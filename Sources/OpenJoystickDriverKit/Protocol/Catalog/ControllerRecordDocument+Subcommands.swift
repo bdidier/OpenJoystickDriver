@@ -75,7 +75,10 @@ extension SubcommandRequest: Decodable {
       case (let data?, nil): try self.init(subcommand: subcommand, data: data)
       case (nil, let read?): try self.init(subcommand: subcommand, spiRead: read)
       default:
-        throw ControllerRecordProblem("a subcommand request names exactly one of data and spiRead")
+        throw ControllerRecordProblem(
+          code: .invalidControllerRecord,
+          "a subcommand request names exactly one of data and spiRead"
+        )
       }
     } catch let problem as ControllerRecordProblem {
       throw DecodingError.dataCorrupted(

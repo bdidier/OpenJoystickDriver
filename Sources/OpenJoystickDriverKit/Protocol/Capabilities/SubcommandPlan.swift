@@ -22,14 +22,23 @@ struct SubcommandPlan: Equatable, Sendable {
     playerIndicator: PlayerIndicatorSubcommand
   ) throws(ControllerRecordProblem) {
     guard Self.counterModulusRange.contains(counterModulus) else {
-      throw ControllerRecordProblem("a subcommand counterModulus is 2...256")
+      throw ControllerRecordProblem(
+        code: .invalidControllerRecord,
+        "a subcommand counterModulus is 2...256"
+      )
     }
     guard Self.requestsRange.contains(requests.count) else {
-      throw ControllerRecordProblem("subcommands name 1...16 requests")
+      throw ControllerRecordProblem(
+        code: .invalidControllerRecord,
+        "subcommands name 1...16 requests"
+      )
     }
     let purposes = requests.compactMap { $0.spiRead?.purpose }
     guard Set(purposes).count == purposes.count else {
-      throw ControllerRecordProblem("each SPI read purpose appears at most once")
+      throw ControllerRecordProblem(
+        code: .invalidControllerRecord,
+        "each SPI read purpose appears at most once"
+      )
     }
     self.reportID = reportID
     self.counterModulus = counterModulus
@@ -59,7 +68,10 @@ struct PlayerIndicatorSubcommand: Equatable, Sendable {
     patterns: [PhysicalPlayerIndicator: UInt8]
   ) throws(ControllerRecordProblem) {
     guard Set(patterns.keys) == Set(PhysicalPlayerIndicator.allCases) else {
-      throw ControllerRecordProblem("a player indicator names a pattern for every indicator")
+      throw ControllerRecordProblem(
+        code: .invalidControllerRecord,
+        "a player indicator names a pattern for every indicator"
+      )
     }
     self.subcommand = subcommand
     self.patterns = patterns
@@ -99,7 +111,10 @@ struct SubcommandRequest: Equatable, Sendable {
 
   init(subcommand: UInt8, data: [UInt8]) throws(ControllerRecordProblem) {
     guard Self.dataRange.contains(data.count) else {
-      throw ControllerRecordProblem("a subcommand request names 1...16 data bytes")
+      throw ControllerRecordProblem(
+        code: .invalidControllerRecord,
+        "a subcommand request names 1...16 data bytes"
+      )
     }
     self.subcommand = subcommand
     self.data = data
@@ -108,7 +123,7 @@ struct SubcommandRequest: Equatable, Sendable {
 
   init(subcommand: UInt8, spiRead: SPIRead) throws(ControllerRecordProblem) {
     guard SPIRead.lengthRange.contains(Int(spiRead.length)) else {
-      throw ControllerRecordProblem("an SPI read length is 1...29")
+      throw ControllerRecordProblem(code: .invalidControllerRecord, "an SPI read length is 1...29")
     }
     self.subcommand = subcommand
     data =

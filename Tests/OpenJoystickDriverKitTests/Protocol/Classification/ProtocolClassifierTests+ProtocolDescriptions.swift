@@ -10,7 +10,6 @@ extension ProtocolClassifierTests {
   func protocolDescriptionDecodesItsSignatures() throws {
     let signatures = try ProtocolDescription.decode(
       protocolDescription(signature: #""variant": "USB", "interfaceNumber": 0"#),
-      protocolID: .xboxGIP,
       fileName: "xbox-gip.json"
     ).interfaceSignatures
     #expect(
@@ -49,7 +48,6 @@ extension ProtocolClassifierTests {
     let error = #expect(throws: ProtocolDescriptionProblem.self) {
       try ProtocolDescription.decode(
         protocolDescription(signature: signature),
-        protocolID: .xboxGIP,
         fileName: "xbox-gip.json"
       )
     }
@@ -82,7 +80,7 @@ extension ProtocolClassifierTests {
       ),
       (
         protocolDescription(signature: #""variant": "USB""#, family: "XboxXUSB"),
-        "family must be XboxGIP",
+        "file name must be xbox-xusb.json",
         .protocolDescriptionFamilyMismatch
       ),
     ]
@@ -90,7 +88,6 @@ extension ProtocolClassifierTests {
       let error = #expect(throws: ProtocolDescriptionProblem.self) {
         try ProtocolDescription.decode(
           data,
-          protocolID: .xboxGIP,
           fileName: "xbox-gip.json"
         )
       }

@@ -86,6 +86,22 @@ struct RecordCommandTests {
   }
 
   @Test
+  func aRecordThatBreaksARuleReportsE5007() async throws {
+    let directory = Directory()
+    let invalid = Data(
+      """
+      {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "ControllerPatch",
+       "selector": {"all": false}, "patch": {"tuning": {"stickDeadzone": 0.08}}}
+      """.utf8
+    )
+
+    let result = await run(["validate", "-"], in: directory, stdin: invalid)
+
+    #expect(result.code == 1)
+    #expect(result.standardError.hasPrefix("error[E5007]: "))
+  }
+
+  @Test
   func installWritesTheFileThatListAndShowReport() async throws {
     let directory = Directory()
 

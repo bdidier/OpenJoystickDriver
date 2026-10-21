@@ -34,10 +34,6 @@ struct ControllerRecordDocument: Decodable {
 
   init(from decoder: any Decoder) throws {
     let container = try decoder.container(keyedBy: DocumentKey.self)
-    try container.rejectUnknown(allowed: [
-      "apiVersion", "kind", "vendorID", "productID", "modes", "usb",
-      "bluetoothLE", "capabilities", "server", "route", "input", "tuning",
-    ])
     let apiVersion = try container.decodeOptional(String.self, for: "apiVersion")
     let kind = try container.decodeOptional(String.self, for: "kind")
     if let problem = OpenJoystickDriverAPI.headerProblem(
@@ -52,6 +48,10 @@ struct ControllerRecordDocument: Decodable {
         debugDescription: problem.message
       )
     }
+    try container.rejectUnknown(allowed: [
+      "apiVersion", "kind", "vendorID", "productID", "modes", "usb",
+      "bluetoothLE", "capabilities", "server", "route", "input", "tuning",
+    ])
     vendorID = try container.decode(Int.self, for: "vendorID")
     productID = try container.decode(Int.self, for: "productID")
     modes = try container.decode([ModeDocument].self, for: "modes")

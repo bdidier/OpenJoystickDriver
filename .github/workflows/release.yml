@@ -70,6 +70,7 @@ jobs:
           ./Scripts/ojd catalog regenerate --check
           ./Scripts/ojd errors regenerate --check
           ./Scripts/ojd vocabulary regenerate --check
+          ./Scripts/ojd fixtures regenerate schema-rejections --check
 
       - name: Check controller records
         run: |

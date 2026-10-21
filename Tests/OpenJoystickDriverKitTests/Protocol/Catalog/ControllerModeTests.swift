@@ -86,7 +86,7 @@ struct ControllerModeTests {
     do {
       _ = try ControllerRecordSet.validate(recordData(modes: modes, family: family, extras: extras))
       return nil
-    } catch { return ControllerRecordSet.problemDescription(error) }
+    } catch { return ControllerRecordSet.problemDescription(error, document: "record") }
   }
 
   private static func select(

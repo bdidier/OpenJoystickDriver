@@ -10,10 +10,16 @@ struct NamedPacketPlan: Equatable, Sendable {
 
   init(packets: [NamedPacket]) throws(ControllerRecordProblem) {
     guard Self.countRange.contains(packets.count) else {
-      throw ControllerRecordProblem("namedPackets name 1...16 packets")
+      throw ControllerRecordProblem(
+        code: .invalidControllerRecord,
+        "namedPackets name 1...16 packets"
+      )
     }
     guard Set(packets.map(\.id)).count == packets.count else {
-      throw ControllerRecordProblem("each named packet id appears at most once")
+      throw ControllerRecordProblem(
+        code: .invalidControllerRecord,
+        "each named packet id appears at most once"
+      )
     }
     self.packets = packets
   }
@@ -38,11 +44,13 @@ struct NamedPacket: Equatable, Sendable {
   init(id: String, bytes: [UInt8], sessionByte: Int) throws(ControllerRecordProblem) {
     guard Self.isWellFormed(id) else {
       throw ControllerRecordProblem(
+        code: .invalidControllerRecord,
         "a named packet id is a family, a slash and lowercase words joined by hyphens"
       )
     }
     guard bytes.count >= 3, sessionByte == NamedPacketPlan.sequenceByteIndex else {
       throw ControllerRecordProblem(
+        code: .invalidControllerRecord,
         "a named packet has at least 3 bytes and its session byte is 2"
       )
     }

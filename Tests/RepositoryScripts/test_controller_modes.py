@@ -8,6 +8,13 @@ from typing import Any, ClassVar
 
 from Scripts.Catalog import validate_profiles
 from Scripts.Catalog.schema_header import header
+from Tests.RepositoryScripts import schema_rejections
+from Tests.RepositoryScripts.schema_rejections import RecordValidator
+
+
+def setUpModule() -> None:
+    schema_rejections.enforce_controller_rejections()
+
 
 SIXAXIS = {"family": "SonySixaxis"}
 ANSWERS = {"report": 239, "length": 64, "expect": "Answers"}
@@ -47,6 +54,7 @@ def record(**fields: Any) -> dict[str, Any]:
 class ControllerModeSchemaTests(unittest.TestCase):
     def setUp(self) -> None:
         self.validator = validate_profiles.validator()
+        self.records = RecordValidator()
 
     def test_accepts_modes_selected_by_each_probe_expectation(self) -> None:
         document = record(
@@ -298,7 +306,7 @@ class ControllerModeSchemaTests(unittest.TestCase):
         }
         for name, document in rejected.items():
             with self.subTest(name):
-                self.assertFalse(self.validator.is_valid(document))
+                self.assertFalse(self.records.is_valid(document))
 
     def test_validator_rejects_duplicate_ids_and_overflowing_bytes(self) -> None:
         overflowing = {
@@ -538,6 +546,7 @@ class SessionTests(unittest.TestCase):
 
     def setUp(self) -> None:
         self.schema = validate_profiles.validator()
+        self.records = RecordValidator()
 
     @staticmethod
     def read(request: int, **fields: Any) -> dict[str, Any]:
@@ -572,7 +581,7 @@ class SessionTests(unittest.TestCase):
         for text in ("0x1a 2b", "1a 2b", "1A  2B", "1A2B", " 1A", "1A ", "1A\n", ""):
             with self.subTest(text):
                 document = self.document("XboxXUSB", {"startup": [{"bytes": text}]})
-                self.assertFalse(self.schema.is_valid(document))
+                self.assertFalse(self.records.is_valid(document))
         accepted = self.document("XboxXUSB", {"startup": [{"bytes": "1A 2B"}]})
         self.assertTrue(self.schema.is_valid(accepted))
 
@@ -593,7 +602,7 @@ class SessionTests(unittest.TestCase):
         }
         for name, (family, session) in rejected.items():
             with self.subTest(name):
-                self.assertFalse(self.schema.is_valid(self.document(family, session)))
+                self.assertFalse(self.records.is_valid(self.document(family, session)))
 
     def test_validator_rejects_control_transfers_that_disagree_with_themselves(
         self,
@@ -669,7 +678,7 @@ class EveryModeConditionalTests(unittest.TestCase):
         """The schema rejects the document too, unless `by_schema` is false: a rule that reads a
         family's description is not the schema's."""
         if by_schema:
-            self.assertFalse(validate_profiles.validator().is_valid(document))
+            self.assertFalse(RecordValidator().is_valid(document))
         with self.assertRaises(validate_profiles.ValidationError) as caught:
             validate_profiles.validate_modes(Path("record.json"), document)
         self.assertIn(message, str(caught.exception))

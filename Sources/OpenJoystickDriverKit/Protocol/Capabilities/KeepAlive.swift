@@ -16,10 +16,16 @@ struct KeepAlive: Equatable, Sendable {
     writes: [KeepAliveWrite] = []
   ) throws(ControllerRecordProblem) {
     guard Self.intervalRange.contains(intervalMilliseconds) else {
-      throw ControllerRecordProblem("a keep-alive interval is 1...60000 ms")
+      throw ControllerRecordProblem(
+        code: .invalidControllerRecord,
+        "a keep-alive interval is 1...60000 ms"
+      )
     }
     guard writes.isEmpty || Self.writesRange.contains(writes.count) else {
-      throw ControllerRecordProblem("keepAlive names no writes or 1...8 of them")
+      throw ControllerRecordProblem(
+        code: .invalidControllerRecord,
+        "keepAlive names no writes or 1...8 of them"
+      )
     }
     self.intervalMilliseconds = intervalMilliseconds
     self.writes = writes

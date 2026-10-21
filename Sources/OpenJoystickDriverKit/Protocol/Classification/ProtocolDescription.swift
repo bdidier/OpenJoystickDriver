@@ -178,20 +178,33 @@ struct ProtocolDescription: Sendable {
       }
       descriptions[protocolID] = try decode(
         Data(contentsOf: url),
-        protocolID: protocolID,
         fileName: url.lastPathComponent
       )
     }
     return descriptions
   }
 
-  /// Decodes one description, the file `fileName` that the bundle holds for `protocolID`.
+  /// Decodes one description from the file `fileName`, whose stem names the family it holds; the
+  /// bundle loads its descriptions through this check.
   ///
-  /// A malformed document, an unknown field and a value outside its range are E5002; a family
-  /// that is not the file's is E5003; a variant that the family lacks is E5004.
+  /// A malformed document, an unknown field and a value outside its range are E5002; a file name
+  /// that is not the family's, or that no family has, is E5003, after the document itself is
+  /// checked; a variant that the family lacks is E5004.
   static func decode(
     _ data: Data,
-    protocolID: PhysicalProtocolID,
+    fileName: String
+  ) throws(ProtocolDescriptionProblem) -> Self {
+    let stem = URL(fileURLWithPath: fileName).deletingPathExtension().lastPathComponent
+    return try decode(
+      data,
+      expectedFamily: PhysicalProtocolID.allCases.first { $0.descriptionFileStem == stem },
+      fileName: fileName
+    )
+  }
+
+  private static func decode(
+    _ data: Data,
+    expectedFamily protocolID: PhysicalProtocolID?,
     fileName: String
   ) throws(ProtocolDescriptionProblem) -> Self {
     let document: Document
@@ -200,7 +213,15 @@ struct ProtocolDescription: Sendable {
       decoder.userInfo[.startupConditionsAllowed] = true
       document = try decoder.decode(Document.self, from: data)
     } catch {
-      throw ProtocolDescriptionProblem(.invalidProtocolDescription, "\(fileName): \(error)")
+      throw ProtocolDescriptionProblem(
+        .invalidProtocolDescription,
+        "\(fileName): "
+          + ControllerRecordSet.problemDescription(
+            error,
+            includingCode: false,
+            document: "description"
+          )
+      )
     }
     if let problem = OpenJoystickDriverAPI.headerProblem(
       apiVersion: document.apiVersion,
@@ -212,10 +233,41 @@ struct ProtocolDescription: Sendable {
         "\(fileName): \(problem.message)"
       )
     }
-    guard document.family == protocolID.rawValue else {
+    guard let family = PhysicalProtocolID(rawValue: document.family) else {
+      throw ProtocolDescriptionProblem(
+        .invalidProtocolDescription,
+        "\(fileName): \(document.family) is not a family"
+      )
+    }
+    var seenSignatures: Set<String> = []
+    for signature in document.interfaceSignatures {
+      let identity = [
+        signature.variant, "\(signature.interfaceClass)", "\(signature.interfaceSubclass)",
+        "\(signature.interfaceProtocol)", signature.interfaceNumber.map(String.init) ?? "",
+      ].joined(separator: "/")
+      guard seenSignatures.insert(identity).inserted else {
+        throw ProtocolDescriptionProblem(
+          .invalidProtocolDescription,
+          "\(fileName): interfaceSignatures names \(identity) twice"
+        )
+      }
+    }
+    let unreadParameters = Set(document.parameters.keys).subtracting(
+      ProtocolParameters.readable(by: family)
+    )
+    guard unreadParameters.isEmpty else {
+      throw ProtocolDescriptionProblem(
+        .invalidProtocolDescription,
+        "\(fileName): \(family.rawValue) reads no parameter(s) "
+          + unreadParameters.sorted().joined(separator: ", ")
+      )
+    }
+    // The file name is checked after the document's own rules, as the Python validator checks
+    // it after the schema.
+    guard let protocolID, family == protocolID else {
       throw ProtocolDescriptionProblem(
         .protocolDescriptionFamilyMismatch,
-        "\(fileName): family must be \(protocolID.rawValue)"
+        "\(fileName): file name must be \(family.descriptionFileStem).json"
       )
     }
     var signatures: [ProtocolInterfaceSignature] = []

@@ -1855,6 +1855,7 @@
 "error.E5004" = "Deskripsi protokol mencantumkan varian yang tidak dimiliki keluarganya. Gunakan salah satu varian keluarga tersebut.";
 "error.E5005" = "File akses AccessGrants.json rusak. Perbaiki atau hapus file itu, lalu berikan akses lagi.";
 "error.E5006" = "Berkas kunci ID perangkat, PortKeyInstallation.key, tidak dapat dibaca atau ukurannya bukan 32 byte. Pulihkan berkas dari cadangan. Jika Anda menghapusnya, OpenJoystickDriver membuat kunci baru dan setiap ID perangkat berubah.";
+"error.E5007" = "Catatan pengontrol atau patch tidak valid. Periksa berkas dengan skemanya dan perbaiki kolom yang disebut pesan.";
 "error.withCode" ="%@ (%@)";
 "cli.update.check.ahead" = "OpenJoystickDriver %1$@ lebih baru daripada rilis terbaru yang dipublikasikan (%2$@).";
 "settings.updateAhead" = "Lebih baru dari rilis terbaru";

@@ -23,7 +23,7 @@ struct RawUSBModeTests {
     do {
       _ = try ControllerRecordSet.validate(JSONSerialization.data(withJSONObject: record))
       return nil
-    } catch { return ControllerRecordSet.problemDescription(error) }
+    } catch { return ControllerRecordSet.problemDescription(error, document: "record") }
   }
 
   private static func gip(

@@ -1188,6 +1188,7 @@
     "error.E5004": "error.E5004.message",
     "error.E5005": "error.E5005.message",
     "error.E5006": "error.E5006.message",
+    "error.E5007": "error.E5007.message",
     "error.actionInProgress": "ui.error.actionInProgress",
     "error.controllerSessionChangeRejected": "ui.error.controllerSessionChangeRejected",
     "error.duplicateProfile": "ui.error.duplicateProfile",

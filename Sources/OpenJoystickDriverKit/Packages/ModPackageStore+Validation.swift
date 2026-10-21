@@ -190,8 +190,10 @@ extension ModPackageStore {
   ) throws -> Value {
     do { return try check(Data(contentsOf: url)) } catch {
       throw ModPackageError(
-        ControllerRecordSet.problemCode(error) ?? .invalidPackageContent,
-        "\(label): \(ControllerRecordSet.problemDescription(error, includingCode: false))"
+        ControllerRecordSet.problemCode(error) == .unsupportedAPIVersion
+          ? .unsupportedAPIVersion : .invalidPackageContent,
+        label + ": "
+          + ControllerRecordSet.problemDescription(error, includingCode: false, document: "record")
       )
     }
   }

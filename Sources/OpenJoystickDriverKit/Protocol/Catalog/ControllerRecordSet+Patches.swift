@@ -81,11 +81,17 @@ extension ControllerRecordSet {
         switch try parse(Data(contentsOf: entry.url), file: entry.url, layer: layer) {
         case .record(let record):
           guard name == fileName(for: record.model) else {
-            throw ControllerRecordProblem("the file name must be \(fileName(for: record.model))")
+            throw ControllerRecordProblem(
+              code: .invalidControllerRecord,
+              "the file name must be \(fileName(for: record.model))"
+            )
           }
           if let owner = entry.owner {
             if let other = owners[record.model] {
-              throw ControllerRecordProblem("same controller as package \(other)")
+              throw ControllerRecordProblem(
+                code: .invalidControllerRecord,
+                "same controller as package \(other)"
+              )
             }
             owners[record.model] = owner
           }
@@ -99,7 +105,10 @@ extension ControllerRecordSet {
           )
         case .patch(let patch):
           guard name == patch.selector.fileName else {
-            throw ControllerRecordProblem("the file name must be \(patch.selector.fileName)")
+            throw ControllerRecordProblem(
+              code: .invalidControllerRecord,
+              "the file name must be \(patch.selector.fileName)"
+            )
           }
           patches.append((entry, patch))
         }
@@ -108,7 +117,7 @@ extension ControllerRecordSet {
           url: entry.url,
           model: nil,
           operation: nil,
-          problem: problemDescription(error)
+          problem: problemDescription(error, document: "record")
         )
       }
     }
@@ -122,7 +131,7 @@ extension ControllerRecordSet {
       for target in targets {
         do {
           records[target] = try apply(patch, to: records[target]!, layer: layer, file: entry.url)
-        } catch { failure = failure ?? problemDescription(error) }
+        } catch { failure = failure ?? problemDescription(error, document: "record") }
       }
       let model: ControllerModelID? =
         switch patch.selector {
@@ -151,7 +160,9 @@ extension ControllerRecordSet {
   static func parse(_ data: Data, file: URL?, layer: ControllerRecordLayer) throws -> ParsedFile {
     guard let object = try? JSONSerialization.jsonObject(with: data),
       let document = object as? [String: Any]
-    else { throw ControllerRecordProblem("the file is not a JSON object") }
+    else {
+      throw ControllerRecordProblem(code: .invalidControllerRecord, "the file is not a JSON object")
+    }
     if document["kind"] as? String == ControllerRecordDocument.kind {
       try OpenJoystickDriverAPI.requireHeader(
         document,
@@ -161,6 +172,7 @@ extension ControllerRecordSet {
       let decoded = try decode(document)
       guard bundled.records[decoded.model] == nil else {
         throw ControllerRecordProblem(
+          code: .invalidControllerRecord,
           "\(decoded.model) is a bundled controller; use a patch to change it"
         )
       }
@@ -205,6 +217,7 @@ extension ControllerRecordSet {
         ?? packages.values.sorted { $0.model < $1.model }.first { patch.selector.selects($0.model) }
       guard let upstream else {
         throw ControllerRecordProblem(
+          code: .invalidControllerRecord,
           "\(patch.selector.description) is not a known controller; use a Controller file"
         )
       }
@@ -226,7 +239,12 @@ extension ControllerRecordSet {
     file: URL?
   ) throws -> ControllerRecord {
     guard let base = try JSONSerialization.jsonObject(with: upstream.document) as? [String: Any]
-    else { throw ControllerRecordProblem("the record is not a JSON object") }
+    else {
+      throw ControllerRecordProblem(
+        code: .invalidControllerRecord,
+        "the record is not a JSON object"
+      )
+    }
     let isAll = patch.selector == .all
     guard let body = ControllerPatchMerge.appliedBody(of: patch, to: base) else { return upstream }
     let merged = ControllerPatchMerge.apply(patch, to: base)
@@ -235,7 +253,10 @@ extension ControllerRecordSet {
         try JSONSerialization.data(withJSONObject: merged, options: .sortedKeys)
         != JSONSerialization.data(withJSONObject: base, options: .sortedKeys)
       guard changed else {
-        throw ControllerRecordProblem("the patch changes nothing in the record")
+        throw ControllerRecordProblem(
+          code: .invalidControllerRecord,
+          "the patch changes nothing in the record"
+        )
       }
     }
     var layers = upstream.fieldLayers

@@ -43,7 +43,7 @@ public struct ControllerDefaults: Equatable, Sendable {
       return Self(
         url: url,
         tuning: .none,
-        problem: ControllerRecordSet.problemDescription(error),
+        problem: ControllerRecordSet.problemDescription(error, document: "tuning"),
         patch: nil
       )
     }
@@ -56,10 +56,15 @@ public struct ControllerDefaults: Equatable, Sendable {
   ) throws -> (patch: ControllerPatch, tuning: ControllerTuning) {
     guard let object = try? JSONSerialization.jsonObject(with: data),
       let document = object as? [String: Any]
-    else { throw ControllerRecordProblem("the file is not a JSON object") }
+    else {
+      throw ControllerRecordProblem(code: .invalidControllerRecord, "the file is not a JSON object")
+    }
     let patch = try ControllerPatch.parse(document, file: file)
     guard patch.selector == .all else {
-      throw ControllerRecordProblem("the selector must be all in \(fileName)")
+      throw ControllerRecordProblem(
+        code: .invalidControllerRecord,
+        "the selector must be all in \(fileName)"
+      )
     }
     var values = patch.body["tuning"] as? [String: Any] ?? [:]
     values = values.filter { !($0.value is NSNull) }
@@ -70,8 +75,8 @@ public struct ControllerDefaults: Equatable, Sendable {
       )
     } catch let error as DecodingError {
       throw ControllerRecordProblem(
-        ControllerRecordSet.problemDescription(error)
-          .replacingOccurrences(of: "record.", with: "tuning.")
+        code: .invalidControllerRecord,
+        ControllerRecordSet.problemDescription(error, document: "tuning")
       )
     }
   }

@@ -12,6 +12,11 @@ from unittest.mock import patch
 from Scripts.Catalog import protocol_descriptions
 from Scripts.Catalog.schema_header import header
 from Scripts.Quality import validate_schemas
+from Tests.RepositoryScripts import schema_rejections
+
+
+def setUpModule() -> None:
+    schema_rejections.enforce_description_rejections()
 
 
 def zeros(count: int) -> str:
@@ -316,6 +321,20 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             r"^E5003: .*file name must be xbox-xusb\.json",
         ):
             self.check(xusb_description(), name="xbox-gip.json")
+
+    def test_a_document_rule_is_reported_before_the_file_name(self) -> None:
+        duplicated = xusb_description()
+        signatures = duplicated["interfaceSignatures"]
+        signatures.append(copy.deepcopy(signatures[0]))
+        unread = self.with_body(
+            "SonyDualSense", parameters={"layout": {"type": "Flag"}}
+        )
+        for name, document in {
+            "a duplicate signature": duplicated,
+            "a parameter the family does not read": unread,
+        }.items():
+            with self.subTest(name):
+                self.assert_rejected(document, name="xbox-gip.json")
 
     def test_file_stems_cover_every_family_and_file(self) -> None:
         families = self.schema["allOf"]

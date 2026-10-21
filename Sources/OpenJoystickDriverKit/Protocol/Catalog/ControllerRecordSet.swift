@@ -110,11 +110,17 @@ public struct ValidatedControllerRecord: Sendable {
   }
 }
 
-/// Why a user controller record is invalid, in words for the person who wrote it.
+/// Why a controller record, patch or related document is invalid. A problem about a controller
+/// record or patch carries ``ErrorCode/invalidControllerRecord``; one about another document,
+/// such as a virtual device, carries no code. ``description`` leaves the code out.
 public struct ControllerRecordProblem: Error, Equatable, Sendable, CustomStringConvertible {
   public let description: String
+  public let code: ErrorCode?
 
-  init(_ description: String) { self.description = description }
+  init(code: ErrorCode?, _ description: String) {
+    self.code = code
+    self.description = description
+  }
 }
 
 /// The bundled controller catalog with the user's controller records applied.
@@ -181,26 +187,39 @@ public struct ControllerRecordSet: Sendable {
       .filter { isRecordFileName($0.lastPathComponent) }.sorted {
         $0.lastPathComponent < $1.lastPathComponent
       }
-    guard !urls.isEmpty else { throw ControllerRecordProblem("controller catalog is empty") }
+    guard !urls.isEmpty else {
+      throw ControllerRecordProblem(code: .invalidControllerRecord, "controller catalog is empty")
+    }
     var records: [ControllerModelID: ControllerRecord] = [:]
     for url in urls {
       do {
         guard
           let document = try JSONSerialization.jsonObject(with: Data(contentsOf: url))
             as? [String: Any]
-        else { throw ControllerRecordProblem("not a JSON object") }
+        else { throw ControllerRecordProblem(code: .invalidControllerRecord, "not a JSON object") }
         let layers = Dictionary(
           uniqueKeysWithValues: fieldNames(of: document).map { ($0, ControllerRecordLayer.bundled) }
         )
         let record = try makeRecord(document, layers: layers)
         guard url.lastPathComponent == fileName(for: record.model) else {
-          throw ControllerRecordProblem("filename must be \(fileName(for: record.model))")
+          throw ControllerRecordProblem(
+            code: .invalidControllerRecord,
+            "filename must be \(fileName(for: record.model))"
+          )
         }
         guard records[record.model] == nil else {
-          throw ControllerRecordProblem("duplicate controller identity")
+          throw ControllerRecordProblem(
+            code: .invalidControllerRecord,
+            "duplicate controller identity"
+          )
         }
         records[record.model] = record
-      } catch { throw ControllerRecordProblem("\(url.path): \(problemDescription(error))") }
+      } catch {
+        throw ControllerRecordProblem(
+          code: .invalidControllerRecord,
+          "\(url.path): \(problemDescription(error, document: "record"))"
+        )
+      }
     }
     return Self(records: records, userFiles: [])
   }
@@ -219,7 +238,12 @@ public struct ControllerRecordSet: Sendable {
     let document = try JSONDecoder().decode(ControllerRecordDocument.self, from: data)
     guard let vendorID = UInt16(exactly: document.vendorID),
       let productID = UInt16(exactly: document.productID)
-    else { throw ControllerRecordProblem("vendorID must be 1...65535 and productID 0...65535") }
+    else {
+      throw ControllerRecordProblem(
+        code: .invalidControllerRecord,
+        "vendorID must be 1...65535 and productID 0...65535"
+      )
+    }
     return (ControllerModelID(vendorID: vendorID, productID: productID), document)
   }
 
@@ -266,23 +290,33 @@ public struct ControllerRecordSet: Sendable {
     return integer
   }
 
-  /// The error code of a document that is refused for its `apiVersion`, or nil when `error` has
-  /// none.
+  /// The error code of a record that is refused: ``ErrorCode/unsupportedAPIVersion`` for its
+  /// `apiVersion`, and ``ErrorCode/invalidControllerRecord`` for any other failed rule. Nil when
+  /// `error` is not about the record's content, such as a file that cannot be read.
   public static func problemCode(_ error: any Error) -> ErrorCode? {
-    (error as? DocumentHeaderProblem)?.code
+    switch error {
+    case let problem as DocumentHeaderProblem: problem.code ?? .invalidControllerRecord
+    case let problem as ControllerRecordProblem: problem.code
+    case is DecodingError: .invalidControllerRecord
+    default: nil
+    }
   }
 
   /// A one-line reason for a decoding or file error, with the JSON path of the field.
   ///
   /// A reason that has an error code leads with it, such as `E5001: `, because a reason is a plain
   /// string where it is listed. A caller that reports the code itself passes `includingCode:
-  /// false`.
-  public static func problemDescription(_ error: any Error, includingCode: Bool = true) -> String {
+  /// false`. A field path leads with `document`, the noun for the kind of file that was decoded.
+  public static func problemDescription(
+    _ error: any Error,
+    includingCode: Bool = true,
+    document: String
+  ) -> String {
     func path(_ codingPath: [any CodingKey]) -> String {
       codingPath.map { $0.intValue.map { "[\($0)]" } ?? $0.stringValue }.joined(separator: ".")
     }
     func located(_ codingPath: [any CodingKey], _ text: String) -> String {
-      codingPath.isEmpty ? text : "record.\(path(codingPath)): \(text)"
+      codingPath.isEmpty ? text : "\(document).\(path(codingPath)): \(text)"
     }
     switch error {
     case let problem as ControllerRecordProblem: return problem.description

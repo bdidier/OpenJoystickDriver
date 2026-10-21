@@ -117,9 +117,14 @@ public struct ControllerInputLayout: Equatable, Sendable {
     leftTrigger: Trigger?,
     rightTrigger: Trigger?
   ) throws(ControllerRecordProblem) {
-    guard reportID != 0 else { throw ControllerRecordProblem("an input report ID is 1...255") }
+    guard reportID != 0 else {
+      throw ControllerRecordProblem(code: .invalidControllerRecord, "an input report ID is 1...255")
+    }
     guard (1...64).contains(minimumLength), reportID == nil || minimumLength >= 2 else {
-      throw ControllerRecordProblem("an input report is 1...64 bytes long, with its ID byte")
+      throw ControllerRecordProblem(
+        code: .invalidControllerRecord,
+        "an input report is 1...64 bytes long, with its ID byte"
+      )
     }
     let readable = (reportID == nil ? 0 : 1)..<minimumLength
     var fields = buttons.map(\.1) + [leftTrigger, rightTrigger].compactMap { $0?.button }
@@ -128,7 +133,10 @@ public struct ControllerInputLayout: Equatable, Sendable {
       case .eightWay(let field, _):
         let shifted = field.mask >> field.mask.trailingZeroBitCount
         guard shifted >= 0x07, shifted & (shifted &+ 1) == 0 else {
-          throw ControllerRecordProblem("an 8-way hat mask is at least 3 adjacent bits")
+          throw ControllerRecordProblem(
+            code: .invalidControllerRecord,
+            "an 8-way hat mask is at least 3 adjacent bits"
+          )
         }
         fields.append(field)
       case .directions(let up, let right, let down, let left): fields += [up, right, down, left]
@@ -138,6 +146,7 @@ public struct ControllerInputLayout: Equatable, Sendable {
           !directions.values.contains(.neutral)
         else {
           throw ControllerRecordProblem(
+            code: .invalidControllerRecord,
             "a table hat names directions for values its mask holds, and no neutral entry"
           )
         }
@@ -149,34 +158,56 @@ public struct ControllerInputLayout: Equatable, Sendable {
       + axes.flatMap { $0.bits == 16 ? [$0.byte, $0.byte + 1] : [$0.byte] }
     guard fields.allSatisfy({ $0.mask != 0 }), bytes.allSatisfy(readable.contains) else {
       throw ControllerRecordProblem(
+        code: .invalidControllerRecord,
         "input fields must select at least one bit after the report ID inside the report"
       )
     }
     guard buttons.allSatisfy({ !Self.nonButtonControls.contains($0.0) }) else {
       throw ControllerRecordProblem(
+        code: .invalidControllerRecord,
         "a button names a digital control, not the D-pad or a stick axis"
       )
     }
     guard axes.allSatisfy({ Control.stickAxes.contains($0.control) }),
       Set(axes.map(\.control)).count == axes.count
-    else { throw ControllerRecordProblem("axes name distinct stick axes") }
+    else {
+      throw ControllerRecordProblem(code: .invalidControllerRecord, "axes name distinct stick axes")
+    }
     guard
       axes.allSatisfy({
         ($0.bits == 8 || $0.bits == 16) && $0.maximum - $0.minimum >= 2
           && $0.fullRange.contains($0.minimum) && $0.fullRange.contains($0.maximum)
       })
     else {
-      throw ControllerRecordProblem("an axis is 8 or 16 bits with min below max inside its range")
+      throw ControllerRecordProblem(
+        code: .invalidControllerRecord,
+        "an axis is 8 or 16 bits with min below max inside its range"
+      )
     }
     guard axes.allSatisfy({ !$0.isSymmetric || ($0.isSigned && $0.minimum < 0 && $0.maximum > 0) })
-    else { throw ControllerRecordProblem("a symmetric axis is signed with min below 0 below max") }
+    else {
+      throw ControllerRecordProblem(
+        code: .invalidControllerRecord,
+        "a symmetric axis is signed with min below 0 below max"
+      )
+    }
     guard
       [leftTrigger, rightTrigger].allSatisfy({ $0 == nil || $0?.byte != nil || $0?.button != nil })
-    else { throw ControllerRecordProblem("a trigger names an analog byte, a button, or both") }
+    else {
+      throw ControllerRecordProblem(
+        code: .invalidControllerRecord,
+        "a trigger names an analog byte, a button, or both"
+      )
+    }
     guard
       !buttons.isEmpty || !axes.isEmpty || !hat.isEmpty || leftTrigger != nil
         || rightTrigger != nil
-    else { throw ControllerRecordProblem("an input layout decodes at least one control") }
+    else {
+      throw ControllerRecordProblem(
+        code: .invalidControllerRecord,
+        "an input layout decodes at least one control"
+      )
+    }
 
     var grouped: [Button] = []
     for (control, field) in buttons {

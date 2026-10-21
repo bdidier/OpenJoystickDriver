@@ -69,7 +69,7 @@ struct ControllerModeMatchTests {
     do {
       _ = try ControllerRecordSet.validate(recordData(modes: modes, family: family))
       return nil
-    } catch { return ControllerRecordSet.problemDescription(error) }
+    } catch { return ControllerRecordSet.problemDescription(error, document: "record") }
   }
 
   private static func signature(endpoints: [[String: Any]]) -> [String: Any] {
@@ -617,7 +617,7 @@ struct ControllerModeMatchTests {
       do {
         _ = try ControllerRecordSet.validate(JSONSerialization.data(withJSONObject: record))
         return nil
-      } catch { return ControllerRecordSet.problemDescription(error) }
+      } catch { return ControllerRecordSet.problemDescription(error, document: "record") }
     }
     let other = Self.mode("x", match: ["link": "USB"])
     let plainDefault: [String: Any] = ["id": "default", "protocol": ["family": "SonySixaxis"]]

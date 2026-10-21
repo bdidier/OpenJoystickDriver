@@ -1855,6 +1855,7 @@
 "error.E5004" = "Mô tả giao thức liệt kê một biến thể mà họ của nó không có. Hãy dùng một trong các biến thể của họ.";
 "error.E5005" = "Tệp truy cập AccessGrants.json bị hỏng. Hãy sửa hoặc xóa tệp, rồi cấp quyền truy cập lại.";
 "error.E5006" = "Không thể đọc tệp khóa của ID thiết bị, PortKeyInstallation.key, hoặc tệp không có kích thước 32 byte. Hãy khôi phục tệp từ bản sao lưu. Nếu bạn xóa tệp, OpenJoystickDriver sẽ tạo khóa mới và mọi ID thiết bị đều thay đổi.";
+"error.E5007" = "Bản ghi bộ điều khiển hoặc patch không hợp lệ. Kiểm tra tệp với lược đồ của nó và sửa trường mà thông báo nêu.";
 "error.withCode" ="%@ (%@)";
 "cli.update.check.ahead" = "OpenJoystickDriver %1$@ mới hơn bản phát hành mới nhất đã công bố (%2$@).";
 "settings.updateAhead" = "Mới hơn bản phát hành mới nhất";

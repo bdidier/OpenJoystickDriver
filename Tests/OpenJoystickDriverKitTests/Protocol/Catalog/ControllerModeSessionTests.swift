@@ -23,7 +23,7 @@ struct ControllerModeSessionTests {
     do {
       _ = try validated(record)
       return nil
-    } catch { return ControllerRecordSet.problemDescription(error) }
+    } catch { return ControllerRecordSet.problemDescription(error, document: "record") }
   }
 
   private static func read(_ request: Int, gate: [String: Any]) -> [String: Any] {

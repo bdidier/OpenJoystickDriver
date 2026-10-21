@@ -31,7 +31,7 @@ struct ControllerRecordSetTests {
     do {
       _ = try ControllerRecordSet.validate(data)
       return nil
-    } catch { return ControllerRecordSet.problemDescription(error) }
+    } catch { return ControllerRecordSet.problemDescription(error, document: "record") }
   }
 
   private static func record(_ data: Data) throws -> ControllerRecord {
@@ -247,7 +247,7 @@ struct ControllerRecordSetTests {
     do {
       _ = try ControllerDefaults.validate(defaultsWrongKind)
       Issue.record("the wrong kind was accepted")
-    } catch { #expect(ControllerRecordSet.problemCode(error) == nil) }
+    } catch { #expect(ControllerRecordSet.problemCode(error) == .invalidControllerRecord) }
   }
 
   @Test

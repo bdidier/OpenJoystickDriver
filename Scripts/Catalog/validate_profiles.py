@@ -10,6 +10,7 @@ from typing import Any
 try:
     from jsonschema import Draft202012Validator
     from jsonschema.exceptions import ValidationError as JSONSchemaValidationError
+    from jsonschema.exceptions import best_match
     from referencing import Registry, Resource
 except ImportError:
     print(
@@ -26,13 +27,23 @@ RECORD_DIR = ROOT / "Sources" / "OpenJoystickDriverKit" / "Resources" / "Control
 SCHEMA_PATH = ROOT / "Resources" / "Schemas" / "controller.schema.json"
 
 
+# The catalog codes of a record that is not valid, as `ControllerRecordSet.problemCode` reports
+# them in Swift.
+UNSUPPORTED_API_VERSION = "E5001"
+INVALID_CONTROLLER_RECORD = "E5007"
+
+
 class ValidationError(Exception):
-    pass
+    """A rule a record or catalog breaks; `code` is its catalog code and leads the message."""
+
+    def __init__(self, message: str, code: str) -> None:
+        super().__init__(f"{code}: {message}")
+        self.code = code
 
 
 def require(condition: bool, message: str) -> None:
     if not condition:
-        raise ValidationError(message)
+        raise ValidationError(message, INVALID_CONTROLLER_RECORD)
 
 
 def description_of(family: str) -> dict[str, Any]:
@@ -325,7 +336,9 @@ def load_object(path: pathlib.Path) -> dict[str, Any]:
     try:
         value = json.loads(path.read_text())
     except json.JSONDecodeError as error:
-        raise ValidationError(f"{path}: invalid JSON: {error}") from error
+        raise ValidationError(
+            f"{path}: invalid JSON: {error}", INVALID_CONTROLLER_RECORD
+        ) from error
     require(isinstance(value, dict), f"{path}: root must be an object")
     return value
 
@@ -348,13 +361,37 @@ def validator() -> Any:
 def check_record(
     path: pathlib.Path, record: dict[str, Any], schema_validator: Any
 ) -> None:
-    """Checks one record against the schema and every rule the schema cannot state."""
-    try:
-        schema_validator.validate(record)
-    except JSONSchemaValidationError as error:
+    """Checks one record against the schema and every rule the schema cannot state.
+
+    A failure names its catalog code: E5001 when `apiVersion` is missing or not the supported
+    one, E5007 for every other rule.
+    """
+    check_record_rules(path, record, schema_validator)
+
+
+def is_api_version_error(error: JSONSchemaValidationError) -> bool:
+    """Whether `error` says the record's `apiVersion` is missing or not the supported one."""
+    return list(error.absolute_path) == ["apiVersion"] or (
+        error.validator == "required"
+        and not error.absolute_path
+        and "'apiVersion'" in error.message
+    )
+
+
+def check_record_rules(
+    path: pathlib.Path, record: dict[str, Any], schema_validator: Any
+) -> None:
+    # The header is checked first, as `OpenJoystickDriverAPI.headerProblem` is in Swift, so a
+    # record with a bad apiVersion and another problem gets E5001 whichever error the schema
+    # validator ranks first.
+    errors = list(schema_validator.iter_errors(record))
+    header = [error for error in errors if is_api_version_error(error)]
+    if header or errors:
+        error = header[0] if header else best_match(errors)
         location = ".".join(str(component) for component in error.absolute_path)
         suffix = f" at {location}" if location else ""
-        raise ValidationError(f"{path}{suffix}: {error.message}") from error
+        code = UNSUPPORTED_API_VERSION if header else INVALID_CONTROLLER_RECORD
+        raise ValidationError(f"{path}{suffix}: {error.message}", code) from error
 
     # JSON Schema cannot express disjoint arrays; the runtime decoder rejects overlap too.
     capabilities = record.get("capabilities", {})

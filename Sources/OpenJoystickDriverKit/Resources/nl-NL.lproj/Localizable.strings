@@ -1582,6 +1582,7 @@
 "error.E5004" = "Een protocolbeschrijving noemt een variant die de familie niet heeft. Gebruik een van de varianten van de familie.";
 "error.E5005" = "Het toegangsbestand AccessGrants.json is beschadigd. Herstel het bestand of verwijder het, en verleen daarna opnieuw toegang.";
 "error.E5006" = "Het sleutelbestand van de apparaat-ID's, PortKeyInstallation.key, kan niet worden gelezen of is niet 32 bytes. Zet het bestand terug vanuit een reservekopie. Als je het in plaats daarvan verwijdert, maakt OpenJoystickDriver een nieuwe sleutel en verandert elke apparaat-ID.";
+"error.E5007" = "Een controllerrecord of patch is ongeldig. Controleer het bestand met zijn schema en herstel het veld dat het bericht noemt.";
 "error.withCode" ="%@ (%@)";
 
 /* Main window, status item, main menu, settings window, library and access. */

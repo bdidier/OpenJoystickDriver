@@ -10,6 +10,14 @@ from unittest import mock
 from Scripts.Catalog import validate_profiles
 from Scripts.Catalog.schema_header import header
 from Scripts.Quality import validate_schemas
+from Tests.RepositoryScripts import schema_rejections
+from Tests.RepositoryScripts.schema_rejections import RecordValidator
+
+
+def setUpModule() -> None:
+    schema_rejections.enforce_controller_rejections()
+    schema_rejections.enforce_description_rejections()
+
 
 BUTTON = {"kind": "Button", "page": 9, "usage": 1, "control": "South"}
 AXIS = {"kind": "Axis", "page": 1, "usage": 48, "control": "LeftStickX"}
@@ -35,6 +43,7 @@ def usage_map(*usages: dict[str, Any], **members: Any) -> dict[str, Any]:
 class HIDUsageMapRecordSchemaTests(unittest.TestCase):
     def setUp(self) -> None:
         self.validator = validate_profiles.validator()
+        self.records = RecordValidator()
 
     def test_accepts_each_usage_kind(self) -> None:
         accepted = {
@@ -97,11 +106,11 @@ class HIDUsageMapRecordSchemaTests(unittest.TestCase):
         }
         for name, input_section in rejected.items():
             with self.subTest(name):
-                self.assertFalse(self.validator.is_valid(record(input_section)))
+                self.assertFalse(self.records.is_valid(record(input_section)))
 
     def test_a_usage_map_belongs_to_hid_descriptor_only(self) -> None:
         self.assertFalse(
-            self.validator.is_valid(record(usage_map(BUTTON), "SonyDualShock4"))
+            self.records.is_valid(record(usage_map(BUTTON), "SonyDualShock4"))
         )
 
     def test_a_byte_layout_belongs_to_report_layout_only(self) -> None:
@@ -110,9 +119,9 @@ class HIDUsageMapRecordSchemaTests(unittest.TestCase):
             "buttons": [{"control": "South", "byte": 0, "mask": 1}],
         }
         self.assertTrue(self.validator.is_valid(record(layout, "HIDReportLayout")))
-        self.assertFalse(self.validator.is_valid(record(layout)))
+        self.assertFalse(self.records.is_valid(record(layout)))
         self.assertFalse(
-            self.validator.is_valid(record(usage_map(BUTTON), "HIDReportLayout"))
+            self.records.is_valid(record(usage_map(BUTTON), "HIDReportLayout"))
         )
 
     def validate_file(self, input_section: Any) -> None:
@@ -141,7 +150,7 @@ class HIDUsageMapRecordSchemaTests(unittest.TestCase):
     def test_hid_descriptor_declares_no_parameters(self) -> None:
         document = record(None)
         document["modes"][0]["protocol"]["parameters"] = {"usageLayout": "Wr007"}
-        self.assertFalse(self.validator.is_valid(document))
+        self.assertFalse(self.records.is_valid(document))
 
 
 class HIDUsageMapDescriptionSchemaTests(unittest.TestCase):
