@@ -122,10 +122,30 @@ struct JSONSyntaxTests {
     #expect(throws: JSONSyntaxError.self) { try JSONSyntax.tokens(in: text) }
   }
 
+  /// Text whose every token is well formed but sits where the JSON grammar does not allow it.
+  @Test(
+    arguments: [
+      "[1 2]", "{,}", "{\"a\" 1}", "[1,]", "{\"a\": 1,}", "{\"a\"}", "[,1]", "{1: 2}",
+      "\"a\": 1", "[] []", "{\"a\": 1 \"b\": 2}", "[1:2]", "{\"a\"::1}", "", "  ", "{\"a\": 1]",
+    ]
+  )
+  func tokensOutOfGrammarThrow(_ text: String) {
+    #expect(throws: JSONSyntaxError.self) { try JSONSyntax.tokens(in: text) }
+  }
+
   @Test
-  func theErrorSaysWhereItStopped() {
-    #expect(throws: JSONSyntaxError(offset: 4, reason: "unexpected character \"@\"")) {
-      try JSONSyntax.tokens(in: "[1, @]")
+  func theErrorSaysWhereItStoppedAndWhatJSONExpects() {
+    #expect(
+      throws: JSONSyntaxError(offset: 4, reason: "unexpected \"@\" where JSON expects a value")
+    ) { try JSONSyntax.tokens(in: "[1, @]") }
+    #expect(
+      throws: JSONSyntaxError(
+        offset: 1,
+        reason: "unexpected \",\" where JSON expects a member name or }"
+      )
+    ) { try JSONSyntax.tokens(in: "{,}") }
+    #expect(throws: JSONSyntaxError(offset: 0, reason: "the text holds no value")) {
+      try JSONSyntax.tokens(in: "")
     }
   }
 }

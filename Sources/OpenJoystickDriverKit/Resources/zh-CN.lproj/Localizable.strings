@@ -1579,8 +1579,10 @@
 "a11y.library.dismissError" = "关闭错误";
 "a11y.library.dismissNotice" = "关闭消息";
 "a11y.library.cancel" = "取消并保持资源库不变";
-/* VoiceOver label for the hexadecimal reading shown after the vendorID and productID lines of a record in the Library. %@ is the value, such as 0x353D. */
-"a11y.library.recordHexadecimal" = "十六进制 %@";
+/* VoiceOver label for the hexadecimal reading shown after the vendorID and productID lines of a record in the Library. %1$@ is the member name, vendorID or productID, which stays as written; %2$@ is the value in hexadecimal, such as 0x353D. */
+"a11y.library.recordHexadecimal" = "%1$@，十六进制 %2$@";
+/* Shown in the Record section of a record in the Library when the record text cannot be read for display. %@ is the controller identity, such as 045E:028E. */
+"ui.library.recordUnreadable" = "记录 %@ 的文本不是有效的 JSON，无法显示。";
 "access.details" = "详细信息";
 "access.dismiss" = "忽略";
 "access.tryAgain" = "重试";

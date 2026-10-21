@@ -1691,8 +1691,10 @@
 "a11y.library.dismissError" = "Cerrar el error";
 "a11y.library.dismissNotice" = "Cerrar el mensaje";
 "a11y.library.cancel" = "Cancelar y dejar la biblioteca como está";
-/* VoiceOver label for the hexadecimal reading shown after the vendorID and productID lines of a record in the Library. %@ is the value, such as 0x353D. */
-"a11y.library.recordHexadecimal" = "Valor hexadecimal %@";
+/* VoiceOver label for the hexadecimal reading shown after the vendorID and productID lines of a record in the Library. %1$@ is the member name, vendorID or productID, which stays as written; %2$@ is the value in hexadecimal, such as 0x353D. */
+"a11y.library.recordHexadecimal" = "%1$@, valor hexadecimal %2$@";
+/* Shown in the Record section of a record in the Library when the record text cannot be read for display. %@ is the controller identity, such as 045E:028E. */
+"ui.library.recordUnreadable" = "El texto del registro %@ no es JSON válido y no se puede mostrar.";
 "access.details" = "Detalles";
 "access.dismiss" = "Cerrar";
 "access.tryAgain" = "Volver a intentarlo";

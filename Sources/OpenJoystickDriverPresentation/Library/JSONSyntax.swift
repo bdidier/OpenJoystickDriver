@@ -36,12 +36,31 @@ struct JSONSyntaxError: Error, Equatable, CustomStringConvertible {
 
 /// Splits the JSON text the app produces into colorable runs.
 ///
-/// It reads the format of ``OrderedJSON/formatted()``: standard JSON, any spacing. A character
-/// JSON does not allow where it appears, or a container left open or closed twice, throws.
+/// It reads the format of ``OrderedJSON/formatted()``: one standard JSON value, any spacing. It
+/// follows the JSON grammar, so a token where JSON does not allow it (`[1 2]`, `{,}`, `{"a" 1}`,
+/// a trailing comma, a second top-level value) or a container left open or closed twice throws.
 enum JSONSyntax {
   static func tokens(in text: String) throws -> [JSONSyntaxToken] {
     var scanner = Scanner(scalars: Array(text.unicodeScalars))
     return try scanner.run()
+  }
+
+  /// What the grammar allows at the scanner's position.
+  private enum Expectation: Equatable {
+    /// A value: at the start, after `:`, or after `,` in an array.
+    case value
+    /// A value or `]`, after `[`.
+    case valueOrClose
+    /// A member name, after `,` in an object.
+    case key
+    /// A member name or `}`, after `{`.
+    case keyOrClose
+    /// `:`, after a member name.
+    case colon
+    /// `,` or the bracket that closes the container, after a value inside it.
+    case commaOrClose
+    /// Nothing but space, after the top-level value.
+    case end
   }
 
   private struct Scanner {
@@ -50,14 +69,15 @@ enum JSONSyntax {
     var tokens: [JSONSyntaxToken] = []
     /// `true` for an object, `false` for an array.
     var containers: [Bool] = []
-    var expectsKey = false
-    var topLevelValues = 0
+    var expectation = Expectation.value
 
     init(scalars: [Unicode.Scalar]) { self.scalars = scalars }
 
     func failure(_ reason: String, at offset: Int? = nil) -> JSONSyntaxError {
       JSONSyntaxError(offset: offset ?? position, reason: reason)
     }
+
+    var expectsValue: Bool { expectation == .value || expectation == .valueOrClose }
 
     mutating func run() throws -> [JSONSyntaxToken] {
       while position < scalars.count {
@@ -70,61 +90,79 @@ enum JSONSyntax {
           }
           emit(.space, from: start)
         case "{", "[":
-          try beginValue()
+          guard expectsValue else { throw unexpected(scalar) }
           emit(.punctuation, from: position, length: 1)
           containers.append(scalar == "{")
-          expectsKey = scalar == "{"
+          expectation = scalar == "{" ? .keyOrClose : .valueOrClose
           position += 1
         case "}", "]":
-          guard let isObject = containers.last, isObject == (scalar == "}") else {
-            throw failure("\(scalar) closes nothing that is open")
-          }
+          let isObject = scalar == "}"
+          guard containers.last == isObject,
+            expectation == .commaOrClose || expectation == (isObject ? .keyOrClose : .valueOrClose)
+          else { throw unexpected(scalar) }
           containers.removeLast()
-          expectsKey = false
           emit(.punctuation, from: position, length: 1)
           position += 1
+          endValue()
         case ",":
-          guard let isObject = containers.last else { throw failure("a comma outside a container") }
-          expectsKey = isObject
+          guard expectation == .commaOrClose, let isObject = containers.last else {
+            throw unexpected(scalar)
+          }
+          expectation = isObject ? .key : .value
           emit(.punctuation, from: position, length: 1)
           position += 1
         case ":":
-          guard containers.last == true else { throw failure("a colon outside an object") }
-          expectsKey = false
+          guard expectation == .colon else { throw unexpected(scalar) }
+          expectation = .value
           emit(.punctuation, from: position, length: 1)
           position += 1
         case "\"":
-          let isKey = expectsKey
-          if !isKey { try beginValue() }
+          let isKey = expectation == .key || expectation == .keyOrClose
+          guard isKey || expectsValue else { throw unexpected(scalar) }
           let start = position
           try string()
           emit(isKey ? .key : .string, from: start)
-          expectsKey = false
+          if isKey { expectation = .colon } else { endValue() }
         case "t", "f", "n":
-          try beginValue()
+          guard expectsValue else { throw unexpected(scalar) }
           let start = position
           try literal()
           emit(.literal, from: start)
+          endValue()
         case "-", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9":
-          try beginValue()
+          guard expectsValue else { throw unexpected(scalar) }
           let start = position
           try number()
           emit(.number, from: start)
+          endValue()
         default:
-          throw failure("unexpected character \(String(scalar).debugDescription)")
+          throw unexpected(scalar)
         }
       }
       guard containers.isEmpty else { throw failure("a container is not closed") }
+      guard expectation == .end else { throw failure("the text holds no value") }
       return tokens
     }
 
-    /// Counts a top-level value; a second one is a programming error.
-    mutating func beginValue() throws {
-      if containers.isEmpty {
-        topLevelValues += 1
-        guard topLevelValues == 1 else { throw failure("more than one top-level value") }
+    /// The failure for `scalar` where the grammar does not allow it.
+    func unexpected(_ scalar: Unicode.Scalar) -> JSONSyntaxError {
+      failure("unexpected \(String(scalar).debugDescription) where JSON expects \(expected)")
+    }
+
+    var expected: String {
+      switch expectation {
+      case .value: "a value"
+      case .valueOrClose: "a value or ]"
+      case .key: "a member name"
+      case .keyOrClose: "a member name or }"
+      case .colon: ":"
+      case .commaOrClose: containers.last == true ? ", or }" : ", or ]"
+      case .end: "the end of the text"
       }
     }
+
+    /// A value ended: the container that holds it takes a comma or its closing bracket next.
+    mutating func endValue() { expectation = containers.isEmpty ? .end : .commaOrClose }
 
     mutating func emit(_ kind: JSONSyntaxKind, from start: Int, length: Int? = nil) {
       let end = length.map { start + $0 } ?? position

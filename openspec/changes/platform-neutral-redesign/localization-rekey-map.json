@@ -1939,6 +1939,7 @@
     "term.protocolVariant.receiver": "term.protocolVariant.receiver",
     "term.protocolVariant.usb": "term.protocolVariant.usb",
     "term.protocolVariant.wired": "term.protocolVariant.wired",
+    "ui.library.recordUnreadable": "ui.library.recordUnreadable",
     "virtualProfile.advanced": "ui.virtualProfile.advanced",
     "virtualProfile.automaticSelected": "ui.virtualProfile.automaticSelected",
     "virtualProfile.failure.activationFailed": "ui.virtualProfile.failure.activationFailed",

@@ -1579,8 +1579,10 @@
 "a11y.library.dismissError" = "Закрыть ошибку";
 "a11y.library.dismissNotice" = "Закрыть сообщение";
 "a11y.library.cancel" = "Отменить и оставить библиотеку без изменений";
-/* VoiceOver label for the hexadecimal reading shown after the vendorID and productID lines of a record in the Library. %@ is the value, such as 0x353D. */
-"a11y.library.recordHexadecimal" = "Шестнадцатеричное значение %@";
+/* VoiceOver label for the hexadecimal reading shown after the vendorID and productID lines of a record in the Library. %1$@ is the member name, vendorID or productID, which stays as written; %2$@ is the value in hexadecimal, such as 0x353D. */
+"a11y.library.recordHexadecimal" = "%1$@, шестнадцатеричное значение %2$@";
+/* Shown in the Record section of a record in the Library when the record text cannot be read for display. %@ is the controller identity, such as 045E:028E. */
+"ui.library.recordUnreadable" = "Текст записи %@ не является допустимым JSON, поэтому его нельзя показать.";
 "access.details" = "Подробнее";
 "access.dismiss" = "Закрыть";
 "access.tryAgain" = "Повторить попытку";

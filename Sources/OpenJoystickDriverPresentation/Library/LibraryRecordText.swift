@@ -1,5 +1,23 @@
 import Foundation
 
+/// The Record section of a Library record, read once when the record is selected.
+enum LibraryRecordDocument: Equatable {
+  case text(LibraryRecordText)
+  /// The tokenizer cannot read the document the catalog produced, with the reason. The section
+  /// says the record text cannot be shown.
+  case unreadable(JSONSyntaxError)
+
+  init(document: String) {
+    do { self = .text(try LibraryRecordText(document: document)) } catch let error
+      as JSONSyntaxError
+    {
+      self = .unreadable(error)
+    } catch {
+      preconditionFailure("JSONSyntax throws only JSONSyntaxError: \(error)")
+    }
+  }
+}
+
 /// The record JSON of a Library record as the detail view shows it: the colored runs, and the
 /// hexadecimal readings that sit beside the `vendorID` and `productID` lines.
 ///
@@ -7,15 +25,23 @@ import Foundation
 /// copying the shown text gives valid JSON.
 struct LibraryRecordText: Equatable {
   /// The top-level members that carry an identifier.
-  static let identifierKeys: Set<String> = ["\"vendorID\"", "\"productID\""]
+  static let identifierKeys: Set<String> = ["vendorID", "productID"]
+
+  /// The hexadecimal reading of an identifier line.
+  struct Reading: Equatable {
+    /// The member name, such as `vendorID`.
+    let key: String
+    /// The value in hexadecimal, such as `0x353D`.
+    let hexadecimal: String
+  }
 
   /// The document, exactly as the catalog holds it.
   let copyText: String
   let tokens: [JSONSyntaxToken]
   /// The lines of the document without line breaks, the last empty line left out.
   let lines: [String]
-  /// The hexadecimal reading of the number on a line, such as `0x353D`, by line index.
-  let identifierReadings: [Int: String]
+  /// The hexadecimal reading of the identifier on a line, by line index.
+  let identifierReadings: [Int: Reading]
 
   /// Reads `document`, which the catalog produced. Throws when it is not JSON the tokenizer reads.
   init(document: String) throws {
@@ -25,24 +51,25 @@ struct LibraryRecordText: Equatable {
     if lines.last?.isEmpty == true { lines.removeLast() }
     self.lines = lines
 
-    var readings: [Int: String] = [:]
+    var readings: [Int: Reading] = [:]
     var line = 0
-    var pendingKey = false
+    var pendingKey: String?
     for token in tokens {
       switch token.kind {
       case .key:
-        pendingKey = token.depth == 1 && Self.identifierKeys.contains(token.text)
+        let name = String(token.text.dropFirst().dropLast())
+        pendingKey = token.depth == 1 && Self.identifierKeys.contains(name) ? name : nil
       case .number:
-        if pendingKey, let value = UInt16(token.text) {
-          readings[line] = ProfileIdentifierInput.formatted(value)
+        if let key = pendingKey, let value = UInt16(token.text) {
+          readings[line] = Reading(key: key, hexadecimal: ProfileIdentifierInput.formatted(value))
         }
-        pendingKey = false
+        pendingKey = nil
       case .space:
         line += token.text.filter { $0 == "\n" }.count
       case .punctuation where token.text == ":":
         break
       default:
-        pendingKey = false
+        pendingKey = nil
       }
     }
     identifierReadings = readings

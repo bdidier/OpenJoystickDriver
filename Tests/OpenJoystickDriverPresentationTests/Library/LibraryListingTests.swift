@@ -23,7 +23,7 @@ struct LibraryListingTests {
       notes: [],
       claimedByUSBExtension: nil,
       fields: [],
-      document: "{}"
+      record: LibraryRecordDocument(document: "{}")
     )
   }
 

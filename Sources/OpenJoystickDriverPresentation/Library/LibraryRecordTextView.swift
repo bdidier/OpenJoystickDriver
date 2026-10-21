@@ -5,18 +5,48 @@
   import SwiftUI
 
   extension JSONSyntaxKind {
-    /// System semantic colors: they follow light and dark appearance and the increased contrast
-    /// setting. Keys and strings, the two kinds that fill most lines, get the blue and green
-    /// that stay readable on both appearances; punctuation recedes.
-    var color: NSColor {
+    /// The appearances a record color has a shade for, in the order of ``shades``.
+    static let appearances: [NSAppearance.Name] = [
+      .aqua, .darkAqua, .accessibilityHighContrastAqua, .accessibilityHighContrastDarkAqua,
+    ]
+
+    /// One sRGB shade, `0xRRGGBB`, per appearance in ``appearances``; nil for space, which shows
+    /// nothing and keeps the label color. Every shade reaches at least 4.5:1 against
+    /// `textBackgroundColor` (at least 7:1 with increased contrast), which the system blue,
+    /// green and orange do not on white. Punctuation has the lowest contrast of the kinds, so it
+    /// recedes behind keys and values.
+    var shades: [UInt32]? {
       switch self {
-      case .key: return .systemBlue
-      case .string: return .systemGreen
-      case .number: return .systemOrange
-      case .literal: return .systemPurple
-      case .punctuation: return .secondaryLabelColor
-      case .space: return .labelColor
+      case .key: [0x0550AE, 0x79C0FF, 0x023B95, 0xB5DCFF]
+      case .string: [0x116329, 0x7EE787, 0x024C1A, 0xA8F0B0]
+      case .number: [0x953800, 0xFFA657, 0x702C00, 0xFFC68A]
+      case .literal: [0x6639BA, 0xD2A8FF, 0x512A97, 0xE6CCFF]
+      case .punctuation: [0x626A73, 0x9DA5AE, 0x474F58, 0xC2C8CF]
+      case .space: nil
       }
+    }
+
+    /// A color that follows light and dark appearance and the increased contrast setting, with
+    /// the shade of the best match among ``appearances``; an appearance that matches none of
+    /// them gets the light shade.
+    var color: NSColor {
+      guard let shades else { return .labelColor }
+      return NSColor(name: "OpenJoystickDriver.record.\(self)") { appearance in
+        let index =
+          appearance.bestMatch(from: Self.appearances).flatMap(Self.appearances.firstIndex(of:))
+          ?? 0
+        return Self.color(shades[index])
+      }
+    }
+
+    /// The sRGB color `0xRRGGBB`.
+    static func color(_ value: UInt32) -> NSColor {
+      NSColor(
+        srgbRed: CGFloat((value >> 16) & 0xFF) / 255,
+        green: CGFloat((value >> 8) & 0xFF) / 255,
+        blue: CGFloat(value & 0xFF) / 255,
+        alpha: 1
+      )
     }
   }
 
@@ -49,16 +79,8 @@
 
     private static let font = Font.system(.body, design: .monospaced)
 
-    /// The width of one character of the monospaced body font.
-    private static var advance: CGFloat {
-      NSFont.monospacedSystemFont(
-        ofSize: NSFont.preferredFont(forTextStyle: .body).pointSize,
-        weight: .regular
-      ).maximumAdvancement.width
-    }
-
-    /// Columns between the end of a line and its reading.
-    private static let gap = 3
+    /// The space between the end of a line and its reading.
+    private static let gap = "   "
 
     var body: some View {
       ScrollView(.horizontal) {
@@ -73,19 +95,26 @@
       }
     }
 
-    /// One row per line, each as tall as a line of the block; only identifier lines have text.
+    /// One row per line of the block. Each row lays out a hidden copy of its line in the same
+    /// font, so the row is as tall as the line and a reading starts where its line ends.
     private var readings: some View {
       VStack(alignment: .leading, spacing: 0) {
         ForEach(Array(text.lines.enumerated()), id: \.offset) { index, line in
-          if let reading = text.identifierReadings[index] {
-            Text(reading).font(Self.font).foregroundColor(.secondary)
-              .padding(.leading, CGFloat(line.count + Self.gap) * Self.advance)
-              .ojdAccessibilityLabel(
-                OJDLocalized.formatted("a11y.library.recordHexadecimal", reading)
-              )
-          } else {
-            Text(" ").font(Self.font).accessibilityHidden(true)
-          }
+          HStack(spacing: 0) {
+            Text(line.isEmpty ? " " : line + Self.gap).font(Self.font).hidden()
+              .accessibilityHidden(true)
+            if let reading = text.identifierReadings[index] {
+              Text(reading.hexadecimal).font(Self.font)
+                .foregroundColor(Color(JSONSyntaxKind.punctuation.color))
+                .ojdAccessibilityLabel(
+                  OJDLocalized.formatted(
+                    "a11y.library.recordHexadecimal",
+                    reading.key,
+                    reading.hexadecimal
+                  )
+                )
+            }
+          }.fixedSize()
         }
       }.allowsHitTesting(false)
     }

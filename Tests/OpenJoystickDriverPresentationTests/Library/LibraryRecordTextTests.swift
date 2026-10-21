@@ -1,8 +1,12 @@
+import AppKit
 import Foundation
 import Testing
 
 @testable import OpenJoystickDriverPresentation
 
+/// AppKit and SwiftUI colors are resolved and released on the main thread only, so the suite
+/// runs there.
+@MainActor
 struct LibraryRecordTextTests {
   private static let document = """
     {
@@ -31,7 +35,12 @@ struct LibraryRecordTextTests {
   func onlyTheTopLevelVendorAndProductLinesGetAReading() throws {
     let text = try text()
 
-    #expect(text.identifierReadings == [3: "0x353D", 4: "0x10C8"])
+    #expect(
+      text.identifierReadings == [
+        3: .init(key: "vendorID", hexadecimal: "0x353D"),
+        4: .init(key: "productID", hexadecimal: "0x10C8"),
+      ]
+    )
     #expect(text.lines[3] == "  \"vendorID\": 13629,")
     #expect(text.lines[4] == "  \"productID\": 4296,")
   }
@@ -48,7 +57,7 @@ struct LibraryRecordTextTests {
   func readingsUseUppercaseHexWithFourDigits() throws {
     let text = try LibraryRecordText(document: "{\n  \"vendorID\": 1,\n  \"productID\": 65535\n}\n")
 
-    #expect(text.identifierReadings == [1: "0x0001", 2: "0xFFFF"])
+    #expect(text.identifierReadings.mapValues(\.hexadecimal) == [1: "0x0001", 2: "0xFFFF"])
   }
 
   @Test
@@ -93,10 +102,104 @@ struct LibraryRecordTextTests {
     #expect(!shown.contains("0x"))
   }
 
+  /// The WCAG contrast ratio of `color` against `textBackgroundColor` in `appearance`. AppKit
+  /// gives the light or dark appearance for a high-contrast name, so the background is the one
+  /// of the light or dark appearance.
+  private static func contrast(_ color: NSColor, in appearance: NSAppearance.Name) throws -> Double
+  {
+    let shown = try #require(NSAppearance(named: appearance))
+    var ratio = 0.0
+    var failure: String?
+    shown.performAsCurrentDrawingAppearance {
+      guard let fore = color.usingColorSpace(.sRGB),
+        let back = NSColor.textBackgroundColor.usingColorSpace(.sRGB)
+      else {
+        failure = "\(color) has no sRGB form in \(appearance.rawValue)"
+        return
+      }
+      func luminance(_ color: NSColor) -> Double {
+        func linear(_ channel: CGFloat) -> Double {
+          let value = Double(channel)
+          return value <= 0.04045 ? value / 12.92 : pow((value + 0.055) / 1.055, 2.4)
+        }
+        return 0.2126 * linear(color.redComponent) + 0.7152 * linear(color.greenComponent)
+          + 0.0722 * linear(color.blueComponent)
+      }
+      let (high, low) = (
+        max(luminance(fore), luminance(back)), min(luminance(fore), luminance(back))
+      )
+      ratio = (high + 0.05) / (low + 0.05)
+    }
+    if let failure { Issue.record(Comment(rawValue: failure)) }
+    return ratio
+  }
+
+  private static let coloredKinds: [JSONSyntaxKind] = [
+    .key, .string, .number, .literal, .punctuation,
+  ]
+
+  /// The contrast of each shade of `kind`, by appearance index.
+  private static func contrasts(_ kind: JSONSyntaxKind) throws -> [Double] {
+    let shades = try #require(kind.shades)
+    #expect(shades.count == JSONSyntaxKind.appearances.count)
+    return try zip(shades, JSONSyntaxKind.appearances).map { shade, appearance in
+      try contrast(JSONSyntaxKind.color(shade), in: appearance)
+    }
+  }
+
   @Test
-  func everyKindHasAColorAndPunctuationRecedes() {
-    let kinds: [JSONSyntaxKind] = [.key, .string, .number, .literal, .punctuation, .space]
-    #expect(Set(kinds.map { $0.color }).count == kinds.count)
+  func everyShadeReadsAtLeast4_5To1AndSevenWithIncreasedContrast() throws {
+    for kind in Self.coloredKinds {
+      let ratios = try Self.contrasts(kind)
+      for (ratio, appearance) in zip(ratios, JSONSyntaxKind.appearances) {
+        let increased =
+          appearance == .accessibilityHighContrastAqua
+          || appearance == .accessibilityHighContrastDarkAqua
+        #expect(ratio >= (increased ? 7 : 4.5), "\(kind) in \(appearance.rawValue): \(ratio)")
+      }
+    }
+  }
+
+  @Test(arguments: [NSAppearance.Name.aqua, .darkAqua])
+  func theColorTakesTheShadeOfTheAppearance(_ appearance: NSAppearance.Name) throws {
+    let index = try #require(JSONSyntaxKind.appearances.firstIndex(of: appearance))
+    for kind in Self.coloredKinds {
+      let shade = try #require(kind.shades)[index]
+      #expect(
+        try Self.contrast(kind.color, in: appearance)
+          == Self.contrast(JSONSyntaxKind.color(shade), in: appearance)
+      )
+    }
+    #expect(JSONSyntaxKind.space.color == .labelColor)
+  }
+
+  @Test
+  func everyKindHasAColorAndPunctuationRecedes() throws {
+    for index in JSONSyntaxKind.appearances.indices {
+      let shades = Self.coloredKinds.compactMap { $0.shades?[index] }
+      #expect(Set(shades).count == Self.coloredKinds.count)
+    }
+    let punctuation = try Self.contrasts(.punctuation)
+    for kind in Self.coloredKinds where kind != .punctuation {
+      for (ratio, receding) in zip(try Self.contrasts(kind), punctuation) {
+        #expect(ratio > receding, "\(kind)")
+      }
+    }
+  }
+
+  @Test
+  func theStoreSaysWhenTheTokenizerCannotReadTheDocument() {
+    #expect(
+      LibraryRecordDocument(document: "[1 2]")
+        == .unreadable(
+          JSONSyntaxError(offset: 3, reason: "unexpected \"2\" where JSON expects , or ]")
+        )
+    )
+    guard case .text(let text) = LibraryRecordDocument(document: Self.document) else {
+      Issue.record("the document is not read")
+      return
+    }
+    #expect(text.copyText == Self.document)
   }
 
   @Test

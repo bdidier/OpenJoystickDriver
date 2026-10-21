@@ -1579,8 +1579,10 @@
 "a11y.library.dismissError" = "오류 닫기";
 "a11y.library.dismissNotice" = "메시지 닫기";
 "a11y.library.cancel" = "취소하고 라이브러리를 그대로 유지";
-/* VoiceOver label for the hexadecimal reading shown after the vendorID and productID lines of a record in the Library. %@ is the value, such as 0x353D. */
-"a11y.library.recordHexadecimal" = "16진수 %@";
+/* VoiceOver label for the hexadecimal reading shown after the vendorID and productID lines of a record in the Library. %1$@ is the member name, vendorID or productID, which stays as written; %2$@ is the value in hexadecimal, such as 0x353D. */
+"a11y.library.recordHexadecimal" = "%1$@, 16진수 %2$@";
+/* Shown in the Record section of a record in the Library when the record text cannot be read for display. %@ is the controller identity, such as 045E:028E. */
+"ui.library.recordUnreadable" = "%@ 레코드의 텍스트가 올바른 JSON이 아니므로 표시할 수 없습니다.";
 "access.details" = "세부사항";
 "access.dismiss" = "닫기";
 "access.tryAgain" = "다시 시도";

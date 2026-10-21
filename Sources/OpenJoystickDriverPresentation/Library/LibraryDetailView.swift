@@ -120,26 +120,13 @@
 
     @ViewBuilder
     private func recordDocument(_ detail: LibraryRecordDetail) -> some View {
-      if let document = detail.document {
-        let result = Result { try LibraryRecordText(document: document) }
-        switch result {
-        case .success(let text):
-          LibraryRecordTextView(text: text)
-        case .failure(let error):
-          unreadableRecord(detail, error)
-        }
-      } else {
-        OJDValueText(nil)
+      switch detail.record {
+      case .text(let text):
+        LibraryRecordTextView(text: text)
+      case .unreadable:
+        Text(OJDLocalized.formatted("ui.library.recordUnreadable", detail.item.identity))
+          .foregroundColor(Color(SemanticTone.failure.color))
       }
-    }
-
-    /// The catalog writes the document, so a text the tokenizer cannot read is a bug: debug builds
-    /// stop, and every build says so in the section.
-    private func unreadableRecord(_ detail: LibraryRecordDetail, _ error: any Error) -> some View {
-      assertionFailure("\(error)")
-      return Text(
-        OJDLocalized.formatted("library.unreadable", detail.item.identity, "\(error)")
-      ).foregroundColor(Color(SemanticTone.failure.color))
     }
 
     private func testSection(_ run: LibraryTestRun) -> some View {

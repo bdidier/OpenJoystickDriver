@@ -77,6 +77,7 @@ AREA_PREFIXES: dict[str, tuple[str, ...]] = {
     "app": ("term", "app"),
     "notifications": ("notify",),
     "a11y": ("a11y",),
+    "ui": ("ui",),
     "status": ("status",),
     "menuBar": ("ui", "extra"),
     "menu": ("ui", "menu"),
