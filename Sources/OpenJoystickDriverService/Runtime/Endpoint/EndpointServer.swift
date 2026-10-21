@@ -41,13 +41,11 @@ final class EndpointServer: @unchecked Sendable {
   /// nanoseconds just after the send.
   let streamDelivered: (@Sendable (ControllerSessionToken, UInt64) async -> Void)?
   let lock = NSLock()
-  private var listeningDescriptor: Int32 = -1
+  private var listener: AcceptListener?
   /// Changes each time the socket starts or stops listening; ends the earlier listener's loop.
   private var socketGeneration = 0
   private var runningSocketAcceptLoops = 0
-  var webDescriptor: Int32 = -1
-  /// The port `webDescriptor` listens on.
-  var webPort = 0
+  var webListener: AcceptListener?
   /// Changes each time the WebSocket starts or stops listening; ends the earlier listener's loop.
   var webGeneration = 0
   var pendingWebRequests = 0
@@ -56,8 +54,15 @@ final class EndpointServer: @unchecked Sendable {
   /// The number of accepted connections that have not finished, including those in the handshake.
   var connectionCount: Int { lock.withLock { connections.count } }
   /// The number of socket accept loops that have not returned, including stale ones that a
-  /// closed listener is still waking.
+  /// stopped listener is still waking.
   var socketAcceptLoopCount: Int { lock.withLock { runningSocketAcceptLoops } }
+  var runningWebAcceptLoops = 0
+  /// The number of WebSocket accept loops that have not returned, including stale ones that a
+  /// stopped listener is still waking.
+  var webAcceptLoopCount: Int { lock.withLock { runningWebAcceptLoops } }
+  /// Called by each accept loop after its generation check and before it waits for a connection;
+  /// tests hold a loop there to let the listener change under it.
+  let beforeAcceptWait: (@Sendable (AccessTransport, Int) -> Void)?
   var refusals = AccessRefusalLog()
   var stream = EndpointStream()
 
@@ -68,8 +73,10 @@ final class EndpointServer: @unchecked Sendable {
     version: String = ApplicationVersion.current,
     feeds: VirtualFeedRegistry? = nil,
     identify: @escaping Identify = EndpointClient.identify,
-    streamDelivered: (@Sendable (ControllerSessionToken, UInt64) async -> Void)? = nil
+    streamDelivered: (@Sendable (ControllerSessionToken, UInt64) async -> Void)? = nil,
+    beforeAcceptWait: (@Sendable (AccessTransport, Int) -> Void)? = nil
   ) {
+    self.beforeAcceptWait = beforeAcceptWait
     self.socketPath = socketPath
     self.store = store
     self.source = source
@@ -122,8 +129,8 @@ final class EndpointServer: @unchecked Sendable {
         refused: refusals.clients(at: Date()),
         web: AccessWebStatus(
           enabled: file.web.enabled,
-          listening: webDescriptor >= 0,
-          port: webDescriptor >= 0 ? webPort : file.web.port,
+          listening: webListener != nil,
+          port: webListener?.port ?? file.web.port,
           pagesPath: store.pagesDirectory.path
         ),
         tokens: file.tokens.map(\.summary),
@@ -139,7 +146,7 @@ final class EndpointServer: @unchecked Sendable {
       var file = try store.load()
       file.enabled = enabled
       if enabled {
-        let wasListening = listeningDescriptor >= 0
+        let wasListening = listener != nil
         if !wasListening { try listen() }
         do { try store.save(file) } catch {
           if !wasListening { stopListening() }
@@ -233,7 +240,7 @@ final class EndpointServer: @unchecked Sendable {
 
   /// Call with `lock` held.
   private func listen() throws {
-    guard listeningDescriptor < 0 else { return }
+    guard listener == nil else { return }
     try removeStaleSocket()
     let descriptor = socket(AF_UNIX, SOCK_STREAM, 0)
     guard descriptor >= 0 else { throw LocalServiceRPCError.connectionFailed(errno) }
@@ -257,7 +264,12 @@ final class EndpointServer: @unchecked Sendable {
       unlink(socketPath)
       throw error
     }
-    listeningDescriptor = descriptor
+    let socketListener: AcceptListener
+    do { socketListener = try AcceptListener(listening: descriptor) } catch {
+      unlink(socketPath)
+      throw error
+    }
+    listener = socketListener
     socketGeneration += 1
     let generation = socketGeneration
     runningSocketAcceptLoops += 1
@@ -268,16 +280,21 @@ final class EndpointServer: @unchecked Sendable {
     // A stale web listener's loop, which may stay blocked, holds only its own thread and never
     // holds up a later one.
     BlockingWork.detachThread(name: "com.openjoystickdriver.endpoint.accept") { [weak self] in
-      self?.acceptConnections(descriptor, generation: generation)
+      guard let self else {
+        socketListener.finish()
+        return
+      }
+      self.acceptConnections(socketListener, generation: generation)
     }
   }
 
   /// Call with `lock` held.
   private func stopListening() {
-    guard listeningDescriptor >= 0 else { return }
-    // Only close wakes a blocked accept; shutdown fails on a listening socket.
-    Darwin.close(listeningDescriptor)
-    listeningDescriptor = -1
+    guard let stopped = listener else { return }
+    // `wake` frees the address at once; the loop closes the descriptor when it wakes, so the
+    // number stays taken until then.
+    stopped.wake()
+    listener = nil
     socketGeneration += 1
     unlink(socketPath)
   }
@@ -292,20 +309,29 @@ final class EndpointServer: @unchecked Sendable {
     guard unlink(socketPath) == 0 else { throw LocalServiceRPCError.connectionFailed(errno) }
   }
 
-  /// Ends when the listener is closed or replaced; a later listener can reuse the descriptor's
-  /// number, so the generation, not the number, tells them apart.
-  private func acceptConnections(_ descriptor: Int32, generation: Int) {
-    defer { lock.withLock { runningSocketAcceptLoops -= 1 } }
+  /// Owns the listener: waits on it and on its wake pipe, and closes it when it ends. The
+  /// descriptor stays open until then, so its number cannot belong to a later listener. A
+  /// connection accepted after the listener was replaced is dropped.
+  private func acceptConnections(_ listener: AcceptListener, generation: Int) {
+    defer {
+      listener.finish()
+      lock.withLock { runningSocketAcceptLoops -= 1 }
+    }
     while lock.withLock({ socketGeneration == generation }) {
-      let accepted = Darwin.accept(descriptor, nil, nil)
-      guard accepted >= 0 else {
-        // Closing the listener fails a blocked accept with ECONNABORTED; the generation check
-        // then ends the loop. Running out of descriptors or memory is retried after a pause.
+      beforeAcceptWait?(.socket, generation)
+      switch listener.wait() {
+      case .woken: return
+      case .failed(let code):
+        print("[EndpointServer] Socket accept loop ends: poll failed with errno \(code)")
+        return
+      case .ready: break
+      }
+      guard let accepted = listener.accept() else {
+        // EAGAIN: the pending connection was dropped between poll and accept; wait again.
+        // Running out of descriptors or memory is retried after a pause.
         guard Self.pause(after: Self.acceptFailure(errno)) else { return }
         continue
       }
-      // The listener closed after the check, and its number may belong to a later listener; the
-      // connection is dropped and the loop ends, so it never serves the later one.
       guard lock.withLock({ socketGeneration == generation }) else {
         Darwin.close(accepted)
         return
@@ -325,7 +351,7 @@ final class EndpointServer: @unchecked Sendable {
   // MARK: - Accept failures
 
   enum AcceptFailure: Equatable {
-    /// An interrupted or aborted accept; accept again at once.
+    /// An interrupted or aborted accept, or none waiting; wait again at once.
     case retry
     /// The process or system is out of descriptors or memory; accept again after a pause.
     case backOff
@@ -337,7 +363,7 @@ final class EndpointServer: @unchecked Sendable {
 
   static func acceptFailure(_ code: Int32) -> AcceptFailure {
     switch code {
-    case EINTR, ECONNABORTED: .retry
+    case EINTR, ECONNABORTED, EAGAIN: .retry
     case EMFILE, ENFILE, ENOBUFS, ENOMEM: .backOff
     default: .stop
     }

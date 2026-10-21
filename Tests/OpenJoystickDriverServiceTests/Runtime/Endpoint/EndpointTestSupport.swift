@@ -27,6 +27,7 @@ func withEndpointServer(
   identity: CodeSigningIdentity? = EndpointFixture.tool,
   feeds: VirtualFeedRegistry? = nil,
   streamDelivered: (@Sendable (ControllerSessionToken, UInt64) async -> Void)? = nil,
+  beforeAcceptWait: (@Sendable (AccessTransport, Int) -> Void)? = nil,
   _ body: (EndpointServer, EndpointFixture) async throws -> Void
 ) async throws {
   let directory = FileManager.default.temporaryDirectory.appendingPathComponent(
@@ -47,7 +48,8 @@ func withEndpointServer(
     version: "1.2.3",
     feeds: feeds,
     identify: { _ in client },
-    streamDelivered: streamDelivered
+    streamDelivered: streamDelivered,
+    beforeAcceptWait: beforeAcceptWait
   )
   defer {
     server.stop()
@@ -418,4 +420,33 @@ final class EndpointWebTestClient: @unchecked Sendable {
     buffer.append(contentsOf: chunk)
     return true
   }
+}
+
+/// Holds the first accept loop of one transport between its generation check and its wait for a
+/// connection, so a test can change the listener under it.
+final class AcceptLoopGate: @unchecked Sendable {
+  private let transport: AccessTransport
+  private let lock = NSLock()
+  private let released = DispatchSemaphore(value: 0)
+  private var held = false
+  private var holding = false
+
+  init(holding transport: AccessTransport) { self.transport = transport }
+
+  var isHolding: Bool { lock.withLock { holding } }
+
+  /// The server's `beforeAcceptWait`.
+  func hook(_ kind: AccessTransport, _ generation: Int) {
+    let shouldHold = lock.withLock { () -> Bool in
+      guard kind == transport, !held else { return false }
+      held = true
+      holding = true
+      return true
+    }
+    guard shouldHold else { return }
+    released.wait()
+    lock.withLock { holding = false }
+  }
+
+  func release() { released.signal() }
 }

@@ -26,11 +26,11 @@ extension EndpointServer {
       guard requested == 0 || AccessWebSettings.ports.contains(requested) else {
         throw AccessGrantStoreError.portUnavailable(requested)
       }
-      let keepsListener = webDescriptor >= 0 && (requested == 0 || requested == webPort)
+      let keepsListener = webListener.map { requested == 0 || requested == $0.port } ?? false
       let listener = keepsListener ? nil : try openWebListener(port: requested)
-      file.web = AccessWebSettings(enabled: true, port: listener?.port ?? webPort)
+      file.web = AccessWebSettings(enabled: true, port: listener?.port ?? webListener?.port ?? 0)
       do { try store.save(file) } catch {
-        if let listener { Darwin.close(listener.descriptor) }
+        listener?.discard()
         throw error
       }
       if let listener {
@@ -41,7 +41,7 @@ extension EndpointServer {
   }
 
   /// A listening TCP socket on `127.0.0.1`, and the port it got.
-  func openWebListener(port: Int) throws -> (descriptor: Int32, port: Int) {
+  func openWebListener(port: Int) throws -> AcceptListener {
     let descriptor = socket(AF_INET, SOCK_STREAM, 0)
     guard descriptor >= 0 else { throw LocalServiceRPCError.connectionFailed(errno) }
     var reuse: Int32 = 1
@@ -65,45 +65,63 @@ extension EndpointServer {
       }
       throw LocalServiceRPCError.connectionFailed(error)
     }
-    return (descriptor, Int(UInt16(bigEndian: address.sin_port)))
+    return try AcceptListener(
+      listening: descriptor,
+      port: Int(UInt16(bigEndian: address.sin_port))
+    )
   }
 
   /// Call with `lock` held.
-  func startWebListening(_ listener: (descriptor: Int32, port: Int)) {
-    webDescriptor = listener.descriptor
-    webPort = listener.port
+  func startWebListening(_ listener: AcceptListener) {
+    webListener = listener
     webGeneration += 1
     let generation = webGeneration
+    runningWebAcceptLoops += 1
     BlockingWork.detachThread(name: "com.openjoystickdriver.endpoint.web-accept") {
       [weak self] in
-      self?.acceptWebConnections(listener, generation: generation)
+      guard let self else {
+        listener.finish()
+        return
+      }
+      self.acceptWebConnections(listener, generation: generation)
     }
   }
 
   /// Call with `lock` held; open web connections stay open.
   func stopWebListening() {
-    guard webDescriptor >= 0 else { return }
-    // Only close wakes a blocked accept; shutdown fails on a listening socket.
-    Darwin.close(webDescriptor)
-    webDescriptor = -1
+    guard let stopped = webListener else { return }
+    // `wake` frees the address at once; the loop closes the descriptor when it wakes, so the
+    // number stays taken until then.
+    stopped.wake()
+    webListener = nil
     webGeneration += 1
   }
 
   // MARK: - Private
 
-  /// Ends when the listener is closed or replaced; a later listener can reuse the descriptor's
-  /// number, so the generation, not the number, tells them apart.
-  private func acceptWebConnections(_ listener: (descriptor: Int32, port: Int), generation: Int) {
+  /// Owns the listener: waits on it and on its wake pipe, and closes it when it ends. The
+  /// descriptor stays open until then, so its number cannot belong to a later listener. A
+  /// connection accepted after the listener was replaced is dropped.
+  private func acceptWebConnections(_ listener: AcceptListener, generation: Int) {
+    defer {
+      listener.finish()
+      lock.withLock { runningWebAcceptLoops -= 1 }
+    }
     while lock.withLock({ webGeneration == generation }) {
-      let accepted = Darwin.accept(listener.descriptor, nil, nil)
-      guard accepted >= 0 else {
-        // Closing the listener fails a blocked accept with ECONNABORTED; the generation check
-        // then ends the loop. Running out of descriptors or memory is retried after a pause.
+      beforeAcceptWait?(.web, generation)
+      switch listener.wait() {
+      case .woken: return
+      case .failed(let code):
+        print("[EndpointServer] WebSocket accept loop ends: poll failed with errno \(code)")
+        return
+      case .ready: break
+      }
+      guard let accepted = listener.accept() else {
+        // EAGAIN: the pending connection was dropped between poll and accept; wait again.
+        // Running out of descriptors or memory is retried after a pause.
         guard Self.pause(after: Self.acceptFailure(errno)) else { return }
         continue
       }
-      // The listener closed after the check, and its number may belong to a later listener; the
-      // connection is dropped and the loop ends, so it never serves the later one.
       guard lock.withLock({ webGeneration == generation }) else {
         Darwin.close(accepted)
         return

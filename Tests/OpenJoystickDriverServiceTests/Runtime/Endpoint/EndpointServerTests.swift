@@ -67,6 +67,28 @@ struct EndpointServerTests {
     }
   }
 
+  /// A loop held between its generation check and its wait must not take over the listener that
+  /// replaced its own: its descriptor stays open until it ends, so the number is not reused.
+  @Test
+  func aLoopHeldBeforeItsWaitDoesNotTakeTheNextListenersFirstClient() async throws {
+    let gate = AcceptLoopGate(holding: .socket)
+    try await withEndpointServer(beforeAcceptWait: gate.hook) { server, _ in
+      try server.grant(Self.tool, path: "/Tool", scopes: [.read])
+      try server.setEnabled(true)
+      await waitUntil("the first loop is held") { gate.isHolding }
+      try server.setEnabled(false)
+      try server.setEnabled(true)
+      gate.release()
+
+      // Before any client connects: a loop blocked in `accept` on the next listener's
+      // descriptor would stay until a client came.
+      await waitUntil("the first loop ends") { server.socketAcceptLoopCount == 1 }
+      let client = try await EndpointTestClient(path: server.socketPath)
+      await client.send(clientLine("Hello", #","scopes":["Read"]"#))
+      #expect(try await client.readObject()["kind"] as? String == "Welcome")
+    }
+  }
+
   @Test(arguments: [#"["read"]"#, #"["control"]"#])
   func aScopeInTheEarlierSpellingIsRefused(scopes: String) async throws {
     try await withEndpointServer { server, _ in

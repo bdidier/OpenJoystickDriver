@@ -487,10 +487,31 @@ struct EndpointWebSocketTests {
       for _ in 0..<20 {
         try server.setWebEnabled(false, port: nil)
         let free = try server.openWebListener(port: 0)
-        close(free.descriptor)
+        free.discard()
         try server.setWebEnabled(true, port: free.port)
         for _ in 0..<5 { #expect(await page("/", port: free.port)?.status == 200) }
       }
+    }
+  }
+
+  /// A loop held between its generation check and its wait must not take over the listener that
+  /// replaced its own: its descriptor stays open until it ends, so the number is not reused.
+  @Test
+  func aWebLoopHeldBeforeItsWaitDoesNotTakeTheNextListenersFirstClient() async throws {
+    let gate = AcceptLoopGate(holding: .web)
+    try await withEndpointServer(beforeAcceptWait: gate.hook) { server, fixture in
+      try write("<p>pad</p>", to: "index.html", in: fixture)
+      try server.setWebEnabled(true, port: nil)
+      await waitUntil("the first loop is held") { gate.isHolding }
+      let port = try #require(server.status().web.port)
+      try server.setWebEnabled(false, port: nil)
+      try server.setWebEnabled(true, port: port)
+      gate.release()
+
+      // Before any client connects: a loop blocked in `accept` on the next listener's
+      // descriptor would stay until a client came.
+      await waitUntil("the first loop ends") { server.webAcceptLoopCount == 1 }
+      #expect(await page("/", port: port)?.status == 200)
     }
   }
 
@@ -499,7 +520,7 @@ struct EndpointWebSocketTests {
     #expect(EndpointServer.acceptFailure(code) == .backOff)
   }
 
-  @Test(arguments: [EINTR, ECONNABORTED])
+  @Test(arguments: [EINTR, ECONNABORTED, EAGAIN])
   func anInterruptedAcceptIsRetriedAtOnce(code: Int32) {
     #expect(EndpointServer.acceptFailure(code) == .retry)
   }
