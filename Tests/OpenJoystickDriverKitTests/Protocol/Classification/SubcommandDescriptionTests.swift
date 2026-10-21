@@ -24,6 +24,7 @@ struct SubcommandDescriptionTests {
     let json = """
       {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "ProtocolDescription",
        "family": "\(family.rawValue)", \(ProtocolDescriptionFixture.variantMembers(of: family))
+       \(ProtocolDescriptionFixture.sessionKeyMembers(of: family))
        "endpoints": {"in": 130, "out": 2}, \(body)}
       """
     return try ProtocolDescription.decode(

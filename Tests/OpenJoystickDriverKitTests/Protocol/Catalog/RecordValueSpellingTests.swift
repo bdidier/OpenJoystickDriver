@@ -263,7 +263,7 @@ struct RecordValueSpellingTests {
     ),
     DescriptionCase(
       name: "startup phase",
-      family: .sonyDualSense,
+      family: .sonyDualShock4,
       body: #""defaults": {"session": {"startup": [{"report": {"kind": "Output", "id": 1, "#
         + #""length": 4}, "bytes": "01 02 03", "phase": "VALUE"}]}}"#,
       current: "Startup",
