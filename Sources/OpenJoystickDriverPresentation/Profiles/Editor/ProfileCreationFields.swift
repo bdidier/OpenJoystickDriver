@@ -5,12 +5,13 @@ import OpenJoystickDriverKit
 /// not connected. `ojd profile create --controller` accepts both.
 struct ProfileControllerChoice: Equatable, Identifiable {
   /// Where the picker lists the choice.
-  enum Group: Equatable {
+  enum Group: Hashable {
     case connected
     case profiles
-    /// A catalog model, under the display name of its protocol family. Each family is its own
-    /// section, so a Steam Deck model is not listed under the Steam Controller.
-    case family(String)
+    /// A catalog model, under its protocol family. Each family is its own section, titled with
+    /// the family's display name, so a Steam Deck model is not listed under the Steam Controller
+    /// and two families whose names read alike in a language stay apart.
+    case family(PhysicalProtocolID)
   }
 
   let id: String
@@ -18,9 +19,12 @@ struct ProfileControllerChoice: Equatable, Identifiable {
   let name: String?
   let vendorID: UInt16
   let productID: UInt16
-  /// The display name of the model's protocol family, when the catalog has the model.
-  let familyName: String?
+  /// The model's protocol family, when the catalog has the model.
+  let family: PhysicalProtocolID?
   let group: Group
+
+  /// The display name of the model's protocol family, when the catalog has the model.
+  var familyName: String? { family?.displayName }
 
   var model: ControllerModelID { ControllerModelID(vendorID: vendorID, productID: productID) }
 
@@ -34,12 +38,13 @@ struct ProfileControllerChoice: Equatable, Identifiable {
   }
 
   /// The connected controllers, then the models that none of them has: first those of `profiles`,
-  /// then those of `catalog`, which maps each catalog model to its family's display name. Models
-  /// are ordered by vendor and product; catalog models by family name first.
+  /// then those of `catalog`, which maps each catalog model to its protocol family. Models are
+  /// ordered by vendor and product; catalog models by family display name first, then by family,
+  /// so each family's models stay together when two family names read alike.
   static func choices(
     devices: [ApplicationServiceDeviceDescription],
     profiles: [RemappingProfile],
-    catalog: [ControllerModelID: String]
+    catalog: [ControllerModelID: PhysicalProtocolID]
   ) -> [Self] {
     let connected = devices.map {
       Self(
@@ -47,35 +52,38 @@ struct ProfileControllerChoice: Equatable, Identifiable {
         name: $0.name,
         vendorID: $0.vendorID,
         productID: $0.productID,
-        familyName: catalog[ControllerModelID(vendorID: $0.vendorID, productID: $0.productID)],
+        family: catalog[ControllerModelID(vendorID: $0.vendorID, productID: $0.productID)],
         group: .connected
       )
     }
     var seen = Set(connected.map(\.model))
-    func models(_ ids: [ControllerModelID], group: (String?) -> Group) -> [Self] {
-      ids.sorted().compactMap { model in
+    func models(_ entries: [(model: ControllerModelID, group: Group)]) -> [Self] {
+      entries.sorted { $0.model < $1.model }.compactMap { model, group in
         guard seen.insert(model).inserted else { return nil }
         return Self(
           id: String(format: "model-%04X-%04X", model.vendorID, model.productID),
           name: nil,
           vendorID: model.vendorID,
           productID: model.productID,
-          familyName: catalog[model],
-          group: group(catalog[model])
+          family: catalog[model],
+          group: group
         )
       }
     }
     let known = models(
       profiles.map {
-        ControllerModelID(vendorID: $0.device.vendorID, productID: $0.device.productID)
+        (ControllerModelID(vendorID: $0.device.vendorID, productID: $0.device.productID), .profiles)
       }
-    ) { _ in .profiles }
-    let families = models(Array(catalog.keys)) { .family($0 ?? "") }
-    let ordered = families.sorted { left, right in
+    )
+    let catalogModels = models(catalog.map { ($0.key, .family($0.value)) })
+    let ordered = catalogModels.sorted { left, right in
       let leftFamily = left.familyName ?? ""
       let rightFamily = right.familyName ?? ""
       if leftFamily != rightFamily {
         return leftFamily.localizedStandardCompare(rightFamily) == .orderedAscending
+      }
+      if left.family != right.family {
+        return (left.family?.rawValue ?? "") < (right.family?.rawValue ?? "")
       }
       return (left.vendorID, left.productID) < (right.vendorID, right.productID)
     }
@@ -85,9 +93,10 @@ struct ProfileControllerChoice: Equatable, Identifiable {
 
 /// A titled run of choices in the picker.
 struct ProfileControllerGroup: Equatable, Identifiable {
+  let group: ProfileControllerChoice.Group
   let title: String
   let choices: [ProfileControllerChoice]
-  var id: String { title }
+  var id: ProfileControllerChoice.Group { group }
 
   /// The sections of `choices`, in their order: connected controllers, controllers of existing
   /// profiles, then one section per protocol family.
@@ -98,12 +107,16 @@ struct ProfileControllerGroup: Equatable, Identifiable {
       switch choice.group {
       case .connected: title = OJDLocalized.string("settings.controllerConnectedShort")
       case .profiles: title = OJDLocalized.string("profiles.controllersOfProfiles")
-      case .family(let label): title = label
+      case .family(let family): title = family.displayName
       }
-      if let last = sections.last, last.title == title {
-        sections[sections.count - 1] = Self(title: title, choices: last.choices + [choice])
+      if let last = sections.last, last.group == choice.group {
+        sections[sections.count - 1] = Self(
+          group: last.group,
+          title: last.title,
+          choices: last.choices + [choice]
+        )
       } else {
-        sections.append(Self(title: title, choices: [choice]))
+        sections.append(Self(group: choice.group, title: title, choices: [choice]))
       }
     }
     return sections

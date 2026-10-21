@@ -90,10 +90,10 @@
       }
     }
 
-    /// The family label of every catalog model, read when the New Profile sheet opens. The sheet
+    /// The protocol family of every catalog model, read when the New Profile sheet opens. The sheet
     /// offers these models beyond the connected controllers and those of existing profiles.
     @Published
-    private(set) var catalogModels: [ControllerModelID: String] = [:]
+    private(set) var catalogModels: [ControllerModelID: PhysicalProtocolID] = [:]
     /// Whether the catalog read of the New Profile sheet is still running.
     @Published
     private(set) var isLoadingCatalog = false
@@ -108,11 +108,11 @@
       isLoadingCatalog = true
       isCreatingProfile = true
       Task { @MainActor in
-        let (labels, unreadable) = await Task.detached {
+        let (families, unreadable) = await Task.detached {
           let set = ControllerRecordSet.load(userDirectory: ControllerRecordSet.userDirectory)
-          return (set.records.mapValues { $0.protocolID.displayName }, set.problems.count)
+          return (set.records.mapValues(\.protocolID), set.problems.count)
         }.value
-        catalogModels = labels
+        catalogModels = families
         unreadableRecordFiles = unreadable
         isLoadingCatalog = false
       }
