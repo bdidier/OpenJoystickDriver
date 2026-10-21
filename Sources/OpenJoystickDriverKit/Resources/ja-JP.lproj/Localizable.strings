@@ -165,7 +165,6 @@
 "capture.buttonsHeld" = "押されているボタン: %@";
 "capture.profileNameValidation" = "プロファイル名を入力してください。";
 "profiles.new" = "新規プロファイル";
-"profiles.defaultName" = "マイコントローラ";
 "profiles.deleteTitle" = "プロファイルを削除しますか？";
 "profiles.deleteMessage" = "このプロファイルはOpenJoystickDriverから削除されます。";
 "profiles.discardMessage" = "このプロファイルへの変更は保存されていません。";
@@ -175,7 +174,6 @@
 "profiles.refreshError" = "プロファイルの状態を更新できませんでした";
 "profiles.none" = "プロファイルなし";
 "profiles.createMessage" = "操作の割り当てを始めるにはプロファイルを作成してください。";
-"profiles.create" = "プロファイルを作成…";
 "profiles.refreshing" = "プロファイルの状態を更新中…";
 "profiles.stateUnavailable" = "プロファイルの状態を利用できません";
 "profiles.draftPreserved" = "現在の下書きは保持されています。%@";
@@ -221,7 +219,12 @@
 "profiles.chordWindow" = "押下時間枠";
 "profiles.chords" = "同時押し";
 "profiles.controlNumber" = "操作 %d";
-"profiles.creationValidation" = "プロファイル名、コントローラの識別子、アプリケーションの対象を確認してください。";
+"profiles.creationValidation" = "プロファイル名とアプリケーションの対象を確認してください。";
+"profiles.controllersOfProfiles" = "プロファイルで使用中";
+"profiles.chooseController" = "コントローラを選択";
+"profiles.saveFirst" = "先にプロファイルを保存してください。";
+"profiles.unreadableRecords" = "一部のコントローラのレコードファイルを読み込めませんでした。詳細: %@";
+"profiles.scopedCaption" = "%1$@ · %2$@";
 "profiles.deactivateController" = "すべてを無効にする";
 "profiles.details" = "プロファイルの詳細";
 "profiles.notSupportedByController" = "このコントローラまたはプロトコルではサポートされていません。";
@@ -231,11 +234,14 @@
 "profiles.holdDuration" = "押し続ける時間";
 "profiles.identifierHint" = "10進数、または 0x で始まる16進数の識別子を使用します。";
 "profiles.import" = "プロファイルを読み込む";
+"profiles.validateFile" = "プロファイルファイルを検証";
+"profiles.validTitle" = "有効なプロファイル";
+"profiles.invalidTitle" = "無効なプロファイル";
+"profiles.validMessage" = "%1$@(%2$@)。適用先: %3$@";
 "profiles.invalidIdentifiers" = "16ビットの有効なベンダーIDと製品IDを入力してください。";
 "profiles.layerName" = "レイヤー名";
 "profiles.layers" = "レイヤー";
 "profiles.longHold" = "長押し";
-"profiles.manualDevice" = "識別子を手動で入力";
 "profiles.noChords" = "同時押しは設定されていません。";
 "profiles.noLayers" = "レイヤーは設定されていません。";
 "profiles.noSequences" = "シーケンスは設定されていません。";

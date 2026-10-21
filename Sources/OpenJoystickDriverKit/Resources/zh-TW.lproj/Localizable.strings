@@ -165,7 +165,6 @@
 "capture.buttonsHeld" = "按住的按鈕：%@";
 "capture.profileNameValidation" = "請輸入設定檔名稱。";
 "profiles.new" = "新增設定檔";
-"profiles.defaultName" = "我的控制器";
 "profiles.deleteTitle" = "要刪除設定檔嗎？";
 "profiles.deleteMessage" = "這會從 OpenJoystickDriver 移除此設定檔。";
 "profiles.discardMessage" = "您對此設定檔的更改尚未儲存。";
@@ -175,7 +174,6 @@
 "profiles.refreshError" = "無法重新整理設定檔狀態";
 "profiles.none" = "沒有設定檔";
 "profiles.createMessage" = "建立設定檔以開始對應控制項。";
-"profiles.create" = "建立設定檔…";
 "profiles.refreshing" = "正在重新整理設定檔狀態…";
 "profiles.stateUnavailable" = "無法使用設定檔狀態";
 "profiles.draftPreserved" = "目前的草稿已保留。%@";
@@ -221,7 +219,12 @@
 "profiles.chordWindow" = "按下時間窗口";
 "profiles.chords" = "組合鍵";
 "profiles.controlNumber" = "控制項 %d";
-"profiles.creationValidation" = "請檢查設定檔名稱、控制器識別碼和 App 目標。";
+"profiles.creationValidation" = "請檢查設定檔名稱和 App 目標。";
+"profiles.controllersOfProfiles" = "您的設定檔使用的控制器";
+"profiles.chooseController" = "選擇控制器";
+"profiles.saveFirst" = "請先儲存設定檔。";
+"profiles.unreadableRecords" = "無法讀取部分控制器記錄檔案。詳細資訊：%@";
+"profiles.scopedCaption" = "%1$@ · %2$@";
 "profiles.deactivateController" = "全部停用";
 "profiles.details" = "設定檔詳細資料";
 "profiles.notSupportedByController" = "此控制器或協定不支援。";
@@ -231,11 +234,14 @@
 "profiles.holdDuration" = "按住時間";
 "profiles.identifierHint" = "使用十進位或以 0x 開頭的十六進位識別碼。";
 "profiles.import" = "匯入設定檔";
+"profiles.validateFile" = "驗證設定檔";
+"profiles.validTitle" = "有效的設定檔";
+"profiles.invalidTitle" = "無效的設定檔";
+"profiles.validMessage" = "%1$@（%2$@）。適用於：%3$@";
 "profiles.invalidIdentifiers" = "請輸入有效的 16 位元供應商和產品識別碼。";
 "profiles.layerName" = "層名稱";
 "profiles.layers" = "層";
 "profiles.longHold" = "長按";
-"profiles.manualDevice" = "手動指定識別碼";
 "profiles.noChords" = "尚未設定組合鍵。";
 "profiles.noLayers" = "尚未設定層。";
 "profiles.noSequences" = "尚未設定序列。";

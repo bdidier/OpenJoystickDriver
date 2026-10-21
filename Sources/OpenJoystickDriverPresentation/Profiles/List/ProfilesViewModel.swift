@@ -10,6 +10,8 @@
       try RemappingProfileFileStore.load(from: url)
     }
 
+    func read(from url: URL) throws -> Data { try Data(contentsOf: url) }
+
     func write(_ profile: RemappingProfile, to url: URL) throws {
       try RemappingProfileFileStore.write(profile, to: url)
     }
@@ -19,6 +21,7 @@
   final class ProfilesViewModel: ObservableObject {
     let documents: ProfileDocumentService
     let capabilityRegistry = ProtocolDriverRegistry()
+    let applicationNames = ProfileApplicationNames()
     @Published
     var selectedProfileID: UUID?
     @Published
@@ -31,6 +34,12 @@
     var profileActionError: String?
     @Published
     var pairingProfile: RemappingProfile?
+    /// The profile whose copy the Duplicate sheet is naming.
+    @Published
+    var duplicatingProfile: RemappingProfile?
+    /// The result of the last Validate Profile File check, shown until dismissed.
+    @Published
+    var fileValidation: ProfileFileValidation?
     /// A profile read from a file the person chose, waiting for the Profiles screen to import it
     /// through the editor's discard and mutation checks.
     @Published
@@ -76,6 +85,52 @@
       Task { @MainActor in
         do {
           chosenImportProfile = try await documents.load(from: url)
+          profileActionError = nil
+        } catch { profileActionError = RuntimePresentation.userFacingError(error) }
+      }
+    }
+
+    /// The family label of every catalog model, read when the New Profile sheet opens. The sheet
+    /// offers these models beyond the connected controllers and those of existing profiles.
+    @Published
+    private(set) var catalogModels: [ControllerModelID: String] = [:]
+    /// Whether the catalog read of the New Profile sheet is still running.
+    @Published
+    private(set) var isLoadingCatalog = false
+    /// How many user controller record files the last catalog read could not use.
+    @Published
+    private(set) var unreadableRecordFiles = 0
+
+    /// Opens the New Profile sheet and reads the catalog off the main actor.
+    func beginCreatingProfile() {
+      catalogModels = [:]
+      unreadableRecordFiles = 0
+      isLoadingCatalog = true
+      isCreatingProfile = true
+      Task { @MainActor in
+        let (labels, unreadable) = await Task.detached {
+          let set = ControllerRecordSet.load(userDirectory: ControllerRecordSet.userDirectory)
+          return (set.records.mapValues { $0.protocolID.familyLabel }, set.problems.count)
+        }.value
+        catalogModels = labels
+        unreadableRecordFiles = unreadable
+        isLoadingCatalog = false
+      }
+    }
+
+    /// Asks for a profile file and checks it without adding it to the library.
+    func validateProfileFile() {
+      let panel = NSOpenPanel()
+      panel.allowsMultipleSelection = false
+      panel.canChooseDirectories = false
+      panel.canChooseFiles = true
+      panel.title = OJDLocalized.string("profiles.validateFile")
+      panel.allowedContentTypes = [.json]
+      guard panel.runModal() == .OK, let url = panel.url else { return }
+      Task { @MainActor in
+        do {
+          let data = try await documents.read(from: url)
+          fileValidation = ProfileFileValidation.check(data, fileName: url.lastPathComponent)
           profileActionError = nil
         } catch { profileActionError = RuntimePresentation.userFacingError(error) }
       }

@@ -165,7 +165,6 @@
 "capture.buttonsHeld" = "Tombol yang ditahan: %@";
 "capture.profileNameValidation" = "Masukkan nama profil.";
 "profiles.new" = "Profil baru";
-"profiles.defaultName" = "Pengontrol saya";
 "profiles.deleteTitle" = "Hapus profil?";
 "profiles.deleteMessage" = "Tindakan ini menghapus profil dari OpenJoystickDriver.";
 "profiles.discardMessage" = "Perubahan Anda pada profil ini belum disimpan.";
@@ -175,7 +174,6 @@
 "profiles.refreshError" = "Tidak dapat menyegarkan status profil";
 "profiles.none" = "Tidak ada profil";
 "profiles.createMessage" = "Buat profil untuk mulai menetapkan kontrol.";
-"profiles.create" = "Buat profil…";
 "profiles.refreshing" = "Menyegarkan status profil…";
 "profiles.stateUnavailable" = "Status profil tidak tersedia";
 "profiles.draftPreserved" = "Draf Anda saat ini dipertahankan. %@";
@@ -221,7 +219,12 @@
 "profiles.chordWindow" = "Rentang waktu penekanan";
 "profiles.chords" = "Kombinasi tombol";
 "profiles.controlNumber" = "Kontrol %d";
-"profiles.creationValidation" = "Periksa nama profil, pengenal pengontrol, dan target aplikasi.";
+"profiles.creationValidation" = "Periksa nama profil dan target aplikasi.";
+"profiles.controllersOfProfiles" = "Dipakai profil Anda";
+"profiles.chooseController" = "Pilih pengontrol";
+"profiles.saveFirst" = "Simpan profil terlebih dahulu.";
+"profiles.unreadableRecords" = "Beberapa file catatan pengontrol tidak dapat dibaca. Detail: %@.";
+"profiles.scopedCaption" = "%1$@ · %2$@";
 "profiles.deactivateController" = "Nonaktifkan semua";
 "profiles.details" = "Detail profil";
 "profiles.notSupportedByController" = "Tidak didukung oleh pengontrol atau protokol ini.";
@@ -231,11 +234,14 @@
 "profiles.holdDuration" = "Durasi tahan";
 "profiles.identifierHint" = "Gunakan pengenal desimal atau heksadesimal berawalan 0x.";
 "profiles.import" = "Impor profil";
+"profiles.validateFile" = "Validasi file profil";
+"profiles.validTitle" = "Profil valid";
+"profiles.invalidTitle" = "Profil tidak valid";
+"profiles.validMessage" = "%1$@ (%2$@). Berlaku untuk: %3$@.";
 "profiles.invalidIdentifiers" = "Masukkan pengenal vendor dan produk 16-bit yang valid.";
 "profiles.layerName" = "Nama lapisan";
 "profiles.layers" = "Lapisan";
 "profiles.longHold" = "Tahan lama";
-"profiles.manualDevice" = "Pengenal manual";
 "profiles.noChords" = "Tidak ada kombinasi tombol yang dikonfigurasi.";
 "profiles.noLayers" = "Tidak ada lapisan yang dikonfigurasi.";
 "profiles.noSequences" = "Tidak ada urutan yang dikonfigurasi.";

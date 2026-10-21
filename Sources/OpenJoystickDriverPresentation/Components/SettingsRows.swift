@@ -27,18 +27,4 @@
     }
   }
 
-  struct KeyValueRow: View {
-    let label: String
-    let value: String
-
-    var body: some View {
-      HStack(alignment: .firstTextBaseline, spacing: 12) {
-        Text(label).foregroundColor(Color(NSColor.secondaryLabelColor))
-        Spacer(minLength: 8)
-        Text(value).multilineTextAlignment(.trailing).fixedSize(horizontal: false, vertical: true)
-          .layoutPriority(1)
-      }
-    }
-  }
-
 #endif

@@ -165,7 +165,6 @@
 "capture.buttonsHeld" = "Нажатые кнопки: %@";
 "capture.profileNameValidation" = "Введите имя профиля.";
 "profiles.new" = "Новый профиль";
-"profiles.defaultName" = "Мой контроллер";
 "profiles.deleteTitle" = "Удалить профиль?";
 "profiles.deleteMessage" = "Профиль будет удалён из OpenJoystickDriver.";
 "profiles.discardMessage" = "Изменения этого профиля не сохранены.";
@@ -175,7 +174,6 @@
 "profiles.refreshError" = "Не удалось обновить состояние профиля";
 "profiles.none" = "Нет профилей";
 "profiles.createMessage" = "Создайте профиль, чтобы начать назначать элементы управления.";
-"profiles.create" = "Создать профиль…";
 "profiles.refreshing" = "Обновление состояния профиля…";
 "profiles.stateUnavailable" = "Состояние профиля недоступно";
 "profiles.draftPreserved" = "Текущий черновик сохранён. %@";
@@ -221,7 +219,12 @@
 "profiles.chordWindow" = "Окно нажатия";
 "profiles.chords" = "Аккорды";
 "profiles.controlNumber" = "Элемент управления %d";
-"profiles.creationValidation" = "Проверьте имя профиля, идентификаторы контроллера и целевое приложение.";
+"profiles.creationValidation" = "Проверьте имя профиля и целевое приложение.";
+"profiles.controllersOfProfiles" = "Используются в ваших профилях";
+"profiles.chooseController" = "Выберите контроллер";
+"profiles.saveFirst" = "Сначала сохраните профиль.";
+"profiles.unreadableRecords" = "Некоторые файлы записей контроллеров не удалось прочитать. Подробности: %@.";
+"profiles.scopedCaption" = "%1$@ · %2$@";
 "profiles.deactivateController" = "Деактивировать все";
 "profiles.details" = "Сведения о профиле";
 "profiles.notSupportedByController" = "Не поддерживается этим контроллером или протоколом.";
@@ -231,11 +234,14 @@
 "profiles.holdDuration" = "Длительность удержания";
 "profiles.identifierHint" = "Используйте десятичные идентификаторы или шестнадцатеричные с префиксом 0x.";
 "profiles.import" = "Импортировать профиль";
+"profiles.validateFile" = "Проверить файл профиля";
+"profiles.validTitle" = "Допустимый профиль";
+"profiles.invalidTitle" = "Недопустимый профиль";
+"profiles.validMessage" = "%1$@ (%2$@). Применяется к: %3$@.";
 "profiles.invalidIdentifiers" = "Введите допустимые 16-битные идентификаторы производителя и продукта.";
 "profiles.layerName" = "Имя слоя";
 "profiles.layers" = "Слои";
 "profiles.longHold" = "Долгое удержание";
-"profiles.manualDevice" = "Идентификаторы вручную";
 "profiles.noChords" = "Аккорды не настроены.";
 "profiles.noLayers" = "Слои не настроены.";
 "profiles.noSequences" = "Последовательности не настроены.";

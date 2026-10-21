@@ -165,7 +165,6 @@
 "capture.buttonsHeld" = "Basılı tutulan düğmeler: %@";
 "capture.profileNameValidation" = "Bir profil adı gir.";
 "profiles.new" = "Yeni Profil";
-"profiles.defaultName" = "Kontrolcüm";
 "profiles.deleteTitle" = "Profil silinsin mi?";
 "profiles.deleteMessage" = "Bu, profili OpenJoystickDriver’dan kaldırır.";
 "profiles.discardMessage" = "Bu profile yaptığın değişiklikler kaydedilmedi.";
@@ -175,7 +174,6 @@
 "profiles.refreshError" = "Profil durumu yenilenemedi";
 "profiles.none" = "Profil Yok";
 "profiles.createMessage" = "Denetim atamaya başlamak için bir profil oluştur.";
-"profiles.create" = "Profil Oluştur…";
 "profiles.refreshing" = "Profil Durumu Yenileniyor…";
 "profiles.stateUnavailable" = "Profil Durumu Kullanılamıyor";
 "profiles.draftPreserved" = "Geçerli taslağın korunuyor. %@";
@@ -221,7 +219,12 @@
 "profiles.chordWindow" = "Basma Penceresi";
 "profiles.chords" = "Kombinasyonlar";
 "profiles.controlNumber" = "Denetim %d";
-"profiles.creationValidation" = "Profil adını, kontrolcü tanımlayıcılarını ve uygulama hedefini gözden geçir.";
+"profiles.creationValidation" = "Profil adını ve uygulama hedefini gözden geçir.";
+"profiles.controllersOfProfiles" = "Profillerinde Kullanılanlar";
+"profiles.chooseController" = "Bir kontrolcü seç";
+"profiles.saveFirst" = "Önce profili kaydet.";
+"profiles.unreadableRecords" = "Bazı kontrolcü kayıt dosyaları okunamadı. Ayrıntılar: %@.";
+"profiles.scopedCaption" = "%1$@ · %2$@";
 "profiles.deactivateController" = "Hepsini Devre Dışı Bırak";
 "profiles.details" = "Profil Detayları";
 "profiles.notSupportedByController" = "Bu kontrolcü veya protokol tarafından desteklenmiyor.";
@@ -231,11 +234,14 @@
 "profiles.holdDuration" = "Bekleme Süresi";
 "profiles.identifierHint" = "Ondalık veya 0x ile başlayan onaltılık tanımlayıcılar kullan.";
 "profiles.import" = "Profili İçe Aktar";
+"profiles.validateFile" = "Profil Dosyasını Doğrula";
+"profiles.validTitle" = "Geçerli Profil";
+"profiles.invalidTitle" = "Geçersiz Profil";
+"profiles.validMessage" = "%1$@ (%2$@). Şuna uygulanır: %3$@.";
 "profiles.invalidIdentifiers" = "Geçerli 16 bitlik satıcı ve ürün kimlikleri gir.";
 "profiles.layerName" = "Katman Adı";
 "profiles.layers" = "Katmanlar";
 "profiles.longHold" = "Uzun Basılı Tutma";
-"profiles.manualDevice" = "Elle Girilen Tanımlayıcılar";
 "profiles.noChords" = "Yapılandırılmış kombinasyon yok.";
 "profiles.noLayers" = "Yapılandırılmış katman yok.";
 "profiles.noSequences" = "Yapılandırılmış dizi yok.";

@@ -165,7 +165,6 @@
 "capture.buttonsHeld" = "दबाकर रखे गए बटन: %@";
 "capture.profileNameValidation" = "प्रोफ़ाइल नाम दर्ज करें।";
 "profiles.new" = "नई प्रोफ़ाइल";
-"profiles.defaultName" = "मेरा कंट्रोलर";
 "profiles.deleteTitle" = "प्रोफ़ाइल डिलीट करें?";
 "profiles.deleteMessage" = "यह प्रोफ़ाइल OpenJoystickDriver से हटा दी जाएगी।";
 "profiles.discardMessage" = "इस प्रोफ़ाइल के बदलाव सहेजे नहीं गए हैं।";
@@ -175,7 +174,6 @@
 "profiles.refreshError" = "प्रोफ़ाइल स्थिति रीफ़्रेश नहीं हो सकी";
 "profiles.none" = "कोई प्रोफ़ाइल नहीं";
 "profiles.createMessage" = "नियंत्रण असाइन करना शुरू करने के लिए प्रोफ़ाइल बनाएँ।";
-"profiles.create" = "प्रोफ़ाइल बनाएँ…";
 "profiles.refreshing" = "प्रोफ़ाइल स्थिति रीफ़्रेश हो रही है…";
 "profiles.stateUnavailable" = "प्रोफ़ाइल स्थिति उपलब्ध नहीं";
 "profiles.draftPreserved" = "आपका वर्तमान ड्राफ़्ट सुरक्षित है। %@";
@@ -221,7 +219,12 @@
 "profiles.chordWindow" = "दबाने की विंडो";
 "profiles.chords" = "कॉर्ड";
 "profiles.controlNumber" = "नियंत्रण %d";
-"profiles.creationValidation" = "प्रोफ़ाइल नाम, कंट्रोलर पहचानकर्ता और लक्ष्य ऐप की समीक्षा करें।";
+"profiles.creationValidation" = "प्रोफ़ाइल नाम और लक्ष्य ऐप की समीक्षा करें।";
+"profiles.controllersOfProfiles" = "आपके प्रोफ़ाइल में उपयोग किए गए";
+"profiles.chooseController" = "कोई कंट्रोलर चुनें";
+"profiles.saveFirst" = "पहले प्रोफ़ाइल सहेजें।";
+"profiles.unreadableRecords" = "कुछ कंट्रोलर रिकॉर्ड फ़ाइलें पढ़ी नहीं जा सकीं। विवरण: %@।";
+"profiles.scopedCaption" = "%1$@ · %2$@";
 "profiles.deactivateController" = "सभी को निष्क्रिय करें";
 "profiles.details" = "प्रोफ़ाइल विवरण";
 "profiles.notSupportedByController" = "यह कंट्रोलर या प्रोटोकॉल इसका समर्थन नहीं करता है।";
@@ -231,11 +234,14 @@
 "profiles.holdDuration" = "दबाए रखने की अवधि";
 "profiles.identifierHint" = "दशमलव या 0x से शुरू होने वाले हेक्साडेसिमल पहचानकर्ता का उपयोग करें।";
 "profiles.import" = "प्रोफ़ाइल इंपोर्ट करें";
+"profiles.validateFile" = "प्रोफ़ाइल फ़ाइल जाँचें";
+"profiles.validTitle" = "मान्य प्रोफ़ाइल";
+"profiles.invalidTitle" = "अमान्य प्रोफ़ाइल";
+"profiles.validMessage" = "%1$@ (%2$@). इन पर लागू: %3$@.";
 "profiles.invalidIdentifiers" = "वैध 16-बिट विक्रेता और उत्पाद पहचानकर्ता दर्ज करें।";
 "profiles.layerName" = "परत का नाम";
 "profiles.layers" = "परतें";
 "profiles.longHold" = "लंबे समय तक दबाए रखें";
-"profiles.manualDevice" = "मैनुअल पहचानकर्ता";
 "profiles.noChords" = "कोई कॉर्ड कॉन्फ़िगर नहीं किया गया है।";
 "profiles.noLayers" = "कोई परत कॉन्फ़िगर नहीं की गई है।";
 "profiles.noSequences" = "कोई अनुक्रम कॉन्फ़िगर नहीं किया गया है।";

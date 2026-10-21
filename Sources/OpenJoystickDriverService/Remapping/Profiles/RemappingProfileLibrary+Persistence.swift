@@ -201,7 +201,7 @@ extension RemappingProfileLibrary {
   }
 
   static func normalizedName(_ name: String) -> String {
-    name.lowercased(with: Locale(identifier: "en_US_POSIX"))
+    RemappingProfile.normalizedName(name)
   }
 
   static func profileOrder(_ lhs: RemappingProfile, _ rhs: RemappingProfile) -> Bool {

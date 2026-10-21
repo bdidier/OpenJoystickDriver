@@ -165,7 +165,6 @@
 "capture.buttonsHeld" = "Gehaltene Tasten: %@";
 "capture.profileNameValidation" = "Gib einen Profilnamen ein.";
 "profiles.new" = "Neues Profil";
-"profiles.defaultName" = "Mein Controller";
 "profiles.deleteTitle" = "Profil löschen?";
 "profiles.deleteMessage" = "Dadurch wird das Profil aus OpenJoystickDriver entfernt.";
 "profiles.discardMessage" = "Die Änderungen an diesem Profil wurden nicht gesichert.";
@@ -175,7 +174,6 @@
 "profiles.refreshError" = "Profilstatus konnte nicht aktualisiert werden";
 "profiles.none" = "Keine Profile";
 "profiles.createMessage" = "Erstelle ein Profil, um Steuerungen zuzuweisen.";
-"profiles.create" = "Profil erstellen…";
 "profiles.refreshing" = "Profilstatus wird aktualisiert…";
 "profiles.stateUnavailable" = "Profilstatus ist nicht verfügbar";
 "profiles.draftPreserved" = "Der aktuelle Entwurf bleibt erhalten. %@";
@@ -221,7 +219,12 @@
 "profiles.chordWindow" = "Druckfenster";
 "profiles.chords" = "Akkorde";
 "profiles.controlNumber" = "Steuerung %d";
-"profiles.creationValidation" = "Prüfe Profilname, Controller-Kennungen und Anwendungsziel.";
+"profiles.creationValidation" = "Prüfe Profilname und Anwendungsziel.";
+"profiles.controllersOfProfiles" = "In deinen Profilen verwendet";
+"profiles.chooseController" = "Wähle einen Controller";
+"profiles.saveFirst" = "Sichere das Profil zuerst.";
+"profiles.unreadableRecords" = "Einige Dateien mit Controller-Einträgen konnten nicht gelesen werden. Details: %@.";
+"profiles.scopedCaption" = "%1$@ · %2$@";
 "profiles.deactivateController" = "Alle deaktivieren";
 "profiles.details" = "Profildetails";
 "profiles.notSupportedByController" = "Von diesem Controller oder Protokoll nicht unterstützt.";
@@ -231,11 +234,14 @@
 "profiles.holdDuration" = "Haltedauer";
 "profiles.identifierHint" = "Verwende dezimale oder mit 0x beginnende hexadezimale Kennungen.";
 "profiles.import" = "Profil importieren";
+"profiles.validateFile" = "Profildatei prüfen";
+"profiles.validTitle" = "Gültiges Profil";
+"profiles.invalidTitle" = "Ungültiges Profil";
+"profiles.validMessage" = "%1$@ (%2$@). Gilt für: %3$@.";
 "profiles.invalidIdentifiers" = "Gib gültige 16-Bit-Hersteller- und Produktkennungen ein.";
 "profiles.layerName" = "Ebenenname";
 "profiles.layers" = "Ebenen";
 "profiles.longHold" = "Langes Halten";
-"profiles.manualDevice" = "Manuelle Kennungen";
 "profiles.noChords" = "Keine Akkorde konfiguriert.";
 "profiles.noLayers" = "Keine Ebenen konfiguriert.";
 "profiles.noSequences" = "Keine Sequenzen konfiguriert.";

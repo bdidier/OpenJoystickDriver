@@ -20,8 +20,6 @@
     let isEditingBlocked: Bool
     @Binding
     var selectedSection: ProfileEditorSection
-    let onDelete: () -> Void
-    let onExport: (RemappingProfile) -> Void
     let onEditingStateChanged: (Bool) -> Void
     let onMutationStarted: (RuntimeMutationRequest) -> Bool
     let onMutationResult: (RuntimeMutationResult) -> Void
@@ -37,8 +35,6 @@
       isActive: Bool,
       isEditingBlocked: Bool,
       selectedSection: Binding<ProfileEditorSection>,
-      onDelete: @escaping () -> Void,
-      onExport: @escaping (RemappingProfile) -> Void,
       onEditingStateChanged: @escaping (Bool) -> Void,
       onMutationStarted: @escaping (RuntimeMutationRequest) -> Bool,
       onMutationResult: @escaping (RuntimeMutationResult) -> Void
@@ -51,8 +47,6 @@
       self.isActive = isActive
       self.isEditingBlocked = isEditingBlocked
       _selectedSection = selectedSection
-      self.onDelete = onDelete
-      self.onExport = onExport
       self.onEditingStateChanged = onEditingStateChanged
       self.onMutationStarted = onMutationStarted
       self.onMutationResult = onMutationResult

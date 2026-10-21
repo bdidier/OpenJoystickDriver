@@ -165,7 +165,6 @@
 "capture.buttonsHeld" = "Nút đang giữ: %@";
 "capture.profileNameValidation" = "Nhập tên cấu hình.";
 "profiles.new" = "Cấu hình mới";
-"profiles.defaultName" = "Bộ điều khiển của tôi";
 "profiles.deleteTitle" = "Xóa cấu hình?";
 "profiles.deleteMessage" = "Thao tác này sẽ xóa cấu hình khỏi OpenJoystickDriver.";
 "profiles.discardMessage" = "Các thay đổi của bạn đối với cấu hình này chưa được lưu.";
@@ -175,7 +174,6 @@
 "profiles.refreshError" = "Không thể làm mới trạng thái cấu hình";
 "profiles.none" = "Không có cấu hình";
 "profiles.createMessage" = "Tạo cấu hình để bắt đầu gán các thành phần điều khiển.";
-"profiles.create" = "Tạo cấu hình…";
 "profiles.refreshing" = "Đang làm mới trạng thái cấu hình…";
 "profiles.stateUnavailable" = "Trạng thái cấu hình không khả dụng";
 "profiles.draftPreserved" = "Bản nháp hiện tại của bạn được giữ nguyên. %@";
@@ -221,7 +219,12 @@
 "profiles.chordWindow" = "Khoảng thời gian nhấn";
 "profiles.chords" = "Tổ hợp nút";
 "profiles.controlNumber" = "Thành phần %d";
-"profiles.creationValidation" = "Xem lại tên cấu hình, mã định danh bộ điều khiển và ứng dụng đích.";
+"profiles.creationValidation" = "Xem lại tên cấu hình và ứng dụng đích.";
+"profiles.controllersOfProfiles" = "Được cấu hình của bạn sử dụng";
+"profiles.chooseController" = "Chọn bộ điều khiển";
+"profiles.saveFirst" = "Hãy lưu cấu hình trước.";
+"profiles.unreadableRecords" = "Không đọc được một số tệp bản ghi bộ điều khiển. Chi tiết: %@.";
+"profiles.scopedCaption" = "%1$@ · %2$@";
 "profiles.deactivateController" = "Hủy kích hoạt tất cả";
 "profiles.details" = "Chi tiết cấu hình";
 "profiles.notSupportedByController" = "Không được bộ điều khiển hoặc giao thức này hỗ trợ.";
@@ -231,11 +234,14 @@
 "profiles.holdDuration" = "Thời lượng giữ";
 "profiles.identifierHint" = "Dùng mã định danh dạng thập phân hoặc thập lục phân có tiền tố 0x.";
 "profiles.import" = "Nhập cấu hình";
+"profiles.validateFile" = "Xác thực tệp cấu hình";
+"profiles.validTitle" = "Cấu hình hợp lệ";
+"profiles.invalidTitle" = "Cấu hình không hợp lệ";
+"profiles.validMessage" = "%1$@ (%2$@). Áp dụng cho: %3$@.";
 "profiles.invalidIdentifiers" = "Nhập mã nhà cung cấp và mã sản phẩm 16 bit hợp lệ.";
 "profiles.layerName" = "Tên lớp";
 "profiles.layers" = "Lớp";
 "profiles.longHold" = "Giữ lâu";
-"profiles.manualDevice" = "Mã định danh thủ công";
 "profiles.noChords" = "Chưa cấu hình tổ hợp nút nào.";
 "profiles.noLayers" = "Chưa cấu hình lớp nào.";
 "profiles.noSequences" = "Chưa cấu hình chuỗi nút nào.";

@@ -165,7 +165,6 @@
 "capture.buttonsHeld" = "Boutons maintenus : %@";
 "capture.profileNameValidation" = "Saisissez un nom de profil.";
 "profiles.new" = "Nouveau profil";
-"profiles.defaultName" = "Ma manette";
 "profiles.deleteTitle" = "Supprimer le profil?";
 "profiles.deleteMessage" = "Cela retire le profil d’OpenJoystickDriver.";
 "profiles.discardMessage" = "Les modifications de ce profil n’ont pas été enregistrées.";
@@ -175,7 +174,6 @@
 "profiles.refreshError" = "Impossible d’actualiser l’état du profil";
 "profiles.none" = "Aucun profil";
 "profiles.createMessage" = "Créez un profil pour commencer à attribuer des commandes.";
-"profiles.create" = "Créer un profil…";
 "profiles.refreshing" = "Actualisation de l’état du profil…";
 "profiles.stateUnavailable" = "L’état du profil est indisponible";
 "profiles.draftPreserved" = "Votre brouillon actuel est conservé. %@";
@@ -221,7 +219,12 @@
 "profiles.chordWindow" = "Fenêtre d’appui";
 "profiles.chords" = "Accords";
 "profiles.controlNumber" = "Commande %d";
-"profiles.creationValidation" = "Vérifiez le nom du profil, les identifiants de manette et la cible d’application.";
+"profiles.creationValidation" = "Vérifiez le nom du profil et la cible d’application.";
+"profiles.controllersOfProfiles" = "Utilisées par vos profils";
+"profiles.chooseController" = "Choisissez une manette";
+"profiles.saveFirst" = "Enregistrez d’abord le profil.";
+"profiles.unreadableRecords" = "Certains fichiers de fiches de manettes n’ont pas pu être lus. Détails : %@.";
+"profiles.scopedCaption" = "%1$@ · %2$@";
 "profiles.deactivateController" = "Tout désactiver";
 "profiles.details" = "Détails du profil";
 "profiles.notSupportedByController" = "Non pris en charge par cette manette ou ce protocole.";
@@ -231,11 +234,14 @@
 "profiles.holdDuration" = "Durée du maintien";
 "profiles.identifierHint" = "Utilisez des identifiants décimaux ou hexadécimaux préfixés par 0x.";
 "profiles.import" = "Importer un profil";
+"profiles.validateFile" = "Valider le fichier de profil";
+"profiles.validTitle" = "Profil valide";
+"profiles.invalidTitle" = "Profil non valide";
+"profiles.validMessage" = "%1$@ (%2$@). S’applique à : %3$@.";
 "profiles.invalidIdentifiers" = "Saisissez des identifiants fabricant et produit 16 bits valides.";
 "profiles.layerName" = "Nom de la couche";
 "profiles.layers" = "Couches";
 "profiles.longHold" = "Maintien long";
-"profiles.manualDevice" = "Identifiants manuels";
 "profiles.noChords" = "Aucun accord configuré.";
 "profiles.noLayers" = "Aucune couche configurée.";
 "profiles.noSequences" = "Aucune séquence configurée.";

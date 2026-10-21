@@ -165,7 +165,6 @@
 "capture.buttonsHeld" = "ปุ่มที่กดค้างไว้: %@";
 "capture.profileNameValidation" = "ป้อนชื่อโปรไฟล์";
 "profiles.new" = "โปรไฟล์ใหม่";
-"profiles.defaultName" = "คอนโทรลเลอร์ของฉัน";
 "profiles.deleteTitle" = "ลบโปรไฟล์หรือไม่";
 "profiles.deleteMessage" = "การดำเนินการนี้จะเอาโปรไฟล์ออกจาก OpenJoystickDriver";
 "profiles.discardMessage" = "การแก้ไขโปรไฟล์นี้ของคุณยังไม่ได้ถูกบันทึก";
@@ -175,7 +174,6 @@
 "profiles.refreshError" = "ไม่สามารถดึงข้อมูลสถานะโปรไฟล์ใหม่ได้";
 "profiles.none" = "ไม่มีโปรไฟล์";
 "profiles.createMessage" = "สร้างโปรไฟล์เพื่อเริ่มกำหนดตัวควบคุม";
-"profiles.create" = "สร้างโปรไฟล์…";
 "profiles.refreshing" = "กำลังดึงข้อมูลสถานะโปรไฟล์ใหม่…";
 "profiles.stateUnavailable" = "สถานะโปรไฟล์ไม่พร้อมใช้งาน";
 "profiles.draftPreserved" = "ร่างปัจจุบันของคุณถูกเก็บรักษาไว้ %@";
@@ -221,7 +219,12 @@
 "profiles.chordWindow" = "ช่วงเวลากด";
 "profiles.chords" = "คอร์ด";
 "profiles.controlNumber" = "ตัวควบคุม %d";
-"profiles.creationValidation" = "ตรวจสอบชื่อโปรไฟล์ ตัวระบุคอนโทรลเลอร์ และเป้าหมายแอพพลิเคชัน";
+"profiles.creationValidation" = "ตรวจสอบชื่อโปรไฟล์และเป้าหมายแอพพลิเคชัน";
+"profiles.controllersOfProfiles" = "ใช้ในโปรไฟล์ของคุณ";
+"profiles.chooseController" = "เลือกคอนโทรลเลอร์";
+"profiles.saveFirst" = "บันทึกโปรไฟล์ก่อน";
+"profiles.unreadableRecords" = "อ่านไฟล์ระเบียนคอนโทรลเลอร์บางไฟล์ไม่ได้ รายละเอียด: %@";
+"profiles.scopedCaption" = "%1$@ · %2$@";
 "profiles.deactivateController" = "ปิดใช้งานทั้งหมด";
 "profiles.details" = "รายละเอียดโปรไฟล์";
 "profiles.notSupportedByController" = "คอนโทรลเลอร์หรือโปรโตคอลนี้ไม่รองรับ";
@@ -231,11 +234,14 @@
 "profiles.holdDuration" = "ระยะเวลากดค้าง";
 "profiles.identifierHint" = "ใช้ตัวระบุเลขฐานสิบหรือเลขฐานสิบหกที่ขึ้นต้นด้วย 0x";
 "profiles.import" = "นำเข้าโปรไฟล์";
+"profiles.validateFile" = "ตรวจสอบไฟล์โปรไฟล์";
+"profiles.validTitle" = "โปรไฟล์ที่ถูกต้อง";
+"profiles.invalidTitle" = "โปรไฟล์ไม่ถูกต้อง";
+"profiles.validMessage" = "%1$@ (%2$@) ใช้กับ: %3$@";
 "profiles.invalidIdentifiers" = "ป้อนตัวระบุผู้จำหน่ายและผลิตภัณฑ์แบบ 16 บิตที่ถูกต้อง";
 "profiles.layerName" = "ชื่อเลเยอร์";
 "profiles.layers" = "เลเยอร์";
 "profiles.longHold" = "กดค้างนาน";
-"profiles.manualDevice" = "ตัวระบุที่ป้อนเอง";
 "profiles.noChords" = "ไม่ได้กำหนดค่าคอร์ด";
 "profiles.noLayers" = "ไม่ได้กำหนดค่าเลเยอร์";
 "profiles.noSequences" = "ไม่ได้กำหนดค่าลำดับ";

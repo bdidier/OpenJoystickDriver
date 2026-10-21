@@ -86,19 +86,10 @@
       return snapshot.activeProfiles.contains { $0.profileID == profile.id }
     }
 
-    func createProfile(
-      named name: String,
-      for device: RemappingDeviceScope,
-      scope: RemappingApplicationScope
-    ) {
+    /// Adds `profile` to the library: a new profile from the creation sheet, or a copy from the
+    /// Duplicate sheet.
+    func createProfile(_ profile: RemappingProfile) {
       guard !isProfileActionBlocked else { return }
-      let profile = RemappingProfile(
-        name: name,
-        device: device,
-        applicationScope: scope,
-        outputPolicy: RemappingOutputPolicy(virtualGamepad: .passthrough),
-        bindings: []
-      )
       let request = RuntimeMutationRequest(operation: .create(profileID: profile.id))
       guard beginProfileMutation(request) else { return }
       Task { @MainActor in

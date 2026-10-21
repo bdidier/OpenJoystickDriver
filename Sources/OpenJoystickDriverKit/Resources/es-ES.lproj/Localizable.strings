@@ -165,7 +165,6 @@
 "capture.buttonsHeld" = "Botones pulsados: %@";
 "capture.profileNameValidation" = "Introduce un nombre de perfil.";
 "profiles.new" = "Perfil nuevo";
-"profiles.defaultName" = "Mi mando";
 "profiles.deleteTitle" = "¿Eliminar perfil?";
 "profiles.deleteMessage" = "Esto quita el perfil de OpenJoystickDriver.";
 "profiles.discardMessage" = "Los cambios de este perfil no se han guardado.";
@@ -175,7 +174,6 @@
 "profiles.refreshError" = "No se ha podido actualizar el estado del perfil";
 "profiles.none" = "Ningún perfil";
 "profiles.createMessage" = "Crea un perfil para empezar a asignar controles.";
-"profiles.create" = "Crear perfil…";
 "profiles.refreshing" = "Actualizando el estado del perfil…";
 "profiles.stateUnavailable" = "El estado del perfil no está disponible";
 "profiles.draftPreserved" = "Se conserva tu borrador actual. %@";
@@ -221,7 +219,12 @@
 "profiles.chordWindow" = "Ventana de pulsación";
 "profiles.chords" = "Acordes";
 "profiles.controlNumber" = "Control %d";
-"profiles.creationValidation" = "Revisa el nombre del perfil, los identificadores del mando y la app de destino.";
+"profiles.creationValidation" = "Revisa el nombre del perfil y la app de destino.";
+"profiles.controllersOfProfiles" = "Usados en tus perfiles";
+"profiles.chooseController" = "Elige un mando";
+"profiles.saveFirst" = "Guarda el perfil primero.";
+"profiles.unreadableRecords" = "No se pudieron leer algunos archivos de registros de mandos. Detalles: %@.";
+"profiles.scopedCaption" = "%1$@ · %2$@";
 "profiles.deactivateController" = "Desactivar todo";
 "profiles.details" = "Detalles del perfil";
 "profiles.notSupportedByController" = "No es compatible con este mando o protocolo.";
@@ -231,11 +234,14 @@
 "profiles.holdDuration" = "Duración de retención";
 "profiles.identifierHint" = "Usa identificadores decimales o hexadecimales con prefijo 0x.";
 "profiles.import" = "Importar perfil";
+"profiles.validateFile" = "Validar archivo de perfil";
+"profiles.validTitle" = "Perfil válido";
+"profiles.invalidTitle" = "Perfil no válido";
+"profiles.validMessage" = "%1$@ (%2$@). Se aplica a: %3$@.";
 "profiles.invalidIdentifiers" = "Introduce identificadores de fabricante y de producto válidos de 16 bits.";
 "profiles.layerName" = "Nombre de la capa";
 "profiles.layers" = "Capas";
 "profiles.longHold" = "Pulsación larga";
-"profiles.manualDevice" = "Identificadores manuales";
 "profiles.noChords" = "No hay acordes configurados.";
 "profiles.noLayers" = "No hay capas configuradas.";
 "profiles.noSequences" = "No se han configurado secuencias.";

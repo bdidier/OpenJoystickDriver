@@ -165,7 +165,6 @@
 "capture.buttonsHeld" = "الأزرار المضغوطة: %@";
 "capture.profileNameValidation" = "أدخل اسم ملف تعريف.";
 "profiles.new" = "ملف تعريف جديد";
-"profiles.defaultName" = "وحدة التحكم الخاصة بي";
 "profiles.deleteTitle" = "هل تريد حذف ملف التعريف؟";
 "profiles.deleteMessage" = "يزيل هذا ملف التعريف من OpenJoystickDriver.";
 "profiles.discardMessage" = "لم تُحفظ تغييراتك على ملف التعريف هذا.";
@@ -175,7 +174,6 @@
 "profiles.refreshError" = "تعذر تحديث حالة ملف التعريف";
 "profiles.none" = "لا توجد ملفات تعريف";
 "profiles.createMessage" = "أنشئ ملف تعريف لبدء تعيين العناصر.";
-"profiles.create" = "إنشاء ملف تعريف…";
 "profiles.refreshing" = "جارٍ تحديث حالة ملف التعريف…";
 "profiles.stateUnavailable" = "حالة ملف التعريف غير متوفرة";
 "profiles.draftPreserved" = "حُفظت المسودة الحالية. %@";
@@ -221,7 +219,12 @@
 "profiles.chordWindow" = "نافذة الضغط";
 "profiles.chords" = "التركيبات";
 "profiles.controlNumber" = "عنصر التحكم %d";
-"profiles.creationValidation" = "راجع اسم ملف التعريف ومعرّفات وحدة التحكم وهدف التطبيق.";
+"profiles.creationValidation" = "راجع اسم ملف التعريف وهدف التطبيق.";
+"profiles.controllersOfProfiles" = "مستخدمة في ملفات التعريف لديك";
+"profiles.chooseController" = "اختر وحدة تحكم";
+"profiles.saveFirst" = "احفظ ملف التعريف أولًا.";
+"profiles.unreadableRecords" = "تعذرت قراءة بعض ملفات سجلات وحدات التحكم. التفاصيل: %@.";
+"profiles.scopedCaption" = "%1$@ · %2$@";
 "profiles.deactivateController" = "إلغاء تنشيط الكل";
 "profiles.details" = "تفاصيل ملف التعريف";
 "profiles.notSupportedByController" = "غير مدعوم من وحدة التحكم هذه أو بروتوكولها.";
@@ -231,11 +234,14 @@
 "profiles.holdDuration" = "مدة الإبقاء";
 "profiles.identifierHint" = "استخدم معرّفات عشرية أو سداسية عشرية بالبادئة 0x.";
 "profiles.import" = "استيراد ملف التعريف";
+"profiles.validateFile" = "التحقق من صحة ملف التعريف";
+"profiles.validTitle" = "ملف تعريف صالح";
+"profiles.invalidTitle" = "ملف تعريف غير صالح";
+"profiles.validMessage" = "%1$@ (%2$@). ينطبق على: %3$@.";
 "profiles.invalidIdentifiers" = "أدخل معرّفَي مورّد ومنتج صالحين بطول 16 بت.";
 "profiles.layerName" = "اسم الطبقة";
 "profiles.layers" = "الطبقات";
 "profiles.longHold" = "إبقاء مطوّل";
-"profiles.manualDevice" = "المعرّفات اليدوية";
 "profiles.noChords" = "لا توجد تركيبات مضبوطة.";
 "profiles.noLayers" = "لا توجد طبقات مضبوطة.";
 "profiles.noSequences" = "لا توجد تسلسلات مضبوطة.";

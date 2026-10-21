@@ -9,29 +9,21 @@
     let onChange: (ControllerColor?) -> Void
 
     var body: some View {
-      GroupBox {
-        VStack(alignment: .leading, spacing: 10) {
-          Toggle(
-            OJDLocalized.string(
-              "profiles.useControllerDefaultColor"
-            ),
-            isOn: Binding(
-              get: { color == nil },
-              set: { useDefault in
-                onChange(useDefault ? nil : ControllerColor(red: 0, green: 122, blue: 255))
-              }
-            )
-          )
-          if color != nil {
-            HStack {
-              Text(OJDLocalized.string("inputTest.color"))
-              Spacer()
-              OJDPhysicalColorWell(color: colorBinding).frame(width: 44, height: 24)
+      Section(header: Text(OJDLocalized.string("inputTest.lighting"))) {
+        Toggle(
+          OJDLocalized.string("profiles.useControllerDefaultColor"),
+          isOn: Binding(
+            get: { color == nil },
+            set: { useDefault in
+              onChange(useDefault ? nil : ControllerColor(red: 0, green: 122, blue: 255))
             }
+          )
+        )
+        if color != nil {
+          OJDLabeledRow(OJDLocalized.string("inputTest.color")) {
+            OJDPhysicalColorWell(color: colorBinding).frame(width: 44, height: 24)
           }
-        }.padding(4)
-      } label: {
-        Text(OJDLocalized.string("inputTest.lighting"))
+        }
       }
     }
 

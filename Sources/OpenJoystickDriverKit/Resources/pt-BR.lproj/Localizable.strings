@@ -165,7 +165,6 @@
 "capture.buttonsHeld" = "Botões pressionados: %@";
 "capture.profileNameValidation" = "Digite um nome de perfil.";
 "profiles.new" = "Novo Perfil";
-"profiles.defaultName" = "Meu Controle";
 "profiles.deleteTitle" = "Apagar perfil?";
 "profiles.deleteMessage" = "Isso remove o perfil do OpenJoystickDriver.";
 "profiles.discardMessage" = "As alterações neste perfil não foram salvas.";
@@ -175,7 +174,6 @@
 "profiles.refreshError" = "Não foi possível atualizar o estado do perfil";
 "profiles.none" = "Nenhum Perfil";
 "profiles.createMessage" = "Crie um perfil para começar a atribuir comandos.";
-"profiles.create" = "Criar Perfil…";
 "profiles.refreshing" = "Atualizando o estado do perfil…";
 "profiles.stateUnavailable" = "O estado do perfil está indisponível";
 "profiles.draftPreserved" = "O rascunho atual foi preservado. %@";
@@ -221,7 +219,12 @@
 "profiles.chordWindow" = "Janela de Tempo para Pressionar";
 "profiles.chords" = "Combinações";
 "profiles.controlNumber" = "Comando %d";
-"profiles.creationValidation" = "Revise o nome do perfil, os identificadores do controle e o aplicativo de destino.";
+"profiles.creationValidation" = "Revise o nome do perfil e o aplicativo de destino.";
+"profiles.controllersOfProfiles" = "Usados nos Seus Perfis";
+"profiles.chooseController" = "Escolha um controle";
+"profiles.saveFirst" = "Salve o perfil primeiro.";
+"profiles.unreadableRecords" = "Alguns arquivos de registros de controles não puderam ser lidos. Detalhes: %@.";
+"profiles.scopedCaption" = "%1$@ · %2$@";
 "profiles.deactivateController" = "Desativar Todos";
 "profiles.details" = "Detalhes do Perfil";
 "profiles.notSupportedByController" = "Sem suporte neste controle ou protocolo.";
@@ -231,11 +234,14 @@
 "profiles.holdDuration" = "Duração de Retenção";
 "profiles.identifierHint" = "Use identificadores decimais ou hexadecimais com prefixo 0x.";
 "profiles.import" = "Importar Perfil";
+"profiles.validateFile" = "Validar Arquivo de Perfil";
+"profiles.validTitle" = "Perfil Válido";
+"profiles.invalidTitle" = "Perfil Inválido";
+"profiles.validMessage" = "%1$@ (%2$@). Aplica-se a: %3$@.";
 "profiles.invalidIdentifiers" = "Digite identificadores de fornecedor e de produto válidos de 16 bits.";
 "profiles.layerName" = "Nome da Camada";
 "profiles.layers" = "Camadas";
 "profiles.longHold" = "Segurar por Muito Tempo";
-"profiles.manualDevice" = "Identificadores Manuais";
 "profiles.noChords" = "Nenhuma combinação configurada.";
 "profiles.noLayers" = "Não há camadas configuradas.";
 "profiles.noSequences" = "Não há sequências configuradas.";

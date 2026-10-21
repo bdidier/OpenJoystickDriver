@@ -165,7 +165,6 @@
 "capture.buttonsHeld" = "Ingedrukte knoppen: %@";
 "capture.profileNameValidation" = "Voer een profielnaam in.";
 "profiles.new" = "Nieuw profiel";
-"profiles.defaultName" = "Mijn controller";
 "profiles.deleteTitle" = "Profiel verwijderen?";
 "profiles.deleteMessage" = "Hiermee wordt het profiel uit OpenJoystickDriver verwijderd.";
 "profiles.discardMessage" = "De wijzigingen in dit profiel zijn niet bewaard.";
@@ -175,7 +174,6 @@
 "profiles.refreshError" = "Profielstatus kon niet worden vernieuwd";
 "profiles.none" = "Geen profielen";
 "profiles.createMessage" = "Maak een profiel om besturingen toe te wijzen.";
-"profiles.create" = "Maak profiel…";
 "profiles.refreshing" = "Profielstatus vernieuwen…";
 "profiles.stateUnavailable" = "Profielstatus is niet beschikbaar";
 "profiles.draftPreserved" = "Het huidige concept blijft bewaard. %@";
@@ -221,7 +219,12 @@
 "profiles.chordWindow" = "Indrukvenster";
 "profiles.chords" = "Akkoorden";
 "profiles.controlNumber" = "Besturing %d";
-"profiles.creationValidation" = "Controleer de profielnaam, de controlleridentificaties en het doel van de toepassing.";
+"profiles.creationValidation" = "Controleer de profielnaam en het doel van de toepassing.";
+"profiles.controllersOfProfiles" = "Gebruikt door je profielen";
+"profiles.chooseController" = "Kies een controller";
+"profiles.saveFirst" = "Bewaar eerst het profiel.";
+"profiles.unreadableRecords" = "Sommige controllerrecordbestanden konden niet worden gelezen. Details: %@.";
+"profiles.scopedCaption" = "%1$@ · %2$@";
 "profiles.deactivateController" = "Deactiveer alles";
 "profiles.details" = "Profielgegevens";
 "profiles.notSupportedByController" = "Niet ondersteund door deze controller of dit protocol.";
@@ -231,11 +234,14 @@
 "profiles.holdDuration" = "Duur van vasthouden";
 "profiles.identifierHint" = "Gebruik decimale of hexadecimale identificaties met het voorvoegsel 0x.";
 "profiles.import" = "Importeer profiel";
+"profiles.validateFile" = "Controleer profielbestand";
+"profiles.validTitle" = "Geldig profiel";
+"profiles.invalidTitle" = "Ongeldig profiel";
+"profiles.validMessage" = "%1$@ (%2$@). Geldt voor: %3$@.";
 "profiles.invalidIdentifiers" = "Voer geldige 16-bits leveranciers- en productidentificaties in.";
 "profiles.layerName" = "Naam van de laag";
 "profiles.layers" = "Lagen";
 "profiles.longHold" = "Lang vasthouden";
-"profiles.manualDevice" = "Handmatige identificaties";
 "profiles.noChords" = "Geen akkoorden geconfigureerd.";
 "profiles.noLayers" = "Geen lagen geconfigureerd.";
 "profiles.noSequences" = "Geen sequenties geconfigureerd.";

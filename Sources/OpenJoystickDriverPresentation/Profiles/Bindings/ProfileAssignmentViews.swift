@@ -83,25 +83,21 @@
     let rowLayout: ProfileAssignmentRowLayout
 
     var body: some View {
-      GroupBox {
-        VStack(alignment: .leading, spacing: 0) {
-          Text(title).font(.subheadline.weight(.semibold)).padding(.bottom, 5)
-          ForEach(bindings) { binding in
-            AssignmentRow(
-              binding: binding,
-              capabilities: capabilities,
-              draft: $draft,
-              isEditingDisabled: isEditingDisabled,
-              onRemove: onRemove,
-              onError: onError,
-              onAdjust: onAdjust,
-              onBehavior: onBehavior,
-              onEditingStateChanged: onEditingStateChanged,
-              layout: rowLayout
-            )
-            if binding.id != bindings.last?.id { Divider().padding(.leading, 2) }
-          }
-        }.padding(4)
+      Section(header: Text(title)) {
+        ForEach(bindings) { binding in
+          AssignmentRow(
+            binding: binding,
+            capabilities: capabilities,
+            draft: $draft,
+            isEditingDisabled: isEditingDisabled,
+            onRemove: onRemove,
+            onError: onError,
+            onAdjust: onAdjust,
+            onBehavior: onBehavior,
+            onEditingStateChanged: onEditingStateChanged,
+            layout: rowLayout
+          )
+        }
       }
     }
   }

@@ -4,35 +4,6 @@
   import OpenJoystickDriverKit
   import SwiftUI
 
-  struct ProfileListButtonStyle: ButtonStyle {
-    let selected: Bool
-
-    func makeBody(configuration: Configuration) -> some View {
-      configuration.label.foregroundColor(Color.primary).background(
-        RoundedRectangle(cornerRadius: 6).fill(
-          selected ? Color(NSColor.selectedControlColor).opacity(0.42) : Color.clear
-        )
-      ).opacity(configuration.isPressed ? 0.72 : 1)
-    }
-  }
-
-  /// A destructive action that keeps the native semantic role and a visibly destructive tint.
-  struct OJDDestructiveButton<Label: View>: View {
-    let action: () -> Void
-    let label: () -> Label
-
-    init(action: @escaping () -> Void, @ViewBuilder label: @escaping () -> Label) {
-      self.action = action
-      self.label = label
-    }
-
-    var body: some View {
-      Button(role: .destructive, action: action, label: label).foregroundColor(
-        Color(NSColor.systemRed)
-      )
-    }
-  }
-
   struct ProfileActionErrorBanner: View {
     let message: String
     let dismiss: () -> Void

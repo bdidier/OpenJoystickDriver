@@ -198,6 +198,7 @@
 
     private var selectedProfile: RemappingProfile? {
       guard case .available(let snapshot) = screens.runtime.remappingState,
+        screens.profiles.selectedRecoveryIssueID == nil,
         let selectedID = screens.profiles.selectedProfileID
       else { return nil }
       return snapshot.profiles.first { $0.id == selectedID }
@@ -301,8 +302,14 @@
       else { return }
       switch action {
       case .refreshControllers: screens.controllers.refresh()
-      case .newProfile: screens.profiles.isCreatingProfile = true
+      case .newProfile: screens.profiles.beginCreatingProfile()
       case .importProfile: screens.profiles.chooseProfileToImport()
+      case .validateProfileFile: screens.profiles.validateProfileFile()
+      case .duplicateProfile: screens.profiles.duplicatingProfile = selectedProfile
+      case .exportProfile:
+        if let selectedProfile { screens.profiles.exportProfile(selectedProfile) }
+      case .deleteProfile:
+        if let selectedProfile { screens.profiles.activeAlert = .delete(selectedProfile.id) }
       case .installLibraryItem: installRecordOrMod()
       case .grantProgram:
         if let url = AccessFilePicker.chooseProgram() {
@@ -332,19 +339,39 @@
     func isEnabled(_ action: MainWindowToolbarAction) -> Bool {
       switch action {
       case .refreshControllers: return !screens.runtime.isScopedRefreshInFlight
-      case .newProfile, .importProfile:
-        return !screens.profiles.isActionBlocked(library: screens.library, runtime: screens.runtime)
+      case .newProfile, .importProfile, .validateProfileFile, .duplicateProfile, .exportProfile,
+        .deleteProfile:
+        return action.isEnabled(profile: profileToolbarState)
       case .installLibraryItem, .validateLibraryItem, .searchLibrary: return true
       case .grantProgram, .createToken: return screens.access.status != nil && !screens.access.busy
       case .testLibraryRecord: return screens.libraryArea.canTestSelection
       case .removeLibraryItem: return screens.libraryArea.canRemoveSelection
       }
     }
+
+    private var profileToolbarState: ProfileToolbarState {
+      ProfileToolbarState(
+        hasSelection: selectedProfile != nil,
+        isBlocked: screens.profiles.isActionBlocked(
+          library: screens.library,
+          runtime: screens.runtime
+        ),
+        hasUnsavedChanges: screens.profiles.editorTransition.isDirty
+      )
+    }
   }
 
   extension MainWindowController: NSToolbarItemValidation {
     func validateToolbarItem(_ item: NSToolbarItem) -> Bool {
-      MainWindowToolbarAction(identifier: item.itemIdentifier).map(isEnabled) ?? true
+      guard let action = MainWindowToolbarAction(identifier: item.itemIdentifier) else {
+        return true
+      }
+      if action.needsSavedProfile {
+        item.toolTip =
+          profileToolbarState.hasUnsavedChanges
+          ? OJDLocalized.string("profiles.saveFirst") : OJDLocalized.string(action.descriptionKey)
+      }
+      return isEnabled(action)
     }
   }
 

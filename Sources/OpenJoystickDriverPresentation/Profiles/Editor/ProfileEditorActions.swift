@@ -56,7 +56,7 @@
     }
 
     var menuActions: [ProfileEditorMenuAction] {
-      var actions: [ProfileEditorMenuAction] = [.duplicate, .export]
+      var actions: [ProfileEditorMenuAction] = []
       if draft.profile.suppressesAllControllerInput { actions.append(.restoreDefaultInput) }
       actions.append(.clearInputs)
       if isActive, profile.joyConPair == nil { actions.append(.deactivateAll) }
@@ -65,11 +65,6 @@
 
     func performMenuAction(_ action: ProfileEditorMenuAction) {
       switch action {
-      case .duplicate: duplicateProfile()
-      case .export:
-        do { onExport(try draft.validatedProfile()) } catch {
-          localError = RuntimePresentation.userFacingError(error)
-        }
       case .details: activeSheet = .metadata
       case .restoreDefaultInput: restoreDefaultInput()
       case .clearInputs: confirmation = .clearInputs
@@ -222,18 +217,6 @@
       }
     }
 
-    func duplicateProfile() {
-      guard !isEditingDisabled else { return }
-      let source = draft.profile
-      let duplicate = duplicatedProfile(source)
-      let request = RuntimeMutationRequest(operation: .create(profileID: duplicate.id))
-      guard onMutationStarted(request) else { return }
-      Task { @MainActor in
-        let result = await library.createRemappingProfile(duplicate, request: request)
-        onMutationResult(result)
-      }
-    }
-
     func reportEditingState() {
       onEditingStateChanged(saveInFlight || draft.profile != expectedCurrent)
     }
@@ -306,8 +289,6 @@
   }
 
   enum ProfileEditorMenuAction: Hashable {
-    case duplicate
-    case export
     case details
     case restoreDefaultInput
     case clearInputs
@@ -315,8 +296,6 @@
 
     var title: String {
       switch self {
-      case .duplicate: return OJDLocalized.string("common.duplicate")
-      case .export: return OJDLocalized.string("profiles.export")
       case .details: return OJDLocalized.string("profiles.details")
       case .restoreDefaultInput:
         return OJDLocalized.string(

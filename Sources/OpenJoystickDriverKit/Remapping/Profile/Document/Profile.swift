@@ -263,6 +263,12 @@ public struct RemappingBinding: Codable, Equatable, Hashable, Identifiable, Send
 }
 
 public struct RemappingProfile: Codable, Equatable, Identifiable, Sendable {
+  /// The form of a profile name that the library compares: two profiles cannot have names that
+  /// are equal in this form.
+  public static func normalizedName(_ name: String) -> String {
+    name.lowercased(with: Locale(identifier: "en_US_POSIX"))
+  }
+
   /// The `kind` of a profile document.
   public static let kind = "Profile"
   public static let maximumBindingCount = 512
