@@ -156,6 +156,18 @@ struct OrderedJSONTests {
     )
   }
 
+  /// A zero byte past the first four bytes is a grammar problem at its offset, not a wide
+  /// encoding; the first problem in the text is the one reported.
+  @Test
+  func aZeroByteInUTF8TextIsASyntaxProblem() {
+    let inString = Self.problem(Array(#"{"name": "a"#.utf8) + [0x00] + Array(#""}"#.utf8))
+    let words = "a zero byte, which JSON text cannot carry"
+    #expect(inString == OrderedJSON.Problem(reason: .syntax(words), offset: 11))
+    #expect(inString?.description == "JSON text, byte 11: \(words)")
+    let afterBadByte = Self.problem(Array(#"{"k": "#.utf8) + [0xC3, 0x28, 0x00] + Array("}".utf8))
+    #expect(afterBadByte == OrderedJSON.Problem(reason: .notUTF8, offset: 6))
+  }
+
   @Test
   func bytesThatAreNotUTF8AreRefusedWithTheirOffset() {
     let problem = Self.problem(Array(#"{"k": "é"#.utf8) + [0xC3, 0x28] + Array(#""}"#.utf8))

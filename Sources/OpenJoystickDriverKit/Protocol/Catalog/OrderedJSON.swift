@@ -34,8 +34,9 @@ public indirect enum OrderedJSON: Equatable, Sendable {
       /// The text starts with the UTF-8 byte order mark `EF BB BF`, which record files do not
       /// carry.
       case byteOrderMark
-      /// The text starts with a UTF-16 byte order mark or holds a zero byte, as UTF-16 and UTF-32
-      /// text does.
+      /// The text starts with a UTF-16 byte order mark or has a zero byte in its first four
+      /// bytes: JSON text starts with ASCII characters, which UTF-16 and UTF-32 write with zero
+      /// bytes.
       case wideEncoding
       /// The bytes from ``Problem/offset`` are not UTF-8.
       case notUTF8
@@ -185,7 +186,8 @@ public indirect enum OrderedJSON: Equatable, Sendable {
   }
 
   /// Refuses text that is not plain UTF-8: a byte order mark, UTF-16 or UTF-32 text, or bytes
-  /// that do not decode as UTF-8.
+  /// that do not decode as UTF-8. A zero byte after the first four is a ``Problem/Reason/syntax``
+  /// problem, because JSON text cannot carry one, not even in a string.
   public static func requireUTF8(_ data: Data) throws { try requireUTF8([UInt8](data)) }
 
   private static func requireUTF8(_ bytes: [UInt8]) throws {
@@ -195,18 +197,24 @@ public indirect enum OrderedJSON: Equatable, Sendable {
     if bytes.starts(with: [0xFE, 0xFF]) || bytes.starts(with: [0xFF, 0xFE]) {
       throw Problem(reason: .wideEncoding, offset: 0)
     }
-    if let zero = bytes.firstIndex(of: 0) { throw Problem(reason: .wideEncoding, offset: zero) }
+    if let zero = bytes.prefix(4).firstIndex(of: 0) {
+      throw Problem(reason: .wideEncoding, offset: zero)
+    }
     var iterator = bytes.makeIterator()
     var decoder = UTF8()
     var offset = 0
     while true {
       switch decoder.decode(&iterator) {
-      case .scalarValue(let scalar): offset += UTF8.width(scalar)
+      case .scalarValue(let scalar):
+        if scalar == "\0" { throw Problem(reason: .syntax(zeroByteWords), offset: offset) }
+        offset += UTF8.width(scalar)
       case .emptyInput: return
       case .error: throw Problem(reason: .notUTF8, offset: offset)
       }
     }
   }
+
+  static let zeroByteWords = "a zero byte, which JSON text cannot carry"
 
   // MARK: Formatting
 
