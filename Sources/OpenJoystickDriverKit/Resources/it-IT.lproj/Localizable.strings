@@ -30,7 +30,6 @@
 "settings.controllers" = "Controller";
 "settings.profiles" = "Profili";
 "settings.accessReadiness" = "Accesso e prontezza";
-"settings.accessReadinessAccessibility" = "Accesso e prontezza";
 "settings.checkUpdates" = "Controlla ora";
 "settings.controllerConnectedShort" = "Connesso";
 "settings.requestAccess" = "Richiedi accesso a %@";
@@ -1620,13 +1619,10 @@
 "access.loading" = "Lettura delle impostazioni di accesso…";
 "access.done" = "Fine";
 "access.choose" = "Scegli";
-"access.none" = "Nessuno";
 "access.endpoint" = "Endpoint locale";
-"access.on" = "Attivo";
-"access.off" = "Disattivato";
 "access.socket" = "Socket locale: %@";
+"access.socket.copy" = "Copia percorso del socket";
 "access.enable" = "Attiva";
-"access.disable" = "Disattiva";
 "access.enable.title" = "Attivare l’endpoint locale?";
 "access.enable.message" = "I programmi a cui concedi l’accesso possono quindi leggere lo stato dei controller e, con l’ambito Controllo, modificarlo.";
 "access.web" = "WebSocket";
@@ -1652,6 +1648,8 @@
 "access.revoke" = "Revoca";
 "access.revoke.title" = "Revocare l’accesso di %@?";
 "access.revoke.message" = "Il programma perde tutti i suoi ambiti e le sue connessioni aperte vengono chiuse.";
+"access.revoke.all" = "Tutti gli ambiti";
+"access.revokeScope.message" = "Viene rimosso solo l’ambito %@. Gli altri ambiti restano e le connessioni aperte che lo usano vengono chiuse.";
 "access.revokeToken.title" = "Revocare il token %@?";
 "access.revokeToken.message" = "Le pagine e i programmi che usano il token perdono l’accesso e le loro connessioni aperte vengono chiuse.";
 "access.tokens" = "Token";
@@ -1688,10 +1686,6 @@
 "a11y.access.dismissError" = "Ignora l’errore";
 "a11y.access.tryAgain" = "Leggi di nuovo le impostazioni di accesso";
 "a11y.access.restart" = "Riavvia l’app per applicare i nuovi permessi";
-"a11y.access.enableEndpoint" = "Attiva l’endpoint locale";
-"a11y.access.disableEndpoint" = "Disattiva l’endpoint locale";
-"a11y.access.enableWeb" = "Attiva il WebSocket";
-"a11y.access.disableWeb" = "Disattiva il WebSocket";
 "a11y.access.webPort" = "Porta del WebSocket; lascia vuoto per usare la porta salvata";
 "a11y.access.grantProgram" = "Concedi l’accesso a un programma che scegli";
 "a11y.access.grantRefused" = "Concedi l’accesso a %@";

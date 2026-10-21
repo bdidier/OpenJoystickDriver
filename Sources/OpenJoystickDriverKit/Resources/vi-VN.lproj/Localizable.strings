@@ -30,7 +30,6 @@
 "settings.controllers" = "Bộ điều khiển";
 "settings.profiles" = "Cấu hình";
 "settings.accessReadiness" = "Quyền truy cập & mức sẵn sàng";
-"settings.accessReadinessAccessibility" = "Quyền truy cập và mức sẵn sàng";
 "settings.checkUpdates" = "Kiểm tra ngay";
 "settings.controllerConnectedShort" = "Đã kết nối";
 "settings.requestAccess" = "Yêu cầu quyền %@";
@@ -1509,13 +1508,10 @@
 "access.loading" = "Đang đọc cài đặt quyền truy cập…";
 "access.done" = "Xong";
 "access.choose" = "Chọn";
-"access.none" = "Không có";
 "access.endpoint" = "Điểm cuối cục bộ";
-"access.on" = "Đang bật";
-"access.off" = "Đang tắt";
 "access.socket" = "Socket cục bộ: %@";
+"access.socket.copy" = "Sao chép đường dẫn socket";
 "access.enable" = "Bật";
-"access.disable" = "Tắt";
 "access.enable.title" = "Bật điểm cuối cục bộ?";
 "access.enable.message" = "Các chương trình mà bạn cấp quyền truy cập sau đó có thể đọc trạng thái bộ điều khiển và, nếu có phạm vi điều khiển, thay đổi trạng thái đó.";
 "access.web" = "WebSocket";
@@ -1541,6 +1537,8 @@
 "access.revoke" = "Thu hồi";
 "access.revoke.title" = "Thu hồi quyền truy cập của %@?";
 "access.revoke.message" = "Chương trình mất mọi phạm vi và các kết nối đang mở của nó bị đóng.";
+"access.revoke.all" = "Mọi phạm vi";
+"access.revokeScope.message" = "Chỉ phạm vi %@ bị gỡ bỏ. Các phạm vi khác được giữ nguyên và các kết nối đang mở dùng phạm vi này bị đóng.";
 "access.revokeToken.title" = "Thu hồi token %@?";
 "access.revokeToken.message" = "Các trang và chương trình dùng token mất quyền truy cập và các kết nối đang mở của chúng bị đóng.";
 "access.tokens" = "Token";
@@ -1577,10 +1575,6 @@
 "a11y.access.dismissError" = "Bỏ qua lỗi";
 "a11y.access.tryAgain" = "Đọc lại cài đặt quyền truy cập";
 "a11y.access.restart" = "Khởi động lại ứng dụng để áp dụng quyền mới";
-"a11y.access.enableEndpoint" = "Bật điểm cuối cục bộ";
-"a11y.access.disableEndpoint" = "Tắt điểm cuối cục bộ";
-"a11y.access.enableWeb" = "Bật WebSocket";
-"a11y.access.disableWeb" = "Tắt WebSocket";
 "a11y.access.webPort" = "Cổng WebSocket; để trống để dùng cổng đã lưu";
 "a11y.access.grantProgram" = "Cấp quyền truy cập cho chương trình bạn chọn";
 "a11y.access.grantRefused" = "Cấp quyền truy cập cho %@";

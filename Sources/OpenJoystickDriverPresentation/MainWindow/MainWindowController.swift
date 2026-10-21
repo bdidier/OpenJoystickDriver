@@ -114,6 +114,7 @@
         runtime.$remappingState.map { _ in () }.eraseToAnyPublisher(),
         screens.library.objectWillChange.map { _ in () }.eraseToAnyPublisher(),
         screens.profiles.objectWillChange.map { _ in () }.eraseToAnyPublisher(),
+        screens.access.objectWillChange.map { _ in () }.eraseToAnyPublisher(),
         navigation.objectWillChange.map { _ in () }.eraseToAnyPublisher()
       ).receive(on: DispatchQueue.main).sink { [weak self] in
         self?.window?.toolbar?.validateVisibleItems()
@@ -302,6 +303,11 @@
       case .newProfile: screens.profiles.isCreatingProfile = true
       case .importProfile: screens.profiles.chooseProfileToImport()
       case .installLibraryItem: installRecordOrMod()
+      case .grantProgram:
+        if let url = AccessFilePicker.chooseProgram() {
+          screens.access.requestGrant(programAt: url)
+        }
+      case .createToken: screens.access.requestTokenForm()
       }
     }
 
@@ -311,6 +317,7 @@
       case .newProfile, .importProfile:
         return !screens.profiles.isActionBlocked(library: screens.library, runtime: screens.runtime)
       case .installLibraryItem: return true
+      case .grantProgram, .createToken: return screens.access.status != nil && !screens.access.busy
       }
     }
   }

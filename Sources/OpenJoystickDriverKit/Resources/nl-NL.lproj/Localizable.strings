@@ -30,7 +30,6 @@
 "settings.controllers" = "Controllers";
 "settings.profiles" = "Profielen";
 "settings.accessReadiness" = "Toegang en gereedheid";
-"settings.accessReadinessAccessibility" = "Toegang en gereedheid";
 "settings.checkUpdates" = "Controleer nu";
 "settings.controllerConnectedShort" = "Verbonden";
 "settings.requestAccess" = "Vraag toegang tot “%@” aan";
@@ -1620,13 +1619,10 @@
 "access.loading" = "Toegangsinstellingen worden gelezen…";
 "access.done" = "Gereed";
 "access.choose" = "Kies";
-"access.none" = "Geen";
 "access.endpoint" = "Lokaal eindpunt";
-"access.on" = "Aan";
-"access.off" = "Uit";
 "access.socket" = "Lokale socket: %@";
+"access.socket.copy" = "Kopieer socketpad";
 "access.enable" = "Zet aan";
-"access.disable" = "Zet uit";
 "access.enable.title" = "Het lokale eindpunt aanzetten?";
 "access.enable.message" = "Programma’s waaraan je toegang verleent, kunnen dan de controllerstatus lezen en deze met het bereik Besturen wijzigen.";
 "access.web" = "WebSocket";
@@ -1652,6 +1648,8 @@
 "access.revoke" = "Trek in";
 "access.revoke.title" = "De toegang van %@ intrekken?";
 "access.revoke.message" = "Het programma verliest al zijn bereiken en zijn open verbindingen worden gesloten.";
+"access.revoke.all" = "Alle bereiken";
+"access.revokeScope.message" = "Alleen het bereik %@ wordt verwijderd. De andere bereiken blijven en open verbindingen die het gebruiken worden gesloten.";
 "access.revokeToken.title" = "Het token %@ intrekken?";
 "access.revokeToken.message" = "Pagina’s en programma’s die het token gebruiken, verliezen de toegang en hun open verbindingen worden gesloten.";
 "access.tokens" = "Tokens";
@@ -1688,10 +1686,6 @@
 "a11y.access.dismissError" = "Sluit de fout";
 "a11y.access.tryAgain" = "Lees de toegangsinstellingen opnieuw";
 "a11y.access.restart" = "Start de app opnieuw op zodat de nieuwe toestemmingen gelden";
-"a11y.access.enableEndpoint" = "Zet het lokale eindpunt aan";
-"a11y.access.disableEndpoint" = "Zet het lokale eindpunt uit";
-"a11y.access.enableWeb" = "Zet de WebSocket aan";
-"a11y.access.disableWeb" = "Zet de WebSocket uit";
 "a11y.access.webPort" = "WebSocket-poort; laat leeg voor de bewaarde poort";
 "a11y.access.grantProgram" = "Verleen toegang aan een programma dat je kiest";
 "a11y.access.grantRefused" = "Verleen toegang aan %@";

@@ -30,7 +30,6 @@
 "settings.controllers" = "Manettes";
 "settings.profiles" = "Profils";
 "settings.accessReadiness" = "Accès et disponibilité";
-"settings.accessReadinessAccessibility" = "Accès et disponibilité";
 "settings.checkUpdates" = "Vérifier maintenant";
 "settings.controllerConnectedShort" = "Connectée";
 "settings.requestAccess" = "Demander l’accès « %@ »";
@@ -1620,13 +1619,10 @@
 "access.loading" = "Lecture des réglages d’accès…";
 "access.done" = "Terminé";
 "access.choose" = "Choisir";
-"access.none" = "Aucun";
 "access.endpoint" = "Point d’accès local";
-"access.on" = "Activé";
-"access.off" = "Désactivé";
 "access.socket" = "Socket : %@";
+"access.socket.copy" = "Copier le chemin du socket";
 "access.enable" = "Activer";
-"access.disable" = "Désactiver";
 "access.enable.title" = "Activer le point d’accès local ?";
 "access.enable.message" = "Les programmes auxquels vous accordez l’accès peuvent alors lire l’état des manettes et, avec la portée control, le modifier.";
 "access.web" = "WebSocket";
@@ -1652,6 +1648,8 @@
 "access.revoke" = "Révoquer";
 "access.revoke.title" = "Révoquer l’accès de %@ ?";
 "access.revoke.message" = "Le programme perd toutes ses portées et ses connexions ouvertes se ferment.";
+"access.revoke.all" = "Toutes les portées";
+"access.revokeScope.message" = "Seule la portée %@ est retirée. Les autres portées restent et les connexions ouvertes qui l’utilisent se ferment.";
 "access.revokeToken.title" = "Révoquer le jeton %@ ?";
 "access.revokeToken.message" = "Les pages et les programmes qui utilisent le jeton perdent l’accès et leurs connexions ouvertes se ferment.";
 "access.tokens" = "Jetons";
@@ -1688,10 +1686,6 @@
 "a11y.access.dismissError" = "Fermer l’erreur";
 "a11y.access.tryAgain" = "Relire les réglages d’accès";
 "a11y.access.restart" = "Redémarrer l’app pour appliquer les nouvelles autorisations";
-"a11y.access.enableEndpoint" = "Activer le point d’accès local";
-"a11y.access.disableEndpoint" = "Désactiver le point d’accès local";
-"a11y.access.enableWeb" = "Activer le WebSocket";
-"a11y.access.disableWeb" = "Désactiver le WebSocket";
 "a11y.access.webPort" = "Port du WebSocket ; laissez vide pour utiliser le port enregistré";
 "a11y.access.grantProgram" = "Accorder l’accès à un programme que vous choisissez";
 "a11y.access.grantRefused" = "Accorder l’accès à %@";

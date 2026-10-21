@@ -62,7 +62,7 @@ struct MainWindowAreaTests {
     #expect(MainWindowArea.controllers.toolbarActions == [.refreshControllers])
     #expect(MainWindowArea.profiles.toolbarActions == [.newProfile, .importProfile])
     #expect(MainWindowArea.library.toolbarActions == [.installLibraryItem])
-    #expect(MainWindowArea.access.toolbarActions.isEmpty)
+    #expect(MainWindowArea.access.toolbarActions == [.grantProgram, .createToken])
     #expect(MainWindowArea.activity.toolbarActions.isEmpty)
     #expect(
       MainWindowToolbarLayout.items(for: .profiles)

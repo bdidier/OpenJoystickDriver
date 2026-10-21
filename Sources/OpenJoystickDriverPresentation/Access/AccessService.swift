@@ -59,7 +59,8 @@ protocol AccessService: Sendable {
     origins: [String],
     scopes: [EndpointScope]
   ) async throws -> AccessTokenGrantResult
-  func revoke(id: String) async throws -> AccessRevokeResult
+  /// Removes `scopes` of the grant, or the whole grant when `scopes` is nil.
+  func revoke(id: String, scopes: [EndpointScope]?) async throws -> AccessRevokeResult
 }
 
 /// The service over its local socket; each request opens a connection and closes it.
@@ -104,7 +105,7 @@ struct ApplicationServiceAccessService: AccessService {
     }
   }
 
-  func revoke(id: String) async throws -> AccessRevokeResult {
-    try await request { try await $0.revokeAccess(id: id, scopes: nil) }
+  func revoke(id: String, scopes: [EndpointScope]?) async throws -> AccessRevokeResult {
+    try await request { try await $0.revokeAccess(id: id, scopes: scopes) }
   }
 }

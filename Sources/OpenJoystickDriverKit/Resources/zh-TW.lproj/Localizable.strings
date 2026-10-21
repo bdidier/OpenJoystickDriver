@@ -30,7 +30,6 @@
 "settings.controllers" = "控制器";
 "settings.profiles" = "設定檔";
 "settings.accessReadiness" = "取用與就緒狀態";
-"settings.accessReadinessAccessibility" = "取用與就緒狀態";
 "settings.checkUpdates" = "立即檢查";
 "settings.controllerConnectedShort" = "已連接";
 "settings.requestAccess" = "要求「%@」取用權限";
@@ -1509,13 +1508,10 @@
 "access.loading" = "正在讀取取用權限設定…";
 "access.done" = "完成";
 "access.choose" = "選擇";
-"access.none" = "無";
 "access.endpoint" = "本機端點";
-"access.on" = "開";
-"access.off" = "關";
 "access.socket" = "通訊端：%@";
+"access.socket.copy" = "拷貝通訊端路徑";
 "access.enable" = "開啟";
-"access.disable" = "關閉";
 "access.enable.title" = "要開啟本機端點嗎？";
 "access.enable.message" = "您授予取用權限的程式隨後可以讀取控制器狀態，若具有控制範圍，還可以更改狀態。";
 "access.web" = "WebSocket";
@@ -1541,6 +1537,8 @@
 "access.revoke" = "撤銷";
 "access.revoke.title" = "要撤銷 %@ 的取用權限嗎？";
 "access.revoke.message" = "該程式將失去所有範圍，其已開啟的連線將關閉。";
+"access.revoke.all" = "所有範圍";
+"access.revokeScope.message" = "僅移除 %@ 範圍。其他範圍維持不變，使用此範圍的已開啟連線將關閉。";
 "access.revokeToken.title" = "要撤銷權杖 %@ 嗎？";
 "access.revokeToken.message" = "使用該權杖的頁面和程式將失去取用權限，其已開啟的連線將關閉。";
 "access.tokens" = "權杖";
@@ -1577,10 +1575,6 @@
 "a11y.access.dismissError" = "關閉錯誤";
 "a11y.access.tryAgain" = "重新讀取取用權限設定";
 "a11y.access.restart" = "重新啟動 App 以套用新權限";
-"a11y.access.enableEndpoint" = "開啟本機端點";
-"a11y.access.disableEndpoint" = "關閉本機端點";
-"a11y.access.enableWeb" = "開啟 WebSocket";
-"a11y.access.disableWeb" = "關閉 WebSocket";
 "a11y.access.webPort" = "WebSocket 連接埠；留空則使用已儲存的連接埠";
 "a11y.access.grantProgram" = "向您選擇的程式授予取用權限";
 "a11y.access.grantRefused" = "向 %@ 授予取用權限";

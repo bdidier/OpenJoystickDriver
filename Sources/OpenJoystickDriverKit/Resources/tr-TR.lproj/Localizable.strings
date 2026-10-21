@@ -30,7 +30,6 @@
 "settings.controllers" = "Kontrolcüler";
 "settings.profiles" = "Profiller";
 "settings.accessReadiness" = "Erişim ve Hazırlık";
-"settings.accessReadinessAccessibility" = "Erişim ve Hazırlık";
 "settings.checkUpdates" = "Şimdi Denetle";
 "settings.controllerConnectedShort" = "Bağlı";
 "settings.requestAccess" = "“%@” Erişimi İste";
@@ -1509,13 +1508,10 @@
 "access.loading" = "Erişim ayarları okunuyor…";
 "access.done" = "Bitti";
 "access.choose" = "Seç";
-"access.none" = "Yok";
 "access.endpoint" = "Yerel uç nokta";
-"access.on" = "Açık";
-"access.off" = "Kapalı";
 "access.socket" = "Soket: %@";
+"access.socket.copy" = "Soket Yolunu Kopyala";
 "access.enable" = "Aç";
-"access.disable" = "Kapat";
 "access.enable.title" = "Yerel uç nokta açılsın mı?";
 "access.enable.message" = "Erişim verdiğiniz programlar bundan sonra kontrolcü durumunu okuyabilir ve Kontrol kapsamıyla değiştirebilir.";
 "access.web" = "WebSocket";
@@ -1541,6 +1537,8 @@
 "access.revoke" = "Geri Çek";
 "access.revoke.title" = "Şunun erişimi geri çekilsin mi: %@?";
 "access.revoke.message" = "Program tüm kapsamlarını kaybeder ve açık bağlantıları kapanır.";
+"access.revoke.all" = "Tüm Kapsamlar";
+"access.revokeScope.message" = "Yalnızca %@ kapsamı kaldırılır. Diğer kapsamlar kalır ve onu kullanan açık bağlantılar kapanır.";
 "access.revokeToken.title" = "Şu token geri çekilsin mi: %@?";
 "access.revokeToken.message" = "Token’ı kullanan sayfalar ve programlar erişimi kaybeder ve açık bağlantıları kapanır.";
 "access.tokens" = "Token’lar";
@@ -1577,10 +1575,6 @@
 "a11y.access.dismissError" = "Hatayı kapat";
 "a11y.access.tryAgain" = "Erişim ayarlarını yeniden oku";
 "a11y.access.restart" = "Yeni izinlerin geçerli olması için uygulamayı yeniden başlat";
-"a11y.access.enableEndpoint" = "Yerel uç noktayı aç";
-"a11y.access.disableEndpoint" = "Yerel uç noktayı kapat";
-"a11y.access.enableWeb" = "WebSocket’i aç";
-"a11y.access.disableWeb" = "WebSocket’i kapat";
 "a11y.access.webPort" = "WebSocket bağlantı noktası; kayıtlı bağlantı noktası için boş bırakın";
 "a11y.access.grantProgram" = "Seçtiğiniz programa erişim ver";
 "a11y.access.grantRefused" = "Şuna erişim ver: %@";

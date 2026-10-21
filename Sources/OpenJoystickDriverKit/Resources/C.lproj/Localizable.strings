@@ -30,7 +30,6 @@
 "settings.controllers" = "Controllers";
 "settings.profiles" = "Profiles";
 "settings.accessReadiness" = "Access & readiness";
-"settings.accessReadinessAccessibility" = "Access and readiness";
 "settings.checkUpdates" = "Check Now";
 "settings.controllerConnectedShort" = "Connected";
 "settings.requestAccess" = "Request %@ access";
@@ -1620,13 +1619,10 @@
 "access.loading" = "Reading the access settings...";
 "access.done" = "Done";
 "access.choose" = "Choose";
-"access.none" = "None";
 "access.endpoint" = "Local endpoint";
-"access.on" = "On";
-"access.off" = "Off";
 "access.socket" = "Socket: %@";
+"access.socket.copy" = "Copy Socket Path";
 "access.enable" = "Turn On";
-"access.disable" = "Turn Off";
 "access.enable.title" = "Turn on the local endpoint?";
 "access.enable.message" = "Programs that you grant access can then read controller state and, with the control scope, change it.";
 "access.web" = "WebSocket";
@@ -1652,6 +1648,8 @@
 "access.revoke" = "Revoke";
 "access.revoke.title" = "Revoke the access of %@?";
 "access.revoke.message" = "The program loses all its scopes and its open connections close.";
+"access.revoke.all" = "All Scopes";
+"access.revokeScope.message" = "Only the %@ scope is removed. The other scopes stay, and open connections that use it close.";
 "access.revokeToken.title" = "Revoke the token %@?";
 "access.revokeToken.message" = "Pages and programs that use the token lose access and their open connections close.";
 "access.tokens" = "Tokens";
@@ -1688,10 +1686,6 @@
 "a11y.access.dismissError" = "Dismiss the error";
 "a11y.access.tryAgain" = "Read the access settings again";
 "a11y.access.restart" = "Restart the app so the new permissions apply";
-"a11y.access.enableEndpoint" = "Turn on the local endpoint";
-"a11y.access.disableEndpoint" = "Turn off the local endpoint";
-"a11y.access.enableWeb" = "Turn on the WebSocket";
-"a11y.access.disableWeb" = "Turn off the WebSocket";
 "a11y.access.webPort" = "WebSocket port; leave empty for the saved port";
 "a11y.access.grantProgram" = "Grant access to a program that you choose";
 "a11y.access.grantRefused" = "Grant access to %@";

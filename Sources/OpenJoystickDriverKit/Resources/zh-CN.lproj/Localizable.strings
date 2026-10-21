@@ -30,7 +30,6 @@
 "settings.controllers" = "控制器";
 "settings.profiles" = "配置文件";
 "settings.accessReadiness" = "访问与就绪状态";
-"settings.accessReadinessAccessibility" = "访问与就绪状态";
 "settings.checkUpdates" = "立即检查";
 "settings.controllerConnectedShort" = "已连接";
 "settings.requestAccess" = "请求“%@”访问权限";
@@ -1509,13 +1508,10 @@
 "access.loading" = "正在读取访问设置…";
 "access.done" = "完成";
 "access.choose" = "选取";
-"access.none" = "无";
 "access.endpoint" = "本地端点";
-"access.on" = "开";
-"access.off" = "关";
 "access.socket" = "套接字：%@";
+"access.socket.copy" = "拷贝套接字路径";
 "access.enable" = "打开";
-"access.disable" = "关闭";
 "access.enable.title" = "要打开本地端点吗？";
 "access.enable.message" = "你授予访问权限的程序随后可以读取控制器状态，若具有控制范围，还可以更改状态。";
 "access.web" = "WebSocket";
@@ -1541,6 +1537,8 @@
 "access.revoke" = "撤销";
 "access.revoke.title" = "要撤销 %@ 的访问权限吗？";
 "access.revoke.message" = "该程序将失去所有范围，其已打开的连接将关闭。";
+"access.revoke.all" = "所有范围";
+"access.revokeScope.message" = "仅移除 %@ 范围。其他范围保持不变，使用此范围的已打开连接将关闭。";
 "access.revokeToken.title" = "要撤销令牌 %@ 吗？";
 "access.revokeToken.message" = "使用该令牌的页面和程序将失去访问权限，其已打开的连接将关闭。";
 "access.tokens" = "令牌";
@@ -1577,10 +1575,6 @@
 "a11y.access.dismissError" = "关闭错误";
 "a11y.access.tryAgain" = "重新读取访问设置";
 "a11y.access.restart" = "重新启动 App 以应用新权限";
-"a11y.access.enableEndpoint" = "打开本地端点";
-"a11y.access.disableEndpoint" = "关闭本地端点";
-"a11y.access.enableWeb" = "打开 WebSocket";
-"a11y.access.disableWeb" = "关闭 WebSocket";
 "a11y.access.webPort" = "WebSocket 端口；留空则使用已存储的端口";
 "a11y.access.grantProgram" = "向你选取的程序授予访问权限";
 "a11y.access.grantRefused" = "向 %@ 授予访问权限";

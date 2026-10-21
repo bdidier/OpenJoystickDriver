@@ -30,7 +30,6 @@
 "settings.controllers" = "Контроллеры";
 "settings.profiles" = "Профили";
 "settings.accessReadiness" = "Доступ и готовность";
-"settings.accessReadinessAccessibility" = "Доступ и готовность";
 "settings.checkUpdates" = "Проверить сейчас";
 "settings.controllerConnectedShort" = "Подключён";
 "settings.requestAccess" = "Запросить доступ: %@";
@@ -1509,13 +1508,10 @@
 "access.loading" = "Чтение настроек доступа…";
 "access.done" = "Готово";
 "access.choose" = "Выбрать";
-"access.none" = "Нет";
 "access.endpoint" = "Локальная конечная точка";
-"access.on" = "Вкл.";
-"access.off" = "Выкл.";
 "access.socket" = "Сокет: %@";
+"access.socket.copy" = "Скопировать путь к сокету";
 "access.enable" = "Включить";
-"access.disable" = "Выключить";
 "access.enable.title" = "Включить локальную конечную точку?";
 "access.enable.message" = "Программы, которым вы предоставите доступ, смогут читать состояние контроллеров и, при наличии области «Управление», изменять его.";
 "access.web" = "WebSocket";
@@ -1541,6 +1537,8 @@
 "access.revoke" = "Отозвать";
 "access.revoke.title" = "Отозвать доступ «%@»?";
 "access.revoke.message" = "Программа потеряет все области, а её открытые подключения закроются.";
+"access.revoke.all" = "Все области";
+"access.revokeScope.message" = "Будет удалена только область «%@». Остальные области сохранятся, а открытые подключения, использующие её, закроются.";
 "access.revokeToken.title" = "Отозвать токен «%@»?";
 "access.revokeToken.message" = "Страницы и программы, которые используют токен, потеряют доступ, а их открытые подключения закроются.";
 "access.tokens" = "Токены";
@@ -1577,10 +1575,6 @@
 "a11y.access.dismissError" = "Закрыть ошибку";
 "a11y.access.tryAgain" = "Прочитать настройки доступа снова";
 "a11y.access.restart" = "Перезапустить приложение, чтобы применить новые разрешения";
-"a11y.access.enableEndpoint" = "Включить локальную конечную точку";
-"a11y.access.disableEndpoint" = "Выключить локальную конечную точку";
-"a11y.access.enableWeb" = "Включить WebSocket";
-"a11y.access.disableWeb" = "Выключить WebSocket";
 "a11y.access.webPort" = "Порт WebSocket; оставьте пустым, чтобы использовать сохранённый порт";
 "a11y.access.grantProgram" = "Предоставить доступ выбранной программе";
 "a11y.access.grantRefused" = "Предоставить доступ «%@»";

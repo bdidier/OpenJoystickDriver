@@ -9,6 +9,8 @@
     case newProfile
     case importProfile
     case installLibraryItem
+    case grantProgram
+    case createToken
 
     var identifier: NSToolbarItem.Identifier {
       NSToolbarItem.Identifier("OpenJoystickDriver.MainWindowToolbar.\(rawValue)")
@@ -27,6 +29,8 @@
       case .newProfile: return "plus"
       case .importProfile: return "square.and.arrow.down"
       case .installLibraryItem: return "square.and.arrow.down.on.square"
+      case .grantProgram: return "person.badge.plus"
+      case .createToken: return "key"
       }
     }
 
@@ -37,6 +41,8 @@
       case .newProfile: return "profiles.new"
       case .importProfile: return "profiles.import"
       case .installLibraryItem: return "library.install"
+      case .grantProgram: return "access.grantProgram"
+      case .createToken: return "access.grantToken"
       }
     }
 
@@ -47,18 +53,21 @@
       case .newProfile: return "profiles.new"
       case .importProfile: return "profiles.import"
       case .installLibraryItem: return "mainMenu.file.installRecordOrMod"
+      case .grantProgram: return "a11y.access.grantProgram"
+      case .createToken: return "a11y.access.grantToken"
       }
     }
   }
 
   extension MainWindowArea {
-    /// The toolbar actions of the area, in order. Access and Activity keep theirs in content.
+    /// The toolbar actions of the area, in order. Activity keeps its actions in its content.
     var toolbarActions: [MainWindowToolbarAction] {
       switch self {
       case .controllers: return [.refreshControllers]
       case .profiles: return [.newProfile, .importProfile]
       case .library: return [.installLibraryItem]
-      case .access, .activity: return []
+      case .access: return [.grantProgram, .createToken]
+      case .activity: return []
       }
     }
   }

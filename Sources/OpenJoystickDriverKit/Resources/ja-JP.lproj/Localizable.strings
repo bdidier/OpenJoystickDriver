@@ -30,7 +30,6 @@
 "settings.controllers" = "コントローラ";
 "settings.profiles" = "プロファイル";
 "settings.accessReadiness" = "アクセスと準備状況";
-"settings.accessReadinessAccessibility" = "アクセスと準備状況";
 "settings.checkUpdates" = "今すぐ確認";
 "settings.controllerConnectedShort" = "接続済み";
 "settings.requestAccess" = "「%@」へのアクセスを要求";
@@ -1509,13 +1508,10 @@
 "access.loading" = "アクセス設定を読み込んでいます…";
 "access.done" = "完了";
 "access.choose" = "選択";
-"access.none" = "なし";
 "access.endpoint" = "ローカルエンドポイント";
-"access.on" = "オン";
-"access.off" = "オフ";
 "access.socket" = "ソケット: %@";
+"access.socket.copy" = "ソケットのパスをコピー";
 "access.enable" = "オンにする";
-"access.disable" = "オフにする";
 "access.enable.title" = "ローカルエンドポイントをオンにしますか？";
 "access.enable.message" = "アクセスを許可したプログラムは、コントローラの状態を読み取れるようになり、制御スコープがあれば状態を変更することもできます。";
 "access.web" = "WebSocket";
@@ -1541,6 +1537,8 @@
 "access.revoke" = "取り消す";
 "access.revoke.title" = "%@のアクセスを取り消しますか？";
 "access.revoke.message" = "プログラムはすべてのスコープを失い、開いている接続は閉じられます。";
+"access.revoke.all" = "すべてのスコープ";
+"access.revokeScope.message" = "「%@」スコープのみが削除されます。他のスコープは残り、このスコープを使用している接続は閉じられます。";
 "access.revokeToken.title" = "トークン「%@」を取り消しますか？";
 "access.revokeToken.message" = "このトークンを使うページとプログラムはアクセスを失い、開いている接続は閉じられます。";
 "access.tokens" = "トークン";
@@ -1577,10 +1575,6 @@
 "a11y.access.dismissError" = "エラーを閉じる";
 "a11y.access.tryAgain" = "アクセス設定をもう一度読み込む";
 "a11y.access.restart" = "新しい権限を反映するためにAppを再起動";
-"a11y.access.enableEndpoint" = "ローカルエンドポイントをオンにする";
-"a11y.access.disableEndpoint" = "ローカルエンドポイントをオフにする";
-"a11y.access.enableWeb" = "WebSocketをオンにする";
-"a11y.access.disableWeb" = "WebSocketをオフにする";
 "a11y.access.webPort" = "WebSocketのポート。空のままにすると保存済みのポートを使います";
 "a11y.access.grantProgram" = "選択したプログラムにアクセスを許可";
 "a11y.access.grantRefused" = "%@にアクセスを許可";

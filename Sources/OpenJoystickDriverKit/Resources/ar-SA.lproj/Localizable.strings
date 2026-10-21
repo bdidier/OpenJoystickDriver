@@ -30,7 +30,6 @@
 "settings.controllers" = "وحدات التحكم";
 "settings.profiles" = "ملفات التعريف";
 "settings.accessReadiness" = "الوصول والجاهزية";
-"settings.accessReadinessAccessibility" = "الوصول والجاهزية";
 "settings.checkUpdates" = "تحقق الآن";
 "settings.controllerConnectedShort" = "متصل";
 "settings.requestAccess" = "طلب الوصول إلى %@";
@@ -1509,13 +1508,10 @@
 "access.loading" = "جارٍ قراءة إعدادات الوصول…";
 "access.done" = "تم";
 "access.choose" = "اختيار";
-"access.none" = "لا شيء";
 "access.endpoint" = "نقطة النهاية المحلية";
-"access.on" = "قيد التشغيل";
-"access.off" = "متوقف";
 "access.socket" = "المقبس: %@";
+"access.socket.copy" = "نسخ مسار المقبس";
 "access.enable" = "تشغيل";
-"access.disable" = "إيقاف التشغيل";
 "access.enable.title" = "هل تريد تشغيل نقطة النهاية المحلية؟";
 "access.enable.message" = "يمكن للبرامج التي تمنحها الوصول بعد ذلك قراءة حالة وحدات التحكم، وتغييرها إذا كان لديها نطاق التحكم.";
 "access.web" = "WebSocket";
@@ -1541,6 +1537,8 @@
 "access.revoke" = "سحب الوصول";
 "access.revoke.title" = "هل تريد سحب وصول %@؟";
 "access.revoke.message" = "يفقد البرنامج جميع نطاقاته وتُغلق اتصالاته المفتوحة.";
+"access.revoke.all" = "جميع النطاقات";
+"access.revokeScope.message" = "يُسحب النطاق %@ فقط. تبقى النطاقات الأخرى وتُغلق الاتصالات المفتوحة التي تستخدمه.";
 "access.revokeToken.title" = "هل تريد سحب الرمز المميز %@؟";
 "access.revokeToken.message" = "تفقد الصفحات والبرامج التي تستخدم الرمز المميز الوصول وتُغلق اتصالاتها المفتوحة.";
 "access.tokens" = "الرموز المميزة";
@@ -1577,10 +1575,6 @@
 "a11y.access.dismissError" = "تجاهل الخطأ";
 "a11y.access.tryAgain" = "قراءة إعدادات الوصول مرة أخرى";
 "a11y.access.restart" = "أعد تشغيل التطبيق لتسري الأذونات الجديدة";
-"a11y.access.enableEndpoint" = "تشغيل نقطة النهاية المحلية";
-"a11y.access.disableEndpoint" = "إيقاف نقطة النهاية المحلية";
-"a11y.access.enableWeb" = "تشغيل WebSocket";
-"a11y.access.disableWeb" = "إيقاف WebSocket";
 "a11y.access.webPort" = "منفذ WebSocket؛ اتركه فارغًا لاستخدام المنفذ المحفوظ";
 "a11y.access.grantProgram" = "منح الوصول لبرنامج تختاره";
 "a11y.access.grantRefused" = "منح الوصول لـ %@";

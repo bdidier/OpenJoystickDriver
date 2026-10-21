@@ -30,7 +30,6 @@
 "settings.controllers" = "Pengontrol";
 "settings.profiles" = "Profil";
 "settings.accessReadiness" = "Akses & kesiapan";
-"settings.accessReadinessAccessibility" = "Akses dan kesiapan";
 "settings.checkUpdates" = "Periksa Sekarang";
 "settings.controllerConnectedShort" = "Terhubung";
 "settings.requestAccess" = "Minta akses %@";
@@ -1509,13 +1508,10 @@
 "access.loading" = "Membaca pengaturan akses…";
 "access.done" = "Selesai";
 "access.choose" = "Pilih";
-"access.none" = "Tidak Ada";
 "access.endpoint" = "Titik akhir lokal";
-"access.on" = "Nyala";
-"access.off" = "Mati";
 "access.socket" = "Soket: %@";
+"access.socket.copy" = "Salin Jalur Soket";
 "access.enable" = "Nyalakan";
-"access.disable" = "Matikan";
 "access.enable.title" = "Nyalakan titik akhir lokal?";
 "access.enable.message" = "Program yang Anda beri akses kemudian dapat membaca status pengontrol dan, dengan cakupan Kontrol, mengubahnya.";
 "access.web" = "WebSocket";
@@ -1541,6 +1537,8 @@
 "access.revoke" = "Cabut";
 "access.revoke.title" = "Cabut akses %@?";
 "access.revoke.message" = "Program kehilangan semua cakupannya dan koneksinya yang terbuka ditutup.";
+"access.revoke.all" = "Semua Cakupan";
+"access.revokeScope.message" = "Hanya cakupan %@ yang dihapus. Cakupan lainnya tetap ada dan koneksi terbuka yang memakainya ditutup.";
 "access.revokeToken.title" = "Cabut token %@?";
 "access.revokeToken.message" = "Laman dan program yang memakai token kehilangan akses dan koneksinya yang terbuka ditutup.";
 "access.tokens" = "Token";
@@ -1577,10 +1575,6 @@
 "a11y.access.dismissError" = "Tutup kesalahan";
 "a11y.access.tryAgain" = "Baca pengaturan akses lagi";
 "a11y.access.restart" = "Mulai ulang app agar izin baru berlaku";
-"a11y.access.enableEndpoint" = "Nyalakan titik akhir lokal";
-"a11y.access.disableEndpoint" = "Matikan titik akhir lokal";
-"a11y.access.enableWeb" = "Nyalakan WebSocket";
-"a11y.access.disableWeb" = "Matikan WebSocket";
 "a11y.access.webPort" = "Port WebSocket; biarkan kosong untuk port tersimpan";
 "a11y.access.grantProgram" = "Beri akses ke program yang Anda pilih";
 "a11y.access.grantRefused" = "Beri akses ke %@";

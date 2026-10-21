@@ -30,7 +30,6 @@
 "settings.controllers" = "कंट्रोलर";
 "settings.profiles" = "प्रोफ़ाइल";
 "settings.accessReadiness" = "ऐक्सेस और तैयारी";
-"settings.accessReadinessAccessibility" = "ऐक्सेस और तैयारी";
 "settings.checkUpdates" = "अब जाँचें";
 "settings.controllerConnectedShort" = "कनेक्टेड";
 "settings.requestAccess" = "%@ ऐक्सेस का अनुरोध करें";
@@ -1509,13 +1508,10 @@
 "access.loading" = "ऐक्सेस सेटिंग्स पढ़ी जा रही हैं…";
 "access.done" = "पूर्ण";
 "access.choose" = "चुनें";
-"access.none" = "कोई नहीं";
 "access.endpoint" = "स्थानीय एंडपॉइंट";
-"access.on" = "चालू";
-"access.off" = "बंद";
 "access.socket" = "सॉकेट: %@";
+"access.socket.copy" = "सॉकेट पथ कॉपी करें";
 "access.enable" = "चालू करें";
-"access.disable" = "बंद करें";
 "access.enable.title" = "स्थानीय एंडपॉइंट चालू करें?";
 "access.enable.message" = "जिन प्रोग्राम को आप ऐक्सेस देते हैं वे फिर कंट्रोलर की स्थिति पढ़ सकते हैं और कंट्रोल स्कोप होने पर उसे बदल भी सकते हैं।";
 "access.web" = "WebSocket";
@@ -1541,6 +1537,8 @@
 "access.revoke" = "वापस लें";
 "access.revoke.title" = "%@ का ऐक्सेस वापस लें?";
 "access.revoke.message" = "प्रोग्राम अपने सभी स्कोप खो देता है और उसके खुले कनेक्शन बंद हो जाते हैं।";
+"access.revoke.all" = "सभी स्कोप";
+"access.revokeScope.message" = "केवल %@ स्कोप हटाया जाता है। अन्य स्कोप बने रहते हैं और इसका उपयोग करने वाले खुले कनेक्शन बंद हो जाते हैं।";
 "access.revokeToken.title" = "टोकन %@ वापस लें?";
 "access.revokeToken.message" = "टोकन का उपयोग करने वाले पेज और प्रोग्राम ऐक्सेस खो देते हैं और उनके खुले कनेक्शन बंद हो जाते हैं।";
 "access.tokens" = "टोकन";
@@ -1577,10 +1575,6 @@
 "a11y.access.dismissError" = "त्रुटि ख़ारिज करें";
 "a11y.access.tryAgain" = "ऐक्सेस सेटिंग्स फिर से पढ़ें";
 "a11y.access.restart" = "नई अनुमतियाँ लागू करने के लिए ऐप फिर से शुरू करें";
-"a11y.access.enableEndpoint" = "स्थानीय एंडपॉइंट चालू करें";
-"a11y.access.disableEndpoint" = "स्थानीय एंडपॉइंट बंद करें";
-"a11y.access.enableWeb" = "WebSocket चालू करें";
-"a11y.access.disableWeb" = "WebSocket बंद करें";
 "a11y.access.webPort" = "WebSocket पोर्ट; सहेजे गए पोर्ट के लिए खाली छोड़ें";
 "a11y.access.grantProgram" = "आपके चुने प्रोग्राम को ऐक्सेस दें";
 "a11y.access.grantRefused" = "%@ को ऐक्सेस दें";
