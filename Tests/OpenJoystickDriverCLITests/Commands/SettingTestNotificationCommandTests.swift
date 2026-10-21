@@ -31,16 +31,15 @@ struct SettingTestNotificationCommandTests {
     return server
   }
 
-  /// Runs the command with `--timeout 5` unless `timeout` is nil, which leaves the default.
+  /// Runs the command with `timeout`, which is `testServerTimeout` unless a test passes `[]` to
+  /// leave the default deadline.
   private func run(
     _ arguments: [String],
     socketPath: String,
-    timeout: String? = "5"
+    timeout: [String] = testServerTimeout
   ) async -> CLIRun {
     await ServiceConnection.$socketPath.withValue(socketPath) {
-      await CLIRun.run(
-        ["setting", "test-notification"] + arguments + (timeout.map { ["--timeout", $0] } ?? [])
-      )
+      await CLIRun.run(["setting", "test-notification"] + arguments + timeout)
     }
   }
 
@@ -52,7 +51,7 @@ struct SettingTestNotificationCommandTests {
     let server = try serve(outcome: .shown, socketPath: socketPath, answerDelay: delay)
     defer { server.stop() }
 
-    let result = await run([], socketPath: socketPath, timeout: nil)
+    let result = await run([], socketPath: socketPath, timeout: [])
 
     #expect(result.code == 0, "\(result.standardError)")
     #expect(
