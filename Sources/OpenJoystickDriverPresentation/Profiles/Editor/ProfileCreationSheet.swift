@@ -30,7 +30,11 @@
               )
             }
             Picker(OJDLocalized.string("common.controller"), selection: controllerBinding) {
-              ForEach(context.choices) { choice in Text(choice.label).tag(choice.id) }
+              ForEach(context.sections) { section in
+                Section(header: Text(section.title)) {
+                  ForEach(section.choices) { choice in Text(choice.label).tag(choice.id) }
+                }
+              }
             }
             Picker(OJDLocalized.string("profiles.target"), selection: $fields.scopeKind) {
               Text(OJDLocalized.string("profiles.targetGlobal")).tag(ProfileScopeKind.global)

@@ -225,7 +225,8 @@
 "profiles.chordWindow" = "누름 허용 시간";
 "profiles.chords" = "동시 누름";
 "profiles.controlNumber" = "조작 %d";
-"profiles.creationValidation" = "프로파일 이름, 컨트롤러 식별자 및 대상 앱을 검토하십시오.";
+"profiles.creationValidation" = "프로파일 이름과 대상 앱을 검토하십시오.";
+"profiles.controllersOfProfiles" = "프로파일에서 사용 중";
 "profiles.deactivateController" = "모두 비활성화";
 "profiles.details" = "프로파일 세부 사항";
 "profiles.notSupportedByController" = "이 컨트롤러 또는 프로토콜에서 지원하지 않습니다.";

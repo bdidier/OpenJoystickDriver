@@ -225,7 +225,8 @@
 "profiles.chordWindow" = "Press window";
 "profiles.chords" = "Chords";
 "profiles.controlNumber" = "Control %d";
-"profiles.creationValidation" = "Review the profile name, controller identifiers, and application target.";
+"profiles.creationValidation" = "Review the profile name and application target.";
+"profiles.controllersOfProfiles" = "Used by your profiles";
 "profiles.deactivateController" = "Deactivate all";
 "profiles.details" = "Profile details";
 "profiles.notSupportedByController" = "Not supported by this controller or protocol.";

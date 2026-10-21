@@ -225,7 +225,8 @@
 "profiles.chordWindow" = "Indrukvenster";
 "profiles.chords" = "Akkoorden";
 "profiles.controlNumber" = "Besturing %d";
-"profiles.creationValidation" = "Controleer de profielnaam, de controlleridentificaties en het doel van de toepassing.";
+"profiles.creationValidation" = "Controleer de profielnaam en het doel van de toepassing.";
+"profiles.controllersOfProfiles" = "Gebruikt door je profielen";
 "profiles.deactivateController" = "Deactiveer alles";
 "profiles.details" = "Profielgegevens";
 "profiles.notSupportedByController" = "Niet ondersteund door deze controller of dit protocol.";

@@ -31,7 +31,7 @@ struct ProfileCreationFieldsTests {
   private static func context(
     devices: [ApplicationServiceDeviceDescription],
     profiles: [RemappingProfile] = [],
-    catalog: [ControllerModelID] = []
+    catalog: [ControllerModelID: String] = [:]
   ) -> ProfileCreationContext {
     ProfileCreationContext(
       choices: ProfileControllerChoice.choices(
@@ -123,20 +123,34 @@ struct ProfileCreationFieldsTests {
       devices: [Self.padA],
       profiles: [Self.profile(named: "Old", vendorID: 0x0001), Self.profile(named: "Other")],
       catalog: [
-        ControllerModelID(vendorID: 9, productID: 7),
-        ControllerModelID(vendorID: 0x0A, productID: 1),
-        ControllerModelID(vendorID: 0x0001, productID: 0x0002),
+        ControllerModelID(vendorID: 9, productID: 7): "Xbox One",
+        ControllerModelID(vendorID: 0x0A, productID: 1): "Xbox One",
+        ControllerModelID(vendorID: 0x045E, productID: 0x02EA): "Xbox One",
+        ControllerModelID(vendorID: 0x054C, productID: 0x0CE6): "DualSense",
+        ControllerModelID(vendorID: 0x0001, productID: 0x0002): "Xbox One",
       ]
     )
-    #expect(choices.map(\.label) == ["Pad A", "0001:0007", "0009:0007", "000A:0001"])
-    #expect(choices.map { $0.name == nil } == [false, true, true, true])
+    #expect(
+      choices.map(\.label) == [
+        "Pad A", "0001:0007", "Xbox One · 0009:0007", "DualSense · 054C:0CE6",
+        "Xbox One · 000A:0001", "Xbox One · 045E:02EA",
+      ]
+    )
+    #expect(
+      ProfileControllerGroup.sections(of: choices).map(\.title) == [
+        OJDLocalized.string("settings.controllerConnectedShort"),
+        OJDLocalized.string("profiles.controllersOfProfiles"),
+        "DualSense", "Xbox One",
+      ]
+    )
+    #expect(ProfileControllerGroup.sections(of: choices).map(\.choices.count) == [1, 2, 1, 2])
   }
 
   @Test
   func aProfileCanTargetAModelThatIsNotConnected() {
     let context = Self.context(
       devices: [],
-      catalog: [ControllerModelID(vendorID: 0x054C, productID: 0x0CE6)]
+      catalog: [ControllerModelID(vendorID: 0x054C, productID: 0x0CE6): "DualSense"]
     )
     var fields = ProfileCreationFields()
     fields.editedName = "Offline"

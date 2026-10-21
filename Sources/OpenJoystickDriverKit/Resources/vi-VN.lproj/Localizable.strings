@@ -225,7 +225,8 @@
 "profiles.chordWindow" = "Khoảng thời gian nhấn";
 "profiles.chords" = "Tổ hợp nút";
 "profiles.controlNumber" = "Thành phần %d";
-"profiles.creationValidation" = "Xem lại tên cấu hình, mã định danh bộ điều khiển và ứng dụng đích.";
+"profiles.creationValidation" = "Xem lại tên cấu hình và ứng dụng đích.";
+"profiles.controllersOfProfiles" = "Được cấu hình của bạn sử dụng";
 "profiles.deactivateController" = "Hủy kích hoạt tất cả";
 "profiles.details" = "Chi tiết cấu hình";
 "profiles.notSupportedByController" = "Không được bộ điều khiển hoặc giao thức này hỗ trợ.";

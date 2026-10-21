@@ -225,7 +225,8 @@
 "profiles.chordWindow" = "Finestra di pressione";
 "profiles.chords" = "Combinazioni";
 "profiles.controlNumber" = "Controllo %d";
-"profiles.creationValidation" = "Rivedi il nome del profilo, gli identificatori del controller e l’applicazione di destinazione.";
+"profiles.creationValidation" = "Rivedi il nome del profilo e l’applicazione di destinazione.";
+"profiles.controllersOfProfiles" = "Usati nei tuoi profili";
 "profiles.deactivateController" = "Disattiva tutti";
 "profiles.details" = "Dettagli del profilo";
 "profiles.notSupportedByController" = "Non supportato da questo controller o protocollo.";

@@ -225,7 +225,8 @@
 "profiles.chordWindow" = "按下时间窗口";
 "profiles.chords" = "组合键";
 "profiles.controlNumber" = "控件 %d";
-"profiles.creationValidation" = "请检查配置文件名称、控制器标识符和 App 目标。";
+"profiles.creationValidation" = "请检查配置文件名称和 App 目标。";
+"profiles.controllersOfProfiles" = "您的配置文件使用的";
 "profiles.deactivateController" = "全部停用";
 "profiles.details" = "配置文件详情";
 "profiles.notSupportedByController" = "此控制器或协议不支持。";

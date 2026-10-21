@@ -225,7 +225,8 @@
 "profiles.chordWindow" = "Fenêtre d’appui";
 "profiles.chords" = "Accords";
 "profiles.controlNumber" = "Commande %d";
-"profiles.creationValidation" = "Vérifiez le nom du profil, les identifiants de manette et la cible d’application.";
+"profiles.creationValidation" = "Vérifiez le nom du profil et la cible d’application.";
+"profiles.controllersOfProfiles" = "Utilisées par vos profils";
 "profiles.deactivateController" = "Tout désactiver";
 "profiles.details" = "Détails du profil";
 "profiles.notSupportedByController" = "Non pris en charge par cette manette ou ce protocole.";

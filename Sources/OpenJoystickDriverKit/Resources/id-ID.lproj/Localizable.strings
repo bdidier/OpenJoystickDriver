@@ -225,7 +225,8 @@
 "profiles.chordWindow" = "Rentang waktu penekanan";
 "profiles.chords" = "Kombinasi tombol";
 "profiles.controlNumber" = "Kontrol %d";
-"profiles.creationValidation" = "Periksa nama profil, pengenal pengontrol, dan target aplikasi.";
+"profiles.creationValidation" = "Periksa nama profil dan target aplikasi.";
+"profiles.controllersOfProfiles" = "Dipakai profil Anda";
 "profiles.deactivateController" = "Nonaktifkan semua";
 "profiles.details" = "Detail profil";
 "profiles.notSupportedByController" = "Tidak didukung oleh pengontrol atau protokol ini.";

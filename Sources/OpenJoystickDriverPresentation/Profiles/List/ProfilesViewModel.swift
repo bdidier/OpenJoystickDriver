@@ -89,15 +89,17 @@
       }
     }
 
-    /// The controller models the New Profile sheet offers beyond the connected controllers and the
-    /// models of existing profiles: every model of the catalog, read when the sheet opens.
-    private(set) var catalogModels: [ControllerModelID] = []
+    /// The family label of every catalog model, read when the New Profile sheet opens. The sheet
+    /// offers these models beyond the connected controllers and those of existing profiles.
+    private(set) var catalogModels: [ControllerModelID: String] = [:]
 
     /// Opens the New Profile sheet.
     func beginCreatingProfile() {
-      catalogModels = Array(
-        ControllerRecordSet.load(userDirectory: ControllerRecordSet.userDirectory).records.keys
-      )
+      let records = ControllerRecordSet.load(userDirectory: ControllerRecordSet.userDirectory)
+        .records
+      catalogModels = records.mapValues { record in
+        ProtocolBindingID(rawValue: record.family)?.displayLabel ?? record.family
+      }
       isCreatingProfile = true
     }
 

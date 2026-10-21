@@ -225,7 +225,8 @@
 "profiles.chordWindow" = "Druckfenster";
 "profiles.chords" = "Akkorde";
 "profiles.controlNumber" = "Steuerung %d";
-"profiles.creationValidation" = "Prüfe Profilname, Controller-Kennungen und Anwendungsziel.";
+"profiles.creationValidation" = "Prüfe Profilname und Anwendungsziel.";
+"profiles.controllersOfProfiles" = "In deinen Profilen verwendet";
 "profiles.deactivateController" = "Alle deaktivieren";
 "profiles.details" = "Profildetails";
 "profiles.notSupportedByController" = "Von diesem Controller oder Protokoll nicht unterstützt.";

@@ -225,7 +225,8 @@
 "profiles.chordWindow" = "نافذة الضغط";
 "profiles.chords" = "التركيبات";
 "profiles.controlNumber" = "عنصر التحكم %d";
-"profiles.creationValidation" = "راجع اسم ملف التعريف ومعرّفات وحدة التحكم وهدف التطبيق.";
+"profiles.creationValidation" = "راجع اسم ملف التعريف وهدف التطبيق.";
+"profiles.controllersOfProfiles" = "مستخدمة في ملفات التعريف لديك";
 "profiles.deactivateController" = "إلغاء تنشيط الكل";
 "profiles.details" = "تفاصيل ملف التعريف";
 "profiles.notSupportedByController" = "غير مدعوم من وحدة التحكم هذه أو بروتوكولها.";

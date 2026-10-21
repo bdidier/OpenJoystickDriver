@@ -4,44 +4,62 @@ import OpenJoystickDriverKit
 /// A controller a new profile can target: a connected controller, or a controller model that is
 /// not connected. `ojd profile create --controller` accepts both.
 struct ProfileControllerChoice: Equatable, Identifiable {
+  /// Where the picker lists the choice.
+  enum Group: Equatable {
+    case connected
+    case profiles
+    /// A catalog model, under the label of its protocol family.
+    case family(String)
+  }
+
   let id: String
   /// The controller's own name; nil for a model that is not connected.
   let name: String?
   let vendorID: UInt16
   let productID: UInt16
+  /// The label of the model's protocol family, when the catalog has the model.
+  let familyLabel: String?
+  let group: Group
 
-  /// The name in the picker: the controller's name, or its vendor and product identifiers.
+  /// The name in the picker: the controller's name, else the family and the vendor and product
+  /// identifiers of the model. The catalog has no product names.
   var label: String {
-    OJDValue.reported(name).textOrNil
-      ?? OJDValue.usbIdentifier(vendorID: vendorID, productID: productID).displayText
+    if let name = OJDValue.reported(name).textOrNil { return name }
+    let identifiers = OJDValue.usbIdentifier(vendorID: vendorID, productID: productID).displayText
+    return familyLabel.map { "\($0) · \(identifiers)" } ?? identifiers
   }
 
   /// The connected controllers, then the models that none of them has: first those of `profiles`,
-  /// then those of `catalog`, each ordered by vendor and product.
+  /// then those of `catalog`, which maps each catalog model to its family label. Models are
+  /// ordered by vendor and product; catalog models by family label first.
   static func choices(
     devices: [ApplicationServiceDeviceDescription],
     profiles: [RemappingProfile],
-    catalog: [ControllerModelID]
+    catalog: [ControllerModelID: String]
   ) -> [Self] {
     let connected = devices.map {
       Self(
         id: $0.sessionToken.rawValue,
         name: $0.name,
         vendorID: $0.vendorID,
-        productID: $0.productID
+        productID: $0.productID,
+        familyLabel: catalog[ControllerModelID(vendorID: $0.vendorID, productID: $0.productID)],
+        group: .connected
       )
     }
     var seen = Set(
       connected.map { ControllerModelID(vendorID: $0.vendorID, productID: $0.productID) }
     )
-    func models(_ ids: [ControllerModelID]) -> [Self] {
+    func models(_ ids: [ControllerModelID], group: (String?) -> Group) -> [Self] {
       ids.sorted().compactMap { model in
         guard seen.insert(model).inserted else { return nil }
         return Self(
           id: String(format: "model-%04X-%04X", model.vendorID, model.productID),
           name: nil,
           vendorID: model.vendorID,
-          productID: model.productID
+          productID: model.productID,
+          familyLabel: catalog[model],
+          group: group(catalog[model])
         )
       }
     }
@@ -49,8 +67,40 @@ struct ProfileControllerChoice: Equatable, Identifiable {
       profiles.map {
         ControllerModelID(vendorID: $0.device.vendorID, productID: $0.device.productID)
       }
-    )
-    return connected + known + models(catalog)
+    ) { _ in .profiles }
+    let families = models(Array(catalog.keys)) { .family($0 ?? "") }
+    let ordered = families.sorted { left, right in
+      if left.group != right.group { return left.familyLabel ?? "" < right.familyLabel ?? "" }
+      return (left.vendorID, left.productID) < (right.vendorID, right.productID)
+    }
+    return connected + known + ordered
+  }
+}
+
+/// A titled run of choices in the picker.
+struct ProfileControllerGroup: Equatable, Identifiable {
+  let title: String
+  let choices: [ProfileControllerChoice]
+  var id: String { title }
+
+  /// The sections of `choices`, in their order: connected controllers, controllers of existing
+  /// profiles, then one section per protocol family.
+  static func sections(of choices: [ProfileControllerChoice]) -> [Self] {
+    var sections: [Self] = []
+    for choice in choices {
+      let title: String
+      switch choice.group {
+      case .connected: title = OJDLocalized.string("settings.controllerConnectedShort")
+      case .profiles: title = OJDLocalized.string("profiles.controllersOfProfiles")
+      case .family(let label): title = label
+      }
+      if let last = sections.last, last.title == title {
+        sections[sections.count - 1] = Self(title: title, choices: last.choices + [choice])
+      } else {
+        sections.append(Self(title: title, choices: [choice]))
+      }
+    }
+    return sections
   }
 }
 
@@ -59,6 +109,8 @@ struct ProfileControllerChoice: Equatable, Identifiable {
 struct ProfileCreationContext: Equatable {
   let choices: [ProfileControllerChoice]
   let profiles: [RemappingProfile]
+
+  var sections: [ProfileControllerGroup] { ProfileControllerGroup.sections(of: choices) }
 }
 
 /// The names profiles can have among `profiles`.

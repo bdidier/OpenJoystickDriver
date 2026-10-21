@@ -225,7 +225,8 @@
 "profiles.chordWindow" = "Basma Penceresi";
 "profiles.chords" = "Kombinasyonlar";
 "profiles.controlNumber" = "Denetim %d";
-"profiles.creationValidation" = "Profil adını, kontrolcü tanımlayıcılarını ve uygulama hedefini gözden geçir.";
+"profiles.creationValidation" = "Profil adını ve uygulama hedefini gözden geçir.";
+"profiles.controllersOfProfiles" = "Profillerinde Kullanılanlar";
 "profiles.deactivateController" = "Hepsini Devre Dışı Bırak";
 "profiles.details" = "Profil Detayları";
 "profiles.notSupportedByController" = "Bu kontrolcü veya protokol tarafından desteklenmiyor.";

@@ -225,7 +225,8 @@
 "profiles.chordWindow" = "दबाने की विंडो";
 "profiles.chords" = "कॉर्ड";
 "profiles.controlNumber" = "नियंत्रण %d";
-"profiles.creationValidation" = "प्रोफ़ाइल नाम, कंट्रोलर पहचानकर्ता और लक्ष्य ऐप की समीक्षा करें।";
+"profiles.creationValidation" = "प्रोफ़ाइल नाम और लक्ष्य ऐप की समीक्षा करें।";
+"profiles.controllersOfProfiles" = "आपके प्रोफ़ाइल में उपयोग किए गए";
 "profiles.deactivateController" = "सभी को निष्क्रिय करें";
 "profiles.details" = "प्रोफ़ाइल विवरण";
 "profiles.notSupportedByController" = "यह कंट्रोलर या प्रोटोकॉल इसका समर्थन नहीं करता है।";

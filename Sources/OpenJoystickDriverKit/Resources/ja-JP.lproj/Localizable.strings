@@ -225,7 +225,8 @@
 "profiles.chordWindow" = "押下時間枠";
 "profiles.chords" = "同時押し";
 "profiles.controlNumber" = "操作 %d";
-"profiles.creationValidation" = "プロファイル名、コントローラの識別子、アプリケーションの対象を確認してください。";
+"profiles.creationValidation" = "プロファイル名とアプリケーションの対象を確認してください。";
+"profiles.controllersOfProfiles" = "プロファイルで使用中";
 "profiles.deactivateController" = "すべてを無効にする";
 "profiles.details" = "プロファイルの詳細";
 "profiles.notSupportedByController" = "このコントローラまたはプロトコルではサポートされていません。";

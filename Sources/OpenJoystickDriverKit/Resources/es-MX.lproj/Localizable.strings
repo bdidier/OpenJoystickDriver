@@ -225,7 +225,8 @@
 "profiles.chordWindow" = "Ventana de pulsación";
 "profiles.chords" = "Acordes";
 "profiles.controlNumber" = "Control %d";
-"profiles.creationValidation" = "Revisa el nombre del perfil, los identificadores del control y la app de destino.";
+"profiles.creationValidation" = "Revisa el nombre del perfil y la app de destino.";
+"profiles.controllersOfProfiles" = "Usados en tus perfiles";
 "profiles.deactivateController" = "Desactivar todo";
 "profiles.details" = "Detalles del perfil";
 "profiles.notSupportedByController" = "No es compatible con este control o protocolo.";

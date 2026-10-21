@@ -225,7 +225,8 @@
 "profiles.chordWindow" = "Окно нажатия";
 "profiles.chords" = "Аккорды";
 "profiles.controlNumber" = "Элемент управления %d";
-"profiles.creationValidation" = "Проверьте имя профиля, идентификаторы контроллера и целевое приложение.";
+"profiles.creationValidation" = "Проверьте имя профиля и целевое приложение.";
+"profiles.controllersOfProfiles" = "Используются в ваших профилях";
 "profiles.deactivateController" = "Деактивировать все";
 "profiles.details" = "Сведения о профиле";
 "profiles.notSupportedByController" = "Не поддерживается этим контроллером или протоколом.";

@@ -225,7 +225,8 @@
 "profiles.chordWindow" = "Janela de Tempo para Pressionar";
 "profiles.chords" = "Combinações";
 "profiles.controlNumber" = "Comando %d";
-"profiles.creationValidation" = "Revise o nome do perfil, os identificadores do controle e o aplicativo de destino.";
+"profiles.creationValidation" = "Revise o nome do perfil e o aplicativo de destino.";
+"profiles.controllersOfProfiles" = "Usados nos Seus Perfis";
 "profiles.deactivateController" = "Desativar Todos";
 "profiles.details" = "Detalhes do Perfil";
 "profiles.notSupportedByController" = "Sem suporte neste controle ou protocolo.";

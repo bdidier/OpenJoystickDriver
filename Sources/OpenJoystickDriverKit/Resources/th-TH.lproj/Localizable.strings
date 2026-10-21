@@ -225,7 +225,8 @@
 "profiles.chordWindow" = "ช่วงเวลากด";
 "profiles.chords" = "คอร์ด";
 "profiles.controlNumber" = "ตัวควบคุม %d";
-"profiles.creationValidation" = "ตรวจสอบชื่อโปรไฟล์ ตัวระบุคอนโทรลเลอร์ และเป้าหมายแอพพลิเคชัน";
+"profiles.creationValidation" = "ตรวจสอบชื่อโปรไฟล์และเป้าหมายแอพพลิเคชัน";
+"profiles.controllersOfProfiles" = "ใช้ในโปรไฟล์ของคุณ";
 "profiles.deactivateController" = "ปิดใช้งานทั้งหมด";
 "profiles.details" = "รายละเอียดโปรไฟล์";
 "profiles.notSupportedByController" = "คอนโทรลเลอร์หรือโปรโตคอลนี้ไม่รองรับ";

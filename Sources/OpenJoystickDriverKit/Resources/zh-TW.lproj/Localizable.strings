@@ -225,7 +225,8 @@
 "profiles.chordWindow" = "按下時間窗口";
 "profiles.chords" = "組合鍵";
 "profiles.controlNumber" = "控制項 %d";
-"profiles.creationValidation" = "請檢查設定檔名稱、控制器識別碼和 App 目標。";
+"profiles.creationValidation" = "請檢查設定檔名稱和 App 目標。";
+"profiles.controllersOfProfiles" = "您的設定檔使用的";
 "profiles.deactivateController" = "全部停用";
 "profiles.details" = "設定檔詳細資料";
 "profiles.notSupportedByController" = "此控制器或協定不支援。";
