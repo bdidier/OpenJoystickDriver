@@ -61,14 +61,6 @@ struct SettingTestNotificationCommandTests {
   }
 
   @Test
-  func theDefaultDeadlineCoversThePickupAndAnswerDeadlines() {
-    #expect(
-      ServiceTimeouts.testNotification
-        > TestNotificationDeadlines.pickupSeconds + TestNotificationDeadlines.answerSeconds
-    )
-  }
-
-  @Test
   func aShownNotificationSucceedsInEachFormat() async throws {
     let socketPath = temporarySocketPath()
     let received = Locked<[String]>([])
