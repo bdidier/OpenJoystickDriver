@@ -29,7 +29,7 @@ public struct OrderedJSONEncoder {
   /// A `Double` or `Float` that is not finite throws, as JSON cannot hold it. A value that writes
   /// nothing encodes to an empty object.
   public func encode(_ value: some Encodable) throws -> OrderedJSON {
-    try OrderedJSONEncoder.node(value, at: []).resolved()
+    try Self.node(value, at: []).resolved()
   }
 
   /// The value being built at one place of the document.
