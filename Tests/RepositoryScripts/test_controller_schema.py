@@ -862,12 +862,15 @@ class InputLayoutTests(unittest.TestCase):
             "missing input": record(REPORT_LAYOUT),
             "input on another family": record(THIRD_PARTY, input=LAYOUT),
             "report ID 0": record(
-                REPORT_LAYOUT, input={**LAYOUT, "report": {"id": 0, "length": {"atLeast": 2}}}
+                REPORT_LAYOUT,
+                input={**LAYOUT, "report": {"id": 0, "length": {"atLeast": 2}}},
             ),
             "long report": record(
                 REPORT_LAYOUT, input={**LAYOUT, "report": {"length": {"atLeast": 65}}}
             ),
-            "report only": record(REPORT_LAYOUT, input={"report": {"length": {"atLeast": 2}}}),
+            "report only": record(
+                REPORT_LAYOUT, input={"report": {"length": {"atLeast": 2}}}
+            ),
             "empty buttons": record(REPORT_LAYOUT, input={**LAYOUT, "buttons": []}),
             "zero mask": record(
                 REPORT_LAYOUT, input={**LAYOUT, "buttons": [{**BUTTON, "mask": 0}]}

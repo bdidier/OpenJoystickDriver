@@ -13,7 +13,8 @@ enum ServiceConnection {
   /// How long ``open()`` keeps probing for the service socket before it reports the service as
   /// stopped. One probe can miss when the machine is loaded or the service is still accepting, so
   /// a single miss is not proof; a stopped service costs a command at most this wait.
-  static let connectWaitSeconds: TimeInterval = 0.5
+  @TaskLocal
+  static var connectWaitSeconds: TimeInterval = 0.5
 
   /// The service's process identifier, or nil when nothing answers on the socket.
   static func processIdentifier() -> Int32? {

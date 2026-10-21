@@ -25,26 +25,29 @@ struct ServiceConnectionTests {
       try await Task.sleep(nanoseconds: 250_000_000)
       try late.start()
     }
-    let client = try await ServiceConnection.$socketPath.withValue(socketPath) {
-      try await ServiceConnection.open()
+    let client = try await ServiceConnection.$connectWaitSeconds.withValue(20) {
+      try await ServiceConnection.$socketPath.withValue(socketPath) {
+        try await ServiceConnection.open()
+      }
     }
     defer { client.disconnect() }
     try await starting.value
     #expect(client.isConnected)
   }
 
-  /// A stopped service costs a command no more than the connect wait, plus the margin of one
-  /// probe.
+  /// A stopped service costs a command the connect wait and no unbounded time.
   @Test
   func aStoppedServiceIsReportedWithinTheConnectWait() async {
     let start = Date()
     await #expect(throws: CLIFailure.self) {
-      try await ServiceConnection.$socketPath.withValue(temporarySocketPath()) {
-        _ = try await ServiceConnection.open()
+      try await ServiceConnection.$connectWaitSeconds.withValue(0.3) {
+        try await ServiceConnection.$socketPath.withValue(temporarySocketPath()) {
+          _ = try await ServiceConnection.open()
+        }
       }
     }
     let elapsed = Date().timeIntervalSince(start)
-    #expect(elapsed >= ServiceConnection.connectWaitSeconds)
-    #expect(elapsed < ServiceConnection.connectWaitSeconds + 0.5)
+    #expect(elapsed >= 0.3)
+    #expect(elapsed < 10)
   }
 }

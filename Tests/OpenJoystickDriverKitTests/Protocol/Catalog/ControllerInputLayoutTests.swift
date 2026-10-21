@@ -10,7 +10,8 @@ private let button = #"{"control": "South", "byte": 1, "mask": 1}"#
 private let invalidSymmetricAxesAndTableHats: [String] = [
   #"{"report": {"length": {"atLeast": 2}}, "#
     + #""axes": [{"control": "LeftStickX", "byte": 1, "symmetric": true}]}"#,
-  #"{"report": {"length": {"atLeast": 2}}, "axes": [{"control": "LeftStickX", "byte": 1, "signed": true, "#
+  #"{"report": {"length": {"atLeast": 2}}, "#
+    + #""axes": [{"control": "LeftStickX", "byte": 1, "signed": true, "#
     + #""min": 0, "max": 127, "symmetric": true}]}"#,
   #"{"report": {"length": {"atLeast": 2}}, "hat": [{"encoding": "Table", "byte": 1, "mask": 15, "#
     + #""values": {}}]}"#,
@@ -23,6 +24,63 @@ private let invalidSymmetricAxesAndTableHats: [String] = [
   #"{"report": {"length": {"atLeast": 2}}, "hat": [{"encoding": "Table", "byte": 1, "mask": 15, "#
     + #""values": {"1": "up"}}]}"#,
   #"{"report": {"length": {"atLeast": 2}}, "hat": [{"encoding": "Table", "byte": 1, "mask": 15}]}"#,
+]
+
+/// Layouts the decoder rejects.
+private let invalidLayouts: [String] = [
+  // Report bounds.
+  #"{"report": {"id": 0, "length": {"atLeast": 2}}, "buttons": [\#(button)]}"#,
+  #"{"report": {"id": 256, "length": {"atLeast": 2}}, "buttons": [\#(button)]}"#,
+  #"{"report": {"length": {"atLeast": 0}}, "buttons": [\#(button)]}"#,
+  #"{"report": {"length": {"atLeast": 65}}, "buttons": [\#(button)]}"#,
+  #"{"report": {"id": 1, "length": {"atLeast": 1}}, "buttons": [\#(button)]}"#,
+  #"{"report": {"length": {"exactly": 0}}, "buttons": [\#(button)]}"#,
+  #"{"report": {"length": {"exactly": 65}}, "buttons": [\#(button)]}"#,
+  #"{"report": {"id": 1, "length": {"exactly": 1}}, "buttons": [\#(button)]}"#,
+  // The length rule names exactly one of atLeast and exactly.
+  #"{"report": {"length": 2}, "buttons": [\#(button)]}"#,
+  #"{"report": {}, "buttons": [\#(button)]}"#,
+  #"{"report": {"length": {}}, "buttons": [\#(button)]}"#,
+  #"{"report": {"length": {"atLeast": 2, "exactly": 2}}, "buttons": [\#(button)]}"#,
+  #"{"report": {"length": {"atLeast": 2}, "exactLength": true}, "buttons": [\#(button)]}"#,
+  // Fields.
+  #"{"report": {"length": {"atLeast": 2}}, "#
+    + #""buttons": [{"control": "South", "byte": 1, "mask": 0}]}"#,
+  #"{"report": {"length": {"atLeast": 2}}, "#
+    + #""buttons": [{"control": "South", "byte": 1, "mask": 256}]}"#,
+  #"{"report": {"length": {"atLeast": 2}}, "#
+    + #""buttons": [{"control": "South", "byte": 2, "mask": 1}]}"#,
+  #"{"report": {"id": 1, "length": {"atLeast": 2}}, "#
+    + #""buttons": [{"control": "South", "byte": 0, "mask": 1}]}"#,
+  #"{"report": {"length": {"atLeast": 2}}, "#
+    + #""buttons": [{"control": "DpadUp", "byte": 1, "mask": 1}]}"#,
+  #"{"report": {"length": {"atLeast": 2}}, "#
+    + #""buttons": [{"control": "LeftStickX", "byte": 1, "mask": 1}]}"#,
+  // Hat.
+  #"{"report": {"length": {"atLeast": 2}}, "#
+    + #""hat": [{"encoding": "EightWay", "byte": 1, "mask": 3}]}"#,
+  #"{"report": {"length": {"atLeast": 2}}, "#
+    + #""hat": [{"encoding": "EightWay", "byte": 1, "mask": 11}]}"#,
+  #"{"report": {"length": {"atLeast": 2}}, "#
+    + #""hat": [{"encoding": "4-way", "byte": 1, "mask": 15}]}"#,
+  // Axes.
+  #"{"report": {"length": {"atLeast": 2}}, "axes": [{"control": "South", "byte": 1}]}"#,
+  #"{"report": {"length": {"atLeast": 3}}, "axes": [{"control": "LeftStickX", "byte": 1}, "#
+    + #"{"control": "LeftStickX", "byte": 2}]}"#,
+  #"{"report": {"length": {"atLeast": 3}}, "#
+    + #""axes": [{"control": "LeftStickX", "byte": 1, "bits": 12}]}"#,
+  #"{"report": {"length": {"atLeast": 2}}, "#
+    + #""axes": [{"control": "LeftStickX", "byte": 1, "bits": 16}]}"#,
+  #"{"report": {"length": {"atLeast": 2}}, "#
+    + #""axes": [{"control": "LeftStickX", "byte": 1, "min": 10, "max": 11}]}"#,
+  #"{"report": {"length": {"atLeast": 2}}, "#
+    + #""axes": [{"control": "LeftStickX", "byte": 1, "max": 256}]}"#,
+  // Triggers and shape.
+  #"{"report": {"length": {"atLeast": 2}}, "leftTrigger": {}}"#,
+  #"{"report": {"length": {"atLeast": 2}}}"#,
+  #"{"report": {"length": {"atLeast": 2}}, "buttons": []}"#,
+  #"{"report": {"length": {"atLeast": 2}}, "buttons": [\#(button)], "touchpad": {}}"#,
+  #"{"report": {"length": {"atLeast": 2}, "endpoint": 1}, "buttons": [\#(button)]}"#,
 ]
 
 @Suite
@@ -62,7 +120,8 @@ struct ControllerInputLayoutTests {
     let atLeast = ReportLayoutDriver(
       layout: try inputLayout(
         """
-        {"report": {"length": {"atLeast": 2}}, "buttons": [{"control": "South", "byte": 1, "mask": 1}]}
+        {"report": {"length": {"atLeast": 2}},
+          "buttons": [{"control": "South", "byte": 1, "mask": 1}]}
         """
       )
     )
@@ -103,8 +162,9 @@ struct ControllerInputLayoutTests {
   func aSymmetricAxisDividesBothSidesByTheMaximum() throws {
     let layout = try inputLayout(
       """
-      {"report": {"length": {"atLeast": 2}}, "axes": [{"control": "LeftStickX", "byte": 0, "bits": 16,
-        "signed": true, "min": -32768, "max": 32767, "symmetric": true}]}
+      {"report": {"length": {"atLeast": 2}},
+        "axes": [{"control": "LeftStickX", "byte": 0, "bits": 16,
+          "signed": true, "min": -32768, "max": 32767, "symmetric": true}]}
       """
     )
     let driver = ReportLayoutDriver(layout: layout)
@@ -118,8 +178,9 @@ struct ControllerInputLayoutTests {
   func aSymmetricAxisWithoutRangeUsesTheFullRange() throws {
     let layout = try inputLayout(
       """
-      {"report": {"length": {"atLeast": 2}}, "axes": [{"control": "LeftStickX", "byte": 0, "bits": 16,
-        "signed": true, "symmetric": true}]}
+      {"report": {"length": {"atLeast": 2}},
+        "axes": [{"control": "LeftStickX", "byte": 0, "bits": 16,
+          "signed": true, "symmetric": true}]}
       """
     )
     let driver = ReportLayoutDriver(layout: layout)
@@ -133,52 +194,7 @@ struct ControllerInputLayoutTests {
     #expect(throws: DecodingError.self) { try inputLayout(json) }
   }
 
-  @Test(
-    arguments: [
-      // Report bounds.
-      #"{"report": {"id": 0, "length": {"atLeast": 2}}, "buttons": [\#(button)]}"#,
-      #"{"report": {"id": 256, "length": {"atLeast": 2}}, "buttons": [\#(button)]}"#,
-      #"{"report": {"length": {"atLeast": 0}}, "buttons": [\#(button)]}"#,
-      #"{"report": {"length": {"atLeast": 65}}, "buttons": [\#(button)]}"#,
-      #"{"report": {"id": 1, "length": {"atLeast": 1}}, "buttons": [\#(button)]}"#,
-      #"{"report": {"length": {"exactly": 0}}, "buttons": [\#(button)]}"#,
-      #"{"report": {"length": {"exactly": 65}}, "buttons": [\#(button)]}"#,
-      #"{"report": {"id": 1, "length": {"exactly": 1}}, "buttons": [\#(button)]}"#,
-      // The length rule names exactly one of atLeast and exactly.
-      #"{"report": {"length": 2}, "buttons": [\#(button)]}"#,
-      #"{"report": {}, "buttons": [\#(button)]}"#,
-      #"{"report": {"length": {}}, "buttons": [\#(button)]}"#,
-      #"{"report": {"length": {"atLeast": 2, "exactly": 2}}, "buttons": [\#(button)]}"#,
-      #"{"report": {"length": {"atLeast": 2}, "exactLength": true}, "buttons": [\#(button)]}"#,
-      // Fields.
-      #"{"report": {"length": {"atLeast": 2}}, "buttons": [{"control": "South", "byte": 1, "mask": 0}]}"#,
-      #"{"report": {"length": {"atLeast": 2}}, "buttons": [{"control": "South", "byte": 1, "mask": 256}]}"#,
-      #"{"report": {"length": {"atLeast": 2}}, "buttons": [{"control": "South", "byte": 2, "mask": 1}]}"#,
-      #"{"report": {"id": 1, "length": {"atLeast": 2}}, "#
-        + #""buttons": [{"control": "South", "byte": 0, "mask": 1}]}"#,
-      #"{"report": {"length": {"atLeast": 2}}, "buttons": [{"control": "DpadUp", "byte": 1, "mask": 1}]}"#,
-      #"{"report": {"length": {"atLeast": 2}}, "buttons": [{"control": "LeftStickX", "byte": 1, "mask": 1}]}"#,
-      // Hat.
-      #"{"report": {"length": {"atLeast": 2}}, "hat": [{"encoding": "EightWay", "byte": 1, "mask": 3}]}"#,
-      #"{"report": {"length": {"atLeast": 2}}, "hat": [{"encoding": "EightWay", "byte": 1, "mask": 11}]}"#,
-      #"{"report": {"length": {"atLeast": 2}}, "hat": [{"encoding": "4-way", "byte": 1, "mask": 15}]}"#,
-      // Axes.
-      #"{"report": {"length": {"atLeast": 2}}, "axes": [{"control": "South", "byte": 1}]}"#,
-      #"{"report": {"length": {"atLeast": 3}}, "axes": [{"control": "LeftStickX", "byte": 1}, "#
-        + #"{"control": "LeftStickX", "byte": 2}]}"#,
-      #"{"report": {"length": {"atLeast": 3}}, "axes": [{"control": "LeftStickX", "byte": 1, "bits": 12}]}"#,
-      #"{"report": {"length": {"atLeast": 2}}, "axes": [{"control": "LeftStickX", "byte": 1, "bits": 16}]}"#,
-      #"{"report": {"length": {"atLeast": 2}}, "#
-        + #""axes": [{"control": "LeftStickX", "byte": 1, "min": 10, "max": 11}]}"#,
-      #"{"report": {"length": {"atLeast": 2}}, "axes": [{"control": "LeftStickX", "byte": 1, "max": 256}]}"#,
-      // Triggers and shape.
-      #"{"report": {"length": {"atLeast": 2}}, "leftTrigger": {}}"#,
-      #"{"report": {"length": {"atLeast": 2}}}"#,
-      #"{"report": {"length": {"atLeast": 2}}, "buttons": []}"#,
-      #"{"report": {"length": {"atLeast": 2}}, "buttons": [\#(button)], "touchpad": {}}"#,
-      #"{"report": {"length": {"atLeast": 2}, "endpoint": 1}, "buttons": [\#(button)]}"#,
-    ]
-  )
+  @Test(arguments: invalidLayouts)
   func rejectsInvalidLayouts(json: String) {
     #expect(throws: DecodingError.self) { try inputLayout(json) }
   }

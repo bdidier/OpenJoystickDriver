@@ -130,7 +130,8 @@ struct RumbleResendTests {
   @Test
   func reportLayoutResendsOnTheHIDChannel() throws {
     let layout = try inputLayout(
-      #"{"report": {"length": {"atLeast": 2}}, "buttons": [{"control": "South", "byte": 1, "mask": 1}]}"#
+      #"{"report": {"length": {"atLeast": 2}}, "#
+        + #""buttons": [{"control": "South", "byte": 1, "mask": 1}]}"#
     )
     let driver = ReportLayoutDriver(
       layout: layout,
