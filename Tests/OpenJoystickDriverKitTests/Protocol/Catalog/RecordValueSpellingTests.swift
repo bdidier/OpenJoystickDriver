@@ -190,7 +190,7 @@ struct RecordValueSpellingTests {
       + #""interfaceProtocol": 208, "endpoints": [{\#(endpoint)}]}}}]"#
   }
 
-  private static func problem(_ fields: String) -> String? {
+  private static func problem(_ fields: String) -> ErrorCode? {
     let json = """
       {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "\(ControllerRecordDocument.kind)",
       "vendorID": 4660, "productID": 22136, \(fields)}
@@ -198,7 +198,7 @@ struct RecordValueSpellingTests {
     do {
       _ = try ControllerRecordSet.validate(Data(json.utf8))
       return nil
-    } catch { return ControllerRecordSet.problemDescription(error) }
+    } catch { return ControllerRecordSet.problemCode(error) }
   }
 
   @Test(arguments: recordCases)
@@ -209,7 +209,8 @@ struct RecordValueSpellingTests {
     )
     for name in spelling.rejected {
       #expect(
-        Self.problem(spelling.fields.replacingOccurrences(of: "VALUE", with: name)) != nil,
+        Self.problem(spelling.fields.replacingOccurrences(of: "VALUE", with: name))
+          == .invalidControllerRecord,
         "\(name) is unknown"
       )
     }
@@ -223,6 +224,7 @@ struct RecordValueSpellingTests {
     let body: String
     let current: String
     let rejected: [String]
+    var code: ErrorCode = .invalidProtocolDescription
     var testDescription: String { name }
   }
 
@@ -272,17 +274,23 @@ struct RecordValueSpellingTests {
       family: .sonyDualSense,
       body: #""defaults": {"variants": {"VALUE": {"tuning": {"stickDeadzone": 0.1}}}}"#,
       current: "USB",
-      rejected: ["usb", "banana"]
+      rejected: ["usb", "banana"],
+      code: .unknownProtocolVariant
     ),
   ]
 
   @Test(arguments: descriptionCases)
   func aDescriptionValueInTheEarlierSpellingIsUnknown(_ spelling: DescriptionCase) {
-    func decodes(_ value: String) -> Bool {
+    func code(_ value: String) -> ErrorCode? {
       let body = spelling.body.replacingOccurrences(of: "VALUE", with: value)
-      return (try? ProtocolDescriptionFixture.decode(family: spelling.family, body)) != nil
+      do {
+        _ = try ProtocolDescriptionFixture.decode(family: spelling.family, body)
+        return nil
+      } catch let problem as ProtocolDescriptionProblem { return problem.code } catch {
+        return .unexpected
+      }
     }
-    #expect(decodes(spelling.current), "the current spelling decodes")
-    for name in spelling.rejected { #expect(!decodes(name), "\(name) is unknown") }
+    #expect(code(spelling.current) == nil, "the current spelling decodes")
+    for name in spelling.rejected { #expect(code(name) == spelling.code, "\(name) is unknown") }
   }
 }

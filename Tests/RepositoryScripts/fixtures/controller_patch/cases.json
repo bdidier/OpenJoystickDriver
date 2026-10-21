@@ -2022,7 +2022,8 @@
         },
         "patch": {}
       },
-      "message": "expected ControllerPatch, found NotAKind"
+      "message": "expected ControllerPatch, found NotAKind",
+      "code": "E5007"
     },
     {
       "name": "a selector that mixes model and identity",
@@ -2038,7 +2039,8 @@
           "server": "OJD"
         }
       },
-      "message": "selector must be all, model, or vendorID with productID"
+      "message": "selector must be all, model, or vendorID with productID",
+      "code": "E5007"
     },
     {
       "name": "a selector with all false",
@@ -2054,7 +2056,8 @@
           }
         }
       },
-      "message": "selector.all must be true"
+      "message": "selector.all must be true",
+      "code": "E5007"
     },
     {
       "name": "an all patch that sets more than tuning",
@@ -2068,7 +2071,8 @@
           "server": "OJD"
         }
       },
-      "message": "an all patch may set only tuning"
+      "message": "an all patch may set only tuning",
+      "code": "E5007"
     },
     {
       "name": "an empty patch",
@@ -2081,7 +2085,8 @@
         },
         "patch": {}
       },
-      "message": "patch must hold modes, usb, bluetoothLE, server, route, input, or tuning"
+      "message": "patch must hold modes, usb, bluetoothLE, server, route, input, or tuning",
+      "code": "E5007"
     },
     {
       "name": "an unknown section",
@@ -2096,7 +2101,8 @@
           "name": "x"
         }
       },
-      "message": "patch must hold modes, usb, bluetoothLE, server, route, input, or tuning"
+      "message": "patch must hold modes, usb, bluetoothLE, server, route, input, or tuning",
+      "code": "E5007"
     },
     {
       "name": "a model that is not vvvv-pppp lowercase hex",
@@ -2110,7 +2116,8 @@
           "server": "OJD"
         }
       },
-      "message": "selector.model must be vvvv-pppp in lowercase hex"
+      "message": "selector.model must be vvvv-pppp in lowercase hex",
+      "code": "E5007"
     },
     {
       "name": "an unknown member",
@@ -2126,7 +2133,8 @@
         },
         "operation": "patch"
       },
-      "message": "the file must hold exactly apiVersion, kind, selector, and patch"
+      "message": "the file must hold exactly apiVersion, kind, selector, and patch",
+      "code": "E5007"
     },
     {
       "name": "a vendorID of 0",
@@ -2143,7 +2151,8 @@
           }
         }
       },
-      "message": "vendorID must be 1...65535 and productID 0...65535"
+      "message": "vendorID must be 1...65535 and productID 0...65535",
+      "code": "E5007"
     },
     {
       "name": "a vendorID above 65535",
@@ -2160,7 +2169,8 @@
           }
         }
       },
-      "message": "vendorID must be 1...65535 and productID 0...65535"
+      "message": "vendorID must be 1...65535 and productID 0...65535",
+      "code": "E5007"
     },
     {
       "name": "a productID above 65535",
@@ -2177,7 +2187,8 @@
           }
         }
       },
-      "message": "vendorID must be 1...65535 and productID 0...65535"
+      "message": "vendorID must be 1...65535 and productID 0...65535",
+      "code": "E5007"
     },
     {
       "name": "a negative productID",
@@ -2194,7 +2205,8 @@
           }
         }
       },
-      "message": "vendorID must be 1...65535 and productID 0...65535"
+      "message": "vendorID must be 1...65535 and productID 0...65535",
+      "code": "E5007"
     },
     {
       "name": "a boolean vendorID",
@@ -2211,7 +2223,8 @@
           }
         }
       },
-      "message": "vendorID must be 1...65535 and productID 0...65535"
+      "message": "vendorID must be 1...65535 and productID 0...65535",
+      "code": "E5007"
     },
     {
       "name": "a string productID",
@@ -2228,7 +2241,8 @@
           }
         }
       },
-      "message": "vendorID must be 1...65535 and productID 0...65535"
+      "message": "vendorID must be 1...65535 and productID 0...65535",
+      "code": "E5007"
     },
     {
       "name": "a float vendorID",
@@ -2245,7 +2259,8 @@
           }
         }
       },
-      "message": "vendorID must be 1...65535 and productID 0...65535"
+      "message": "vendorID must be 1...65535 and productID 0...65535",
+      "code": "E5007"
     },
     {
       "name": "a vendorID written as a float",
@@ -2262,7 +2277,8 @@
           }
         }
       },
-      "message": "vendorID must be 1...65535 and productID 0...65535"
+      "message": "vendorID must be 1...65535 and productID 0...65535",
+      "code": "E5007"
     },
     {
       "name": "a model with a trailing newline",
@@ -2278,7 +2294,8 @@
           }
         }
       },
-      "message": "selector.model must be vvvv-pppp in lowercase hex"
+      "message": "selector.model must be vvvv-pppp in lowercase hex",
+      "code": "E5007"
     },
     {
       "name": "a model that is not a string",
@@ -2294,7 +2311,8 @@
           }
         }
       },
-      "message": "selector.model must be vvvv-pppp in lowercase hex"
+      "message": "selector.model must be vvvv-pppp in lowercase hex",
+      "code": "E5007"
     },
     {
       "name": "a selector.all of 1",
@@ -2310,7 +2328,8 @@
           }
         }
       },
-      "message": "selector.all must be true"
+      "message": "selector.all must be true",
+      "code": "E5007"
     },
     {
       "name": "a patch with no kind",
@@ -2325,7 +2344,8 @@
           }
         }
       },
-      "message": "no kind found; expected ControllerPatch"
+      "message": "no kind found; expected ControllerPatch",
+      "code": "E5007"
     },
     {
       "name": "a patch that is not an object",
@@ -2337,7 +2357,8 @@
         },
         "patch": [1]
       },
-      "message": "the file must hold exactly apiVersion, kind, selector, and patch"
+      "message": "the file must hold exactly apiVersion, kind, selector, and patch",
+      "code": "E5007"
     }
   ]
 }

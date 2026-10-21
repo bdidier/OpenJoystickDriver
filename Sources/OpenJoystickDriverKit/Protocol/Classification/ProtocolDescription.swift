@@ -222,7 +222,10 @@ struct ProtocolDescription: Sendable {
       decoder.userInfo[.startupConditionsAllowed] = true
       document = try decoder.decode(Document.self, from: data)
     } catch {
-      throw ProtocolDescriptionProblem(.invalidProtocolDescription, "\(fileName): \(error)")
+      throw ProtocolDescriptionProblem(
+        .invalidProtocolDescription,
+        "\(fileName): \(ControllerRecordSet.problemDescription(error, includingCode: false))"
+      )
     }
     if let problem = OpenJoystickDriverAPI.headerProblem(
       apiVersion: document.apiVersion,
@@ -234,16 +237,16 @@ struct ProtocolDescription: Sendable {
         "\(fileName): \(problem.message)"
       )
     }
-    guard PhysicalProtocolID(rawValue: document.family) != nil else {
+    guard let family = PhysicalProtocolID(rawValue: document.family) else {
       throw ProtocolDescriptionProblem(
         .invalidProtocolDescription,
         "\(fileName): \(document.family) is not a family"
       )
     }
-    guard let protocolID, document.family == protocolID.rawValue else {
+    guard let protocolID, family == protocolID else {
       throw ProtocolDescriptionProblem(
         .protocolDescriptionFamilyMismatch,
-        "\(fileName): family must be \(protocolID?.rawValue ?? "named by the file name")"
+        "\(fileName): file name must be \(family.descriptionFileStem).json"
       )
     }
     var seenSignatures: Set<String> = []

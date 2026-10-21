@@ -82,7 +82,7 @@ extension ProtocolClassifierTests {
       ),
       (
         protocolDescription(signature: #""variant": "USB""#, family: "XboxXUSB"),
-        "family must be XboxGIP",
+        "file name must be xbox-xusb.json",
         .protocolDescriptionFamilyMismatch
       ),
     ]

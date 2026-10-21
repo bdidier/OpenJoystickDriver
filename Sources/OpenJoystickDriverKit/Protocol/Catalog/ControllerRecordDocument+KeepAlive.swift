@@ -8,7 +8,10 @@ extension KeepAlive: Decodable {
         writes: container.decodeOptional([KeepAliveWrite].self, for: "writes") ?? []
       )
       guard !container.contains(DocumentKey("writes")) || !writes.isEmpty else {
-        throw ControllerRecordProblem("keepAlive names no writes or 1...8 of them")
+        throw ControllerRecordProblem(
+          code: .invalidControllerRecord,
+          "keepAlive names no writes or 1...8 of them"
+        )
       }
     } catch let problem as ControllerRecordProblem {
       throw DecodingError.dataCorrupted(
@@ -35,7 +38,10 @@ extension KeepAliveWrite: Decodable {
       let name = try container.decodeOptional(String.self, for: "resendTuning")
       let key = name.flatMap(ControllerTuning.Key.init(rawValue:))
       guard name == nil || key.map(Self.resendTuningKeys.contains) == true else {
-        throw ControllerRecordProblem("a keep-alive resendTuning is lizardResendTicks")
+        throw ControllerRecordProblem(
+          code: .invalidControllerRecord,
+          "a keep-alive resendTuning is lizardResendTicks"
+        )
       }
       resendTuning = key
       payload =

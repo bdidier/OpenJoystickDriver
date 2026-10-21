@@ -3,7 +3,8 @@ from __future__ import annotations
 import unittest
 from typing import Any
 
-from Scripts.Catalog import validate_profiles
+from Tests.RepositoryScripts import schema_rejections
+from Tests.RepositoryScripts.schema_rejections import RecordValidator
 from Tests.RepositoryScripts.test_controller_schema import (
     DUALSENSE,
     GIP,
@@ -14,6 +15,11 @@ from Tests.RepositoryScripts.test_controller_schema import (
 from Tests.RepositoryScripts.test_controller_schema import (
     record as base_record,
 )
+
+
+def setUpModule() -> None:
+    schema_rejections.enforce_controller_rejections()
+
 
 HID_REPORT = {"kind": "Output", "id": 1, "length": 4}
 
@@ -47,7 +53,7 @@ class RecordValueSpellingTests(unittest.TestCase):
     """A value spelled as before the naming rule is an unknown name, like a random word."""
 
     def setUp(self) -> None:
-        self.validator = validate_profiles.validator()
+        self.validator = RecordValidator()
 
     def test_the_current_spellings_are_accepted(self) -> None:
         accepted = {

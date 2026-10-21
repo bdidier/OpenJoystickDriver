@@ -95,6 +95,7 @@ check-fast: check-schemas lint
     ./Scripts/ojd catalog regenerate --check
     ./Scripts/ojd errors regenerate --check
     ./Scripts/ojd vocabulary regenerate --check
+    ./Scripts/ojd fixtures regenerate schema-rejections --check
     ./Scripts/ojd check profiles
     python3 Scripts/Quality/check_localization_keys.py
     .build/schema-validator/bin/python -m unittest discover -s Tests/RepositoryScripts

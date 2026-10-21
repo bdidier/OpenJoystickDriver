@@ -35,18 +35,22 @@ SECTIONS = frozenset(
     }
 )
 UNSUPPORTED_API_VERSION = "E5001"
+INVALID_CONTROLLER_RECORD = "E5007"
 RANK_ALL, RANK_IDENTITY, RANK_MODEL = 0, 1, 2
 
 
 class PatchError(ValueError):
     """A patch document that is not a valid `ControllerPatch`.
 
-    `code` is the catalog code, `E5001` when the `apiVersion` is missing or unsupported, and
-    None for every other problem, as `DocumentHeaderProblem.code` is in Swift.
+    `code` is the catalog code, `E5001` when the `apiVersion` is missing or unsupported and
+    `E5007` for every other problem, as `ControllerRecordSet.problemCode` is in Swift. Only
+    E5001 leads its message, as `DocumentHeaderProblem.description` does.
     """
 
-    def __init__(self, message: str, code: str | None = None) -> None:
-        super().__init__(f"{code}: {message}" if code else message)
+    def __init__(self, message: str, code: str = INVALID_CONTROLLER_RECORD) -> None:
+        super().__init__(
+            f"{code}: {message}" if code == UNSUPPORTED_API_VERSION else message
+        )
         self.code = code
 
 

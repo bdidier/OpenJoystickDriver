@@ -247,7 +247,7 @@ struct ControllerRecordSetTests {
     do {
       _ = try ControllerDefaults.validate(defaultsWrongKind)
       Issue.record("the wrong kind was accepted")
-    } catch { #expect(ControllerRecordSet.problemCode(error) == nil) }
+    } catch { #expect(ControllerRecordSet.problemCode(error) == .invalidControllerRecord) }
   }
 
   @Test

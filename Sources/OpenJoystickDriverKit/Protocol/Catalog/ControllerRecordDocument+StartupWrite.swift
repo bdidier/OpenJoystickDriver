@@ -18,7 +18,10 @@ extension ControllerRecordDocument {
       do {
         if container.contains(DocumentKey("packet")) {
           guard decoder.userInfo[.startupConditionsAllowed] as? Bool == true else {
-            throw ControllerRecordProblem("a startup packet reference is for protocol descriptions")
+            throw ControllerRecordProblem(
+              code: .invalidControllerRecord,
+              "a startup packet reference is for protocol descriptions"
+            )
           }
           try container.rejectUnknown(allowed: ["packet", "variants", "when"])
           packet = StartupPacketReference(
@@ -67,17 +70,24 @@ extension ControllerRecordDocument {
         .flatMap { $0 == .proprietaryRadioReceiver ? nil : $0 }
       guard transportName == nil || transport != nil else {
         throw ControllerRecordProblem(
+          code: .invalidControllerRecord,
           "a startup transport is USB, BluetoothClassic or BluetoothLE"
         )
       }
       let phaseName = try container.decodeOptional(String.self, for: "phase")
       let phase = phaseName.flatMap(StartupPhase.init(rawValue:))
       guard phaseName == nil || phase != nil else {
-        throw ControllerRecordProblem("a startup phase is Startup or Activation")
+        throw ControllerRecordProblem(
+          code: .invalidControllerRecord,
+          "a startup phase is Startup or Activation"
+        )
       }
       let seed = try container.decodeOptional(Int.self, for: "crc32Seed")
       guard seed.map({ (0...255).contains($0) }) ?? true else {
-        throw ControllerRecordProblem("a startup crc32Seed is 0...255")
+        throw ControllerRecordProblem(
+          code: .invalidControllerRecord,
+          "a startup crc32Seed is 0...255"
+        )
       }
       return try RecordStartupWrite(
         report: report,
@@ -96,7 +106,10 @@ extension ControllerRecordDocument {
     ) throws -> USBStartupWrite {
       let endpoint = try container.decodeOptional(Int.self, for: "endpoint")
       guard endpoint.map(USBStartupWrite.endpointRange.contains) ?? true else {
-        throw ControllerRecordProblem("a USB startup endpoint is 1...127")
+        throw ControllerRecordProblem(
+          code: .invalidControllerRecord,
+          "a USB startup endpoint is 1...127"
+        )
       }
       return try USBStartupWrite(
         bytes: bytes(container),

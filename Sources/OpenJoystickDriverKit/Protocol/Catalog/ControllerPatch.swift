@@ -105,20 +105,23 @@ public struct ControllerPatch: Equatable, Sendable {
       let body = document["patch"] as? [String: Any]
     else {
       throw ControllerRecordProblem(
-        code: nil,
+        code: .invalidControllerRecord,
         "the file must hold exactly apiVersion, kind, selector, and patch"
       )
     }
     let parsed = try parseSelector(selector)
     guard !body.isEmpty, Set(body.keys).isSubset(of: sections) else {
       throw ControllerRecordProblem(
-        code: nil,
+        code: .invalidControllerRecord,
         "patch must hold modes, usb, bluetoothLE, server, "
           + "route, input, or tuning"
       )
     }
     if parsed == .all, Set(body.keys) != ["tuning"] {
-      throw ControllerRecordProblem(code: nil, "an all patch may set only tuning")
+      throw ControllerRecordProblem(
+        code: .invalidControllerRecord,
+        "an all patch may set only tuning"
+      )
     }
     return try Self(selector: parsed, body: body)
   }
@@ -138,7 +141,9 @@ public struct ControllerPatch: Equatable, Sendable {
       // swiftlint:disable:next legacy_objc_type
       guard let flag = selector["all"] as? NSNumber, CFGetTypeID(flag) == CFBooleanGetTypeID(),
         flag.boolValue
-      else { throw ControllerRecordProblem(code: nil, "selector.all must be true") }
+      else {
+        throw ControllerRecordProblem(code: .invalidControllerRecord, "selector.all must be true")
+      }
       return .all
     case ["vendorID", "productID"]:
       guard
@@ -151,7 +156,7 @@ public struct ControllerPatch: Equatable, Sendable {
         )
       else {
         throw ControllerRecordProblem(
-          code: nil,
+          code: .invalidControllerRecord,
           "vendorID must be 1...65535 and productID 0...65535"
         )
       }
@@ -159,14 +164,14 @@ public struct ControllerPatch: Equatable, Sendable {
     case ["model"]:
       guard let id = selector["model"] as? String, isModelID(id) else {
         throw ControllerRecordProblem(
-          code: nil,
+          code: .invalidControllerRecord,
           "selector.model must be vvvv-pppp in lowercase hex"
         )
       }
       return .model(id)
     default:
       throw ControllerRecordProblem(
-        code: nil,
+        code: .invalidControllerRecord,
         "selector must be all, model, or vendorID with productID"
       )
     }

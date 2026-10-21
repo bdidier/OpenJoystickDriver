@@ -82,31 +82,48 @@ struct HIDUsageMap: Equatable, Sendable {
   /// control, an axis on any other control, an empty or reversed range, or a dead zone outside
   /// the open interval from 0 to 1.
   init(reportID: UInt32? = nil, entries: [Entry]) throws {
-    guard !entries.isEmpty else { throw ControllerRecordProblem("a usage map must not be empty") }
+    guard !entries.isEmpty else {
+      throw ControllerRecordProblem(code: .invalidControllerRecord, "a usage map must not be empty")
+    }
     var bindings: [HIDUsage: Binding] = [:]
     for entry in entries {
       let name = "usage \(entry.usage.usagePage)/\(entry.usage.usage)"
       guard bindings.updateValue(entry.binding, forKey: entry.usage) == nil else {
-        throw ControllerRecordProblem("\(name) is named twice")
+        throw ControllerRecordProblem(code: .invalidControllerRecord, "\(name) is named twice")
       }
       switch entry.binding {
       case .button(let control):
         guard !Control.stickAxes.contains(control), !Control.dpad.contains(control) else {
-          throw ControllerRecordProblem("\(name) is a button; \(control.rawValue) is not")
+          throw ControllerRecordProblem(
+            code: .invalidControllerRecord,
+            "\(name) is a button; \(control.rawValue) is not"
+          )
         }
       case .axis(let axis):
         guard Control.stickAxes.contains(axis.control) || axis.isTrigger else {
-          throw ControllerRecordProblem("\(name) is an axis; \(axis.control.rawValue) is not")
+          throw ControllerRecordProblem(
+            code: .invalidControllerRecord,
+            "\(name) is an axis; \(axis.control.rawValue) is not"
+          )
         }
         if let range = axis.range, range.isEmpty || range.lowerBound == range.upperBound {
-          throw ControllerRecordProblem("\(name) range must have min below max")
+          throw ControllerRecordProblem(
+            code: .invalidControllerRecord,
+            "\(name) range must have min below max"
+          )
         }
         if let deadZone = axis.deadZone, !(deadZone > 0 && deadZone < 1) {
-          throw ControllerRecordProblem("\(name) deadZone must be above 0 and below 1")
+          throw ControllerRecordProblem(
+            code: .invalidControllerRecord,
+            "\(name) deadZone must be above 0 and below 1"
+          )
         }
       case .hat(let hat):
         if let range = hat.range, range != 0...7, range != 1...8 {
-          throw ControllerRecordProblem("\(name) hat range must be 0...7 or 1...8")
+          throw ControllerRecordProblem(
+            code: .invalidControllerRecord,
+            "\(name) hat range must be 0...7 or 1...8"
+          )
         }
       }
     }

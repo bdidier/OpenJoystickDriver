@@ -22,7 +22,7 @@ enum HexBytes {
     what: String
   ) throws -> [UInt8] {
     guard let bytes = parse(try container.decode(String.self, for: key)) else {
-      throw ControllerRecordProblem("\(what) \(message)")
+      throw ControllerRecordProblem(code: .invalidControllerRecord, "\(what) \(message)")
     }
     return bytes
   }
@@ -128,7 +128,10 @@ extension ControllerRecordDocument {
           writes: writes.map { KeepAliveWrite(payload: .usb($0.write), resendTuning: nil) }
         )
         guard !writes.isEmpty else {
-          throw ControllerRecordProblem("keepAlive names no writes or 1...8 of them")
+          throw ControllerRecordProblem(
+            code: .invalidControllerRecord,
+            "keepAlive names no writes or 1...8 of them"
+          )
         }
       } catch let problem as ControllerRecordProblem {
         throw DecodingError.dataCorrupted(

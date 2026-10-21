@@ -47,6 +47,7 @@ struct DeviceCatalog: Sendable {
   {
     guard (1...65_535).contains(record.vendorID), (0...65_535).contains(record.productID) else {
       throw ControllerRecordProblem(
+        code: .invalidControllerRecord,
         "invalid controller identity \(record.vendorID):\(record.productID)"
       )
     }
@@ -57,7 +58,10 @@ struct DeviceCatalog: Sendable {
     if let configuration = record.usb?.configuration,
       configuration != "SetConfiguration1BeforeClaim"
     {
-      throw ControllerRecordProblem("unsupported USB configuration \(configuration)")
+      throw ControllerRecordProblem(
+        code: .invalidControllerRecord,
+        "unsupported USB configuration \(configuration)"
+      )
     }
     let session = record.defaultMode.session
     let keepAlivePolicy: GIPKeepAlivePolicy =

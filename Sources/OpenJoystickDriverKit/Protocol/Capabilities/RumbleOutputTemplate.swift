@@ -135,25 +135,43 @@ public struct RumbleOutputTemplate: Equatable, Sendable {
     switch target {
     case .hid(let report):
       guard report.kind != .input else {
-        throw ControllerRecordProblem("a rumble template writes an output or feature report")
+        throw ControllerRecordProblem(
+          code: .invalidControllerRecord,
+          "a rumble template writes an output or feature report"
+        )
       }
       guard (2...64).contains(report.length) else {
-        throw ControllerRecordProblem("a rumble report is 2...64 bytes long")
+        throw ControllerRecordProblem(
+          code: .invalidControllerRecord,
+          "a rumble report is 2...64 bytes long"
+        )
       }
     case .usb(let length):
       guard (1...64).contains(length) else {
-        throw ControllerRecordProblem("a rumble packet is 1...64 bytes long")
+        throw ControllerRecordProblem(
+          code: .invalidControllerRecord,
+          "a rumble packet is 1...64 bytes long"
+        )
       }
     }
     let base = bytes ?? Self.zeroedBytes(for: target)
     guard base.count == target.length else {
-      throw ControllerRecordProblem("rumble template bytes must cover the whole report")
+      throw ControllerRecordProblem(
+        code: .invalidControllerRecord,
+        "rumble template bytes must cover the whole report"
+      )
     }
     if let report = target.hidReport, report.reportID != 0, base[0] != report.reportID {
-      throw ControllerRecordProblem("rumble template bytes must start with the report ID")
+      throw ControllerRecordProblem(
+        code: .invalidControllerRecord,
+        "rumble template bytes must start with the report ID"
+      )
     }
     guard !motors.isEmpty, motors.keys.allSatisfy(Self.templateMotors.contains) else {
-      throw ControllerRecordProblem("a rumble template names at least one motor")
+      throw ControllerRecordProblem(
+        code: .invalidControllerRecord,
+        "a rumble template names at least one motor"
+      )
     }
     let fields = motors.values.map(\.bytes) + (counterByte.map { [$0..<($0 + 1)] } ?? [])
     let writable = target.writableBytes
@@ -165,13 +183,17 @@ public struct RumbleOutputTemplate: Equatable, Sendable {
       Set(used).count == used.count
     else {
       throw ControllerRecordProblem(
+        code: .invalidControllerRecord,
         "rumble motor and counter bytes must be distinct and follow the report ID inside the report"
       )
     }
     if let resendIntervalMilliseconds,
       !Self.resendIntervalRange.contains(resendIntervalMilliseconds)
     {
-      throw ControllerRecordProblem("a rumble resend interval is 1...60000 milliseconds")
+      throw ControllerRecordProblem(
+        code: .invalidControllerRecord,
+        "a rumble resend interval is 1...60000 milliseconds"
+      )
     }
     self.target = target
     self.bytes = base
