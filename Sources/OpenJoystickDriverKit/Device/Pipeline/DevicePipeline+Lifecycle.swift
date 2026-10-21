@@ -16,6 +16,7 @@ extension DevicePipeline {
     isActive = true
     if plan.inputReportLivenessTimeoutNanoseconds != nil {
       inputHealthMonitoringStartedNanoseconds = uptimeNanoseconds()
+      armStaleWatch()
     }
     startIdleMonitor()
 
@@ -49,6 +50,8 @@ extension DevicePipeline {
     let idleTask = idleMonitorTask
     idleMonitorTask = nil
     idleTask?.cancel()
+    staleWatchTask?.cancel()
+    staleWatchTask = nil
     if case .usb = transport, !hasPendingUSBOwnershipReport {
       await reportUSBInputOwnership(.unknown)
     }
@@ -234,6 +237,37 @@ extension DevicePipeline {
   func getPacketLog() -> [PacketLogEntry] {
     packetLog.armCapture()
     return packetLog.entries()
+  }
+
+  /// Announces a status change once the input reports are overdue, because the stale state of
+  /// ``inputHealth()`` follows time and no event announces it. One watch runs at a time; a later
+  /// report arms it again after it fires.
+  func armStaleWatch() {
+    guard staleWatchTask == nil, let timeout = plan.inputReportLivenessTimeoutNanoseconds else {
+      return
+    }
+    staleWatchTask = Task { [weak self] in
+      while !Task.isCancelled, let self {
+        guard let due = await self.staleDeadline(timeout: timeout) else { break }
+        let now = self.uptimeNanoseconds()
+        if now >= due {
+          await self.announceStale()
+          break
+        }
+        try? await Task.sleep(nanoseconds: due &- now)
+      }
+    }
+  }
+
+  private func staleDeadline(timeout: UInt64) -> UInt64? {
+    (lastLiveInputReportNanoseconds ?? inputHealthMonitoringStartedNanoseconds).map {
+      $0 &+ timeout
+    }
+  }
+
+  private func announceStale() {
+    staleWatchTask = nil
+    NotificationCenter.postServiceStatusChanged(from: self)
   }
 
   func inputHealth() -> ControllerInputHealth {

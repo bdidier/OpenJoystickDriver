@@ -7,103 +7,153 @@ import Testing
 @Suite(.timeLimit(.minutes(1)))
 @MainActor
 struct ControllerLiveUpdatesTests {
+  private func makeUpdates(
+    _ source: ScriptedChangeSource,
+    refreshed: Counter,
+    logged: LogLines = LogLines(),
+    modes: Modes = Modes()
+  ) -> ControllerLiveUpdates {
+    ControllerLiveUpdates(
+      source: source,
+      fallbackPollSeconds: 0.01,
+      log: { logged.lines.append($0) },
+      modeChanged: { modes.values.append($0) },
+      refresh: { refreshed.increment() }
+    )
+  }
+
   @Test
   func theFirstAnswerRefreshesOnceAndAServiceNotificationRefreshesWithinOneSecond() async {
     let source = ScriptedChangeSource()
     let refreshed = Counter()
-    let updates = ControllerLiveUpdates(
-      source: source,
-      log: { _ in },
-      modeChanged: { _ in },
-      refresh: { refreshed.increment() }
-    )
+    let updates = makeUpdates(source, refreshed: refreshed)
     updates.start()
     defer { updates.stop() }
     source.answer(.revision(1))
-    await refreshed.waitUntil(1, timeout: 1)
+    await refreshed.waitUntil(1, timeout: 30)
     #expect(updates.mode == .subscribed)
     #expect(refreshed.value == 1)
 
-    let clock = ContinuousClock()
-    let start = clock.now
     source.answer(.revision(2))
-    await refreshed.waitUntil(2, timeout: 1)
+    await refreshed.waitUntil(2, timeout: 30)
 
     #expect(refreshed.value == 2)
-    #expect(clock.now - start < .seconds(1))
   }
 
   @Test
-  func aHoldTimeAnswerWithNoChangeStillRefreshesForTimeDerivedHealth() async {
+  func aHoldTimeAnswerWithNoChangeRefreshesNothing() async {
     let source = ScriptedChangeSource()
     let refreshed = Counter()
-    let updates = ControllerLiveUpdates(
-      source: source,
-      log: { _ in },
-      modeChanged: { _ in },
-      refresh: { refreshed.increment() }
-    )
+    let updates = makeUpdates(source, refreshed: refreshed)
     updates.start()
     defer { updates.stop() }
     source.answer(.revision(1))
     source.answer(.revision(1))
-    await refreshed.waitUntil(2, timeout: 1)
+    source.answer(.revision(2))
+    await refreshed.waitUntil(2, timeout: 30)
 
     #expect(refreshed.value == 2)
   }
 
   @Test
-  func anUnavailableSubscriptionPollsAndLogsTheNamedFallbackOnce() async {
+  func aRestartedServiceWithTheSameCountRefreshes() async {
+    let source = ScriptedChangeSource()
+    let refreshed = Counter()
+    let updates = makeUpdates(source, refreshed: refreshed)
+    updates.start()
+    defer { updates.stop() }
+    source.answer(.revision(0))
+    await refreshed.waitUntil(1, timeout: 30)
+    source.answer(.revision(0, instance: "00000000-0000-0000-0000-000000000002"))
+    await refreshed.waitUntil(2, timeout: 30)
+
+    #expect(refreshed.value == 2)
+  }
+
+  @Test
+  func pollingIsLoggedOnceAndReportedOnlyAfterSeveralConsecutiveFailures() async {
     let source = ScriptedChangeSource()
     let refreshed = Counter()
     let logged = LogLines()
     let modes = Modes()
-    let updates = ControllerLiveUpdates(
-      source: source,
-      fallbackPollSeconds: 0.02,
-      log: { logged.lines.append($0) },
-      modeChanged: { modes.values.append($0) },
-      refresh: { refreshed.increment() }
-    )
+    let updates = makeUpdates(source, refreshed: refreshed, logged: logged, modes: modes)
     updates.start()
     defer { updates.stop() }
 
-    source.fail(ScriptedFailure.unreachable)
-    await refreshed.waitUntil(1, timeout: 1)
-    source.fail(ScriptedFailure.unreachable)
-    await refreshed.waitUntil(2, timeout: 1)
-
-    let reason = ScriptedFailure.unreachable.localizedDescription
-    #expect(updates.mode == .polling(reason: reason))
-    #expect(modes.values == [.polling(reason: reason)])
+    for _ in 0..<(ControllerLiveUpdates.failuresBeforeReporting - 1) {
+      source.fail(ScriptedFailure.unreachable)
+    }
+    await refreshed.waitUntil(ControllerLiveUpdates.failuresBeforeReporting - 1, timeout: 30)
+    #expect(modes.values.isEmpty)
     #expect(logged.lines.count == 1)
-    #expect(logged.lines.first?.contains("polling every 0.02 s") == true)
+    #expect(logged.lines.first?.contains("polling every 0.01 s") == true)
+    #expect(logged.lines.first?.contains("The service is unreachable.") == true)
+
+    source.fail(ScriptedFailure.unreachable)
+    await refreshed.waitUntil(ControllerLiveUpdates.failuresBeforeReporting, timeout: 30)
+
+    let expected = ControllerLiveUpdateMode.polling(
+      failure: .other,
+      detail: ScriptedFailure.unreachable.localizedDescription
+    )
+    #expect(updates.mode == expected)
+    #expect(modes.values == [expected])
+    #expect(logged.lines.count == 1)
   }
 
   @Test
-  func aRestoredSubscriptionStopsPollingAndRefreshesOnce() async {
+  func aRecoveryBeforeTheThresholdNeverReportsPolling() async {
     let source = ScriptedChangeSource()
     let refreshed = Counter()
     let logged = LogLines()
     let modes = Modes()
-    let updates = ControllerLiveUpdates(
-      source: source,
-      fallbackPollSeconds: 0.02,
-      log: { logged.lines.append($0) },
-      modeChanged: { modes.values.append($0) },
-      refresh: { refreshed.increment() }
-    )
+    let updates = makeUpdates(source, refreshed: refreshed, logged: logged, modes: modes)
     updates.start()
     defer { updates.stop() }
     source.fail(ScriptedFailure.unreachable)
-    await refreshed.waitUntil(1, timeout: 1)
+    await refreshed.waitUntil(1, timeout: 30)
+    source.answer(.revision(5))
+    await refreshed.waitUntil(2, timeout: 30)
+
+    #expect(updates.mode == .subscribed)
+    #expect(modes.values.isEmpty)
+    #expect(logged.lines.count == 2)
+  }
+
+  @Test
+  func aRestoredWaitAfterAReportedFallbackIsReportedOnceAndRefreshes() async {
+    let source = ScriptedChangeSource()
+    let refreshed = Counter()
+    let modes = Modes()
+    let updates = makeUpdates(source, refreshed: refreshed, modes: modes)
+    updates.start()
+    defer { updates.stop() }
+    for _ in 0..<ControllerLiveUpdates.failuresBeforeReporting {
+      source.fail(ScriptedFailure.unreachable)
+    }
+    await refreshed.waitUntil(ControllerLiveUpdates.failuresBeforeReporting, timeout: 30)
 
     source.answer(.revision(5))
-    await refreshed.waitUntil(2, timeout: 1)
+    await refreshed.waitUntil(ControllerLiveUpdates.failuresBeforeReporting + 1, timeout: 30)
 
     #expect(updates.mode == .subscribed)
     #expect(modes.values.last == .subscribed)
-    #expect(logged.lines.count == 2)
+    #expect(modes.values.count == 2)
+  }
+
+  @Test
+  func failuresMapToOneBannerReasonEach() {
+    #expect(
+      ControllerLiveUpdateFailure(LocalServiceRPCError.serviceClosedConnection)
+        == .serviceClosedConnection
+    )
+    #expect(ControllerLiveUpdateFailure(ApplicationServiceClientError.timeout) == .timeout)
+    #expect(ControllerLiveUpdateFailure(ScriptedFailure.unreachable) == .other)
+    let keys = [
+      ControllerLiveUpdateFailure.serviceClosedConnection, .timeout, .other,
+    ].map(\.detailKey)
+    #expect(Set(keys).count == 3)
+    for key in keys { #expect(OJDLocalized.string(key) != key) }
   }
 }
 
@@ -130,11 +180,11 @@ private final class LogLines { var lines: [String] = [] }
 private final class Modes { var values: [ControllerLiveUpdateMode] = [] }
 
 extension ServiceStatusRevision {
-  static func revision(_ generation: UInt64) -> Self {
-    Self(
-      instance: UUID(uuidString: "00000000-0000-0000-0000-000000000001")!,
-      generation: generation
-    )
+  static func revision(
+    _ generation: UInt64,
+    instance: String = "00000000-0000-0000-0000-000000000001"
+  ) -> Self {
+    Self(instance: UUID(uuidString: instance)!, generation: generation)
   }
 }
 

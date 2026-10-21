@@ -1,12 +1,14 @@
+import AppKit
 import Foundation
 import OpenJoystickDriverKit
 
 /// Counts service status changes and holds waiters until the count moves.
 ///
 /// The count follows `.ojdServiceStatusDidChange`, which the device manager, the permission
-/// manager, the virtual output backend, the device pipelines and the remapping handlers post when
-/// what `getStatus` or the remapping snapshot reports changes. Time-derived input health is the
-/// one status no event announces; the app reads status after every held wait.
+/// manager, the virtual output backends, the device pipelines (including an overdue input report)
+/// and the remapping handlers post when what `getStatus` or the remapping snapshot reports
+/// changes. The foreground application, which decides remapping eligibility, is observed here
+/// through the workspace.
 /// - Note: `@unchecked Sendable` because `generation` and `waiters` are guarded by `lock`.
 final class ServiceStatusChanges: @unchecked Sendable {
   private final class Waiter {
@@ -23,19 +25,37 @@ final class ServiceStatusChanges: @unchecked Sendable {
   private var generation: UInt64 = 0
   private var waiters: [UUID: Waiter] = [:]
   private let center: NotificationCenter
-  private var observer: NSObjectProtocol?
+  private let workspaceCenter: NotificationCenter
+  private var observers: [NSObjectProtocol] = []
 
-  init(center: NotificationCenter = .default, instance: UUID = UUID()) {
+  init(
+    center: NotificationCenter = .default,
+    workspaceCenter: NotificationCenter = NSWorkspace.shared.notificationCenter,
+    instance: UUID = UUID()
+  ) {
     self.center = center
+    self.workspaceCenter = workspaceCenter
     self.instance = instance
-    observer = center.addObserver(
-      forName: .ojdServiceStatusDidChange,
-      object: nil,
-      queue: nil
-    ) { [weak self] _ in self?.recordChange() }
+    observers = [
+      center.addObserver(forName: .ojdServiceStatusDidChange, object: nil, queue: nil) {
+        [weak self] _ in self?.recordChange()
+      }
+    ]
+    observers.append(
+      workspaceCenter.addObserver(
+        forName: NSWorkspace.didActivateApplicationNotification,
+        object: nil,
+        queue: nil
+      ) { [weak self] _ in self?.recordChange() }
+    )
   }
 
-  deinit { if let observer { center.removeObserver(observer) } }
+  deinit {
+    for observer in observers {
+      center.removeObserver(observer)
+      workspaceCenter.removeObserver(observer)
+    }
+  }
 
   /// Returns the current revision at once when `after` is nil or differs from it, including by
   /// service instance; otherwise waits for the next change and returns the current revision after

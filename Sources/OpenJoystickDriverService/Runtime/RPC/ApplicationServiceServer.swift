@@ -36,12 +36,15 @@ public final class ApplicationServiceServer: @unchecked Sendable {
   /// and `virtualOutputServerStopped`.
   let userSpaceLock = NSLock()
   var userSpaceDispatcher: (any VirtualOutputDispatching)?
+  /// Written only under `userSpaceLock`; a change sets `userSpaceChangePending`, and
+  /// ``withUserSpaceState(_:)`` announces it after the lock is released.
   var userSpaceEnabled: Bool {
-    didSet { if oldValue != userSpaceEnabled { NotificationCenter.postServiceStatusChanged() } }
+    didSet { if oldValue != userSpaceEnabled { userSpaceChangePending = true } }
   }
   var userSpaceStatus: VirtualOutputBackendStatus = .off {
-    didSet { if oldValue != userSpaceStatus { NotificationCenter.postServiceStatusChanged() } }
+    didSet { if oldValue != userSpaceStatus { userSpaceChangePending = true } }
   }
+  var userSpaceChangePending = false
   var userSpaceCloseSlot: VirtualOutputBackendCloseSlot?
   /// Guards `rpcServer` and `endpointServer`.
   let rpcServerLock = NSLock()
@@ -166,7 +169,7 @@ extension ApplicationServiceServer {
       timeout: virtualOutputTransitionTimeouts.feedbackNanoseconds,
       clock: virtualOutputTransitionClock
     )
-    let slot = userSpaceLock.withLock { () -> VirtualOutputBackendCloseSlot? in
+    let slot = withUserSpaceState { () -> VirtualOutputBackendCloseSlot? in
       dispatcher.setBackend(nil)
       let slot = userSpaceCloseSlot
       userSpaceDispatcher = nil
@@ -206,6 +209,18 @@ extension ApplicationServiceServer {
   }
 
   func currentUserSpaceStatus() -> VirtualOutputBackendStatus { userSpaceStatusSnapshot().status }
+
+  /// Runs `body` under `userSpaceLock` and announces a status change it made after the lock is
+  /// released.
+  func withUserSpaceState<Result>(_ body: () throws -> Result) rethrows -> Result {
+    let (result, announce) = try userSpaceLock.withLock { () -> (Result, Bool) in
+      let result = try body()
+      defer { userSpaceChangePending = false }
+      return (result, userSpaceChangePending)
+    }
+    if announce { NotificationCenter.postServiceStatusChanged(from: self) }
+    return result
+  }
 
   struct UserSpaceStatusSnapshot: Sendable {
     let enabled: Bool

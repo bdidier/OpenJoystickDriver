@@ -285,7 +285,7 @@ struct VirtualHIDProfileOverrideTests {
   }
 
   @Test
-  func automaticLiveProfileIsThePublishedIdentityInEveryPlace() {
+  func automaticLiveProfileIsThePublishedIdentityInEveryPlace() throws {
     var pad = Self.device(
       profile: ApplicationServiceVirtualHIDProfileStatus(
         profile: .generic,
@@ -299,10 +299,10 @@ struct VirtualHIDProfileOverrideTests {
     let label = VirtualHIDProfileID.generic.identity.publishedUSBIdentityLabel
     #expect(pad.publishedIdentityLabel == label)
     #expect(pad.publishedIdentityLabel != RuntimePresentation.noVirtualHIDProfileLabel)
+    let name = try #require(pad.publishedVirtualProfile?.productName)
     #expect(
-      ControllerDetailFacts.automaticProfileLabel(pad).contains(
-        pad.publishedVirtualProfile?.productName ?? ""
-      )
+      ControllerDetailFacts.automaticProfileLabel(pad)
+        == OJDLocalized.formatted("virtualProfile.automaticSelected", name)
     )
     #expect(pad.publishedIdentityPresentation == VirtualHIDProfileID.generic.identity.presentation)
   }

@@ -18,7 +18,7 @@ final class RuntimeViewModel: ObservableObject {
   /// Why the service's change notifications are unavailable, so the app reads the service
   /// repeatedly instead; nil while they work.
   @Published
-  var liveUpdatesFallbackReason: String?
+  var liveUpdatesFallbackReason: ControllerLiveUpdateFailure?
   @Published
   var statusState: RuntimeStatusState = .loading
   @Published

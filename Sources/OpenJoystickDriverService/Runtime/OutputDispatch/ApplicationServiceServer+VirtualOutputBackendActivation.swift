@@ -48,7 +48,7 @@ extension ApplicationServiceServer {
       return false
     }
 
-    let published = userSpaceLock.withLock { () -> Bool in
+    let published = withUserSpaceState { () -> Bool in
       guard !virtualOutputServerStopped else { return false }
       userSpaceDispatcher = candidate.dispatcher
       userSpaceCloseSlot = candidate.closeSlot
@@ -98,7 +98,7 @@ extension ApplicationServiceServer {
   }
 
   private func recordVirtualOutputBackendUnavailable(_ error: any Error) {
-    userSpaceLock.withLock {
+    withUserSpaceState {
       guard !virtualOutputServerStopped else { return }
       userSpaceStatus = .error("\(error)")
     }

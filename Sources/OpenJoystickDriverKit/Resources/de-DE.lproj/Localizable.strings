@@ -528,7 +528,9 @@
 "banner.access.title" = "Berechtigung erforderlich";
 "banner.access.detail" = "macOS hat nicht alles erlaubt, was OpenJoystickDriver benötigt, um Controller auszulesen und für Spiele bereitzustellen.";
 "banner.liveUpdates.title" = "Live-Updates nicht verfügbar";
-"banner.liveUpdates.detail" = "Live-Updates sind nicht verfügbar (%@). OpenJoystickDriver fragt den Dienst deshalb wiederholt ab.";
+"banner.liveUpdates.detail.closed" = "Der Dienst hat die Verbindung geschlossen. OpenJoystickDriver prüft stattdessen jede Sekunde auf Änderungen an Controllern.";
+"banner.liveUpdates.detail.timeout" = "Der Dienst hat nicht rechtzeitig geantwortet. OpenJoystickDriver prüft stattdessen jede Sekunde auf Änderungen an Controllern.";
+"banner.liveUpdates.detail.other" = "Die Live-Updates des Dienstes funktionieren nicht. OpenJoystickDriver prüft stattdessen jede Sekunde auf Änderungen an Controllern.";
 "cli.login.uninstall_action" = "Deinstallieren";
 "console.all" = "Alle";
 "console.empty" = "Keine Protokolleinträge.";

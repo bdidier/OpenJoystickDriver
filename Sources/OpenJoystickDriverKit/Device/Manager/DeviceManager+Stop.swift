@@ -2,7 +2,7 @@ import Foundation
 
 extension DeviceManager {
   func notifyServiceStatusChanged() {
-    NotificationCenter.postServiceStatusChanged()
+    NotificationCenter.postServiceStatusChanged(from: self)
   }
 
   /// Stop all detection and pipelines.

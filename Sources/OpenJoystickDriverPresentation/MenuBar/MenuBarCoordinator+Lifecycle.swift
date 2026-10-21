@@ -53,8 +53,8 @@
       let updates = ControllerLiveUpdates(
         source: gatewayChangeSource,
         modeChanged: { [weak self] mode in
-          if case .polling(let reason) = mode {
-            self?.viewModel.liveUpdatesFallbackReason = reason
+          if case .polling(let failure, _) = mode {
+            self?.viewModel.liveUpdatesFallbackReason = failure
           } else {
             self?.viewModel.liveUpdatesFallbackReason = nil
           }

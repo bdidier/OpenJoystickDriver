@@ -530,7 +530,9 @@
 "banner.access.title" = "Permission needed";
 "banner.access.detail" = "macOS has not allowed everything OpenJoystickDriver needs to read controllers and publish them to games.";
 "banner.liveUpdates.title" = "Live updates unavailable";
-"banner.liveUpdates.detail" = "Live updates are unavailable (%@), so OpenJoystickDriver checks the service repeatedly.";
+"banner.liveUpdates.detail.closed" = "The service closed the connection. OpenJoystickDriver checks for controller changes every second instead.";
+"banner.liveUpdates.detail.timeout" = "The service did not answer in time. OpenJoystickDriver checks for controller changes every second instead.";
+"banner.liveUpdates.detail.other" = "Live updates from the service are not working. OpenJoystickDriver checks for controller changes every second instead.";
 
 "cli.login.uninstall_action" = "Uninstall";
 "console.all" = "All";

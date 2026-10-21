@@ -11,7 +11,7 @@ enum MainWindowProblem: Equatable, Sendable, Identifiable {
   case accessMissing
   /// The service's change notifications are unavailable for the reason, so the app reads the
   /// service repeatedly instead.
-  case liveUpdatesPolling(String)
+  case liveUpdatesPolling(ControllerLiveUpdateFailure)
 
   var id: String {
     switch self {
@@ -34,7 +34,8 @@ enum MainWindowProblem: Equatable, Sendable, Identifiable {
   /// Localization key of the detail, or nil when the detail is the service's own message.
   var detailKey: String? {
     switch self {
-    case .serviceUnavailable, .liveUpdatesPolling: return nil
+    case .serviceUnavailable: return nil
+    case .liveUpdatesPolling(let failure): return failure.detailKey
     case .driver(let state):
       switch state {
       case .missingEmbedded: return "setup.missingDetail"
@@ -79,7 +80,7 @@ enum MainWindowProblem: Equatable, Sendable, Identifiable {
     permissions: RuntimePermissionLoadState,
     status: RuntimeStatusState,
     driver: SystemExtensionSetupState,
-    liveUpdatesFallbackReason: String? = nil
+    liveUpdatesFallbackReason: ControllerLiveUpdateFailure? = nil
   ) -> [Self] {
     var problems: [Self] = []
     switch status {
@@ -96,7 +97,7 @@ enum MainWindowProblem: Equatable, Sendable, Identifiable {
     if AccessReadiness.hasMissingPermission(permissionState: permissions, statusState: status) {
       problems.append(.accessMissing)
     }
-    if let reason = liveUpdatesFallbackReason { problems.append(.liveUpdatesPolling(reason)) }
+    if let failure = liveUpdatesFallbackReason { problems.append(.liveUpdatesPolling(failure)) }
     return problems
   }
 }

@@ -21,6 +21,7 @@ extension DevicePipeline {
     foregroundMask = nil
     lastLiveInputReportNanoseconds = nil
     inputHealthMonitoringStartedNanoseconds = uptimeNanoseconds()
+    armStaleWatch()
     awaitingNeutralAfterLivenessLoss = false
     sessionState = .active
     await activateOutput()

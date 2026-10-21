@@ -528,7 +528,9 @@
 "banner.access.title" = "需要權限";
 "banner.access.detail" = "macOS 尚未授予 OpenJoystickDriver 讀取控制器並將其發佈給遊戲所需的全部權限。";
 "banner.liveUpdates.title" = "即時更新無法使用";
-"banner.liveUpdates.detail" = "即時更新無法使用（%@），因此 OpenJoystickDriver 會重複檢查服務。";
+"banner.liveUpdates.detail.closed" = "服務已關閉連線。OpenJoystickDriver 改為每秒檢查一次控制器變更。";
+"banner.liveUpdates.detail.timeout" = "服務未及時回應。OpenJoystickDriver 改為每秒檢查一次控制器變更。";
+"banner.liveUpdates.detail.other" = "來自服務的即時更新無法使用。OpenJoystickDriver 改為每秒檢查一次控制器變更。";
 "cli.login.uninstall_action" = "解除安裝";
 "console.all" = "全部";
 "console.empty" = "沒有日誌項目。";

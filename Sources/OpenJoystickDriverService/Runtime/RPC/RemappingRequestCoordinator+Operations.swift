@@ -290,7 +290,7 @@ extension RemappingRequestCoordinator {
     _ operation: () async throws -> Value
   ) async -> RemappingRequestResult<Value> {
     let result = await exclusively(operation)
-    if case .success = result { NotificationCenter.postServiceStatusChanged() }
+    if case .success = result { NotificationCenter.postServiceStatusChanged(from: self) }
     return result
   }
 

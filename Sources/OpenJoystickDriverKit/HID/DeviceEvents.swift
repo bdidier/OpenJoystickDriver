@@ -9,9 +9,10 @@ public extension Notification.Name {
 }
 
 public extension NotificationCenter {
-  /// Announces that the service's reported status changed.
-  static func postServiceStatusChanged() {
-    Self.default.post(name: .ojdServiceStatusDidChange, object: nil)
+  /// Announces that the service's reported status changed. `source` is the object whose state
+  /// changed, so a test can observe one source.
+  static func postServiceStatusChanged(from source: AnyObject) {
+    Self.default.post(name: .ojdServiceStatusDidChange, object: source)
   }
 }
 

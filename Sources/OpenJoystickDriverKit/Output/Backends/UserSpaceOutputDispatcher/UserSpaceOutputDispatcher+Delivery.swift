@@ -27,7 +27,7 @@ extension UserSpaceOutputDispatcher {
         activeEntry = try await entry(for: identifier)
       }
     } catch {
-      registryLock.withLock { if lifecycle.isOpen { _status = .error("\(error)") } }
+      withRegistry { if lifecycle.isOpen { _status = .error("\(error)") } }
       throw error
     }
     guard lifecycle.isOpen else { throw CancellationError() }
@@ -64,12 +64,12 @@ extension UserSpaceOutputDispatcher {
         return primary + activeEntry.inputReportState.claimChangedAuxiliaryReports()
       }.value()
       onPublished()
-      registryLock.withLock { recomputeStatusLocked() }
+      withRegistry { recomputeStatusLocked() }
     } catch UserSpaceReportSender.Failure.superseded {
       // A newer frame in the queue carries the complete state, so the device stays open.
       return
     } catch {
-      let removed = registryLock.withLock { () -> Entry? in
+      let removed = withRegistry { () -> Entry? in
         guard entries[identifier] === activeEntry else { return nil }
         _status = .error("\(error)")
         return entries.removeValue(forKey: identifier)
@@ -98,7 +98,7 @@ extension UserSpaceOutputDispatcher {
 
     do {
       let entry = try await task.value
-      let installed = registryLock.withLock { () -> Bool in
+      let installed = withRegistry { () -> Bool in
         guard lifecycle.isOpen, lifecycleGenerations[identifier, default: 0] == generation else {
           return false
         }
@@ -123,6 +123,18 @@ extension UserSpaceOutputDispatcher {
       }
       throw error
     }
+  }
+
+  /// Runs `body` under `registryLock` and announces a status change it made after the lock is
+  /// released, so observers never run while the registry is locked.
+  internal func withRegistry<Result>(_ body: () throws -> Result) rethrows -> Result {
+    let (result, announce) = try registryLock.withLock { () -> (Result, Bool) in
+      let result = try body()
+      defer { statusChangePending = false }
+      return (result, statusChangePending)
+    }
+    if announce { NotificationCenter.postServiceStatusChanged(from: self) }
+    return result
   }
 
   internal func recomputeStatusLocked() {

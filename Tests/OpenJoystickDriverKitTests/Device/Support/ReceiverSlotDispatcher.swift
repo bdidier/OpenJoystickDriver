@@ -47,10 +47,12 @@ enum ReceiverSlotAdmissionCanceller {
   @TaskLocal
   static var counter: Counter?
 
-  static func observe() -> NSObjectProtocol {
+  /// Counts the status changes `source` announces; pipelines announce from themselves and do not
+  /// count.
+  static func observe(from source: AnyObject) -> NSObjectProtocol {
     NotificationCenter.default.addObserver(
       forName: .ojdServiceStatusDidChange,
-      object: nil,
+      object: source,
       queue: nil
     ) { _ in
       guard let counter, counter.increment() == 2 else { return }

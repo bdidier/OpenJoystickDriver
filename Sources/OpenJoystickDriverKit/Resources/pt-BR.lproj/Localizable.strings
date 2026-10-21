@@ -528,7 +528,9 @@
 "banner.access.title" = "Permissão necessária";
 "banner.access.detail" = "O macOS não permitiu tudo o que o OpenJoystickDriver precisa para ler os controles e publicá-los nos jogos.";
 "banner.liveUpdates.title" = "Atualizações em tempo real indisponíveis";
-"banner.liveUpdates.detail" = "As atualizações em tempo real estão indisponíveis (%@), então o OpenJoystickDriver consulta o serviço repetidamente.";
+"banner.liveUpdates.detail.closed" = "O serviço fechou a conexão. O OpenJoystickDriver verifica alterações nos controles a cada segundo.";
+"banner.liveUpdates.detail.timeout" = "O serviço não respondeu a tempo. O OpenJoystickDriver verifica alterações nos controles a cada segundo.";
+"banner.liveUpdates.detail.other" = "As atualizações em tempo real do serviço não estão funcionando. O OpenJoystickDriver verifica alterações nos controles a cada segundo.";
 "cli.login.uninstall_action" = "Desinstalar";
 "console.all" = "Todos";
 "console.empty" = "Não há entradas de registro.";

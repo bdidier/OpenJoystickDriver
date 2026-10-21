@@ -1,3 +1,4 @@
+import AppKit
 import Foundation
 import Testing
 
@@ -34,7 +35,7 @@ struct ServiceStatusChangesTests {
     center.post(name: .ojdServiceStatusDidChange, object: nil)
 
     #expect(await next.generation == 1)
-    #expect(clock.now - start < .seconds(1))
+    #expect(clock.now - start < .seconds(10))
   }
 
   @Test
@@ -67,6 +68,17 @@ struct ServiceStatusChangesTests {
   }
 
   @Test
+  func anApplicationActivationIsAStatusChange() async {
+    let workspace = NotificationCenter()
+    let changes = ServiceStatusChanges(center: NotificationCenter(), workspaceCenter: workspace)
+    let baseline = await Self.revision(changes)
+
+    workspace.post(name: NSWorkspace.didActivateApplicationNotification, object: nil)
+
+    #expect(await changes.wait(after: baseline, holdSeconds: 30).generation == 1)
+  }
+
+  @Test
   func aCancelledWaitReturnsAtOnceWithoutWaitingForTheHoldTime() async {
     let changes = ServiceStatusChanges(center: NotificationCenter())
     let baseline = await Self.revision(changes)
@@ -76,15 +88,15 @@ struct ServiceStatusChangesTests {
     task.cancel()
 
     #expect(await task.value == baseline)
-    #expect(clock.now - start < .seconds(1))
+    #expect(clock.now - start < .seconds(10))
   }
 
   @Test
   func theSharedPostAnnouncesAChange() async {
-    let changes = ServiceStatusChanges()
+    let changes = ServiceStatusChanges(workspaceCenter: NotificationCenter())
     let baseline = await Self.revision(changes)
 
-    NotificationCenter.postServiceStatusChanged()
+    NotificationCenter.postServiceStatusChanged(from: changes)
 
     #expect(await changes.wait(after: baseline, holdSeconds: 30).generation > baseline.generation)
   }

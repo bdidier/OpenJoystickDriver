@@ -19,7 +19,7 @@ extension ApplicationServiceServer {
       server: server,
       systemGamepadConnected: systemGamepadConnected
     )
-    NotificationCenter.postServiceStatusChanged()
+    if result.failure == nil { NotificationCenter.postServiceStatusChanged(from: self) }
     return result
   }
 

@@ -528,7 +528,9 @@
 "banner.access.title" = "권한 필요";
 "banner.access.detail" = "macOS에서 OpenJoystickDriver가 컨트롤러를 읽고 게임에 게시하는 데 필요한 권한 중 일부를 허용하지 않았습니다.";
 "banner.liveUpdates.title" = "실시간 업데이트를 사용할 수 없음";
-"banner.liveUpdates.detail" = "실시간 업데이트를 사용할 수 없어(%@) OpenJoystickDriver가 서비스를 반복해서 확인합니다.";
+"banner.liveUpdates.detail.closed" = "서비스가 연결을 닫았습니다. 대신 OpenJoystickDriver가 1초마다 컨트롤러 변경 사항을 확인합니다.";
+"banner.liveUpdates.detail.timeout" = "서비스가 제시간에 응답하지 않았습니다. 대신 OpenJoystickDriver가 1초마다 컨트롤러 변경 사항을 확인합니다.";
+"banner.liveUpdates.detail.other" = "서비스의 실시간 업데이트가 작동하지 않습니다. 대신 OpenJoystickDriver가 1초마다 컨트롤러 변경 사항을 확인합니다.";
 "cli.login.uninstall_action" = "제거";
 "console.all" = "모두";
 "console.empty" = "로그 항목이 없습니다.";

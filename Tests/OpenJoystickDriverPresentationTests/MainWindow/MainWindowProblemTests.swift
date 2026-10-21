@@ -112,12 +112,13 @@ struct MainWindowProblemTests {
       permissions: permissions(.granted),
       status: status(inputRead: .granted),
       driver: .active,
-      liveUpdatesFallbackReason: "The service is unreachable."
+      liveUpdatesFallbackReason: .timeout
     )
-    #expect(problems == [.liveUpdatesPolling("The service is unreachable.")])
+    #expect(problems == [.liveUpdatesPolling(.timeout)])
     #expect(problems.first?.isFailure == false)
     #expect(problems.first?.action == nil)
     #expect(problems.first?.titleKey == "banner.liveUpdates.title")
+    #expect(problems.first?.detailKey == "banner.liveUpdates.detail.timeout")
   }
 
   @Test

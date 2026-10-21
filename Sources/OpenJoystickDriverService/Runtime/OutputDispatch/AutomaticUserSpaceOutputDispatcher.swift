@@ -290,11 +290,16 @@ final class AutomaticUserSpaceOutputDispatcher: VirtualOutputDispatching,
     let targets = await coordinator.installedTargets()
     let publication = await coordinator.publicationDiagnostics()
     let statuses = await coordinator.publicationStatuses()
-    stateLock.withLock {
+    let changed = stateLock.withLock { () -> Bool in
+      let changed =
+        diagnosticTargets != targets || publicationDiagnostics != publication
+        || publicationStatuses != statuses
       diagnosticTargets = targets
       publicationDiagnostics = publication
       publicationStatuses = statuses
+      return changed
     }
+    if changed { NotificationCenter.postServiceStatusChanged(from: self) }
   }
 
   /// The controller's selected profile; nil when no virtual profile can represent its declared
@@ -334,8 +339,10 @@ final class AutomaticUserSpaceOutputDispatcher: VirtualOutputDispatching,
     for identifier: LogicalControllerID,
     generation: UInt64
   ) {
-    stateLock.withLock {
-      guard descriptionCacheGeneration[identifier, default: 0] == generation else { return }
+    let changed = stateLock.withLock { () -> Bool in
+      guard descriptionCacheGeneration[identifier, default: 0] == generation else { return false }
+      let previous = selections[identifier]
+      let wasUnavailable = unavailableControllers.contains(identifier)
       identities[identifier] = identity
       if let selection {
         selections[identifier] = selection
@@ -344,7 +351,10 @@ final class AutomaticUserSpaceOutputDispatcher: VirtualOutputDispatching,
         _ = selections.removeValue(forKey: identifier)
         _ = unavailableControllers.insert(identifier)
       }
+      return previous?.profileID != selection?.profileID || previous?.source != selection?.source
+        || wasUnavailable != (selection == nil)
     }
+    if changed { NotificationCenter.postServiceStatusChanged(from: self) }
   }
 
   private func cacheGeneration(for identifier: LogicalControllerID) -> UInt64 {

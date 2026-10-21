@@ -528,7 +528,9 @@
 "banner.access.title" = "ต้องมีสิทธิ์";
 "banner.access.detail" = "macOS ยังไม่ได้อนุญาตทั้งหมดที่ OpenJoystickDriver ต้องใช้ในการอ่านคอนโทรลเลอร์และเผยแพร่ไปยังเกม";
 "banner.liveUpdates.title" = "ไม่มีการอัปเดตแบบเรียลไทม์";
-"banner.liveUpdates.detail" = "ไม่สามารถใช้การอัปเดตแบบเรียลไทม์ได้ (%@) OpenJoystickDriver จึงตรวจสอบบริการซ้ำ ๆ";
+"banner.liveUpdates.detail.closed" = "บริการปิดการเชื่อมต่อ OpenJoystickDriver จะตรวจสอบการเปลี่ยนแปลงของคอนโทรลเลอร์ทุกวินาทีแทน";
+"banner.liveUpdates.detail.timeout" = "บริการไม่ตอบกลับภายในเวลาที่กำหนด OpenJoystickDriver จะตรวจสอบการเปลี่ยนแปลงของคอนโทรลเลอร์ทุกวินาทีแทน";
+"banner.liveUpdates.detail.other" = "การอัปเดตแบบเรียลไทม์จากบริการไม่ทำงาน OpenJoystickDriver จะตรวจสอบการเปลี่ยนแปลงของคอนโทรลเลอร์ทุกวินาทีแทน";
 "cli.login.uninstall_action" = "ถอนการติดตั้ง";
 "console.all" = "ทั้งหมด";
 "console.empty" = "ไม่มีรายการบันทึกการใช้งาน";

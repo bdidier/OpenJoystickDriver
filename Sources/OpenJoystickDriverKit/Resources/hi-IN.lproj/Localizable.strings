@@ -528,7 +528,9 @@
 "banner.access.title" = "अनुमति आवश्यक है";
 "banner.access.detail" = "OpenJoystickDriver को कंट्रोलर पढ़ने और उन्हें गेम में प्रकाशित करने के लिए जो कुछ चाहिए, macOS ने उसकी पूरी अनुमति नहीं दी है।";
 "banner.liveUpdates.title" = "लाइव अपडेट उपलब्ध नहीं हैं";
-"banner.liveUpdates.detail" = "लाइव अपडेट उपलब्ध नहीं हैं (%@), इसलिए OpenJoystickDriver सेवा को बार-बार जाँचता है।";
+"banner.liveUpdates.detail.closed" = "सेवा ने कनेक्शन बंद कर दिया। इसके बजाय OpenJoystickDriver हर सेकंड कंट्रोलर में बदलाव जाँचता है।";
+"banner.liveUpdates.detail.timeout" = "सेवा ने समय पर जवाब नहीं दिया। इसके बजाय OpenJoystickDriver हर सेकंड कंट्रोलर में बदलाव जाँचता है।";
+"banner.liveUpdates.detail.other" = "सेवा से लाइव अपडेट काम नहीं कर रहे हैं। इसके बजाय OpenJoystickDriver हर सेकंड कंट्रोलर में बदलाव जाँचता है।";
 "cli.login.uninstall_action" = "अनइंस्टॉल करें";
 "console.all" = "सभी";
 "console.empty" = "कोई लॉग प्रविष्टि नहीं।";
