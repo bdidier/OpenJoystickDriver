@@ -151,15 +151,18 @@
       )
       let fitting = fittingHeight(of: panes.selected)
       let chrome = window.frame.height - window.contentRect(forFrameRect: window.frame).height
-      let available = (window.screen ?? NSScreen.main)?.visibleFrame.height ?? .greatestFiniteMagnitude
+      let available =
+        (window.screen ?? NSScreen.main)?.visibleFrame.height ?? .greatestFiniteMagnitude
       let size = SettingsWindowPane.contentSize(
         fittingHeight: fitting,
         availableHeight: available - chrome
       )
-      guard window.contentRect(forFrameRect: window.frame).size != NSSize(
-        width: size.width,
-        height: size.height
-      )
+      guard
+        window.contentRect(forFrameRect: window.frame).size
+          != NSSize(
+            width: size.width,
+            height: size.height
+          )
       else { return }
       var frame = window.frameRect(
         forContentRect: NSRect(x: 0, y: 0, width: size.width, height: size.height)

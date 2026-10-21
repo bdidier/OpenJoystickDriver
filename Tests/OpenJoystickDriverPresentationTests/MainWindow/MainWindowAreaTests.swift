@@ -73,7 +73,9 @@ struct MainWindowAreaTests {
         .searchLibrary,
       ]
     )
-    #expect(MainWindowArea.access.toolbarActions(activityMode: .log) == [.grantProgram, .createToken])
+    #expect(
+      MainWindowArea.access.toolbarActions(activityMode: .log) == [.grantProgram, .createToken]
+    )
     #expect(
       MainWindowToolbarLayout.items(for: .profiles, activityMode: .log)
         == MainWindowToolbarLayout.fixedItems + profileActions.map(\.identifier)

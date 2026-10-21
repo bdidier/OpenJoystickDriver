@@ -25,7 +25,9 @@ struct UpdateStatusPresentationTests {
     )
     #expect(status.title == OJDLocalized.string("settings.updateAhead"))
     #expect(status.version == "0.6.0-alpha.1")
-    #expect(status.latestRelease == OJDLocalized.formatted("settings.latestRelease", "0.5.0-beta.4"))
+    #expect(
+      status.latestRelease == OJDLocalized.formatted("settings.latestRelease", "0.5.0-beta.4")
+    )
   }
 
   @Test
@@ -69,8 +71,13 @@ struct UpdateStatusPresentationTests {
     let failure = UpdateCheckFailure(reason: .transport, message: "offline")
     #expect(indicator(.idle) == .none)
     #expect(indicator(.checking) == .progress)
-    #expect(indicator(.upToDate(current: "1.0.0", latest: "v1.0.0")) == .symbol(name: "checkmark.circle.fill", tone: .positive))
-    #expect(indicator(.available(info)) == .symbol(name: "arrow.down.circle.fill", tone: .attention))
+    #expect(
+      indicator(.upToDate(current: "1.0.0", latest: "v1.0.0"))
+        == .symbol(name: "checkmark.circle.fill", tone: .positive)
+    )
+    #expect(
+      indicator(.available(info)) == .symbol(name: "arrow.down.circle.fill", tone: .attention)
+    )
     #expect(
       indicator(.aheadOfLatestRelease(current: "1.0.0", latest: "v0.9.0"))
         == .symbol(name: "arrow.up.circle.fill", tone: .informational)

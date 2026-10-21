@@ -48,7 +48,10 @@ struct UpdateCommandTests {
 
   @Test
   func upToDatePrintsPlainRow() async {
-    let plain = await run(["update", "check", "--plain"], state: .upToDate(current: "1.0.0", latest: "v1.0.0"))
+    let plain = await run(
+      ["update", "check", "--plain"],
+      state: .upToDate(current: "1.0.0", latest: "v1.0.0")
+    )
 
     #expect(plain.code == 0)
     #expect(plain.standardOutput.hasPrefix("up-to-date\t"))

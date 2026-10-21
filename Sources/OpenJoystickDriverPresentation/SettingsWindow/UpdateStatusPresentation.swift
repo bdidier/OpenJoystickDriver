@@ -50,7 +50,10 @@ struct UpdateStatusPresentation: Equatable {
       indicator = .symbol(name: "arrow.up.circle.fill", tone: .informational)
       title = OJDLocalized.string("settings.updateAhead")
       version = current
-      latestRelease = OJDLocalized.formatted("settings.latestRelease", Self.versionText(ofTag: latest))
+      latestRelease = OJDLocalized.formatted(
+        "settings.latestRelease",
+        Self.versionText(ofTag: latest)
+      )
     case .failed(let failure):
       indicator = .symbol(name: "xmark.circle.fill", tone: .failure)
       title = failure.message

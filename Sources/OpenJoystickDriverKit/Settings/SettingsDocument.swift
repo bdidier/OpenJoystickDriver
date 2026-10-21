@@ -147,7 +147,8 @@ extension SettingsDocument.Updates: Codable {
 
 extension SettingsDocument: Codable {
   private enum CodingKeys: String, CodingKey, CaseIterable {
-    case apiVersion, kind, launchAtLoginOptOut, showInMenuBar, showInDock, notify, updates, developerTools
+    case apiVersion, kind, launchAtLoginOptOut, showInMenuBar, showInDock, notify, updates,
+      developerTools
   }
 
   public init(from decoder: any Decoder) throws {
