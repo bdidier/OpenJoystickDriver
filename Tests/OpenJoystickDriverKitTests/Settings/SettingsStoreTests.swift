@@ -27,9 +27,50 @@ struct SettingsStoreTests {
   func everySettingRoundTripsThroughTheUserFile() throws {
     for key in ApplicationSettingKey.allCases {
       for value in [true, false] {
+        // Show in menu bar and Show in Dock are never both off.
+        if key == .showInMenuBar && !value { try store.set(.showInDock, to: true) }
+        if key == .showInDock && !value { try store.set(.showInMenuBar, to: true) }
         try store.set(key, to: value)
         #expect(try store.value(of: key) == value, "\(key.rawValue)")
       }
+    }
+  }
+
+  @Test(arguments: [
+    #", "showInMenuBar": false, "showInDock": false"#, #", "showInMenuBar": false"#,
+  ])
+  func aFileThatTurnsOffEveryEntryPointFailsToLoad(body: String) throws {
+    try write(header(body), to: .applicationData)
+
+    #expect(throws: SettingsStoreError.self) { try store.load() }
+    do { _ = try store.load() } catch let error as SettingsStoreError {
+      guard case .storedNoVisibleEntryPoint(let file) = error else {
+        Issue.record("Expected storedNoVisibleEntryPoint, got \(error)")
+        return
+      }
+      #expect(file == store.userFileURL.path)
+      #expect(error.localizedDescription.contains("Show in Dock"))
+    }
+  }
+
+  @Test
+  func theDockIconIsOffByDefault() throws { #expect(try !store.value(of: .showInDock)) }
+
+  @Test
+  func turningOffTheLastEntryPointFails() throws {
+    #expect(throws: SettingsStoreError.noVisibleEntryPoint) {
+      try store.set(.showInMenuBar, to: false)
+    }
+    #expect(try store.value(of: .showInMenuBar))
+
+    try store.set(.showInDock, to: true)
+    try store.set(.showInMenuBar, to: false)
+    #expect(throws: SettingsStoreError.noVisibleEntryPoint) {
+      try store.set(.showInDock, to: false)
+    }
+    #expect(try store.value(of: .showInDock))
+    #expect(throws: SettingsStoreError.noVisibleEntryPoint) {
+      try store.update([.showInDock: false, .showInMenuBar: false])
     }
   }
 
@@ -90,7 +131,10 @@ struct SettingsStoreTests {
 
   @Test
   func twoStoresWritingDifferentKeysAtOnceLoseNoUpdate() async throws {
-    let keys = ApplicationSettingKey.allCases.filter { $0 != .launchAtLogin }
+    // Show in menu bar stays on: the entry-point guard refuses the all-false rounds.
+    let keys = ApplicationSettingKey.allCases.filter {
+      $0 != .launchAtLogin && $0 != .showInMenuBar
+    }
     let first = store
     let second = store
     for round in 0..<20 {

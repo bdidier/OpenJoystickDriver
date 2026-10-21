@@ -31,6 +31,8 @@
     @Published
     private(set) var showInMenuBar: Bool
     @Published
+    private(set) var showInDock: Bool
+    @Published
     private(set) var checkUpdatesAutomatically: Bool
     @Published
     private(set) var includePrereleaseUpdates: Bool
@@ -81,6 +83,7 @@
         ApplicationSettingKey.notifyProfileDeactivated.defaultValue
       self.notificationSounds = ApplicationSettingKey.notifySounds.defaultValue
       self.showInMenuBar = ApplicationSettingKey.showInMenuBar.defaultValue
+      self.showInDock = ApplicationSettingKey.showInDock.defaultValue
       self.checkUpdatesAutomatically = ApplicationSettingKey.updatesCheckAutomatically.defaultValue
       self.includePrereleaseUpdates = ApplicationSettingKey.updatesIncludePrereleases.defaultValue
       self.developerToolsEnabled = ApplicationSettingKey.developerTools.defaultValue
@@ -113,6 +116,7 @@
       profileDeactivatedNotifications = value(.notifyProfileDeactivated)
       notificationSounds = value(.notifySounds)
       showInMenuBar = value(.showInMenuBar)
+      showInDock = value(.showInDock)
       checkUpdatesAutomatically = value(.updatesCheckAutomatically)
       includePrereleaseUpdates = value(.updatesIncludePrereleases)
       developerToolsEnabled = value(.developerTools)
@@ -162,6 +166,16 @@
       guard persist(.showInMenuBar, enabled) else { return }
       showInMenuBar = enabled
     }
+
+    func setShowInDock(_ enabled: Bool) {
+      guard persist(.showInDock, enabled) else { return }
+      showInDock = enabled
+    }
+
+    /// Show in menu bar and Show in Dock cannot both be off, so the one that is on stays on.
+    var showInMenuBarIsLocked: Bool { showInMenuBar && !showInDock }
+
+    var showInDockIsLocked: Bool { showInDock && !showInMenuBar }
 
     func setCheckUpdatesAutomatically(_ enabled: Bool) {
       guard persist(.updatesCheckAutomatically, enabled) else { return }

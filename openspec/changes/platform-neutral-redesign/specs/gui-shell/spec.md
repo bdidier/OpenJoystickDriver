@@ -160,7 +160,7 @@ The Library area SHALL have one Validate action, in the toolbar, and one empty l
 
 ### Requirement: Access area
 
-The Access area SHALL show each access grant as one row with its status. A grant that the app does not need SHALL NOT appear. The full socket path SHALL NOT appear.
+The Access area SHALL show each access grant as one row with its status. A grant that the app does not need SHALL NOT appear. The full socket path SHALL NOT appear in the row; the endpoint row offers Copy Socket Path for it.
 
 #### Scenario: Grant not needed
 

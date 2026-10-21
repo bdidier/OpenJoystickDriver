@@ -132,7 +132,11 @@ VALUES: dict[str, tuple[str, ...]] = {
     f"{EXTENSION}/registration": REGISTRATION,
     f"{D}/transportExtensionStatus/properties/bundle": BUNDLE,
     f"{D}/transportExtensionStatus/properties/registration": REGISTRATION,
-    f"{D}/updateCheck/properties/status": ("UpToDate", "Available"),
+    f"{D}/updateCheck/properties/status": (
+        "UpToDate",
+        "Available",
+        "AheadOfLatestRelease",
+    ),
     f"{D}/virtualExportMapping/properties/format": ("SDL", "W3C"),
 }
 

@@ -10,78 +10,67 @@
     var preferences: SettingsPreferencesModel
 
     var body: some View {
-      SettingsPaneColumn {
-        GroupBox {
-          VStack(alignment: .leading, spacing: 10) {
-            HStack(alignment: .top, spacing: 24) {
-              eventGroup(
-                title: OJDLocalized.string("settings.controllers"),
-                first: eventToggle(
-                  "settings.controllerConnectedShort",
-                  "settings.controllerNotifications",
-                  \.controllerNotifications,
-                  preferences.setControllerNotifications
-                ),
-                second: eventToggle(
-                  "settings.controllerDisconnectedShort",
-                  "settings.controllerDisconnectedNotifications",
-                  \.controllerDisconnectedNotifications,
-                  preferences.setControllerDisconnectedNotifications
-                )
-              )
-              eventGroup(
-                title: OJDLocalized.string("settings.profiles"),
-                first: eventToggle(
-                  "settings.profileActivatedShort",
-                  "settings.profileNotifications",
-                  \.profileNotifications,
-                  preferences.setProfileNotifications
-                ),
-                second: eventToggle(
-                  "settings.profileDeactivatedShort",
-                  "settings.profileDeactivatedNotifications",
-                  \.profileDeactivatedNotifications,
-                  preferences.setProfileDeactivatedNotifications
-                )
-              )
-              Spacer(minLength: 0)
-            }
-            Divider()
-            HStack(alignment: .top, spacing: 12) {
-              VStack(alignment: .leading, spacing: 4) {
-                Text(OJDLocalized.string("settings.notificationSounds"))
-                Text(deliveryStatus).font(.caption).foregroundColor(
-                  deliveryNeedsAttention
-                    ? Color(NSColor.systemOrange) : Color(NSColor.secondaryLabelColor)
-                )
-                if deliveryNeedsAttention {
-                  Button(OJDLocalized.string("settings.openNotificationSettings")) {
-                    preferences.openNotificationSettings()
-                  }
-                }
-              }
-              Spacer(minLength: 12)
-              Toggle(
-                OJDLocalized.string("settings.notificationSounds"),
-                isOn: Binding(
-                  get: { preferences.notificationSounds },
-                  set: { preferences.setNotificationSounds($0) }
-                )
-              ).toggleStyle(.switch).labelsHidden().ojdAccessibilityLabel(
-                OJDLocalized.string("settings.notificationSounds")
-              )
-              Button(OJDLocalized.string("settings.testNotification")) {
-                preferences.sendTestNotification()
-              }
-            }
-          }.padding(4).frame(maxWidth: .infinity, alignment: .topLeading)
-        } label: {
-          Text(OJDLocalized.string("settings.notifications")).font(.headline)
+      Form {
+        SettingsErrorSection(preferences: preferences)
+        Section(OJDLocalized.string("settings.controllers")) {
+          eventToggle(
+            "settings.controllerConnectedShort",
+            "settings.controllerNotifications",
+            \.controllerNotifications,
+            preferences.setControllerNotifications
+          )
+          eventToggle(
+            "settings.controllerDisconnectedShort",
+            "settings.controllerDisconnectedNotifications",
+            \.controllerDisconnectedNotifications,
+            preferences.setControllerDisconnectedNotifications
+          )
         }
-        SettingsErrorBanner(preferences: preferences)
-      }.onAppear { preferences.refreshNotificationAuthorization() }.onReceive(
+        Section(OJDLocalized.string("settings.profiles")) {
+          eventToggle(
+            "settings.profileActivatedShort",
+            "settings.profileNotifications",
+            \.profileNotifications,
+            preferences.setProfileNotifications
+          )
+          eventToggle(
+            "settings.profileDeactivatedShort",
+            "settings.profileDeactivatedNotifications",
+            \.profileDeactivatedNotifications,
+            preferences.setProfileDeactivatedNotifications
+          )
+        }
+        Section {
+          Toggle(
+            OJDLocalized.string("settings.notificationSounds"),
+            isOn: Binding(
+              get: { preferences.notificationSounds },
+              set: { preferences.setNotificationSounds($0) }
+            )
+          )
+        }
+        Section { deliveryRow }
+      }.ojdGroupedForm().onAppear { preferences.refreshNotificationAuthorization() }.onReceive(
         NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)
       ) { _ in preferences.refreshNotificationAuthorization() }
+    }
+
+    private var deliveryRow: some View {
+      HStack(alignment: .firstTextBaseline, spacing: 8) {
+        Text(deliveryStatus).foregroundColor(
+          deliveryNeedsAttention
+            ? Color(NSColor.systemOrange) : Color(NSColor.secondaryLabelColor)
+        ).fixedSize(horizontal: false, vertical: true)
+        Spacer(minLength: 12)
+        if deliveryNeedsAttention {
+          Button(OJDLocalized.string("settings.openNotificationSettings")) {
+            preferences.openNotificationSettings()
+          }
+        }
+        Button(OJDLocalized.string("settings.testNotification")) {
+          preferences.sendTestNotification()
+        }
+      }
     }
 
     private func eventToggle(
@@ -93,15 +82,7 @@
       Toggle(
         OJDLocalized.string(titleKey),
         isOn: Binding(get: { preferences[keyPath: value] }, set: set)
-      ).toggleStyle(.checkbox).ojdAccessibilityLabel(OJDLocalized.string(accessibilityKey))
-    }
-
-    private func eventGroup(title: String, first: some View, second: some View) -> some View {
-      VStack(alignment: .leading, spacing: 8) {
-        Text(title).font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor))
-        first
-        second
-      }.frame(maxWidth: .infinity, alignment: .leading)
+      ).ojdAccessibilityLabel(OJDLocalized.string(accessibilityKey))
     }
 
     private var deliveryNeedsAttention: Bool {

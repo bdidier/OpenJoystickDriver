@@ -302,6 +302,7 @@ The keys are:
 
 - `launchAtLogin`: the macOS login item. `get` reads it from macOS, so it includes changes made in System Settings, and `set` registers or unregisters the item. A change made with `ojd setting` or in the app also records whether you opted out, so OJD does not register itself again at the next start. A change made only in System Settings records nothing.
 - `showInMenuBar`: show the OJD item in the menu bar. It is on by default.
+- `showInDock`: always show the OJD icon in the Dock. With it off, the icon shows only while a window (main, Settings, Input Test) is open. It is off by default. `showInMenuBar` and `showInDock` cannot both be off: the change that would turn off the last one fails.
 - `notify.controllerConnected`: notify when a controller connects or needs attention.
 - `notify.controllerDisconnected`: notify when a controller disconnects.
 - `notify.profileActivated`: notify when a profile is activated or switched.
@@ -394,7 +395,7 @@ Check whether a newer release exists.
 ojd update check [--prerelease]
 ```
 
-`--prerelease` includes prerelease versions. The command exits with code 1 when the check fails. With `--json`, it prints an `UpdateCheck` with `status` (`UpToDate` or `Available`), `currentVersion`, `latestVersion`, `includePrereleases`, and `releaseURL` when an update is available.
+`--prerelease` includes prerelease versions. The command exits with code 1 when the check fails. With `--json`, it prints an `UpdateCheck` with `status` (`UpToDate`, `Available`, or `AheadOfLatestRelease` when the running version is newer than the latest release), `currentVersion`, `latestVersion`, `includePrereleases`, and `releaseURL` when an update is available.
 
 ## explain
 

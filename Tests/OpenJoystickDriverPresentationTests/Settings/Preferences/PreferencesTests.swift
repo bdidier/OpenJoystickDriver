@@ -166,7 +166,7 @@ struct PreferencesTests {
   @MainActor
   func prereleaseChoiceAndUpdateCheckShareTheCLIUpdateEngine() async throws {
     let settings = SettingsStore(directory: RootedDataDirectory.temporary())
-    let checker = UpdateCheckerStub(result: .upToDate("v1.2.3"))
+    let checker = UpdateCheckerStub(result: .upToDate(current: "1.2.3", latest: "v1.2.3"))
     let model = SettingsPreferencesModel(
       settings: settings,
       launchAtLogin: LaunchAtLoginStub(isEnabled: false),
@@ -176,12 +176,40 @@ struct PreferencesTests {
 
     model.setIncludePrereleaseUpdates(true)
     model.checkForUpdates()
-    await waitUntil("model.updateState == .upToDate(\"v1.2.3\")") {
-      model.updateState == .upToDate("v1.2.3")
+    await waitUntil("model.updateState == .upToDate(current: \"1.2.3\", latest: \"v1.2.3\")") {
+      model.updateState == .upToDate(current: "1.2.3", latest: "v1.2.3")
     }
 
     #expect(try settings.value(of: .updatesIncludePrereleases))
     #expect(await checker.includePrereleaseArguments == [true])
+  }
+
+  @Test
+  @MainActor
+  func theMenuBarAndDockChoicesAreNeverBothOff() throws {
+    let settings = SettingsStore(directory: RootedDataDirectory.temporary())
+    let model = SettingsPreferencesModel(
+      settings: settings,
+      launchAtLogin: LaunchAtLoginStub(isEnabled: false),
+      notificationAuthorization: NotificationAuthorizationStub(state: .denied)
+    )
+
+    #expect(model.showInMenuBar && !model.showInDock)
+    #expect(model.showInMenuBarIsLocked && !model.showInDockIsLocked)
+    model.setShowInMenuBar(false)
+    #expect(model.showInMenuBar)
+    #expect(model.errorMessage != nil)
+
+    model.setShowInDock(true)
+    #expect(model.showInDock)
+    #expect(try settings.value(of: .showInDock))
+    #expect(!model.showInMenuBarIsLocked && !model.showInDockIsLocked)
+
+    model.setShowInMenuBar(false)
+    #expect(!model.showInMenuBar)
+    #expect(model.showInDockIsLocked && !model.showInMenuBarIsLocked)
+    model.setShowInDock(false)
+    #expect(model.showInDock)
   }
 
   @Test

@@ -21,6 +21,10 @@
       "description": "Show the OpenJoystickDriver item in the menu bar. Default true.",
       "type": "boolean"
     },
+    "showInDock": {
+      "description": "Always show the OpenJoystickDriver icon in the Dock; when false it shows only while a window is open. Default false. Show in menu bar and Show in Dock cannot both be false.",
+      "type": "boolean"
+    },
     "notify": {
       "description": "Which events post a notification.",
       "type": "object",

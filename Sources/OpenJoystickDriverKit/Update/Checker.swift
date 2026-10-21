@@ -35,8 +35,12 @@ public struct UpdateCheckFailure: Equatable, Sendable {
 public enum UpdateCheckState: Equatable, Sendable {
   case idle
   case checking
-  case upToDate(String)
+  /// The running version equals the latest release.
+  case upToDate(current: String, latest: String)
+  /// A newer release exists.
   case available(UpdateInfo)
+  /// The running version is newer than the latest release.
+  case aheadOfLatestRelease(current: String, latest: String)
   case failed(UpdateCheckFailure)
 }
 
@@ -102,7 +106,11 @@ public struct UpdateChecker: Sendable {
         version: candidate.version,
         htmlURL: tagURL(candidate.tag.name)
       )
-      return candidate.version > currentVersion ? .available(info) : .upToDate(candidate.tag.name)
+      if currentVersion < candidate.version { return .available(info) }
+      if candidate.version < currentVersion {
+        return .aheadOfLatestRelease(current: rawCurrentVersion, latest: candidate.tag.name)
+      }
+      return .upToDate(current: rawCurrentVersion, latest: candidate.tag.name)
     } catch let error as UpdateCheckerError {
       return .failed(UpdateCheckFailure(reason: error.reason, message: error.message))
     } catch {

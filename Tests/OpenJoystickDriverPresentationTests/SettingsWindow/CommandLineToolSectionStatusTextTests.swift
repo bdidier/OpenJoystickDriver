@@ -5,11 +5,11 @@
   @testable import OpenJoystickDriverPresentation
 
   @Suite
-  struct CommandLinePaneStatusTextTests {
+  struct CommandLineToolSectionStatusTextTests {
     @Test
     func linkWithoutReadableTargetSaysSo() {
       for state in [CommandLineToolLinkStatus.State.linkedElsewhere, .broken] {
-        let text = CommandLinePaneView.statusText(
+        let text = CommandLineToolSection.statusText(
           CommandLineToolLinkStatus(state: state, path: "/usr/local/bin/ojd"),
           linkPath: "/usr/local/bin/ojd"
         )
@@ -25,7 +25,7 @@
 
     @Test
     func linkWithTargetNamesIt() {
-      let text = CommandLinePaneView.statusText(
+      let text = CommandLineToolSection.statusText(
         CommandLineToolLinkStatus(state: .broken, path: "/l", target: "/gone"),
         linkPath: "/l"
       )

@@ -7,105 +7,62 @@
   struct DeveloperControllerSummaryView: View {
     @ObservedObject
     var model: DeveloperToolsViewModel
-    let compact: Bool
-
     var body: some View {
-      GroupBox {
-        VStack(alignment: .leading, spacing: 12) {
-          HStack(spacing: 12) {
-            Picker(
-              OJDLocalized.string("developer.controller"),
-              selection: Binding(
-                get: { model.selectedDevice?.sessionToken.rawValue ?? "" },
-                set: { model.selectDevice(sessionToken: $0) }
-              )
-            ) {
-              ForEach(model.devices, id: \.sessionToken) { device in
-                Text(device.name).tag(device.sessionToken.rawValue)
-              }
-            }.labelsHidden().frame(maxWidth: 360)
-            Spacer()
-            Button(
-              OJDLocalized.string("common.refresh"),
-              action: model.requestRefresh
-            ).disabled(model.isCapturing)
+      Section(OJDLocalized.string("developer.controllerDetails")) {
+        Picker(
+          OJDLocalized.string("developer.controller"),
+          selection: Binding(
+            get: { model.selectedDevice?.sessionToken.rawValue ?? "" },
+            set: { model.selectDevice(sessionToken: $0) }
+          )
+        ) {
+          ForEach(model.devices, id: \.sessionToken) { device in
+            Text(device.name).tag(device.sessionToken.rawValue)
           }
-
-          if let device = model.selectedDevice {
-            Divider()
-            controllerFacts(device)
-          }
-        }.padding(4)
-      } label: {
-        Text(OJDLocalized.string("developer.controllerDetails")).font(
-          .headline
-        )
+        }
+        if let device = model.selectedDevice { controllerFacts(device) }
+        Button(OJDLocalized.string("common.refresh"), action: model.requestRefresh)
+          .disabled(model.isCapturing)
       }
     }
 
+    @ViewBuilder
     private func controllerFacts(_ device: ApplicationServiceDeviceDescription) -> some View {
-      VStack(alignment: .leading, spacing: 10) {
-        factRow(
-          DeveloperValueRow(
-            label: OJDLocalized.string("developer.usbID"),
-            value: String(format: "%04X:%04X", device.vendorID, device.productID)
-          ),
-          DeveloperValueRow(
-            label: OJDLocalized.string("common.protocol"),
-            value: "\(protocolName(device.protocolBinding)) (\(device.protocolBinding))"
-          ),
-          DeveloperValueRow(
-            label: OJDLocalized.string("common.serialNumber"),
-            value: device.serialNumber ?? "—"
-          )
+      OJDLabeledValue(
+        OJDLocalized.string("developer.usbID"),
+        OJDValue.usbIdentifier(vendorID: device.vendorID, productID: device.productID)
+      )
+      OJDLabeledValue(
+        OJDLocalized.string("common.protocol"),
+        "\(protocolName(device.protocolBinding)) (\(device.protocolBinding))"
+      )
+      DeveloperSerialRow(serial: OJDValue.reported(device.serialNumber)).id(
+        device.sessionToken.rawValue
+      )
+      OJDLabeledValue(OJDLocalized.string("developer.route"), routeName(device.discoverySource))
+      OJDLabeledValue(OJDLocalized.string("developer.connection"), device.connection)
+      OJDLabeledValue(
+        OJDLocalized.string("developer.usbEndpoints"),
+        String(
+          format: "%@ 0x%02X · %@ 0x%02X",
+          OJDLocalized.string("common.inputEndpoint"),
+          device.inputEndpoint,
+          OJDLocalized.string("common.outputEndpoint"),
+          device.outputEndpoint
         )
-        factRow(
-          DeveloperValueRow(
-            label: OJDLocalized.string("developer.route"),
-            value: routeName(device.discoverySource)
-          ),
-          DeveloperValueRow(
-            label: OJDLocalized.string("developer.connection"),
-            value: device.connection
-          ),
-          DeveloperValueRow(
-            label: OJDLocalized.string("developer.usbEndpoints"),
-            value: String(
-              format: "%@ 0x%02X · %@ 0x%02X",
-              OJDLocalized.string("common.inputEndpoint"),
-              device.inputEndpoint,
-              OJDLocalized.string("common.outputEndpoint"),
-              device.outputEndpoint
-            )
-          )
-        )
-        factRow(
-          DeveloperValueRow(
-            label: OJDLocalized.string("developer.buttons"),
-            value: buttonValue(model.latestInput?.pressed)
-          ),
-          DeveloperValueRow(
-            label: OJDLocalized.string("developer.leftStick"),
-            value: stickValue(model.latestInput?.leftStick)
-          ),
-          DeveloperValueRow(
-            label: OJDLocalized.string("developer.rightStick"),
-            value: stickValue(model.latestInput?.rightStick)
-          )
-        )
-      }
-    }
-
-    private func factRow<First: View, Second: View, Third: View>(
-      _ first: First,
-      _ second: Second,
-      _ third: Third
-    ) -> some View {
-      HStack(alignment: .top, spacing: compact ? 10 : 24) {
-        first.frame(maxWidth: .infinity, alignment: .leading)
-        second.frame(maxWidth: .infinity, alignment: .leading)
-        third.frame(maxWidth: .infinity, alignment: .leading)
-      }
+      )
+      OJDLabeledValue(
+        OJDLocalized.string("developer.buttons"),
+        buttonValue(model.latestInput?.pressed)
+      )
+      OJDLabeledValue(
+        OJDLocalized.string("developer.leftStick"),
+        stickValue(model.latestInput?.leftStick)
+      )
+      OJDLabeledValue(
+        OJDLocalized.string("developer.rightStick"),
+        stickValue(model.latestInput?.rightStick)
+      )
     }
 
     /// Raw canonical values; Y points down.
@@ -154,17 +111,18 @@
     }
   }
 
-  private struct DeveloperValueRow: View {
-    let label: String
-    let value: String
+  /// The serial number row; it is blurred until revealed, and starts blurred for each controller.
+  private struct DeveloperSerialRow: View {
+    let serial: OJDValue
+    @State
+    private var visibility = SerialNumberVisibility()
 
     var body: some View {
-      VStack(alignment: .leading, spacing: 2) {
-        Text(label).font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor))
-        // The monospaced design draws Arabic letters unjoined, so only digits are fixed-width.
-        Text(value).font(.body.monospacedDigit()).lineLimit(2)
-          .textSelection(.enabled)
-      }.accessibilityElement(children: .combine)
+      SerialNumberRow(
+        label: OJDLocalized.string("common.serialNumber"),
+        serial: serial,
+        visibility: $visibility
+      )
     }
   }
 

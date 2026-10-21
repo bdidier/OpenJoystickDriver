@@ -6,6 +6,10 @@ public enum SettingsStoreError: Error, Equatable, LocalizedError, Sendable {
   /// The file's `apiVersion` or `kind` is not the supported one; the problem names the file.
   case unsupported(DocumentHeaderProblem)
   case unwritable(file: String)
+  /// The change would turn off both Show in menu bar and Show in Dock.
+  case noVisibleEntryPoint
+  /// The file turns off both Show in menu bar and Show in Dock, which leaves no entry point.
+  case storedNoVisibleEntryPoint(file: String)
 
   public var errorDescription: String? {
     switch self {
@@ -14,6 +18,10 @@ public enum SettingsStoreError: Error, Equatable, LocalizedError, Sendable {
     case .unsupported(let problem):
       problem.description + " Delete the file or rewrite it for the supported apiVersion."
     case .unwritable(let file): "The settings file \(file) cannot be written."
+    case .storedNoVisibleEntryPoint(let file):
+      "The settings file \(file) turns off both Show in menu bar and Show in Dock, so the app would have no visible entry point. Fix or delete it, then try again."
+    case .noVisibleEntryPoint:
+      "Show in menu bar and Show in Dock cannot both be off: the app would have no visible entry point."
     }
   }
 }
@@ -90,6 +98,9 @@ public struct SettingsStore: Sendable {
     }
     var document = try read(url)
     for (key, value) in values { document[key] = value }
+    if values[.showInMenuBar] != nil || values[.showInDock] != nil,
+      document.hasNoVisibleEntryPoint
+    { throw SettingsStoreError.noVisibleEntryPoint }
     let encoder = JSONEncoder()
     encoder.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
     do { try encoder.encode(document).write(to: url, options: .atomic) } catch {
@@ -103,7 +114,13 @@ public struct SettingsStore: Sendable {
       return SettingsDocument()
     } catch { throw SettingsStoreError.damaged(file: url.path) }
     do {
-      return try JSONDecoder().decode(SettingsDocument.self, from: data)
+      let document = try JSONDecoder().decode(SettingsDocument.self, from: data)
+      if document.hasNoVisibleEntryPoint {
+        throw SettingsStoreError.storedNoVisibleEntryPoint(file: url.path)
+      }
+      return document
+    } catch let error as SettingsStoreError {
+      throw error
     } catch let problem as SettingsHeaderProblem {
       throw SettingsStoreError.unsupported(problem.problem.located(in: url.path))
     } catch { throw SettingsStoreError.damaged(file: url.path) }

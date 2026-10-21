@@ -10,67 +10,39 @@
 
     var body: some View {
       let displayedPackets = model.displayedPackets
-      GroupBox {
-        VStack(alignment: .leading, spacing: 12) {
-          HStack(spacing: 8) {
-            captureStatus
-            Picker("", selection: $model.packetFilter) {
-              Text(OJDLocalized.string("developer.packetFilterActivity")).tag(
-                DeveloperToolsViewModel.PacketFilter.activity
-              )
-              Text(OJDLocalized.string("developer.packetFilterAll")).tag(
-                DeveloperToolsViewModel.PacketFilter.all
-              )
-            }.pickerStyle(SegmentedPickerStyle()).frame(width: 150).labelsHidden()
-            Spacer()
-            if model.isCapturing {
-              Button(
-                OJDLocalized.string("common.stop"),
-                action: model.stopCapture
-              ).keyboardShortcut(.defaultAction)
-            } else {
-              Button(
-                OJDLocalized.string("developer.startCapture"),
-                action: model.startCapture
-              ).keyboardShortcut(.defaultAction).disabled(model.selectedDevice == nil)
-            }
-            Button(
-              OJDLocalized.string("common.clear"),
-              action: model.clearCapture
-            ).disabled(model.packets.isEmpty && model.observedExtraInputs.isEmpty)
-            OJDCompactSymbolButton(
-              symbolName: "doc.on.doc",
-              label: OJDLocalized.string("common.copyAll"),
-              action: model.copyPacketCapture
-            ).disabled(model.packets.isEmpty)
-            OJDCompactSymbolButton(
-              symbolName: "square.and.arrow.up",
-              label: OJDLocalized.string("common.export"),
-              action: model.exportPacketCapture
-            ).disabled(model.packets.isEmpty)
+      Section(OJDLocalized.string("developer.packetCapture")) {
+        captureStatus
+        Picker(OJDLocalized.string("developer.packetCapture"), selection: $model.packetFilter) {
+          Text(OJDLocalized.string("developer.packetFilterActivity")).tag(
+            DeveloperToolsViewModel.PacketFilter.activity
+          )
+          Text(OJDLocalized.string("developer.packetFilterAll")).tag(
+            DeveloperToolsViewModel.PacketFilter.all
+          )
+        }.pickerStyle(.segmented).labelsHidden()
+        HStack(spacing: 8) {
+          if model.isCapturing {
+            Button(OJDLocalized.string("common.stop"), action: model.stopCapture)
+          } else {
+            Button(OJDLocalized.string("developer.startCapture"), action: model.startCapture)
+              .disabled(model.selectedDevice == nil)
           }
-
-          packetList(displayedPackets)
-
-          if model.hiddenIdlePacketCount > 0 {
-            Text(
-              OJDLocalized.formatted(
-                "developer.hiddenIdlePackets",
-                model.hiddenIdlePacketCount
-              )
-            ).font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor))
-          }
-
+          Button(OJDLocalized.string("common.clear"), action: model.clearCapture)
+            .disabled(model.packets.isEmpty && model.observedExtraInputs.isEmpty)
+          Spacer(minLength: 12)
+          Button(OJDLocalized.string("common.copyAll"), action: model.copyPacketCapture)
+            .disabled(model.packets.isEmpty)
+          Button(OJDLocalized.string("common.export"), action: model.exportPacketCapture)
+            .disabled(model.packets.isEmpty)
+        }
+        packetList(displayedPackets)
+        if model.hiddenIdlePacketCount > 0 {
           Text(
-            OJDLocalized.string(
-              "developer.packetSharingWarning"
-            )
+            OJDLocalized.formatted("developer.hiddenIdlePackets", model.hiddenIdlePacketCount)
           ).font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor))
-        }.padding(4)
-      } label: {
-        Text(OJDLocalized.string("developer.packetCapture")).font(
-          .headline
-        )
+        }
+        Text(OJDLocalized.string("developer.packetSharingWarning")).font(.caption)
+          .foregroundColor(Color(NSColor.secondaryLabelColor))
       }
     }
 
@@ -112,24 +84,16 @@
     @ViewBuilder
     private func packetList(_ packets: [PacketLogEntry]) -> some View {
       if packets.isEmpty {
-        VStack(alignment: .leading, spacing: 6) {
-          Text(
-            model.isCapturing
-              ? OJDLocalized.string(
-                "developer.waitingForPackets"
-              )
-              : OJDLocalized.string(
-                "developer.emptyCapture"
-              )
-          ).foregroundColor(Color(NSColor.secondaryLabelColor))
-          if model.isCapturing {
-            Text(
-              OJDLocalized.string(
-                "developer.keepAliveNote"
-              )
-            ).font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor))
-          }
-        }.padding(10).frame(maxWidth: .infinity, minHeight: 90, alignment: .topLeading)
+        Text(
+          model.isCapturing
+            ? OJDLocalized.string("developer.waitingForPackets")
+            : OJDLocalized.string("developer.emptyCapture")
+        ).foregroundColor(Color(NSColor.secondaryLabelColor))
+        if model.isCapturing {
+          Text(OJDLocalized.string("developer.keepAliveNote")).font(.caption).foregroundColor(
+            Color(NSColor.secondaryLabelColor)
+          )
+        }
       } else {
         DeveloperPacketTable(packets: packets).frame(minHeight: 160, maxHeight: 240)
       }

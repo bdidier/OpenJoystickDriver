@@ -79,7 +79,6 @@ public protocol MainWindowPresenting: AnyObject {
 public enum SettingsWindowPane: String, CaseIterable, Identifiable, Hashable, Sendable {
   case general
   case notifications
-  case commandLine
   case advanced
 
   public var id: String { rawValue }

@@ -102,7 +102,7 @@ struct MainWindowAreaTests {
 
   @Test
   func settingsPanesRunInToolbarOrder() {
-    #expect(SettingsWindowPane.allCases == [.general, .notifications, .commandLine, .advanced])
+    #expect(SettingsWindowPane.allCases == [.general, .notifications, .advanced])
   }
 }
 

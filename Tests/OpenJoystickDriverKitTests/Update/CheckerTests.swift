@@ -11,7 +11,7 @@ struct UpdateCheckerTests {
 
     let state = await checker.check(currentVersion: "0.5.0-alpha.5")
 
-    #expect(state == .upToDate("v0.4.1"))
+    #expect(state == .aheadOfLatestRelease(current: "0.5.0-alpha.5", latest: "v0.4.1"))
   }
 
   @Test("prerelease channel selects the greatest SemVer tag")
@@ -20,7 +20,7 @@ struct UpdateCheckerTests {
 
     let state = await checker.check(currentVersion: "0.5.0-alpha.5", includePrereleases: true)
 
-    #expect(state == .upToDate("v0.5.0-alpha.4"))
+    #expect(state == .aheadOfLatestRelease(current: "0.5.0-alpha.5", latest: "v0.5.0-alpha.4"))
   }
 
   @Test("available update uses a tag page without a release object")
@@ -37,16 +37,22 @@ struct UpdateCheckerTests {
     #expect(info.htmlURL.absoluteString == "https://github.example/project/tree/v0.4.1")
   }
 
-  @Test(
-    "equal and installed-newer checks retain the selected remote tag",
-    arguments: ["0.4.1", "0.5.0"]
-  )
-  func noUpdateRetainsSelectedTag(currentVersion: String) async throws {
+  @Test("the running version equal to the latest tag is up to date")
+  func equalVersionIsUpToDate() async throws {
     let checker = try Self.checker(path: "/mixed-tags")
 
-    let state = await checker.check(currentVersion: currentVersion)
+    let state = await checker.check(currentVersion: "0.4.1")
 
-    #expect(state == .upToDate("v0.4.1"))
+    #expect(state == .upToDate(current: "0.4.1", latest: "v0.4.1"))
+  }
+
+  @Test("a running version newer than the latest tag reports both versions")
+  func newerVersionReportsBothVersions() async throws {
+    let checker = try Self.checker(path: "/mixed-tags")
+
+    let state = await checker.check(currentVersion: "0.5.0")
+
+    #expect(state == .aheadOfLatestRelease(current: "0.5.0", latest: "v0.4.1"))
   }
 
   @Test("selection spans every linked tag page")

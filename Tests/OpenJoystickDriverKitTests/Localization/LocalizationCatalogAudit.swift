@@ -18,7 +18,7 @@ enum LocalizationCatalogAudit {
     "developer.packetColumnBytes", "inputTest.color", "keyboard.control", "profiles.controlNumber",
     "profiles.motion.local",
     "profiles.physical.motor", "profiles.stick.horizontal", "profiles.stick.vertical",
-    "profiles.trackball.enabled", "profiles.turbo", "settings.general",
+    "profiles.trackball.enabled", "profiles.turbo",
     "library.mods", "access.scope.control", "access.socket", "access.transport.socket",
     "access.tokens", "access.token.issued.title", "access.token.named",
     "settingsPane.general.title",
@@ -31,7 +31,8 @@ enum LocalizationCatalogAudit {
     "profiles.activationMode", "profiles.motion.local", "profiles.sectionSticks",
     "profiles.stick.horizontal", "profiles.stick.source", "profiles.stick.vertical",
     "profiles.touch.surface", "profiles.trackball.enabled", "profiles.turbo",
-    "settings.notifications", "access.transport.socket", "access.web.port", "library.mods",
+    "settings.notifications", "settings.version", "access.transport.socket", "access.web.port",
+    "library.mods",
   ]
 
   private static let sourceIdenticalTermsByLocale: [String: Set<String>] = [
@@ -51,7 +52,7 @@ enum LocalizationCatalogAudit {
       "developer.route", "inputTest.home", "keyboard.control", "keyboard.escape", "mapping.guide",
       "mapping.start", "profiles.physical.motor", "profiles.sectionSticks",
       "profiles.stick.horizontal", "profiles.stick.source", "profiles.trackball.enabled",
-      "profiles.trigger.source", "profiles.turbo", "settings.updates",
+      "profiles.trigger.source", "profiles.turbo", "settings.updates", "settings.version",
       "shortcuts.controller.name", "shortcuts.controller.type", "shortcuts.parameter.controller",
       "shortcuts.profile.name",
     ],

@@ -12,7 +12,6 @@ extension SettingsWindowPane {
     switch self {
     case .general: return "gearshape"
     case .notifications: return "bell"
-    case .commandLine: return "terminal"
     case .advanced: return "wrench.and.screwdriver"
     }
   }
@@ -20,14 +19,27 @@ extension SettingsWindowPane {
   /// Localization key of the pane button's accessibility label.
   var accessibilityKey: String { "a11y.settingsPane.\(rawValue)" }
 
-  /// The content size of the pane; the window is fixed at this size while the pane is shown.
-  var minimumContentSize: SettingsPaneSize {
-    switch self {
-    case .general: return SettingsPaneSize(width: 520, height: 360)
-    case .notifications: return SettingsPaneSize(width: 520, height: 380)
-    case .commandLine: return SettingsPaneSize(width: 520, height: 240)
-    case .advanced: return SettingsPaneSize(width: 760, height: 560)
-    }
+  /// The toolbar item identifier of the pane's button.
+  var toolbarItemIdentifier: String { "OpenJoystickDriver.SettingsPane.\(rawValue)" }
+
+  /// The pane whose toolbar button has the identifier; nil for any other identifier.
+  init?(toolbarItemIdentifier: String) {
+    let matching = Self.allCases.filter { $0.toolbarItemIdentifier == toolbarItemIdentifier }
+    guard let pane = matching.first else { return nil }
+    self = pane
+  }
+
+  /// The width that fits the toolbar buttons of every pane and the packet table of Advanced.
+  static let contentWidth = 600.0
+
+  /// The shortest content area a pane gets.
+  static let minimumContentHeight = 100.0
+
+  /// The content size of a pane whose content is `fittingHeight` tall: every pane has the same
+  /// width, and a pane taller than `availableHeight` gets that height and scrolls.
+  static func contentSize(fittingHeight: Double, availableHeight: Double) -> SettingsPaneSize {
+    let height = max(min(fittingHeight, availableHeight), minimumContentHeight)
+    return SettingsPaneSize(width: contentWidth, height: height)
   }
 }
 
@@ -45,8 +57,6 @@ final class SettingsWindowPaneModel: ObservableObject {
   var titleKey: String { selected.titleKey }
 
   var selectedIndex: Int { panes.firstIndex(of: selected) ?? 0 }
-
-  var minimumContentSize: SettingsPaneSize { selected.minimumContentSize }
 
   func select(_ pane: SettingsWindowPane) { selected = pane }
 

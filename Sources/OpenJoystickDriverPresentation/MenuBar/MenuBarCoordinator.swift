@@ -34,18 +34,19 @@
     /// The Settings window.
     var settingsWindow: (any SettingsWindowPresenting)?
     /// App preferences, shared with the Settings window; `showInMenuBar` adds or removes the
-    /// status item.
+    /// status item and `showInDock` the Dock icon.
     let preferences = SettingsPreferencesModel()
     /// The command-line tool link, shown by the Settings window.
     let commandLineTool = CommandLineToolModel()
     var showInMenuBarObservation: AnyCancellable?
+    var showInDockObservation: AnyCancellable?
     var inputTestWindowController: InputTestWindowController?
     var liveStatusTimer: Timer?
     var controllerInventoryObserver: NSObjectProtocol?
     let notificationMonitor = RuntimeNotificationMonitor()
     let notificationPresenter = RuntimeNotificationCenterDelegate()
     let termination = MenuBarTermination()
-    let primaryWindowVisibility = PrimaryWindowVisibilityController()
+    let dockIcon = DockIconController()
     static weak var activeCoordinator: MenuBarCoordinator?
 
     package init(

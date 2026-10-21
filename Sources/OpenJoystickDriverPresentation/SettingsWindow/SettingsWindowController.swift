@@ -1,31 +1,40 @@
 #if canImport(AppKit) && canImport(SwiftUI)
 
   import AppKit
+  import Combine
   import OpenJoystickDriverKit
   import SwiftUI
 
-  /// The pane the Settings window shows; SwiftUI content for the selected pane.
-  private struct SettingsWindowContent: View {
-    @ObservedObject
-    var panes: SettingsWindowPaneModel
+  /// The SwiftUI content of one pane.
+  private struct SettingsPaneContent: View {
+    let pane: SettingsWindowPane
     let preferences: SettingsPreferencesModel
     let commandLineTool: CommandLineToolModel
     let developerTools: DeveloperToolsViewModel
     let runtime: RuntimeViewModel
 
     var body: some View {
-      switch panes.selected {
+      switch pane {
       case .general: GeneralPaneView(preferences: preferences)
       case .notifications: NotificationsPaneView(preferences: preferences)
-      case .commandLine: CommandLinePaneView(commandLineTool: commandLineTool)
       case .advanced:
         AdvancedPaneView(
           preferences: preferences,
+          commandLineTool: commandLineTool,
           developerTools: developerTools,
           runtime: runtime
         )
       }
     }
+  }
+
+  /// The pane the Settings window shows: the content of the selected pane.
+  private struct SettingsWindowContent: View {
+    @ObservedObject
+    var panes: SettingsWindowPaneModel
+    let content: (SettingsWindowPane) -> SettingsPaneContent
+
+    var body: some View { content(panes.selected) }
   }
 
   /// The Settings window: toolbar buttons choose the pane, and the window title is the pane title.
@@ -36,20 +45,19 @@
     private static let toolbarIdentifier = NSToolbar.Identifier(
       "OpenJoystickDriver.SettingsToolbar"
     )
-    private static let paneGroupIdentifier = NSToolbarItem.Identifier(
-      "OpenJoystickDriver.SettingsPanes"
-    )
-
     private let panes: SettingsWindowPaneModel
     private let developerTools: DeveloperToolsViewModel
+    private weak var toolbar: NSToolbar?
     private let visibilityChanged: @MainActor (Bool) -> Void
-    private weak var paneGroup: NSToolbarItemGroup?
+    private let makeContent: (SettingsWindowPane) -> SettingsPaneContent
+    private var contentChanges: [AnyCancellable] = []
+    private var fitting: RunLoopCoalescer?
 
     /// - Parameters:
     ///   - gateway: the service connection the developer tools in Advanced read.
     ///   - runtime: the driver extension state and actions of Advanced.
     ///   - preferences: the switches of General, Notifications and Advanced.
-    ///   - commandLineTool: the command-line tool link of the Command Line pane.
+    ///   - commandLineTool: the command-line tool link of Advanced.
     ///   - visibilityChanged: called with true when the window is shown and false when it closes.
     init(
       gateway: any ApplicationServiceGateway,
@@ -61,28 +69,50 @@
       self.visibilityChanged = visibilityChanged
       panes = SettingsWindowPaneModel()
       developerTools = DeveloperToolsViewModel(gateway: gateway)
-      let content = SettingsWindowContent(
-        panes: panes,
-        preferences: preferences,
-        commandLineTool: commandLineTool,
-        developerTools: developerTools,
-        runtime: runtime
-      )
-      let minimum = panes.minimumContentSize
+      let developerTools = developerTools
+      let makeContent = { (pane: SettingsWindowPane) in
+        SettingsPaneContent(
+          pane: pane,
+          preferences: preferences,
+          commandLineTool: commandLineTool,
+          developerTools: developerTools,
+          runtime: runtime
+        )
+      }
+      self.makeContent = makeContent
       let window = NSWindow(
-        contentRect: NSRect(x: 0, y: 0, width: minimum.width, height: minimum.height),
+        contentRect: NSRect(
+          x: 0,
+          y: 0,
+          width: SettingsWindowPane.contentWidth,
+          height: SettingsWindowPane.minimumContentHeight
+        ),
         styleMask: [.titled, .closable],
         backing: .buffered,
         defer: false
       )
       window.isReleasedWhenClosed = false
       window.hidesOnDeactivate = false
-      window.contentView = NSHostingView(rootView: content)
+      window.contentView = NSHostingView(
+        rootView: SettingsWindowContent(panes: panes, content: makeContent)
+      )
       super.init(window: window)
       window.delegate = self
       configureToolbar(on: window)
-      paneChanged()
+      paneChanged(animated: false)
       window.center()
+      fitting = RunLoopCoalescer { [weak self] in
+        guard self?.window?.isVisible == true else { return }
+        self?.paneChanged(animated: true)
+      }
+      // Each publisher announces a change before it is applied; the coalescer measures on a later
+      // turn, once the content shows it. Fitting changes only the window, never these models.
+      contentChanges = [
+        preferences.objectWillChange.sink { [weak self] _ in self?.fitting?.schedule() },
+        developerTools.objectWillChange.sink { [weak self] _ in self?.fitting?.schedule() },
+        commandLineTool.objectWillChange.sink { [weak self] _ in self?.fitting?.schedule() },
+        runtime.objectWillChange.sink { [weak self] _ in self?.fitting?.schedule() },
+      ]
     }
 
     @available(*, unavailable)
@@ -91,7 +121,7 @@
     func showSettings(pane: SettingsWindowPane?) {
       if let pane {
         panes.select(pane)
-        paneChanged()
+        paneChanged(animated: window?.isVisible == true)
       }
       visibilityChanged(true)
       window?.makeKeyAndOrderFront(nil)
@@ -107,42 +137,70 @@
       toolbar.autosavesConfiguration = false
       toolbar.displayMode = .iconAndLabel
       window.toolbar = toolbar
-      if #available(macOS 11.0, *) { window.toolbarStyle = .preference }
+      window.toolbarStyle = .preference
+      self.toolbar = toolbar
     }
 
-    /// Sets the title of the selected pane and sizes the fixed-size window to the pane's size.
-    private func paneChanged() {
+    /// Sets the title of the selected pane and resizes the window's height to the pane's height,
+    /// keeping its top edge in place.
+    private func paneChanged(animated: Bool) {
       guard let window else { return }
       window.title = OJDLocalized.string(panes.titleKey)
-      let minimum = panes.minimumContentSize
-      let size = NSSize(width: minimum.width, height: minimum.height)
-      window.contentMinSize = size
-      if window.contentRect(forFrameRect: window.frame).size != size {
-        let top = window.frame.maxY
-        window.setContentSize(size)
-        window.setFrameTopLeftPoint(NSPoint(x: window.frame.minX, y: top))
-      }
-      paneGroup?.selectedIndex = panes.selectedIndex
+      toolbar?.selectedItemIdentifier = NSToolbarItem.Identifier(
+        panes.selected.toolbarItemIdentifier
+      )
+      let fitting = fittingHeight(of: panes.selected)
+      let chrome = window.frame.height - window.contentRect(forFrameRect: window.frame).height
+      let available = (window.screen ?? NSScreen.main)?.visibleFrame.height ?? .greatestFiniteMagnitude
+      let size = SettingsWindowPane.contentSize(
+        fittingHeight: fitting,
+        availableHeight: available - chrome
+      )
+      guard window.contentRect(forFrameRect: window.frame).size != NSSize(
+        width: size.width,
+        height: size.height
+      )
+      else { return }
+      var frame = window.frameRect(
+        forContentRect: NSRect(x: 0, y: 0, width: size.width, height: size.height)
+      )
+      frame.origin = NSPoint(x: window.frame.minX, y: window.frame.maxY - frame.height)
+      window.setFrame(frame, display: true, animate: animated)
+    }
+
+    /// The height the pane's content takes at the window's width.
+    private func fittingHeight(of pane: SettingsWindowPane) -> Double {
+      let probe = NSHostingView(
+        rootView: makeContent(pane).frame(width: SettingsWindowPane.contentWidth)
+          .fixedSize(horizontal: false, vertical: true)
+      )
+      return Double(probe.fittingSize.height)
     }
 
     @objc
-    private func paneButtonClicked(_ sender: NSToolbarItemGroup) {
-      guard panes.select(index: sender.selectedIndex) else { return }
-      paneChanged()
+    private func paneButtonClicked(_ sender: NSToolbarItem) {
+      guard let pane = SettingsWindowPane(toolbarItemIdentifier: sender.itemIdentifier.rawValue)
+      else { return }
+      panes.select(pane)
+      paneChanged(animated: true)
     }
   }
 
   extension SettingsWindowController: NSToolbarDelegate {
+    private var paneIdentifiers: [NSToolbarItem.Identifier] {
+      panes.panes.map { NSToolbarItem.Identifier($0.toolbarItemIdentifier) }
+    }
+
     func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-      [Self.paneGroupIdentifier]
+      paneIdentifiers
     }
 
     func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-      [Self.paneGroupIdentifier]
+      paneIdentifiers
     }
 
     func toolbarSelectableItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-      [Self.paneGroupIdentifier]
+      paneIdentifiers
     }
 
     func toolbar(
@@ -150,25 +208,18 @@
       itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier,
       willBeInsertedIntoToolbar flag: Bool
     ) -> NSToolbarItem? {
-      guard itemIdentifier == Self.paneGroupIdentifier else { return nil }
-      let titles = panes.panes.map { OJDLocalized.string($0.titleKey) }
-      let group = NSToolbarItemGroup(
-        itemIdentifier: itemIdentifier,
-        titles: titles,
-        selectionMode: .selectOne,
-        labels: titles,
-        target: self,
-        action: #selector(paneButtonClicked(_:))
-      )
-      group.controlRepresentation = .expanded
-      for (item, pane) in zip(group.subitems, panes.panes) {
-        let label = OJDLocalized.string(pane.accessibilityKey)
-        item.image = NSImage(systemSymbolName: pane.symbolName, accessibilityDescription: label)
-        item.toolTip = label
-      }
-      group.selectedIndex = panes.selectedIndex
-      paneGroup = group
-      return group
+      guard let pane = SettingsWindowPane(toolbarItemIdentifier: itemIdentifier.rawValue)
+      else { return nil }
+      let item = NSToolbarItem(itemIdentifier: itemIdentifier)
+      let title = OJDLocalized.string(pane.titleKey)
+      let description = OJDLocalized.string(pane.accessibilityKey)
+      item.label = title
+      item.paletteLabel = title
+      item.toolTip = description
+      item.image = NSImage(systemSymbolName: pane.symbolName, accessibilityDescription: description)
+      item.target = self
+      item.action = #selector(paneButtonClicked(_:))
+      return item
     }
   }
 

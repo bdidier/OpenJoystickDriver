@@ -50,6 +50,7 @@ struct UpdateCheckCommand: AsyncParsableCommand {
     enum Status: String, Encodable {
       case upToDate = "UpToDate"
       case available = "Available"
+      case aheadOfLatestRelease = "AheadOfLatestRelease"
     }
 
     let status: Status
@@ -64,7 +65,7 @@ struct UpdateCheckCommand: AsyncParsableCommand {
       let current = ApplicationVersion.current
       let result: Result
       switch await Self.checker(current, prerelease) {
-      case .upToDate(let latest):
+      case .upToDate(_, let latest):
         result = Result(
           status: .upToDate,
           currentVersion: current,
@@ -78,6 +79,14 @@ struct UpdateCheckCommand: AsyncParsableCommand {
           currentVersion: current,
           latestVersion: info.tagName,
           releaseURL: info.htmlURL.absoluteString,
+          includePrereleases: prerelease
+        )
+      case .aheadOfLatestRelease(_, let latest):
+        result = Result(
+          status: .aheadOfLatestRelease,
+          currentVersion: current,
+          latestVersion: latest,
+          releaseURL: nil,
           includePrereleases: prerelease
         )
       case .failed(let failure):
@@ -109,6 +118,14 @@ struct UpdateCheckCommand: AsyncParsableCommand {
         CLIOutput.stdout(
           CLILocalized.format(
             "cli.update.check.up_to_date",
+            result.currentVersion,
+            result.latestVersion
+          )
+        )
+      case .aheadOfLatestRelease:
+        CLIOutput.stdout(
+          CLILocalized.format(
+            "cli.update.check.ahead",
             result.currentVersion,
             result.latestVersion
           )

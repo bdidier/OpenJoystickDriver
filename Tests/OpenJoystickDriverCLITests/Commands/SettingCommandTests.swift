@@ -126,6 +126,22 @@ struct SettingCommandTests {
   }
 
   @Test
+  func showInDockIsASettingKeyThatDefaultsToOff() async throws {
+    let socketPath = temporarySocketPath()
+    let server = try serve(socketPath: socketPath, received: Locked<[String]>([]))
+    defer { server.stop() }
+
+    let get = await run(["setting", "get", "showInDock", "--json"], socketPath: socketPath)
+    let set = await run(["setting", "set", "showInDock", "true", "--json"], socketPath: socketPath)
+
+    #expect(get.code == 0, "\(get.standardError)")
+    #expect(try get.json()["key"] as? String == "showInDock")
+    #expect(try get.json()["value"] as? Bool == false)
+    #expect(set.code == 0, "\(set.standardError)")
+    #expect(try set.json()["value"] as? Bool == true)
+  }
+
+  @Test
   func setExitsOneWhenMacOSLeavesTheSettingOff() async throws {
     let socketPath = temporarySocketPath()
     let server = try serve(refused: [.launchAtLogin], socketPath: socketPath)

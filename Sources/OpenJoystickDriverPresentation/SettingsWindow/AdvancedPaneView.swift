@@ -4,39 +4,39 @@
   import OpenJoystickDriverKit
   import SwiftUI
 
-  /// The Xbox USB driver extension, the developer tools switch and, while it is on, the
+  /// The command-line tool link, the Xbox USB driver extension, the developer tools switch and, while it is on, the
   /// developer tools.
   struct AdvancedPaneView: View {
     @ObservedObject
     var preferences: SettingsPreferencesModel
+    let commandLineTool: CommandLineToolModel
     let developerTools: DeveloperToolsViewModel
     let runtime: RuntimeViewModel
 
     var body: some View {
-      VStack(spacing: 0) {
-        SettingsErrorBanner(preferences: preferences).padding(.horizontal, 24).padding(.top, 12)
-        Form {
-          DriverExtensionSection(runtime: runtime)
-          Section(OJDLocalized.string("settings.developerTools")) {
-            SettingsSwitchRow(
-              title: OJDLocalized.string("settings.enableDeveloperTools"),
-              description: OJDLocalized.string("settings.developerToolsDescription"),
-              isOn: Binding(
-                get: { preferences.developerToolsEnabled },
-                set: { preferences.setDeveloperToolsEnabled($0) }
-              )
+      Form {
+        SettingsErrorSection(preferences: preferences)
+        CommandLineToolSection(commandLineTool: commandLineTool)
+        DriverExtensionSection(runtime: runtime)
+        Section(OJDLocalized.string("settings.developerTools")) {
+          SettingsSwitchRow(
+            title: OJDLocalized.string("settings.enableDeveloperTools"),
+            description: OJDLocalized.string("settings.developerToolsDescription"),
+            isOn: Binding(
+              get: { preferences.developerToolsEnabled },
+              set: { preferences.setDeveloperToolsEnabled($0) }
             )
+          )
+        }
+        if preferences.developerToolsEnabled {
+          DeveloperToolsView(model: developerTools)
+        } else {
+          Section {
+            Text(OJDLocalized.string("settingsPane.advanced.developerToolsOff"))
+              .foregroundColor(Color(NSColor.secondaryLabelColor))
           }
-          if preferences.developerToolsEnabled {
-            Section { DeveloperToolsView(model: developerTools) }
-          } else {
-            Section {
-              Text(OJDLocalized.string("settingsPane.advanced.developerToolsOff"))
-                .foregroundColor(Color(NSColor.secondaryLabelColor))
-            }
-          }
-        }.ojdGroupedForm()
-      }
+        }
+      }.ojdGroupedForm()
     }
   }
 

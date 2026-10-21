@@ -5,6 +5,7 @@ import Foundation
 public enum ApplicationSettingKey: String, Codable, CaseIterable, Sendable {
   case launchAtLogin
   case showInMenuBar
+  case showInDock
   case notifyControllerConnected = "notify.controllerConnected"
   case notifyControllerDisconnected = "notify.controllerDisconnected"
   case notifyProfileActivated = "notify.profileActivated"
@@ -15,7 +16,7 @@ public enum ApplicationSettingKey: String, Codable, CaseIterable, Sendable {
   case developerTools
 
   /// The value while no settings file stores one: true for `showInMenuBar` and `notify.sounds`,
-  /// false otherwise.
+  /// false otherwise (`showInDock` included).
   public var defaultValue: Bool { self == .showInMenuBar || self == .notifySounds }
 }
 

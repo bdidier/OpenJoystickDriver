@@ -36,6 +36,9 @@
         isEnabled: { [preferences] in preferences.checkUpdatesAutomatically },
         check: { [preferences] in preferences.checkForUpdates(announcingAvailableUpdate: true) }
       ).run()
+      showInDockObservation = preferences.$showInDock.removeDuplicates().sink {
+        [weak self] shown in self?.dockIcon.showsAlways = shown
+      }
       showInMenuBarObservation = preferences.$showInMenuBar.removeDuplicates().sink {
         [weak self] shown in self?.applyShowInMenuBar(shown)
       }
@@ -114,32 +117,18 @@
         supportReport: supportReport,
         restartApplication: { [weak self] in self?.restartApplication() },
         openInputTest: { [weak self] device in self?.openInputTest(for: device) },
-        visibilityChanged: { [weak self] isOpen in
-          if isOpen {
-            self?.primaryWindowVisibility.opened(.workbench)
-          } else {
-            self?.primaryWindowVisibility.closed(.workbench)
-          }
-        }
+        visibilityChanged: { [weak self] isOpen in self?.dockIcon.setOpen(.workbench, isOpen) }
       )
       settingsWindow = SettingsWindowController(
         gateway: gateway,
         runtime: viewModel,
         preferences: preferences,
         commandLineTool: commandLineTool
-      ) { [weak self] isOpen in
-        if isOpen {
-          self?.primaryWindowVisibility.opened(.settings)
-        } else {
-          self?.primaryWindowVisibility.closed(.settings)
-        }
-      }
+      ) { [weak self] isOpen in self?.dockIcon.setOpen(.settings, isOpen) }
     }
 
-    /// Without a status item the main window is the only way into the app, so hiding the item
-    /// opens the window.
+    /// Hiding the status item opens the main window, so the change shows where the app is now.
     private func applyShowInMenuBar(_ shown: Bool) {
-      primaryWindowVisibility.keepsDockIcon = !shown
       if shown {
         guard statusItem == nil else { return }
         installStatusItem()
@@ -154,13 +143,7 @@
         inputTestWindowController = InputTestWindowController(
           gateway: gateway,
           runtimeViewModel: viewModel
-        ) { [weak self] isOpen in
-          if isOpen {
-            self?.primaryWindowVisibility.opened(.inputTest)
-          } else {
-            self?.primaryWindowVisibility.closed(.inputTest)
-          }
-        }
+        ) { [weak self] isOpen in self?.dockIcon.setOpen(.inputTest, isOpen) }
       }
       inputTestWindowController?.show(device: device)
     }

@@ -13,9 +13,12 @@
 
     var body: some View {
       Section(OJDLocalized.string("setup.driverTitle")) {
-        Text(OJDLocalized.string(detailKey)).foregroundColor(Color(NSColor.secondaryLabelColor))
-        if runtime.systemExtensionSetupState == .active {
-          Button(OJDLocalized.string("cli.login.uninstall_action")) { confirmsUninstall = true }
+        HStack(alignment: .firstTextBaseline, spacing: 12) {
+          Text(OJDLocalized.string(detailKey)).fixedSize(horizontal: false, vertical: true)
+          Spacer(minLength: 12)
+          if runtime.systemExtensionSetupState == .active {
+            Button(OJDLocalized.string("cli.login.uninstall_action")) { confirmsUninstall = true }
+          }
         }
       }.alert(isPresented: $confirmsUninstall) {
         Alert(

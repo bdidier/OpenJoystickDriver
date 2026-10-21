@@ -2948,6 +2948,7 @@
       "enum": [
         "launchAtLogin",
         "showInMenuBar",
+        "showInDock",
         "notify.controllerConnected",
         "notify.controllerDisconnected",
         "notify.profileActivated",
@@ -3461,7 +3462,7 @@
           "type": "string"
         },
         "status": {
-          "enum": ["UpToDate", "Available"]
+          "enum": ["UpToDate", "Available", "AheadOfLatestRelease"]
         }
       }
     },

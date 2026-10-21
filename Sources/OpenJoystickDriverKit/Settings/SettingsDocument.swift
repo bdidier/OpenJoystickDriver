@@ -33,11 +33,20 @@ public struct SettingsDocument: Equatable, Sendable {
   /// truth; a change made in System Settings does not update this field.
   public var launchAtLoginOptOut: Bool?
   public var showInMenuBar: Bool?
+  public var showInDock: Bool?
   public var notify = Notify()
   public var updates = Updates()
   public var developerTools: Bool?
 
   public init() {}
+
+  /// Whether this document, with its defaults filled in, turns off both Show in menu bar and
+  /// Show in Dock, which would leave the app no visible entry point.
+  public var hasNoVisibleEntryPoint: Bool {
+    let menuBar = showInMenuBar ?? ApplicationSettingKey.showInMenuBar.defaultValue
+    let dock = showInDock ?? ApplicationSettingKey.showInDock.defaultValue
+    return !menuBar && !dock
+  }
 
   /// The stored value of `key`, or nil when this layer leaves it out.
   ///
@@ -48,6 +57,7 @@ public struct SettingsDocument: Equatable, Sendable {
       switch key {
       case .launchAtLogin: launchAtLoginOptOut.map { !$0 }
       case .showInMenuBar: showInMenuBar
+      case .showInDock: showInDock
       case .notifyControllerConnected: notify.controllerConnected
       case .notifyControllerDisconnected: notify.controllerDisconnected
       case .notifyProfileActivated: notify.profileActivated
@@ -62,6 +72,7 @@ public struct SettingsDocument: Equatable, Sendable {
       switch key {
       case .launchAtLogin: launchAtLoginOptOut = newValue.map { !$0 }
       case .showInMenuBar: showInMenuBar = newValue
+      case .showInDock: showInDock = newValue
       case .notifyControllerConnected: notify.controllerConnected = newValue
       case .notifyControllerDisconnected: notify.controllerDisconnected = newValue
       case .notifyProfileActivated: notify.profileActivated = newValue
@@ -136,7 +147,7 @@ extension SettingsDocument.Updates: Codable {
 
 extension SettingsDocument: Codable {
   private enum CodingKeys: String, CodingKey, CaseIterable {
-    case apiVersion, kind, launchAtLoginOptOut, showInMenuBar, notify, updates, developerTools
+    case apiVersion, kind, launchAtLoginOptOut, showInMenuBar, showInDock, notify, updates, developerTools
   }
 
   public init(from decoder: any Decoder) throws {
@@ -151,6 +162,7 @@ extension SettingsDocument: Codable {
     try decoder.rejectUnknownKeys(CodingKeys.self)
     launchAtLoginOptOut = try container.decodeIfPresent(Bool.self, forKey: .launchAtLoginOptOut)
     showInMenuBar = try container.decodeIfPresent(Bool.self, forKey: .showInMenuBar)
+    showInDock = try container.decodeIfPresent(Bool.self, forKey: .showInDock)
     notify = try container.decodeIfPresent(Notify.self, forKey: .notify) ?? Notify()
     updates = try container.decodeIfPresent(Updates.self, forKey: .updates) ?? Updates()
     developerTools = try container.decodeIfPresent(Bool.self, forKey: .developerTools)
@@ -162,6 +174,7 @@ extension SettingsDocument: Codable {
     try container.encode(Self.kind, forKey: .kind)
     try container.encodeIfPresent(launchAtLoginOptOut, forKey: .launchAtLoginOptOut)
     try container.encodeIfPresent(showInMenuBar, forKey: .showInMenuBar)
+    try container.encodeIfPresent(showInDock, forKey: .showInDock)
     if notify != Notify() { try container.encode(notify, forKey: .notify) }
     if updates != Updates() { try container.encode(updates, forKey: .updates) }
     try container.encodeIfPresent(developerTools, forKey: .developerTools)

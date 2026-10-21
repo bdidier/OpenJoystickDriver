@@ -44,6 +44,9 @@ struct CommandLineValueSpellingTests {
     #expect(StatusReport.Extension.Bundle.invalid.rawValue == "Invalid")
     #expect(StatusReport.Extension.Registration.unavailable.rawValue == "Unavailable")
     #expect(UpdateCheckCommand.Result.Status.upToDate.rawValue == "UpToDate")
+    #expect(
+      UpdateCheckCommand.Result.Status.aheadOfLatestRelease.rawValue == "AheadOfLatestRelease"
+    )
     #expect(RecordTransport.hid.rawValue == "HID")
     #expect(RecordTransport.usb.rawValue == "USB")
     #expect(RecordTransportClaim.claimed.rawValue == "Claimed")

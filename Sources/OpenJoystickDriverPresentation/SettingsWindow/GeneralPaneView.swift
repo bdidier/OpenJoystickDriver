@@ -4,112 +4,119 @@
   import OpenJoystickDriverKit
   import SwiftUI
 
-  /// Launch at login, the menu bar item and update checks.
+  /// Launch at login, the menu bar item, the Dock icon and update checks.
   struct GeneralPaneView: View {
     @ObservedObject
     var preferences: SettingsPreferencesModel
 
     var body: some View {
-      SettingsPaneColumn {
-        GroupBox {
-          VStack(alignment: .leading, spacing: 14) {
-            SettingsSwitchRow(
-              title: OJDLocalized.string("settings.startAtLogin"),
-              description: OJDLocalized.string("settings.startAtLoginDescription"),
-              isOn: Binding(
-                get: { preferences.startAtLogin },
-                set: { preferences.setStartAtLogin($0) }
-              ),
-              isEnabled: preferences.launchAtLoginIsAvailable
-            )
-            Divider()
-            SettingsSwitchRow(
-              title: OJDLocalized.string("settingsPane.general.showInMenuBar"),
-              description: OJDLocalized.string("settingsPane.general.showInMenuBarDescription"),
-              isOn: Binding(
-                get: { preferences.showInMenuBar },
-                set: { preferences.setShowInMenuBar($0) }
-              )
-            )
-          }.padding(4).frame(maxWidth: .infinity, alignment: .topLeading)
-        } label: {
-          Text(OJDLocalized.string("settings.general")).font(.headline)
+      Form {
+        SettingsErrorSection(preferences: preferences)
+        Section {
+          SettingsSwitchRow(
+            title: OJDLocalized.string("settings.startAtLogin"),
+            description: OJDLocalized.string("settings.startAtLoginDescription"),
+            isOn: Binding(
+              get: { preferences.startAtLogin },
+              set: { preferences.setStartAtLogin($0) }
+            ),
+            isEnabled: preferences.launchAtLoginIsAvailable
+          )
+          SettingsSwitchRow(
+            title: OJDLocalized.string("settingsPane.general.showInMenuBar"),
+            description: OJDLocalized.string("settingsPane.general.showInMenuBarDescription"),
+            isOn: Binding(
+              get: { preferences.showInMenuBar },
+              set: { preferences.setShowInMenuBar($0) }
+            ),
+            isEnabled: !preferences.showInMenuBarIsLocked,
+            disabledReason: OJDLocalized.string("settingsPane.general.entryPointRequired")
+          )
+          SettingsSwitchRow(
+            title: OJDLocalized.string("settingsPane.general.showInDock"),
+            description: OJDLocalized.string("settingsPane.general.showInDockDescription"),
+            isOn: Binding(
+              get: { preferences.showInDock },
+              set: { preferences.setShowInDock($0) }
+            ),
+            isEnabled: !preferences.showInDockIsLocked,
+            disabledReason: OJDLocalized.string("settingsPane.general.entryPointRequired")
+          )
         }
         updates
-        SettingsErrorBanner(preferences: preferences)
-      }
+      }.ojdGroupedForm()
     }
 
     private var updates: some View {
-      GroupBox {
-        VStack(alignment: .leading, spacing: 12) {
-          HStack(spacing: 12) {
-            VStack(alignment: .leading, spacing: 4) {
-              Text(updateStatusTitle).font(.body.weight(.medium))
-              Text(updateStatusDetail).font(.caption).foregroundColor(
+      Section(OJDLocalized.string("settings.updates")) {
+        HStack(alignment: .firstTextBaseline, spacing: 8) {
+          VStack(alignment: .leading, spacing: 2) {
+            HStack(spacing: 6) {
+              indicator(status.indicator)
+              Text(status.title)
+            }
+            if let latestRelease = status.latestRelease {
+              Text(latestRelease).font(.caption).foregroundColor(
                 Color(NSColor.secondaryLabelColor)
               )
             }
-            Spacer()
-            if case .available = preferences.updateState {
-              Button(OJDLocalized.string("settings.viewUpdate")) {
-                preferences.openAvailableUpdate()
-              }
+          }
+          Spacer(minLength: 8)
+          Text(status.version).foregroundColor(Color(NSColor.secondaryLabelColor))
+          if case .available = preferences.updateState {
+            Button(OJDLocalized.string("settings.viewUpdate")) {
+              preferences.openAvailableUpdate()
             }
-            Button(OJDLocalized.string("settings.checkUpdates")) {
-              preferences.checkForUpdates()
-            }.disabled(preferences.updateState == .checking)
           }
-          Divider()
-          SettingsSwitchRow(
-            title: OJDLocalized.string("settingsPane.general.checkUpdatesAutomatically"),
-            description: OJDLocalized.string(
-              "settingsPane.general.checkUpdatesAutomaticallyDescription"
-            ),
-            isOn: Binding(
-              get: { preferences.checkUpdatesAutomatically },
-              set: { preferences.setCheckUpdatesAutomatically($0) }
-            )
+          Button(OJDLocalized.string("settings.checkUpdates")) {
+            preferences.checkForUpdates()
+          }.disabled(preferences.updateState == .checking)
+        }
+        SettingsSwitchRow(
+          title: OJDLocalized.string("settingsPane.general.checkUpdatesAutomatically"),
+          description: OJDLocalized.string(
+            "settingsPane.general.checkUpdatesAutomaticallyDescription"
+          ),
+          isOn: Binding(
+            get: { preferences.checkUpdatesAutomatically },
+            set: { preferences.setCheckUpdatesAutomatically($0) }
           )
-          Divider()
-          HStack {
-            Text(OJDLocalized.string("settings.prereleaseUpdates"))
-            Spacer(minLength: 12)
-            Toggle(
-              OJDLocalized.string("settings.prereleaseUpdates"),
-              isOn: Binding(
-                get: { preferences.includePrereleaseUpdates },
-                set: { preferences.setIncludePrereleaseUpdates($0) }
-              )
-            ).toggleStyle(.switch).labelsHidden().ojdAccessibilityLabel(
-              OJDLocalized.string("settings.prereleaseUpdates")
-            )
-          }
-        }.padding(4)
-      } label: {
-        Text(OJDLocalized.string("settings.updates")).font(.headline)
+        )
+        Toggle(
+          OJDLocalized.string("settings.prereleaseUpdates"),
+          isOn: Binding(
+            get: { preferences.includePrereleaseUpdates },
+            set: { preferences.setIncludePrereleaseUpdates($0) }
+          )
+        )
       }
     }
 
-    private var updateStatusTitle: String {
-      switch preferences.updateState {
-      case .idle: return OJDLocalized.string("settings.updateIdle")
-      case .checking: return OJDLocalized.string("settings.updateChecking")
-      case .upToDate: return OJDLocalized.string("settings.upToDate")
-      case .available: return OJDLocalized.string("settings.updateAvailable")
-      case .failed: return OJDLocalized.string("settings.updateFailed")
+    @ViewBuilder
+    private func indicator(_ indicator: UpdateStatusPresentation.Indicator) -> some View {
+      switch indicator {
+      case .none: EmptyView()
+      case .progress: ProgressView().controlSize(.small).accessibilityHidden(true)
+      case .symbol(let name, let tone):
+        Image(systemName: name).foregroundColor(Color(Self.color(of: tone)))
+          .accessibilityHidden(true)
       }
     }
 
-    private var updateStatusDetail: String {
-      switch preferences.updateState {
-      case .idle:
-        return OJDLocalized.formatted("settings.currentVersion", ApplicationVersion.current)
-      case .checking: return OJDLocalized.string("settings.contactingGitHub")
-      case .upToDate(let tag): return tag
-      case .available(let info): return info.tagName
-      case .failed(let failure): return failure.message
+    private static func color(of tone: UpdateStatusPresentation.Tone) -> NSColor {
+      switch tone {
+      case .positive: return SemanticState.healthy.presentation.tone.color
+      case .attention: return SemanticState.attention.presentation.tone.color
+      case .informational: return NSColor.controlAccentColor
+      case .failure: return SemanticState.failure.presentation.tone.color
       }
+    }
+
+    private var status: UpdateStatusPresentation {
+      UpdateStatusPresentation(
+        state: preferences.updateState,
+        runningVersion: ApplicationVersion.current
+      )
     }
   }
 

@@ -26,6 +26,8 @@ enum SettingCatalog {
       CLILocalized.text("cli.setting.launch_at_login")
     case .showInMenuBar:
       CLILocalized.text("cli.setting.show_in_menu_bar")
+    case .showInDock:
+      CLILocalized.text("cli.setting.show_in_dock")
     case .notifyControllerConnected:
       CLILocalized.text("cli.setting.notify_controller_connected")
     case .notifyControllerDisconnected:

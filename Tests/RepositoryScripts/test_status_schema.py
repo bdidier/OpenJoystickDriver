@@ -12,6 +12,7 @@ LINK_STATES = ("Installed", "LinkedElsewhere", "Broken", "BlockedByFile", "Missi
 SETTING_KEYS = [
     "launchAtLogin",
     "showInMenuBar",
+    "showInDock",
     "notify.controllerConnected",
     "notify.controllerDisconnected",
     "notify.profileActivated",

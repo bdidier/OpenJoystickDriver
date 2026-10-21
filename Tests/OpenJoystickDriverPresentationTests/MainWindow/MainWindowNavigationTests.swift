@@ -8,42 +8,50 @@ import Testing
 struct MainWindowNavigationTests {
   @Test
   @MainActor
-  func dockVisibilityTracksPrimaryWindowsAndRetriesFailedPolicyChanges() {
+  func theDockIconShowsWhileShowInDockIsOnOrAWindowIsOpen() {
     var requestedPolicies: [NSApplication.ActivationPolicy] = []
-    var shouldSucceed = true
-    let visibility = PrimaryWindowVisibilityController { policy in
+    let dock = DockIconController { policy in
+      requestedPolicies.append(policy)
+      return true
+    }
+
+    // Show in Dock off, no window: no icon.
+    #expect(dock.appliedPolicy == .accessory)
+    // Show in Dock off, a window open: icon until the last window closes.
+    dock.setOpen(.workbench, true)
+    dock.setOpen(.inputTest, true)
+    dock.setOpen(.workbench, false)
+    #expect(dock.appliedPolicy == .regular)
+    dock.setOpen(.inputTest, false)
+    #expect(dock.appliedPolicy == .accessory)
+    #expect(requestedPolicies == [.regular, .accessory])
+
+    // Show in Dock on: icon with or without a window.
+    dock.showsAlways = true
+    #expect(dock.appliedPolicy == .regular)
+    dock.setOpen(.settings, true)
+    dock.setOpen(.settings, false)
+    #expect(dock.appliedPolicy == .regular)
+    dock.showsAlways = false
+    #expect(dock.appliedPolicy == .accessory)
+  }
+
+  @Test
+  @MainActor
+  func aRefusedPolicyChangeIsRetriedOnTheNextChange() {
+    var shouldSucceed = false
+    var requestedPolicies: [NSApplication.ActivationPolicy] = []
+    let dock = DockIconController { policy in
       requestedPolicies.append(policy)
       return shouldSucceed
     }
 
-    #expect(visibility.appliedPolicy == .accessory)
-    visibility.opened(.workbench)
-    #expect(requestedPolicies == [.regular])
-    #expect(visibility.appliedPolicy == .regular)
-
-    visibility.opened(.inputTest)
-    visibility.closed(.workbench)
-    #expect(requestedPolicies == [.regular])
-    #expect(visibility.isOpen(.inputTest))
-
-    shouldSucceed = false
-    visibility.closed(.inputTest)
-    #expect(requestedPolicies == [.regular, .accessory])
-    #expect(visibility.appliedPolicy == .regular)
-
+    dock.setOpen(.settings, true)
+    #expect(dock.appliedPolicy == .accessory)
     shouldSucceed = true
-    visibility.opened(.inputTest)
-    visibility.closed(.inputTest)
-    #expect(requestedPolicies == [.regular, .accessory, .accessory])
-    #expect(visibility.appliedPolicy == .accessory)
-
-    visibility.keepsDockIcon = true
-    #expect(visibility.appliedPolicy == .regular)
-    visibility.opened(.settings)
-    visibility.closed(.settings)
-    #expect(visibility.appliedPolicy == .regular)
-    visibility.keepsDockIcon = false
-    #expect(visibility.appliedPolicy == .accessory)
+    dock.setOpen(.workbench, true)
+    #expect(dock.appliedPolicy == .regular)
+    #expect(requestedPolicies == [.regular, .regular])
   }
 
   @Test

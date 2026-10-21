@@ -48,11 +48,28 @@ struct UpdateCommandTests {
 
   @Test
   func upToDatePrintsPlainRow() async {
-    let plain = await run(["update", "check", "--plain"], state: .upToDate("v1.0.0"))
+    let plain = await run(["update", "check", "--plain"], state: .upToDate(current: "1.0.0", latest: "v1.0.0"))
 
     #expect(plain.code == 0)
     #expect(plain.standardOutput.hasPrefix("up-to-date\t"))
     #expect(plain.standardOutput.contains("\tv1.0.0\t"))
+  }
+
+  @Test
+  func aRunningVersionNewerThanTheLatestReleaseReportsBothVersions() async throws {
+    let state = UpdateCheckState.aheadOfLatestRelease(current: "0.6.0-alpha.1", latest: "v0.5.0")
+    let human = await run(["update", "check"], state: state)
+    let plain = await run(["update", "check", "--plain"], state: state)
+    let json = await run(["update", "check", "--json"], state: state)
+
+    #expect(human.code == 0)
+    #expect(human.standardOutput.contains("v0.5.0"))
+    #expect(!human.standardOutput.contains("up to date"))
+    #expect(plain.standardOutput.hasPrefix("ahead-of-latest-release\t"))
+    let object = try json.json()
+    #expect(object["status"] as? String == "AheadOfLatestRelease")
+    #expect(object["latestVersion"] as? String == "v0.5.0")
+    #expect(object["releaseURL"] == nil)
   }
 
   @Test
