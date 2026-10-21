@@ -326,15 +326,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         duplicated = xusb_description()
         signatures = duplicated["interfaceSignatures"]
         signatures.append(copy.deepcopy(signatures[0]))
-        unread = self.with_body(
-            "SonyDualSense", parameters={"layout": {"type": "Flag"}}
-        )
-        for name, document in {
-            "a duplicate signature": duplicated,
-            "a parameter the family does not read": unread,
-        }.items():
-            with self.subTest(name):
-                self.assert_rejected(document, name="xbox-gip.json")
+        self.assert_rejected(duplicated, name="xbox-gip.json")
 
     def test_file_stems_cover_every_family_and_file(self) -> None:
         controller: Any = self.documents["controller.schema.json"]

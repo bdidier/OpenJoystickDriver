@@ -251,25 +251,6 @@ public struct ProtocolParameters: Codable, Equatable, Sendable {
     return result
   }
 
-  /// The parameter names the family's driver reads, which its description may declare.
-  static func readable(by family: PhysicalProtocolID) -> Set<String> {
-    switch family {
-    case .xboxGIP: ["shareButton"]
-    case .sonyDualShock4: ["motionCalibration", "role", "motionScale"]
-    case .sonyDualSense:
-      ["maker", "unprobedSensors", "unprobedTouchpad", "forcedVibration", "role"]
-    case .nintendoSwitch1: ["layout", "usbProtocol"]
-    case .nintendoSwitch2: ["layout"]
-    case .vendorPS3ThirdParty: ["hatSource"]
-    case .vendorGameSir: ["innerGrips", "lightingMemory"]
-    case .vendorNVIDIAShield: ["reportRevision"]
-    case .hidDescriptor, .hidReportLayout, .xboxXID, .xboxXUSB, .sonySixaxis,
-      .nintendoSwitchInputOnly, .valveSteamController, .valveSteamTriton, .valveSteamDeck,
-      .vendorFlydigi:
-      []
-    }
-  }
-
   /// The parameter names the family's protocol description declares.
   static func declared(by family: PhysicalProtocolID) -> Set<String> {
     ProtocolDescription.bundled[family].map { Set($0.parameters.keys) } ?? []
