@@ -10,8 +10,6 @@ One Foundation catalog in `OpenJoystickDriverKit`. macOS preferred-language orde
 - Shipped locales: `Sources/OpenJoystickDriverKit/Resources/<locale>.lproj/Localizable.strings` and `.stringsdict`.
 - `crowdin.yml`: the Crowdin project configuration.
 
-There is no separate template. The `en-US` pair is the template, and `Localizable.template.*` is not in the resource tree or in any bundle.
-
 `Package.swift` default is `en-US`. `Scripts/Build/bundles.sh` copies Kit locales into the app. Kit `Localization` falls back to `en-US`. App: `OJDLocalized`. CLI: `CLILocalized`.
 
 English text lives only in the `en-US` catalog. Call sites pass a key and nothing else: there is no `fallback:` or `defaultValue:` argument, so a key missing from `en-US` renders as the raw key. Add the key to `en-US` and to every other locale before using it.
@@ -24,12 +22,12 @@ English text lives only in the `en-US` catalog. Call sites pass a key and nothin
 
 - Namespace: a key starts with `term.`, `action.`, `status.`, `ui.<area>.`, `ui.menu.`, `ui.extra.`, `ui.settings.<pane>.`, `a11y.`, `cli.<group>.<command>.`, `error.<code>.`, `notify.` or `platform.<os>.`.
   Segments are lowerCamelCase; only an error code such as `E1001` is capitalized.
-- Operating system words: `DriverKit`, `macOS`, `Mac`, `Apple`, `System Settings`, `Login Items`, `Finder`, `IOKit`, `systemextensionsctl`, `launchd` and `Xcode` appear in an English value only under `platform.<os>.`. A neutral key carries the neutral wording.
+- Operating system words: `DriverKit`, `macOS`, `Mac`, `Apple`, `System Settings`, `Login Items`, `Finder`, `IOKit`, `systemextensionsctl`, `launchd`, `Xcode`, `Input Monitoring`, `Privacy & Security`, `Dock`, `Terminal`, `TCC`, `codesign` and `Accessibility` as a permission or pane name appear in an English value only under `platform.<os>.`. A neutral key carries the neutral wording.
 - Specifiers: a value with more than one format specifier numbers each one (`%1$@ of %2$@`), so a translation can reorder them. A single specifier needs no number.
-- Plurals: a key that takes a count has a `.stringsdict` entry in every bundle, with the plural forms CLDR gives that language (`ar`: zero, one, two, few, many, other; `ru`: one, few, many, other; `es`, `fr`, `it`, `pt`: one, many, other; `en`, `de`, `hi`, `nl`, `tr`: one, other; `id`, `ja`, `ko`, `th`, `vi`, `zh`: other).
+- Plurals: a key that takes a count (`%#@name@` or an integer specifier such as `%d`, `%lld`, `%1$lld` in `en-US`) has a `.stringsdict` entry in every bundle, with the plural forms CLDR gives that language (`ar`: zero, one, two, few, many, other; `ru`: one, few, many, other; `es`, `fr`, `it`, `pt`: one, many, other; `en`, `de`, `hi`, `nl`, `tr`: one, other; `id`, `ja`, `ko`, `th`, `vi`, `zh`: other). An integer specifier that is not a count is listed in `NOT_A_COUNT` in the checker with the reason.
 - Comments: every `en-US` key has a translator comment, a `/* ... */` directly above the entry in `.strings` and a `<!-- ... -->` above the key in `.stringsdict`. The comment says where the text appears and what each specifier is.
 
-The plural rule is enforced now. The namespace, operating system word, specifier and comment rules apply once the catalog is re-keyed. Until then `REKEY_PENDING` in the checker keeps them from failing, and the check prints how many violations it does not enforce.
+The `%#@name@` plural rule is enforced now. `GATED_RULES` in the checker names the other rules that do not fail yet and the task that lifts each: namespace and operating system words at task 22.2 (the key re-key), specifiers, comments and integer count specifiers at task 22.3. A gated rule holds back only the keys in `Scripts/Quality/localization-gated-keys.json` and fails on every other key, so a new key must follow every rule now. The check prints how many violations each gated rule holds back. After 22.2, `--write-gated-keys` rewrites that file with the new key names; 22.3 deletes it.
 
 ## Crowdin
 
@@ -40,7 +38,7 @@ The plural rule is enforced now. The namespace, operating system word, specifier
 3. Download the translations into the `<locale>.lproj` folders and review them against [Meaning](#meaning) and [Punctuation](#punctuation) before the commit.
 
 22 `.lproj` bundles: `C`, `en-US`, `ar-SA`, `de-DE`, `es-ES`, `es-MX`, `fr-CA`, `fr-FR`, `hi-IN`, `id-ID`, `it-IT`, `ja-JP`, `ko-KR`, `nl-NL`, `pt-BR`, `ru-RU`, `th-TH`, `tr-TR`, `vi-VN`, `zh-CN`, `zh-HK`, `zh-TW`.
-Five plurals.
+Three plural keys in `en-US` (`status.controllerConnected`, `profiles.assignments`, `debug.outputDevices`).
 Every non-English locale began as a machine translation and needs review against the rules in [Meaning](#meaning).
 English source catalogs are `en-US` and `C`.
 Ship only languages that macOS itself offers.

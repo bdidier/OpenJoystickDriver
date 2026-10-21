@@ -13,16 +13,24 @@ The catalog itself follows these rules:
   (`OS_WORDS`) only under `platform.`;
 - specifiers: a value with more than one format specifier numbers every one (`%1$@`);
 - comments: every en-US key has a translator comment directly above it;
-- plurals: every `%#@name@` value has a `.stringsdict` entry in the same bundle, and each entry
-  has the plural categories its locale needs (`PLURAL_CATEGORIES`).
+- plurals: every `%#@name@` value has a `.stringsdict` entry in the same bundle, each entry has the
+  plural categories its locale needs (`PLURAL_CATEGORIES`), and an en-US value with an integer
+  count specifier (`%d`, `%lld`, `%1$lld`) has a `.stringsdict` entry unless `NOT_A_COUNT` names
+  its key and says why the number is not a count.
 
-`REKEY_PENDING` keeps the namespace, operating system word, specifier and comment rules from
-failing while the catalog has the keys and values from before the re-key. The check prints how many
-violations it is not enforcing. The re-key removes the flag.
+`GATED_RULES` names each rule that does not fail yet and the task that lifts it. The catalog keys
+that violate a gated rule are listed in `localization-gated-keys.json`; a gated rule does not fail
+on those keys and fails on every other key, so a new key cannot add a violation. The check prints
+how many violations each gated rule holds back. Task 22.2 (the key and Swift call site re-key)
+lifts `namespace` and `osWord` and rewrites the list with `--write-gated-keys`. Task 22.3 (positional
+specifiers, plurals, comments) lifts `specifier`, `comment` and `pluralCount` and deletes the
+list. The listed keys must still violate a gated rule, otherwise the check fails and asks to remove
+them.
 """
 
 from __future__ import annotations
 
+import json
 import plistlib
 import re
 import subprocess
@@ -41,10 +49,16 @@ STRINGS_KEY = re.compile(r'^"((?:[^"\\]|\\.)*)"\s*=', re.MULTILINE)
 LITERAL = re.compile(r'"((?:[^"\\]|\\.)*)"')
 
 
-# True while the catalog has the keys, values and comments from before the namespace re-key. The
-# namespace, operating system word, specifier and comment rules are reported but do not fail the
-# check. The re-key removes this flag and `rekey_map.py`.
-REKEY_PENDING = True
+# Rules that do not fail on the keys in `GATED_KEYS_PATH`, each with the task that lifts it. Lifting
+# a rule is deleting its entry.
+GATED_RULES: dict[str, str] = {
+    "namespace": "22.2",
+    "osWord": "22.2",
+    "specifier": "22.3",
+    "comment": "22.3",
+    "pluralCount": "22.3",
+}
+GATED_KEYS_PATH = Path("Scripts/Quality/localization-gated-keys.json")
 
 SEGMENT = r"(?:[a-z][a-zA-Z0-9]*|E\d{4})"
 OPERATING_SYSTEMS = ("macos", "windows", "linux")
@@ -62,15 +76,20 @@ NAMESPACE_PATTERNS: dict[str, re.Pattern[str]] = {
         rf"platform\.(?:{'|'.join(OPERATING_SYSTEMS)})(?:\.{SEGMENT})+"
     ),
 }
+# `Accessibility` is the permission or pane name: the whole value, or after the `>` of a pane path.
 OS_WORDS = re.compile(
     r"\b(?:DriverKit|macOS|Mac|Apple|System Settings|Login Items|Finder|IOKit|systemextensionsctl"
-    r"|launchd|Xcode)\b"
+    r"|launchd|Xcode|Input Monitoring|Privacy & Security|Dock|Terminal|TCC|codesign)\b"
+    r"|^Accessibility$|>\s*Accessibility\b|\bAccessibility (?:permission|access)\b"
 )
 # A format specifier: optional position, flags, width, precision, length and conversion.
 SPECIFIER = re.compile(
     r"%(?P<position>\d+\$)?[-+ 0#]*\d*(?:\.\d+)?(?:hh|h|ll|l|q|L|z|t|j)?[@dDiuUxXoOfeEgGcCsSpaAF]"
 )
 PLURAL_REFERENCE = re.compile(r"%#@[A-Za-z0-9_]+@")
+COUNT_SPECIFIER = re.compile(r"%(?:\d+\$)?[-+ 0#]*\d*(?:hh|h|ll|l|q|z|t|j)?[dDiuU]")
+# En-US keys whose integer specifier is not a count, each with the reason.
+NOT_A_COUNT: dict[str, str] = {}
 # CLDR plural categories each shipped locale needs, by language.
 PLURAL_CATEGORIES: dict[str, frozenset[str]] = {
     "ar": frozenset({"zero", "one", "two", "few", "many", "other"}),
@@ -88,7 +107,8 @@ STRINGS_ENTRY = re.compile(
     re.DOTALL,
 )
 STRINGSDICT_COMMENTED_KEY = re.compile(
-    r"(?P<comment><!--(?:(?!-->).)*-->[ \t]*\n)?\t<key>(?P<key>[^<]+)</key>", re.DOTALL
+    r"(?P<comment><!--(?:(?!-->).)*-->[ \t]*\n)?(?m:^)\t<key>(?P<key>[^<]+)</key>",
+    re.DOTALL,
 )
 
 
@@ -279,9 +299,12 @@ def reader_files(root: Path = ROOT) -> list[Path]:
     ]
 
 
-def unread_keys(root: Path = ROOT) -> tuple[list[str], dict[str, int]]:
-    """Return (catalog keys no Swift source reads, keys read per pattern)."""
-    keys = catalog_keys(root)
+def key_readers(root: Path = ROOT) -> tuple[set[str], dict[str, re.Pattern[str]]]:
+    """Return (literals Swift passes as keys, patterns of keys Swift builds from a prefix).
+
+    A pattern is named by the source text that builds the key: `error.\\(rawValue)` or
+    `profiles.gyro. + <text>`.
+    """
     literals: set[str] = set()
     patterns: dict[str, re.Pattern[str]] = {}
     for path in reader_files(root):
@@ -291,18 +314,24 @@ def unread_keys(root: Path = ROOT) -> tuple[list[str], dict[str, int]]:
                 patterns[literal] = pattern
             elif "\\(" not in literal:
                 literals.add(literal)
-    prefixes = {
-        literal
-        for literal in literals
-        if literal.endswith((".", "_")) and len(literal) > 3
-    }
+    for literal in literals:
+        if literal.endswith((".", "_")) and len(literal) > 3:
+            patterns[f"{literal} + <text>"] = re.compile(re.escape(literal) + ".+")
+    return literals, patterns
+
+
+def unread_keys(root: Path = ROOT) -> tuple[list[str], dict[str, int]]:
+    """Return (catalog keys no Swift source reads, keys read per pattern)."""
+    keys = catalog_keys(root)
+    literals, patterns = key_readers(root)
     unread: list[str] = []
     covered: dict[str, int] = {}
     for key in sorted(keys):
         if key in literals:
             continue
-        matching = [t for t, pattern in patterns.items() if pattern.fullmatch(key)]
-        matching += [f"{p} + <text>" for p in prefixes if key.startswith(p)]
+        matching = [
+            text for text, pattern in patterns.items() if pattern.fullmatch(key)
+        ]
         for text in matching:
             covered[text] = covered.get(text, 0) + 1
         if not matching:
@@ -409,15 +438,16 @@ def plural_problems(directory: Path) -> list[str]:
     return problems
 
 
-def stringsdict_comment_problems(root: Path = ROOT) -> list[str]:
+def stringsdict_uncommented_keys(root: Path = ROOT) -> set[str]:
+    """Return the en-US stringsdict keys without a translator comment above them."""
     text = (root / CATALOG_DIRECTORY / "Localizable.stringsdict").read_text(
         encoding="utf-8"
     )
-    return [
-        f"{match['key']!r}: no translator comment in the stringsdict"
+    return {
+        match["key"]
         for match in STRINGSDICT_COMMENTED_KEY.finditer(text)
         if not match["comment"]
-    ]
+    }
 
 
 def stringsdict_values(root: Path = ROOT) -> dict[str, list[str]]:
@@ -436,49 +466,119 @@ def stringsdict_values(root: Path = ROOT) -> dict[str, list[str]]:
     }
 
 
-def rekey_problems(root: Path = ROOT) -> list[str]:
-    """Return the namespace, operating system word, specifier and comment violations."""
-    problems: list[str] = []
-    english = (root / CATALOG_DIRECTORY / "Localizable.strings").read_text(
-        encoding="utf-8"
+@dataclass(frozen=True)
+class RuleProblem:
+    key: str
+    message: str
+
+
+def count_specifier_problem(entry: StringsEntry, plurals: set[str]) -> str | None:
+    """Return why an integer specifier has no plural entry, or None."""
+    if (
+        entry.key in plurals
+        or entry.key in NOT_A_COUNT
+        or not COUNT_SPECIFIER.search(entry.value.replace("%%", ""))
+    ):
+        return None
+    return (
+        f"{entry.key!r}: an integer specifier needs a stringsdict entry, "
+        "or a NOT_A_COUNT reason"
     )
-    entries = strings_entries(english)
+
+
+def rule_problems(root: Path = ROOT) -> dict[str, list[RuleProblem]]:
+    """Return the violations of the gateable rules by rule name."""
+    found: dict[str, list[RuleProblem]] = {
+        "namespace": [],
+        "osWord": [],
+        "specifier": [],
+        "comment": [],
+        "pluralCount": [],
+    }
+
+    def add(rule: str, key: str, message: str | None, prefix: str = "") -> None:
+        if message:
+            found[rule].append(RuleProblem(key, prefix + message))
+
+    directory = root / CATALOG_DIRECTORY
+    entries = strings_entries((directory / "Localizable.strings").read_text("utf-8"))
+    plurals = plistlib.loads((directory / "Localizable.stringsdict").read_bytes())
+    uncommented = stringsdict_uncommented_keys(root)
     for entry in entries:
-        for problem in (
-            key_shape_problem(entry.key),
-            os_word_problem(entry.key, entry.value),
-            specifier_problem(entry.key, entry.value),
-            comment_problem(entry),
-        ):
-            if problem:
-                problems.append(problem)
+        add("namespace", entry.key, key_shape_problem(entry.key))
+        add("osWord", entry.key, os_word_problem(entry.key, entry.value))
+        add("specifier", entry.key, specifier_problem(entry.key, entry.value))
+        add("comment", entry.key, comment_problem(entry))
+        add("pluralCount", entry.key, count_specifier_problem(entry, set(plurals)))
     for key, texts in stringsdict_values(root).items():
-        for problem in (
-            key_shape_problem(key),
-            *(specifier_problem(key, t) for t in texts),
-        ):
-            if problem:
-                problems.append(problem)
-        problems.extend(
-            p for p in stringsdict_comment_problems(root) if p.startswith(repr(key))
-        )
+        add("namespace", key, key_shape_problem(key))
+        for text in texts:
+            add("specifier", key, specifier_problem(key, text))
+        if key in uncommented:
+            add("comment", key, f"{key!r}: no translator comment in the stringsdict")
     for name in ("C",):
-        directory = root / RESOURCES_DIRECTORY / f"{name}.lproj"
         for entry in strings_entries(
-            (directory / "Localizable.strings").read_text("utf-8")
+            (
+                root / RESOURCES_DIRECTORY / f"{name}.lproj" / "Localizable.strings"
+            ).read_text("utf-8")
         ):
-            problem = os_word_problem(entry.key, entry.value)
-            if problem:
-                problems.append(f"C.lproj {problem}")
-    for directory in locale_directories(root):
-        if directory.name == "en-US.lproj":
+            add(
+                "osWord",
+                entry.key,
+                os_word_problem(entry.key, entry.value),
+                f"{name}.lproj ",
+            )
+    for locale in locale_directories(root):
+        if locale.name == "en-US.lproj":
             continue
-        text = (directory / "Localizable.strings").read_text(encoding="utf-8")
+        text = (locale / "Localizable.strings").read_text(encoding="utf-8")
         for entry in strings_entries(text):
-            problem = specifier_problem(entry.key, entry.value)
-            if problem:
-                problems.append(f"{directory.name}: {problem}")
-    return problems
+            add(
+                "specifier",
+                entry.key,
+                specifier_problem(entry.key, entry.value),
+                f"{locale.name}: ",
+            )
+    return found
+
+
+def gated_keys(root: Path = ROOT) -> set[str]:
+    """Return the catalog keys that a gated rule does not fail on."""
+    if not GATED_RULES:
+        return set()
+    return set(json.loads((root / GATED_KEYS_PATH).read_text(encoding="utf-8")))
+
+
+def write_gated_keys(root: Path = ROOT) -> None:
+    """Write the keys that violate a gated rule to `GATED_KEYS_PATH`."""
+    found = rule_problems(root)
+    violating = sorted({problem.key for rule in GATED_RULES for problem in found[rule]})
+    text = json.dumps(violating, indent=2, ensure_ascii=False) + "\n"
+    (root / GATED_KEYS_PATH).write_text(text, encoding="utf-8")
+
+
+def rule_report(
+    found: dict[str, list[RuleProblem]], gated: set[str]
+) -> tuple[list[str], list[str], list[str]]:
+    """Return (failing messages, held-back notes, listed keys with no gated violation)."""
+    failing: list[str] = []
+    held: list[str] = []
+    used: set[str] = set()
+    for rule, problems in found.items():
+        task = GATED_RULES.get(rule)
+        held_back = [p for p in problems if task and p.key in gated]
+        used.update(p.key for p in held_back)
+        failing.extend(p.message for p in problems if p not in held_back)
+        if held_back:
+            held.append(
+                f"gated rule {rule}: {len(held_back)} violation(s) held back until "
+                f"task {task}"
+            )
+    stale = [
+        f"gated key {key!r} violates no gated rule; remove it with --write-gated-keys"
+        for key in sorted(gated - used)
+    ]
+    return failing, held, stale
 
 
 def check(root: Path = ROOT) -> tuple[list[tuple[KeyUse, str]], list[KeyUse]]:
@@ -498,7 +598,10 @@ def check(root: Path = ROOT) -> tuple[list[tuple[KeyUse, str]], list[KeyUse]]:
     return missing, unscannable
 
 
-def main() -> int:
+def main(arguments: list[str] | None = None) -> int:
+    if arguments == ["--write-gated-keys"]:
+        write_gated_keys()
+        return 0
     missing, unscannable = check()
     unread, covered = unread_keys()
     unexplained = [key for key in unread if key not in KEPT_WITHOUT_READER]
@@ -508,17 +611,11 @@ def main() -> int:
         for directory in locale_directories()
         for problem in plural_problems(directory)
     ]
-    rekey = rekey_problems()
-    for problem in plurals:
+    failing, held, stale_gated = rule_report(rule_problems(), gated_keys())
+    for problem in plurals + failing:
         print(problem)
-    if REKEY_PENDING:
-        print(
-            f"re-key pending (REKEY_PENDING): {len(rekey)} namespace, operating system word, "
-            "specifier and comment violation(s) are not enforced"
-        )
-    else:
-        for problem in rekey:
-            print(problem)
+    for note in held + stale_gated:
+        print(note)
     for use, reason in missing:
         print(f"{use.path}:{use.line}: {reason} in the en-US catalog")
     for use in unscannable:
@@ -531,7 +628,7 @@ def main() -> int:
         print(f"kept without reader: {key}: {reason}")
     for text, count in sorted(covered.items()):
         print(f"read by pattern: {text} ({count} keys)")
-    enforced = plurals + ([] if REKEY_PENDING else rekey)
+    enforced = plurals + failing + stale_gated
     if missing or unexplained or stale or enforced:
         print(
             f"error: {len(missing)} key(s) missing from en-US, {len(unexplained)} "
@@ -546,4 +643,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(main(sys.argv[1:]))

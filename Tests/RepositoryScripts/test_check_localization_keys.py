@@ -1,9 +1,12 @@
 from __future__ import annotations
 
+import contextlib
+import io
 import plistlib
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 from Scripts.Quality import check_localization_keys as guard
 
@@ -223,19 +226,162 @@ class PluralTests(unittest.TestCase):
         self.assertEqual(guard.plural_problems(directory), [])
 
 
-class GateTests(unittest.TestCase):
-    def test_rekey_rules_are_gated_by_a_named_flag(self) -> None:
-        self.assertTrue(guard.REKEY_PENDING)
-
-    def test_the_pre_rekey_catalog_breaks_every_gated_rule(self) -> None:
-        problems = guard.rekey_problems()
-        for text in (
-            "outside the namespaces",
-            "outside platform.",
-            "several format specifiers",
-            "no translator comment",
+class AccessibilityAndPermissionWordTests(unittest.TestCase):
+    def test_permission_and_pane_names_are_operating_system_words(self) -> None:
+        for value in (
+            "Input Monitoring",
+            "Accessibility",
+            "Privacy & Security > Accessibility",
+            "Show in Dock",
+            "Run ojd in Terminal",
+            "not a TCC privacy permission",
+            "Could not run codesign",
+            "Accessibility permission required",
         ):
-            self.assertTrue(any(text in problem for problem in problems), text)
+            self.assertIn(
+                "outside platform.", guard.os_word_problem("ui.a.b", value) or "", value
+            )
+
+    def test_the_generic_word_accessibility_passes(self) -> None:
+        for value in ("Accessibility details", "Improves accessibility", "Docking"):
+            self.assertIsNone(guard.os_word_problem("ui.a.b", value), value)
+
+
+class CountSpecifierTests(unittest.TestCase):
+    def entry(self, value: str, key: str = "ui.a.b") -> guard.StringsEntry:
+        return guard.StringsEntry(key, value, "Label.")
+
+    def test_integer_specifiers_without_a_plural_entry_fail(self) -> None:
+        for value in ("%d items", "%lld items", "%ld", "%lu", "%li", "%1$lld of %2$d"):
+            self.assertIn(
+                "needs a stringsdict entry",
+                guard.count_specifier_problem(self.entry(value), set()) or "",
+                value,
+            )
+
+    def test_plural_entry_and_non_integer_specifiers_pass(self) -> None:
+        self.assertIsNone(guard.count_specifier_problem(self.entry("%d"), {"ui.a.b"}))
+        for value in ("%@ items", "%.1f MiB", "100%% of %@", "%1$@"):
+            self.assertIsNone(
+                guard.count_specifier_problem(self.entry(value), set()), value
+            )
+
+    def test_not_a_count_key_passes_with_its_reason(self) -> None:
+        guard.NOT_A_COUNT["ui.a.b"] = "an exit status"
+        try:
+            self.assertIsNone(
+                guard.count_specifier_problem(self.entry("status %d"), set())
+            )
+        finally:
+            del guard.NOT_A_COUNT["ui.a.b"]
+
+    def test_every_not_a_count_entry_has_a_reason(self) -> None:
+        for key, reason in guard.NOT_A_COUNT.items():
+            self.assertTrue(reason.strip(), key)
+
+
+class StringsdictCommentTests(unittest.TestCase):
+    def test_only_top_level_keys_are_read_and_found_once(self) -> None:
+        with tempfile.TemporaryDirectory() as name:
+            root = Path(name)
+            directory = root / guard.CATALOG_DIRECTORY
+            directory.mkdir(parents=True)
+            (directory / "Localizable.stringsdict").write_text(
+                "<dict>\n\t<!-- Count. -->\n\t<key>a.b</key>\n\t<dict>\n"
+                "\t\t<key>NSStringLocalizedFormatKey</key>\n\t</dict>\n"
+                "\t<key>c.d</key>\n\t<dict>\n\t\t<key>inner</key>\n\t</dict>\n</dict>\n",
+                encoding="utf-8",
+            )
+            self.assertEqual(guard.stringsdict_uncommented_keys(root), {"c.d"})
+
+
+class RuleTests(unittest.TestCase):
+    def catalog(self, strings: str, c_strings: str = "") -> Path:
+        scratch = tempfile.TemporaryDirectory()
+        self.addCleanup(scratch.cleanup)
+        root = Path(scratch.name)
+        resources = root / guard.RESOURCES_DIRECTORY
+        for name, text in (("en-US", strings), ("C", c_strings)):
+            (resources / f"{name}.lproj").mkdir(parents=True)
+            (resources / f"{name}.lproj" / "Localizable.strings").write_text(text)
+        (resources / "en-US.lproj" / "Localizable.stringsdict").write_bytes(
+            plistlib.dumps({})
+        )
+        return root
+
+    def test_each_rule_reports_its_violation_with_the_key(self) -> None:
+        root = self.catalog(
+            '"bad key" = "Open System Settings %@ %@ %d";\n'
+            '/* Label. */\n"ui.fine.title" = "Fine";\n'
+        )
+        found = guard.rule_problems(root)
+        for rule in ("namespace", "osWord", "specifier", "comment", "pluralCount"):
+            self.assertEqual({p.key for p in found[rule]}, {"bad key"}, rule)
+
+    def test_a_conforming_catalog_has_no_violation(self) -> None:
+        root = self.catalog('/* Label. */\n"ui.fine.title" = "Fine";\n')
+        self.assertEqual(
+            {rule: p for rule, p in guard.rule_problems(root).items() if p}, {}
+        )
+
+
+class GateTests(unittest.TestCase):
+    def test_each_gated_rule_names_the_task_that_lifts_it(self) -> None:
+        self.assertEqual(
+            guard.GATED_RULES,
+            {
+                "namespace": "22.2",
+                "osWord": "22.2",
+                "specifier": "22.3",
+                "comment": "22.3",
+                "pluralCount": "22.3",
+            },
+        )
+
+    def found(self, rule: str) -> dict[str, list[guard.RuleProblem]]:
+        found = {name: [] for name in guard.GATED_RULES}
+        found[rule] = [guard.RuleProblem("old.key", "old.key: violation")]
+        return found
+
+    def test_gated_rule_holds_back_a_listed_key_only(self) -> None:
+        failing, held, stale = guard.rule_report(self.found("comment"), {"old.key"})
+        self.assertEqual((failing, stale), ([], []))
+        self.assertIn("comment: 1 violation(s) held back until task 22.3", held[0])
+        failing, _, _ = guard.rule_report(self.found("comment"), set())
+        self.assertEqual(failing, ["old.key: violation"])
+
+    def test_lifted_rule_fails_a_listed_key(self) -> None:
+        with mock.patch.dict(guard.GATED_RULES, clear=True):
+            failing, held, _ = guard.rule_report(self.found("comment"), {"old.key"})
+        self.assertEqual((failing, held), (["old.key: violation"], []))
+
+    def test_listed_key_without_a_gated_violation_is_stale(self) -> None:
+        _, _, stale = guard.rule_report(self.found("comment"), {"old.key", "gone.key"})
+        self.assertIn("gone.key", stale[0])
+
+    def test_main_fails_when_a_gate_is_off_and_a_violation_exists(self) -> None:
+        violation = {"osWord": [guard.RuleProblem("old.key", "old.key: names macOS")]}
+        for gate in (True, False):
+            with (
+                mock.patch.object(
+                    guard,
+                    "rule_problems",
+                    return_value={name: [] for name in guard.GATED_RULES} | violation,
+                ),
+                mock.patch.object(guard, "gated_keys", return_value={"old.key"}),
+                mock.patch.dict(
+                    guard.GATED_RULES,
+                    {"osWord": "22.2"} if gate else {},
+                    clear=True,
+                ),
+                contextlib.redirect_stdout(io.StringIO()),
+                contextlib.redirect_stderr(io.StringIO()),
+            ):
+                self.assertEqual(guard.main([]), 0 if gate else 1, gate)
+
+    def test_the_repository_passes_with_the_gates_it_has(self) -> None:
+        with contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(guard.main([]), 0)
 
 
 class RepositoryTests(unittest.TestCase):
