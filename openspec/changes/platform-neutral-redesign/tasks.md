@@ -329,13 +329,13 @@ Owns: `*.lproj`, `crowdin.yml`, `Scripts/Quality/check_localization_keys.py`, `L
 Depends: 17, 20, 21.
 Verify: `python3 Scripts/Quality/check_localization_keys.py`, `ruff check Scripts Tests/RepositoryScripts`, `pyright`.
 
-- [ ] 22.1 Write the old-to-new key map by the namespaces in `localization-keys`. Verify: map covers every current key.
+- [x] 22.1 Write the old-to-new key map by the namespaces in `localization-keys`. Verify: map covers every current key. Done: `Scripts/Quality/rekey_map.py` builds `localization-rekey-map.json` in this change directory from the en-US catalog and its rules (1897 keys, 59 under `platform.macos.`, 90 shared-value groups listed for later merges); regenerate with `python3 -m Scripts.Quality.rekey_map --write` right before 22.2; the map, script and `test_rekey_map.py` go away after 22.2.
 - [ ] 22.2 Apply the re-key mechanically to the 22 bundles. Verify: the value comparison test shows identical values except merged duplicates and positional specifiers.
 - [ ] 22.3 Add positional specifiers, `.stringsdict` plurals and translator comments to `en-US`. Verify: checker passes.
-- [ ] 22.4 Update the checker for namespaces, OS words, specifiers, comments. Verify: negative unit tests per rule.
-- [ ] 22.5 Add `crowdin.yml` and stop copying `Localizable.template.*` into bundles. Verify: a test parses the file; build output has no template.
+- [x] 22.4 Update the checker for namespaces, OS words, specifiers, comments. Verify: negative unit tests per rule. Done: the checker enforces namespaces, OS words, positional specifiers, translator comments and plural categories, with a negative test per rule; the first four are gated by `REKEY_PENDING`, which prints the violation count and which 22.3 removes together with `rekey_map.py`.
+- [x] 22.5 Add `crowdin.yml` and stop copying `Localizable.template.*` into bundles. Verify: a test parses the file; build output has no template. Done: `crowdin.yml` with a language mapping for the 20 locales, `test_crowdin_config.py` parses it; `Localizable.template.*` is deleted (the error-code generator and `ErrorCodeTests` read `en-US.lproj`), and the built Kit bundle holds no template.
 - [x] 22.6 Review translation decisions from open item 3 as separate edits. Verify: each decision is a separate commit with the user's answer. Done: the user delegated the choices on 2026-10-15; eight `fix(l10n)` commits, one per decision.
-- [ ] 22.7 Update `LOCALIZATION.md`. Verify: markdownlint.
+- [x] 22.7 Update `LOCALIZATION.md`. Verify: markdownlint. Done: `LOCALIZATION.md` lists the files, key rules (namespace rules marked as applying after the re-key), Crowdin flow; markdownlint passes.
 
 ## 23. Docs, wiki, CHANGELOG, release checks
 
