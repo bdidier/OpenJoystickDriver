@@ -299,6 +299,7 @@ ojd setting list
 ojd setting get KEY
 ojd setting set KEY true|false
 ojd setting reset [--force]
+ojd setting test-notification
 ```
 
 The keys are:
@@ -315,7 +316,7 @@ The keys are:
 - `updates.includePrereleases`: include prereleases when checking for updates.
 - `developerTools`: show the developer tools.
 
-Settings live in `Settings.json`. A setting your file at `~/Library/Application Support/OpenJoystickDriver/Settings.json` leaves out takes its built-in default. `setting set` writes that file. A file with an unsupported `apiVersion` is refused with `E5001`. A file that is damaged, or that turns off both `showInMenuBar` and `showInDock` (for example `{"showInMenuBar": false}`, because `showInDock` is off by default), is refused too, and the app shows an alert for it at launch. `setting reset` moves `Settings.json` to the Trash so every setting returns to its default; it asks for confirmation unless you pass `--force`, works on the file itself so it needs no running service, and with no file it changes nothing. With `--json` it prints a `Status` with `details` holding `file` and `moved`. `setting get` prints `true` or `false` alone. With `--json`, `setting list` prints a `SettingList` with `items`, each with `key`, `value`, and `description`, and `setting get` and `setting set` print a `Setting` with `key` and `value`.
+Settings live in `Settings.json`. A setting your file at `~/Library/Application Support/OpenJoystickDriver/Settings.json` leaves out takes its built-in default. `setting set` writes that file. A file with an unsupported `apiVersion` is refused with `E5001`. A file that is damaged, or that turns off both `showInMenuBar` and `showInDock` (for example `{"showInMenuBar": false}`, because `showInDock` is off by default), is refused too, and the app shows an alert for it at launch. `setting reset` moves `Settings.json` to the Trash so every setting returns to its default; it asks for confirmation unless you pass `--force`, works on the file itself so it needs no running service, and with no file it changes nothing. With `--json` it prints a `Status` with `details` holding `file` and `moved`. `setting test-notification` asks the service to announce a test notification to the open app, which shows it, the same as **Send Test Notification** in **Settings**. The announcement reaches an app that is waiting for service events; if none is, the command fails with `E2037` and exits with 69, and a stopped service fails with `E2004`. The command cannot see whether macOS lets the app show the notification: if notifications are denied, the app says so in its Notifications settings and shows nothing. With `--json` it prints a `Status` with `details` holding `announcedApps`, and `--plain` prints that number. `setting get` prints `true` or `false` alone. With `--json`, `setting list` prints a `SettingList` with `items`, each with `key`, `value`, and `description`, and `setting get` and `setting set` print a `Setting` with `key` and `value`.
 
 ## config
 

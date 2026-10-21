@@ -13,7 +13,7 @@ struct SettingCommand: AsyncParsableCommand {
     ),
     subcommands: [
       SettingListCommand.self, SettingGetCommand.self, SettingSetCommand.self,
-      SettingResetCommand.self,
+      SettingResetCommand.self, SettingTestNotificationCommand.self,
     ]
   )
 
@@ -284,6 +284,44 @@ struct SettingResetCommand: AsyncParsableCommand {
         } else {
           CLIOutput.stdout(CLILocalized.format("cli.setting.reset.none", file))
         }
+      }
+    }
+  }
+}
+
+/// Asks the service to announce a test notification to the open app, which shows it.
+///
+/// The service answers with how many waiting apps it announced the test notification to. None
+/// means the service runs without an app, or the app is not waiting yet, and the command fails
+/// with E2037. Whether macOS lets the app show the notification is the app's own report: it
+/// shows the denial in its Notifications settings and this command cannot see it.
+struct SettingTestNotificationCommand: AsyncParsableCommand {
+  static let configuration = CommandConfiguration(
+    commandName: "test-notification",
+    abstract: CLILocalized.text("cli.setting.testNotification.abstract"),
+    discussion: CLILocalized.text("cli.setting.testNotification.discussion")
+  )
+
+  /// The `--json` result: how many waiting apps the service announced the notification to.
+  struct Result: Encodable, Equatable {
+    let announcedApps: Int
+  }
+
+  @OptionGroup(visibility: GlobalOptions.subcommandVisibility)
+  var global: GlobalOptions
+
+  func run() async throws {
+    try await global.run {
+      let announced = try await ServiceConnection.request { client in
+        try await client.sendTestNotification()
+      }.announcedApps
+      guard announced > 0 else {
+        throw CLIFailure(.noApplicationListening, CLILocalized.text("error.E2037"))
+      }
+      switch CLIContext.current.format {
+      case .json: try CLIOutput.json(CLIStatus(details: Result(announcedApps: announced)))
+      case .plain: CLIOutput.plain([[String(announced)]])
+      case .human: CLIOutput.success(CLILocalized.text("cli.setting.testNotification.success"))
       }
     }
   }

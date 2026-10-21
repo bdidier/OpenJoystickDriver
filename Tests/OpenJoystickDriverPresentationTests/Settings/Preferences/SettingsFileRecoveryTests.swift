@@ -39,6 +39,7 @@ struct SettingsFileRecoveryTests {
   @MainActor
   private func makeModel() -> SettingsPreferencesModel {
     SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
       settings: store,
       launchAtLogin: RecoveryLaunchAtLoginStub(),
       notificationAuthorization: RecoveryAuthorizationStub()
@@ -99,6 +100,7 @@ struct SettingsFileRecoveryTests {
     try writeRejectedFile()
     let failing = SettingsStore(directory: root) { _ in throw CocoaError(.fileWriteNoPermission) }
     let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
       settings: failing,
       launchAtLogin: RecoveryLaunchAtLoginStub(),
       notificationAuthorization: RecoveryAuthorizationStub()
@@ -269,6 +271,7 @@ struct SettingsFileRecoveryTests {
     try writeRejectedFile()
     let failing = SettingsStore(directory: root) { _ in throw CocoaError(.fileWriteNoPermission) }
     let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
       settings: failing,
       launchAtLogin: RecoveryLaunchAtLoginStub(),
       notificationAuthorization: RecoveryAuthorizationStub()

@@ -1365,6 +1365,8 @@
 "error.E2034" = "服務已停止接受要求。請結束並重新打開 OpenJoystickDriver，然後重試。";
 "error.E2035" = "無法使用記錄要求監聽停止原因的檔案。請刪除該檔案，然後重新打開 OpenJoystickDriver。";
 "error.E2036" = "--json 輸出無法在不改變數值的情況下寫出記錄中的某個數字。請不加 --json 執行指令，以查看記錄文字。";
+/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app is waiting for service events, so a test notification would reach nobody. */
+"error.E2037" = "沒有 OpenJoystickDriver App 在等待測試通知。請打開 OpenJoystickDriver，然後重試。";
 "cli.record.usb_not_claimed" = "此系列使用原始 USB，USB 延伸功能無法接管此控制器，因為其產品清單由 Apple 簽署。只有在 macOS 允許時，OJD 才能透過直接 USB 存取使用它。";
 "cli.record.usb_only_switch2" = "僅限 USB：如要透過低功耗藍牙連接控制器，請將 bluetoothLE.vibrationCharacteristic 加入此 Switch 2 記錄。";
 "cli.record.validate.abstract" = "檢查控制器記錄，但不安裝。";
@@ -2053,3 +2055,9 @@
 "status.listenerFailure.otherUser" = "該記錄屬於其他使用者；請以該使用者身份執行 ojd";
 /* Reason the listener failure file cannot be used: the system would not say whether the process that wrote it runs. %1$@ is the system's reason, %2$@ the error number. Fills the reason in the error E2035 message. */
 "status.listenerFailure.processCheckFailed" = "無法檢查服務處理程序是否正在執行：%1$@（錯誤編號 %2$@）";
+/* Abstract of the ojd setting test-notification command, in the command help. */
+"cli.setting.testNotification.abstract" = "在 App 中顯示一則測試通知。";
+/* Discussion of the ojd setting test-notification command, in the command help. */
+"cli.setting.testNotification.discussion" = "要求服務向已打開的 OpenJoystickDriver App 發出測試通知，由 App 顯示。如果通知被拒絕，App 會說明這一點，並且不顯示任何內容。";
+/* Printed by ojd setting test-notification after the service announced the test notification to a waiting app. */
+"cli.setting.testNotification.success" = "已要求 App 顯示測試通知。";

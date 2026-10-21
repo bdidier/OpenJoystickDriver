@@ -163,6 +163,13 @@ extension ApplicationServiceClientGateway {
     return try await client.resetVirtualHIDProfileOverride(for: selector, unit: scope == .unit)
   }
 
+  /// Asks the service to announce the test notification to the waiting apps and returns how many
+  /// it announced it to.
+  func requestTestNotification() async throws -> Int {
+    await ensureConnection()
+    return try await client.sendTestNotification().announcedApps
+  }
+
   func resetAllVirtualHIDProfileOverrides() async throws -> Bool {
     await ensureConnection()
     return try await client.resetSettings()

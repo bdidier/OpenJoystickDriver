@@ -22,7 +22,7 @@ extension ErrorCode {
     case .unknownCommand, .usage, .confirmationRequired, .noAccessScope, .duplicateTokenName,
       .invalidTokenName, .invalidWebOrigin, .webPortUnavailable, .controlScopeWithOrigins:
       64
-    case .serviceUnavailable, .requestListenerStopped: 69
+    case .serviceUnavailable, .requestListenerStopped, .noApplicationListening: 69
     case .permissionMissing: 77
     case .installedCLIFailed: 127
     default: 1

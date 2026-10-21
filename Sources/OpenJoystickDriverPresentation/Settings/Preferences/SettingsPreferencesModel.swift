@@ -10,6 +10,14 @@
 
   extension UpdateChecker: ApplicationUpdateChecking {}
 
+  /// Asks the service to announce the test notification to the waiting apps.
+  protocol TestNotificationRequesting: Sendable {
+    /// Returns how many apps the service announced it to; zero means none was waiting.
+    func requestTestNotification() async throws -> Int
+  }
+
+  extension ApplicationServiceClientGateway: TestNotificationRequesting {}
+
   @MainActor
   final class SettingsPreferencesModel: ObservableObject {
     @Published
@@ -63,7 +71,10 @@
     private let updateChecker: any ApplicationUpdateChecking
     private let notificationDelivery: any RuntimeNotificationDelivering
 
+    private let testNotifications: any TestNotificationRequesting
+
     init(
+      testNotifications: any TestNotificationRequesting,
       settings: SettingsStore = SettingsStore(),
       launchAtLogin: (any LaunchAtLoginControlling)? = nil,
       notificationAuthorization: any NotificationAuthorizationControlling =
@@ -72,6 +83,7 @@
       notificationDelivery: any RuntimeNotificationDelivering = SystemRuntimeNotificationDelivery()
     ) {
       let launchAtLogin = launchAtLogin ?? SystemLaunchAtLoginController(settings: settings)
+      self.testNotifications = testNotifications
       self.settings = settings
       self.launchAtLogin = launchAtLogin
       self.notificationAuthorizationController = notificationAuthorization
@@ -167,7 +179,22 @@
       notificationSounds = enabled
     }
 
-    func sendTestNotification() { setNotificationPreference(true, preference: .test) }
+    /// Asks the service to announce a test notification to the waiting apps; the announcement
+    /// reaches this app's own wait, which calls `showTestNotification`. A failed request, or one
+    /// that no app was waiting for, shows in `errorMessage`.
+    func sendTestNotification() {
+      Task { @MainActor [weak self, testNotifications] in
+        do {
+          guard try await testNotifications.requestTestNotification() > 0 else {
+            self?.errorMessage = OJDLocalized.string("error.E2037")
+            return
+          }
+        } catch { self?.report(error) }
+      }
+    }
+
+    /// Shows the test notification, asking macOS for permission first when it is not decided.
+    func showTestNotification() { setNotificationPreference(true, preference: .test) }
 
     func setShowInMenuBar(_ enabled: Bool) {
       guard persist(.showInMenuBar, enabled) else { return }

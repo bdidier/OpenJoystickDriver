@@ -2,7 +2,8 @@ import AppKit
 import Foundation
 import OpenJoystickDriverKit
 
-/// Counts service status changes and holds waiters until the count moves.
+/// Counts service status changes and holds waiters until the count moves or a test notification
+/// is announced.
 ///
 /// The count follows `.ojdServiceStatusDidChange`, which the device manager, the permission
 /// manager, the virtual output backends, the device pipelines (including an overdue input report)
@@ -12,10 +13,10 @@ import OpenJoystickDriverKit
 /// - Note: `@unchecked Sendable` because `generation` and `waiters` are guarded by `lock`.
 final class ServiceStatusChanges: @unchecked Sendable {
   private final class Waiter {
-    let continuation: CheckedContinuation<ServiceStatusRevision, Never>
+    let continuation: CheckedContinuation<ServiceStatusReply, Never>
     var hold: Task<Void, Never>?
 
-    init(_ continuation: CheckedContinuation<ServiceStatusRevision, Never>) {
+    init(_ continuation: CheckedContinuation<ServiceStatusReply, Never>) {
       self.continuation = continuation
     }
   }
@@ -61,17 +62,19 @@ final class ServiceStatusChanges: @unchecked Sendable {
   var heldWaitCount: Int { lock.withLock { waiters.count } }
 
   /// Returns the current revision at once when `after` is nil or differs from it, including by
-  /// service instance; otherwise waits for the next change and returns the current revision after
-  /// `holdSeconds` with none. A cancelled wait returns at once.
-  func wait(after: ServiceStatusRevision?, holdSeconds: TimeInterval) async -> ServiceStatusRevision
-  {
+  /// service instance; otherwise waits for the next change, or for a test notification, and
+  /// returns the current revision as `holdElapsed` after `holdSeconds` with none. A cancelled
+  /// wait returns at once.
+  func wait(after: ServiceStatusRevision?, holdSeconds: TimeInterval) async -> ServiceStatusReply {
     let id = UUID()
     return await withTaskCancellationHandler {
       await withCheckedContinuation { continuation in
         let waiter = Waiter(continuation)
-        let current = lock.withLock { () -> ServiceStatusRevision? in
+        let current = lock.withLock { () -> ServiceStatusReply? in
           let revision = ServiceStatusRevision(instance: instance, generation: generation)
-          guard let after, after == revision, !Task.isCancelled else { return revision }
+          guard let after, after == revision, !Task.isCancelled else {
+            return ServiceStatusReply(revision: revision, event: .statusChange)
+          }
           waiters[id] = waiter
           return nil
         }
@@ -105,8 +108,26 @@ final class ServiceStatusChanges: @unchecked Sendable {
     }
     for waiter in released {
       waiter.hold?.cancel()
-      waiter.continuation.resume(returning: revision)
+      waiter.continuation.resume(
+        returning: ServiceStatusReply(revision: revision, event: .statusChange)
+      )
     }
+  }
+
+  /// Answers every held wait with a test notification at the current revision, which a test
+  /// notification does not move, and returns how many it answered. Zero means no app is waiting.
+  func announceTestNotification() -> Int {
+    let (released, revision) = lock.withLock { () -> ([Waiter], ServiceStatusRevision) in
+      defer { waiters = [:] }
+      return (Array(waiters.values), ServiceStatusRevision(instance: instance, generation: generation))
+    }
+    for waiter in released {
+      waiter.hold?.cancel()
+      waiter.continuation.resume(
+        returning: ServiceStatusReply(revision: revision, event: .testNotification)
+      )
+    }
+    return released.count
   }
 
   private func release(_ id: UUID) {
@@ -117,6 +138,6 @@ final class ServiceStatusChanges: @unchecked Sendable {
       )
     }
     waiter?.hold?.cancel()
-    waiter?.continuation.resume(returning: revision)
+    waiter?.continuation.resume(returning: ServiceStatusReply(revision: revision, event: .holdElapsed))
   }
 }

@@ -17,7 +17,7 @@ struct ServiceStatusChangesTests {
   }
 
   private static func revision(_ changes: ServiceStatusChanges) async -> ServiceStatusRevision {
-    await changes.wait(after: nil, holdSeconds: 30)
+    await changes.wait(after: nil, holdSeconds: 30).revision
   }
 
   /// Polls until `count` waits are held, for at most ten seconds.
@@ -36,7 +36,10 @@ struct ServiceStatusChangesTests {
 
     #expect(
       await changes.wait(after: nil, holdSeconds: 30)
-        == ServiceStatusRevision(instance: instance, generation: 0)
+        == ServiceStatusReply(
+          revision: ServiceStatusRevision(instance: instance, generation: 0),
+          event: .statusChange
+        )
     )
   }
 
@@ -52,7 +55,7 @@ struct ServiceStatusChangesTests {
     await Self.waitForHeldWaits(1, in: changes)
     center.post(name: .ojdServiceStatusDidChange, object: nil)
 
-    #expect(await next.generation == 1)
+    #expect(await next.revision.generation == 1)
     #expect(clock.now - start < .seconds(10))
   }
 
@@ -63,7 +66,7 @@ struct ServiceStatusChangesTests {
     let baseline = await Self.revision(changes)
     center.post(name: .ojdServiceStatusDidChange, object: nil)
 
-    #expect(await changes.wait(after: baseline, holdSeconds: 30).generation == 1)
+    #expect(await changes.wait(after: baseline, holdSeconds: 30).revision.generation == 1)
   }
 
   @Test
@@ -71,7 +74,10 @@ struct ServiceStatusChangesTests {
     let changes = Self.isolated()
     let baseline = await Self.revision(changes)
 
-    #expect(await changes.wait(after: baseline, holdSeconds: 0.05) == baseline)
+    #expect(
+      await changes.wait(after: baseline, holdSeconds: 0.05)
+        == ServiceStatusReply(revision: baseline, event: .holdElapsed)
+    )
   }
 
   @Test
@@ -79,7 +85,7 @@ struct ServiceStatusChangesTests {
     let old = ServiceStatusRevision(instance: UUID(), generation: 0)
     let changes = Self.isolated()
 
-    let revision = await changes.wait(after: old, holdSeconds: 30)
+    let revision = await changes.wait(after: old, holdSeconds: 30).revision
 
     #expect(revision.generation == old.generation)
     #expect(revision.instance != old.instance)
@@ -93,7 +99,7 @@ struct ServiceStatusChangesTests {
 
     workspace.post(name: NSWorkspace.didActivateApplicationNotification, object: nil)
 
-    #expect(await changes.wait(after: baseline, holdSeconds: 30).generation == 1)
+    #expect(await changes.wait(after: baseline, holdSeconds: 30).revision.generation == 1)
   }
 
   @Test
@@ -105,7 +111,7 @@ struct ServiceStatusChangesTests {
     let task = Task { await changes.wait(after: baseline, holdSeconds: 30) }
     task.cancel()
 
-    #expect(await task.value == baseline)
+    #expect(await task.value.revision == baseline)
     #expect(clock.now - start < .seconds(10))
   }
 
@@ -116,6 +122,29 @@ struct ServiceStatusChangesTests {
 
     NotificationCenter.postServiceStatusChanged(from: changes)
 
-    #expect(await changes.wait(after: baseline, holdSeconds: 30).generation > baseline.generation)
+    #expect(await changes.wait(after: baseline, holdSeconds: 30).revision.generation > baseline.generation)
+  }
+
+  @Test
+  func aTestNotificationAnswersEveryHeldWaitWithoutMovingTheRevision() async {
+    let changes = ServiceStatusChanges(center: NotificationCenter())
+    let baseline = await Self.revision(changes)
+    async let first = changes.wait(after: baseline, holdSeconds: 30)
+    async let second = changes.wait(after: baseline, holdSeconds: 30)
+    await Self.waitForHeldWaits(2, in: changes)
+
+    #expect(changes.announceTestNotification() == 2)
+
+    let expected = ServiceStatusReply(revision: baseline, event: .testNotification)
+    #expect(await first == expected)
+    #expect(await second == expected)
+    #expect(changes.heldWaitCount == 0)
+  }
+
+  @Test
+  func aTestNotificationWithNoHeldWaitAnnouncesToNobody() async {
+    let changes = ServiceStatusChanges(center: NotificationCenter())
+
+    #expect(changes.announceTestNotification() == 0)
   }
 }

@@ -142,6 +142,11 @@ extension ApplicationServiceServer {
           holdSeconds: ServiceStatusRevision.holdSeconds
         )
       )
+    case .sendTestNotification:
+      _ = try decode(LocalServiceRPCEmptyArguments.self)
+      return try send(
+        TestNotificationAnnouncement(announcedApps: statusChanges.announceTestNotification())
+      )
     case .setVirtualHIDProfileOverride:
       let value = try decode(LocalServiceRPCVirtualHIDProfileOverrideArguments.self)
       return try send(

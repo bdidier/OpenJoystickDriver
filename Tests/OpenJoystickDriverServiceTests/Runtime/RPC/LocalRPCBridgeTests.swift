@@ -12,7 +12,7 @@ struct LocalRPCBridgeTests {
     "getVirtualOutputState",
     "sendControllerOutput", "previewPhysicalColor", "releasePhysicalColorPreview",
     "getVirtualDeviceDiagnostics", "getFrameTimings", "waitForServiceStatusChange",
-    "setVirtualHIDProfileOverride",
+    "sendTestNotification", "setVirtualHIDProfileOverride",
     "resetVirtualHIDProfileOverride", "setControllerServer", "openVirtualFeed",
     "exchangeVirtualFeed",
     "closeVirtualFeed", "suspendController", "resumeController",
@@ -120,7 +120,7 @@ struct LocalRPCBridgeTests {
       defer { rpcServer.stop() }
       let client = ApplicationServiceClient(socketPath: socketPath)
       await client.connect()
-      let baseline = try await client.waitForServiceStatusChange(after: nil)
+      let baseline = try await client.waitForServiceStatusChange(after: nil).revision
 
       let clock = ContinuousClock()
       let start = clock.now
@@ -128,8 +128,35 @@ struct LocalRPCBridgeTests {
       try await Task.sleep(nanoseconds: 100_000_000)
       NotificationCenter.default.post(name: .ojdServiceStatusDidChange, object: nil)
 
-      #expect(try await next != baseline)
+      #expect(try await next.revision != baseline)
       #expect(clock.now - start < .seconds(10))
+    }
+  }
+
+  @Test
+  func sendTestNotificationAnnouncesTheEventToTheHeldWait() async throws {
+    try await withServer { server in
+      let socketPath = "/tmp/com.openjoystickdriver.bridge.\(UUID().uuidString).rpc"
+      let rpcServer = LocalServiceRPCServer(
+        socketPath: socketPath,
+        authentication: { _ in true },
+        handler: { request, completion in Task { completion(await server.handleLocalRPC(request)) }
+        }
+      )
+      try rpcServer.start()
+      defer { rpcServer.stop() }
+      let client = ApplicationServiceClient(socketPath: socketPath)
+      await client.connect()
+      let baseline = try await client.waitForServiceStatusChange(after: nil).revision
+      #expect(try await client.sendTestNotification().announcedApps == 0)
+
+      async let next = client.waitForServiceStatusChange(after: baseline)
+      while server.statusChanges.heldWaitCount < 1 { try await Task.sleep(nanoseconds: 1_000_000) }
+      #expect(try await client.sendTestNotification().announcedApps == 1)
+
+      #expect(
+        try await next == ServiceStatusReply(revision: baseline, event: .testNotification)
+      )
     }
   }
 

@@ -1365,6 +1365,8 @@
 "error.E2034" = "सेवा ने अनुरोध स्वीकार करना बंद कर दिया है। OpenJoystickDriver को बंद करके दोबारा खोलें, फिर दोबारा कोशिश करें।";
 "error.E2035" = "वह फ़ाइल उपयोग नहीं की जा सकती जिसमें दर्ज है कि अनुरोध श्रोता क्यों रुका। फ़ाइल हटाएँ, फिर OpenJoystickDriver को दोबारा खोलें।";
 "error.E2036" = "--json आउटपुट रिकॉर्ड की किसी संख्या को उसका मान बदले बिना नहीं लिख सकता। रिकॉर्ड का टेक्स्ट देखने के लिए कमांड को --json के बिना चलाएँ।";
+/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app is waiting for service events, so a test notification would reach nobody. */
+"error.E2037" = "कोई OpenJoystickDriver ऐप परीक्षण सूचना की प्रतीक्षा नहीं कर रहा है। OpenJoystickDriver खोलें, फिर दोबारा कोशिश करें।";
 "cli.record.usb_not_claimed" = "यह परिवार रॉ USB इस्तेमाल करता है, और USB एक्सटेंशन इस कंट्रोलर को क्लेम नहीं कर सकता, क्योंकि उसकी प्रोडक्ट सूची पर Apple के हस्ताक्षर हैं। OJD उस तक केवल सीधे USB एक्सेस से पहुँचता है, जब macOS अनुमति देता है।";
 "cli.record.usb_only_switch2" = "केवल USB: कंट्रोलर को Bluetooth LE से कनेक्ट करने के लिए इस Switch 2 रिकॉर्ड में bluetoothLE.vibrationCharacteristic जोड़ें।";
 "cli.record.validate.abstract" = "इंस्टॉल किए बिना कंट्रोलर रिकॉर्ड जाँचें।";
@@ -2053,3 +2055,9 @@
 "status.listenerFailure.otherUser" = "रिकॉर्ड किसी दूसरे उपयोगकर्ता का है; ojd को उसी उपयोगकर्ता के रूप में चलाएँ";
 /* Reason the listener failure file cannot be used: the system would not say whether the process that wrote it runs. %1$@ is the system's reason, %2$@ the error number. Fills the reason in the error E2035 message. */
 "status.listenerFailure.processCheckFailed" = "यह जाँचा नहीं जा सका कि सेवा की प्रक्रिया चल रही है या नहीं: %1$@ (त्रुटि संख्या %2$@)";
+/* Abstract of the ojd setting test-notification command, in the command help. */
+"cli.setting.testNotification.abstract" = "ऐप में एक परीक्षण सूचना दिखाएँ।";
+/* Discussion of the ojd setting test-notification command, in the command help. */
+"cli.setting.testNotification.discussion" = "सेवा से कहता है कि वह खुले OpenJoystickDriver ऐप को परीक्षण सूचना की घोषणा करे, जो उसे दिखाता है। यदि सूचनाएँ अस्वीकृत हैं, तो ऐप यह बताता है और कुछ नहीं दिखाता।";
+/* Printed by ojd setting test-notification after the service announced the test notification to a waiting app. */
+"cli.setting.testNotification.success" = "ऐप से परीक्षण सूचना दिखाने के लिए कहा गया।";

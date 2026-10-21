@@ -1365,6 +1365,8 @@
 "error.E2034" = "サービスがリクエストを受け付けなくなりました。OpenJoystickDriverを終了して開き直してから、もう一度お試しください。";
 "error.E2035" = "リクエストの待ち受けが停止した理由を記録したファイルは使用できません。ファイルを削除してから、OpenJoystickDriverを開き直してください。";
 "error.E2036" = "--json の出力では、レコードに含まれる数値をその値のまま書き出せません。レコードのテキストを確認するには、--json を付けずにコマンドを実行してください。";
+/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app is waiting for service events, so a test notification would reach nobody. */
+"error.E2037" = "テスト通知を待っているOpenJoystickDriverアプリがありません。OpenJoystickDriverを開いてから、もう一度お試しください。";
 "cli.record.usb_not_claimed" = "このファミリーは生の USB を使用しますが、製品リストが Apple によって署名されているため、USB 機能拡張はこのコントローラを占有できません。OJD は、macOS が許可する場合にのみ、直接 USB アクセスでこのコントローラに接続します。";
 "cli.record.usb_only_switch2" = "USB のみ。コントローラを Bluetooth LE で接続するには、この Switch 2 レコードに bluetoothLE.vibrationCharacteristic を追加してください。";
 "cli.record.validate.abstract" = "コントローラのレコードをインストールせずに確認します。";
@@ -2053,3 +2055,9 @@
 "status.listenerFailure.otherUser" = "記録は別のユーザのものです。そのユーザとしてojdを実行してください";
 /* Reason the listener failure file cannot be used: the system would not say whether the process that wrote it runs. %1$@ is the system's reason, %2$@ the error number. Fills the reason in the error E2035 message. */
 "status.listenerFailure.processCheckFailed" = "サービスのプロセスが実行中か確認できませんでした：%1$@（エラー番号 %2$@）";
+/* Abstract of the ojd setting test-notification command, in the command help. */
+"cli.setting.testNotification.abstract" = "アプリにテスト通知を表示します。";
+/* Discussion of the ojd setting test-notification command, in the command help. */
+"cli.setting.testNotification.discussion" = "開いているOpenJoystickDriverアプリにテスト通知を伝えるようサービスに依頼し、アプリが通知を表示します。通知が拒否されている場合、アプリはその旨を伝え、何も表示しません。";
+/* Printed by ojd setting test-notification after the service announced the test notification to a waiting app. */
+"cli.setting.testNotification.success" = "アプリにテスト通知の表示を依頼しました。";

@@ -1587,6 +1587,8 @@
 "error.E2035" = "The file that records why the request listener stopped cannot be used. Delete the file, then open OpenJoystickDriver again.";
 /* Error E2036, shown in the CLI when --json output cannot write a number of a record without changing its value. */
 "error.E2036" = "The --json output cannot write a number of the record without changing its value. Run the command without --json to see the record text.";
+/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app is waiting for service events, so a test notification would reach nobody. */
+"error.E2037" = "No OpenJoystickDriver app is waiting for the test notification. Open OpenJoystickDriver, then try again.";
 "error.E3001" = "The controller is not connected or not ready for remapping. Reconnect it and try again.";
 "error.E3002" = "The selected Joy-Cons could not be paired. Refresh the connected controllers and try again.";
 "error.E3003" = "The controller does not report motion data. Choose a controller with motion sensors, or leave motion options off.";
@@ -2061,3 +2063,9 @@
 "status.listenerFailure.otherUser" = "the record belongs to another user; run ojd as that user";
 /* Reason the listener failure file cannot be used: the system would not say whether the process that wrote it runs. %1$@ is the system's reason, %2$@ the error number. Fills the reason in the error E2035 message. */
 "status.listenerFailure.processCheckFailed" = "could not check whether the service process is running: %1$@ (error number %2$@)";
+/* Abstract of the ojd setting test-notification command, in the command help. */
+"cli.setting.testNotification.abstract" = "Show a test notification in the app.";
+/* Discussion of the ojd setting test-notification command, in the command help. */
+"cli.setting.testNotification.discussion" = "Asks the service to announce a test notification to the open OpenJoystickDriver app, which shows it. If notifications are denied, the app says so and shows nothing.";
+/* Printed by ojd setting test-notification after the service announced the test notification to a waiting app. */
+"cli.setting.testNotification.success" = "Asked the app to show a test notification.";

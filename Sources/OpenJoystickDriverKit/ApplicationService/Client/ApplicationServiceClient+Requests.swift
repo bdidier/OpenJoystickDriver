@@ -130,7 +130,7 @@ extension ApplicationServiceClient {
   /// ``LocalServiceRPCError/peerRejected``.
   public func waitForServiceStatusChange(
     after: ServiceStatusRevision?
-  ) async throws -> ServiceStatusRevision {
+  ) async throws -> ServiceStatusReply {
     try await call(
       .waitForServiceStatusChange,
       LocalServiceRPCStatusChangeArguments(after: after),
@@ -138,6 +138,12 @@ extension ApplicationServiceClient {
         + applicationServiceDefaultReplyTimeoutSeconds,
       closedWithoutReply: after == nil ? .peerRejected : .serviceClosedConnection
     )
+  }
+
+  /// Asks the service to announce a test notification to every app holding a
+  /// `waitForServiceStatusChange`, and returns how many it announced it to.
+  public func sendTestNotification() async throws -> TestNotificationAnnouncement {
+    try await call(.sendTestNotification, LocalServiceRPCEmptyArguments())
   }
 
   public func getFrameTimings() async throws -> ApplicationServiceFrameTimingsPayload {

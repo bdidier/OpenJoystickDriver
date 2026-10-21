@@ -1365,6 +1365,8 @@
 "error.E2034" = "Der Dienst nimmt keine Anfragen mehr an. Beende OpenJoystickDriver, öffne es erneut und versuche es dann noch einmal.";
 "error.E2035" = "Die Datei, die festhält, warum die Anfrageannahme beendet wurde, lässt sich nicht verwenden. Lösche die Datei und öffne OpenJoystickDriver dann erneut.";
 "error.E2036" = "Die Ausgabe mit --json kann eine Zahl des Eintrags nicht schreiben, ohne ihren Wert zu ändern. Führe den Befehl ohne --json aus, um den Text des Eintrags zu sehen.";
+/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app is waiting for service events, so a test notification would reach nobody. */
+"error.E2037" = "Keine OpenJoystickDriver-App wartet auf die Testmitteilung. Öffne OpenJoystickDriver und versuche es dann noch einmal.";
 "cli.record.usb_not_claimed" = "Die Familie nutzt rohes USB, und die USB-Erweiterung kann diesen Controller nicht übernehmen, weil ihre Produktliste von Apple signiert ist. OJD erreicht ihn nur über direkten USB-Zugriff, sofern macOS ihn erlaubt.";
 "cli.record.usb_only_switch2" = "Nur USB: bluetoothLE.vibrationCharacteristic zu diesem Switch 2-Eintrag hinzufügen, um den Controller über Bluetooth LE zu verbinden.";
 "cli.record.validate.abstract" = "Einen Controller-Eintrag prüfen, ohne ihn zu installieren.";
@@ -2054,3 +2056,9 @@
 "status.listenerFailure.otherUser" = "die Datei gehört einem anderen Benutzer; führe ojd als dieser Benutzer aus";
 /* Reason the listener failure file cannot be used: the system would not say whether the process that wrote it runs. %1$@ is the system's reason, %2$@ the error number. Fills the reason in the error E2035 message. */
 "status.listenerFailure.processCheckFailed" = "es ließ sich nicht prüfen, ob der Dienstprozess läuft: %1$@ (Fehlernummer %2$@)";
+/* Abstract of the ojd setting test-notification command, in the command help. */
+"cli.setting.testNotification.abstract" = "Zeigt eine Testmitteilung in der App an.";
+/* Discussion of the ojd setting test-notification command, in the command help. */
+"cli.setting.testNotification.discussion" = "Bittet den Dienst, die geöffnete OpenJoystickDriver-App eine Testmitteilung anzeigen zu lassen. Sind Mitteilungen abgelehnt, weist die App darauf hin und zeigt nichts an.";
+/* Printed by ojd setting test-notification after the service announced the test notification to a waiting app. */
+"cli.setting.testNotification.success" = "Die App wurde gebeten, eine Testmitteilung anzuzeigen.";

@@ -2182,6 +2182,22 @@
         }
       }
     },
+    "settingTestNotification": {
+      "$ref": "#/$defs/sharedStatus",
+      "properties": {
+        "details": {
+          "type": "object",
+          "required": ["announcedApps"],
+          "additionalProperties": false,
+          "properties": {
+            "announcedApps": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        }
+      }
+    },
     "settingSet": {
       "required": ["apiVersion", "kind"],
       "properties": {

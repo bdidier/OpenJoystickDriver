@@ -1,11 +1,12 @@
 import Foundation
 import OpenJoystickDriverKit
 
-/// Waits on the service for status changes.
+/// Waits on the service for status changes and the events it announces to the app.
 protocol ControllerChangeSource: Sendable {
-  /// Returns the service's status revision once it differs from `revision`, or after the
-  /// service's hold time with the same one. A nil `revision` returns the current one at once.
-  func waitForChange(after revision: ServiceStatusRevision?) async throws -> ServiceStatusRevision
+  /// Returns the service's reply once its status revision differs from `revision`, after the
+  /// service's hold time with the same one, or when the service announces an event. A nil
+  /// `revision` returns the current one at once.
+  func waitForChange(after revision: ServiceStatusRevision?) async throws -> ServiceStatusReply
 }
 
 /// Why the wait for service status changes failed, as the banner states it.
@@ -55,6 +56,9 @@ enum ControllerLiveUpdateMode: Equatable {
 /// again. `modeChanged` reports polling only after `failuresBeforeReporting` consecutive
 /// failures, so a service restart does not flash a banner, reports again only when the failure
 /// kind changes, and reports the restored wait.
+///
+/// A reply that carries the test-notification event calls `showTestNotification` and refreshes
+/// nothing, because the status did not change.
 @MainActor
 final class ControllerLiveUpdates {
   static let fallbackPollSeconds: Double = 1
@@ -64,6 +68,7 @@ final class ControllerLiveUpdates {
   private let source: any ControllerChangeSource
   private let refresh: @MainActor () async -> Void
   private let log: @MainActor (String) -> Void
+  private let showTestNotification: @MainActor () -> Void
   private let modeChanged: @MainActor (ControllerLiveUpdateMode) -> Void
   private let fallbackPollSeconds: Double
   private var task: Task<Void, Never>?
@@ -74,12 +79,14 @@ final class ControllerLiveUpdates {
     source: any ControllerChangeSource,
     fallbackPollSeconds: Double = ControllerLiveUpdates.fallbackPollSeconds,
     log: @escaping @MainActor (String) -> Void = { print($0) },
+    showTestNotification: @escaping @MainActor () -> Void,
     modeChanged: @escaping @MainActor (ControllerLiveUpdateMode) -> Void,
     refresh: @escaping @MainActor () async -> Void
   ) {
     self.source = source
     self.refresh = refresh
     self.log = log
+    self.showTestNotification = showTestNotification
     self.modeChanged = modeChanged
     self.fallbackPollSeconds = fallbackPollSeconds
   }
@@ -98,11 +105,12 @@ final class ControllerLiveUpdates {
     var revision: ServiceStatusRevision?
     while !Task.isCancelled {
       do {
-        let next = try await source.waitForChange(after: revision)
+        let reply = try await source.waitForChange(after: revision)
         if Task.isCancelled { return }
         recordSuccess()
-        let changed = next != revision
-        revision = next
+        let changed = reply.revision != revision
+        revision = reply.revision
+        if reply.event == .testNotification { showTestNotification() }
         if changed { await refresh() }
       } catch {
         if Task.isCancelled { return }
@@ -153,7 +161,7 @@ final class ControllerLiveUpdates {
 extension ApplicationServiceClientGateway: ControllerChangeSource {
   func waitForChange(
     after revision: ServiceStatusRevision?
-  ) async throws -> ServiceStatusRevision {
+  ) async throws -> ServiceStatusReply {
     await ensureConnection()
     return try await client.waitForServiceStatusChange(after: revision)
   }

@@ -12,6 +12,7 @@ struct PreferencesTests {
   func startAtLoginReflectsTheNativeControllerResult() {
     let launch = LaunchAtLoginStub(isEnabled: false)
     let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
       settings: SettingsStore(directory: RootedDataDirectory.temporary()),
       launchAtLogin: launch,
       notificationAuthorization: NotificationAuthorizationStub(state: .denied)
@@ -29,6 +30,7 @@ struct PreferencesTests {
     let settings = SettingsStore(directory: RootedDataDirectory.temporary())
     let authorization = NotificationAuthorizationStub(state: .notDetermined)
     let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
       settings: settings,
       launchAtLogin: LaunchAtLoginStub(isEnabled: false),
       notificationAuthorization: authorization
@@ -48,6 +50,7 @@ struct PreferencesTests {
     let settings = SettingsStore(directory: RootedDataDirectory.temporary())
     let authorization = HeldSettingsAuthorizationStub()
     let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
       settings: settings,
       launchAtLogin: LaunchAtLoginStub(isEnabled: false),
       notificationAuthorization: authorization
@@ -72,6 +75,7 @@ struct PreferencesTests {
     let settings = SettingsStore(directory: RootedDataDirectory.temporary())
     try settings.set(.notifyControllerConnected, to: true)
     let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
       settings: settings,
       launchAtLogin: LaunchAtLoginStub(isEnabled: false),
       notificationAuthorization: NotificationAuthorizationStub(state: .denied)
@@ -88,6 +92,7 @@ struct PreferencesTests {
   func notificationEventsAndSoundPersistIndependently() async throws {
     let settings = SettingsStore(directory: RootedDataDirectory.temporary())
     let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
       settings: settings,
       launchAtLogin: LaunchAtLoginStub(isEnabled: false),
       notificationAuthorization: NotificationAuthorizationStub(state: .allowed)
@@ -113,13 +118,14 @@ struct PreferencesTests {
     let authorization = NotificationAuthorizationStub(state: .notDetermined)
     let delivery = PreferencesNotificationDeliverySpy()
     let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
       settings: settings,
       launchAtLogin: LaunchAtLoginStub(isEnabled: false),
       notificationAuthorization: authorization,
       notificationDelivery: delivery
     )
 
-    model.sendTestNotification()
+    model.showTestNotification()
     await waitUntil("delivery.deliveryCount == 1") { delivery.deliveryCount == 1 }
 
     #expect(authorization.requestCount == 1)
@@ -129,9 +135,47 @@ struct PreferencesTests {
 
   @Test
   @MainActor
+  func sendTestNotificationAsksTheServiceAndShowsNothingItself() async throws {
+    let requester = TestNotificationRequestStub()
+    let delivery = PreferencesNotificationDeliverySpy()
+    let model = SettingsPreferencesModel(
+      testNotifications: requester,
+      settings: SettingsStore(directory: RootedDataDirectory.temporary()),
+      launchAtLogin: LaunchAtLoginStub(isEnabled: false),
+      notificationAuthorization: NotificationAuthorizationStub(state: .allowed),
+      notificationDelivery: delivery
+    )
+
+    model.sendTestNotification()
+    await waitUntil("requester.requestCount == 1") { requester.requestCount == 1 }
+    try await Task.sleep(nanoseconds: 50_000_000)
+
+    #expect(delivery.deliveryCount == 0)
+    #expect(model.errorMessage == nil)
+  }
+
+  @Test
+  @MainActor
+  func sendTestNotificationNamesTheCaseWhereNoAppWasWaiting() async {
+    let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(announced: 0),
+      settings: SettingsStore(directory: RootedDataDirectory.temporary()),
+      launchAtLogin: LaunchAtLoginStub(isEnabled: false),
+      notificationAuthorization: NotificationAuthorizationStub(state: .allowed)
+    )
+
+    model.sendTestNotification()
+    await waitUntil("model.errorMessage != nil") { model.errorMessage != nil }
+
+    #expect(model.errorMessage == OJDLocalized.string("error.E2037"))
+  }
+
+  @Test
+  @MainActor
   func refreshPublishesAuthorizationGrantedOutsideTheApp() async {
     let authorization = NotificationAuthorizationStub(state: .denied)
     let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
       settings: SettingsStore(directory: RootedDataDirectory.temporary()),
       launchAtLogin: LaunchAtLoginStub(isEnabled: false),
       notificationAuthorization: authorization
@@ -151,6 +195,7 @@ struct PreferencesTests {
   func startAtLoginReportsWhenNativeApprovalIsStillRequired() {
     let launch = LaunchAtLoginStub(isEnabled: false, acceptsChanges: false)
     let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
       settings: SettingsStore(directory: RootedDataDirectory.temporary()),
       launchAtLogin: launch,
       notificationAuthorization: NotificationAuthorizationStub(state: .denied)
@@ -168,6 +213,7 @@ struct PreferencesTests {
     let settings = SettingsStore(directory: RootedDataDirectory.temporary())
     let checker = UpdateCheckerStub(result: .upToDate(current: "1.2.3", latest: "v1.2.3"))
     let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
       settings: settings,
       launchAtLogin: LaunchAtLoginStub(isEnabled: false),
       notificationAuthorization: NotificationAuthorizationStub(state: .denied),
@@ -189,6 +235,7 @@ struct PreferencesTests {
   func theMenuBarAndDockChoicesAreNeverBothOff() throws {
     let settings = SettingsStore(directory: RootedDataDirectory.temporary())
     let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
       settings: settings,
       launchAtLogin: LaunchAtLoginStub(isEnabled: false),
       notificationAuthorization: NotificationAuthorizationStub(state: .denied)
@@ -217,6 +264,7 @@ struct PreferencesTests {
   func developerToolsChoicePersists() throws {
     let settings = SettingsStore(directory: RootedDataDirectory.temporary())
     let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
       settings: settings,
       launchAtLogin: LaunchAtLoginStub(isEnabled: false),
       notificationAuthorization: NotificationAuthorizationStub(state: .denied)
@@ -234,6 +282,7 @@ struct PreferencesTests {
     let directory = RootedDataDirectory.temporary()
     let loginItem = LaunchAtLoginStub(isEnabled: false)
     let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
       settings: SettingsStore(directory: directory),
       launchAtLogin: loginItem,
       notificationAuthorization: NotificationAuthorizationStub(state: .allowed)
@@ -259,6 +308,7 @@ struct PreferencesTests {
   func aGoodReloadClearsTheErrorOfAFailedSettingsRead() throws {
     let settings = SettingsStore(directory: RootedDataDirectory.temporary())
     let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
       settings: settings,
       launchAtLogin: LaunchAtLoginStub(isEnabled: false),
       notificationAuthorization: NotificationAuthorizationStub(state: .allowed)
@@ -275,6 +325,26 @@ struct PreferencesTests {
     try FileManager.default.removeItem(at: settings.userFileURL)
     model.reloadSettings()
     #expect(model.errorMessage == nil)
+  }
+}
+
+final class TestNotificationRequestStub: TestNotificationRequesting, @unchecked Sendable {
+  private let lock = NSLock()
+  private var requests = 0
+  private let announced: Int
+  private let failure: (any Error)?
+
+  init(announced: Int = 1, failure: (any Error)? = nil) {
+    self.announced = announced
+    self.failure = failure
+  }
+
+  var requestCount: Int { lock.withLock { requests } }
+
+  func requestTestNotification() async throws -> Int {
+    lock.withLock { requests += 1 }
+    if let failure { throw failure }
+    return announced
   }
 }
 

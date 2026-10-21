@@ -274,6 +274,12 @@
       "exitCode": 1
     },
     {
+      "code": "E2037",
+      "domain": "CLI",
+      "name": "noApplicationListening",
+      "exitCode": 69
+    },
+    {
       "code": "E3001",
       "domain": "Remapping",
       "name": "controllerUnavailable",
