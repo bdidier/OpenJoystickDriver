@@ -64,6 +64,31 @@ def gui(command: str, *args: str) -> str:
     return ax(command, process_id(), *args)
 
 
+def session_state() -> str:
+    script = str(GUI_DIR / "ax.js")
+    return run(["osascript", "-l", "JavaScript", script, "session"])
+
+
+def require_unlocked_console_session() -> None:
+    """A locked or background session hides app windows from Accessibility and capture."""
+    reported = session_state()
+    found = re.fullmatch(r"locked=(true|false) console=(true|false)", reported)
+    if not found:
+        raise CaptureError(f"session state reported {reported!r}")
+    if found.group(1) == "true":
+        raise CaptureError(
+            "the screen is locked: unlock this Mac's session and run the capture "
+            "again; macOS hides app windows from Accessibility and screen capture "
+            "while it is locked"
+        )
+    if found.group(2) == "false":
+        raise CaptureError(
+            "this login session is not on the console: switch to it and run the "
+            "capture again; macOS hides app windows from Accessibility and screen "
+            "capture in a session that is not on the console"
+        )
+
+
 def process_id() -> int:
     if not APP.is_dir():
         raise CaptureError(f"{APP} is not installed: ./Scripts/ojd build install dev")
@@ -188,6 +213,7 @@ def restore(steps: list[tuple[str, tuple[str, ...]]]) -> list[str]:
 
 def capture(args: argparse.Namespace) -> int:
     pid = process_id()
+    require_unlocked_console_session()
     require_accessibility(pid)
     require_english_ui()
     areas = AREAS if args.all else (args.area,) if args.area else ()

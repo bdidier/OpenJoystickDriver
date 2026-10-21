@@ -16,6 +16,9 @@ class TargetInvoked(Exception):
     pass
 
 
+UNLOCKED = "locked=false console=true"
+
+
 class GuiCaptureTests(unittest.TestCase):
     def test_dispatcher_routes_shots_capture(self) -> None:
         with (
@@ -126,6 +129,7 @@ class GuiCaptureTests(unittest.TestCase):
             tempfile.TemporaryDirectory() as root,
             patch.object(capture, "PROJECT_DIR", Path(root)),
             patch.object(capture, "process_id", return_value=1),
+            patch.object(capture, "require_unlocked_console_session"),
             patch.object(capture, "require_accessibility"),
             patch.object(capture, "require_english_ui"),
             patch.object(capture, "run"),
@@ -238,12 +242,52 @@ class GuiCaptureTests(unittest.TestCase):
                 "ax",
                 side_effect=lambda *call: order.append("probe") or "-25211",
             ),
+            patch.object(capture, "session_state", return_value=UNLOCKED),
             patch.object(capture, "gui") as gui,
             self.assertRaises(capture.CaptureError),
         ):
             capture.capture(capture.parse_args(["--area", "Controllers"]))
         self.assertEqual(order, ["pid", "probe"])
         gui.assert_not_called()
+
+    def session_message(self, reported: str) -> str | None:
+        with patch.object(capture, "session_state", return_value=reported):
+            try:
+                capture.require_unlocked_console_session()
+            except capture.CaptureError as error:
+                return str(error)
+        return None
+
+    def test_unlocked_console_session_lets_capture_continue(self) -> None:
+        self.assertIsNone(self.session_message(UNLOCKED))
+
+    def test_locked_screen_is_named(self) -> None:
+        message = self.session_message("locked=true console=true")
+        assert message is not None
+        self.assertIn("the screen is locked: unlock this Mac's session", message)
+
+    def test_session_off_the_console_is_named(self) -> None:
+        message = self.session_message("locked=false console=false")
+        assert message is not None
+        self.assertIn("not on the console", message)
+        self.assertNotIn("screen is locked", message)
+
+    def test_unreadable_session_state_fails(self) -> None:
+        message = self.session_message("garbage")
+        assert message is not None
+        self.assertIn("session state reported 'garbage'", message)
+
+    def test_locked_screen_stops_before_the_accessibility_probe(self) -> None:
+        with (
+            patch.object(capture, "process_id", return_value=7),
+            patch.object(
+                capture, "session_state", return_value="locked=true console=true"
+            ),
+            patch.object(capture, "ax") as probe,
+            self.assertRaises(capture.CaptureError),
+        ):
+            capture.capture(capture.parse_args(["--area", "Controllers"]))
+        probe.assert_not_called()
 
     def test_english_ui_is_required(self) -> None:
         english = self.completed(0, '(\n    "en-US",\n    "et-EE"\n)')

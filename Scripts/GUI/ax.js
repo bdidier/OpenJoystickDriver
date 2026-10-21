@@ -3,6 +3,7 @@
 // Accessibility trust is attributed apart from the host app and reports no windows
 // when that attribution fails.
 // Usage: osascript -l JavaScript ax.js <command> <pid> [argument]
+//   session                    "locked=true|false console=true|false" (no pid needed)
 //   probe                      0, or the AXError of reading the app role (-25211: not trusted)
 //   app-state                  "main=true|false settings=<tab>|none"
 //   current-sidebar            label of the selected sidebar row of the main window
@@ -14,6 +15,7 @@
 // The main window is the one with a split group (the sidebar). The Settings window is
 // the one without a sidebar whose toolbar holds all three tabs.
 ObjC.import("ApplicationServices");
+ObjC.import("CoreGraphics");
 ObjC.bindFunction("AXUIElementCreateApplication", ["id", ["int"]]);
 ObjC.bindFunction("AXUIElementCopyAttributeValue", ["int", ["id", "id", "id *"]]);
 ObjC.bindFunction("AXUIElementSetAttributeValue", ["int", ["id", "id", "id"]]);
@@ -117,6 +119,14 @@ function waitFor(condition) {
 
 function run(argv) {
 	const [command, pidText, argument] = argv;
+	if (command === "session") {
+		const dictionary = $.CGSessionCopyCurrentDictionary();
+		const session = dictionary && ObjC.deepUnwrap(ObjC.castRefToObject(dictionary));
+		if (!session) throw new Error("the process has no window server session");
+		return (
+			"locked=" + Boolean(session.CGSSessionScreenIsLocked) + " console=" + Boolean(session.kCGSSessionOnConsoleKey)
+		);
+	}
 	const pid = Number(pidText);
 	if (command === "probe") {
 		if (!$.AXIsProcessTrusted()) return String(AX_NOT_TRUSTED);
