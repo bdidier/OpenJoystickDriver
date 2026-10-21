@@ -125,8 +125,7 @@ struct RecordShowCommand: AsyncParsableCommand {
       let fields = record.fieldLayers.mapValues(\.rawValue)
       switch CLIContext.current.format {
       case .json:
-        try RecordJSONOutput.print(
-          message: { CLILocalized.format("cli.record.show.unwritableNumber", $0, $1) },
+        try CLIOutput.json(
           Result(
             identity: model.description,
             family: record.family,

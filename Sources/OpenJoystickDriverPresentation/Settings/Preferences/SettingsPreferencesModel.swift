@@ -201,9 +201,9 @@
     static func message(for outcome: TestNotificationOutcome) -> String? {
       switch outcome {
       case .shown: return nil
-      case .denied: return OJDLocalized.string("error.E2038")
+      case .denied: return OJDLocalized.string("error.E2037")
       case .failed(let reason): return reason
-      case .noAnswer: return OJDLocalized.string("error.E2037")
+      case .noAnswer: return OJDLocalized.string("error.E2036")
       }
     }
 

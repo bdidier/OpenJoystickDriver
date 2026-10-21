@@ -1319,7 +1319,6 @@
 "cli.record.draft.next" = "Guarda el registro en un archivo, comprueba cada control y luego ejecuta «ojd record validate FILE».";
 "cli.record.draft.no_layout" = "No se pudo leer ningún control de %@ a partir de su descriptor de informes HID, y su registro incluido ya indica su familia. «ojd record show %@» muestra ese registro.";
 "cli.record.draft.started" = "Pulsa cada control de %@ (%@) y mueve cada palanca y cada gatillo.";
-"cli.record.draft.unwritableNumber" = "--json no puede escribir el número %1$@ en %2$@ sin cambiar su valor. Ejecuta «ojd record draft» sin --json para ver el texto del registro.";
 "cli.record.error.unreadable" = "No se puede leer %@: %@";
 "cli.record.file" = "Un archivo de registro, o - para leer el registro desde la entrada estándar.";
 "cli.record.identity" = "El modelo de mando, como VVVV:PPPP.";
@@ -1342,7 +1341,6 @@
 "cli.record.remove.success" = "Eliminación de %@ completada.";
 "cli.record.show.abstract" = "Muestra el registro efectivo de un modelo de mando y la capa de cada parte.";
 "cli.record.show.not_found" = "No hay registro de mando para %@. «ojd record list» muestra todos los registros.";
-"cli.record.show.unwritableNumber" = "--json no puede escribir el número %1$@ en %2$@ sin cambiar su valor. Ejecuta «ojd record show» sin --json para ver el texto del registro.";
 "cli.record.skipped" = "Omitido %@: %@";
 "cli.record.test.abstract" = "Reproducir informes capturados con el analizador de un registro y comparar el estado analizado.";
 "cli.record.test.capture_invalid" = "%@ no es una captura de paquetes: %@";
@@ -1370,11 +1368,10 @@
 "error.E2033" = "No se pudo iniciar el programa. Comprueba que su ruta indique un archivo ejecutable o una app y que tengas permiso para ejecutarlo.";
 "error.E2034" = "El servicio ha dejado de aceptar solicitudes. Cierra OpenJoystickDriver, ábrelo de nuevo y vuelve a intentarlo.";
 "error.E2035" = "No se puede usar el archivo que registra por qué se detuvo la escucha de solicitudes. Elimina el archivo y abre OpenJoystickDriver de nuevo.";
-"error.E2036" = "La salida de --json no puede escribir un número del registro sin cambiar su valor. Ejecuta el comando sin --json para ver el texto del registro.";
-/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
-"error.E2037" = "Ninguna app de OpenJoystickDriver respondió a tiempo a la notificación de prueba. Comprueba que la app esté en ejecución y vuelve a intentarlo.";
-/* Error E2038, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */
-"error.E2038" = "Las notificaciones no están permitidas para OpenJoystickDriver. Permítelas en los ajustes de notificaciones del sistema y vuelve a intentarlo.";
+/* Error E2036, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
+"error.E2036" = "Ninguna app de OpenJoystickDriver respondió a tiempo a la notificación de prueba. Comprueba que la app esté en ejecución y vuelve a intentarlo.";
+/* Error E2037, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */
+"error.E2037" = "Las notificaciones no están permitidas para OpenJoystickDriver. Permítelas en los ajustes de notificaciones del sistema y vuelve a intentarlo.";
 "cli.record.usb_not_claimed" = "La familia usa USB sin procesar, y la extensión USB no puede reclamar este mando, porque su lista de productos está firmada por Apple. OJD solo llega a él mediante acceso USB directo, cuando macOS lo permite.";
 "cli.record.usb_only_switch2" = "Solo USB: añade bluetoothLE.vibrationCharacteristic a este registro de Switch 2 para conectar el mando por Bluetooth LE.";
 "cli.record.validate.abstract" = "Comprueba un registro de mando sin instalarlo.";

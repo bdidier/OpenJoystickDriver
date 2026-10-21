@@ -1319,7 +1319,6 @@
 "cli.record.draft.next" = "Lưu bản ghi vào một tệp, kiểm tra từng thành phần, rồi chạy “ojd record validate FILE”.";
 "cli.record.draft.no_layout" = "Không đọc được thành phần nào của %@ từ bộ mô tả báo cáo HID của nó, và bản ghi đi kèm của nó đã gọi tên họ thiết bị. “ojd record show %@” hiển thị bản ghi đó.";
 "cli.record.draft.started" = "Hãy nhấn mọi thành phần trên %@ (%@), và di chuyển từng cần và cò.";
-"cli.record.draft.unwritableNumber" = "--json không thể ghi số %1$@ tại %2$@ mà không thay đổi giá trị của nó. Hãy chạy “ojd record draft” mà không có --json để xem văn bản của bản ghi.";
 "cli.record.error.unreadable" = "Không thể đọc %@: %@";
 "cli.record.file" = "Một tệp bản ghi, hoặc - để đọc bản ghi từ stdin.";
 "cli.record.identity" = "Kiểu máy bộ điều khiển, dạng VVVV:PPPP.";
@@ -1342,7 +1341,6 @@
 "cli.record.remove.success" = "Đã xóa %@.";
 "cli.record.show.abstract" = "Hiển thị bản ghi hiệu lực của một kiểu máy bộ điều khiển và lớp của từng phần.";
 "cli.record.show.not_found" = "Không có bản ghi bộ điều khiển nào cho %@. “ojd record list” hiển thị mọi bản ghi.";
-"cli.record.show.unwritableNumber" = "--json không thể ghi số %1$@ tại %2$@ mà không thay đổi giá trị của nó. Hãy chạy “ojd record show” mà không có --json để xem văn bản của bản ghi.";
 "cli.record.skipped" = "Đã bỏ qua %@: %@";
 "cli.record.test.abstract" = "Phát lại các báo cáo đã ghi qua trình phân tích của một bản ghi và so sánh trạng thái đã phân tích.";
 "cli.record.test.capture_invalid" = "%@ không phải nội dung ghi gói tin: %@";
@@ -1370,11 +1368,10 @@
 "error.E2033" = "Không thể khởi động chương trình. Hãy kiểm tra đường dẫn của nó chỉ tới một tệp thực thi hoặc một ứng dụng và bạn có quyền chạy nó.";
 "error.E2034" = "Dịch vụ đã ngừng nhận yêu cầu. Hãy thoát OpenJoystickDriver, mở lại, rồi thử lại.";
 "error.E2035" = "Không dùng được tệp ghi lại lý do trình lắng nghe yêu cầu dừng. Hãy xóa tệp, rồi mở lại OpenJoystickDriver.";
-"error.E2036" = "Đầu ra --json không thể ghi một số trong bản ghi mà không thay đổi giá trị của nó. Hãy chạy lệnh mà không có --json để xem văn bản của bản ghi.";
-/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
-"error.E2037" = "Không có ứng dụng OpenJoystickDriver nào trả lời thông báo thử kịp lúc. Hãy kiểm tra ứng dụng đang chạy, rồi thử lại.";
-/* Error E2038, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */
-"error.E2038" = "Thông báo không được phép cho OpenJoystickDriver. Hãy cho phép trong cài đặt thông báo của hệ thống, rồi thử lại.";
+/* Error E2036, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
+"error.E2036" = "Không có ứng dụng OpenJoystickDriver nào trả lời thông báo thử kịp lúc. Hãy kiểm tra ứng dụng đang chạy, rồi thử lại.";
+/* Error E2037, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */
+"error.E2037" = "Thông báo không được phép cho OpenJoystickDriver. Hãy cho phép trong cài đặt thông báo của hệ thống, rồi thử lại.";
 "cli.record.usb_not_claimed" = "Họ thiết bị này dùng USB thô, và phần mở rộng USB không thể chiếm bộ điều khiển này, vì danh sách sản phẩm của nó do Apple ký. OJD chỉ truy cập được nó qua truy cập USB trực tiếp, khi macOS cho phép.";
 "cli.record.usb_only_switch2" = "Chỉ USB: thêm bluetoothLE.vibrationCharacteristic vào bản ghi Switch 2 này để kết nối bộ điều khiển qua Bluetooth LE.";
 "cli.record.validate.abstract" = "Kiểm tra một bản ghi bộ điều khiển mà không cài đặt.";

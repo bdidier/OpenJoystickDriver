@@ -1319,7 +1319,6 @@
 "cli.record.draft.next" = "Sla het record op in een bestand, controleer elke bediening en voer daarna ‘ojd record validate FILE’ uit.";
 "cli.record.draft.no_layout" = "Geen enkele bediening van %@ kon uit de HID-rapportdescriptor worden gelezen, en het meegeleverde record noemt de familie al. ‘ojd record show %@’ toont dat record.";
 "cli.record.draft.started" = "Druk op elke bediening van %@ (%@) en beweeg elke stick en trigger.";
-"cli.record.draft.unwritableNumber" = "--json kan het getal %1$@ bij %2$@ niet schrijven zonder de waarde te veranderen. Voer ‘ojd record draft’ uit zonder --json om de tekst van het record te zien.";
 "cli.record.error.unreadable" = "Kan %@ niet lezen: %@";
 "cli.record.file" = "Een recordbestand, of - om het record van stdin te lezen.";
 "cli.record.identity" = "Het controllermodel, als VVVV:PPPP.";
@@ -1342,7 +1341,6 @@
 "cli.record.remove.success" = "%@ verwijderd.";
 "cli.record.show.abstract" = "Toont het effectieve record van één controllermodel en de laag van elk onderdeel.";
 "cli.record.show.not_found" = "Geen controllerrecord voor %@. ‘ojd record list’ toont elk record.";
-"cli.record.show.unwritableNumber" = "--json kan het getal %1$@ bij %2$@ niet schrijven zonder de waarde te veranderen. Voer ‘ojd record show’ uit zonder --json om de tekst van het record te zien.";
 "cli.record.skipped" = "%@ overgeslagen: %@";
 "cli.record.test.abstract" = "Speel vastgelegde rapporten af via de parser van een record en vergelijk de geparste status.";
 "cli.record.test.capture_invalid" = "%@ is geen pakketopname: %@";
@@ -1370,11 +1368,10 @@
 "error.E2033" = "Het programma kon niet worden gestart. Controleer of het pad een uitvoerbaar bestand of een app aanwijst en of je het mag uitvoeren.";
 "error.E2034" = "De service accepteert geen verzoeken meer. Sluit OpenJoystickDriver af, open het opnieuw en probeer het opnieuw.";
 "error.E2035" = "Het bestand dat vastlegt waarom de verzoeklistener is gestopt, kan niet worden gebruikt. Verwijder het bestand en open OpenJoystickDriver daarna opnieuw.";
-"error.E2036" = "De uitvoer van --json kan een getal van het record niet schrijven zonder de waarde te veranderen. Voer de opdracht uit zonder --json om de tekst van het record te zien.";
-/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
-"error.E2037" = "Geen enkele OpenJoystickDriver-app heeft op tijd op de testmelding geantwoord. Controleer of de app draait en probeer het opnieuw.";
-/* Error E2038, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */
-"error.E2038" = "Meldingen zijn niet toegestaan voor OpenJoystickDriver. Sta ze toe in de meldingsinstellingen van het systeem en probeer het opnieuw.";
+/* Error E2036, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
+"error.E2036" = "Geen enkele OpenJoystickDriver-app heeft op tijd op de testmelding geantwoord. Controleer of de app draait en probeer het opnieuw.";
+/* Error E2037, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */
+"error.E2037" = "Meldingen zijn niet toegestaan voor OpenJoystickDriver. Sta ze toe in de meldingsinstellingen van het systeem en probeer het opnieuw.";
 "cli.record.usb_not_claimed" = "De familie gebruikt onbewerkte USB en de USB-extensie kan deze controller niet claimen, omdat de productlijst door Apple is ondertekend. OJD bereikt hem alleen via directe USB-toegang, wanneer macOS dat toestaat.";
 "cli.record.usb_only_switch2" = "Alleen USB: voeg bluetoothLE.vibrationCharacteristic toe aan dit Switch 2-record om de controller via Bluetooth LE te verbinden.";
 "cli.record.validate.abstract" = "Controleert een controllerrecord zonder het te installeren.";

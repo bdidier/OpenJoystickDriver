@@ -290,55 +290,38 @@ struct RecordCommandTests {
     #expect(result.standardError.contains("ojd record show 045E:028E"))
   }
 
-  /// An installed patch can carry `0.08000000000000000001`, which the schema bounds allow and
-  /// no `Double` holds, so `record show --json` fails with E2036 while the plain and human
-  /// output show the record text as written. A record draft is built from integers and the
-  /// bundled record, so no input reaches E2036 through `record draft`; the test below covers its
-  /// message directly.
+  /// A user record keeps the member order and the number text of its file in `record show
+  /// --json`, while the members of the envelope stay sorted by name.
   @Test
-  func showJSONOfARecordWithAnUnwritableNumberFailsWithItsPlace() async throws {
+  func showJSONKeepsTheMemberOrderAndNumberTextOfAUserRecord() async throws {
     let directory = Directory()
-    let number = "0.08000000000000000001"
-    let text = try #require(String(bytes: Self.patch, encoding: .utf8))
-    let patch = Data(text.replacingOccurrences(of: "0.08", with: number).utf8)
-    let install = await run(["install", "-", "--json"], in: directory, stdin: patch)
-    let json = await run(["show", "366c:0005", "--json"], in: directory)
-    let human = await run(["show", "366c:0005"], in: directory)
-
-    #expect(install.code == 0, "\(install.standardError)")
-    #expect(json.code == CLIExitCode(for: .unwritableJSONNumber).rawValue)
-    #expect(json.standardOutput.isEmpty)
-    #expect(
-      json.standardError.contains(
-        "error[E2036]: --json cannot write the number \(number) at record.tuning.stickDeadzone "
-          + "without changing its value. Run 'ojd record show' without --json"
-      )
+    let record = Data(
+      """
+      {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "Controller",
+       "vendorID": 4617, "productID": 2,
+       "modes": [{"id": "default", "protocol": {"family": "XboxGIP"}}],
+       "tuning": {"stickDeadzone": 8E-2, "usbTransferTimeoutMs": 1e3}}
+      """.utf8
     )
-    #expect(human.code == 0, "\(human.standardError)")
-    #expect(human.standardOutput.contains(number))
-  }
+    try directory.write(record, as: "1209-0002.json")
+    let validate = await run(["validate", "-"], in: directory, stdin: record)
+    let json = await run(["show", "1209:0002", "--json"], in: directory)
 
-  /// A record number that `--json` cannot write without changing its value fails the command
-  /// with E2036 and names the number and its place in the document, for `record show` and
-  /// `record draft`.
-  @Test(arguments: ["cli.record.show.unwritableNumber", "cli.record.draft.unwritableNumber"])
-  func aRecordNumberThatJSONCannotHoldFailsWithItsPlace(_ key: String) {
-    struct Output: Encodable { let record: OrderedJSON }
-    let scale = OrderedJSON.object([OrderedJSON.Member(key: "scale", value: .number("1e400"))])
-    let record = OrderedJSON.object([OrderedJSON.Member(key: "modes", value: .array([scale]))])
-    let failure = #expect(throws: CLIFailure.self) {
-      try RecordJSONOutput.print(
-        message: { CLILocalized.format(key, $0, $1) },
-        Output(record: record)
-      )
-    }
-    #expect(failure?.id == .unwritableJSONNumber)
-    #expect(failure?.code == CLIExitCode(for: .unwritableJSONNumber))
-    #expect(
-      failure?.line
-        == "error[E2036]: --json cannot write the number 1e400 at record.modes.0.scale without "
-        + "changing its value. Run 'ojd record \(key.contains("show") ? "show" : "draft")' "
-        + "without --json to see the record text."
-    )
+    #expect(validate.code == 0, "\(validate.standardError)")
+    #expect(json.code == 0, "\(json.standardError)")
+    let output = json.standardOutput
+    #expect(output.hasPrefix("{\n  \"apiVersion\": "))
+    #expect(output.hasSuffix("}\n"))
+    #expect(!output.hasSuffix("\n\n"))
+    #expect(output.contains("\"stickDeadzone\": 8E-2,"))
+    #expect(output.contains("\"usbTransferTimeoutMs\": 1e3"))
+    // The record keeps its file's member order: `vendorID` precedes `modes`, sorting reverses it.
+    let vendor = try #require(output.range(of: "\n    \"vendorID\""))
+    let modes = try #require(output.range(of: "\n    \"modes\": ["))
+    #expect(vendor.lowerBound < modes.lowerBound)
+    // The envelope and the other members stay sorted by name.
+    let names = ["apiVersion", "family", "identity", "kind", "layer", "record", "transport"]
+    let positions = try names.map { try #require(output.range(of: "\n  \"\($0)\"")).lowerBound }
+    #expect(positions == positions.sorted())
   }
 }

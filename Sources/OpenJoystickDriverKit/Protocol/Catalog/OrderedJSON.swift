@@ -264,6 +264,20 @@ public indirect enum OrderedJSON: Equatable, Sendable {
     return output
   }
 
+  /// The value on one line without spaces, such as `{"a":[1,2]}`, and without a newline.
+  public func compact() -> String {
+    switch self {
+    case .object(let members):
+      let parts = members.map { Self.quoted($0.key) + ":" + $0.value.compact() }
+      return "{" + parts.joined(separator: ",") + "}"
+    case .array(let items): return "[" + items.map { $0.compact() }.joined(separator: ",") + "]"
+    case .string(let text): return Self.quoted(text)
+    case .number(let text): return text
+    case .bool(let flag): return flag ? "true" : "false"
+    case .null: return "null"
+    }
+  }
+
   /// ``formatted()`` as UTF-8.
   public func formattedData() -> Data { Data(formatted().utf8) }
 

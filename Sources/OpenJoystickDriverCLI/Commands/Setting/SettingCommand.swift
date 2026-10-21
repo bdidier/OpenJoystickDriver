@@ -293,8 +293,8 @@ struct SettingResetCommand: AsyncParsableCommand {
 ///
 /// The app answers with `shown`, `denied` or `failed`; the service answers `noAnswer` when no app
 /// took the announcement or reported in time (`TestNotificationDeadlines`). Each other outcome
-/// is a named failure: E2038 for denied notifications, E2006 with the system's reason for a
-/// failed delivery, and E2037 for no answer. The service holds the request until then, so
+/// is a named failure: E2037 for denied notifications, E2006 with the system's reason for a
+/// failed delivery, and E2036 for no answer. The service holds the request until then, so
 /// without `--timeout` the command waits `ServiceTimeouts.testNotification`.
 struct SettingTestNotificationCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
@@ -324,11 +324,11 @@ struct SettingTestNotificationCommand: AsyncParsableCommand {
       switch outcome {
       case .shown: break
       case .denied:
-        throw CLIFailure(.notificationsDenied, CLILocalized.text("error.E2038"))
+        throw CLIFailure(.notificationsDenied, CLILocalized.text("error.E2037"))
       case .failed(let reason):
         throw CLIFailure.serviceRequestFailed(reason)
       case .noAnswer:
-        throw CLIFailure(.noApplicationAnswered, CLILocalized.text("error.E2037"))
+        throw CLIFailure(.noApplicationAnswered, CLILocalized.text("error.E2036"))
       }
       switch CLIContext.current.format {
       case .json:
