@@ -99,6 +99,26 @@ struct RPCAcceptLoopTests {
   }
 
   @Test
+  func aStopDuringStartLeavesTheServerStoppedAndRestartable() async throws {
+    let server = makeServer(generation: 9)
+    let exited = DispatchSemaphore(value: 0)
+    server.acceptLoopDidExit = { exited.signal() }
+    server.beforeListenerPublished = { [unowned server] in
+      server.stop()
+      // A start while the first still runs is refused.
+      #expect(throws: LocalServiceRPCError.alreadyRunning) { try server.start() }
+    }
+    try server.start()
+
+    #expect(try await waitForExit(exited))
+    #expect(!FileManager.default.fileExists(atPath: server.socketPath))
+    server.beforeListenerPublished = nil
+    try server.start()
+    defer { server.stop() }
+    #expect(try await call(server) == 9)
+  }
+
+  @Test
   func onlyOneOfTwoConcurrentStartsSucceeds() async throws {
     for _ in 0..<20 {
       let server = makeServer()

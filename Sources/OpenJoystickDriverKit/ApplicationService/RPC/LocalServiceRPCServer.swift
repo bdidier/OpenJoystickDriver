@@ -16,7 +16,9 @@ public final class LocalServiceRPCServer: @unchecked Sendable {
   /// True when `stop()` ran while `starting`; `start()` stops the server it finished.
   private var stopRequested = false
 
-  // The four hooks below belong to tests; set them before `start()`.
+  // The five hooks below belong to tests; set them before `start()`.
+  /// Runs inside `start()` after the sockets are listening and before the server publishes them.
+  package var beforeListenerPublished: (@Sendable () -> Void)?
   /// Runs once the accept loop has stopped and closed its descriptors; tests await it.
   package var acceptLoopDidExit: (@Sendable () -> Void)?
   /// Takes one connection from the listening descriptor, as `accept` does; tests replace it to
@@ -99,6 +101,7 @@ public final class LocalServiceRPCServer: @unchecked Sendable {
       var wake: [Int32] = [-1, -1]
       guard pipe(&wake) == 0 else { throw LocalServiceRPCError.connectionFailed(errno) }
       let started = Listener(socket: descriptor, wakeRead: wake[0], wakeWrite: wake[1])
+      beforeListenerPublished?()
       stateLock.withLock {
         listener = started
         starting = false
