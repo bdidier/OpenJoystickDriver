@@ -19,7 +19,7 @@ AREAS = ("Controllers", "Profiles", "Library", "Access", "Activity")
 SETTINGS_PANES = ("General", "Notifications", "Advanced")
 BOUNDS_TOLERANCE = 2.0
 ACCESSIBILITY_GRANTED = "0"
-ACCESSIBILITY_MISSING = "Accessibility is not granted to the host app"
+ACCESSIBILITY_NOT_TRUSTED = "-25211"
 
 
 class CaptureError(Exception):
@@ -55,22 +55,13 @@ def run(command: list[str]) -> str:
     return result.stdout.strip()
 
 
-def require_accessibility() -> None:
-    """UI scripting reports no windows without Accessibility, so refuse before it runs."""
-    code = run(
-        ["osascript", "-l", "JavaScript", str(GUI_DIR / "accessibility-probe.js")]
-    )
-    if code != ACCESSIBILITY_GRANTED:
-        raise CaptureError(
-            f"{ACCESSIBILITY_MISSING} (AXError {code}): the host app running this "
-            "command (Terminal, iTerm or another) needs Accessibility in System "
-            "Settings > Privacy & Security > Accessibility; the capture cannot run "
-            "without it"
-        )
+def ax(command: str, pid: int, *args: str) -> str:
+    script = str(GUI_DIR / "ax.js")
+    return run(["osascript", "-l", "JavaScript", script, command, str(pid), *args])
 
 
-def gui(script: str, *args: str) -> str:
-    return run(["osascript", str(GUI_DIR / script), *args])
+def gui(command: str, *args: str) -> str:
+    return ax(command, process_id(), *args)
 
 
 def process_id() -> int:
@@ -88,8 +79,26 @@ def process_id() -> int:
     return int(pids[0])
 
 
+def require_accessibility(pid: int) -> None:
+    """Reads the app role through the Accessibility API and names each failure."""
+    code = ax("probe", pid)
+    if code == ACCESSIBILITY_GRANTED:
+        return
+    if code == ACCESSIBILITY_NOT_TRUSTED:
+        raise CaptureError(
+            f"Accessibility is not granted to the host app (AXError {code}): "
+            "allow the host app in System Settings > Privacy & Security > "
+            "Accessibility"
+        )
+    raise CaptureError(
+        f"Accessibility call to {PROCESS} failed (AXError {code}) although the "
+        "host app is trusted: the app may not be responding, or the command is "
+        "not running in a logged-in GUI session"
+    )
+
+
 def window_id(pid: int, kind: str) -> int:
-    reported = gui("window-bounds.applescript", kind)
+    reported = gui("window-bounds", kind)
     try:
         bounds = [float(value) for value in reported.split()]
     except ValueError as error:
@@ -130,7 +139,7 @@ def require_english_ui() -> None:
 
 def read_state() -> tuple[bool, str | None]:
     """Whether the main window is open and which Settings tab is open, if any."""
-    reported = gui("app-state.applescript")
+    reported = gui("app-state")
     found = re.fullmatch(r"main=(true|false) settings=(\S+)", reported)
     if not found:
         raise CaptureError(f"app-state reported {reported!r}")
@@ -178,8 +187,8 @@ def restore(steps: list[tuple[str, tuple[str, ...]]]) -> list[str]:
 
 
 def capture(args: argparse.Namespace) -> int:
-    require_accessibility()
     pid = process_id()
+    require_accessibility(pid)
     require_english_ui()
     areas = AREAS if args.all else (args.area,) if args.area else ()
     panes = (
@@ -194,25 +203,26 @@ def capture(args: argparse.Namespace) -> int:
     sidebar = None
     opens_settings = False
     try:
-        gui("open-main-window.applescript", str(APP))
-        sidebar = gui("current-sidebar.applescript")
+        run(["open", str(APP)])
+        gui("wait-main-window")
+        sidebar = gui("current-sidebar")
         for area in areas:
-            gui("select-sidebar.applescript", area)
+            gui("select-sidebar", area)
             shoot(pid, "main", folder / f"main-{area.lower()}.png")
         for pane in panes:
             opens_settings = settings_tab is None
-            gui("open-settings.applescript", pane)
+            gui("open-settings", pane)
             shoot(pid, "settings", folder / f"settings-{pane.lower()}.png")
     finally:
         steps: list[tuple[str, tuple[str, ...]]] = []
         if sidebar is not None:
-            steps.append(("sidebar area", ("select-sidebar.applescript", sidebar)))
+            steps.append(("sidebar area", ("select-sidebar", sidebar)))
         if settings_tab is not None and panes:
-            steps.append(("settings tab", ("open-settings.applescript", settings_tab)))
+            steps.append(("settings tab", ("open-settings", settings_tab)))
         if opens_settings:
-            steps.append(("settings window", ("close-window.applescript", "settings")))
+            steps.append(("settings window", ("close-window", "settings")))
         if not main_was_open:
-            steps.append(("main window", ("close-window.applescript", "main")))
+            steps.append(("main window", ("close-window", "main")))
         failures = restore(steps)
     return 2 if failures else 0
 

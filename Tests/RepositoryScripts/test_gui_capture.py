@@ -120,7 +120,7 @@ class GuiCaptureTests(unittest.TestCase):
             calls.append(command)
             if command[0] in failures:
                 raise failures[command[0]]
-            return "Activity" if command[0] == "current-sidebar.applescript" else ""
+            return "Activity" if command[0] == "current-sidebar" else ""
 
         with (
             tempfile.TemporaryDirectory() as root,
@@ -128,6 +128,7 @@ class GuiCaptureTests(unittest.TestCase):
             patch.object(capture, "process_id", return_value=1),
             patch.object(capture, "require_accessibility"),
             patch.object(capture, "require_english_ui"),
+            patch.object(capture, "run"),
             patch.object(capture, "read_state", return_value=state),
             patch.object(capture, "gui", side_effect=fake_gui),
             patch.object(capture, "shoot"),
@@ -147,9 +148,9 @@ class GuiCaptureTests(unittest.TestCase):
         self.assertEqual(
             calls[-3:],
             [
-                ("select-sidebar.applescript", "Activity"),
-                ("close-window.applescript", "settings"),
-                ("close-window.applescript", "main"),
+                ("select-sidebar", "Activity"),
+                ("close-window", "settings"),
+                ("close-window", "main"),
             ],
         )
 
@@ -161,58 +162,88 @@ class GuiCaptureTests(unittest.TestCase):
         self.assertEqual(
             calls[-2:],
             [
-                ("select-sidebar.applescript", "Activity"),
-                ("open-settings.applescript", "General"),
+                ("select-sidebar", "Activity"),
+                ("open-settings", "General"),
             ],
         )
-        self.assertNotIn(("close-window.applescript", "main"), calls)
+        self.assertNotIn(("close-window", "main"), calls)
 
     def test_failed_capture_keeps_its_error_and_still_restores(self) -> None:
         failures: dict[str, Exception] = {
-            "open-settings.applescript": capture.CaptureError("menu failed"),
-            "close-window.applescript": capture.CaptureError("no window"),
+            "open-settings": capture.CaptureError("menu failed"),
+            "close-window": capture.CaptureError("no window"),
         }
         code, calls, error = self.run_capture(
             (False, None), failures, ["--settings-pane", "General"]
         )
         self.assertIsNone(code)
         self.assertEqual(str(error), "menu failed")
-        self.assertEqual(calls[-3][0], "select-sidebar.applescript")
-        self.assertEqual(calls[-1], ("close-window.applescript", "main"))
+        self.assertEqual(calls[-3][0], "select-sidebar")
+        self.assertEqual(calls[-1], ("close-window", "main"))
 
     def test_failed_restore_step_does_not_skip_later_steps(self) -> None:
         failures: dict[str, Exception] = {
-            "select-sidebar.applescript": capture.CaptureError("row missing")
+            "select-sidebar": capture.CaptureError("row missing")
         }
         code, calls, error = self.run_capture(
             (False, None), failures, ["--settings-pane", "General"]
         )
         self.assertEqual((code, error), (2, None))
-        self.assertEqual(calls[-1], ("close-window.applescript", "main"))
+        self.assertEqual(calls[-1], ("close-window", "main"))
 
     def completed(self, code: int, out: str) -> subprocess.CompletedProcess[str]:
         return subprocess.CompletedProcess([], code, out, "")
 
-    def test_accessibility_probe_granted_lets_capture_continue(self) -> None:
-        with patch.object(capture, "run", return_value="0") as probe:
-            capture.require_accessibility()
-        self.assertIn("accessibility-probe.js", probe.call_args.args[0][-1])
+    def probe_message(self, code: str) -> str | None:
+        with patch.object(capture, "ax", return_value=code) as probe:
+            try:
+                capture.require_accessibility(7)
+            except capture.CaptureError as error:
+                message = str(error)
+            else:
+                message = None
+        probe.assert_called_once_with("probe", 7)
+        return message
 
-    def test_accessibility_probe_denied_fails_before_any_gui_script(self) -> None:
-        with (
-            patch.object(capture, "run", return_value="-25211"),
-            patch.object(capture, "gui") as gui,
-            patch.object(capture, "process_id") as pid,
-            self.assertRaises(capture.CaptureError) as raised,
-        ):
-            capture.capture(capture.parse_args(["--area", "Controllers"]))
-        message = str(raised.exception)
-        self.assertIn(capture.ACCESSIBILITY_MISSING, message)
+    def test_accessibility_probe_granted_lets_capture_continue(self) -> None:
+        self.assertIsNone(self.probe_message("0"))
+
+    def test_accessibility_probe_untrusted_names_the_permission(self) -> None:
+        message = self.probe_message("-25211")
+        assert message is not None
+        self.assertIn("Accessibility is not granted to the host app", message)
         self.assertIn("-25211", message)
         self.assertIn("Privacy & Security > Accessibility", message)
-        self.assertIn("cannot run without it", message)
+
+    def test_accessibility_probe_other_failure_does_not_ask_for_permission(
+        self,
+    ) -> None:
+        message = self.probe_message("-25204")
+        assert message is not None
+        self.assertIn("Accessibility call to OpenJoystickDriver failed", message)
+        self.assertIn("-25204", message)
+        self.assertIn("although the host app is trusted", message)
+        self.assertNotIn("Privacy & Security", message)
+
+    def test_capture_probes_after_finding_the_app_and_before_any_gui_call(
+        self,
+    ) -> None:
+        order: list[str] = []
+        with (
+            patch.object(
+                capture, "process_id", side_effect=lambda: order.append("pid") or 7
+            ),
+            patch.object(
+                capture,
+                "ax",
+                side_effect=lambda *call: order.append("probe") or "-25211",
+            ),
+            patch.object(capture, "gui") as gui,
+            self.assertRaises(capture.CaptureError),
+        ):
+            capture.capture(capture.parse_args(["--area", "Controllers"]))
+        self.assertEqual(order, ["pid", "probe"])
         gui.assert_not_called()
-        pid.assert_not_called()
 
     def test_english_ui_is_required(self) -> None:
         english = self.completed(0, '(\n    "en-US",\n    "et-EE"\n)')
