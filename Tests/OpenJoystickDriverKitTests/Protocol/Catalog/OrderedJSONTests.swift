@@ -287,6 +287,33 @@ struct OrderedJSONTests {
   }
 
   @Test
+  func twoNamesThatDifferOnlyByCanonicalEquivalenceAreRefused() {
+    let precomposed = "\u{E9}"
+    let decomposed = "e\u{301}"
+    #expect(precomposed == decomposed)
+    let problem = Self.problem(Array(#"{"\#(precomposed)": 1, "\#(decomposed)": 2}"#.utf8))
+    #expect(
+      problem == OrderedJSON.Problem(reason: .equivalentMembers(precomposed, decomposed), offset: 10)
+    )
+    #expect(problem?.description.contains("different scalars") == true)
+    // The same scalars twice stay a duplicate, and distinct names stay apart.
+    #expect(
+      Self.problem(Array(#"{"\#(decomposed)": 1, "\#(decomposed)": 2}"#.utf8))?.reason
+        == .duplicateMember(decomposed)
+    )
+    #expect(Self.problem(Array(#"{"\#(precomposed)": 1, "e": 2}"#.utf8)) == nil)
+  }
+
+  @Test
+  func anObjectKeepsTheOrderOfItsGuideAndSortsTheRest() throws {
+    let guide = OrderedJSON.object([
+      .init(key: "z", value: .number("1")), .init(key: "m", value: .number("2")),
+    ])
+    let value = try OrderedJSON(foundation: ["a": 1, "m": 2, "z": 3, "b": 4], order: guide)
+    #expect(value.formatted() == "{\n  \"z\": 3,\n  \"m\": 2,\n  \"a\": 1,\n  \"b\": 4\n}\n")
+  }
+
+  @Test
   func anArrayWithANonNumberPutsOneItemPerLine() {
     let items: [OrderedJSON] = (1...28).map { .number(String($0)) } + [.string("x")]
     let text = OrderedJSON.object([.init(key: "mix", value: .array(items))]).formatted()

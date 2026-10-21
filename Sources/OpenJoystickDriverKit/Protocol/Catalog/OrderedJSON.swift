@@ -40,8 +40,12 @@ public indirect enum OrderedJSON: Equatable, Sendable {
       case wideEncoding
       /// The bytes from ``Problem/offset`` are not UTF-8.
       case notUTF8
-      /// An object names this member twice, so one of the values would be lost.
+      /// An object names this member twice, byte for byte, so one of the values would be lost.
       case duplicateMember(String)
+      /// An object names two members that are canonically equivalent Unicode text but differ in
+      /// their scalars, such as U+00E9 and `e` with U+0301. Swift compares and hashes names by
+      /// canonical equivalence, so a `[String: Any]` reader keeps only one of the two values.
+      case equivalentMembers(String, String)
       /// The text breaks the JSON grammar, in words.
       case syntax(String)
       /// A Foundation value JSON cannot hold, in words.
@@ -61,6 +65,9 @@ public indirect enum OrderedJSON: Equatable, Sendable {
         case .notUTF8: "the text is not UTF-8; save the file as UTF-8"
         case .duplicateMember(let key):
           "the member \(OrderedJSON.quoted(key)) appears twice in one object"
+        case .equivalentMembers(let first, let second):
+          "the members \(OrderedJSON.quoted(first)) and \(OrderedJSON.quoted(second)) have "
+            + "different scalars but count as one name in Swift; write the name one way"
         case .syntax(let words), .notAJSONValue(let words): words
         }
       return offset.map { "JSON text, byte \($0): \(message)" } ?? message
@@ -96,13 +103,14 @@ public indirect enum OrderedJSON: Equatable, Sendable {
           guide[member.key] = member.value
         }
       }
-      let keys =
-        guided.filter { dictionary[$0] != nil }
-        + dictionary.keys.filter { guide[$0] == nil }.sorted()
+      var remaining = dictionary
       var members: [Member] = []
-      for key in keys {
-        guard let child = dictionary[key] else { preconditionFailure("key from the dictionary") }
+      for key in guided {
+        guard let child = remaining.removeValue(forKey: key) else { continue }
         members.append(Member(key: key, value: try Self(foundation: child, order: guide[key])))
+      }
+      for (key, child) in remaining.sorted(by: { $0.key < $1.key }) {
+        members.append(Member(key: key, value: try Self(foundation: child)))
       }
       self = .object(members)
     case let list as [Any]:
@@ -173,7 +181,9 @@ public indirect enum OrderedJSON: Equatable, Sendable {
   // MARK: Parsing
 
   /// The value in `data`, a UTF-8 JSON document without a byte order mark. A member name that
-  /// appears twice in one object is refused, because a reader keeps only one of its values.
+  /// appears twice in one object is refused, because a reader keeps only one of its values; so
+  /// are two names that differ in their scalars only by canonical equivalence, because a
+  /// `[String: Any]` reader merges them.
   public static func parse(_ data: Data) throws -> Self {
     let bytes = [UInt8](data)
     try requireUTF8(bytes)

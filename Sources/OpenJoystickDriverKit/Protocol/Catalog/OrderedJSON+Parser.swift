@@ -61,7 +61,9 @@ extension OrderedJSON {
     mutating func object() throws -> OrderedJSON {
       position += 1
       var members: [Member] = []
-      var names: Set<String> = []
+      // The first spelling of each name, found by the name as Swift compares it (canonical
+      // equivalence) and told from a later spelling by its Unicode scalars.
+      var names: [String: String] = [:]
       skipSpace()
       if peek("}") {
         position += 1
@@ -72,9 +74,14 @@ extension OrderedJSON {
         guard peek("\"") else { throw problem("expected a member name") }
         let start = position
         let key = try string()
-        guard names.insert(key).inserted else {
-          throw Problem(reason: .duplicateMember(key), offset: start)
+        if let first = names[key] {
+          throw Problem(
+            reason: first.unicodeScalars.elementsEqual(key.unicodeScalars)
+              ? .duplicateMember(key) : .equivalentMembers(first, key),
+            offset: start
+          )
         }
+        names[key] = key
         skipSpace()
         guard peek(":") else { throw problem("expected :") }
         position += 1
