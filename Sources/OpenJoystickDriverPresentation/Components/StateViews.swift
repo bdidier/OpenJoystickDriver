@@ -31,7 +31,7 @@
         VStack(spacing: 4) {
           OJDSystemSymbol(name: symbol, fallback: OJDLocalized.string("common.status")).font(
             .largeTitle
-          ).foregroundColor(Color(NSColor.tertiaryLabelColor))
+          ).foregroundColor(Color(NSColor.tertiaryLabelColor)).accessibilityHidden(true)
           Text(title).font(.headline).foregroundColor(Color(NSColor.secondaryLabelColor))
           if let message {
             Text(message).foregroundColor(Color(NSColor.secondaryLabelColor))
@@ -68,6 +68,7 @@
             name: SemanticState.failure.presentation.symbolName,
             fallback: OJDLocalized.string("common.needsAttention")
           ).foregroundColor(Color(SemanticState.failure.presentation.tone.color))
+            .accessibilityHidden(true)
           VStack(alignment: .leading, spacing: 6) {
             Text(title).font(.headline)
             Text(message).foregroundColor(Color(NSColor.secondaryLabelColor)).fixedSize(

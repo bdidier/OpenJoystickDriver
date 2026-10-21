@@ -26,7 +26,7 @@
         )
       } else {
         InputTestSliderRow(title: title, valueText: "\(Int(value.wrappedValue.rounded()))") {
-          Slider(value: value, in: 0...255)
+          Slider(value: value, in: 0...255).ojdAccessibilityLabel(title)
         }
       }
     }
@@ -48,7 +48,7 @@
     var body: some View {
       OJDLabeledRow(title) {
         HStack(spacing: 8) {
-          control.labelsHidden().ojdAccessibilityLabel(title)
+          control.labelsHidden()
           Text(valueText)
             .font(.system(.body).monospacedDigit())
             .foregroundColor(Color(NSColor.secondaryLabelColor))
@@ -143,7 +143,7 @@
                 InputTestViewModel.rumbleDurationRange.upperBound
               ),
               step: 50
-            )
+            ).ojdAccessibilityLabel(OJDLocalized.string("inputTest.duration"))
           }
         }.disabled(!model.canSendOutput || model.isOutputBusy)
         HStack(spacing: 8) {
@@ -173,6 +173,7 @@
               Text("3").tag(PhysicalPlayerIndicator.player3)
               Text("4").tag(PhysicalPlayerIndicator.player4)
             }.pickerStyle(.segmented).labelsHidden()
+              .ojdAccessibilityLabel(OJDLocalized.string("inputTest.playerIndicator"))
             Button(OJDLocalized.string("common.apply")) { model.applyPlayerIndicator() }
           }
         }
@@ -195,6 +196,7 @@
             }
             HStack {
               Slider(value: brightnessBinding, in: 0...255)
+                .ojdAccessibilityLabel(OJDLocalized.string("inputTest.brightness"))
               Button(OJDLocalized.string("common.apply")) { model.applyBrightness() }
             }
           }

@@ -329,6 +329,7 @@
                 Text(section.title).tag(section)
               }
             }.labelsHidden().pickerStyle(PopUpButtonPickerStyle()).frame(maxWidth: .infinity)
+              .ojdAccessibilityLabel(OJDLocalized.string("profiles.editorSection"))
           }
         }
       }.padding(.horizontal, 28).padding(.vertical, 10).ojdAccessibilityLabel(

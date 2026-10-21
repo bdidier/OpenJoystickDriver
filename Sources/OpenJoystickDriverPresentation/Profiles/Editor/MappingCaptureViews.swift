@@ -114,7 +114,7 @@
           Spacer()
           Text(formattedValue).foregroundColor(Color(NSColor.secondaryLabelColor))
         }
-        Slider(value: $value, in: range)
+        Slider(value: $value, in: range).ojdAccessibilityLabel(title)
       }
     }
 

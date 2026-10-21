@@ -90,6 +90,7 @@
       let label = NSTextField(
         labelWithString: OJDLocalized.string("controllers.exportMapping.format")
       )
+      popup.setAccessibilityLabel(OJDLocalized.string("controllers.exportMapping.format"))
       let stack = NSStackView(views: [label, popup])
       stack.orientation = .horizontal
       stack.spacing = 8
