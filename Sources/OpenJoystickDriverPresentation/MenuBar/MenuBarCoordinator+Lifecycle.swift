@@ -26,11 +26,6 @@
     package func applicationDidFinishLaunching(_ notification: Notification) {
       bundledNotificationCenter?.delegate = notificationPresenter
       refreshStatus()
-      controllerInventoryObserver = NotificationCenter.default.addObserver(
-        forName: .ojdControllerInventoryDidChange,
-        object: nil,
-        queue: .main
-      ) { [weak self] _ in Task { @MainActor [weak self] in self?.refreshLiveStatus() } }
       Task { @MainActor in await viewModel.startSystemExtensionSetup() }
       preferences.settingsRecovered = { [weak self] in
         guard let self else { return }
@@ -55,12 +50,11 @@
       ).map { SettingsFileStartup.statusItemIsShown(showInMenuBar: $0, settingsError: $1) }
         .removeDuplicates().sink { [weak self] shown in self?.applyShowInMenuBar(shown) }
       Task { @MainActor in self.offerSettingsRecovery() }
-      // The service sends no controller attach or detach notification to the app, so this poll is
-      // the only source of live controller changes.
-      liveStatusTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
-        guard let self else { return }
-        Task { @MainActor in self.refreshLiveStatus() }
+      let updates = ControllerLiveUpdates(source: gatewayChangeSource) { [weak self] in
+        await self?.refreshLiveStatusNow()
       }
+      controllerLiveUpdates = updates
+      updates.start()
     }
 
     private var launchUpdateCheck: LaunchUpdateCheck {
@@ -217,12 +211,8 @@
     }
 
     private func stopLiveStatus() {
-      liveStatusTimer?.invalidate()
-      liveStatusTimer = nil
-      if let controllerInventoryObserver {
-        NotificationCenter.default.removeObserver(controllerInventoryObserver)
-        self.controllerInventoryObserver = nil
-      }
+      controllerLiveUpdates?.stop()
+      controllerLiveUpdates = nil
     }
 
     private func removeStatusItem() {
@@ -243,12 +233,13 @@
     }
 
     private func refreshLiveStatus() {
-      Task { @MainActor [weak self] in
-        guard let self else { return }
-        let statusChanged = await menuBarViewModel.refreshLiveStatus()
-        notificationMonitor.observe(RuntimeNotificationSnapshot(viewModel: viewModel))
-        if statusChanged { updateStatusMenu() }
-      }
+      Task { @MainActor [weak self] in await self?.refreshLiveStatusNow() }
+    }
+
+    private func refreshLiveStatusNow() async {
+      let statusChanged = await menuBarViewModel.refreshLiveStatus()
+      notificationMonitor.observe(RuntimeNotificationSnapshot(viewModel: viewModel))
+      if statusChanged { updateStatusMenu() }
     }
 
     /// Installs the current menu as the status item's menu, which AppKit places under the button.

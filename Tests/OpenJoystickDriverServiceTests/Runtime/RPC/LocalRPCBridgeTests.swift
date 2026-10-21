@@ -11,7 +11,8 @@ struct LocalRPCBridgeTests {
     "getStatus", "requestRequiredAccess", "requestAccess", "getControllerState", "getPacketLog",
     "getVirtualOutputState",
     "sendControllerOutput", "previewPhysicalColor", "releasePhysicalColorPreview",
-    "getVirtualDeviceDiagnostics", "getFrameTimings", "setVirtualHIDProfileOverride",
+    "getVirtualDeviceDiagnostics", "getFrameTimings", "waitForControllerInventoryChange",
+    "setVirtualHIDProfileOverride",
     "resetVirtualHIDProfileOverride", "setControllerServer", "openVirtualFeed",
     "exchangeVirtualFeed",
     "closeVirtualFeed", "suspendController", "resumeController",
@@ -102,6 +103,33 @@ struct LocalRPCBridgeTests {
         try await client.getRemappingProfile(id: UUID())
       }
       #expect(error?.code == .profileNotFound)
+    }
+  }
+
+  @Test
+  func anInventoryNotificationReachesAWaitingClientWithinOneSecond() async throws {
+    try await withServer { server in
+      let socketPath = "/tmp/com.openjoystickdriver.bridge.\(UUID().uuidString).rpc"
+      let rpcServer = LocalServiceRPCServer(
+        socketPath: socketPath,
+        authentication: { _ in true },
+        handler: { request, completion in Task { completion(await server.handleLocalRPC(request)) }
+        }
+      )
+      try rpcServer.start()
+      defer { rpcServer.stop() }
+      let client = ApplicationServiceClient(socketPath: socketPath)
+      await client.connect()
+      let baseline = try await client.waitForControllerInventoryChange(after: nil).generation
+
+      let clock = ContinuousClock()
+      let start = clock.now
+      async let next = client.waitForControllerInventoryChange(after: baseline)
+      try await Task.sleep(nanoseconds: 100_000_000)
+      NotificationCenter.default.post(name: .ojdControllerInventoryDidChange, object: nil)
+
+      #expect(try await next.generation != baseline)
+      #expect(clock.now - start < .seconds(1))
     }
   }
 
