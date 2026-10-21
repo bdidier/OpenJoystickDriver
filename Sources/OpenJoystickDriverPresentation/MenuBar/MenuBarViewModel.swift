@@ -18,9 +18,13 @@
       return status.devices
     }
 
+    /// Whether the Access area has a permission to grant; see
+    /// ``AccessReadiness/hasMissingPermission(permissionState:statusState:)``.
     var needsPermissionAttention: Bool {
-      guard case .available(let status) = runtime.statusState else { return false }
-      return status.needsAccess
+      AccessReadiness.hasMissingPermission(
+        permissionState: runtime.permissionState,
+        statusState: runtime.statusState
+      )
     }
 
     var summaryTitle: String {

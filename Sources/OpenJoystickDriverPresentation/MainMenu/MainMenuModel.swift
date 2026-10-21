@@ -151,6 +151,15 @@ enum MainMenuModel {
       ),
       .separator,
       entry(
+        "close",
+        "mainMenu.file.close",
+        key: "w",
+        action: .close,
+        enabled: .responderChain,
+        gui: .standardCommand
+      ),
+      .separator,
+      entry(
         "saveSupportReport",
         "mainMenu.file.saveSupportReport",
         action: .saveSupportReport,
@@ -208,6 +217,13 @@ enum MainMenuModel {
         "mainMenu.edit.paste",
         key: "v",
         action: .paste,
+        enabled: .responderChain,
+        gui: .standardCommand
+      ),
+      entry(
+        "delete",
+        "common.delete",
+        action: .delete,
         enabled: .responderChain,
         gui: .standardCommand
       ),

@@ -103,12 +103,48 @@ struct MainMenuModelTests {
   }
 
   @Test
-  func fileMenuHoldsTheFiveCommands() throws {
+  func fileMenuHoldsTheCommandsAndTheStandardClose() throws {
     #expect(
       try section("file").items.map(\.action) == [
-        .importProfile, .exportProfile, .installRecordOrMod, .saveSupportReport, .saveActivityLog,
+        .importProfile, .exportProfile, .installRecordOrMod, .close, .saveSupportReport,
+        .saveActivityLog,
       ]
     )
+    let close = try #require(MainMenuModel.item(for: .close))
+    #expect(close.keyEquivalent == "w")
+    #expect(close.modifiers == [.command])
+    #expect(close.enabled == .responderChain)
+  }
+
+  @Test
+  func editMenuHoldsTheStandardItemsInOrder() throws {
+    #expect(
+      try section("edit").items.map(\.action) == [
+        .undo, .redo, .cut, .copy, .paste, .delete, .selectAll,
+      ]
+    )
+    #expect(try #require(MainMenuModel.item(for: .delete)).keyEquivalent.isEmpty)
+  }
+
+  @Test
+  func menusAppearInTheStandardOrder() {
+    #expect(
+      MainMenuModel.sections.map(\.id) == [
+        "app", "file", "edit", "view", "controller", "profile", "window", "help",
+      ]
+    )
+  }
+
+  @Test
+  func submenuParentsAndAreaOpeningItemsCarryNoEllipsis() throws {
+    let withoutMoreInput: [MainMenuAction] = [
+      .activateProfile, .testInput, .disconnectWirelessLink, .showActivityLog,
+    ]
+    for action in withoutMoreInput {
+      let item = try #require(MainMenuModel.item(for: action))
+      #expect(!OJDLocalized.string(item.titleKey).hasSuffix("..."), "\(item.titleKey)")
+      #expect(!OJDLocalized.string(item.titleKey).hasSuffix("…"), "\(item.titleKey)")
+    }
   }
 
   @Test

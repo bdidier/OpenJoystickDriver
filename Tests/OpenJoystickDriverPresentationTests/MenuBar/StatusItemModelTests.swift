@@ -52,6 +52,24 @@ struct StatusItemModelTests {
   }
 
   @Test
+  func onlyTheStatusLineCarriesAnIcon() {
+    let entries = StatusItemModel.entries(for: Self.state(controllers: [Self.pad]))
+    func symbols(_ entries: [StatusItemEntry]) -> [String] {
+      entries.flatMap { Array($0.symbolName.map { [$0] } ?? []) + symbols($0.submenu ?? []) }
+    }
+    #expect(symbols(entries) == ["circle"])
+    #expect(Self.entry("status", in: entries)?.symbolName == "circle")
+  }
+
+  @Test
+  func settingsAndQuitUseTheAppMenuTitles() {
+    let entries = StatusItemModel.entries(for: Self.state())
+    #expect(Self.entry("settings", in: entries)?.title == .key("mainMenu.app.settings"))
+    #expect(Self.entry("quit", in: entries)?.title == .key("mainMenu.app.quit"))
+    #expect(Self.entry("openWindow", in: entries)?.title == .key("menuBar.openWindow"))
+  }
+
+  @Test
   func alreadyActiveProfileIsCheckedWithoutAnAction() throws {
     let active = StatusItemState.Profile(id: UUID(), name: "A", isActive: true)
     let other = StatusItemState.Profile(id: UUID(), name: "B", isActive: false)

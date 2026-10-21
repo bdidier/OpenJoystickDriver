@@ -1,4 +1,5 @@
 import Foundation
+import OpenJoystickDriverKit
 import Testing
 
 @testable import OpenJoystickDriverPresentation
@@ -93,5 +94,97 @@ struct AccessReadinessTests {
 
     #expect(value.notification.value == OJDLocalized.string("common.notRequested"))
     #expect(value.notification.isActionable)
+  }
+
+  private func status(
+    postEvent: RemappingPostEventAccessState?,
+    requiresPostEvent: Bool?,
+    inputRead: PermissionManager.AccessState = .granted
+  ) -> RuntimeStatusState {
+    .available(
+      RuntimeStatusPresentation(
+        payload: ApplicationServiceStatusPayload(
+          inputRead: inputRead,
+          inputInject: .granted,
+          connectedDevices: [],
+          userSpaceVirtualDeviceEnabled: true,
+          userSpaceVirtualDeviceStatus: .backend("ready")
+        ),
+        postEventAccess: postEvent,
+        requiresPostEventAccess: requiresPostEvent
+      )
+    )
+  }
+
+  @Test
+  func noPermissionIsMissingWhenAllAreGrantedOrNothingWasRead() {
+    let granted = RuntimePermissionLoadState.available(
+      RuntimePermissionSummary(inputRead: .granted, inputInject: .granted)
+    )
+    #expect(
+      !AccessReadiness.hasMissingPermission(
+        permissionState: granted,
+        statusState: status(postEvent: .granted, requiresPostEvent: true)
+      )
+    )
+    #expect(
+      !AccessReadiness.hasMissingPermission(
+        permissionState: granted,
+        statusState: status(postEvent: nil, requiresPostEvent: false)
+      )
+    )
+    #expect(
+      !AccessReadiness.hasMissingPermission(permissionState: .unavailable, statusState: .loading)
+    )
+    #expect(!AccessReadiness.hasMissingPermission(permissionState: .loading, statusState: .loading))
+    #expect(
+      !AccessReadiness.hasMissingPermission(
+        permissionState: .unavailable,
+        statusState: .unavailable("down")
+      )
+    )
+  }
+
+  @Test
+  func theAppsOwnPermissionReadingDecidesOverTheStatusPayload() {
+    let granted = RuntimePermissionLoadState.available(
+      RuntimePermissionSummary(inputRead: .granted, inputInject: .granted)
+    )
+    #expect(
+      !AccessReadiness.hasMissingPermission(
+        permissionState: granted,
+        statusState: status(postEvent: .granted, requiresPostEvent: false, inputRead: .denied)
+      )
+    )
+  }
+
+  @Test
+  func aDeniedUnknownOrUnauthorizedPermissionIsMissing() {
+    func summary(
+      _ read: RuntimePermissionState,
+      _ inject: RuntimePermissionState
+    )
+      -> RuntimePermissionLoadState
+    {
+      .available(RuntimePermissionSummary(inputRead: read, inputInject: inject))
+    }
+    #expect(
+      AccessReadiness.hasMissingPermission(
+        permissionState: summary(.denied, .granted),
+        statusState: .loading
+      )
+    )
+    #expect(
+      AccessReadiness.hasMissingPermission(
+        permissionState: summary(.granted, .unknown),
+        statusState: .loading
+      )
+    )
+    #expect(
+      AccessReadiness.hasMissingPermission(
+        permissionState: summary(.granted, .granted),
+        statusState: status(postEvent: .notAuthorized, requiresPostEvent: true)
+      )
+    )
   }
 }

@@ -24,6 +24,7 @@ enum MainMenuAction: Hashable, Sendable {
   case importProfile
   case exportProfile
   case installRecordOrMod
+  case close
   case saveSupportReport
   case saveActivityLog
 
@@ -32,6 +33,7 @@ enum MainMenuAction: Hashable, Sendable {
   case cut
   case copy
   case paste
+  case delete
   case selectAll
 
   case showArea(MainWindowArea)

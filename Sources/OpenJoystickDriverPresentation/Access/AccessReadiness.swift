@@ -64,6 +64,25 @@ struct AccessReadiness {
     }
   }
 
+  /// Whether a permission the service needs is missing: denied or never requested, or Post Event
+  /// access required and not authorized. Permissions that were never read, a value still being
+  /// checked and a notification setting do not count. Reads the same sources as the Access area,
+  /// so the status item and the area agree.
+  static func hasMissingPermission(
+    permissionState: RuntimePermissionLoadState,
+    statusState: RuntimeStatusState
+  ) -> Bool {
+    let readiness = Self(
+      permissionState: permissionState,
+      statusState: statusState,
+      notificationState: .checking,
+      notificationSettings: .authorizationOnly(.checking)
+    )
+    let postEventIsMissing = readiness.postEvent.tone == .caution
+    guard let summary = readiness.permissionSummary else { return postEventIsMissing }
+    return !summary.isReady || postEventIsMissing
+  }
+
   /// The four values in card order, for the accessibility value of the group.
   var summaryValue: String {
     [inputRead.value, inputInject.value, postEvent.value, notification.value].joined(

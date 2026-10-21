@@ -147,8 +147,8 @@
       case .copySupportReport: copySupportReportWithFeedback()
       case .reportProblem: open(urlString: StatusItemModel.problemReport)
       case .openProjectWebsite: openProjectPage(nil)
-      case .services, .hide, .hideOthers, .showAll, .undo, .redo, .cut, .copy, .paste, .selectAll,
-        .toggleSidebar, .toggleFullScreen, .minimize, .zoom, .bringAllToFront:
+      case .services, .hide, .hideOthers, .showAll, .undo, .redo, .cut, .copy, .paste, .delete,
+        .selectAll, .close, .toggleSidebar, .toggleFullScreen, .minimize, .zoom, .bringAllToFront:
         // Sent down the responder chain by the menu item; the renderer never routes these here.
         preconditionFailure("\(action) is a responder-chain action")
       }
