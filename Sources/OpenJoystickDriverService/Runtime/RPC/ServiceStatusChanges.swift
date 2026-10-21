@@ -57,6 +57,9 @@ final class ServiceStatusChanges: @unchecked Sendable {
     }
   }
 
+  /// The number of waits held for the next change.
+  var heldWaitCount: Int { lock.withLock { waiters.count } }
+
   /// Returns the current revision at once when `after` is nil or differs from it, including by
   /// service instance; otherwise waits for the next change and returns the current revision after
   /// `holdSeconds` with none. A cancelled wait returns at once.

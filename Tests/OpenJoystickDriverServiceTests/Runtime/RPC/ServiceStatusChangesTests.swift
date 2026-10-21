@@ -11,6 +11,15 @@ struct ServiceStatusChangesTests {
     await changes.wait(after: nil, holdSeconds: 30)
   }
 
+  /// Polls until `count` waits are held, for at most ten seconds.
+  private static func waitForHeldWaits(_ count: Int, in changes: ServiceStatusChanges) async {
+    let deadline = ContinuousClock.now + .seconds(10)
+    while changes.heldWaitCount < count, ContinuousClock.now < deadline {
+      try? await Task.sleep(nanoseconds: 1_000_000)
+    }
+    #expect(changes.heldWaitCount >= count)
+  }
+
   @Test
   func aNilRevisionReadsTheCurrentOneAtOnce() async {
     let instance = UUID()
@@ -31,7 +40,7 @@ struct ServiceStatusChangesTests {
 
     let start = clock.now
     async let next = changes.wait(after: baseline, holdSeconds: 30)
-    try? await Task.sleep(nanoseconds: 50_000_000)
+    await Self.waitForHeldWaits(1, in: changes)
     center.post(name: .ojdServiceStatusDidChange, object: nil)
 
     #expect(await next.generation == 1)
