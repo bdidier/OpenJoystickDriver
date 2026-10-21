@@ -190,14 +190,30 @@ public struct ControllerRecordSet: Sendable {
   /// The bundled records, decoded once per process.
   private static func loadBundled() throws -> Self {
     let urls = (Bundle.module.urls(forResourcesWithExtension: "json", subdirectory: nil) ?? [])
-      .filter { isRecordFileName($0.lastPathComponent) }.sorted {
-        $0.lastPathComponent < $1.lastPathComponent
-      }
+      .filter { isRecordFileName($0.lastPathComponent) }
     guard !urls.isEmpty else {
       throw ControllerRecordProblem(code: .invalidControllerRecord, "controller catalog is empty")
     }
+    let catalog = loadCatalog(urls)
+    if let problem = catalog.problems.first {
+      throw ControllerRecordProblem(
+        code: .invalidControllerRecord,
+        "\(problem.file): \(problem.message)"
+      )
+    }
+    return Self(records: catalog.records, userFiles: [])
+  }
+
+  /// The records of the Controller files `urls` in file-name order, and a problem for each file
+  /// that is not a valid record of the catalog: one that fails the record rules, whose file name
+  /// is not its record's ``fileName(for:)``, or whose identity an earlier file holds. The
+  /// bundled catalog and ``RepositoryValidation/records(in:)`` load through this check.
+  static func loadCatalog(
+    _ urls: [URL]
+  ) -> (records: [ControllerModelID: ControllerRecord], problems: [RepositoryProblem]) {
     var records: [ControllerModelID: ControllerRecord] = [:]
-    for url in urls {
+    var problems: [RepositoryProblem] = []
+    for url in urls.sorted(by: { $0.lastPathComponent < $1.lastPathComponent }) {
       do {
         let data = try Data(contentsOf: url)
         try requireUTF8(data)
@@ -221,13 +237,10 @@ public struct ControllerRecordSet: Sendable {
         }
         records[record.model] = record
       } catch {
-        throw ControllerRecordProblem(
-          code: .invalidControllerRecord,
-          "\(url.path): \(problemDescription(error, document: "record"))"
-        )
+        problems.append(RepositoryProblem(file: url.path, error: error, document: "record"))
       }
     }
-    return Self(records: records, userFiles: [])
+    return (records, problems)
   }
 
   private static func isRecordFileName(_ name: String) -> Bool {

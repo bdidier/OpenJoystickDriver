@@ -66,6 +66,12 @@ let package = Package(
       exclude: ["Entitlements"]
     ),
 
+    .executableTarget(
+      name: "OJDRepositoryTool",
+      dependencies: ["OpenJoystickDriverKit"],
+      path: "Sources/OJDRepositoryTool"
+    ),
+
     .target(
       name: "OpenJoystickDriverService",
       dependencies: ["OpenJoystickDriverKit", "OpenJoystickDriverUSB"],
@@ -183,6 +189,13 @@ let package = Package(
       ],
       path: "Tests/OpenJoystickDriverCLITests",
       exclude: ["Fixtures"],
+      swiftSettings: [.unsafeFlags(["-target", testTargetTriple])],
+      linkerSettings: [.unsafeFlags(["-target", testTargetTriple])]
+    ),
+    .testTarget(
+      name: "OJDRepositoryToolTests",
+      dependencies: ["OpenJoystickDriverKit", "OJDRepositoryTool"],
+      path: "Tests/OJDRepositoryToolTests",
       swiftSettings: [.unsafeFlags(["-target", testTargetTriple])],
       linkerSettings: [.unsafeFlags(["-target", testTargetTriple])]
     ),

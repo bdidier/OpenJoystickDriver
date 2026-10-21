@@ -228,25 +228,56 @@ struct ProtocolDescription: Sendable {
   }()
 
   private static func loadBundled() throws -> [PhysicalProtocolID: Self] {
-    var descriptions: [PhysicalProtocolID: Self] = [:]
-    for protocolID in PhysicalProtocolID.allCases {
-      guard
-        let url = Bundle.module.url(
-          forResource: protocolID.descriptionFileStem,
-          withExtension: "json"
-        )
-      else {
-        throw ProtocolDescriptionProblem(
-          .invalidProtocolDescription,
-          "\(protocolID.descriptionFileStem).json is missing from the bundle"
-        )
-      }
-      descriptions[protocolID] = try decode(
-        Data(contentsOf: url),
-        fileName: url.lastPathComponent
+    let urls = PhysicalProtocolID.allCases.compactMap {
+      Bundle.module.url(forResource: $0.descriptionFileStem, withExtension: "json")
+    }
+    let catalog = loadCatalog(urls, missing: "the bundle")
+    if let problem = catalog.problems.first {
+      throw ProtocolDescriptionProblem(
+        problem.code ?? .invalidProtocolDescription,
+        problem.message
       )
     }
-    return descriptions
+    return catalog.descriptions
+  }
+
+  /// The descriptions of the files `urls`, and a problem for each file that is not a valid
+  /// description and for each family that has no file; `source` names where the files are, in
+  /// the problem of a missing one. The bundled descriptions and
+  /// ``RepositoryValidation/descriptions(in:)`` load through this check.
+  static func loadCatalog(
+    _ urls: [URL],
+    missing source: String
+  ) -> (descriptions: [PhysicalProtocolID: Self], problems: [RepositoryProblem]) {
+    var descriptions: [PhysicalProtocolID: Self] = [:]
+    var problems: [RepositoryProblem] = []
+    for url in urls.sorted(by: { $0.lastPathComponent < $1.lastPathComponent }) {
+      do {
+        let description = try decode(Data(contentsOf: url), fileName: url.lastPathComponent)
+        descriptions[description.family] = description
+      } catch let problem as ProtocolDescriptionProblem {
+        problems.append(
+          RepositoryProblem(file: url.path, code: problem.code, message: problem.detail)
+        )
+      } catch {
+        problems.append(
+          RepositoryProblem(file: url.path, code: nil, message: error.localizedDescription)
+        )
+      }
+    }
+    for protocolID in PhysicalProtocolID.allCases where descriptions[protocolID] == nil {
+      let name = "\(protocolID.descriptionFileStem).json"
+      if !urls.contains(where: { $0.lastPathComponent == name }) {
+        problems.append(
+          RepositoryProblem(
+            file: name,
+            code: .invalidProtocolDescription,
+            message: "\(name) is missing from \(source)"
+          )
+        )
+      }
+    }
+    return (descriptions, problems)
   }
 
   /// Decodes one description from the file `fileName`, whose stem names the family it holds; the
