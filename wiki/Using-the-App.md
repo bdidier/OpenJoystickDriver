@@ -95,7 +95,9 @@ The **Controllers** pane lists connected controllers and shows details and actio
 
 ### The List
 
-The list shows each connected controller. Click **Refresh controllers** to read the list again. If no controller appears, the pane shows **No controller connected**. For more information, see [Controller not detected](Troubleshooting.md).
+The list shows each connected controller and updates by itself when the service reports a change, such as a controller you connect or disconnect. If no controller appears, the pane shows **No controller connected**. For more information, see [Controller not detected](Troubleshooting.md).
+
+If the app cannot receive changes from the service, a **Live updates unavailable** banner appears below the toolbar after three failed attempts in a row. It says why: the service closed the connection, the service did not answer in time, or live updates are not working. The app then reads the controller list from the service every second instead, and tries to receive changes again on each read. The banner disappears when live updates work again. A short service restart does not show the banner.
 
 ### Controller Details
 
@@ -113,7 +115,7 @@ A field that the controller does not report shows **Not reported**.
 
 ### Session Commands
 
-The Controller menu, the status menu, and the controller's context menu in the list hold the commands for the selected controller:
+The Controller menu and the status menu hold the commands for the selected controller. The controller's context menu in the list holds **Suspend**, **Resume**, and **Disconnect Wireless Link**:
 
 - **Test Input** opens the test window. For more information, see [Testing a controller](Testing-a-Controller.md).
 - **Suspend** pauses input, physical effects, and virtual output for this controller. The controller then shows **Suspended**. **Resume** continues. **Test Input** is off while the controller shows **Suspended**.
