@@ -41,7 +41,15 @@
           Spacer()
           buttons
         }
-      }.padding(20).frame(width: 440)
+      }.padding(20).frame(width: 440).onExitCommand { dismissFinishedResult() }
+    }
+
+    /// Escape closes the sheet after a result, as Done does; Cancel and Stop answer it in the
+    /// other states.
+    private func dismissFinishedResult() {
+      guard case .finished = model.state else { return }
+      model.reset()
+      presentationMode.wrappedValue.dismiss()
     }
 
     @ViewBuilder
@@ -110,10 +118,8 @@
           model.reset()
           model.start()
         }
-        Button(OJDLocalized.string("common.done")) {
-          model.reset()
-          presentationMode.wrappedValue.dismiss()
-        }.keyboardShortcut(.defaultAction)
+        Button(OJDLocalized.string("common.done")) { dismissFinishedResult() }
+          .keyboardShortcut(.defaultAction)
       }
     }
   }
