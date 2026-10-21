@@ -1,7 +1,7 @@
 """Naming rule for every schema in Resources/Schemas.
 
-Enum values, string constants and string defaults of an enum are UpperCamelCase. Property names and
-`required` entries are lowerCamelCase with acronyms upper case (`reportID`). Three lists describe
+Enum values, string constants and string defaults of an enum are UpperCamelCase. Property names, `$defs`
+names and `required` entries are lowerCamelCase with acronyms upper case (`reportID`). Three lists describe
 what the rule does not cover:
 
 - EXCEPTIONS: names fixed by an external format.
@@ -94,8 +94,8 @@ def checked_strings(node: Any, pointer: str = "") -> Iterator[Hit]:
     for keyword, child in keywords.items():
         if keyword in SCHEMA_MAPS and isinstance(child, dict):
             for name, schema in cast("dict[str, Any]", child).items():
-                if keyword == "properties":
-                    yield Hit("name", f"{pointer}/properties", name)
+                if keyword in ("properties", "$defs"):
+                    yield Hit("name", f"{pointer}/{keyword}", name)
                 yield from checked_strings(
                     schema, f"{pointer}/{keyword}/{escape(name)}"
                 )
@@ -136,10 +136,11 @@ ACRONYM_AS_WORD = re.compile(
 
 
 # A field name starts with a lower case word, so only an acronym after the first word is checked.
+# A plural takes a lower case `s` after the acronym (`reportIDs`).
 ACRONYM_IN_NAME = re.compile(
     "(?<=[a-z0-9])(?:"
     + "|".join(f"{acronym[0]}{acronym[1:].lower()}" for acronym in ACRONYMS)
-    + ")(?![a-z])"
+    + ")s?(?![a-z])"
 )
 
 
@@ -356,6 +357,22 @@ def unexplained(documents: dict[str, Any]) -> list[tuple[str, Hit]]:
                 continue
             found.append((schema, hit))
     return found
+
+
+class NameRuleTests(unittest.TestCase):
+    def test_an_acronym_in_a_name_is_upper_case_also_in_a_plural(self) -> None:
+        for name in ("reportId", "reportIds", "vendorId", "sharedVirtualSdl", "usbIds"):
+            with self.subTest(name=name):
+                self.assertTrue(breaks_rule(Hit("name", "/properties", name)))
+        for name in ("reportID", "reportIDs", "vendorIDs", "sharedVirtualSDL", "idle"):
+            with self.subTest(name=name):
+                self.assertFalse(breaks_rule(Hit("name", "/properties", name)))
+
+    def test_a_defs_name_is_checked_like_a_property_name(self) -> None:
+        document = {"$defs": {"sharedVirtualSdl": {}, "sharedVirtualSDL": {}}}
+        self.assertEqual(
+            [hit.value for hit in violations(document)], ["sharedVirtualSdl"]
+        )
 
 
 class SchemaNamingTests(unittest.TestCase):
