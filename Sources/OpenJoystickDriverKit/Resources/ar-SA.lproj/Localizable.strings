@@ -1827,3 +1827,17 @@
 "settingsPane.general.showInDockDescription" = "إظهار أيقونة OpenJoystickDriver في Dock دائمًا. عند إيقافه، تظهر الأيقونة فقط أثناء فتح نافذة.";
 "settingsPane.general.entryPointRequired" = "أبقِ واحدًا على الأقل من «إظهار في شريط القوائم» و«إظهار في Dock» قيد التشغيل.";
 "cli.setting.show_in_dock" = "إظهار أيقونة OpenJoystickDriver في Dock دائمًا؛ عند إيقافه، تظهر الأيقونة فقط أثناء فتح نافذة.";
+"settings.error.damaged" = "ملف الإعدادات %@ تالف. أصلحه أو انقله إلى سلة المهملات باستخدام `ojd setting reset`.";
+"settings.error.unsupported" = "%@ أعد كتابة الملف وفق apiVersion المدعوم، أو انقله إلى سلة المهملات باستخدام `ojd setting reset`.";
+"settings.error.unwritable" = "تعذّرت الكتابة في ملف الإعدادات %@.";
+"settings.error.cannotReset" = "تعذّر نقل ملف الإعدادات %@ إلى سلة المهملات.";
+"settings.error.storedNoVisibleEntryPoint" = "ملف الإعدادات %@ يوقف كلاً من «إظهار في شريط القوائم» و«إظهار في Dock»، لذلك لن يكون للتطبيق نقطة دخول مرئية. أصلحه أو انقله إلى سلة المهملات باستخدام `ojd setting reset`.";
+"settings.error.noVisibleEntryPoint" = "لا يمكن إيقاف «إظهار في شريط القوائم» و«إظهار في Dock» معًا: لن يكون للتطبيق نقطة دخول مرئية.";
+"settings.unreadable.title" = "تعذّرت قراءة الإعدادات";
+"settings.unreadable.resetSettings" = "إعادة ضبط الإعدادات";
+"settings.unreadable.showInFinder" = "إظهار في Finder";
+"cli.setting.reset.abstract" = "انقل ملف الإعدادات إلى سلة المهملات.";
+"cli.setting.reset.discussion" = "ينقل Settings.json إلى سلة المهملات لتعود كل الإعدادات إلى قيمها الافتراضية. استخدمه عندما يكون الملف تالفًا أو مرفوضًا.";
+"cli.setting.reset.confirm" = "هل تريد نقل ملف الإعدادات إلى سلة المهملات وإعادة كل الإعدادات إلى قيمها الافتراضية؟";
+"cli.setting.reset.success" = "تم نقل %@ إلى سلة المهملات.";
+"cli.setting.reset.none" = "لا يوجد ملف إعدادات في %@.";

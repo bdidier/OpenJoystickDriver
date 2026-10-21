@@ -1828,3 +1828,17 @@
 "settingsPane.general.showInDockDescription" = "Toujours afficher l’icône d’OpenJoystickDriver dans le Dock. Si l’option est désactivée, l’icône n’apparaît que lorsqu’une fenêtre est ouverte.";
 "settingsPane.general.entryPointRequired" = "Laissez au moins une des options « Afficher dans la barre des menus » et « Afficher dans le Dock » activée.";
 "cli.setting.show_in_dock" = "Toujours afficher l’icône d’OpenJoystickDriver dans le Dock ; si l’option est désactivée, l’icône n’apparaît que lorsqu’une fenêtre est ouverte.";
+"settings.error.damaged" = "Le fichier de réglages %@ est endommagé. Corrigez-le ou placez-le dans la corbeille avec `ojd setting reset`.";
+"settings.error.unsupported" = "%@ Réécrivez le fichier pour l’apiVersion prise en charge ou placez-le dans la corbeille avec `ojd setting reset`.";
+"settings.error.unwritable" = "Impossible d’écrire dans le fichier de réglages %@.";
+"settings.error.cannotReset" = "Impossible de placer le fichier de réglages %@ dans la corbeille.";
+"settings.error.storedNoVisibleEntryPoint" = "Le fichier de réglages %@ désactive à la fois « Afficher dans la barre des menus » et « Afficher dans le Dock », si bien que l’app n’aurait aucun point d’entrée visible. Corrigez-le ou placez-le dans la corbeille avec `ojd setting reset`.";
+"settings.error.noVisibleEntryPoint" = "« Afficher dans la barre des menus » et « Afficher dans le Dock » ne peuvent pas être désactivés tous les deux : l’app n’aurait aucun point d’entrée visible.";
+"settings.unreadable.title" = "Impossible de lire les réglages";
+"settings.unreadable.resetSettings" = "Réinitialiser les réglages";
+"settings.unreadable.showInFinder" = "Afficher dans le Finder";
+"cli.setting.reset.abstract" = "Place le fichier de réglages dans la corbeille.";
+"cli.setting.reset.discussion" = "Place Settings.json dans la corbeille pour que chaque réglage revienne à sa valeur par défaut. À utiliser lorsque le fichier est endommagé ou refusé.";
+"cli.setting.reset.confirm" = "Placer le fichier de réglages dans la corbeille et rétablir chaque réglage à sa valeur par défaut ?";
+"cli.setting.reset.success" = "%@ a été placé dans la corbeille.";
+"cli.setting.reset.none" = "Il n’y a aucun fichier de réglages à l’emplacement %@.";

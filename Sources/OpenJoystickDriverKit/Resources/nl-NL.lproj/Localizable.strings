@@ -1828,3 +1828,17 @@
 "settingsPane.general.showInDockDescription" = "Toont het OpenJoystickDriver-symbool altijd in het Dock. Als dit uit staat, verschijnt het alleen zolang een venster open is.";
 "settingsPane.general.entryPointRequired" = "Laat minstens een van “Toon in menubalk” en “Toon in Dock” ingeschakeld.";
 "cli.setting.show_in_dock" = "Toon het OpenJoystickDriver-symbool altijd in het Dock; als dit uit staat, verschijnt het alleen zolang een venster open is.";
+"settings.error.damaged" = "Het instellingenbestand %@ is beschadigd. Herstel het, of zet het met `ojd setting reset` in de Prullenmand.";
+"settings.error.unsupported" = "%@ Schrijf het bestand opnieuw voor de ondersteunde apiVersion, of zet het met `ojd setting reset` in de Prullenmand.";
+"settings.error.unwritable" = "Het instellingenbestand %@ kan niet worden geschreven.";
+"settings.error.cannotReset" = "Het instellingenbestand %@ kan niet naar de Prullenmand worden verplaatst.";
+"settings.error.storedNoVisibleEntryPoint" = "Het instellingenbestand %@ schakelt zowel ‘Toon in menubalk’ als ‘Toon in Dock’ uit, waardoor de app geen zichtbaar ingangspunt zou hebben. Herstel het, of zet het met `ojd setting reset` in de Prullenmand.";
+"settings.error.noVisibleEntryPoint" = "‘Toon in menubalk’ en ‘Toon in Dock’ kunnen niet allebei uit staan: de app zou geen zichtbaar ingangspunt hebben.";
+"settings.unreadable.title" = "Instellingen kunnen niet worden gelezen";
+"settings.unreadable.resetSettings" = "Instellingen terugzetten";
+"settings.unreadable.showInFinder" = "Toon in Finder";
+"cli.setting.reset.abstract" = "Zet het instellingenbestand in de Prullenmand.";
+"cli.setting.reset.discussion" = "Zet Settings.json in de Prullenmand, zodat elke instelling terugkeert naar de standaardwaarde. Gebruik dit als het bestand beschadigd is of wordt geweigerd.";
+"cli.setting.reset.confirm" = "Het instellingenbestand in de Prullenmand zetten en elke instelling terugzetten naar de standaardwaarde?";
+"cli.setting.reset.success" = "%@ is in de Prullenmand gezet.";
+"cli.setting.reset.none" = "Er is geen instellingenbestand op %@.";

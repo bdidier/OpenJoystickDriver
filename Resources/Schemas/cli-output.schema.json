@@ -2116,6 +2116,24 @@
         }
       }
     },
+    "settingReset": {
+      "$ref": "#/$defs/sharedStatus",
+      "properties": {
+        "details": {
+          "type": "object",
+          "required": ["file", "moved"],
+          "additionalProperties": false,
+          "properties": {
+            "file": {
+              "type": "string"
+            },
+            "moved": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
     "settingSet": {
       "required": ["apiVersion", "kind"],
       "properties": {

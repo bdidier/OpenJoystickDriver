@@ -42,13 +42,15 @@
     private(set) var updateState: UpdateCheckState = .idle
     @Published
     private(set) var errorMessage: String?
+    /// Why the settings file cannot be used, or `nil` while it can. While it is set, the switches
+    /// show the built-in defaults and features that read settings do nothing.
+    @Published
+    private(set) var settingsFileError: SettingsStoreError?
 
     let launchAtLoginIsAvailable: Bool
 
     private let settings: SettingsStore
     private var watcher: SettingsWatcher?
-    /// True while `errorMessage` shows a failed read of the settings file.
-    private var settingsReadFailed = false
     private let launchAtLogin: any LaunchAtLoginControlling
     private let notificationAuthorizationController: any NotificationAuthorizationControlling
     /// Counts authorization reads. The controller answers off the main actor, so a refresh that
@@ -95,18 +97,17 @@
       refreshNotificationAuthorization()
     }
 
-    /// Reads the user settings file and the login item again; a damaged file shows in
-    /// `errorMessage` and leaves the switches as they are.
+    /// Reads the user settings file and the login item again; a file that cannot be used shows in
+    /// `errorMessage` and `settingsFileError` and leaves the switches as they are.
     func reloadSettings() {
       startAtLogin = launchAtLogin.isEnabled
       let stored: SettingsDocument
       do { stored = try settings.load() } catch {
-        errorMessage = error.localizedDescription
-        settingsReadFailed = true
+        report(error)
         return
       }
-      if settingsReadFailed {
-        settingsReadFailed = false
+      if settingsFileError != nil {
+        settingsFileError = nil
         errorMessage = nil
       }
       func value(_ key: ApplicationSettingKey) -> Bool { stored[key] ?? key.defaultValue }
@@ -135,7 +136,7 @@
         }
       } catch {
         startAtLogin = launchAtLogin.isEnabled
-        errorMessage = error.localizedDescription
+        report(error)
       }
     }
 
@@ -259,8 +260,36 @@
         try settings.update(values)
         return true
       } catch {
-        errorMessage = error.localizedDescription
+        report(error)
         return false
+      }
+    }
+
+    /// Shows `error`; a settings file error that makes the file unusable is also kept typed.
+    private func report(_ error: any Error) {
+      errorMessage = error.localizedDescription
+      if let error = error as? SettingsStoreError, error.fileIsUnusable {
+        settingsFileError = error
+      }
+    }
+
+    /// Moves the settings file to the Trash and reads the defaults; a failure shows in
+    /// `errorMessage`.
+    func resetSettings() {
+      do { try settings.moveToTrash() } catch {
+        errorMessage = error.localizedDescription
+        return
+      }
+      reloadSettings()
+    }
+
+    /// Shows the settings file in Finder, or its folder while there is no file.
+    func showSettingsFileInFinder() {
+      let file = settings.userFileURL
+      if FileManager.default.fileExists(atPath: file.path) {
+        NSWorkspace.shared.activateFileViewerSelecting([file])
+      } else {
+        NSWorkspace.shared.open(settings.folderURL)
       }
     }
 

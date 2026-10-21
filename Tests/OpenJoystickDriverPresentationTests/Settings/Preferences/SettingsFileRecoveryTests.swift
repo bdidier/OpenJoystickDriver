@@ -1,0 +1,253 @@
+import AppKit
+import Foundation
+import OpenJoystickDriverKit
+import OpenJoystickDriverTestSupport
+import Testing
+
+@testable import OpenJoystickDriverPresentation
+
+@Suite
+struct SettingsFileRecoveryTests {
+  private let root = RootedDataDirectory.temporary()
+  private let trash = FileManager.default.temporaryDirectory.appendingPathComponent(
+    "ojd-settings-recovery-trash-\(UUID().uuidString)"
+  )
+
+  private var store: SettingsStore {
+    let trash = trash
+    return SettingsStore(directory: root) { url in
+      try FileManager.default.createDirectory(at: trash, withIntermediateDirectories: true)
+      try FileManager.default.moveItem(
+        at: url,
+        to: trash.appendingPathComponent(url.lastPathComponent)
+      )
+    }
+  }
+
+  /// The file earlier builds wrote when only the menu bar item was turned off.
+  private func writeRejectedFile() throws {
+    try FileManager.default.createDirectory(
+      at: store.folderURL,
+      withIntermediateDirectories: true
+    )
+    try Data(
+      (#"{"apiVersion": "\#(OpenJoystickDriverAPI.version)", "kind": "Settings", "#
+        + #""showInMenuBar": false}"#).utf8
+    ).write(to: store.userFileURL)
+  }
+
+  @MainActor
+  private func makeModel() -> SettingsPreferencesModel {
+    SettingsPreferencesModel(
+      settings: store,
+      launchAtLogin: RecoveryLaunchAtLoginStub(),
+      notificationAuthorization: RecoveryAuthorizationStub()
+    )
+  }
+
+  @Test
+  @MainActor
+  func theModelExposesTheTypedErrorOfARejectedFile() throws {
+    try writeRejectedFile()
+
+    let model = makeModel()
+
+    #expect(model.settingsFileError == .storedNoVisibleEntryPoint(file: store.userFileURL.path))
+    #expect(model.errorMessage == model.settingsFileError?.localizedDescription)
+  }
+
+  @Test
+  @MainActor
+  func aUsableFileLeavesNoError() {
+    #expect(makeModel().settingsFileError == nil)
+  }
+
+  @Test
+  @MainActor
+  func aChangeThatFailsOnARejectedFileKeepsTheTypedError() throws {
+    let model = makeModel()
+    try writeRejectedFile()
+
+    model.setDeveloperToolsEnabled(true)
+
+    #expect(model.settingsFileError == .storedNoVisibleEntryPoint(file: store.userFileURL.path))
+    #expect(!model.developerToolsEnabled)
+  }
+
+  @Test
+  @MainActor
+  func resetMovesTheFileToTheTrashAndClearsTheError() throws {
+    try writeRejectedFile()
+    let model = makeModel()
+
+    model.resetSettings()
+
+    #expect(model.settingsFileError == nil)
+    #expect(model.errorMessage == nil)
+    #expect(!FileManager.default.fileExists(atPath: store.userFileURL.path))
+    #expect(
+      FileManager.default.fileExists(
+        atPath: trash.appendingPathComponent(SettingsStore.fileName).path
+      )
+    )
+    #expect(model.showInMenuBar)
+  }
+
+  @Test
+  @MainActor
+  func aResetThatFailsShowsWhyAndKeepsTheError() throws {
+    try writeRejectedFile()
+    let failing = SettingsStore(directory: root) { _ in throw CocoaError(.fileWriteNoPermission) }
+    let model = SettingsPreferencesModel(
+      settings: failing,
+      launchAtLogin: RecoveryLaunchAtLoginStub(),
+      notificationAuthorization: RecoveryAuthorizationStub()
+    )
+
+    model.resetSettings()
+
+    #expect(model.settingsFileError == .storedNoVisibleEntryPoint(file: failing.userFileURL.path))
+    #expect(
+      model.errorMessage
+        == SettingsStoreError.cannotReset(file: failing.userFileURL.path).localizedDescription
+    )
+  }
+
+  @Test
+  func theStartupOffersRecoveryOnlyForAnUnusableFile() {
+    let error = SettingsStoreError.damaged(file: "/tmp/Settings.json")
+
+    #expect(SettingsFileStartup.decide(settingsError: nil) == .proceed)
+    #expect(SettingsFileStartup.decide(settingsError: error) == .offerRecovery(error))
+  }
+
+  @Test(arguments: [true, false])
+  func theMenuBarItemShowsWhileTheSettingsFileCannotBeRead(showInMenuBar: Bool) {
+    let error = SettingsStoreError.damaged(file: "/tmp/Settings.json")
+
+    #expect(
+      SettingsFileStartup.statusItemIsShown(showInMenuBar: showInMenuBar, settingsError: error)
+    )
+    #expect(
+      SettingsFileStartup.statusItemIsShown(showInMenuBar: showInMenuBar, settingsError: nil)
+        == showInMenuBar
+    )
+  }
+
+  @Test
+  @MainActor
+  func theAlertDefaultsToShowInFinderAndQuitAnswersEscape() {
+    let alert = SettingsUnreadableAlert.make(reason: "Reason")
+
+    #expect(alert.messageText == OJDLocalized.string("settings.unreadable.title"))
+    #expect(alert.informativeText == "Reason")
+    #expect(
+      alert.buttons.map(\.title) == [
+        OJDLocalized.string("settings.unreadable.showInFinder"),
+        OJDLocalized.string("settings.unreadable.resetSettings"),
+        OJDLocalized.string("menuBar.quit"),
+      ]
+    )
+    #expect(alert.buttons[0].keyEquivalent == "\r")
+    #expect(alert.buttons[1].hasDestructiveAction)
+    #expect(alert.buttons[1].keyEquivalent.isEmpty)
+    #expect(alert.buttons[2].keyEquivalent == "\u{1b}")
+  }
+
+  @Test
+  func theButtonsMapToTheirChoices() {
+    #expect(SettingsUnreadableChoice(response: .alertFirstButtonReturn) == .showInFinder)
+    #expect(SettingsUnreadableChoice(response: .alertSecondButtonReturn) == .resetSettings)
+    #expect(SettingsUnreadableChoice(response: .alertThirdButtonReturn) == .quit)
+  }
+
+  @Test
+  @MainActor
+  func theLaunchUpdateCheckSkipsWhileTheSettingsFileCannotBeRead() {
+    let error = SettingsStoreError.damaged(file: "/tmp/Settings.json")
+    var checks = 0
+
+    let outcome = LaunchUpdateCheck(
+      settingsError: { error },
+      isEnabled: { true },
+      check: { checks += 1 }
+    ).run()
+
+    #expect(outcome == .skippedSettingsUnreadable(error))
+    #expect(checks == 0)
+  }
+
+  @Test
+  @MainActor
+  func theLaunchUpdateCheckReportsWhyItDidOrDidNotRun() {
+    var checks = 0
+
+    let enabled = LaunchUpdateCheck(
+      settingsError: { nil },
+      isEnabled: { true },
+      check: { checks += 1 }
+    ).run()
+    let disabled = LaunchUpdateCheck(
+      settingsError: { nil },
+      isEnabled: { false },
+      check: { checks += 1 }
+    ).run()
+
+    #expect(enabled == .checked)
+    #expect(disabled == .disabled)
+    #expect(checks == 1)
+  }
+
+  @Test
+  func theSkipLogNamesTheFeatureTheFileAndTheReason() {
+    let error = SettingsStoreError.damaged(file: "/tmp/Settings.json")
+
+    let message = SettingsSkipLog.message(
+      feature: "the launch update check",
+      file: "/tmp/Settings.json",
+      error: error
+    )
+
+    #expect(message.hasPrefix("[Settings] /tmp/Settings.json cannot be read, skipping the launch"))
+    #expect(message.contains(error.localizedDescription))
+  }
+
+  @Test
+  @MainActor
+  func notificationsAreNotDeliveredWhileTheSettingsFileCannotBeRead() throws {
+    try writeRejectedFile()
+    let delivery = RecoveryDeliverySpy()
+    let monitor = RuntimeNotificationMonitor(settings: store, delivery: delivery)
+
+    monitor.observe(RuntimeNotificationSnapshot(controllers: [:], activeProfiles: [:]))
+    monitor.observe(
+      RuntimeNotificationSnapshot(controllers: ["a": "Pad"], activeProfiles: [:])
+    )
+
+    #expect(delivery.total == 0)
+  }
+}
+
+private final class RecoveryDeliverySpy: RuntimeNotificationDelivering {
+  private(set) var total = 0
+
+  func deliver(title: String, body: String, sound: Bool) { total += 1 }
+}
+
+private final class RecoveryLaunchAtLoginStub: LaunchAtLoginControlling {
+  let isAvailable = true
+  let isEnabled = false
+
+  func setEnabled(_ enabled: Bool) {}
+}
+
+private final class RecoveryAuthorizationStub: NotificationAuthorizationControlling,
+  @unchecked Sendable
+{
+  func state() -> RuntimeNotificationAuthorizationState { .notDetermined }
+
+  func request() -> (RuntimeNotificationAuthorizationState, String?) { (.allowed, nil) }
+
+  @MainActor
+  func openSystemSettings() {}
+}

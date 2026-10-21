@@ -1827,3 +1827,17 @@
 "settingsPane.general.showInDockDescription" = "Selalu tampilkan ikon OpenJoystickDriver di Dock. Jika nonaktif, ikon hanya tampil selama ada jendela yang terbuka.";
 "settingsPane.general.entryPointRequired" = "Biarkan setidaknya satu dari Tampilkan di bar menu dan Tampilkan di Dock tetap aktif.";
 "cli.setting.show_in_dock" = "Selalu tampilkan ikon OpenJoystickDriver di Dock; jika nonaktif, ikon hanya tampil selama ada jendela yang terbuka.";
+"settings.error.damaged" = "File pengaturan %@ rusak. Perbaiki, atau pindahkan ke Sampah dengan `ojd setting reset`.";
+"settings.error.unsupported" = "%@ Tulis ulang file untuk apiVersion yang didukung, atau pindahkan ke Sampah dengan `ojd setting reset`.";
+"settings.error.unwritable" = "File pengaturan %@ tidak dapat ditulis.";
+"settings.error.cannotReset" = "File pengaturan %@ tidak dapat dipindahkan ke Sampah.";
+"settings.error.storedNoVisibleEntryPoint" = "File pengaturan %@ menonaktifkan “Tampilkan di bar menu” dan “Tampilkan di Dock”, sehingga app tidak memiliki titik masuk yang terlihat. Perbaiki, atau pindahkan ke Sampah dengan `ojd setting reset`.";
+"settings.error.noVisibleEntryPoint" = "“Tampilkan di bar menu” dan “Tampilkan di Dock” tidak dapat dinonaktifkan bersamaan: app tidak akan memiliki titik masuk yang terlihat.";
+"settings.unreadable.title" = "Pengaturan tidak dapat dibaca";
+"settings.unreadable.resetSettings" = "Atur Ulang Pengaturan";
+"settings.unreadable.showInFinder" = "Tampilkan di Finder";
+"cli.setting.reset.abstract" = "Pindahkan file pengaturan ke Sampah.";
+"cli.setting.reset.discussion" = "Memindahkan Settings.json ke Sampah sehingga setiap pengaturan kembali ke nilai default. Gunakan saat file rusak atau ditolak.";
+"cli.setting.reset.confirm" = "Pindahkan file pengaturan ke Sampah dan kembalikan setiap pengaturan ke nilai default?";
+"cli.setting.reset.success" = "%@ dipindahkan ke Sampah.";
+"cli.setting.reset.none" = "Tidak ada file pengaturan di %@.";

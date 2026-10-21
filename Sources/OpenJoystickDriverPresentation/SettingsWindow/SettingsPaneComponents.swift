@@ -16,7 +16,8 @@
     var body: some View {
       VStack(alignment: .leading, spacing: 2) {
         Toggle(title, isOn: isOn).disabled(!isEnabled)
-        Text(isEnabled ? description : disabledReason ?? description).font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor))
+        Text(isEnabled ? description : disabledReason ?? description).font(.caption)
+          .foregroundColor(Color(NSColor.secondaryLabelColor))
           .fixedSize(horizontal: false, vertical: true)
       }
     }
@@ -41,6 +42,14 @@
             if preferences.notificationAuthorization == .denied {
               Button(OJDLocalized.string("settings.openSystemSettings")) {
                 preferences.openNotificationSettings()
+              }
+            }
+            if preferences.settingsFileError != nil {
+              Button(OJDLocalized.string("settings.unreadable.showInFinder")) {
+                preferences.showSettingsFileInFinder()
+              }
+              Button(OJDLocalized.string("settings.unreadable.resetSettings")) {
+                preferences.resetSettings()
               }
             }
             Button(OJDLocalized.string("common.dismiss")) { preferences.dismissError() }

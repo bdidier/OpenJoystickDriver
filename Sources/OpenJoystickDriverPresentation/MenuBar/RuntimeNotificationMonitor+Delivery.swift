@@ -13,9 +13,19 @@
         return
       }
       self.previousSnapshot = snapshot
-      for event in RuntimeNotificationDiff.events(from: previousSnapshot, to: snapshot) {
-        deliver(event)
+      let events = RuntimeNotificationDiff.events(from: previousSnapshot, to: snapshot)
+      guard !events.isEmpty else { return }
+      // Notification preferences and sounds have defaults, but the defaults are not the user's
+      // choice while the settings file can't be read, so no event is delivered.
+      do { _ = try settings.load() } catch {
+        SettingsSkipLog.write(
+          feature: "\(events.count) notification(s)",
+          file: settings.userFileURL.path,
+          error: error
+        )
+        return
       }
+      for event in events { deliver(event) }
     }
 
     func deliver(_ event: RuntimeNotificationEvent) {
@@ -72,15 +82,16 @@
 
     private var notificationSoundIsEnabled: Bool { preferenceIsEnabled(.notifySounds) }
 
-    /// A settings file that cannot be read is logged with its path, and the built-in default of
-    /// the key applies, so sounds keep their true default.
+    /// A settings file that cannot be read is logged with its path, and the preference counts as
+    /// off, so the notification is not delivered on a default.
     private func preferenceIsEnabled(_ key: ApplicationSettingKey) -> Bool {
       do { return try settings.value(of: key) } catch {
-        let message =
-          "[Settings] \(settings.userFileURL.path) cannot be read, using the default for "
-          + "\(key.rawValue): \(error.localizedDescription)\n"
-        FileHandle.standardError.write(Data(message.utf8))
-        return key.defaultValue
+        SettingsSkipLog.write(
+          feature: key.rawValue,
+          file: settings.userFileURL.path,
+          error: error
+        )
+        return false
       }
     }
 

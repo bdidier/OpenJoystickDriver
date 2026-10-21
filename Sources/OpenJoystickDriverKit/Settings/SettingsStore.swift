@@ -4,24 +4,49 @@ public enum SettingsStoreError: Error, Equatable, LocalizedError, Sendable {
   /// The file is not valid JSON of the `Settings` kind (including an unknown key).
   case damaged(file: String)
   /// The file's `apiVersion` or `kind` is not the supported one; the problem names the file.
-  case unsupported(DocumentHeaderProblem)
+  case unsupported(file: String, problem: DocumentHeaderProblem)
   case unwritable(file: String)
+  /// The file could not be moved to the Trash.
+  case cannotReset(file: String)
   /// The change would turn off both Show in menu bar and Show in Dock.
   case noVisibleEntryPoint
   /// The file turns off both Show in menu bar and Show in Dock, which leaves no entry point.
   case storedNoVisibleEntryPoint(file: String)
 
+  private static let localization = Localization()
+
+  /// The settings file the error is about; `nil` when the error is about a change, not a file.
+  public var file: String? {
+    switch self {
+    case .damaged(let file), .unsupported(let file, _), .unwritable(let file),
+      .cannotReset(let file), .storedNoVisibleEntryPoint(let file):
+      file
+    case .noVisibleEntryPoint: nil
+    }
+  }
+
+  /// Whether the file itself cannot be used, so a reset (moving it to the Trash) fixes the error.
+  /// A file that cannot be written or moved is not fixed by a reset.
+  public var fileIsUnusable: Bool {
+    switch self {
+    case .damaged, .unsupported, .storedNoVisibleEntryPoint: true
+    case .unwritable, .cannotReset, .noVisibleEntryPoint: false
+    }
+  }
+
   public var errorDescription: String? {
     switch self {
     case .damaged(let file):
-      "The settings file \(file) is damaged. Fix or delete it, then try again."
-    case .unsupported(let problem):
-      problem.description + " Delete the file or rewrite it for the supported apiVersion."
-    case .unwritable(let file): "The settings file \(file) cannot be written."
+      Self.localization.formatted("settings.error.damaged", arguments: [file])
+    case .unsupported(_, let problem):
+      Self.localization.formatted("settings.error.unsupported", arguments: [problem.description])
+    case .unwritable(let file):
+      Self.localization.formatted("settings.error.unwritable", arguments: [file])
+    case .cannotReset(let file):
+      Self.localization.formatted("settings.error.cannotReset", arguments: [file])
     case .storedNoVisibleEntryPoint(let file):
-      "The settings file \(file) turns off both Show in menu bar and Show in Dock, so the app would have no visible entry point. Fix or delete it, then try again."
-    case .noVisibleEntryPoint:
-      "Show in menu bar and Show in Dock cannot both be off: the app would have no visible entry point."
+      Self.localization.formatted("settings.error.storedNoVisibleEntryPoint", arguments: [file])
+    case .noVisibleEntryPoint: Self.localization.string("settings.error.noVisibleEntryPoint")
     }
   }
 }
@@ -33,9 +58,9 @@ public enum SettingsStoreError: Error, Equatable, LocalizedError, Sendable {
 /// 2. the user file in ``DataLocation/applicationData``, which is the only file OJD writes.
 ///
 /// A missing file is an empty layer. A damaged or unsupported file is an error, never an empty
-/// layer, so a mistake does not silently reset settings. An update holds an advisory lock on a
-/// sidecar file while it reads, changes, and writes, so the app, the service, and the CLI cannot
-/// lose each other's updates.
+/// layer, so a mistake does not silently reset settings; ``moveToTrash()`` is the explicit reset.
+/// An update holds an advisory lock on a sidecar file while it reads, changes, and writes, so the
+/// app, the service, and the CLI cannot lose each other's updates.
 public struct SettingsStore: Sendable {
   public static let fileName = "Settings.json"
   /// The sidecar file whose advisory lock serializes updates.
@@ -44,8 +69,19 @@ public struct SettingsStore: Sendable {
   public static let location = DataLocation.applicationData
 
   private let directory: any DataDirectory
+  private let trash: @Sendable (URL) throws -> Void
 
-  public init(directory: any DataDirectory = MacOSDataDirectory()) { self.directory = directory }
+  /// `trash` moves the settings file to the Trash; the default is the user's Trash.
+  @preconcurrency
+  public init(
+    directory: any DataDirectory = MacOSDataDirectory(),
+    trash: @escaping @Sendable (URL) throws -> Void = {
+      try FileManager.default.trashItem(at: $0, resultingItemURL: nil)
+    }
+  ) {
+    self.directory = directory
+    self.trash = trash
+  }
 
   /// The path of the user file.
   public var userFileURL: URL { directory.fileURL(Self.fileName, in: Self.location) }
@@ -77,16 +113,47 @@ public struct SettingsStore: Sendable {
   /// Stores every value in `values` in the user file in one write.
   public func update(_ values: [ApplicationSettingKey: Bool]) throws {
     let url = userFileURL
-    let folder = folderURL
     do {
       try FileManager.default.createDirectory(
-        at: folder,
+        at: folderURL,
         withIntermediateDirectories: true,
         attributes: [.posixPermissions: 0o700]
       )
     } catch { throw SettingsStoreError.unwritable(file: url.path) }
+    try locked {
+      var document = try read(url)
+      for (key, value) in values { document[key] = value }
+      if values[.showInMenuBar] != nil || values[.showInDock] != nil,
+        document.hasNoVisibleEntryPoint
+      {
+        throw SettingsStoreError.noVisibleEntryPoint
+      }
+      let encoder = JSONEncoder()
+      encoder.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
+      do { try encoder.encode(document).write(to: url, options: .atomic) } catch {
+        throw SettingsStoreError.unwritable(file: url.path)
+      }
+    }
+  }
+
+  /// Moves the user file to the Trash, whatever it holds, so the built-in defaults apply again.
+  ///
+  /// Returns whether there was a file to move.
+  @discardableResult
+  public func moveToTrash() throws -> Bool {
+    let url = userFileURL
+    guard FileManager.default.fileExists(atPath: url.path) else { return false }
+    try locked {
+      do { try trash(url) } catch { throw SettingsStoreError.cannotReset(file: url.path) }
+    }
+    return true
+  }
+
+  /// Runs `body` while holding the advisory lock on the sidecar file in the settings folder.
+  private func locked<Result>(_ body: () throws -> Result) throws -> Result {
+    let url = userFileURL
     let lock = open(
-      folder.appendingPathComponent(Self.lockFileName).path,
+      folderURL.appendingPathComponent(Self.lockFileName).path,
       O_CREAT | O_RDWR | O_CLOEXEC,
       0o600
     )
@@ -96,16 +163,7 @@ public struct SettingsStore: Sendable {
     while flock(lock, LOCK_EX) != 0 {
       guard errno == EINTR else { throw SettingsStoreError.unwritable(file: url.path) }
     }
-    var document = try read(url)
-    for (key, value) in values { document[key] = value }
-    if values[.showInMenuBar] != nil || values[.showInDock] != nil,
-      document.hasNoVisibleEntryPoint
-    { throw SettingsStoreError.noVisibleEntryPoint }
-    let encoder = JSONEncoder()
-    encoder.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
-    do { try encoder.encode(document).write(to: url, options: .atomic) } catch {
-      throw SettingsStoreError.unwritable(file: url.path)
-    }
+    return try body()
   }
 
   private func read(_ url: URL) throws -> SettingsDocument {
@@ -122,7 +180,10 @@ public struct SettingsStore: Sendable {
     } catch let error as SettingsStoreError {
       throw error
     } catch let problem as SettingsHeaderProblem {
-      throw SettingsStoreError.unsupported(problem.problem.located(in: url.path))
+      throw SettingsStoreError.unsupported(
+        file: url.path,
+        problem: problem.problem.located(in: url.path)
+      )
     } catch { throw SettingsStoreError.damaged(file: url.path) }
   }
 }

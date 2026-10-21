@@ -1827,3 +1827,17 @@
 "settingsPane.general.showInDockDescription" = "Luôn hiện biểu tượng OpenJoystickDriver trong Dock. Khi tắt, biểu tượng chỉ hiện khi có cửa sổ đang mở.";
 "settingsPane.general.entryPointRequired" = "Giữ bật ít nhất một trong hai tùy chọn Hiện trên thanh menu và Hiện trong Dock.";
 "cli.setting.show_in_dock" = "Luôn hiện biểu tượng OpenJoystickDriver trong Dock; khi tắt, biểu tượng chỉ hiện khi có cửa sổ đang mở.";
+"settings.error.damaged" = "Tệp cài đặt %@ bị hỏng. Hãy sửa tệp, hoặc chuyển tệp vào Thùng rác bằng `ojd setting reset`.";
+"settings.error.unsupported" = "%@ Hãy viết lại tệp theo apiVersion được hỗ trợ, hoặc chuyển tệp vào Thùng rác bằng `ojd setting reset`.";
+"settings.error.unwritable" = "Không thể ghi tệp cài đặt %@.";
+"settings.error.cannotReset" = "Không thể chuyển tệp cài đặt %@ vào Thùng rác.";
+"settings.error.storedNoVisibleEntryPoint" = "Tệp cài đặt %@ tắt cả “Hiện trên thanh menu” và “Hiện trong Dock”, nên ứng dụng sẽ không có điểm vào nào hiển thị. Hãy sửa tệp, hoặc chuyển tệp vào Thùng rác bằng `ojd setting reset`.";
+"settings.error.noVisibleEntryPoint" = "Không thể tắt cả “Hiện trên thanh menu” và “Hiện trong Dock”: ứng dụng sẽ không có điểm vào nào hiển thị.";
+"settings.unreadable.title" = "Không thể đọc cài đặt";
+"settings.unreadable.resetSettings" = "Đặt lại cài đặt";
+"settings.unreadable.showInFinder" = "Hiện trong Finder";
+"cli.setting.reset.abstract" = "Chuyển tệp cài đặt vào Thùng rác.";
+"cli.setting.reset.discussion" = "Chuyển Settings.json vào Thùng rác để mọi cài đặt trở về mặc định. Dùng khi tệp bị hỏng hoặc bị từ chối.";
+"cli.setting.reset.confirm" = "Chuyển tệp cài đặt vào Thùng rác và đưa mọi cài đặt về mặc định?";
+"cli.setting.reset.success" = "Đã chuyển %@ vào Thùng rác.";
+"cli.setting.reset.none" = "Không có tệp cài đặt tại %@.";

@@ -1827,3 +1827,17 @@
 "settingsPane.general.showInDockDescription" = "OpenJoystickDriver आइकन को हमेशा डॉक में दिखाएँ। बंद होने पर यह केवल तब दिखता है जब कोई विंडो खुली हो।";
 "settingsPane.general.entryPointRequired" = "“मेनू बार में दिखाएँ” और “डॉक में दिखाएँ” में से कम से कम एक चालू रखें।";
 "cli.setting.show_in_dock" = "OpenJoystickDriver आइकन को हमेशा डॉक में दिखाएँ; बंद होने पर यह केवल तब दिखता है जब कोई विंडो खुली हो।";
+"settings.error.damaged" = "सेटिंग्स फ़ाइल %@ क्षतिग्रस्त है। इसे ठीक करें, या `ojd setting reset` से इसे ट्रैश में भेजें।";
+"settings.error.unsupported" = "%@ फ़ाइल को समर्थित apiVersion के लिए दोबारा लिखें, या `ojd setting reset` से इसे ट्रैश में भेजें।";
+"settings.error.unwritable" = "सेटिंग्स फ़ाइल %@ में लिखा नहीं जा सकता।";
+"settings.error.cannotReset" = "सेटिंग्स फ़ाइल %@ को ट्रैश में नहीं भेजा जा सकता।";
+"settings.error.storedNoVisibleEntryPoint" = "सेटिंग्स फ़ाइल %@ “मेनू बार में दिखाएँ” और “डॉक में दिखाएँ” दोनों को बंद करती है, इसलिए ऐप का कोई दिखने वाला प्रवेश बिंदु नहीं रहेगा। इसे ठीक करें, या `ojd setting reset` से इसे ट्रैश में भेजें।";
+"settings.error.noVisibleEntryPoint" = "“मेनू बार में दिखाएँ” और “डॉक में दिखाएँ” दोनों बंद नहीं हो सकते: ऐप का कोई दिखने वाला प्रवेश बिंदु नहीं रहेगा।";
+"settings.unreadable.title" = "सेटिंग्स पढ़ी नहीं जा सकतीं";
+"settings.unreadable.resetSettings" = "सेटिंग्स रीसेट करें";
+"settings.unreadable.showInFinder" = "Finder में दिखाएँ";
+"cli.setting.reset.abstract" = "सेटिंग्स फ़ाइल को ट्रैश में भेजें।";
+"cli.setting.reset.discussion" = "Settings.json को ट्रैश में भेजता है, ताकि हर सेटिंग अपने डिफ़ॉल्ट मान पर लौट आए। फ़ाइल क्षतिग्रस्त हो या अस्वीकार की गई हो, तो इसका उपयोग करें।";
+"cli.setting.reset.confirm" = "क्या सेटिंग्स फ़ाइल को ट्रैश में भेजना है और हर सेटिंग को डिफ़ॉल्ट पर लौटाना है?";
+"cli.setting.reset.success" = "%@ को ट्रैश में भेज दिया गया।";
+"cli.setting.reset.none" = "%@ पर कोई सेटिंग्स फ़ाइल नहीं है।";
