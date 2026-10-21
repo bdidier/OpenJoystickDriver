@@ -5,8 +5,8 @@ import Testing
 import OpenJoystickDriverTestSupport
 
 /// The documents the Swift decoders refuse, read from `SchemaRejections/controller.json` and
-/// `protocol-description.json`. Each case names the error code its decoder gives. A case with
-/// `schema: true` is also rejected by the JSON Schema alone, which
+/// `protocol-description.json`. Each case has a unique name and input and names the `ErrorCode`
+/// its decoder gives. A case with `schema: true` is also rejected by the JSON Schema alone, which
 /// `Tests/RepositoryScripts/test_schema_rejection_flags.py` checks.
 struct SchemaRejectionTests {
   private static func cases(_ file: String) throws -> [[String: Any]] {
@@ -50,10 +50,22 @@ struct SchemaRejectionTests {
     for kind in ["controller", "protocol-description"] {
       let cases = try Self.cases(kind)
       #expect(cases.count > 100)
+      var names: Set<String> = []
+      var documents: Set<Data> = []
       for fixture in cases {
         let name = try #require(fixture["name"] as? String)
         let code = try #require(fixture["code"] as? String)
         let document = try #require(fixture["document"] as? [String: Any])
+        if !names.insert(name).inserted { failures.append("\(kind) \(name): duplicate name") }
+        let input = fixture.filter { ["document", "fileName"].contains($0.key) }
+        if !documents.insert(
+          try JSONSerialization.data(withJSONObject: input, options: .sortedKeys)
+        ).inserted {
+          failures.append("\(kind) \(name): duplicate document")
+        }
+        if ErrorCode(rawValue: code) == nil {
+          failures.append("\(kind) \(name): \(code) is not an error code")
+        }
         let refusal =
           kind == "controller"
           ? Self.controllerRefusal(document)
