@@ -5,19 +5,20 @@ extension DiagnoseServiceSnapshot {
   /// Asks the service once; a stopped or failing service never throws.
   static func fetch() async -> Self {
     do {
-      let (status, diagnostics, timings) = try await ServiceConnection.request { client in
-        let status = try await client.getStatus()
-        return (
-          status, try? await client.getVirtualDeviceDiagnostics(),
-          try? await client.getFrameTimings()
+      return try await ServiceConnection.request { client in
+        await gather(
+          status: { try await client.getStatus() },
+          virtualDiagnostics: { try await client.getVirtualDeviceDiagnostics() },
+          frameTimings: { try await client.getFrameTimings() },
+          classify: { error in
+            let failure = ServiceConnection.failure(for: error)
+            if let known = failure as? CLIFailure, known.code == .serviceUnavailable {
+              return .stopped
+            }
+            return .failed((failure as? CLIFailure)?.message ?? failure.localizedDescription)
+          }
         )
       }
-      return Self(
-        availability: .running,
-        status: status,
-        virtualDiagnostics: diagnostics,
-        frameTimings: timings
-      )
     } catch let failure as CLIFailure where failure.code == .serviceUnavailable {
       return Self(availability: .stopped, status: nil, virtualDiagnostics: nil, frameTimings: nil)
     } catch {

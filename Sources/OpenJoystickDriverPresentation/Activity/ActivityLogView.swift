@@ -10,18 +10,7 @@
     var model: ActivityLogModel
 
     var body: some View {
-      content.onAppear { model.start() }.onDisappear { model.stop() }.alert(
-        isPresented: Binding(
-          get: { model.actionFailure != nil },
-          set: { if !$0 { model.actionFailure = nil } }
-        )
-      ) {
-        Alert(
-          title: Text(OJDLocalized.string("mainMenu.file.saveFailed")),
-          message: Text(model.actionFailure ?? ""),
-          dismissButton: .default(Text(OJDLocalized.string("common.ok")))
-        )
-      }
+      content
     }
 
     @ViewBuilder

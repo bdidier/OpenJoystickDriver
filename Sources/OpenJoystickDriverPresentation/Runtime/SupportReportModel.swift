@@ -17,6 +17,11 @@ final class SupportReportModel: ObservableObject {
   @Published
   var supportLogsState: RuntimeSupportLogsState = .idle
 
+  /// The line count of a saved log: the CLI's export default until the Activity log's line count
+  /// is changed, then that count. The Save Activity Log menu item and the Activity toolbar save
+  /// the same thing.
+  var logExportLines = ApplicationServiceLogService.defaultExportLines
+
   private var supportDiagnosticsGeneration = 0
   private var supportReportGeneration = 0
   private var supportLogsGeneration = 0
@@ -129,16 +134,14 @@ final class SupportReportModel: ObservableObject {
     do {
       try await SupportExportService().writeLogs(
         to: outputURL,
-        lines: ApplicationServiceLogService.defaultExportLines
+        lines: logExportLines
       )
       guard generation == supportLogsGeneration else { return }
       supportLogsState = .saved
     } catch {
       guard generation == supportLogsGeneration else { return }
       supportLogsState = .error(
-        OJDLocalized.string(
-          "error.logsSave"
-        )
+        OJDLocalized.string("error.logsSave") + "\n" + error.localizedDescription
       )
     }
   }

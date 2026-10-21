@@ -25,28 +25,16 @@ enum ActivityDiagnosticsChecks {
     )
   }
 
-  /// Asks the service once; a stopped or failing service never throws.
+  /// Asks the service once, as `ojd diagnose` does; a stopped or failing service never throws.
   static func serviceSnapshot(
     _ gateway: any ApplicationServiceGateway
   ) async
     -> DiagnoseServiceSnapshot
   {
-    do {
-      let status = try await gateway.status()
-      return DiagnoseServiceSnapshot(
-        availability: .running,
-        status: status,
-        virtualDiagnostics: try? await gateway.virtualDeviceDiagnostics(),
-        frameTimings: try? await gateway.frameTimings()
-      )
-    } catch {
-      return DiagnoseServiceSnapshot(
-        availability: RuntimePresentation.isUnavailable(error)
-          ? .stopped : .failed(RuntimePresentation.userFacingError(error)),
-        status: nil,
-        virtualDiagnostics: nil,
-        frameTimings: nil
-      )
-    }
+    await DiagnoseServiceSnapshot.gather(
+      status: { try await gateway.status() },
+      virtualDiagnostics: { try await gateway.virtualDeviceDiagnostics() },
+      frameTimings: { try await gateway.frameTimings() }
+    )
   }
 }

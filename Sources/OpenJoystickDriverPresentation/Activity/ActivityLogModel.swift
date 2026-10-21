@@ -76,42 +76,59 @@
   /// The Activity log: the end of both service logs, followed live while the log is shown.
   @MainActor
   final class ActivityLogModel: ObservableObject {
-    /// Entries kept while following; older ones drop out.
+    /// Entries kept while following; older ones drop out in batches of a tenth.
     static let retainedEntries = 2 * ApplicationServiceLogService.linesRange.upperBound
 
     @Published
-    var filter: ActivityLogFilter = .all
+    var filter: ActivityLogFilter = .all {
+      didSet { refreshRows() }
+    }
     @Published
-    var searchText = ""
+    var searchText = "" {
+      didSet { refreshRows() }
+    }
     @Published
     private(set) var lineCount = ActivityLogLineCount.initial
+    /// The shown entries, newest first. A SwiftUI `Table` cannot scroll to its last row, so the
+    /// log keeps the newest line visible at the top instead of pinning the bottom as Console does.
+    /// Stored, and changed only by the filter, the search, a reload or an appended line.
     @Published
-    private(set) var entries: [ActivityLogEntry] = []
+    private(set) var rows: [ActivityLogEntry] = []
     /// Why the logs could not be read.
     @Published
     private(set) var loadFailure: String?
-    /// Why the last Save Log or Show in Finder did not happen.
-    @Published
-    var actionFailure: String?
 
+    private(set) var entries: [ActivityLogEntry] = []
+    private(set) var isFollowing = false
+    private let retainedEntries: Int
     private let source: ActivityLogSource
     private var followTasks: [Task<Void, Never>] = []
     private var nextID = 0
 
-    init(source: ActivityLogSource = .system) { self.source = source }
-
-    /// The shown entries, newest first. A SwiftUI `Table` cannot scroll to its last row, so the log
-    /// keeps the newest line visible at the top instead of pinning the bottom as Console does.
-    var rows: [ActivityLogEntry] {
-      filter.rows(in: entries, matching: searchText).reversed()
+    init(
+      source: ActivityLogSource = .system,
+      retainedEntries: Int = ActivityLogModel.retainedEntries
+    ) {
+      self.source = source
+      self.retainedEntries = retainedEntries
     }
 
     /// The shown lines in the order they were written, one per line.
     var copyText: String { rows.reversed().map(\.text).joined(separator: "\n") }
 
+    /// Starts following when the log is shown and stops when it is not.
+    func setFollowing(_ shouldFollow: Bool) {
+      if shouldFollow {
+        if !isFollowing { start() }
+      } else {
+        stop()
+      }
+    }
+
     /// Reads the end of both logs and follows what they gain.
     func start() {
       stop()
+      isFollowing = true
       let snapshots: [ApplicationServiceLogSnapshot]
       do {
         snapshots = try ApplicationServiceLogStream.allCases.map {
@@ -120,11 +137,13 @@
       } catch {
         loadFailure = error.localizedDescription
         entries = []
+        refreshRows()
         return
       }
       loadFailure = nil
       nextID = 0
       entries = snapshots.flatMap { snapshot in snapshot.lines.map { entry(snapshot.stream, $0) } }
+      refreshRows()
       for snapshot in snapshots {
         let lines = source.follow(snapshot.stream, snapshot.fileSizeBytes)
         followTasks.append(
@@ -138,6 +157,7 @@
     func stop() {
       followTasks.forEach { $0.cancel() }
       followTasks = []
+      isFollowing = false
     }
 
     func setLineCount(_ count: Int) {
@@ -151,29 +171,28 @@
       pasteboard.setString(copyText, forType: .string)
     }
 
-    /// Writes the end of the logs to `url`, as `ojd log export --lines` does.
-    func save(to url: URL) async {
-      do { try await SupportExportService().writeLogs(to: url, lines: lineCount) } catch {
-        actionFailure = OJDLocalized.string("error.logsSave")
-      }
-    }
-
-    /// Opens the folder that `ojd log path` prints.
-    func showInFinder() {
-      if !NSWorkspace.shared.open(ApplicationServiceLogService.directory) {
-        actionFailure = OJDLocalized.string("activity.showInFinder.failed")
-      }
-    }
+    /// Opens the folder that `ojd log path` prints; false when it did not open.
+    func showInFinder() -> Bool { NSWorkspace.shared.open(ApplicationServiceLogService.directory) }
 
     private func entry(_ stream: ApplicationServiceLogStream, _ text: String) -> ActivityLogEntry {
       defer { nextID += 1 }
       return ActivityLogEntry(id: nextID, stream: stream, text: text)
     }
 
-    private func append(_ line: ApplicationServiceLogLine) {
-      entries.append(entry(line.stream, line.text))
-      if entries.count > Self.retainedEntries {
-        entries.removeFirst(entries.count - Self.retainedEntries)
+    private func refreshRows() {
+      rows = filter.rows(in: entries, matching: searchText).reversed()
+    }
+
+    /// Adds a line the follower produced. Only a line the filter and search show joins `rows`;
+    /// the oldest entries drop out once a tenth more than the retained count piled up.
+    func append(_ line: ApplicationServiceLogLine) {
+      let added = entry(line.stream, line.text)
+      entries.append(added)
+      if entries.count > retainedEntries + retainedEntries / 10 {
+        entries.removeFirst(entries.count - retainedEntries)
+        refreshRows()
+      } else if !filter.rows(in: [added], matching: searchText).isEmpty {
+        rows.insert(added, at: 0)
       }
     }
   }

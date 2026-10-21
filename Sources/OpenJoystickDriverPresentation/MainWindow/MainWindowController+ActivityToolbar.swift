@@ -118,6 +118,7 @@
     @objc
     func selectActivityLineCount(_ sender: NSMenuItem) {
       screens.activity.log.setLineCount(sender.tag)
+      screens.supportReport.logExportLines = sender.tag
     }
 
     @objc
@@ -125,7 +126,8 @@
       screens.activity.log.searchText = sender.stringValue
     }
 
-    /// Asks where to save the end of the logs, then writes them as `ojd log export` does.
+    /// Asks where to save the end of the logs, then writes them as `ojd log export` does, through
+    /// the same model as the Save Activity Log menu item.
     func saveActivityLog() {
       guard let window else { return }
       let panel = NSSavePanel()
@@ -135,8 +137,38 @@
       panel.canCreateDirectories = true
       panel.beginSheetModal(for: window) { [weak self] response in
         guard response == .OK, let url = panel.url else { return }
-        Task { @MainActor in await self?.screens.activity.log.save(to: url) }
+        Task { @MainActor in
+          guard let self else { return }
+          await self.screens.supportReport.saveSupportLogs(to: url)
+          if case .error(let message) = self.screens.supportReport.supportLogsState {
+            self.screens.activity.failure = ActivityActionFailure(
+              title: OJDLocalized.string("mainMenu.file.saveFailed"),
+              message: message
+            )
+          }
+        }
       }
+    }
+
+    func showActivityLogInFinder() {
+      if !screens.activity.log.showInFinder() {
+        screens.activity.failure = ActivityActionFailure(
+          title: OJDLocalized.string("activity.showInFinder.failed"),
+          message: nil
+        )
+      }
+    }
+
+    /// Follows the logs while the window is visible and shows the log, and stops otherwise.
+    func updateLogFollowing() {
+      guard let window else { return }
+      screens.activity.log.setFollowing(
+        ActivityLogFollowing.shouldFollow(
+          windowVisible: window.isVisible && !window.isMiniaturized,
+          area: navigation.selectedArea,
+          mode: screens.activity.mode
+        )
+      )
     }
   }
 

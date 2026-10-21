@@ -13,6 +13,25 @@ enum ActivityMode: Int, CaseIterable {
   }
 }
 
+/// Whether the Activity log follows the service logs: only while the main window is visible and
+/// shows the log.
+enum ActivityLogFollowing {
+  static func shouldFollow(
+    windowVisible: Bool,
+    area: MainWindowArea,
+    mode: ActivityMode
+  ) -> Bool {
+    windowVisible && area == .activity && mode == .log
+  }
+}
+
+/// An action of the Activity area that did not happen: the alert's title and, when there is more
+/// to say, its message.
+struct ActivityActionFailure: Equatable {
+  let title: String
+  let message: String?
+}
+
 #if canImport(AppKit) && canImport(SwiftUI)
 
   import SwiftUI
@@ -24,9 +43,9 @@ enum ActivityMode: Int, CaseIterable {
     var mode = ActivityMode.log
     let log: ActivityLogModel
     let diagnostics: ActivityDiagnosticsModel
-    /// Why a fix button could not do its action.
+    /// The last action that failed. The alert shows in both views.
     @Published
-    var fixFailure: String?
+    var failure: ActivityActionFailure?
     private let performFix: @MainActor (ActivityCheckFix) -> String?
 
     /// `performFix` does the action of a fix button and returns why it could not, if it could not.
@@ -40,7 +59,9 @@ enum ActivityMode: Int, CaseIterable {
       self.performFix = performFix
     }
 
-    func perform(_ fix: ActivityCheckFix) { fixFailure = performFix(fix) }
+    func perform(_ fix: ActivityCheckFix) {
+      if let title = performFix(fix) { failure = ActivityActionFailure(title: title, message: nil) }
+    }
   }
 
   /// The Activity area: the log table or the diagnostic checks, filling the detail column.
@@ -49,20 +70,25 @@ enum ActivityMode: Int, CaseIterable {
     var model: ActivityModel
 
     var body: some View {
+      content.alert(
+        isPresented: Binding(
+          get: { model.failure != nil },
+          set: { if !$0 { model.failure = nil } }
+        )
+      ) {
+        Alert(
+          title: Text(model.failure?.title ?? ""),
+          message: model.failure?.message.map { Text($0) },
+          dismissButton: .default(Text(OJDLocalized.string("common.ok")))
+        )
+      }
+    }
+
+    @ViewBuilder
+    private var content: some View {
       switch model.mode {
       case .log: ActivityLogView(model: model.log)
-      case .diagnostics:
-        ActivityDiagnosticsView(model: model.diagnostics, perform: model.perform).alert(
-          isPresented: Binding(
-            get: { model.fixFailure != nil },
-            set: { if !$0 { model.fixFailure = nil } }
-          )
-        ) {
-          Alert(
-            title: Text(model.fixFailure ?? ""),
-            dismissButton: .default(Text(OJDLocalized.string("common.ok")))
-          )
-        }
+      case .diagnostics: ActivityDiagnosticsView(model: model.diagnostics, perform: model.perform)
       }
     }
   }

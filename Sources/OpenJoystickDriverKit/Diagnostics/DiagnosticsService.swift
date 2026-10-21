@@ -47,6 +47,50 @@ public struct DiagnoseServiceSnapshot: Sendable {
   }
 }
 
+extension DiagnoseServiceSnapshot {
+  /// Asks the service once; a stopped or failing service never throws. `classify` turns the error
+  /// of a failed status request into the availability; ``availability(after:)`` is the rule for
+  /// the Kit client errors.
+  @preconcurrency
+  public static func gather(
+    status: @Sendable () async throws -> ApplicationServiceStatusPayload,
+    virtualDiagnostics:
+      @Sendable () async throws -> ApplicationServiceVirtualDeviceDiagnosticsPayload,
+    frameTimings: @Sendable () async throws -> ApplicationServiceFrameTimingsPayload,
+    classify: @Sendable (any Error) -> Availability = { availability(after: $0) }
+  ) async -> Self {
+    do {
+      let payload = try await status()
+      return Self(
+        availability: .running,
+        status: payload,
+        virtualDiagnostics: try? await virtualDiagnostics(),
+        frameTimings: try? await frameTimings()
+      )
+    } catch {
+      return Self(
+        availability: classify(error),
+        status: nil,
+        virtualDiagnostics: nil,
+        frameTimings: nil
+      )
+    }
+  }
+
+  /// An unreachable service is stopped; any other error leaves it failed, with the message that
+  /// the command-line tool gives for a failed request.
+  public static func availability(after error: any Error) -> Availability {
+    if case ApplicationServiceClientError.notConnected = error { return .stopped }
+    let detail = error.localizedDescription
+    return .failed(
+      Localization().formatted(
+        "cli.error.service_request_failed",
+        arguments: [detail.hasSuffix(".") ? String(detail.dropLast()) : detail]
+      )
+    )
+  }
+}
+
 /// The checks of `ojd diagnose`, built from facts that the caller gathered.
 public enum DiagnosticsService {
   private static let localization = Localization()

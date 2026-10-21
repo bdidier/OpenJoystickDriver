@@ -1,3 +1,4 @@
+import Darwin
 import Foundation
 
 /// One line a followed log stream produced.
@@ -16,27 +17,34 @@ public enum ApplicationServiceLogFollower {
   static let pollNanoseconds: UInt64 = 200_000_000
 
   /// The lines appended to the log of `stream` after `offset` bytes, until the task that
-  /// iterates the stream is cancelled.
+  /// iterates the stream is cancelled. Bytes that are not UTF-8 show as replacement characters.
   public static func lines(
     of stream: ApplicationServiceLogStream,
     from offset: UInt64
   ) -> AsyncStream<ApplicationServiceLogLine> {
+    lines(of: stream, at: ApplicationServiceLogService.url(for: stream), from: offset)
+  }
+
+  static func lines(
+    of stream: ApplicationServiceLogStream,
+    at url: URL,
+    from offset: UInt64
+  ) -> AsyncStream<ApplicationServiceLogLine> {
     AsyncStream { continuation in
+      let initialIdentity = fileIdentity(url)
       let task = Task {
-        let url = ApplicationServiceLogService.url(for: stream)
         var position = offset
+        var identity = initialIdentity
         var pending = Data()
         while !Task.isCancelled {
-          if let chunk = readAppended(url, position: &position) {
+          if let chunk = readAppended(url, position: &position, identity: &identity) {
             pending.append(chunk)
             while let newline = pending.firstIndex(of: 0x0A) {
               let line = pending[pending.startIndex..<newline]
-              continuation.yield(
-                ApplicationServiceLogLine(
-                  stream: stream,
-                  text: String(bytes: line, encoding: .utf8) ?? ""
-                )
-              )
+              // Lossy on purpose: a line with invalid bytes still shows.
+              // swiftlint:disable:next optional_data_string_conversion
+              let text = String(decoding: Array(line), as: UTF8.self)
+              continuation.yield(ApplicationServiceLogLine(stream: stream, text: text))
               pending.removeSubrange(pending.startIndex...newline)
             }
           }
@@ -48,11 +56,27 @@ public enum ApplicationServiceLogFollower {
     }
   }
 
-  /// Reads what `url` gained after `position` and moves `position` to the end; a file that shrank
-  /// belongs to a later session, so it is read from the start.
-  private static func readAppended(_ url: URL, position: inout UInt64) -> Data? {
+  /// The inode of the file at `url`, which changes when a new file replaces it.
+  private static func fileIdentity(_ url: URL) -> UInt64? {
+    var info = stat()
+    guard stat(url.path, &info) == 0 else { return nil }
+    return UInt64(info.st_ino)
+  }
+
+  /// Reads what `url` gained after `position` and moves `position` to the end. A file that shrank
+  /// or was replaced by another file belongs to a later session, so it is read from the start.
+  private static func readAppended(
+    _ url: URL,
+    position: inout UInt64,
+    identity: inout UInt64?
+  ) -> Data? {
     guard let handle = try? FileHandle(forReadingFrom: url) else { return nil }
     defer { handle.closeFile() }
+    var info = stat()
+    guard fstat(handle.fileDescriptor, &info) == 0 else { return nil }
+    let current = UInt64(info.st_ino)
+    if let known = identity, known != current { position = 0 }
+    identity = current
     let size = handle.seekToEndOfFile()
     if size < position { position = 0 }
     guard size > position else { return nil }

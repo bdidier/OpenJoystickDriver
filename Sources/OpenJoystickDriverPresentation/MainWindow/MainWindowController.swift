@@ -151,6 +151,7 @@
         [weak self] _ in
         guard let self else { return }
         showToolbarActions(of: navigation.selectedArea)
+        updateLogFollowing()
       }
       summaryObservation = runtime.$statusState.sink { [weak window] status in
         window?.subtitle = MainWindowSummary.text(for: navigation.selectedArea, status: status)
@@ -256,11 +257,13 @@
       visibilityChanged(true)
       window.makeKeyAndOrderFront(nil)
       NSApplication.shared.activate(ignoringOtherApps: true)
+      updateLogFollowing()
     }
 
     func windowShouldClose(_ sender: NSWindow) -> Bool {
       // Hiding keeps the selected area, the screens' state and the window geometry.
       sender.orderOut(nil)
+      updateLogFollowing()
       visibilityChanged(false)
       return false
     }
@@ -271,6 +274,10 @@
         minimumSize: MainWindowSizingPolicy.minimumFrameSize(for: sender)
       )
     }
+
+    func windowDidMiniaturize(_ notification: Notification) { updateLogFollowing() }
+
+    func windowDidDeminiaturize(_ notification: Notification) { updateLogFollowing() }
 
     func windowDidResize(_ notification: Notification) {
       guard !isEnforcingMinimumSize, let window = notification.object as? NSWindow else { return }
@@ -314,6 +321,7 @@
     private func reflect(area: MainWindowArea) {
       listItem.isCollapsed = !area.hasListColumn
       showToolbarActions(of: area)
+      updateLogFollowing()
       window?.title = area.title
       window?.subtitle = MainWindowSummary.text(for: area, status: screens.runtime.statusState)
     }
@@ -343,7 +351,7 @@
       case .installLibraryItem: installRecordOrMod()
       case .copyActivityLog: screens.activity.log.copyVisible()
       case .saveActivityLog: saveActivityLog()
-      case .showActivityLogInFinder: screens.activity.log.showInFinder()
+      case .showActivityLogInFinder: showActivityLogInFinder()
       case .runDiagnostics: Task { await screens.activity.diagnostics.run() }
       case .activityMode, .activityFilter, .activitySearch:
         preconditionFailure("\(action) has its own control action")
