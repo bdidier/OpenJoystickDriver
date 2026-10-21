@@ -37,7 +37,7 @@ COMMAND_HELP = """Commands:
   build dext                  Build DriverKit `.dext` and embed into `.build/` app
   build install dev|release   Full rebuild and install
   build install-fast dev      App-only rebuild and install (keeps installed sysext)
-  driverkit generate [path]   Generate a fresh SwifterKit DriverKit project
+  driverkit generate [path]   Generate the DriverKit project into a missing folder
   package tester               Build a private, shareable Developer ID DMG
   release bump-version <version>
                               Update release version references

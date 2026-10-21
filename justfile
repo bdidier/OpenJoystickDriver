@@ -50,7 +50,7 @@ install-fast-dev:
 # DriverKit
 # =========================================================================
 
-# Generate a fresh SwifterKit DriverKit project
+# Generate the DriverKit project into a missing folder
 driverkit-generate *args:
     ./Scripts/ojd driverkit generate {{ args }}
 

@@ -73,6 +73,19 @@ do {
     ),
     at: arguments.output
   )
+} catch DriverExtensionGenerationError.destinationExists(let path) {
+  // Generation writes a complete project into a missing folder only, so an existing project is
+  // never mixed with or overwritten by the generated one.
+  FileHandle.standardError.write(
+    Data(
+      """
+      DriverKit generation refused: \(path) already exists.
+      Delete the folder or pass a path that does not exist.
+
+      """.utf8
+    )
+  )
+  exit(2)
 } catch {
   FileHandle.standardError.write(Data("DriverKit generation failed: \(error)\n".utf8))
   exit(2)

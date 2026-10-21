@@ -438,9 +438,12 @@ expected = [
 if entitlements.get(key) != expected:
     raise SystemExit("authored USB entitlement differs from Apple's exact seven-device grant")
 PY
-  if generate_driverkit_project "$first" >/dev/null 2>&1; then
+  local refusal
+  if refusal="$(generate_driverkit_project "$first" 2>&1)"; then
     die "generator overwrote an existing destination"
   fi
+  [[ "$refusal" == *"DriverKit generation refused: $first already exists."* ]] \
+    || die "generator did not name the existing destination in its refusal"
 
   local tracked_native
   tracked_native="$(

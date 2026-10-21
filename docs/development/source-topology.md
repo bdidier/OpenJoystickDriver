@@ -118,7 +118,7 @@ Extension files are `Type+Concern.swift`, where `Concern` is a noun phrase namin
 - Keep Kit independent of SwifterKit and of app, runtime, and platform composition.
 - Put IOUSBHost/DriverKit adaptation in USB; keep parsing in Kit.
 - Use IOKit HID (`IOHIDManager`, `IOHIDDevice`, `IOHIDUserDevice`) on every supported macOS; HID has no OS-version branch and the package does not link CoreHID.
-- Never edit or commit `.build/driverkit/generated/`; regenerate with `./Scripts/ojd driverkit generate` and validate with `./Scripts/ojd check driverkit`.
+- Never edit or commit `.build/driverkit/generated/`; validate generation with `./Scripts/ojd check driverkit`. `./Scripts/ojd driverkit generate [path]` writes into a missing folder only (default `.build/driverkit/generated/`) and refuses an existing one, so a generated project never mixes with an earlier one; delete the folder first to regenerate it.
 
 ## Rejected Alternatives
 
