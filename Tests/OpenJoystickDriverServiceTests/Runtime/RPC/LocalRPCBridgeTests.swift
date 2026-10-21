@@ -133,6 +133,38 @@ struct LocalRPCBridgeTests {
     }
   }
 
+  @Test
+  func aVirtualOutputStatusChangeAnnouncesAServiceStatusChange() async throws {
+    try await withServer { server in
+      #expect(
+        await Self.announcements {
+          server.userSpaceLock.withLock { server.userSpaceStatus = .error("failed") }
+        } >= 1
+      )
+    }
+  }
+
+  @Test
+  func aProfileReloadAndAnOverrideResetAnnounceAServiceStatusChange() async throws {
+    try await withServer { server in
+      #expect(await Self.announcements { await server.reloadRemappingProfiles() } >= 1)
+      #expect(await Self.announcements { server.resetVirtualHIDProfileSettings() } >= 1)
+    }
+  }
+
+  /// How many service status changes `action` announces on the default center.
+  private static func announcements(_ action: () async -> Void) async -> Int {
+    let count = AnnouncementCount()
+    let observer = NotificationCenter.default.addObserver(
+      forName: .ojdServiceStatusDidChange,
+      object: nil,
+      queue: nil
+    ) { _ in count.increment() }
+    defer { NotificationCenter.default.removeObserver(observer) }
+    await action()
+    return count.value
+  }
+
   private static func unknownMethodMessage(_ name: String) -> String {
     "Unknown RPC method: \(name)"
   }
@@ -181,4 +213,11 @@ struct LocalRPCBridgeTests {
     )
     try await body(server)
   }
+}
+
+private final class AnnouncementCount: @unchecked Sendable {
+  private let lock = NSLock()
+  private var count = 0
+  var value: Int { lock.withLock { count } }
+  func increment() { lock.withLock { count += 1 } }
 }
