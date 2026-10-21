@@ -299,10 +299,8 @@ struct RecordCommandTests {
   func showJSONOfARecordWithAnUnwritableNumberFailsWithItsPlace() async throws {
     let directory = Directory()
     let number = "0.08000000000000000001"
-    let patch = Data(
-      String(decoding: Self.patch, as: UTF8.self).replacingOccurrences(of: "0.08", with: number)
-        .utf8
-    )
+    let text = try #require(String(bytes: Self.patch, encoding: .utf8))
+    let patch = Data(text.replacingOccurrences(of: "0.08", with: number).utf8)
     let install = await run(["install", "-", "--json"], in: directory, stdin: patch)
     let json = await run(["show", "366c:0005", "--json"], in: directory)
     let human = await run(["show", "366c:0005"], in: directory)

@@ -293,7 +293,8 @@ struct OrderedJSONTests {
     #expect(precomposed == decomposed)
     let problem = Self.problem(Array(#"{"\#(precomposed)": 1, "\#(decomposed)": 2}"#.utf8))
     #expect(
-      problem == OrderedJSON.Problem(reason: .equivalentMembers(precomposed, decomposed), offset: 10)
+      problem
+        == OrderedJSON.Problem(reason: .equivalentMembers(precomposed, decomposed), offset: 10)
     )
     #expect(problem?.description.contains("different scalars") == true)
     // The same scalars twice stay a duplicate, and distinct names stay apart.
