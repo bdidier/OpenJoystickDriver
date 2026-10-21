@@ -293,6 +293,42 @@ struct ProtocolDescriptionTests {
     #expect(rejection(family: family, body)?.code == .invalidProtocolDescription, "\(body)")
   }
 
+  /// A description sets exactly the family-specific session fields its driver reads.
+  @Test
+  func aFamilySpecificSessionFieldOfAnotherFamilyIsRefused() {
+    let foreign: [(PhysicalProtocolID, String)] = [
+      (.xboxXUSB, "handshakeAttempts"), (.xboxXUSB, "announceResendLimit"),
+      (.xboxGIP, "receiverInquiryResendLimit"), (.xboxXID, "handshakeAttempts"),
+      (.sonyDualSense, "announceResendLimit"), (.sonyDualSense, "trailingStopPackets"),
+    ]
+    for (family, key) in foreign {
+      let body = #""defaults": {"session": {"\#(key)": 3}}"#
+      let problem = rejection(family: family, body)
+      #expect(problem?.code == .invalidProtocolDescription, "\(family) \(key)")
+      #expect(problem?.detail.contains("does not read \(key)") == true, "\(family) \(key)")
+    }
+    let activation =
+      #""defaults": {"session": {"activation": [{"report": "#
+      + #"{"kind": "Feature", "id": 0, "length": 2}, "bytes": "81 00"}]}}"#
+    #expect(rejection(family: .sonyDualSense, activation)?.code == .invalidProtocolDescription)
+  }
+
+  @Test
+  func aSessionFieldTheDriverReadsMustBeSet() {
+    let missing: [(PhysicalProtocolID, String)] = [
+      (.xboxGIP, #""rawUSB": true"#),
+      (.xboxGIP, #""rawUSB": true, "defaults": {"session": {"handshakeAttempts": 3}}"#),
+      (.xboxXUSB, #""rawUSB": true"#),
+      (.nintendoSwitch1, ""),
+      (.valveSteamDeck, ""),
+    ]
+    for (family, body) in missing {
+      let problem = rejection(exactly: family, body)
+      #expect(problem?.code == .invalidProtocolDescription, "\(family) \(body)")
+      #expect(problem?.detail.contains("must set") == true, "\(family) \(body)")
+    }
+  }
+
   @Test
   func sessionLimitsComeFromTheirFamily() throws {
     let gip = try decode(family: .xboxGIP, #""rawUSB": true"#)
@@ -814,7 +850,10 @@ struct ProtocolDescriptionTests {
       let json = """
         {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "ProtocolDescription",
          "family": "XboxGIP", \(members) "endpoints": {"in": 130, "out": 2}, "rawUSB": true,
-         "defaults": {"session": {"handshakeAttempts": 3, "announceResendLimit": 8}}}
+         "defaults": {"session": {"handshakeAttempts": 3, "announceResendLimit": 8,
+         "namedPackets": [
+          {"id": "XboxGIP/power-on", "bytes": "05 20 00 01 00", "sessionByte": 2}
+         ]}}}
         """
       do {
         _ = try ProtocolDescription.decode(
@@ -882,8 +921,11 @@ struct ProtocolDescriptionTests {
 /// Builds protocol description documents for tests.
 enum ProtocolDescriptionFixture {
   /// The session counts each family's description must state.
-  static let sessionLimits: [PhysicalProtocolID: [String: Int]] = [
-    .xboxGIP: ["handshakeAttempts": 3, "announceResendLimit": 8],
+  nonisolated(unsafe) static let sessionLimits: [PhysicalProtocolID: [String: Any]] = [
+    .xboxGIP: [
+      "handshakeAttempts": 3, "announceResendLimit": 8,
+      "namedPackets": [["id": "XboxGIP/power-on", "bytes": "05 20 00 01 00", "sessionByte": 2]],
+    ],
     .xboxXUSB: ["receiverInquiryResendLimit": 8],
   ]
 

@@ -177,6 +177,7 @@ def semantic_violations(description: dict[str, Any]) -> list[tuple[str, str]]:
     found += named_packet_violations(description)
     found += session_write_violations(description)
     found += parameter_rule_violations(description)
+    found += session_field_violations(description)
     return found
 
 
@@ -537,6 +538,39 @@ def parameters_problem(
             case "Requires" if names and not listed <= names:
                 return f"parameters require {text}"
     return None
+
+
+# The family-specific `defaults.session` fields each family's driver reads; `sessionFields` in
+# `ProtocolClassifier.swift` is the same table, which a test compares.
+SESSION_FIELDS: dict[str, frozenset[str]] = {
+    "NintendoSwitch1": frozenset({"subcommands"}),
+    "NintendoSwitch2": frozenset({"commandChannel", "trailingStopPackets"}),
+    "XboxGIP": frozenset({"namedPackets", "handshakeAttempts", "announceResendLimit"}),
+    "XboxXUSB": frozenset({"receiverInquiryResendLimit"}),
+    "ValveSteamController": frozenset({"activation", "deactivation"}),
+    "ValveSteamTriton": frozenset({"activation", "deactivation"}),
+    "ValveSteamDeck": frozenset({"activation", "deactivation"}),
+}
+FAMILY_SESSION_FIELDS = frozenset().union(*SESSION_FIELDS.values())
+
+
+def session_field_violations(description: dict[str, Any]) -> list[tuple[str, str]]:
+    """A description sets exactly the family-specific session fields its driver reads, as
+    `ProtocolDescription` checks in Swift."""
+    family = description["family"]
+    read = SESSION_FIELDS.get(family, frozenset())
+    present = FAMILY_SESSION_FIELDS & set(
+        description.get("defaults", {}).get("session", {})
+    )
+    found = [
+        ("E5002", f"defaults.session.{name}: {family} does not read it")
+        for name in sorted(present - read)
+    ]
+    found += [
+        ("E5002", f"defaults.session.{name}: {family} must set it")
+        for name in sorted(read - present)
+    ]
+    return found
 
 
 def parameter_rule_violations(description: dict[str, Any]) -> list[tuple[str, str]]:

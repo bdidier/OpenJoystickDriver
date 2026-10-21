@@ -28,7 +28,13 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 
 # The counts a family's description sets for its driver.
 SESSION_LIMITS: dict[str, dict[str, Any]] = {
-    "XboxGIP": {"handshakeAttempts": 3, "announceResendLimit": 8},
+    "XboxGIP": {
+        "handshakeAttempts": 3,
+        "announceResendLimit": 8,
+        "namedPackets": [
+            {"id": "XboxGIP/power-on", "bytes": "05 20 00 01 00", "sessionByte": 2}
+        ],
+    },
     "XboxXUSB": {"receiverInquiryResendLimit": 8},
     "NintendoSwitch2": {
         "commandChannel": {
@@ -533,6 +539,51 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         flag = {"type": "Flag"}
         self.assert_rejected(self.with_body("SonyDualSense", parameters={"x": flag}))
         self.assert_rejected(self.with_body("SonyDualSense", parameters={}))
+
+    def test_session_fields_match_the_swift_table(self) -> None:
+        source = (
+            REPOSITORY_ROOT
+            / "Sources/OpenJoystickDriverKit/Protocol/Classification/ProtocolClassifier.swift"
+        ).read_text(encoding="utf-8")
+        body = source.split("var sessionFields: Set<String> {", 1)[1].split(
+            "\n  }\n", 1
+        )[0]
+        swift = {
+            case[0].upper() + case[1:]: frozenset(re.findall(r'"(\w+)"', names))
+            for case, names in re.findall(r"case \.(\w+): \[([^\]]*)\]", body)
+        }
+        self.assertEqual(protocol_descriptions.SESSION_FIELDS, swift)
+
+    def test_a_family_specific_session_field_of_another_family_is_refused(
+        self,
+    ) -> None:
+        for family, key, value in (
+            ("XboxXUSB", "handshakeAttempts", 3),
+            ("XboxXUSB", "announceResendLimit", 8),
+            ("XboxGIP", "receiverInquiryResendLimit", 8),
+            ("SonyDualSense", "trailingStopPackets", 2),
+            ("SonyDualSense", "activation", VALVE_SESSION["activation"]),
+        ):
+            with self.subTest(family=family, key=key):
+                document = self.with_body(family)
+                document.setdefault("defaults", {}).setdefault("session", {})[key] = (
+                    value
+                )
+                self.assert_rejected(document)
+
+    def test_a_session_field_the_driver_reads_must_be_set(self) -> None:
+        for family, limits in SESSION_LIMITS.items():
+            for key in limits:
+                with self.subTest(family=family, key=key):
+                    document = self.with_body(family)
+                    del document["defaults"]["session"][key]
+                    self.assert_rejected(document)
+        for family in VALVE_FAMILIES:
+            for key in ("activation", "deactivation"):
+                with self.subTest(family=family, key=key):
+                    document = self.valve_body(family)
+                    del document["defaults"]["session"][key]
+                    self.assert_rejected(document)
 
     def test_session_limits_are_accepted_for_their_family(self) -> None:
         for family in SESSION_LIMITS:
@@ -1197,13 +1248,6 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
     def test_rejects_startup_that_refers_to_an_unknown_packet(self) -> None:
         self.assert_rejected(
             self.packet_startup_body([{"packet": "XboxGIP/missing"}]), code="E5002"
-        )
-        self.assert_rejected(
-            self.with_body(
-                "XboxGIP",
-                defaults={"session": {"startup": [{"packet": "XboxGIP/power-on"}]}},
-            ),
-            code="E5002",
         )
 
     def test_rejects_malformed_or_mixed_packet_startup(self) -> None:

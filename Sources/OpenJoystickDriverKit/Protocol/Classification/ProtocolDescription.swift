@@ -538,14 +538,12 @@ struct ProtocolDescription: Sendable {
 
   /// The activation reports of a controller reached over `transport`.
   func activationWrites(over transport: PhysicalTransport?) -> [PhysicalOutputWrite] {
-    precondition(!activation.isEmpty, "\(family.descriptionFileStem).json sets no activation")
-    return activation.filter { $0.applies(to: transport) }.map(\.write)
+    activation.filter { $0.applies(to: transport) }.map(\.write)
   }
 
   /// The deactivation reports of a controller reached over `transport`.
   func deactivationWrites(over transport: PhysicalTransport?) -> [PhysicalOutputWrite] {
-    precondition(!deactivation.isEmpty, "\(family.descriptionFileStem).json sets no deactivation")
-    return deactivation.filter { $0.applies(to: transport) }.map(\.write)
+    deactivation.filter { $0.applies(to: transport) }.map(\.write)
   }
 
   /// The raw-USB startup packets that a controller on `variant` whose record sets `parameters`
@@ -555,6 +553,21 @@ struct ProtocolDescription: Sendable {
     parameters: ProtocolParameters
   ) -> [USBStartupWrite] {
     usbStartupWrites.filter { $0.condition.matches(variant: variant, parameters: parameters) }
+  }
+
+  /// The family-specific `defaults.session` fields the description sets.
+  private var presentSessionFields: Set<String> {
+    var names: Set<String> = []
+    if subcommands != nil { names.insert("subcommands") }
+    if namedPackets != nil { names.insert("namedPackets") }
+    if !activation.isEmpty { names.insert("activation") }
+    if !deactivation.isEmpty { names.insert("deactivation") }
+    if handshakeAttempts != nil { names.insert("handshakeAttempts") }
+    if announceResendLimit != nil { names.insert("announceResendLimit") }
+    if receiverInquiryResendLimit != nil { names.insert("receiverInquiryResendLimit") }
+    if commandChannel != nil { names.insert("commandChannel") }
+    if trailingStopPackets != nil { names.insert("trailingStopPackets") }
+    return names
   }
 
   /// Why the defaults name something the family's driver does not read, or nil. The rule reads
@@ -588,6 +601,13 @@ struct ProtocolDescription: Sendable {
       $0.transport.map { !writeTransports.contains($0) } ?? false
     }) {
       return "activation and deactivation name only a transport writeTransports lists"
+    }
+    if presentSessionFields != family.sessionFields {
+      let unread = presentSessionFields.subtracting(family.sessionFields).sorted()
+      let missing = family.sessionFields.subtracting(presentSessionFields).sorted()
+      return unread.isEmpty
+        ? "\(family.rawValue) must set \(missing.joined(separator: ", "))"
+        : "\(family.rawValue) does not read \(unread.joined(separator: ", "))"
     }
     if let namedPackets, !namedPackets.allIDs(startWith: "\(family.rawValue)/") {
       return "each named packet id starts with \(family.rawValue)/"

@@ -118,7 +118,6 @@ struct NamedPacketDescriptionTests {
     ] {
       #expect((try? decodeStartup(startup)) == nil, "\(startup)")
     }
-    #expect((try? decodeStartup("[\(reference)]", packets: false)) == nil)
   }
 
   @Test

@@ -130,7 +130,10 @@ extension ProtocolClassifierTests {
         "family": "\(family)",
         \(PhysicalProtocolID(rawValue: family).map(ProtocolDescriptionFixture.variantMembers) ?? "")
         "endpoints": {"in": 130, "out": 2},
-        "defaults": {"session": {"handshakeAttempts": 3, "announceResendLimit": 8}},
+        "defaults": {"session": {"handshakeAttempts": 3, "announceResendLimit": 8,
+          "namedPackets": [
+          {"id": "XboxGIP/power-on", "bytes": "05 20 00 01 00", "sessionByte": 2}
+         ]}},
         "interfaceSignatures": [
           {\(signature), "interfaceClass": 255, "interfaceSubclass": 71, "interfaceProtocol": 208}
         ]
