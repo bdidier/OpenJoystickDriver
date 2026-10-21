@@ -102,6 +102,30 @@ struct ControllerLiveUpdatesTests {
   }
 
   @Test
+  func aFailureWithChangingTextOfTheSameKindIsReportedOnce() async {
+    let source = ScriptedChangeSource()
+    let refreshed = Counter()
+    let modes = Modes()
+    let updates = makeUpdates(source, refreshed: refreshed, modes: modes)
+    updates.start()
+    defer { updates.stop() }
+    for _ in 0..<ControllerLiveUpdates.failuresBeforeReporting {
+      source.fail(ScriptedFailure.unreachable)
+    }
+    await refreshed.waitUntil(ControllerLiveUpdates.failuresBeforeReporting, timeout: 30)
+    source.fail(ScriptedFailure.other("first"))
+    source.fail(ScriptedFailure.other("second"))
+    await refreshed.waitUntil(ControllerLiveUpdates.failuresBeforeReporting + 2, timeout: 30)
+
+    #expect(modes.values.count == 1)
+
+    source.fail(ApplicationServiceClientError.timeout)
+    await refreshed.waitUntil(ControllerLiveUpdates.failuresBeforeReporting + 3, timeout: 30)
+
+    #expect(modes.values.count == 2)
+  }
+
+  @Test
   func aRecoveryBeforeTheThresholdNeverReportsPolling() async {
     let source = ScriptedChangeSource()
     let refreshed = Counter()
@@ -159,7 +183,13 @@ struct ControllerLiveUpdatesTests {
 
 private enum ScriptedFailure: Error, LocalizedError {
   case unreachable
-  var errorDescription: String? { "The service is unreachable." }
+  case other(String)
+  var errorDescription: String? {
+    switch self {
+    case .unreachable: return "The service is unreachable."
+    case .other(let text): return text
+    }
+  }
 }
 
 @MainActor

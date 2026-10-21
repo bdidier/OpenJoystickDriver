@@ -53,7 +53,8 @@ enum ControllerLiveUpdateMode: Equatable {
 /// ends with no change refreshes nothing. When the wait fails, the mode becomes `.polling`, the
 /// error is logged once, and `refresh` runs every `fallbackPollSeconds` until a wait succeeds
 /// again. `modeChanged` reports polling only after `failuresBeforeReporting` consecutive
-/// failures, so a service restart does not flash a banner, and reports the restored wait.
+/// failures, so a service restart does not flash a banner, reports again only when the failure
+/// kind changes, and reports the restored wait.
 @MainActor
 final class ControllerLiveUpdates {
   static let fallbackPollSeconds: Double = 1
@@ -67,7 +68,7 @@ final class ControllerLiveUpdates {
   private let fallbackPollSeconds: Double
   private var task: Task<Void, Never>?
   private var consecutiveFailures = 0
-  private var reportedMode: ControllerLiveUpdateMode?
+  private var reportedFailure: ControllerLiveUpdateFailure?
 
   init(
     source: any ControllerChangeSource,
@@ -119,16 +120,17 @@ final class ControllerLiveUpdates {
     }
     consecutiveFailures = 0
     mode = .subscribed
-    if reportedMode != nil {
-      reportedMode = nil
+    if reportedFailure != nil {
+      reportedFailure = nil
       modeChanged(.subscribed)
     }
   }
 
   private func recordFailure(_ error: any Error) {
     consecutiveFailures += 1
+    let failure = ControllerLiveUpdateFailure(error)
     let next = ControllerLiveUpdateMode.polling(
-      failure: ControllerLiveUpdateFailure(error),
+      failure: failure,
       detail: error.localizedDescription
     )
     if mode != next {
@@ -141,8 +143,8 @@ final class ControllerLiveUpdates {
       }
       mode = next
     }
-    if consecutiveFailures >= Self.failuresBeforeReporting, reportedMode != next {
-      reportedMode = next
+    if consecutiveFailures >= Self.failuresBeforeReporting, reportedFailure != failure {
+      reportedFailure = failure
       modeChanged(next)
     }
   }

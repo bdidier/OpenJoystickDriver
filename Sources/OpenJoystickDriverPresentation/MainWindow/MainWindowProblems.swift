@@ -80,7 +80,7 @@ enum MainWindowProblem: Equatable, Sendable, Identifiable {
     permissions: RuntimePermissionLoadState,
     status: RuntimeStatusState,
     driver: SystemExtensionSetupState,
-    liveUpdatesFallbackReason: ControllerLiveUpdateFailure? = nil
+    liveUpdatesFallbackReason: ControllerLiveUpdateFailure?
   ) -> [Self] {
     var problems: [Self] = []
     switch status {

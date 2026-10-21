@@ -30,12 +30,17 @@ struct MainWindowProblemTests {
       MainWindowProblem.current(
         permissions: permissions(.granted),
         status: status(inputRead: .granted),
-        driver: .active
+        driver: .active,
+        liveUpdatesFallbackReason: nil
       ).isEmpty
     )
     #expect(
-      MainWindowProblem.current(permissions: .loading, status: .loading, driver: .checking)
-        .isEmpty
+      MainWindowProblem.current(
+        permissions: .loading,
+        status: .loading,
+        driver: .checking,
+        liveUpdatesFallbackReason: nil
+      ).isEmpty
     )
   }
 
@@ -55,7 +60,8 @@ struct MainWindowProblemTests {
       let problems = MainWindowProblem.current(
         permissions: reading,
         status: payload,
-        driver: .active
+        driver: .active,
+        liveUpdatesFallbackReason: nil
       )
       #expect(problems.contains(.accessMissing) == isMissing, "\(reading)")
     }
@@ -63,7 +69,8 @@ struct MainWindowProblemTests {
       !MainWindowProblem.current(
         permissions: permissions(.granted),
         status: status(inputRead: .denied),
-        driver: .active
+        driver: .active,
+        liveUpdatesFallbackReason: nil
       ).contains(.accessMissing)
     )
   }
@@ -74,7 +81,8 @@ struct MainWindowProblemTests {
       MainWindowProblem.current(
         permissions: .unavailable,
         status: .unavailable("down"),
-        driver: .awaitingApproval
+        driver: .awaitingApproval,
+        liveUpdatesFallbackReason: nil
       )
         == [.serviceUnavailable("down"), .driver(.awaitingApproval)]
     )
@@ -82,7 +90,8 @@ struct MainWindowProblemTests {
       MainWindowProblem.current(
         permissions: permissions(.denied),
         status: status(inputRead: .denied),
-        driver: .failed
+        driver: .failed,
+        liveUpdatesFallbackReason: nil
       )
         == [.driver(.failed), .accessMissing]
     )
