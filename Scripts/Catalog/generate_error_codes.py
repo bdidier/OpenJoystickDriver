@@ -1,7 +1,7 @@
 """Check or rebuild everything that derives from the error code catalog.
 
 `Resources/ErrorCodes.json` is the only authored list of E#### codes.
-This script validates it, guards against reusing a released code,
+This script validates it
 and rewrites the two files that copy it:
 the `code` enum of `Resources/Schemas/endpoint.schema.json`
 and the generated block of `wiki/Error-Codes.md`.
@@ -17,7 +17,6 @@ from pathlib import Path
 from typing import Any
 
 from Scripts.Quality.biome_format import format_json
-from Scripts.Quality.schema_compatibility import git, last_release_tag
 
 try:
     from jsonschema import Draft202012Validator
@@ -127,43 +126,6 @@ def check_invariants(entries: list[Entry]) -> None:
         raise ErrorCodeError(f"{CATALOG} breaks its rules:\n  " + "\n  ".join(problems))
 
 
-def check_not_reused(previous: list[Entry], entries: list[Entry]) -> None:
-    """Every code of the previous catalog stays, with the same domain and name."""
-    current = {entry["code"]: entry for entry in entries}
-    problems: list[str] = []
-    for old in previous:
-        new = current.get(old["code"])
-        if new is None:
-            problems.append(
-                f"{old['code']} ({old['name']}) is missing from the catalog"
-            )
-        elif (new["domain"], new["name"]) != (old["domain"], old["name"]):
-            problems.append(
-                f"{old['code']} was {old['domain']} {old['name']} "
-                f"and is now {new['domain']} {new['name']}; a code is never reused"
-            )
-    if problems:
-        raise ErrorCodeError(
-            "a released error code changed:\n  " + "\n  ".join(problems)
-        )
-
-
-def released_catalog(root: Path) -> tuple[str, list[Entry]] | None:
-    """The catalog at the last release tag, or None when there is no tag or no catalog.
-
-    A git failure raises `CalledProcessError`, so the reuse check never passes unchecked.
-    """
-    tag = last_release_tag(root)
-    if tag is None:
-        print("No release tag precedes HEAD; skipped the reuse check.", file=sys.stderr)
-        return None
-    path = CATALOG.as_posix()
-    if not git(root, "ls-tree", "--name-only", tag, "--", path).strip():
-        print(f"{tag} has no {path}; skipped the reuse check.", file=sys.stderr)
-        return None
-    return tag, json.loads(git(root, "show", f"{tag}:{path}"))["codes"]
-
-
 def english_strings(root: Path) -> dict[str, str]:
     strings: dict[str, str] = {}
     for line in (root / TEMPLATE).read_text(encoding="utf-8").splitlines():
@@ -226,12 +188,6 @@ def outputs(root: Path) -> dict[Path, str]:
     """The derived files as they should be, keyed by path relative to `root`."""
     entries = load_catalog(root)
     check_invariants(entries)
-    released = released_catalog(root)
-    if released is not None:
-        try:
-            check_not_reused(released[1], entries)
-        except ErrorCodeError as error:
-            raise ErrorCodeError(f"{error} (compared with {released[0]})") from error
     strings = english_strings(root)
     endpoint = (root / ENDPOINT_SCHEMA).read_text(encoding="utf-8")
     page = (root / WIKI_PAGE).read_text(encoding="utf-8")

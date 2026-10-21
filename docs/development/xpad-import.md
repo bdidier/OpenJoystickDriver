@@ -107,15 +107,4 @@ A `Controller` file supplies a complete canonical record missing from the pinned
 
 Review evidence belongs in the controller's testing document, upstream issue, and Git history. Do not copy it into runtime controller records.
 
-## Review-Only Source Inspection
-
-Use the lower-level importer to inspect another exact Linux revision without changing runtime data:
-
-```bash
-./Scripts/ojd catalog xpad --github-ref 893e11787f78e43b534e252249ac3fff4d1333f8 \
-  --vid 0x1532 --pid 0x0a29 --output-dir /tmp/ojd-xpad
-```
-
-Its manifest belongs only to the temporary inspection output. The runtime tree is reproduced from ControllerSources.lock.json.
-
 Linux recognition proves numeric identity and Linux driver classification. It does not prove macOS permissions, physical USB descriptors, Apple framework mapping or successful input/output. Those require runtime descriptor discovery and hardware evidence.

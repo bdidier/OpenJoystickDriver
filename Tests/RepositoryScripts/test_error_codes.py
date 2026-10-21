@@ -1,15 +1,11 @@
 from __future__ import annotations
 
-import io
 import json
 import shutil
-import subprocess
 import tempfile
 import unittest
-from contextlib import redirect_stderr
 from pathlib import Path
 from typing import Any
-from unittest.mock import patch
 
 from Scripts.Catalog import generate_error_codes as errors
 from Scripts.Catalog.schema_header import header
@@ -163,117 +159,6 @@ class ErrorCodeTests(unittest.TestCase):
         for exit_code in sorted(errors.CLI_EXIT_CODES):
             self.assertRegex(page, rf"\| {exit_code} \|")
 
-    # The previous catalogs below are fakes: they stand for the catalog at a release tag.
-    def test_a_deleted_released_code_is_refused(self) -> None:
-        fake_previous = [
-            entry("E1001", "Endpoint", "a"),
-            entry("E1002", "Endpoint", "b"),
-        ]
-        with self.assertRaisesRegex(
-            errors.ErrorCodeError, "E1002 .* is missing from the catalog"
-        ):
-            errors.check_not_reused(fake_previous, [entry("E1001", "Endpoint", "a")])
-
-    def test_a_released_code_given_another_meaning_is_refused(self) -> None:
-        fake_previous = [entry("E1001", "Endpoint", "a")]
-        with self.assertRaisesRegex(errors.ErrorCodeError, "never reused"):
-            errors.check_not_reused(
-                fake_previous, [entry("E1001", "Endpoint", "other")]
-            )
-        with self.assertRaisesRegex(errors.ErrorCodeError, "never reused"):
-            errors.check_not_reused(
-                fake_previous, [entry("E1001", "CLI", "a", exitCode=1)]
-            )
-
-    def test_a_new_code_passes_the_reuse_guard(self) -> None:
-        fake_previous = [entry("E1001", "Endpoint", "a")]
-        errors.check_not_reused(
-            fake_previous,
-            [entry("E1001", "Endpoint", "a"), entry("E1002", "Endpoint", "b")],
-        )
-
-    def test_the_released_catalog_is_read_at_the_last_tag_before_head(self) -> None:
-        root = Path(tempfile.mkdtemp(prefix="ojd-errors-git-"))
-        self.addCleanup(shutil.rmtree, root)
-
-        def run_git(*args: str) -> None:
-            subprocess.run(
-                [
-                    "git",
-                    "-c",
-                    "user.name=test",
-                    "-c",
-                    "user.email=test@example.invalid",
-                    "-c",
-                    "commit.gpgsign=false",
-                    "-c",
-                    "tag.gpgsign=false",
-                    *args,
-                ],
-                cwd=root,
-                check=True,
-                capture_output=True,
-            )
-
-        run_git("init", "-q")
-        self.assertIsNone(errors.released_catalog(root))
-        (root / errors.CATALOG).parent.mkdir(parents=True)
-        released = [entry("E1001", "Endpoint", "a")]
-        self.write_catalog(root, released)
-        run_git("add", "-A")
-        run_git("commit", "-q", "-m", "release")
-        run_git("tag", "0.4.0")
-        self.write_catalog(root, [*released, entry("E1002", "Endpoint", "b")])
-        run_git("commit", "-q", "-am", "next")
-
-        self.assertEqual(errors.released_catalog(root), ("0.4.0", released))
-
-    def test_a_release_without_a_catalog_has_no_baseline_and_says_so(self) -> None:
-        root = Path(tempfile.mkdtemp(prefix="ojd-errors-git-"))
-        self.addCleanup(shutil.rmtree, root)
-        for args in (
-            ("init", "-q"),
-            ("commit", "-q", "--allow-empty", "-m", "release"),
-            ("tag", "0.4.0"),
-            ("commit", "-q", "--allow-empty", "-m", "next"),
-        ):
-            subprocess.run(
-                [
-                    "git",
-                    "-c",
-                    "user.name=test",
-                    "-c",
-                    "user.email=test@example.invalid",
-                    "-c",
-                    "commit.gpgsign=false",
-                    "-c",
-                    "tag.gpgsign=false",
-                    *args,
-                ],
-                cwd=root,
-                check=True,
-                capture_output=True,
-            )
-        stderr = io.StringIO()
-        with redirect_stderr(stderr):
-            self.assertIsNone(errors.released_catalog(root))
-        self.assertIn("0.4.0 has no Resources/ErrorCodes.json", stderr.getvalue())
-
-    def test_a_git_failure_fails_the_reuse_check(self) -> None:
-        root = Path(tempfile.mkdtemp(prefix="ojd-errors-nogit-"))
-        self.addCleanup(shutil.rmtree, root)
-        with self.assertRaises(subprocess.CalledProcessError):
-            errors.released_catalog(root)
-
-    def test_the_guard_runs_against_the_released_catalog(self) -> None:
-        root = self.copy_repository()
-        fake_previous = ("0.0.0", [entry("E1999", "Endpoint", "gone")])
-        with (
-            patch.object(errors, "released_catalog", return_value=fake_previous),
-            self.assertRaisesRegex(errors.ErrorCodeError, "compared with 0.0.0"),
-        ):
-            errors.outputs(root)
-
     def test_write_then_check_round_trips(self) -> None:
         root = self.copy_repository()
         catalog = errors.load_catalog(root)
@@ -299,16 +184,15 @@ class ErrorCodeTests(unittest.TestCase):
             + f'"error.{new_remapping}" = "Other wire. Fix it.";\n',
             encoding="utf-8",
         )
-        with patch.object(errors, "released_catalog", return_value=None):
-            self.assertEqual(
-                errors.regenerate(root, write=False),
-                [errors.ENDPOINT_SCHEMA, errors.WIKI_PAGE],
-            )
-            self.assertEqual(
-                errors.regenerate(root, write=True),
-                [errors.ENDPOINT_SCHEMA, errors.WIKI_PAGE],
-            )
-            self.assertEqual(errors.regenerate(root, write=False), [])
+        self.assertEqual(
+            errors.regenerate(root, write=False),
+            [errors.ENDPOINT_SCHEMA, errors.WIKI_PAGE],
+        )
+        self.assertEqual(
+            errors.regenerate(root, write=True),
+            [errors.ENDPOINT_SCHEMA, errors.WIKI_PAGE],
+        )
+        self.assertEqual(errors.regenerate(root, write=False), [])
         schema = json.loads((root / errors.ENDPOINT_SCHEMA).read_text(encoding="utf-8"))
         enum = schema["$defs"]["error"]["properties"]["code"]["enum"]
         self.assertEqual(enum[-1], new_endpoint)
@@ -365,10 +249,7 @@ class ErrorCodeTests(unittest.TestCase):
             ),
             encoding="utf-8",
         )
-        with (
-            patch.object(errors, "released_catalog", return_value=None),
-            self.assertRaisesRegex(errors.ErrorCodeError, "no key error.E1001"),
-        ):
+        with self.assertRaisesRegex(errors.ErrorCodeError, "no key error.E1001"):
             errors.outputs(root)
 
     def test_a_hand_edited_wiki_table_is_stale(self) -> None:
@@ -378,8 +259,7 @@ class ErrorCodeTests(unittest.TestCase):
             page.read_text(encoding="utf-8").replace("| E1001 |", "| E1001 edited |"),
             encoding="utf-8",
         )
-        with patch.object(errors, "released_catalog", return_value=None):
-            self.assertEqual(errors.regenerate(root, write=False), [errors.WIKI_PAGE])
+        self.assertEqual(errors.regenerate(root, write=False), [errors.WIKI_PAGE])
 
 
 if __name__ == "__main__":

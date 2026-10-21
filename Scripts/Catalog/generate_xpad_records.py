@@ -1,14 +1,10 @@
-"""Generate review-only OJD controller controller record candidates from Linux xpad.c."""
+"""Parse Linux xpad.c device rows and initialization rules into controller record candidates."""
 
 from __future__ import annotations
 
-import argparse
 import ast
-import hashlib
-import json
 import pathlib
 import re
-import sys
 from dataclasses import dataclass
 from typing import Any
 
@@ -17,9 +13,6 @@ from Scripts.Catalog.catalog_rules import load_rules
 from Scripts.Catalog.schema_header import KINDS, header
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-PROFILE_DIR = ROOT / "Sources" / "OpenJoystickDriverKit" / "Resources" / "Controllers"
-LINUX_REPOSITORY = "torvalds/linux"
-XPAD_PATH = "drivers/input/joystick/xpad.c"
 
 DEVICE_PATTERN = re.compile(
     r"""
@@ -312,19 +305,6 @@ def build_profile(
     return profile
 
 
-def load_existing_profile_keys() -> set[tuple[int, int]]:
-    keys: set[tuple[int, int]] = set()
-    for path in sorted(PROFILE_DIR.glob("*/*.json")):
-        try:
-            document = json.loads(path.read_text())
-            keys.add((int(document["vendorID"]), int(document["productID"])))
-        except (KeyError, TypeError, ValueError, json.JSONDecodeError) as error:
-            raise GenerationError(
-                f"Could not read bundled record {path}: {error}"
-            ) from error
-    return keys
-
-
 def generate_candidates(
     devices: list[XpadDevice],
     init_rules: list[InitRule],
@@ -395,90 +375,3 @@ def generate_candidates(
     candidates.sort(key=lambda item: (item.device.vendor_id, item.device.product_id))
     skipped.sort(key=lambda item: (item["vendorID"], item["productID"]))
     return candidates, skipped, filtered_out
-
-
-from Scripts.Catalog.xpad_io import (
-    load_github_source,
-    load_local_source,
-    write_catalog,
-)
-
-
-def parse_cli_int(value: str) -> int:
-    try:
-        parsed = int(value, 0)
-    except ValueError as error:
-        raise argparse.ArgumentTypeError(f"invalid integer: {value}") from error
-    if not 0 <= parsed <= 65_535:
-        raise argparse.ArgumentTypeError("VID/PID must be in 0...65535")
-    return parsed
-
-
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description=(
-            "Generate review-only OJD controller record candidates from a pinned Linux xpad.c source"
-        )
-    )
-    source = parser.add_mutually_exclusive_group(required=True)
-    source.add_argument("--source", type=pathlib.Path, help="local xpad.c path")
-    source.add_argument(
-        "--github-ref",
-        help="Linux GitHub ref to resolve and pin, for example master or a commit SHA",
-    )
-    parser.add_argument("--output-dir", type=pathlib.Path, required=True)
-    parser.add_argument("--type", choices=sorted(TYPE_FILTERS), default="all")
-    parser.add_argument("--vid", type=parse_cli_int)
-    parser.add_argument("--pid", type=parse_cli_int)
-    parser.add_argument(
-        "--include-existing",
-        action="store_true",
-        help="also emit candidates whose VID:PID is already bundled",
-    )
-    parser.add_argument(
-        "--force",
-        action="store_true",
-        help="overwrite differing generated files after explicit review",
-    )
-    return parser.parse_args()
-
-
-def main() -> int:
-    args = parse_args()
-    try:
-        if args.github_ref is not None:
-            source, source_info = load_github_source(args.github_ref, GenerationError)
-        else:
-            source, source_info = load_local_source(args.source)
-
-        devices = parse_devices(source)
-        init_rules = parse_init_rules(source)
-        candidates, skipped, filtered_out = generate_candidates(
-            devices=devices,
-            init_rules=init_rules,
-            existing_keys=load_existing_profile_keys(),
-            include_existing=args.include_existing,
-            requested_type=args.type,
-            vendor_id=args.vid,
-            product_id=args.pid,
-        )
-        source_info["sha256"] = hashlib.sha256(source.encode()).hexdigest()
-        write_catalog(
-            args.output_dir, candidates, force=args.force, failure=GenerationError
-        )
-    except (GenerationError, OSError, KeyError, json.JSONDecodeError) as error:
-        print(f"ERROR: {error}", file=sys.stderr)
-        return 1
-
-    print(
-        f"Generated {len(candidates)} controller record candidate(s) in {args.output_dir} "
-        f"({len(skipped)} skipped, {filtered_out} filtered out)"
-    )
-    print(f"Source SHA-256: {source_info['sha256']}")
-    if source_info["commit"]:
-        print(f"Linux commit: {source_info['commit']}")
-    return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())
