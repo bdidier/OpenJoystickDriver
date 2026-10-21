@@ -330,7 +330,10 @@ private actor SupportDiagnosticsGatewayStub: ApplicationServiceGateway {
     try remappingSnapshot()
   }
 
-  func activateRemappingProfile(id: UUID) throws -> ApplicationServiceRemappingSnapshotPayload {
+  func activateRemappingProfile(
+    id: UUID,
+    allowEmpty: Bool
+  ) throws -> ApplicationServiceRemappingSnapshotPayload {
     try remappingSnapshot()
   }
 

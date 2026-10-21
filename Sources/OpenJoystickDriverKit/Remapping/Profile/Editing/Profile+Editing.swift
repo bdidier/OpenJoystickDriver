@@ -45,6 +45,12 @@ extension RemappingProfile {
     )
   }
 
+  /// Returns a copy without any binding, chord, sequence or layer. Stick, trigger, touch and
+  /// motion settings stay. The copy is not validated.
+  package func removingAllBindings() -> Self {
+    replacing(bindings: [], chords: [], sequences: [], layers: [])
+  }
+
   package func layer(_ layerID: UUID) throws -> RemappingLayer {
     guard let layer = layers.first(where: { $0.id == layerID }) else {
       throw RemappingProfileEditingError.layerNotFound(layerID)

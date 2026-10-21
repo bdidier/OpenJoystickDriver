@@ -137,6 +137,11 @@ extension RuntimeProfileDraft {
     )
   }
 
+  /// Removes every binding, chord, sequence and layer, as `ojd binding clear --all` does.
+  func removingAllBindings() throws -> Self {
+    Self(profile: try Self.validate(profile.removingAllBindings()))
+  }
+
   func removingBinding(_ bindingID: UUID) throws -> Self {
     guard profile.bindings.contains(where: { $0.id == bindingID }) else {
       throw RuntimeProfileDraftError.bindingNotFound(bindingID)

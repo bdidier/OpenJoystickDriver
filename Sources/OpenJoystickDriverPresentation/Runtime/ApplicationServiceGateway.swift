@@ -38,7 +38,10 @@ protocol RemappingGateway: Sendable {
   func resetRemappingProfileLibrary(
     issueID: UUID
   ) async throws -> ApplicationServiceRemappingSnapshotPayload
-  func activateRemappingProfile(id: UUID) async throws -> ApplicationServiceRemappingSnapshotPayload
+  func activateRemappingProfile(
+    id: UUID,
+    allowEmpty: Bool
+  ) async throws -> ApplicationServiceRemappingSnapshotPayload
   func deactivateRemappingProfile(
     vendorID: UInt16,
     productID: UInt16

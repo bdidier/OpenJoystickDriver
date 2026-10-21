@@ -1,4 +1,5 @@
 import Foundation
+import OpenJoystickDriverKit
 import Testing
 
 @testable import OpenJoystickDriverPresentation
@@ -32,7 +33,7 @@ struct StatusItemProfileOperationTests {
   func operationsMapToTheirRuntimeMutation() {
     let id = UUID()
     #expect(
-      StatusItemProfileOperation.activate(profileID: id).request.operation
+      StatusItemProfileOperation.activate(profileID: id, allowEmpty: false).request.operation
         == .activate(profileID: id)
     )
     #expect(
@@ -46,10 +47,49 @@ struct StatusItemProfileOperationTests {
   func operationIsRefusedWithoutSuccessWhileTheEditorHoldsAMutation() async {
     let window = BusyWindow()
     let id = UUID()
-    let activated = await StatusItemProfileOperation.activate(profileID: id).perform(on: window)
+    let activated = await StatusItemProfileOperation.activate(profileID: id, allowEmpty: false)
+      .perform(on: window)
     let deactivated = await StatusItemProfileOperation.deactivate(profileID: id).perform(on: window)
     #expect(activated == nil)
     #expect(deactivated == nil)
     #expect(window.requests.count == 2)
+  }
+
+  private static func emptyProfile() -> RemappingProfile {
+    makeProfile().replacing(outputPolicy: RemappingOutputPolicy(virtualGamepad: .mapped))
+      .removingAllBindings()
+  }
+
+  @Test
+  func aProfileWithOutputIsActivatedWithoutAsking() {
+    let profile = makeProfile()
+    let operation = StatusItemProfileOperation.activation(of: profile.id, in: [profile]) { _ in
+      Issue.record("Asked about a profile that produces output")
+      return false
+    }
+    #expect(operation == .activate(profileID: profile.id, allowEmpty: false))
+  }
+
+  @Test
+  func aProfileWithNoOutputIsActivatedOnlyAfterConfirmation() {
+    let profile = Self.emptyProfile()
+    #expect(profile.producesNoOutput)
+    let confirmed = StatusItemProfileOperation.activation(of: profile.id, in: [profile]) { _ in
+      true
+    }
+    let declined = StatusItemProfileOperation.activation(of: profile.id, in: [profile]) { _ in
+      false
+    }
+    #expect(confirmed == .activate(profileID: profile.id, allowEmpty: true))
+    #expect(declined == nil)
+  }
+
+  @Test
+  func aProfileTheLibraryLacksIsActivatedWithoutTheAllowance() {
+    let id = UUID()
+    #expect(
+      StatusItemProfileOperation.activation(of: id, in: []) { _ in true }
+        == .activate(profileID: id, allowEmpty: false)
+    )
   }
 }

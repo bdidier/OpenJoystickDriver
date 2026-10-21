@@ -29,6 +29,8 @@ func snapshot(
 }
 
 actor GatewayStub: ApplicationServiceGateway {
+  /// The `allowEmpty` of each activation request, in order.
+  private(set) var activationAllowEmpty: [Bool] = []
   var statusPayload: ApplicationServiceStatusPayload
   var snapshotPayload: ApplicationServiceRemappingSnapshotPayload
   var statusShouldFail: Bool
@@ -293,8 +295,12 @@ actor GatewayStub: ApplicationServiceGateway {
     return snapshotPayload
   }
 
-  func activateRemappingProfile(id: UUID) throws -> ApplicationServiceRemappingSnapshotPayload {
-    snapshotPayload
+  func activateRemappingProfile(
+    id: UUID,
+    allowEmpty: Bool
+  ) throws -> ApplicationServiceRemappingSnapshotPayload {
+    activationAllowEmpty.append(allowEmpty)
+    return snapshotPayload
   }
 
   func deactivateRemappingProfile(

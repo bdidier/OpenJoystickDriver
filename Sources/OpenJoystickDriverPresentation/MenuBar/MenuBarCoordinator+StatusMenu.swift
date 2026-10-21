@@ -84,7 +84,8 @@
       case .testInput(let token): mainWindow?.showInputTest(controllerID: token)
       case .showController(let token): mainWindow?.showController(id: token)
       case .disconnectWireless(let token): disconnectWirelessController(sessionToken: token)
-      case .activateProfile(let id): changeProfile(.activate(profileID: id))
+      case .activateProfile(let id):
+        if let operation = confirmedActivation(of: id) { changeProfile(operation) }
       case .deactivateProfile(let id): changeProfile(.deactivate(profileID: id))
       case .showArea(let area): mainWindow?.showMainWindow(area: area)
       case .openWindow: mainWindow?.showMainWindow(area: nil)
@@ -136,6 +137,26 @@
       guard alert.runModal() == .alertFirstButtonReturn else { return }
       runControllerAction(sessionToken) { device in
         await self.viewModel.disconnectWirelessController(device)
+      }
+    }
+
+    /// The activation of a profile, after asking about a profile that produces no output; nil when
+    /// the person declines.
+    func confirmedActivation(of profileID: UUID) -> StatusItemProfileOperation? {
+      let profiles: [RemappingProfile]
+      if case .available(let snapshot) = viewModel.remappingState {
+        profiles = snapshot.profiles
+      } else {
+        profiles = []
+      }
+      return StatusItemProfileOperation.activation(of: profileID, in: profiles) { _ in
+        let alert = NSAlert()
+        alert.alertStyle = .warning
+        alert.messageText = OJDLocalized.string("profiles.emptyActivationTitle")
+        alert.informativeText = OJDLocalized.string("profiles.emptyActivationMessage")
+        alert.addButton(withTitle: OJDLocalized.string("common.setActive"))
+        alert.addButton(withTitle: OJDLocalized.string("common.cancel"))
+        return alert.runModal() == .alertFirstButtonReturn
       }
     }
 

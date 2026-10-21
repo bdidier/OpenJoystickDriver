@@ -56,11 +56,13 @@
   enum ProfileEditorConfirmation: Identifiable {
     case activateEmpty
     case clearInputs
+    case removeAllAssignments
 
     var id: String {
       switch self {
       case .activateEmpty: "activate-empty"
       case .clearInputs: "clear-inputs"
+      case .removeAllAssignments: "remove-all-assignments"
       }
     }
   }

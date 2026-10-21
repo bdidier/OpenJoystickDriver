@@ -58,6 +58,9 @@
 
     var hiddenIdlePacketCount: Int { packets.count - displayedPackets.count }
 
+    /// The soak test of the Soak Test sheet.
+    let soakTest: SoakTestModel
+
     private let gateway: any ApplicationServiceGateway
     private let pollIntervalNanoseconds: UInt64
     private let sleep: Sleep
@@ -72,6 +75,7 @@
       sleep: @escaping Sleep = { try await Task.sleep(nanoseconds: $0) }
     ) {
       self.gateway = gateway
+      soakTest = SoakTestModel(source: .service(gateway: gateway))
       self.pollIntervalNanoseconds = pollIntervalNanoseconds
       self.sleep = sleep
     }

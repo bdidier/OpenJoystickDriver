@@ -230,7 +230,10 @@ private actor PermissionRaceGatewayStub: ApplicationServiceGateway {
     snapshotPayload
   }
 
-  func activateRemappingProfile(id: UUID) throws -> ApplicationServiceRemappingSnapshotPayload {
+  func activateRemappingProfile(
+    id: UUID,
+    allowEmpty: Bool
+  ) throws -> ApplicationServiceRemappingSnapshotPayload {
     snapshotPayload
   }
 

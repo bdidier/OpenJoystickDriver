@@ -59,8 +59,10 @@ struct ProfileMutationTests {
 
     _ = await library.activateRemappingProfile(
       id: original.id,
+      allowEmpty: false,
       request: RuntimeMutationRequest(operation: .activate(profileID: original.id))
     )
+    #expect(await gateway.activationAllowEmpty == [false])
     let activationState = await MainActor.run { library.mutationState }
     guard case .completed(.activate(let activatedID)) = activationState else {
       Issue.record("Expected activation to be separate from profile save")

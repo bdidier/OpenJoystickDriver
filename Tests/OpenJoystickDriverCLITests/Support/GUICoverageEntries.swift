@@ -137,28 +137,13 @@ enum GUICoverageEntries {
     leaf("profile create", "beginCreatingProfile"),
     option("profile create", "--controller", "ProfileControllerChoice"),
     option("profile create", "--app", "ProfileCreationFields"),
-    pending(
-      "profile create",
-      "--virtual-gamepad",
-      "20.3b",
-      "the create sheet offers no virtual gamepad choice"
-    ),
-    pending(
-      "profile create",
-      "--physical-input",
-      "20.3b",
-      "the create sheet offers no physical input choice"
-    ),
+    option("profile create", "--virtual-gamepad", "ProfileOutputPolicyView"),
+    option("profile create", "--physical-input", "ProfileOutputPolicyView"),
     leaf("profile duplicate", "ProfileDuplicateSheet"),
     leaf("profile rename", "updateMetadata"),
     leaf("profile delete", "deleteProfile"),
     leaf("profile activate", "activateProfile"),
-    pending(
-      "profile activate",
-      "--allow-empty",
-      "20.3b",
-      "the GUI always activates a profile that produces no output, without asking"
-    ),
+    option("profile activate", "--allow-empty", "requestActivation"),
     leaf("profile deactivate", "deactivateProfile"),
     leaf("profile import", "chooseProfileToImport"),
     leaf("profile validate", "validateProfileFile"),
@@ -186,12 +171,7 @@ enum GUICoverageEntries {
     option("binding set", "--double-tap", "doubleTapWindow"),
     option("binding set", "--actions-json", "ProfileAdditionalActionsView"),
     leaf("binding clear", "removeBinding"),
-    pending(
-      "binding clear",
-      "--all",
-      "20.3b",
-      "no action removes every binding, chord, sequence and layer at once"
-    ),
+    option("binding clear", "--all", "removeAllAssignments"),
   ]
 
   private static let virtual = [
@@ -257,15 +237,10 @@ enum GUICoverageEntries {
     option("log export", "--lines", "setLineCount"),
     leaf("diagnose", "ActivityDiagnosticsModel"),
     option("diagnose", "--output", "saveSupportReport"),
-    pending("diagnose", "--soak", "20.3d", "no Soak Test sheet under developer tools"),
-    pending("diagnose", "--interval-ms", "20.3d", "no Soak Test sheet under developer tools"),
-    pending("diagnose", "--rss-limit-mib", "20.3d", "no Soak Test sheet under developer tools"),
-    pending(
-      "diagnose",
-      "--footprint-limit-mib",
-      "20.3d",
-      "no Soak Test sheet under developer tools"
-    ),
+    option("diagnose", "--soak", "SoakTestSheet"),
+    option("diagnose", "--interval-ms", "SoakTestField"),
+    option("diagnose", "--rss-limit-mib", "SoakTestField"),
+    option("diagnose", "--footprint-limit-mib", "SoakTestField"),
     leaf("update check", "checkForUpdates"),
     option("update check", "--prerelease", "setIncludePrereleaseUpdates"),
     leaf("explain", "ErrorCodeExplainerView"),

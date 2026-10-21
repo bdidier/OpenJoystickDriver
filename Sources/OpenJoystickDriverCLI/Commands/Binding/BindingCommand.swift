@@ -326,6 +326,6 @@ struct BindingClearCommand: AsyncParsableCommand {
     guard all else {
       return profile.replacing(bindings: profile.bindings.filter { !sources.contains($0.source) })
     }
-    return profile.replacing(bindings: [], chords: [], sequences: [], layers: [])
+    return profile.removingAllBindings()
   }
 }
