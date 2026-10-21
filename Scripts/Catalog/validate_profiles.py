@@ -10,6 +10,7 @@ from typing import Any
 try:
     from jsonschema import Draft202012Validator
     from jsonschema.exceptions import ValidationError as JSONSchemaValidationError
+    from jsonschema.exceptions import best_match
     from referencing import Registry, Resource
 except ImportError:
     print(
@@ -368,27 +369,29 @@ def check_record(
     check_record_rules(path, record, schema_validator)
 
 
+def is_api_version_error(error: JSONSchemaValidationError) -> bool:
+    """Whether `error` says the record's `apiVersion` is missing or not the supported one."""
+    return list(error.absolute_path) == ["apiVersion"] or (
+        error.validator == "required"
+        and not error.absolute_path
+        and "'apiVersion'" in error.message
+    )
+
+
 def check_record_rules(
     path: pathlib.Path, record: dict[str, Any], schema_validator: Any
 ) -> None:
-    try:
-        schema_validator.validate(record)
-    except JSONSchemaValidationError as error:
+    # The header is checked first, as `OpenJoystickDriverAPI.headerProblem` is in Swift, so a
+    # record with a bad apiVersion and another problem gets E5001 whichever error the schema
+    # validator ranks first.
+    errors = list(schema_validator.iter_errors(record))
+    header = [error for error in errors if is_api_version_error(error)]
+    if header or errors:
+        error = header[0] if header else best_match(errors)
         location = ".".join(str(component) for component in error.absolute_path)
         suffix = f" at {location}" if location else ""
-        versioned = list(error.absolute_path) == ["apiVersion"] or (
-            error.validator == "required"
-            and not error.absolute_path
-            and "'apiVersion'" in error.message
-        )
-        if versioned:
-            raise ValidationError(
-                f"{path}{suffix}: {error.message}",
-                UNSUPPORTED_API_VERSION,
-            ) from error
-        raise ValidationError(
-            f"{path}{suffix}: {error.message}", INVALID_CONTROLLER_RECORD
-        ) from error
+        code = UNSUPPORTED_API_VERSION if header else INVALID_CONTROLLER_RECORD
+        raise ValidationError(f"{path}{suffix}: {error.message}", code) from error
 
     # JSON Schema cannot express disjoint arrays; the runtime decoder rejects overlap too.
     capabilities = record.get("capabilities", {})

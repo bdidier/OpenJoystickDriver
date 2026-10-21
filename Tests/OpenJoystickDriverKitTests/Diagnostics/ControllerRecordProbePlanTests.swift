@@ -207,11 +207,11 @@ struct ControllerRecordProbePlanTests {
     let noKind = #expect(throws: ControllerRecordProbeError.self) {
       try ControllerRecordProbePlan(data: try recordData(kind: nil))
     }
-    #expect(noKind?.errorDescription?.hasPrefix("Invalid controller record: ") == true)
+    #expect(noKind?.errorDescription?.hasPrefix("E5007: ") == true)
     let wrongKind = #expect(throws: ControllerRecordProbeError.self) {
       try ControllerRecordProbePlan(data: try recordData(kind: "NotAKind"))
     }
-    #expect(wrongKind?.errorDescription?.hasPrefix("Invalid controller record: ") == true)
+    #expect(wrongKind?.errorDescription?.hasPrefix("E5007: ") == true)
   }
 
   @Test

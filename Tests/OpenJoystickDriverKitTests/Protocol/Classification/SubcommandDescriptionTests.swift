@@ -28,7 +28,6 @@ struct SubcommandDescriptionTests {
       """
     return try ProtocolDescription.decode(
       Data(json.utf8),
-      protocolID: family,
       fileName: "\(family.descriptionFileStem).json"
     )
   }

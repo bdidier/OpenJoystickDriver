@@ -76,8 +76,7 @@ public struct ControllerDefaults: Equatable, Sendable {
     } catch let error as DecodingError {
       throw ControllerRecordProblem(
         code: .invalidControllerRecord,
-        ControllerRecordSet.problemDescription(error)
-          .replacingOccurrences(of: "record.", with: "tuning.")
+        ControllerRecordSet.problemDescription(error, document: "tuning")
       )
     }
   }

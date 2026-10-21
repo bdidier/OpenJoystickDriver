@@ -861,7 +861,6 @@ struct ProtocolDescriptionTests {
       do {
         _ = try ProtocolDescription.decode(
           Data(json.utf8),
-          protocolID: .xboxGIP,
           fileName: "xbox-gip.json"
         )
         return nil
@@ -951,7 +950,6 @@ enum ProtocolDescriptionFixture {
       """
     return try ProtocolDescription.decode(
       Data(json.utf8),
-      protocolID: family,
       fileName: "\(family.descriptionFileStem).json"
     )
   }

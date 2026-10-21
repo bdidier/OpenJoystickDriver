@@ -88,7 +88,7 @@ def require_listed(kind: str, document: Any, file_name: str | None = None) -> No
         entry = {"name": "<name the rule>", "document": document}
         if file_name is not None:
             entry["fileName"] = file_name
-        raise AssertionError(
+        raise TypeError(
             f"Python rejects a {kind} document that fixtures/schema_rejections/{kind}.json "
             "does not list, so Swift has no counterpart; run `./Scripts/ojd fixtures "
             f"regenerate schema-rejections --write`:\n{json.dumps(entry)}"
@@ -103,14 +103,19 @@ def enforce_controller_rejections() -> None:
 
     def listing(name: str) -> None:
         original = getattr(validate_profiles, name)
+        signature = inspect.signature(original)
 
         def wrapper(*args: Any, **kwargs: Any) -> Any:
             try:
                 return original(*args, **kwargs)
             except validate_profiles.ValidationError:
-                document = args[1] if len(args) > 1 else None
-                if isinstance(document, dict):
-                    require_listed("controller", document)
+                # Bound by name, so a keyword call is checked like a positional one.
+                document = signature.bind(*args, **kwargs).arguments["record"]
+                if not isinstance(document, dict):
+                    raise TypeError(
+                        f"{name} was given a record that is not a JSON object"
+                    )
+                require_listed("controller", document)
                 raise
 
         patcher = patch.object(validate_profiles, name, wrapper)

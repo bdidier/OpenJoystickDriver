@@ -153,6 +153,24 @@ class ControllerSchemaTests(unittest.TestCase):
                     "E5001" if member == "apiVersion" else "E5007",
                 )
 
+    def test_a_wrong_apiVersion_wins_over_other_problems(self) -> None:
+        for name, document in {
+            "foreign apiVersion with an unknown field": record(
+                GIP, apiVersion="unsupported.example/v9", notAField="USB"
+            ),
+            "missing apiVersion with a foreign kind": {
+                key: value
+                for key, value in record(GIP, kind="ControllerPatch").items()
+                if key != "apiVersion"
+            },
+        }.items():
+            with self.subTest(name):
+                with self.assertRaises(validate_profiles.ValidationError) as raised:
+                    validate_profiles.check_record(
+                        Path("record.json"), document, self.validator.schema
+                    )
+                self.assertEqual(raised.exception.code, "E5001")
+
     def test_rejects_unknown_vocabulary(self) -> None:
         refused = {
             "unknown field": record(GIP, notAField="USB"),

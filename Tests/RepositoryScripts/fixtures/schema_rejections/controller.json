@@ -404,7 +404,7 @@
     {
       "name": "rejects invalid modes: endpoints without an entry",
       "code": "E5007",
-      "python": "E5007: record.json at modes.1.match.interfaceSignature.endpoints: [] should be non-empty",
+      "python": "E5007: record.json at modes.1.match.interfaceSignature: False schema does not allow []",
       "swift": "record.modes.[1].match.interfaceSignature.endpoints: endpoints names at least one endpoint",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -438,7 +438,7 @@
     {
       "name": "rejects invalid modes: endpoint without a key",
       "code": "E5007",
-      "python": "E5007: record.json at modes.1.match.interfaceSignature.endpoints.0: {} should be non-empty",
+      "python": "E5007: record.json at modes.1.match.interfaceSignature: False schema does not allow [{}]",
       "swift": "record.modes.[1].match.interfaceSignature.endpoints.[0]: an endpoint needs at least one key",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -472,7 +472,7 @@
     {
       "name": "rejects invalid modes: endpoint with a bad direction",
       "code": "E5007",
-      "python": "E5007: record.json at modes.1.match.interfaceSignature.endpoints.0.direction: 'both' is not one of ['In', 'Out']",
+      "python": "E5007: record.json at modes.1.match.interfaceSignature: False schema does not allow [{'direction': 'both'}]",
       "swift": "record.modes.[1].match.interfaceSignature.endpoints.[0].direction: direction is In or Out",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -510,7 +510,7 @@
     {
       "name": "rejects invalid modes: endpoint with a bad transfer type",
       "code": "E5007",
-      "python": "E5007: record.json at modes.1.match.interfaceSignature.endpoints.0.transferType: 'unknown' is not one of ['Control', 'Isochronous', 'Bulk', 'Interrupt']",
+      "python": "E5007: record.json at modes.1.match.interfaceSignature: False schema does not allow [{'transferType': 'unknown'}]",
       "swift": "record.modes.[1].match.interfaceSignature.endpoints.[0].transferType: transferType is Control, Isochronous, Bulk, or Interrupt",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -548,7 +548,7 @@
     {
       "name": "rejects invalid modes: endpoint address above 255",
       "code": "E5007",
-      "python": "E5007: record.json at modes.1.match.interfaceSignature.endpoints.0.address: 256 is greater than the maximum of 255",
+      "python": "E5007: record.json at modes.1.match.interfaceSignature: False schema does not allow [{'address': 256}]",
       "swift": "record.modes.[1].match.interfaceSignature.endpoints.[0].address: address is 0...255",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -586,7 +586,7 @@
     {
       "name": "rejects invalid modes: endpoint packet size above 16 bits",
       "code": "E5007",
-      "python": "E5007: record.json at modes.1.match.interfaceSignature.endpoints.0.maxPacketSize: 65536 is greater than the maximum of 65535",
+      "python": "E5007: record.json at modes.1.match.interfaceSignature: False schema does not allow [{'maxPacketSize': 65536}]",
       "swift": "record.modes.[1].match.interfaceSignature.endpoints.[0].maxPacketSize: maxPacketSize is 0...65535",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -624,7 +624,7 @@
     {
       "name": "rejects invalid modes: endpoint with an unknown key",
       "code": "E5007",
-      "python": "E5007: record.json at modes.1.match.interfaceSignature.endpoints.0: Additional properties are not allowed ('interval' was unexpected)",
+      "python": "E5007: record.json at modes.1.match.interfaceSignature: False schema does not allow [{'interval': 1}]",
       "swift": "record.modes.[1].match.interfaceSignature.endpoints.[0]: unknown field(s): interval",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -2390,6 +2390,46 @@
       }
     },
     {
+      "name": "a wrong apiVersion wins over other problems: foreign apiVersion with an unknown field",
+      "code": "E5001",
+      "python": "E5001: record.json at apiVersion: 'openjoystickdriver/v1alpha1' was expected",
+      "swift": "E5001: apiVersion unsupported.example/v9 is not supported; the supported apiVersion is openjoystickdriver/v1alpha1",
+      "document": {
+        "apiVersion": "unsupported.example/v9",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            }
+          }
+        ],
+        "notAField": "USB"
+      }
+    },
+    {
+      "name": "a wrong apiVersion wins over other problems: missing apiVersion with a foreign kind",
+      "code": "E5001",
+      "python": "E5001: record.json: 'apiVersion' is a required property",
+      "swift": "E5001: no apiVersion found; the supported apiVersion is openjoystickdriver/v1alpha1",
+      "document": {
+        "kind": "ControllerPatch",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            }
+          }
+        ]
+      }
+    },
+    {
       "name": "rejects a missing or foreign header: member=apiVersion, value=None",
       "code": "E5001",
       "python": "E5001: record.json: 'apiVersion' is a required property",
@@ -2768,7 +2808,7 @@
     {
       "name": "rejects unknown vocabulary: usb block on GameSir enhanced HID",
       "code": "E5007",
-      "python": "E5007: record.json at modes.0.protocol: {'family': 'VendorGameSir', 'variant': 'EnhancedHID', 'parameters': {'innerGrips': True}} is not valid under any of the given schemas",
+      "python": "E5007: record.json at modes.0.protocol.family: 'VendorGameSir' is not one of ['XboxXID', 'XboxXUSB', 'XboxGIP']",
       "swift": "record.usb: USB overrides require a raw-USB protocol family",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -3713,7 +3753,7 @@
     {
       "name": "rejects invalid report layouts: report ID 0",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'report': {'id': 0, 'length': 2}, 'buttons': [{'control': 'South', 'byte': 1, 'mask': 1}]} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input.report.id: 0 is less than the minimum of 1",
       "swift": "record.input.report: id must be 1...255",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -3746,7 +3786,7 @@
     {
       "name": "rejects invalid report layouts: long report",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'report': {'length': 65}, 'buttons': [{'control': 'South', 'byte': 1, 'mask': 1}]} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input.report.length: 65 is greater than the maximum of 64",
       "swift": "record.input: an input report is 1...64 bytes long, with its ID byte",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -3778,7 +3818,7 @@
     {
       "name": "rejects invalid report layouts: report only",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'report': {'length': 2}} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input: {'report': {'length': 2}} does not have enough properties",
       "swift": "record.input: an input layout decodes at least one control",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -3803,7 +3843,7 @@
     {
       "name": "rejects invalid report layouts: empty buttons",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'report': {'length': 2}, 'buttons': []} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input.buttons: [] should be non-empty",
       "swift": "record.input: input lists must be nonempty",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -3829,7 +3869,7 @@
     {
       "name": "rejects invalid report layouts: zero mask",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'report': {'length': 2}, 'buttons': [{'control': 'South', 'byte': 1, 'mask': 0}]} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input.buttons.0.mask: 0 is less than the minimum of 1",
       "swift": "record.input: input fields must select at least one bit after the report ID inside the report",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -3861,7 +3901,7 @@
     {
       "name": "rejects invalid report layouts: dpad button",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'report': {'length': 2}, 'buttons': [{'control': 'DpadUp', 'byte': 1, 'mask': 1}]} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input.buttons.0.control: 'DpadUp' should not be valid under {'anyOf': [{'$ref': 'vocabulary.schema.json#/$defs/stickAxis'}, {'$ref': 'vocabulary.schema.json#/$defs/dpadControl'}]}",
       "swift": "record.input: a button names a digital control, not the D-pad or a stick axis",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -3893,7 +3933,7 @@
     {
       "name": "rejects invalid report layouts: 12-bit axis",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'report': {'length': 2}, 'buttons': [{'control': 'South', 'byte': 1, 'mask': 1}], 'axes': [{'control': 'LeftStickX', 'byte': 1, 'bits': 12}]} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input.axes.0.bits: 12 is not one of [8, 16]",
       "swift": "record.input: an axis is 8 or 16 bits with min below max inside its range",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -3932,7 +3972,7 @@
     {
       "name": "rejects invalid report layouts: 4-way hat",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'report': {'length': 2}, 'buttons': [{'control': 'South', 'byte': 1, 'mask': 1}], 'hat': [{'encoding': '4-way', 'byte': 1, 'mask': 15}]} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input.hat.0: {'encoding': '4-way', 'byte': 1, 'mask': 15} is not valid under any of the given schemas",
       "swift": "record.input.hat.[0]: hat encoding must be EightWay, Directions or Table",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -3971,7 +4011,7 @@
     {
       "name": "rejects invalid report layouts: unsigned symmetric axis",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'report': {'length': 2}, 'buttons': [{'control': 'South', 'byte': 1, 'mask': 1}], 'axes': [{'control': 'LeftStickX', 'byte': 1, 'symmetric': True}]} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input.axes.0: 'signed' is a required property",
       "swift": "record.input: a symmetric axis is signed with min below 0 below max",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -4010,7 +4050,7 @@
     {
       "name": "rejects invalid report layouts: table hat without values",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'report': {'length': 2}, 'buttons': [{'control': 'South', 'byte': 1, 'mask': 1}], 'hat': [{'encoding': 'Table', 'byte': 1, 'mask': 15, 'values': {}}]} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input.hat.0: {'encoding': 'Table', 'byte': 1, 'mask': 15, 'values': {}} is not valid under any of the given schemas",
       "swift": "record.input: a table hat names directions for values its mask holds, and no neutral entry",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -4050,7 +4090,7 @@
     {
       "name": "rejects invalid report layouts: table hat neutral entry",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'report': {'length': 2}, 'buttons': [{'control': 'South', 'byte': 1, 'mask': 1}], 'hat': [{'encoding': 'Table', 'byte': 1, 'mask': 15, 'values': {'0': 'Neutral'}}]} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input.hat.0.values.0: 'Neutral' is not one of ['North', 'NorthEast', 'East', 'SouthEast', 'South', 'SouthWest', 'West', 'NorthWest']",
       "swift": "record.input.hat.[0]: values map decimal numbers to non-neutral direction names",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -4092,7 +4132,7 @@
     {
       "name": "rejects invalid report layouts: empty trigger",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'report': {'length': 2}, 'buttons': [{'control': 'South', 'byte': 1, 'mask': 1}], 'leftTrigger': {}} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input.leftTrigger: {} should be non-empty",
       "swift": "record.input: a trigger names an analog byte, a button, or both",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -4125,7 +4165,7 @@
     {
       "name": "rejects invalid report layouts: unknown section",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'report': {'length': 2}, 'buttons': [{'control': 'South', 'byte': 1, 'mask': 1}], 'touchpad': {}} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input: Additional properties are not allowed ('touchpad' was unexpected)",
       "swift": "record.input: unknown field(s): touchpad",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -4181,7 +4221,7 @@
     {
       "name": "rejects a resend interval that a keep alive would retime: session keepAlive",
       "code": "E5007",
-      "python": "E5007: record.json at modes.0.session.keepAlive: 'writes' is a required property",
+      "python": "E5007: record.json at modes.0: {'id': 'default', 'protocol': {'family': 'XboxXUSB', 'variant': 'Wired'}, 'session': {'rumble': {'report': {'kind': 'USB', 'length': 8}, 'lowFrequency': {'byte': 3}, 'resendIntervalMilliseconds': 100}, 'keepAlive': {'intervalMilliseconds': 500}}} should not be valid under {'properties': {'session': {'required': ['keepAlive', 'rumble'], 'properties': {'rumble': {'required': ['resendIntervalMilliseconds']}}}}, 'required': ['session']}",
       "swift": "record.modes.[0].session.keepAlive: missing field writes",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -4217,7 +4257,7 @@
     {
       "name": "rejects a resend interval that a keep alive would retime: family keepAlive",
       "code": "E5007",
-      "python": "E5007: record.json at modes.0.protocol: 'parameters' is a required property",
+      "python": "E5007: record.json at modes.0: {'id': 'default', 'protocol': {'family': 'VendorGameSir', 'variant': 'EnhancedHID'}, 'session': {'rumble': {'report': {'kind': 'Output', 'id': 2, 'length': 8}, 'lowFrequency': {'byte': 3}, 'highFrequency': {'byte': 2}, 'resendIntervalMilliseconds': 100}}} should not be valid under {'properties': {'session': {'required': ['rumble'], 'properties': {'rumble': {'required': ['resendIntervalMilliseconds']}}}, 'protocol': {'required': ['family'], 'properties': {'family': {'enum': ['VendorGameSir']}}}}, 'required': ['session', 'protocol']}",
       "swift": "record.modes.[0].protocol: GameSir enhanced HID must select exactly one model parameter",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -4439,7 +4479,7 @@
     {
       "name": "rejects invalid ownership and session: keep-alive in a record",
       "code": "E5007",
-      "python": "E5007: record.json at modes.0.session.keepAlive: 'writes' is a required property",
+      "python": "E5007: record.json at modes.0.session: False schema does not allow {'intervalMilliseconds': 500}",
       "swift": "record.modes.[0].session.keepAlive: missing field writes",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -4713,7 +4753,7 @@
     {
       "name": "rejects malformed template bytes encodings counter and resend: usb packet with an id",
       "code": "E5007",
-      "python": "E5007: record.json at modes.0.session.rumble.report: {'kind': 'USB', 'id': 2, 'length': 8} is not valid under any of the given schemas",
+      "python": "E5007: record.json at modes.0.session.rumble.report.kind: 'USB' is not one of ['Output', 'Feature']",
       "swift": "record.modes.[0].session.rumble.report: unknown field(s): id",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -4745,7 +4785,7 @@
     {
       "name": "rejects malformed template bytes encodings counter and resend: usb packet of 65 bytes",
       "code": "E5007",
-      "python": "E5007: record.json at modes.0.session.rumble.report: {'kind': 'USB', 'length': 65} is not valid under any of the given schemas",
+      "python": "E5007: record.json at modes.0.session.rumble.report.kind: 'USB' is not one of ['Output', 'Feature']",
       "swift": "record.modes.[0].session.rumble: a rumble packet is 1...64 bytes long",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -5276,7 +5316,7 @@
     {
       "name": "rejects invalid startup writes: input report",
       "code": "E5007",
-      "python": "E5007: record.json at modes.0.session.startup.0: {'report': {'kind': 'input', 'id': 244, 'length': 5}, 'bytes': '42 03 00 00', 'transport': 'BluetoothClassic'} is not valid under any of the given schemas",
+      "python": "E5007: record.json at modes.0.session.startup.0.report.kind: 'input' is not one of ['Output', 'Feature']",
       "swift": "record.modes.[0].session.startup.[0].report: report must be an output or feature report with ID 0...255",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -5409,7 +5449,7 @@
     {
       "name": "rejects invalid startup writes: radio transport",
       "code": "E5007",
-      "python": "E5007: record.json at modes.0.session.startup.0: {'report': {'kind': 'Feature', 'id': 244, 'length': 5}, 'bytes': '42 03 00 00', 'transport': 'ProprietaryRadioReceiver'} is not valid under any of the given schemas",
+      "python": "E5007: record.json at modes.0.session.startup.0.transport: 'ProprietaryRadioReceiver' is not one of ['USB', 'BluetoothClassic', 'BluetoothLE']",
       "swift": "record.modes.[0].session.startup.[0]: a startup transport is USB, BluetoothClassic or BluetoothLE",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -5623,7 +5663,7 @@
     {
       "name": "rejects invalid startup writes: unknown phase",
       "code": "E5007",
-      "python": "E5007: record.json at modes.0.session.startup.0: {'report': {'kind': 'Feature', 'id': 244, 'length': 5}, 'bytes': '42 03 00 00', 'transport': 'BluetoothClassic', 'phase': 'later'} is not valid under any of the given schemas",
+      "python": "E5007: record.json at modes.0.session.startup.0.phase: 'later' is not one of ['Startup', 'Activation']",
       "swift": "record.modes.[0].session.startup.[0]: a startup phase is Startup or Activation",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -5657,7 +5697,7 @@
     {
       "name": "rejects invalid startup writes: CRC seed above 255",
       "code": "E5007",
-      "python": "E5007: record.json at modes.0.session.startup.0: {'report': {'kind': 'Feature', 'id': 244, 'length': 5}, 'bytes': '42 03 00 00', 'transport': 'BluetoothClassic', 'crc32Seed': 256} is not valid under any of the given schemas",
+      "python": "E5007: record.json at modes.0.session.startup.0.crc32Seed: 256 is greater than the maximum of 255",
       "swift": "record.modes.[0].session.startup.[0]: a startup crc32Seed is 0...255",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -5691,7 +5731,7 @@
     {
       "name": "rejects invalid startup writes: CRC without room",
       "code": "E5007",
-      "python": "E5007: record.json at modes.0.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'crc32Seed': 1} is not valid under any of the given schemas",
+      "python": "E5007: record.json at modes.0.session.startup.0.report.length: 4 is less than the minimum of 5",
       "swift": "record.modes.[0].session.startup.[0]: a CRC startup report has room for its 4-byte trailer",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -5724,7 +5764,7 @@
     {
       "name": "rejects invalid startup writes: report above 128 bytes",
       "code": "E5007",
-      "python": "E5007: record.json at modes.0.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 129}, 'bytes': '42 03 00 00', 'transport': 'BluetoothClassic'} is not valid under any of the given schemas",
+      "python": "E5007: record.json at modes.0.session.startup.0.report.length: 129 is greater than the maximum of 128",
       "swift": "record.modes.[0].session.startup.[0]: a startup report is 2...128 bytes long",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -5828,7 +5868,7 @@
     {
       "name": "rejects invalid startup writes: packet endpoint 0",
       "code": "E5007",
-      "python": "E5007: record.json at modes.0.session.startup.0: {'bytes': '05 20 00 01 00', 'endpoint': 0} is not valid under any of the given schemas",
+      "python": "E5007: record.json at modes.0.session.startup.0.endpoint: 0 is less than the minimum of 1",
       "swift": "record.modes.[0].session.startup.[0]: a USB startup endpoint is 1...127",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -5856,7 +5896,7 @@
     {
       "name": "rejects invalid startup writes: packet endpoint 128",
       "code": "E5007",
-      "python": "E5007: record.json at modes.0.session.startup.0: {'bytes': '05 20 00 01 00', 'endpoint': 128} is not valid under any of the given schemas",
+      "python": "E5007: record.json at modes.0.session.startup.0.endpoint: 128 is greater than the maximum of 127",
       "swift": "record.modes.[0].session.startup.[0]: a USB startup endpoint is 1...127",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -5884,7 +5924,7 @@
     {
       "name": "rejects invalid startup writes: packet timeout 0",
       "code": "E5007",
-      "python": "E5007: record.json at modes.0.session.startup.0: {'bytes': '05 20 00 01 00', 'timeoutMilliseconds': 0} is not valid under any of the given schemas",
+      "python": "E5007: record.json at modes.0.session.startup.0.timeoutMilliseconds: 0 is less than the minimum of 1",
       "swift": "record.modes.[0].session.startup.[0]: a USB startup timeout is 1...60000 ms",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -5912,7 +5952,7 @@
     {
       "name": "rejects invalid startup writes: packet timeout above 60000",
       "code": "E5007",
-      "python": "E5007: record.json at modes.0.session.startup.0: {'bytes': '05 20 00 01 00', 'timeoutMilliseconds': 60001} is not valid under any of the given schemas",
+      "python": "E5007: record.json at modes.0.session.startup.0.timeoutMilliseconds: 60001 is greater than the maximum of 60000",
       "swift": "record.modes.[0].session.startup.[0]: a USB startup timeout is 1...60000 ms",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -5968,7 +6008,7 @@
     {
       "name": "rejects invalid startup writes: packet session byte above 63",
       "code": "E5007",
-      "python": "E5007: record.json at modes.0.session.startup.0: {'bytes': '05 20 00 01 00', 'sessionByte': 64} is not valid under any of the given schemas",
+      "python": "E5007: record.json at modes.0.session.startup.0.sessionByte: 64 is greater than the maximum of 63",
       "swift": "record.modes.[0].session.startup.[0]: a USB startup session byte indexes the packet",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -5996,7 +6036,7 @@
     {
       "name": "rejects invalid startup writes: packet above 64 bytes",
       "code": "E5007",
-      "python": "E5007: record.json at modes.0.session.startup.0: {'bytes': '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00'} is not valid under any of the given schemas",
+      "python": "E5007: record.json at modes.0.session.startup.0.bytes: '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00' is too long",
       "swift": "record.modes.[0].session.startup.[0]: a USB startup packet is 1...64 bytes long",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -7176,7 +7216,7 @@
     {
       "name": "rejects invalid usages: empty usages",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'hidUsageMap': {'usages': []}} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input.hidUsageMap.usages: [] should be non-empty",
       "swift": "record.input.hidUsageMap: a usage map must not be empty",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -7201,7 +7241,7 @@
     {
       "name": "rejects invalid usages: button on a stick",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'hidUsageMap': {'usages': [{'kind': 'Button', 'page': 9, 'usage': 1, 'control': 'LeftStickX'}]}} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input.hidUsageMap.usages.0.control: 'LeftStickX' should not be valid under {'anyOf': [{'$ref': 'vocabulary.schema.json#/$defs/stickAxis'}, {'$ref': 'vocabulary.schema.json#/$defs/dpadControl'}]}",
       "swift": "record.input.hidUsageMap: usage 9/1 is a button; LeftStickX is not",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -7233,7 +7273,7 @@
     {
       "name": "rejects invalid usages: button on the dpad",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'hidUsageMap': {'usages': [{'kind': 'Button', 'page': 9, 'usage': 1, 'control': 'DpadUp'}]}} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input.hidUsageMap.usages.0: {'kind': 'Button', 'page': 9, 'usage': 1, 'control': 'DpadUp'} is not valid under any of the given schemas",
       "swift": "record.input.hidUsageMap: usage 9/1 is a button; DpadUp is not",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -7265,7 +7305,7 @@
     {
       "name": "rejects invalid usages: axis on a button",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'hidUsageMap': {'usages': [{'kind': 'Axis', 'page': 1, 'usage': 48, 'control': 'South'}]}} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input.hidUsageMap.usages.0.control: 'South' is not one of ['LeftStickX', 'LeftStickY', 'RightStickX', 'RightStickY', 'LeftTrigger', 'RightTrigger']",
       "swift": "record.input.hidUsageMap: usage 1/48 is an axis; South is not",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -7297,7 +7337,7 @@
     {
       "name": "rejects invalid usages: axis on the dpad",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'hidUsageMap': {'usages': [{'kind': 'Axis', 'page': 1, 'usage': 48, 'control': 'DpadUp'}]}} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input.hidUsageMap.usages.0: {'kind': 'Axis', 'page': 1, 'usage': 48, 'control': 'DpadUp'} is not valid under any of the given schemas",
       "swift": "record.input.hidUsageMap: usage 1/48 is an axis; DpadUp is not",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -7329,7 +7369,7 @@
     {
       "name": "rejects invalid usages: hat on a button",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'hidUsageMap': {'usages': [{'kind': 'Hat', 'page': 1, 'usage': 57, 'control': 'South'}]}} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input.hidUsageMap.usages.0.control: 'South' is not one of ['LeftStickX', 'LeftStickY', 'RightStickX', 'RightStickY', 'LeftTrigger', 'RightTrigger']",
       "swift": "record.input.hidUsageMap.usages.[0]: unknown field(s): control",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -7361,7 +7401,7 @@
     {
       "name": "rejects invalid usages: hat range 2...9",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'hidUsageMap': {'usages': [{'kind': 'Hat', 'page': 1, 'usage': 57, 'range': {'min': 2, 'max': 9}}]}} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input.hidUsageMap.usages.0: {'kind': 'Hat', 'page': 1, 'usage': 57, 'range': {'min': 2, 'max': 9}} is not valid under any of the given schemas",
       "swift": "record.input.hidUsageMap: usage 1/57 hat range must be 0...7 or 1...8",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -7396,7 +7436,7 @@
     {
       "name": "rejects invalid usages: hat with a dead zone",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'hidUsageMap': {'usages': [{'kind': 'Hat', 'page': 1, 'usage': 57, 'deadZone': 0.1}]}} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input.hidUsageMap.usages.0: {'kind': 'Hat', 'page': 1, 'usage': 57, 'deadZone': 0.1} is not valid under any of the given schemas",
       "swift": "record.input.hidUsageMap.usages.[0]: unknown field(s): deadZone",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -7428,7 +7468,7 @@
     {
       "name": "rejects invalid usages: button with a dead zone",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'hidUsageMap': {'usages': [{'kind': 'Button', 'page': 9, 'usage': 1, 'control': 'South', 'deadZone': 0.1}]}} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input.hidUsageMap.usages.0.control: 'South' is not one of ['LeftStickX', 'LeftStickY', 'RightStickX', 'RightStickY', 'LeftTrigger', 'RightTrigger']",
       "swift": "record.input.hidUsageMap.usages.[0]: unknown field(s): deadZone",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -7461,7 +7501,7 @@
     {
       "name": "rejects invalid usages: dead zone 0",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'hidUsageMap': {'usages': [{'kind': 'Axis', 'page': 1, 'usage': 48, 'control': 'LeftStickX', 'deadZone': 0}]}} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input.hidUsageMap.usages.0.control: 'LeftStickX' should not be valid under {'anyOf': [{'$ref': 'vocabulary.schema.json#/$defs/stickAxis'}, {'$ref': 'vocabulary.schema.json#/$defs/dpadControl'}]}",
       "swift": "record.input.hidUsageMap: usage 1/48 deadZone must be above 0 and below 1",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -7494,7 +7534,7 @@
     {
       "name": "rejects invalid usages: dead zone 1",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'hidUsageMap': {'usages': [{'kind': 'Axis', 'page': 1, 'usage': 48, 'control': 'LeftStickX', 'deadZone': 1}]}} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input.hidUsageMap.usages.0.control: 'LeftStickX' should not be valid under {'anyOf': [{'$ref': 'vocabulary.schema.json#/$defs/stickAxis'}, {'$ref': 'vocabulary.schema.json#/$defs/dpadControl'}]}",
       "swift": "record.input.hidUsageMap: usage 1/48 deadZone must be above 0 and below 1",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -7527,7 +7567,7 @@
     {
       "name": "rejects invalid usages: negative dead zone",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'hidUsageMap': {'usages': [{'kind': 'Axis', 'page': 1, 'usage': 48, 'control': 'LeftStickX', 'deadZone': -0.1}]}} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input.hidUsageMap.usages.0.control: 'LeftStickX' should not be valid under {'anyOf': [{'$ref': 'vocabulary.schema.json#/$defs/stickAxis'}, {'$ref': 'vocabulary.schema.json#/$defs/dpadControl'}]}",
       "swift": "record.input.hidUsageMap: usage 1/48 deadZone must be above 0 and below 1",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -7560,7 +7600,7 @@
     {
       "name": "rejects invalid usages: range without max",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'hidUsageMap': {'usages': [{'kind': 'Axis', 'page': 1, 'usage': 48, 'control': 'LeftStickX', 'range': {'min': 0}}]}} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input.hidUsageMap.usages.0.control: 'LeftStickX' should not be valid under {'anyOf': [{'$ref': 'vocabulary.schema.json#/$defs/stickAxis'}, {'$ref': 'vocabulary.schema.json#/$defs/dpadControl'}]}",
       "swift": "record.input.hidUsageMap.usages.[0].range: missing field max",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -7595,7 +7635,7 @@
     {
       "name": "rejects invalid usages: range beyond 32 bits",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'hidUsageMap': {'usages': [{'kind': 'Axis', 'page': 1, 'usage': 48, 'control': 'LeftStickX', 'range': {'min': 0, 'max': 2147483648}}]}} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input.hidUsageMap.usages.0.range.max: 2147483648 is greater than the maximum of 2147483647",
       "swift": "record.input.hidUsageMap.usages.[0].range: min and max are 32-bit integers with min at most max",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -7631,7 +7671,7 @@
     {
       "name": "rejects invalid usages: unknown kind",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'hidUsageMap': {'usages': [{'kind': 'slider', 'page': 1, 'usage': 48, 'control': 'LeftStickX'}]}} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input.hidUsageMap.usages.0.control: 'LeftStickX' should not be valid under {'anyOf': [{'$ref': 'vocabulary.schema.json#/$defs/stickAxis'}, {'$ref': 'vocabulary.schema.json#/$defs/dpadControl'}]}",
       "swift": "record.input.hidUsageMap.usages.[0].kind: kind is Button, Axis or Hat",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -7663,7 +7703,7 @@
     {
       "name": "rejects invalid usages: unknown field",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'hidUsageMap': {'usages': [{'kind': 'Button', 'page': 9, 'usage': 1, 'control': 'South', 'extra': 1}]}} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input.hidUsageMap.usages.0.control: 'South' is not one of ['LeftStickX', 'LeftStickY', 'RightStickX', 'RightStickY', 'LeftTrigger', 'RightTrigger']",
       "swift": "record.input.hidUsageMap.usages.[0]: unknown field(s): extra",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -7696,7 +7736,7 @@
     {
       "name": "rejects invalid usages: page 0",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'hidUsageMap': {'usages': [{'kind': 'Button', 'page': 0, 'usage': 1, 'control': 'South'}]}} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input.hidUsageMap.usages.0.control: 'South' is not one of ['LeftStickX', 'LeftStickY', 'RightStickX', 'RightStickY', 'LeftTrigger', 'RightTrigger']",
       "swift": "record.input.hidUsageMap.usages.[0]: page is 1...65535 and usage 0...65535",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -7728,7 +7768,7 @@
     {
       "name": "rejects invalid usages: usage 65536",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'hidUsageMap': {'usages': [{'kind': 'Button', 'page': 9, 'usage': 65536, 'control': 'South'}]}} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input.hidUsageMap.usages.0.control: 'South' is not one of ['LeftStickX', 'LeftStickY', 'RightStickX', 'RightStickY', 'LeftTrigger', 'RightTrigger']",
       "swift": "record.input.hidUsageMap.usages.[0]: page is 1...65535 and usage 0...65535",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -7760,7 +7800,7 @@
     {
       "name": "rejects invalid usages: report id 0",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'hidUsageMap': {'usages': [{'kind': 'Button', 'page': 9, 'usage': 1, 'control': 'South'}], 'reportID': 0}} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input.hidUsageMap.reportID: 0 is less than the minimum of 1",
       "swift": "record.input.hidUsageMap.reportID: reportID must be 1...255",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -7793,7 +7833,7 @@
     {
       "name": "rejects invalid usages: report id 256",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'hidUsageMap': {'usages': [{'kind': 'Button', 'page': 9, 'usage': 1, 'control': 'South'}], 'reportID': 256}} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input.hidUsageMap.reportID: 256 is greater than the maximum of 255",
       "swift": "record.input.hidUsageMap.reportID: reportID must be 1...255",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -7826,7 +7866,7 @@
     {
       "name": "rejects invalid usages: descriptor shapes in a record",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'descriptorShapes': [{'present': [{'page': 1, 'usage': 50}], 'hidUsageMap': {'usages': [{'kind': 'Button', 'page': 9, 'usage': 1, 'control': 'South'}]}}]} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input: Additional properties are not allowed ('descriptorShapes' was unexpected)",
       "swift": "record.input: descriptorShapes belong to a protocol description",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -8207,7 +8247,7 @@
     {
       "name": "unknown names are rejected: startup phase startup",
       "code": "E5007",
-      "python": "E5007: record.json at modes.0.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'phase': 'startup'} is not valid under any of the given schemas",
+      "python": "E5007: record.json at modes.0.session.startup.0.phase: 'startup' is not one of ['Startup', 'Activation']",
       "swift": "record.modes.[0].session.startup.[0]: a startup phase is Startup or Activation",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -8350,7 +8390,7 @@
     {
       "name": "unknown names are rejected: hat encoding",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'report': {'length': 4}, 'buttons': [{'control': 'South', 'byte': 0, 'mask': 1}], 'hat': [{'encoding': '8-way', 'byte': 1, 'mask': 15}]} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input.hat.0: {'encoding': '8-way', 'byte': 1, 'mask': 15} is not valid under any of the given schemas",
       "swift": "record.input.hat.[0]: hat encoding must be EightWay, Directions or Table",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",

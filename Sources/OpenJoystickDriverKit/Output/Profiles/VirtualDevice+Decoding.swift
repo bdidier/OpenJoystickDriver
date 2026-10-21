@@ -1,11 +1,16 @@
 import Foundation
 
 extension VirtualDevice {
-  /// Decodes one `virtual-device.schema.json` document.
+  /// Decodes one `virtual-device.schema.json` document. `requiresMatch` refuses a document
+  /// without `match`, which would otherwise be read as a persona definition.
   ///
   /// - Throws: ``DocumentHeaderProblem`` carrying E5001 when `apiVersion` or `kind` is not the
   ///   supported one, and ``ControllerRecordProblem`` for any other violation of the schema.
-  static func decode(_ data: Data, fileName: String? = nil) throws -> Self {
+  static func decode(
+    _ data: Data,
+    fileName: String? = nil,
+    requiresMatch: Bool = false
+  ) throws -> Self {
     guard let object = try? JSONSerialization.jsonObject(with: data),
       let document = object as? [String: Any]
     else { throw ControllerRecordProblem(code: nil, "the file is not a JSON object") }
@@ -33,6 +38,9 @@ extension VirtualDevice {
         code: nil,
         "persona must be \(VirtualHIDProfileID.allCases.map(\.rawValue).joined(separator: " or "))"
       )
+    }
+    if requiresMatch, document["match"] == nil {
+      throw ControllerRecordProblem(code: nil, "the file must hold match")
     }
     let match = try document["match"].map(Self.match)
     let layout = try document["layout"].map { value in

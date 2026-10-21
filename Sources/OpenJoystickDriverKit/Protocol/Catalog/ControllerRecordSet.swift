@@ -306,13 +306,17 @@ public struct ControllerRecordSet: Sendable {
   ///
   /// A reason that has an error code leads with it, such as `E5001: `, because a reason is a plain
   /// string where it is listed. A caller that reports the code itself passes `includingCode:
-  /// false`.
-  public static func problemDescription(_ error: any Error, includingCode: Bool = true) -> String {
+  /// false`. A field path leads with `document`, the noun for the kind of file that was decoded.
+  public static func problemDescription(
+    _ error: any Error,
+    includingCode: Bool = true,
+    document: String = "record"
+  ) -> String {
     func path(_ codingPath: [any CodingKey]) -> String {
       codingPath.map { $0.intValue.map { "[\($0)]" } ?? $0.stringValue }.joined(separator: ".")
     }
     func located(_ codingPath: [any CodingKey], _ text: String) -> String {
-      codingPath.isEmpty ? text : "record.\(path(codingPath)): \(text)"
+      codingPath.isEmpty ? text : "\(document).\(path(codingPath)): \(text)"
     }
     switch error {
     case let problem as ControllerRecordProblem: return problem.description

@@ -1853,7 +1853,7 @@
 "error.E5004" = "프로토콜 설명이 해당 패밀리에 없는 변형을 나열합니다. 패밀리의 변형 중 하나를 사용하세요.";
 "error.E5005" = "접근 파일 AccessGrants.json이(가) 손상되었습니다. 파일을 고치거나 삭제한 다음 접근을 다시 허용하세요.";
 "error.E5006" = "유닛 ID의 키 파일 PortKeyInstallation.key를 읽을 수 없거나 크기가 32바이트가 아닙니다. 백업에서 파일을 복원하세요. 대신 삭제하면 OpenJoystickDriver가 새 키를 만들고 모든 유닛 ID가 바뀝니다.";
-"error.E5007" = "컨트롤러 레코드가 올바르지 않습니다. controller 스키마로 파일을 확인하고 메시지가 알려 주는 필드를 고치세요.";
+"error.E5007" = "컨트롤러 레코드 또는 patch가 올바르지 않습니다. 해당 스키마로 파일을 확인하고 메시지가 알려 주는 필드를 고치세요.";
 "error.withCode" ="%@ (%@)";
 "cli.update.check.ahead" = "OpenJoystickDriver %1$@은(는) 게시된 최신 릴리스(%2$@)보다 새로운 버전입니다.";
 "settings.updateAhead" = "최신 릴리스보다 새로움";

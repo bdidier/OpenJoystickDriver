@@ -1580,7 +1580,7 @@
 "error.E5004" = "Eine Protokollbeschreibung führt eine Variante auf, die ihre Familie nicht hat. Verwende eine der Varianten der Familie.";
 "error.E5005" = "Die Zugriffsdatei AccessGrants.json ist beschädigt. Repariere die Datei oder lösche sie und erteile den Zugriff dann erneut.";
 "error.E5006" = "Die Schlüsseldatei der Geräte-IDs, PortKeyInstallation.key, kann nicht gelesen werden oder ist nicht 32 Byte groß. Stellen Sie die Datei aus einer Sicherung wieder her. Wenn Sie sie stattdessen löschen, erstellt OpenJoystickDriver einen neuen Schlüssel, und jede Geräte-ID ändert sich.";
-"error.E5007" = "Ein Controller-Eintrag ist ungültig. Prüfe die Datei gegen das Schema controller und korrigiere das Feld, das die Meldung nennt.";
+"error.E5007" = "Ein Controller-Eintrag oder -Patch ist ungültig. Prüfe die Datei gegen ihr Schema und korrigiere das Feld, das die Meldung nennt.";
 "error.withCode" ="%@ (%@)";
 
 /* Main window, status item, main menu, settings window, library and access. */

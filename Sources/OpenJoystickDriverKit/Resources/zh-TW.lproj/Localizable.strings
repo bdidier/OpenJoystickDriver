@@ -1853,7 +1853,7 @@
 "error.E5004" = "協定描述列出了其系列沒有的變體。請使用該系列的其中一個變體。";
 "error.E5005" = "存取檔案 AccessGrants.json 已損毀。請修復或刪除該檔案，然後重新授予存取權限。";
 "error.E5006" = "無法讀取單元 ID 的金鑰檔案 PortKeyInstallation.key，或其大小不是 32 位元組。請從備份回復該檔案。如果改為刪除它，OpenJoystickDriver 會建立新金鑰，所有單元 ID 都會改變。";
-"error.E5007" = "控制器記錄無效。請用 controller 結構描述檢查該檔案，並修正訊息指出的欄位。";
+"error.E5007" = "控制器記錄或 patch 無效。請對照其結構描述檢查該檔案，並修正訊息指出的欄位。";
 "error.withCode" ="%@ (%@)";
 "cli.update.check.ahead" = "OpenJoystickDriver %1$@ 比已發行的最新版本（%2$@）更新。";
 "settings.updateAhead" = "比最新發行版本更新";

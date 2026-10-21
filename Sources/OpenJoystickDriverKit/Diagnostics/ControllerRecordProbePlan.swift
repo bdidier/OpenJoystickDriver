@@ -25,9 +25,9 @@ public struct ControllerRecordProbePlan: Equatable, Sendable {
     } catch {
       // A coded reason leads with its code, like every other `E5001: ...` message.
       let reason =
-        (error as? DocumentHeaderProblem)?.code != nil
-        ? ControllerRecordSet.problemDescription(error)
-        : "Invalid controller record: \(error)"
+        ControllerRecordSet.problemCode(error).map {
+          "\($0.rawValue): " + ControllerRecordSet.problemDescription(error, includingCode: false)
+        } ?? "Invalid controller record: \(error)"
       throw ControllerRecordProbeError.invalidProfile(reason)
     }
     // The signing-free probe drives only the raw-USB Xbox families it can start safely.

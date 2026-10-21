@@ -4,7 +4,7 @@
       "name": "rejects duplicate usages and empty ranges",
       "code": "E5002",
       "python": "E5002: hid-descriptor.json at defaults.input.hidUsageMap: usage page 1 usage 48 appears more than once",
-      "swift": "E5002: hid-descriptor.json: record.defaults.input.hidUsageMap: usage 1/48 is named twice",
+      "swift": "E5002: hid-descriptor.json: description.defaults.input.hidUsageMap: usage 1/48 is named twice",
       "fileName": "hid-descriptor.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -41,7 +41,7 @@
       "name": "rejects duplicate usages and empty ranges (2)",
       "code": "E5002",
       "python": "E5002: hid-descriptor.json at defaults.input.hidUsageMap: axis range 9...3 must have min below max",
-      "swift": "E5002: hid-descriptor.json: record.defaults.input.hidUsageMap.usages.[0].range: min and max are 32-bit integers with min at most max",
+      "swift": "E5002: hid-descriptor.json: description.defaults.input.hidUsageMap.usages.[0].range: min and max are 32-bit integers with min at most max",
       "fileName": "hid-descriptor.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -76,7 +76,7 @@
       "name": "rejects duplicate usages and empty ranges (3)",
       "code": "E5002",
       "python": "E5002: hid-descriptor.json at defaults.input.descriptorShapes.0.hidUsageMap: usage page 1 usage 48 appears more than once",
-      "swift": "E5002: hid-descriptor.json: record.defaults.input.descriptorShapes.[0].hidUsageMap: usage 1/48 is named twice",
+      "swift": "E5002: hid-descriptor.json: description.defaults.input.descriptorShapes.[0].hidUsageMap: usage 1/48 is named twice",
       "fileName": "hid-descriptor.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -123,7 +123,7 @@
       "name": "rejects duplicate usages and empty ranges (4)",
       "code": "E5002",
       "python": "E5002: hid-descriptor.json at defaults.input.descriptorShapes.0.hidUsageMap: axis range 9...3 must have min below max",
-      "swift": "E5002: hid-descriptor.json: record.defaults.input.descriptorShapes.[0].hidUsageMap.usages.[0].range: min and max are 32-bit integers with min at most max",
+      "swift": "E5002: hid-descriptor.json: description.defaults.input.descriptorShapes.[0].hidUsageMap.usages.[0].range: min and max are 32-bit integers with min at most max",
       "fileName": "hid-descriptor.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -168,7 +168,7 @@
       "name": "rejects invalid shapes and maps",
       "code": "E5002",
       "python": "E5002: hid-descriptor.json at defaults.input: {'descriptorShapes': []} is not valid under any of the given schemas",
-      "swift": "E5002: hid-descriptor.json: record.defaults.input.descriptorShapes: descriptorShapes must not be empty",
+      "swift": "E5002: hid-descriptor.json: description.defaults.input.descriptorShapes: descriptorShapes must not be empty",
       "fileName": "hid-descriptor.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -190,7 +190,7 @@
       "name": "rejects invalid shapes and maps (2)",
       "code": "E5002",
       "python": "E5002: hid-descriptor.json at defaults.input: {'descriptorShapes': [{'present': []}]} is not valid under any of the given schemas",
-      "swift": "E5002: hid-descriptor.json: record.defaults.input.descriptorShapes.[0].present: present must be nonempty and unique",
+      "swift": "E5002: hid-descriptor.json: description.defaults.input.descriptorShapes.[0].present: present must be nonempty and unique",
       "fileName": "hid-descriptor.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -216,7 +216,7 @@
       "name": "rejects invalid shapes and maps (3)",
       "code": "E5002",
       "python": "E5002: hid-descriptor.json at defaults.input: {'descriptorShapes': [{'present': [], 'hidUsageMap': {'usages': [{'kind': 'Button', 'page': 9, 'usage': 1, 'control': 'South'}]}}]} is not valid under any of the given schemas",
-      "swift": "E5002: hid-descriptor.json: record.defaults.input.descriptorShapes.[0].present: present must be nonempty and unique",
+      "swift": "E5002: hid-descriptor.json: description.defaults.input.descriptorShapes.[0].present: present must be nonempty and unique",
       "fileName": "hid-descriptor.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -252,7 +252,7 @@
       "name": "rejects invalid shapes and maps (4)",
       "code": "E5002",
       "python": "E5002: hid-descriptor.json at defaults.input: {'descriptorShapes': [{'present': [{'page': 1, 'usage': 50}], 'hidUsageMap': {'usages': [{'kind': 'Button', 'page': 9, 'usage': 1, 'control': 'South'}]}, 'extra': True}]} is not valid under any of the given schemas",
-      "swift": "E5002: hid-descriptor.json: record.defaults.input.descriptorShapes.[0]: unknown field(s): extra",
+      "swift": "E5002: hid-descriptor.json: description.defaults.input.descriptorShapes.[0]: unknown field(s): extra",
       "fileName": "hid-descriptor.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -294,7 +294,7 @@
       "name": "rejects invalid shapes and maps (5)",
       "code": "E5002",
       "python": "E5002: hid-descriptor.json at defaults.input: {'hidUsageMap': {'usages': [{'kind': 'Button', 'page': 9, 'usage': 1, 'control': 'DpadUp'}]}} is not valid under any of the given schemas",
-      "swift": "E5002: hid-descriptor.json: record.defaults.input.hidUsageMap: usage 9/1 is a button; DpadUp is not",
+      "swift": "E5002: hid-descriptor.json: description.defaults.input.hidUsageMap: usage 9/1 is a button; DpadUp is not",
       "fileName": "hid-descriptor.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -325,7 +325,7 @@
       "name": "rejects invalid shapes and maps (6)",
       "code": "E5002",
       "python": "E5002: hid-descriptor.json at defaults.input: {'hidUsageMap': {'usages': []}} is not valid under any of the given schemas",
-      "swift": "E5002: hid-descriptor.json: record.defaults.input.hidUsageMap: a usage map must not be empty",
+      "swift": "E5002: hid-descriptor.json: description.defaults.input.hidUsageMap: a usage map must not be empty",
       "fileName": "hid-descriptor.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -851,7 +851,7 @@
       "name": "command channel has ranges: path=('interface',), value=-1",
       "code": "E5002",
       "python": "E5002: nintendo-switch2.json at defaults.session.commandChannel.interface: -1 is less than the minimum of 0",
-      "swift": "E5002: nintendo-switch2.json: record.defaults.session.commandChannel.interface: interface must be in 0...255",
+      "swift": "E5002: nintendo-switch2.json: description.defaults.session.commandChannel.interface: interface must be in 0...255",
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
@@ -880,7 +880,7 @@
       "name": "command channel has ranges: path=('interface',), value=256",
       "code": "E5002",
       "python": "E5002: nintendo-switch2.json at defaults.session.commandChannel.interface: 256 is greater than the maximum of 255",
-      "swift": "E5002: nintendo-switch2.json: record.defaults.session.commandChannel.interface: interface must be in 0...255",
+      "swift": "E5002: nintendo-switch2.json: description.defaults.session.commandChannel.interface: interface must be in 0...255",
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
@@ -909,7 +909,7 @@
       "name": "command channel has ranges: path=('interface',), case=required",
       "code": "E5002",
       "python": "E5002: nintendo-switch2.json at defaults.session.commandChannel: 'interface' is a required property",
-      "swift": "E5002: nintendo-switch2.json: record.defaults.session.commandChannel: missing field interface",
+      "swift": "E5002: nintendo-switch2.json: description.defaults.session.commandChannel: missing field interface",
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
@@ -937,7 +937,7 @@
       "name": "command channel has ranges: path=('inEndpoint',), value=127",
       "code": "E5002",
       "python": "E5002: nintendo-switch2.json at defaults.session.commandChannel.inEndpoint: 127 is less than the minimum of 128",
-      "swift": "E5002: nintendo-switch2.json: record.defaults.session.commandChannel.inEndpoint: inEndpoint must be in 128...255",
+      "swift": "E5002: nintendo-switch2.json: description.defaults.session.commandChannel.inEndpoint: inEndpoint must be in 128...255",
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
@@ -966,7 +966,7 @@
       "name": "command channel has ranges: path=('inEndpoint',), value=256",
       "code": "E5002",
       "python": "E5002: nintendo-switch2.json at defaults.session.commandChannel.inEndpoint: 256 is greater than the maximum of 255",
-      "swift": "E5002: nintendo-switch2.json: record.defaults.session.commandChannel.inEndpoint: inEndpoint must be in 128...255",
+      "swift": "E5002: nintendo-switch2.json: description.defaults.session.commandChannel.inEndpoint: inEndpoint must be in 128...255",
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
@@ -995,7 +995,7 @@
       "name": "command channel has ranges: path=('inEndpoint',), case=required",
       "code": "E5002",
       "python": "E5002: nintendo-switch2.json at defaults.session.commandChannel: 'inEndpoint' is a required property",
-      "swift": "E5002: nintendo-switch2.json: record.defaults.session.commandChannel: missing field inEndpoint",
+      "swift": "E5002: nintendo-switch2.json: description.defaults.session.commandChannel: missing field inEndpoint",
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
@@ -1023,7 +1023,7 @@
       "name": "command channel has ranges: path=('replyLength',), value=0",
       "code": "E5002",
       "python": "E5002: nintendo-switch2.json at defaults.session.commandChannel.replyLength: 0 is less than the minimum of 1",
-      "swift": "E5002: nintendo-switch2.json: record.defaults.session.commandChannel.replyLength: replyLength must be in 1...4096",
+      "swift": "E5002: nintendo-switch2.json: description.defaults.session.commandChannel.replyLength: replyLength must be in 1...4096",
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
@@ -1052,7 +1052,7 @@
       "name": "command channel has ranges: path=('replyLength',), value=4097",
       "code": "E5002",
       "python": "E5002: nintendo-switch2.json at defaults.session.commandChannel.replyLength: 4097 is greater than the maximum of 4096",
-      "swift": "E5002: nintendo-switch2.json: record.defaults.session.commandChannel.replyLength: replyLength must be in 1...4096",
+      "swift": "E5002: nintendo-switch2.json: description.defaults.session.commandChannel.replyLength: replyLength must be in 1...4096",
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
@@ -1081,7 +1081,7 @@
       "name": "command channel has ranges: path=('replyLength',), case=required",
       "code": "E5002",
       "python": "E5002: nintendo-switch2.json at defaults.session.commandChannel: 'replyLength' is a required property",
-      "swift": "E5002: nintendo-switch2.json: record.defaults.session.commandChannel: missing field replyLength",
+      "swift": "E5002: nintendo-switch2.json: description.defaults.session.commandChannel: missing field replyLength",
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
@@ -1109,7 +1109,7 @@
       "name": "command channel has ranges: path=('usbReplyTimeoutMilliseconds',), value=0",
       "code": "E5002",
       "python": "E5002: nintendo-switch2.json at defaults.session.commandChannel.usbReplyTimeoutMilliseconds: 0 is less than the minimum of 1",
-      "swift": "E5002: nintendo-switch2.json: record.defaults.session.commandChannel.usbReplyTimeoutMilliseconds: usbReplyTimeoutMilliseconds must be in 1...60000",
+      "swift": "E5002: nintendo-switch2.json: description.defaults.session.commandChannel.usbReplyTimeoutMilliseconds: usbReplyTimeoutMilliseconds must be in 1...60000",
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
@@ -1138,7 +1138,7 @@
       "name": "command channel has ranges: path=('usbReplyTimeoutMilliseconds',), value=60001",
       "code": "E5002",
       "python": "E5002: nintendo-switch2.json at defaults.session.commandChannel.usbReplyTimeoutMilliseconds: 60001 is greater than the maximum of 60000",
-      "swift": "E5002: nintendo-switch2.json: record.defaults.session.commandChannel.usbReplyTimeoutMilliseconds: usbReplyTimeoutMilliseconds must be in 1...60000",
+      "swift": "E5002: nintendo-switch2.json: description.defaults.session.commandChannel.usbReplyTimeoutMilliseconds: usbReplyTimeoutMilliseconds must be in 1...60000",
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
@@ -1167,7 +1167,7 @@
       "name": "command channel has ranges: path=('usbReplyTimeoutMilliseconds',), case=required",
       "code": "E5002",
       "python": "E5002: nintendo-switch2.json at defaults.session.commandChannel: 'usbReplyTimeoutMilliseconds' is a required property",
-      "swift": "E5002: nintendo-switch2.json: record.defaults.session.commandChannel: missing field usbReplyTimeoutMilliseconds",
+      "swift": "E5002: nintendo-switch2.json: description.defaults.session.commandChannel: missing field usbReplyTimeoutMilliseconds",
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
@@ -1195,7 +1195,7 @@
       "name": "command channel has ranges: path=('bluetoothLEReplyTimeoutMilliseconds',), value=0",
       "code": "E5002",
       "python": "E5002: nintendo-switch2.json at defaults.session.commandChannel.bluetoothLEReplyTimeoutMilliseconds: 0 is less than the minimum of 1",
-      "swift": "E5002: nintendo-switch2.json: record.defaults.session.commandChannel.bluetoothLEReplyTimeoutMilliseconds: bluetoothLEReplyTimeoutMilliseconds must be in 1...60000",
+      "swift": "E5002: nintendo-switch2.json: description.defaults.session.commandChannel.bluetoothLEReplyTimeoutMilliseconds: bluetoothLEReplyTimeoutMilliseconds must be in 1...60000",
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
@@ -1224,7 +1224,7 @@
       "name": "command channel has ranges: path=('bluetoothLEReplyTimeoutMilliseconds',), value=60001",
       "code": "E5002",
       "python": "E5002: nintendo-switch2.json at defaults.session.commandChannel.bluetoothLEReplyTimeoutMilliseconds: 60001 is greater than the maximum of 60000",
-      "swift": "E5002: nintendo-switch2.json: record.defaults.session.commandChannel.bluetoothLEReplyTimeoutMilliseconds: bluetoothLEReplyTimeoutMilliseconds must be in 1...60000",
+      "swift": "E5002: nintendo-switch2.json: description.defaults.session.commandChannel.bluetoothLEReplyTimeoutMilliseconds: bluetoothLEReplyTimeoutMilliseconds must be in 1...60000",
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
@@ -1253,7 +1253,7 @@
       "name": "command channel has ranges: path=('bluetoothLEReplyTimeoutMilliseconds',), case=required",
       "code": "E5002",
       "python": "E5002: nintendo-switch2.json at defaults.session.commandChannel: 'bluetoothLEReplyTimeoutMilliseconds' is a required property",
-      "swift": "E5002: nintendo-switch2.json: record.defaults.session.commandChannel: missing field bluetoothLEReplyTimeoutMilliseconds",
+      "swift": "E5002: nintendo-switch2.json: description.defaults.session.commandChannel: missing field bluetoothLEReplyTimeoutMilliseconds",
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
@@ -1281,7 +1281,7 @@
       "name": "command channel has ranges: case=unknown channel member",
       "code": "E5002",
       "python": "E5002: nintendo-switch2.json at defaults.session.commandChannel: Additional properties are not allowed ('outEndpoint' was unexpected)",
-      "swift": "E5002: nintendo-switch2.json: record.defaults.session.commandChannel: unknown field(s): outEndpoint",
+      "swift": "E5002: nintendo-switch2.json: description.defaults.session.commandChannel: unknown field(s): outEndpoint",
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
@@ -5132,7 +5132,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=hid-descriptor",
       "code": "E5002",
       "python": "E5002: hid-descriptor.json at defaults.tuning.frameQueueCapacity: 0 is less than the minimum of 1",
-      "swift": "E5002: hid-descriptor.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: hid-descriptor.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "hid-descriptor.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -5472,7 +5472,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=hid-descriptor (2)",
       "code": "E5002",
       "python": "E5002: hid-descriptor.json at defaults.tuning.frameQueueCapacity: 1025 is greater than the maximum of 1024",
-      "swift": "E5002: hid-descriptor.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: hid-descriptor.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "hid-descriptor.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -6152,7 +6152,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=hid-descriptor (4)",
       "code": "E5002",
       "python": "E5002: hid-descriptor.json at defaults.tuning.frameQueueCapacity: '64' is not of type 'integer'",
-      "swift": "E5002: hid-descriptor.json: record.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
+      "swift": "E5002: hid-descriptor.json: description.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
       "fileName": "hid-descriptor.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -6492,7 +6492,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=hid-report-layout",
       "code": "E5002",
       "python": "E5002: hid-report-layout.json at defaults.tuning.frameQueueCapacity: 0 is less than the minimum of 1",
-      "swift": "E5002: hid-report-layout.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: hid-report-layout.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "hid-report-layout.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -6515,7 +6515,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=hid-report-layout (2)",
       "code": "E5002",
       "python": "E5002: hid-report-layout.json at defaults.tuning.frameQueueCapacity: 1025 is greater than the maximum of 1024",
-      "swift": "E5002: hid-report-layout.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: hid-report-layout.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "hid-report-layout.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -6561,7 +6561,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=hid-report-layout (4)",
       "code": "E5002",
       "python": "E5002: hid-report-layout.json at defaults.tuning.frameQueueCapacity: '64' is not of type 'integer'",
-      "swift": "E5002: hid-report-layout.json: record.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
+      "swift": "E5002: hid-report-layout.json: description.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
       "fileName": "hid-report-layout.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -6584,7 +6584,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=nintendo-switch-input-only",
       "code": "E5002",
       "python": "E5002: nintendo-switch-input-only.json at defaults.tuning.frameQueueCapacity: 0 is less than the minimum of 1",
-      "swift": "E5002: nintendo-switch-input-only.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: nintendo-switch-input-only.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "nintendo-switch-input-only.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -6612,7 +6612,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=nintendo-switch-input-only (2)",
       "code": "E5002",
       "python": "E5002: nintendo-switch-input-only.json at defaults.tuning.frameQueueCapacity: 1025 is greater than the maximum of 1024",
-      "swift": "E5002: nintendo-switch-input-only.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: nintendo-switch-input-only.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "nintendo-switch-input-only.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -6668,7 +6668,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=nintendo-switch-input-only (4)",
       "code": "E5002",
       "python": "E5002: nintendo-switch-input-only.json at defaults.tuning.frameQueueCapacity: '64' is not of type 'integer'",
-      "swift": "E5002: nintendo-switch-input-only.json: record.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
+      "swift": "E5002: nintendo-switch-input-only.json: description.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
       "fileName": "nintendo-switch-input-only.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -6696,7 +6696,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=nintendo-switch1",
       "code": "E5002",
       "python": "E5002: nintendo-switch1.json at defaults.tuning.frameQueueCapacity: 0 is less than the minimum of 1",
-      "swift": "E5002: nintendo-switch1.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: nintendo-switch1.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "nintendo-switch1.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -6873,7 +6873,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=nintendo-switch1 (2)",
       "code": "E5002",
       "python": "E5002: nintendo-switch1.json at defaults.tuning.frameQueueCapacity: 1025 is greater than the maximum of 1024",
-      "swift": "E5002: nintendo-switch1.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: nintendo-switch1.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "nintendo-switch1.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -7227,7 +7227,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=nintendo-switch1 (4)",
       "code": "E5002",
       "python": "E5002: nintendo-switch1.json at defaults.tuning.frameQueueCapacity: '64' is not of type 'integer'",
-      "swift": "E5002: nintendo-switch1.json: record.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
+      "swift": "E5002: nintendo-switch1.json: description.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
       "fileName": "nintendo-switch1.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -7404,7 +7404,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=nintendo-switch2",
       "code": "E5002",
       "python": "E5002: nintendo-switch2.json at defaults.tuning.frameQueueCapacity: 0 is less than the minimum of 1",
-      "swift": "E5002: nintendo-switch2.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: nintendo-switch2.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "nintendo-switch2.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -7532,7 +7532,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=nintendo-switch2 (2)",
       "code": "E5002",
       "python": "E5002: nintendo-switch2.json at defaults.tuning.frameQueueCapacity: 1025 is greater than the maximum of 1024",
-      "swift": "E5002: nintendo-switch2.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: nintendo-switch2.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "nintendo-switch2.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -7788,7 +7788,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=nintendo-switch2 (4)",
       "code": "E5002",
       "python": "E5002: nintendo-switch2.json at defaults.tuning.frameQueueCapacity: '64' is not of type 'integer'",
-      "swift": "E5002: nintendo-switch2.json: record.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
+      "swift": "E5002: nintendo-switch2.json: description.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
       "fileName": "nintendo-switch2.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -7916,7 +7916,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=sony-dualsense",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at defaults.tuning.frameQueueCapacity: 0 is less than the minimum of 1",
-      "swift": "E5002: sony-dualsense.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: sony-dualsense.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "sony-dualsense.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -7973,7 +7973,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=sony-dualsense (2)",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at defaults.tuning.frameQueueCapacity: 1025 is greater than the maximum of 1024",
-      "swift": "E5002: sony-dualsense.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: sony-dualsense.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "sony-dualsense.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -8087,7 +8087,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=sony-dualsense (4)",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at defaults.tuning.frameQueueCapacity: '64' is not of type 'integer'",
-      "swift": "E5002: sony-dualsense.json: record.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
+      "swift": "E5002: sony-dualsense.json: description.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
       "fileName": "sony-dualsense.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -8144,7 +8144,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=sony-dualshock4",
       "code": "E5002",
       "python": "E5002: sony-dualshock4.json at defaults.tuning.frameQueueCapacity: 0 is less than the minimum of 1",
-      "swift": "E5002: sony-dualshock4.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: sony-dualshock4.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "sony-dualshock4.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -8214,7 +8214,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=sony-dualshock4 (2)",
       "code": "E5002",
       "python": "E5002: sony-dualshock4.json at defaults.tuning.frameQueueCapacity: 1025 is greater than the maximum of 1024",
-      "swift": "E5002: sony-dualshock4.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: sony-dualshock4.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "sony-dualshock4.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -8354,7 +8354,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=sony-dualshock4 (4)",
       "code": "E5002",
       "python": "E5002: sony-dualshock4.json at defaults.tuning.frameQueueCapacity: '64' is not of type 'integer'",
-      "swift": "E5002: sony-dualshock4.json: record.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
+      "swift": "E5002: sony-dualshock4.json: description.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
       "fileName": "sony-dualshock4.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -8424,7 +8424,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=sony-sixaxis",
       "code": "E5002",
       "python": "E5002: sony-sixaxis.json at defaults.tuning.frameQueueCapacity: 0 is less than the minimum of 1",
-      "swift": "E5002: sony-sixaxis.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: sony-sixaxis.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "sony-sixaxis.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -8466,7 +8466,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=sony-sixaxis (2)",
       "code": "E5002",
       "python": "E5002: sony-sixaxis.json at defaults.tuning.frameQueueCapacity: 1025 is greater than the maximum of 1024",
-      "swift": "E5002: sony-sixaxis.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: sony-sixaxis.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "sony-sixaxis.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -8550,7 +8550,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=sony-sixaxis (4)",
       "code": "E5002",
       "python": "E5002: sony-sixaxis.json at defaults.tuning.frameQueueCapacity: '64' is not of type 'integer'",
-      "swift": "E5002: sony-sixaxis.json: record.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
+      "swift": "E5002: sony-sixaxis.json: description.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
       "fileName": "sony-sixaxis.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -8592,7 +8592,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=valve-steam-controller",
       "code": "E5002",
       "python": "E5002: valve-steam-controller.json at defaults.tuning.frameQueueCapacity: 0 is less than the minimum of 1",
-      "swift": "E5002: valve-steam-controller.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: valve-steam-controller.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "valve-steam-controller.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -8710,7 +8710,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=valve-steam-controller (2)",
       "code": "E5002",
       "python": "E5002: valve-steam-controller.json at defaults.tuning.frameQueueCapacity: 1025 is greater than the maximum of 1024",
-      "swift": "E5002: valve-steam-controller.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: valve-steam-controller.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "valve-steam-controller.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -8946,7 +8946,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=valve-steam-controller (4)",
       "code": "E5002",
       "python": "E5002: valve-steam-controller.json at defaults.tuning.frameQueueCapacity: '64' is not of type 'integer'",
-      "swift": "E5002: valve-steam-controller.json: record.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
+      "swift": "E5002: valve-steam-controller.json: description.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
       "fileName": "valve-steam-controller.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -9064,7 +9064,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=valve-steam-deck",
       "code": "E5002",
       "python": "E5002: valve-steam-deck.json at defaults.tuning.frameQueueCapacity: 0 is less than the minimum of 1",
-      "swift": "E5002: valve-steam-deck.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: valve-steam-deck.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "valve-steam-deck.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -9165,7 +9165,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=valve-steam-deck (2)",
       "code": "E5002",
       "python": "E5002: valve-steam-deck.json at defaults.tuning.frameQueueCapacity: 1025 is greater than the maximum of 1024",
-      "swift": "E5002: valve-steam-deck.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: valve-steam-deck.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "valve-steam-deck.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -9367,7 +9367,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=valve-steam-deck (4)",
       "code": "E5002",
       "python": "E5002: valve-steam-deck.json at defaults.tuning.frameQueueCapacity: '64' is not of type 'integer'",
-      "swift": "E5002: valve-steam-deck.json: record.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
+      "swift": "E5002: valve-steam-deck.json: description.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
       "fileName": "valve-steam-deck.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -9468,7 +9468,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=valve-steam-triton",
       "code": "E5002",
       "python": "E5002: valve-steam-triton.json at defaults.tuning.frameQueueCapacity: 0 is less than the minimum of 1",
-      "swift": "E5002: valve-steam-triton.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: valve-steam-triton.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "valve-steam-triton.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -9561,7 +9561,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=valve-steam-triton (2)",
       "code": "E5002",
       "python": "E5002: valve-steam-triton.json at defaults.tuning.frameQueueCapacity: 1025 is greater than the maximum of 1024",
-      "swift": "E5002: valve-steam-triton.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: valve-steam-triton.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "valve-steam-triton.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -9747,7 +9747,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=valve-steam-triton (4)",
       "code": "E5002",
       "python": "E5002: valve-steam-triton.json at defaults.tuning.frameQueueCapacity: '64' is not of type 'integer'",
-      "swift": "E5002: valve-steam-triton.json: record.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
+      "swift": "E5002: valve-steam-triton.json: description.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
       "fileName": "valve-steam-triton.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -9840,7 +9840,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=vendor-flydigi",
       "code": "E5002",
       "python": "E5002: vendor-flydigi.json at defaults.tuning.frameQueueCapacity: 0 is less than the minimum of 1",
-      "swift": "E5002: vendor-flydigi.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: vendor-flydigi.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "vendor-flydigi.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -9867,7 +9867,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=vendor-flydigi (2)",
       "code": "E5002",
       "python": "E5002: vendor-flydigi.json at defaults.tuning.frameQueueCapacity: 1025 is greater than the maximum of 1024",
-      "swift": "E5002: vendor-flydigi.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: vendor-flydigi.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "vendor-flydigi.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -9921,7 +9921,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=vendor-flydigi (4)",
       "code": "E5002",
       "python": "E5002: vendor-flydigi.json at defaults.tuning.frameQueueCapacity: '64' is not of type 'integer'",
-      "swift": "E5002: vendor-flydigi.json: record.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
+      "swift": "E5002: vendor-flydigi.json: description.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
       "fileName": "vendor-flydigi.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -9948,7 +9948,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=vendor-gamesir",
       "code": "E5002",
       "python": "E5002: vendor-gamesir.json at defaults.tuning.frameQueueCapacity: 0 is less than the minimum of 1",
-      "swift": "E5002: vendor-gamesir.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: vendor-gamesir.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "vendor-gamesir.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -10058,7 +10058,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=vendor-gamesir (2)",
       "code": "E5002",
       "python": "E5002: vendor-gamesir.json at defaults.tuning.frameQueueCapacity: 1025 is greater than the maximum of 1024",
-      "swift": "E5002: vendor-gamesir.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: vendor-gamesir.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "vendor-gamesir.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -10278,7 +10278,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=vendor-gamesir (4)",
       "code": "E5002",
       "python": "E5002: vendor-gamesir.json at defaults.tuning.frameQueueCapacity: '64' is not of type 'integer'",
-      "swift": "E5002: vendor-gamesir.json: record.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
+      "swift": "E5002: vendor-gamesir.json: description.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
       "fileName": "vendor-gamesir.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -10388,7 +10388,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=vendor-nvidia-shield",
       "code": "E5002",
       "python": "E5002: vendor-nvidia-shield.json at defaults.tuning.frameQueueCapacity: 0 is less than the minimum of 1",
-      "swift": "E5002: vendor-nvidia-shield.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: vendor-nvidia-shield.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "vendor-nvidia-shield.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -10437,7 +10437,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=vendor-nvidia-shield (2)",
       "code": "E5002",
       "python": "E5002: vendor-nvidia-shield.json at defaults.tuning.frameQueueCapacity: 1025 is greater than the maximum of 1024",
-      "swift": "E5002: vendor-nvidia-shield.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: vendor-nvidia-shield.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "vendor-nvidia-shield.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -10535,7 +10535,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=vendor-nvidia-shield (4)",
       "code": "E5002",
       "python": "E5002: vendor-nvidia-shield.json at defaults.tuning.frameQueueCapacity: '64' is not of type 'integer'",
-      "swift": "E5002: vendor-nvidia-shield.json: record.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
+      "swift": "E5002: vendor-nvidia-shield.json: description.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
       "fileName": "vendor-nvidia-shield.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -10584,7 +10584,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=vendor-ps3-third-party",
       "code": "E5002",
       "python": "E5002: vendor-ps3-third-party.json at defaults.tuning.frameQueueCapacity: 0 is less than the minimum of 1",
-      "swift": "E5002: vendor-ps3-third-party.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: vendor-ps3-third-party.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "vendor-ps3-third-party.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -10617,7 +10617,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=vendor-ps3-third-party (2)",
       "code": "E5002",
       "python": "E5002: vendor-ps3-third-party.json at defaults.tuning.frameQueueCapacity: 1025 is greater than the maximum of 1024",
-      "swift": "E5002: vendor-ps3-third-party.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: vendor-ps3-third-party.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "vendor-ps3-third-party.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -10683,7 +10683,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=vendor-ps3-third-party (4)",
       "code": "E5002",
       "python": "E5002: vendor-ps3-third-party.json at defaults.tuning.frameQueueCapacity: '64' is not of type 'integer'",
-      "swift": "E5002: vendor-ps3-third-party.json: record.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
+      "swift": "E5002: vendor-ps3-third-party.json: description.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
       "fileName": "vendor-ps3-third-party.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -10716,7 +10716,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=xbox-gip",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.tuning.frameQueueCapacity: 0 is less than the minimum of 1",
-      "swift": "E5002: xbox-gip.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: xbox-gip.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "xbox-gip.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -10843,7 +10843,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=xbox-gip (2)",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.tuning.frameQueueCapacity: 1025 is greater than the maximum of 1024",
-      "swift": "E5002: xbox-gip.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: xbox-gip.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "xbox-gip.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -11097,7 +11097,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=xbox-gip (4)",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.tuning.frameQueueCapacity: '64' is not of type 'integer'",
-      "swift": "E5002: xbox-gip.json: record.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
+      "swift": "E5002: xbox-gip.json: description.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
       "fileName": "xbox-gip.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -11224,7 +11224,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=xbox-xid",
       "code": "E5002",
       "python": "E5002: xbox-xid.json at defaults.tuning.frameQueueCapacity: 0 is less than the minimum of 1",
-      "swift": "E5002: xbox-xid.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: xbox-xid.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "xbox-xid.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -11399,7 +11399,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=xbox-xid (2)",
       "code": "E5002",
       "python": "E5002: xbox-xid.json at defaults.tuning.frameQueueCapacity: 1025 is greater than the maximum of 1024",
-      "swift": "E5002: xbox-xid.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: xbox-xid.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "xbox-xid.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -11749,7 +11749,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=xbox-xid (4)",
       "code": "E5002",
       "python": "E5002: xbox-xid.json at defaults.tuning.frameQueueCapacity: '64' is not of type 'integer'",
-      "swift": "E5002: xbox-xid.json: record.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
+      "swift": "E5002: xbox-xid.json: description.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
       "fileName": "xbox-xid.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -11924,7 +11924,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=xbox-xusb",
       "code": "E5002",
       "python": "E5002: xbox-xusb.json at defaults.tuning.frameQueueCapacity: 0 is less than the minimum of 1",
-      "swift": "E5002: xbox-xusb.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: xbox-xusb.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "xbox-xusb.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -12017,7 +12017,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=xbox-xusb (2)",
       "code": "E5002",
       "python": "E5002: xbox-xusb.json at defaults.tuning.frameQueueCapacity: 1025 is greater than the maximum of 1024",
-      "swift": "E5002: xbox-xusb.json: record.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "swift": "E5002: xbox-xusb.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
       "fileName": "xbox-xusb.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -12203,7 +12203,7 @@
       "name": "every family may set a frame queue capacity in the schema range: family=xbox-xusb (4)",
       "code": "E5002",
       "python": "E5002: xbox-xusb.json at defaults.tuning.frameQueueCapacity: '64' is not of type 'integer'",
-      "swift": "E5002: xbox-xusb.json: record.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
+      "swift": "E5002: xbox-xusb.json: description.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
       "fileName": "xbox-xusb.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -13131,7 +13131,7 @@
       "name": "rejects a bad parameter declaration: declaration={'type': 'string'}",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at parameters.maker: {'type': 'string'} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: record.parameters.maker.type: type is Flag, Enum or Object",
+      "swift": "E5002: sony-dualsense.json: description.parameters.maker.type: type is Flag, Enum or Object",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -13153,7 +13153,7 @@
       "name": "rejects a bad parameter declaration: declaration={'type': 'Flag', 'values': ['A']}",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at parameters.maker: {'type': 'Flag', 'values': ['A']} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: record.parameters.maker: unknown field(s): values",
+      "swift": "E5002: sony-dualsense.json: description.parameters.maker: unknown field(s): values",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -13176,7 +13176,7 @@
       "name": "rejects a bad parameter declaration: declaration={'type': 'Enum'}",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at parameters.maker: {'type': 'Enum'} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: record.parameters.maker: missing field values",
+      "swift": "E5002: sony-dualsense.json: description.parameters.maker: missing field values",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -13198,7 +13198,7 @@
       "name": "rejects a bad parameter declaration: declaration={'type': 'Enum', 'values': []}",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at parameters.maker: {'type': 'Enum', 'values': []} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: record.parameters.maker.values: values are unique, nonempty UpperCamelCase names",
+      "swift": "E5002: sony-dualsense.json: description.parameters.maker.values: values are unique, nonempty UpperCamelCase names",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -13221,7 +13221,7 @@
       "name": "rejects a bad parameter declaration: declaration={'type': 'Enum', 'values': ['lower']}",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at parameters.maker: {'type': 'Enum', 'values': ['lower']} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: record.parameters.maker.values: values are unique, nonempty UpperCamelCase names",
+      "swift": "E5002: sony-dualsense.json: description.parameters.maker.values: values are unique, nonempty UpperCamelCase names",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -13244,7 +13244,7 @@
       "name": "rejects a bad parameter declaration: declaration={'type': 'Enum', 'values': ['A', 'A']}",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at parameters.maker: {'type': 'Enum', 'values': ['A', 'A']} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: record.parameters.maker.values: values are unique, nonempty UpperCamelCase names",
+      "swift": "E5002: sony-dualsense.json: description.parameters.maker.values: values are unique, nonempty UpperCamelCase names",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -13267,7 +13267,7 @@
       "name": "rejects a bad parameter declaration: declaration={'type': 'Object', 'fields': {}}",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at parameters.maker: {'type': 'Object', 'fields': {}} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: record.parameters.maker.fields: fields must not be empty",
+      "swift": "E5002: sony-dualsense.json: description.parameters.maker.fields: fields must not be empty",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -13290,7 +13290,7 @@
       "name": "rejects a bad parameter declaration: declaration={'type': 'Object', 'fields': {'x': {'type': 'Integer', 'minimum': 1}}}",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at parameters.maker: {'type': 'Object', 'fields': {'x': {'type': 'Integer', 'minimum': 1}}} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: record.parameters.maker.fields.x: missing field maximum",
+      "swift": "E5002: sony-dualsense.json: description.parameters.maker.fields.x: missing field maximum",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -13318,7 +13318,7 @@
       "name": "rejects a bad parameter declaration: declaration={'type': 'Object', 'fields': {'x': {'type': 'string'}}}",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at parameters.maker: {'type': 'Object', 'fields': {'x': {'type': 'string'}}} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: record.parameters.maker.fields.x.type: an object field is an integer",
+      "swift": "E5002: sony-dualsense.json: description.parameters.maker.fields.x.type: an object field is an integer",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -14008,7 +14008,7 @@
       "name": "rejects a parameter the family does not declare",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at parameters: 'x' is not one of ['maker', 'unprobedSensors', 'unprobedTouchpad', 'forcedVibration', 'role']",
-      "swift": "E5002: sony-dualsense.json: record.parameters: no driver reads parameter(s): x",
+      "swift": "E5002: sony-dualsense.json: description.parameters: no driver reads parameter(s): x",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -14077,7 +14077,7 @@
       "name": "rejects a parameter the family does not declare (4)",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at parameters: {} should be non-empty",
-      "swift": "E5002: sony-dualsense.json: record.parameters: parameters must not be empty",
+      "swift": "E5002: sony-dualsense.json: description.parameters: parameters must not be empty",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -14095,7 +14095,7 @@
       "name": "rejects a rationale of the wrong type: rationale=5",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at macOSOwnedOutput.rationale: 5 is not of type 'string'",
-      "swift": "E5002: sony-dualsense.json: record.macOSOwnedOutput.rationale: Expected to decode String but found number instead.",
+      "swift": "E5002: sony-dualsense.json: description.macOSOwnedOutput.rationale: Expected to decode String but found number instead.",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -14115,7 +14115,7 @@
       "name": "rejects a rationale of the wrong type: rationale=None",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at macOSOwnedOutput.rationale: None is not of type 'string'",
-      "swift": "E5002: sony-dualsense.json: record.macOSOwnedOutput.rationale: null is not permitted",
+      "swift": "E5002: sony-dualsense.json: description.macOSOwnedOutput.rationale: null is not permitted",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -14135,7 +14135,7 @@
       "name": "rejects a rationale of the wrong type: rationale=['rationale']",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at macOSOwnedOutput.rationale: ['rationale'] is not of type 'string'",
-      "swift": "E5002: sony-dualsense.json: record.macOSOwnedOutput.rationale: Expected to decode String but found an array instead.",
+      "swift": "E5002: sony-dualsense.json: description.macOSOwnedOutput.rationale: Expected to decode String but found an array instead.",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -14155,7 +14155,7 @@
       "name": "rejects a rationale of the wrong type: rationale={'text': 'x'}",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at macOSOwnedOutput.rationale: {'text': 'x'} is not of type 'string'",
-      "swift": "E5002: sony-dualsense.json: record.macOSOwnedOutput.rationale: Expected to decode String but found a dictionary instead.",
+      "swift": "E5002: sony-dualsense.json: description.macOSOwnedOutput.rationale: Expected to decode String but found a dictionary instead.",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -14240,7 +14240,7 @@
       "name": "rejects a resend interval in a family with a keep alive: flat template",
       "code": "E5002",
       "python": "E5002: vendor-gamesir.json at defaults: {'session': {'keepAlive': {'intervalMilliseconds': 100}, 'rumble': {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'lowFrequency': {'byte': 1}, 'resendIntervalMilliseconds': 100}}, 'variants': {}} should not be valid under {'required': ['session'], 'properties': {'session': {'required': ['keepAlive']}}, 'anyOf': [{'properties': {'session': {'required': ['rumble'], 'properties': {'rumble': {'required': ['resendIntervalMilliseconds']}}}}}, {'required': ['variants'], 'properties': {'variants': {'not': {'additionalProperties': {'not': {'required': ['session'], 'properties': {'session': {'required': ['rumble'], 'properties': {'rumble': {'required': ['resendIntervalMilliseconds']}}}}}}}}}}]}",
-      "swift": "E5002: vendor-gamesir.json: record.defaults.variants: variants must not be empty",
+      "swift": "E5002: vendor-gamesir.json: description.defaults.variants: variants must not be empty",
       "fileName": "vendor-gamesir.json",
       "document": {
         "variants": ["USB", "EnhancedHID"],
@@ -14279,7 +14279,7 @@
       "name": "rejects a signature missing a triple field: field=variant",
       "code": "E5002",
       "python": "E5002: xbox-xusb.json at interfaceSignatures.0: 'variant' is a required property",
-      "swift": "E5002: xbox-xusb.json: record.interfaceSignatures.[0]: missing field variant",
+      "swift": "E5002: xbox-xusb.json: description.interfaceSignatures.[0]: missing field variant",
       "fileName": "xbox-xusb.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -14310,7 +14310,7 @@
       "name": "rejects a signature missing a triple field: field=interfaceClass",
       "code": "E5002",
       "python": "E5002: xbox-xusb.json at interfaceSignatures.0: 'interfaceClass' is a required property",
-      "swift": "E5002: xbox-xusb.json: record.interfaceSignatures.[0]: missing field interfaceClass",
+      "swift": "E5002: xbox-xusb.json: description.interfaceSignatures.[0]: missing field interfaceClass",
       "fileName": "xbox-xusb.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -14341,7 +14341,7 @@
       "name": "rejects a signature missing a triple field: field=interfaceSubclass",
       "code": "E5002",
       "python": "E5002: xbox-xusb.json at interfaceSignatures.0: 'interfaceSubclass' is a required property",
-      "swift": "E5002: xbox-xusb.json: record.interfaceSignatures.[0]: missing field interfaceSubclass",
+      "swift": "E5002: xbox-xusb.json: description.interfaceSignatures.[0]: missing field interfaceSubclass",
       "fileName": "xbox-xusb.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -14626,7 +14626,7 @@
       "name": "rejects a variant rumble template the family cannot use: bytes without the report ID",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json: defaults.variants.USB.session.rumble: rumble template bytes must start with the report ID",
-      "swift": "E5002: sony-dualsense.json: record.defaults.variants.USB.session.rumble: rumble template bytes must start with the report ID",
+      "swift": "E5002: sony-dualsense.json: description.defaults.variants.USB.session.rumble: rumble template bytes must start with the report ID",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -14663,7 +14663,7 @@
       "name": "rejects a variant rumble template the family cannot use: counter on a motor byte",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json: defaults.variants.USB.session.rumble: rumble motor and counter bytes must be distinct and follow the report ID inside the report",
-      "swift": "E5002: sony-dualsense.json: record.defaults.variants.USB.session.rumble: rumble motor and counter bytes must be distinct and follow the report ID inside the report",
+      "swift": "E5002: sony-dualsense.json: description.defaults.variants.USB.session.rumble: rumble motor and counter bytes must be distinct and follow the report ID inside the report",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -14702,7 +14702,7 @@
       "name": "rejects a variant rumble template the family cannot use: member other than rumble",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at defaults.variants.USB.session: Additional properties are not allowed ('keepAlive' was unexpected)",
-      "swift": "E5002: sony-dualsense.json: record.defaults.variants.USB.session: unknown field(s): keepAlive",
+      "swift": "E5002: sony-dualsense.json: description.defaults.variants.USB.session: unknown field(s): keepAlive",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -14731,7 +14731,7 @@
       "name": "rejects a variant rumble template the family cannot use: empty variant",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at defaults.variants.USB: {} should be non-empty",
-      "swift": "E5002: sony-dualsense.json: record.defaults.variants.USB: a variant must not be empty",
+      "swift": "E5002: sony-dualsense.json: description.defaults.variants.USB: a variant must not be empty",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -14754,7 +14754,7 @@
       "name": "rejects a variant rumble template the family cannot use: empty variant session",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at defaults.variants.USB.session: 'rumble' is a required property",
-      "swift": "E5002: sony-dualsense.json: record.defaults.variants.USB.session: missing field rumble",
+      "swift": "E5002: sony-dualsense.json: description.defaults.variants.USB.session: missing field rumble",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -14934,7 +14934,7 @@
       "name": "rejects an unknown or repeated variant list: variants=['Wired', 'Wired']",
       "code": "E5002",
       "python": "E5002: xbox-xusb.json at variants: ['Wired', 'Wired'] has non-unique elements",
-      "swift": "E5002: xbox-xusb.json: record.variants: variants lists unique, known names",
+      "swift": "E5002: xbox-xusb.json: description.variants: variants lists unique, known names",
       "fileName": "xbox-xusb.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -14966,7 +14966,7 @@
       "name": "rejects an unknown or repeated variant list: variants=['usb']",
       "code": "E5002",
       "python": "E5002: xbox-xusb.json at variants.0: 'usb' is not one of ['USB', 'BluetoothClassic', 'BluetoothLE', 'Gamepad', 'Wired', 'Receiver', 'Dongle', 'EnhancedHID']",
-      "swift": "E5002: xbox-xusb.json: record.variants: variants lists unique, known names",
+      "swift": "E5002: xbox-xusb.json: description.variants: variants lists unique, known names",
       "fileName": "xbox-xusb.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -14998,7 +14998,7 @@
       "name": "rejects an unknown or repeated variant list: variants=[]",
       "code": "E5002",
       "python": "E5002: xbox-xusb.json at variants: [] should be non-empty",
-      "swift": "E5002: xbox-xusb.json: record.variants: variants lists unique, known names",
+      "swift": "E5002: xbox-xusb.json: description.variants: variants lists unique, known names",
       "fileName": "xbox-xusb.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -15096,7 +15096,7 @@
       "name": "rejects defaults a driver does not read: family=XboxXID, defaults={'input': {'report': {'length': 4}, 'axes': [{'control': 'LeftStickX', 'byte': 0, 'symmetric': True}]}}",
       "code": "E5002",
       "python": "E5002: xbox-xid.json at defaults.input: {'report': {'length': 4}, 'axes': [{'control': 'LeftStickX', 'byte': 0, 'symmetric': True}]} is not valid under any of the given schemas",
-      "swift": "E5002: xbox-xid.json: record.defaults.input: a symmetric axis is signed with min below 0 below max",
+      "swift": "E5002: xbox-xid.json: description.defaults.input: a symmetric axis is signed with min below 0 below max",
       "fileName": "xbox-xid.json",
       "document": {
         "variants": ["Gamepad"],
@@ -15130,7 +15130,7 @@
       "name": "rejects defaults a driver does not read: family=XboxXID, defaults={'input': {'report': {'length': 4}, 'hat': [{'encoding': 'Table', 'byte': 2, 'mask': 15, 'values': {}}]}}",
       "code": "E5002",
       "python": "E5002: xbox-xid.json at defaults.input: {'report': {'length': 4}, 'hat': [{'encoding': 'Table', 'byte': 2, 'mask': 15, 'values': {}}]} is not valid under any of the given schemas",
-      "swift": "E5002: xbox-xid.json: record.defaults.input: a table hat names directions for values its mask holds, and no neutral entry",
+      "swift": "E5002: xbox-xid.json: description.defaults.input: a table hat names directions for values its mask holds, and no neutral entry",
       "fileName": "xbox-xid.json",
       "document": {
         "variants": ["Gamepad"],
@@ -15165,7 +15165,7 @@
       "name": "rejects defaults a driver does not read: family=XboxXID, defaults={'input': {'report': {'length': 4}, 'hat': [{'encoding': 'Table', 'byte': 2, 'mask': 15, 'values': {'01': 'North'}}]}}",
       "code": "E5002",
       "python": "E5002: xbox-xid.json at defaults.input: {'report': {'length': 4}, 'hat': [{'encoding': 'Table', 'byte': 2, 'mask': 15, 'values': {'01': 'North'}}]} is not valid under any of the given schemas",
-      "swift": "E5002: xbox-xid.json: record.defaults.input.hat.[0]: values map decimal numbers to non-neutral direction names",
+      "swift": "E5002: xbox-xid.json: description.defaults.input.hat.[0]: values map decimal numbers to non-neutral direction names",
       "fileName": "xbox-xid.json",
       "document": {
         "variants": ["Gamepad"],
@@ -15202,7 +15202,7 @@
       "name": "rejects defaults a driver does not read: family=XboxXID, defaults={'input': {'report': {'length': 4}, 'hat': [{'encoding': 'Table', 'byte': 2, 'mask': 15, 'values': {'1': 'Neutral'}}]}}",
       "code": "E5002",
       "python": "E5002: xbox-xid.json at defaults.input: {'report': {'length': 4}, 'hat': [{'encoding': 'Table', 'byte': 2, 'mask': 15, 'values': {'1': 'Neutral'}}]} is not valid under any of the given schemas",
-      "swift": "E5002: xbox-xid.json: record.defaults.input.hat.[0]: values map decimal numbers to non-neutral direction names",
+      "swift": "E5002: xbox-xid.json: description.defaults.input.hat.[0]: values map decimal numbers to non-neutral direction names",
       "fileName": "xbox-xid.json",
       "document": {
         "variants": ["Gamepad"],
@@ -15344,7 +15344,7 @@
       "name": "rejects defaults a driver does not read: family=XboxGIP, defaults={'unknown': {}}",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults: Additional properties are not allowed ('unknown' was unexpected)",
-      "swift": "E5002: xbox-gip.json: record.defaults: unknown field(s): unknown",
+      "swift": "E5002: xbox-gip.json: description.defaults: unknown field(s): unknown",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -15369,7 +15369,7 @@
       "name": "rejects defaults a driver does not read: family=XboxGIP, defaults={'tuning': {'stickDeadzone': 5}}",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.tuning.stickDeadzone: 5 is greater than or equal to the maximum of 1",
-      "swift": "E5002: xbox-gip.json: record.defaults.tuning.stickDeadzone: stickDeadzone must be greater than 0 and less than 1",
+      "swift": "E5002: xbox-gip.json: description.defaults.tuning.stickDeadzone: stickDeadzone must be greater than 0 and less than 1",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -15464,7 +15464,7 @@
       "name": "rejects descriptions values spelled as before the naming rule: parameter type enum",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at parameters.maker: {'type': 'enum', 'values': ['ThirdParty']} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: record.parameters.maker.type: type is Flag, Enum or Object",
+      "swift": "E5002: sony-dualsense.json: description.parameters.maker.type: type is Flag, Enum or Object",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -15487,7 +15487,7 @@
       "name": "rejects descriptions values spelled as before the naming rule: parameter type flag",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at parameters.forcedVibration: {'type': 'flag'} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: record.parameters.forcedVibration.type: type is Flag, Enum or Object",
+      "swift": "E5002: sony-dualsense.json: description.parameters.forcedVibration.type: type is Flag, Enum or Object",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -15509,7 +15509,7 @@
       "name": "rejects descriptions values spelled as before the naming rule: integer field type",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at parameters.shareButton: {'type': 'Object', 'fields': {'fromEnd': {'type': 'integer', 'minimum': 1, 'maximum': 255}}} is not valid under any of the given schemas",
-      "swift": "E5002: xbox-gip.json: record.parameters.shareButton.fields.fromEnd.type: an object field is an integer",
+      "swift": "E5002: xbox-gip.json: description.parameters.shareButton.fields.fromEnd.type: an object field is an integer",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -15545,7 +15545,7 @@
       "name": "rejects descriptions values spelled as before the naming rule: controls base",
       "code": "E5002",
       "python": "E5002: xbox-xid.json at controls.base: 'xbox' is not one of ['Xbox']",
-      "swift": "E5002: xbox-xid.json: record.controls.base: base is Xbox",
+      "swift": "E5002: xbox-xid.json: description.controls.base: base is Xbox",
       "fileName": "xbox-xid.json",
       "document": {
         "variants": ["Gamepad"],
@@ -15568,7 +15568,7 @@
       "name": "rejects empty signatures and admits none",
       "code": "E5002",
       "python": "E5002: xbox-xusb.json at interfaceSignatures: [] should be non-empty",
-      "swift": "E5002: xbox-xusb.json: record.interfaceSignatures: interfaceSignatures must not be empty",
+      "swift": "E5002: xbox-xusb.json: description.interfaceSignatures: interfaceSignatures must not be empty",
       "fileName": "xbox-xusb.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -15593,7 +15593,7 @@
       "name": "rejects empty signatures and admits none (2)",
       "code": "E5002",
       "python": "E5002: xbox-xusb.json at parameters: {} should be non-empty",
-      "swift": "E5002: xbox-xusb.json: record.parameters: parameters must not be empty",
+      "swift": "E5002: xbox-xusb.json: description.parameters: parameters must not be empty",
       "fileName": "xbox-xusb.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -15652,7 +15652,7 @@
       "name": "rejects malformed keep alives: keep_alive={}",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.keepAlive: 'intervalMilliseconds' is a required property",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.keepAlive: missing field intervalMilliseconds",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.keepAlive: missing field intervalMilliseconds",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -15677,7 +15677,7 @@
       "name": "rejects malformed keep alives: keep_alive={'writes': [{'bytes': '05 20 00 01 00'}]}",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.keepAlive: 'intervalMilliseconds' is a required property",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.keepAlive: missing field intervalMilliseconds",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.keepAlive: missing field intervalMilliseconds",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -15708,7 +15708,7 @@
       "name": "rejects malformed keep alives: keep_alive={'intervalMilliseconds': 0}",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.keepAlive.intervalMilliseconds: 0 is less than the minimum of 1",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.keepAlive: a keep-alive interval is 1...60000 ms",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.keepAlive: a keep-alive interval is 1...60000 ms",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -15735,7 +15735,7 @@
       "name": "rejects malformed keep alives: keep_alive={'intervalMilliseconds': 60001}",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.keepAlive.intervalMilliseconds: 60001 is greater than the maximum of 60000",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.keepAlive: a keep-alive interval is 1...60000 ms",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.keepAlive: a keep-alive interval is 1...60000 ms",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -15789,7 +15789,7 @@
       "name": "rejects malformed keep alives: keep_alive={'intervalMilliseconds': '500'}",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.keepAlive.intervalMilliseconds: '500' is not of type 'integer'",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.keepAlive.intervalMilliseconds: Expected to decode Int but found a string instead.",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.keepAlive.intervalMilliseconds: Expected to decode Int but found a string instead.",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -15816,7 +15816,7 @@
       "name": "rejects malformed keep alives: keep_alive={'intervalMilliseconds': 500, 'unknown': 1}",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.keepAlive: Additional properties are not allowed ('unknown' was unexpected)",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.keepAlive: unknown field(s): unknown",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.keepAlive: unknown field(s): unknown",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -15844,7 +15844,7 @@
       "name": "rejects malformed keep alives: keep_alive={'intervalMilliseconds': 500, 'writes': []}",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.keepAlive.writes: [] should be non-empty",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.keepAlive: keepAlive names no writes or 1...8 of them",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.keepAlive: keepAlive names no writes or 1...8 of them",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -15872,7 +15872,7 @@
       "name": "rejects malformed keep alives: keep_alive={'intervalMilliseconds': 500, 'writes': [{'bytes': '05 20 00 01 00'}, {'bytes': '05 20 00 01 00'}, {'bytes': '05 20 00 01 00'}, {'bytes': '05 20 00 01 00'}, {'bytes': '05 20 00 01 00'}, {'bytes': '05 20 00 01 00'}, {'bytes': '05 20 00 01 00'}, {'bytes': '05 20 00 01 00'}, {'bytes': '05 20 00 01 00'}]}",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.keepAlive.writes: [{'bytes': '05 20 00 01 00'}, {'bytes': '05 20 00 01 00'}, {'bytes': '05 20 00 01 00'}, {'bytes': '05 20 00 01 00'}, {'bytes': '05 20 00 01 00'}, {'bytes': '05 20 00 01 00'}, {'bytes': '05 20 00 01 00'}, {'bytes': '05 20 00 01 00'}, {'bytes': '05 20 00 01 00'}] is too long",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.keepAlive: keepAlive names no writes or 1...8 of them",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.keepAlive: keepAlive names no writes or 1...8 of them",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -15928,7 +15928,7 @@
       "name": "rejects malformed keep alives: keep_alive={'intervalMilliseconds': 500, 'writes': [{'bytes': ''}]}",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.keepAlive.writes.0: {'bytes': ''} is not valid under any of the given schemas",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.keepAlive.writes.[0]: startup bytes are uppercase hex pairs separated by single spaces",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.keepAlive.writes.[0]: startup bytes are uppercase hex pairs separated by single spaces",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -15960,7 +15960,7 @@
       "name": "rejects malformed keep alives: keep_alive={'intervalMilliseconds': 500, 'writes': [{'bytes': '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00'}]}",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.keepAlive.writes.0: {'bytes': '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00'} is not valid under any of the given schemas",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.keepAlive.writes.[0]: a USB startup packet is 1...64 bytes long",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.keepAlive.writes.[0]: a USB startup packet is 1...64 bytes long",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -15992,7 +15992,7 @@
       "name": "rejects malformed keep alives: keep_alive={'intervalMilliseconds': 500, 'writes': [{'bytes': '05 20 00 01 00', 'sessionByte': 64}]}",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.keepAlive.writes.0: {'bytes': '05 20 00 01 00', 'sessionByte': 64} is not valid under any of the given schemas",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.keepAlive.writes.[0]: a USB startup session byte indexes the packet",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.keepAlive.writes.[0]: a USB startup session byte indexes the packet",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -16025,7 +16025,7 @@
       "name": "rejects malformed keep alives: keep_alive={'intervalMilliseconds': 500, 'writes': [{'bytes': '05 20 00 01 00', 'endpoint': 0}]}",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.keepAlive.writes.0: {'bytes': '05 20 00 01 00', 'endpoint': 0} is not valid under any of the given schemas",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.keepAlive.writes.[0]: a USB startup endpoint is 1...127",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.keepAlive.writes.[0]: a USB startup endpoint is 1...127",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -16058,7 +16058,7 @@
       "name": "rejects malformed keep alives: keep_alive={'intervalMilliseconds': 500, 'writes': [{'bytes': '05 20 00 01 00', 'variants': []}]}",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.keepAlive.writes.0: {'bytes': '05 20 00 01 00', 'variants': []} is not valid under any of the given schemas",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.keepAlive.writes.[0].variants: variants lists 1...8 distinct variant names",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.keepAlive.writes.[0].variants: variants lists 1...8 distinct variant names",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -16091,7 +16091,7 @@
       "name": "rejects malformed keep alives: keep_alive={'intervalMilliseconds': 500, 'writes': [{'bytes': '05 20 00 01 00', 'resendTuning': 'x'}]}",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.keepAlive.writes.0: {'bytes': '05 20 00 01 00', 'resendTuning': 'x'} is not valid under any of the given schemas",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.keepAlive.writes.[0]: a keep-alive resendTuning is lizardResendTicks",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.keepAlive.writes.[0]: a keep-alive resendTuning is lizardResendTicks",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -16124,7 +16124,7 @@
       "name": "rejects malformed keep alives: keep_alive={'intervalMilliseconds': 500, 'writes': [{'bytes': '05 20 00 01 00', 'resendTuning': 'usbCommandTimeoutMs'}]}",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.keepAlive.writes.0: {'bytes': '05 20 00 01 00', 'resendTuning': 'usbCommandTimeoutMs'} is not valid under any of the given schemas",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.keepAlive.writes.[0]: a keep-alive resendTuning is lizardResendTicks",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.keepAlive.writes.[0]: a keep-alive resendTuning is lizardResendTicks",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -16157,7 +16157,7 @@
       "name": "rejects malformed named packets: packets=[]",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.namedPackets: [] should be non-empty",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.namedPackets: namedPackets name 1...16 packets",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.namedPackets: namedPackets name 1...16 packets",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -16182,7 +16182,7 @@
       "name": "rejects malformed named packets: packets=[{'id': 'XboxGIP/packet-0', 'bytes': '05 20 00 01 00', 'sessionByte': 2}, {'id': 'XboxGIP/packet-1', 'bytes': '05 20 00 01 00', 'sessionByte': 2}, {'id': 'XboxGIP/packet-2', 'bytes': '05 20 00 01 00', 'sessionByte': 2}, {'id': 'XboxGIP/packet-3', 'bytes': '05 20 00 01 00', 'sessionByte': 2}, {'id': 'XboxGIP/packet-4', 'bytes': '05 20 00 01 00', 'sessionByte': 2}, {'id': 'XboxGIP/packet-5', 'bytes': '05 20 00 01 00', 'sessionByte': 2}, {'id': 'XboxGIP/packet-6', 'bytes': '05 20 00 01 00', 'sessionByte': 2}, {'id': 'XboxGIP/packet-7', 'bytes': '05 20 00 01 00', 'sessionByte': 2}, {'id': 'XboxGIP/packet-8', 'bytes': '05 20 00 01 00', 'sessionByte': 2}, {'id': 'XboxGIP/packet-9', 'bytes': '05 20 00 01 00', 'sessionByte': 2}, {'id': 'XboxGIP/packet-10', 'bytes': '05 20 00 01 00', 'sessionByte': 2}, {'id': 'XboxGIP/packet-11', 'bytes': '05 20 00 01 00', 'sessionByte': 2}, {'id': 'XboxGIP/packet-12', 'bytes': '05 20 00 01 00', 'sessionByte': 2}, {'id': 'XboxGIP/packet-13', 'bytes': '05 20 00 01 00', 'sessionByte': 2}, {'id': 'XboxGIP/packet-14', 'bytes': '05 20 00 01 00', 'sessionByte': 2}, {'id': 'XboxGIP/packet-15', 'bytes': '05 20 00 01 00', 'sessionByte': 2}, {'id': 'XboxGIP/packet-16', 'bytes': '05 20 00 01 00', 'sessionByte': 2}]",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.namedPackets: [{'id': 'XboxGIP/packet-0', 'bytes': '05 20 00 01 00', 'sessionByte': 2}, {'id': 'XboxGIP/packet-1', 'bytes': '05 20 00 01 00', 'sessionByte': 2}, {'id': 'XboxGIP/packet-2', 'bytes': '05 20 00 01 00', 'sessionByte': 2}, {'id': 'XboxGIP/packet-3', 'bytes': '05 20 00 01 00', 'sessionByte': 2}, {'id': 'XboxGIP/packet-4', 'bytes': '05 20 00 01 00', 'sessionByte': 2}, {'id': 'XboxGIP/packet-5', 'bytes': '05 20 00 01 00', 'sessionByte': 2}, {'id': 'XboxGIP/packet-6', 'bytes': '05 20 00 01 00', 'sessionByte': 2}, {'id': 'XboxGIP/packet-7', 'bytes': '05 20 00 01 00', 'sessionByte': 2}, {'id': 'XboxGIP/packet-8', 'bytes': '05 20 00 01 00', 'sessionByte': 2}, {'id': 'XboxGIP/packet-9', 'bytes': '05 20 00 01 00', 'sessionByte': 2}, {'id': 'XboxGIP/packet-10', 'bytes': '05 20 00 01 00', 'sessionByte': 2}, {'id': 'XboxGIP/packet-11', 'bytes': '05 20 00 01 00', 'sessionByte': 2}, {'id': 'XboxGIP/packet-12', 'bytes': '05 20 00 01 00', 'sessionByte': 2}, {'id': 'XboxGIP/packet-13', 'bytes': '05 20 00 01 00', 'sessionByte': 2}, {'id': 'XboxGIP/packet-14', 'bytes': '05 20 00 01 00', 'sessionByte': 2}, {'id': 'XboxGIP/packet-15', 'bytes': '05 20 00 01 00', 'sessionByte': 2}, {'id': 'XboxGIP/packet-16', 'bytes': '05 20 00 01 00', 'sessionByte': 2}] is too long",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.namedPackets: namedPackets name 1...16 packets",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.namedPackets: namedPackets name 1...16 packets",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -16293,7 +16293,7 @@
       "name": "rejects malformed named packets: packets=[{'bytes': '05 20 00', 'sessionByte': 2}]",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.namedPackets.0: 'id' is a required property",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.namedPackets.[0]: missing field id",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.namedPackets.[0]: missing field id",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -16323,7 +16323,7 @@
       "name": "rejects malformed named packets: packets=[{'id': 'XboxGIP/power-on', 'sessionByte': 2}]",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.namedPackets.0: 'bytes' is a required property",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.namedPackets.[0]: missing field bytes",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.namedPackets.[0]: missing field bytes",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -16353,7 +16353,7 @@
       "name": "rejects malformed named packets: packets=[{'id': 'XboxGIP/power-on', 'bytes': '05 20 00'}]",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.namedPackets.0: 'sessionByte' is a required property",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.namedPackets.[0]: missing field sessionByte",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.namedPackets.[0]: missing field sessionByte",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -16383,7 +16383,7 @@
       "name": "rejects malformed named packets: packets=[{'id': 'power-on', 'bytes': '05 20 00 01 00', 'sessionByte': 2}]",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.namedPackets.0.id: 'power-on' does not match '^XboxGIP/[a-z0-9]+(-[a-z0-9]+)*$'",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.namedPackets.[0]: a named packet id is a family, a slash and lowercase words joined by hyphens",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.namedPackets.[0]: a named packet id is a family, a slash and lowercase words joined by hyphens",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -16414,7 +16414,7 @@
       "name": "rejects malformed named packets: packets=[{'id': 'XboxGIP/Power-On', 'bytes': '05 20 00 01 00', 'sessionByte': 2}]",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.namedPackets.0.id: 'XboxGIP/Power-On' does not match '^XboxGIP/[a-z0-9]+(-[a-z0-9]+)*$'",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.namedPackets.[0]: a named packet id is a family, a slash and lowercase words joined by hyphens",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.namedPackets.[0]: a named packet id is a family, a slash and lowercase words joined by hyphens",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -16445,7 +16445,7 @@
       "name": "rejects malformed named packets: packets=[{'id': 'XboxGIP/power--on', 'bytes': '05 20 00 01 00', 'sessionByte': 2}]",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.namedPackets.0.id: 'XboxGIP/power--on' does not match '^XboxGIP/[a-z0-9]+(-[a-z0-9]+)*$'",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.namedPackets.[0]: a named packet id is a family, a slash and lowercase words joined by hyphens",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.namedPackets.[0]: a named packet id is a family, a slash and lowercase words joined by hyphens",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -16476,7 +16476,7 @@
       "name": "rejects malformed named packets: packets=[{'id': 'XboxGIP/', 'bytes': '05 20 00 01 00', 'sessionByte': 2}]",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.namedPackets.0.id: 'XboxGIP/' does not match '^XboxGIP/[a-z0-9]+(-[a-z0-9]+)*$'",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.namedPackets.[0]: a named packet id is a family, a slash and lowercase words joined by hyphens",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.namedPackets.[0]: a named packet id is a family, a slash and lowercase words joined by hyphens",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -16507,7 +16507,7 @@
       "name": "rejects malformed named packets: packets=[{'id': 'XboxGIP/power-on', 'bytes': '05 20', 'sessionByte': 2}]",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.namedPackets.0.bytes: '05 20' is too short",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.namedPackets.[0]: a named packet has at least 3 bytes and its session byte is 2",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.namedPackets.[0]: a named packet has at least 3 bytes and its session byte is 2",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -16538,7 +16538,7 @@
       "name": "rejects malformed named packets: packets=[{'id': 'XboxGIP/power-on', 'bytes': '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00', 'sessionByte': 2}]",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.namedPackets.0.bytes: '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00' is too long",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.namedPackets.[0]: a USB startup packet is 1...64 bytes long",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.namedPackets.[0]: a USB startup packet is 1...64 bytes long",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -16569,7 +16569,7 @@
       "name": "rejects malformed named packets: packets=[{'id': 'XboxGIP/power-on', 'bytes': '05 20 100', 'sessionByte': 2}]",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.namedPackets.0.bytes: '05 20 100' does not match '^[0-9A-F]{2}( [0-9A-F]{2})*(?!\\\\n)$'",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.namedPackets.[0]: named packet bytes are uppercase hex pairs separated by single spaces",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.namedPackets.[0]: named packet bytes are uppercase hex pairs separated by single spaces",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -16600,7 +16600,7 @@
       "name": "rejects malformed named packets: packets=[{'id': 'XboxGIP/power-on', 'bytes': '05 20 00 01 00', 'sessionByte': 1}]",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.namedPackets.0.sessionByte: 2 was expected",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.namedPackets.[0]: a named packet has at least 3 bytes and its session byte is 2",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.namedPackets.[0]: a named packet has at least 3 bytes and its session byte is 2",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -16631,7 +16631,7 @@
       "name": "rejects malformed named packets: packets=[{'id': 'XboxGIP/power-on', 'bytes': '05 20 00 01 00', 'sessionByte': 3}]",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.namedPackets.0.sessionByte: 2 was expected",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.namedPackets.[0]: a named packet has at least 3 bytes and its session byte is 2",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.namedPackets.[0]: a named packet has at least 3 bytes and its session byte is 2",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -16662,7 +16662,7 @@
       "name": "rejects malformed named packets: packets=[{'id': 'XboxGIP/power-on', 'bytes': '05 20 00 01 00', 'sessionByte': 2, 'endpoint': 2}]",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.namedPackets.0: Additional properties are not allowed ('endpoint' was unexpected)",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.namedPackets.[0]: unknown field(s): endpoint",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.namedPackets.[0]: unknown field(s): endpoint",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -16694,7 +16694,7 @@
       "name": "rejects malformed named packets: packets=[{'id': 'XboxGIP/power-on', 'bytes': '05 20 00 01 00', 'sessionByte': 2, 'unknown': 1}]",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.namedPackets.0: Additional properties are not allowed ('unknown' was unexpected)",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.namedPackets.[0]: unknown field(s): unknown",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.namedPackets.[0]: unknown field(s): unknown",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -16726,7 +16726,7 @@
       "name": "rejects malformed named packets: packets=[{'id': 'XboxGIP/power-on', 'bytes': '05 20 00 01 00', 'sessionByte': 2}, {'id': 'XboxGIP/power-on', 'bytes': '05 20 00 02', 'sessionByte': 2}]",
       "code": "E5002",
       "python": "E5002: xbox-gip.json: defaults.session.namedPackets: each id appears at most once",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.namedPackets: each named packet id appears at most once",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.namedPackets: each named packet id appears at most once",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -16829,7 +16829,7 @@
       "name": "rejects malformed or mixed packet startup: startup=[{'packet': 'XboxGIP/power-on', 'bytes': '01 02 03'}]",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.startup.0: {'packet': 'XboxGIP/power-on', 'bytes': '01 02 03'} is not valid under any of the given schemas",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.startup.[0]: unknown field(s): bytes",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.startup.[0]: unknown field(s): bytes",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -16866,7 +16866,7 @@
       "name": "rejects malformed or mixed packet startup: startup=[{'packet': 'XboxGIP/power-on'}, {'bytes': '05 20 00 01 00'}]",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session: {'handshakeAttempts': 3, 'announceResendLimit': 8, 'namedPackets': [{'id': 'XboxGIP/power-on', 'bytes': '05 20 00 01 00', 'sessionByte': 2}], 'startup': [{'packet': 'XboxGIP/power-on'}, {'bytes': '05 20 00 01 00'}]} should not be valid under {'required': ['startup'], 'properties': {'startup': {'allOf': [{'contains': {'required': ['packet']}}, {'contains': {'required': ['bytes']}}]}}}",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.startup: startup writes are all HID reports, all raw-USB packets or all named packets",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.startup: startup writes are all HID reports, all raw-USB packets or all named packets",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -16905,7 +16905,7 @@
       "name": "rejects malformed or mixed packet startup: startup=[{'bytes': '05 20 00 01 00'}, {'packet': 'XboxGIP/power-on'}]",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session: {'handshakeAttempts': 3, 'announceResendLimit': 8, 'namedPackets': [{'id': 'XboxGIP/power-on', 'bytes': '05 20 00 01 00', 'sessionByte': 2}], 'startup': [{'bytes': '05 20 00 01 00'}, {'packet': 'XboxGIP/power-on'}]} should not be valid under {'required': ['startup'], 'properties': {'startup': {'allOf': [{'contains': {'required': ['packet']}}, {'contains': {'required': ['bytes']}}]}}}",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.startup: startup writes are all HID reports, all raw-USB packets or all named packets",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.startup: startup writes are all HID reports, all raw-USB packets or all named packets",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -16944,7 +16944,7 @@
       "name": "rejects malformed or mixed packet startup: startup=[{'packet': 'XboxGIP/power-on'}, {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03'}]",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session: {'handshakeAttempts': 3, 'announceResendLimit': 8, 'namedPackets': [{'id': 'XboxGIP/power-on', 'bytes': '05 20 00 01 00', 'sessionByte': 2}], 'startup': [{'packet': 'XboxGIP/power-on'}, {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03'}]} should not be valid under {'required': ['startup'], 'properties': {'startup': {'allOf': [{'contains': {'required': ['report']}}, {'contains': {'not': {'required': ['report']}}}]}}}",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.startup: startup writes are all HID reports, all raw-USB packets or all named packets",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.startup: startup writes are all HID reports, all raw-USB packets or all named packets",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -16988,7 +16988,7 @@
       "name": "rejects malformed startup writes: family=XboxGIP, write={'bytes': '05 20 00 01 00', 'endpoint': 0}",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.startup.0: {'bytes': '05 20 00 01 00', 'endpoint': 0} is not valid under any of the given schemas",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.startup.[0]: a USB startup endpoint is 1...127",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.startup.[0]: a USB startup endpoint is 1...127",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -17018,7 +17018,7 @@
       "name": "rejects malformed startup writes: family=XboxGIP, write={'bytes': '05 20 00 01 00', 'endpoint': 128}",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.startup.0: {'bytes': '05 20 00 01 00', 'endpoint': 128} is not valid under any of the given schemas",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.startup.[0]: a USB startup endpoint is 1...127",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.startup.[0]: a USB startup endpoint is 1...127",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -17048,7 +17048,7 @@
       "name": "rejects malformed startup writes: family=XboxGIP, write={'bytes': '05 20 00 01 00', 'timeoutMilliseconds': 0}",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.startup.0: {'bytes': '05 20 00 01 00', 'timeoutMilliseconds': 0} is not valid under any of the given schemas",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.startup.[0]: a USB startup timeout is 1...60000 ms",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.startup.[0]: a USB startup timeout is 1...60000 ms",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -17078,7 +17078,7 @@
       "name": "rejects malformed startup writes: family=XboxGIP, write={'bytes': '05 20 00 01 00', 'timeoutMilliseconds': 60001}",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.startup.0: {'bytes': '05 20 00 01 00', 'timeoutMilliseconds': 60001} is not valid under any of the given schemas",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.startup.[0]: a USB startup timeout is 1...60000 ms",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.startup.[0]: a USB startup timeout is 1...60000 ms",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -17108,7 +17108,7 @@
       "name": "rejects malformed startup writes: family=XboxGIP, write={'bytes': '05 20 00 01 00', 'delayMilliseconds': 1001}",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.startup.0: {'bytes': '05 20 00 01 00', 'delayMilliseconds': 1001} is not valid under any of the given schemas",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.startup.[0]: a startup delay is 0...1000 ms",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.startup.[0]: a startup delay is 0...1000 ms",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -17138,7 +17138,7 @@
       "name": "rejects malformed startup writes: family=XboxGIP, write={'bytes': '05 20 00 01 00', 'delayMilliseconds': -1}",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.startup.0: {'bytes': '05 20 00 01 00', 'delayMilliseconds': -1} is not valid under any of the given schemas",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.startup.[0]: a startup delay is 0...1000 ms",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.startup.[0]: a startup delay is 0...1000 ms",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -17168,7 +17168,7 @@
       "name": "rejects malformed startup writes: family=XboxGIP, write={'bytes': '05 20 00 01 00', 'sessionByte': 64}",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.startup.0: {'bytes': '05 20 00 01 00', 'sessionByte': 64} is not valid under any of the given schemas",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.startup.[0]: a USB startup session byte indexes the packet",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.startup.[0]: a USB startup session byte indexes the packet",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -17198,7 +17198,7 @@
       "name": "rejects malformed startup writes: family=XboxGIP, write={'bytes': '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00'}",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.startup.0: {'bytes': '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00'} is not valid under any of the given schemas",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.startup.[0]: a USB startup packet is 1...64 bytes long",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.startup.[0]: a USB startup packet is 1...64 bytes long",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -17227,7 +17227,7 @@
       "name": "rejects malformed startup writes: family=XboxGIP, write={'bytes': ''}",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.startup.0: {'bytes': ''} is not valid under any of the given schemas",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.startup.[0]: startup bytes are uppercase hex pairs separated by single spaces",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.startup.[0]: startup bytes are uppercase hex pairs separated by single spaces",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -17256,7 +17256,7 @@
       "name": "rejects malformed startup writes: family=XboxGIP, write={'bytes': '05 20 00 01 00', 'toleratesRejection': 'yes'}",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.startup.0: {'bytes': '05 20 00 01 00', 'toleratesRejection': 'yes'} is not valid under any of the given schemas",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.startup.[0].toleratesRejection: Expected to decode Bool but found a string instead.",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.startup.[0].toleratesRejection: Expected to decode Bool but found a string instead.",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -17286,7 +17286,7 @@
       "name": "rejects malformed startup writes: family=XboxGIP, write={'bytes': '05 20 00 01 00', 'report': {'kind': 'Output', 'id': 1, 'length': 4}}",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.startup.0: {'bytes': '05 20 00 01 00', 'report': {'kind': 'Output', 'id': 1, 'length': 4}} should not be valid under {'required': ['report']}",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.startup.[0]: a startup write lists every byte after the report ID: 3",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.startup.[0]: a startup write lists every byte after the report ID: 3",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -17320,7 +17320,7 @@
       "name": "rejects malformed startup writes: family=SonyDualSense, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'phase': 'Later'}",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'phase': 'Later'} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: record.defaults.session.startup.[0]: a startup phase is Startup or Activation",
+      "swift": "E5002: sony-dualsense.json: description.defaults.session.startup.[0]: a startup phase is Startup or Activation",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -17352,7 +17352,7 @@
       "name": "rejects malformed startup writes: family=SonyDualSense, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'delayMilliseconds': 1001}",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'delayMilliseconds': 1001} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: record.defaults.session.startup.[0]: a startup delay is 0...1000 ms",
+      "swift": "E5002: sony-dualsense.json: description.defaults.session.startup.[0]: a startup delay is 0...1000 ms",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -17384,7 +17384,7 @@
       "name": "rejects malformed startup writes: family=SonyDualSense, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'crc32Seed': 256}",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'crc32Seed': 256} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: record.defaults.session.startup.[0]: a startup crc32Seed is 0...255",
+      "swift": "E5002: sony-dualsense.json: description.defaults.session.startup.[0]: a startup crc32Seed is 0...255",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -17416,7 +17416,7 @@
       "name": "rejects malformed startup writes: family=SonyDualSense, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'crc32Seed': 1}",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'crc32Seed': 1} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: record.defaults.session.startup.[0]: a CRC startup report has room for its 4-byte trailer",
+      "swift": "E5002: sony-dualsense.json: description.defaults.session.startup.[0]: a CRC startup report has room for its 4-byte trailer",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -17448,7 +17448,7 @@
       "name": "rejects malformed startup writes: family=SonyDualSense, write={'report': {'kind': 'Output', 'id': 1, 'length': 129}, 'bytes': '01 02 03'}",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 129}, 'bytes': '01 02 03'} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: record.defaults.session.startup.[0]: a startup report is 2...128 bytes long",
+      "swift": "E5002: sony-dualsense.json: description.defaults.session.startup.[0]: a startup report is 2...128 bytes long",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -17479,7 +17479,7 @@
       "name": "rejects malformed startup writes: family=SonyDualSense, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'variants': []}",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'variants': []} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: record.defaults.session.startup.[0].variants: variants lists 1...8 distinct variant names",
+      "swift": "E5002: sony-dualsense.json: description.defaults.session.startup.[0].variants: variants lists 1...8 distinct variant names",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -17511,7 +17511,7 @@
       "name": "rejects malformed startup writes: family=SonyDualSense, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'variants': ['USB', 'USB']}",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'variants': ['USB', 'USB']} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: record.defaults.session.startup.[0].variants: variants lists 1...8 distinct variant names",
+      "swift": "E5002: sony-dualsense.json: description.defaults.session.startup.[0].variants: variants lists 1...8 distinct variant names",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -17543,7 +17543,7 @@
       "name": "rejects malformed startup writes: family=SonyDualSense, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'layout'}}",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'layout'}} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: record.defaults.session.startup.[0].when: when names an enumeration parameter and exactly one of is or isNot, 1...16 values",
+      "swift": "E5002: sony-dualsense.json: description.defaults.session.startup.[0].when: when names an enumeration parameter and exactly one of is or isNot, 1...16 values",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -17577,7 +17577,7 @@
       "name": "rejects malformed startup writes: family=SonyDualSense, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'role', 'is': ['A'], 'isNot': ['B']}}",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'role', 'is': ['A'], 'isNot': ['B']}} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: record.defaults.session.startup.[0].when: when names an enumeration parameter and exactly one of is or isNot, 1...16 values",
+      "swift": "E5002: sony-dualsense.json: description.defaults.session.startup.[0].when: when names an enumeration parameter and exactly one of is or isNot, 1...16 values",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -17613,7 +17613,7 @@
       "name": "rejects malformed startup writes: family=SonyDualSense, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'role', 'is': []}}",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'role', 'is': []}} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: record.defaults.session.startup.[0].when: when names an enumeration parameter and exactly one of is or isNot, 1...16 values",
+      "swift": "E5002: sony-dualsense.json: description.defaults.session.startup.[0].when: when names an enumeration parameter and exactly one of is or isNot, 1...16 values",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -17648,7 +17648,7 @@
       "name": "rejects malformed startup writes: family=SonyDualSense, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'color', 'is': ['A']}}",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'color', 'is': ['A']}} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: record.defaults.session.startup.[0].when: when names an enumeration parameter and exactly one of is or isNot, 1...16 values",
+      "swift": "E5002: sony-dualsense.json: description.defaults.session.startup.[0].when: when names an enumeration parameter and exactly one of is or isNot, 1...16 values",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -17683,7 +17683,7 @@
       "name": "rejects malformed subcommands: subcommands={'counterModulus': 16, 'requests': [{'subcommand': 3, 'data': '30'}]}",
       "code": "E5002",
       "python": "E5002: nintendo-switch1.json at defaults.session.subcommands: 'reportID' is a required property",
-      "swift": "E5002: nintendo-switch1.json: record.defaults.session.subcommands: missing field reportID",
+      "swift": "E5002: nintendo-switch1.json: description.defaults.session.subcommands: missing field reportID",
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -17713,7 +17713,7 @@
       "name": "rejects malformed subcommands: subcommands={'reportID': 1, 'requests': [{'subcommand': 3, 'data': '30'}]}",
       "code": "E5002",
       "python": "E5002: nintendo-switch1.json at defaults.session.subcommands: 'counterModulus' is a required property",
-      "swift": "E5002: nintendo-switch1.json: record.defaults.session.subcommands: missing field counterModulus",
+      "swift": "E5002: nintendo-switch1.json: description.defaults.session.subcommands: missing field counterModulus",
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -17743,7 +17743,7 @@
       "name": "rejects malformed subcommands: subcommands={'reportID': 1, 'counterModulus': 16}",
       "code": "E5002",
       "python": "E5002: nintendo-switch1.json at defaults.session.subcommands: 'requests' is a required property",
-      "swift": "E5002: nintendo-switch1.json: record.defaults.session.subcommands: missing field requests",
+      "swift": "E5002: nintendo-switch1.json: description.defaults.session.subcommands: missing field requests",
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -17768,7 +17768,7 @@
       "name": "rejects malformed subcommands: subcommands={'reportID': 1, 'counterModulus': 16, 'requests': [{'subcommand': 3, 'data': '30'}]}",
       "code": "E5002",
       "python": "E5002: nintendo-switch1.json at defaults.session.subcommands: 'playerIndicator' is a required property",
-      "swift": "E5002: nintendo-switch1.json: record.defaults.session.subcommands: missing field playerIndicator",
+      "swift": "E5002: nintendo-switch1.json: description.defaults.session.subcommands: missing field playerIndicator",
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -17840,7 +17840,7 @@
       "name": "rejects malformed subcommands: subcommands={'reportID': 1, 'counterModulus': 1, 'requests': [{'subcommand': 3, 'data': '30'}], 'playerIndicator': {'subcommand': 48, 'patterns': {'off': 0, 'player1': 1, 'player2': 3, 'player3': 7, 'player4': 15}}}",
       "code": "E5002",
       "python": "E5002: nintendo-switch1.json at defaults.session.subcommands.counterModulus: 1 is less than the minimum of 2",
-      "swift": "E5002: nintendo-switch1.json: record.defaults.session.subcommands: a subcommand counterModulus is 2...256",
+      "swift": "E5002: nintendo-switch1.json: description.defaults.session.subcommands: a subcommand counterModulus is 2...256",
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -17881,7 +17881,7 @@
       "name": "rejects malformed subcommands: subcommands={'reportID': 1, 'counterModulus': 257, 'requests': [{'subcommand': 3, 'data': '30'}], 'playerIndicator': {'subcommand': 48, 'patterns': {'off': 0, 'player1': 1, 'player2': 3, 'player3': 7, 'player4': 15}}}",
       "code": "E5002",
       "python": "E5002: nintendo-switch1.json at defaults.session.subcommands.counterModulus: 257 is greater than the maximum of 256",
-      "swift": "E5002: nintendo-switch1.json: record.defaults.session.subcommands: a subcommand counterModulus is 2...256",
+      "swift": "E5002: nintendo-switch1.json: description.defaults.session.subcommands: a subcommand counterModulus is 2...256",
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -17963,7 +17963,7 @@
       "name": "rejects malformed subcommands: subcommands={'reportID': 1, 'counterModulus': 16, 'requests': [], 'playerIndicator': {'subcommand': 48, 'patterns': {'off': 0, 'player1': 1, 'player2': 3, 'player3': 7, 'player4': 15}}}",
       "code": "E5002",
       "python": "E5002: nintendo-switch1.json at defaults.session.subcommands.requests: [] should be non-empty",
-      "swift": "E5002: nintendo-switch1.json: record.defaults.session.subcommands: subcommands name 1...16 requests",
+      "swift": "E5002: nintendo-switch1.json: description.defaults.session.subcommands: subcommands name 1...16 requests",
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -17999,7 +17999,7 @@
       "name": "rejects malformed subcommands: subcommands={'reportID': 1, 'counterModulus': 16, 'requests': [{'subcommand': 3, 'data': '30'}, {'subcommand': 3, 'data': '30'}, {'subcommand': 3, 'data': '30'}, {'subcommand': 3, 'data': '30'}, {'subcommand': 3, 'data': '30'}, {'subcommand': 3, 'data': '30'}, {'subcommand': 3, 'data': '30'}, {'subcommand': 3, 'data': '30'}, {'subcommand': 3, 'data': '30'}, {'subcommand': 3, 'data': '30'}, {'subcommand': 3, 'data': '30'}, {'subcommand': 3, 'data': '30'}, {'subcommand': 3, 'data': '30'}, {'subcommand': 3, 'data': '30'}, {'subcommand': 3, 'data': '30'}, {'subcommand': 3, 'data': '30'}, {'subcommand': 3, 'data': '30'}], 'playerIndicator': {'subcommand': 48, 'patterns': {'off': 0, 'player1': 1, 'player2': 3, 'player3': 7, 'player4': 15}}}",
       "code": "E5002",
       "python": "E5002: nintendo-switch1.json at defaults.session.subcommands.requests: [{'subcommand': 3, 'data': '30'}, {'subcommand': 3, 'data': '30'}, {'subcommand': 3, 'data': '30'}, {'subcommand': 3, 'data': '30'}, {'subcommand': 3, 'data': '30'}, {'subcommand': 3, 'data': '30'}, {'subcommand': 3, 'data': '30'}, {'subcommand': 3, 'data': '30'}, {'subcommand': 3, 'data': '30'}, {'subcommand': 3, 'data': '30'}, {'subcommand': 3, 'data': '30'}, {'subcommand': 3, 'data': '30'}, {'subcommand': 3, 'data': '30'}, {'subcommand': 3, 'data': '30'}, {'subcommand': 3, 'data': '30'}, {'subcommand': 3, 'data': '30'}, {'subcommand': 3, 'data': '30'}] is too long",
-      "swift": "E5002: nintendo-switch1.json: record.defaults.session.subcommands: subcommands name 1...16 requests",
+      "swift": "E5002: nintendo-switch1.json: description.defaults.session.subcommands: subcommands name 1...16 requests",
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -18104,7 +18104,7 @@
       "name": "rejects malformed subcommands: subcommands={'reportID': 1, 'counterModulus': 16, 'requests': [{'subcommand': 3, 'data': '30'}], 'playerIndicator': {'subcommand': 48, 'patterns': {'off': 0, 'player1': 1, 'player2': 3, 'player3': 7, 'player4': 15}}, 'unknown': 1}",
       "code": "E5002",
       "python": "E5002: nintendo-switch1.json at defaults.session.subcommands: Additional properties are not allowed ('unknown' was unexpected)",
-      "swift": "E5002: nintendo-switch1.json: record.defaults.session.subcommands: unknown field(s): unknown",
+      "swift": "E5002: nintendo-switch1.json: description.defaults.session.subcommands: unknown field(s): unknown",
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -18146,7 +18146,7 @@
       "name": "rejects malformed subcommands: subcommands={'reportID': 1, 'counterModulus': 16, 'requests': [{'subcommand': 3}], 'playerIndicator': {'subcommand': 48, 'patterns': {'off': 0, 'player1': 1, 'player2': 3, 'player3': 7, 'player4': 15}}}",
       "code": "E5002",
       "python": "E5002: nintendo-switch1.json at defaults.session.subcommands.requests.0: {'subcommand': 3} is not valid under any of the given schemas",
-      "swift": "E5002: nintendo-switch1.json: record.defaults.session.subcommands.requests.[0]: a subcommand request names exactly one of data and spiRead",
+      "swift": "E5002: nintendo-switch1.json: description.defaults.session.subcommands.requests.[0]: a subcommand request names exactly one of data and spiRead",
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -18186,7 +18186,7 @@
       "name": "rejects malformed subcommands: subcommands={'reportID': 1, 'counterModulus': 16, 'requests': [{'subcommand': 3, 'data': '30', 'spiRead': {'address': 24608, 'length': 24, 'purpose': 'FactoryMotionCalibration'}}], 'playerIndicator': {'subcommand': 48, 'patterns': {'off': 0, 'player1': 1, 'player2': 3, 'player3': 7, 'player4': 15}}}",
       "code": "E5002",
       "python": "E5002: nintendo-switch1.json at defaults.session.subcommands.requests.0: {'subcommand': 3, 'data': '30', 'spiRead': {'address': 24608, 'length': 24, 'purpose': 'FactoryMotionCalibration'}} is valid under each of {'required': ['spiRead']}, {'required': ['data']}",
-      "swift": "E5002: nintendo-switch1.json: record.defaults.session.subcommands.requests.[0]: a subcommand request names exactly one of data and spiRead",
+      "swift": "E5002: nintendo-switch1.json: description.defaults.session.subcommands.requests.[0]: a subcommand request names exactly one of data and spiRead",
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -18273,7 +18273,7 @@
       "name": "rejects malformed subcommands: subcommands={'reportID': 1, 'counterModulus': 16, 'requests': [{'subcommand': 3, 'data': ''}], 'playerIndicator': {'subcommand': 48, 'patterns': {'off': 0, 'player1': 1, 'player2': 3, 'player3': 7, 'player4': 15}}}",
       "code": "E5002",
       "python": "E5002: nintendo-switch1.json at defaults.session.subcommands.requests.0.data: '' does not match '^[0-9A-F]{2}( [0-9A-F]{2})*(?!\\\\n)$'",
-      "swift": "E5002: nintendo-switch1.json: record.defaults.session.subcommands.requests.[0].data: subcommand request data bytes are uppercase hex pairs separated by single spaces",
+      "swift": "E5002: nintendo-switch1.json: description.defaults.session.subcommands.requests.[0].data: subcommand request data bytes are uppercase hex pairs separated by single spaces",
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -18314,7 +18314,7 @@
       "name": "rejects malformed subcommands: subcommands={'reportID': 1, 'counterModulus': 16, 'requests': [{'subcommand': 3, 'data': '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00'}], 'playerIndicator': {'subcommand': 48, 'patterns': {'off': 0, 'player1': 1, 'player2': 3, 'player3': 7, 'player4': 15}}}",
       "code": "E5002",
       "python": "E5002: nintendo-switch1.json at defaults.session.subcommands.requests.0.data: '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00' is too long",
-      "swift": "E5002: nintendo-switch1.json: record.defaults.session.subcommands.requests.[0]: a subcommand request names 1...16 data bytes",
+      "swift": "E5002: nintendo-switch1.json: description.defaults.session.subcommands.requests.[0]: a subcommand request names 1...16 data bytes",
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -18355,7 +18355,7 @@
       "name": "rejects malformed subcommands: subcommands={'reportID': 1, 'counterModulus': 16, 'requests': [{'subcommand': 3, 'data': '100'}], 'playerIndicator': {'subcommand': 48, 'patterns': {'off': 0, 'player1': 1, 'player2': 3, 'player3': 7, 'player4': 15}}}",
       "code": "E5002",
       "python": "E5002: nintendo-switch1.json at defaults.session.subcommands.requests.0.data: '100' does not match '^[0-9A-F]{2}( [0-9A-F]{2})*(?!\\\\n)$'",
-      "swift": "E5002: nintendo-switch1.json: record.defaults.session.subcommands.requests.[0].data: subcommand request data bytes are uppercase hex pairs separated by single spaces",
+      "swift": "E5002: nintendo-switch1.json: description.defaults.session.subcommands.requests.[0].data: subcommand request data bytes are uppercase hex pairs separated by single spaces",
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -18396,7 +18396,7 @@
       "name": "rejects malformed subcommands: subcommands={'reportID': 1, 'counterModulus': 16, 'requests': [{'subcommand': 3, 'data': '30', 'unknown': 1}], 'playerIndicator': {'subcommand': 48, 'patterns': {'off': 0, 'player1': 1, 'player2': 3, 'player3': 7, 'player4': 15}}}",
       "code": "E5002",
       "python": "E5002: nintendo-switch1.json at defaults.session.subcommands.requests.0: Additional properties are not allowed ('unknown' was unexpected)",
-      "swift": "E5002: nintendo-switch1.json: record.defaults.session.subcommands.requests.[0]: unknown field(s): unknown",
+      "swift": "E5002: nintendo-switch1.json: description.defaults.session.subcommands.requests.[0]: unknown field(s): unknown",
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -18438,7 +18438,7 @@
       "name": "rejects malformed subcommands: subcommands={'reportID': 1, 'counterModulus': 16, 'requests': [{'subcommand': 16, 'spiRead': {'address': 24608, 'length': 0, 'purpose': 'FactoryMotionCalibration'}}], 'playerIndicator': {'subcommand': 48, 'patterns': {'off': 0, 'player1': 1, 'player2': 3, 'player3': 7, 'player4': 15}}}",
       "code": "E5002",
       "python": "E5002: nintendo-switch1.json at defaults.session.subcommands.requests.0.spiRead.length: 0 is less than the minimum of 1",
-      "swift": "E5002: nintendo-switch1.json: record.defaults.session.subcommands.requests.[0].spiRead: an SPI read has a known purpose and a length of 1...29",
+      "swift": "E5002: nintendo-switch1.json: description.defaults.session.subcommands.requests.[0].spiRead: an SPI read has a known purpose and a length of 1...29",
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -18483,7 +18483,7 @@
       "name": "rejects malformed subcommands: subcommands={'reportID': 1, 'counterModulus': 16, 'requests': [{'subcommand': 16, 'spiRead': {'address': 24608, 'length': 30, 'purpose': 'FactoryMotionCalibration'}}], 'playerIndicator': {'subcommand': 48, 'patterns': {'off': 0, 'player1': 1, 'player2': 3, 'player3': 7, 'player4': 15}}}",
       "code": "E5002",
       "python": "E5002: nintendo-switch1.json at defaults.session.subcommands.requests.0.spiRead.length: 30 is greater than the maximum of 29",
-      "swift": "E5002: nintendo-switch1.json: record.defaults.session.subcommands.requests.[0].spiRead: an SPI read has a known purpose and a length of 1...29",
+      "swift": "E5002: nintendo-switch1.json: description.defaults.session.subcommands.requests.[0].spiRead: an SPI read has a known purpose and a length of 1...29",
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -18618,7 +18618,7 @@
       "name": "rejects malformed subcommands: subcommands={'reportID': 1, 'counterModulus': 16, 'requests': [{'subcommand': 16, 'spiRead': {'address': 24608, 'length': 24, 'purpose': 'other'}}], 'playerIndicator': {'subcommand': 48, 'patterns': {'off': 0, 'player1': 1, 'player2': 3, 'player3': 7, 'player4': 15}}}",
       "code": "E5002",
       "python": "E5002: nintendo-switch1.json at defaults.session.subcommands.requests.0.spiRead.purpose: 'other' is not one of ['FactoryMotionCalibration', 'UserMotionCalibration']",
-      "swift": "E5002: nintendo-switch1.json: record.defaults.session.subcommands.requests.[0].spiRead: an SPI read has a known purpose and a length of 1...29",
+      "swift": "E5002: nintendo-switch1.json: description.defaults.session.subcommands.requests.[0].spiRead: an SPI read has a known purpose and a length of 1...29",
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -18663,7 +18663,7 @@
       "name": "rejects malformed subcommands: subcommands={'reportID': 1, 'counterModulus': 16, 'requests': [{'subcommand': 16, 'spiRead': {'address': 24608, 'length': 24, 'purpose': 'FactoryMotionCalibration', 'unknown': 1}}], 'playerIndicator': {'subcommand': 48, 'patterns': {'off': 0, 'player1': 1, 'player2': 3, 'player3': 7, 'player4': 15}}}",
       "code": "E5002",
       "python": "E5002: nintendo-switch1.json at defaults.session.subcommands.requests.0.spiRead: Additional properties are not allowed ('unknown' was unexpected)",
-      "swift": "E5002: nintendo-switch1.json: record.defaults.session.subcommands.requests.[0].spiRead: unknown field(s): unknown",
+      "swift": "E5002: nintendo-switch1.json: description.defaults.session.subcommands.requests.[0].spiRead: unknown field(s): unknown",
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -18709,7 +18709,7 @@
       "name": "rejects malformed subcommands: subcommands={'reportID': 1, 'counterModulus': 16, 'requests': [{'subcommand': 3, 'data': '30'}], 'playerIndicator': {'subcommand': 48}}",
       "code": "E5002",
       "python": "E5002: nintendo-switch1.json at defaults.session.subcommands.playerIndicator: 'patterns' is a required property",
-      "swift": "E5002: nintendo-switch1.json: record.defaults.session.subcommands.playerIndicator: missing field patterns",
+      "swift": "E5002: nintendo-switch1.json: description.defaults.session.subcommands.playerIndicator: missing field patterns",
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -18743,7 +18743,7 @@
       "name": "rejects malformed subcommands: subcommands={'reportID': 1, 'counterModulus': 16, 'requests': [{'subcommand': 3, 'data': '30'}], 'playerIndicator': {'patterns': {'off': 0, 'player1': 1, 'player2': 3, 'player3': 7, 'player4': 15}}}",
       "code": "E5002",
       "python": "E5002: nintendo-switch1.json at defaults.session.subcommands.playerIndicator: 'subcommand' is a required property",
-      "swift": "E5002: nintendo-switch1.json: record.defaults.session.subcommands.playerIndicator: missing field subcommand",
+      "swift": "E5002: nintendo-switch1.json: description.defaults.session.subcommands.playerIndicator: missing field subcommand",
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -18906,7 +18906,7 @@
       "name": "rejects malformed subcommands: subcommands={'reportID': 1, 'counterModulus': 16, 'requests': [{'subcommand': 3, 'data': '30'}], 'playerIndicator': {'subcommand': 48, 'patterns': {'off': 0, 'player1': 1, 'player2': 3, 'player3': 7, 'player4': 15, 'player5': 1}}}",
       "code": "E5002",
       "python": "E5002: nintendo-switch1.json at defaults.session.subcommands.playerIndicator.patterns: Additional properties are not allowed ('player5' was unexpected)",
-      "swift": "E5002: nintendo-switch1.json: record.defaults.session.subcommands.playerIndicator.patterns: unknown field(s): player5",
+      "swift": "E5002: nintendo-switch1.json: description.defaults.session.subcommands.playerIndicator.patterns: unknown field(s): player5",
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -18948,7 +18948,7 @@
       "name": "rejects malformed subcommands: subcommands={'reportID': 1, 'counterModulus': 16, 'requests': [{'subcommand': 3, 'data': '30'}], 'playerIndicator': {'subcommand': 48, 'patterns': {'off': 0, 'player1': 1}}}",
       "code": "E5002",
       "python": "E5002: nintendo-switch1.json at defaults.session.subcommands.playerIndicator.patterns: 'player2' is a required property",
-      "swift": "E5002: nintendo-switch1.json: record.defaults.session.subcommands.playerIndicator.patterns: missing field player2",
+      "swift": "E5002: nintendo-switch1.json: description.defaults.session.subcommands.playerIndicator.patterns: missing field player2",
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -18986,7 +18986,7 @@
       "name": "rejects malformed subcommands: subcommands={'reportID': 1, 'counterModulus': 16, 'requests': [{'subcommand': 3, 'data': '30'}], 'playerIndicator': {'subcommand': 48, 'patterns': {'off': 0, 'player1': 1, 'player2': 3, 'player3': 7, 'player4': 15}, 'unknown': 1}}",
       "code": "E5002",
       "python": "E5002: nintendo-switch1.json at defaults.session.subcommands.playerIndicator: Additional properties are not allowed ('unknown' was unexpected)",
-      "swift": "E5002: nintendo-switch1.json: record.defaults.session.subcommands.playerIndicator: unknown field(s): unknown",
+      "swift": "E5002: nintendo-switch1.json: description.defaults.session.subcommands.playerIndicator: unknown field(s): unknown",
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -19028,7 +19028,7 @@
       "name": "rejects malformed subcommands: subcommands={'reportID': 1, 'counterModulus': 16, 'requests': [{'subcommand': 16, 'spiRead': {'address': 24608, 'length': 24, 'purpose': 'FactoryMotionCalibration'}}, {'subcommand': 16, 'spiRead': {'address': 1, 'length': 24, 'purpose': 'FactoryMotionCalibration'}}], 'playerIndicator': {'subcommand': 48, 'patterns': {'off': 0, 'player1': 1, 'player2': 3, 'player3': 7, 'player4': 15}}}",
       "code": "E5002",
       "python": "E5002: nintendo-switch1.json: defaults.session.subcommands: each SPI read purpose appears at most once",
-      "swift": "E5002: nintendo-switch1.json: record.defaults.session.subcommands: each SPI read purpose appears at most once",
+      "swift": "E5002: nintendo-switch1.json: description.defaults.session.subcommands: each SPI read purpose appears at most once",
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -19081,7 +19081,7 @@
       "name": "rejects malformed valve activation: key=activation, writes=[]",
       "code": "E5002",
       "python": "E5002: valve-steam-deck.json at defaults.session.activation: [] should be non-empty",
-      "swift": "E5002: valve-steam-deck.json: record.defaults.session.activation: activation and deactivation name 1...16 writes",
+      "swift": "E5002: valve-steam-deck.json: description.defaults.session.activation: activation and deactivation name 1...16 writes",
       "fileName": "valve-steam-deck.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -19112,7 +19112,7 @@
       "name": "rejects malformed valve activation: key=deactivation, writes=[]",
       "code": "E5002",
       "python": "E5002: valve-steam-deck.json at defaults.session.deactivation: [] should be non-empty",
-      "swift": "E5002: valve-steam-deck.json: record.defaults.session.deactivation: activation and deactivation name 1...16 writes",
+      "swift": "E5002: valve-steam-deck.json: description.defaults.session.deactivation: activation and deactivation name 1...16 writes",
       "fileName": "valve-steam-deck.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -19143,7 +19143,7 @@
       "name": "rejects malformed valve activation: key=activation, writes=[{'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}]",
       "code": "E5002",
       "python": "E5002: valve-steam-deck.json at defaults.session.activation: [{'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}] is too long",
-      "swift": "E5002: valve-steam-deck.json: record.defaults.session.activation: activation and deactivation name 1...16 writes",
+      "swift": "E5002: valve-steam-deck.json: description.defaults.session.activation: activation and deactivation name 1...16 writes",
       "fileName": "valve-steam-deck.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -19311,7 +19311,7 @@
       "name": "rejects malformed valve activation: key=deactivation, writes=[{'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}]",
       "code": "E5002",
       "python": "E5002: valve-steam-deck.json at defaults.session.deactivation: [{'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}, {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}] is too long",
-      "swift": "E5002: valve-steam-deck.json: record.defaults.session.deactivation: activation and deactivation name 1...16 writes",
+      "swift": "E5002: valve-steam-deck.json: description.defaults.session.deactivation: activation and deactivation name 1...16 writes",
       "fileName": "valve-steam-deck.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -19479,7 +19479,7 @@
       "name": "rejects malformed valve activation: key=activation, writes=[{'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81'}]",
       "code": "E5002",
       "python": "E5002: valve-steam-deck.json: defaults.session.activation[0]: bytes lists 1 bytes, and the report has 2 after its ID",
-      "swift": "E5002: valve-steam-deck.json: record.defaults.session.activation: a startup write lists every byte after the report ID: 2",
+      "swift": "E5002: valve-steam-deck.json: description.defaults.session.activation: a startup write lists every byte after the report ID: 2",
       "fileName": "valve-steam-deck.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -19519,7 +19519,7 @@
       "name": "rejects malformed valve activation: key=deactivation, writes=[{'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81'}]",
       "code": "E5002",
       "python": "E5002: valve-steam-deck.json: defaults.session.deactivation[0]: bytes lists 1 bytes, and the report has 2 after its ID",
-      "swift": "E5002: valve-steam-deck.json: record.defaults.session.deactivation: a startup write lists every byte after the report ID: 2",
+      "swift": "E5002: valve-steam-deck.json: description.defaults.session.deactivation: a startup write lists every byte after the report ID: 2",
       "fileName": "valve-steam-deck.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -19559,7 +19559,7 @@
       "name": "rejects malformed valve activation: key=activation, writes=[{'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00 00'}]",
       "code": "E5002",
       "python": "E5002: valve-steam-deck.json: defaults.session.activation[0]: bytes lists 3 bytes, and the report has 2 after its ID",
-      "swift": "E5002: valve-steam-deck.json: record.defaults.session.activation: a startup write lists every byte after the report ID: 2",
+      "swift": "E5002: valve-steam-deck.json: description.defaults.session.activation: a startup write lists every byte after the report ID: 2",
       "fileName": "valve-steam-deck.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -19599,7 +19599,7 @@
       "name": "rejects malformed valve activation: key=deactivation, writes=[{'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00 00'}]",
       "code": "E5002",
       "python": "E5002: valve-steam-deck.json: defaults.session.deactivation[0]: bytes lists 3 bytes, and the report has 2 after its ID",
-      "swift": "E5002: valve-steam-deck.json: record.defaults.session.deactivation: a startup write lists every byte after the report ID: 2",
+      "swift": "E5002: valve-steam-deck.json: description.defaults.session.deactivation: a startup write lists every byte after the report ID: 2",
       "fileName": "valve-steam-deck.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -19639,7 +19639,7 @@
       "name": "rejects malformed valve activation: key=activation, writes=[{'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00', 'transport': 'Radio'}]",
       "code": "E5002",
       "python": "E5002: valve-steam-deck.json at defaults.session.activation.0.transport: 'Radio' is not one of ['USB', 'BluetoothClassic', 'BluetoothLE']",
-      "swift": "E5002: valve-steam-deck.json: record.defaults.session.activation: a startup transport is USB, BluetoothClassic or BluetoothLE",
+      "swift": "E5002: valve-steam-deck.json: description.defaults.session.activation: a startup transport is USB, BluetoothClassic or BluetoothLE",
       "fileName": "valve-steam-deck.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -19680,7 +19680,7 @@
       "name": "rejects malformed valve activation: key=deactivation, writes=[{'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00', 'transport': 'Radio'}]",
       "code": "E5002",
       "python": "E5002: valve-steam-deck.json at defaults.session.deactivation.0.transport: 'Radio' is not one of ['USB', 'BluetoothClassic', 'BluetoothLE']",
-      "swift": "E5002: valve-steam-deck.json: record.defaults.session.deactivation: a startup transport is USB, BluetoothClassic or BluetoothLE",
+      "swift": "E5002: valve-steam-deck.json: description.defaults.session.deactivation: a startup transport is USB, BluetoothClassic or BluetoothLE",
       "fileName": "valve-steam-deck.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -19721,7 +19721,7 @@
       "name": "rejects malformed valve activation: key=activation, writes=[{'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00', 'phase': 'Startup'}]",
       "code": "E5002",
       "python": "E5002: valve-steam-deck.json at defaults.session.activation.0: Additional properties are not allowed ('phase' was unexpected)",
-      "swift": "E5002: valve-steam-deck.json: record.defaults.session.activation.[0]: unknown field(s): phase",
+      "swift": "E5002: valve-steam-deck.json: description.defaults.session.activation.[0]: unknown field(s): phase",
       "fileName": "valve-steam-deck.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -19762,7 +19762,7 @@
       "name": "rejects malformed valve activation: key=deactivation, writes=[{'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00', 'phase': 'Startup'}]",
       "code": "E5002",
       "python": "E5002: valve-steam-deck.json at defaults.session.deactivation.0: Additional properties are not allowed ('phase' was unexpected)",
-      "swift": "E5002: valve-steam-deck.json: record.defaults.session.deactivation.[0]: unknown field(s): phase",
+      "swift": "E5002: valve-steam-deck.json: description.defaults.session.deactivation.[0]: unknown field(s): phase",
       "fileName": "valve-steam-deck.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -19803,7 +19803,7 @@
       "name": "rejects malformed valve activation: key=activation, writes=[{'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00', 'variants': ['Wired']}]",
       "code": "E5002",
       "python": "E5002: valve-steam-deck.json at defaults.session.activation.0: Additional properties are not allowed ('variants' was unexpected)",
-      "swift": "E5002: valve-steam-deck.json: record.defaults.session.activation.[0]: unknown field(s): variants",
+      "swift": "E5002: valve-steam-deck.json: description.defaults.session.activation.[0]: unknown field(s): variants",
       "fileName": "valve-steam-deck.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -19844,7 +19844,7 @@
       "name": "rejects malformed valve activation: key=deactivation, writes=[{'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00', 'variants': ['Wired']}]",
       "code": "E5002",
       "python": "E5002: valve-steam-deck.json at defaults.session.deactivation.0: Additional properties are not allowed ('variants' was unexpected)",
-      "swift": "E5002: valve-steam-deck.json: record.defaults.session.deactivation.[0]: unknown field(s): variants",
+      "swift": "E5002: valve-steam-deck.json: description.defaults.session.deactivation.[0]: unknown field(s): variants",
       "fileName": "valve-steam-deck.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -19885,7 +19885,7 @@
       "name": "rejects malformed valve activation: key=activation, writes=[{'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00', 'delayMilliseconds': 5}]",
       "code": "E5002",
       "python": "E5002: valve-steam-deck.json at defaults.session.activation.0: Additional properties are not allowed ('delayMilliseconds' was unexpected)",
-      "swift": "E5002: valve-steam-deck.json: record.defaults.session.activation.[0]: unknown field(s): delayMilliseconds",
+      "swift": "E5002: valve-steam-deck.json: description.defaults.session.activation.[0]: unknown field(s): delayMilliseconds",
       "fileName": "valve-steam-deck.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -19926,7 +19926,7 @@
       "name": "rejects malformed valve activation: key=deactivation, writes=[{'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00', 'delayMilliseconds': 5}]",
       "code": "E5002",
       "python": "E5002: valve-steam-deck.json at defaults.session.deactivation.0: Additional properties are not allowed ('delayMilliseconds' was unexpected)",
-      "swift": "E5002: valve-steam-deck.json: record.defaults.session.deactivation.[0]: unknown field(s): delayMilliseconds",
+      "swift": "E5002: valve-steam-deck.json: description.defaults.session.deactivation.[0]: unknown field(s): delayMilliseconds",
       "fileName": "valve-steam-deck.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -19967,7 +19967,7 @@
       "name": "rejects malformed valve activation: key=activation, writes=[{'bytes': '81 00'}]",
       "code": "E5002",
       "python": "E5002: valve-steam-deck.json at defaults.session.activation.0: 'report' is a required property",
-      "swift": "E5002: valve-steam-deck.json: record.defaults.session.activation.[0]: missing field report",
+      "swift": "E5002: valve-steam-deck.json: description.defaults.session.activation.[0]: missing field report",
       "fileName": "valve-steam-deck.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -20002,7 +20002,7 @@
       "name": "rejects malformed valve activation: key=deactivation, writes=[{'bytes': '81 00'}]",
       "code": "E5002",
       "python": "E5002: valve-steam-deck.json at defaults.session.deactivation.0: 'report' is a required property",
-      "swift": "E5002: valve-steam-deck.json: record.defaults.session.deactivation.[0]: missing field report",
+      "swift": "E5002: valve-steam-deck.json: description.defaults.session.deactivation.[0]: missing field report",
       "fileName": "valve-steam-deck.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -20037,7 +20037,7 @@
       "name": "rejects malformed valve activation: key=activation, writes=[{'report': {'kind': 'Feature', 'id': 0, 'length': 2}}]",
       "code": "E5002",
       "python": "E5002: valve-steam-deck.json at defaults.session.activation.0: 'bytes' is a required property",
-      "swift": "E5002: valve-steam-deck.json: record.defaults.session.activation.[0]: missing field bytes",
+      "swift": "E5002: valve-steam-deck.json: description.defaults.session.activation.[0]: missing field bytes",
       "fileName": "valve-steam-deck.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -20076,7 +20076,7 @@
       "name": "rejects malformed valve activation: key=deactivation, writes=[{'report': {'kind': 'Feature', 'id': 0, 'length': 2}}]",
       "code": "E5002",
       "python": "E5002: valve-steam-deck.json at defaults.session.deactivation.0: 'bytes' is a required property",
-      "swift": "E5002: valve-steam-deck.json: record.defaults.session.deactivation.[0]: missing field bytes",
+      "swift": "E5002: valve-steam-deck.json: description.defaults.session.deactivation.[0]: missing field bytes",
       "fileName": "valve-steam-deck.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -20158,7 +20158,7 @@
       "name": "rejects startup only members in a keep alive write: write={'bytes': '05 20 00 01 00', 'delayMilliseconds': 5}",
       "code": "E5002",
       "python": "E5002: vendor-gamesir.json at defaults.session.keepAlive.writes.0: {'bytes': '05 20 00 01 00', 'delayMilliseconds': 5} is not valid under any of the given schemas",
-      "swift": "E5002: vendor-gamesir.json: record.defaults.session.keepAlive.writes.[0]: unknown field(s): delayMilliseconds",
+      "swift": "E5002: vendor-gamesir.json: description.defaults.session.keepAlive.writes.[0]: unknown field(s): delayMilliseconds",
       "fileName": "vendor-gamesir.json",
       "document": {
         "variants": ["USB", "EnhancedHID"],
@@ -20190,7 +20190,7 @@
       "name": "rejects startup only members in a keep alive write: write={'bytes': '05 20 00 01 00', 'toleratesRejection': True}",
       "code": "E5002",
       "python": "E5002: vendor-gamesir.json at defaults.session.keepAlive.writes.0: {'bytes': '05 20 00 01 00', 'toleratesRejection': True} is not valid under any of the given schemas",
-      "swift": "E5002: vendor-gamesir.json: record.defaults.session.keepAlive.writes.[0]: unknown field(s): toleratesRejection",
+      "swift": "E5002: vendor-gamesir.json: description.defaults.session.keepAlive.writes.[0]: unknown field(s): toleratesRejection",
       "fileName": "vendor-gamesir.json",
       "document": {
         "variants": ["USB", "EnhancedHID"],
@@ -20222,7 +20222,7 @@
       "name": "rejects startup only members in a keep alive write: write={'bytes': '05 20 00 01 00', 'when': {'parameter': 'layout', 'is': ['Pro']}}",
       "code": "E5002",
       "python": "E5002: vendor-gamesir.json at defaults.session.keepAlive.writes.0: {'bytes': '05 20 00 01 00', 'when': {'parameter': 'layout', 'is': ['Pro']}} is not valid under any of the given schemas",
-      "swift": "E5002: vendor-gamesir.json: record.defaults.session.keepAlive.writes.[0]: unknown field(s): when",
+      "swift": "E5002: vendor-gamesir.json: description.defaults.session.keepAlive.writes.[0]: unknown field(s): when",
       "fileName": "vendor-gamesir.json",
       "document": {
         "variants": ["USB", "EnhancedHID"],
@@ -20257,7 +20257,7 @@
       "name": "rejects startup only members in a keep alive write: write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'phase': 'Startup'}",
       "code": "E5002",
       "python": "E5002: vendor-gamesir.json at defaults.session.keepAlive.writes.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'phase': 'Startup'} is not valid under any of the given schemas",
-      "swift": "E5002: vendor-gamesir.json: record.defaults.session.keepAlive.writes.[0]: unknown field(s): phase",
+      "swift": "E5002: vendor-gamesir.json: description.defaults.session.keepAlive.writes.[0]: unknown field(s): phase",
       "fileName": "vendor-gamesir.json",
       "document": {
         "variants": ["USB", "EnhancedHID"],
@@ -20294,7 +20294,7 @@
       "name": "rejects startup only members in a keep alive write: write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'delayMilliseconds': 5}",
       "code": "E5002",
       "python": "E5002: vendor-gamesir.json at defaults.session.keepAlive.writes.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'delayMilliseconds': 5} is not valid under any of the given schemas",
-      "swift": "E5002: vendor-gamesir.json: record.defaults.session.keepAlive.writes.[0]: unknown field(s): delayMilliseconds",
+      "swift": "E5002: vendor-gamesir.json: description.defaults.session.keepAlive.writes.[0]: unknown field(s): delayMilliseconds",
       "fileName": "vendor-gamesir.json",
       "document": {
         "variants": ["USB", "EnhancedHID"],
@@ -20331,7 +20331,7 @@
       "name": "rejects startup only members in a keep alive write: write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'transport': 'USB'}",
       "code": "E5002",
       "python": "E5002: vendor-gamesir.json at defaults.session.keepAlive.writes.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'transport': 'USB'} is not valid under any of the given schemas",
-      "swift": "E5002: vendor-gamesir.json: record.defaults.session.keepAlive.writes.[0]: unknown field(s): transport",
+      "swift": "E5002: vendor-gamesir.json: description.defaults.session.keepAlive.writes.[0]: unknown field(s): transport",
       "fileName": "vendor-gamesir.json",
       "document": {
         "variants": ["USB", "EnhancedHID"],
@@ -20368,7 +20368,7 @@
       "name": "rejects startup only members in a keep alive write: write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'crc32Seed': 1}",
       "code": "E5002",
       "python": "E5002: vendor-gamesir.json at defaults.session.keepAlive.writes.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'crc32Seed': 1} is not valid under any of the given schemas",
-      "swift": "E5002: vendor-gamesir.json: record.defaults.session.keepAlive.writes.[0]: unknown field(s): crc32Seed",
+      "swift": "E5002: vendor-gamesir.json: description.defaults.session.keepAlive.writes.[0]: unknown field(s): crc32Seed",
       "fileName": "vendor-gamesir.json",
       "document": {
         "variants": ["USB", "EnhancedHID"],
@@ -20405,7 +20405,7 @@
       "name": "rejects startup only members in a keep alive write: write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'layout', 'is': ['Pro']}}",
       "code": "E5002",
       "python": "E5002: vendor-gamesir.json at defaults.session.keepAlive.writes.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'layout', 'is': ['Pro']}} is not valid under any of the given schemas",
-      "swift": "E5002: vendor-gamesir.json: record.defaults.session.keepAlive.writes.[0]: unknown field(s): when",
+      "swift": "E5002: vendor-gamesir.json: description.defaults.session.keepAlive.writes.[0]: unknown field(s): when",
       "fileName": "vendor-gamesir.json",
       "document": {
         "variants": ["USB", "EnhancedHID"],
@@ -20510,7 +20510,7 @@
       "name": "rejects startup writes mixing hid and usb formats",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at defaults.session: {'startup': [{'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03'}, {'bytes': '05 20 00 01 00'}]} should not be valid under {'required': ['startup'], 'properties': {'startup': {'allOf': [{'contains': {'required': ['report']}}, {'contains': {'not': {'required': ['report']}}}]}}}",
-      "swift": "E5002: sony-dualsense.json: record.defaults.session.startup: startup writes are all HID reports, all raw-USB packets or all named packets",
+      "swift": "E5002: sony-dualsense.json: description.defaults.session.startup: startup writes are all HID reports, all raw-USB packets or all named packets",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -20544,7 +20544,7 @@
       "name": "rejects stick deadzone as a declared tuning key",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at tuningKeys.0: 'stickDeadzone' is not one of ['inputLivenessTimeoutMs', 'hidStartupIntervalMs', 'minimumHIDOutputIntervalMs', 'hidStartupRecoveryIntervalMs', 'hidStartupRecoveryRounds', 'lizardResendTicks', 'usbCommandTimeoutMs', 'presenceResendReports', 'adapterDisconnectDelayMs', 'usbStartupIntervalMs', 'usbStartupRetryDelayMs', 'usbTransferTimeoutMs']",
-      "swift": "E5002: sony-dualsense.json: record.tuningKeys: stickDeadzone is read by every driver",
+      "swift": "E5002: sony-dualsense.json: description.tuningKeys: stickDeadzone is read by every driver",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -20562,7 +20562,7 @@
       "name": "rejects stick deadzone as a declared tuning key (2)",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at rawUSBTuningKeys.0: 'stickDeadzone' is not one of ['lizardResendTicks', 'usbCommandTimeoutMs', 'presenceResendReports', 'adapterDisconnectDelayMs', 'usbStartupIntervalMs', 'usbStartupRetryDelayMs', 'usbTransferTimeoutMs']",
-      "swift": "E5002: xbox-gip.json: record.tuningKeys: stickDeadzone is read by every driver",
+      "swift": "E5002: xbox-gip.json: description.tuningKeys: stickDeadzone is read by every driver",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -20587,7 +20587,7 @@
       "name": "rejects stores variant without variants",
       "code": "E5002",
       "python": "E5002: xbox-xusb.json: 'variants' is a dependency of 'storesVariant'",
-      "swift": "E5002: xbox-xusb.json: record.storesVariant: storesVariant is true and needs variants",
+      "swift": "E5002: xbox-xusb.json: description.storesVariant: storesVariant is true and needs variants",
       "fileName": "xbox-xusb.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -20650,7 +20650,7 @@
       "name": "rejects the interval as a tuning key: place=0",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at rawUSBTuningKeys.0: 'keepAliveIntervalMs' is not one of ['lizardResendTicks', 'usbCommandTimeoutMs', 'presenceResendReports', 'adapterDisconnectDelayMs', 'usbStartupIntervalMs', 'usbStartupRetryDelayMs', 'usbTransferTimeoutMs']",
-      "swift": "E5002: xbox-gip.json: record.rawUSBTuningKeys: rawUSBTuningKeys lists unique, known names",
+      "swift": "E5002: xbox-gip.json: description.rawUSBTuningKeys: rawUSBTuningKeys lists unique, known names",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -20675,7 +20675,7 @@
       "name": "rejects the interval as a tuning key: place=1",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.tuning: Additional properties are not allowed ('keepAliveIntervalMs' was unexpected)",
-      "swift": "E5002: xbox-gip.json: record.defaults.tuning: unknown field(s): keepAliveIntervalMs",
+      "swift": "E5002: xbox-gip.json: description.defaults.tuning: unknown field(s): keepAliveIntervalMs",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -20703,7 +20703,7 @@
       "name": "rejects the interval as a tuning key: place=2",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.variants.USB.tuning: Additional properties are not allowed ('keepAliveIntervalMs' was unexpected)",
-      "swift": "E5002: xbox-gip.json: record.defaults.variants.USB.tuning: unknown field(s): keepAliveIntervalMs",
+      "swift": "E5002: xbox-gip.json: description.defaults.variants.USB.tuning: unknown field(s): keepAliveIntervalMs",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -20735,7 +20735,7 @@
       "name": "rejects the interval as a tuning key",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at tuningKeys.0: 'keepAliveIntervalMs' is not one of ['inputLivenessTimeoutMs', 'hidStartupIntervalMs', 'minimumHIDOutputIntervalMs', 'hidStartupRecoveryIntervalMs', 'hidStartupRecoveryRounds', 'lizardResendTicks', 'usbCommandTimeoutMs', 'presenceResendReports', 'adapterDisconnectDelayMs', 'usbStartupIntervalMs', 'usbStartupRetryDelayMs', 'usbTransferTimeoutMs']",
-      "swift": "E5002: sony-dualsense.json: record.tuningKeys: tuningKeys lists unique, known names",
+      "swift": "E5002: sony-dualsense.json: description.tuningKeys: tuningKeys lists unique, known names",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -20786,7 +20786,7 @@
       "name": "rejects unknown fields (2)",
       "code": "E5002",
       "python": "E5002: xbox-xusb.json at interfaceSignatures.0: Additional properties are not allowed ('endpoint' was unexpected)",
-      "swift": "E5002: xbox-xusb.json: record.interfaceSignatures.[0]: unknown field(s): endpoint",
+      "swift": "E5002: xbox-xusb.json: description.interfaceSignatures.[0]: unknown field(s): endpoint",
       "fileName": "xbox-xusb.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -20819,7 +20819,7 @@
       "name": "rejects unknown fields (3)",
       "code": "E5002",
       "python": "E5002: xbox-xusb.json at defaults: Additional properties are not allowed ('capabilities' was unexpected)",
-      "swift": "E5002: xbox-xusb.json: record.defaults: unknown field(s): capabilities",
+      "swift": "E5002: xbox-xusb.json: description.defaults: unknown field(s): capabilities",
       "fileName": "xbox-xusb.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -20969,7 +20969,7 @@
       "name": "session limits belong to their family: family=XboxXUSB, key=receiverInquiryResendLimit, case=required",
       "code": "E5002",
       "python": "E5002: xbox-xusb.json at defaults.session: {} should be non-empty",
-      "swift": "E5002: xbox-xusb.json: record.defaults.session: session must not be empty",
+      "swift": "E5002: xbox-xusb.json: description.defaults.session: session must not be empty",
       "fileName": "xbox-xusb.json",
       "document": {
         "variants": ["Wired", "Receiver"],
@@ -21102,7 +21102,7 @@
       "name": "session limits belong to their family: family=XboxGIP, key=commandChannel, case=forbidden",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.commandChannel: 3 is not of type 'object'",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.commandChannel: Expected to decode Dictionary<String, Any> but found number instead.",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.commandChannel: Expected to decode Dictionary<String, Any> but found number instead.",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -21202,7 +21202,7 @@
       "name": "session limits belong to their family: family=XboxXUSB, key=commandChannel, case=forbidden",
       "code": "E5002",
       "python": "E5002: xbox-xusb.json at defaults.session.commandChannel: 3 is not of type 'object'",
-      "swift": "E5002: xbox-xusb.json: record.defaults.session.commandChannel: Expected to decode Dictionary<String, Any> but found number instead.",
+      "swift": "E5002: xbox-xusb.json: description.defaults.session.commandChannel: Expected to decode Dictionary<String, Any> but found number instead.",
       "fileName": "xbox-xusb.json",
       "document": {
         "variants": ["Wired", "Receiver"],
@@ -21327,7 +21327,7 @@
       "name": "session limits belong to their family: family=XboxXID, key=commandChannel, case=forbidden",
       "code": "E5002",
       "python": "E5002: xbox-xid.json at defaults.session.commandChannel: 3 is not of type 'object'",
-      "swift": "E5002: xbox-xid.json: record.defaults.session.commandChannel: Expected to decode Dictionary<String, Any> but found number instead.",
+      "swift": "E5002: xbox-xid.json: description.defaults.session.commandChannel: Expected to decode Dictionary<String, Any> but found number instead.",
       "fileName": "xbox-xid.json",
       "document": {
         "variants": ["Gamepad"],
@@ -21443,7 +21443,7 @@
       "name": "session limits belong to their family: family=SonyDualSense, key=commandChannel, case=forbidden",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at defaults.session.commandChannel: 3 is not of type 'object'",
-      "swift": "E5002: sony-dualsense.json: record.defaults.session.commandChannel: Expected to decode Dictionary<String, Any> but found number instead.",
+      "swift": "E5002: sony-dualsense.json: description.defaults.session.commandChannel: Expected to decode Dictionary<String, Any> but found number instead.",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -21577,7 +21577,7 @@
       "name": "session limits have ranges: key=handshakeAttempts, value=0",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.handshakeAttempts: 0 is less than the minimum of 1",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.handshakeAttempts: handshakeAttempts must be in 1...10",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.handshakeAttempts: handshakeAttempts must be in 1...10",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -21601,7 +21601,7 @@
       "name": "session limits have ranges: key=handshakeAttempts, value=11",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.handshakeAttempts: 11 is greater than the maximum of 10",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.handshakeAttempts: handshakeAttempts must be in 1...10",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.handshakeAttempts: handshakeAttempts must be in 1...10",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -21625,7 +21625,7 @@
       "name": "session limits have ranges: key=announceResendLimit, value=0",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.announceResendLimit: 0 is less than the minimum of 1",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.announceResendLimit: announceResendLimit must be in 1...100",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.announceResendLimit: announceResendLimit must be in 1...100",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -21649,7 +21649,7 @@
       "name": "session limits have ranges: key=announceResendLimit, value=101",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.announceResendLimit: 101 is greater than the maximum of 100",
-      "swift": "E5002: xbox-gip.json: record.defaults.session.announceResendLimit: announceResendLimit must be in 1...100",
+      "swift": "E5002: xbox-gip.json: description.defaults.session.announceResendLimit: announceResendLimit must be in 1...100",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
@@ -21673,7 +21673,7 @@
       "name": "session limits have ranges: key=receiverInquiryResendLimit, value=0",
       "code": "E5002",
       "python": "E5002: xbox-xusb.json at defaults.session.receiverInquiryResendLimit: 0 is less than the minimum of 1",
-      "swift": "E5002: xbox-xusb.json: record.defaults.session.receiverInquiryResendLimit: receiverInquiryResendLimit must be in 1...100",
+      "swift": "E5002: xbox-xusb.json: description.defaults.session.receiverInquiryResendLimit: receiverInquiryResendLimit must be in 1...100",
       "fileName": "xbox-xusb.json",
       "document": {
         "variants": ["Wired", "Receiver"],
@@ -21697,7 +21697,7 @@
       "name": "session limits have ranges: key=receiverInquiryResendLimit, value=101",
       "code": "E5002",
       "python": "E5002: xbox-xusb.json at defaults.session.receiverInquiryResendLimit: 101 is greater than the maximum of 100",
-      "swift": "E5002: xbox-xusb.json: record.defaults.session.receiverInquiryResendLimit: receiverInquiryResendLimit must be in 1...100",
+      "swift": "E5002: xbox-xusb.json: description.defaults.session.receiverInquiryResendLimit: receiverInquiryResendLimit must be in 1...100",
       "fileName": "xbox-xusb.json",
       "document": {
         "variants": ["Wired", "Receiver"],
@@ -21721,7 +21721,7 @@
       "name": "session limits have ranges: key=trailingStopPackets, value=0",
       "code": "E5002",
       "python": "E5002: nintendo-switch2.json at defaults.session.trailingStopPackets: 0 is less than the minimum of 1",
-      "swift": "E5002: nintendo-switch2.json: record.defaults.session.trailingStopPackets: trailingStopPackets must be in 1...10",
+      "swift": "E5002: nintendo-switch2.json: description.defaults.session.trailingStopPackets: trailingStopPackets must be in 1...10",
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
@@ -21750,7 +21750,7 @@
       "name": "session limits have ranges: key=trailingStopPackets, value=11",
       "code": "E5002",
       "python": "E5002: nintendo-switch2.json at defaults.session.trailingStopPackets: 11 is greater than the maximum of 10",
-      "swift": "E5002: nintendo-switch2.json: record.defaults.session.trailingStopPackets: trailingStopPackets must be in 1...10",
+      "swift": "E5002: nintendo-switch2.json: description.defaults.session.trailingStopPackets: trailingStopPackets must be in 1...10",
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],

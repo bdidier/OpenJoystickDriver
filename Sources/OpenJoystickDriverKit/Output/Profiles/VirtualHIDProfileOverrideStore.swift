@@ -281,7 +281,7 @@ public struct VirtualHIDProfileOverrideStore: Sendable {
 
   /// Decodes one `virtual-device.schema.json` document that selects a persona.
   static func parse(_ data: Data) throws -> (Model, VirtualPersona) {
-    let device = try VirtualDevice.decode(data)
+    let device = try VirtualDevice.decode(data, requiresMatch: true)
     guard let model = device.match else {
       throw ControllerRecordProblem(code: nil, "the file must hold match")
     }

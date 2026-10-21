@@ -178,27 +178,18 @@ struct ProtocolDescription: Sendable {
       }
       descriptions[protocolID] = try decode(
         Data(contentsOf: url),
-        protocolID: protocolID,
         fileName: url.lastPathComponent
       )
     }
     return descriptions
   }
 
-  /// Decodes one description, the file `fileName` that the bundle holds for `protocolID`.
+  /// Decodes one description from the file `fileName`, whose stem names the family it holds; the
+  /// bundle loads its descriptions through this check.
   ///
-  /// A malformed document, an unknown field and a value outside its range are E5002; a family
-  /// that is not the file's is E5003; a variant that the family lacks is E5004.
-  static func decode(
-    _ data: Data,
-    protocolID: PhysicalProtocolID,
-    fileName: String
-  ) throws(ProtocolDescriptionProblem) -> Self {
-    try decode(data, expectedFamily: protocolID, fileName: fileName)
-  }
-
-  /// Decodes one description from the file `fileName`, whose stem names the family it holds. A
-  /// stem that no family has is E5003, after the document itself is checked.
+  /// A malformed document, an unknown field and a value outside its range are E5002; a file name
+  /// that is not the family's, or that no family has, is E5003, after the document itself is
+  /// checked; a variant that the family lacks is E5004.
   static func decode(
     _ data: Data,
     fileName: String
@@ -224,7 +215,12 @@ struct ProtocolDescription: Sendable {
     } catch {
       throw ProtocolDescriptionProblem(
         .invalidProtocolDescription,
-        "\(fileName): \(ControllerRecordSet.problemDescription(error, includingCode: false))"
+        "\(fileName): "
+          + ControllerRecordSet.problemDescription(
+            error,
+            includingCode: false,
+            document: "description"
+          )
       )
     }
     if let problem = OpenJoystickDriverAPI.headerProblem(

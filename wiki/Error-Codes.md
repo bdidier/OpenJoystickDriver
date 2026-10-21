@@ -111,7 +111,7 @@ The table is generated from the code catalog and the English text of OJD. The ta
 | E5004 | Document | A protocol description lists a variant that its family does not have. Use one of the variants of the family. |
 | E5005 | Document | The access file AccessGrants.json is damaged. Fix the file or delete it, then grant access again. |
 | E5006 | Document | The key file of the unit IDs, PortKeyInstallation.key, cannot be read or is not 32 bytes. Restore the file from a backup. If you delete it instead, OpenJoystickDriver creates a new key and every unit ID changes. |
-| E5007 | Document | A controller record is invalid. Check the file against the controller schema and fix the field that the message names. |
+| E5007 | Document | A controller record or patch is invalid. Check the file against its schema and fix the field that the message names. |
 <!-- END GENERATED: error-codes -->
 
 ## Further reading
