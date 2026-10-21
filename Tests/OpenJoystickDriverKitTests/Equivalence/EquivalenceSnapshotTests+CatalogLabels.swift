@@ -14,8 +14,8 @@ extension EquivalenceSnapshotCatalogTests {
     case .xboxXUSB: "xbox-xusb"
     case .xboxGIP: "xbox-gip"
     case .sonySixaxis: "sony-sixaxis"
-    case .sonyDualShock4: "sony-dualshock4"
-    case .sonyDualSense: "sony-dualsense"
+    case .sonyDualShock4: "sony-dual-shock4"
+    case .sonyDualSense: "sony-dual-sense"
     case .nintendoSwitch1: "nintendo-switch1"
     case .nintendoSwitch2: "nintendo-switch2"
     case .nintendoSwitchInputOnly: "nintendo-switch-input-only"
@@ -24,7 +24,7 @@ extension EquivalenceSnapshotCatalogTests {
     case .valveSteamDeck: "valve-steam-deck"
     case .vendorFlydigi: "vendor-flydigi"
     case .vendorPS3ThirdParty: "vendor-ps3-third-party"
-    case .vendorGameSir: "vendor-gamesir"
+    case .vendorGameSir: "vendor-game-sir"
     case .vendorNVIDIAShield: "vendor-nvidia-shield"
     }
   }

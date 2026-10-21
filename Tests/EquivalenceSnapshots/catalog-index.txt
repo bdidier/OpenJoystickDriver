@@ -24,7 +24,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 0079:181B
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -343,7 +343,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 044F:D00E
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -888,7 +888,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 054C:05C4
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -897,7 +897,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=motionCalibration=Factory
 
 ## 054C:05C5
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -906,7 +906,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=motionCalibration=Factory,motionScale=StrikePad
 
 ## 054C:09CC
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -915,7 +915,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=motionCalibration=Factory
 
 ## 054C:0BA0
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -924,7 +924,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=motionCalibration=Factory,role=WirelessAdapter
 
 ## 054C:0CE6
-protocol=sony-dualsense variant=- ownership=macos
+protocol=sony-dual-sense variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,Microphone,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -933,7 +933,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 054C:0DF2
-protocol=sony-dualsense variant=- ownership=macos
+protocol=sony-dual-sense variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Auxiliary1,Auxiliary2,Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftPaddle1,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,Microphone,North,RightPaddle1,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -942,7 +942,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 054C:0E5F
-protocol=sony-dualsense variant=- ownership=macos
+protocol=sony-dual-sense variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,Microphone,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -1514,7 +1514,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 0738:8250
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -1523,7 +1523,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 0738:8384
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -1532,7 +1532,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 0738:8480
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -1541,7 +1541,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 0738:8481
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -1809,7 +1809,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 0C12:0E10
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -1818,7 +1818,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 0C12:0E13
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -1827,7 +1827,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 0C12:0E15
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -1864,7 +1864,7 @@ gip keepAlive=enabled startup=[0520000100,0A200003000114,062000020100]
 parameters=
 
 ## 0C12:0E20
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -1901,7 +1901,7 @@ gip keepAlive=enabled startup=[0520000100,0A200003000114,062000020100]
 parameters=
 
 ## 0C12:0EF6
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -1919,7 +1919,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 0C12:1CF6
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -1928,7 +1928,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 0C12:1E10
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -1937,7 +1937,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 0C12:2E18
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -2638,7 +2638,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 0E6F:0203
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -2675,7 +2675,7 @@ gip keepAlive=enabled startup=[0520000100,0A200003000114,062000020100]
 parameters=
 
 ## 0E6F:0207
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -2684,7 +2684,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 0E6F:0209
-protocol=sony-dualsense variant=- ownership=macos
+protocol=sony-dual-sense variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,Microphone,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -2693,7 +2693,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=maker=ThirdParty
 
 ## 0E6F:020A
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -3627,7 +3627,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 0F0D:0055
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -3636,7 +3636,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 0F0D:005E
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -3668,7 +3668,7 @@ gip keepAlive=enabled startup=[0520000100,0A200003000114,062000020100]
 parameters=
 
 ## 0F0D:0066
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -3733,7 +3733,7 @@ gip keepAlive=enabled startup=[0520000100,0A200003000114,062000020100]
 parameters=
 
 ## 0F0D:0084
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -3760,7 +3760,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 0F0D:0087
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -3778,7 +3778,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 0F0D:008A
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -3819,7 +3819,7 @@ gip keepAlive=enabled startup=[0520000100,0A200003000114,062000020100]
 parameters=
 
 ## 0F0D:009C
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -3828,7 +3828,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 0F0D:00A0
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -3956,7 +3956,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 0F0D:00EE
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -3992,7 +3992,7 @@ startup[8] hid-output id=1 01040001404000014040102680000014
 parameters=usbProtocol=ChargingOnly
 
 ## 0F0D:011C
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -4010,7 +4010,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 0F0D:0123
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -4061,7 +4061,7 @@ gip keepAlive=enabled startup=[0520000100,0A200003000114,062000020100]
 parameters=
 
 ## 0F0D:0162
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -4070,7 +4070,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 0F0D:0163
-protocol=sony-dualsense variant=- ownership=macos
+protocol=sony-dual-sense variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,Microphone,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -4079,7 +4079,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=maker=ThirdParty
 
 ## 0F0D:0184
-protocol=sony-dualsense variant=- ownership=macos
+protocol=sony-dual-sense variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,Microphone,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -4235,7 +4235,7 @@ gip keepAlive=enabled startup=[0520000100,0A200003000114,062000020100]
 parameters=
 
 ## 11C0:4001
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -4574,7 +4574,7 @@ gip keepAlive=enabled startup=[0520000100,0A200003000114,062000020100]
 parameters=
 
 ## 146B:0D01
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -4583,7 +4583,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 146B:0D02
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -4592,7 +4592,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 146B:0D06
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -4601,7 +4601,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 146B:0D08
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -4610,7 +4610,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 146B:0D09
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -4619,7 +4619,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 146B:0D10
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -4628,7 +4628,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 146B:0D13
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -4637,7 +4637,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 146B:1103
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -4655,7 +4655,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 1532:0401
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -4780,7 +4780,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 1532:1000
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -4789,7 +4789,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 1532:1004
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -4798,7 +4798,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 1532:1007
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -4807,7 +4807,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 1532:1008
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -4816,7 +4816,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 1532:1009
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -4825,7 +4825,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 1532:100A
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -4834,7 +4834,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 1532:100B
-protocol=sony-dualsense variant=- ownership=macos
+protocol=sony-dual-sense variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,Microphone,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -4843,7 +4843,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=maker=ThirdParty,unprobedSensors=true,unprobedTouchpad=true
 
 ## 1532:100C
-protocol=sony-dualsense variant=- ownership=macos
+protocol=sony-dual-sense variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,Microphone,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -4852,7 +4852,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=maker=ThirdParty,role=Receiver,unprobedSensors=true,unprobedTouchpad=true
 
 ## 1532:1012
-protocol=sony-dualsense variant=- ownership=macos
+protocol=sony-dual-sense variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,Microphone,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -4861,7 +4861,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=maker=ThirdParty,unprobedTouchpad=true
 
 ## 1532:1024
-protocol=sony-dualsense variant=- ownership=macos
+protocol=sony-dual-sense variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,Microphone,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -4870,7 +4870,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=maker=ThirdParty,unprobedTouchpad=true
 
 ## 1532:1026
-protocol=sony-dualsense variant=- ownership=macos
+protocol=sony-dual-sense variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,Microphone,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -4879,7 +4879,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=maker=ThirdParty,role=Receiver,unprobedTouchpad=true
 
 ## 1532:1100
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -5865,7 +5865,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 20D6:792A
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -6606,7 +6606,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 2C22:2000
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -6638,7 +6638,7 @@ gip keepAlive=enabled startup=[0520000100,0A200003000114,062000020100]
 parameters=
 
 ## 2C22:2300
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -6656,7 +6656,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 2C22:2500
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -7106,7 +7106,7 @@ gip keepAlive=enabled startup=[0520000100,0A200003000114,062000020100]
 parameters=
 
 ## 3285:0D16
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -7115,7 +7115,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 3285:0D17
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -7124,7 +7124,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 3285:0D18
-protocol=sony-dualsense variant=- ownership=macos
+protocol=sony-dual-sense variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,Microphone,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -7133,7 +7133,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=forcedVibration=true,maker=ThirdParty,role=Receiver
 
 ## 3285:0D19
-protocol=sony-dualsense variant=- ownership=macos
+protocol=sony-dual-sense variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,Microphone,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -7169,7 +7169,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 3537:0575
-protocol=vendor-gamesir variant=enhanced-hid ownership=macos
+protocol=vendor-game-sir variant=enhanced-hid ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Auxiliary1,Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftPaddle1,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightPaddle1,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
@@ -7181,7 +7181,7 @@ keepAlive[0] hid-output id=15 0FF20000000000000000000000000000000000000000000000
 parameters=lightingMemory=ProfileSlots
 
 ## 3537:1003
-protocol=vendor-gamesir variant=usb ownership=macos
+protocol=vendor-game-sir variant=usb ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Auxiliary1,Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftPaddle1,LeftPaddle2,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightPaddle1,RightPaddle2,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
@@ -7209,7 +7209,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 3537:100B
-protocol=vendor-gamesir variant=enhanced-hid ownership=macos
+protocol=vendor-game-sir variant=enhanced-hid ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Auxiliary1,Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftPaddle1,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightPaddle1,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
@@ -7267,7 +7267,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 3537:1053
-protocol=vendor-gamesir variant=enhanced-hid ownership=macos
+protocol=vendor-game-sir variant=enhanced-hid ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Auxiliary1,Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftPaddle1,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightPaddle1,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
@@ -7279,7 +7279,7 @@ keepAlive[0] hid-output id=15 0FF20000000000000000000000000000000000000000000000
 parameters=lightingMemory=ProfileSlots
 
 ## 3537:105D
-protocol=vendor-gamesir variant=usb ownership=macos
+protocol=vendor-game-sir variant=usb ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Auxiliary1,Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftPaddle1,LeftPaddle2,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightPaddle1,RightPaddle2,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
@@ -7289,7 +7289,7 @@ keepAlive[0] usb ep=2 timeoutMs=2000 tolerated=false 0F000102F200000000000000000
 parameters=
 
 ## 3537:105E
-protocol=vendor-gamesir variant=usb ownership=macos
+protocol=vendor-game-sir variant=usb ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Auxiliary1,Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftPaddle1,LeftPaddle2,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightPaddle1,RightPaddle2,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
@@ -7299,7 +7299,7 @@ keepAlive[0] usb ep=2 timeoutMs=2000 tolerated=false 0F000102F200000000000000000
 parameters=
 
 ## 3537:109B
-protocol=vendor-gamesir variant=usb ownership=macos
+protocol=vendor-game-sir variant=usb ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Auxiliary1,Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftPaddle1,LeftPaddle2,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightPaddle1,RightPaddle2,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
@@ -7309,7 +7309,7 @@ keepAlive[0] usb ep=2 timeoutMs=2000 tolerated=false 0F000102F200000000000000000
 parameters=
 
 ## 3537:109C
-protocol=vendor-gamesir variant=usb ownership=macos
+protocol=vendor-game-sir variant=usb ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Auxiliary1,Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftPaddle1,LeftPaddle2,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightPaddle1,RightPaddle2,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
@@ -7319,7 +7319,7 @@ keepAlive[0] usb ep=2 timeoutMs=2000 tolerated=false 0F000102F200000000000000000
 parameters=
 
 ## 3537:10BA
-protocol=vendor-gamesir variant=usb ownership=macos
+protocol=vendor-game-sir variant=usb ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Auxiliary1,Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftPaddle1,LeftPaddle2,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightPaddle1,RightPaddle2,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
@@ -7329,7 +7329,7 @@ keepAlive[0] usb ep=2 timeoutMs=2000 tolerated=false 0F000102F200000000000000000
 parameters=
 
 ## 3537:10C5
-protocol=vendor-gamesir variant=enhanced-hid ownership=macos
+protocol=vendor-game-sir variant=enhanced-hid ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Auxiliary1,Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftPaddle1,LeftPaddle2,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightPaddle1,RightPaddle2,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
@@ -7340,7 +7340,7 @@ keepAlive[0] hid-output id=15 0FF20000000000000000000000000000000000000000000000
 parameters=innerGrips=true
 
 ## 3537:10C6
-protocol=vendor-gamesir variant=enhanced-hid ownership=macos
+protocol=vendor-game-sir variant=enhanced-hid ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Auxiliary1,Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftPaddle1,LeftPaddle2,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightPaddle1,RightPaddle2,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
@@ -7351,7 +7351,7 @@ keepAlive[0] hid-output id=15 0FF20000000000000000000000000000000000000000000000
 parameters=innerGrips=true
 
 ## 3537:10C7
-protocol=vendor-gamesir variant=enhanced-hid ownership=macos
+protocol=vendor-game-sir variant=enhanced-hid ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Auxiliary1,Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftPaddle1,LeftPaddle2,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightPaddle1,RightPaddle2,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
@@ -7362,7 +7362,7 @@ keepAlive[0] hid-output id=15 0FF20000000000000000000000000000000000000000000000
 parameters=innerGrips=true
 
 ## 3537:10C8
-protocol=vendor-gamesir variant=enhanced-hid ownership=macos
+protocol=vendor-game-sir variant=enhanced-hid ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Auxiliary1,Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftPaddle1,LeftPaddle2,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightPaddle1,RightPaddle2,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
@@ -7373,7 +7373,7 @@ keepAlive[0] hid-output id=15 0FF20000000000000000000000000000000000000000000000
 parameters=innerGrips=true
 
 ## 358A:0104
-protocol=sony-dualsense variant=- ownership=macos
+protocol=sony-dual-sense variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,Microphone,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -7455,7 +7455,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 7545:0104
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
@@ -7482,7 +7482,7 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 parameters=
 
 ## 9886:0025
-protocol=sony-dualshock4 variant=- ownership=macos
+protocol=sony-dual-shock4 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,TouchpadClick,West]
