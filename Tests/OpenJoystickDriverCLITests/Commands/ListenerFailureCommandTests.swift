@@ -37,7 +37,7 @@ struct ListenerFailureCommandTests {
               operation: {
                 await DiagnoseCommand.$gameControllerAudit.withValue(
                   { nil },
-                  operation: { await CLIRun.run(["diagnose"] + arguments + ["--timeout", "5"]) }
+                  operation: { await CLIRun.run(["diagnose"] + arguments + testServerTimeout) }
                 )
               }
             )

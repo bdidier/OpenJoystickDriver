@@ -51,7 +51,7 @@ struct SettingCommandTests {
 
   private func run(_ arguments: [String], socketPath: String) async -> CLIRun {
     await ServiceConnection.$socketPath.withValue(socketPath) {
-      await CLIRun.run(arguments + ["--timeout", "5"])
+      await CLIRun.run(arguments + testServerTimeout)
     }
   }
 
