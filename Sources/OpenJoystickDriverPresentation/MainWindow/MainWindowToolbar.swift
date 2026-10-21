@@ -203,6 +203,7 @@
       fixedItems + MainWindowToolbarAction.allCases.map(\.identifier)
     }
 
+    @MainActor
     static func makeItem(for action: MainWindowToolbarAction) -> NSToolbarItem {
       let item =
         action == .searchLibrary
