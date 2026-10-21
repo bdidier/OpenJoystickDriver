@@ -20,6 +20,7 @@ on run argv
 	end tell
 end run
 
+-- Same predicate as in window-bounds.applescript, close-window.applescript, app-state.applescript: osascript has no imports, keep every copy equal.
 on isSettings(w)
 	tell application "System Events" to tell process "OpenJoystickDriver"
 		if exists (splitter group 1 of w) then return false

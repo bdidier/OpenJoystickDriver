@@ -16,6 +16,7 @@ on run argv
 	error "no " & windowKind & " window is open"
 end run
 
+-- Same predicate as in open-settings.applescript, close-window.applescript, app-state.applescript: osascript has no imports, keep every copy equal.
 on isSettings(w)
 	tell application "System Events" to tell process "OpenJoystickDriver"
 		if exists (splitter group 1 of w) then return false
