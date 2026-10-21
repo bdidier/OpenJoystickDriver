@@ -221,6 +221,7 @@ enum GUICoverageEntries {
     option("access revoke", "--scope", "partialRevoke"),
     leaf("access web enable", "requestEnableWeb"),
     option("access web enable", "--port", "webPort"),
+    option("access web enable", "--automatic", "chooseAutomaticPort"),
     leaf("access web disable", "disableWeb"),
   ]
 
