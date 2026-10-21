@@ -135,9 +135,18 @@ struct UpdateCheckerTests {
 
   @Test("cancelling a check cancels the in-flight request", .timeLimit(.minutes(1)))
   func cancellingCheckCancelsInFlightRequest() async throws {
+    var started = UpdateURLProtocolStub.stalledRequests.stream.makeAsyncIterator()
+    // The description URLSession gives a request that its task cancels; a request that timed out
+    // describes itself differently.
+    let stalledURL = try #require(URL(string: "https://api.example/stalled"))
+    let session = Self.session()
+    let reference = Task { try await session.data(from: stalledURL) }
+    _ = await started.next()
+    reference.cancel()
+    let cancelledDescription = await reference.result.failureDescription
+
     let checker = try Self.checker(path: "/stalled")
     let check = Task { await checker.check(currentVersion: "1.0.0") }
-    var started = UpdateURLProtocolStub.stalledRequests.stream.makeAsyncIterator()
     _ = await started.next()
 
     check.cancel()
@@ -148,6 +157,7 @@ struct UpdateCheckerTests {
       return
     }
     #expect(failure.reason == .transport)
+    #expect(failure.message == cancelledDescription)
   }
 
   private static func checker(path: String) throws -> UpdateChecker {
@@ -162,6 +172,13 @@ struct UpdateCheckerTests {
     let configuration = URLSessionConfiguration.ephemeral
     configuration.protocolClasses = [UpdateURLProtocolStub.self]
     return URLSession(configuration: configuration)
+  }
+}
+
+extension Result {
+  fileprivate var failureDescription: String? {
+    if case .failure(let error) = self { return error.localizedDescription }
+    return nil
   }
 }
 

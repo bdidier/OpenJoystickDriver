@@ -568,7 +568,9 @@ struct EndpointServerTests {
       let ninth = try await EndpointTestClient(path: server.socketPath)
 
       #expect(try await ninth.readObject()["code"] as? String == "E1004")
-      // A slot freed by a closed client is served at once, behind the idle ones.
+      // Once a closed client frees its slot, the replacement is served although the other idle
+      // clients still hold the limit. The client's 5-second read timeout bounds each wait for a
+      // reply; the test sets no other time bound.
       clients.removeLast()
       await waitUntil("the service sees the closed client") {
         server.connectionCount == EndpointServer.maximumConnections - 1

@@ -87,7 +87,7 @@ struct LocalRPCBridgeTests {
   @Test
   func remappingFailureArrivesAtTheClientAsTheTypedError() async throws {
     try await withServer { server in
-      let socketPath = "/tmp/com.openjoystickdriver.bridge.\(UUID().uuidString).rpc"
+      let socketPath = unregisteredSocketPath()
       let rpcServer = LocalServiceRPCServer(
         socketPath: socketPath,
         authentication: { _ in true },
@@ -108,7 +108,7 @@ struct LocalRPCBridgeTests {
   @Test
   func aStatusNotificationReachesAWaitingClientWithinOneSecond() async throws {
     try await withServer { server in
-      let socketPath = "/tmp/com.openjoystickdriver.bridge.\(UUID().uuidString).rpc"
+      let socketPath = unregisteredSocketPath()
       let rpcServer = LocalServiceRPCServer(
         socketPath: socketPath,
         authentication: { _ in true },
@@ -134,7 +134,7 @@ struct LocalRPCBridgeTests {
   @Test
   func sendTestNotificationEndsWithTheAppsReport() async throws {
     try await withServer { server in
-      let socketPath = "/tmp/com.openjoystickdriver.bridge.\(UUID().uuidString).rpc"
+      let socketPath = unregisteredSocketPath()
       let rpcServer = LocalServiceRPCServer(
         socketPath: socketPath,
         authentication: { _ in true },
@@ -166,7 +166,7 @@ struct LocalRPCBridgeTests {
   @Test
   func aClientThatClosesDuringAHeldWaitLeavesTheHeldCountAndMissesTheAnnouncement() async throws {
     try await withServer { server in
-      let socketPath = "/tmp/com.openjoystickdriver.bridge.\(UUID().uuidString).rpc"
+      let socketPath = unregisteredSocketPath()
       let rpcServer = LocalServiceRPCServer(
         socketPath: socketPath,
         authentication: { _ in true },
@@ -214,7 +214,7 @@ struct LocalRPCBridgeTests {
   @Test
   func aClientThatClosesASendTestNotificationRequestWithdrawsIt() async throws {
     try await withServer { server in
-      let socketPath = "/tmp/com.openjoystickdriver.bridge.\(UUID().uuidString).rpc"
+      let socketPath = unregisteredSocketPath()
       let rpcServer = LocalServiceRPCServer(
         socketPath: socketPath,
         authentication: { _ in true },
