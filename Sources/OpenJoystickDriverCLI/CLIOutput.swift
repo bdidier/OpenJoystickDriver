@@ -54,10 +54,17 @@ enum CLIOutput {
     stdout(String(bytes: data, encoding: .utf8) ?? "")
   }
 
-  /// Prints one tab-separated record per row on stdout, for `--plain`.
+  /// Prints one tab-separated record per row on stdout, for `--plain`. A tab, line feed or
+  /// carriage return inside a field becomes a space, so a field never splits a row or a record.
   static func plain(_ rows: [[String]]) {
+    let separators: Set<Unicode.Scalar> = ["\t", "\n", "\r"]
     for row in rows {
-      stdout(row.map { $0.replacingOccurrences(of: "\t", with: " ") }.joined(separator: "\t"))
+      let fields = row.map { field in
+        String(
+          String.UnicodeScalarView(field.unicodeScalars.map { separators.contains($0) ? " " : $0 })
+        )
+      }
+      stdout(fields.joined(separator: "\t"))
     }
   }
 
