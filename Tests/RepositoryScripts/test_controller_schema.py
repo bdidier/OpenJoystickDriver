@@ -1248,6 +1248,18 @@ class RecordTextTests(unittest.TestCase):
                 self.assertEqual(caught.exception.code, "E5007")
                 self.assertIn("the text is not UTF-8 (byte", str(caught.exception))
 
+    def test_refuses_text_that_starts_with_a_utf8_byte_order_mark(self) -> None:
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "record.json"
+            path.write_bytes(b"\xef\xbb\xbf" + b'{"apiVersion": 1}')
+            with self.assertRaises(validate_profiles.ValidationError) as caught:
+                validate_profiles.validate_record(path, enforce_path=False)
+            self.assertEqual(caught.exception.code, "E5007")
+            self.assertIn("UTF-8 BOM", str(caught.exception))
+
 
 if __name__ == "__main__":
     unittest.main()
