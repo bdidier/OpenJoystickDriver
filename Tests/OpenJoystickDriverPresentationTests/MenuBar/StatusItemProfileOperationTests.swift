@@ -9,6 +9,7 @@ struct StatusItemProfileOperationTests {
   private final class BusyWindow: MenuProfileMutating {
     private(set) var requests: [RuntimeMutationRequest] = []
     var hasSelectedProfile: Bool { false }
+    var selectedControllerID: String? { nil }
 
     func showMainWindow(area: MainWindowArea?) {}
     func showController(id: String) {}

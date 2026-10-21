@@ -154,6 +154,35 @@
     }
   }
 
+  /// The editable fields of the New profile sheet.
+  struct ProfileCreationFields: Equatable {
+    var name: String
+    var vendorID: String
+    var productID: String
+    var scopeKind: ProfileScopeKind
+    var appID: String
+
+    /// The fields as the sheet opens: the first controller's identifiers are prefilled.
+    static func initial(
+      name: String,
+      device: ApplicationServiceDeviceDescription?
+    ) -> Self {
+      Self(
+        name: name,
+        vendorID: device.map { ProfileIdentifierInput.formatted($0.vendorID) } ?? "",
+        productID: device.map { ProfileIdentifierInput.formatted($0.productID) } ?? "",
+        scopeKind: .global,
+        appID: ""
+      )
+    }
+
+    /// Validation is shown only once a field differs from the opening state and the fields do not
+    /// make a valid profile.
+    func showsValidation(comparedTo initial: Self, isValid: Bool) -> Bool {
+      !isValid && self != initial
+    }
+  }
+
   struct ProfileNameSheet: View {
     let title: String
     let initialName: String
@@ -166,13 +195,14 @@
     @State
     private var selectedSessionToken: String?
     @State
-    private var vendorID = ""
+    private var vendorID: String
     @State
-    private var productID = ""
+    private var productID: String
     @State
     private var scopeKind = ProfileScopeKind.global
     @State
     private var appID = ""
+    private let initialFields: ProfileCreationFields
 
     init(
       title: String,
@@ -184,7 +214,12 @@
       self.initialName = initialName
       self.devices = devices
       self.onCreate = onCreate
-      _name = State(initialValue: initialName)
+      let initialFields = ProfileCreationFields.initial(name: initialName, device: devices.first)
+      self.initialFields = initialFields
+      _name = State(initialValue: initialFields.name)
+      _vendorID = State(initialValue: initialFields.vendorID)
+      _productID = State(initialValue: initialFields.productID)
+      _selectedSessionToken = State(initialValue: devices.first?.sessionToken.rawValue)
     }
 
     var body: some View {
@@ -244,7 +279,7 @@
             text: $appID
           )
         }
-        if !fieldsAreEmpty && proposedProfile == nil {
+        if currentFields.showsValidation(comparedTo: initialFields, isValid: canCreate) {
           Text(
             OJDLocalized.string(
               "profiles.creationValidation"
@@ -265,18 +300,21 @@
             presentationMode.wrappedValue.dismiss()
           }.disabled(!canCreate)
         }
-      }.padding(28).frame(width: 390).onAppear {
-        selectedSessionToken = devices.first?.sessionToken.rawValue
-        applySelectedDevice(devices.first)
-      }
+      }.padding(28).frame(width: 390)
     }
 
     private var trimmedName: String { ProfileNameValidation.trimmedName(name) }
 
     private var canCreate: Bool { proposedProfile != nil }
 
-    private var fieldsAreEmpty: Bool {
-      name.isEmpty && vendorID.isEmpty && productID.isEmpty && appID.isEmpty
+    private var currentFields: ProfileCreationFields {
+      ProfileCreationFields(
+        name: name,
+        vendorID: vendorID,
+        productID: productID,
+        scopeKind: scopeKind,
+        appID: appID
+      )
     }
 
     private var proposedProfile: RemappingProfile? {

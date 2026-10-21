@@ -63,7 +63,11 @@
 
     var statusItemState: StatusItemState {
       var profiles: [StatusItemState.Profile] = []
-      if case .available(let snapshot) = runtime.remappingState {
+      var snapshot: ApplicationServiceRemappingSnapshotPayload?
+      if case .available(let available) = runtime.remappingState {
+        snapshot = available
+      }
+      if let snapshot {
         let activeIDs = Set(snapshot.activeProfiles.map(\.profileID))
         profiles = snapshot.profiles.map {
           StatusItemState.Profile(id: $0.id, name: $0.name, isActive: activeIDs.contains($0.id))
@@ -71,17 +75,37 @@
       }
       return StatusItemState(
         statusLine: summaryTitle,
+        needsAccess: needsPermissionAttention,
         controllers: devices.map {
           StatusItemState.Controller(
             id: $0.sessionToken.rawValue,
             name: $0.name,
             isSuspended: $0.sessionState == .suspended,
-            isWireless: $0.supportsWirelessDisconnect
+            isWireless: $0.supportsWirelessDisconnect,
+            profiles: Self.profiles(applyingTo: $0, in: snapshot)
           )
         },
         profiles: profiles,
         statusSymbolName: summarySemanticState.presentation.symbolName
       )
+    }
+
+    /// The profiles of the snapshot that apply to the controller: its model, and its unit when
+    /// the profile names one. The active one is the profile routing uses for the controller's
+    /// model.
+    static func profiles(
+      applyingTo device: ApplicationServiceDeviceDescription,
+      in snapshot: ApplicationServiceRemappingSnapshotPayload?
+    ) -> [StatusItemState.Profile] {
+      guard let snapshot else { return [] }
+      let activeID = snapshot.activeProfiles.routingActiveProfile(
+        vendorID: device.vendorID,
+        productID: device.productID
+      )?.profileID
+      return snapshot.profiles.filter {
+        $0.device.vendorID == device.vendorID && $0.device.productID == device.productID
+          && ($0.device.unit == nil || $0.device.unit == device.portKey?.rawValue)
+      }.map { StatusItemState.Profile(id: $0.id, name: $0.name, isActive: $0.id == activeID) }
     }
 
     var summarySemanticState: SemanticState {

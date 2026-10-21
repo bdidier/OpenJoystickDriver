@@ -26,30 +26,6 @@
 			<string>%d контроллеров подключено</string>
 		</dict>
 	</dict>
-	<key>status.activeProfilesCount</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@count@</string>
-		<key>count</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>d</string>
-			<key>one</key>
-			<string>%d активный профиль</string>
-			<key>zero</key>
-			<string>%d активных профилей</string>
-			<key>two</key>
-			<string>%d активных профиля</string>
-			<key>few</key>
-			<string>%d активных профиля</string>
-			<key>many</key>
-			<string>%d активных профилей</string>
-			<key>other</key>
-			<string>%d активных профилей</string>
-		</dict>
-	</dict>
 	<key>profiles.assignments</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
@@ -72,30 +48,6 @@
 			<string>%d назначений</string>
 			<key>other</key>
 			<string>%d назначений</string>
-		</dict>
-	</dict>
-	<key>debug.devices</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@count@</string>
-		<key>count</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>d</string>
-			<key>zero</key>
-			<string>Ничего не обнаружено</string>
-			<key>one</key>
-			<string>Обнаружено: %d</string>
-			<key>two</key>
-			<string>Обнаружено: %d</string>
-			<key>few</key>
-			<string>Обнаружено: %d</string>
-			<key>many</key>
-			<string>Обнаружено: %d</string>
-			<key>other</key>
-			<string>Обнаружено: %d</string>
 		</dict>
 	</dict>
 	<key>debug.outputDevices</key>

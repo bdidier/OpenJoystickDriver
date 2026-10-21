@@ -1,5 +1,6 @@
 import AppKit
 import OpenJoystickDriverKit
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverPresentation
@@ -13,6 +14,16 @@ struct InputTestPresentationTests {
       InputTestWindowSizingPolicy.fittingContentSize(NSSize(width: 640, height: 420))
         == InputTestWindowSizingPolicy.minimumContentSize
     )
+  }
+
+  @Test(arguments: ServingFixture.all)
+  func windowTitleNamesThePhysicalController(_ fixture: ServingFixture) {
+    let device = fixture.device
+    let title = InputTestWindowTitle.make(for: device)
+    #expect(title == "Input Test — \(fixture.name)")
+    if let published = device.publishedVirtualProfile {
+      #expect(!title.contains(published.productName))
+    }
   }
 
   @Test

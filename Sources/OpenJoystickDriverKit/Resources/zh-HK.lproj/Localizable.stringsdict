@@ -26,30 +26,6 @@
 			<string>已連接 %d 個控制器</string>
 		</dict>
 	</dict>
-	<key>status.activeProfilesCount</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@count@</string>
-		<key>count</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>d</string>
-			<key>one</key>
-			<string>%d 個使用中的設定檔</string>
-			<key>zero</key>
-			<string>%d 個使用中的設定檔</string>
-			<key>two</key>
-			<string>%d 個使用中的設定檔</string>
-			<key>few</key>
-			<string>%d 個使用中的設定檔</string>
-			<key>many</key>
-			<string>%d 個使用中的設定檔</string>
-			<key>other</key>
-			<string>%d 個使用中的設定檔</string>
-		</dict>
-	</dict>
 	<key>profiles.assignments</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
@@ -72,30 +48,6 @@
 			<string>%d 個對應</string>
 			<key>other</key>
 			<string>%d 個對應</string>
-		</dict>
-	</dict>
-	<key>debug.devices</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@count@</string>
-		<key>count</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>d</string>
-			<key>zero</key>
-			<string>未偵測到</string>
-			<key>one</key>
-			<string>已偵測到 %d 個</string>
-			<key>two</key>
-			<string>已偵測到 %d 個</string>
-			<key>few</key>
-			<string>已偵測到 %d 個</string>
-			<key>many</key>
-			<string>已偵測到 %d 個</string>
-			<key>other</key>
-			<string>已偵測到 %d 個</string>
 		</dict>
 	</dict>
 	<key>debug.outputDevices</key>

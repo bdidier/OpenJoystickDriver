@@ -47,10 +47,47 @@ class ProblemTests(unittest.TestCase):
         self.assertIsNone(guard.problems("key", KEYS))
 
 
+class ReaderTests(unittest.TestCase):
+    def test_string_literals_skip_comments_and_keep_interpolations(self) -> None:
+        source = (
+            '// "commented.key"\nlet a = "area.\\(raw).title"\n'
+            '/* "block.key" */\nlet b = """\n"multi.line"\n"""\nlet c = "plain.key"\n'
+        )
+        self.assertEqual(
+            guard.string_literals(source), ["area.\\(raw).title", "plain.key"]
+        )
+
+    def test_interpolated_key_matches_with_each_interpolation_as_any_text(self) -> None:
+        pattern = guard.interpolation_pattern("area.\\(raw).title")
+        assert pattern is not None
+        self.assertTrue(pattern.fullmatch("area.status.title"))
+        self.assertFalse(pattern.fullmatch("area.status.subtitle"))
+
+    def test_interpolation_without_a_dotted_prefix_reads_nothing(self) -> None:
+        self.assertIsNone(guard.interpolation_pattern("a\\(index)"))
+        self.assertIsNone(guard.interpolation_pattern("\\(prefix).title"))
+
+    def test_kept_entry_must_be_unread_and_in_the_catalog(self) -> None:
+        guard.KEPT_WITHOUT_READER["gone.key"] = "test"
+        guard.KEPT_WITHOUT_READER["read.key"] = "test"
+        try:
+            problems = guard.stale_kept(["gone.key"], {"read.key", "gone.key"})
+        finally:
+            del guard.KEPT_WITHOUT_READER["gone.key"]
+            del guard.KEPT_WITHOUT_READER["read.key"]
+        self.assertEqual(problems, ["kept key 'read.key' has a reader"])
+
+
 class RepositoryTests(unittest.TestCase):
     def test_en_us_catalog_covers_every_scannable_key(self) -> None:
         missing, _ = guard.check()
         self.assertEqual(missing, [])
+
+    def test_every_catalog_key_has_a_reader_or_a_stated_reason(self) -> None:
+        unread, _ = guard.unread_keys()
+        self.assertEqual(
+            [key for key in unread if key not in guard.KEPT_WITHOUT_READER], []
+        )
 
 
 if __name__ == "__main__":

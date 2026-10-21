@@ -16,10 +16,12 @@ struct StatusItemModelTests {
 
   private static func state(
     controllers: [StatusItemState.Controller] = [],
-    profiles: [StatusItemState.Profile] = []
+    profiles: [StatusItemState.Profile] = [],
+    needsAccess: Bool = true
   ) -> StatusItemState {
     StatusItemState(
       statusLine: "status",
+      needsAccess: needsAccess,
       controllers: controllers,
       profiles: profiles,
       statusSymbolName: "circle"
@@ -42,17 +44,25 @@ struct StatusItemModelTests {
   }
 
   @Test
+  func grantAccessIsShownOnlyWhenAccessIsMissing() {
+    let missing = StatusItemModel.entries(for: Self.state(needsAccess: true))
+    let complete = StatusItemModel.entries(for: Self.state(needsAccess: false))
+    #expect(Self.entry("grantAccess", in: missing)?.action == .showArea(.access))
+    #expect(Self.entry("grantAccess", in: complete) == nil)
+  }
+
+  @Test
   func alreadyActiveProfileIsCheckedWithoutAnAction() throws {
     let active = StatusItemState.Profile(id: UUID(), name: "A", isActive: true)
     let other = StatusItemState.Profile(id: UUID(), name: "B", isActive: false)
-    let entries = StatusItemModel.entries(
-      for: Self.state(controllers: [Self.pad], profiles: [active, other])
-    )
+    var pad = Self.pad
+    pad.profiles = [active, other]
+    let entries = StatusItemModel.entries(for: Self.state(controllers: [pad]))
     let activeEntry = try #require(
-      Self.entry("controllers.activeProfile.\(active.id.uuidString)", in: entries)
+      Self.entry("controllers.pad-a.activeProfile.\(active.id.uuidString)", in: entries)
     )
     let otherEntry = try #require(
-      Self.entry("controllers.activeProfile.\(other.id.uuidString)", in: entries)
+      Self.entry("controllers.pad-a.activeProfile.\(other.id.uuidString)", in: entries)
     )
     #expect(activeEntry.isChecked)
     #expect(activeEntry.action == nil)
@@ -61,15 +71,15 @@ struct StatusItemModelTests {
   }
 
   @Test
-  func noControllerDisablesControllerItemsAndKeepsThemVisible() throws {
+  func noControllerShowsOneDisabledRowThatSaysSo() throws {
     let entries = StatusItemModel.entries(for: Self.state())
-    for id in [
-      "controllers.suspend", "controllers.testInput", "controllers.activeProfile",
-      "controllers.disconnectWireless", "controllers.showInWindow",
-    ] {
-      let item = try #require(Self.entry(id, in: entries))
-      #expect(!item.isEnabled, "\(id)")
-    }
+    let controllers = try #require(Self.entry("controllers", in: entries))
+    #expect(controllers.isEnabled)
+    #expect(controllers.submenu?.map(\.id) == ["controllers.none"])
+    let none = try #require(Self.entry("controllers.none", in: entries))
+    #expect(none.title == .key("controllers.emptyTitle"))
+    #expect(!none.isEnabled)
+    #expect(none.action == nil)
     #expect(try #require(Self.entry("grantAccess", in: entries)).isEnabled)
     #expect(try #require(Self.entry("quit", in: entries)).isEnabled)
     #expect(!(try #require(Self.entry("profiles.activate", in: entries))).isEnabled)
@@ -77,21 +87,102 @@ struct StatusItemModelTests {
   }
 
   @Test
+  func eachControllerListsOnlyItsOwnProfilesAndChecksItsActiveOne() throws {
+    let racing = StatusItemState.Profile(id: UUID(), name: "Racing", isActive: true)
+    let menu = StatusItemState.Profile(id: UUID(), name: "Menu", isActive: false)
+    let flight = StatusItemState.Profile(id: UUID(), name: "Flight", isActive: false)
+    var first = Self.pad
+    first.profiles = [racing, menu]
+    var second = StatusItemState.Controller(
+      id: "pad-b",
+      name: "Stick",
+      isSuspended: false,
+      isWireless: false
+    )
+    second.profiles = [flight]
+    let entries = StatusItemModel.entries(for: Self.state(controllers: [first, second]))
+    let firstProfiles = try #require(
+      Self.entry("controllers.pad-a.activeProfile", in: entries)?.submenu
+    )
+    #expect(firstProfiles.map(\.title) == [.verbatim("Racing"), .verbatim("Menu")])
+    #expect(firstProfiles.map(\.isChecked) == [true, false])
+    let secondProfiles = try #require(
+      Self.entry("controllers.pad-b.activeProfile", in: entries)?.submenu
+    )
+    #expect(secondProfiles.map(\.title) == [.verbatim("Flight")])
+    #expect(secondProfiles.map(\.isChecked) == [false])
+    #expect(secondProfiles.map(\.action) == [.activateProfile(flight.id)])
+  }
+
+  @Test
+  func controllerActionsAreDisabledNotHiddenWhenTheyDoNotApply() throws {
+    let wired = StatusItemState.Controller(
+      id: "pad-b",
+      name: "Wired",
+      isSuspended: false,
+      isWireless: false
+    )
+    let entries = StatusItemModel.entries(for: Self.state(controllers: [Self.pad, wired]))
+    let suffixes = ["suspend", "testInput", "activeProfile", "disconnectWireless", "showInWindow"]
+    for token in ["pad-a", "pad-b"] {
+      let actions = try #require(Self.entry("controllers.\(token)", in: entries)?.submenu)
+      #expect(actions.map(\.id) == suffixes.map { "controllers.\(token).\($0)" })
+    }
+    let wiredActions = try #require(Self.entry("controllers.pad-b", in: entries)?.submenu)
+    #expect(wiredActions.map(\.isEnabled) == [true, true, false, false, true])
+    #expect(wiredActions[3].action == nil)
+  }
+
+  @Test
+  func eachOfTwoControllersHasItsOwnActions() throws {
+    let wired = StatusItemState.Controller(
+      id: "pad-b",
+      name: "Wired",
+      isSuspended: true,
+      isWireless: false
+    )
+    let entries = StatusItemModel.entries(for: Self.state(controllers: [Self.pad, wired]))
+    let controllers = try #require(Self.entry("controllers", in: entries))
+    #expect(controllers.submenu?.map(\.id) == ["controllers.pad-a", "controllers.pad-b"])
+    #expect(controllers.submenu?.map(\.title) == [.verbatim("Pad"), .verbatim("Wired")])
+
+    let padActions = try #require(Self.entry("controllers.pad-a", in: entries)?.submenu)
+    #expect(
+      padActions.map(\.action) == [
+        .suspendController(sessionToken: "pad-a"), .testInput(sessionToken: "pad-a"), nil,
+        .disconnectWireless(sessionToken: "pad-a"), .showController(sessionToken: "pad-a"),
+      ]
+    )
+    #expect(padActions.map(\.isEnabled) == [true, true, false, true, true])
+
+    let wiredActions = try #require(Self.entry("controllers.pad-b", in: entries)?.submenu)
+    #expect(
+      wiredActions.map(\.action) == [
+        .resumeController(sessionToken: "pad-b"), .testInput(sessionToken: "pad-b"), nil, nil,
+        .showController(sessionToken: "pad-b"),
+      ]
+    )
+    #expect(wiredActions.map(\.isEnabled) == [true, true, false, false, true])
+  }
+
+  @Test
   func oneWirelessControllerEnablesItsItems() throws {
     let profile = StatusItemState.Profile(id: UUID(), name: "Racing", isActive: true)
     let other = StatusItemState.Profile(id: UUID(), name: "Menu", isActive: false)
+    var pad = Self.pad
+    pad.profiles = [profile, other]
     let entries = StatusItemModel.entries(
-      for: Self.state(controllers: [Self.pad], profiles: [profile, other])
+      for: Self.state(controllers: [pad], profiles: [profile, other])
     )
-    let suspend = try #require(Self.entry("controllers.suspend", in: entries))
+    let suspend = try #require(Self.entry("controllers.pad-a.suspend", in: entries))
     #expect(suspend.isEnabled)
     #expect(suspend.action == .suspendController(sessionToken: "pad-a"))
-    let disconnect = try #require(Self.entry("controllers.disconnectWireless", in: entries))
+    let disconnect = try #require(Self.entry("controllers.pad-a.disconnectWireless", in: entries))
     #expect(disconnect.isEnabled)
     #expect(disconnect.action == .disconnectWireless(sessionToken: "pad-a"))
-    #expect(try #require(Self.entry("controllers.testInput", in: entries)).isEnabled)
-    #expect(try #require(Self.entry("controllers.showInWindow", in: entries)).isEnabled)
-    let active = try #require(Self.entry("controllers.activeProfile", in: entries))
+    #expect(try #require(Self.entry("controllers.pad-a.testInput", in: entries)).isEnabled)
+    #expect(try #require(Self.entry("controllers.pad-a.showInWindow", in: entries)).isEnabled)
+    let active = try #require(Self.entry("controllers.pad-a.activeProfile", in: entries))
     #expect(active.isEnabled)
     #expect(active.submenu?.map(\.isChecked) == [true, false])
     let activate = try #require(Self.entry("profiles.activate", in: entries))
@@ -109,10 +200,10 @@ struct StatusItemModelTests {
       isWireless: false
     )
     let entries = StatusItemModel.entries(for: Self.state(controllers: [suspended]))
-    #expect(Self.entry("controllers.suspend", in: entries) == nil)
-    let resume = try #require(Self.entry("controllers.resume", in: entries))
+    #expect(Self.entry("controllers.pad-a.suspend", in: entries) == nil)
+    let resume = try #require(Self.entry("controllers.pad-a.resume", in: entries))
     #expect(resume.action == .resumeController(sessionToken: "pad-a"))
-    let disconnect = try #require(Self.entry("controllers.disconnectWireless", in: entries))
+    let disconnect = try #require(Self.entry("controllers.pad-a.disconnectWireless", in: entries))
     #expect(!disconnect.isEnabled)
   }
 
@@ -125,28 +216,36 @@ struct StatusItemModelTests {
       isWireless: false
     )
     let entries = StatusItemModel.entries(for: Self.state(controllers: [wired]))
-    #expect(!(try #require(Self.entry("controllers.disconnectWireless", in: entries))).isEnabled)
+    #expect(
+      !(try #require(Self.entry("controllers.pad-b.disconnectWireless", in: entries))).isEnabled
+    )
   }
 
   @Test
-  func layoutIsFixedAcrossStates() {
-    let none = Self.ids(StatusItemModel.entries(for: Self.state()))
-    let wireless = Self.ids(StatusItemModel.entries(for: Self.state(controllers: [Self.pad])))
+  func topLevelLayoutIsFixedAcrossStates() {
+    func topLevel(_ state: StatusItemState) -> [String] {
+      StatusItemModel.entries(for: state).map(\.id)
+    }
+    let none = topLevel(Self.state())
     var errored = Self.state()
     errored.statusLine = "service unavailable"
     errored.statusSymbolName = "xmark.octagon"
-    let error = Self.ids(StatusItemModel.entries(for: errored))
-    #expect(none == error)
-    // Suspend and Resume are one slot; every other id is identical.
-    #expect(none == wireless)
+    #expect(none == topLevel(errored))
+    #expect(none == topLevel(Self.state(controllers: [Self.pad])))
     #expect(
       none == [
-        "status", "separator.status", "controllers", "controllers.suspend",
-        "controllers.testInput", "controllers.activeProfile", "controllers.disconnectWireless",
-        "controllers.showInWindow", "profiles", "profiles.activate", "profiles.deactivate",
-        "separator.profiles", "grantAccess", "openWindow", "settings", "separator.window", "help",
-        "help.activityLog", "help.explainErrorCode", "help.reportProblem", "help.projectWebsite",
-        "separator.help", "quit",
+        "status", "separator.status", "controllers", "profiles", "separator.profiles",
+        "grantAccess", "openWindow", "settings", "separator.window", "help", "separator.help",
+        "quit",
+      ]
+    )
+    #expect(
+      Self.ids(StatusItemModel.entries(for: Self.state(controllers: [Self.pad]))).filter {
+        $0.hasPrefix("controllers.")
+      } == [
+        "controllers.pad-a", "controllers.pad-a.suspend", "controllers.pad-a.testInput",
+        "controllers.pad-a.activeProfile", "controllers.pad-a.disconnectWireless",
+        "controllers.pad-a.showInWindow",
       ]
     )
   }

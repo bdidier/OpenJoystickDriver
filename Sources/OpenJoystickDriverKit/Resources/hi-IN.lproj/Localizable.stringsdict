@@ -26,30 +26,6 @@
 			<string>%d कंट्रोलर कनेक्ट हैं</string>
 		</dict>
 	</dict>
-	<key>status.activeProfilesCount</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@count@</string>
-		<key>count</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>d</string>
-			<key>one</key>
-			<string>%d सक्रिय प्रोफ़ाइल</string>
-			<key>zero</key>
-			<string>%d सक्रिय प्रोफ़ाइल</string>
-			<key>two</key>
-			<string>%d सक्रिय प्रोफ़ाइल</string>
-			<key>few</key>
-			<string>%d सक्रिय प्रोफ़ाइल</string>
-			<key>many</key>
-			<string>%d सक्रिय प्रोफ़ाइल</string>
-			<key>other</key>
-			<string>%d सक्रिय प्रोफ़ाइल</string>
-		</dict>
-	</dict>
 	<key>profiles.assignments</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
@@ -72,30 +48,6 @@
 			<string>%d असाइनमेंट</string>
 			<key>other</key>
 			<string>%d असाइनमेंट</string>
-		</dict>
-	</dict>
-	<key>debug.devices</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@count@</string>
-		<key>count</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>d</string>
-			<key>zero</key>
-			<string>कुछ नहीं मिला</string>
-			<key>one</key>
-			<string>%d पहचाना गया</string>
-			<key>two</key>
-			<string>%d पहचाने गए</string>
-			<key>few</key>
-			<string>%d पहचाने गए</string>
-			<key>many</key>
-			<string>%d पहचाने गए</string>
-			<key>other</key>
-			<string>%d पहचाने गए</string>
 		</dict>
 	</dict>
 	<key>debug.outputDevices</key>

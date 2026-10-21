@@ -38,6 +38,7 @@
           } == true
         )
       }
+      state.selectedControllerID = mainWindow?.selectedControllerID
       state.hasMainWindow = mainWindow != nil
       state.hasSelectedProfile = mainWindow?.hasSelectedProfile == true
       state.hasSettingsWindow = settingsWindow != nil
@@ -65,6 +66,12 @@
         guard let id = menuItem.identifier?.rawValue,
           let item = MainMenuModel.allItems.first(where: { $0.id == id })
         else { continue }
+        if item.action == .controllerTarget {
+          menuItem.title = MainMenuRenderer.text(
+            of: MainMenuModel.controllerTargetTitle(state: state)
+          )
+          continue
+        }
         menuItem.title = MainMenuRenderer.title(
           MainMenuModel.titleKey(of: item, state: state),
           appName: appName
@@ -102,6 +109,9 @@
       case .saveSupportReport: beginSaveSupportReport()
       case .saveActivityLog: beginSaveActivityLog()
       case .showArea(let area): mainWindow?.showMainWindow(area: area)
+      case .controllerTarget:
+        // Informational row; it carries no action.
+        preconditionFailure("\(action) has no action")
       case .suspendOrResumeController:
         guard let controller = state.controller, let device = device(for: controller) else {
           return
@@ -133,7 +143,9 @@
         }
         deactivateProfiles(of: device)
       case .showActivityLog: mainWindow?.showMainWindow(area: .activity)
+      case .explainErrorCode: mainWindow?.showMainWindow(area: .activity)
       case .copySupportReport: copySupportReportWithFeedback()
+      case .reportProblem: open(urlString: StatusItemModel.problemReport)
       case .openProjectWebsite: openProjectPage(nil)
       case .services, .hide, .hideOthers, .showAll, .undo, .redo, .cut, .copy, .paste, .selectAll,
         .toggleSidebar, .toggleFullScreen, .minimize, .zoom, .bringAllToFront:

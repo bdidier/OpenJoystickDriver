@@ -26,7 +26,7 @@ enum StatusItemTitle: Equatable {
   case verbatim(String)
 }
 
-/// One row of the status menu. Rows are disabled when they do not apply and are never removed.
+/// One row of the status menu. Controller and profile rows are disabled when they do not apply.
 struct StatusItemEntry: Equatable {
   let id: String
   let title: StatusItemTitle
@@ -81,6 +81,9 @@ struct StatusItemState: Equatable {
     let isSuspended: Bool
     /// Whether the controller is linked over Bluetooth, from the typed transport.
     let isWireless: Bool
+    /// The profiles that apply to this controller (same model, and its unit when a profile names
+    /// one). ``Profile/isActive`` tells whether the profile is the one active for it.
+    var profiles: [Profile] = []
   }
 
   struct Profile: Equatable {
@@ -90,8 +93,10 @@ struct StatusItemState: Equatable {
   }
 
   var statusLine: String
-  /// Connected controllers in inventory order. Controller actions apply to the first controller;
-  /// Disconnect Wireless Link applies to the first wireless one.
+  /// Whether a required permission or access is missing.
+  var needsAccess: Bool
+  /// Connected controllers in inventory order. Each has its own actions; Disconnect Wireless
+  /// Link is enabled only for a wireless one.
   var controllers: [Controller]
   var profiles: [Profile]
   /// The state glyph shown beside the status line.
@@ -104,8 +109,16 @@ enum StatusItemModel {
   static let problemReport = "https://github.com/xsyetopz/OpenJoystickDriver/issues/new"
 
   static func entries(for state: StatusItemState) -> [StatusItemEntry] {
-    let target = state.controllers.first
-    let wireless = state.controllers.first { $0.isWireless }
+    let grantAccess =
+      state.needsAccess
+      ? [
+        StatusItemEntry(
+          id: "grantAccess",
+          title: .key("menuBar.grantAccess"),
+          action: .showArea(.access),
+          symbolName: "lock.shield"
+        )
+      ] : []
     return [
       StatusItemEntry(
         id: "status",
@@ -117,7 +130,7 @@ enum StatusItemModel {
       StatusItemEntry(
         id: "controllers",
         title: .key("menuBar.controllers"),
-        submenu: controllersSubmenu(target: target, wireless: wireless, profiles: state.profiles)
+        submenu: controllersSubmenu(controllers: state.controllers)
       ),
       StatusItemEntry(
         id: "profiles",
@@ -148,12 +161,7 @@ enum StatusItemModel {
         ]
       ),
       .separator("separator.profiles"),
-      StatusItemEntry(
-        id: "grantAccess",
-        title: .key("menuBar.grantAccess"),
-        action: .showArea(.access),
-        symbolName: "lock.shield"
-      ),
+    ] + grantAccess + [
       StatusItemEntry(
         id: "openWindow",
         title: .key("menuBar.openWindow"),
@@ -172,57 +180,76 @@ enum StatusItemModel {
     ]
   }
 
+  /// One submenu per connected controller, each with that controller's own actions. With no
+  /// controller connected the submenu holds one disabled row that says so.
   private static func controllersSubmenu(
-    target: StatusItemState.Controller?,
-    wireless: StatusItemState.Controller?,
-    profiles: [StatusItemState.Profile]
+    controllers: [StatusItemState.Controller]
   ) -> [StatusItemEntry] {
+    guard !controllers.isEmpty else {
+      return [
+        StatusItemEntry(
+          id: "controllers.none",
+          title: .key("controllers.emptyTitle"),
+          isEnabled: false
+        )
+      ]
+    }
+    return controllers.map { controller in
+      StatusItemEntry(
+        id: "controllers.\(controller.id)",
+        title: .verbatim(controller.name),
+        submenu: controllerActions(controller)
+      )
+    }
+  }
+
+  private static func controllerActions(
+    _ controller: StatusItemState.Controller
+  ) -> [StatusItemEntry] {
+    let prefix = "controllers.\(controller.id)"
     let suspend: StatusItemEntry
-    if let target, target.isSuspended {
+    if controller.isSuspended {
       suspend = StatusItemEntry(
-        id: "controllers.resume",
+        id: "\(prefix).resume",
         title: .key("menuBar.resume"),
-        action: .resumeController(sessionToken: target.id)
+        action: .resumeController(sessionToken: controller.id)
       )
     } else {
       suspend = StatusItemEntry(
-        id: "controllers.suspend",
+        id: "\(prefix).suspend",
         title: .key("menuBar.suspend"),
-        isEnabled: target != nil,
-        action: target.map { .suspendController(sessionToken: $0.id) }
+        action: .suspendController(sessionToken: controller.id)
       )
     }
     return [
       suspend,
       StatusItemEntry(
-        id: "controllers.testInput",
+        id: "\(prefix).testInput",
         title: .key("menuBar.testInput"),
-        isEnabled: target != nil,
-        action: target.map { .testInput(sessionToken: $0.id) }
+        action: .testInput(sessionToken: controller.id)
       ),
       StatusItemEntry(
-        id: "controllers.activeProfile",
+        id: "\(prefix).activeProfile",
         title: .key("menuBar.activeProfile"),
-        isEnabled: target != nil && !profiles.isEmpty,
+        isEnabled: !controller.profiles.isEmpty,
         submenu: profileEntries(
-          profiles,
-          idPrefix: "controllers.activeProfile",
+          controller.profiles,
+          idPrefix: "\(prefix).activeProfile",
           action: { .activateProfile($0) },
           checkActive: true
         )
       ),
       StatusItemEntry(
-        id: "controllers.disconnectWireless",
+        id: "\(prefix).disconnectWireless",
         title: .key("menuBar.disconnectWireless"),
-        isEnabled: wireless != nil,
-        action: wireless.map { .disconnectWireless(sessionToken: $0.id) },
+        isEnabled: controller.isWireless,
+        action: controller.isWireless ? .disconnectWireless(sessionToken: controller.id) : nil,
         symbolName: "antenna.radiowaves.left.and.right.slash"
       ),
       StatusItemEntry(
-        id: "controllers.showInWindow",
+        id: "\(prefix).showInWindow",
         title: .key("menuBar.showInWindow"),
-        isEnabled: target != nil,
-        action: target.map { .showController(sessionToken: $0.id) }
+        action: .showController(sessionToken: controller.id)
       ),
     ]
   }

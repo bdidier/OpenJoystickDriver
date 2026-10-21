@@ -26,30 +26,6 @@
 			<string>컨트롤러 %d대 연결됨</string>
 		</dict>
 	</dict>
-	<key>status.activeProfilesCount</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@count@</string>
-		<key>count</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>d</string>
-			<key>one</key>
-			<string>활성 프로파일 %d개</string>
-			<key>zero</key>
-			<string>활성 프로파일 %d개</string>
-			<key>two</key>
-			<string>활성 프로파일 %d개</string>
-			<key>few</key>
-			<string>활성 프로파일 %d개</string>
-			<key>many</key>
-			<string>활성 프로파일 %d개</string>
-			<key>other</key>
-			<string>활성 프로파일 %d개</string>
-		</dict>
-	</dict>
 	<key>profiles.assignments</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
@@ -72,30 +48,6 @@
 			<string>할당 %d개</string>
 			<key>other</key>
 			<string>할당 %d개</string>
-		</dict>
-	</dict>
-	<key>debug.devices</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@count@</string>
-		<key>count</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>d</string>
-			<key>zero</key>
-			<string>감지된 항목 없음</string>
-			<key>one</key>
-			<string>%d개 감지됨</string>
-			<key>two</key>
-			<string>%d개 감지됨</string>
-			<key>few</key>
-			<string>%d개 감지됨</string>
-			<key>many</key>
-			<string>%d개 감지됨</string>
-			<key>other</key>
-			<string>%d개 감지됨</string>
 		</dict>
 	</dict>
 	<key>debug.outputDevices</key>

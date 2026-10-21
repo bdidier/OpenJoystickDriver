@@ -26,30 +26,6 @@
 			<string>%d kontrolcü bağlı</string>
 		</dict>
 	</dict>
-	<key>status.activeProfilesCount</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@count@</string>
-		<key>count</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>d</string>
-			<key>one</key>
-			<string>%d etkin profil</string>
-			<key>zero</key>
-			<string>%d etkin profil</string>
-			<key>two</key>
-			<string>%d etkin profil</string>
-			<key>few</key>
-			<string>%d etkin profil</string>
-			<key>many</key>
-			<string>%d etkin profil</string>
-			<key>other</key>
-			<string>%d etkin profil</string>
-		</dict>
-	</dict>
 	<key>profiles.assignments</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
@@ -72,30 +48,6 @@
 			<string>%d atama</string>
 			<key>other</key>
 			<string>%d atama</string>
-		</dict>
-	</dict>
-	<key>debug.devices</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@count@</string>
-		<key>count</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>d</string>
-			<key>zero</key>
-			<string>Algılanmadı</string>
-			<key>one</key>
-			<string>%d algılandı</string>
-			<key>two</key>
-			<string>%d algılandı</string>
-			<key>few</key>
-			<string>%d algılandı</string>
-			<key>many</key>
-			<string>%d algılandı</string>
-			<key>other</key>
-			<string>%d algılandı</string>
 		</dict>
 	</dict>
 	<key>debug.outputDevices</key>

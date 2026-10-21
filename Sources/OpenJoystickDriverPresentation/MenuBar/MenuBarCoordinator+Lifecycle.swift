@@ -169,17 +169,18 @@
       statusItem = item
       if let button = item.button {
         button.toolTip = OJDLocalized.string("app.name")
-        button.target = self
-        button.action = #selector(showStatusMenu(_:))
         button.image = MenuBarStatusItemImage.make(
           accessibilityDescription: OJDLocalized.string("a11y.menuBar.statusItem")
         )
         button.setAccessibilityLabel(OJDLocalized.string("a11y.menuBar.statusItem"))
       }
+      statusMenuTracker.onWillOpen = { [weak self] in self?.refreshLiveStatus() }
+      // The menu runs the chosen item's action after it closes; rebuilding first would
+      // release that item.
+      statusMenuTracker.onDidClose = { [weak self] in
+        DispatchQueue.main.async { self?.updateStatusMenu() }
+      }
       updateStatusMenu()
-      // Use the action path rather than assigning a menu directly so each opening refreshes its
-      // snapshot before the menu is shown.
-      item.menu = nil
     }
 
     private func stopLiveStatus() {
@@ -196,15 +197,6 @@
       NSStatusBar.system.removeStatusItem(item)
       statusItem = nil
       statusMenu = nil
-    }
-
-    @objc
-    private func showStatusMenu(_ sender: Any?) {
-      refreshLiveStatus()
-      updateStatusMenu()
-      guard let menu = statusMenu, let button = statusItem?.button else { return }
-      // Pop up the same native menu on every click after the asynchronous status refresh starts.
-      menu.popUp(positioning: nil, at: NSPoint(x: 0, y: button.bounds.height), in: button)
     }
 
     private func refreshStatus() {
@@ -226,11 +218,17 @@
       }
     }
 
+    /// Installs the current menu as the status item's menu, which AppKit places under the button.
+    /// An open menu is left alone and replaced when it closes.
     private func updateStatusMenu() {
-      statusMenu = makeStatusMenu(
+      guard !statusMenuTracker.isOpen else { return }
+      let menu = makeStatusMenu(
         from: StatusItemModel.entries(for: menuBarViewModel.statusItemState),
         title: OJDLocalized.string("app.name")
       )
+      menu.delegate = statusMenuTracker
+      statusMenu = menu
+      statusItem?.menu = menu
     }
   }
 

@@ -132,6 +132,10 @@
       present()
     }
 
+    var selectedControllerID: String? {
+      screens.controllers.selectedDevice?.sessionToken.rawValue
+    }
+
     func showInputTest(controllerID: String) {
       guard navigation.requestArea(.controllers) else {
         present()

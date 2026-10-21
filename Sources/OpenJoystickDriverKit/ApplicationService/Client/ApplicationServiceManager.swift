@@ -94,10 +94,13 @@ public enum ApplicationServiceManager: Sendable {
     try registerMainApp(using: MainAppServiceRegistration())
   }
 
-  static func registerMainApp(using service: any ApplicationServiceRegistration) throws {
+  static func registerMainApp(
+    using service: any ApplicationServiceRegistration,
+    information: FileHandle = .standardOutput
+  ) throws {
     guard #available(macOS 13.0, *) else { throw ManagerError.unsupportedOperatingSystem }
     if service.status == .notRegistered { try service.register() }
-    log("[ApplicationServiceManager] Main app registered for login")
+    log("[ApplicationServiceManager] Main app registered for login", to: information)
   }
 
   public static func uninstall(settings: SettingsStore = SettingsStore()) throws {
@@ -105,10 +108,13 @@ public enum ApplicationServiceManager: Sendable {
     try unregisterMainApp(using: MainAppServiceRegistration())
   }
 
-  private static func unregisterMainApp(using service: any ApplicationServiceRegistration) throws {
+  static func unregisterMainApp(
+    using service: any ApplicationServiceRegistration,
+    information: FileHandle = .standardOutput
+  ) throws {
     guard #available(macOS 13.0, *) else { throw ManagerError.unsupportedOperatingSystem }
     if service.status != .notRegistered { try service.unregister() }
-    log("[ApplicationServiceManager] Main app removed from login items")
+    log("[ApplicationServiceManager] Main app removed from login items", to: information)
   }
 
   public static func health() -> ApplicationServiceHealth {
@@ -135,7 +141,9 @@ public enum ApplicationServiceManager: Sendable {
     }
   }
 
-  private static func log(_ message: String) {
-    FileHandle.standardError.write(Data((message + "\n").utf8))
+  /// Writes an informational line to standard output, which the Activity console lists as output;
+  /// standard error is reserved for errors.
+  private static func log(_ message: String, to information: FileHandle) {
+    information.write(Data((message + "\n").utf8))
   }
 }

@@ -30,8 +30,8 @@ final class FileChangeWatcher {
     self.onChange = onChange
   }
 
-  /// Starts watching the directories that exist and can be opened; logs the others and tries
-  /// them again until they open.
+  /// Starts watching the directories that exist and can be opened; logs those that fail to open
+  /// for a reason other than not existing, and tries every unopened one again until it opens.
   func start() {
     guard !isRunning else { return }
     isRunning = true
@@ -58,7 +58,7 @@ final class FileChangeWatcher {
     for directory in directories where sources[directory] == nil {
       let descriptor = open(directory.path, O_EVTONLY)
       guard descriptor >= 0 else {
-        if logsFailures {
+        if logsFailures && Self.isFailure(openErrno: errno) {
           fputs("[Watch] Cannot watch \(directory.path): errno \(errno)\n", stderr)
         }
         continue
@@ -73,6 +73,10 @@ final class FileChangeWatcher {
     if sources.count < directories.count { scheduleRetry() }
     return opened
   }
+
+  /// A directory that does not exist yet is a normal state and is watched once it appears; any
+  /// other error from opening it is a failure.
+  static func isFailure(openErrno code: Int32) -> Bool { code != ENOENT }
 
   private func closeDirectory(_ directory: URL) {
     sources.removeValue(forKey: directory)?.cancel()

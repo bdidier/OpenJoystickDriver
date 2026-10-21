@@ -1,175 +1,5 @@
 import Foundation
 
-/// Modifier keys of a menu key equivalent, independent of AppKit.
-struct MainMenuModifiers: OptionSet, Hashable, Sendable {
-  let rawValue: UInt8
-
-  static let command = Self(rawValue: 1 << 0)
-  static let shift = Self(rawValue: 1 << 1)
-  static let option = Self(rawValue: 1 << 2)
-  static let control = Self(rawValue: 1 << 3)
-}
-
-/// What choosing a main menu item does. The renderer maps each case to a responder-chain
-/// selector or to the coordinator; the compiler checks the mapping is exhaustive.
-enum MainMenuAction: Hashable, Sendable {
-  case about
-  case settings
-  case services
-  case hide
-  case hideOthers
-  case showAll
-  case quit
-
-  case importProfile
-  case exportProfile
-  case installRecordOrMod
-  case saveSupportReport
-  case saveActivityLog
-
-  case undo
-  case redo
-  case cut
-  case copy
-  case paste
-  case selectAll
-
-  case showArea(MainWindowArea)
-  case toggleSidebar
-  case toggleFullScreen
-
-  case suspendOrResumeController
-  case testInput
-  case disconnectWirelessLink
-  case showControllerInWindow
-
-  case activateProfile
-  case deactivateProfile
-
-  case minimize
-  case zoom
-  case bringAllToFront
-
-  case showActivityLog
-  case copySupportReport
-  case openProjectWebsite
-}
-
-extension MainMenuAction {
-  /// Whether the action runs a flow of its own (a file panel, a profile choice) instead of
-  /// only showing an area.
-  var performsFlow: Bool {
-    switch self {
-    case .importProfile, .exportProfile, .activateProfile, .installRecordOrMod: return true
-    default: return false
-    }
-  }
-}
-
-/// A condition on the app state that must hold for an item to be enabled.
-enum MainMenuRequirement: Hashable, Sendable {
-  case mainWindow
-  case settingsWindow
-  /// Exactly one controller is connected, so the Controller and Profile menus have a target.
-  case controller
-  case wirelessController
-  case controllerHasActiveProfile
-  case profileExists
-  /// A profile is selected in the Profiles screen.
-  case profileSelected
-}
-
-/// How an item decides whether it is enabled.
-enum MainMenuEnabledRule: Hashable, Sendable {
-  /// AppKit validates the item against the responder chain.
-  case responderChain
-  /// The item is enabled when every requirement holds.
-  case requires(Set<MainMenuRequirement>)
-
-  static let always = Self.requires([])
-}
-
-/// The place in the GUI that offers the same function as a menu item. The menu bar is a subset
-/// of the GUI, so every item has one.
-enum MainMenuGUICounterpart: Hashable, Sendable {
-  case area(MainWindowArea)
-  case settingsPane(SettingsWindowPane)
-  /// The sidebar button in the main window toolbar.
-  case sidebarToolbarButton
-  /// A standard window control or a system-wide macOS command.
-  case standardCommand
-  /// A link that opens in the default browser.
-  case externalLink
-}
-
-struct MainMenuItem: Equatable, Sendable {
-  let id: String
-  let titleKey: String
-  /// Localization key of the title while the item's alternate state holds; see
-  /// ``MainMenuModel/titleKey(of:state:)``.
-  let alternateTitleKey: String?
-  let keyEquivalent: String
-  let modifiers: MainMenuModifiers
-  let action: MainMenuAction
-  let enabled: MainMenuEnabledRule
-  let guiCounterpart: MainMenuGUICounterpart
-}
-
-enum MainMenuEntry: Equatable, Sendable {
-  case item(MainMenuItem)
-  case separator
-
-  var item: MainMenuItem? {
-    if case .item(let item) = self { return item }
-    return nil
-  }
-}
-
-struct MainMenuSection: Equatable, Sendable {
-  let id: String
-  let titleKey: String
-  let entries: [MainMenuEntry]
-
-  var items: [MainMenuItem] { entries.compactMap(\.item) }
-}
-
-/// What the menu needs to know about one connected controller.
-struct MainMenuControllerState: Equatable, Sendable {
-  let id: String
-  let name: String
-  let isSuspended: Bool
-  let isWireless: Bool
-  let hasActiveProfile: Bool
-}
-
-/// The app state that enables items and picks their titles.
-struct MainMenuState: Equatable, Sendable {
-  var controllers: [MainMenuControllerState] = []
-  var profileCount = 0
-  var hasSelectedProfile = false
-  var hasMainWindow = false
-  var hasSettingsWindow = false
-  var isSidebarVisible = true
-  var isFullScreen = false
-
-  /// The controller the Controller and Profile menus act on: the only connected one. With
-  /// several, the menus cannot tell which is meant, so those items stay disabled and Show in
-  /// Window opens Controllers.
-  var controller: MainMenuControllerState? { controllers.count == 1 ? controllers[0] : nil }
-
-  func satisfies(_ requirement: MainMenuRequirement) -> Bool {
-    switch requirement {
-    case .mainWindow: return hasMainWindow
-    case .settingsWindow: return hasSettingsWindow
-    case .controller: return controller != nil
-    case .wirelessController: return controller?.isWireless == true
-    case .controllerHasActiveProfile: return controller?.hasActiveProfile == true
-    case .profileExists: return profileCount > 0
-    case .profileSelected: return hasSelectedProfile
-    }
-  }
-}
-
 /// The main menu as data: titles, key equivalents, actions, enabled rules and GUI counterparts.
 /// The test checks this; ``MainMenuRenderer`` renders it to an `NSMenu`.
 enum MainMenuModel {
@@ -189,6 +19,15 @@ enum MainMenuModel {
     case .responderChain: return true
     case .requires(let requirements): return requirements.allSatisfy(state.satisfies)
     }
+  }
+
+  /// The text of the controller target row: the selected controller's name; the key that says no
+  /// controller is connected; or, when controllers are connected but none is selected (or the
+  /// selected one is gone), the key that says no controller is selected.
+  static func controllerTargetTitle(state: MainMenuState) -> StatusItemTitle {
+    if let controller = state.controller { return .verbatim(controller.name) }
+    if state.controllers.isEmpty { return .key("controllers.emptyTitle") }
+    return .key("mainMenu.controller.noneSelected")
   }
 
   /// The title key to show: the alternate one for Hide Sidebar, Exit Full Screen and Resume.
@@ -425,6 +264,14 @@ enum MainMenuModel {
     titleKey: "mainMenu.controller",
     entries: [
       entry(
+        "controllerTarget",
+        "controllers.emptyTitle",
+        action: .controllerTarget,
+        enabled: .never,
+        gui: .area(.controllers)
+      ),
+      .separator,
+      entry(
         "suspendOrResume",
         "mainMenu.controller.suspend",
         alternate: "mainMenu.controller.resume",
@@ -520,10 +367,23 @@ enum MainMenuModel {
         gui: .area(.activity)
       ),
       entry(
+        "explainErrorCode",
+        "mainMenu.help.explainErrorCode",
+        action: .explainErrorCode,
+        enabled: needsMainWindow,
+        gui: .area(.activity)
+      ),
+      entry(
         "copySupportReport",
         "mainMenu.help.copySupportReport",
         action: .copySupportReport,
         gui: .area(.activity)
+      ),
+      entry(
+        "reportProblem",
+        "mainMenu.help.reportProblem",
+        action: .reportProblem,
+        gui: .externalLink
       ),
       .separator,
       entry(

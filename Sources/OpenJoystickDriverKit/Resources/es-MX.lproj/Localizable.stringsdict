@@ -26,30 +26,6 @@
 			<string>%d controles conectados</string>
 		</dict>
 	</dict>
-	<key>status.activeProfilesCount</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@count@</string>
-		<key>count</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>d</string>
-			<key>one</key>
-			<string>%d perfil activo</string>
-			<key>zero</key>
-			<string>%d perfiles activos</string>
-			<key>two</key>
-			<string>%d perfiles activos</string>
-			<key>few</key>
-			<string>%d perfiles activos</string>
-			<key>many</key>
-			<string>%d perfiles activos</string>
-			<key>other</key>
-			<string>%d perfiles activos</string>
-		</dict>
-	</dict>
 	<key>profiles.assignments</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
@@ -72,30 +48,6 @@
 			<string>%d asignaciones</string>
 			<key>other</key>
 			<string>%d asignaciones</string>
-		</dict>
-	</dict>
-	<key>debug.devices</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@count@</string>
-		<key>count</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>d</string>
-			<key>zero</key>
-			<string>Ninguno detectado</string>
-			<key>one</key>
-			<string>%d detectado</string>
-			<key>two</key>
-			<string>%d detectados</string>
-			<key>few</key>
-			<string>%d detectados</string>
-			<key>many</key>
-			<string>%d detectados</string>
-			<key>other</key>
-			<string>%d detectados</string>
 		</dict>
 	</dict>
 	<key>debug.outputDevices</key>

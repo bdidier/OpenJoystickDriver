@@ -49,6 +49,14 @@
       )
     }
 
+    /// The text of a title that is a localization key or data such as a controller name.
+    static func text(of title: StatusItemTitle) -> String {
+      switch title {
+      case .key(let key): return OJDLocalized.string(key)
+      case .verbatim(let text): return text
+      }
+    }
+
     static func title(_ key: String, appName: String) -> String {
       let text = OJDLocalized.string(key)
       return text.contains("%@") ? String(format: text, appName) : text
@@ -76,6 +84,8 @@
         menuItem.submenu = profiles
       case .responder(let selector):
         menuItem.action = selector
+      case .informational:
+        break
       case .coordinator:
         menuItem.action = #selector(MenuBarCoordinator.performMainMenuItem(_:))
         menuItem.target = target
@@ -90,11 +100,14 @@
       case profileSubmenu
       case responder(Selector)
       case coordinator
+      /// A row that shows text and has no action.
+      case informational
     }
 
     static func routing(for action: MainMenuAction) -> Routing {
       if action == .services { return .services }
       if action == .activateProfile { return .profileSubmenu }
+      if action == .controllerTarget { return .informational }
       if let selector = responderSelector(for: action) { return .responder(selector) }
       return .coordinator
     }
@@ -128,9 +141,9 @@
       case .bringAllToFront: return #selector(NSApplication.arrangeInFront(_:))
       case .services, .about, .settings, .quit, .importProfile, .exportProfile,
         .installRecordOrMod, .saveSupportReport, .saveActivityLog, .showArea,
-        .suspendOrResumeController, .testInput, .disconnectWirelessLink,
+        .controllerTarget, .suspendOrResumeController, .testInput, .disconnectWirelessLink,
         .showControllerInWindow, .activateProfile, .deactivateProfile, .showActivityLog,
-        .copySupportReport, .openProjectWebsite:
+        .explainErrorCode, .copySupportReport, .reportProblem, .openProjectWebsite:
         return nil
       }
     }

@@ -14,9 +14,27 @@
     init(_ action: StatusItemAction) { self.action = action }
   }
 
+  /// Reports when the status menu opens and closes so it is refreshed on opening and never
+  /// replaced while it is showing.
+  @MainActor
+  final class StatusMenuTracker: NSObject, NSMenuDelegate {
+    private(set) var isOpen = false
+    var onWillOpen: () -> Void = {}
+    var onDidClose: () -> Void = {}
+
+    func menuWillOpen(_ menu: NSMenu) {
+      isOpen = true
+      onWillOpen()
+    }
+
+    func menuDidClose(_ menu: NSMenu) {
+      isOpen = false
+      onDidClose()
+    }
+  }
+
   extension MenuBarCoordinator {
-    /// Builds the status menu from the model; every entry is present and disabled when it does
-    /// not apply.
+    /// Builds the status menu from the model.
     func makeStatusMenu(from entries: [StatusItemEntry], title: String) -> NSMenu {
       let menu = NSMenu(title: title)
       menu.autoenablesItems = false
@@ -76,7 +94,7 @@
       }
     }
 
-    private func open(urlString: String) {
+    func open(urlString: String) {
       guard let url = URL(string: urlString) else { return }
       NSWorkspace.shared.open(url)
     }

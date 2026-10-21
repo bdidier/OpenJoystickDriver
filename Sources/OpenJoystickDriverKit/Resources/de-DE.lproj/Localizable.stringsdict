@@ -26,30 +26,6 @@
 			<string>%d Controller verbunden</string>
 		</dict>
 	</dict>
-	<key>status.activeProfilesCount</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@count@</string>
-		<key>count</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>d</string>
-			<key>one</key>
-			<string>%d aktives Profil</string>
-			<key>zero</key>
-			<string>%d aktive Profile</string>
-			<key>two</key>
-			<string>%d aktive Profile</string>
-			<key>few</key>
-			<string>%d aktive Profile</string>
-			<key>many</key>
-			<string>%d aktive Profile</string>
-			<key>other</key>
-			<string>%d aktive Profile</string>
-		</dict>
-	</dict>
 	<key>profiles.assignments</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
@@ -72,30 +48,6 @@
 			<string>%d Zuweisungen</string>
 			<key>other</key>
 			<string>%d Zuweisungen</string>
-		</dict>
-	</dict>
-	<key>debug.devices</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@count@</string>
-		<key>count</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>d</string>
-			<key>zero</key>
-			<string>Keine erkannt</string>
-			<key>one</key>
-			<string>%d erkannt</string>
-			<key>two</key>
-			<string>%d erkannt</string>
-			<key>few</key>
-			<string>%d erkannt</string>
-			<key>many</key>
-			<string>%d erkannt</string>
-			<key>other</key>
-			<string>%d erkannt</string>
 		</dict>
 	</dict>
 	<key>debug.outputDevices</key>

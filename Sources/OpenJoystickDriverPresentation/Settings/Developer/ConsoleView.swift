@@ -28,6 +28,7 @@
     private(set) var snapshots: [ApplicationServiceLogSnapshot] = []
     @Published
     private(set) var errorMessage: String?
+    let errorCodeExplainer = ErrorCodeExplainerModel()
 
     var displayedLines: [String] {
       snapshots.flatMap { snapshot -> [String] in
@@ -120,7 +121,7 @@
             ForEach(ConsoleStreamSelection.allCases) { selection in
               Text(selection.title).tag(selection)
             }
-          }.pickerStyle(.segmented).frame(width: 220)
+          }.pickerStyle(.segmented).labelsHidden().frame(width: 220)
           OJDCompactSymbolButton(
             symbolName: "arrow.clockwise",
             label: OJDLocalized.string("common.refresh"),
@@ -155,6 +156,8 @@
             RoundedRectangle(cornerRadius: 6).stroke(Color(NSColor.separatorColor))
           )
         }
+
+        ErrorCodeExplainerView(model: model.errorCodeExplainer)
 
         Text(ApplicationServiceLogService.sharingWarning).font(.caption).foregroundColor(
           Color(NSColor.secondaryLabelColor)

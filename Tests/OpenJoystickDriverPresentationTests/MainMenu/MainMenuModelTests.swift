@@ -146,7 +146,12 @@ struct MainMenuModelTests {
       isWireless: false,
       hasActiveProfile: false
     )
-    var state = MainMenuState(controllers: [wired], profileCount: 1, hasMainWindow: true)
+    var state = MainMenuState(
+      controllers: [wired],
+      selectedControllerID: "a",
+      profileCount: 1,
+      hasMainWindow: true
+    )
     let disconnect = try #require(MainMenuModel.item(for: .disconnectWirelessLink))
     let deactivate = try #require(MainMenuModel.item(for: .deactivateProfile))
     let activate = try #require(MainMenuModel.item(for: .activateProfile))
@@ -169,8 +174,114 @@ struct MainMenuModelTests {
     #expect(MainMenuModel.isEnabled(deactivate, state: state))
     #expect(MainMenuModel.titleKey(of: suspend, state: state) == "mainMenu.controller.resume")
 
-    state.controllers.append(wired)
+    state.selectedControllerID = nil
     #expect(!MainMenuModel.isEnabled(suspend, state: state))
+  }
+
+  @Test
+  func controllerMenuActsOnTheSelectedOfTwoControllers() throws {
+    let first = MainMenuControllerState(
+      id: "a",
+      name: "First",
+      isSuspended: false,
+      isWireless: false,
+      hasActiveProfile: false
+    )
+    let second = MainMenuControllerState(
+      id: "b",
+      name: "Second",
+      isSuspended: true,
+      isWireless: true,
+      hasActiveProfile: true
+    )
+    var state = MainMenuState(
+      controllers: [first, second],
+      selectedControllerID: "a",
+      profileCount: 1,
+      hasMainWindow: true
+    )
+    let suspend = try #require(MainMenuModel.item(for: .suspendOrResumeController))
+    let disconnect = try #require(MainMenuModel.item(for: .disconnectWirelessLink))
+    let deactivate = try #require(MainMenuModel.item(for: .deactivateProfile))
+    #expect(state.controller == first)
+    #expect(MainMenuModel.controllerTargetTitle(state: state) == .verbatim("First"))
+    #expect(MainMenuModel.isEnabled(suspend, state: state))
+    #expect(MainMenuModel.titleKey(of: suspend, state: state) == "mainMenu.controller.suspend")
+    #expect(!MainMenuModel.isEnabled(disconnect, state: state))
+    #expect(!MainMenuModel.isEnabled(deactivate, state: state))
+
+    state.selectedControllerID = "b"
+    #expect(state.controller == second)
+    #expect(MainMenuModel.controllerTargetTitle(state: state) == .verbatim("Second"))
+    #expect(MainMenuModel.titleKey(of: suspend, state: state) == "mainMenu.controller.resume")
+    #expect(MainMenuModel.isEnabled(disconnect, state: state))
+    #expect(MainMenuModel.isEnabled(deactivate, state: state))
+  }
+
+  @Test
+  func controllerTargetRowSaysWhyTheMenuIsDisabled() throws {
+    let target = try #require(MainMenuModel.item(for: .controllerTarget))
+    var state = MainMenuState()
+    #expect(MainMenuModel.controllerTargetTitle(state: state) == .key("controllers.emptyTitle"))
+    #expect(!MainMenuModel.isEnabled(target, state: state))
+    state.controllers = [
+      MainMenuControllerState(
+        id: "a",
+        name: "A",
+        isSuspended: false,
+        isWireless: false,
+        hasActiveProfile: false
+      )
+    ]
+    state.selectedControllerID = "a"
+    #expect(!MainMenuModel.isEnabled(target, state: state))
+  }
+
+  @Test
+  func controllerTargetRowDistinguishesNoSelectionFromNoController() {
+    var state = MainMenuState(
+      controllers: [
+        MainMenuControllerState(
+          id: "a",
+          name: "A",
+          isSuspended: false,
+          isWireless: false,
+          hasActiveProfile: false
+        )
+      ]
+    )
+    #expect(
+      MainMenuModel.controllerTargetTitle(state: state) == .key("mainMenu.controller.noneSelected")
+    )
+    state.selectedControllerID = "gone"
+    #expect(state.controller == nil)
+    #expect(
+      MainMenuModel.controllerTargetTitle(state: state) == .key("mainMenu.controller.noneSelected")
+    )
+    state.controllers = []
+    #expect(MainMenuModel.controllerTargetTitle(state: state) == .key("controllers.emptyTitle"))
+  }
+
+  @Test
+  @MainActor
+  func controllerTargetRowTextIsTheNameOrLocalizedText() {
+    #expect(MainMenuRenderer.text(of: .verbatim("Pad")) == "Pad")
+    for key in ["controllers.emptyTitle", "mainMenu.controller.noneSelected"] {
+      let text = MainMenuRenderer.text(of: .key(key))
+      #expect(!text.isEmpty && text != key, "\(key) has no text")
+    }
+  }
+
+  @Test
+  func theHelpMenuListsExplainErrorCodeAndReportProblemWithTheirCounterparts() throws {
+    let help = try section("help")
+    let explain = try #require(help.items.first { $0.action == .explainErrorCode })
+    let report = try #require(help.items.first { $0.action == .reportProblem })
+    #expect(explain.guiCounterpart == .area(.activity))
+    #expect(report.guiCounterpart == .externalLink)
+    #expect(!MainMenuModel.isEnabled(explain, state: MainMenuState()))
+    #expect(MainMenuModel.isEnabled(explain, state: MainMenuState(hasMainWindow: true)))
+    #expect(MainMenuModel.isEnabled(report, state: MainMenuState()))
   }
 
   @Test
@@ -194,6 +305,9 @@ struct MainMenuRoutingTests {
         #expect(item.action == .services || item.action == .activateProfile)
       case .responder, .coordinator:
         #expect(item.action != .services && item.action != .activateProfile)
+      case .informational:
+        #expect(item.action == .controllerTarget)
+        #expect(item.enabled == .never)
       }
     }
     if case .profileSubmenu = MainMenuRenderer.routing(for: .activateProfile) {

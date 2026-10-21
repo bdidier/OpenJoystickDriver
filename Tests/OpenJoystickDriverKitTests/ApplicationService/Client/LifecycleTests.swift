@@ -28,6 +28,30 @@ struct LifecycleTests {
     #expect(service.registerCount == 1)
     #expect(service.unregisterCount == 0)
   }
+
+  @Test("login registration messages are written to the information stream")
+  func registrationMessagesAreInformation() throws {
+    let pipe = Pipe()
+
+    try ApplicationServiceManager.registerMainApp(
+      using: RecordingRegistration(status: .notRegistered),
+      information: pipe.fileHandleForWriting
+    )
+    try ApplicationServiceManager.unregisterMainApp(
+      using: RecordingRegistration(status: .enabled),
+      information: pipe.fileHandleForWriting
+    )
+    try pipe.fileHandleForWriting.close()
+    let text = try #require(
+      String(bytes: pipe.fileHandleForReading.readDataToEndOfFile(), encoding: .utf8)
+    )
+
+    #expect(
+      text
+        == "[ApplicationServiceManager] Main app registered for login\n"
+        + "[ApplicationServiceManager] Main app removed from login items\n"
+    )
+  }
 }
 
 private final class RecordingRegistration: ApplicationServiceRegistration, @unchecked Sendable {

@@ -28,6 +28,7 @@
 
     var statusItem: NSStatusItem?
     var statusMenu: NSMenu?
+    let statusMenuTracker = StatusMenuTracker()
     /// The main window; the status item and main menu open areas only through it.
     var mainWindow: (any MenuProfileMutating)?
     /// The Settings window.

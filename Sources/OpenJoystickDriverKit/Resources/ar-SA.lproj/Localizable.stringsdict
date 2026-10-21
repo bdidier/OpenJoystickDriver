@@ -26,30 +26,6 @@
 			<string>%d وحدة تحكم متصلة</string>
 		</dict>
 	</dict>
-	<key>status.activeProfilesCount</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@count@</string>
-		<key>count</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>d</string>
-			<key>one</key>
-			<string>%d ملف تعريف نشط</string>
-			<key>zero</key>
-			<string>لا توجد ملفات تعريف نشطة (%d)</string>
-			<key>two</key>
-			<string>%d ملفا تعريف نشطان</string>
-			<key>few</key>
-			<string>%d ملفات تعريف نشطة</string>
-			<key>many</key>
-			<string>%d ملف تعريف نشط</string>
-			<key>other</key>
-			<string>%d ملف تعريف نشط</string>
-		</dict>
-	</dict>
 	<key>profiles.assignments</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
@@ -72,30 +48,6 @@
 			<string>%d تعيين</string>
 			<key>other</key>
 			<string>%d تعيين</string>
-		</dict>
-	</dict>
-	<key>debug.devices</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@count@</string>
-		<key>count</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>d</string>
-			<key>zero</key>
-			<string>لم يُكتشف أي جهاز</string>
-			<key>one</key>
-			<string>اكتُشف %d جهاز</string>
-			<key>two</key>
-			<string>اكتُشف جهازان (%d)</string>
-			<key>few</key>
-			<string>اكتُشفت %d أجهزة</string>
-			<key>many</key>
-			<string>اكتُشف %d جهاز</string>
-			<key>other</key>
-			<string>اكتُشف %d جهاز</string>
 		</dict>
 	</dict>
 	<key>debug.outputDevices</key>

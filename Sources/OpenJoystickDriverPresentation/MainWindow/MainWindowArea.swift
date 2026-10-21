@@ -50,6 +50,8 @@ public protocol MainWindowPresenting: AnyObject {
   func showMainWindow(area: MainWindowArea?)
   /// Opens Controllers with the controller selected, for "Show in Window".
   func showController(id: String)
+  /// The session token of the controller selected in the Controllers area, if one is connected.
+  var selectedControllerID: String? { get }
   /// Opens Controllers > Input Test for the controller.
   func showInputTest(controllerID: String)
   /// Opens Profiles, asks for a profile file and imports it through the editor's checks.

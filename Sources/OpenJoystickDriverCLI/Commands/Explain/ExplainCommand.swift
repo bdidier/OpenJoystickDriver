@@ -69,7 +69,7 @@ struct ExplainCommand: AsyncParsableCommand {
   }
 
   private static func result(for code: String) throws -> Result {
-    if let id = ErrorCode(rawValue: code.uppercased()) {
+    if let id = ErrorCode(typed: code) {
       return Result(
         code: id.rawValue,
         domain: id.domain.rawValue,

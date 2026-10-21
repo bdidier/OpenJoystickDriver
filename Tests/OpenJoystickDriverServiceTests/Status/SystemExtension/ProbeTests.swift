@@ -6,6 +6,37 @@ import Testing
 
 struct ProbeTests {
   @Test
+  func readsBundleStateAndVersionFromEmbeddedExtension() throws {
+    let appURL = FileManager.default.temporaryDirectory
+      .appendingPathComponent("ProbeTests-\(UUID().uuidString).app")
+    defer { try? FileManager.default.removeItem(at: appURL) }
+    #expect(ExtensionProbe.bundleState(in: appURL) == .missing)
+
+    let extensionURL = appURL.appendingPathComponent(
+      "Contents/Library/SystemExtensions/\(ExtensionProbe.extensionID).dext"
+    )
+    try FileManager.default.createDirectory(at: extensionURL, withIntermediateDirectories: true)
+    let info: [String: Any] = [
+      "CFBundleIdentifier": ExtensionProbe.extensionID,
+      "CFBundleShortVersionString": "0.6.0-alpha.1",
+      "CFBundleVersion": "1.14.55d1",
+      "CFBundlePackageType": "DEXT",
+    ]
+    let data = try PropertyListSerialization.data(fromPropertyList: info, format: .xml, options: 0)
+    try data.write(to: extensionURL.appendingPathComponent("Info.plist"))
+
+    #expect(ExtensionProbe.bundleState(in: appURL) == .present)
+    #expect(
+      ExtensionProbe.embeddedFacts(in: appURL)
+        == ExtensionVersionFacts(
+          extensionID: ExtensionProbe.extensionID,
+          shortVersion: "0.6.0-alpha.1",
+          buildVersion: "1.14.55d1"
+        )
+    )
+  }
+
+  @Test
   func distinguishesActiveInactiveAndAbsentRegistration() {
     let identifier = ExtensionProbe.extensionID
     let active = result(output: "* * ABC \(identifier) [activated enabled]")

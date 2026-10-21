@@ -140,3 +140,11 @@ public enum ErrorCode: String, Codable, Sendable, CaseIterable {
     Localization().string("error.\(rawValue)")
   }
 }
+
+extension ErrorCode {
+  /// The code that typed text names: surrounding whitespace and letter case do not matter.
+  /// `ojd explain` and the app's Explain Error Code read codes through this.
+  public init?(typed text: String) {
+    self.init(rawValue: text.trimmingCharacters(in: .whitespacesAndNewlines).uppercased())
+  }
+}

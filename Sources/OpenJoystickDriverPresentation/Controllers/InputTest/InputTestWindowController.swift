@@ -16,6 +16,13 @@
     }
   }
 
+  enum InputTestWindowTitle {
+    /// Names the physical controller, as the Controllers list does.
+    static func make(for device: ApplicationServiceDeviceDescription) -> String {
+      OJDLocalized.formatted("inputTest.windowTitle", device.name)
+    }
+  }
+
   @MainActor
   final class InputTestWindowController: NSWindowController, NSWindowDelegate {
     private static let toolbarIdentifier = NSToolbar.Identifier(
@@ -66,10 +73,7 @@
 
     func show(device: ApplicationServiceDeviceDescription) {
       model.selectDevice(device)
-      window?.title = OJDLocalized.formatted(
-        "inputTest.windowTitle",
-        device.publishedVirtualProfile?.productName ?? device.name
-      )
+      window?.title = InputTestWindowTitle.make(for: device)
       model.open()
       visibilityChanged(true)
       if let window { WindowFramePolicy.clamp(window) }

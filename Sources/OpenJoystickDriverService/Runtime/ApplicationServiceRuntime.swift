@@ -190,11 +190,18 @@ package final class ApplicationServiceRuntime {
   }
 
   /// Re-creates a connected controller's virtual device when a change to the persona files
-  /// changes its identity. A missing directory is watched once it exists.
+  /// changes its identity. The service creates the persona and package folders, which are absent
+  /// until first use; a folder removed later is watched once it exists again.
   private func startPersonaWatcher() {
     let applicationServiceServer = applicationServiceServer
     let packages = ModPackageStore.rootDirectory
-    try? FileManager.default.createDirectory(at: packages, withIntermediateDirectories: true)
+    for folder in [VirtualHIDProfileOverrideStore.userDirectory, packages] {
+      do {
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+      } catch {
+        serviceError("[Personas] Cannot create \(folder.path): \(error.localizedDescription)")
+      }
+    }
     let personaWatcher = FileChangeWatcher(
       directories: [VirtualHIDProfileOverrideStore.userDirectory, packages],
       watchesFile: {

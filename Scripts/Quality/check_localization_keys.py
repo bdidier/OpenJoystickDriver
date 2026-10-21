@@ -8,6 +8,14 @@ and `Localization().*` / `localization.*` calls. A literal key must exist exactl
 literals must have both keys. A key built from a literal prefix, such as `"error.\\(rawValue)"` or
 `"profiles.stick." + key`, must have at least one catalog key with that prefix. Other dynamic keys
 cannot be checked and are listed.
+
+The scan also fails on a catalog key that no Swift source under `Sources` reads. A key is read
+when its literal is any string literal of those files, so keys held in tables, enum properties and
+`.key(...)` wrappers count. A string literal with an interpolation after a literal prefix, such as
+`"error.\\(rawValue)"` or `"area.\\(rawValue).title"`, reads every key it matches, each
+interpolation standing for one key segment (no dot). A literal prefix ending in `.` or `_`, such as
+`"profiles.stick." + key`, reads every key with that prefix. `KEPT_WITHOUT_READER` names each key
+kept without a reader and why. The scan prints every pattern that reads keys, with the key count.
 """
 
 from __future__ import annotations
@@ -27,6 +35,10 @@ CALL = re.compile(
 )
 STRINGS_KEY = re.compile(r'^"((?:[^"\\]|\\.)*)"\s*=', re.MULTILINE)
 LITERAL = re.compile(r'"((?:[^"\\]|\\.)*)"')
+
+
+# Catalog keys no Swift source reads but that stay, each with its reason.
+KEPT_WITHOUT_READER: dict[str, str] = {}
 
 
 @dataclass(frozen=True)
@@ -96,6 +108,48 @@ def first_argument(source: str, open_index: int) -> str:
     return source[open_index + 1 : index].strip()
 
 
+def string_literals(source: str) -> list[str]:
+    """Return the text of each string literal in `source`, interpolations included."""
+    literals: list[str] = []
+    index = 0
+    while index < len(source):
+        if source.startswith("//", index):
+            newline = source.find("\n", index)
+            index = len(source) if newline < 0 else newline
+        elif source.startswith("/*", index):
+            end = source.find("*/", index + 2)
+            index = len(source) if end < 0 else end + 2
+        elif source.startswith('"""', index):
+            end = source.find('"""', index + 3)
+            index = len(source) if end < 0 else end + 3
+        elif source.startswith('#"', index):
+            end = source.find('"#', index + 2)
+            index = len(source) if end < 0 else end + 2
+        elif source[index] == '"':
+            end = skip_string(source, index)
+            literals.append(source[index + 1 : end - 1])
+            index = end
+        else:
+            index += 1
+    return literals
+
+
+def interpolation_pattern(literal: str) -> re.Pattern[str] | None:
+    """Return the pattern a key-building literal reads, or None without a literal prefix."""
+    if "\\(" not in literal or "." not in literal.split("\\(")[0]:
+        return None
+    pattern = ""
+    index = 0
+    while index < len(literal):
+        if literal.startswith("\\(", index):
+            pattern += "[^.]+"
+            index = skip_group(literal, index + 1)
+        else:
+            pattern += re.escape(literal[index])
+            index += 1
+    return re.compile(pattern)
+
+
 def key_arguments(source: str) -> list[tuple[int, str]]:
     """Return (line, first-argument text) for each localization call in `source`."""
     return [
@@ -154,6 +208,56 @@ def tracked_swift_files(root: Path = ROOT) -> list[Path]:
     ]
 
 
+def reader_files(root: Path = ROOT) -> list[Path]:
+    """Return the Swift files whose string literals count as readers: all of `Sources`."""
+    return [
+        path
+        for path in tracked_swift_files(root)
+        if path.relative_to(root).parts[0] == "Sources"
+    ]
+
+
+def unread_keys(root: Path = ROOT) -> tuple[list[str], dict[str, int]]:
+    """Return (catalog keys no Swift source reads, keys read per pattern)."""
+    keys = catalog_keys(root)
+    literals: set[str] = set()
+    patterns: dict[str, re.Pattern[str]] = {}
+    for path in reader_files(root):
+        for literal in string_literals(path.read_text(encoding="utf-8")):
+            pattern = interpolation_pattern(literal)
+            if pattern:
+                patterns[literal] = pattern
+            elif "\\(" not in literal:
+                literals.add(literal)
+    prefixes = {
+        literal
+        for literal in literals
+        if literal.endswith((".", "_")) and len(literal) > 3
+    }
+    unread: list[str] = []
+    covered: dict[str, int] = {}
+    for key in sorted(keys):
+        if key in literals:
+            continue
+        matching = [t for t, pattern in patterns.items() if pattern.fullmatch(key)]
+        matching += [f"{p} + <text>" for p in prefixes if key.startswith(p)]
+        for text in matching:
+            covered[text] = covered.get(text, 0) + 1
+        if not matching:
+            unread.append(key)
+    return unread, covered
+
+
+def stale_kept(unread: list[str], keys: set[str]) -> list[str]:
+    """Return why a `KEPT_WITHOUT_READER` entry no longer holds."""
+    return [
+        f"kept key {key!r} "
+        + ("is not in the catalog" if key not in keys else "has a reader")
+        for key in sorted(KEPT_WITHOUT_READER)
+        if key not in keys or key not in unread
+    ]
+
+
 def check(root: Path = ROOT) -> tuple[list[tuple[KeyUse, str]], list[KeyUse]]:
     """Return (missing keys with reasons, call sites whose key cannot be scanned)."""
     keys = catalog_keys(root)
@@ -173,17 +277,30 @@ def check(root: Path = ROOT) -> tuple[list[tuple[KeyUse, str]], list[KeyUse]]:
 
 def main() -> int:
     missing, unscannable = check()
+    unread, covered = unread_keys()
+    unexplained = [key for key in unread if key not in KEPT_WITHOUT_READER]
+    stale = stale_kept(unread, catalog_keys())
     for use, reason in missing:
         print(f"{use.path}:{use.line}: {reason} in the en-US catalog")
     for use in unscannable:
         print(f"{use.path}:{use.line}: key not scanned: {use.expression}")
-    if missing:
+    for key in unexplained:
+        print(f"{key}: no Swift source reads this catalog key")
+    for problem in stale:
+        print(problem)
+    for key, reason in KEPT_WITHOUT_READER.items():
+        print(f"kept without reader: {key}: {reason}")
+    for text, count in sorted(covered.items()):
+        print(f"read by pattern: {text} ({count} keys)")
+    if missing or unexplained or stale:
         print(
-            f"error: {len(missing)} localization key(s) missing from en-US",
+            f"error: {len(missing)} key(s) missing from en-US, {len(unexplained)} "
+            f"key(s) with no reader, {len(stale)} stale kept entr(ies)",
             file=sys.stderr,
         )
         return 1
     print("Every scannable localization key used in Swift exists in the en-US catalog.")
+    print("Every en-US catalog key is read by Swift or kept with a reason.")
     return 0
 
 

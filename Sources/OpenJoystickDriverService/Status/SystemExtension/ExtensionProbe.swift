@@ -4,7 +4,7 @@ import OpenJoystickDriverUSB
 
 package enum ExtensionProbe {
   package static let extensionID = USBDriverKitExtensionConfiguration.extensionID
-  static let relativePath = "Contents/Library/SystemExtensions/\\(extensionID).dext"
+  static let relativePath = "Contents/Library/SystemExtensions/\(extensionID).dext"
 
   package static func currentStatus(bundleURL: URL = Bundle.main.bundleURL) -> ExtensionStatus {
     let bundle = bundleState(in: bundleURL)

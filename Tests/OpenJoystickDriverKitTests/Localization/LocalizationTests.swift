@@ -103,7 +103,7 @@ struct LocalizationTests {
     )
     #expect(sourceCategories["status.controllerConnected"] == expectedCategories)
     #expect(sourceCategories["profiles.assignments"] == expectedCategories)
-    #expect(sourceCategories["debug.devices"] == expectedCategories)
+    #expect(sourceCategories["debug.outputDevices"] == expectedCategories)
     #expect(
       LocalizationCatalogAudit.pluralCategories(for: "ar-SA")["status.controllerConnected"]
         == expectedCategories
@@ -234,10 +234,10 @@ struct LocalizationTests {
     )
     #expect(value == "3 controllers connected")
 
-    let about = resolver.formatted(
-      "about.version",
-      arguments: ["1.2.3" as CVarArg]
+    let area = resolver.formatted(
+      "cli.explain.area",
+      arguments: ["Endpoint" as CVarArg]
     )
-    #expect(about == "Version 1.2.3\nController input for macOS")
+    #expect(area == "Area: Endpoint")
   }
 }
