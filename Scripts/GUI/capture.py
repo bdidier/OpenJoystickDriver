@@ -18,6 +18,8 @@ BUNDLE_ID = "com.openjoystickdriver"
 AREAS = ("Controllers", "Profiles", "Library", "Access", "Activity")
 SETTINGS_PANES = ("General", "Notifications", "Advanced")
 BOUNDS_TOLERANCE = 2.0
+ACCESSIBILITY_GRANTED = "0"
+ACCESSIBILITY_MISSING = "Accessibility is not granted to the host app"
 
 
 class CaptureError(Exception):
@@ -51,6 +53,20 @@ def run(command: list[str]) -> str:
             )
         raise CaptureError(f"{' '.join(command[:3])} failed: {detail}")
     return result.stdout.strip()
+
+
+def require_accessibility() -> None:
+    """UI scripting reports no windows without Accessibility, so refuse before it runs."""
+    code = run(
+        ["osascript", "-l", "JavaScript", str(GUI_DIR / "accessibility-probe.js")]
+    )
+    if code != ACCESSIBILITY_GRANTED:
+        raise CaptureError(
+            f"{ACCESSIBILITY_MISSING} (AXError {code}): the host app running this "
+            "command (Terminal, iTerm or another) needs Accessibility in System "
+            "Settings > Privacy & Security > Accessibility; the capture cannot run "
+            "without it"
+        )
 
 
 def gui(script: str, *args: str) -> str:
@@ -162,6 +178,7 @@ def restore(steps: list[tuple[str, tuple[str, ...]]]) -> list[str]:
 
 
 def capture(args: argparse.Namespace) -> int:
+    require_accessibility()
     pid = process_id()
     require_english_ui()
     areas = AREAS if args.all else (args.area,) if args.area else ()

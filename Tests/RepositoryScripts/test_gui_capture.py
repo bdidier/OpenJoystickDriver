@@ -126,6 +126,7 @@ class GuiCaptureTests(unittest.TestCase):
             tempfile.TemporaryDirectory() as root,
             patch.object(capture, "PROJECT_DIR", Path(root)),
             patch.object(capture, "process_id", return_value=1),
+            patch.object(capture, "require_accessibility"),
             patch.object(capture, "require_english_ui"),
             patch.object(capture, "read_state", return_value=state),
             patch.object(capture, "gui", side_effect=fake_gui),
@@ -191,6 +192,27 @@ class GuiCaptureTests(unittest.TestCase):
 
     def completed(self, code: int, out: str) -> subprocess.CompletedProcess[str]:
         return subprocess.CompletedProcess([], code, out, "")
+
+    def test_accessibility_probe_granted_lets_capture_continue(self) -> None:
+        with patch.object(capture, "run", return_value="0") as probe:
+            capture.require_accessibility()
+        self.assertIn("accessibility-probe.js", probe.call_args.args[0][-1])
+
+    def test_accessibility_probe_denied_fails_before_any_gui_script(self) -> None:
+        with (
+            patch.object(capture, "run", return_value="-25211"),
+            patch.object(capture, "gui") as gui,
+            patch.object(capture, "process_id") as pid,
+            self.assertRaises(capture.CaptureError) as raised,
+        ):
+            capture.capture(capture.parse_args(["--area", "Controllers"]))
+        message = str(raised.exception)
+        self.assertIn(capture.ACCESSIBILITY_MISSING, message)
+        self.assertIn("-25211", message)
+        self.assertIn("Privacy & Security > Accessibility", message)
+        self.assertIn("cannot run without it", message)
+        gui.assert_not_called()
+        pid.assert_not_called()
 
     def test_english_ui_is_required(self) -> None:
         english = self.completed(0, '(\n    "en-US",\n    "et-EE"\n)')
