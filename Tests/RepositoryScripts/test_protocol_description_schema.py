@@ -917,7 +917,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
     @staticmethod
     def subcommands(**members: Any) -> dict[str, Any]:
         return {
-            "reportId": 1,
+            "reportID": 1,
             "counterModulus": 16,
             "requests": [{"subcommand": 3, "data": "30"}],
             "playerIndicator": {
@@ -979,10 +979,10 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         both = {**plain, "spiRead": self.spi_read()["spiRead"]}
         for subcommands in (
             {"counterModulus": 16, "requests": [plain]},
-            {"reportId": 1, "requests": [plain]},
-            {"reportId": 1, "counterModulus": 16},
-            {"reportId": 1, "counterModulus": 16, "requests": [plain]},
-            self.subcommands(reportId=256),
+            {"reportID": 1, "requests": [plain]},
+            {"reportID": 1, "counterModulus": 16},
+            {"reportID": 1, "counterModulus": 16, "requests": [plain]},
+            self.subcommands(reportID=256),
             self.subcommands(counterModulus=1),
             self.subcommands(counterModulus=257),
             self.subcommands(counterModulus=16.5),

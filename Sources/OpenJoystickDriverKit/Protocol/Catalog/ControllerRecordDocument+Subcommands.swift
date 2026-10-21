@@ -2,11 +2,11 @@ extension SubcommandPlan: Decodable {
   init(from decoder: any Decoder) throws {
     let container = try decoder.container(keyedBy: DocumentKey.self)
     try container.rejectUnknown(allowed: [
-      "reportId", "counterModulus", "requests", "playerIndicator",
+      "reportID", "counterModulus", "requests", "playerIndicator",
     ])
     do {
       try self.init(
-        reportID: container.decode(UInt8.self, for: "reportId"),
+        reportID: container.decode(UInt8.self, for: "reportID"),
         counterModulus: container.decode(Int.self, for: "counterModulus"),
         requests: container.decode([SubcommandRequest].self, for: "requests"),
         playerIndicator: container.decode(PlayerIndicatorSubcommand.self, for: "playerIndicator")

@@ -252,7 +252,7 @@ struct RecordValueSpellingTests {
     DescriptionCase(
       name: "SPI read purpose",
       family: .nintendoSwitch1,
-      body: #""defaults": {"session": {"subcommands": {"reportId": 1, "counterModulus": 16, "#
+      body: #""defaults": {"session": {"subcommands": {"reportID": 1, "counterModulus": 16, "#
         + #""requests": [{"subcommand": 16, "spiRead": {"address": 0, "length": 1, "#
         + #""purpose": "VALUE"}}], "playerIndicator": {"subcommand": 48, "patterns": "#
         + #"{"off": 0, "player1": 1, "player2": 3, "player3": 7, "player4": 15}}}}}"#,

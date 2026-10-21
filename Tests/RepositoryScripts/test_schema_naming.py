@@ -1,7 +1,8 @@
 """Naming rule for every schema in Resources/Schemas.
 
 Enum values, string constants and string defaults of an enum are UpperCamelCase. Property names and
-`required` entries are lowerCamelCase. Three lists describe what the rule does not cover:
+`required` entries are lowerCamelCase with acronyms upper case (`reportID`). Three lists describe
+what the rule does not cover:
 
 - EXCEPTIONS: names fixed by an external format.
 - FIELD_NAME_ENUMS: values that name a field, so they follow the field rule and must be a field.
@@ -134,9 +135,17 @@ ACRONYM_AS_WORD = re.compile(
 )
 
 
+# A field name starts with a lower case word, so only an acronym after the first word is checked.
+ACRONYM_IN_NAME = re.compile(
+    "(?<=[a-z0-9])(?:"
+    + "|".join(f"{acronym[0]}{acronym[1:].lower()}" for acronym in ACRONYMS)
+    + ")(?![a-z])"
+)
+
+
 def breaks_rule(hit: Hit) -> bool:
     if hit.kind == "name":
-        return not FIELD.match(hit.value)
+        return not FIELD.match(hit.value) or bool(ACRONYM_IN_NAME.search(hit.value))
     return not VALUE.match(hit.value) or bool(ACRONYM_AS_WORD.search(hit.value))
 
 
