@@ -354,11 +354,9 @@
 "common.stop" = "Dừng";
 "error.supportReportSave" = "Không thể lưu báo cáo hỗ trợ. Hãy chọn tệp khác rồi thử lại.";
 "error.logsSave" = "Không thể lưu nhật ký. Hãy chọn tệp khác rồi thử lại.";
-"error.noControllerInput" = "Chưa có đầu vào bộ điều khiển nào.";
 "error.noDetectedControl" = "Không phát hiện thành phần mới nào của bộ điều khiển.";
 "error.actionInProgress" = "Một thao tác cấu hình khác đang được thực hiện.";
 "error.profileLibraryCorrupt" = "Danh sách cấu hình đang hoạt động bị hỏng và không thể tải.";
-"error.selectedAssignmentMissing" = "Phép gán đã chọn không còn khả dụng.";
 "capture.listeningButton" = "Đang lắng nghe…";
 "error.reviewAssignmentsBeforeSave" = "Hãy xem lại các phép gán trước khi lưu cấu hình này.";
 "error.selectedProfileItemMissing" = "Mục cấu hình đã chọn không còn khả dụng.";

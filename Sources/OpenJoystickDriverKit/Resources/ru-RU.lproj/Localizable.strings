@@ -354,11 +354,9 @@
 "common.stop" = "Остановить";
 "error.supportReportSave" = "Не удалось сохранить отчёт для поддержки. Выберите другой файл и повторите попытку.";
 "error.logsSave" = "Не удалось сохранить журналы. Выберите другой файл и повторите попытку.";
-"error.noControllerInput" = "Ввод с контроллера пока недоступен.";
 "error.noDetectedControl" = "Новый элемент управления контроллера не обнаружен.";
 "error.actionInProgress" = "Другое действие профиля уже выполняется.";
 "error.profileLibraryCorrupt" = "Список активных профилей повреждён, и его не удалось загрузить.";
-"error.selectedAssignmentMissing" = "Выбранное назначение больше недоступно.";
 "capture.listeningButton" = "Ожидание…";
 "error.reviewAssignmentsBeforeSave" = "Проверьте назначения перед сохранением этого профиля.";
 "error.selectedProfileItemMissing" = "Выбранный элемент профиля больше недоступен.";

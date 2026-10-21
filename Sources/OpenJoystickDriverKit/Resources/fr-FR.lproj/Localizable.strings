@@ -354,11 +354,9 @@
 "common.stop" = "Arrêter";
 "error.supportReportSave" = "Impossible d’enregistrer le rapport d’assistance. Choisissez un autre fichier, puis réessayez.";
 "error.logsSave" = "Impossible d’enregistrer les journaux. Choisissez un autre fichier, puis réessayez.";
-"error.noControllerInput" = "Aucune entrée de manette n’est encore disponible.";
 "error.noDetectedControl" = "Aucune nouvelle commande de manette n’a été détectée.";
 "error.actionInProgress" = "Une autre action de profil est déjà en cours.";
 "error.profileLibraryCorrupt" = "La liste des profils actifs est endommagée et n’a pas pu être chargée.";
-"error.selectedAssignmentMissing" = "L’attribution sélectionnée n’est plus disponible.";
 "capture.listeningButton" = "Écoute…";
 "error.reviewAssignmentsBeforeSave" = "Vérifiez les attributions avant d’enregistrer ce profil.";
 "error.selectedProfileItemMissing" = "L’élément de profil sélectionné n’est plus disponible.";

@@ -354,11 +354,9 @@
 "common.stop" = "रोकें";
 "error.supportReportSave" = "सपोर्ट रिपोर्ट सहेजी नहीं जा सकी। कोई अन्य फ़ाइल चुनें और फिर कोशिश करें।";
 "error.logsSave" = "लॉग सहेजे नहीं जा सके। कोई अन्य फ़ाइल चुनें और फिर कोशिश करें।";
-"error.noControllerInput" = "अभी कोई कंट्रोलर इनपुट उपलब्ध नहीं है।";
 "error.noDetectedControl" = "कोई नया कंट्रोलर नियंत्रण नहीं पहचाना गया।";
 "error.actionInProgress" = "कोई अन्य प्रोफ़ाइल कार्रवाई पहले से चल रही है।";
 "error.profileLibraryCorrupt" = "सक्रिय प्रोफ़ाइल सूची क्षतिग्रस्त है और लोड नहीं की जा सकी।";
-"error.selectedAssignmentMissing" = "चयनित असाइनमेंट अब उपलब्ध नहीं है।";
 "capture.listeningButton" = "सुना जा रहा है…";
 "error.reviewAssignmentsBeforeSave" = "इस प्रोफ़ाइल को सहेजने से पहले असाइनमेंट की समीक्षा करें।";
 "error.selectedProfileItemMissing" = "चयनित प्रोफ़ाइल आइटम अब उपलब्ध नहीं है।";

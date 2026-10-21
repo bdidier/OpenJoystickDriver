@@ -354,11 +354,9 @@
 "common.stop" = "Stopp";
 "error.supportReportSave" = "Der Supportbericht konnte nicht gesichert werden. Wähle eine andere Datei und versuche es erneut.";
 "error.logsSave" = "Die Protokolle konnten nicht gesichert werden. Wähle eine andere Datei und versuche es erneut.";
-"error.noControllerInput" = "Noch keine Controller-Eingabe verfügbar.";
 "error.noDetectedControl" = "Keine neue Controller-Steuerung erkannt.";
 "error.actionInProgress" = "Eine andere Profilaktion läuft bereits.";
 "error.profileLibraryCorrupt" = "Die Liste aktiver Profile ist beschädigt und konnte nicht geladen werden.";
-"error.selectedAssignmentMissing" = "Die ausgewählte Zuweisung ist nicht mehr verfügbar.";
 "capture.listeningButton" = "Lauschen…";
 "error.reviewAssignmentsBeforeSave" = "Prüfe die Zuweisungen, bevor du dieses Profil sicherst.";
 "error.selectedProfileItemMissing" = "Das ausgewählte Profilelement ist nicht mehr verfügbar.";

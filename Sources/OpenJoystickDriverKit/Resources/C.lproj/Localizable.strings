@@ -354,11 +354,9 @@
 "common.stop" = "Stop";
 "error.supportReportSave" = "The support report couldn't be saved. Choose another file and try again.";
 "error.logsSave" = "The logs couldn't be saved. Choose another file and try again.";
-"error.noControllerInput" = "No controller input is available yet.";
 "error.noDetectedControl" = "No new controller control was detected.";
 "error.actionInProgress" = "Another profile action is already in progress.";
 "error.profileLibraryCorrupt" = "The active profile list is damaged and could not be loaded.";
-"error.selectedAssignmentMissing" = "The selected assignment is no longer available.";
 "capture.listeningButton" = "Listening...";
 "error.reviewAssignmentsBeforeSave" = "Review the assignments before saving this profile.";
 "error.selectedProfileItemMissing" = "The selected profile item is no longer available.";

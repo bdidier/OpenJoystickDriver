@@ -354,11 +354,9 @@
 "common.stop" = "停止";
 "error.supportReportSave" = "无法存储支持报告。请选择其他文件后重试。";
 "error.logsSave" = "无法存储日志。请选择其他文件后重试。";
-"error.noControllerInput" = "尚无可用的控制器输入。";
 "error.noDetectedControl" = "未检测到新的控制器控件。";
 "error.actionInProgress" = "另一项配置文件操作已在进行中。";
 "error.profileLibraryCorrupt" = "活动配置文件列表已损坏，无法载入。";
-"error.selectedAssignmentMissing" = "所选映射已不可用。";
 "capture.listeningButton" = "正在侦听…";
 "error.reviewAssignmentsBeforeSave" = "存储此配置文件前请先检查映射。";
 "error.selectedProfileItemMissing" = "所选配置文件项目已不可用。";

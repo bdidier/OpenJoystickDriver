@@ -354,11 +354,9 @@
 "common.stop" = "إيقاف";
 "error.supportReportSave" = "تعذر حفظ تقرير الدعم. اختر ملفاً آخر وحاول مرة أخرى.";
 "error.logsSave" = "تعذر حفظ السجلات. اختر ملفاً آخر وحاول مرة أخرى.";
-"error.noControllerInput" = "لا يتوفر إدخال من وحدة التحكم بعد.";
 "error.noDetectedControl" = "لم يُكشف عن عنصر جديد في وحدة التحكم.";
 "error.actionInProgress" = "إجراء آخر لملف التعريف قيد التنفيذ بالفعل.";
 "error.profileLibraryCorrupt" = "قائمة ملفات التعريف النشطة تالفة وتعذر تحميلها.";
-"error.selectedAssignmentMissing" = "التعيين المحدد لم يعد متوفراً.";
 "capture.listeningButton" = "جارٍ الاستماع…";
 "error.reviewAssignmentsBeforeSave" = "راجع التعيينات قبل حفظ ملف التعريف هذا.";
 "error.selectedProfileItemMissing" = "البند المحدد لم يعد متاحا.";

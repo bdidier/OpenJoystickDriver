@@ -73,6 +73,27 @@ class ReaderTests(unittest.TestCase):
         self.assertIsNone(guard.interpolation_pattern("a\\(index)"))
         self.assertIsNone(guard.interpolation_pattern("\\(prefix).title"))
 
+    def test_error_reader_covers_only_error_code_keys(self) -> None:
+        pattern = guard.interpolation_pattern("error.\\(rawValue)")
+        assert pattern is not None
+        self.assertTrue(pattern.fullmatch("error.E1001"))
+        self.assertFalse(pattern.fullmatch("error.noControllerInput"))
+
+    def test_interpolated_literal_reads_keys_only_in_key_position(self) -> None:
+        source = (
+            'let a = Localization().string("error.\\(rawValue)")\n'
+            'var titleKey: String { "area.\\(rawValue).title" }\n'
+            'let item = Entry(id: "controllers.\\(controller.id)")\n'
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "Source.swift"
+            path.write_text(source, encoding="utf-8")
+            with mock.patch.object(guard, "reader_files", return_value=[path]):
+                _, patterns = guard.key_readers()
+        self.assertEqual(
+            set(patterns), {"error.\\(rawValue)", "area.\\(rawValue).title"}
+        )
+
     def test_kept_entry_must_be_unread_and_in_the_catalog(self) -> None:
         guard.KEPT_WITHOUT_READER["gone.key"] = "test"
         guard.KEPT_WITHOUT_READER["read.key"] = "test"

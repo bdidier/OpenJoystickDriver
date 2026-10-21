@@ -354,11 +354,9 @@
 "common.stop" = "Stop";
 "error.supportReportSave" = "Het supportrapport kon niet worden bewaard. Kies een ander bestand en probeer opnieuw.";
 "error.logsSave" = "De logboeken konden niet worden bewaard. Kies een ander bestand en probeer opnieuw.";
-"error.noControllerInput" = "Er is nog geen controllerinvoer beschikbaar.";
 "error.noDetectedControl" = "Er is geen nieuwe controllerbesturing gedetecteerd.";
 "error.actionInProgress" = "Er is al een andere profielactie bezig.";
 "error.profileLibraryCorrupt" = "De lijst met actieve profielen is beschadigd en kon niet worden geladen.";
-"error.selectedAssignmentMissing" = "De geselecteerde toewijzing is niet meer beschikbaar.";
 "capture.listeningButton" = "Luisteren…";
 "error.reviewAssignmentsBeforeSave" = "Controleer de toewijzingen voordat je dit profiel bewaart.";
 "error.selectedProfileItemMissing" = "Het geselecteerde profielonderdeel is niet meer beschikbaar.";

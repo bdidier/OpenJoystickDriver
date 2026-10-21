@@ -354,11 +354,9 @@
 "common.stop" = "Detener";
 "error.supportReportSave" = "No se ha podido guardar el informe de asistencia. Elige otro archivo y vuelve a intentarlo.";
 "error.logsSave" = "No se han podido guardar los registros. Elige otro archivo y vuelve a intentarlo.";
-"error.noControllerInput" = "Aún no hay entrada de control disponible.";
 "error.noDetectedControl" = "No se ha detectado ningún elemento nuevo del control.";
 "error.actionInProgress" = "Ya hay otra acción de perfil en curso.";
 "error.profileLibraryCorrupt" = "La lista de perfiles activos está dañada y no se ha podido cargar.";
-"error.selectedAssignmentMissing" = "La asignación seleccionada ya no está disponible.";
 "capture.listeningButton" = "Escuchando…";
 "error.reviewAssignmentsBeforeSave" = "Revisa las asignaciones antes de guardar este perfil.";
 "error.selectedProfileItemMissing" = "El elemento de perfil seleccionado ya no está disponible.";

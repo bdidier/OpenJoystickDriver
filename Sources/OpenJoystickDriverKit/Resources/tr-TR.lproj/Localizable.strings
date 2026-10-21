@@ -354,11 +354,9 @@
 "common.stop" = "Durdur";
 "error.supportReportSave" = "Destek raporu kaydedilemedi. Başka bir dosya seç ve yeniden dene.";
 "error.logsSave" = "Günlükler kaydedilemedi. Başka bir dosya seç ve yeniden dene.";
-"error.noControllerInput" = "Henüz kullanılabilir kontrolcü girişi yok.";
 "error.noDetectedControl" = "Yeni bir kontrolcü denetimi algılanmadı.";
 "error.actionInProgress" = "Başka bir profil eylemi zaten sürüyor.";
 "error.profileLibraryCorrupt" = "Etkin profil listesi hasarlı ve yüklenemedi.";
-"error.selectedAssignmentMissing" = "Seçilen atama artık kullanılamıyor.";
 "capture.listeningButton" = "Dinleniyor…";
 "error.reviewAssignmentsBeforeSave" = "Bu profili kaydetmeden önce atamaları gözden geçir.";
 "error.selectedProfileItemMissing" = "Seçilen profil öğesi artık kullanılamıyor.";

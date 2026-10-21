@@ -354,11 +354,9 @@
 "common.stop" = "Interrompi";
 "error.supportReportSave" = "Impossibile salvare il report di assistenza. Scegli un altro file e riprova.";
 "error.logsSave" = "Impossibile salvare i log. Scegli un altro file e riprova.";
-"error.noControllerInput" = "Nessun input del controller è ancora disponibile.";
 "error.noDetectedControl" = "Nessun nuovo controllo del controller è stato rilevato.";
 "error.actionInProgress" = "Un’altra azione del profilo è già in corso.";
 "error.profileLibraryCorrupt" = "L’elenco dei profili attivi è danneggiato e non è stato possibile caricarlo.";
-"error.selectedAssignmentMissing" = "L’assegnazione selezionata non è più disponibile.";
 "capture.listeningButton" = "In ascolto…";
 "error.reviewAssignmentsBeforeSave" = "Controlla le assegnazioni prima di salvare questo profilo.";
 "error.selectedProfileItemMissing" = "L’elemento di profilo selezionato non è più disponibile.";

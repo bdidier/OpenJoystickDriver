@@ -45,6 +45,14 @@ CALL = re.compile(
     r"\b(?:OJDLocalized\.(?:string|formatted|plural)|CLILocalized\.(?:text|format)"
     r"|LocalizedStringResource|(?:Localization\(\)|localization)\.(?:string|formatted|plural))\("
 )
+# An interpolated literal is a key lookup only where Swift passes it as a key: the first argument of
+# a localization call or the value of a property named `...Key`. Other interpolated literals build
+# identifiers, paths and messages.
+KEY_POSITION = re.compile(
+    CALL.pattern + r"\s*$|Key\s*:\s*String\s*\{\s*$|\.key\(\s*$",
+)
+# Interpolations whose values are a closed set, so the pattern names that set instead of any text.
+EXACT_INTERPOLATIONS = {"error.\\(rawValue)": r"error\.E\d{4}"}
 STRINGS_KEY = re.compile(r'^"((?:[^"\\]|\\.)*)"\s*=', re.MULTILINE)
 LITERAL = re.compile(r'"((?:[^"\\]|\\.)*)"')
 
@@ -192,7 +200,12 @@ def first_argument(source: str, open_index: int) -> str:
 
 def string_literals(source: str) -> list[str]:
     """Return the text of each string literal in `source`, interpolations included."""
-    literals: list[str] = []
+    return [text for _, text in string_literal_spans(source)]
+
+
+def string_literal_spans(source: str) -> list[tuple[int, str]]:
+    """Return (offset, text) for each string literal in `source`, interpolations included."""
+    literals: list[tuple[int, str]] = []
     index = 0
     while index < len(source):
         if source.startswith("//", index):
@@ -209,7 +222,7 @@ def string_literals(source: str) -> list[str]:
             index = len(source) if end < 0 else end + 2
         elif source[index] == '"':
             end = skip_string(source, index)
-            literals.append(source[index + 1 : end - 1])
+            literals.append((index, source[index + 1 : end - 1]))
             index = end
         else:
             index += 1
@@ -220,6 +233,8 @@ def interpolation_pattern(literal: str) -> re.Pattern[str] | None:
     """Return the pattern a key-building literal reads, or None without a literal prefix."""
     if "\\(" not in literal or "." not in literal.split("\\(")[0]:
         return None
+    if literal in EXACT_INTERPOLATIONS:
+        return re.compile(EXACT_INTERPOLATIONS[literal])
     pattern = ""
     index = 0
     while index < len(literal):
@@ -308,10 +323,13 @@ def key_readers(root: Path = ROOT) -> tuple[set[str], dict[str, re.Pattern[str]]
     literals: set[str] = set()
     patterns: dict[str, re.Pattern[str]] = {}
     for path in reader_files(root):
-        for literal in string_literals(path.read_text(encoding="utf-8")):
+        source = path.read_text(encoding="utf-8")
+        for offset, literal in string_literal_spans(source):
             pattern = interpolation_pattern(literal)
             if pattern:
-                patterns[literal] = pattern
+                line = source[source.rfind("\n", 0, offset) + 1 : offset]
+                if KEY_POSITION.search(line):
+                    patterns[literal] = pattern
             elif "\\(" not in literal:
                 literals.add(literal)
     for literal in literals:
