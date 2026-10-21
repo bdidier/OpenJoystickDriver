@@ -364,21 +364,58 @@
 "cli.transport_extension.completed" = "Demande d’extension système terminée avec le résultat %@.";
 "cli.transport_extension.failed" = "La demande d’extension système a échoué : %@ code=%d %@";
 "cli.transport_extension.replacing" = "Remplacement de %@ v%@ par v%@.";
-"controller.dualSense" = "DualSense";
-"controller.dualShock3" = "DualShock 3";
-"controller.dualShock4" = "DualShock 4";
-"controller.flydigi" = "Flydigi";
-"controller.genericHID" = "Generic HID";
-"controller.originalXbox" = "Original Xbox";
-"controller.standardHID" = "Standard HID";
-"controller.steamController" = "Steam Controller";
-"controller.switchPro" = "Switch Pro";
-"controller.switchProController" = "Switch Pro Controller";
-"controller.xbox360" = "Xbox 360";
-"controller.xbox360Wireless" = "Xbox 360 wireless";
-"controller.xbox360WirelessDeveloper" = "Xbox 360 Wireless";
-"controller.xboxOne" = "Xbox One";
-"controller.xboxOriginal" = "Xbox (d’origine)";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker: a generic HID controller, which OJD reads by the layout its HID report descriptor declares. Keep HID as written. */
+"term.protocolFamily.hidDescriptor" = "HID générique";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker: a generic HID controller whose input report layout comes from its controller record, the file OJD keeps for each controller model. Keep HID as written. */
+"term.protocolFamily.hidReportLayout" = "HID générique (structure de la fiche)";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+"term.protocolFamily.nintendoSwitch1" = "Nintendo Switch";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+"term.protocolFamily.nintendoSwitch2" = "Nintendo Switch 2";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker: a wired Switch controller that sends input reports and takes no commands. Keep Nintendo Switch as written. */
+"term.protocolFamily.nintendoSwitchInputOnly" = "Nintendo Switch (entrée uniquement)";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+"term.protocolFamily.sonyDualSense" = "Sony DualSense";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+"term.protocolFamily.sonyDualShock4" = "Sony DualShock 4";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+"term.protocolFamily.sonySixaxis" = "Sony Sixaxis";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+"term.protocolFamily.valveSteamController" = "Valve Steam Controller";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+"term.protocolFamily.valveSteamDeck" = "Valve Steam Deck";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+"term.protocolFamily.valveSteamTriton" = "Valve Steam Controller (2026)";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+"term.protocolFamily.vendorFlydigi" = "Flydigi";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+"term.protocolFamily.vendorGameSir" = "GameSir";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+"term.protocolFamily.vendorNvidiaShield" = "NVIDIA SHIELD";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker: controllers from other makers that use the PS3 controller protocol. Keep PS3 as written. */
+"term.protocolFamily.vendorPs3ThirdParty" = "Manette PS3 de fabricants tiers";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+"term.protocolFamily.xboxGip" = "Xbox One (GIP)";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+"term.protocolFamily.xboxXid" = "Xbox (XID)";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+"term.protocolFamily.xboxXusb" = "Xbox 360 (XUSB)";
+/* Name of a controller's protocol in the Controllers list and detail and in Input Test, also spoken by VoiceOver, for a protocol family that stores its variant in its records, because the connection does not tell every variant apart. %1$@ is the protocol family name, such as Xbox 360 (XUSB); %2$@ is the variant name, such as Receiver. */
+"term.protocolBinding.familyWithVariant" = "%1$@, %2$@";
+/* Name of a protocol variant, shown after the protocol family name in the Controllers list and detail and in Input Test: the controller is connected over Bluetooth Low Energy. A technical name: keep Bluetooth LE as the system writes it in this language. */
+"term.protocolVariant.bluetoothLe" = "Bluetooth LE";
+/* Name of a protocol variant, shown after the protocol family name in the Controllers list and detail and in Input Test: the controller is connected through the small wireless USB adapter sold with it. A noun label. */
+"term.protocolVariant.dongle" = "Adaptateur sans fil";
+/* Name of a protocol variant, shown after the protocol family name in the Controllers list and detail and in Input Test: the GameSir HID mode with extra reports for lighting, rumble and extra buttons, as opposed to its plain USB mode. Keep HID as written. */
+"term.protocolVariant.enhancedHid" = "HID amélioré";
+/* Name of a protocol variant, shown after the protocol family name in the Controllers list and detail and in Input Test: the controller is connected through a separate wireless receiver for Xbox 360 controllers. A noun label. */
+"term.protocolVariant.receiver" = "Récepteur";
+/* Name of a protocol variant, shown after the protocol family name in the Controllers list and detail and in Input Test: the GameSir mode that OJD reads over plain USB, as opposed to its enhanced HID mode. A technical name: keep USB as written. */
+"term.protocolVariant.usb" = "USB";
+/* Name of a protocol variant, shown after the protocol family name in the Controllers list and detail and in Input Test: the controller is connected by its cable. An adjective label, not a sentence. */
+"term.protocolVariant.wired" = "Filaire";
+/* Label of a fact under Advanced in the Controllers detail: the parser that reads the controller, shown as its ojd spelling such as xbox-xusb:receiver. */
+"term.parser" = "Analyseur";
 "developer.buttons" = "Boutons";
 "developer.capturing" = "Capture en cours";
 "developer.connection" = "Connexion";

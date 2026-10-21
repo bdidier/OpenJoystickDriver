@@ -156,7 +156,8 @@ struct ControllerShowReport: Encodable, Equatable {
     let vendorID: Int
     let productID: Int
     let connection: String
-    let `protocol`: String
+    /// Encoded as the binding's document value, such as `XboxXUSB:Receiver`.
+    let `protocol`: ProtocolBindingID
     let interfaceNumber: Int?
     let hasSerialNumber: Bool
     let session: String
@@ -199,7 +200,7 @@ struct ControllerShowReport: Encodable, Equatable {
       vendorID: Int(device.vendorID),
       productID: Int(device.productID),
       connection: device.connection,
-      protocol: device.protocolBinding.rawValue,
+      protocol: device.protocolBinding,
       interfaceNumber: device.interfaceNumber.map(Int.init),
       hasSerialNumber: device.serialNumber.map { !$0.isEmpty } ?? false,
       session: device.sessionState.rawValue,

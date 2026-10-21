@@ -11,7 +11,7 @@ struct LibraryFailure: Error, Equatable {
 /// patches.
 struct LibraryRecordItem: Equatable, Identifiable {
   let model: ControllerModelID
-  let family: String
+  let family: PhysicalProtocolID
   let layer: ControllerRecordLayer
   let file: URL?
   /// The file name of the user file or mod file that patches a built-in record.
@@ -23,10 +23,11 @@ struct LibraryRecordItem: Equatable, Identifiable {
   /// goes with its package.
   var isRemovable: Bool { layer == .user }
 
-  /// Whether the record's `VVVV:PPPP`, or its family, contains `query`, ignoring case. An empty
-  /// query matches every record.
+  /// Whether the record's `VVVV:PPPP`, its family's display name or its family's `ojd` token
+  /// contains `query`, ignoring case, so a search finds what the Library shows and what `ojd`
+  /// prints. An empty query matches every record.
   func matches(_ query: String) -> Bool {
-    Self.contains(query, in: [identity, family])
+    Self.contains(query, in: [identity, family.displayName, family.commandLineName])
   }
 
   static func contains(_ query: String, in fields: [String]) -> Bool {
@@ -85,8 +86,6 @@ struct LibraryTestRun: Equatable {
 /// What validation found in a record file.
 struct LibraryRecordCheck: Equatable {
   let identity: String
-  let family: String?
-  let operation: ControllerRecordOperation
   let fileName: String
   /// Whether the record directory already holds a file of this name.
   let replaces: Bool
@@ -182,7 +181,7 @@ final class DirectoryLibraryStore: LibraryStore {
   private static func item(_ record: ControllerRecord) -> LibraryRecordItem {
     LibraryRecordItem(
       model: record.model,
-      family: CommandLineName.kebab(record.family),
+      family: record.protocolID,
       layer: record.layer,
       file: record.file
     )
@@ -243,8 +242,6 @@ final class DirectoryLibraryStore: LibraryStore {
     let destination = recordsDirectory.appendingPathComponent(validated.fileName)
     return LibraryRecordCheck(
       identity: Self.identity(of: validated),
-      family: validated.record.map { CommandLineName.kebab($0.family) },
-      operation: validated.operation,
       fileName: validated.fileName,
       replaces: FileManager.default.fileExists(atPath: destination.path)
     )

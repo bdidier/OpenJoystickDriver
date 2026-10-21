@@ -146,9 +146,9 @@ class RekeyMapTests(unittest.TestCase):
         samples = {
             "common.ok": "action.ok",
             "common.status": "term.status",
+            "term.protocolFamily.xboxGip": "term.protocolFamily.xboxGip",
             "status.ready": "status.ready",
             "keyboard.escape": "term.key.escape",
-            "controller.xboxOne": "term.controllerModel.xboxOne",
             "settings.startAtLogin": "ui.settings.general.startAtLogin",
             "settingsPane.advanced.title": "ui.settings.advanced.title",
             "cli.controller.list.abstract": "cli.controller.list.abstract",

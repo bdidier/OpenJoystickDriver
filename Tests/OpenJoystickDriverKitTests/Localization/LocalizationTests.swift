@@ -239,4 +239,108 @@ struct LocalizationTests {
     )
     #expect(area == "Area: Endpoint")
   }
+
+  @Test
+  func everyProtocolFamilyHasOneDisplayNameKey() {
+    let sourceKeys = LocalizationCatalogAudit.keys(for: Localization.sourceLocalization)
+    let familyKeys = Set(PhysicalProtocolID.allCases.map(\.displayNameKey))
+    #expect(familyKeys.count == PhysicalProtocolID.allCases.count)
+    #expect(familyKeys.isSubset(of: sourceKeys), "\(familyKeys.subtracting(sourceKeys).sorted())")
+    let catalogFamilyKeys = sourceKeys.filter { $0.hasPrefix("term.protocolFamily.") }
+    #expect(
+      catalogFamilyKeys == familyKeys,
+      "\(catalogFamilyKeys.subtracting(familyKeys).sorted())"
+    )
+    #expect(
+      PhysicalProtocolID.sonyDualShock4.displayNameKey == "term.protocolFamily.sonyDualShock4"
+    )
+    #expect(
+      PhysicalProtocolID.vendorPS3ThirdParty.displayNameKey
+        == "term.protocolFamily.vendorPs3ThirdParty"
+    )
+
+    let english = Localization(preferredLanguages: ["en-US"])
+    let names = PhysicalProtocolID.allCases.map { english.string($0.displayNameKey) }
+    #expect(Set(names).count == names.count)
+    #expect(
+      english.string(PhysicalProtocolID.sonyDualShock4.displayNameKey) == "Sony DualShock 4"
+    )
+  }
+
+  @Test
+  func everyVariantThatABindingNamesHasOneDisplayNameKey() {
+    let sourceKeys = LocalizationCatalogAudit.keys(for: Localization.sourceLocalization)
+    let named = PhysicalProtocolID.allCases.filter(\.namesVariant)
+    #expect(
+      Set(named) == [.xboxXUSB, .valveSteamController, .valveSteamTriton, .vendorGameSir]
+    )
+    let variantKeys = Set(named.flatMap(\.variants).map(\.displayNameKey))
+    #expect(
+      variantKeys == [
+        "term.protocolVariant.wired", "term.protocolVariant.receiver",
+        "term.protocolVariant.dongle", "term.protocolVariant.usb",
+        "term.protocolVariant.enhancedHid", "term.protocolVariant.bluetoothLe",
+      ]
+    )
+    #expect(variantKeys.isSubset(of: sourceKeys), "\(variantKeys.subtracting(sourceKeys).sorted())")
+    let catalogVariantKeys = sourceKeys.filter { $0.hasPrefix("term.protocolVariant.") }
+    #expect(
+      catalogVariantKeys == variantKeys,
+      "\(catalogVariantKeys.subtracting(variantKeys).sorted())"
+    )
+    for locale in Localization.availableLocalizations() {
+      let values = LocalizationCatalogAudit.values(for: locale)
+      let names = variantKeys.sorted().map { values[$0] }
+      #expect(Set(names).count == names.count, "\(locale) \(names)")
+    }
+  }
+
+  @Test
+  func aReceiverBindingReadsAsTheFamilyThenTheVariantInEnglish() {
+    let english = Localization(preferredLanguages: ["en-US"])
+    #expect(
+      ProtocolBindingID(.xboxXUSB, variant: .receiver).displayName(in: english)
+        == "Xbox 360 (XUSB), Receiver"
+    )
+  }
+
+  @Test
+  func aBindingNamesItsVariantOnlyWhenTheFamilyStoresIt() {
+    let english = Localization(preferredLanguages: ["en-US"])
+    #expect(english.string("term.protocolBinding.familyWithVariant", "A", "B") == "A, B")
+    let receiver = ProtocolBindingID(.xboxXUSB, variant: .receiver)
+    #expect(
+      receiver.displayName
+        == Localization().string(
+          "term.protocolBinding.familyWithVariant",
+          PhysicalProtocolID.xboxXUSB.displayName,
+          Localization().string("term.protocolVariant.receiver")
+        )
+    )
+    #expect(receiver.displayName != ProtocolBindingID(.xboxXUSB, variant: .wired).displayName)
+    #expect(
+      ProtocolBindingID(.vendorGameSir, variant: .usb).displayName
+        != ProtocolBindingID(.vendorGameSir, variant: .enhancedHID).displayName
+    )
+    for binding in [
+      ProtocolBindingID(.xboxGIP, variant: .usb), ProtocolBindingID(.xboxXID, variant: .gamepad),
+      ProtocolBindingID(.sonyDualSense, variant: .bluetoothClassic),
+      ProtocolBindingID(.hidDescriptor),
+    ] {
+      #expect(binding.displayName == binding.protocolID.displayName, "\(binding)")
+    }
+  }
+
+  @Test
+  func brandAndTechnicalNamesEqualTheSourceInEveryLocale() {
+    let source = LocalizationCatalogAudit.values(for: Localization.sourceLocalization)
+    let listed = LocalizationCatalogAudit.sameInEveryLocaleKeys
+    #expect(listed.isSubset(of: Set(source.keys)), "\(listed.subtracting(source.keys).sorted())")
+    for locale in Localization.availableLocalizations() {
+      let values = LocalizationCatalogAudit.values(for: locale)
+      for key in listed.sorted() {
+        #expect(values[key] == source[key], "\(locale) \(key)")
+      }
+    }
+  }
 }

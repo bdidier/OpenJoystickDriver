@@ -33,7 +33,7 @@ struct ProfileCreationFieldsTests {
   private static func context(
     devices: [ApplicationServiceDeviceDescription],
     profiles: [RemappingProfile] = [],
-    catalog: [ControllerModelID: String] = [:]
+    catalog: [ControllerModelID: PhysicalProtocolID] = [:]
   ) -> ProfileCreationContext {
     ProfileCreationContext(
       choices: ProfileControllerChoice.choices(
@@ -130,7 +130,7 @@ struct ProfileCreationFieldsTests {
   func withNothingConnectedAndNothingPickedNoModelIsPreselected() {
     let context = Self.context(
       devices: [],
-      catalog: [ControllerModelID(vendorID: 0x054C, productID: 0x0CE6): "DualSense"]
+      catalog: [ControllerModelID(vendorID: 0x054C, productID: 0x0CE6): .sonyDualSense]
     )
     let fields = ProfileCreationFields()
     #expect(!context.choices.isEmpty)
@@ -160,33 +160,61 @@ struct ProfileCreationFieldsTests {
       devices: [Self.padA],
       profiles: [Self.profile(named: "Old", vendorID: 0x0001), Self.profile(named: "Other")],
       catalog: [
-        ControllerModelID(vendorID: 9, productID: 7): "Xbox One",
-        ControllerModelID(vendorID: 0x0A, productID: 1): "Xbox One",
-        ControllerModelID(vendorID: 0x045E, productID: 0x02EA): "Xbox One",
-        ControllerModelID(vendorID: 0x054C, productID: 0x0CE6): "DualSense",
-        ControllerModelID(vendorID: 0x0001, productID: 0x0002): "Xbox One",
+        ControllerModelID(vendorID: 9, productID: 7): .xboxGIP,
+        ControllerModelID(vendorID: 0x0A, productID: 1): .xboxGIP,
+        ControllerModelID(vendorID: 0x045E, productID: 0x02EA): .xboxGIP,
+        ControllerModelID(vendorID: 0x054C, productID: 0x0CE6): .sonyDualSense,
+        ControllerModelID(vendorID: 0x0001, productID: 0x0002): .xboxGIP,
       ]
     )
+    let gip = PhysicalProtocolID.xboxGIP.displayName
     #expect(
       choices.map(\.label) == [
-        "Pad A", "0001:0007", "Xbox One · 0009:0007", "054C:0CE6", "000A:0001", "045E:02EA",
+        "Pad A", "0001:0007", "\(gip) · 0009:0007", "054C:0CE6", "000A:0001", "045E:02EA",
+      ]
+    )
+    let sections = ProfileControllerGroup.sections(of: choices)
+    #expect(
+      sections.map(\.title) == [
+        OJDLocalized.string("settings.controllerConnectedShort"),
+        OJDLocalized.string("profiles.controllersOfProfiles"),
+        PhysicalProtocolID.sonyDualSense.displayName, gip,
       ]
     )
     #expect(
-      ProfileControllerGroup.sections(of: choices).map(\.title) == [
-        OJDLocalized.string("settings.controllerConnectedShort"),
-        OJDLocalized.string("profiles.controllersOfProfiles"),
-        "DualSense", "Xbox One",
+      sections.map(\.id) == [.connected, .profiles, .family(.sonyDualSense), .family(.xboxGIP)]
+    )
+    #expect(sections.map(\.choices.count) == [1, 2, 1, 2])
+  }
+
+  @Test
+  func twoFamiliesThatShareATitleStayInSectionsOfTheirOwn() {
+    let choices = ProfileControllerChoice.choices(
+      devices: [],
+      profiles: [],
+      catalog: [
+        ControllerModelID(vendorID: 1, productID: 1): .valveSteamController,
+        ControllerModelID(vendorID: 1, productID: 2): .valveSteamDeck,
+        ControllerModelID(vendorID: 1, productID: 3): .valveSteamController,
       ]
     )
-    #expect(ProfileControllerGroup.sections(of: choices).map(\.choices.count) == [1, 2, 1, 2])
+    let sections = ProfileControllerGroup.sections(of: choices) { group in
+      if case .family = group { return "Valve" }
+      return ProfileControllerGroup.title(of: group)
+    }
+    #expect(sections.map(\.title) == ["Valve", "Valve"])
+    #expect(Set(sections.map(\.id)) == [.family(.valveSteamController), .family(.valveSteamDeck)])
+    #expect(sections.map(\.choices.count).sorted() == [1, 2])
+    for section in sections {
+      #expect(section.choices.allSatisfy { $0.group == section.group })
+    }
   }
 
   @Test
   func aProfileCanTargetAModelThatIsNotConnected() {
     let context = Self.context(
       devices: [],
-      catalog: [ControllerModelID(vendorID: 0x054C, productID: 0x0CE6): "DualSense"]
+      catalog: [ControllerModelID(vendorID: 0x054C, productID: 0x0CE6): .sonyDualSense]
     )
     var fields = ProfileCreationFields()
     fields.picked = context.choices[0]

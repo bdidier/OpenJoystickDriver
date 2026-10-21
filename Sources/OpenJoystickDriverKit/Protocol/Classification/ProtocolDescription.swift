@@ -325,8 +325,7 @@ struct ProtocolDescription: Sendable {
           + unreadParameters.sorted().joined(separator: ", ")
       )
     }
-    // The file name is checked after the document's own rules, as the Python validator checks
-    // it after the schema.
+    // The file name is checked after the document's own rules.
     guard let protocolID, family == protocolID else {
       throw ProtocolDescriptionProblem(
         .protocolDescriptionFamilyMismatch,

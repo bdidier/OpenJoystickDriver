@@ -14,6 +14,22 @@ struct ProtocolBindingIDTests {
     )
   }
 
+  @Test
+  func spellsEachSideOfTheBindingInKebabCaseOnTheCommandLine() {
+    #expect(
+      ProtocolBindingID(.xboxXUSB, variant: .receiver).commandLineName == "xbox-xusb:receiver"
+    )
+    #expect(
+      ProtocolBindingID(.vendorGameSir, variant: .enhancedHID).commandLineName
+        == "vendor-game-sir:enhanced-hid"
+    )
+    #expect(
+      ProtocolBindingID(.valveSteamController, variant: .bluetoothLE).commandLineName
+        == "valve-steam-controller:bluetooth-le"
+    )
+    #expect(ProtocolBindingID(.vendorFlydigi).commandLineName == "vendor-flydigi")
+  }
+
   @Test(arguments: [
     "", "XboxXUSB:", "xboxOne", "GIP", "XboxGIP:USB:usb", "SonyDualSense:Receiver",
     "VendorFlydigi:USB", "XboxXUSB:xbox360Wireless", "VendorGameSir:EnhancedHID-8k",

@@ -34,7 +34,8 @@
       )
       OJDLabeledValue(
         OJDLocalized.string("common.protocol"),
-        "\(protocolName(device.protocolBinding)) (\(device.protocolBinding))"
+        "\(device.protocolBinding.protocolID.displayName) "
+          + "(\(device.protocolBinding.commandLineName))"
       )
       DeveloperSerialRow(serial: OJDValue.reported(device.serialNumber)).id(
         device.sessionToken.rawValue
@@ -76,31 +77,6 @@
         return OJDLocalized.string("common.none")
       }
       return Control.allCases.filter(pressed.contains).map(\.rawValue).joined(separator: ", ")
-    }
-
-    /// Family label; transport variants share their family's label.
-    private func protocolName(_ value: ProtocolBindingID) -> String {
-      switch value.protocolID {
-      case .xboxXID: OJDLocalized.string("controller.originalXbox")
-      case .xboxXUSB where value.variant == .receiver:
-        OJDLocalized.string("controller.xbox360WirelessDeveloper")
-      case .xboxXUSB: OJDLocalized.string("controller.xbox360")
-      case .xboxGIP: OJDLocalized.string("controller.xboxOne")
-      case .sonySixaxis: OJDLocalized.string("controller.dualShock3")
-      case .sonyDualShock4: OJDLocalized.string("controller.dualShock4")
-      case .sonyDualSense: OJDLocalized.string("controller.dualSense")
-      case .valveSteamController, .valveSteamTriton, .valveSteamDeck:
-        OJDLocalized.string("controller.steamController")
-      case .vendorFlydigi: OJDLocalized.string("controller.flydigi")
-      case .vendorPS3ThirdParty: "Third-party PS3"
-      case .vendorNVIDIAShield: "NVIDIA SHIELD"
-      case .vendorGameSir where value.variant == .usb: "GameSir G7 Pro USB"
-      case .vendorGameSir: "GameSir enhanced HID"
-      case .nintendoSwitch1, .nintendoSwitch2, .nintendoSwitchInputOnly:
-        OJDLocalized.string("controller.switchProController")
-      case .hidDescriptor, .hidReportLayout:
-        OJDLocalized.string("controller.standardHID")
-      }
     }
 
     private func routeName(_ value: DeviceDiscoverySource) -> String {

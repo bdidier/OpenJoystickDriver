@@ -247,7 +247,7 @@ class HIDUsageMapDescriptionSchemaTests(unittest.TestCase):
             "family": "SonyDualSense",
             "defaults": {"input": usage_map(BUTTON)},
         }
-        path = self.root / "sony-dualsense.json"
+        path = self.root / "sony-dual-sense.json"
         path.write_text(json.dumps(document), encoding="utf-8")
         with self.assertRaisesRegex(validate_schemas.ValidationError, r"^E5002: "):
             validate_schemas.validate_protocol_descriptions(

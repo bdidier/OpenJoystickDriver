@@ -295,6 +295,27 @@ struct ControllerCommandTests {
   }
 
   @Test
+  func showSpellsEachSideOfABindingWithAVariantInKebabCase() async throws {
+    let device = ApplicationServiceDeviceDescription.fixture(
+      id: "pad-1",
+      protocolBinding: ProtocolBindingID(.xboxXUSB, variant: .receiver)
+    )
+    let service = try FakeService(devices: [device])
+
+    let plain = await service.run(["controller", "show", token("pad-1"), "--plain"])
+    let human = await service.run(["controller", "show", token("pad-1")])
+    let json = await service.run(["controller", "show", token("pad-1"), "--json"])
+
+    #expect(plain.code == 0, "\(plain.standardError)")
+    #expect(plain.standardOutput.split(separator: "\n").contains("protocol\txbox-xusb:receiver"))
+    #expect(Self.rows(human, endingIn: "xbox-xusb:receiver").count == 1)
+    let object = try #require(
+      JSONSerialization.jsonObject(with: Data(json.standardOutput.utf8)) as? [String: Any]
+    )
+    #expect(object["protocol"] as? String == "XboxXUSB:Receiver")
+  }
+
+  @Test
   func showPrintsWhyTheControllerIsNotPublished() async throws {
     var device = ApplicationServiceDeviceDescription.fixture(id: "pad-1")
     device.publication = ApplicationServicePublicationStatus.notPublished(

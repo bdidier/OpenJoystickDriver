@@ -358,9 +358,9 @@
     {
       "name": "rejects usage maps in other families",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json: 'endpoints' is a required property",
-      "swift": "E5002: sony-dualsense.json: missing field endpoints",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json: 'endpoints' is a required property",
+      "swift": "E5002: sony-dual-sense.json: missing field endpoints",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
@@ -377,45 +377,6 @@
                 }
               ]
             }
-          }
-        }
-      }
-    },
-    {
-      "name": "a document rule is reported before the file name",
-      "code": "E5002",
-      "python": "E5002: xbox-gip.json at interfaceSignatures: [{'variant': 'Wired', 'interfaceClass': 255, 'interfaceSubclass': 93, 'interfaceProtocol': 1}, {'variant': 'Wired', 'interfaceClass': 255, 'interfaceSubclass': 93, 'interfaceProtocol': 1}] has non-unique elements",
-      "swift": "E5002: xbox-gip.json: interfaceSignatures names Wired/255/93/1/ twice",
-      "fileName": "xbox-gip.json",
-      "document": {
-        "sessionKeys": ["startup"],
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "XboxXUSB",
-        "variants": ["Wired", "Receiver"],
-        "storesVariant": true,
-        "endpoints": {
-          "in": 129,
-          "out": 1
-        },
-        "rawUSB": true,
-        "interfaceSignatures": [
-          {
-            "variant": "Wired",
-            "interfaceClass": 255,
-            "interfaceSubclass": 93,
-            "interfaceProtocol": 1
-          },
-          {
-            "variant": "Wired",
-            "interfaceClass": 255,
-            "interfaceSubclass": 93,
-            "interfaceProtocol": 1
-          }
-        ],
-        "defaults": {
-          "session": {
-            "receiverInquiryResendLimit": 8
           }
         }
       }
@@ -467,9 +428,9 @@
     {
       "name": "a family specific session field of another family is refused: family=SonyDualSense, key=subcommands",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json: defaults.session.subcommands: SonyDualSense does not read it",
-      "swift": "E5002: sony-dualsense.json: SonyDualSense does not read subcommands",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json: defaults.session.subcommands: SonyDualSense does not read it",
+      "swift": "E5002: sony-dual-sense.json: SonyDualSense does not read subcommands",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -625,9 +586,9 @@
     {
       "name": "a family specific session field of another family is refused: family=SonyDualSense, key=namedPackets",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json: defaults.session.namedPackets: XboxGIP/power-on must start with SonyDualSense/",
-      "swift": "E5002: sony-dualsense.json: SonyDualSense does not read namedPackets",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json: defaults.session.namedPackets: XboxGIP/power-on must start with SonyDualSense/",
+      "swift": "E5002: sony-dual-sense.json: SonyDualSense does not read namedPackets",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -738,9 +699,9 @@
     {
       "name": "a family specific session field of another family is refused: family=SonyDualSense, key=handshakeAttempts",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json: defaults.session.handshakeAttempts: SonyDualSense does not read it",
-      "swift": "E5002: sony-dualsense.json: SonyDualSense does not read handshakeAttempts",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json: defaults.session.handshakeAttempts: SonyDualSense does not read it",
+      "swift": "E5002: sony-dual-sense.json: SonyDualSense does not read handshakeAttempts",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -833,9 +794,9 @@
     {
       "name": "a family specific session field of another family is refused: family=SonyDualSense, key=announceResendLimit",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json: defaults.session.announceResendLimit: SonyDualSense does not read it",
-      "swift": "E5002: sony-dualsense.json: SonyDualSense does not read announceResendLimit",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json: defaults.session.announceResendLimit: SonyDualSense does not read it",
+      "swift": "E5002: sony-dual-sense.json: SonyDualSense does not read announceResendLimit",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -928,9 +889,9 @@
     {
       "name": "a family specific session field of another family is refused: family=SonyDualSense, key=receiverInquiryResendLimit",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json: defaults.session.receiverInquiryResendLimit: SonyDualSense does not read it",
-      "swift": "E5002: sony-dualsense.json: SonyDualSense does not read receiverInquiryResendLimit",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json: defaults.session.receiverInquiryResendLimit: SonyDualSense does not read it",
+      "swift": "E5002: sony-dual-sense.json: SonyDualSense does not read receiverInquiryResendLimit",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -1036,9 +997,9 @@
     {
       "name": "a family specific session field of another family is refused: family=SonyDualSense, key=commandChannel",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json: defaults.session.commandChannel: SonyDualSense does not read it",
-      "swift": "E5002: sony-dualsense.json: SonyDualSense does not read commandChannel",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json: defaults.session.commandChannel: SonyDualSense does not read it",
+      "swift": "E5002: sony-dual-sense.json: SonyDualSense does not read commandChannel",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -1149,9 +1110,9 @@
     {
       "name": "a family specific session field of another family is refused: family=SonyDualSense, key=trailingStopPackets",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json: defaults.session.trailingStopPackets: SonyDualSense does not read it",
-      "swift": "E5002: sony-dualsense.json: SonyDualSense does not read trailingStopPackets",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json: defaults.session.trailingStopPackets: SonyDualSense does not read it",
+      "swift": "E5002: sony-dual-sense.json: SonyDualSense does not read trailingStopPackets",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -1253,9 +1214,9 @@
     {
       "name": "a family specific session field of another family is refused: family=SonyDualSense, key=activation",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json: defaults.session.activation: SonyDualSense does not read it",
-      "swift": "E5002: sony-dualsense.json: SonyDualSense does not read activation",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json: defaults.session.activation: SonyDualSense does not read it",
+      "swift": "E5002: sony-dual-sense.json: SonyDualSense does not read activation",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -1384,9 +1345,9 @@
     {
       "name": "a family specific session field of another family is refused: family=SonyDualSense, key=deactivation",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json: defaults.session.deactivation: SonyDualSense does not read it",
-      "swift": "E5002: sony-dualsense.json: SonyDualSense does not read deactivation",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json: defaults.session.deactivation: SonyDualSense does not read it",
+      "swift": "E5002: sony-dual-sense.json: SonyDualSense does not read deactivation",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -2116,9 +2077,9 @@
     {
       "name": "checks the flat rumble template against each variant without its own: HID template with every variant raw USB",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json: a raw-USB variant's rumble template is a usb packet, and a HID variant's is a HID report",
-      "swift": "E5002: sony-dualsense.json: a raw-USB variant's rumble template is a usb packet, and a HID variant's is a HID report",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json: a raw-USB variant's rumble template is a usb packet, and a HID variant's is a HID report",
+      "swift": "E5002: sony-dual-sense.json: a raw-USB variant's rumble template is a usb packet, and a HID variant's is a HID report",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -2149,9 +2110,9 @@
     {
       "name": "checks the flat rumble template against each variant without its own: usb packet with no raw-USB variant",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json: a raw-USB variant's rumble template is a usb packet, and a HID variant's is a HID report",
-      "swift": "E5002: sony-dualsense.json: a raw-USB variant's rumble template is a usb packet, and a HID variant's is a HID report",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json: a raw-USB variant's rumble template is a usb packet, and a HID variant's is a HID report",
+      "swift": "E5002: sony-dual-sense.json: a raw-USB variant's rumble template is a usb packet, and a HID variant's is a HID report",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -2186,9 +2147,9 @@
     {
       "name": "checks the flat rumble template against each variant without its own: HID template on the raw-USB variant of a mixed family",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json: a raw-USB variant's rumble template is a usb packet, and a HID variant's is a HID report",
-      "swift": "E5002: sony-dualsense.json: a raw-USB variant's rumble template is a usb packet, and a HID variant's is a HID report",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json: a raw-USB variant's rumble template is a usb packet, and a HID variant's is a HID report",
+      "swift": "E5002: sony-dual-sense.json: a raw-USB variant's rumble template is a usb packet, and a HID variant's is a HID report",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -2219,9 +2180,9 @@
     {
       "name": "checks the flat rumble template against each variant without its own: usb packet on the HID variant of a mixed family",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json: a raw-USB variant's rumble template is a usb packet, and a HID variant's is a HID report",
-      "swift": "E5002: sony-dualsense.json: a raw-USB variant's rumble template is a usb packet, and a HID variant's is a HID report",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json: a raw-USB variant's rumble template is a usb packet, and a HID variant's is a HID report",
+      "swift": "E5002: sony-dual-sense.json: a raw-USB variant's rumble template is a usb packet, and a HID variant's is a HID report",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -3850,9 +3811,9 @@
     {
       "name": "each family accepts only its own variants: family=SonyDualSense, variant=BluetoothLE",
       "code": "E5004",
-      "python": "E5004: sony-dualsense.json: interfaceSignatures names BluetoothLE, which the family does not have",
-      "swift": "E5004: sony-dualsense.json: SonyDualSense has no variant BluetoothLE",
-      "fileName": "sony-dualsense.json",
+      "python": "E5004: sony-dual-sense.json: interfaceSignatures names BluetoothLE, which the family does not have",
+      "swift": "E5004: sony-dual-sense.json: SonyDualSense has no variant BluetoothLE",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -3876,9 +3837,9 @@
     {
       "name": "each family accepts only its own variants: family=SonyDualSense, variant=Gamepad",
       "code": "E5004",
-      "python": "E5004: sony-dualsense.json: interfaceSignatures names Gamepad, which the family does not have",
-      "swift": "E5004: sony-dualsense.json: SonyDualSense has no variant Gamepad",
-      "fileName": "sony-dualsense.json",
+      "python": "E5004: sony-dual-sense.json: interfaceSignatures names Gamepad, which the family does not have",
+      "swift": "E5004: sony-dual-sense.json: SonyDualSense has no variant Gamepad",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -3902,9 +3863,9 @@
     {
       "name": "each family accepts only its own variants: family=SonyDualSense, variant=Wired",
       "code": "E5004",
-      "python": "E5004: sony-dualsense.json: interfaceSignatures names Wired, which the family does not have",
-      "swift": "E5004: sony-dualsense.json: SonyDualSense has no variant Wired",
-      "fileName": "sony-dualsense.json",
+      "python": "E5004: sony-dual-sense.json: interfaceSignatures names Wired, which the family does not have",
+      "swift": "E5004: sony-dual-sense.json: SonyDualSense has no variant Wired",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -3928,9 +3889,9 @@
     {
       "name": "each family accepts only its own variants: family=SonyDualSense, variant=Receiver",
       "code": "E5004",
-      "python": "E5004: sony-dualsense.json: interfaceSignatures names Receiver, which the family does not have",
-      "swift": "E5004: sony-dualsense.json: SonyDualSense has no variant Receiver",
-      "fileName": "sony-dualsense.json",
+      "python": "E5004: sony-dual-sense.json: interfaceSignatures names Receiver, which the family does not have",
+      "swift": "E5004: sony-dual-sense.json: SonyDualSense has no variant Receiver",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -3954,9 +3915,9 @@
     {
       "name": "each family accepts only its own variants: family=SonyDualSense, variant=Dongle",
       "code": "E5004",
-      "python": "E5004: sony-dualsense.json: interfaceSignatures names Dongle, which the family does not have",
-      "swift": "E5004: sony-dualsense.json: SonyDualSense has no variant Dongle",
-      "fileName": "sony-dualsense.json",
+      "python": "E5004: sony-dual-sense.json: interfaceSignatures names Dongle, which the family does not have",
+      "swift": "E5004: sony-dual-sense.json: SonyDualSense has no variant Dongle",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -3980,9 +3941,9 @@
     {
       "name": "each family accepts only its own variants: family=SonyDualSense, variant=EnhancedHID",
       "code": "E5004",
-      "python": "E5004: sony-dualsense.json: interfaceSignatures names EnhancedHID, which the family does not have",
-      "swift": "E5004: sony-dualsense.json: SonyDualSense has no variant EnhancedHID",
-      "fileName": "sony-dualsense.json",
+      "python": "E5004: sony-dual-sense.json: interfaceSignatures names EnhancedHID, which the family does not have",
+      "swift": "E5004: sony-dual-sense.json: SonyDualSense has no variant EnhancedHID",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -4006,9 +3967,9 @@
     {
       "name": "each family accepts only its own variants: family=SonyDualShock4, variant=BluetoothLE",
       "code": "E5004",
-      "python": "E5004: sony-dualshock4.json: interfaceSignatures names BluetoothLE, which the family does not have",
-      "swift": "E5004: sony-dualshock4.json: SonyDualShock4 has no variant BluetoothLE",
-      "fileName": "sony-dualshock4.json",
+      "python": "E5004: sony-dual-shock4.json: interfaceSignatures names BluetoothLE, which the family does not have",
+      "swift": "E5004: sony-dual-shock4.json: SonyDualShock4 has no variant BluetoothLE",
+      "fileName": "sony-dual-shock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "sessionKeys": ["startup"],
@@ -4033,9 +3994,9 @@
     {
       "name": "each family accepts only its own variants: family=SonyDualShock4, variant=Gamepad",
       "code": "E5004",
-      "python": "E5004: sony-dualshock4.json: interfaceSignatures names Gamepad, which the family does not have",
-      "swift": "E5004: sony-dualshock4.json: SonyDualShock4 has no variant Gamepad",
-      "fileName": "sony-dualshock4.json",
+      "python": "E5004: sony-dual-shock4.json: interfaceSignatures names Gamepad, which the family does not have",
+      "swift": "E5004: sony-dual-shock4.json: SonyDualShock4 has no variant Gamepad",
+      "fileName": "sony-dual-shock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "sessionKeys": ["startup"],
@@ -4060,9 +4021,9 @@
     {
       "name": "each family accepts only its own variants: family=SonyDualShock4, variant=Wired",
       "code": "E5004",
-      "python": "E5004: sony-dualshock4.json: interfaceSignatures names Wired, which the family does not have",
-      "swift": "E5004: sony-dualshock4.json: SonyDualShock4 has no variant Wired",
-      "fileName": "sony-dualshock4.json",
+      "python": "E5004: sony-dual-shock4.json: interfaceSignatures names Wired, which the family does not have",
+      "swift": "E5004: sony-dual-shock4.json: SonyDualShock4 has no variant Wired",
+      "fileName": "sony-dual-shock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "sessionKeys": ["startup"],
@@ -4087,9 +4048,9 @@
     {
       "name": "each family accepts only its own variants: family=SonyDualShock4, variant=Receiver",
       "code": "E5004",
-      "python": "E5004: sony-dualshock4.json: interfaceSignatures names Receiver, which the family does not have",
-      "swift": "E5004: sony-dualshock4.json: SonyDualShock4 has no variant Receiver",
-      "fileName": "sony-dualshock4.json",
+      "python": "E5004: sony-dual-shock4.json: interfaceSignatures names Receiver, which the family does not have",
+      "swift": "E5004: sony-dual-shock4.json: SonyDualShock4 has no variant Receiver",
+      "fileName": "sony-dual-shock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "sessionKeys": ["startup"],
@@ -4114,9 +4075,9 @@
     {
       "name": "each family accepts only its own variants: family=SonyDualShock4, variant=Dongle",
       "code": "E5004",
-      "python": "E5004: sony-dualshock4.json: interfaceSignatures names Dongle, which the family does not have",
-      "swift": "E5004: sony-dualshock4.json: SonyDualShock4 has no variant Dongle",
-      "fileName": "sony-dualshock4.json",
+      "python": "E5004: sony-dual-shock4.json: interfaceSignatures names Dongle, which the family does not have",
+      "swift": "E5004: sony-dual-shock4.json: SonyDualShock4 has no variant Dongle",
+      "fileName": "sony-dual-shock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "sessionKeys": ["startup"],
@@ -4141,9 +4102,9 @@
     {
       "name": "each family accepts only its own variants: family=SonyDualShock4, variant=EnhancedHID",
       "code": "E5004",
-      "python": "E5004: sony-dualshock4.json: interfaceSignatures names EnhancedHID, which the family does not have",
-      "swift": "E5004: sony-dualshock4.json: SonyDualShock4 has no variant EnhancedHID",
-      "fileName": "sony-dualshock4.json",
+      "python": "E5004: sony-dual-shock4.json: interfaceSignatures names EnhancedHID, which the family does not have",
+      "swift": "E5004: sony-dual-shock4.json: SonyDualShock4 has no variant EnhancedHID",
+      "fileName": "sony-dual-shock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "sessionKeys": ["startup"],
@@ -5439,9 +5400,9 @@
     {
       "name": "each family accepts only its own variants: family=VendorGameSir, variant=BluetoothClassic",
       "code": "E5004",
-      "python": "E5004: vendor-gamesir.json: interfaceSignatures names BluetoothClassic, which the family does not have",
-      "swift": "E5004: vendor-gamesir.json: VendorGameSir has no variant BluetoothClassic",
-      "fileName": "vendor-gamesir.json",
+      "python": "E5004: vendor-game-sir.json: interfaceSignatures names BluetoothClassic, which the family does not have",
+      "swift": "E5004: vendor-game-sir.json: VendorGameSir has no variant BluetoothClassic",
+      "fileName": "vendor-game-sir.json",
       "document": {
         "variants": ["USB", "EnhancedHID"],
         "storesVariant": true,
@@ -5467,9 +5428,9 @@
     {
       "name": "each family accepts only its own variants: family=VendorGameSir, variant=BluetoothLE",
       "code": "E5004",
-      "python": "E5004: vendor-gamesir.json: interfaceSignatures names BluetoothLE, which the family does not have",
-      "swift": "E5004: vendor-gamesir.json: VendorGameSir has no variant BluetoothLE",
-      "fileName": "vendor-gamesir.json",
+      "python": "E5004: vendor-game-sir.json: interfaceSignatures names BluetoothLE, which the family does not have",
+      "swift": "E5004: vendor-game-sir.json: VendorGameSir has no variant BluetoothLE",
+      "fileName": "vendor-game-sir.json",
       "document": {
         "variants": ["USB", "EnhancedHID"],
         "storesVariant": true,
@@ -5495,9 +5456,9 @@
     {
       "name": "each family accepts only its own variants: family=VendorGameSir, variant=Gamepad",
       "code": "E5004",
-      "python": "E5004: vendor-gamesir.json: interfaceSignatures names Gamepad, which the family does not have",
-      "swift": "E5004: vendor-gamesir.json: VendorGameSir has no variant Gamepad",
-      "fileName": "vendor-gamesir.json",
+      "python": "E5004: vendor-game-sir.json: interfaceSignatures names Gamepad, which the family does not have",
+      "swift": "E5004: vendor-game-sir.json: VendorGameSir has no variant Gamepad",
+      "fileName": "vendor-game-sir.json",
       "document": {
         "variants": ["USB", "EnhancedHID"],
         "storesVariant": true,
@@ -5523,9 +5484,9 @@
     {
       "name": "each family accepts only its own variants: family=VendorGameSir, variant=Wired",
       "code": "E5004",
-      "python": "E5004: vendor-gamesir.json: interfaceSignatures names Wired, which the family does not have",
-      "swift": "E5004: vendor-gamesir.json: VendorGameSir has no variant Wired",
-      "fileName": "vendor-gamesir.json",
+      "python": "E5004: vendor-game-sir.json: interfaceSignatures names Wired, which the family does not have",
+      "swift": "E5004: vendor-game-sir.json: VendorGameSir has no variant Wired",
+      "fileName": "vendor-game-sir.json",
       "document": {
         "variants": ["USB", "EnhancedHID"],
         "storesVariant": true,
@@ -5551,9 +5512,9 @@
     {
       "name": "each family accepts only its own variants: family=VendorGameSir, variant=Receiver",
       "code": "E5004",
-      "python": "E5004: vendor-gamesir.json: interfaceSignatures names Receiver, which the family does not have",
-      "swift": "E5004: vendor-gamesir.json: VendorGameSir has no variant Receiver",
-      "fileName": "vendor-gamesir.json",
+      "python": "E5004: vendor-game-sir.json: interfaceSignatures names Receiver, which the family does not have",
+      "swift": "E5004: vendor-game-sir.json: VendorGameSir has no variant Receiver",
+      "fileName": "vendor-game-sir.json",
       "document": {
         "variants": ["USB", "EnhancedHID"],
         "storesVariant": true,
@@ -5579,9 +5540,9 @@
     {
       "name": "each family accepts only its own variants: family=VendorGameSir, variant=Dongle",
       "code": "E5004",
-      "python": "E5004: vendor-gamesir.json: interfaceSignatures names Dongle, which the family does not have",
-      "swift": "E5004: vendor-gamesir.json: VendorGameSir has no variant Dongle",
-      "fileName": "vendor-gamesir.json",
+      "python": "E5004: vendor-game-sir.json: interfaceSignatures names Dongle, which the family does not have",
+      "swift": "E5004: vendor-game-sir.json: VendorGameSir has no variant Dongle",
+      "fileName": "vendor-game-sir.json",
       "document": {
         "variants": ["USB", "EnhancedHID"],
         "storesVariant": true,
@@ -9496,11 +9457,11 @@
       }
     },
     {
-      "name": "every family may set a frame queue capacity in the schema range: family=sony-dualsense",
+      "name": "every family may set a frame queue capacity in the schema range: family=sony-dual-sense",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at defaults.tuning.frameQueueCapacity: 0 is less than the minimum of 1",
-      "swift": "E5002: sony-dualsense.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json at defaults.tuning.frameQueueCapacity: 0 is less than the minimum of 1",
+      "swift": "E5002: sony-dual-sense.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
@@ -9559,11 +9520,11 @@
       }
     },
     {
-      "name": "every family may set a frame queue capacity in the schema range: family=sony-dualsense (2)",
+      "name": "every family may set a frame queue capacity in the schema range: family=sony-dual-sense (2)",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at defaults.tuning.frameQueueCapacity: 1025 is greater than the maximum of 1024",
-      "swift": "E5002: sony-dualsense.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json at defaults.tuning.frameQueueCapacity: 1025 is greater than the maximum of 1024",
+      "swift": "E5002: sony-dual-sense.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
@@ -9622,11 +9583,11 @@
       }
     },
     {
-      "name": "every family may set a frame queue capacity in the schema range: family=sony-dualsense (3)",
+      "name": "every family may set a frame queue capacity in the schema range: family=sony-dual-sense (3)",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at defaults.tuning.frameQueueCapacity: 1.5 is not of type 'integer'",
-      "swift": "E5002: sony-dualsense.json: The given data was not valid JSON.",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json at defaults.tuning.frameQueueCapacity: 1.5 is not of type 'integer'",
+      "swift": "E5002: sony-dual-sense.json: The given data was not valid JSON.",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
@@ -9685,11 +9646,11 @@
       }
     },
     {
-      "name": "every family may set a frame queue capacity in the schema range: family=sony-dualsense (4)",
+      "name": "every family may set a frame queue capacity in the schema range: family=sony-dual-sense (4)",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at defaults.tuning.frameQueueCapacity: '64' is not of type 'integer'",
-      "swift": "E5002: sony-dualsense.json: description.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json at defaults.tuning.frameQueueCapacity: '64' is not of type 'integer'",
+      "swift": "E5002: sony-dual-sense.json: description.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
@@ -9748,11 +9709,11 @@
       }
     },
     {
-      "name": "every family may set a frame queue capacity in the schema range: family=sony-dualshock4",
+      "name": "every family may set a frame queue capacity in the schema range: family=sony-dual-shock4",
       "code": "E5002",
-      "python": "E5002: sony-dualshock4.json at defaults.tuning.frameQueueCapacity: 0 is less than the minimum of 1",
-      "swift": "E5002: sony-dualshock4.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
-      "fileName": "sony-dualshock4.json",
+      "python": "E5002: sony-dual-shock4.json at defaults.tuning.frameQueueCapacity: 0 is less than the minimum of 1",
+      "swift": "E5002: sony-dual-shock4.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "fileName": "sony-dual-shock4.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
@@ -9825,11 +9786,11 @@
       }
     },
     {
-      "name": "every family may set a frame queue capacity in the schema range: family=sony-dualshock4 (2)",
+      "name": "every family may set a frame queue capacity in the schema range: family=sony-dual-shock4 (2)",
       "code": "E5002",
-      "python": "E5002: sony-dualshock4.json at defaults.tuning.frameQueueCapacity: 1025 is greater than the maximum of 1024",
-      "swift": "E5002: sony-dualshock4.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
-      "fileName": "sony-dualshock4.json",
+      "python": "E5002: sony-dual-shock4.json at defaults.tuning.frameQueueCapacity: 1025 is greater than the maximum of 1024",
+      "swift": "E5002: sony-dual-shock4.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "fileName": "sony-dual-shock4.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
@@ -9902,11 +9863,11 @@
       }
     },
     {
-      "name": "every family may set a frame queue capacity in the schema range: family=sony-dualshock4 (3)",
+      "name": "every family may set a frame queue capacity in the schema range: family=sony-dual-shock4 (3)",
       "code": "E5002",
-      "python": "E5002: sony-dualshock4.json at defaults.tuning.frameQueueCapacity: 1.5 is not of type 'integer'",
-      "swift": "E5002: sony-dualshock4.json: The given data was not valid JSON.",
-      "fileName": "sony-dualshock4.json",
+      "python": "E5002: sony-dual-shock4.json at defaults.tuning.frameQueueCapacity: 1.5 is not of type 'integer'",
+      "swift": "E5002: sony-dual-shock4.json: The given data was not valid JSON.",
+      "fileName": "sony-dual-shock4.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
@@ -9979,11 +9940,11 @@
       }
     },
     {
-      "name": "every family may set a frame queue capacity in the schema range: family=sony-dualshock4 (4)",
+      "name": "every family may set a frame queue capacity in the schema range: family=sony-dual-shock4 (4)",
       "code": "E5002",
-      "python": "E5002: sony-dualshock4.json at defaults.tuning.frameQueueCapacity: '64' is not of type 'integer'",
-      "swift": "E5002: sony-dualshock4.json: description.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
-      "fileName": "sony-dualshock4.json",
+      "python": "E5002: sony-dual-shock4.json at defaults.tuning.frameQueueCapacity: '64' is not of type 'integer'",
+      "swift": "E5002: sony-dual-shock4.json: description.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
+      "fileName": "sony-dual-shock4.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
@@ -11592,11 +11553,11 @@
       }
     },
     {
-      "name": "every family may set a frame queue capacity in the schema range: family=vendor-gamesir",
+      "name": "every family may set a frame queue capacity in the schema range: family=vendor-game-sir",
       "code": "E5002",
-      "python": "E5002: vendor-gamesir.json at defaults.tuning.frameQueueCapacity: 0 is less than the minimum of 1",
-      "swift": "E5002: vendor-gamesir.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
-      "fileName": "vendor-gamesir.json",
+      "python": "E5002: vendor-game-sir.json at defaults.tuning.frameQueueCapacity: 0 is less than the minimum of 1",
+      "swift": "E5002: vendor-game-sir.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "fileName": "vendor-game-sir.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
@@ -11714,11 +11675,11 @@
       }
     },
     {
-      "name": "every family may set a frame queue capacity in the schema range: family=vendor-gamesir (2)",
+      "name": "every family may set a frame queue capacity in the schema range: family=vendor-game-sir (2)",
       "code": "E5002",
-      "python": "E5002: vendor-gamesir.json at defaults.tuning.frameQueueCapacity: 1025 is greater than the maximum of 1024",
-      "swift": "E5002: vendor-gamesir.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
-      "fileName": "vendor-gamesir.json",
+      "python": "E5002: vendor-game-sir.json at defaults.tuning.frameQueueCapacity: 1025 is greater than the maximum of 1024",
+      "swift": "E5002: vendor-game-sir.json: description.defaults.tuning.frameQueueCapacity: frameQueueCapacity must be in 1...1024",
+      "fileName": "vendor-game-sir.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
@@ -11836,11 +11797,11 @@
       }
     },
     {
-      "name": "every family may set a frame queue capacity in the schema range: family=vendor-gamesir (3)",
+      "name": "every family may set a frame queue capacity in the schema range: family=vendor-game-sir (3)",
       "code": "E5002",
-      "python": "E5002: vendor-gamesir.json at defaults.tuning.frameQueueCapacity: 1.5 is not of type 'integer'",
-      "swift": "E5002: vendor-gamesir.json: The given data was not valid JSON.",
-      "fileName": "vendor-gamesir.json",
+      "python": "E5002: vendor-game-sir.json at defaults.tuning.frameQueueCapacity: 1.5 is not of type 'integer'",
+      "swift": "E5002: vendor-game-sir.json: The given data was not valid JSON.",
+      "fileName": "vendor-game-sir.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
@@ -11958,11 +11919,11 @@
       }
     },
     {
-      "name": "every family may set a frame queue capacity in the schema range: family=vendor-gamesir (4)",
+      "name": "every family may set a frame queue capacity in the schema range: family=vendor-game-sir (4)",
       "code": "E5002",
-      "python": "E5002: vendor-gamesir.json at defaults.tuning.frameQueueCapacity: '64' is not of type 'integer'",
-      "swift": "E5002: vendor-gamesir.json: description.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
-      "fileName": "vendor-gamesir.json",
+      "python": "E5002: vendor-game-sir.json at defaults.tuning.frameQueueCapacity: '64' is not of type 'integer'",
+      "swift": "E5002: vendor-game-sir.json: description.defaults.tuning.frameQueueCapacity: Expected to decode Int but found a string instead.",
+      "fileName": "vendor-game-sir.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
@@ -14098,9 +14059,9 @@
     {
       "name": "parameter rules name the family own variants and parameters",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json: parameterRules names layout, which the description does not declare",
-      "swift": "E5002: sony-dualsense.json: parameterRules names layout, which the description does not declare",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json: parameterRules names layout, which the description does not declare",
+      "swift": "E5002: sony-dual-sense.json: parameterRules names layout, which the description does not declare",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -14131,9 +14092,9 @@
     {
       "name": "parameter rules name the family own variants and parameters (2)",
       "code": "E5004",
-      "python": "E5004: sony-dualsense.json: parameterRules names Wired, which the family does not have",
-      "swift": "E5004: sony-dualsense.json: SonyDualSense has no variant Wired",
-      "fileName": "sony-dualsense.json",
+      "python": "E5004: sony-dual-sense.json: parameterRules names Wired, which the family does not have",
+      "swift": "E5004: sony-dual-sense.json: SonyDualSense has no variant Wired",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -14165,9 +14126,9 @@
     {
       "name": "parameter rules name the family own variants and parameters: rule={'rule': 'None', 'parameters': ['maker']}",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at parameterRules.0: {'rule': 'None', 'parameters': ['maker']} should not be valid under {'required': ['parameters']}",
-      "swift": "E5002: sony-dualsense.json: description.parameterRules.[0]: a parameter rule has a known kind, unique parameters (none for None) and unique variants",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json at parameterRules.0: {'rule': 'None', 'parameters': ['maker']} should not be valid under {'required': ['parameters']}",
+      "swift": "E5002: sony-dual-sense.json: description.parameterRules.[0]: a parameter rule has a known kind, unique parameters (none for None) and unique variants",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -14198,9 +14159,9 @@
     {
       "name": "parameter rules name the family own variants and parameters: rule={'rule': 'AtMostOne'}",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at parameterRules.0: 'parameters' is a required property",
-      "swift": "E5002: sony-dualsense.json: description.parameterRules.[0]: a parameter rule has a known kind, unique parameters (none for None) and unique variants",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json at parameterRules.0: 'parameters' is a required property",
+      "swift": "E5002: sony-dual-sense.json: description.parameterRules.[0]: a parameter rule has a known kind, unique parameters (none for None) and unique variants",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -14230,9 +14191,9 @@
     {
       "name": "parameter rules name the family own variants and parameters: rule={'rule': 'Sometimes', 'parameters': ['maker']}",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at parameterRules.0.rule: 'Sometimes' is not one of ['None', 'AtMostOne', 'ExactlyOne', 'Requires']",
-      "swift": "E5002: sony-dualsense.json: description.parameterRules.[0]: a parameter rule has a known kind, unique parameters (none for None) and unique variants",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json at parameterRules.0.rule: 'Sometimes' is not one of ['None', 'AtMostOne', 'ExactlyOne', 'Requires']",
+      "swift": "E5002: sony-dual-sense.json: description.parameterRules.[0]: a parameter rule has a known kind, unique parameters (none for None) and unique variants",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -14263,9 +14224,9 @@
     {
       "name": "rejects a bad parameter declaration: declaration={'type': 'string'}",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at parameters.maker: {'type': 'string'} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: description.parameters.maker.type: type is Flag, Enum or Object",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json at parameters.maker: {'type': 'string'} is not valid under any of the given schemas",
+      "swift": "E5002: sony-dual-sense.json: description.parameters.maker.type: type is Flag, Enum or Object",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -14285,9 +14246,9 @@
     {
       "name": "rejects a bad parameter declaration: declaration={'type': 'Flag', 'values': ['A']}",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at parameters.maker: {'type': 'Flag', 'values': ['A']} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: description.parameters.maker: unknown field(s): values",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json at parameters.maker: {'type': 'Flag', 'values': ['A']} is not valid under any of the given schemas",
+      "swift": "E5002: sony-dual-sense.json: description.parameters.maker: unknown field(s): values",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -14308,9 +14269,9 @@
     {
       "name": "rejects a bad parameter declaration: declaration={'type': 'Enum'}",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at parameters.maker: {'type': 'Enum'} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: description.parameters.maker: missing field values",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json at parameters.maker: {'type': 'Enum'} is not valid under any of the given schemas",
+      "swift": "E5002: sony-dual-sense.json: description.parameters.maker: missing field values",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -14330,9 +14291,9 @@
     {
       "name": "rejects a bad parameter declaration: declaration={'type': 'Enum', 'values': []}",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at parameters.maker: {'type': 'Enum', 'values': []} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: description.parameters.maker.values: values are unique, nonempty UpperCamelCase names",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json at parameters.maker: {'type': 'Enum', 'values': []} is not valid under any of the given schemas",
+      "swift": "E5002: sony-dual-sense.json: description.parameters.maker.values: values are unique, nonempty UpperCamelCase names",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -14353,9 +14314,9 @@
     {
       "name": "rejects a bad parameter declaration: declaration={'type': 'Enum', 'values': ['lower']}",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at parameters.maker: {'type': 'Enum', 'values': ['lower']} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: description.parameters.maker.values: values are unique, nonempty UpperCamelCase names",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json at parameters.maker: {'type': 'Enum', 'values': ['lower']} is not valid under any of the given schemas",
+      "swift": "E5002: sony-dual-sense.json: description.parameters.maker.values: values are unique, nonempty UpperCamelCase names",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -14376,9 +14337,9 @@
     {
       "name": "rejects a bad parameter declaration: declaration={'type': 'Enum', 'values': ['A', 'A']}",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at parameters.maker: {'type': 'Enum', 'values': ['A', 'A']} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: description.parameters.maker.values: values are unique, nonempty UpperCamelCase names",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json at parameters.maker: {'type': 'Enum', 'values': ['A', 'A']} is not valid under any of the given schemas",
+      "swift": "E5002: sony-dual-sense.json: description.parameters.maker.values: values are unique, nonempty UpperCamelCase names",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -14399,9 +14360,9 @@
     {
       "name": "rejects a bad parameter declaration: declaration={'type': 'Object', 'fields': {}}",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at parameters.maker: {'type': 'Object', 'fields': {}} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: description.parameters.maker.fields: fields must not be empty",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json at parameters.maker: {'type': 'Object', 'fields': {}} is not valid under any of the given schemas",
+      "swift": "E5002: sony-dual-sense.json: description.parameters.maker.fields: fields must not be empty",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -14422,9 +14383,9 @@
     {
       "name": "rejects a bad parameter declaration: declaration={'type': 'Object', 'fields': {'x': {'type': 'Integer', 'minimum': 1}}}",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at parameters.maker: {'type': 'Object', 'fields': {'x': {'type': 'Integer', 'minimum': 1}}} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: description.parameters.maker.fields.x: missing field maximum",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json at parameters.maker: {'type': 'Object', 'fields': {'x': {'type': 'Integer', 'minimum': 1}}} is not valid under any of the given schemas",
+      "swift": "E5002: sony-dual-sense.json: description.parameters.maker.fields.x: missing field maximum",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -14450,9 +14411,9 @@
     {
       "name": "rejects a bad parameter declaration: declaration={'type': 'Object', 'fields': {'x': {'type': 'string'}}}",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at parameters.maker: {'type': 'Object', 'fields': {'x': {'type': 'string'}}} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: description.parameters.maker.fields.x.type: an object field is an integer",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json at parameters.maker: {'type': 'Object', 'fields': {'x': {'type': 'string'}}} is not valid under any of the given schemas",
+      "swift": "E5002: sony-dual-sense.json: description.parameters.maker.fields.x.type: an object field is an integer",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -14720,39 +14681,6 @@
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "vendor.ps3-third-party",
-        "variants": ["Wired", "Receiver"],
-        "storesVariant": true,
-        "endpoints": {
-          "in": 129,
-          "out": 1
-        },
-        "rawUSB": true,
-        "interfaceSignatures": [
-          {
-            "variant": "Wired",
-            "interfaceClass": 255,
-            "interfaceSubclass": 93,
-            "interfaceProtocol": 1
-          }
-        ],
-        "defaults": {
-          "session": {
-            "receiverInquiryResendLimit": 8
-          }
-        }
-      }
-    },
-    {
-      "name": "rejects a file name that differs from the family",
-      "code": "E5003",
-      "python": "E5003: xbox-gip.json: file name must be xbox-xusb.json",
-      "swift": "E5003: xbox-gip.json: file name must be xbox-xusb.json",
-      "fileName": "xbox-gip.json",
-      "document": {
-        "sessionKeys": ["startup"],
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "XboxXUSB",
         "variants": ["Wired", "Receiver"],
         "storesVariant": true,
         "endpoints": {
@@ -15188,9 +15116,9 @@
     {
       "name": "rejects a parameter the family does not declare",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at parameters: 'x' is not one of ['shareButton', 'layout', 'usbProtocol', 'innerGrips', 'lightingMemory', 'hatSource', 'motionCalibration', 'role', 'motionScale', 'reportRevision', 'maker', 'unprobedSensors', 'unprobedTouchpad', 'forcedVibration']",
-      "swift": "E5002: sony-dualsense.json: description.parameters: no driver reads parameter(s): x",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json at parameters: 'x' is not one of ['shareButton', 'layout', 'usbProtocol', 'innerGrips', 'lightingMemory', 'hatSource', 'motionCalibration', 'role', 'motionScale', 'reportRevision', 'maker', 'unprobedSensors', 'unprobedTouchpad', 'forcedVibration']",
+      "swift": "E5002: sony-dual-sense.json: description.parameters: no driver reads parameter(s): x",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -15210,9 +15138,9 @@
     {
       "name": "rejects a parameter the family does not declare (2)",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at parameters: {} should be non-empty",
-      "swift": "E5002: sony-dualsense.json: description.parameters: parameters must not be empty",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json at parameters: {} should be non-empty",
+      "swift": "E5002: sony-dual-sense.json: description.parameters: parameters must not be empty",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -15228,9 +15156,9 @@
     {
       "name": "rejects a parameter the family does not declare: family=SonyDualSense, name=layout",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json: parameters.layout: SonyDualSense does not read it",
-      "swift": "E5002: sony-dualsense.json: SonyDualSense reads no parameter(s) layout",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json: parameters.layout: SonyDualSense does not read it",
+      "swift": "E5002: sony-dual-sense.json: SonyDualSense reads no parameter(s) layout",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -15347,9 +15275,9 @@
     {
       "name": "rejects a rationale of the wrong type: rationale=5",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at macOSOwnedOutput.rationale: 5 is not of type 'string'",
-      "swift": "E5002: sony-dualsense.json: description.macOSOwnedOutput.rationale: Expected to decode String but found number instead.",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json at macOSOwnedOutput.rationale: 5 is not of type 'string'",
+      "swift": "E5002: sony-dual-sense.json: description.macOSOwnedOutput.rationale: Expected to decode String but found number instead.",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -15367,9 +15295,9 @@
     {
       "name": "rejects a rationale of the wrong type: rationale=None",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at macOSOwnedOutput.rationale: None is not of type 'string'",
-      "swift": "E5002: sony-dualsense.json: description.macOSOwnedOutput.rationale: null is not permitted",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json at macOSOwnedOutput.rationale: None is not of type 'string'",
+      "swift": "E5002: sony-dual-sense.json: description.macOSOwnedOutput.rationale: null is not permitted",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -15387,9 +15315,9 @@
     {
       "name": "rejects a rationale of the wrong type: rationale=['rationale']",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at macOSOwnedOutput.rationale: ['rationale'] is not of type 'string'",
-      "swift": "E5002: sony-dualsense.json: description.macOSOwnedOutput.rationale: Expected to decode String but found an array instead.",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json at macOSOwnedOutput.rationale: ['rationale'] is not of type 'string'",
+      "swift": "E5002: sony-dual-sense.json: description.macOSOwnedOutput.rationale: Expected to decode String but found an array instead.",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -15407,9 +15335,9 @@
     {
       "name": "rejects a rationale of the wrong type: rationale={'text': 'x'}",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at macOSOwnedOutput.rationale: {'text': 'x'} is not of type 'string'",
-      "swift": "E5002: sony-dualsense.json: description.macOSOwnedOutput.rationale: Expected to decode String but found a dictionary instead.",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json at macOSOwnedOutput.rationale: {'text': 'x'} is not of type 'string'",
+      "swift": "E5002: sony-dual-sense.json: description.macOSOwnedOutput.rationale: Expected to decode String but found a dictionary instead.",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -15429,9 +15357,9 @@
     {
       "name": "rejects a raw usb variant the family does not have",
       "code": "E5004",
-      "python": "E5004: vendor-gamesir.json: rawUSB names Wired, which the family does not have",
-      "swift": "E5004: vendor-gamesir.json: VendorGameSir has no variant Wired",
-      "fileName": "vendor-gamesir.json",
+      "python": "E5004: vendor-game-sir.json: rawUSB names Wired, which the family does not have",
+      "swift": "E5004: vendor-game-sir.json: VendorGameSir has no variant Wired",
+      "fileName": "vendor-game-sir.json",
       "document": {
         "variants": ["USB", "EnhancedHID"],
         "storesVariant": true,
@@ -15449,9 +15377,9 @@
     {
       "name": "rejects a resend interval in a family with a keep alive: variant template",
       "code": "E5002",
-      "python": "E5002: vendor-gamesir.json at defaults: {'session': {'keepAlive': {'intervalMilliseconds': 100}}, 'variants': {'EnhancedHID': {'session': {'rumble': {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'lowFrequency': {'byte': 1}, 'resendIntervalMilliseconds': 100}}}}} should not be valid under {'required': ['session'], 'properties': {'session': {'required': ['keepAlive']}}, 'anyOf': [{'properties': {'session': {'required': ['rumble'], 'properties': {'rumble': {'required': ['resendIntervalMilliseconds']}}}}}, {'required': ['variants'], 'properties': {'variants': {'not': {'additionalProperties': {'not': {'required': ['session'], 'properties': {'session': {'required': ['rumble'], 'properties': {'rumble': {'required': ['resendIntervalMilliseconds']}}}}}}}}}}]}",
-      "swift": "E5002: vendor-gamesir.json: a rumble resendIntervalMilliseconds needs a family whose description declares no keepAlive",
-      "fileName": "vendor-gamesir.json",
+      "python": "E5002: vendor-game-sir.json at defaults: {'session': {'keepAlive': {'intervalMilliseconds': 100}}, 'variants': {'EnhancedHID': {'session': {'rumble': {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'lowFrequency': {'byte': 1}, 'resendIntervalMilliseconds': 100}}}}} should not be valid under {'required': ['session'], 'properties': {'session': {'required': ['keepAlive']}}, 'anyOf': [{'properties': {'session': {'required': ['rumble'], 'properties': {'rumble': {'required': ['resendIntervalMilliseconds']}}}}}, {'required': ['variants'], 'properties': {'variants': {'not': {'additionalProperties': {'not': {'required': ['session'], 'properties': {'session': {'required': ['rumble'], 'properties': {'rumble': {'required': ['resendIntervalMilliseconds']}}}}}}}}}}]}",
+      "swift": "E5002: vendor-game-sir.json: a rumble resendIntervalMilliseconds needs a family whose description declares no keepAlive",
+      "fileName": "vendor-game-sir.json",
       "document": {
         "variants": ["USB", "EnhancedHID"],
         "storesVariant": true,
@@ -15494,9 +15422,9 @@
     {
       "name": "rejects a resend interval in a family with a keep alive: flat template",
       "code": "E5002",
-      "python": "E5002: vendor-gamesir.json at defaults: {'session': {'keepAlive': {'intervalMilliseconds': 100}, 'rumble': {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'lowFrequency': {'byte': 1}, 'resendIntervalMilliseconds': 100}}, 'variants': {}} should not be valid under {'required': ['session'], 'properties': {'session': {'required': ['keepAlive']}}, 'anyOf': [{'properties': {'session': {'required': ['rumble'], 'properties': {'rumble': {'required': ['resendIntervalMilliseconds']}}}}}, {'required': ['variants'], 'properties': {'variants': {'not': {'additionalProperties': {'not': {'required': ['session'], 'properties': {'session': {'required': ['rumble'], 'properties': {'rumble': {'required': ['resendIntervalMilliseconds']}}}}}}}}}}]}",
-      "swift": "E5002: vendor-gamesir.json: description.defaults.variants: variants must not be empty",
-      "fileName": "vendor-gamesir.json",
+      "python": "E5002: vendor-game-sir.json at defaults: {'session': {'keepAlive': {'intervalMilliseconds': 100}, 'rumble': {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'lowFrequency': {'byte': 1}, 'resendIntervalMilliseconds': 100}}, 'variants': {}} should not be valid under {'required': ['session'], 'properties': {'session': {'required': ['keepAlive']}}, 'anyOf': [{'properties': {'session': {'required': ['rumble'], 'properties': {'rumble': {'required': ['resendIntervalMilliseconds']}}}}}, {'required': ['variants'], 'properties': {'variants': {'not': {'additionalProperties': {'not': {'required': ['session'], 'properties': {'session': {'required': ['rumble'], 'properties': {'rumble': {'required': ['resendIntervalMilliseconds']}}}}}}}}}}]}",
+      "swift": "E5002: vendor-game-sir.json: description.defaults.variants: variants must not be empty",
+      "fileName": "vendor-game-sir.json",
       "document": {
         "variants": ["USB", "EnhancedHID"],
         "storesVariant": true,
@@ -15630,9 +15558,9 @@
     {
       "name": "rejects a startup write naming what the family lacks: write={'bytes': '05 20 00 01 00', 'variants': ['Wired']}",
       "code": "E5004",
-      "python": "E5004: sony-dualshock4.json: defaults.session.startup[0].variants names Wired, which the family does not have",
-      "swift": "E5004: sony-dualshock4.json: SonyDualShock4 has no variant Wired",
-      "fileName": "sony-dualshock4.json",
+      "python": "E5004: sony-dual-shock4.json: defaults.session.startup[0].variants names Wired, which the family does not have",
+      "swift": "E5004: sony-dual-shock4.json: SonyDualShock4 has no variant Wired",
+      "fileName": "sony-dual-shock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "sessionKeys": ["startup"],
@@ -15664,9 +15592,9 @@
     {
       "name": "rejects a startup write naming what the family lacks: write={'bytes': '05 20 00 01 00', 'when': {'parameter': 'layout', 'is': ['Pro']}}",
       "code": "E5002",
-      "python": "E5002: sony-dualshock4.json: defaults.session.startup[0].when: layout is not a declared enumeration",
-      "swift": "E5002: sony-dualshock4.json: when names layout, which is not an enumeration parameter of SonyDualShock4",
-      "fileName": "sony-dualshock4.json",
+      "python": "E5002: sony-dual-shock4.json: defaults.session.startup[0].when: layout is not a declared enumeration",
+      "swift": "E5002: sony-dual-shock4.json: when names layout, which is not an enumeration parameter of SonyDualShock4",
+      "fileName": "sony-dual-shock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "sessionKeys": ["startup"],
@@ -15701,9 +15629,9 @@
     {
       "name": "rejects a startup write naming what the family lacks: write={'bytes': '05 20 00 01 00', 'when': {'parameter': 'role', 'is': ['Other']}}",
       "code": "E5002",
-      "python": "E5002: sony-dualshock4.json: defaults.session.startup[0].when: Other is not a value of role",
-      "swift": "E5002: sony-dualshock4.json: when names Other, which role does not declare",
-      "fileName": "sony-dualshock4.json",
+      "python": "E5002: sony-dual-shock4.json: defaults.session.startup[0].when: Other is not a value of role",
+      "swift": "E5002: sony-dual-shock4.json: when names Other, which role does not declare",
+      "fileName": "sony-dual-shock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "sessionKeys": ["startup"],
@@ -15738,9 +15666,9 @@
     {
       "name": "rejects a variant rumble template the family cannot use: driver reads no rumble section",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at defaults.variants.USB: False schema does not allow {'rumble': {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'lowFrequency': {'byte': 1}}}",
-      "swift": "E5002: sony-dualsense.json: rumble templates require a driver that encodes them",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json at defaults.variants.USB: False schema does not allow {'rumble': {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'lowFrequency': {'byte': 1}}}",
+      "swift": "E5002: sony-dual-sense.json: rumble templates require a driver that encodes them",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -15773,9 +15701,9 @@
     {
       "name": "rejects a variant rumble template the family cannot use: variant the family lacks",
       "code": "E5004",
-      "python": "E5004: sony-dualsense.json: defaults.variants names Wired, which the family does not have",
-      "swift": "E5004: sony-dualsense.json: SonyDualSense has no variant Wired",
-      "fileName": "sony-dualsense.json",
+      "python": "E5004: sony-dual-sense.json: defaults.variants names Wired, which the family does not have",
+      "swift": "E5004: sony-dual-sense.json: SonyDualSense has no variant Wired",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -15809,9 +15737,9 @@
     {
       "name": "rejects a variant rumble template the family cannot use: HID report on a raw-USB variant",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json: a raw-USB variant's rumble template is a usb packet, and a HID variant's is a HID report",
-      "swift": "E5002: sony-dualsense.json: a raw-USB variant's rumble template is a usb packet, and a HID variant's is a HID report",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json: a raw-USB variant's rumble template is a usb packet, and a HID variant's is a HID report",
+      "swift": "E5002: sony-dual-sense.json: a raw-USB variant's rumble template is a usb packet, and a HID variant's is a HID report",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -15846,9 +15774,9 @@
     {
       "name": "rejects a variant rumble template the family cannot use: usb packet on a HID variant",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json: a raw-USB variant's rumble template is a usb packet, and a HID variant's is a HID report",
-      "swift": "E5002: sony-dualsense.json: a raw-USB variant's rumble template is a usb packet, and a HID variant's is a HID report",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json: a raw-USB variant's rumble template is a usb packet, and a HID variant's is a HID report",
+      "swift": "E5002: sony-dual-sense.json: a raw-USB variant's rumble template is a usb packet, and a HID variant's is a HID report",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -15887,9 +15815,9 @@
     {
       "name": "rejects a variant rumble template the family cannot use: bytes without the report ID",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json: defaults.variants.USB.session.rumble: rumble template bytes must start with the report ID",
-      "swift": "E5002: sony-dualsense.json: description.defaults.variants.USB.session.rumble: rumble template bytes must start with the report ID",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json: defaults.variants.USB.session.rumble: rumble template bytes must start with the report ID",
+      "swift": "E5002: sony-dual-sense.json: description.defaults.variants.USB.session.rumble: rumble template bytes must start with the report ID",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -15924,9 +15852,9 @@
     {
       "name": "rejects a variant rumble template the family cannot use: counter on a motor byte",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json: defaults.variants.USB.session.rumble: rumble motor and counter bytes must be distinct and follow the report ID inside the report",
-      "swift": "E5002: sony-dualsense.json: description.defaults.variants.USB.session.rumble: rumble motor and counter bytes must be distinct and follow the report ID inside the report",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json: defaults.variants.USB.session.rumble: rumble motor and counter bytes must be distinct and follow the report ID inside the report",
+      "swift": "E5002: sony-dual-sense.json: description.defaults.variants.USB.session.rumble: rumble motor and counter bytes must be distinct and follow the report ID inside the report",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -15963,9 +15891,9 @@
     {
       "name": "rejects a variant rumble template the family cannot use: member other than rumble",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at defaults.variants.USB.session: Additional properties are not allowed ('keepAlive' was unexpected)",
-      "swift": "E5002: sony-dualsense.json: description.defaults.variants.USB.session: unknown field(s): keepAlive",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json at defaults.variants.USB.session: Additional properties are not allowed ('keepAlive' was unexpected)",
+      "swift": "E5002: sony-dual-sense.json: description.defaults.variants.USB.session: unknown field(s): keepAlive",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -15992,9 +15920,9 @@
     {
       "name": "rejects a variant rumble template the family cannot use: empty variant",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at defaults.variants.USB: {} should be non-empty",
-      "swift": "E5002: sony-dualsense.json: description.defaults.variants.USB: a variant must not be empty",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json at defaults.variants.USB: {} should be non-empty",
+      "swift": "E5002: sony-dual-sense.json: description.defaults.variants.USB: a variant must not be empty",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -16015,9 +15943,9 @@
     {
       "name": "rejects a variant rumble template the family cannot use: empty variant session",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at defaults.variants.USB.session: 'rumble' is a required property",
-      "swift": "E5002: sony-dualsense.json: description.defaults.variants.USB.session: missing field rumble",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json at defaults.variants.USB.session: 'rumble' is a required property",
+      "swift": "E5002: sony-dual-sense.json: description.defaults.variants.USB.session: missing field rumble",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -16160,9 +16088,9 @@
     {
       "name": "rejects a variant tuning key the family reads only elsewhere",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json: defaults.variants.USB.tuning: adapterDisconnectDelayMs not read by the driver",
-      "swift": "E5002: sony-dualsense.json: adapterDisconnectDelayMs is not read by the SonyDualSense:USB driver",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json: defaults.variants.USB.tuning: adapterDisconnectDelayMs not read by the driver",
+      "swift": "E5002: sony-dual-sense.json: adapterDisconnectDelayMs is not read by the SonyDualSense:USB driver",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -16562,9 +16490,9 @@
     {
       "name": "rejects defaults a driver does not read: family=SonyDualSense, defaults={'tuning': {'inputLivenessTimeoutMs': 5}}",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json: defaults.tuning: inputLivenessTimeoutMs not read by the driver",
-      "swift": "E5002: sony-dualsense.json: inputLivenessTimeoutMs is not read by the SonyDualSense driver",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json: defaults.tuning: inputLivenessTimeoutMs not read by the driver",
+      "swift": "E5002: sony-dual-sense.json: inputLivenessTimeoutMs is not read by the SonyDualSense driver",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -16584,9 +16512,9 @@
     {
       "name": "rejects defaults a driver does not read: family=SonyDualSense, defaults={'tuning': {'hidStartupRecoveryRounds': 2}}",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json: defaults.tuning: hidStartupRecoveryRounds not read by the driver",
-      "swift": "E5002: sony-dualsense.json: hidStartupRecoveryRounds is not read by the SonyDualSense driver",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json: defaults.tuning: hidStartupRecoveryRounds not read by the driver",
+      "swift": "E5002: sony-dual-sense.json: hidStartupRecoveryRounds is not read by the SonyDualSense driver",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -16779,9 +16707,9 @@
     {
       "name": "rejects descriptions values spelled as before the naming rule: parameter type enum",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at parameters.maker: {'type': 'enum', 'values': ['ThirdParty']} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: description.parameters.maker.type: type is Flag, Enum or Object",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json at parameters.maker: {'type': 'enum', 'values': ['ThirdParty']} is not valid under any of the given schemas",
+      "swift": "E5002: sony-dual-sense.json: description.parameters.maker.type: type is Flag, Enum or Object",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -16802,9 +16730,9 @@
     {
       "name": "rejects descriptions values spelled as before the naming rule: parameter type flag",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at parameters.forcedVibration: {'type': 'flag'} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: description.parameters.forcedVibration.type: type is Flag, Enum or Object",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json at parameters.forcedVibration: {'type': 'flag'} is not valid under any of the given schemas",
+      "swift": "E5002: sony-dual-sense.json: description.parameters.forcedVibration.type: type is Flag, Enum or Object",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -18892,9 +18820,9 @@
     {
       "name": "rejects malformed startup writes: family=SonyDualShock4, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'phase': 'Later'}",
       "code": "E5002",
-      "python": "E5002: sony-dualshock4.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'phase': 'Later'} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualshock4.json: description.defaults.session.startup.[0]: a startup phase is Startup or Activation",
-      "fileName": "sony-dualshock4.json",
+      "python": "E5002: sony-dual-shock4.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'phase': 'Later'} is not valid under any of the given schemas",
+      "swift": "E5002: sony-dual-shock4.json: description.defaults.session.startup.[0]: a startup phase is Startup or Activation",
+      "fileName": "sony-dual-shock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "sessionKeys": ["startup"],
@@ -18925,9 +18853,9 @@
     {
       "name": "rejects malformed startup writes: family=SonyDualShock4, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'delayMilliseconds': 1001}",
       "code": "E5002",
-      "python": "E5002: sony-dualshock4.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'delayMilliseconds': 1001} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualshock4.json: description.defaults.session.startup.[0]: a startup delay is 0...1000 ms",
-      "fileName": "sony-dualshock4.json",
+      "python": "E5002: sony-dual-shock4.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'delayMilliseconds': 1001} is not valid under any of the given schemas",
+      "swift": "E5002: sony-dual-shock4.json: description.defaults.session.startup.[0]: a startup delay is 0...1000 ms",
+      "fileName": "sony-dual-shock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "sessionKeys": ["startup"],
@@ -18958,9 +18886,9 @@
     {
       "name": "rejects malformed startup writes: family=SonyDualShock4, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'crc32Seed': 256}",
       "code": "E5002",
-      "python": "E5002: sony-dualshock4.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'crc32Seed': 256} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualshock4.json: description.defaults.session.startup.[0]: a startup crc32Seed is 0...255",
-      "fileName": "sony-dualshock4.json",
+      "python": "E5002: sony-dual-shock4.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'crc32Seed': 256} is not valid under any of the given schemas",
+      "swift": "E5002: sony-dual-shock4.json: description.defaults.session.startup.[0]: a startup crc32Seed is 0...255",
+      "fileName": "sony-dual-shock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "sessionKeys": ["startup"],
@@ -18991,9 +18919,9 @@
     {
       "name": "rejects malformed startup writes: family=SonyDualShock4, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'crc32Seed': 1}",
       "code": "E5002",
-      "python": "E5002: sony-dualshock4.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'crc32Seed': 1} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualshock4.json: description.defaults.session.startup.[0]: a CRC startup report has room for its 4-byte trailer",
-      "fileName": "sony-dualshock4.json",
+      "python": "E5002: sony-dual-shock4.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'crc32Seed': 1} is not valid under any of the given schemas",
+      "swift": "E5002: sony-dual-shock4.json: description.defaults.session.startup.[0]: a CRC startup report has room for its 4-byte trailer",
+      "fileName": "sony-dual-shock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "sessionKeys": ["startup"],
@@ -19024,9 +18952,9 @@
     {
       "name": "rejects malformed startup writes: family=SonyDualShock4, write={'report': {'kind': 'Output', 'id': 1, 'length': 129}, 'bytes': '01 02 03'}",
       "code": "E5002",
-      "python": "E5002: sony-dualshock4.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 129}, 'bytes': '01 02 03'} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualshock4.json: description.defaults.session.startup.[0]: a startup report is 2...128 bytes long",
-      "fileName": "sony-dualshock4.json",
+      "python": "E5002: sony-dual-shock4.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 129}, 'bytes': '01 02 03'} is not valid under any of the given schemas",
+      "swift": "E5002: sony-dual-shock4.json: description.defaults.session.startup.[0]: a startup report is 2...128 bytes long",
+      "fileName": "sony-dual-shock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "sessionKeys": ["startup"],
@@ -19056,9 +18984,9 @@
     {
       "name": "rejects malformed startup writes: family=SonyDualShock4, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'variants': []}",
       "code": "E5002",
-      "python": "E5002: sony-dualshock4.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'variants': []} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualshock4.json: description.defaults.session.startup.[0].variants: variants lists 1...8 distinct variant names",
-      "fileName": "sony-dualshock4.json",
+      "python": "E5002: sony-dual-shock4.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'variants': []} is not valid under any of the given schemas",
+      "swift": "E5002: sony-dual-shock4.json: description.defaults.session.startup.[0].variants: variants lists 1...8 distinct variant names",
+      "fileName": "sony-dual-shock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "sessionKeys": ["startup"],
@@ -19089,9 +19017,9 @@
     {
       "name": "rejects malformed startup writes: family=SonyDualShock4, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'variants': ['USB', 'USB']}",
       "code": "E5002",
-      "python": "E5002: sony-dualshock4.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'variants': ['USB', 'USB']} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualshock4.json: description.defaults.session.startup.[0].variants: variants lists 1...8 distinct variant names",
-      "fileName": "sony-dualshock4.json",
+      "python": "E5002: sony-dual-shock4.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'variants': ['USB', 'USB']} is not valid under any of the given schemas",
+      "swift": "E5002: sony-dual-shock4.json: description.defaults.session.startup.[0].variants: variants lists 1...8 distinct variant names",
+      "fileName": "sony-dual-shock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "sessionKeys": ["startup"],
@@ -19122,9 +19050,9 @@
     {
       "name": "rejects malformed startup writes: family=SonyDualShock4, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'layout'}}",
       "code": "E5002",
-      "python": "E5002: sony-dualshock4.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'layout'}} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualshock4.json: description.defaults.session.startup.[0].when: when names an enumeration parameter and exactly one of is or isNot, 1...16 values",
-      "fileName": "sony-dualshock4.json",
+      "python": "E5002: sony-dual-shock4.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'layout'}} is not valid under any of the given schemas",
+      "swift": "E5002: sony-dual-shock4.json: description.defaults.session.startup.[0].when: when names an enumeration parameter and exactly one of is or isNot, 1...16 values",
+      "fileName": "sony-dual-shock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "sessionKeys": ["startup"],
@@ -19157,9 +19085,9 @@
     {
       "name": "rejects malformed startup writes: family=SonyDualShock4, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'role', 'is': ['A'], 'isNot': ['B']}}",
       "code": "E5002",
-      "python": "E5002: sony-dualshock4.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'role', 'is': ['A'], 'isNot': ['B']}} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualshock4.json: description.defaults.session.startup.[0].when: when names an enumeration parameter and exactly one of is or isNot, 1...16 values",
-      "fileName": "sony-dualshock4.json",
+      "python": "E5002: sony-dual-shock4.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'role', 'is': ['A'], 'isNot': ['B']}} is not valid under any of the given schemas",
+      "swift": "E5002: sony-dual-shock4.json: description.defaults.session.startup.[0].when: when names an enumeration parameter and exactly one of is or isNot, 1...16 values",
+      "fileName": "sony-dual-shock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "sessionKeys": ["startup"],
@@ -19194,9 +19122,9 @@
     {
       "name": "rejects malformed startup writes: family=SonyDualShock4, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'role', 'is': []}}",
       "code": "E5002",
-      "python": "E5002: sony-dualshock4.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'role', 'is': []}} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualshock4.json: description.defaults.session.startup.[0].when: when names an enumeration parameter and exactly one of is or isNot, 1...16 values",
-      "fileName": "sony-dualshock4.json",
+      "python": "E5002: sony-dual-shock4.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'role', 'is': []}} is not valid under any of the given schemas",
+      "swift": "E5002: sony-dual-shock4.json: description.defaults.session.startup.[0].when: when names an enumeration parameter and exactly one of is or isNot, 1...16 values",
+      "fileName": "sony-dual-shock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "sessionKeys": ["startup"],
@@ -19230,9 +19158,9 @@
     {
       "name": "rejects malformed startup writes: family=SonyDualShock4, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'color', 'is': ['A']}}",
       "code": "E5002",
-      "python": "E5002: sony-dualshock4.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'color', 'is': ['A']}} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualshock4.json: description.defaults.session.startup.[0].when: when names an enumeration parameter and exactly one of is or isNot, 1...16 values",
-      "fileName": "sony-dualshock4.json",
+      "python": "E5002: sony-dual-shock4.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'color', 'is': ['A']}} is not valid under any of the given schemas",
+      "swift": "E5002: sony-dual-shock4.json: description.defaults.session.startup.[0].when: when names an enumeration parameter and exactly one of is or isNot, 1...16 values",
+      "fileName": "sony-dual-shock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "sessionKeys": ["startup"],
@@ -21784,9 +21712,9 @@
     {
       "name": "rejects raw usb rules that contradict each other: family=SonyDualSense",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json: {'variants': ['USB', 'BluetoothClassic'], 'apiVersion': 'openjoystickdriver/v1alpha1', 'kind': 'ProtocolDescription', 'family': 'SonyDualSense', 'endpoints': {'in': 130, 'out': 2}, 'rawUSBTuningKeys': ['lizardResendTicks']} should not be valid under {'required': ['rawUSBTuningKeys']}",
-      "swift": "E5002: sony-dualsense.json: rawUSBTuningKeys apply only to a family with a raw-USB variant",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json: {'variants': ['USB', 'BluetoothClassic'], 'apiVersion': 'openjoystickdriver/v1alpha1', 'kind': 'ProtocolDescription', 'family': 'SonyDualSense', 'endpoints': {'in': 130, 'out': 2}, 'rawUSBTuningKeys': ['lizardResendTicks']} should not be valid under {'required': ['rawUSBTuningKeys']}",
+      "swift": "E5002: sony-dual-sense.json: rawUSBTuningKeys apply only to a family with a raw-USB variant",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -21802,9 +21730,9 @@
     {
       "name": "rejects startup only members in a keep alive write: write={'bytes': '05 20 00 01 00', 'delayMilliseconds': 5}",
       "code": "E5002",
-      "python": "E5002: vendor-gamesir.json at defaults.session.keepAlive.writes.0: {'bytes': '05 20 00 01 00', 'delayMilliseconds': 5} is not valid under any of the given schemas",
-      "swift": "E5002: vendor-gamesir.json: description.defaults.session.keepAlive.writes.[0]: unknown field(s): delayMilliseconds",
-      "fileName": "vendor-gamesir.json",
+      "python": "E5002: vendor-game-sir.json at defaults.session.keepAlive.writes.0: {'bytes': '05 20 00 01 00', 'delayMilliseconds': 5} is not valid under any of the given schemas",
+      "swift": "E5002: vendor-game-sir.json: description.defaults.session.keepAlive.writes.[0]: unknown field(s): delayMilliseconds",
+      "fileName": "vendor-game-sir.json",
       "document": {
         "variants": ["USB", "EnhancedHID"],
         "storesVariant": true,
@@ -21835,9 +21763,9 @@
     {
       "name": "rejects startup only members in a keep alive write: write={'bytes': '05 20 00 01 00', 'toleratesRejection': True}",
       "code": "E5002",
-      "python": "E5002: vendor-gamesir.json at defaults.session.keepAlive.writes.0: {'bytes': '05 20 00 01 00', 'toleratesRejection': True} is not valid under any of the given schemas",
-      "swift": "E5002: vendor-gamesir.json: description.defaults.session.keepAlive.writes.[0]: unknown field(s): toleratesRejection",
-      "fileName": "vendor-gamesir.json",
+      "python": "E5002: vendor-game-sir.json at defaults.session.keepAlive.writes.0: {'bytes': '05 20 00 01 00', 'toleratesRejection': True} is not valid under any of the given schemas",
+      "swift": "E5002: vendor-game-sir.json: description.defaults.session.keepAlive.writes.[0]: unknown field(s): toleratesRejection",
+      "fileName": "vendor-game-sir.json",
       "document": {
         "variants": ["USB", "EnhancedHID"],
         "storesVariant": true,
@@ -21868,9 +21796,9 @@
     {
       "name": "rejects startup only members in a keep alive write: write={'bytes': '05 20 00 01 00', 'when': {'parameter': 'layout', 'is': ['Pro']}}",
       "code": "E5002",
-      "python": "E5002: vendor-gamesir.json at defaults.session.keepAlive.writes.0: {'bytes': '05 20 00 01 00', 'when': {'parameter': 'layout', 'is': ['Pro']}} is not valid under any of the given schemas",
-      "swift": "E5002: vendor-gamesir.json: description.defaults.session.keepAlive.writes.[0]: unknown field(s): when",
-      "fileName": "vendor-gamesir.json",
+      "python": "E5002: vendor-game-sir.json at defaults.session.keepAlive.writes.0: {'bytes': '05 20 00 01 00', 'when': {'parameter': 'layout', 'is': ['Pro']}} is not valid under any of the given schemas",
+      "swift": "E5002: vendor-game-sir.json: description.defaults.session.keepAlive.writes.[0]: unknown field(s): when",
+      "fileName": "vendor-game-sir.json",
       "document": {
         "variants": ["USB", "EnhancedHID"],
         "storesVariant": true,
@@ -21904,9 +21832,9 @@
     {
       "name": "rejects startup only members in a keep alive write: write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'phase': 'Startup'}",
       "code": "E5002",
-      "python": "E5002: vendor-gamesir.json at defaults.session.keepAlive.writes.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'phase': 'Startup'} is not valid under any of the given schemas",
-      "swift": "E5002: vendor-gamesir.json: description.defaults.session.keepAlive.writes.[0]: unknown field(s): phase",
-      "fileName": "vendor-gamesir.json",
+      "python": "E5002: vendor-game-sir.json at defaults.session.keepAlive.writes.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'phase': 'Startup'} is not valid under any of the given schemas",
+      "swift": "E5002: vendor-game-sir.json: description.defaults.session.keepAlive.writes.[0]: unknown field(s): phase",
+      "fileName": "vendor-game-sir.json",
       "document": {
         "variants": ["USB", "EnhancedHID"],
         "storesVariant": true,
@@ -21942,9 +21870,9 @@
     {
       "name": "rejects startup only members in a keep alive write: write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'delayMilliseconds': 5}",
       "code": "E5002",
-      "python": "E5002: vendor-gamesir.json at defaults.session.keepAlive.writes.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'delayMilliseconds': 5} is not valid under any of the given schemas",
-      "swift": "E5002: vendor-gamesir.json: description.defaults.session.keepAlive.writes.[0]: unknown field(s): delayMilliseconds",
-      "fileName": "vendor-gamesir.json",
+      "python": "E5002: vendor-game-sir.json at defaults.session.keepAlive.writes.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'delayMilliseconds': 5} is not valid under any of the given schemas",
+      "swift": "E5002: vendor-game-sir.json: description.defaults.session.keepAlive.writes.[0]: unknown field(s): delayMilliseconds",
+      "fileName": "vendor-game-sir.json",
       "document": {
         "variants": ["USB", "EnhancedHID"],
         "storesVariant": true,
@@ -21980,9 +21908,9 @@
     {
       "name": "rejects startup only members in a keep alive write: write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'transport': 'USB'}",
       "code": "E5002",
-      "python": "E5002: vendor-gamesir.json at defaults.session.keepAlive.writes.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'transport': 'USB'} is not valid under any of the given schemas",
-      "swift": "E5002: vendor-gamesir.json: description.defaults.session.keepAlive.writes.[0]: unknown field(s): transport",
-      "fileName": "vendor-gamesir.json",
+      "python": "E5002: vendor-game-sir.json at defaults.session.keepAlive.writes.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'transport': 'USB'} is not valid under any of the given schemas",
+      "swift": "E5002: vendor-game-sir.json: description.defaults.session.keepAlive.writes.[0]: unknown field(s): transport",
+      "fileName": "vendor-game-sir.json",
       "document": {
         "variants": ["USB", "EnhancedHID"],
         "storesVariant": true,
@@ -22018,9 +21946,9 @@
     {
       "name": "rejects startup only members in a keep alive write: write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'crc32Seed': 1}",
       "code": "E5002",
-      "python": "E5002: vendor-gamesir.json at defaults.session.keepAlive.writes.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'crc32Seed': 1} is not valid under any of the given schemas",
-      "swift": "E5002: vendor-gamesir.json: description.defaults.session.keepAlive.writes.[0]: unknown field(s): crc32Seed",
-      "fileName": "vendor-gamesir.json",
+      "python": "E5002: vendor-game-sir.json at defaults.session.keepAlive.writes.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'crc32Seed': 1} is not valid under any of the given schemas",
+      "swift": "E5002: vendor-game-sir.json: description.defaults.session.keepAlive.writes.[0]: unknown field(s): crc32Seed",
+      "fileName": "vendor-game-sir.json",
       "document": {
         "variants": ["USB", "EnhancedHID"],
         "storesVariant": true,
@@ -22056,9 +21984,9 @@
     {
       "name": "rejects startup only members in a keep alive write: write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'layout', 'is': ['Pro']}}",
       "code": "E5002",
-      "python": "E5002: vendor-gamesir.json at defaults.session.keepAlive.writes.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'layout', 'is': ['Pro']}} is not valid under any of the given schemas",
-      "swift": "E5002: vendor-gamesir.json: description.defaults.session.keepAlive.writes.[0]: unknown field(s): when",
-      "fileName": "vendor-gamesir.json",
+      "python": "E5002: vendor-game-sir.json at defaults.session.keepAlive.writes.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'layout', 'is': ['Pro']}} is not valid under any of the given schemas",
+      "swift": "E5002: vendor-game-sir.json: description.defaults.session.keepAlive.writes.[0]: unknown field(s): when",
+      "fileName": "vendor-game-sir.json",
       "document": {
         "variants": ["USB", "EnhancedHID"],
         "storesVariant": true,
@@ -22134,9 +22062,9 @@
     {
       "name": "rejects startup writes mixing hid and usb formats",
       "code": "E5002",
-      "python": "E5002: sony-dualshock4.json at defaults.session: {'startup': [{'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03'}, {'bytes': '05 20 00 01 00'}]} should not be valid under {'required': ['startup'], 'properties': {'startup': {'allOf': [{'contains': {'required': ['report']}}, {'contains': {'not': {'required': ['report']}}}]}}}",
-      "swift": "E5002: sony-dualshock4.json: description.defaults.session.startup: startup writes are all HID reports, all raw-USB packets or all named packets",
-      "fileName": "sony-dualshock4.json",
+      "python": "E5002: sony-dual-shock4.json at defaults.session: {'startup': [{'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03'}, {'bytes': '05 20 00 01 00'}]} should not be valid under {'required': ['startup'], 'properties': {'startup': {'allOf': [{'contains': {'required': ['report']}}, {'contains': {'not': {'required': ['report']}}}]}}}",
+      "swift": "E5002: sony-dual-shock4.json: description.defaults.session.startup: startup writes are all HID reports, all raw-USB packets or all named packets",
+      "fileName": "sony-dual-shock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "sessionKeys": ["startup"],
@@ -22169,9 +22097,9 @@
     {
       "name": "rejects stick deadzone as a declared tuning key",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at tuningKeys.0: 'stickDeadzone' is not one of ['inputLivenessTimeoutMs', 'hidStartupIntervalMs', 'minimumHIDOutputIntervalMs', 'hidStartupRecoveryIntervalMs', 'hidStartupRecoveryRounds', 'lizardResendTicks', 'usbCommandTimeoutMs', 'presenceResendReports', 'adapterDisconnectDelayMs', 'usbStartupIntervalMs', 'usbStartupRetryDelayMs', 'usbTransferTimeoutMs']",
-      "swift": "E5002: sony-dualsense.json: description.tuningKeys: stickDeadzone is read by every driver",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json at tuningKeys.0: 'stickDeadzone' is not one of ['inputLivenessTimeoutMs', 'hidStartupIntervalMs', 'minimumHIDOutputIntervalMs', 'hidStartupRecoveryIntervalMs', 'hidStartupRecoveryRounds', 'lizardResendTicks', 'usbCommandTimeoutMs', 'presenceResendReports', 'adapterDisconnectDelayMs', 'usbStartupIntervalMs', 'usbStartupRetryDelayMs', 'usbTransferTimeoutMs']",
+      "swift": "E5002: sony-dual-sense.json: description.tuningKeys: stickDeadzone is read by every driver",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -22228,39 +22156,6 @@
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
-        "storesVariant": true,
-        "endpoints": {
-          "in": 129,
-          "out": 1
-        },
-        "rawUSB": true,
-        "interfaceSignatures": [
-          {
-            "variant": "Wired",
-            "interfaceClass": 255,
-            "interfaceSubclass": 93,
-            "interfaceProtocol": 1
-          }
-        ],
-        "defaults": {
-          "session": {
-            "receiverInquiryResendLimit": 8
-          }
-        }
-      }
-    },
-    {
-      "name": "rejects the family file name in the family spelling",
-      "code": "E5003",
-      "python": "E5003: XboxXUSB.json: file name must be xbox-xusb.json",
-      "swift": "E5003: XboxXUSB.json: file name must be xbox-xusb.json",
-      "fileName": "XboxXUSB.json",
-      "document": {
-        "sessionKeys": ["startup"],
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "XboxXUSB",
-        "variants": ["Wired", "Receiver"],
         "storesVariant": true,
         "endpoints": {
           "in": 129,
@@ -22394,9 +22289,9 @@
     {
       "name": "rejects the interval as a tuning key",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at tuningKeys.0: 'keepAliveIntervalMs' is not one of ['inputLivenessTimeoutMs', 'hidStartupIntervalMs', 'minimumHIDOutputIntervalMs', 'hidStartupRecoveryIntervalMs', 'hidStartupRecoveryRounds', 'lizardResendTicks', 'usbCommandTimeoutMs', 'presenceResendReports', 'adapterDisconnectDelayMs', 'usbStartupIntervalMs', 'usbStartupRetryDelayMs', 'usbTransferTimeoutMs']",
-      "swift": "E5002: sony-dualsense.json: description.tuningKeys: tuningKeys lists unique, known names",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json at tuningKeys.0: 'keepAliveIntervalMs' is not one of ['inputLivenessTimeoutMs', 'hidStartupIntervalMs', 'minimumHIDOutputIntervalMs', 'hidStartupRecoveryIntervalMs', 'hidStartupRecoveryRounds', 'lizardResendTicks', 'usbCommandTimeoutMs', 'presenceResendReports', 'adapterDisconnectDelayMs', 'usbStartupIntervalMs', 'usbStartupRetryDelayMs', 'usbTransferTimeoutMs']",
+      "swift": "E5002: sony-dual-sense.json: description.tuningKeys: tuningKeys lists unique, known names",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -22606,9 +22501,9 @@
     {
       "name": "rejects variant defaults the family does not have",
       "code": "E5004",
-      "python": "E5004: sony-dualsense.json: defaults.variants names Wired, which the family does not have",
-      "swift": "E5004: sony-dualsense.json: SonyDualSense has no variant Wired",
-      "fileName": "sony-dualsense.json",
+      "python": "E5004: sony-dual-sense.json: defaults.variants names Wired, which the family does not have",
+      "swift": "E5004: sony-dual-sense.json: SonyDualSense has no variant Wired",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -22633,9 +22528,9 @@
     {
       "name": "rejects variant tuning outside the variant scope",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json: defaults.variants.USB.tuning: usbCommandTimeoutMs not read by the driver",
-      "swift": "E5002: sony-dualsense.json: usbCommandTimeoutMs is not read by the SonyDualSense:USB driver",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dual-sense.json: defaults.variants.USB.tuning: usbCommandTimeoutMs not read by the driver",
+      "swift": "E5002: sony-dual-sense.json: usbCommandTimeoutMs is not read by the SonyDualSense:USB driver",
+      "fileName": "sony-dual-sense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -22702,9 +22597,9 @@
     {
       "name": "session keys are the ones the driver reads: family=SonyDualShock4, keys=['keepAlive']",
       "code": "E5002",
-      "python": "E5002: sony-dualshock4.json: SonyDualShock4 reads the session keys startup",
-      "swift": "E5002: sony-dualshock4.json: SonyDualShock4 reads the session keys startup",
-      "fileName": "sony-dualshock4.json",
+      "python": "E5002: sony-dual-shock4.json: SonyDualShock4 reads the session keys startup",
+      "swift": "E5002: sony-dual-shock4.json: SonyDualShock4 reads the session keys startup",
+      "fileName": "sony-dual-shock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -22720,9 +22615,9 @@
     {
       "name": "session keys are the ones the driver reads: family=SonyDualShock4, keys=['startup', 'keepAlive']",
       "code": "E5002",
-      "python": "E5002: sony-dualshock4.json: SonyDualShock4 reads the session keys startup",
-      "swift": "E5002: sony-dualshock4.json: SonyDualShock4 reads the session keys startup",
-      "fileName": "sony-dualshock4.json",
+      "python": "E5002: sony-dual-shock4.json: SonyDualShock4 reads the session keys startup",
+      "swift": "E5002: sony-dual-shock4.json: SonyDualShock4 reads the session keys startup",
+      "fileName": "sony-dual-shock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",

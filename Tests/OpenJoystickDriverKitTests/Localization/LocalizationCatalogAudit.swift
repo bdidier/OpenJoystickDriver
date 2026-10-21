@@ -3,17 +3,28 @@ import Foundation
 @testable import OpenJoystickDriverKit
 
 enum LocalizationCatalogAudit {
-  static let nonLinguisticSourceIdenticalKeys: Set<String> = [
-    "app.name", "controller.dualSense", "controller.dualShock3", "controller.dualShock4",
-    "controller.flydigi", "controller.genericHID", "controller.originalXbox",
-    "controller.standardHID", "controller.steamController", "controller.switchPro",
-    "controller.switchProController", "controller.xbox360", "controller.xbox360Wireless",
-    "controller.xbox360WirelessDeveloper", "controller.xboxOne", "controller.xboxOriginal",
+  /// Brand, product and technical names that every language writes as `en-US` does: a test
+  /// requires each to equal `en-US` in every locale.
+  static let sameInEveryLocaleKeys: Set<String> = [
+    "term.protocolFamily.nintendoSwitch1", "term.protocolFamily.nintendoSwitch2",
+    "term.protocolFamily.sonyDualSense", "term.protocolFamily.sonyDualShock4",
+    "term.protocolFamily.sonySixaxis", "term.protocolFamily.valveSteamController",
+    "term.protocolFamily.valveSteamDeck", "term.protocolFamily.valveSteamTriton",
+    "term.protocolFamily.vendorFlydigi", "term.protocolFamily.vendorGameSir",
+    "term.protocolFamily.vendorNvidiaShield", "term.protocolFamily.xboxGip",
+    "term.protocolFamily.xboxXid", "term.protocolFamily.xboxXusb",
+    "term.protocolVariant.usb",
+  ]
+
+  static let nonLinguisticSourceIdenticalKeys: Set<String> = sameInEveryLocaleKeys.union([
+    "app.name",
+    // Bluetooth LE as the system writes it; Korean and Chinese write Bluetooth in their script.
+    "term.protocolVariant.bluetoothLe",
     "controllers.usbIdentifier", "controllers.discovery.hid", "developer.hid", "developer.usbID",
     "inputTest.yTriangle",
     "mapping.buttonNorth", "mapping.dpadDirection", "menu.projectPage", "profiles.sectionDpad",
     "access.transport.web", "access.web",
-  ]
+  ])
 
   private static let spanishTerms: Set<String> = [
     "developer.packetColumnBytes", "inputTest.color", "keyboard.control", "profiles.controlNumber",
@@ -43,6 +54,7 @@ enum LocalizationCatalogAudit {
       "keyboard.return", "keyboard.shift", "keyboard.tab",
     ],
     "de-DE": [
+      "term.parser", "term.protocolVariant.dongle",
       "library.field.version", "mainMenu.controller", "activity.filter",
       "activity.column.details",
       "access.details", "library.details",
@@ -71,6 +83,7 @@ enum LocalizationCatalogAudit {
     ]),
     "hi-IN": ["keyboard.escape", "keyboard.return"],
     "id-ID": [
+      "term.parser", "term.protocolVariant.dongle",
       "library.layer.driver", "access.token.issued.title", "access.token.named",
       "activity.filter", "activity.mode.log",
       "access.web.port", "access.web.enable.port", "mainMenu.window.zoom",
@@ -85,6 +98,7 @@ enum LocalizationCatalogAudit {
       "shortcuts.controller.model",
     ],
     "it-IT": [
+      "term.parser", "term.protocolVariant.dongle",
       "access.token.issued.title", "access.token.named",
       "mainMenu.controller", "mainMenu.file", "mainMenu.window.zoom",
       "cli.access.status.socket", "cli.controller.show.label.input",
@@ -104,6 +118,7 @@ enum LocalizationCatalogAudit {
       "keyboard.alt", "keyboard.return", "keyboard.shift",
     ],
     "nl-NL": [
+      "term.parser", "term.protocolVariant.dongle",
       "library.field.transport", "access.details", "library.details", "activity.filter",
       "activity.column.details",
       "access.token.issued.title", "access.token.named", "access.tokens", "library.mods",
@@ -127,6 +142,7 @@ enum LocalizationCatalogAudit {
       "shortcuts.controller.type", "shortcuts.parameter.controller",
     ],
     "pt-BR": [
+      "term.parser",
       "activity.mode.log",
       "access.token.issued.title", "access.token.named",
       "access.tokens", "library.mods",
@@ -169,6 +185,11 @@ enum LocalizationCatalogAudit {
         $0.key.caseInsensitiveCompare(localization) == .orderedSame
       }?.value ?? []
     return nonLinguisticSourceIdenticalKeys.union(terms)
+  }
+
+  /// The `.strings` values of `localization`, by key.
+  static func values(for localization: String) -> [String: String] {
+    stringsData(for: localization).map(parseStrings) ?? [:]
   }
 
   static func keys(for localization: String) -> Set<String> {

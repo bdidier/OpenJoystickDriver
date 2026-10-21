@@ -6,7 +6,8 @@ import Testing
 
 @Suite
 struct CommandLineNameTests {
-  /// `Tests/CommandLineNames/samples.json`, the table the Python tests read too.
+  /// `Tests/CommandLineNames/samples.json`: the spellings `CommandLineName.kebab` must produce, and
+  /// document values whose spellings must all differ.
   private struct Samples: Decodable {
     let spellings: [String: String]
     let values: [String]

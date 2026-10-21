@@ -32,11 +32,26 @@ struct RecordValueSpellingTests {
     #expect(PhysicalProtocolID.xboxGIP.descriptionFileStem == "xbox-gip")
     #expect(PhysicalProtocolID.hidDescriptor.descriptionFileStem == "hid-descriptor")
     #expect(PhysicalProtocolID.vendorPS3ThirdParty.descriptionFileStem == "vendor-ps3-third-party")
-    #expect(PhysicalProtocolID.sonyDualShock4.descriptionFileStem == "sony-dualshock4")
-    #expect(PhysicalProtocolID.vendorGameSir.descriptionFileStem == "vendor-gamesir")
+    #expect(PhysicalProtocolID.sonyDualShock4.descriptionFileStem == "sony-dual-shock4")
+    #expect(PhysicalProtocolID.vendorGameSir.descriptionFileStem == "vendor-game-sir")
     for family in PhysicalProtocolID.allCases {
       #expect(ProtocolDescription.bundled[family] != nil)
+      #expect(family.descriptionFileStem == CommandLineName.kebab(family.rawValue))
     }
+  }
+
+  @Test
+  func brandNamesSplitAtEveryCaseBoundary() {
+    #expect(CommandLineName.kebab("SonyDualShock4") == "sony-dual-shock4")
+    #expect(CommandLineName.kebab("SonyDualSense") == "sony-dual-sense")
+    #expect(CommandLineName.kebab("VendorGameSir") == "vendor-game-sir")
+    #expect(CommandLineName.kebab("VendorNVIDIAShield") == "vendor-nvidia-shield")
+    #expect(CommandLineName.value(of: "sony-dualshock4", in: PhysicalProtocolID.self) == nil)
+    #expect(
+      CommandLineName.value(of: "sony-dual-shock4", in: PhysicalProtocolID.self)
+        == .sonyDualShock4
+    )
+    #expect(CommandLineName.collisions(in: PhysicalProtocolID.self).isEmpty)
   }
 
   // MARK: - Records

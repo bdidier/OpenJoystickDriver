@@ -89,7 +89,7 @@
     private func recordRow(_ item: LibraryRecordItem) -> some View {
       let summary = OJDLocalized.formatted(
         "library.record.detail",
-        item.family,
+        item.family.displayName,
         item.layer.libraryTitle
       )
       return VStack(alignment: .leading, spacing: 2) {

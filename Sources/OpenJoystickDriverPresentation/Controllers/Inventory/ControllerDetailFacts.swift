@@ -7,7 +7,7 @@ struct ControllerFact: Equatable, Identifiable {
     case publication, serving, controllerProtocol, serialNumber, inputHealth
     case battery, chargingState, cableState
     case rumble, lighting, adaptiveTriggers, motion, touchContacts
-    case unitID, ownership, duplicateExposureRisk, outputOwner, record, controls
+    case unitID, parser, ownership, duplicateExposureRisk, outputOwner, record, controls
     case startupStatus, inputReportFormat, inputRecoveries
     case publicationAttempted, publicationCompleted
     case usbIdentifier, inputEndpoint, outputEndpoint
@@ -33,7 +33,11 @@ enum ControllerDetailFacts {
     let always = [
       fact(.publication, "cli.controller.show.label.publication", publication(device)),
       fact(.serving, "controllers.serving.label", .text(servingText(device))),
-      fact(.controllerProtocol, "common.protocol", .text(device.protocolBinding.displayLabel)),
+      fact(
+        .controllerProtocol,
+        "common.protocol",
+        .text(device.protocolBinding.displayName)
+      ),
       fact(.serialNumber, "common.serialNumber", serialNumber(device)),
       fact(.inputHealth, "cli.controller.show.label.input", .text(inputHealthText(device))),
     ]
@@ -69,9 +73,10 @@ enum ControllerDetailFacts {
     return always + (power + capabilities).filter { $0.value != .none }
   }
 
-  /// The technical facts, shown under Advanced: identifiers, ownership, the record, publication
-  /// timing, and the controls the parser emits. `record` is the controller model's effective
-  /// record, if one matches.
+  /// The technical facts, shown under Advanced: identifiers, the parser (the binding that parses
+  /// the controller's input, in its `ojd` spelling, such as `xbox-xusb:receiver`), ownership, the
+  /// record, publication timing, and the controls the parser emits. `record` is the controller
+  /// model's effective record, if one matches.
   static func advanced(
     for device: ApplicationServiceDeviceDescription,
     record: ControllerRecord?
@@ -119,6 +124,7 @@ enum ControllerDetailFacts {
     ].filter { $0.value != .none }
     return [
       fact(.unitID, "cli.controller.show.label.unit", .reported(device.portKey?.rawValue)),
+      fact(.parser, "term.parser", .reported(device.protocolBinding.commandLineName)),
       fact(.ownership, "cli.controller.show.label.ownership", .text(ownershipText(device))),
       fact(
         .duplicateExposureRisk,
