@@ -92,9 +92,10 @@ COMMAND_HELP = """Commands:
   snapshots check             Diff the tree against the equivalence snapshots, per record
   snapshots write             Rewrite the equivalence snapshots from the tree (review the diff)
 
-  shots capture --area <name>|--settings-pane <name>|--all
+  shots capture --area <name>|--settings-pane <name>|--all [--ready-timeout <seconds>]
                               Capture the installed app's windows into .ojd-shots/<timestamp>/
                               (areas: Controllers Profiles Library Access Activity; panes: General Notifications Advanced)
+                              Waits up to --ready-timeout (default 15) for the app to answer Accessibility
 
   hooks install|validate      Install or validate repository Git hooks
   setup                       Install required command runner and hooks

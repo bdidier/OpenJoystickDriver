@@ -242,12 +242,64 @@ class GuiCaptureTests(unittest.TestCase):
     def test_accessibility_probe_other_failure_does_not_ask_for_permission(
         self,
     ) -> None:
-        message = self.probe_message("-25204")
+        message = self.probe_message("-25202")
         assert message is not None
         self.assertIn("Accessibility call to OpenJoystickDriver failed", message)
-        self.assertIn("-25204", message)
+        self.assertIn("-25202", message)
         self.assertIn("although the host app is trusted", message)
         self.assertNotIn("Privacy & Security", message)
+
+    def wait_for_app(
+        self, codes: list[str], timeout: float = 5.0
+    ) -> tuple[str | None, int, list[float]]:
+        now = [0.0]
+        sleeps: list[float] = []
+
+        def sleep(seconds: float) -> None:
+            sleeps.append(seconds)
+            now[0] += seconds
+
+        with patch.object(capture, "ax", side_effect=codes) as probe:
+            try:
+                capture.require_accessibility(7, timeout, lambda: now[0], sleep)
+            except capture.CaptureError as error:
+                return str(error), probe.call_count, sleeps
+        return None, probe.call_count, sleeps
+
+    def test_app_ready_immediately_does_not_wait(self) -> None:
+        self.assertEqual(self.wait_for_app(["0"]), (None, 1, []))
+
+    def test_app_ready_after_cannot_complete_probes_waits_then_continues(self) -> None:
+        message, probes, sleeps = self.wait_for_app(["-25204", "-25204", "0"])
+        self.assertEqual((message, probes), (None, 3))
+        self.assertEqual(sleeps, [capture.APP_READY_POLL_SECONDS] * 2)
+
+    def test_app_not_ready_by_the_deadline_names_app_wait_timeout_and_error(
+        self,
+    ) -> None:
+        message, probes, _ = self.wait_for_app(["-25204"] * 100, timeout=1.0)
+        assert message is not None
+        self.assertIn("OpenJoystickDriver did not answer Accessibility", message)
+        self.assertIn("within 1 seconds", message)
+        self.assertIn("last AXError -25204", message)
+        self.assertIn("--ready-timeout", message)
+        self.assertEqual(probes, 5)
+
+    def test_other_probe_errors_are_not_waited_on(self) -> None:
+        message, probes, sleeps = self.wait_for_app(["-25202"])
+        assert message is not None
+        self.assertEqual((probes, sleeps), (1, []))
+
+    def test_ready_timeout_option_is_positive(self) -> None:
+        self.assertEqual(
+            capture.parse_args(["--all", "--ready-timeout", "3"]).ready_timeout, 3.0
+        )
+        self.assertEqual(
+            capture.parse_args(["--all"]).ready_timeout,
+            capture.APP_READY_TIMEOUT_SECONDS,
+        )
+        with self.assertRaises(SystemExit):
+            capture.parse_args(["--all", "--ready-timeout", "0"])
 
     def test_capture_probes_after_finding_the_app_and_before_any_gui_call(
         self,
