@@ -887,6 +887,14 @@
         "$ref": "#/$defs/descriptionSessionWrite"
       }
     },
+    "generalSessionKeys": {
+      "description": "The defaults.session keys every family may set. Any other session key belongs to the families whose drivers read it.",
+      "properties": {
+        "startup": true,
+        "rumble": true,
+        "keepAlive": true
+      }
+    },
     "descriptionSession": {
       "description": "What runs while the device is open: startup writes, the rumble template, the keep-alive, for NintendoSwitch1 its subcommands, for XboxGIP its named packets, handshake attempts and announce resend limit, and for XboxXUSB its receiver inquiry resend limit, and for NintendoSwitch2 its command channel and trailing stop packets. Startup writes are all HID reports, all raw-USB packets, or all references to the family's named packets; a reference names an id that namedPackets lists, which a schema cannot say and the validators check.",
       "type": "object",

@@ -48,7 +48,8 @@ public enum PhysicalProtocolID: String, CaseIterable, Codable, Sendable {
     }
   }
 
-  /// The parameter names this family's driver reads. Its description declares exactly these.
+  /// The parameter names this family's driver reads. Loading refuses a description that declares
+  /// others, and the bundled descriptions declare exactly these, as a test checks.
   var readParameters: Set<String> {
     switch self {
     case .xboxGIP: ["shareButton"]

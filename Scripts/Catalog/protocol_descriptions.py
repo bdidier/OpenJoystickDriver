@@ -540,21 +540,31 @@ def parameters_problem(
     return None
 
 
-# The `defaults.session` keys every family may have; any other key is family-specific.
-GENERAL_SESSION_KEYS = frozenset({"startup", "rumble", "keepAlive"})
+SCHEMA = PROTOCOLS.parents[0] / "Schemas" / "protocol-description.schema.json"
+
+
+@cache
+def general_session_keys() -> frozenset[str]:
+    """The `defaults.session` keys every family may set, from the description schema; any
+    other key is family-specific. A Swift test pins `Session.generalKeys` to the same list."""
+    schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
+    return frozenset(schema["$defs"]["generalSessionKeys"]["properties"])
 
 
 @cache
 def read_by_driver(family: str) -> tuple[frozenset[str], frozenset[str]]:
-    """The parameter names and family-specific session fields the family's driver reads,
-    which its bundled description declares. `PhysicalProtocolID.readParameters` and
-    `sessionFields` state the same sets in Swift, and a Swift test pins the bundled
-    descriptions to them."""
+    """The parameter names and family-specific session fields the family's driver reads, as
+    its bundled description declares them.
+
+    For a bundled file this compares the file with itself, so Python checks only documents
+    that are not bundled (fixtures and test bodies). The bundled files are protected by the
+    Swift load check against `PhysicalProtocolID.readParameters` and `sessionFields`, and by
+    the Swift test `eachBundledDescriptionDeclaresWhatItsDriverReads`."""
     description = bundled()[family]
     return (
         frozenset(description.get("parameters", {})),
         frozenset(description.get("defaults", {}).get("session", {}))
-        - GENERAL_SESSION_KEYS,
+        - general_session_keys(),
     )
 
 
@@ -564,7 +574,7 @@ def session_field_violations(description: dict[str, Any]) -> list[tuple[str, str
     family = description["family"]
     read_parameters, read = read_by_driver(family)
     present = (
-        set(description.get("defaults", {}).get("session", {})) - GENERAL_SESSION_KEYS
+        set(description.get("defaults", {}).get("session", {})) - general_session_keys()
     )
     found = [
         ("E5002", f"defaults.session.{name}: {family} does not read it")

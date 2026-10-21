@@ -1,4 +1,5 @@
 import Foundation
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -336,6 +337,16 @@ struct ProtocolDescriptionTests {
     let description = try #require(ProtocolDescription.bundled[family])
     #expect(Set(description.parameters.keys) == family.readParameters, "\(family.rawValue)")
     #expect(description.presentSessionFields == family.sessionFields, "\(family.rawValue)")
+  }
+
+  /// The general session keys are the schema's list, which Python reads.
+  @Test
+  func theGeneralSessionKeysAreTheSchemasList() throws {
+    let schema = try JSONSchemaFiles.document(named: "protocol-description.schema.json")
+    let defs = try #require(schema["$defs"] as? [String: Any])
+    let general = try #require(defs["generalSessionKeys"] as? [String: Any])
+    let keys = try #require(general["properties"] as? [String: Any])
+    #expect(Set(keys.keys) == ProtocolDescription.Document.Session.generalKeys)
   }
 
   @Test

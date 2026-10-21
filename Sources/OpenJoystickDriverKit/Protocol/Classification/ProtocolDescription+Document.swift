@@ -75,8 +75,10 @@ extension ProtocolDescription {
       let receiverInquiryResendLimit: Int?
       let commandChannel: ProtocolDescription.CommandChannel?
       let trailingStopPackets: Int?
-      /// The keys of the session that only some families have: every key but the startup writes,
-      /// the rumble template and the keep-alive.
+      /// The keys every family may set. The description schema lists the same keys as
+      /// `$defs/generalSessionKeys`, which a test pins this to.
+      static let generalKeys: Set<String> = ["startup", "rumble", "keepAlive"]
+      /// The keys of the session that only some families have: every key but the general ones.
       let familyFields: Set<String>
 
       init(from decoder: any Decoder) throws {
@@ -87,9 +89,7 @@ extension ProtocolDescription {
           "announceResendLimit", "receiverInquiryResendLimit", "commandChannel",
           "trailingStopPackets",
         ])
-        familyFields = Set(container.allKeys.map(\.stringValue)).subtracting([
-          "startup", "rumble", "keepAlive",
-        ])
+        familyFields = Set(container.allKeys.map(\.stringValue)).subtracting(Self.generalKeys)
         guard !container.allKeys.isEmpty else {
           throw DecodingError.dataCorrupted(
             .init(codingPath: decoder.codingPath, debugDescription: "session must not be empty")
