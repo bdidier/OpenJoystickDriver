@@ -48,8 +48,10 @@ public enum PhysicalProtocolID: String, CaseIterable, Codable, Sendable {
     }
   }
 
-  /// The general `defaults.session` keys this family's driver reads beyond the rumble template,
-  /// which `recordSections` governs. Its description lists exactly these as `sessionKeys`.
+  /// The general `defaults.session` keys this family uses beyond the rumble template, which
+  /// `recordSections` governs: the keys its description may set. Its description lists exactly
+  /// these as `sessionKeys`. HID startup writes run through one shared pipeline, so this names
+  /// what the family uses, not what its driver reads itself.
   var generalSessionFields: Set<ProtocolDescription.SessionKey> {
     switch self {
     case .xboxXUSB, .nintendoSwitch1, .sonyDualShock4: [.startup]

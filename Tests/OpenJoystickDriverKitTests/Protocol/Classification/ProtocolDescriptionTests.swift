@@ -413,8 +413,8 @@ struct ProtocolDescriptionTests {
     }
   }
 
-  /// XboxXID's `sessionKeys` list only `rumble`, so its `defaults.session` refuses startup
-  /// packets and a keep-alive.
+  /// XboxXID lists no `sessionKeys`, so its `defaults.session` refuses startup packets and a
+  /// keep-alive.
   @Test
   func anXIDSessionHoldsOnlyARumbleTemplate() {
     let session = [
