@@ -12,13 +12,49 @@ public final class LocalServiceRPCServer: @unchecked Sendable {
   private let stateLock = NSLock()
   private var listener: Listener?
 
-  /// One started server's sockets. The accept loop is the only code that closes them, so the
-  /// descriptor numbers stay reserved until the loop has stopped using them and a later server
-  /// cannot be handed the same numbers while this loop still polls.
+  /// Runs once the accept loop has stopped and closed its descriptors; tests await it.
+  package var acceptLoopDidExit: (@Sendable () -> Void)?
+
+  /// One started server's sockets. The accept loop closes `socket` and `wakeRead`. Whoever clears
+  /// `listener` closes `wakeWrite`: `stop()`, or the loop when it ends on its own. The loop sees
+  /// the hang-up of `wakeRead` when `wakeWrite` closes.
   private struct Listener {
     let socket: Int32
     let wakeRead: Int32
     let wakeWrite: Int32
+  }
+
+  /// What the accept loop does after `accept` fails with an error number.
+  package enum AcceptFailure: Equatable, Sendable {
+    /// The connection was dropped before it was accepted; accept the next one.
+    case skip
+    /// The process or system is out of descriptors or memory. Connections wait in the queue;
+    /// the loop reports the reason, waits and accepts again.
+    case waitForResources
+    /// The listening socket is unusable, so the server ends.
+    case fatal
+
+    package init(errno code: Int32) {
+      switch code {
+      case EINTR, ECONNABORTED: self = .skip
+      case EMFILE, ENFILE, ENOBUFS, ENOMEM: self = .waitForResources
+      default: self = .fatal
+      }
+    }
+  }
+
+  /// Seconds the accept loop waits after `AcceptFailure.waitForResources` before accepting again.
+  package static let resourceWaitMilliseconds: Int32 = 500
+
+  package static func acceptFailureMessage(_ code: Int32, action: AcceptFailure) -> String {
+    let reason = String(cString: strerror(code))
+    switch action {
+    case .waitForResources:
+      return "[LocalServiceRPCServer] Cannot accept connections (\(reason), errno \(code)); "
+        + "retrying in \(resourceWaitMilliseconds) ms"
+    default:
+      return "[LocalServiceRPCServer] Stopped accepting connections (\(reason), errno \(code))"
+    }
   }
 
   public convenience init(authentication: @escaping Authentication, handler: @escaping Handler) {
@@ -40,6 +76,7 @@ public final class LocalServiceRPCServer: @unchecked Sendable {
   }
 
   public func start() throws {
+    if stateLock.withLock({ listener != nil }) { throw LocalServiceRPCError.alreadyRunning }
     let path = socketPath
     try removeStaleSocket(at: path)
     let descriptor = socket(AF_UNIX, SOCK_STREAM, 0)
@@ -78,17 +115,29 @@ public final class LocalServiceRPCServer: @unchecked Sendable {
       return listener
     }
     guard let stopped else { return }
-    // The accept loop wakes on the pipe, closes every descriptor and ends.
-    var byte: UInt8 = 0
-    _ = Darwin.write(stopped.wakeWrite, &byte, 1)
+    // Closing the write end hangs up the read end, which wakes the accept loop to close the rest.
+    Darwin.close(stopped.wakeWrite)
     unlink(socketPath)
+  }
+
+  /// Ends the server when the loop stops on its own: the loop owns `wakeWrite` then, unless
+  /// `stop()` already took the listener.
+  private func release(_ ended: Listener) {
+    let owned = stateLock.withLock { () -> Bool in
+      guard listener?.wakeWrite == ended.wakeWrite else { return false }
+      listener = nil
+      Darwin.close(ended.wakeWrite)
+      return true
+    }
+    if owned { unlink(socketPath) }
   }
 
   private func acceptConnections(_ listener: Listener) {
     defer {
+      release(listener)
       Darwin.close(listener.socket)
       Darwin.close(listener.wakeRead)
-      Darwin.close(listener.wakeWrite)
+      acceptLoopDidExit?()
     }
     while true {
       var events = [
@@ -98,14 +147,34 @@ public final class LocalServiceRPCServer: @unchecked Sendable {
       let ready = poll(&events, 2, -1)
       if ready < 0 {
         if errno == EINTR { continue }
+        print(Self.acceptFailureMessage(errno, action: .fatal))
         return
       }
       if events[1].revents != 0 { return }
-      guard events[0].revents & Int16(POLLIN) != 0 else { return }
+      guard events[0].revents & Int16(POLLIN) != 0 else {
+        print(
+          "[LocalServiceRPCServer] Stopped accepting connections "
+            + "(listening socket poll events \(events[0].revents))"
+        )
+        return
+      }
       let connection = Darwin.accept(listener.socket, nil, nil)
       guard connection >= 0 else {
-        if errno == EINTR || errno == ECONNABORTED { continue }
-        return
+        let code = errno
+        let action = AcceptFailure(errno: code)
+        switch action {
+        case .skip: continue
+        case .waitForResources:
+          print(Self.acceptFailureMessage(code, action: action))
+          // The wait ends early when the server stops.
+          var wake = [pollfd(fd: listener.wakeRead, events: Int16(POLLIN), revents: 0)]
+          _ = poll(&wake, 1, Self.resourceWaitMilliseconds)
+          if wake[0].revents != 0 { return }
+          continue
+        case .fatal:
+          print(Self.acceptFailureMessage(code, action: action))
+          return
+        }
       }
       BlockingWork.detach(label: "com.openjoystickdriver.rpc.connection") { [weak self] in
         self?.handleConnection(connection)

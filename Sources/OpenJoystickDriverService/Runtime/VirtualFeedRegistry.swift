@@ -188,8 +188,7 @@ final class VirtualFeedRegistry: @unchecked Sendable {
       activationFailure = .activationFailed(
         "it took longer than \(activationTimeout.formatted()) seconds"
       )
-    } catch is CancellationError {
-      activationFailure = nil
+    } catch is CancellationError where Task.isCancelled {
       if lock.withLock({ sessions.removeValue(forKey: token) }) != nil {
         Task { await device.close() }
       }

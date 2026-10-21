@@ -50,15 +50,21 @@ struct VirtualFeedCommand: AsyncParsableCommand {
       let token = try await ServiceConnection.withDeadline(seconds: timeout) {
         try await client.openVirtualFeed(profile: name).token
       }
+      // The close runs in a task of its own: a feed that ended by cancellation still sends it, which
+      // a cancelled task would cut short.
       let close: @Sendable () async -> Void = {
-        do {
-          _ = try await ServiceConnection.withDeadline(seconds: timeout) {
-            try await client.closeVirtualFeed(token: token)
+        await Task {
+          do {
+            _ = try await ServiceConnection.withDeadline(seconds: timeout) {
+              try await client.closeVirtualFeed(token: token)
+            }
+          } catch let failure as CLIFailure {
+            // The command's own outcome stands; a failed close is still reported.
+            CLIOutput.stderr(failure.line)
+          } catch {
+            // Only a cancellation remains, and this task is never cancelled.
           }
-        } catch {
-          // The command's own outcome stands; a failed close is still reported.
-          CLIOutput.stderr((error as? CLIFailure)?.line ?? error.localizedDescription)
-        }
+        }.value
       }
       try await withCLIShutdownCleanup(close) {
         if CLIContext.current.format == .human {
