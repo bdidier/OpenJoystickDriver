@@ -101,6 +101,8 @@ function rowLabel(row) {
 	return text ? attribute(text, "AXValue") : null;
 }
 
+// AXValueGetValue cannot be called from JXA: the CGPoint and CGSize out-parameters
+// need a struct type that bindFunction rejects, so the value is read from its description.
 function pair(element, name, first, second) {
 	const { value } = read(element, name);
 	const found = value && ObjC.unwrap(value.description).match(
@@ -146,13 +148,18 @@ function run(argv) {
 		case "current-sidebar": {
 			const row = sidebar(app).find((candidate) => attribute(candidate, "AXSelected"));
 			if (!row) throw new Error("no sidebar row is selected");
-			return rowLabel(row);
+			const name = rowLabel(row);
+			if (name === null) throw new Error("the selected sidebar row has no label");
+			return name;
 		}
 		case "select-sidebar": {
 			const row = sidebar(app).find((candidate) => rowLabel(candidate) === argument);
 			if (!row) throw new Error("no sidebar item named " + argument);
 			const code = $.AXUIElementSetAttributeValue(row, "AXSelected", AX_TRUE);
 			if (code !== 0) throw new Error("selecting " + argument + " failed with AXError " + code);
+			if (!waitFor(() => attribute(row, "AXSelected") === true)) {
+				throw new Error("sidebar item " + argument + " did not become selected");
+			}
 			delay(SETTLE_SECONDS);
 			return "";
 		}
@@ -160,7 +167,8 @@ function run(argv) {
 			if (!waitFor(() => windows(app).some(isMain))) throw new Error("main window did not appear");
 			return "";
 		case "open-settings": {
-			$.AXUIElementSetAttributeValue(app, "AXFrontmost", AX_TRUE);
+			const front = $.AXUIElementSetAttributeValue(app, "AXFrontmost", AX_TRUE);
+			if (front !== 0) throw new Error("bringing the app to the front failed with AXError " + front);
 			const menuBar = children(app, "AXMenuBar")[0];
 			const appMenu = menuBar && children(menuBar, "AXMenuBarItem").find((item) => label(item) === "OpenJoystickDriver");
 			const menu = appMenu && children(appMenu, "AXMenu")[0];

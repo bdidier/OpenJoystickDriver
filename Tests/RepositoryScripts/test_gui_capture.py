@@ -219,6 +219,26 @@ class GuiCaptureTests(unittest.TestCase):
         self.assertIn("-25211", message)
         self.assertIn("Privacy & Security > Accessibility", message)
 
+    def test_run_names_the_host_app_for_an_untrusted_ax_error(self) -> None:
+        failure = subprocess.CompletedProcess(
+            [], 1, "", "execution error: AXError -25211"
+        )
+        with (
+            patch.object(subprocess, "run", return_value=failure),
+            self.assertRaises(capture.CaptureError) as raised,
+        ):
+            capture.run(["osascript", "-l", "JavaScript"])
+        self.assertEqual(str(raised.exception), capture.not_trusted_message("-25211"))
+
+    def test_run_does_not_blame_permission_for_the_word_assistive(self) -> None:
+        failure = subprocess.CompletedProcess([], 1, "", "assistive access failed")
+        with (
+            patch.object(subprocess, "run", return_value=failure),
+            self.assertRaises(capture.CaptureError) as raised,
+        ):
+            capture.run(["osascript", "-l", "JavaScript"])
+        self.assertNotIn("not granted", str(raised.exception))
+
     def test_accessibility_probe_other_failure_does_not_ask_for_permission(
         self,
     ) -> None:

@@ -46,11 +46,8 @@ def run(command: list[str]) -> str:
     result = subprocess.run(command, capture_output=True, text=True, check=False)
     if result.returncode != 0:
         detail = result.stderr.strip()
-        if "assistive" in detail.lower() or "25211" in detail:
-            raise CaptureError(
-                "Accessibility permission is missing: allow the terminal in "
-                "System Settings > Privacy & Security > Accessibility"
-            )
+        if f"AXError {ACCESSIBILITY_NOT_TRUSTED}" in detail:
+            raise CaptureError(not_trusted_message(ACCESSIBILITY_NOT_TRUSTED))
         raise CaptureError(f"{' '.join(command[:3])} failed: {detail}")
     return result.stdout.strip()
 
@@ -104,17 +101,21 @@ def process_id() -> int:
     return int(pids[0])
 
 
+def not_trusted_message(code: str) -> str:
+    return (
+        f"Accessibility is not granted to the host app (AXError {code}): "
+        "allow the host app in System Settings > Privacy & Security > "
+        "Accessibility"
+    )
+
+
 def require_accessibility(pid: int) -> None:
     """Reads the app role through the Accessibility API and names each failure."""
     code = ax("probe", pid)
     if code == ACCESSIBILITY_GRANTED:
         return
     if code == ACCESSIBILITY_NOT_TRUSTED:
-        raise CaptureError(
-            f"Accessibility is not granted to the host app (AXError {code}): "
-            "allow the host app in System Settings > Privacy & Security > "
-            "Accessibility"
-        )
+        raise CaptureError(not_trusted_message(code))
     raise CaptureError(
         f"Accessibility call to {PROCESS} failed (AXError {code}) although the "
         "host app is trusted: the app may not be responding, or the command is "
