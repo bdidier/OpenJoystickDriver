@@ -1230,8 +1230,8 @@
 "cli.virtual.export_mapping.profile" = "出力する仮想ゲームパッドのプロファイル。省略するとすべてのプロファイルを出力します。";
 "cli.virtual.feed.abstract" = "stdin で操作される仮想ゲームパッドを公開します。";
 "cli.virtual.feed.discussion" = "1 行につき 1 つの JSON オブジェクトを読み取ります。「buttons」 と 「dpad」 は押されているコントロール (South や up など) を列挙し、「axes」 は軸名 (LeftStickX など) を値に対応付けます。省略したコントロールはニュートラルになります。スティックは -1 から 1 の範囲で Y が下方向、トリガーは 0 から 1 の範囲です。フレームは順番に再生され、各フレームは最低 8 ms 継続します。「holdMilliseconds」 を指定すると、フレームをより長く (最大 60000) 保持できます。ゲームがゲームパッドに送るすべての出力コマンド (振動など) を、1 行につき 1 つの JSON オブジェクトとして出力します。入力が終了した後、すべてのフレームを再生し終えると停止します。";
-"cli.virtual.feed.error.closed" = "サービスが仮想ゲームパッドを閉じました。「ojd status」 で確認してください。";
-"cli.virtual.feed.error.close_interrupted" = "仮想ゲームパッドを閉じる処理が中断されました。「ojd status」 で確認してください。";
+"cli.virtual.feed.error.closed" = "サービスが仮想ゲームパッドを閉じました。「ojd status」で確認してください。";
+"cli.virtual.feed.error.close_interrupted" = "仮想ゲームパッドを閉じる処理が中断されました。「ojd status」で確認してください。";
 "cli.virtual.feed.error.frame" = "%@ 行目は有効なフレームではありません。「ojd virtual feed --help」 で形式を確認できます。";
 "cli.virtual.feed.profile" = "公開する仮想ゲームパッドのプロファイル。";
 "cli.virtual.feed.started" = "%@ の仮想ゲームパッドを公開しています。フレームを stdin に書き込みます。停止するには、入力を終了するか Control-C を押してください。";

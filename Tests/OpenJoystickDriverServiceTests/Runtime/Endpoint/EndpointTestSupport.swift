@@ -28,6 +28,9 @@ func withEndpointServer(
   feeds: VirtualFeedRegistry? = nil,
   streamDelivered: (@Sendable (ControllerSessionToken, UInt64) async -> Void)? = nil,
   beforeAcceptWait: (@Sendable (AccessTransport, Int) -> Void)? = nil,
+  acceptCall: @escaping @Sendable (Int32) -> Int32 = { Darwin.accept($0, nil, nil) },
+  resourceWaitMilliseconds: Int32 = AcceptFailure.resourceWaitMilliseconds,
+  report: @escaping @Sendable (String) -> Void = { print($0) },
   _ body: (EndpointServer, EndpointFixture) async throws -> Void
 ) async throws {
   let directory = FileManager.default.temporaryDirectory.appendingPathComponent(
@@ -49,7 +52,10 @@ func withEndpointServer(
     feeds: feeds,
     identify: { _ in client },
     streamDelivered: streamDelivered,
-    beforeAcceptWait: beforeAcceptWait
+    beforeAcceptWait: beforeAcceptWait,
+    acceptCall: acceptCall,
+    resourceWaitMilliseconds: resourceWaitMilliseconds,
+    report: report
   )
   defer {
     server.stop()

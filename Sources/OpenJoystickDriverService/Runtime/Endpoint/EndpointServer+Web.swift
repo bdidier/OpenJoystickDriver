@@ -68,7 +68,8 @@ extension EndpointServer {
     }
     return try AcceptListener(
       listening: descriptor,
-      port: Int(UInt16(bigEndian: address.sin_port))
+      port: Int(UInt16(bigEndian: address.sin_port)),
+      acceptCall: acceptCall
     )
   }
 
@@ -121,12 +122,17 @@ extension EndpointServer {
         // EAGAIN: the pending connection was dropped between poll and accept; wait again.
         // Running out of descriptors or memory is reported and retried after a wait that
         // `stop` ends.
+        let code = errno
+        // A stop wakes the loop and replaces the socket under the descriptor, so the failure
+        // that follows is the stop, not a fault.
+        guard lock.withLock({ webGeneration == generation }) else { return }
         guard
           AcceptFailure.continuesAfter(
-            errno: errno,
+            errno: code,
             server: "EndpointServer",
             wake: listener.wakeRead,
-            report: { print($0) }
+            waitMilliseconds: resourceWaitMilliseconds,
+            report: report
           )
         else { return }
         continue

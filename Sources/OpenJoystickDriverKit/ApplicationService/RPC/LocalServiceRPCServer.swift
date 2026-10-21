@@ -13,7 +13,10 @@ public final class LocalServiceRPCServer: @unchecked Sendable {
   private var listener: Listener?
   /// True while a `start()` call sets up the sockets, so a second call is refused.
   private var starting = false
+  /// True when `stop()` ran while `starting`; `start()` stops the server it finished.
+  private var stopRequested = false
 
+  // The four hooks below belong to tests; set them before `start()`.
   /// Runs once the accept loop has stopped and closed its descriptors; tests await it.
   package var acceptLoopDidExit: (@Sendable () -> Void)?
   /// Takes one connection from the listening descriptor, as `accept` does; tests replace it to
@@ -60,8 +63,16 @@ public final class LocalServiceRPCServer: @unchecked Sendable {
       starting = true
     }
     do { try startReserved() } catch {
-      stateLock.withLock { starting = false }
+      stateLock.withLock {
+        starting = false
+        stopRequested = false
+      }
       throw error
+    }
+    if stateLock.withLock({
+      defer { stopRequested = false }; return stopRequested
+    }) {
+      stop()
     }
   }
 
@@ -102,27 +113,31 @@ public final class LocalServiceRPCServer: @unchecked Sendable {
     }
   }
 
+  /// Stops the server. A call while `start()` still sets up the sockets takes effect as soon as
+  /// that call returns.
   public func stop() {
-    let stopped = stateLock.withLock { () -> Listener? in
-      defer { listener = nil }
-      return listener
+    stateLock.withLock {
+      guard let stopped = listener else {
+        if starting { stopRequested = true }
+        return
+      }
+      listener = nil
+      // Closing the write end hangs up the read end, which wakes the accept loop to close the
+      // rest. The socket file goes under the lock, so a later `start()` cannot lose its new file.
+      Darwin.close(stopped.wakeWrite)
+      unlink(socketPath)
     }
-    guard let stopped else { return }
-    // Closing the write end hangs up the read end, which wakes the accept loop to close the rest.
-    Darwin.close(stopped.wakeWrite)
-    unlink(socketPath)
   }
 
   /// Ends the server when the loop stops on its own: the loop owns `wakeWrite` then, unless
   /// `stop()` already took the listener.
   private func release(_ ended: Listener) {
-    let owned = stateLock.withLock { () -> Bool in
-      guard listener?.id == ended.id else { return false }
+    stateLock.withLock {
+      guard listener?.id == ended.id else { return }
       listener = nil
       Darwin.close(ended.wakeWrite)
-      return true
+      unlink(socketPath)
     }
-    if owned { unlink(socketPath) }
   }
 
   private func acceptConnections(_ listener: Listener) {

@@ -51,6 +51,7 @@ package enum AcceptFailure: Equatable, Sendable {
     wake: Int32,
     waitMilliseconds: Int32 = resourceWaitMilliseconds,
     ended: ErrorCode? = nil,
+    pollCall: PollCall = Darwin.poll,
     report: (String) -> Void
   ) -> Bool {
     let action = Self(errno: code)
@@ -60,27 +61,51 @@ package enum AcceptFailure: Equatable, Sendable {
       report(
         message(server: server, errno: code, action: action, waitMilliseconds: waitMilliseconds)
       )
-      return !wait(milliseconds: waitMilliseconds, wake: wake)
+      switch wait(milliseconds: waitMilliseconds, wake: wake, pollCall: pollCall) {
+      case .elapsed: return true
+      case .woken: return false
+      case .failed(let pollCode):
+        report(message(server: server, errno: pollCode, action: .fatal, ended: ended))
+        return false
+      }
     case .fatal:
       report(message(server: server, errno: code, action: action, ended: ended))
       return false
     }
   }
 
-  /// Waits up to `milliseconds`; true when `wake` became readable or hung up first.
-  package static func wait(milliseconds: Int32, wake: Int32) -> Bool {
+  /// `poll`, as tests replace it to fail the call.
+  package typealias PollCall = (UnsafeMutablePointer<pollfd>, nfds_t, Int32) -> Int32
+
+  /// How a wait for resources ended.
+  package enum Wait: Equatable, Sendable {
+    /// The time passed; accept again.
+    case elapsed
+    /// `wake` became readable or hung up: the server was stopped.
+    case woken
+    /// `poll` failed with this error number.
+    case failed(Int32)
+  }
+
+  /// Waits up to `milliseconds` for `wake` to become readable or hang up.
+  package static func wait(
+    milliseconds: Int32,
+    wake: Int32,
+    pollCall: PollCall = Darwin.poll
+  ) -> Wait {
     let deadline = DispatchTime.now().uptimeNanoseconds + UInt64(milliseconds) * 1_000_000
     while true {
       let now = DispatchTime.now().uptimeNanoseconds
-      guard now < deadline else { return false }
+      guard now < deadline else { return .elapsed }
       let remaining = Int32(min((deadline - now + 999_999) / 1_000_000, UInt64(Int32.max)))
       var polled = [pollfd(fd: wake, events: Int16(POLLIN), revents: 0)]
-      let ready = poll(&polled, 1, remaining)
+      let ready = pollCall(&polled, 1, remaining)
       if ready < 0 {
         if errno == EINTR { continue }
-        return true
+        return .failed(errno)
       }
-      if polled[0].revents != 0 { return true }
+      if polled[0].revents & Int16(POLLNVAL) != 0 { return .failed(EBADF) }
+      if polled[0].revents != 0 { return .woken }
     }
   }
 }

@@ -207,3 +207,38 @@ struct RPCAcceptLoopTests {
     #expect(try await call(server) == 5)
   }
 }
+
+struct AcceptFailureWaitTests {
+  @Test
+  func aPollFailureDuringTheWaitIsReportedAsFatalWithItsCode() {
+    nonisolated(unsafe) var lines: [String] = []
+    let goesOn = AcceptFailure.continuesAfter(
+      errno: EMFILE,
+      server: "Test",
+      wake: -1,
+      waitMilliseconds: 1_000,
+      ended: .requestListenerStopped,
+      pollCall: { _, _, _ in
+        errno = EINVAL
+        return -1
+      },
+      report: { lines.append($0) }
+    )
+
+    #expect(!goesOn)
+    #expect(lines.count == 2)
+    #expect(lines[0].contains("Cannot accept connections"))
+    #expect(lines[1].contains(ErrorCode.requestListenerStopped.rawValue))
+    #expect(lines[1].contains("errno \(EINVAL)"))
+  }
+
+  @Test
+  func aWakeDescriptorThatIsClosedIsAFailureNotAStop() {
+    var ends: [Int32] = [-1, -1]
+    #expect(pipe(&ends) == 0)
+    Darwin.close(ends[0])
+    Darwin.close(ends[1])
+
+    #expect(AcceptFailure.wait(milliseconds: 1_000, wake: ends[0]) == .failed(EBADF))
+  }
+}

@@ -1325,7 +1325,7 @@
 "error.E2031" = "127.0.0.1 üzerindeki bu bağlantı noktası kullanımda veya açılamıyor. --port ile başka birini seçin.";
 "error.E2032" = "Kaynakları olan bir belirteç control kapsamına sahip olamaz, çünkü bir sayfa asla sanal bir oyun kumandasını sürmemelidir. control kapsamını kaynağı olmayan bir belirtece verin.";
 "error.E2033" = "Program başlatılamadı. Yolunun yürütülebilir bir dosyayı veya uygulamayı gösterdiğini ve çalıştırma izniniz olduğunu kontrol edin.";
-"error.E2034" = "Hizmet istekleri kabul etmeyi durdurdu. OpenJoystickDriver’ı kapatıp yeniden açın, sonra yeniden deneyin.";
+"error.E2034" = "Servis istekleri kabul etmeyi durdurdu. OpenJoystickDriver’ı kapatıp yeniden açın, sonra yeniden deneyin.";
 "cli.record.usb_not_claimed" = "Bu aile ham USB kullanır ve ürün listesi Apple tarafından imzalandığı için USB uzantısı bu kontrolcüyü sahiplenemez. OJD ona yalnızca macOS izin verdiğinde doğrudan USB erişimiyle ulaşır.";
 "cli.record.usb_only_switch2" = "Yalnızca USB: Kontrolcüyü Bluetooth LE üzerinden bağlamak için bu Switch 2 kaydına bluetoothLE.vibrationCharacteristic ekleyin.";
 "cli.record.validate.abstract" = "Bir kontrolcü kaydını yüklemeden denetler.";

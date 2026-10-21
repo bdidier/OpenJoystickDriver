@@ -67,6 +67,82 @@ struct EndpointServerTests {
     }
   }
 
+  /// Connects to the socket and leaves the connection unread, which makes the listener readable
+  /// while the accept calls of these tests fail.
+  private static func connectWithoutHandshake(_ path: String) throws -> Int32 {
+    let descriptor = socket(AF_UNIX, SOCK_STREAM, 0)
+    try #require(descriptor >= 0)
+    var address = try LocalServiceRPCTransport.socketAddress(path: path)
+    let length = LocalServiceRPCTransport.socketAddressLength(path: path)
+    let status = withUnsafePointer(to: &address) {
+      $0.withMemoryRebound(to: sockaddr.self, capacity: 1) { connect(descriptor, $0, length) }
+    }
+    try #require(status == 0)
+    return descriptor
+  }
+
+  /// Collects the lines an accept loop reports.
+  private final class Reports: @unchecked Sendable {
+    private let lock = NSLock()
+    private var lines: [String] = []
+
+    func add(_ line: String) { lock.withLock { lines.append(line) } }
+    var all: [String] { lock.withLock { lines } }
+  }
+
+  @Test
+  func stoppingTheEndpointDuringAWaitForResourcesEndsTheLoopAtOnce() async throws {
+    let reports = Reports()
+    let failing: @Sendable (Int32) -> Int32 = { _ in
+      errno = EMFILE
+      return -1
+    }
+    try await withEndpointServer(
+      acceptCall: failing,
+      resourceWaitMilliseconds: 600_000,
+      report: reports.add
+    ) { server, _ in
+      try server.setEnabled(true)
+      let client = try Self.connectWithoutHandshake(server.socketPath)
+      defer { Darwin.close(client) }
+      await waitUntil("the loop reports the wait") { !reports.all.isEmpty }
+      #expect(reports.all.first?.contains("Cannot accept connections") == true)
+
+      try server.setEnabled(false)
+      await waitUntil("the loop ends") { server.socketAcceptLoopCount == 0 }
+      #expect(reports.all.count == 1)
+    }
+  }
+
+  @Test
+  func aNormalStopReportsNoAcceptFailure() async throws {
+    let reports = Reports()
+    let inAccept = DispatchSemaphore(value: 0)
+    let proceed = DispatchSemaphore(value: 0)
+    // The listener is stopped while the loop is here; the call then fails as it does on the
+    // placeholder that replaced the socket.
+    let stoppedMeanwhile: @Sendable (Int32) -> Int32 = { _ in
+      inAccept.signal()
+      proceed.wait()
+      errno = ENOTSOCK
+      return -1
+    }
+    try await withEndpointServer(
+      acceptCall: stoppedMeanwhile,
+      report: reports.add
+    ) { server, _ in
+      try server.setEnabled(true)
+      let client = try Self.connectWithoutHandshake(server.socketPath)
+      defer { Darwin.close(client) }
+      await offPool { inAccept.wait() }
+
+      try server.setEnabled(false)
+      proceed.signal()
+      await waitUntil("the loop ends") { server.socketAcceptLoopCount == 0 }
+      #expect(reports.all.isEmpty)
+    }
+  }
+
   /// A loop held between its generation check and its wait must not take over the listener that
   /// replaced its own: its descriptor stays open until it ends, so the number is not reused.
   @Test
