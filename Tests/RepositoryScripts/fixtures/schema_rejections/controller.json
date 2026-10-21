@@ -1088,7 +1088,9 @@
         ],
         "input": {
           "report": {
-            "length": 8
+            "length": {
+              "atLeast": 8
+            }
           },
           "buttons": [
             {
@@ -1380,7 +1382,9 @@
         ],
         "input": {
           "report": {
-            "length": 8
+            "length": {
+              "atLeast": 8
+            }
           },
           "buttons": [
             {
@@ -3862,7 +3866,9 @@
         ],
         "input": {
           "report": {
-            "length": 2
+            "length": {
+              "atLeast": 2
+            }
           },
           "buttons": [
             {
@@ -3895,7 +3901,9 @@
         "input": {
           "report": {
             "id": 0,
-            "length": 2
+            "length": {
+              "atLeast": 2
+            }
           },
           "buttons": [
             {
@@ -3910,7 +3918,7 @@
     {
       "name": "rejects invalid report layouts: long report",
       "code": "E5007",
-      "python": "E5007: record.json at input.report.length: 65 is greater than the maximum of 64",
+      "python": "E5007: record.json at input.report.length.atLeast: 65 is greater than the maximum of 64",
       "swift": "record.input: an input report is 1...64 bytes long, with its ID byte",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -3927,7 +3935,9 @@
         ],
         "input": {
           "report": {
-            "length": 65
+            "length": {
+              "atLeast": 65
+            }
           },
           "buttons": [
             {
@@ -3942,7 +3952,7 @@
     {
       "name": "rejects invalid report layouts: report only",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'report': {'length': 2}} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input: {'report': {'length': {'atLeast': 2}}} is not valid under any of the given schemas",
       "swift": "record.input: an input layout decodes at least one control",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -3959,7 +3969,9 @@
         ],
         "input": {
           "report": {
-            "length": 2
+            "length": {
+              "atLeast": 2
+            }
           }
         }
       }
@@ -3984,7 +3996,9 @@
         ],
         "input": {
           "report": {
-            "length": 2
+            "length": {
+              "atLeast": 2
+            }
           },
           "buttons": []
         }
@@ -4010,7 +4024,9 @@
         ],
         "input": {
           "report": {
-            "length": 2
+            "length": {
+              "atLeast": 2
+            }
           },
           "buttons": [
             {
@@ -4042,7 +4058,9 @@
         ],
         "input": {
           "report": {
-            "length": 2
+            "length": {
+              "atLeast": 2
+            }
           },
           "buttons": [
             {
@@ -4074,7 +4092,9 @@
         ],
         "input": {
           "report": {
-            "length": 2
+            "length": {
+              "atLeast": 2
+            }
           },
           "buttons": [
             {
@@ -4113,7 +4133,9 @@
         ],
         "input": {
           "report": {
-            "length": 2
+            "length": {
+              "atLeast": 2
+            }
           },
           "buttons": [
             {
@@ -4152,7 +4174,9 @@
         ],
         "input": {
           "report": {
-            "length": 2
+            "length": {
+              "atLeast": 2
+            }
           },
           "buttons": [
             {
@@ -4191,7 +4215,9 @@
         ],
         "input": {
           "report": {
-            "length": 2
+            "length": {
+              "atLeast": 2
+            }
           },
           "buttons": [
             {
@@ -4231,7 +4257,9 @@
         ],
         "input": {
           "report": {
-            "length": 2
+            "length": {
+              "atLeast": 2
+            }
           },
           "buttons": [
             {
@@ -4273,7 +4301,9 @@
         ],
         "input": {
           "report": {
-            "length": 2
+            "length": {
+              "atLeast": 2
+            }
           },
           "buttons": [
             {
@@ -4289,7 +4319,7 @@
     {
       "name": "rejects invalid report layouts: unknown section",
       "code": "E5007",
-      "python": "E5007: record.json at input: {'report': {'length': 2}, 'buttons': [{'control': 'South', 'byte': 1, 'mask': 1}], 'touchpad': {}} is not valid under any of the given schemas",
+      "python": "E5007: record.json at input: {'report': {'length': {'atLeast': 2}}, 'buttons': [{'control': 'South', 'byte': 1, 'mask': 1}], 'touchpad': {}} is not valid under any of the given schemas",
       "swift": "record.input: unknown field(s): touchpad",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -4306,7 +4336,9 @@
         ],
         "input": {
           "report": {
-            "length": 2
+            "length": {
+              "atLeast": 2
+            }
           },
           "buttons": [
             {
@@ -7241,7 +7273,9 @@
         ],
         "input": {
           "report": {
-            "length": 1
+            "length": {
+              "atLeast": 1
+            }
           },
           "buttons": [
             {
@@ -8534,7 +8568,9 @@
         ],
         "input": {
           "report": {
-            "length": 4
+            "length": {
+              "atLeast": 4
+            }
           },
           "buttons": [
             {

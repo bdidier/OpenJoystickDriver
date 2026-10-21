@@ -5,6 +5,7 @@ import Testing
 
 struct HIDDescriptorDriverTests {
   static let family = PhysicalProtocolID.hidDescriptor
+  static let model = ControllerModelID(vendorID: 0x3537, productID: 0x100A)
 
   private let model = ControllerModelID(vendorID: 65_534, productID: 1)
 

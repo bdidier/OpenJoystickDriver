@@ -17,8 +17,7 @@
     "input": {
       "report": {
         "id": 1,
-        "length": 15,
-        "exactLength": true
+        "length": { "exactly": 15 }
       },
       "buttons": [
         {

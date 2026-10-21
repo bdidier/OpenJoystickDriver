@@ -6,6 +6,7 @@ import Testing
 
 struct SteamControllerDriverTests {
   static let family = PhysicalProtocolID.valveSteamController
+  static let model = ControllerModelID(vendorID: 0x28DE, productID: 0x1102)
 
   @Test
   func testSteamControllerProfilesExposeOperationalFlags() throws {

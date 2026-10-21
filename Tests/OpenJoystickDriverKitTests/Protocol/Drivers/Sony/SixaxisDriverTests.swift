@@ -6,6 +6,7 @@ import Testing
 
 struct SixaxisDriverTests {
   static let family = PhysicalProtocolID.sonySixaxis
+  static let model = ControllerModelID(vendorID: 0x054C, productID: 0x0268)
 
   @Test
   func testDS3ProfileIsExperimentalAndUnverified() throws {

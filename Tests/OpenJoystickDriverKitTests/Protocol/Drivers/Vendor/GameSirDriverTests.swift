@@ -4,6 +4,7 @@ import Testing
 
 struct GameSirDriverTests {
   static let family = PhysicalProtocolID.vendorGameSir
+  static let model = ControllerModelID(vendorID: 0x3537, productID: 0x1003)
 
   @Test
   func enhancedReportMapsGameplayExtrasAndBatteryWithoutMotion() throws {

@@ -90,14 +90,9 @@ public final class ReportLayoutDriver: PhysicalProtocolDriver {
     _ command: ControllerOutputCommand
   ) throws(ControllerOutputError) -> PhysicalOutputPlan {
     guard let rumbleTemplate else { throw .unsupportedCapability(command.capability) }
-    let intensities: RumbleIntensities
-    switch command {
-    case .setRumble(let requested, _): intensities = requested
-    case .stopRumble: intensities = .off
-    default: throw .unsupportedCapability(command.capability)
-    }
-    lastRumble = intensities
-    return PhysicalOutputPlan(writes: [rumbleWrite(rumbleTemplate, intensities)])
+    let plan = try rumbleTemplate.encode(command) { self.rumbleWrite(rumbleTemplate, $0) }
+    lastRumble = command.rumbleIntensities
+    return plan
   }
 
   /// Decodes one input report into the full controller state; a report shorter than the layout

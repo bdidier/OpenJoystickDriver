@@ -17,7 +17,7 @@
   "defaults": {
     "input": {
       "report": {
-        "length": 7
+        "length": { "atLeast": 7 }
       },
       "buttons": [
         {

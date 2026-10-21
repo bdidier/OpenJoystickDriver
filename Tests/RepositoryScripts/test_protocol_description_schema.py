@@ -433,7 +433,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                 "HIDReportLayout",
                 defaults={
                     "input": {
-                        "report": {"length": 1},
+                        "report": {"length": {"atLeast": 1}},
                         "buttons": [{"control": "South", "byte": 0, "mask": 1}],
                     }
                 },
@@ -444,7 +444,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                 "XboxXID",
                 defaults={
                     "input": {
-                        "report": {"length": 4},
+                        "report": {"length": {"atLeast": 4}},
                         "axes": [
                             {
                                 "control": "LeftStickX",
@@ -608,7 +608,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
 
     def test_rejects_defaults_a_driver_does_not_read(self) -> None:
         input_layout = {
-            "report": {"length": 1},
+            "report": {"length": {"atLeast": 1}},
             "buttons": [{"control": "South", "byte": 0, "mask": 1}],
         }
         for family, defaults in (
@@ -618,7 +618,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                 "XboxXID",
                 {
                     "input": {
-                        "report": {"length": 4},
+                        "report": {"length": {"atLeast": 4}},
                         "axes": [
                             {"control": "LeftStickX", "byte": 0, "symmetric": True}
                         ],
@@ -629,7 +629,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                 "XboxXID",
                 {
                     "input": {
-                        "report": {"length": 4},
+                        "report": {"length": {"atLeast": 4}},
                         "hat": [
                             {"encoding": "Table", "byte": 2, "mask": 15, "values": {}}
                         ],
@@ -640,7 +640,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                 "XboxXID",
                 {
                     "input": {
-                        "report": {"length": 4},
+                        "report": {"length": {"atLeast": 4}},
                         "hat": [
                             {
                                 "encoding": "Table",
@@ -656,7 +656,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                 "XboxXID",
                 {
                     "input": {
-                        "report": {"length": 4},
+                        "report": {"length": {"atLeast": 4}},
                         "hat": [
                             {
                                 "encoding": "Table",
@@ -1618,7 +1618,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             }
         }
         layout = {
-            "report": {"length": 1},
+            "report": {"length": {"atLeast": 1}},
             "buttons": [{"control": "South", "byte": 0, "mask": 1}],
         }
         self.assert_rejected(self.with_body("XboxXID", defaults={"input": usage_map}))

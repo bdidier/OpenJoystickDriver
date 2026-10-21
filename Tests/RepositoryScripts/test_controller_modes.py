@@ -342,7 +342,7 @@ class ControllerModeSchemaTests(unittest.TestCase):
 
     def test_validator_rejects_modes_that_break_record_level_rules(self) -> None:
         layout = {
-            "report": {"length": 8},
+            "report": {"length": {"atLeast": 8}},
             "buttons": [{"control": "South", "byte": 0, "mask": 1}],
         }
         rumble = {
@@ -409,7 +409,7 @@ class ControllerModeSchemaTests(unittest.TestCase):
 
     def test_single_mode_records_get_the_same_per_mode_checks(self) -> None:
         layout = {
-            "report": {"length": 8},
+            "report": {"length": {"atLeast": 8}},
             "buttons": [{"control": "South", "byte": 0, "mask": 1}],
         }
         rumble = {

@@ -39,6 +39,7 @@ private func makeXIDReport(
 
 struct XIDDriverTests {
   static let family = PhysicalProtocolID.xboxXID
+  static let model = ControllerModelID(vendorID: 0x045E, productID: 0x0202)
 
   @Test
   func rumbleUsesXIDBigEndianFullRangeMotorsAndCatalogEndpoint() throws {

@@ -421,7 +421,7 @@ struct ControllerModeTests {
       let expected: String
     }
     let layout: [String: Any] = [
-      "report": ["length": 8],
+      "report": ["length": ["atLeast": 8]],
       "buttons": [["control": "South", "byte": 0, "mask": 1]],
     ]
     let rumble: [String: Any] = [

@@ -8113,7 +8113,9 @@
         "defaults": {
           "input": {
             "report": {
-              "length": 7
+              "length": {
+                "atLeast": 7
+              }
             },
             "buttons": [
               {
@@ -8244,7 +8246,9 @@
         "defaults": {
           "input": {
             "report": {
-              "length": 7
+              "length": {
+                "atLeast": 7
+              }
             },
             "buttons": [
               {
@@ -8375,7 +8379,9 @@
         "defaults": {
           "input": {
             "report": {
-              "length": 7
+              "length": {
+                "atLeast": 7
+              }
             },
             "buttons": [
               {
@@ -8506,7 +8512,9 @@
         "defaults": {
           "input": {
             "report": {
-              "length": 7
+              "length": {
+                "atLeast": 7
+              }
             },
             "buttons": [
               {
@@ -11881,8 +11889,9 @@
           "input": {
             "report": {
               "id": 1,
-              "length": 15,
-              "exactLength": true
+              "length": {
+                "exactly": 15
+              }
             },
             "buttons": [
               {
@@ -12044,8 +12053,9 @@
           "input": {
             "report": {
               "id": 1,
-              "length": 15,
-              "exactLength": true
+              "length": {
+                "exactly": 15
+              }
             },
             "buttons": [
               {
@@ -12207,8 +12217,9 @@
           "input": {
             "report": {
               "id": 1,
-              "length": 15,
-              "exactLength": true
+              "length": {
+                "exactly": 15
+              }
             },
             "buttons": [
               {
@@ -12370,8 +12381,9 @@
           "input": {
             "report": {
               "id": 1,
-              "length": 15,
-              "exactLength": true
+              "length": {
+                "exactly": 15
+              }
             },
             "buttons": [
               {
@@ -13894,7 +13906,9 @@
           },
           "input": {
             "report": {
-              "length": 20
+              "length": {
+                "atLeast": 20
+              }
             },
             "buttons": [
               {
@@ -14069,7 +14083,9 @@
           },
           "input": {
             "report": {
-              "length": 20
+              "length": {
+                "atLeast": 20
+              }
             },
             "buttons": [
               {
@@ -14244,7 +14260,9 @@
           },
           "input": {
             "report": {
-              "length": 20
+              "length": {
+                "atLeast": 20
+              }
             },
             "buttons": [
               {
@@ -14419,7 +14437,9 @@
           },
           "input": {
             "report": {
-              "length": 20
+              "length": {
+                "atLeast": 20
+              }
             },
             "buttons": [
               {
@@ -14999,7 +15019,9 @@
         "defaults": {
           "input": {
             "report": {
-              "length": 1
+              "length": {
+                "atLeast": 1
+              }
             },
             "buttons": [
               {
@@ -17200,9 +17222,9 @@
       }
     },
     {
-      "name": "rejects defaults a driver does not read: family=HIDDescriptor, defaults={'input': {'report': {'length': 1}, 'buttons': [{'control': 'South', 'byte': 0, 'mask': 1}]}}",
+      "name": "rejects defaults a driver does not read: family=HIDDescriptor, defaults={'input': {'report': {'length': {'atLeast': 1}}, 'buttons': [{'control': 'South', 'byte': 0, 'mask': 1}]}}",
       "code": "E5002",
-      "python": "E5002: hid-descriptor.json at defaults: False schema does not allow {'report': {'length': 1}, 'buttons': [{'control': 'South', 'byte': 0, 'mask': 1}]}",
+      "python": "E5002: hid-descriptor.json at defaults: False schema does not allow {'report': {'length': {'atLeast': 1}}, 'buttons': [{'control': 'South', 'byte': 0, 'mask': 1}]}",
       "swift": "E5002: hid-descriptor.json: an input layout applies only to a family that reads one",
       "fileName": "hid-descriptor.json",
       "document": {
@@ -17216,7 +17238,9 @@
         "defaults": {
           "input": {
             "report": {
-              "length": 1
+              "length": {
+                "atLeast": 1
+              }
             },
             "buttons": [
               {
@@ -17230,9 +17254,9 @@
       }
     },
     {
-      "name": "rejects defaults a driver does not read: family=XboxXUSB, defaults={'input': {'report': {'length': 1}, 'buttons': [{'control': 'South', 'byte': 0, 'mask': 1}]}}",
+      "name": "rejects defaults a driver does not read: family=XboxXUSB, defaults={'input': {'report': {'length': {'atLeast': 1}}, 'buttons': [{'control': 'South', 'byte': 0, 'mask': 1}]}}",
       "code": "E5002",
-      "python": "E5002: xbox-xusb.json at defaults: False schema does not allow {'report': {'length': 1}, 'buttons': [{'control': 'South', 'byte': 0, 'mask': 1}]}",
+      "python": "E5002: xbox-xusb.json at defaults: False schema does not allow {'report': {'length': {'atLeast': 1}}, 'buttons': [{'control': 'South', 'byte': 0, 'mask': 1}]}",
       "swift": "E5002: xbox-xusb.json: an input layout applies only to a family that reads one",
       "fileName": "xbox-xusb.json",
       "document": {
@@ -17250,7 +17274,9 @@
         "defaults": {
           "input": {
             "report": {
-              "length": 1
+              "length": {
+                "atLeast": 1
+              }
             },
             "buttons": [
               {
@@ -17267,9 +17293,9 @@
       }
     },
     {
-      "name": "rejects defaults a driver does not read: family=XboxXID, defaults={'input': {'report': {'length': 4}, 'axes': [{'control': 'LeftStickX', 'byte': 0, 'symmetric': True}]}}",
+      "name": "rejects defaults a driver does not read: family=XboxXID, defaults={'input': {'report': {'length': {'atLeast': 4}}, 'axes': [{'control': 'LeftStickX', 'byte': 0, 'symmetric': True}]}}",
       "code": "E5002",
-      "python": "E5002: xbox-xid.json at defaults.input: {'report': {'length': 4}, 'axes': [{'control': 'LeftStickX', 'byte': 0, 'symmetric': True}]} is not valid under any of the given schemas",
+      "python": "E5002: xbox-xid.json at defaults.input: {'report': {'length': {'atLeast': 4}}, 'axes': [{'control': 'LeftStickX', 'byte': 0, 'symmetric': True}]} is not valid under any of the given schemas",
       "swift": "E5002: xbox-xid.json: description.defaults.input: a symmetric axis is signed with min below 0 below max",
       "fileName": "xbox-xid.json",
       "document": {
@@ -17287,7 +17313,9 @@
         "defaults": {
           "input": {
             "report": {
-              "length": 4
+              "length": {
+                "atLeast": 4
+              }
             },
             "axes": [
               {
@@ -17301,9 +17329,9 @@
       }
     },
     {
-      "name": "rejects defaults a driver does not read: family=XboxXID, defaults={'input': {'report': {'length': 4}, 'hat': [{'encoding': 'Table', 'byte': 2, 'mask': 15, 'values': {}}]}}",
+      "name": "rejects defaults a driver does not read: family=XboxXID, defaults={'input': {'report': {'length': {'atLeast': 4}}, 'hat': [{'encoding': 'Table', 'byte': 2, 'mask': 15, 'values': {}}]}}",
       "code": "E5002",
-      "python": "E5002: xbox-xid.json at defaults.input: {'report': {'length': 4}, 'hat': [{'encoding': 'Table', 'byte': 2, 'mask': 15, 'values': {}}]} is not valid under any of the given schemas",
+      "python": "E5002: xbox-xid.json at defaults.input: {'report': {'length': {'atLeast': 4}}, 'hat': [{'encoding': 'Table', 'byte': 2, 'mask': 15, 'values': {}}]} is not valid under any of the given schemas",
       "swift": "E5002: xbox-xid.json: description.defaults.input: a table hat names directions for values its mask holds, and no neutral entry",
       "fileName": "xbox-xid.json",
       "document": {
@@ -17321,7 +17349,9 @@
         "defaults": {
           "input": {
             "report": {
-              "length": 4
+              "length": {
+                "atLeast": 4
+              }
             },
             "hat": [
               {
@@ -17336,9 +17366,9 @@
       }
     },
     {
-      "name": "rejects defaults a driver does not read: family=XboxXID, defaults={'input': {'report': {'length': 4}, 'hat': [{'encoding': 'Table', 'byte': 2, 'mask': 15, 'values': {'01': 'North'}}]}}",
+      "name": "rejects defaults a driver does not read: family=XboxXID, defaults={'input': {'report': {'length': {'atLeast': 4}}, 'hat': [{'encoding': 'Table', 'byte': 2, 'mask': 15, 'values': {'01': 'North'}}]}}",
       "code": "E5002",
-      "python": "E5002: xbox-xid.json at defaults.input: {'report': {'length': 4}, 'hat': [{'encoding': 'Table', 'byte': 2, 'mask': 15, 'values': {'01': 'North'}}]} is not valid under any of the given schemas",
+      "python": "E5002: xbox-xid.json at defaults.input: {'report': {'length': {'atLeast': 4}}, 'hat': [{'encoding': 'Table', 'byte': 2, 'mask': 15, 'values': {'01': 'North'}}]} is not valid under any of the given schemas",
       "swift": "E5002: xbox-xid.json: description.defaults.input.hat.[0]: values map decimal numbers to non-neutral direction names",
       "fileName": "xbox-xid.json",
       "document": {
@@ -17356,7 +17386,9 @@
         "defaults": {
           "input": {
             "report": {
-              "length": 4
+              "length": {
+                "atLeast": 4
+              }
             },
             "hat": [
               {
@@ -17373,9 +17405,9 @@
       }
     },
     {
-      "name": "rejects defaults a driver does not read: family=XboxXID, defaults={'input': {'report': {'length': 4}, 'hat': [{'encoding': 'Table', 'byte': 2, 'mask': 15, 'values': {'1': 'Neutral'}}]}}",
+      "name": "rejects defaults a driver does not read: family=XboxXID, defaults={'input': {'report': {'length': {'atLeast': 4}}, 'hat': [{'encoding': 'Table', 'byte': 2, 'mask': 15, 'values': {'1': 'Neutral'}}]}}",
       "code": "E5002",
-      "python": "E5002: xbox-xid.json at defaults.input: {'report': {'length': 4}, 'hat': [{'encoding': 'Table', 'byte': 2, 'mask': 15, 'values': {'1': 'Neutral'}}]} is not valid under any of the given schemas",
+      "python": "E5002: xbox-xid.json at defaults.input: {'report': {'length': {'atLeast': 4}}, 'hat': [{'encoding': 'Table', 'byte': 2, 'mask': 15, 'values': {'1': 'Neutral'}}]} is not valid under any of the given schemas",
       "swift": "E5002: xbox-xid.json: description.defaults.input.hat.[0]: values map decimal numbers to non-neutral direction names",
       "fileName": "xbox-xid.json",
       "document": {
@@ -17393,7 +17425,9 @@
         "defaults": {
           "input": {
             "report": {
-              "length": 4
+              "length": {
+                "atLeast": 4
+              }
             },
             "hat": [
               {

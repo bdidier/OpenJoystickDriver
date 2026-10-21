@@ -233,13 +233,16 @@ public struct RumbleOutputTemplate: Equatable, Sendable {
     return last
   }
 
-  /// Rumble through this HID template; the motors run until the next report.
+  /// Rumble through this template; the motors run until the next report. `send` builds the write
+  /// of a raw-USB template, whose driver owns the endpoint; a HID template writes its own report.
   func encode(
-    _ command: ControllerOutputCommand
+    _ command: ControllerOutputCommand,
+    sending send: ((RumbleIntensities) -> PhysicalOutputWrite)? = nil
   ) throws(ControllerOutputError) -> PhysicalOutputPlan {
+    let build = send ?? { write($0) }
     switch command {
-    case .setRumble(let intensities, _): PhysicalOutputPlan(writes: [write(intensities)])
-    case .stopRumble: PhysicalOutputPlan(writes: [write(.off)])
+    case .setRumble(let intensities, _): return PhysicalOutputPlan(writes: [build(intensities)])
+    case .stopRumble: return PhysicalOutputPlan(writes: [build(.off)])
     default: throw .unsupportedCapability(command.capability)
     }
   }

@@ -32,6 +32,7 @@ private var v104: NVIDIAShieldDriver { NVIDIAShieldDriver(isShield2015: false) }
 @Suite
 struct NVIDIAShieldDriverTests {
   static let family = PhysicalProtocolID.vendorNVIDIAShield
+  static let model = ControllerModelID(vendorID: 0x0955, productID: 0x7210)
 
   @Test
   func restingReportsAreNeutral() throws {

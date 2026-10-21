@@ -150,7 +150,7 @@ private struct DraftLayout {
   var controlCount: Int { buttons.count + axes.count + (hat == nil ? 0 : 1) + triggers.count }
 
   var json: [String: Any] {
-    var report: [String: Any] = ["length": length]
+    var report: [String: Any] = ["length": ["atLeast": length]]
     if let reportID { report["id"] = Int(reportID) }
     var input: [String: Any] = ["report": report]
     if !buttons.isEmpty { input["buttons"] = buttons }

@@ -10,6 +10,11 @@ enum ServiceConnection {
   @TaskLocal
   static var socketPath = LocalServiceRPCTransport.defaultSocketPath
 
+  /// How long ``open()`` keeps probing for the service socket before it reports the service as
+  /// stopped. One probe can miss when the machine is loaded or the service is still accepting, so
+  /// a single miss is not proof; a stopped service costs a command at most this wait.
+  static let connectWaitSeconds: TimeInterval = 0.5
+
   /// The service's process identifier, or nil when nothing answers on the socket.
   static func processIdentifier() -> Int32? {
     LocalServiceRPCClient.serverProcessIdentifier(socketPath: socketPath)
@@ -30,7 +35,7 @@ enum ServiceConnection {
   /// The caller disconnects the client and bounds each request with `withDeadline`.
   static func open() async throws -> ApplicationServiceClient {
     let client = ApplicationServiceClient(socketPath: socketPath)
-    await client.connect(timeoutSeconds: 0)
+    await client.connect(timeoutSeconds: connectWaitSeconds)
     guard client.isConnected else { throw CLIFailure.serviceUnavailable }
     return client
   }

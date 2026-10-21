@@ -6,6 +6,8 @@ import Testing
 protocol ParserSuite {
   /// The family whose parser the suite's tests cover.
   static var family: PhysicalProtocolID { get }
+  /// A catalog model of that family; the registry builds the driver the suite's tests feed.
+  static var model: ControllerModelID { get }
 }
 
 extension HIDDescriptorDriverTests: ParserSuite {}
@@ -43,5 +45,24 @@ struct ProtocolParserCoverageTests {
   func everyProtocolFamilyHasExactlyOneParserSuite() {
     let families = Self.parserSuites.map { $0.family.rawValue }.sorted()
     #expect(families == PhysicalProtocolID.allCases.map(\.rawValue).sorted())
+  }
+
+  /// A suite's family is the family the registry binds its model to and builds the driver for,
+  /// so a suite listed under the wrong family fails.
+  @Test(arguments: parserSuites.map { SuiteBox(suite: $0) })
+  func eachSuiteCoversTheDriverTheRegistryBuildsForItsFamily(box: SuiteBox) throws {
+    let suite = box.suite
+    let record = try #require(ProtocolDriverRegistry().record(for: suite.model))
+    #expect(record.physicalProtocolID == suite.family, "\(suite)")
+    let driver = try catalogParser(suite.model)
+    #expect(
+      ProtocolDriverRegistryTests.driver(driver, belongsTo: suite.family),
+      "\(suite)"
+    )
+  }
+
+  struct SuiteBox: CustomTestStringConvertible, Sendable {
+    nonisolated(unsafe) let suite: any ParserSuite.Type
+    var testDescription: String { String(describing: suite) }
   }
 }

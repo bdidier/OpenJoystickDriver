@@ -6,6 +6,7 @@ import Testing
 
 struct DualSenseDriverTests {
   static let family = PhysicalProtocolID.sonyDualSense
+  static let model = ControllerModelID(vendorID: 0x054C, productID: 0x0CE6)
 
   @Test
   func testDualSenseUSBReportParsesPrimaryControls() throws {

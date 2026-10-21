@@ -39,7 +39,9 @@ struct ControllerRecordDraftTests {
       JSONSerialization.jsonObject(with: draft.document) as? [String: Any]
     )
     let input = try #require(document["input"] as? [String: Any])
-    #expect(input["report"] as? [String: Int] == ["length": 6, "id": 1])
+    let report = input["report"] as? [String: Any]
+    #expect((report?["length"] as? [String: Int]) == ["atLeast": 6])
+    #expect(report?["id"] as? Int == 1)
     let buttons = try #require(input["buttons"] as? [[String: Any]])
     #expect(buttons.compactMap { $0["control"] as? String }.first == "South")
     #expect(buttons.compactMap { $0["mask"] as? Int } == [1, 2, 4, 8, 16, 32, 64, 128])

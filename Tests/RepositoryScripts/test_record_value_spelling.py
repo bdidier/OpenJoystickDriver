@@ -93,7 +93,7 @@ class RecordValueSpellingTests(unittest.TestCase):
             "hat encoding": record(
                 {"family": "HIDReportLayout"},
                 input={
-                    "report": {"length": 4},
+                    "report": {"length": {"atLeast": 4}},
                     "buttons": [{"control": "South", "byte": 0, "mask": 1}],
                     "hat": [{"encoding": "EightWay", "byte": 1, "mask": 15}],
                 },
@@ -167,7 +167,7 @@ class RecordValueSpellingTests(unittest.TestCase):
             "hat encoding": record(
                 {"family": "HIDReportLayout"},
                 input={
-                    "report": {"length": 4},
+                    "report": {"length": {"atLeast": 4}},
                     "buttons": [{"control": "South", "byte": 0, "mask": 1}],
                     "hat": [{"encoding": "8-way", "byte": 1, "mask": 15}],
                 },
