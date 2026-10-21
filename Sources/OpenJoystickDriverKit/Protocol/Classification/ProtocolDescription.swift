@@ -152,6 +152,8 @@ struct ProtocolDescription: Sendable {
   /// The HID reports sent in order when a Valve controller is deactivated, each limited by its
   /// transport. Only the Valve families have them.
   let deactivation: [RecordStartupWrite]
+  /// The family-specific `defaults.session` keys the document sets, as written.
+  let presentSessionFields: Set<String>
   /// The family's subcommand reports: the report id, the rolling counter rule and the startup
   /// requests. Only `NintendoSwitch1` has them.
   let subcommands: SubcommandPlan?
@@ -304,6 +306,14 @@ struct ProtocolDescription: Sendable {
         )
       }
     }
+    let unreadParameters = Set(document.parameters.keys).subtracting(family.readParameters)
+    guard unreadParameters.isEmpty else {
+      throw ProtocolDescriptionProblem(
+        .invalidProtocolDescription,
+        "\(fileName): \(family.rawValue) reads no parameter(s) "
+          + unreadParameters.sorted().joined(separator: ", ")
+      )
+    }
     // The file name is checked after the document's own rules, as the Python validator checks
     // it after the schema.
     guard let protocolID, family == protocolID else {
@@ -399,6 +409,7 @@ struct ProtocolDescription: Sendable {
       keepAlive: document.defaults?.session?.keepAlive,
       activation: document.defaults?.session?.activation ?? [],
       deactivation: document.defaults?.session?.deactivation ?? [],
+      presentSessionFields: document.defaults?.session?.familyFields ?? [],
       subcommands: document.defaults?.session?.subcommands,
       namedPackets: document.defaults?.session?.namedPackets,
       handshakeAttempts: document.defaults?.session?.handshakeAttempts,

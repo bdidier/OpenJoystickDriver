@@ -50,21 +50,6 @@ extension ProtocolDescription {
     return nil
   }
 
-  /// The family-specific `defaults.session` fields the description sets.
-  var presentSessionFields: Set<String> {
-    var names: Set<String> = []
-    if subcommands != nil { names.insert("subcommands") }
-    if namedPackets != nil { names.insert("namedPackets") }
-    if !activation.isEmpty { names.insert("activation") }
-    if !deactivation.isEmpty { names.insert("deactivation") }
-    if handshakeAttempts != nil { names.insert("handshakeAttempts") }
-    if announceResendLimit != nil { names.insert("announceResendLimit") }
-    if receiverInquiryResendLimit != nil { names.insert("receiverInquiryResendLimit") }
-    if commandChannel != nil { names.insert("commandChannel") }
-    if trailingStopPackets != nil { names.insert("trailingStopPackets") }
-    return names
-  }
-
   /// Why the defaults name something the family's driver does not read, or nil. The rule reads
   /// only this description, so it holds while the bundle is still loading.
   var scopeViolation: String? {

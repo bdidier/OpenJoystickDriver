@@ -439,6 +439,13 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             defaults = dict(document.get("defaults", {}))
             defaults["session"] = {**VALVE_SESSION, **defaults.get("session", {})}
             document["defaults"] = defaults
+        if family == "NintendoSwitch1":
+            defaults = dict(document.get("defaults", {}))
+            defaults["session"] = {
+                "subcommands": self.subcommands(),
+                **defaults.get("session", {}),
+            }
+            document["defaults"] = defaults
         return document
 
     def test_accepts_parameters_and_defaults(self) -> None:
@@ -531,51 +538,66 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         flag = {"type": "Flag"}
         self.assert_rejected(self.with_body("SonyDualSense", parameters={"x": flag}))
         self.assert_rejected(self.with_body("SonyDualSense", parameters={}))
-
-    def test_session_fields_match_the_swift_table(self) -> None:
-        source = (
-            REPOSITORY_ROOT
-            / "Sources/OpenJoystickDriverKit/Protocol/Classification/ProtocolClassifier.swift"
-        ).read_text(encoding="utf-8")
-        body = source.split("var sessionFields: Set<String> {", 1)[1].split(
-            "\n  }\n", 1
-        )[0]
-        swift = {
-            case[0].upper() + case[1:]: frozenset(re.findall(r'"(\w+)"', names))
-            for case, names in re.findall(r"case \.(\w+): \[([^\]]*)\]", body)
-        }
-        self.assertEqual(protocol_descriptions.SESSION_FIELDS, swift)
+        for family, name in (
+            ("SonyDualSense", "layout"),
+            ("XboxGIP", "maker"),
+            ("XboxXID", "layout"),
+            ("NintendoSwitch2", "usbProtocol"),
+        ):
+            with self.subTest(family=family, name=name):
+                self.assert_rejected(self.with_body(family, parameters={name: flag}))
 
     def test_a_family_specific_session_field_of_another_family_is_refused(
         self,
     ) -> None:
-        for family, key, value in (
-            ("XboxXUSB", "handshakeAttempts", 3),
-            ("XboxXUSB", "announceResendLimit", 8),
-            ("XboxGIP", "receiverInquiryResendLimit", 8),
-            ("SonyDualSense", "trailingStopPackets", 2),
-            ("SonyDualSense", "activation", VALVE_SESSION["activation"]),
-        ):
-            with self.subTest(family=family, key=key):
-                document = self.with_body(family)
-                document.setdefault("defaults", {}).setdefault("session", {})[key] = (
-                    value
-                )
+        samples = self.session_field_samples()
+        owners = {
+            "subcommands": "NintendoSwitch1",
+            "namedPackets": "XboxGIP",
+            "handshakeAttempts": "XboxGIP",
+            "announceResendLimit": "XboxGIP",
+            "receiverInquiryResendLimit": "XboxXUSB",
+            "commandChannel": "NintendoSwitch2",
+            "trailingStopPackets": "NintendoSwitch2",
+            "activation": "ValveSteamDeck",
+            "deactivation": "ValveSteamDeck",
+        }
+        self.assertEqual(set(samples), set(owners))
+        for key, owner in owners.items():
+            for family in ("XboxXID", "SonyDualSense", "NintendoSwitchInputOnly"):
+                with self.subTest(family=family, key=key):
+                    document = self.with_body(family)
+                    document.setdefault("defaults", {}).setdefault("session", {})[
+                        key
+                    ] = samples[key]
+                    self.assert_rejected(document)
+            with self.subTest(family="another owner", key=key):
+                other = "XboxXUSB" if owner != "XboxXUSB" else "XboxGIP"
+                document = self.with_body(other)
+                document["defaults"]["session"][key] = samples[key]
                 self.assert_rejected(document)
 
     def test_a_session_field_the_driver_reads_must_be_set(self) -> None:
-        for family, limits in SESSION_LIMITS.items():
-            for key in limits:
+        read = {
+            **{family: set(limits) for family, limits in SESSION_LIMITS.items()},
+            "NintendoSwitch1": {"subcommands"},
+            **{family: {"activation", "deactivation"} for family in VALVE_FAMILIES},
+        }
+        for family, keys in read.items():
+            for key in sorted(keys):
                 with self.subTest(family=family, key=key):
                     document = self.with_body(family)
                     del document["defaults"]["session"][key]
                     self.assert_rejected(document)
-        for family in VALVE_FAMILIES:
-            for key in ("activation", "deactivation"):
-                with self.subTest(family=family, key=key):
-                    document = self.valve_body(family)
-                    del document["defaults"]["session"][key]
-                    self.assert_rejected(document)
+
+    def session_field_samples(self) -> dict[str, Any]:
+        return {
+            **SESSION_LIMITS["XboxGIP"],
+            **SESSION_LIMITS["XboxXUSB"],
+            **SESSION_LIMITS["NintendoSwitch2"],
+            **VALVE_SESSION,
+            "subcommands": self.subcommands(),
+        }
 
     def test_session_limits_are_accepted_for_their_family(self) -> None:
         for family in SESSION_LIMITS:

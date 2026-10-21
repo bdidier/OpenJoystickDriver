@@ -540,27 +540,31 @@ def parameters_problem(
     return None
 
 
-# The family-specific `defaults.session` fields each family's driver reads; `sessionFields` in
-# `ProtocolClassifier.swift` is the same table, which a test compares.
-SESSION_FIELDS: dict[str, frozenset[str]] = {
-    "NintendoSwitch1": frozenset({"subcommands"}),
-    "NintendoSwitch2": frozenset({"commandChannel", "trailingStopPackets"}),
-    "XboxGIP": frozenset({"namedPackets", "handshakeAttempts", "announceResendLimit"}),
-    "XboxXUSB": frozenset({"receiverInquiryResendLimit"}),
-    "ValveSteamController": frozenset({"activation", "deactivation"}),
-    "ValveSteamTriton": frozenset({"activation", "deactivation"}),
-    "ValveSteamDeck": frozenset({"activation", "deactivation"}),
-}
-FAMILY_SESSION_FIELDS = frozenset().union(*SESSION_FIELDS.values())
+# The `defaults.session` keys every family may have; any other key is family-specific.
+GENERAL_SESSION_KEYS = frozenset({"startup", "rumble", "keepAlive"})
+
+
+@cache
+def read_by_driver(family: str) -> tuple[frozenset[str], frozenset[str]]:
+    """The parameter names and family-specific session fields the family's driver reads,
+    which its bundled description declares. `PhysicalProtocolID.readParameters` and
+    `sessionFields` state the same sets in Swift, and a Swift test pins the bundled
+    descriptions to them."""
+    description = bundled()[family]
+    return (
+        frozenset(description.get("parameters", {})),
+        frozenset(description.get("defaults", {}).get("session", {}))
+        - GENERAL_SESSION_KEYS,
+    )
 
 
 def session_field_violations(description: dict[str, Any]) -> list[tuple[str, str]]:
-    """A description sets exactly the family-specific session fields its driver reads, as
-    `ProtocolDescription` checks in Swift."""
+    """A description sets exactly the family-specific session fields its driver reads, and
+    declares only parameters it reads, as `ProtocolDescription` checks in Swift."""
     family = description["family"]
-    read = SESSION_FIELDS.get(family, frozenset())
-    present = FAMILY_SESSION_FIELDS & set(
-        description.get("defaults", {}).get("session", {})
+    read_parameters, read = read_by_driver(family)
+    present = (
+        set(description.get("defaults", {}).get("session", {})) - GENERAL_SESSION_KEYS
     )
     found = [
         ("E5002", f"defaults.session.{name}: {family} does not read it")
@@ -569,6 +573,10 @@ def session_field_violations(description: dict[str, Any]) -> list[tuple[str, str
     found += [
         ("E5002", f"defaults.session.{name}: {family} must set it")
         for name in sorted(read - present)
+    ]
+    found += [
+        ("E5002", f"parameters.{name}: {family} does not read it")
+        for name in sorted(set(description.get("parameters", {})) - read_parameters)
     ]
     return found
 

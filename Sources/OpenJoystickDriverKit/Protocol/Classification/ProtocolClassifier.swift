@@ -48,6 +48,22 @@ public enum PhysicalProtocolID: String, CaseIterable, Codable, Sendable {
     }
   }
 
+  /// The parameter names this family's driver reads. Its description declares exactly these.
+  var readParameters: Set<String> {
+    switch self {
+    case .xboxGIP: ["shareButton"]
+    case .sonyDualShock4: ["motionCalibration", "role", "motionScale"]
+    case .sonyDualSense:
+      ["maker", "unprobedSensors", "unprobedTouchpad", "forcedVibration", "role"]
+    case .nintendoSwitch1: ["layout", "usbProtocol"]
+    case .nintendoSwitch2: ["layout"]
+    case .vendorPS3ThirdParty: ["hatSource"]
+    case .vendorGameSir: ["innerGrips", "lightingMemory"]
+    case .vendorNVIDIAShield: ["reportRevision"]
+    default: []
+    }
+  }
+
   /// The stem of this family's description file in `Resources/Protocols`: lowercase kebab-case
   /// with each brand or product name kept as one word.
   public var descriptionFileStem: String {

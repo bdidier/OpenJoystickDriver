@@ -329,6 +329,15 @@ struct ProtocolDescriptionTests {
     }
   }
 
+  /// The code states what each driver reads, and a description declares exactly that: the
+  /// parameters and the family-specific session fields.
+  @Test(arguments: PhysicalProtocolID.allCases)
+  func eachBundledDescriptionDeclaresWhatItsDriverReads(family: PhysicalProtocolID) throws {
+    let description = try #require(ProtocolDescription.bundled[family])
+    #expect(Set(description.parameters.keys) == family.readParameters, "\(family.rawValue)")
+    #expect(description.presentSessionFields == family.sessionFields, "\(family.rawValue)")
+  }
+
   @Test
   func sessionLimitsComeFromTheirFamily() throws {
     let gip = try decode(family: .xboxGIP, #""rawUSB": true"#)

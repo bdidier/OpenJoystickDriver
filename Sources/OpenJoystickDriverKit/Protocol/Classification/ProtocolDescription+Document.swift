@@ -75,6 +75,9 @@ extension ProtocolDescription {
       let receiverInquiryResendLimit: Int?
       let commandChannel: ProtocolDescription.CommandChannel?
       let trailingStopPackets: Int?
+      /// The keys of the session that only some families have: every key but the startup writes,
+      /// the rumble template and the keep-alive.
+      let familyFields: Set<String>
 
       init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: DocumentKey.self)
@@ -83,6 +86,9 @@ extension ProtocolDescription {
           "namedPackets", "handshakeAttempts",
           "announceResendLimit", "receiverInquiryResendLimit", "commandChannel",
           "trailingStopPackets",
+        ])
+        familyFields = Set(container.allKeys.map(\.stringValue)).subtracting([
+          "startup", "rumble", "keepAlive",
         ])
         guard !container.allKeys.isEmpty else {
           throw DecodingError.dataCorrupted(
