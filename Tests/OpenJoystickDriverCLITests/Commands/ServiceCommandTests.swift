@@ -117,6 +117,8 @@ struct ServiceCommandTests {
           discoverySource: .rawUSB,
           serialNumber: nil,
           bindingResult: .hidDescriptorFixture,
+          recordServer: .system,
+          recordAccessRoute: .system,
           sessionToken: .fixture("pad-1")
         )
       ],

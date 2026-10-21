@@ -250,6 +250,8 @@ extension InputTestTests {
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
       physicalOutputCapabilities: capabilities,
+      recordServer: .system,
+      recordAccessRoute: .system,
       capabilities: ControllerCapabilities(controls: [], motion: hasMotion),
       sessionToken: .fixture(sessionToken)
     )

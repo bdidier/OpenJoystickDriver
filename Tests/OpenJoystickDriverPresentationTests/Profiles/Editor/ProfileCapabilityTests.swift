@@ -229,6 +229,8 @@ struct ProfileCapabilityTests {
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
       physicalOutputCapabilities: output,
+      recordServer: .system,
+      recordAccessRoute: .system,
       capabilities: input
     )
   }

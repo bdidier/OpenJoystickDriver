@@ -179,6 +179,8 @@ struct LogicalControllerIDTests {
       discoverySource: .rawUSB,
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
+      recordServer: .system,
+      recordAccessRoute: .system,
       sessionToken: token
     )
     let route = ApplicationServiceRemappingRoutePayload(
@@ -213,7 +215,9 @@ struct LogicalControllerIDTests {
       connection: "USB",
       discoverySource: .hid,
       serialNumber: nil,
-      bindingResult: .hidDescriptorFixture
+      bindingResult: .hidDescriptorFixture,
+      recordServer: .system,
+      recordAccessRoute: .system
     )
 
     let decoded = try JSONDecoder().decode(
@@ -234,7 +238,9 @@ struct LogicalControllerIDTests {
       connection: "USB",
       discoverySource: .rawUSB,
       serialNumber: nil,
-      bindingResult: .hidDescriptorFixture
+      bindingResult: .hidDescriptorFixture,
+      recordServer: .system,
+      recordAccessRoute: .system
     )
     let encoded = try JSONEncoder().encode(description)
     var object = try #require(JSONSerialization.jsonObject(with: encoded) as? [String: Any])

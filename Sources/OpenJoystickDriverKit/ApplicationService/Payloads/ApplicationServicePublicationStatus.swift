@@ -34,7 +34,7 @@ public struct ApplicationServicePublicationStatus: Codable, Equatable, Sendable 
   public let state: State
   /// Why the controller is not published; set exactly when `state` is `NotPublished`.
   public let reason: NotPublishedReason?
-  /// The text of the failed send; set exactly when `state` is `Failed`.
+  /// The text of the failed send, never empty; set exactly when `state` is `Failed`.
   public let failure: String?
   /// The virtual HID profile the controller publishes or tries to publish.
   public let target: VirtualHIDProfileID?
@@ -43,13 +43,13 @@ public struct ApplicationServicePublicationStatus: Codable, Equatable, Sendable 
   /// System uptime in nanoseconds of the last send the virtual device accepted.
   public let lastCompletedNanoseconds: UInt64?
 
-  public init(
+  private init(
     state: State,
-    reason: NotPublishedReason? = nil,
-    failure: String? = nil,
-    target: VirtualHIDProfileID? = nil,
-    lastAttemptedNanoseconds: UInt64? = nil,
-    lastCompletedNanoseconds: UInt64? = nil
+    reason: NotPublishedReason?,
+    failure: String?,
+    target: VirtualHIDProfileID?,
+    lastAttemptedNanoseconds: UInt64?,
+    lastCompletedNanoseconds: UInt64?
   ) {
     self.state = state
     self.reason = reason
@@ -57,5 +57,113 @@ public struct ApplicationServicePublicationStatus: Codable, Equatable, Sendable 
     self.target = target
     self.lastAttemptedNanoseconds = lastAttemptedNanoseconds
     self.lastCompletedNanoseconds = lastCompletedNanoseconds
+  }
+
+  /// A virtual device is installed for the controller.
+  public static func published(
+    target: VirtualHIDProfileID? = nil,
+    lastAttemptedNanoseconds: UInt64? = nil,
+    lastCompletedNanoseconds: UInt64? = nil
+  ) -> Self {
+    Self(
+      state: .published,
+      reason: nil,
+      failure: nil,
+      target: target,
+      lastAttemptedNanoseconds: lastAttemptedNanoseconds,
+      lastCompletedNanoseconds: lastCompletedNanoseconds
+    )
+  }
+
+  /// No virtual device is installed, for `reason`.
+  public static func notPublished(
+    _ reason: NotPublishedReason,
+    target: VirtualHIDProfileID? = nil,
+    lastAttemptedNanoseconds: UInt64? = nil,
+    lastCompletedNanoseconds: UInt64? = nil
+  ) -> Self {
+    Self(
+      state: .notPublished,
+      reason: reason,
+      failure: nil,
+      target: target,
+      lastAttemptedNanoseconds: lastAttemptedNanoseconds,
+      lastCompletedNanoseconds: lastCompletedNanoseconds
+    )
+  }
+
+  /// The last send failed with `failure`, which is not empty.
+  public static func failed(
+    _ failure: String,
+    target: VirtualHIDProfileID? = nil,
+    lastAttemptedNanoseconds: UInt64? = nil,
+    lastCompletedNanoseconds: UInt64? = nil
+  ) -> Self {
+    precondition(!failure.isEmpty, "A failed publication carries its failure text.")
+    return Self(
+      state: .failed,
+      reason: nil,
+      failure: failure,
+      target: target,
+      lastAttemptedNanoseconds: lastAttemptedNanoseconds,
+      lastCompletedNanoseconds: lastCompletedNanoseconds
+    )
+  }
+
+  private enum CodingKeys: String, CodingKey {
+    case state
+    case reason
+    case failure
+    case target
+    case lastAttemptedNanoseconds
+    case lastCompletedNanoseconds
+  }
+
+  /// Refuses a payload whose `reason` or `failure` does not match its `state`, and an empty
+  /// `failure`.
+  public init(from decoder: Decoder) throws {
+    let container = try decoder.container(keyedBy: CodingKeys.self)
+    let state = try container.decode(State.self, forKey: .state)
+    let reason = try container.decodeIfPresent(NotPublishedReason.self, forKey: .reason)
+    let failure = try container.decodeIfPresent(String.self, forKey: .failure)
+    switch state {
+    case .published:
+      guard reason == nil, failure == nil else {
+        throw Self.mismatch(container, "A Published publication has no reason or failure.")
+      }
+    case .notPublished:
+      guard reason != nil, failure == nil else {
+        throw Self.mismatch(container, "A NotPublished publication has a reason and no failure.")
+      }
+    case .failed:
+      guard reason == nil, let failure, !failure.isEmpty else {
+        throw Self.mismatch(container, "A Failed publication has a failure text and no reason.")
+      }
+    }
+    self.init(
+      state: state,
+      reason: reason,
+      failure: failure,
+      target: try container.decodeIfPresent(VirtualHIDProfileID.self, forKey: .target),
+      lastAttemptedNanoseconds: try container.decodeIfPresent(
+        UInt64.self,
+        forKey: .lastAttemptedNanoseconds
+      ),
+      lastCompletedNanoseconds: try container.decodeIfPresent(
+        UInt64.self,
+        forKey: .lastCompletedNanoseconds
+      )
+    )
+  }
+
+  private static func mismatch(
+    _ container: KeyedDecodingContainer<CodingKeys>,
+    _ description: String
+  ) -> DecodingError {
+    DecodingError.dataCorruptedError(
+      forKey: .state,
+      in: container,
+      debugDescription: description
+    )
   }
 }

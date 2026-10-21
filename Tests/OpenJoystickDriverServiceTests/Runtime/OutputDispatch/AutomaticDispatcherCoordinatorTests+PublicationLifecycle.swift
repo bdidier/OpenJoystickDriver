@@ -16,7 +16,9 @@ extension AutomaticDispatcherCoordinatorTests {
       connection: "USB",
       discoverySource: .rawUSB,
       serialNumber: nil,
-      bindingResult: .hidDescriptorFixture
+      bindingResult: .hidDescriptorFixture,
+      recordServer: .system,
+      recordAccessRoute: .system
     )
   }
 

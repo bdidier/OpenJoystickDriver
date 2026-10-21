@@ -297,9 +297,8 @@ struct ControllerCommandTests {
   @Test
   func showPrintsWhyTheControllerIsNotPublished() async throws {
     var device = ApplicationServiceDeviceDescription.fixture(id: "pad-1")
-    device.publication = ApplicationServicePublicationStatus(
-      state: .notPublished,
-      reason: .systemGamepad,
+    device.publication = ApplicationServicePublicationStatus.notPublished(
+      .systemGamepad,
       target: .sdlCompatible
     )
     let service = try FakeService(devices: [device])
@@ -316,6 +315,25 @@ struct ControllerCommandTests {
     #expect(publication["target"] as? String == VirtualHIDProfileID.sdlCompatible.rawValue)
     #expect(plain.standardOutput.contains("\npublication\tnot-published\tsystem-gamepad\n"))
     #expect(Self.rows(human, endingIn: "not-published (system-gamepad)").count == 1)
+  }
+
+  @Test
+  func showPrintsTheFailureTextOfAFailedPublication() async throws {
+    var device = ApplicationServiceDeviceDescription.fixture(id: "pad-1")
+    device.publication = .failed("send failed", target: .generic)
+    let service = try FakeService(devices: [device])
+
+    let json = await service.run(["controller", "show", token("pad-1"), "--json"])
+    let plain = await service.run(["controller", "show", token("pad-1"), "--plain"])
+    let human = await service.run(["controller", "show", token("pad-1")])
+
+    #expect(json.code == 0, "\(json.standardError)")
+    let publication = try #require(try json.json()["publication"] as? [String: Any])
+    #expect(publication["state"] as? String == "Failed")
+    #expect(publication["failure"] as? String == "send failed")
+    #expect(publication["reason"] == nil)
+    #expect(plain.standardOutput.contains("\npublication\tfailed\tsend failed\n"))
+    #expect(Self.rows(human, endingIn: "failed (send failed)").count == 1)
   }
 
   @Test

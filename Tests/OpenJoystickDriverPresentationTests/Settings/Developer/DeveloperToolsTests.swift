@@ -366,6 +366,8 @@ struct DeveloperToolsTests {
       bindingResult: .hidDescriptorFixture,
       inputEndpoint: 0x82,
       outputEndpoint: 0x02,
+      recordServer: .system,
+      recordAccessRoute: .system,
       sessionToken: .fixture(sessionToken)
     )
   }

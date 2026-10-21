@@ -20,6 +20,8 @@ struct ControllerActionsTests {
       discoverySource: .rawUSB,
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
+      recordServer: .system,
+      recordAccessRoute: .system,
       sessionToken: .fixture("actions-device"),
       portKey: portKey
     )
@@ -133,7 +135,9 @@ struct ControllerActionsTests {
       discoverySource: .hid,
       physicalOwnership: .systemGamepad,
       serialNumber: nil,
-      bindingResult: .hidDescriptorFixture
+      bindingResult: .hidDescriptorFixture,
+      recordServer: .system,
+      recordAccessRoute: .system
     )
     #expect(VirtualGamepadExport.profile(for: system) == nil)
   }
@@ -201,7 +205,9 @@ struct ControllerActionsTests {
       discoverySource: .hid,
       physicalOwnership: .systemGamepad,
       serialNumber: nil,
-      bindingResult: .hidDescriptorFixture
+      bindingResult: .hidDescriptorFixture,
+      recordServer: .system,
+      recordAccessRoute: .system
     )
     #expect(throws: VirtualGamepadLaunch.Failure.noGamepad) {
       try VirtualGamepadLaunch.prepare(

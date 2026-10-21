@@ -45,7 +45,7 @@ struct CLIOutputValueSpellingTests {
   }
 
   @Test
-  func notPublishedReasonsAreUpperCamelCaseAndRefuseEarlierSpellingsAndFailureText() throws {
+  func notPublishedReasonsAreUpperCamelCaseAndRefuseOtherSpellingsAndFailureText() throws {
     #expect(
       ApplicationServicePublicationStatus.NotPublishedReason.allCases.map(\.rawValue) == [
         "OutputDisabled", "SystemGamepad", "NativeHIDPassThrough", "UpstreamVirtualDevice",
@@ -64,7 +64,7 @@ struct CLIOutputValueSpellingTests {
         "\(raw)"
       )
     }
-    let failed = ApplicationServicePublicationStatus(state: .failed, failure: "send failed")
+    let failed = ApplicationServicePublicationStatus.failed("send failed")
     let decoded = try JSONDecoder().decode(
       ApplicationServicePublicationStatus.self,
       from: JSONEncoder().encode(failed)

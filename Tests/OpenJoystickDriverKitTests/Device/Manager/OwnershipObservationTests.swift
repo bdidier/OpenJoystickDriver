@@ -321,7 +321,9 @@ struct OwnershipObservationTests {
       physicalOwnership: .systemHIDVisible,
       duplicateExposureRisk: .systemHIDVisible,
       serialNumber: nil,
-      bindingResult: .hidDescriptorFixture
+      bindingResult: .hidDescriptorFixture,
+      recordServer: .system,
+      recordAccessRoute: .system
     )
 
     let decoded = try JSONDecoder().decode(

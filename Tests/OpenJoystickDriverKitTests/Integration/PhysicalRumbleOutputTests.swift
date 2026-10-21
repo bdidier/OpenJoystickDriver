@@ -57,7 +57,9 @@ struct PhysicalRumbleOutputTests {
       connection: "USB",
       discoverySource: .rawUSB,
       serialNumber: nil,
-      bindingResult: .hidDescriptorFixture
+      bindingResult: .hidDescriptorFixture,
+      recordServer: .system,
+      recordAccessRoute: .system
     )
 
     #expect(description.physicalOutputCapabilities == .none)
@@ -123,7 +125,9 @@ struct PhysicalRumbleOutputTests {
       discoverySource: .rawUSB,
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
-      physicalOutputCapabilities: capabilities
+      physicalOutputCapabilities: capabilities,
+      recordServer: .system,
+      recordAccessRoute: .system
     )
     let decoded = try JSONDecoder().decode(
       ApplicationServiceDeviceDescription.self,

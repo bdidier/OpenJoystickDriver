@@ -2,7 +2,7 @@ import Foundation
 
 /// Arguments of `setVirtualHIDProfileOverride`: the controller reference, the requested
 /// profile's raw identifier, such as `Generic`, and whether the override is for the selected
-/// unit only (see ``ControllerPortKey``) instead of its model. An absent `unit` means the model.
+/// unit only (see ``ControllerPortKey``) instead of its model.
 public struct LocalServiceRPCVirtualHIDProfileOverrideArguments: Codable, Sendable {
   public let controller: ControllerReference
   public let profile: String
@@ -22,12 +22,12 @@ public struct LocalServiceRPCVirtualHIDProfileOverrideArguments: Codable, Sendab
     let container = try decoder.container(keyedBy: CodingKeys.self)
     controller = try container.decode(ControllerReference.self, forKey: .controller)
     profile = try container.decode(String.self, forKey: .profile)
-    unit = try container.decodeIfPresent(Bool.self, forKey: .unit) ?? false
+    unit = try container.decode(Bool.self, forKey: .unit)
   }
 }
 
 /// Arguments of `resetVirtualHIDProfileOverride`: the controller reference and whether to reset
-/// the selected unit's override instead of its model's. An absent `unit` means the model.
+/// the selected unit's override instead of its model's.
 public struct LocalServiceRPCVirtualHIDProfileOverrideResetArguments: Codable, Sendable {
   public let controller: ControllerReference
   public let unit: Bool
@@ -40,7 +40,7 @@ public struct LocalServiceRPCVirtualHIDProfileOverrideResetArguments: Codable, S
   public init(from decoder: any Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
     controller = try container.decode(ControllerReference.self, forKey: .controller)
-    unit = try container.decodeIfPresent(Bool.self, forKey: .unit) ?? false
+    unit = try container.decode(Bool.self, forKey: .unit)
   }
 }
 

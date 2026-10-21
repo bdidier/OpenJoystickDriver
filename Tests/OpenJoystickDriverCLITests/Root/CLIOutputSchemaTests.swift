@@ -14,6 +14,18 @@ struct CLIOutputSchemaTests {
   }
 
   @Test
+  func plainRowsKeepEachFieldOnOneLine() async throws {
+    let capture = CLIOutputCapture()
+    await CLIOutput.$capture.withValue(capture) {
+      CLIOutput.plain([
+        ["a\tb", "line one\nline two", "x\r\ny\rz", "u\u{85}v\u{2028}w\u{2029}x\u{0B}y\u{0C}z"],
+        ["next"],
+      ])
+    }
+    #expect(capture.standardOutput == "a b\tline one line two\tx  y z\tu v w x y z\nnext\n")
+  }
+
+  @Test
   func everyCommandHasOneOutputDefinition() {
     let names = CLICommandTree.leafPaths.filter { !CLIOutputSchema.exempt.contains($0) }
       .map(CLIOutputSchema.definitionName(for:))

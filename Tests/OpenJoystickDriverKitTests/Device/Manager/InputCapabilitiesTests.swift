@@ -62,7 +62,9 @@ struct InputCapabilitiesTests {
       connection: "USB",
       discoverySource: .rawUSB,
       serialNumber: nil,
-      bindingResult: .hidDescriptorFixture
+      bindingResult: .hidDescriptorFixture,
+      recordServer: .system,
+      recordAccessRoute: .system
     )
     let data = try JSONEncoder().encode(description)
     let object = try #require(JSONSerialization.jsonObject(with: data) as? [String: Any])
@@ -99,6 +101,8 @@ struct InputCapabilitiesTests {
       discoverySource: .rawUSB,
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
+      recordServer: .system,
+      recordAccessRoute: .system,
       connectionState: state
     )
 

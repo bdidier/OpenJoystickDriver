@@ -3204,7 +3204,7 @@
         }
       ]
     },
-    "sharedVirtualSdl": {
+    "sharedVirtualSDL": {
       "description": "The SDL mapping of a virtual gamepad profile, derived from its report descriptor and report codec. The GUID carries a zero CRC.",
       "type": "object",
       "required": ["guid", "mapping", "worksWithDefaultSDLHints"],
@@ -3224,7 +3224,7 @@
         }
       }
     },
-    "sharedVirtualW3c": {
+    "sharedVirtualW3C": {
       "description": "The W3C Gamepad description of a virtual gamepad profile: for each index of the standard layout, the control and the input of the virtual gamepad that supplies it. A source is bN for a button, aN for an axis and h0.MASK for a hat direction, numbered as SDL numbers them.",
       "type": "object",
       "required": ["id", "buttons", "axes"],
@@ -3236,18 +3236,18 @@
         "buttons": {
           "type": "array",
           "items": {
-            "$ref": "#/$defs/sharedVirtualW3cEntry"
+            "$ref": "#/$defs/sharedVirtualW3CEntry"
           }
         },
         "axes": {
           "type": "array",
           "items": {
-            "$ref": "#/$defs/sharedVirtualW3cEntry"
+            "$ref": "#/$defs/sharedVirtualW3CEntry"
           }
         }
       }
     },
-    "sharedVirtualW3cEntry": {
+    "sharedVirtualW3CEntry": {
       "type": "object",
       "required": ["index", "control", "source"],
       "additionalProperties": false,
@@ -3566,10 +3566,10 @@
                 "enum": ["SDLCompatible", "Generic"]
               },
               "sdl": {
-                "$ref": "#/$defs/sharedVirtualSdl"
+                "$ref": "#/$defs/sharedVirtualSDL"
               },
               "w3c": {
-                "$ref": "#/$defs/sharedVirtualW3c"
+                "$ref": "#/$defs/sharedVirtualW3C"
               }
             }
           }
@@ -3663,7 +3663,7 @@
                 "enum": ["SDLCompatible", "Generic"]
               },
               "sdl": {
-                "$ref": "#/$defs/sharedVirtualSdl",
+                "$ref": "#/$defs/sharedVirtualSDL",
                 "description": "The SDL mapping of the controller's live virtual gamepad. Absent with no virtual gamepad."
               },
               "source": {
@@ -3678,7 +3678,7 @@
                 "maximum": 65535
               },
               "w3c": {
-                "$ref": "#/$defs/sharedVirtualW3c",
+                "$ref": "#/$defs/sharedVirtualW3C",
                 "description": "The W3C Gamepad description of the controller's live virtual gamepad. Absent with no virtual gamepad."
               }
             }

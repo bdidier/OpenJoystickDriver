@@ -24,6 +24,8 @@ struct ControllerDetailFactsTests {
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
       physicalOutputCapabilities: output,
+      recordServer: .system,
+      recordAccessRoute: .system,
       capabilities: ControllerCapabilities(controls: [], motion: motion),
       connectionState: power.map {
         ControllerConnectionState(transport: nil, backend: .hid, isConnected: true, power: $0)
@@ -101,17 +103,12 @@ struct ControllerDetailFactsTests {
   @Test
   func theSelectedProfileShowsWhetherOrNotItIsPublished() {
     let label = "Xbox Wireless Controller (045E:02FD)"
-    let published = ApplicationServicePublicationStatus(state: .published, target: .sdlCompatible)
-    let notPublished = ApplicationServicePublicationStatus(
-      state: .notPublished,
-      reason: .noInputYet,
+    let published = ApplicationServicePublicationStatus.published(target: .sdlCompatible)
+    let notPublished = ApplicationServicePublicationStatus.notPublished(
+      .noInputYet,
       target: .sdlCompatible
     )
-    let failed = ApplicationServicePublicationStatus(
-      state: .failed,
-      failure: "send failed",
-      target: .sdlCompatible
-    )
+    let failed = ApplicationServicePublicationStatus.failed("send failed", target: .sdlCompatible)
     for (publication, text) in [
       (published, "Published"), (notPublished, "Not published (no-input-yet)"),
       (failed, "Failed (send failed)"),
@@ -184,12 +181,12 @@ extension ControllerDetailFactsTests {
   @Test
   func publicationAndInputHealthShowLocalizedWords() {
     #expect(
-      ControllerDetailFacts.publicationText(ApplicationServicePublicationStatus(state: .published))
+      ControllerDetailFacts.publicationText(ApplicationServicePublicationStatus.published())
         == OJDLocalized.string("controllers.publication.published")
     )
     #expect(
       ControllerDetailFacts.publicationText(
-        ApplicationServicePublicationStatus(state: .notPublished, reason: .noInputYet)
+        ApplicationServicePublicationStatus.notPublished(.noInputYet)
       ) == "\(OJDLocalized.string("controllers.publication.notPublished")) (no-input-yet)"
     )
     #expect(
