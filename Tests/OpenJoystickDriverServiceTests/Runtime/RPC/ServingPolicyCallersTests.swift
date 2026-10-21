@@ -77,56 +77,72 @@ struct ServingPolicyCallersTests {
     )
   }
 
+  /// Runs `body` against a profile-override server and awaits its teardown, also when `body`
+  /// throws.
+  @MainActor
+  private static func withServer(
+    _ identifiers: [LogicalControllerID],
+    outputEnabled: Bool,
+    _ body: (ProfileOverrideServerFixture) async throws -> Void
+  ) async throws {
+    let server = try await VirtualOutputTests().profileOverrideServer(
+      identifiers,
+      outputEnabled: outputEnabled
+    )
+    do { try await body(server) } catch {
+      await server.tearDown()
+      throw error
+    }
+    await server.tearDown()
+  }
+
   @MainActor
   @Test
   func theServiceReportsTheReasonTheSessionAndTheProfileGive() async throws {
     let published = LogicalControllerID(vendorID: 0x3537, productID: 0x100B)
-    let server = try await VirtualOutputTests().profileOverrideServer(
-      [published],
-      outputEnabled: true
-    )
-    defer { Task { await server.tearDown() } }
-    // A controller the dispatcher has not published, so the service decides the reason itself.
-    let id = LogicalControllerID(vendorID: 0x3537, productID: 0x2222)
+    try await Self.withServer([published], outputEnabled: true) { server in
+      // A controller the dispatcher has not published, so the service decides the reason itself.
+      let id = LogicalControllerID(vendorID: 0x3537, productID: 0x2222)
 
-    let suspended = Self.device(session: .suspended, controls: Control.xboxLayout)
-    let described = server.server.describingVirtualHIDProfiles([(id, suspended)])
-    #expect(described.first?.publication?.reason == .sessionSuspended)
+      let suspended = Self.device(session: .suspended, controls: Control.xboxLayout)
+      let described = server.server.describingVirtualHIDProfiles([(id, suspended)])
+      #expect(described.first?.publication?.reason == .sessionSuspended)
 
-    // The extension owns the USB link and OJD still publishes the persona, so the controller
-    // waits for input like any other.
-    let extensionOwned = try #require(ServingFixture.all.first { $0.name == "extension owned" })
-    #expect(
-      server.server.describingVirtualHIDProfiles([(id, extensionOwned.device)]).first?
-        .publication?.reason == .noInputYet
-    )
+      // The extension owns the USB link and OJD still publishes the persona, so the controller
+      // waits for input like any other.
+      let extensionOwned = try #require(ServingFixture.all.first { $0.name == "extension owned" })
+      #expect(
+        server.server.describingVirtualHIDProfiles([(id, extensionOwned.device)]).first?
+          .publication?.reason == .noInputYet
+      )
 
-    let active = Self.device(session: .active, controls: Control.xboxLayout)
-    let automatic = server.server.automaticUserSpaceDispatcher()
-    #expect(
-      ApplicationServiceServer.publication(
-        of: active,
-        identifier: id,
-        automatic: automatic,
-        unavailable: true
-      ).reason == .noVirtualProfile
-    )
-    #expect(
-      ApplicationServiceServer.publication(
-        of: active,
-        identifier: id,
-        automatic: automatic,
-        unavailable: false
-      ).reason == .noInputYet
-    )
-    #expect(
-      ApplicationServiceServer.publication(
-        of: active,
-        identifier: id,
-        automatic: nil,
-        unavailable: false
-      ).reason == .outputDisabled
-    )
+      let active = Self.device(session: .active, controls: Control.xboxLayout)
+      let automatic = server.server.automaticUserSpaceDispatcher()
+      #expect(
+        ApplicationServiceServer.publication(
+          of: active,
+          identifier: id,
+          automatic: automatic,
+          unavailable: true
+        ).reason == .noVirtualProfile
+      )
+      #expect(
+        ApplicationServiceServer.publication(
+          of: active,
+          identifier: id,
+          automatic: automatic,
+          unavailable: false
+        ).reason == .noInputYet
+      )
+      #expect(
+        ApplicationServiceServer.publication(
+          of: active,
+          identifier: id,
+          automatic: nil,
+          unavailable: false
+        ).reason == .outputDisabled
+      )
+    }
   }
 
   /// What one caller says about a controller: the persona it shows and whether it offers the
@@ -145,51 +161,48 @@ struct ServingPolicyCallersTests {
     _ fixture: ServingFixture
   ) async throws {
     let id = LogicalControllerID(vendorID: 0x3537, productID: 0x100B)
-    let server = try await VirtualOutputTests().profileOverrideServer(
-      [id],
-      outputEnabled: fixture.outputEnabled
-    )
-    if let override = fixture.override {
-      try server.store.set(override, vendorID: 0x3537, productID: 0x100B)
-    }
-    defer { Task { await server.tearDown() } }
+    try await Self.withServer([id], outputEnabled: fixture.outputEnabled) { server in
+      if let override = fixture.override {
+        try server.store.set(override, vendorID: 0x3537, productID: 0x100B)
+      }
 
-    // Service and endpoint: the description the service builds for its status and watch stream.
-    let described = try #require(
-      server.server.describingVirtualHIDProfiles([(id, fixture.device)]).first
-    )
-    let service = Answer(
-      persona: described.virtualHIDProfile?.profile?.rawValue,
-      offersServerChoice: ServingPolicy.offersServerChoice(ServingInput(described))
-    )
-    // CLI: the `virtual show` report and the `controller claim` check.
-    let cliAccepts =
-      (try? ControllerServerChange.checkSupported(
-        described,
-        server: fixture.server,
-        accessRoute: fixture.accessRoute
-      )) != nil
-    let cli = Answer(
-      persona: try VirtualShowReport.Controller(described).profile,
-      offersServerChoice: cliAccepts
-    )
-    // GUI: the persona it shows and whether it shows the picker.
-    let gui = Answer(
-      persona: described.publishedVirtualProfile.flatMap { identity in
-        VirtualHIDProfileID.allCases.first { $0.identity == identity }?.rawValue
-      },
-      offersServerChoice: ControllerServerPicker.isShown(for: described)
-    )
+      // Service and endpoint: the description the service builds for its status and watch stream.
+      let described = try #require(
+        server.server.describingVirtualHIDProfiles([(id, fixture.device)]).first
+      )
+      let service = Answer(
+        persona: described.virtualHIDProfile?.profile?.rawValue,
+        offersServerChoice: ServingPolicy.offersServerChoice(ServingInput(described))
+      )
+      // CLI: the `virtual show` report and the `controller claim` check.
+      let cliAccepts =
+        (try? ControllerServerChange.checkSupported(
+          described,
+          server: fixture.server,
+          accessRoute: fixture.accessRoute
+        )) != nil
+      let cli = Answer(
+        persona: try VirtualShowReport.Controller(described).profile,
+        offersServerChoice: cliAccepts
+      )
+      // GUI: the persona it shows and whether it shows the picker.
+      let gui = Answer(
+        persona: described.publishedVirtualProfile.flatMap { identity in
+          VirtualHIDProfileID.allCases.first { $0.identity == identity }?.rawValue
+        },
+        offersServerChoice: ControllerServerPicker.isShown(for: described)
+      )
 
-    let expected: String?
-    switch fixture.route {
-    case .virtualHID(let persona): expected = persona.rawValue
-    case .extensionOwned: expected = VirtualHIDProfileID.default.rawValue
-    case .nativePassThrough, .outputDisabled: expected = nil
+      let expected: String?
+      switch fixture.route {
+      case .virtualHID(let persona): expected = persona.rawValue
+      case .extensionOwned: expected = VirtualHIDProfileID.default.rawValue
+      case .nativePassThrough, .outputDisabled: expected = nil
+      }
+      let answer = Answer(persona: expected, offersServerChoice: fixture.offersServerChoice)
+      #expect(service == answer, "\(fixture.name) service")
+      #expect(cli == answer, "\(fixture.name) cli")
+      #expect(gui == answer, "\(fixture.name) gui")
     }
-    let answer = Answer(persona: expected, offersServerChoice: fixture.offersServerChoice)
-    #expect(service == answer, "\(fixture.name) service")
-    #expect(cli == answer, "\(fixture.name) cli")
-    #expect(gui == answer, "\(fixture.name) gui")
   }
 }

@@ -185,7 +185,7 @@ extension AutomaticDispatcherCoordinator {
       entry.recoveryState == "idle", entry.context != nil
     else { return }
     entry.publicationGeneration &+= 1
-    entry.lastFailure = String(describing: failure)
+    entry.lastFailure = PublicationFailureText.text(for: failure)
     entry.recoveryState = "retiring"
     let old = entry.installed ?? entry.retiring
     entry.installed = nil
@@ -243,7 +243,7 @@ extension AutomaticDispatcherCoordinator {
       entries[controller]?.recoveryState = "idle"
       entries[controller]?.recoveryToken = nil
     } catch {
-      entries[controller]?.lastFailure = String(describing: error)
+      entries[controller]?.lastFailure = PublicationFailureText.text(for: error)
       entries[controller]?.recoveryState = "retry-gated"
       scheduleRecoveryRetry(controller, token: token)
     }
