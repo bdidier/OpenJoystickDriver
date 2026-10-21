@@ -5,7 +5,7 @@ import Testing
 @testable import OpenJoystickDriverKit
 @testable import OpenJoystickDriverService
 
-@Suite(.serialized, .timeLimit(.minutes(2)))
+@Suite(.serialized, .timeLimit(.minutes(2)), .removingTemporarySockets)
 struct LocalRPCBridgeTests {
   private static let controllerMethodNames: Set = [
     "getStatus", "requestRequiredAccess", "requestAccess", "getControllerState", "getPacketLog",
@@ -351,7 +351,7 @@ struct LocalRPCBridgeTests {
 
   @Test
   func aListenerRestartAfterStopBeginsRefusesAsStopping() async throws {
-    let socketPath = "/tmp/com.openjoystickdriver.test.\(UUID().uuidString).rpc"
+    let socketPath = temporarySocketPath()
     try await withServer { server in
       let listener = LocalServiceRPCServer(
         socketPath: socketPath,

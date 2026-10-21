@@ -1,8 +1,10 @@
 import Foundation
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverCLI
 
+@Suite(.removingTemporarySockets)
 struct ServiceConnectionTests {
   /// With nothing listening on the socket, `open()` reports the service as stopped after its one
   /// probe, whose socket timeout is 0.2 s; the rest of the bound is scheduling margin.

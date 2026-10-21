@@ -1,13 +1,13 @@
 import Darwin
 import Foundation
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverKit
 
+@Suite(.removingTemporarySockets)
 struct ServiceListenerFailureTests {
-  private func socketPath() -> String {
-    "/tmp/com.openjoystickdriver.test.\(UUID().uuidString).rpc"
-  }
+  private func socketPath() -> String { temporarySocketPath() }
 
   private func plant(_ text: String, socketPath: String) throws -> String {
     let path = ServiceListenerFailure.path(forSocket: socketPath)

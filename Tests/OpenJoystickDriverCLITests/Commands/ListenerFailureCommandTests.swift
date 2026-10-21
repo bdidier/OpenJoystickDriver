@@ -5,7 +5,7 @@ import Testing
 
 @testable import OpenJoystickDriverCLI
 
-@Suite(.serialized)
+@Suite(.serialized, .removingTemporarySockets)
 struct ListenerFailureCommandTests {
   private let failure = ServiceListenerFailure(
     errorNumber: EBADF,

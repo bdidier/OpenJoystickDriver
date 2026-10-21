@@ -5,7 +5,7 @@ import Testing
 
 @testable import OpenJoystickDriverCLI
 
-@Suite(.serialized)
+@Suite(.serialized, .removingTemporarySockets)
 struct SettingCommandTests {
   /// A service whose settings start as `settings` and that applies each `setSetting` unless the
   /// key is in `refused`; it records the methods it received.

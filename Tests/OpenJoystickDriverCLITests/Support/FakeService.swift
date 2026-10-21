@@ -9,7 +9,7 @@ import OpenJoystickDriverTestSupport
 final class FakeService: @unchecked Sendable {
   typealias Respond = @Sendable (_ method: ApplicationServiceRPCMethod, _ arguments: Data) -> Data?
 
-  let socketPath = temporarySocketPath()
+  let socketPath = unregisteredSocketPath()
   private let lock = NSLock()
   private var received: [(ApplicationServiceRPCMethod, Data)] = []
   private var server: LocalServiceRPCServer?

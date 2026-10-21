@@ -4,7 +4,7 @@ import Testing
 
 @testable import OpenJoystickDriverKit
 
-@Suite(.serialized)
+@Suite(.serialized, .removingTemporarySockets)
 struct RemappingRPCTests {
   @Test
   func explicitPayloadsRoundTripWithoutAssociatedEnumAmbiguity() throws {
@@ -457,10 +457,6 @@ struct RemappingRPCTests {
       ],
       postEventAccess: .granted
     )
-  }
-
-  private func temporarySocketPath() -> String {
-    "/tmp/com.openjoystickdriver.remapping.\(UUID().uuidString).rpc"
   }
 }
 

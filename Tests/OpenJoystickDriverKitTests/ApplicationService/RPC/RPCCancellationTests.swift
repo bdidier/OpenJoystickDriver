@@ -5,7 +5,7 @@ import Testing
 
 @testable import OpenJoystickDriverKit
 
-@Suite(.timeLimit(.minutes(2)))
+@Suite(.timeLimit(.minutes(2)), .removingTemporarySockets)
 struct LocalServiceRPCCancellationTests {
   @Test(.timeLimit(.minutes(1)))
   func cancellingACallToASilentServerEndsPromptlyWithCancellationError() async throws {
@@ -70,7 +70,4 @@ struct LocalServiceRPCCancellationTests {
     return descriptor
   }
 
-  private func temporarySocketPath() -> String {
-    "/tmp/com.openjoystickdriver.test.\(UUID().uuidString).rpc"
-  }
 }

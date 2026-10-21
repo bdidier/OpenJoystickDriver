@@ -5,7 +5,7 @@ import Testing
 
 @testable import OpenJoystickDriverCLI
 
-@Suite(.serialized)
+@Suite(.serialized, .removingTemporarySockets)
 struct StatusCommandLinkTests {
   /// A folder that holds the link under test and the file it may point at.
   private struct Folder {
