@@ -5,23 +5,19 @@
   struct MotionCalibrationControls: View {
     @ObservedObject
     var model: MotionCalibrationViewModel
-    let embedded: Bool
+    @State
+    private var attempt = 0
 
-    init(model: MotionCalibrationViewModel, embedded: Bool = false) {
-      self.model = model
-      self.embedded = embedded
+    private struct LoadID: Equatable {
+      let selector: ControllerReference?
+      let attempt: Int
     }
 
-    @ViewBuilder
+    /// Loads the calibration status of the selected controller, and keeps it current while the
+    /// service can still change it. A new selection or a retry starts the load again.
     var body: some View {
-      if embedded {
-        content
-      } else {
-        GroupBox {
-          content
-        } label: {
-          Text(OJDLocalized.string("motion.calibration.title"))
-        }
+      content.task(id: LoadID(selector: model.selector, attempt: attempt)) {
+        await model.refreshWhileCalibrating()
       }
     }
 
@@ -68,12 +64,7 @@
             horizontal: false,
             vertical: true
           )
-        }
-        HStack {
-          Button(OJDLocalized.string("common.refresh")) {
-            Task { await model.refresh() }
-          }
-          if model.isBusy { ProgressView() }
+          Button(OJDLocalized.string("common.tryAgain")) { attempt += 1 }
         }
         HStack {
           Button(OJDLocalized.string("motion.calibration.start")) {
@@ -85,6 +76,7 @@
           Button(OJDLocalized.string("common.reset")) {
             Task { await model.perform(.reset) }
           }.disabled(model.status == nil)
+          if model.isBusy { ProgressView().controlSize(.small) }
         }
       }.disabled(model.selector == nil || model.isBusy)
     }

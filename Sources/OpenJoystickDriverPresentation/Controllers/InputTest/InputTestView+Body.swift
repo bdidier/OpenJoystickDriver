@@ -41,15 +41,34 @@
 
   extension InputTestView {
     var body: some View {
-      GeometryReader { proxy in
-        ScrollView {
-          VStack(alignment: .leading, spacing: 18) {
-            controllerHeader
-            dashboard(for: InputTestLayoutPolicy.widthClass(for: proxy.size.width))
-          }.padding(18).frame(maxWidth: .infinity, alignment: .topLeading)
+      Form {
+        Section { controllerHeader }
+        ForEach(model.visibleSections, id: \.self) { section in
+          switch section {
+          case .liveInput: Section { liveInput }
+          case .motion:
+            Section(header: Text(OJDLocalized.string("motion.calibration.title"))) {
+              MotionCalibrationControls(model: model.motionCalibration)
+            }
+          case .rumble:
+            Section(header: Text(OJDLocalized.string("inputTest.rumble"))) {
+              InputTestOutputControlsView(settings: model.outputSettings) {
+                rumbleContent
+                if outputErrorBelongs(to: [.rumble]) { outputErrorView }
+              }
+            }
+          case .lighting:
+            Section(header: Text(OJDLocalized.string("inputTest.lighting"))) {
+              InputTestOutputControlsView(settings: model.outputSettings) {
+                lightingContent
+                if outputErrorBelongs(to: [.playerIndicator, .color, .brightness]) {
+                  outputErrorView
+                }
+              }
+            }
+          }
         }
-      }.background(Color(NSColor.windowBackgroundColor)).onReceive(runtimeViewModel.$statusState) {
-        state in
+      }.ojdGroupedForm().onReceive(runtimeViewModel.$statusState) { state in
         guard case .available(let status) = state else { return }
         model.reconcileStatus(status)
       }
@@ -65,9 +84,7 @@
           Text(
             "\(OJDValue.reported(device.connection).displayText) · "
               + "\(device.protocolBinding.displayLabel) · "
-              + "\(OJDValue.reported(device.protocolBinding.rawValue).displayText) · "
-              + "\(usbIdentifier(device).displayText) · "
-              + device.publishedIdentityLabel
+              + usbIdentifier(device).displayText
           ).font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor))
         }
         Spacer()
@@ -76,109 +93,21 @@
       ).ojdAccessibilityValue(statusLabel)
     }
 
-    @ViewBuilder
-    private func dashboard(for widthClass: InputTestLayoutPolicy.WidthClass) -> some View {
-      switch widthClass {
-      case .compact:
-        VStack(alignment: .leading, spacing: 18) {
-          liveInput
-          axisValues
-          motionGroup
-          rumbleGroup
-          lightingGroup
-        }
-      case .regular:
-        VStack(alignment: .leading, spacing: 18) {
-          HStack(alignment: .top, spacing: 18) {
-            liveInput
-            VStack(alignment: .leading, spacing: 18) {
-              axisValues
-              motionGroup
-            }.frame(width: 260)
-          }
-          HStack(alignment: .top, spacing: 18) {
-            rumbleGroup
-            lightingGroup
-          }
-        }
-      case .wide:
-        HStack(alignment: .top, spacing: 18) {
-          liveInput.frame(minWidth: 380, idealWidth: 420, maxWidth: 480)
-          HStack(alignment: .top, spacing: 18) {
-            VStack(alignment: .leading, spacing: 18) {
-              axisValues
-              rumbleGroup
-            }
-            VStack(alignment: .leading, spacing: 18) {
-              motionGroup
-              lightingGroup
-            }
-          }.frame(maxWidth: .infinity, alignment: .topLeading)
-        }
-      }
-    }
-
-    private var motionGroup: some View {
-      GroupBox {
-        MotionCalibrationControls(model: model.motionCalibration, embedded: true)
-      } label: {
-        Text(OJDLocalized.string("motion.calibration.title"))
-      }.frame(maxWidth: .infinity, alignment: .topLeading)
-    }
-
     private var publishedProfile: VirtualDeviceProfile {
       model.device?.publishedVirtualProfile ?? .generic
     }
 
     var liveInput: some View {
-      InputTestLiveInputView(
-        liveState: model.liveState,
-        publishedProfile: publishedProfile,
-        embedded: true
-      ).frame(maxWidth: .infinity, alignment: .topLeading)
-    }
-
-    private var axisValues: some View {
-      GroupBox {
-        InputTestAxisValuesView(liveState: model.liveState, embedded: true)
-      } label: {
-        Text(OJDLocalized.string("inputTest.axisValues"))
-      }
-    }
-
-    private var rumbleGroup: some View {
-      GroupBox {
-        InputTestOutputControlsView(settings: model.outputSettings) {
-          VStack(alignment: .leading, spacing: 10) {
-            rumbleContent
-            if outputErrorBelongs(to: [.rumble]) { outputErrorView }
-          }
-        }
-      } label: {
-        Text(OJDLocalized.string("inputTest.rumble"))
-      }.frame(maxWidth: .infinity, alignment: .topLeading)
-    }
-
-    private var lightingGroup: some View {
-      GroupBox {
-        InputTestOutputControlsView(settings: model.outputSettings) {
-          VStack(alignment: .leading, spacing: 10) {
-            lightingContent
-            if outputErrorBelongs(to: [.playerIndicator, .color, .brightness]) { outputErrorView }
-          }
-        }
-      } label: {
-        Text(OJDLocalized.string("inputTest.lighting"))
-      }.frame(maxWidth: .infinity, alignment: .topLeading)
+      InputTestLiveInputView(liveState: model.liveState, publishedProfile: publishedProfile)
+        .frame(maxWidth: .infinity, alignment: .topLeading)
     }
 
     @ViewBuilder
     private var rumbleContent: some View {
       if model.capabilities.supportsRumble {
-        VStack(alignment: .leading, spacing: 10) {
-          rumbleMotorGrid.disabled(!model.canSendOutput || model.isOutputBusy)
-          Divider()
-          VStack(alignment: .leading, spacing: 5) {
+        Group {
+          ForEach(model.capabilities.rumbleMotors, id: \.self) { rumbleControl(for: $0) }
+          VStack(alignment: .leading, spacing: 3) {
             HStack {
               Text(OJDLocalized.string("inputTest.duration"))
               Spacer()
@@ -189,81 +118,71 @@
                 )
               ).font(.system(.caption, design: .monospaced))
             }
-            Slider(value: rumbleDurationBinding, in: 100...2_000, step: 50)
-          }.disabled(!model.canSendOutput || model.isOutputBusy)
-          HStack(spacing: 8) {
-            Button(OJDLocalized.string("inputTest.testRumble")) {
-              model.testRumble()
-            }.disabled(!model.canSendOutput || model.isOutputBusy)
-            Button(OJDLocalized.string("common.stop")) { model.stopRumble() }
-              .disabled(!model.canStopRumble)
-            Spacer()
-            outputStatus(for: .rumble)
+            Slider(
+              value: rumbleDurationBinding,
+              in: Double(
+                InputTestViewModel.rumbleDurationRange.lowerBound
+              )...Double(
+                InputTestViewModel.rumbleDurationRange.upperBound
+              ),
+              step: 50
+            )
           }
-        }.padding(4)
+        }.disabled(!model.canSendOutput || model.isOutputBusy)
+        HStack(spacing: 8) {
+          Button(OJDLocalized.string("inputTest.testRumble")) {
+            model.testRumble()
+          }.disabled(!model.canSendOutput || model.isOutputBusy)
+          Button(OJDLocalized.string("common.stop")) { model.stopRumble() }
+            .disabled(!model.canStopRumble)
+          Spacer()
+          outputStatus(for: .rumble)
+        }
       } else {
-        unavailableOutputLabel(
-          OJDLocalized.string(
-            "inputTest.rumbleUnavailable"
-          )
-        )
+        unavailableOutputLabel(OJDLocalized.string("inputTest.rumbleUnavailable"))
       }
     }
 
     @ViewBuilder
     private var lightingContent: some View {
-      if model.capabilities.lightingFeatures.isEmpty {
-        unavailableOutputLabel(
-          OJDLocalized.string(
-            "inputTest.lightingUnavailable"
-          )
-        )
-      } else {
-        VStack(alignment: .leading, spacing: 12) {
-          if model.capabilities.supportsPlayerIndicator {
-            VStack(alignment: .leading, spacing: 6) {
-              Text(OJDLocalized.string("inputTest.playerIndicator"))
-              Picker("", selection: playerIndicatorBinding) {
-                Text(OJDLocalized.string("inputTest.off")).tag(
-                  PhysicalPlayerIndicator.off
-                )
-                Text("1").tag(PhysicalPlayerIndicator.player1)
-                Text("2").tag(PhysicalPlayerIndicator.player2)
-                Text("3").tag(PhysicalPlayerIndicator.player3)
-                Text("4").tag(PhysicalPlayerIndicator.player4)
-              }.pickerStyle(.segmented).labelsHidden()
-              Button(OJDLocalized.string("common.apply")) {
-                model.applyPlayerIndicator()
-              }
-            }
+      Group {
+        if model.capabilities.supportsPlayerIndicator {
+          VStack(alignment: .leading, spacing: 6) {
+            Text(OJDLocalized.string("inputTest.playerIndicator"))
+            Picker("", selection: playerIndicatorBinding) {
+              Text(OJDLocalized.string("inputTest.off")).tag(PhysicalPlayerIndicator.off)
+              Text("1").tag(PhysicalPlayerIndicator.player1)
+              Text("2").tag(PhysicalPlayerIndicator.player2)
+              Text("3").tag(PhysicalPlayerIndicator.player3)
+              Text("4").tag(PhysicalPlayerIndicator.player4)
+            }.pickerStyle(.segmented).labelsHidden()
+            Button(OJDLocalized.string("common.apply")) { model.applyPlayerIndicator() }
           }
-          if model.capabilities.lightingFeatures.contains(.programmableColor) {
+        }
+        if model.capabilities.lightingFeatures.contains(.programmableColor) {
+          OJDLabeledRow(OJDLocalized.string("inputTest.color")) {
             HStack {
-              Text(OJDLocalized.string("inputTest.color"))
-              Spacer()
               OJDPhysicalColorWell(color: colorBinding).frame(width: 44, height: 24)
               Button(OJDLocalized.string("common.apply")) { model.applyColor() }
             }
           }
-          if model.capabilities.supportsProgrammableBrightness {
-            VStack(alignment: .leading, spacing: 5) {
-              HStack {
-                Text(OJDLocalized.string("inputTest.brightness"))
-                Spacer()
-                Text("\(Int(model.brightness.rounded()))").font(
-                  .system(.caption, design: .monospaced)
-                )
-              }
-              HStack {
-                Slider(value: brightnessBinding, in: 0...255)
-                Button(OJDLocalized.string("common.apply")) {
-                  model.applyBrightness()
-                }
-              }
+        }
+        if model.capabilities.supportsProgrammableBrightness {
+          VStack(alignment: .leading, spacing: 3) {
+            HStack {
+              Text(OJDLocalized.string("inputTest.brightness"))
+              Spacer()
+              Text("\(Int(model.brightness.rounded()))").font(
+                .system(.caption, design: .monospaced)
+              )
+            }
+            HStack {
+              Slider(value: brightnessBinding, in: 0...255)
+              Button(OJDLocalized.string("common.apply")) { model.applyBrightness() }
             }
           }
-        }.padding(4).disabled(!model.canSendOutput || model.isOutputBusy)
-      }
+        }
+      }.disabled(!model.canSendOutput || model.isOutputBusy)
     }
 
     private func outputErrorBelongs(to operations: Set<InputTestViewModel.OutputOperation>) -> Bool
@@ -284,32 +203,17 @@
       }
     }
 
-    private var rumbleMotorGrid: some View {
-      let motors = model.capabilities.rumbleMotors
-      let midpoint = (motors.count + 1) / 2
-      return HStack(alignment: .top, spacing: 14) {
-        VStack(spacing: 9) {
-          ForEach(Array(motors.prefix(midpoint)), id: \.self) { rumbleControl(for: $0) }
-        }
-        VStack(spacing: 9) {
-          ForEach(Array(motors.dropFirst(midpoint)), id: \.self) { rumbleControl(for: $0) }
-        }
-      }
-    }
-
     private func rumbleControl(for motor: PhysicalRumbleMotor) -> some View {
       InputTestRumbleMotorControl(
         settings: model.outputSettings,
         motor: motor,
-        title: motorLabel(motor),
+        title: motor.title,
         isBinary: model.capabilities.binaryRumbleMotors.contains(motor)
       )
     }
 
     private func unavailableOutputLabel(_ message: String) -> some View {
-      Text(message).font(.subheadline).foregroundColor(Color(NSColor.secondaryLabelColor)).padding(
-        4
-      ).frame(maxWidth: .infinity, alignment: .leading)
+      Text(message).foregroundColor(Color(NSColor.secondaryLabelColor))
     }
 
     @ViewBuilder

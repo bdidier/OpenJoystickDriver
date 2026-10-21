@@ -17,15 +17,11 @@
             controllerActionFailure(failure)
           }
         }
-        Section { activeProfileRow }
         Section {
-          ForEach(controllerFacts, id: \.label) { fact in
-            if fact.isSerialNumber {
-              SerialNumberRow(
-                label: fact.label,
-                serial: fact.value,
-                visibility: $serialVisibility
-              )
+          activeProfileRow
+          ForEach(ControllerDetailFacts.general(for: device)) { fact in
+            if fact.kind == .serialNumber {
+              SerialNumberRow(label: fact.label, serial: fact.value, visibility: $serialVisibility)
             } else {
               OJDLabeledValue(fact.label, fact.value)
             }
@@ -33,16 +29,51 @@
         }
         Section { inputTestAction }
         if ControllerServerPicker.isShown(for: device) {
-          Section { ControllerServerPicker(viewModel: viewModel, device: device) }
+          Section {
+            ControllerServerPicker(viewModel: viewModel, device: device)
+            if let record {
+              OJDLabeledValue(
+                OJDLocalized.string("controllers.server.source"),
+                CommandLineName.kebab(record.serverSource)
+              )
+            }
+          }
         }
         if device.physicalOwnership != .systemGamepad {
-          // A per-controller identity collapses Advanced again on a new selection.
+          // A per-controller identity resets the picker state on a new selection.
           Section {
             VirtualHIDProfileOverrideView(viewModel: viewModel, device: device).id(
               device.sessionToken.rawValue
             )
           }
+          Section {
+            VirtualGamepadActionsView(
+              device: device,
+              connectedDevices: connectedDevices,
+              viewModel: viewModel,
+              actions: actions
+            )
+          }
         }
+        if let record {
+          Section(header: Text(OJDLocalized.string("cli.controller.show.label.tuning"))) {
+            tuningRows(for: record)
+          }
+        }
+        Section { advancedDisclosure }
+      }.task(id: recordLoadID) {
+        let model = ControllerModelID(vendorID: device.vendorID, productID: device.productID)
+        record = await Task.detached { ControllerRecordSet.load().records[model] }.value
+      }.sheet(item: $actions.timedKind) { kind in
+        ControllerTimedActionSheet(
+          kind: kind,
+          device: device,
+          gateway: viewModel.gateway,
+          actions: actions
+        )
+      }.onReceive(actions.$pendingSave) { request in
+        guard let request else { return }
+        ControllerFilePanels.save(request) { actions.finishSave(to: $0) }
       }.ojdGroupedForm().ojdAccessibilityLabel(device.name).ojdAccessibilityValue(
         accessibilityValue
       ).alert(
@@ -70,24 +101,52 @@
       }
     }
 
+    /// Reloads the record when the controller or who serves its model changes.
+    private var recordLoadID: String {
+      "\(device.sessionToken.rawValue) \(device.recordServer.rawValue)"
+    }
+
+    private var connectedDevices: [ApplicationServiceDeviceDescription]? {
+      if case .available(let status) = viewModel.statusState { return status.devices }
+      return nil
+    }
+
+    /// The remapping profile active for the controller's model, if there is one.
+    private var activeRemappingProfile: RemappingProfile? {
+      guard case .available(let snapshot) = viewModel.remappingState,
+        let active = snapshot.activeProfiles.routingActiveProfile(
+          vendorID: device.vendorID,
+          productID: device.productID
+        )
+      else { return nil }
+      return snapshot.profiles.first { $0.id == active.profileID }
+    }
+
+    @ViewBuilder
+    private func tuningRows(for record: ControllerRecord) -> some View {
+      ForEach(ControllerTuningRows.rows(for: record, activeProfile: activeRemappingProfile)) {
+        OJDLabeledValue($0.name, $0.text)
+      }
+    }
+
     private var wirelessDisconnectAction: some View {
-      HStack(alignment: .center, spacing: 12) {
-        VStack(alignment: .leading, spacing: 3) {
-          Text(
-            OJDLocalized.string(
-              "controllers.disconnectWireless"
-            )
-          ).font(.headline)
-          Text(
-            OJDLocalized.string(
-              "controllers.disconnectWirelessSummary"
-            )
-          ).font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor))
+      OJDLabeledRow(OJDLocalized.string("controllers.disconnectWireless")) {
+        Button(OJDLocalized.string("controllers.disconnectWirelessButton")) {
+          confirmsWirelessDisconnect = true
         }
-        Spacer(minLength: 12)
-        Button(
-          OJDLocalized.string("controllers.disconnectWirelessButton")
-        ) { confirmsWirelessDisconnect = true }
+      }
+    }
+
+    /// The identifiers and endpoints. The whole label row toggles, not only the chevron.
+    private var advancedDisclosure: some View {
+      DisclosureGroup(isExpanded: $showsAdvanced) {
+        ForEach(ControllerDetailFacts.advanced(for: device, record: record)) { fact in
+          OJDLabeledValue(fact.label, fact.value)
+        }
+        ControllerTimedActionRows(actions: actions)
+      } label: {
+        Button(OJDLocalized.string("virtualProfile.advanced")) { showsAdvanced.toggle() }
+          .buttonStyle(.plain).frame(maxWidth: .infinity, alignment: .leading)
       }
     }
 
@@ -107,19 +166,7 @@
     }
 
     private var inputTestAction: some View {
-      HStack(alignment: .center, spacing: 12) {
-        VStack(alignment: .leading, spacing: 3) {
-          Text(OJDLocalized.string("inputTest.title")).font(.headline)
-          Text(
-            OJDLocalized.string(
-              "inputTest.summary"
-            )
-          ).font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor)).fixedSize(
-            horizontal: false,
-            vertical: true
-          )
-        }
-        Spacer(minLength: 12)
+      OJDLabeledRow(OJDLocalized.string("inputTest.title")) {
         Button(OJDLocalized.string("inputTest.open")) {
           openInputTest(device)
         }.disabled(device.sessionState == .suspended)
@@ -127,36 +174,19 @@
     }
 
     private var controllerSessionAction: some View {
-      HStack(alignment: .center, spacing: 12) {
-        VStack(alignment: .leading, spacing: 3) {
-          Text(
-            device.sessionState == .suspended
-              ? OJDLocalized.string("controllers.suspended")
-              : OJDLocalized.string(
-                "controllers.sessionActive"
-              )
-          ).font(.headline)
-          Text(
-            device.sessionState == .suspended
-              ? OJDLocalized.string(
-                "controllers.suspendedSummary"
-              )
-              : OJDLocalized.string(
-                "controllers.disconnectSummary"
-              )
-          ).font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor))
-        }
-        Spacer(minLength: 12)
+      OJDLabeledRow(
+        device.sessionState == .suspended
+          ? OJDLocalized.string("controllers.suspended")
+          : OJDLocalized.string("controllers.sessionActive")
+      ) {
         if device.sessionState == .suspended {
           Button(OJDLocalized.string("controllers.resume")) {
             Task { @MainActor in await viewModel.resumeController(device) }
           }
         } else {
-          Button(
-            OJDLocalized.string(
-              "controllers.disconnectFromOJD"
-            )
-          ) { Task { @MainActor in await viewModel.suspendController(device) } }
+          Button(OJDLocalized.string("controllers.disconnectFromOJD")) {
+            Task { @MainActor in await viewModel.suspendController(device) }
+          }
         }
       }
     }
@@ -172,7 +202,7 @@
           .accessibilityHidden(true)
         VStack(alignment: .leading, spacing: 3) {
           Text(device.name).font(.headline.weight(.semibold)).lineLimit(1)
-          Text(headerSubtitle)
+          Text(connectionValue.displayText)
             .foregroundColor(Color(NSColor.secondaryLabelColor))
         }
         Spacer(minLength: 0)
@@ -228,64 +258,7 @@
       }
     }
 
-    private var controllerFacts: [(label: String, value: OJDValue, isSerialNumber: Bool)] {
-      [
-        (
-          OJDLocalized.string("controllers.publishedAs"), .text(device.publishedIdentityLabel),
-          false
-        ),
-        (OJDLocalized.string("controllers.serving.label"), .text(device.servingRouteLabel), false),
-        (OJDLocalized.string("common.protocol"), .text(device.protocolBinding.displayLabel), false),
-        (OJDLocalized.string("common.serialNumber"), serialNumberValue, true),
-        (OJDLocalized.string("controllers.battery"), batteryValue, false),
-        (OJDLocalized.string("controllers.chargingState"), chargingStateValue, false),
-        (OJDLocalized.string("controllers.cableState"), cableStateValue, false),
-        (OJDLocalized.string("controllers.usbIdentifier"), usbIdentifierValue, false),
-        (
-          OJDLocalized.string("common.inputEndpoint"), OJDValue.endpoint(device.inputEndpoint),
-          false
-        ),
-        (
-          OJDLocalized.string("common.outputEndpoint"), OJDValue.endpoint(device.outputEndpoint),
-          false
-        ),
-      ]
-    }
-
-    /// The connection, when the controller reports one, then the published identity.
-    private var headerSubtitle: String {
-      [connectionValue.textOrNil, device.publishedIdentityLabel].compactMap { $0 }.joined(
-        separator: " · "
-      )
-    }
-
     var connectionValue: OJDValue { .reported(device.connection) }
-
-    var serialNumberValue: OJDValue { .reported(device.serialNumber) }
-
-    var usbIdentifierValue: OJDValue {
-      .usbIdentifier(vendorID: device.vendorID, productID: device.productID)
-    }
-
-    var batteryValue: OJDValue { OJDValue(device.connectionState?.power.battery.percentageText) }
-
-    var chargingStateValue: OJDValue {
-      switch device.connectionState?.power.charging ?? .unknown {
-      case .discharging: return .text(OJDLocalized.string("controllers.discharging"))
-      case .charging: return .text(OJDLocalized.string("controllers.charging"))
-      case .full: return .text(OJDLocalized.string("controllers.batteryFull"))
-      case .notChargeable: return .text(OJDLocalized.string("controllers.notChargeable"))
-      case .unknown: return .none
-      }
-    }
-
-    var cableStateValue: OJDValue {
-      switch device.connectionState?.power.wiredPower {
-      case true?: return .text(OJDLocalized.string("settings.controllerConnectedShort"))
-      case false?: return .text(OJDLocalized.string("settings.controllerDisconnectedShort"))
-      case nil: return .none
-      }
-    }
   }
 
 #endif

@@ -59,13 +59,19 @@ protocol RemappingGateway: Sendable {
 }
 
 protocol VirtualOutputGateway: Sendable {
+  /// `scope` is the controller's model, or the one controller by its unit ID.
   func setVirtualHIDProfileOverride(
     _ profile: VirtualHIDProfileID,
-    for selector: ControllerReference
+    for selector: ControllerReference,
+    scope: VirtualHIDProfileOverrideScope
   ) async throws -> VirtualHIDProfileOverrideResult
   func resetVirtualHIDProfileOverride(
-    for selector: ControllerReference
+    for selector: ControllerReference,
+    scope: VirtualHIDProfileOverrideScope
   ) async throws -> VirtualHIDProfileOverrideResult
+  /// Returns every controller model, connected or not, to automatic virtual HID profile
+  /// selection; false when the service could not apply it.
+  func resetAllVirtualHIDProfileOverrides() async throws -> Bool
   func setControllerServer(
     model: ControllerModelID,
     server: ControllerServer

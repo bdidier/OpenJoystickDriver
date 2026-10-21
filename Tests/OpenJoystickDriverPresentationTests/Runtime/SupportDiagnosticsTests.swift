@@ -358,7 +358,8 @@ private actor SupportDiagnosticsGatewayStub: ApplicationServiceGateway {
 
   func setVirtualHIDProfileOverride(
     _ profile: VirtualHIDProfileID,
-    for selector: ControllerReference
+    for selector: ControllerReference,
+    scope: VirtualHIDProfileOverrideScope
   ) throws -> VirtualHIDProfileOverrideResult {
     VirtualHIDProfileOverrideResult(
       requested: profile,
@@ -369,7 +370,8 @@ private actor SupportDiagnosticsGatewayStub: ApplicationServiceGateway {
   }
 
   func resetVirtualHIDProfileOverride(
-    for selector: ControllerReference
+    for selector: ControllerReference,
+    scope: VirtualHIDProfileOverrideScope
   ) throws -> VirtualHIDProfileOverrideResult {
     VirtualHIDProfileOverrideResult(
       requested: nil,
@@ -378,4 +380,6 @@ private actor SupportDiagnosticsGatewayStub: ApplicationServiceGateway {
       failure: nil
     )
   }
+
+  func resetAllVirtualHIDProfileOverrides() throws -> Bool { true }
 }

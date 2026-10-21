@@ -96,7 +96,7 @@
             }
             VStack(alignment: .leading, spacing: 2) {
               Text(device.name).lineLimit(1)
-              Text(device.publishedIdentityLabel).font(.caption).foregroundColor(
+              Text(device.protocolBinding.displayLabel).font(.caption).foregroundColor(
                 Color(NSColor.secondaryLabelColor)
               ).lineLimit(1)
             }
@@ -104,9 +104,7 @@
           }.padding(.vertical, 4).tag(device.sessionToken.rawValue).ojdAccessibilityLabel(
             device.name
           )
-          .ojdAccessibilityValue(
-            "\(device.publishedIdentityLabel). \(device.protocolBinding.displayLabel)"
-          )
+          .ojdAccessibilityValue(device.protocolBinding.displayLabel)
         }
       }.listStyle(InsetListStyle())
     }

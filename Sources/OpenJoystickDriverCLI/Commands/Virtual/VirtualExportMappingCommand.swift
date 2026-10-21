@@ -2,58 +2,16 @@ import ArgumentParser
 import Foundation
 import OpenJoystickDriverKit
 
-/// The SDL mapping of one persona in a `--json` result.
-struct VirtualSDLReport: Encodable, Equatable {
-  let guid: String
-  let mapping: String
-  /// False when SDL does not recognize the persona with its default hints.
-  let worksWithDefaultSDLHints: Bool
-
-  init(_ mapping: VirtualGamepadMapping) {
-    guid = mapping.guid
-    worksWithDefaultSDLHints = mapping.worksWithDefaultSDLHints
-    self.mapping = mapping.sdlMapping
-  }
-}
-
-/// The W3C Gamepad description of one persona in a `--json` result: for each index of the standard
-/// layout, the control and the input of the virtual gamepad that supplies it.
-struct VirtualW3CReport: Encodable, Equatable {
-  struct Entry: Encodable, Equatable {
-    let index: Int
-    let control: String
-    let source: String
-
-    init(_ entry: VirtualGamepadMapping.W3CEntry) {
-      index = entry.index
-      control = entry.control.rawValue
-      source = entry.source
-    }
-  }
-
-  let id: String
-  let buttons: [Entry]
-  let axes: [Entry]
-
-  init(_ mapping: VirtualGamepadMapping) {
-    id = mapping.w3cID
-    buttons = mapping.w3cButtons.map(Entry.init)
-    axes = mapping.w3cAxes.map(Entry.init)
-  }
-}
-
-/// The formats `ojd virtual export-mapping` writes.
-enum VirtualMappingFormat: String, CaseIterable, ExpressibleByArgument {
-  case sdl = "SDL"
-  case w3c = "W3C"
-
+extension VirtualMappingFormat: ExpressibleByArgument {
   /// A format on the command line is its lowercase name: `sdl` or `w3c`.
-  init?(argument: String) {
+  public init?(argument: String) {
     guard let format = CommandLineName.value(of: argument, in: Self.self) else { return nil }
     self = format
   }
 
-  static var allValueStrings: [String] { allCases.map { CommandLineName.kebab($0.rawValue) } }
+  public static var allValueStrings: [String] {
+    allCases.map { CommandLineName.kebab($0.rawValue) }
+  }
 }
 
 /// The `ojd virtual export-mapping --json` result: one entry per persona, carrying only the
@@ -115,7 +73,7 @@ struct VirtualExportMappingCommand: AsyncParsableCommand {
       switch CLIContext.current.format {
       case .json: try CLIOutput.json(report)
       case .plain: CLIOutput.plain(Self.plainRows(report))
-      case .human: try Self.printHuman(report)
+      case .human: try Self.printHuman(format, personas)
       }
     }
   }
@@ -137,29 +95,14 @@ struct VirtualExportMappingCommand: AsyncParsableCommand {
 
   /// SDL prints one mapping line per persona, which is a valid SDL mapping file. W3C prints one
   /// JSON array of the descriptions.
-  private static func printHuman(_ report: VirtualMappingExport) throws {
-    if report.format == VirtualMappingFormat.sdl.rawValue {
-      for entry in report.mappings {
-        guard let sdl = entry.sdl else { continue }
-        // A comment line keeps the output a valid SDL mapping file.
-        if !sdl.worksWithDefaultSDLHints { CLIOutput.stdout("# \(sdlHintsNote(entry.profile))") }
-        CLIOutput.stdout(sdl.mapping)
-      }
-      return
-    }
-    struct Description: Encodable {
-      let profile: String
-      let id: String
-      let buttons: [VirtualW3CReport.Entry]
-      let axes: [VirtualW3CReport.Entry]
-    }
-    let descriptions = report.mappings.compactMap { entry in
-      entry.w3c.map {
-        Description(profile: entry.profile, id: $0.id, buttons: $0.buttons, axes: $0.axes)
-      }
-    }
-    let encoder = JSONEncoder()
-    encoder.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
-    CLIOutput.stdout(String(bytes: try encoder.encode(descriptions), encoding: .utf8) ?? "")
+  private static func printHuman(
+    _ format: VirtualMappingFormat,
+    _ personas: [VirtualHIDProfileID]
+  )
+    throws
+  {
+    CLIOutput.stdout(
+      try format.document(for: personas) { sdlHintsNote($0.rawValue) }
+    )
   }
 }

@@ -15,6 +15,13 @@
     var confirmsWirelessDisconnect = false
     @State
     var serialVisibility = SerialNumberVisibility()
+    @State
+    var showsAdvanced = false
+    /// The effective record of the controller's model, read from the record files.
+    @State
+    var record: ControllerRecord?
+    @StateObject
+    var actions = ControllerDetailActions()
   }
 
 #endif

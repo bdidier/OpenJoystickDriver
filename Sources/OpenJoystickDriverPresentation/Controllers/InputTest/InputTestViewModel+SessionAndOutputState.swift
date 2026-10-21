@@ -71,6 +71,29 @@
       device?.physicalOutputCapabilities ?? .none
     }
 
+    /// The sections shown for the selected controller: Motion calibration needs a gyroscope and
+    /// Lighting needs a lighting feature; Rumble states when the controller has no motor.
+    var visibleSections: [InputTestSection] {
+      InputTestSection.allCases.filter { section in
+        switch section {
+        case .liveInput, .rumble: true
+        case .motion: device?.capabilities.motion == true
+        case .lighting: !capabilities.lightingFeatures.isEmpty
+        }
+      }
+    }
+
+    /// The rumble test lengths in milliseconds, up to the longest the service accepts, which
+    /// `ojd controller rumble --duration` also allows.
+    static let rumbleDurationRange = 100...maxRumbleDurationMs
+
+    static func clampedRumbleDuration(_ milliseconds: Double) -> Int {
+      max(
+        rumbleDurationRange.lowerBound,
+        min(rumbleDurationRange.upperBound, Int(milliseconds.rounded()))
+      )
+    }
+
     var latestInput: ControllerState { liveState.snapshot }
 
     var isSampling: Bool { samplingTask != nil }
@@ -168,7 +191,7 @@
       guard let device, canSendOutput, capabilities.supportsRumble else { return }
       let command = rumbleCommand()
       let selector = ControllerReference.session(device.sessionToken)
-      let duration = max(100, min(2_000, Int(rumbleDurationMilliseconds.rounded())))
+      let duration = Self.clampedRumbleDuration(rumbleDurationMilliseconds)
       beginOutputOperation(.rumble, selector: selector) { [gateway, rumbleSleep] in
         let intensities = RumbleIntensities(
           lowFrequency: UnipolarValue(byte: command.left),

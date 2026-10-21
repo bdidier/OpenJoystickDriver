@@ -266,7 +266,8 @@ private actor PermissionRaceGatewayStub: ApplicationServiceGateway {
 
   func setVirtualHIDProfileOverride(
     _ profile: VirtualHIDProfileID,
-    for selector: ControllerReference
+    for selector: ControllerReference,
+    scope: VirtualHIDProfileOverrideScope
   ) throws -> VirtualHIDProfileOverrideResult {
     VirtualHIDProfileOverrideResult(
       requested: profile,
@@ -277,7 +278,8 @@ private actor PermissionRaceGatewayStub: ApplicationServiceGateway {
   }
 
   func resetVirtualHIDProfileOverride(
-    for selector: ControllerReference
+    for selector: ControllerReference,
+    scope: VirtualHIDProfileOverrideScope
   ) throws -> VirtualHIDProfileOverrideResult {
     VirtualHIDProfileOverrideResult(
       requested: nil,
@@ -286,4 +288,6 @@ private actor PermissionRaceGatewayStub: ApplicationServiceGateway {
       failure: nil
     )
   }
+
+  func resetAllVirtualHIDProfileOverrides() throws -> Bool { true }
 }

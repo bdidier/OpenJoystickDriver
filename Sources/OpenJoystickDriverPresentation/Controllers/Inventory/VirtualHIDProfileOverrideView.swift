@@ -5,22 +5,22 @@
   import OpenJoystickDriverKit
   import SwiftUI
 
-  /// The Advanced override of one controller model's virtual HID profile, matching
+  /// The override of one controller model's virtual HID profile, matching
   /// `ojd virtual set|reset`: Automatic clears the override.
   struct VirtualHIDProfileOverrideView: View {
     @ObservedObject
     var viewModel: RuntimeViewModel
     let device: ApplicationServiceDeviceDescription
+    @State
+    private var scope: VirtualHIDProfileScopeChoice
+
+    init(viewModel: RuntimeViewModel, device: ApplicationServiceDeviceDescription) {
+      self.viewModel = viewModel
+      self.device = device
+      _scope = State(initialValue: VirtualHIDProfileScopeChoice.initial(for: device))
+    }
 
     var body: some View {
-      DisclosureGroup(advancedTitle) { content.padding(.top, 8) }
-    }
-
-    private var advancedTitle: String {
-      OJDLocalized.string("virtualProfile.advanced")
-    }
-
-    private var content: some View {
       VStack(alignment: .leading, spacing: 10) {
         Picker(
           OJDLocalized.string("virtualProfile.title"),
@@ -35,15 +35,29 @@
             )
           }
         }.disabled(overrideState.inFlight)
-        Text(
-          OJDLocalized.string(
-            "virtualProfile.modelScope"
-          )
-        ).font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor)).fixedSize(
-          horizontal: false,
-          vertical: true
-        )
-        OJDLabeledValue(OJDLocalized.string("virtualProfile.live"), liveProfileLabel)
+        if VirtualHIDProfileScopeChoice.offered(for: device).count > 1 {
+          Picker(OJDLocalized.string("controllers.virtual.scope"), selection: $scope) {
+            ForEach(VirtualHIDProfileScopeChoice.offered(for: device), id: \.self) { choice in
+              Text(OJDLocalized.string(choice.titleKey)).tag(choice)
+            }
+          }.disabled(overrideState.inFlight)
+          if let holder = VirtualHIDProfileOverrideDecision.currentScope(for: device),
+            holder != scope
+          {
+            Text(
+              OJDLocalized.formatted(
+                "controllers.virtual.currentScope",
+                OJDLocalized.string(holder.titleKey)
+              )
+            ).font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor))
+          }
+        } else {
+          Text(OJDLocalized.string("virtualProfile.modelScope")).font(.caption)
+            .foregroundColor(Color(NSColor.secondaryLabelColor)).fixedSize(
+              horizontal: false,
+              vertical: true
+            )
+        }
         if overrideState.inFlight {
           HStack(spacing: 8) {
             ProgressView()
@@ -81,25 +95,16 @@
           return device.virtualHIDProfile?.override
         },
         set: { profile in
-          guard profile != device.virtualHIDProfile?.override else { return }
+          guard
+            VirtualHIDProfileOverrideDecision.decide(profile: profile, scope: scope, for: device)
+              == .send
+          else { return }
           let device = device
-          Task { @MainActor in await viewModel.setVirtualHIDProfileOverride(profile, for: device) }
+          let scope = scope.scope
+          Task { @MainActor in
+            await viewModel.setVirtualHIDProfileOverride(profile, for: device, scope: scope)
+          }
         }
-      )
-    }
-
-    private var liveProfileLabel: String {
-      let decision = device.servingDecision
-      if decision.route == .outputDisabled(.noVirtualProfile) {
-        return OJDLocalized.string("virtualProfile.unavailable")
-      }
-      guard let selection = decision.selection else {
-        return RuntimePresentation.noVirtualHIDProfileLabel
-      }
-      let profile = selection.profileID
-      let source = RuntimePresentation.virtualHIDProfileSourceLabel(selection.source.reported)
-      return [profile.identity.publishedUSBIdentityLabel, source].compactMap { $0 }.joined(
-        separator: " · "
       )
     }
 

@@ -5,18 +5,7 @@
   import SwiftUI
 
   extension InputTestLiveInputView {
-    @ViewBuilder
-    var body: some View {
-      if embedded {
-        content
-      } else {
-        GroupBox {
-          content
-        } label: {
-          Text(OJDLocalized.string("inputTest.controls")).font(.headline)
-        }
-      }
-    }
+    var body: some View { content }
 
     var content: some View {
       let snapshot = liveState.snapshot
@@ -77,11 +66,13 @@
         indicator(symbols.leftShoulder, active: snapshot.pressed.contains(.leftShoulder))
         indicator(
           symbols.leftTrigger,
+          value: snapshot.leftTrigger.normalized,
           active: snapshot.leftTrigger.normalized > 0.05
             || snapshot.pressed.contains(.leftTrigger)
         )
         indicator(
           symbols.rightTrigger,
+          value: snapshot.rightTrigger.normalized,
           active: snapshot.rightTrigger.normalized > 0.05
             || snapshot.pressed.contains(.rightTrigger)
         )
@@ -92,33 +83,25 @@
     private func dpadCluster(hat: HatDirection) -> some View {
       let directions = RuntimePresentation.dpadDirections(hat)
       return VStack(spacing: 6) {
-        indicator(
-          OJDLocalized.string("inputTest.dpadUp"),
-          symbol: "dpad.up.filled",
-          fallbackSymbol: "arrowtriangle.up.fill",
-          active: directions.contains(.up)
-        )
+        dpadIndicator(.up, title: "inputTest.dpadUp", active: directions.contains(.up))
         HStack(spacing: 6) {
-          indicator(
-            OJDLocalized.string("inputTest.dpadLeft"),
-            symbol: "dpad.left.filled",
-            fallbackSymbol: "arrowtriangle.left.fill",
-            active: directions.contains(.left)
-          )
-          indicator(
-            OJDLocalized.string("inputTest.dpadRight"),
-            symbol: "dpad.right.filled",
-            fallbackSymbol: "arrowtriangle.right.fill",
-            active: directions.contains(.right)
-          )
+          dpadIndicator(.left, title: "inputTest.dpadLeft", active: directions.contains(.left))
+          dpadIndicator(.right, title: "inputTest.dpadRight", active: directions.contains(.right))
         }
-        indicator(
-          OJDLocalized.string("inputTest.dpadDown"),
-          symbol: "dpad.down.filled",
-          fallbackSymbol: "arrowtriangle.down.fill",
-          active: directions.contains(.down)
-        )
+        dpadIndicator(.down, title: "inputTest.dpadDown", active: directions.contains(.down))
       }
+    }
+
+    private func dpadIndicator(
+      _ direction: RemappingDpadDirection,
+      title: String,
+      active: Bool
+    ) -> some View {
+      indicator(
+        OJDLocalized.string(title),
+        symbol: InputTestButtonPresentation.dpadSymbol(direction),
+        active: active
+      )
     }
 
     @ViewBuilder
@@ -150,24 +133,18 @@
       }
     }
 
+    func indicator(_ title: String, symbol: String, active: Bool) -> some View {
+      InputTestIndicator(title: title, symbol: symbol, active: active)
+    }
+
     func indicator(
-      _ title: String,
-      symbol: String,
-      fallbackSymbol: String? = nil,
+      _ presentation: InputTestControllerSymbolSet.Control,
+      value: Float? = nil,
       active: Bool
     ) -> some View {
       InputTestIndicator(
-        title: title,
-        symbol: symbol,
-        fallbackSymbol: fallbackSymbol,
-        active: active
-      )
-    }
-
-    func indicator(_ presentation: InputTestControllerSymbolSet.Control, active: Bool) -> some View
-    {
-      InputTestIndicator(
         title: presentation.title,
+        displayedText: value.map { OJDLocalized.formatted("inputTest.axisValue", $0) },
         symbol: presentation.symbol,
         fallbackSymbol: presentation.fallbackSymbol,
         fallbackText: presentation.fallbackText,

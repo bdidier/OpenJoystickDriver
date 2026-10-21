@@ -27,11 +27,9 @@ struct InputTestPresentationTests {
   }
 
   @Test
-  func layoutContainsEverySectionAndCompactsAtNarrowWidths() {
-    #expect(InputTestLayoutPolicy.sectionOrder == [.liveInput, .axes, .motion, .rumble, .lighting])
-    #expect(InputTestLayoutPolicy.widthClass(for: 700) == .compact)
-    #expect(InputTestLayoutPolicy.widthClass(for: 860) == .regular)
-    #expect(InputTestLayoutPolicy.widthClass(for: 1_200) == .wide)
+  func dpadDirectionsHaveDistinctSymbols() {
+    let symbols = RemappingDpadDirection.allCases.map(InputTestButtonPresentation.dpadSymbol)
+    #expect(Set(symbols).count == RemappingDpadDirection.allCases.count)
   }
 
   @Test
