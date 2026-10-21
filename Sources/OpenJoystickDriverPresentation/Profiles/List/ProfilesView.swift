@@ -12,7 +12,7 @@
     @ObservedObject
     var library: ProfileLibraryModel
     @ObservedObject
-    var navigation: SettingsNavigationModel
+    var navigation: MainWindowNavigationModel
     @ObservedObject
     var screen: ProfilesViewModel
   }

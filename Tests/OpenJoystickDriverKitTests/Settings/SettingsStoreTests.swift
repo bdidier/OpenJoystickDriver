@@ -34,6 +34,12 @@ struct SettingsStoreTests {
   }
 
   @Test
+  func theMenuBarItemIsOnAndAutomaticUpdateChecksAreOffByDefault() throws {
+    #expect(try store.value(of: .showInMenuBar))
+    #expect(try !store.value(of: .updatesCheckAutomatically))
+  }
+
+  @Test
   func theDocumentEncodesAndDecodesToItself() throws {
     var document = SettingsDocument()
     for (index, key) in ApplicationSettingKey.allCases.enumerated() {

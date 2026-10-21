@@ -8,22 +8,7 @@
   import UserNotifications
 
   enum MenuBarStatusItemImage {
-    static let statusItemSize = NSSize(width: 18, height: 18)
-
-    static func make(applicationIcon: NSImage?, accessibilityDescription: String) -> NSImage? {
-      if let icon = scaledApplicationIcon(applicationIcon) { return icon }
-      return templateSymbol(accessibilityDescription: accessibilityDescription)
-    }
-
-    static func scaledApplicationIcon(_ icon: NSImage?) -> NSImage? {
-      guard let icon, icon.isValid, !icon.representations.isEmpty else { return nil }
-      guard icon.size.width > 0, icon.size.height > 0 else { return nil }
-      guard let copy = icon.copy() as? NSImage else { return nil }
-      copy.size = statusItemSize
-      return copy
-    }
-
-    static func templateSymbol(accessibilityDescription: String) -> NSImage? {
+    static func make(accessibilityDescription: String) -> NSImage? {
       let image = NSImage(
         systemSymbolName: "gamecontroller",
         accessibilityDescription: accessibilityDescription
@@ -43,7 +28,16 @@
 
     var statusItem: NSStatusItem?
     var statusMenu: NSMenu?
-    var settingsWindowController: SettingsWindowController?
+    /// The main window; the status item and main menu open areas only through it.
+    var mainWindow: (any MenuProfileMutating)?
+    /// The Settings window.
+    var settingsWindow: (any SettingsWindowPresenting)?
+    /// App preferences, shared with the Settings window; `showInMenuBar` adds or removes the
+    /// status item.
+    let preferences = SettingsPreferencesModel()
+    /// The command-line tool link, shown by the Settings window.
+    let commandLineTool = CommandLineToolModel()
+    var showInMenuBarObservation: AnyCancellable?
     var inputTestWindowController: InputTestWindowController?
     var liveStatusTimer: Timer?
     var controllerInventoryObserver: NSObjectProtocol?

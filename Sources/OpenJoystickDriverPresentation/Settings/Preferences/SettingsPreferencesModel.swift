@@ -29,6 +29,10 @@
     @Published
     private(set) var notificationSystemSettings: RuntimeNotificationSettings
     @Published
+    private(set) var showInMenuBar: Bool
+    @Published
+    private(set) var checkUpdatesAutomatically: Bool
+    @Published
     private(set) var includePrereleaseUpdates: Bool
     @Published
     private(set) var developerToolsEnabled: Bool
@@ -76,6 +80,8 @@
       self.profileDeactivatedNotifications =
         ApplicationSettingKey.notifyProfileDeactivated.defaultValue
       self.notificationSounds = ApplicationSettingKey.notifySounds.defaultValue
+      self.showInMenuBar = ApplicationSettingKey.showInMenuBar.defaultValue
+      self.checkUpdatesAutomatically = ApplicationSettingKey.updatesCheckAutomatically.defaultValue
       self.includePrereleaseUpdates = ApplicationSettingKey.updatesIncludePrereleases.defaultValue
       self.developerToolsEnabled = ApplicationSettingKey.developerTools.defaultValue
       reloadSettings()
@@ -106,6 +112,8 @@
       profileNotifications = value(.notifyProfileActivated)
       profileDeactivatedNotifications = value(.notifyProfileDeactivated)
       notificationSounds = value(.notifySounds)
+      showInMenuBar = value(.showInMenuBar)
+      checkUpdatesAutomatically = value(.updatesCheckAutomatically)
       includePrereleaseUpdates = value(.updatesIncludePrereleases)
       developerToolsEnabled = value(.developerTools)
     }
@@ -150,6 +158,16 @@
 
     func sendTestNotification() { setNotificationPreference(true, preference: .test) }
 
+    func setShowInMenuBar(_ enabled: Bool) {
+      guard persist(.showInMenuBar, enabled) else { return }
+      showInMenuBar = enabled
+    }
+
+    func setCheckUpdatesAutomatically(_ enabled: Bool) {
+      guard persist(.updatesCheckAutomatically, enabled) else { return }
+      checkUpdatesAutomatically = enabled
+    }
+
     func setIncludePrereleaseUpdates(_ enabled: Bool) {
       guard persist(.updatesIncludePrereleases, enabled) else { return }
       includePrereleaseUpdates = enabled
@@ -160,7 +178,10 @@
       developerToolsEnabled = enabled
     }
 
-    func checkForUpdates() {
+    /// Checks for a newer version and shows the result in `updateState`. With
+    /// `announcingAvailableUpdate`, a newer version also posts a notification; an up-to-date
+    /// result or a failure posts none and stays in `updateState`.
+    func checkForUpdates(announcingAvailableUpdate: Bool = false) {
       guard updateState != .checking else { return }
       updateState = .checking
       let includePrereleases = includePrereleaseUpdates
@@ -169,7 +190,15 @@
           currentVersion: ApplicationVersion.current,
           includePrereleases: includePrereleases
         )
-        self?.updateState = state
+        guard let self else { return }
+        self.updateState = state
+        if announcingAvailableUpdate, case .available(let info) = state {
+          self.notificationDelivery.deliver(
+            title: OJDLocalized.string("settings.updateAvailable"),
+            body: OJDLocalized.formatted("settings.updateAvailableBody", info.tagName),
+            sound: self.notificationSounds
+          )
+        }
       }
     }
 

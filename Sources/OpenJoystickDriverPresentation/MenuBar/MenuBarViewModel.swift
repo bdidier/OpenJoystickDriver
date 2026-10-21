@@ -6,8 +6,12 @@
   @MainActor
   final class MenuBarViewModel {
     let runtime: RuntimeViewModel
+    private let localization: Localization
 
-    init(runtime: RuntimeViewModel) { self.runtime = runtime }
+    init(runtime: RuntimeViewModel, localization: Localization = Localization()) {
+      self.runtime = runtime
+      self.localization = localization
+    }
 
     var devices: [ApplicationServiceDeviceDescription] {
       guard case .available(let status) = runtime.statusState else { return [] }
@@ -48,7 +52,36 @@
           "status.noActiveProfile"
         )
       }
-      return [readiness, controllerSummary, profileSummary].joined(separator: " · ")
+      return StatusItemStatusLine.make(
+        readiness: readiness,
+        controllers: controllerSummary,
+        profile: profileSummary,
+        localization: localization,
+        locale: .current
+      )
+    }
+
+    var statusItemState: StatusItemState {
+      var profiles: [StatusItemState.Profile] = []
+      if case .available(let snapshot) = runtime.remappingState {
+        let activeIDs = Set(snapshot.activeProfiles.map(\.profileID))
+        profiles = snapshot.profiles.map {
+          StatusItemState.Profile(id: $0.id, name: $0.name, isActive: activeIDs.contains($0.id))
+        }
+      }
+      return StatusItemState(
+        statusLine: summaryTitle,
+        controllers: devices.map {
+          StatusItemState.Controller(
+            id: $0.sessionToken.rawValue,
+            name: $0.name,
+            isSuspended: $0.sessionState == .suspended,
+            isWireless: $0.supportsWirelessDisconnect
+          )
+        },
+        profiles: profiles,
+        statusSymbolName: summarySemanticState.presentation.symbolName
+      )
     }
 
     var summarySemanticState: SemanticState {

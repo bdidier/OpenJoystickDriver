@@ -127,37 +127,20 @@
 
     func importProfile() {
       guard !isProfileActionBlocked else { return }
-      let panel = NSOpenPanel()
-      panel.allowsMultipleSelection = false
-      panel.canChooseDirectories = false
-      panel.canChooseFiles = true
-      panel.title = OJDLocalized.string("profiles.import")
-      configureJSONTypes(panel)
-      guard panel.runModal() == .OK, let url = panel.url else { return }
-      Task { @MainActor in
-        do {
-          let profile = try await screen.documents.load(from: url)
-          requestProfileAction(.importProfile(profile))
-        } catch { profileActionError = RuntimePresentation.userFacingError(error) }
-      }
+      screen.chooseProfileToImport()
     }
 
-    func exportProfile(_ profile: RemappingProfile) {
-      let panel = NSSavePanel()
-      panel.title = OJDLocalized.string("profiles.export")
-      panel.nameFieldStringValue = "\(profile.name).json"
-      configureJSONTypes(panel)
-      guard panel.runModal() == .OK, let url = panel.url else { return }
-      Task { @MainActor in
-        do {
-          try await screen.documents.write(profile, to: url)
-          profileActionError = nil
-        } catch { profileActionError = RuntimePresentation.userFacingError(error) }
-      }
-    }
+    func exportProfile(_ profile: RemappingProfile) { screen.exportProfile(profile) }
 
-    func configureJSONTypes(_ panel: NSSavePanel) {
-      panel.allowedContentTypes = [.json]
+    /// Imports a profile chosen through the screen model, from the Profiles screen or the File
+    /// menu.
+    func receiveChosenImportProfile(_ profile: RemappingProfile) {
+      screen.chosenImportProfile = nil
+      guard !isProfileActionBlocked else {
+        profileActionError = OJDLocalized.string("profiles.importBlocked")
+        return
+      }
+      requestProfileAction(.importProfile(profile))
     }
 
     func handleProfileMutation(_ mutation: RuntimeMutationState) {

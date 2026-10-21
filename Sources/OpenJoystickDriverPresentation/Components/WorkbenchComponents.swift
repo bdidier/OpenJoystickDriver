@@ -94,33 +94,4 @@
     }
   }
 
-  struct SettingsSidebar: View {
-    @ObservedObject
-    var navigation: SettingsNavigationModel
-    let panes: [SettingsPane]
-
-    var body: some View {
-      List(selection: selection) {
-        ForEach(panes) { pane in
-          HStack(spacing: 8) {
-            OJDSystemSymbol(name: pane.symbolName, fallback: nil).frame(width: 18)
-              .accessibilityHidden(true)
-            Text(pane.title)
-            Spacer(minLength: 0)
-          }.padding(.vertical, 3).tag(pane)
-        }
-      }.listStyle(SidebarListStyle()).frame(minWidth: 170, idealWidth: 190, maxWidth: 240)
-        .ojdAccessibilityLabel(
-          OJDLocalized.string("settings.navigation")
-        )
-    }
-
-    private var selection: Binding<SettingsPane?> {
-      Binding(
-        get: { navigation.selectedPane },
-        set: { pane in if let pane { navigation.requestPane(pane) } }
-      )
-    }
-  }
-
 #endif

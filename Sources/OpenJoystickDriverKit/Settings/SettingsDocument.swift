@@ -21,6 +21,7 @@ public struct SettingsDocument: Equatable, Sendable {
 
   /// How update checks behave.
   public struct Updates: Equatable, Sendable {
+    public var checkAutomatically: Bool?
     public var includePrereleases: Bool?
 
     public init() {}
@@ -31,6 +32,7 @@ public struct SettingsDocument: Equatable, Sendable {
   /// `launchAtLogin` is read from and written to the macOS login item, which stays the source of
   /// truth; a change made in System Settings does not update this field.
   public var launchAtLoginOptOut: Bool?
+  public var showInMenuBar: Bool?
   public var notify = Notify()
   public var updates = Updates()
   public var developerTools: Bool?
@@ -45,11 +47,13 @@ public struct SettingsDocument: Equatable, Sendable {
     get {
       switch key {
       case .launchAtLogin: launchAtLoginOptOut.map { !$0 }
+      case .showInMenuBar: showInMenuBar
       case .notifyControllerConnected: notify.controllerConnected
       case .notifyControllerDisconnected: notify.controllerDisconnected
       case .notifyProfileActivated: notify.profileActivated
       case .notifyProfileDeactivated: notify.profileDeactivated
       case .notifySounds: notify.sounds
+      case .updatesCheckAutomatically: updates.checkAutomatically
       case .updatesIncludePrereleases: updates.includePrereleases
       case .developerTools: developerTools
       }
@@ -57,11 +61,13 @@ public struct SettingsDocument: Equatable, Sendable {
     set {
       switch key {
       case .launchAtLogin: launchAtLoginOptOut = newValue.map { !$0 }
+      case .showInMenuBar: showInMenuBar = newValue
       case .notifyControllerConnected: notify.controllerConnected = newValue
       case .notifyControllerDisconnected: notify.controllerDisconnected = newValue
       case .notifyProfileActivated: notify.profileActivated = newValue
       case .notifyProfileDeactivated: notify.profileDeactivated = newValue
       case .notifySounds: notify.sounds = newValue
+      case .updatesCheckAutomatically: updates.checkAutomatically = newValue
       case .updatesIncludePrereleases: updates.includePrereleases = newValue
       case .developerTools: developerTools = newValue
       }
@@ -110,23 +116,27 @@ extension SettingsDocument.Notify: Codable {
 }
 
 extension SettingsDocument.Updates: Codable {
-  private enum CodingKeys: String, CodingKey, CaseIterable { case includePrereleases }
+  private enum CodingKeys: String, CodingKey, CaseIterable {
+    case checkAutomatically, includePrereleases
+  }
 
   public init(from decoder: any Decoder) throws {
     try decoder.rejectUnknownKeys(CodingKeys.self)
     let container = try decoder.container(keyedBy: CodingKeys.self)
+    checkAutomatically = try container.decodeIfPresent(Bool.self, forKey: .checkAutomatically)
     includePrereleases = try container.decodeIfPresent(Bool.self, forKey: .includePrereleases)
   }
 
   public func encode(to encoder: any Encoder) throws {
     var container = encoder.container(keyedBy: CodingKeys.self)
+    try container.encodeIfPresent(checkAutomatically, forKey: .checkAutomatically)
     try container.encodeIfPresent(includePrereleases, forKey: .includePrereleases)
   }
 }
 
 extension SettingsDocument: Codable {
   private enum CodingKeys: String, CodingKey, CaseIterable {
-    case apiVersion, kind, launchAtLoginOptOut, notify, updates, developerTools
+    case apiVersion, kind, launchAtLoginOptOut, showInMenuBar, notify, updates, developerTools
   }
 
   public init(from decoder: any Decoder) throws {
@@ -140,6 +150,7 @@ extension SettingsDocument: Codable {
     }
     try decoder.rejectUnknownKeys(CodingKeys.self)
     launchAtLoginOptOut = try container.decodeIfPresent(Bool.self, forKey: .launchAtLoginOptOut)
+    showInMenuBar = try container.decodeIfPresent(Bool.self, forKey: .showInMenuBar)
     notify = try container.decodeIfPresent(Notify.self, forKey: .notify) ?? Notify()
     updates = try container.decodeIfPresent(Updates.self, forKey: .updates) ?? Updates()
     developerTools = try container.decodeIfPresent(Bool.self, forKey: .developerTools)
@@ -150,6 +161,7 @@ extension SettingsDocument: Codable {
     try container.encode(OpenJoystickDriverAPI.version, forKey: .apiVersion)
     try container.encode(Self.kind, forKey: .kind)
     try container.encodeIfPresent(launchAtLoginOptOut, forKey: .launchAtLoginOptOut)
+    try container.encodeIfPresent(showInMenuBar, forKey: .showInMenuBar)
     if notify != Notify() { try container.encode(notify, forKey: .notify) }
     if updates != Updates() { try container.encode(updates, forKey: .updates) }
     try container.encodeIfPresent(developerTools, forKey: .developerTools)

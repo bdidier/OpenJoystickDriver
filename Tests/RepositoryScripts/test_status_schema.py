@@ -11,11 +11,13 @@ SCHEMA = "cli-output.schema.json"
 LINK_STATES = ("Installed", "LinkedElsewhere", "Broken", "BlockedByFile", "Missing")
 SETTING_KEYS = [
     "launchAtLogin",
+    "showInMenuBar",
     "notify.controllerConnected",
     "notify.controllerDisconnected",
     "notify.profileActivated",
     "notify.profileDeactivated",
     "notify.sounds",
+    "updates.checkAutomatically",
     "updates.includePrereleases",
     "developerTools",
 ]

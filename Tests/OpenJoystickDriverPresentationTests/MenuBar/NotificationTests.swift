@@ -9,35 +9,8 @@ import Testing
 @Suite
 struct NotificationTests {
   @Test
-  func prefersApplicationIconOverTemplateSymbol() {
-    let representation = NSBitmapImageRep(
-      bitmapDataPlanes: nil,
-      pixelsWide: 32,
-      pixelsHigh: 32,
-      bitsPerSample: 8,
-      samplesPerPixel: 4,
-      hasAlpha: true,
-      isPlanar: false,
-      colorSpaceName: .deviceRGB,
-      bytesPerRow: 0,
-      bitsPerPixel: 0
-    )
-    let icon = NSImage(size: NSSize(width: 32, height: 32))
-    if let representation { icon.addRepresentation(representation) }
-    let image = MenuBarStatusItemImage.make(
-      applicationIcon: icon,
-      accessibilityDescription: "OpenJoystickDriver"
-    )
-    #expect(image?.isTemplate == false)
-    #expect(image?.size == MenuBarStatusItemImage.statusItemSize)
-  }
-
-  @Test
-  func fallsBackToTemplateSymbolWhenApplicationIconIsMissing() {
-    let image = MenuBarStatusItemImage.make(
-      applicationIcon: nil,
-      accessibilityDescription: "OpenJoystickDriver"
-    )
+  func statusItemImageIsAlwaysTheTemplateSymbol() {
+    let image = MenuBarStatusItemImage.make(accessibilityDescription: "OpenJoystickDriver")
     #expect(image?.isTemplate == true)
   }
 

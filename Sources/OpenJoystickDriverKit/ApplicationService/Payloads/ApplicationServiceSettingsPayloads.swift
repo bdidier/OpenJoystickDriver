@@ -4,16 +4,19 @@ import Foundation
 /// `ojd setting` takes and that names the setting in `Settings.json`.
 public enum ApplicationSettingKey: String, Codable, CaseIterable, Sendable {
   case launchAtLogin
+  case showInMenuBar
   case notifyControllerConnected = "notify.controllerConnected"
   case notifyControllerDisconnected = "notify.controllerDisconnected"
   case notifyProfileActivated = "notify.profileActivated"
   case notifyProfileDeactivated = "notify.profileDeactivated"
   case notifySounds = "notify.sounds"
+  case updatesCheckAutomatically = "updates.checkAutomatically"
   case updatesIncludePrereleases = "updates.includePrereleases"
   case developerTools
 
-  /// The value while no settings file stores one: true for `notify.sounds`, false otherwise.
-  public var defaultValue: Bool { self == .notifySounds }
+  /// The value while no settings file stores one: true for `showInMenuBar` and `notify.sounds`,
+  /// false otherwise.
+  public var defaultValue: Bool { self == .showInMenuBar || self == .notifySounds }
 }
 
 /// One app setting and its current value.

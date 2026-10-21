@@ -50,7 +50,7 @@ Read every value back against `en-US` before you ship it.
   Keep a diagnose "check" distinct from the controller device.
 - For a standard macOS term (menu items, keys, common buttons), use the term Apple's macOS glossary uses in that language when it has the same sense.
 - Leave English only for product names, CLI tokens and option values, identifiers, and a loanword that macOS itself uses in that language.
-- Do not ship unreviewed machine translation.
+- Do not ship unreviewed machine translation. Whoever adds or changes a value, person or agent, reviews it against these rules before the commit; an agent reads each value back against `en-US` and its call site, and fixes what fails. Native speakers review on top when they can.
 
 ## Translate
 

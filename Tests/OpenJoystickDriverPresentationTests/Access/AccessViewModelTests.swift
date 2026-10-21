@@ -1,0 +1,312 @@
+import Foundation
+import OpenJoystickDriverKit
+import Testing
+
+@testable import OpenJoystickDriverPresentation
+
+private final class FakeAccessService: AccessService, @unchecked Sendable {
+  var payload = AccessStatusPayload(
+    enabled: false,
+    socketPath: "/tmp/ojd.sock",
+    connections: [],
+    grants: [],
+    refused: [],
+    web: AccessWebStatus(enabled: false, listening: false, port: nil, pagesPath: "/tmp/pages"),
+    tokens: [],
+    refusedTokens: []
+  )
+  var error: (any Error)?
+  var calls: [String] = []
+  var grantedScopes: [EndpointScope] = []
+
+  func status() throws -> AccessStatusPayload {
+    if let error { throw error }
+    return payload
+  }
+
+  func setEnabled(_ enabled: Bool) throws -> AccessStatusPayload {
+    calls.append("enabled:\(enabled)")
+    return try status()
+  }
+
+  func setWeb(enabled: Bool, port: Int?) throws -> AccessStatusPayload {
+    calls.append("web:\(enabled):\(port.map(String.init) ?? "-")")
+    return try status()
+  }
+
+  func grant(
+    _ identity: CodeSigningIdentity,
+    path: String,
+    scopes: [EndpointScope]
+  ) throws -> AccessGrantSummary {
+    calls.append("grant:\(identity.identifier)")
+    grantedScopes = scopes
+    return AccessGrantSummary(
+      AccessGrant(identity: identity, scopes: scopes, grantedAt: "2026-01-01T00:00:00Z", path: path)
+    )
+  }
+
+  func grantToken(
+    name: String,
+    origins: [String],
+    scopes: [EndpointScope]
+  ) throws -> AccessTokenGrantResult {
+    calls.append("token:\(name)")
+    return AccessTokenGrantResult(
+      token: "secret",
+      grant: AccessTokenSummary(
+        name: name,
+        origins: origins,
+        scopes: scopes,
+        grantTime: "2026-01-01T00:00:00Z"
+      )
+    )
+  }
+
+  func revoke(id: String) throws -> AccessRevokeResult {
+    calls.append("revoke:\(id)")
+    return AccessRevokeResult(id: id, grant: nil, token: nil, closedConnections: 0)
+  }
+}
+
+@MainActor
+struct AccessViewModelTests {
+  private let signed = CodeSigningIdentity(
+    kind: .signed,
+    identifier: "com.example.app",
+    publisherID: "ABCDE12345"
+  )
+
+  @Test
+  func refreshLoadsTheStatus() async {
+    let service = FakeAccessService()
+    let model = AccessViewModel(service: service)
+
+    await model.refresh()
+
+    #expect(model.status?.socketPath == "/tmp/ojd.sock")
+  }
+
+  @Test
+  func aServiceThatIsNotRunningIsAnE2004Failure() async {
+    let service = FakeAccessService()
+    service.error = ApplicationServiceClientError.notConnected
+    let model = AccessViewModel(service: service)
+
+    await model.refresh()
+
+    #expect(model.load == .failed(AccessFailure(ApplicationServiceClientError.notConnected)))
+    #expect(AccessFailure(ApplicationServiceClientError.notConnected).code == .serviceUnavailable)
+  }
+
+  @Test
+  func turningTheEndpointOnAsksFirst() async {
+    let service = FakeAccessService()
+    let model = AccessViewModel(service: service)
+
+    model.requestEnableEndpoint()
+    #expect(service.calls.isEmpty)
+    #expect(model.sheet == .confirm(.enableEndpoint))
+    await model.confirm(.enableEndpoint)
+
+    #expect(service.calls == ["enabled:true"])
+    #expect(model.sheet == nil)
+  }
+
+  @Test
+  func turningTheEndpointOffNeedsNoConfirmation() async {
+    let service = FakeAccessService()
+    let model = AccessViewModel(service: service)
+
+    await model.disableEndpoint()
+
+    #expect(service.calls == ["enabled:false"])
+  }
+
+  @Test
+  func aPortOutsideTheAllowedRangeIsRefused() {
+    let model = AccessViewModel(service: FakeAccessService())
+    model.portText = "80"
+
+    model.requestEnableWeb()
+
+    #expect(model.sheet == nil)
+    #expect(model.failure?.code == .webPortUnavailable)
+  }
+
+  @Test
+  func anEmptyPortKeepsTheSavedPort() async throws {
+    let service = FakeAccessService()
+    let model = AccessViewModel(service: service)
+
+    model.requestEnableWeb()
+    let port = try model.webPort()
+    await model.confirm(.enableWeb(port: port))
+
+    #expect(service.calls == ["web:true:-"])
+  }
+
+  @Test
+  func grantingUsesTheChosenScopes() async {
+    let service = FakeAccessService()
+    let model = AccessViewModel(service: service)
+    let candidate = AccessClientCandidate(identity: signed, path: "/Applications/App.app")
+
+    model.requestGrant(candidate)
+    model.grantScopes = [.read, .control]
+    let confirmation = model.confirmation(for: .grantClient(candidate))
+    await model.confirm(.grantClient(candidate))
+
+    #expect(confirmation.lines.count == 2)
+    #expect(service.grantedScopes == [.read, .control])
+  }
+
+  @Test
+  func aPlatformClientGetsAWarningLine() {
+    let model = AccessViewModel(service: FakeAccessService())
+    let candidate = AccessClientCandidate(
+      identity: CodeSigningIdentity(
+        kind: .platform,
+        identifier: "com.apple.tool",
+        publisherID: nil
+      ),
+      path: "/usr/bin/tool"
+    )
+
+    #expect(model.confirmation(for: .grantClient(candidate)).lines.count == 2)
+  }
+
+  @Test
+  func anAdHocClientCannotBeGranted() {
+    let model = AccessViewModel(service: FakeAccessService())
+    let candidate = AccessClientCandidate(
+      identity: CodeSigningIdentity(kind: .adHoc, identifier: "tool", publisherID: nil),
+      path: "/tmp/tool"
+    )
+
+    model.requestGrant(candidate)
+
+    #expect(model.sheet == nil)
+    #expect(model.failure?.code == .unsignedClient)
+  }
+
+  @Test
+  func aProgramWithoutASignatureCannotBeGranted() {
+    let model = AccessViewModel(service: FakeAccessService()) { _ in nil }
+
+    model.requestGrant(programAt: URL(fileURLWithPath: "/tmp/tool"))
+
+    #expect(model.sheet == nil)
+    #expect(model.failure?.code == .unsignedClient)
+  }
+
+  @Test
+  func aTokenForWebPagesCannotHaveTheControlScope() {
+    let model = AccessViewModel(service: FakeAccessService())
+    model.tokenDraft = AccessTokenDraft(
+      name: "page",
+      originsText: "https://example.com",
+      scopes: [.read, .control]
+    )
+
+    model.requestGrantToken()
+
+    #expect(model.sheet == nil)
+    #expect(model.failure?.code == .controlScopeWithOrigins)
+  }
+
+  @Test
+  func aTokenNeedsAName() {
+    let model = AccessViewModel(service: FakeAccessService())
+    model.tokenDraft = AccessTokenDraft(name: "  ", originsText: "", scopes: [.read])
+
+    model.requestGrantToken()
+
+    #expect(model.failure?.code == .invalidTokenName)
+  }
+
+  @Test
+  func theIssuedTokenIsShownOnceAfterTheGrant() async {
+    let service = FakeAccessService()
+    let model = AccessViewModel(service: service)
+    model.tokenDraft = AccessTokenDraft(name: "tool", originsText: "", scopes: [.read])
+    model.requestGrantToken()
+
+    await model.confirm(.grantToken(name: "tool", origins: []))
+
+    #expect(model.sheet == .issuedToken(AccessIssuedToken(name: "tool", token: "secret")))
+  }
+
+  @Test
+  func originsAreOnePerLineWithoutBlanks() {
+    let draft = AccessTokenDraft(
+      name: "page",
+      originsText: "https://a.example\n\n  https://b.example  \n",
+      scopes: [.read]
+    )
+
+    #expect(draft.origins == ["https://a.example", "https://b.example"])
+  }
+
+  @Test
+  func revokingAsksThenRevokesById() async {
+    let service = FakeAccessService()
+    let model = AccessViewModel(service: service)
+    let pending = AccessPending.revokeToken(id: "token:tool", name: "tool")
+
+    model.requestRevoke(
+      AccessTokenSummary(name: "tool", origins: [], scopes: [.read], grantTime: "")
+    )
+    #expect(model.sheet == .confirm(pending))
+    #expect(model.confirmation(for: pending).isDestructive)
+    await model.confirm(pending)
+
+    #expect(service.calls == ["revoke:token:tool"])
+  }
+
+  @Test
+  func aRefusedClientWithoutAPathIsNotGranted() {
+    let model = AccessViewModel(service: FakeAccessService())
+    let client = AccessRefusedClient(
+      identity: signed,
+      path: nil,
+      scopes: [.read],
+      reason: "E1002",
+      refusalTime: "2026-01-01T00:00:00Z"
+    )
+
+    model.requestRefusedGrant(client)
+
+    #expect(model.sheet == nil)
+    #expect(model.failure?.code == .unsignedClient)
+  }
+
+  @Test
+  func aRefusedClientWithAPathOpensTheGrantConfirmation() {
+    let model = AccessViewModel(service: FakeAccessService())
+    let client = AccessRefusedClient(
+      identity: signed,
+      path: "/usr/bin/tool",
+      scopes: [.read],
+      reason: "E1002",
+      refusalTime: "2026-01-01T00:00:00Z"
+    )
+
+    model.requestRefusedGrant(client)
+
+    #expect(
+      model.sheet
+        == .confirm(.grantClient(AccessClientCandidate(identity: signed, path: "/usr/bin/tool")))
+    )
+  }
+
+  @Test
+  func enablingTheWebEndpointWithoutAPortSaysItKeepsTheSavedPort() {
+    let model = AccessViewModel(service: FakeAccessService())
+
+    let lines = model.confirmation(for: .enableWeb(port: nil)).lines
+
+    #expect(lines.count == 2)
+    #expect(lines.allSatisfy { !$0.isEmpty })
+  }
+}

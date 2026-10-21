@@ -122,5 +122,29 @@
 			<string>Обнаружено %d устройств вывода контроллера</string>
 		</dict>
 	</dict>
+	<key>library.records.bundled</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>В комплекте с приложением ещё %d запись.</string>
+			<key>zero</key>
+			<string>В комплекте с приложением ещё %d записей.</string>
+			<key>two</key>
+			<string>В комплекте с приложением ещё %d записи.</string>
+			<key>few</key>
+			<string>В комплекте с приложением ещё %d записи.</string>
+			<key>many</key>
+			<string>В комплекте с приложением ещё %d записей.</string>
+			<key>other</key>
+			<string>В комплекте с приложением ещё %d записи.</string>
+		</dict>
+	</dict>
 </dict>
 </plist>

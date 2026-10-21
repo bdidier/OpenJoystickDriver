@@ -17,6 +17,10 @@
       "description": "Internal state, not a setting: true after the user turned launch at login off through the app or 'ojd setting', so the app does not register itself automatically on its next start. Default false. The public key launchAtLogin is read from and written to the macOS login item (SMAppService), which stays the source of truth; a change made in System Settings does not update this field.",
       "type": "boolean"
     },
+    "showInMenuBar": {
+      "description": "Show the OpenJoystickDriver item in the menu bar. Default true.",
+      "type": "boolean"
+    },
     "notify": {
       "description": "Which events post a notification.",
       "type": "object",
@@ -49,6 +53,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "checkAutomatically": {
+          "description": "Check for updates when the app starts. Default false.",
+          "type": "boolean"
+        },
         "includePrereleases": {
           "description": "Include pre-release versions when checking for updates. Default false.",
           "type": "boolean"

@@ -14,8 +14,8 @@
       let application = NSApplication.shared
       application.setActivationPolicy(.accessory)
       application.delegate = self
+      makeWindows()
       application.mainMenu = makeApplicationMenu()
-      installStatusItem()
       application.run()
 
       // Normal termination has already awaited stopRuntime() in applicationShouldTerminate.
@@ -32,6 +32,15 @@
         queue: .main
       ) { [weak self] _ in Task { @MainActor [weak self] in self?.refreshLiveStatus() } }
       Task { @MainActor in await viewModel.startSystemExtensionSetup() }
+      LaunchUpdateCheck(
+        isEnabled: { [preferences] in preferences.checkUpdatesAutomatically },
+        check: { [preferences] in preferences.checkForUpdates(announcingAvailableUpdate: true) }
+      ).run()
+      showInMenuBarObservation = preferences.$showInMenuBar.removeDuplicates().sink {
+        [weak self] shown in self?.applyShowInMenuBar(shown)
+      }
+      // The service sends no controller attach or detach notification to the app, so this poll is
+      // the only source of live controller changes.
       liveStatusTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
         guard let self else { return }
         Task { @MainActor in self.refreshLiveStatus() }
@@ -47,13 +56,14 @@
       hasVisibleWindows flag: Bool
     ) -> Bool {
       refreshLiveStatus()
-      openSettings(pane: .overview)
+      mainWindow?.showMainWindow(area: nil)
       return true
     }
 
     package func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply
     {
       termination.request {
+        self.stopLiveStatus()
         self.removeStatusItem()
         self.inputTestWindowController?.stop()
         await self.stopRuntime()
@@ -73,19 +83,9 @@
       return true
     }
 
-    package func applicationWillTerminate(_ notification: Notification) { removeStatusItem() }
-
-    @objc
-    func openSettings(_ sender: Any?) { openSettings(pane: .settings) }
-
-    @objc
-    func showApplication(_ sender: Any?) { openSettings(pane: nil) }
-
-    @objc
-    func openSettingsFromStatus(_ sender: Any?) {
-      let item = sender as? NSMenuItem
-      let pane = item.flatMap { SettingsPane(rawValue: $0.representedObject as? String ?? "") }
-      openSettings(pane: pane ?? .overview)
+    package func applicationWillTerminate(_ notification: Notification) {
+      stopLiveStatus()
+      removeStatusItem()
     }
 
     @objc
@@ -107,23 +107,45 @@
       }
     }
 
-    func openSettings(pane: SettingsPane?) {
-      if settingsWindowController == nil {
-        settingsWindowController = SettingsWindowController(
-          viewModel: viewModel,
-          supportReport: supportReport,
-          restartApplication: { [weak self] in self?.restartApplication() },
-          openInputTest: { [weak self] device in self?.openInputTest(for: device) },
-          visibilityChanged: { [weak self] isOpen in
-            if isOpen {
-              self?.primaryWindowVisibility.opened(.workbench)
-            } else {
-              self?.primaryWindowVisibility.closed(.workbench)
-            }
+    /// Creates the main and Settings windows once; they hide on close and keep their state.
+    func makeWindows() {
+      mainWindow = MainWindowController(
+        runtime: viewModel,
+        supportReport: supportReport,
+        restartApplication: { [weak self] in self?.restartApplication() },
+        openInputTest: { [weak self] device in self?.openInputTest(for: device) },
+        visibilityChanged: { [weak self] isOpen in
+          if isOpen {
+            self?.primaryWindowVisibility.opened(.workbench)
+          } else {
+            self?.primaryWindowVisibility.closed(.workbench)
           }
-        )
+        }
+      )
+      settingsWindow = SettingsWindowController(
+        gateway: gateway,
+        preferences: preferences,
+        commandLineTool: commandLineTool
+      ) { [weak self] isOpen in
+        if isOpen {
+          self?.primaryWindowVisibility.opened(.settings)
+        } else {
+          self?.primaryWindowVisibility.closed(.settings)
+        }
       }
-      settingsWindowController?.show(pane: pane)
+    }
+
+    /// Without a status item the main window is the only way into the app, so hiding the item
+    /// opens the window.
+    private func applyShowInMenuBar(_ shown: Bool) {
+      primaryWindowVisibility.keepsDockIcon = !shown
+      if shown {
+        guard statusItem == nil else { return }
+        installStatusItem()
+      } else {
+        removeStatusItem()
+        mainWindow?.showMainWindow(area: nil)
+      }
     }
 
     private func openInputTest(for device: ApplicationServiceDeviceDescription) {
@@ -149,30 +171,27 @@
         button.toolTip = OJDLocalized.string("app.name")
         button.target = self
         button.action = #selector(showStatusMenu(_:))
-        if let image = MenuBarStatusItemImage.make(
-          applicationIcon: NSImage(named: NSImage.applicationIconName),
-          accessibilityDescription: OJDLocalized.string("app.name")
-        ) {
-          button.image = image
-        }
-        if button.image == nil {
-          // Text is an intentional final fallback for an unbundled debug executable.
-          button.title = "OJ"
-        }
+        button.image = MenuBarStatusItemImage.make(
+          accessibilityDescription: OJDLocalized.string("a11y.menuBar.statusItem")
+        )
+        button.setAccessibilityLabel(OJDLocalized.string("a11y.menuBar.statusItem"))
       }
-      statusMenu = NSMenu(title: OJDLocalized.string("app.name"))
+      updateStatusMenu()
       // Use the action path rather than assigning a menu directly so each opening refreshes its
       // snapshot before the menu is shown.
       item.menu = nil
     }
 
-    private func removeStatusItem() {
+    private func stopLiveStatus() {
       liveStatusTimer?.invalidate()
       liveStatusTimer = nil
       if let controllerInventoryObserver {
         NotificationCenter.default.removeObserver(controllerInventoryObserver)
         self.controllerInventoryObserver = nil
       }
+    }
+
+    private func removeStatusItem() {
       guard let item = statusItem else { return }
       NSStatusBar.system.removeStatusItem(item)
       statusItem = nil
@@ -182,6 +201,7 @@
     @objc
     private func showStatusMenu(_ sender: Any?) {
       refreshLiveStatus()
+      updateStatusMenu()
       guard let menu = statusMenu, let button = statusItem?.button else { return }
       // Pop up the same native menu on every click after the asynchronous status refresh starts.
       menu.popUp(positioning: nil, at: NSPoint(x: 0, y: button.bounds.height), in: button)
@@ -207,137 +227,11 @@
     }
 
     private func updateStatusMenu() {
-      guard let menu = statusMenu else { return }
-      menu.removeAllItems()
-
-      let summary = NSMenuItem(title: menuBarViewModel.summaryTitle, action: nil, keyEquivalent: "")
-      summary.isEnabled = false
-      summary.image = menuImage(
-        symbol: menuBarViewModel.summarySemanticState.presentation.symbolName
+      statusMenu = makeStatusMenu(
+        from: StatusItemModel.entries(for: menuBarViewModel.statusItemState),
+        title: OJDLocalized.string("app.name")
       )
-      menu.addItem(summary)
-      menu.addItem(.separator())
-
-      if menuBarViewModel.needsPermissionAttention {
-        let request = NSMenuItem(
-          title: OJDLocalized.string("menu.requestAccess"),
-          action: #selector(requestAccessFromStatus(_:)),
-          keyEquivalent: ""
-        )
-        request.target = self
-        request.image = menuImage(symbol: "lock.shield")
-        menu.addItem(request)
-      }
-
-      let controllers = NSMenuItem(
-        title: OJDLocalized.string("common.controllers"),
-        action: nil,
-        keyEquivalent: ""
-      )
-      controllers.submenu = makeControllersMenu()
-      menu.addItem(controllers)
-
-      let show = NSMenuItem(
-        title: OJDLocalized.string("menu.show"),
-        action: #selector(showApplication(_:)),
-        keyEquivalent: ""
-      )
-      show.target = self
-      menu.addItem(show)
-
-      let settings = NSMenuItem(
-        title: OJDLocalized.string("menu.settings"),
-        action: #selector(openSettingsFromStatus(_:)),
-        keyEquivalent: ","
-      )
-      settings.target = self
-      settings.representedObject = SettingsPane.settings.rawValue
-      settings.keyEquivalentModifierMask = [.command]
-      settings.image = menuImage(symbol: "gearshape")
-      menu.addItem(settings)
-      menu.addItem(.separator())
-
-      let help = NSMenuItem(
-        title: OJDLocalized.string("menu.help"),
-        action: nil,
-        keyEquivalent: ""
-      )
-      help.submenu = makeHelpMenu()
-      menu.addItem(help)
-      menu.addItem(.separator())
-
-      let about = NSMenuItem(
-        title: OJDLocalized.string("menu.about"),
-        action: #selector(showAbout(_:)),
-        keyEquivalent: ""
-      )
-      about.target = self
-      menu.addItem(about)
-
-      let quit = NSMenuItem(
-        title: OJDLocalized.string("menu.quit"),
-        action: #selector(quit(_:)),
-        keyEquivalent: "q"
-      )
-      quit.target = self
-      quit.keyEquivalentModifierMask = [.command]
-      quit.image = menuImage(symbol: "power")
-      menu.addItem(quit)
     }
-
-    private func makeControllersMenu() -> NSMenu {
-      let menu = NSMenu(title: OJDLocalized.string("common.controllers"))
-      if !menuBarViewModel.devices.isEmpty {
-        for device in menuBarViewModel.devices {
-          let item = NSMenuItem(title: device.name, action: nil, keyEquivalent: "")
-          item.image = controllerMenuImage(for: device.publishedIdentityPresentation)
-          item.submenu = makeControllerMenu(for: device)
-          menu.addItem(item)
-        }
-        menu.addItem(.separator())
-      } else {
-        let empty = NSMenuItem(
-          title: OJDLocalized.string("controllers.emptyTitle"),
-          action: nil,
-          keyEquivalent: ""
-        )
-        empty.isEnabled = false
-        menu.addItem(empty)
-        menu.addItem(.separator())
-      }
-      addNavigationItem(
-        title: OJDLocalized.string("menu.controllers"),
-        pane: .controllers,
-        symbol: "gamecontroller",
-        to: menu
-      )
-      return menu
-    }
-
-    private func makeControllerMenu(for device: ApplicationServiceDeviceDescription) -> NSMenu {
-      let menu = NSMenu(title: device.name)
-      addNavigationItem(
-        title: OJDLocalized.string("menu.controllers"),
-        pane: .controllers,
-        symbol: "info.circle",
-        to: menu
-      )
-      if device.connection.caseInsensitiveCompare("Bluetooth") == .orderedSame {
-        let disconnect = NSMenuItem(
-          title: OJDLocalized.string(
-            "controllers.disconnectWireless"
-          ),
-          action: #selector(disconnectWirelessControllerFromStatus(_:)),
-          keyEquivalent: ""
-        )
-        disconnect.target = self
-        disconnect.representedObject = device.sessionToken.rawValue
-        disconnect.image = menuImage(symbol: "antenna.radiowaves.left.and.right.slash")
-        menu.addItem(disconnect)
-      }
-      return menu
-    }
-
   }
 
 #endif

@@ -47,6 +47,17 @@
       selectedSessionToken = device.sessionToken.rawValue
     }
 
+    /// Selects the controller with this session token, for "Show in Window".
+    /// Returns false when no connected controller has it; the selection stays as it is.
+    @discardableResult
+    func select(sessionToken: String) -> Bool {
+      guard devices.contains(where: { $0.sessionToken.rawValue == sessionToken }) else {
+        return false
+      }
+      selectedSessionToken = sessionToken
+      return true
+    }
+
     func refresh() { Task { await runtime.refreshControllerInventory() } }
 
     func activeProfileState(

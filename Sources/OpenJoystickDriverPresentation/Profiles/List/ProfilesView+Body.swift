@@ -190,6 +190,8 @@
         navigation.setProfilesEditorDirty(editorHasUnsavedChanges)
         handleProfileMutation(library.mutationState)
       }.onReceive(library.$mutationState) { handleProfileMutation($0) }.onReceive(
+        screen.$chosenImportProfile.compactMap { $0 }
+      ) { receiveChosenImportProfile($0) }.onReceive(
         navigation.$discardGeneration
       ) { generation in
         observedDiscardGeneration = generation

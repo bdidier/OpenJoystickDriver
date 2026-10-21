@@ -122,5 +122,29 @@
 			<string>%d dispositivos de saída de controle detectados</string>
 		</dict>
 	</dict>
+	<key>library.records.bundled</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>%d registro adicional acompanha o app.</string>
+			<key>zero</key>
+			<string>%d registros adicionais acompanham o app.</string>
+			<key>two</key>
+			<string>%d registros adicionais acompanham o app.</string>
+			<key>few</key>
+			<string>%d registros adicionais acompanham o app.</string>
+			<key>many</key>
+			<string>%d registros adicionais acompanham o app.</string>
+			<key>other</key>
+			<string>%d registros adicionais acompanham o app.</string>
+		</dict>
+	</dict>
 </dict>
 </plist>

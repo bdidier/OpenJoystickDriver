@@ -1,0 +1,110 @@
+import Foundation
+import OpenJoystickDriverKit
+
+/// A failure of an access operation: the message to show and the error code `ojd explain` knows.
+struct AccessFailure: Error, Equatable {
+  let message: String
+  let code: ErrorCode?
+
+  init(message: String, code: ErrorCode?) {
+    self.message = message
+    self.code = code
+  }
+
+  /// The failure that reports `error` from a service request.
+  init(_ error: any Error) {
+    switch error {
+    case let failure as Self: self = failure
+    case ApplicationServiceClientError.notConnected:
+      self.init(
+        message: OJDLocalized.string("access.error.serviceUnavailable"),
+        code: .serviceUnavailable
+      )
+    case ApplicationServiceClientError.timeout:
+      self.init(
+        message: OJDLocalized.string("access.error.serviceTimeout"),
+        code: .serviceTimeout
+      )
+    case LocalServiceRPCError.peerRejected:
+      self.init(
+        message: OJDLocalized.string("access.error.peerRejected"),
+        code: .peerRejected
+      )
+    case let rejection as ApplicationServiceRemappingRPCError:
+      self.init(message: rejection.localizedDescription, code: rejection.code.errorCode)
+    default:
+      self.init(
+        message: OJDLocalized.formatted(
+          "access.error.requestFailed",
+          error.localizedDescription
+        ),
+        code: .serviceRequestFailed
+      )
+    }
+  }
+}
+
+/// The endpoint requests of `ojd access`.
+protocol AccessService: Sendable {
+  func status() async throws -> AccessStatusPayload
+  func setEnabled(_ enabled: Bool) async throws -> AccessStatusPayload
+  func setWeb(enabled: Bool, port: Int?) async throws -> AccessStatusPayload
+  func grant(
+    _ identity: CodeSigningIdentity,
+    path: String,
+    scopes: [EndpointScope]
+  ) async throws -> AccessGrantSummary
+  func grantToken(
+    name: String,
+    origins: [String],
+    scopes: [EndpointScope]
+  ) async throws -> AccessTokenGrantResult
+  func revoke(id: String) async throws -> AccessRevokeResult
+}
+
+/// The service over its local socket; each request opens a connection and closes it.
+struct ApplicationServiceAccessService: AccessService {
+  private func request<T: Sendable>(
+    _ body: @Sendable (ApplicationServiceClient) async throws -> T
+  ) async throws -> T {
+    let client = ApplicationServiceClient()
+    await client.connect(timeoutSeconds: 0)
+    defer { client.disconnect() }
+    guard client.isConnected else { throw ApplicationServiceClientError.notConnected }
+    return try await body(client)
+  }
+
+  func status() async throws -> AccessStatusPayload {
+    try await request { try await $0.accessStatus() }
+  }
+
+  func setEnabled(_ enabled: Bool) async throws -> AccessStatusPayload {
+    try await request { try await $0.setAccessEnabled(enabled) }
+  }
+
+  func setWeb(enabled: Bool, port: Int?) async throws -> AccessStatusPayload {
+    try await request { try await $0.setWebAccess(enabled: enabled, port: port) }
+  }
+
+  func grant(
+    _ identity: CodeSigningIdentity,
+    path: String,
+    scopes: [EndpointScope]
+  ) async throws -> AccessGrantSummary {
+    try await request { try await $0.grantAccess(identity, path: path, scopes: scopes) }
+  }
+
+  func grantToken(
+    name: String,
+    origins: [String],
+    scopes: [EndpointScope]
+  ) async throws -> AccessTokenGrantResult {
+    try await request {
+      try await $0.grantTokenAccess(name: name, origins: origins, scopes: scopes)
+    }
+  }
+
+  func revoke(id: String) async throws -> AccessRevokeResult {
+    try await request { try await $0.revokeAccess(id: id, scopes: nil) }
+  }
+}

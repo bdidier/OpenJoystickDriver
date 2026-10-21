@@ -122,5 +122,29 @@
 			<string>%d Controller-Ausgabegeräte erkannt</string>
 		</dict>
 	</dict>
+	<key>library.records.bundled</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>%d weiterer Eintrag wird mit der App mitgeliefert.</string>
+			<key>zero</key>
+			<string>%d weitere Einträge werden mit der App mitgeliefert.</string>
+			<key>two</key>
+			<string>%d weitere Einträge werden mit der App mitgeliefert.</string>
+			<key>few</key>
+			<string>%d weitere Einträge werden mit der App mitgeliefert.</string>
+			<key>many</key>
+			<string>%d weitere Einträge werden mit der App mitgeliefert.</string>
+			<key>other</key>
+			<string>%d weitere Einträge werden mit der App mitgeliefert.</string>
+		</dict>
+	</dict>
 </dict>
 </plist>

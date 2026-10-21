@@ -7,6 +7,7 @@
 - Remove code only after finding every reference.
 - Comments and docs state current behavior and its reason. No history words ("renamed", "was", "now", "new", "old", "legacy"), no task/review/agent/issue references. History goes only in `CHANGELOG.md`.
 - Never hand-edit `Sources/OpenJoystickDriverKit/Resources/Controllers/` or `.build/driverkit/generated/`: run `./Scripts/ojd catalog regenerate --write` / `./Scripts/ojd driverkit generate`.
+- Review every translation you add or change against `LOCALIZATION.md` (Meaning, Punctuation) before committing, and fix what fails; passing `LocalizationTests` is not a review.
 - After changing `Resources/ErrorCodes.json`, run `./Scripts/ojd errors regenerate --write`.
 - No SVGs, no secrets. Confirm destructive writes and publication first.
 - Fix code/spec gaps and Swift/Python divergences now; add larger fixes as tasks in the active change.

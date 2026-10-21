@@ -301,11 +301,13 @@ ojd setting set KEY true|false
 The keys are:
 
 - `launchAtLogin`: the macOS login item. `get` reads it from macOS, so it includes changes made in System Settings, and `set` registers or unregisters the item. A change made with `ojd setting` or in the app also records whether you opted out, so OJD does not register itself again at the next start. A change made only in System Settings records nothing.
+- `showInMenuBar`: show the OJD item in the menu bar. It is on by default.
 - `notify.controllerConnected`: notify when a controller connects or needs attention.
 - `notify.controllerDisconnected`: notify when a controller disconnects.
 - `notify.profileActivated`: notify when a profile is activated or switched.
 - `notify.profileDeactivated`: notify when the active profile is turned off.
-- `notify.sounds`: play a sound with notifications. It is on by default; every other key is off by default.
+- `notify.sounds`: play a sound with notifications. `showInMenuBar` is also on by default; every other key is off by default.
+- `updates.checkAutomatically`: check for updates when the app starts.
 - `updates.includePrereleases`: include prereleases when checking for updates.
 - `developerTools`: show the developer tools.
 

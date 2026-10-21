@@ -7,137 +7,317 @@
   import SwiftUI
   import UserNotifications
 
-  extension MenuBarCoordinator {
+  extension MenuBarCoordinator: NSMenuDelegate, NSMenuItemValidation {
     func makeApplicationMenu() -> NSMenu {
-      let menu = NSMenu(title: OJDLocalized.string("app.name"))
+      let rendered = MainMenuRenderer.render(target: self)
+      let application = NSApplication.shared
+      application.servicesMenu = rendered.servicesMenu
+      application.windowsMenu = rendered.windowMenu
+      application.helpMenu = rendered.helpMenu
+      return rendered.menu
+    }
 
-      let applicationMenu = NSMenu(
-        title: OJDLocalized.string("app.name")
-      )
-      let about = NSMenuItem(
-        title: OJDLocalized.string("menu.about"),
-        action: #selector(showAbout(_:)),
-        keyEquivalent: ""
-      )
-      about.target = self
-      about.image = menuImage(symbol: "info.circle")
-      applicationMenu.addItem(about)
-      applicationMenu.addItem(.separator())
-      let settings = NSMenuItem(
-        title: OJDLocalized.string("menu.settings"),
-        action: #selector(openSettings(_:)),
-        keyEquivalent: ","
-      )
-      settings.target = self
-      settings.keyEquivalentModifierMask = [.command]
-      settings.image = menuImage(symbol: "gearshape")
-      applicationMenu.addItem(settings)
-      applicationMenu.addItem(.separator())
-      let quit = NSMenuItem(
-        title: OJDLocalized.string("menu.quit"),
-        action: #selector(quit(_:)),
-        keyEquivalent: "q"
-      )
-      quit.target = self
-      quit.keyEquivalentModifierMask = [.command]
-      quit.image = menuImage(symbol: "power")
-      applicationMenu.addItem(quit)
-      let applicationItem = NSMenuItem()
-      applicationItem.submenu = applicationMenu
-      menu.addItem(applicationItem)
+    /// The state that enables main menu items and picks their titles.
+    func mainMenuState() -> MainMenuState {
+      var state = MainMenuState()
+      let snapshot: ApplicationServiceRemappingSnapshotPayload?
+      if case .available(let available) = viewModel.remappingState {
+        snapshot = available
+      } else {
+        snapshot = nil
+      }
+      state.profileCount = snapshot?.profiles.count ?? 0
+      state.controllers = menuBarViewModel.devices.map { device in
+        MainMenuControllerState(
+          id: device.sessionToken.rawValue,
+          name: device.name,
+          isSuspended: device.sessionState == .suspended,
+          isWireless: device.supportsWirelessDisconnect,
+          hasActiveProfile: snapshot?.activeProfiles.contains {
+            $0.vendorID == device.vendorID && $0.productID == device.productID
+          } == true
+        )
+      }
+      state.hasMainWindow = mainWindow != nil
+      state.hasSelectedProfile = mainWindow?.hasSelectedProfile == true
+      state.hasSettingsWindow = settingsWindow != nil
+      if let window = NSApplication.shared.keyWindow {
+        state.isFullScreen = window.styleMask.contains(.fullScreen)
+        if let split = window.contentViewController as? NSSplitViewController,
+          let sidebar = split.splitViewItems.first
+        {
+          state.isSidebarVisible = !sidebar.isCollapsed
+        }
+      }
+      return state
+    }
 
-      // Install real responder-chain menus rather than empty placeholders.  Text fields and the
-      // profile editor therefore retain the familiar macOS editing commands even though the app
-      // itself is primarily a menu-bar facade.
-      let editMenu = NSMenu(title: OJDLocalized.string("menu.edit"))
-      editMenu.addItem(
-        withTitle: OJDLocalized.string("menu.undo"),
-        action: #selector(UndoManager.undo),
-        keyEquivalent: "z"
-      )
-      editMenu.addItem(
-        withTitle: OJDLocalized.string("menu.redo"),
-        action: #selector(UndoManager.redo),
-        keyEquivalent: "Z"
-      )
-      editMenu.addItem(.separator())
-      editMenu.addItem(
-        withTitle: OJDLocalized.string("menu.cut"),
-        action: #selector(NSText.cut(_:)),
-        keyEquivalent: "x"
-      )
-      editMenu.addItem(
-        withTitle: OJDLocalized.string("menu.copy"),
-        action: #selector(NSText.copy(_:)),
-        keyEquivalent: "c"
-      )
-      editMenu.addItem(
-        withTitle: OJDLocalized.string("menu.paste"),
-        action: #selector(NSText.paste(_:)),
-        keyEquivalent: "v"
-      )
-      editMenu.addItem(
-        withTitle: OJDLocalized.string("menu.selectAll"),
-        action: #selector(NSText.selectAll(_:)),
-        keyEquivalent: "a"
-      )
-      let editItem = NSMenuItem(
-        title: OJDLocalized.string("menu.edit"),
-        action: nil,
-        keyEquivalent: ""
-      )
-      editItem.submenu = editMenu
-      menu.addItem(editItem)
+    package func menuNeedsUpdate(_ menu: NSMenu) {
+      let state = mainMenuState()
+      if menu.supermenu?.items.first(where: { $0.submenu === menu })?.identifier?.rawValue
+        == MainMenuModel.item(for: .activateProfile)?.id
+      {
+        populateActivateProfileMenu(menu)
+        return
+      }
+      let appName = OJDLocalized.string("app.name")
+      for menuItem in menu.items {
+        guard let id = menuItem.identifier?.rawValue,
+          let item = MainMenuModel.allItems.first(where: { $0.id == id })
+        else { continue }
+        menuItem.title = MainMenuRenderer.title(
+          MainMenuModel.titleKey(of: item, state: state),
+          appName: appName
+        )
+      }
+    }
 
-      let windowMenu = NSMenu(title: OJDLocalized.string("menu.window"))
-      windowMenu.addItem(
-        withTitle: OJDLocalized.string("menu.minimize"),
-        action: #selector(NSWindow.performMiniaturize(_:)),
-        keyEquivalent: "m"
-      )
-      windowMenu.addItem(
-        withTitle: OJDLocalized.string("menu.zoom"),
-        action: #selector(NSWindow.performZoom(_:)),
-        keyEquivalent: ""
-      )
-      windowMenu.addItem(.separator())
-      windowMenu.addItem(
-        withTitle: OJDLocalized.string("menu.bringAllToFront"),
-        action: #selector(NSApplication.arrangeInFront(_:)),
-        keyEquivalent: ""
-      )
-      let windowItem = NSMenuItem(
-        title: OJDLocalized.string("menu.window"),
-        action: nil,
-        keyEquivalent: ""
-      )
-      windowItem.submenu = windowMenu
-      menu.addItem(windowItem)
-      NSApplication.shared.windowsMenu = windowMenu
-      return menu
+    package func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
+      guard let id = menuItem.identifier?.rawValue,
+        let item = MainMenuModel.allItems.first(where: { $0.id == id })
+      else { return true }
+      return MainMenuModel.isEnabled(item, state: mainMenuState())
     }
 
     @objc
-    func saveSupportReport(_ sender: Any?) {
+    func performMainMenuItem(_ sender: NSMenuItem) {
+      guard let id = sender.identifier?.rawValue,
+        let item = MainMenuModel.allItems.first(where: { $0.id == id })
+      else { return }
+      performMainMenu(item.action)
+    }
+
+    func performMainMenu(_ action: MainMenuAction) {
+      let state = mainMenuState()
+      switch action {
+      case .about: showAbout(nil)
+      case .settings: settingsWindow?.showSettings(pane: nil)
+      case .quit: NSApplication.shared.terminate(nil)
+      case .importProfile: mainWindow?.importProfile()
+      case .exportProfile: mainWindow?.exportProfile()
+      case .installRecordOrMod: mainWindow?.installRecordOrMod()
+      case .activateProfile:
+        // A submenu parent; its profile items run `activateProfileFromMenu`.
+        preconditionFailure("\(action) opens a submenu")
+      case .saveSupportReport: beginSaveSupportReport()
+      case .saveActivityLog: beginSaveActivityLog()
+      case .showArea(let area): mainWindow?.showMainWindow(area: area)
+      case .suspendOrResumeController:
+        guard let controller = state.controller, let device = device(for: controller) else {
+          return
+        }
+        Task { @MainActor in
+          if controller.isSuspended {
+            await viewModel.resumeController(device)
+          } else {
+            await viewModel.suspendController(device)
+          }
+        }
+      case .testInput:
+        guard let controller = state.controller else { return }
+        mainWindow?.showInputTest(controllerID: controller.id)
+      case .disconnectWirelessLink:
+        guard let controller = state.controller, let device = device(for: controller) else {
+          return
+        }
+        confirmDisconnectWireless(device)
+      case .showControllerInWindow:
+        if let controller = state.controller {
+          mainWindow?.showController(id: controller.id)
+        } else {
+          mainWindow?.showMainWindow(area: .controllers)
+        }
+      case .deactivateProfile:
+        guard let controller = state.controller, let device = device(for: controller) else {
+          return
+        }
+        deactivateProfiles(of: device)
+      case .showActivityLog: mainWindow?.showMainWindow(area: .activity)
+      case .copySupportReport: copySupportReportWithFeedback()
+      case .openProjectWebsite: openProjectPage(nil)
+      case .services, .hide, .hideOthers, .showAll, .undo, .redo, .cut, .copy, .paste, .selectAll,
+        .toggleSidebar, .toggleFullScreen, .minimize, .zoom, .bringAllToFront:
+        // Sent down the responder chain by the menu item; the renderer never routes these here.
+        preconditionFailure("\(action) is a responder-chain action")
+      }
+    }
+
+    private func populateActivateProfileMenu(_ menu: NSMenu) {
+      menu.removeAllItems()
+      guard case .available(let snapshot) = viewModel.remappingState else { return }
+      let activeIDs = Set(snapshot.activeProfiles.map(\.profileID))
+      for profile in snapshot.profiles {
+        let item = NSMenuItem(title: profile.name, action: nil, keyEquivalent: "")
+        item.representedObject = profile.id
+        if activeIDs.contains(profile.id) {
+          item.state = .on
+          item.isEnabled = false
+        } else {
+          item.action = #selector(activateProfileFromMenu(_:))
+          item.target = self
+        }
+        menu.addItem(item)
+      }
+    }
+
+    @objc
+    func activateProfileFromMenu(_ sender: NSMenuItem) {
+      guard let profileID = sender.representedObject as? UUID else { return }
+      Task { @MainActor in
+        guard let mainWindow else { return }
+        let outcome = await StatusItemProfileOperation.activate(profileID: profileID)
+          .perform(on: mainWindow)
+        guard let outcome else {
+          showMainMenuAlert(
+            title: OJDLocalized.string("mainMenu.profile.activateFailed"),
+            message: OJDLocalized.string("menuBar.profileEditorBusy"),
+            style: .warning
+          )
+          return
+        }
+        switch outcome.result {
+        case .succeeded: break
+        case .conflict:
+          showMainMenuAlert(
+            title: OJDLocalized.string("mainMenu.profile.activateFailed"),
+            message: outcome.lastError ?? OJDLocalized.string("mainMenu.profile.activateConflict"),
+            style: .warning
+          )
+        case .failed(_, _, let message), .rejected(_, _, let message):
+          showMainMenuAlert(
+            title: OJDLocalized.string("mainMenu.profile.activateFailed"),
+            message: message,
+            style: .warning
+          )
+        }
+      }
+    }
+
+    private func device(
+      for controller: MainMenuControllerState
+    ) -> ApplicationServiceDeviceDescription? {
+      menuBarViewModel.devices.first { $0.sessionToken.rawValue == controller.id }
+    }
+
+    private func showMainMenuAlert(
+      title: String,
+      message: String,
+      style: NSAlert.Style = .informational
+    ) {
+      let alert = NSAlert()
+      alert.alertStyle = style
+      alert.messageText = title
+      alert.informativeText = message
+      alert.addButton(withTitle: OJDLocalized.string("common.ok"))
+      alert.runModal()
+    }
+
+    private func confirmDisconnectWireless(_ device: ApplicationServiceDeviceDescription) {
+      let alert = NSAlert()
+      alert.alertStyle = .warning
+      alert.messageText = OJDLocalized.string("controllers.disconnectWirelessConfirmTitle")
+      alert.informativeText = OJDLocalized.formatted(
+        "controllers.disconnectWirelessConfirmMessage",
+        device.name
+      )
+      alert.addButton(withTitle: OJDLocalized.string("controllers.disconnectWirelessConfirm"))
+      alert.addButton(withTitle: OJDLocalized.string("common.cancel"))
+      guard alert.runModal() == .alertFirstButtonReturn else { return }
+      Task { @MainActor in await viewModel.disconnectWirelessController(device) }
+    }
+
+    private func deactivateProfiles(of device: ApplicationServiceDeviceDescription) {
+      let request = RuntimeMutationRequest(operation: .deactivate(profileID: nil))
+      Task { @MainActor in
+        guard let mainWindow else { return }
+        let outcome = await mainWindow.performMenuProfileMutation(request) { library in
+          await library.deactivateRemappingProfile(
+            vendorID: device.vendorID,
+            productID: device.productID,
+            request: request
+          )
+        }
+        guard let outcome else {
+          showMainMenuAlert(
+            title: OJDLocalized.string("mainMenu.profile.deactivateFailed"),
+            message: OJDLocalized.string("menuBar.profileEditorBusy"),
+            style: .warning
+          )
+          return
+        }
+        switch outcome.result {
+        case .succeeded: break
+        case .conflict:
+          showMainMenuAlert(
+            title: OJDLocalized.string("mainMenu.profile.deactivateFailed"),
+            message: OJDLocalized.string("mainMenu.profile.deactivateConflict"),
+            style: .warning
+          )
+        case .failed(_, _, let message), .rejected(_, _, let message):
+          showMainMenuAlert(
+            title: OJDLocalized.string("mainMenu.profile.deactivateFailed"),
+            message: message,
+            style: .warning
+          )
+        }
+      }
+    }
+
+    private func copySupportReportWithFeedback() {
+      Task { @MainActor in
+        let copied = await supportReport.copySupportReport()
+        if copied {
+          showMainMenuAlert(
+            title: OJDLocalized.string("mainMenu.copySupportReport.done"),
+            message: OJDLocalized.string("mainMenu.copySupportReport.doneDetail")
+          )
+        } else {
+          showMainMenuAlert(
+            title: OJDLocalized.string("mainMenu.copySupportReport.failed"),
+            message: OJDLocalized.string("mainMenu.copySupportReport.failedDetail"),
+            style: .warning
+          )
+        }
+      }
+    }
+
+    private func beginSaveSupportReport() {
       let panel = NSSavePanel()
       panel.title = OJDLocalized.string("debug.saveReportPanel")
       panel.nameFieldStringValue = supportReport.defaultSupportReportFilename
       panel.canCreateDirectories = true
       panel.begin { [supportReport] response in
         guard response == .OK, let outputURL = panel.url else { return }
-        Task { @MainActor in await supportReport.saveSupportReport(to: outputURL) }
+        Task { @MainActor in
+          await supportReport.saveSupportReport(to: outputURL)
+          if case .error(let message) = supportReport.supportReportState {
+            self.showMainMenuAlert(
+              title: OJDLocalized.string("mainMenu.file.saveFailed"),
+              message: message,
+              style: .warning
+            )
+          }
+        }
       }
     }
 
-    @objc
-    func saveSupportLogs(_ sender: Any?) {
+    private func beginSaveActivityLog() {
       let panel = NSSavePanel()
       panel.title = OJDLocalized.string("debug.saveLogsPanel")
       panel.nameFieldStringValue = supportReport.defaultSupportLogsFilename
       panel.canCreateDirectories = true
       panel.begin { [supportReport] response in
         guard response == .OK, let outputURL = panel.url else { return }
-        Task { @MainActor in await supportReport.saveSupportLogs(to: outputURL) }
+        Task { @MainActor in
+          await supportReport.saveSupportLogs(to: outputURL)
+          if case .error(let message) = supportReport.supportLogsState {
+            self.showMainMenuAlert(
+              title: OJDLocalized.string("mainMenu.file.saveFailed"),
+              message: message,
+              style: .warning
+            )
+          }
+        }
       }
     }
 

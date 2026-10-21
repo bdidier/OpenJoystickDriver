@@ -183,6 +183,42 @@ struct ControllerSessionTests {
   }
 
   @Test
+  func wirelessDisconnectRejectsBluetoothLEWithoutSuspending() async throws {
+    let probe = WirelessDisconnectProbe(outcome: .disconnected)
+    let manager = DeviceManager(
+      dispatcher: ControllerSessionOutputProbe(),
+      installationKey: testPortKeyInstallationKey,
+      wirelessControllerDisconnector: probe
+    )
+    await manager.handleHIDEvent(
+      .connected(
+        connection: HIDDeviceConnection(
+          physicalDevice: PhysicalDevice(
+            vendorID: 0x057E,
+            productID: 0x2073,
+            productName: "Controller",
+            serialNumber: "AA:BB:CC:DD:EE:FF",
+            transportProperty: "Bluetooth Low Energy",
+            physicalLocationIdentifier: 74,
+            interfaces: [gamepadHIDInterface(host: .bluetoothLE)]
+          ),
+          routingAddress: .ioKit(locationID: 74, interfaceNumber: nil),
+        ),
+        ownership: .exclusive
+      )
+    )
+    let device = try #require(await manager.connectedDeviceDescriptions().first)
+
+    let result = await manager.disconnectWirelessController(.session(device.sessionToken))
+
+    #expect(device.connectionState?.transport == .bluetoothLE)
+    #expect(result.state == .active)
+    #expect(result.failure == .notBluetooth)
+    #expect(probe.calls.isEmpty)
+    await manager.stop()
+  }
+
+  @Test
   func suspensionNeutralizesHeldInputAndIgnoresReportsUntilResume() async {
     let identifier = LogicalControllerID(vendorID: 0x054C, productID: 0x09CC)
     let clock = ManualUptime()

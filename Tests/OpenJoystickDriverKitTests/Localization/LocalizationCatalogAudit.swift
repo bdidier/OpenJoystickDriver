@@ -12,6 +12,7 @@ enum LocalizationCatalogAudit {
     "controllers.usbIdentifier", "developer.hid", "developer.usbID", "inputTest.yTriangle",
     "mapping.buttonNorth", "mapping.dpadDirection", "mapping.paddle1", "mapping.paddle2",
     "mapping.paddle3", "mapping.paddle4", "menu.projectPage", "profiles.sectionDpad",
+    "access.transport.web", "access.web",
   ]
 
   private static let spanishTerms: Set<String> = [
@@ -19,6 +20,9 @@ enum LocalizationCatalogAudit {
     "profiles.motion.local",
     "profiles.physical.motor", "profiles.stick.horizontal", "profiles.stick.vertical",
     "profiles.trackball.enabled", "profiles.turbo", "settings.general",
+    "library.mods", "access.scope.control", "access.socket", "access.transport.socket",
+    "access.tokens", "access.token.issued.title", "access.token.named",
+    "settingsPane.general.title",
   ]
   private static let frenchTerms: Set<String> = [
     "capture.destination", "capture.gain", "cli.controller.show.label.session",
@@ -29,6 +33,7 @@ enum LocalizationCatalogAudit {
     "profiles.stick.horizontal", "profiles.stick.source", "profiles.stick.vertical",
     "profiles.touch.surface", "profiles.trackball.enabled", "profiles.turbo",
     "settings.notifications", "settings.service",
+    "access.transport.socket", "access.web.port", "library.mods",
   ]
 
   private static let sourceIdenticalTermsByLocale: [String: Set<String>] = [
@@ -37,6 +42,11 @@ enum LocalizationCatalogAudit {
       "keyboard.return", "keyboard.shift", "keyboard.tab",
     ],
     "de-DE": [
+      "mainMenu.controller",
+      "a11y.area.status", "area.status.title", "access.details", "library.details",
+      "access.token.name", "access.web.port", "access.web.enable.port", "access.socket",
+      "access.transport.socket", "access.token.issued.title", "access.token.named",
+      "access.tokens", "library.mods",
       "capture.controller", "capture.linear", "cli.access.status.socket",
       "cli.controller.show.label.name", "common.controller", "common.status", "console.stream",
       "controllers.label", "developer.controller", "developer.controllerDetails",
@@ -47,12 +57,18 @@ enum LocalizationCatalogAudit {
       "shortcuts.controller.name", "shortcuts.controller.type", "shortcuts.parameter.controller",
       "shortcuts.profile.name",
     ],
-    "es-ES": spanishTerms.union(["menu.zoom"]),
-    "es-MX": spanishTerms,
-    "fr-CA": frenchTerms.union(["developer.packetColumnDirection"]),
-    "fr-FR": frenchTerms,
+    "es-ES": spanishTerms.union(["menu.zoom", "mainMenu.window.zoom"]),
+    "es-MX": spanishTerms.union(["mainMenu.window.zoom"]),
+    "fr-CA": frenchTerms.union(["developer.packetColumnDirection"]).union([
+      "mainMenu.app.services", "mainMenu.window.zoom", "settingsPane.notifications.title",
+    ]),
+    "fr-FR": frenchTerms.union([
+      "mainMenu.app.services", "mainMenu.window.zoom", "settingsPane.notifications.title",
+    ]),
     "hi-IN": ["keyboard.escape", "keyboard.return"],
     "id-ID": [
+      "a11y.area.status", "area.status.title", "access.token.issued.title", "access.token.named",
+      "access.web.port", "access.web.enable.port", "mainMenu.window.zoom",
       "cli.controller.show.label.input", "cli.explain.area", "cli.explain.area.endpoint",
       "common.runtime", "common.status", "console.output", "console.stream", "debug.runtime",
       "debug.title", "developer.packetColumnData", "inputTest.home", "inputTest.menu",
@@ -64,6 +80,8 @@ enum LocalizationCatalogAudit {
       "settings.runtime", "settings.status", "shortcuts.controller.model",
     ],
     "it-IT": [
+      "access.token.issued.title", "access.token.named",
+      "mainMenu.controller", "mainMenu.file", "mainMenu.window.zoom",
       "capture.controller", "cli.access.status.socket", "cli.controller.show.label.input",
       "cli.controller.show.label.record", "common.controller", "console.output", "console.title",
       "controllers.label", "debug.title", "developer.controller", "developer.controllerDetails",
@@ -81,6 +99,11 @@ enum LocalizationCatalogAudit {
       "keyboard.alt", "keyboard.return", "keyboard.shift",
     ],
     "nl-NL": [
+      "a11y.area.status", "area.status.title", "access.details", "library.details",
+      "access.token.issued.title", "access.token.named", "access.tokens", "library.mods",
+      "mainMenu.window.zoom",
+      "a11y.area.controllers", "area.controllers.title", "menuBar.controllers",
+      "mainMenu.controller", "mainMenu.help", "menuBar.help",
       "capture.controller", "cli.access.status.socket", "cli.controller.show.label.protocol",
       "cli.controller.show.label.record", "cli.controller.show.label.rumble",
       "cli.status.label.controllers", "cli.status.label.service", "common.controller",
@@ -100,6 +123,9 @@ enum LocalizationCatalogAudit {
       "shortcuts.controller.type", "shortcuts.parameter.controller",
     ],
     "pt-BR": [
+      "a11y.area.status", "area.status.title", "access.token.issued.title", "access.token.named",
+      "access.tokens", "library.mods",
+      "mainMenu.window.zoom",
       "capture.linear", "common.status", "console.title", "developer.packetColumnBytes",
       "inputTest.menu", "keyboard.control",
       "menu.zoom",
@@ -127,7 +153,7 @@ enum LocalizationCatalogAudit {
       "keyboard.meta", "keyboard.control", "keyboard.delete", "keyboard.escape",
       "keyboard.alt", "keyboard.pageDown", "keyboard.pageUp", "keyboard.return",
       "keyboard.shift", "keyboard.tab", "mapping.guide", "profiles.trackball.enabled",
-      "profiles.turbo",
+      "profiles.turbo", "access.token.issued.title", "access.token.named",
     ],
     "zh-CN": ["keyboard.alt", "keyboard.shift"],
     "zh-TW": ["keyboard.escape", "keyboard.alt"],

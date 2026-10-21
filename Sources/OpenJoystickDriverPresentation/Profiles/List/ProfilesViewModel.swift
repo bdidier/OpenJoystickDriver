@@ -1,7 +1,9 @@
 #if canImport(SwiftUI)
 
+  import AppKit
   import Foundation
   import OpenJoystickDriverKit
+  import UniformTypeIdentifiers
 
   actor ProfileDocumentService {
     func load(from url: URL) throws -> RemappingProfile {
@@ -29,6 +31,10 @@
     var profileActionError: String?
     @Published
     var pairingProfile: RemappingProfile?
+    /// A profile read from a file the person chose, waiting for the Profiles screen to import it
+    /// through the editor's discard and mutation checks.
+    @Published
+    var chosenImportProfile: RemappingProfile?
     @Published
     var selectedEditorSection = ProfilePresentationPolicy.defaultSection
 
@@ -42,6 +48,38 @@
 
     init(documents: ProfileDocumentService = ProfileDocumentService()) {
       self.documents = documents
+    }
+
+    /// Asks for a profile file and reads it into ``chosenImportProfile``.
+    func chooseProfileToImport() {
+      let panel = NSOpenPanel()
+      panel.allowsMultipleSelection = false
+      panel.canChooseDirectories = false
+      panel.canChooseFiles = true
+      panel.title = OJDLocalized.string("profiles.import")
+      panel.allowedContentTypes = [.json]
+      guard panel.runModal() == .OK, let url = panel.url else { return }
+      Task { @MainActor in
+        do {
+          chosenImportProfile = try await documents.load(from: url)
+          profileActionError = nil
+        } catch { profileActionError = RuntimePresentation.userFacingError(error) }
+      }
+    }
+
+    /// Asks where to save `profile` and writes it there.
+    func exportProfile(_ profile: RemappingProfile) {
+      let panel = NSSavePanel()
+      panel.title = OJDLocalized.string("profiles.export")
+      panel.nameFieldStringValue = "\(profile.name).json"
+      panel.allowedContentTypes = [.json]
+      guard panel.runModal() == .OK, let url = panel.url else { return }
+      Task { @MainActor in
+        do {
+          try await documents.write(profile, to: url)
+          profileActionError = nil
+        } catch { profileActionError = RuntimePresentation.userFacingError(error) }
+      }
     }
 
     func editor(for profile: RemappingProfile, discardGeneration: Int) -> ProfileEditorViewModel {

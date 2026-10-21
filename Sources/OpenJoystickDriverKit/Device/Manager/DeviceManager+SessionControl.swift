@@ -84,7 +84,7 @@ extension DeviceManager {
       let identifier = connectedIdentifier(for: controller),
       let pipeline = pipelines[identifier], let info = deviceInfos[identifier]
     else { return WirelessControllerDisconnectResult(state: .active, failure: .notFound) }
-    guard info.connection.caseInsensitiveCompare("Bluetooth") == .orderedSame else {
+    guard await pipeline.currentConnectionState()?.transport == .bluetoothClassic else {
       return WirelessControllerDisconnectResult(
         state: await pipeline.controllerSessionState(),
         failure: .notBluetooth

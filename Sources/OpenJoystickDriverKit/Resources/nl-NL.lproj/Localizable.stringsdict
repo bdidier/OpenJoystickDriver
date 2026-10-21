@@ -122,5 +122,29 @@
 			<string>%d controlleruitvoerapparaten gedetecteerd</string>
 		</dict>
 	</dict>
+	<key>library.records.bundled</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>%d extra record wordt met de app meegeleverd.</string>
+			<key>zero</key>
+			<string>%d extra records worden met de app meegeleverd.</string>
+			<key>two</key>
+			<string>%d extra records worden met de app meegeleverd.</string>
+			<key>few</key>
+			<string>%d extra records worden met de app meegeleverd.</string>
+			<key>many</key>
+			<string>%d extra records worden met de app meegeleverd.</string>
+			<key>other</key>
+			<string>%d extra records worden met de app meegeleverd.</string>
+		</dict>
+	</dict>
 </dict>
 </plist>

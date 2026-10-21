@@ -2,6 +2,7 @@
   "apiVersion": "openjoystickdriver/v1alpha1",
   "kind": "Settings",
   "launchAtLoginOptOut": true,
+  "showInMenuBar": false,
   "notify": {
     "controllerConnected": true,
     "controllerDisconnected": false,
@@ -10,6 +11,7 @@
     "sounds": false
   },
   "updates": {
+    "checkAutomatically": true,
     "includePrereleases": true
   },
   "developerTools": true

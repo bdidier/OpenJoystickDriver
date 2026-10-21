@@ -5,7 +5,7 @@ import Testing
 @testable import OpenJoystickDriverPresentation
 
 @Suite
-struct SettingsNavigationTests {
+struct MainWindowNavigationTests {
   @Test
   @MainActor
   func dockVisibilityTracksPrimaryWindowsAndRetriesFailedPolicyChanges() {
@@ -36,20 +36,101 @@ struct SettingsNavigationTests {
     visibility.closed(.inputTest)
     #expect(requestedPolicies == [.regular, .accessory, .accessory])
     #expect(visibility.appliedPolicy == .accessory)
+
+    visibility.keepsDockIcon = true
+    #expect(visibility.appliedPolicy == .regular)
+    visibility.opened(.settings)
+    visibility.closed(.settings)
+    #expect(visibility.appliedPolicy == .regular)
+    visibility.keepsDockIcon = false
+    #expect(visibility.appliedPolicy == .accessory)
   }
 
   @Test
-  func settingsWindowUsesStableContentSizingAcrossPanes() {
-    #expect(SettingsWindowSizingPolicy.defaultContentSize == NSSize(width: 1_040, height: 700))
-    #expect(SettingsWindowSizingPolicy.minimumContentSize == NSSize(width: 800, height: 560))
-    #expect(
-      SettingsWindowSizingPolicy.fittingContentSize(NSSize(width: 1_100, height: 700))
-        == NSSize(width: 1_100, height: 700)
+  @MainActor
+  func menuProfileMutationIsRefusedWhileTheEditorHoldsOneAndRunsOnceReleased() async {
+    let navigation = MainWindowNavigationModel(
+      persistence: UserDefaultsMainWindowAreaPersistence(
+        defaults: UserDefaults(suiteName: "MainWindowNavigationTests.\(UUID().uuidString)")!
+      )
     )
-    #expect(
-      SettingsWindowSizingPolicy.fittingContentSize(NSSize(width: 600, height: 400))
-        == SettingsWindowSizingPolicy.minimumContentSize
+    let editorRequest = RuntimeMutationRequest(operation: .create(profileID: UUID()))
+    #expect(navigation.beginProfilesEditorMutation(editorRequest))
+
+    var runs = 0
+    let menuRequest = RuntimeMutationRequest(operation: .activate(profileID: UUID()))
+    let refused: Int? = await navigation.trackMenuProfileMutation(menuRequest) {
+      runs += 1
+      return runs
+    }
+    #expect(refused == nil)
+    #expect(runs == 0)
+
+    navigation.finishProfilesEditorMutation(editorRequest)
+    let ran: Int? = await navigation.trackMenuProfileMutation(menuRequest) {
+      runs += 1
+      return runs
+    }
+    #expect(ran == 1)
+    #expect(!navigation.ownsProfilesEditorMutation(menuRequest))
+  }
+
+  @MainActor
+  private static func dirtyNavigation() -> MainWindowNavigationModel {
+    let navigation = MainWindowNavigationModel(
+      persistence: UserDefaultsMainWindowAreaPersistence(
+        defaults: UserDefaults(suiteName: "MainWindowNavigationTests.\(UUID().uuidString)")!
+      )
     )
+    navigation.requestArea(.profiles)
+    navigation.setProfilesEditorDirty(true)
+    return navigation
+  }
+
+  @Test
+  @MainActor
+  func actionWaitsForTheDiscardAnswerAndRunsAfterDiscard() {
+    let navigation = Self.dirtyNavigation()
+    var runs = 0
+    #expect(!navigation.perform(in: .library) { runs += 1 })
+    #expect(runs == 0)
+    #expect(navigation.isDiscardConfirmationPresented)
+    navigation.discardPendingArea()
+    #expect(navigation.selectedArea == .library)
+    #expect(runs == 1)
+  }
+
+  @Test
+  @MainActor
+  func actionIsDroppedWhenTheDiscardIsCancelled() {
+    let navigation = Self.dirtyNavigation()
+    var runs = 0
+    navigation.perform(in: .library) { runs += 1 }
+    navigation.cancelPendingArea()
+    navigation.requestArea(.library)
+    navigation.cancelPendingArea()
+    navigation.discardPendingArea()
+    #expect(runs == 0)
+  }
+
+  @Test
+  @MainActor
+  func actionRunsAtOnceInTheSelectedAreaAndIsRefusedDuringAMutation() {
+    let navigation = Self.dirtyNavigation()
+    var runs = 0
+    #expect(navigation.perform(in: .profiles) { runs += 1 })
+    #expect(runs == 1)
+    let request = RuntimeMutationRequest(operation: .create(profileID: UUID()))
+    #expect(navigation.beginProfilesEditorMutation(request))
+    #expect(!navigation.perform(in: .profiles) { runs += 1 })
+    #expect(runs == 1)
+    #expect(navigation.isMutationRefusalPresented)
+  }
+
+  @Test
+  func mainWindowUsesStableContentSizingAcrossAreas() {
+    #expect(MainWindowSizingPolicy.defaultContentSize == NSSize(width: 1_040, height: 700))
+    #expect(MainWindowSizingPolicy.minimumContentSize == NSSize(width: 800, height: 560))
   }
 
   @Test
@@ -74,18 +155,18 @@ struct SettingsNavigationTests {
   @MainActor
   func frameMinimumConvertsBackToTheRequiredContentMinimum() {
     let window = NSWindow(
-      contentRect: NSRect(origin: .zero, size: SettingsWindowSizingPolicy.defaultContentSize),
+      contentRect: NSRect(origin: .zero, size: MainWindowSizingPolicy.defaultContentSize),
       styleMask: [.titled, .closable, .resizable],
       backing: .buffered,
       defer: false
     )
     window.toolbar = NSToolbar(identifier: "SizingPolicyTest")
-    let minimumFrameSize = SettingsWindowSizingPolicy.minimumFrameSize(for: window)
+    let minimumFrameSize = MainWindowSizingPolicy.minimumFrameSize(for: window)
     let convertedContentSize = window.contentRect(
       forFrameRect: NSRect(origin: .zero, size: minimumFrameSize)
     ).size
 
-    #expect(convertedContentSize == SettingsWindowSizingPolicy.minimumContentSize)
+    #expect(convertedContentSize == MainWindowSizingPolicy.minimumContentSize)
   }
 
   @Test
@@ -105,152 +186,126 @@ struct SettingsNavigationTests {
   }
 
   @Test
-  func developerPaneIsProgressivelyDisclosed() {
-    #expect(
-      SettingsPane.primaryCases(developerToolsEnabled: false) == [
-        .overview, .controllers, .profiles, .console, .settings,
-      ]
-    )
-    #expect(
-      SettingsPane.primaryCases(developerToolsEnabled: true) == [
-        .overview, .controllers, .profiles, .console, .developer, .settings,
-      ]
-    )
-  }
-
-  @Test
   @MainActor
-  func disablingDeveloperToolsLeavesTheHiddenPane() {
-    let navigation = SettingsNavigationModel(developerToolsEnabled: true)
-    navigation.requestPane(.developer)
-    #expect(navigation.selectedPane == .developer)
-
-    navigation.setDeveloperToolsEnabled(false)
-
-    #expect(navigation.selectedPane == .settings)
-  }
-
-  @Test
-  @MainActor
-  func restoresTheLastAcceptedPane() {
-    let suiteName = "SettingsNavigationTests.\(UUID().uuidString)"
+  func restoresTheLastAcceptedArea() {
+    let suiteName = "MainWindowNavigationTests.\(UUID().uuidString)"
     guard let defaults = UserDefaults(suiteName: suiteName) else {
       #expect(Bool(false), "Could not create isolated UserDefaults suite")
       return
     }
     defer { defaults.removePersistentDomain(forName: suiteName) }
-    let persistence = UserDefaultsSettingsPanePersistence(defaults: defaults)
+    let persistence = UserDefaultsMainWindowAreaPersistence(defaults: defaults)
 
-    let initial = SettingsNavigationModel(persistence: persistence)
-    #expect(initial.selectedPane == .overview)
-    initial.requestPane(.profiles)
-    #expect(initial.selectedPane == .profiles)
+    let initial = MainWindowNavigationModel(persistence: persistence)
+    #expect(initial.selectedArea == .status)
+    initial.requestArea(.profiles)
+    #expect(initial.selectedArea == .profiles)
 
-    let restored = SettingsNavigationModel(persistence: persistence)
-    #expect(restored.selectedPane == .profiles)
+    let restored = MainWindowNavigationModel(persistence: persistence)
+    #expect(restored.selectedArea == .profiles)
   }
 
   @Test
   @MainActor
   func dirtySelectionPersistsOnlyAfterDiscard() {
-    let suiteName = "SettingsNavigationTests.\(UUID().uuidString)"
+    let suiteName = "MainWindowNavigationTests.\(UUID().uuidString)"
     guard let defaults = UserDefaults(suiteName: suiteName) else {
       #expect(Bool(false), "Could not create isolated UserDefaults suite")
       return
     }
     defer { defaults.removePersistentDomain(forName: suiteName) }
-    let persistence = UserDefaultsSettingsPanePersistence(defaults: defaults)
+    let persistence = UserDefaultsMainWindowAreaPersistence(defaults: defaults)
 
-    let navigation = SettingsNavigationModel(persistence: persistence)
-    navigation.requestPane(.controllers)
+    let navigation = MainWindowNavigationModel(persistence: persistence)
+    navigation.requestArea(.controllers)
     navigation.setProfilesEditorDirty(true)
-    navigation.requestPane(.settings)
+    navigation.requestArea(.library)
 
-    #expect(navigation.selectedPane == .controllers)
-    #expect(navigation.pendingPane == .settings)
+    #expect(navigation.selectedArea == .controllers)
+    #expect(navigation.pendingArea == .library)
     #expect(navigation.isDiscardConfirmationPresented)
-    let beforeDiscard = SettingsNavigationModel(persistence: persistence)
-    #expect(beforeDiscard.selectedPane == .controllers)
+    let beforeDiscard = MainWindowNavigationModel(persistence: persistence)
+    #expect(beforeDiscard.selectedArea == .controllers)
 
-    navigation.discardPendingPane()
-    #expect(navigation.selectedPane == .settings)
-    #expect(navigation.pendingPane == nil)
+    navigation.discardPendingArea()
+    #expect(navigation.selectedArea == .library)
+    #expect(navigation.pendingArea == nil)
     #expect(!navigation.isDiscardConfirmationPresented)
-    let afterDiscard = SettingsNavigationModel(persistence: persistence)
-    #expect(afterDiscard.selectedPane == .settings)
+    let afterDiscard = MainWindowNavigationModel(persistence: persistence)
+    #expect(afterDiscard.selectedArea == .library)
   }
 
   @Test
   @MainActor
-  func canceledDirtySelectionLeavesThePersistedPaneUnchanged() {
-    let suiteName = "SettingsNavigationTests.\(UUID().uuidString)"
+  func canceledDirtySelectionLeavesThePersistedAreaUnchanged() {
+    let suiteName = "MainWindowNavigationTests.\(UUID().uuidString)"
     guard let defaults = UserDefaults(suiteName: suiteName) else {
       #expect(Bool(false), "Could not create isolated UserDefaults suite")
       return
     }
     defer { defaults.removePersistentDomain(forName: suiteName) }
-    let persistence = UserDefaultsSettingsPanePersistence(defaults: defaults)
+    let persistence = UserDefaultsMainWindowAreaPersistence(defaults: defaults)
 
-    let navigation = SettingsNavigationModel(persistence: persistence)
-    navigation.requestPane(.controllers)
+    let navigation = MainWindowNavigationModel(persistence: persistence)
+    navigation.requestArea(.controllers)
     navigation.setProfilesEditorDirty(true)
-    navigation.requestPane(.console)
-    navigation.cancelPendingPane()
+    navigation.requestArea(.activity)
+    navigation.cancelPendingArea()
 
-    #expect(navigation.selectedPane == .controllers)
-    #expect(navigation.pendingPane == nil)
-    let restored = SettingsNavigationModel(persistence: persistence)
-    #expect(restored.selectedPane == .controllers)
+    #expect(navigation.selectedArea == .controllers)
+    #expect(navigation.pendingArea == nil)
+    let restored = MainWindowNavigationModel(persistence: persistence)
+    #expect(restored.selectedArea == .controllers)
   }
 
   @Test
   @MainActor
-  func activeProfileMutationKeepsTheProfilesPaneMountedUntilResolution() {
-    let suiteName = "SettingsNavigationTests.\(UUID().uuidString)"
+  func activeProfileMutationKeepsTheProfilesAreaMountedUntilResolution() {
+    let suiteName = "MainWindowNavigationTests.\(UUID().uuidString)"
     guard let defaults = UserDefaults(suiteName: suiteName) else {
       #expect(Bool(false), "Could not create isolated UserDefaults suite")
       return
     }
     defer { defaults.removePersistentDomain(forName: suiteName) }
-    let persistence = UserDefaultsSettingsPanePersistence(defaults: defaults)
+    let persistence = UserDefaultsMainWindowAreaPersistence(defaults: defaults)
 
-    let navigation = SettingsNavigationModel(persistence: persistence)
+    let navigation = MainWindowNavigationModel(persistence: persistence)
     let request = RuntimeMutationRequest(operation: .delete(profileID: UUID()))
-    navigation.requestPane(.profiles)
+    navigation.requestArea(.profiles)
     navigation.setProfilesEditorDirty(true)
     #expect(navigation.beginProfilesEditorMutation(request))
     navigation.setProfilesEditorDirty(false)
 
-    navigation.requestPane(.settings)
+    navigation.requestArea(.library)
 
-    #expect(navigation.selectedPane == .profiles)
-    #expect(navigation.pendingPane == nil)
+    #expect(navigation.selectedArea == .profiles)
+    #expect(navigation.pendingArea == nil)
     #expect(!navigation.isDiscardConfirmationPresented)
 
     #expect(navigation.finishProfilesEditorMutation(request))
     navigation.setProfilesEditorDirty(true)
-    navigation.requestPane(.settings)
+    navigation.requestArea(.library)
 
-    #expect(navigation.pendingPane == .settings)
+    #expect(navigation.pendingArea == .library)
     #expect(navigation.isDiscardConfirmationPresented)
 
-    navigation.cancelPendingPane()
+    navigation.cancelPendingArea()
     navigation.setProfilesEditorDirty(false)
-    navigation.requestPane(.settings)
-    #expect(navigation.selectedPane == .settings)
+    navigation.requestArea(.library)
+    #expect(navigation.selectedArea == .library)
   }
 
   @Test
   @MainActor
   func overlappingProfileMutationCannotReleaseTheFirstNavigationOwner() {
-    let suiteName = "SettingsNavigationTests.\(UUID().uuidString)"
+    let suiteName = "MainWindowNavigationTests.\(UUID().uuidString)"
     guard let defaults = UserDefaults(suiteName: suiteName) else {
       #expect(Bool(false), "Could not create isolated UserDefaults suite")
       return
     }
     defer { defaults.removePersistentDomain(forName: suiteName) }
-    let navigation = SettingsNavigationModel(
-      persistence: UserDefaultsSettingsPanePersistence(defaults: defaults)
+    let navigation = MainWindowNavigationModel(
+      persistence: UserDefaultsMainWindowAreaPersistence(defaults: defaults)
     )
     let first = RuntimeMutationRequest(operation: .delete(profileID: UUID()))
     let second = RuntimeMutationRequest(operation: .importProfile(profileID: UUID()))
@@ -258,38 +313,38 @@ struct SettingsNavigationTests {
     #expect(navigation.beginProfilesEditorMutation(first))
     #expect(!navigation.beginProfilesEditorMutation(first))
     #expect(!navigation.beginProfilesEditorMutation(second))
-    navigation.requestPane(.settings)
-    #expect(navigation.selectedPane == .overview)
-    #expect(navigation.pendingPane == nil)
+    navigation.requestArea(.library)
+    #expect(navigation.selectedArea == .status)
+    #expect(navigation.pendingArea == nil)
 
     #expect(!navigation.finishProfilesEditorMutation(second))
-    navigation.requestPane(.settings)
-    #expect(navigation.selectedPane == .overview)
-    #expect(navigation.pendingPane == nil)
+    navigation.requestArea(.library)
+    #expect(navigation.selectedArea == .status)
+    #expect(navigation.pendingArea == nil)
 
     #expect(navigation.finishProfilesEditorMutation(first))
-    navigation.requestPane(.settings)
-    #expect(navigation.selectedPane == .settings)
+    navigation.requestArea(.library)
+    #expect(navigation.selectedArea == .library)
   }
 
   @Test
   @MainActor
   func matchingPreflightFailureReleasesNavigationOwner() {
-    let suiteName = "SettingsNavigationTests.\(UUID().uuidString)"
+    let suiteName = "MainWindowNavigationTests.\(UUID().uuidString)"
     guard let defaults = UserDefaults(suiteName: suiteName) else {
       #expect(Bool(false), "Could not create isolated UserDefaults suite")
       return
     }
     defer { defaults.removePersistentDomain(forName: suiteName) }
-    let navigation = SettingsNavigationModel(
-      persistence: UserDefaultsSettingsPanePersistence(defaults: defaults)
+    let navigation = MainWindowNavigationModel(
+      persistence: UserDefaultsMainWindowAreaPersistence(defaults: defaults)
     )
     let request = RuntimeMutationRequest(operation: .update(profileID: UUID()))
 
     #expect(navigation.beginProfilesEditorMutation(request))
-    navigation.requestPane(.settings)
-    #expect(navigation.selectedPane == .overview)
-    #expect(navigation.pendingPane == nil)
+    navigation.requestArea(.library)
+    #expect(navigation.selectedArea == .status)
+    #expect(navigation.pendingArea == nil)
 
     #expect(
       !navigation.finishProfilesEditorMutation(RuntimeMutationRequest(operation: request.operation))
@@ -298,14 +353,14 @@ struct SettingsNavigationTests {
     #expect(navigation.finishProfilesEditorMutation(request))
 
     navigation.setProfilesEditorDirty(false)
-    navigation.requestPane(.settings)
-    #expect(navigation.selectedPane == .settings)
+    navigation.requestArea(.library)
+    #expect(navigation.selectedArea == .library)
   }
 
   @Test
   @MainActor
   func preflightFailureReleasesBothOwnersAndPreservesDirtyDraft() async {
-    let suiteName = "SettingsNavigationTests.\(UUID().uuidString)"
+    let suiteName = "MainWindowNavigationTests.\(UUID().uuidString)"
     guard let defaults = UserDefaults(suiteName: suiteName) else {
       #expect(Bool(false), "Could not create isolated UserDefaults suite")
       return
@@ -318,8 +373,8 @@ struct SettingsNavigationTests {
     let gateway = GatewayStub(snapshotPayload: snapshot(profiles: [original]))
     let library = ProfileLibraryModel(runtime: RuntimeViewModel(gateway: gateway))
     var transition = ProfileEditorTransitionState()
-    let navigation = SettingsNavigationModel(
-      persistence: UserDefaultsSettingsPanePersistence(defaults: defaults)
+    let navigation = MainWindowNavigationModel(
+      persistence: UserDefaultsMainWindowAreaPersistence(defaults: defaults)
     )
 
     transition.setDirty(true)
@@ -336,9 +391,9 @@ struct SettingsNavigationTests {
     #expect(navigation.finishProfilesEditorMutation(result.request))
     navigation.setProfilesEditorDirty(transition.isDirty)
 
-    navigation.requestPane(.settings)
-    #expect(navigation.selectedPane == .overview)
-    #expect(navigation.pendingPane == .settings)
+    navigation.requestArea(.library)
+    #expect(navigation.selectedArea == .status)
+    #expect(navigation.pendingArea == .library)
     #expect(navigation.isDiscardConfirmationPresented)
     #expect(transition.isDirty)
   }

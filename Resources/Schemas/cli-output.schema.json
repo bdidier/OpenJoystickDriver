@@ -2947,11 +2947,13 @@
     "sharedSettingKey": {
       "enum": [
         "launchAtLogin",
+        "showInMenuBar",
         "notify.controllerConnected",
         "notify.controllerDisconnected",
         "notify.profileActivated",
         "notify.profileDeactivated",
         "notify.sounds",
+        "updates.checkAutomatically",
         "updates.includePrereleases",
         "developerTools"
       ]

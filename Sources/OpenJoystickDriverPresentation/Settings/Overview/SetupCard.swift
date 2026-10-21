@@ -8,7 +8,7 @@
     var viewModel: RuntimeViewModel
     let supportReport: SupportReportModel
     @ObservedObject
-    var navigation: SettingsNavigationModel
+    var navigation: MainWindowNavigationModel
     @State
     private var confirmsUninstall = false
 
@@ -42,7 +42,7 @@
               }
             }
             Button(OJDLocalized.string("setup.controllerTest")) {
-              navigation.requestPane(.controllers)
+              navigation.requestArea(.controllers)
             }
             Button(OJDLocalized.string("setup.copySupportReport")) {
               Task { @MainActor in _ = await supportReport.copySupportReport() }

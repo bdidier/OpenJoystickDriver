@@ -13,7 +13,7 @@
           VStack(alignment: .leading, spacing: 18) {
             controllerHeader
             controllerSessionAction
-            if isBluetooth { wirelessDisconnectAction }
+            if device.supportsWirelessDisconnect { wirelessDisconnectAction }
             if let failure = viewModel.controllerActionFailures[device.sessionToken.rawValue] {
               controllerActionFailure(failure)
             }
@@ -60,10 +60,6 @@
           secondaryButton: .cancel()
         )
       }
-    }
-
-    private var isBluetooth: Bool {
-      device.connection.caseInsensitiveCompare("Bluetooth") == .orderedSame
     }
 
     private var wirelessDisconnectAction: some View {
