@@ -57,7 +57,7 @@ COMMAND_HELP = """Commands:
   signing audit [paths...]     Audit profiles without leaking identifiers
   signing cert-info <cer>      Show safe-ish .cer info (Team ID = Subject OU)
   signing profile-info <pp>    Show safe-ish profile embedded cert info
-  signing import-embedded <pp> Import embedded cert from a profile into Keychain
+  signing import-embedded <pp> Import every embedded cert from a profile into Keychain
   signing ci-release-setup     Import GitHub Actions release secrets (CI only)
   signing export-github-secrets
                                Write/import GitHub Actions release secrets

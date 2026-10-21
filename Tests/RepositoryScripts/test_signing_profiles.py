@@ -10,6 +10,10 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "Scripts" / "Signing"))
+
+import profile_certs
+
 from Scripts.Signing import configure, doctor
 
 DEXT = "com.openjoystickdriver.XboxUSBDevice"
@@ -250,3 +254,70 @@ class SignedHostAccessTests(unittest.TestCase):
         self.assertNotEqual(self._check([DEXT, OTHER_DRIVER], [DEXT, OTHER_DRIVER]), 0)
         self.assertNotEqual(self._check([DEXT], [OTHER_DRIVER]), 0)
         self.assertNotEqual(self._check(None, [DEXT]), 0)
+
+
+class SharedIdentityTests(unittest.TestCase):
+    HOST_PATH = "/profiles/Host.provisionprofile"
+    DEXT_PATH = "/profiles/Dext.provisionprofile"
+
+    def pick(self, host: list[str], dext: list[str], keychain: dict[str, str]) -> str:
+        embedded = {self.HOST_PATH: host, self.DEXT_PATH: dext}
+        with (
+            patch.object(
+                configure,
+                "embedded_cert_sha1s_from_profile",
+                side_effect=lambda path: embedded[path],
+            ),
+            patch.object(profile_certs, "keychain_identities", return_value=keychain),
+            patch.dict("os.environ", {"APPLE_DEV_IDENTITY": ""}),
+        ):
+            return configure.pick_identity_matching_profiles(
+                "Apple Development", [self.HOST_PATH, self.DEXT_PATH]
+            )
+
+    def test_identity_after_first_embedded_cert_is_chosen(self) -> None:
+        chosen = self.pick(
+            ["a" * 40, "b" * 40, "c" * 40],
+            ["a" * 40, "b" * 40, "c" * 40],
+            {"b" * 40: "Apple Development: X", "c" * 40: "Apple Development: Y"},
+        )
+        self.assertEqual(chosen, "b" * 40)
+
+    def test_identity_must_be_embedded_in_both_profiles(self) -> None:
+        chosen = self.pick(
+            ["a" * 40, "b" * 40],
+            ["a" * 40, "c" * 40],
+            {"b" * 40: "Apple Development: X", "a" * 40: "Apple Development: Z"},
+        )
+        self.assertEqual(chosen, "a" * 40)
+
+    def test_no_shared_identity_lists_every_sha1(self) -> None:
+        with self.assertRaises(SystemExit) as raised:
+            self.pick(
+                ["a" * 40, "b" * 40],
+                ["c" * 40],
+                {"b" * 40: "Apple Development: X"},
+            )
+        text = str(raised.exception)
+        for sha1 in ("a" * 40, "b" * 40, "c" * 40):
+            self.assertIn(sha1, text)
+
+    def test_empty_keychain_fails(self) -> None:
+        with self.assertRaises(SystemExit) as raised:
+            self.pick(["a" * 40], ["a" * 40], {})
+        self.assertIn("NONE", str(raised.exception))
+
+    def test_helper_sorts_qualifying_identities(self) -> None:
+        shared = profile_certs.shared_identity_sha1s(
+            [["b", "a", "z"], ["a", "b"]], {"b": "n", "a": "n", "z": "n"}
+        )
+        self.assertEqual(shared, ["a", "b"])
+
+    def test_certificate_sha1_list_reads_every_certificate(self) -> None:
+        profile = {"DeveloperCertificates": [b"one", b"two"]}
+        self.assertEqual(len(profile_certs.certificate_sha1_list(profile)), 2)
+
+    def test_certificate_sha1_list_fails_on_a_certificate_that_is_not_data(self) -> None:
+        profile = {"DeveloperCertificates": [b"one", "two"]}
+        with self.assertRaisesRegex(TypeError, r"DeveloperCertificates\[1\] is str"):
+            profile_certs.certificate_sha1_list(profile)

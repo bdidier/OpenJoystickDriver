@@ -230,9 +230,8 @@ bundle_suffix = "UNKNOWN"
 if isinstance(app_id, str) and '.' in app_id:
     bundle_suffix = app_id.split('.', 1)[1]
 certs = obj.get('DeveloperCertificates') or []
-cert_kind = "UNKNOWN"
-if certs and isinstance(certs[0], (bytes, bytearray)):
-    cert_kind = classify_cert_kind(certs[0])
+cert_kinds = [classify_cert_kind(c) for c in certs if isinstance(c, (bytes, bytearray))]
+cert_kind = ",".join(cert_kinds) if cert_kinds else "UNKNOWN"
 has_hid_virtual = 'com.apple.developer.hid.virtual.device' in ent
 print(f"==> {os.path.basename(profile)}")
 print("  decode_ok: true")
@@ -347,37 +346,43 @@ for path in profiles:
     print(f"  name: {name}")
     print(f"  team_identifier: {team}")
     certs = obj.get("DeveloperCertificates") or []
-    if not certs or not isinstance(certs[0], (bytes, bytearray)):
+    ders = [c for c in certs if isinstance(c, (bytes, bytearray))]
+    if not ders:
         print("  embedded_cert: missing")
         continue
-    der = certs[0]
-    sha1 = sha1_of_der(der)
-    serial = serial_of_der(der)
-    subj = subject_rfc2253_of_der(der)
-    ou = subj.split("OU=", 1)[1].split(",", 1)[0] if "OU=" in subj else ""
-    cn = subj.split("CN=", 1)[1].split(",", 1)[0] if "CN=" in subj else ""
-    cn_suffix = "NONE"
-    if cn.endswith(")") and "(" in cn:
-        cn_suffix = cn.rsplit("(", 1)[1].rstrip(")")
-    if full:
-        print(f"  embedded_cert_sha1: {sha1}")
-        print(f"  embedded_cert_serial: {serial}")
-    else:
-        print(f"  embedded_cert_sha1: {short(sha1)}  (use --full for full)")
-        print(f"  embedded_cert_serial: {short(serial)}  (use --full for full)")
-    print(f"  embedded_cert_ou: {ou}")
-    print(f"  embedded_cert_cn_suffix: {cn_suffix}")
+    print(f"  embedded_cert_count: {len(ders)}")
+    for index, der in enumerate(ders):
+        sha1 = sha1_of_der(der)
+        serial = serial_of_der(der)
+        subj = subject_rfc2253_of_der(der)
+        ou = subj.split("OU=", 1)[1].split(",", 1)[0] if "OU=" in subj else ""
+        cn = subj.split("CN=", 1)[1].split(",", 1)[0] if "CN=" in subj else ""
+        cn_suffix = "NONE"
+        if cn.endswith(")") and "(" in cn:
+            cn_suffix = cn.rsplit("(", 1)[1].rstrip(")")
+        if full:
+            print(f"  embedded_cert[{index}]_sha1: {sha1}")
+            print(f"  embedded_cert[{index}]_serial: {serial}")
+        else:
+            print(f"  embedded_cert[{index}]_sha1: {short(sha1)}  (use --full for full)")
+            print(f"  embedded_cert[{index}]_serial: {short(serial)}  (use --full for full)")
+        print(f"  embedded_cert[{index}]_ou: {ou}")
+        print(f"  embedded_cert[{index}]_cn_suffix: {cn_suffix}")
 PY
 }
 
-cmd_import_embedded() {
+# Runs in a subshell so the EXIT trap still sees the local $tmpdir.
+cmd_import_embedded() (
   local profile="${1:-}"
   [[ -n "$profile" ]] || die "Usage: ./Scripts/ojd signing import-embedded <profile.provisionprofile>"
   [[ -f "$profile" ]] || die "Missing profile file: $profile"
-  local tmp="/tmp/ojd-embedded-devcert.der"
-  python3 - "$profile" "$tmp" <<'PY'
+  local tmpdir
+  tmpdir="$(mktemp -d)"
+  trap 'rm -rf "$tmpdir"' EXIT
+  # Writes every embedded certificate to $tmpdir/cert-<index>.der.
+  python3 - "$profile" "$tmpdir" <<'PY'
 import os, sys, plistlib, subprocess
-profile = os.path.expanduser(sys.argv[1]); out_path = sys.argv[2]
+profile = os.path.expanduser(sys.argv[1]); out_dir = sys.argv[2]
 def decode(path: str) -> bytes:
     p = subprocess.run(["security","cms","-D","-i",path], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
     if p.returncode == 0 and p.stdout:
@@ -390,19 +395,24 @@ if not raw or b"<?xml" not in raw:
     raise SystemExit("ERROR: could not decode provisioning profile")
 raw = raw[raw.index(b"<?xml") :]
 obj = plistlib.loads(raw)
-certs = obj.get("DeveloperCertificates") or []
-if not certs or not isinstance(certs[0], (bytes, bytearray)):
-    raise SystemExit("ERROR: profile has no DeveloperCertificates[0]")
-with open(out_path, "wb") as f:
-    f.write(certs[0])
+certs = [c for c in (obj.get("DeveloperCertificates") or []) if isinstance(c, (bytes, bytearray))]
+if not certs:
+    raise SystemExit("ERROR: profile has no DeveloperCertificates")
+for index, cert in enumerate(certs):
+    with open(os.path.join(out_dir, f"cert-{index}.der"), "wb") as f:
+        f.write(cert)
 PY
-  echo "Extracted embedded certificate to: $tmp"
-  echo "Importing into login keychain (Keychain may prompt)..."
-  security import "$tmp" -k "$HOME/Library/Keychains/login.keychain-db" >/dev/null
+  echo "Importing every embedded certificate into the login keychain (Keychain may prompt)..."
+  local der sha1
+  for der in "$tmpdir"/cert-*.der; do
+    sha1=$(openssl x509 -inform DER -in "$der" -noout -fingerprint -sha1 | sed 's/.*=//;s/://g' | tr '[:upper:]' '[:lower:]')
+    echo "  importing $(basename "$der" .der) sha1=$sha1"
+    security import "$der" -k "$HOME/Library/Keychains/login.keychain-db" >/dev/null
+  done
   echo "Done."
   echo "Now run:"
   echo "  security find-identity -v -p codesigning"
-}
+)
 
 cmd_doctor() {
   exec /usr/bin/env python3 "$SCRIPT_DIR/doctor.py"

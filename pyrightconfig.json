@@ -1,6 +1,6 @@
 {
   "include": ["Scripts", "Tests/RepositoryScripts"],
-  "extraPaths": ["."],
+  "extraPaths": [".", "Scripts/Signing"],
   "venvPath": ".build",
   "venv": "schema-validator",
   "typeCheckingMode": "standard"

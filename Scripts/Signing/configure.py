@@ -1,9 +1,10 @@
 import os
 import pathlib
 import plistlib
-import re
 import subprocess
 import sys
+
+import profile_certs
 
 project_dir = pathlib.Path(os.environ.get("PROJECT_DIR", "."))
 script_dir = pathlib.Path(os.environ.get("SCRIPT_DIR", "Scripts"))
@@ -68,49 +69,13 @@ def decode_profile(path: str) -> dict:
         )
 
 
-def sha1_fingerprint(der_bytes: bytes) -> str:
-    p = subprocess.run(
-        ["openssl", "x509", "-inform", "DER", "-noout", "-fingerprint", "-sha1"],
-        input=der_bytes,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.DEVNULL,
-        check=True,
-    )
-    # output: SHA1 Fingerprint=AA:BB:...
-    s = p.stdout.decode("utf-8", "replace").strip()
-    if "=" not in s:
-        raise RuntimeError("unexpected openssl fingerprint output")
-    return s.split("=", 1)[1].replace(":", "").lower()
-
-
-def embedded_cert_sha1_from_profile(path: str) -> str:
-    obj = decode_profile(path)
-    certs = obj.get("DeveloperCertificates") or []
-    if not certs or not isinstance(certs[0], (bytes, bytearray)):
+def embedded_cert_sha1s_from_profile(path: str) -> list[str]:
+    sha1s = profile_certs.certificate_sha1_list(decode_profile(path))
+    if not sha1s:
         raise SystemExit(
             f"ERROR: Could not extract DeveloperCertificates from profile: {path}"
         )
-    return sha1_fingerprint(certs[0])
-
-
-def pick_identity(prefix: str) -> str:
-    override = os.environ.get(
-        "APPLE_DEV_IDENTITY" if prefix == "Apple Development" else "DEVID_APP_IDENTITY",
-        "",
-    )
-    if override:
-        return override
-    out = run(["security", "find-identity", "-v", "-p", "codesigning"]).stdout
-    matches: list[str] = []
-    for line in out.splitlines():
-        m = re.search(r'"(' + re.escape(prefix) + r':[^\"]+)"', line)
-        if m:
-            matches.append(m.group(1))
-    if not matches:
-        raise SystemExit(
-            f"ERROR: Missing Keychain identity: {prefix} (run `security find-identity -v -p codesigning`)"
-        )
-    return matches[0]
+    return sha1s
 
 
 def team_id_from_profile(path: str) -> str:
@@ -134,79 +99,60 @@ def profile_name(path: str) -> str:
 dext_bundle_id = "com.openjoystickdriver.XboxUSBDevice"
 
 
-# Prefer exact certificate match with provisioning profiles (handles multiple teams/idents cleanly).
-def pick_identity_matching_profile(prefix: str, profile_path: str) -> str:
+# A profile embeds every certificate it was generated for. The identity must be embedded in
+# all given profiles and have a private key in the Keychain.
+def pick_identity_matching_profiles(prefix: str, profile_paths: list[str]) -> str:
     override = os.environ.get(
         "APPLE_DEV_IDENTITY" if prefix == "Apple Development" else "DEVID_APP_IDENTITY",
         "",
     )
     if override:
         return override
-    want = embedded_cert_sha1_from_profile(profile_path)
-    out = run(["security", "find-identity", "-v", "-p", "codesigning"]).stdout
-    if "0 valid identities found" in out:
-        # In some environments `security` cannot read the keychain (sandbox, SSH, locked keychain).
-        # We can still proceed by writing the identity as the embedded certificate SHA1.
-        #
-        # This keeps the scripts non-blocking, while the actual build will still fail
-        # if the private key is missing or the keychain is inaccessible.
+    embedded = {path: embedded_cert_sha1s_from_profile(path) for path in profile_paths}
+    try:
+        keychain = profile_certs.keychain_identities(prefix)
+    except RuntimeError as error:
+        raise SystemExit(f"ERROR: {error}")
+    shared = profile_certs.shared_identity_sha1s(list(embedded.values()), keychain)
+    if shared:
+        chosen = shared[0]
+        # The SHA1 names the identity unambiguously; the Keychain display name can carry a
+        # suffix that differs from the certificate's Team ID.
         print(
-            "WARN: macOS reports 0 valid code-signing identities in Keychain.\n"
-            "      Proceeding by using the provisioning profile's embedded certificate SHA1.\n"
-            "      (The build will still fail if the matching private key isn't available.)\n"
-            "Check the login keychain:\n"
-            "  1) Unlock the 'login' keychain.\n"
-            "  2) Ensure signing certs appear under 'My Certificates' with a private key underneath.\n"
-            "  3) If needed, fix keychain permissions then log out/in:\n"
-            '       chmod 700 "$HOME/Library/Keychains"\n'
-            '       chmod 600 "$HOME/Library/Keychains/login.keychain-db"\n'
-            "  4) Import Apple intermediates (WWDR + DeveloperIDG2CA) if certs show untrusted.\n",
-            file=sys.stderr,
+            f"Selected {prefix} identity {chosen} ({keychain[chosen]}): the lowest SHA1 "
+            f"of {len(shared)} Keychain identit{'y' if len(shared) == 1 else 'ies'} "
+            f"embedded in all of: "
+            + ", ".join(os.path.basename(path) for path in profile_paths)
+            + (f" (qualifying: {', '.join(shared)})" if len(shared) > 1 else "")
         )
-        return want
-    available_sha1s: list[str] = []
-    for line in out.splitlines():
-        # Format:  1) <sha1> "<identity>"
-        m = re.search(
-            r"^\s*\d+\)\s+([0-9A-Fa-f]{40})\s+\"(" + re.escape(prefix) + r":[^\"]+)\"",
-            line,
-        )
-        if not m:
-            continue
-        got = m.group(1).lower()
-        available_sha1s.append(got)
-        if got == want:
-            # Use the SHA1 identity instead of the display name.
-            # This avoids confusing cases where the certificate's Subject CN
-            # (and thus the Keychain display name) contains a stale/incorrect
-            # suffix, while the certificate Subject OU and provisioning profile
-            # TeamIdentifier are correct.
-            return got
-    profile_team = team_id_from_profile(profile_path)
-    sha1_str = ", ".join(available_sha1s) if available_sha1s else "UNKNOWN"
-    profile_base = os.path.basename(profile_path)
-    raise SystemExit(
-        f"ERROR: No {prefix} identity matches the certificate embedded in provisioning profile.\n"
-        f"  profile: {profile_path}\n"
-        f"  profile_team: {profile_team}\n"
-        f"  profile_embedded_cert_sha1: {want}\n"
-        f"  keychain_{prefix.replace(' ', '_').lower()}_sha1s: {sha1_str}\n"
+        return chosen
+    profile_lines = "".join(
+        f"  {os.path.basename(path)} embedded_cert_sha1s: {', '.join(sha1s)}\n"
+        for path, sha1s in embedded.items()
+    )
+    keychain_sha1s = ", ".join(sorted(keychain)) if keychain else "NONE"
+    first = os.path.basename(profile_paths[0])
+    message = (
+        f"ERROR: No {prefix} identity is embedded in all of these provisioning profiles.\n"
+        f"{profile_lines}"
+        f"  keychain_{prefix.replace(' ', '_').lower()}_sha1s: {keychain_sha1s}\n"
         "\n"
         "Required identity:\n"
-        f"  A Keychain identity named '{prefix}: ...' with SHA1 profile_embedded_cert_sha1.\n"
+        f"  A Keychain identity named '{prefix}: ...' whose SHA1 is embedded in every profile above.\n"
         "  The certificate must have its private key. Matching the Team ID alone is insufficient.\n"
         "  Apple Development identities do not satisfy Developer ID Application profiles.\n"
         "\n"
-        "Check the profile and Keychain:\n"
-        f"  1) Print the certificate embedded in the profile:\n"
-        f'       ./Scripts/ojd signing profile-info --full "$HOME/Library/MobileDevice/Provisioning Profiles/{profile_base}"\n'
+        "Check the profiles and Keychain:\n"
+        "  1) List the certificates embedded in a profile:\n"
+        f'       ./Scripts/ojd signing profile-info --full "$HOME/Library/MobileDevice/Provisioning Profiles/{first}"\n'
         "  2) List identities that have private keys:\n"
         "       security find-identity -v -p codesigning\n"
-        "  3) If the private key is already in Keychain, import the profile's embedded certificate:\n"
-        f'       ./Scripts/ojd signing import-embedded "$HOME/Library/MobileDevice/Provisioning Profiles/{profile_base}"\n'
-        "  4) Otherwise, regenerate the profile in the Apple Developer portal and select an installed certificate.\n"
-        '  5) Reinstall profiles: ./Scripts/ojd signing install-profiles "$HOME/Documents/Profiles"\n'
+        "     If this reports 0 valid identities, unlock the login keychain and import the Apple\n"
+        "     intermediates (WWDR, DeveloperIDG2CA) if certificates show as untrusted.\n"
+        "  3) Otherwise, regenerate the profiles in the Apple Developer portal and select an installed certificate.\n"
+        '  4) Reinstall profiles: ./Scripts/ojd signing install-profiles "$HOME/Documents/Profiles"\n'
     )
+    raise SystemExit(message)
 
 
 def shell_quote(value: str) -> str:
@@ -349,16 +295,9 @@ def configure_development() -> None:
         raise SystemExit(
             "ERROR: development host and DEXT profiles use different teams"
         )
-    apple_dev_identity = pick_identity_matching_profile(
-        "Apple Development", dext_profile
+    apple_dev_identity = pick_identity_matching_profiles(
+        "Apple Development", [gui_dev_profile, dext_profile]
     )
-    if (
-        pick_identity_matching_profile("Apple Development", gui_dev_profile)
-        != apple_dev_identity
-    ):
-        raise SystemExit(
-            "ERROR: development host and DEXT profiles use different certificates"
-        )
     update_env_file(
         dev_env,
         "# Development signing (managed by ./Scripts/ojd signing configure)",
@@ -393,12 +332,11 @@ def configure_release(*, optional: bool) -> None:
         raise SystemExit(
             "ERROR: Developer ID host and DEXT profiles use different teams"
         )
-    gui_devid_identity = pick_identity_matching_profile(
-        "Developer ID Application", gui_devid_profile
+    devid_identity = pick_identity_matching_profiles(
+        "Developer ID Application", [gui_devid_profile, dext_devid_profile]
     )
-    dext_devid_identity = pick_identity_matching_profile(
-        "Developer ID Application", dext_devid_profile
-    )
+    gui_devid_identity = devid_identity
+    dext_devid_identity = devid_identity
     update_env_file(
         rel_env,
         "# Release signing (managed by ./Scripts/ojd signing configure)",

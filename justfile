@@ -195,7 +195,7 @@ signing-cert-info *args:
 signing-profile-info *args:
     ./Scripts/ojd signing profile-info {{ args }}
 
-# Import embedded cert from a profile into Keychain
+# Import every embedded cert from a profile into Keychain
 signing-import-embedded profile:
     ./Scripts/ojd signing import-embedded {{ profile }}
 

@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import hashlib
 import json
 import os
 import pathlib
@@ -10,6 +9,8 @@ import plistlib
 import re
 import subprocess
 import sys
+
+import profile_certs
 
 PROFILES = pathlib.Path(
     os.environ.get(
@@ -73,11 +74,7 @@ def decode_profile(path: pathlib.Path) -> dict:
 
 
 def certificate_sha1s(profile: dict) -> set[str]:
-    return {
-        hashlib.sha1(bytes(certificate), usedforsecurity=False).hexdigest()
-        for certificate in profile.get("DeveloperCertificates", [])
-        if isinstance(certificate, (bytes, bytearray))
-    }
+    return set(profile_certs.certificate_sha1_list(profile))
 
 
 def identities(prefix: str) -> set[str]:

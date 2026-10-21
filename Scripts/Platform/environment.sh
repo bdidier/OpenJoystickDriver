@@ -131,8 +131,8 @@ else
 fi
 export GUI_PROFILE
 
-# Verify that the provisioning profile's signing certificate matches the
-# keychain identity. Fails with a clear message instead of letting AMFI
+# Verify that the keychain identity's certificate is one of the certificates
+# embedded in the provisioning profile. Fails with a clear message instead of letting AMFI
 # reject the app at launch with error 163.
 # Usage: verify_profile_cert <profile_path> <signing_identity>
 decode_provisioning_profile() {
@@ -147,35 +147,58 @@ decode_provisioning_profile() {
 
 verify_profile_cert() (
   local profile="$1" identity="$2"
-  local profile_sha1 keychain_sha1
-  local tmpder
-  tmpder="$(mktemp)"
-  trap 'rm -f "$tmpder"' EXIT
+  local profile_sha1s="" keychain_sha1 profile_plist
+  local tmpdir index sha1 cert_b64
+  tmpdir="$(mktemp -d)"
+  trap 'rm -rf "$tmpdir"' EXIT
+  profile_plist="$tmpdir/profile.plist"
 
-  # Extract first DeveloperCertificate from profile to a temp file
-  # Binary DER data contains null bytes, so it cannot be stored in Bash variables.
-  decode_provisioning_profile "$profile" \
-    | plutil -extract DeveloperCertificates.0 raw -o - - \
-    | base64 -d > "$tmpder" 2>/dev/null
-
-  profile_sha1=$(openssl x509 -inform DER -in "$tmpder" -noout -fingerprint -sha1 2>/dev/null \
-    | sed 's/.*=//;s/://g' | tr '[:upper:]' '[:lower:]')
-
-  keychain_sha1=$(security find-identity -v -p codesigning 2>/dev/null \
-    | grep -i "$identity" | head -1 \
-    | awk '{print $2}' | tr '[:upper:]' '[:lower:]')
-
-  if [[ -z "$profile_sha1" || -z "$keychain_sha1" ]]; then
-    echo "WARNING: Could not extract SHA1 for profile cert verification (profile_sha1=${profile_sha1:-empty}, keychain_sha1=${keychain_sha1:-empty})"
-    return 0  # can't verify, don't block
+  if ! decode_provisioning_profile "$profile" > "$profile_plist" || [[ ! -s "$profile_plist" ]]; then
+    echo "ERROR: Could not decode provisioning profile: $profile"
+    return 1
   fi
 
-  if [[ "$profile_sha1" != "$keychain_sha1" ]]; then
+  # A profile embeds every certificate it was generated for. Collect the SHA1 of each.
+  # Binary DER data contains null bytes, so it goes through temp files.
+  index=0
+  while cert_b64=$(plutil -extract "DeveloperCertificates.$index" raw -o - "$profile_plist" 2>/dev/null); do
+    printf '%s' "$cert_b64" | base64 -d > "$tmpdir/cert.der" 2>/dev/null
+    sha1=$(openssl x509 -inform DER -in "$tmpdir/cert.der" -noout -fingerprint -sha1 2>/dev/null \
+      | sed 's/.*=//;s/://g' | tr '[:upper:]' '[:lower:]')
+    if [[ -z "$sha1" ]]; then
+      echo "ERROR: Could not read DeveloperCertificates.$index of profile: $profile"
+      return 1
+    fi
+    profile_sha1s+="$sha1 "
+    index=$((index + 1))
+  done
+
+  keychain_sha1=$(security find-identity -v -p codesigning 2>/dev/null \
+    | grep -i -F "$identity" | head -1 \
+    | awk '{print $2}' | tr '[:upper:]' '[:lower:]')
+
+  if [[ -z "$profile_sha1s" || -z "$keychain_sha1" ]]; then
     echo ""
-    echo "ERROR: Provisioning profile cert does not match signing identity!"
+    echo "ERROR: Could not verify the provisioning profile certificate against the signing identity."
     echo ""
     echo "  profile: $profile"
-    echo "  profile_cert_sha1: $profile_sha1"
+    echo "  profile_cert_sha1s: ${profile_sha1s:-none}"
+    echo "  keychain_identity_sha1: ${keychain_sha1:-none}"
+    echo "  identity: $identity"
+    echo ""
+    echo "Repair:"
+    echo "  1) Run: ./Scripts/ojd signing doctor"
+    echo "  2) Unlock the login keychain and check: security find-identity -v -p codesigning"
+    echo ""
+    return 1
+  fi
+
+  if [[ " $profile_sha1s" != *" $keychain_sha1 "* ]]; then
+    echo ""
+    echo "ERROR: Provisioning profile certs do not include the signing identity!"
+    echo ""
+    echo "  profile: $profile"
+    echo "  profile_cert_sha1s: $profile_sha1s"
     echo "  keychain_identity_sha1: $keychain_sha1"
     echo ""
     echo "Repair:"
