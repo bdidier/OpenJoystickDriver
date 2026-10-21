@@ -174,8 +174,8 @@
         forContentRect: NSRect(x: 0, y: 0, width: size.width, height: size.height)
       )
       frame.origin = NSPoint(x: window.frame.minX, y: window.frame.maxY - frame.height)
-      if let screen = window.screen ?? NSScreen.main {
-        frame = window.constrainFrameRect(frame, to: screen)
+      if let visible = (window.screen ?? NSScreen.main)?.visibleFrame {
+        frame.origin.y = min(max(frame.origin.y, visible.minY), visible.maxY - frame.height)
       }
       window.setFrame(frame, display: true, animate: animated)
     }
