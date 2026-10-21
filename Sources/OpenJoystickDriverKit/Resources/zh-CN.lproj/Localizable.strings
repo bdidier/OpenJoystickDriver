@@ -1373,7 +1373,7 @@
 /* Error E2037, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
 "error.E2037" = "没有 OpenJoystickDriver 应用及时响应测试通知。请确认应用正在运行，然后重试。";
 /* Error E2038, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */
-"error.E2038" = "OpenJoystickDriver 不允许发送通知。请在系统的通知设置中允许，然后重试。";
+"error.E2038" = "未允许 OpenJoystickDriver 发送通知。请在系统的通知设置中允许，然后重试。";
 "cli.record.usb_not_claimed" = "该系列使用原始 USB，USB 扩展无法接管此控制器，因为其产品列表由 Apple 签名。只有在 macOS 允许时，OJD 才能通过直接 USB 访问使用它。";
 "cli.record.usb_only_switch2" = "仅限 USB：要通过低功耗蓝牙连接控制器，请将 bluetoothLE.vibrationCharacteristic 添加到此 Switch 2 记录。";
 "cli.record.validate.abstract" = "检查控制器记录，但不安装。";
