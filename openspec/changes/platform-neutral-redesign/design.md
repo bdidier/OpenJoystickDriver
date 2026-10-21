@@ -253,7 +253,7 @@ The GUI is redone entirely as an AppKit shell for macOS 12: `NSToolbar`, `NSStat
 - Area actions live in the toolbar (add, install, validate, grant, copy, filter, search), not in the content. Empty lists show one secondary line.
 - Area layouts: Controllers list and a form detail (sections; Advanced is a section); Profiles list and editor; Library one list with Records and Mods sections and a detail; Access one form (Permissions rows with status and Open System Settings when missing, Endpoints with switches, Programs, Tokens, Refused recently); Activity a full-height log table with All/Output/Errors, search and Copy in the toolbar. Explain Error Code is a sheet from the Help menu.
 - One obvious way: each action and each fact appears once on a screen; capabilities a controller lacks are hidden.
-- Unknown values: a value that is unknown, missing or not applicable shows `-` from one shared helper; fields that can never apply are hidden.
+- Unknown values: a value that is unknown, missing or not applicable shows the localized word "None" from one shared helper; fields that can never apply are hidden.
 - Sections: each section is a native `Form` `Section` or `List` section with a plain header; an empty section is one compact line.
 - Settings window: a preference-style `NSToolbar` (`toolbarStyle = .preference`) of one selectable icon-and-label item per pane, one window width, the height fitting each pane, with panes General (launch at login, show in menu bar, updates), Notifications, Advanced (Command-Line Tool, Xbox USB driver, developer tools).
 - Apple HIG pages followed: Sidebars, Split views, Toolbars, Segmented controls, Settings, Windows, The menu bar.

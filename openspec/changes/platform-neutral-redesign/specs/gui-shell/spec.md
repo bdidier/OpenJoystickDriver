@@ -25,12 +25,12 @@ Each action SHALL appear once on a screen, and each fact SHALL appear once on a 
 
 ### Requirement: Unknown values
 
-A value field whose value is unknown, missing or not applicable SHALL show a single hyphen `-`, produced by one shared helper that every screen uses. No screen SHALL show a sentence, "Unknown", "None" or "N/A" in a value field in its place. A field that can never apply to the selected controller SHALL be hidden instead.
+A value field whose value is unknown, missing or not applicable SHALL show the localized word "None", produced by one shared helper that every screen uses. No screen SHALL show a sentence, "Unknown", "N/A" or a hyphen in a value field in its place. A field that can never apply to the selected controller SHALL be hidden instead.
 
 #### Scenario: No virtual HID profile published
 
 - **WHEN** the selected controller has no published virtual HID profile
-- **THEN** the Published as value reads `-`
+- **THEN** the Published as value reads "None"
 
 #### Scenario: Unsupported capability
 
