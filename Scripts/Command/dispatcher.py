@@ -88,6 +88,10 @@ COMMAND_HELP = """Commands:
   snapshots check             Diff the tree against the equivalence snapshots, per record
   snapshots write             Rewrite the equivalence snapshots from the tree (review the diff)
 
+  shots capture --area <name>|--settings-pane <name>|--all
+                              Capture the installed app's windows into .ojd-shots/<timestamp>/
+                              (areas: Controllers Profiles Library Access Activity; panes: General Notifications Advanced)
+
   hooks install|validate      Install or validate repository Git hooks
   setup                       Install required command runner and hooks
 
@@ -410,6 +414,10 @@ def dispatch(argv: list[str]) -> int:
                 require("repair swiftpm-module-cache", tail, count=0)
                 return repair_swiftpm_cache()
             die(f"Unknown: repair {sub} (expected: stale-dext | swiftpm-module-cache)")
+        case "shots":
+            if not rest or rest[0] != "capture":
+                die(f"Unknown: shots {rest[0] if rest else ''} (expected: capture)")
+            exec_target("GUI/capture.py", rest[1:], python=True)
         case "hooks":
             if rest not in (["install"], ["validate"]):
                 die(
