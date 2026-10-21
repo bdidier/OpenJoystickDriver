@@ -46,7 +46,10 @@ extension ApplicationServiceServer {
         unit: unit
       )
     }
-    if let result = result.flatMap({ $0 }) { return result }
+    if let result = result.flatMap({ $0 }) {
+      if result.succeeded { NotificationCenter.postServiceStatusChanged(from: self) }
+      return result
+    }
     var requested: VirtualHIDProfileID?
     if case .set(let raw) = change { requested = VirtualHIDProfileID(rawValue: raw) }
     return VirtualHIDProfileOverrideResult(
@@ -346,7 +349,10 @@ extension ApplicationServiceServer {
   }
 
   /// Clears every virtual HID profile override.
-  func resetVirtualHIDProfileSettings() { virtualHIDProfileOverrides.resetAll() }
+  func resetVirtualHIDProfileSettings() {
+    virtualHIDProfileOverrides.resetAll()
+    NotificationCenter.postServiceStatusChanged(from: self)
+  }
 
   /// Applies a change to the persona files. A connected controller whose persona identity or
   /// profile changed gets a new virtual device, and the others keep theirs.
@@ -358,6 +364,7 @@ extension ApplicationServiceServer {
     if retargeted == false {
       fputs("[Personas] A controller kept its earlier virtual device\n", stderr)
     }
+    NotificationCenter.postServiceStatusChanged(from: self)
   }
 
   /// Reselects every connected controller's profile, each within the per-controller timeout;

@@ -186,7 +186,7 @@ extension DeviceManager {
     let removed = identifiers.compactMap(removeUSBRole)
     // A physical disconnect ends the user's suspension; the next connection starts active.
     suspendedControllerIdentities.subtract(identifiers)
-    notifyControllerInventoryChanged()
+    notifyServiceStatusChanged()
     for pipeline in removed { await pipeline.stop() }
     await reconcileUnboundHIDClaims()
     print("[DeviceManager] USB device removed: \(identifiers)")

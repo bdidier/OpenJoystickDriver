@@ -7,7 +7,7 @@ Every status-item and main-menu action SHALL exist in the main window or Setting
 #### Scenario: Menu action
 
 - **WHEN** the user chooses Disconnect Wireless Link from the status item
-- **THEN** the same action is available on the controller's detail page
+- **THEN** the same action is available in the Controller menu and in the context menu of the controller's row in the Controllers list, and a suspended controller's detail offers Resume
 
 ### Requirement: Fixed status-item layout
 

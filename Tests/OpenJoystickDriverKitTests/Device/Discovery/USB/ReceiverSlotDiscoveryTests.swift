@@ -166,7 +166,7 @@ struct ReceiverSlotDiscoveryTests {
     // Synthetic interface layout (ReceiverSlotProvider); receiver slot numbers are uncaptured.
     let provider = ReceiverSlotProvider(sessions: slotSessions { _ in [] })
     let manager = makeManager(provider)
-    let observer = ReceiverSlotAdmissionCanceller.observe()
+    let observer = ReceiverSlotAdmissionCanceller.observe(from: manager)
     defer { NotificationCenter.default.removeObserver(observer) }
 
     let counter = ReceiverSlotAdmissionCanceller.Counter()

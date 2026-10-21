@@ -512,6 +512,7 @@
 "keyboard.alt" = "Option";
 "keyboard.shift" = "Shift";
 "mapping.automatic" = "自动";
+"virtualProfile.automaticSelected" = "自动（%@）";
 "setup.activeDetail" = "受限 Xbox USB 驱动程序已安装并就绪。";
 "setup.approvalDetail" = "请在系统设置中批准该驱动程序，以使用受支持的 Microsoft USB 控制器。";
 "setup.checkingDetail" = "正在检查已安装的 Xbox USB 驱动程序。";
@@ -526,6 +527,10 @@
 "banner.service.title" = "OpenJoystickDriver 无法连接其服务";
 "banner.access.title" = "需要权限";
 "banner.access.detail" = "macOS 尚未授予 OpenJoystickDriver 读取控制器并将其发布给游戏所需的全部权限。";
+"banner.liveUpdates.title" = "实时更新不可用";
+"banner.liveUpdates.detail.closed" = "服务已关闭连接。OpenJoystickDriver 改为每秒检查一次控制器变化。";
+"banner.liveUpdates.detail.timeout" = "服务未及时响应。OpenJoystickDriver 改为定期检查控制器变化。";
+"banner.liveUpdates.detail.other" = "来自服务的实时更新无法使用。OpenJoystickDriver 改为定期检查控制器变化。";
 "cli.login.uninstall_action" = "卸载";
 "console.all" = "全部";
 "console.empty" = "没有日志条目。";
@@ -791,16 +796,8 @@
 
 /* Controller session lifecycle */
 "controllers.suspended" = "已暂停";
-"controllers.sessionActive" = "由 OpenJoystickDriver 管理";
-"controllers.suspendedSummary" = "输入和 OpenJoystickDriver 输出会暂停，直到你恢复。";
-"controllers.disconnectSummary" = "暂停输入、实体效果和 OpenJoystickDriver 虚拟输出。";
-"controllers.resume" = "继续";
-"controllers.disconnectFromOJD" = "与 OpenJoystickDriver 断开";
 "error.controllerSessionChangeRejected" = "无法更改控制器会话。";
 
-"controllers.disconnectWireless" = "断开无线控制器…";
-"controllers.disconnectWirelessButton" = "断开…";
-"controllers.disconnectWirelessSummary" = "停止此蓝牙连接，不影响其他控制器。";
 "controllers.disconnectWirelessConfirmTitle" = "要断开无线控制器吗？";
 "controllers.disconnectWirelessConfirmMessage" = "%@ 将保持断开，直到你再次手动连接。";
 "controllers.disconnectWirelessConfirm" = "断开";
@@ -1941,3 +1938,49 @@
 "cli.setting.reset.confirm" = "要将设置文件移到废纸篓并让每项设置恢复默认值吗？";
 "cli.setting.reset.success" = "已将 %@ 移到废纸篓。";
 "cli.setting.reset.none" = "%@ 处没有设置文件。";
+/* Why a controller is not published as a virtual device, and a failed send. */
+"controllers.publication.reason.outputDisabled" = "虚拟输出已关闭";
+"controllers.publication.reason.systemGamepad" = "macOS 将其作为游戏手柄处理";
+"controllers.publication.reason.nativeHIDPassThrough" = "macOS 直接处理其输入";
+"controllers.publication.reason.upstreamVirtualDevice" = "已有其他虚拟设备代表它";
+"controllers.publication.reason.sessionSuspended" = "会话已暂停";
+"controllers.publication.reason.noVirtualProfile" = "没有适合的虚拟配置文件";
+"controllers.publication.reason.suppressed" = "输出已暂停";
+"controllers.publication.reason.noInputYet" = "正在等待第一次输入";
+/* Publication state with its reason or failure, for example "Not published (Waiting for the first input)". %1$@ is the state and %2$@ the reason. */
+"controllers.publication.withReason" = "%1$@（%2$@）";
+"controllers.publication.failedSend" = "最近一次发送失败：%@";
+/* Serving route with why it publishes nothing, for example "Output off (No virtual profile fits it)". %1$@ is the route and %2$@ the reason. */
+"controllers.serving.withReason" = "%1$@（%2$@）";
+/* Why a controller's input health is failing. */
+"controllers.inputHealth.reason.missingReports" = "没有收到报告";
+"controllers.inputHealth.reason.freshnessNotAdvancing" = "报告没有更新";
+/* Input health state with its failure reason, for example "Stale (No reports arriving)". %1$@ is the state and %2$@ the reason. */
+"controllers.inputHealth.withReason" = "%1$@（%2$@）";
+/* How a controller was discovered. */
+"controllers.discovery.hid" = "HID";
+"controllers.discovery.rawUSB" = "原始 USB";
+/* Who holds the physical controller. */
+"controllers.physicalOwnership.exclusiveHID" = "独占 HID";
+"controllers.physicalOwnership.exclusiveRawUSB" = "独占原始 USB";
+"controllers.physicalOwnership.extensionOwnedUSB" = "USB 扩展";
+"controllers.physicalOwnership.systemHIDVisible" = "系统 HID";
+"controllers.physicalOwnership.systemGamepad" = "系统游戏手柄";
+"controllers.physicalOwnership.upstreamVirtualDevice" = "上游虚拟设备";
+"controllers.physicalOwnership.unknown" = "未知";
+/* Result of acquiring HID input. */
+"controllers.hidInputOwnership.unknown" = "未知";
+"controllers.hidInputOwnership.exclusive" = "独占";
+"controllers.hidInputOwnership.shared" = "共享";
+"controllers.hidInputOwnership.accessDenied" = "访问被拒绝";
+"controllers.hidInputOwnership.ownedByAnotherClient" = "由其他 App 占用";
+"controllers.hidInputOwnership.acquisitionFailed" = "获取失败";
+/* Ownership summary: %1$@ is the discovery route, %2$@ the owner and %3$@ the HID input result. */
+"controllers.ownership.value" = "通过 %1$@ 发现。所有者：%2$@。HID 输入：%3$@。";
+/* Why closing a controller's Bluetooth link failed. */
+"controllers.disconnectWireless.failure.notFound" = "控制器已不再连接";
+"controllers.disconnectWireless.failure.notBluetooth" = "控制器不是通过蓝牙连接的";
+"controllers.disconnectWireless.failure.bluetoothLEUnsupported" = "无法在此处断开蓝牙 LE 控制器";
+"controllers.disconnectWireless.failure.missingAddress" = "控制器的蓝牙地址未知";
+"controllers.disconnectWireless.failure.disconnectFailed" = "蓝牙未断开控制器";
+"controllers.disconnectWireless.failure.timedOut" = "断开连接超时";

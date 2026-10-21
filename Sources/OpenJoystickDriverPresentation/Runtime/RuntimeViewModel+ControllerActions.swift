@@ -205,13 +205,14 @@ extension RuntimeViewModel {
       let result = try await gateway.disconnectWirelessController(
         ControllerReference.session(device.sessionToken)
       )
-      guard !result.succeeded else { return nil }
-      let stage = result.failedStage?.rawValue ?? "disconnect-wireless-controller"
-      let cause = result.detail ?? result.failure?.rawValue ?? "unknown failure"
-      let code = result.systemCode.map { " (\($0))" } ?? ""
-      // The stage, cause, and code are service identifiers; the view labels them localized.
-      let message = "\(stage): \(cause)\(code)"
-      return result.recovery.map { "\(message). \($0)" } ?? message
+      guard let failure = result.failure else { return nil }
+      let code = result.systemCode.map(String.init) ?? "none"
+      print(
+        "[RuntimeViewModel] Wireless disconnect failed: \(failure.rawValue), "
+          + "stage \(result.failedStage?.rawValue ?? "none"), code \(code), "
+          + "detail \(result.detail ?? "none"), recovery \(result.recovery ?? "none")"
+      )
+      return ControllerDetailLabels.wirelessDisconnectFailureText(failure)
     }
   }
 

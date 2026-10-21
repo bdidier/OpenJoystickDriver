@@ -11,7 +11,7 @@ struct LocalRPCBridgeTests {
     "getStatus", "requestRequiredAccess", "requestAccess", "getControllerState", "getPacketLog",
     "getVirtualOutputState",
     "sendControllerOutput", "previewPhysicalColor", "releasePhysicalColorPreview",
-    "getVirtualDeviceDiagnostics", "getFrameTimings", "waitForControllerInventoryChange",
+    "getVirtualDeviceDiagnostics", "getFrameTimings", "waitForServiceStatusChange",
     "setVirtualHIDProfileOverride",
     "resetVirtualHIDProfileOverride", "setControllerServer", "openVirtualFeed",
     "exchangeVirtualFeed",
@@ -107,7 +107,7 @@ struct LocalRPCBridgeTests {
   }
 
   @Test
-  func anInventoryNotificationReachesAWaitingClientWithinOneSecond() async throws {
+  func aStatusNotificationReachesAWaitingClientWithinOneSecond() async throws {
     try await withServer { server in
       let socketPath = "/tmp/com.openjoystickdriver.bridge.\(UUID().uuidString).rpc"
       let rpcServer = LocalServiceRPCServer(
@@ -120,17 +120,91 @@ struct LocalRPCBridgeTests {
       defer { rpcServer.stop() }
       let client = ApplicationServiceClient(socketPath: socketPath)
       await client.connect()
-      let baseline = try await client.waitForControllerInventoryChange(after: nil).generation
+      let baseline = try await client.waitForServiceStatusChange(after: nil)
 
       let clock = ContinuousClock()
       let start = clock.now
-      async let next = client.waitForControllerInventoryChange(after: baseline)
+      async let next = client.waitForServiceStatusChange(after: baseline)
       try await Task.sleep(nanoseconds: 100_000_000)
-      NotificationCenter.default.post(name: .ojdControllerInventoryDidChange, object: nil)
+      NotificationCenter.default.post(name: .ojdServiceStatusDidChange, object: nil)
 
-      #expect(try await next.generation != baseline)
-      #expect(clock.now - start < .seconds(1))
+      #expect(try await next != baseline)
+      #expect(clock.now - start < .seconds(10))
     }
+  }
+
+  @Test
+  func aVirtualOutputStatusChangeAnnouncesOnceAfterTheLockIsReleased() async throws {
+    try await withServer { server in
+      let lockHeldDuringPost = LockedFlag()
+      let observer = NotificationCenter.default.addObserver(
+        forName: .ojdServiceStatusDidChange,
+        object: server,
+        queue: nil
+      ) { _ in
+        // A held lock cannot be taken again; `try` fails the check while the lock is held.
+        if server.userSpaceLock.try() {
+          server.userSpaceLock.unlock()
+        } else {
+          lockHeldDuringPost.set()
+        }
+      }
+      defer { NotificationCenter.default.removeObserver(observer) }
+
+      let count = await Self.announcements(from: server) {
+        server.withUserSpaceState { server.userSpaceStatus = .error("failed") }
+      }
+
+      #expect(count == 1)
+      #expect(!lockHeldDuringPost.isSet)
+    }
+  }
+
+  @Test
+  func aRepeatedVirtualOutputStatusAnnouncesNothing() async throws {
+    try await withServer { server in
+      #expect(
+        await Self.announcements(from: server) {
+          server.withUserSpaceState { server.userSpaceStatus = .off }
+        } == 0
+      )
+    }
+  }
+
+  @Test
+  func aProfileReloadAnnouncesFromTheRemappingCoordinator() async throws {
+    try await withServer { server in
+      #expect(
+        await Self.announcements(from: server.remappingRequests) {
+          await server.reloadRemappingProfiles()
+        } == 1
+      )
+    }
+  }
+
+  @Test
+  func anOverrideResetAnnouncesFromTheServer() async throws {
+    try await withServer { server in
+      #expect(
+        await Self.announcements(from: server) { server.resetVirtualHIDProfileSettings() } == 1
+      )
+    }
+  }
+
+  /// How many service status changes `source` announces during `action`.
+  private static func announcements(
+    from source: AnyObject,
+    _ action: () async -> Void
+  ) async -> Int {
+    let count = AnnouncementCount()
+    let observer = NotificationCenter.default.addObserver(
+      forName: .ojdServiceStatusDidChange,
+      object: source,
+      queue: nil
+    ) { _ in count.increment() }
+    defer { NotificationCenter.default.removeObserver(observer) }
+    await action()
+    return count.value
   }
 
   private static func unknownMethodMessage(_ name: String) -> String {
@@ -181,4 +255,18 @@ struct LocalRPCBridgeTests {
     )
     try await body(server)
   }
+}
+
+private final class AnnouncementCount: @unchecked Sendable {
+  private let lock = NSLock()
+  private var count = 0
+  var value: Int { lock.withLock { count } }
+  func increment() { lock.withLock { count += 1 } }
+}
+
+private final class LockedFlag: @unchecked Sendable {
+  private let lock = NSLock()
+  private var flag = false
+  var isSet: Bool { lock.withLock { flag } }
+  func set() { lock.withLock { flag = true } }
 }

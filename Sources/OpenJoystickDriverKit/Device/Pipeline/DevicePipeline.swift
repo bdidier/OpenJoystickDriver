@@ -94,7 +94,11 @@ actor DevicePipeline {
   /// Hides input held across a lifted foreground gate until it changes.
   var foregroundMask: ForegroundInputMask?
   let maxPacketLogEntries = 200
-  var currentPower: ControllerConnectionState.Power?
+  var currentPower: ControllerConnectionState.Power? {
+    didSet {
+      if oldValue != currentPower { NotificationCenter.postServiceStatusChanged(from: self) }
+    }
+  }
   let packetLog: PacketLogBuffer
   var idleMonitorTask: Task<Void, Never>?
   var runTask: Task<Void, Never>?
@@ -116,7 +120,12 @@ actor DevicePipeline {
   var lastUSBIOErrorLogNs: UInt64 = 0
   /// Ending the connection or the session drops the held input, so it is never replayed later.
   var inputConnectionActive: Bool {
-    didSet { if !inputConnectionActive { coalescedInput = nil } }
+    didSet {
+      if !inputConnectionActive { coalescedInput = nil }
+      if oldValue != inputConnectionActive {
+        NotificationCenter.postServiceStatusChanged(from: self)
+      }
+    }
   }
   var sessionState: ControllerSessionState {
     didSet { if sessionState != .active { coalescedInput = nil } }
@@ -125,9 +134,22 @@ actor DevicePipeline {
   var lastLiveInputReportNanoseconds: UInt64?
   var inputHealthMonitoringStartedNanoseconds: UInt64?
   var lastObservedInputReportNanoseconds: UInt64?
-  var awaitingNeutralAfterLivenessLoss = false
+  var awaitingNeutralAfterLivenessLoss = false {
+    didSet {
+      if oldValue != awaitingNeutralAfterLivenessLoss {
+        NotificationCenter.postServiceStatusChanged(from: self)
+      }
+    }
+  }
+  /// Counted before `awaitingNeutralAfterLivenessLoss` clears, so one recovery posts once.
   var inputHealthRecoveryCount = 0
-  var startupOutputStatus: String?
+  /// Wakes once the input reports are overdue, because no event announces that.
+  var staleWatchTask: Task<Void, Never>?
+  var startupOutputStatus: String? {
+    didSet {
+      if oldValue != startupOutputStatus { NotificationCenter.postServiceStatusChanged(from: self) }
+    }
+  }
   /// Whether the native startup player indicator still waits for the first input report.
   var startupPlayerIndicatorPending: Bool
   /// The player slot a USB pipeline writes with its startup writes; nil sets none.

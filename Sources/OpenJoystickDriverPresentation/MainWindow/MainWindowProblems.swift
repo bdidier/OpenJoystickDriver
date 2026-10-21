@@ -9,12 +9,16 @@ enum MainWindowProblem: Equatable, Sendable, Identifiable {
   case driver(SystemExtensionSetupState)
   /// macOS has not granted a permission the service needs.
   case accessMissing
+  /// The service's change notifications are unavailable for the reason, so the app reads the
+  /// service repeatedly instead.
+  case liveUpdatesPolling(ControllerLiveUpdateFailure)
 
   var id: String {
     switch self {
     case .serviceUnavailable: return "service"
     case .driver: return "driver"
     case .accessMissing: return "access"
+    case .liveUpdatesPolling: return "liveUpdates"
     }
   }
 
@@ -23,6 +27,7 @@ enum MainWindowProblem: Equatable, Sendable, Identifiable {
     case .serviceUnavailable: return "banner.service.title"
     case .driver: return "setup.driverTitle"
     case .accessMissing: return "banner.access.title"
+    case .liveUpdatesPolling: return "banner.liveUpdates.title"
     }
   }
 
@@ -30,6 +35,7 @@ enum MainWindowProblem: Equatable, Sendable, Identifiable {
   var detailKey: String? {
     switch self {
     case .serviceUnavailable: return nil
+    case .liveUpdatesPolling(let failure): return failure.detailKey
     case .driver(let state):
       switch state {
       case .missingEmbedded: return "setup.missingDetail"
@@ -55,6 +61,7 @@ enum MainWindowProblem: Equatable, Sendable, Identifiable {
         preconditionFailure("A driver problem is never made for \(state)")
       }
     case .accessMissing: return .showAccess
+    case .liveUpdatesPolling: return nil
     }
   }
 
@@ -63,7 +70,7 @@ enum MainWindowProblem: Equatable, Sendable, Identifiable {
     switch self {
     case .serviceUnavailable: return true
     case .driver(let state): return state == .missingEmbedded || state == .invalid
-    case .accessMissing: return false
+    case .accessMissing, .liveUpdatesPolling: return false
     }
   }
 
@@ -72,7 +79,8 @@ enum MainWindowProblem: Equatable, Sendable, Identifiable {
   static func current(
     permissions: RuntimePermissionLoadState,
     status: RuntimeStatusState,
-    driver: SystemExtensionSetupState
+    driver: SystemExtensionSetupState,
+    liveUpdatesFallbackReason: ControllerLiveUpdateFailure?
   ) -> [Self] {
     var problems: [Self] = []
     switch status {
@@ -89,6 +97,7 @@ enum MainWindowProblem: Equatable, Sendable, Identifiable {
     if AccessReadiness.hasMissingPermission(permissionState: permissions, statusState: status) {
       problems.append(.accessMissing)
     }
+    if let failure = liveUpdatesFallbackReason { problems.append(.liveUpdatesPolling(failure)) }
     return problems
   }
 }

@@ -512,6 +512,7 @@
 "keyboard.alt" = "Option";
 "keyboard.shift" = "Shift";
 "mapping.automatic" = "自動";
+"virtualProfile.automaticSelected" = "自動（%@）";
 "setup.activeDetail" = "制限付きXbox USBドライバがインストールされ、準備ができています。";
 "setup.approvalDetail" = "対応するMicrosoft USBコントローラを使うには、システム設定でドライバを承認してください。";
 "setup.checkingDetail" = "インストール済みのXbox USBドライバを確認しています。";
@@ -526,6 +527,10 @@
 "banner.service.title" = "OpenJoystickDriverがサービスに接続できません";
 "banner.access.title" = "権限が必要です";
 "banner.access.detail" = "macOSは、OpenJoystickDriverがコントローラを読み取り、ゲームに公開するために必要な権限をすべては許可していません。";
+"banner.liveUpdates.title" = "ライブ更新を利用できません";
+"banner.liveUpdates.detail.closed" = "サービスが接続を閉じました。OpenJoystickDriverは代わりに1秒ごとにコントローラの変更を確認します。";
+"banner.liveUpdates.detail.timeout" = "サービスが時間内に応答しませんでした。OpenJoystickDriverは代わりに定期的にコントローラの変更を確認します。";
+"banner.liveUpdates.detail.other" = "サービスからのライブ更新が機能していません。OpenJoystickDriverは代わりに定期的にコントローラの変更を確認します。";
 "cli.login.uninstall_action" = "アンインストール";
 "console.all" = "すべて";
 "console.empty" = "ログエントリはありません。";
@@ -791,16 +796,8 @@
 
 /* Controller session lifecycle */
 "controllers.suspended" = "一時停止中";
-"controllers.sessionActive" = "OpenJoystickDriverで管理中";
-"controllers.suspendedSummary" = "再開するまで、入力とOpenJoystickDriverの出力は一時停止されます。";
-"controllers.disconnectSummary" = "入力、物理エフェクト、OpenJoystickDriverの仮想出力を一時停止します。";
-"controllers.resume" = "再開";
-"controllers.disconnectFromOJD" = "OpenJoystickDriverから切り離す";
 "error.controllerSessionChangeRejected" = "コントローラのセッションを変更できませんでした。";
 
-"controllers.disconnectWireless" = "ワイヤレスコントローラを切断…";
-"controllers.disconnectWirelessButton" = "切断…";
-"controllers.disconnectWirelessSummary" = "他のコントローラに影響を与えずに、このBluetooth接続を終了します。";
 "controllers.disconnectWirelessConfirmTitle" = "ワイヤレスコントローラを切断しますか？";
 "controllers.disconnectWirelessConfirmMessage" = "%@は、手動で再接続するまで切断されたままになります。";
 "controllers.disconnectWirelessConfirm" = "接続解除";
@@ -1941,3 +1938,49 @@
 "cli.setting.reset.confirm" = "設定ファイルをゴミ箱に移動して、すべての設定をデフォルト値に戻しますか？";
 "cli.setting.reset.success" = "%@ をゴミ箱に移動しました。";
 "cli.setting.reset.none" = "%@ に設定ファイルはありません。";
+/* Why a controller is not published as a virtual device, and a failed send. */
+"controllers.publication.reason.outputDisabled" = "仮想出力はオフです";
+"controllers.publication.reason.systemGamepad" = "macOSがゲームパッドとして扱っています";
+"controllers.publication.reason.nativeHIDPassThrough" = "macOSが入力を直接処理しています";
+"controllers.publication.reason.upstreamVirtualDevice" = "別の仮想デバイスがすでに代わりを務めています";
+"controllers.publication.reason.sessionSuspended" = "セッションは一時停止中です";
+"controllers.publication.reason.noVirtualProfile" = "適合する仮想プロファイルがありません";
+"controllers.publication.reason.suppressed" = "出力は一時停止中です";
+"controllers.publication.reason.noInputYet" = "最初の入力を待っています";
+/* Publication state with its reason or failure, for example "Not published (Waiting for the first input)". %1$@ is the state and %2$@ the reason. */
+"controllers.publication.withReason" = "%1$@ (%2$@)";
+"controllers.publication.failedSend" = "直前の送信に失敗しました: %@";
+/* Serving route with why it publishes nothing, for example "Output off (No virtual profile fits it)". %1$@ is the route and %2$@ the reason. */
+"controllers.serving.withReason" = "%1$@ (%2$@)";
+/* Why a controller's input health is failing. */
+"controllers.inputHealth.reason.missingReports" = "レポートが届いていません";
+"controllers.inputHealth.reason.freshnessNotAdvancing" = "レポートが更新されていません";
+/* Input health state with its failure reason, for example "Stale (No reports arriving)". %1$@ is the state and %2$@ the reason. */
+"controllers.inputHealth.withReason" = "%1$@ (%2$@)";
+/* How a controller was discovered. */
+"controllers.discovery.hid" = "HID";
+"controllers.discovery.rawUSB" = "ローUSB";
+/* Who holds the physical controller. */
+"controllers.physicalOwnership.exclusiveHID" = "専有HID";
+"controllers.physicalOwnership.exclusiveRawUSB" = "専有ローUSB";
+"controllers.physicalOwnership.extensionOwnedUSB" = "USB拡張機能";
+"controllers.physicalOwnership.systemHIDVisible" = "システムHID";
+"controllers.physicalOwnership.systemGamepad" = "システムゲームパッド";
+"controllers.physicalOwnership.upstreamVirtualDevice" = "上流の仮想デバイス";
+"controllers.physicalOwnership.unknown" = "不明";
+/* Result of acquiring HID input. */
+"controllers.hidInputOwnership.unknown" = "不明";
+"controllers.hidInputOwnership.exclusive" = "専有";
+"controllers.hidInputOwnership.shared" = "共有";
+"controllers.hidInputOwnership.accessDenied" = "アクセスが拒否されました";
+"controllers.hidInputOwnership.ownedByAnotherClient" = "別のアプリが使用中";
+"controllers.hidInputOwnership.acquisitionFailed" = "取得に失敗しました";
+/* Ownership summary: %1$@ is the discovery route, %2$@ the owner and %3$@ the HID input result. */
+"controllers.ownership.value" = "%1$@ 経由で検出。所有者: %2$@。HID入力: %3$@。";
+/* Why closing a controller's Bluetooth link failed. */
+"controllers.disconnectWireless.failure.notFound" = "コントローラは接続されなくなりました";
+"controllers.disconnectWireless.failure.notBluetooth" = "コントローラはBluetoothで接続されていません";
+"controllers.disconnectWireless.failure.bluetoothLEUnsupported" = "Bluetooth LEのコントローラはここから切断できません";
+"controllers.disconnectWireless.failure.missingAddress" = "コントローラのBluetoothアドレスが不明です";
+"controllers.disconnectWireless.failure.disconnectFailed" = "Bluetoothがコントローラを切断しませんでした";
+"controllers.disconnectWireless.failure.timedOut" = "切断がタイムアウトしました";

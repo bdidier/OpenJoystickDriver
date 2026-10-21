@@ -49,6 +49,7 @@ public actor PermissionManager {
 
   public private(set) var inputReadState: AccessState = .unknown
   public private(set) var inputInjectState: AccessState = .unknown
+  private(set) var postEventState = PermissionManager.currentPostEventAccessState()
   private(set) var pollingTask: Task<Void, Never>?
 
   public init() {}
@@ -86,19 +87,29 @@ public actor PermissionManager {
   @discardableResult
   public func refreshAccessState() -> Snapshot {
     let snapshot = checkAccess()
-    updateState(
+    record(snapshot, postEvent: Self.currentPostEventAccessState())
+    return snapshot
+  }
+
+  /// Stores the observed permission states and announces one status change when any differs.
+  func record(_ snapshot: Snapshot, postEvent: RemappingPostEventAccessState) {
+    let readChanged = updateState(
       name: "Input read",
       previous: inputReadState,
       current: snapshot.inputRead
     )
-    updateState(
+    let injectChanged = updateState(
       name: "Input inject",
       previous: inputInjectState,
       current: snapshot.inputInject
     )
     inputReadState = snapshot.inputRead
     inputInjectState = snapshot.inputInject
-    return snapshot
+    let postEventChanged = postEvent != postEventState
+    postEventState = postEvent
+    if readChanged || injectChanged || postEventChanged {
+      NotificationCenter.postServiceStatusChanged(from: self)
+    }
   }
 
   /// Requests every HID permission that is not already granted.
@@ -163,9 +174,11 @@ public actor PermissionManager {
     pollingTask = nil
   }
 
-  private func updateState(name: String, previous: AccessState, current: AccessState) {
-    guard previous != current else { return }
+  /// Logs a change of one permission and returns whether it changed.
+  private func updateState(name: String, previous: AccessState, current: AccessState) -> Bool {
+    guard previous != current else { return false }
     print("[PermissionManager] \(name) state changed: \(previous) -> \(current)")
+    return true
   }
 }
 

@@ -4,7 +4,8 @@ extension ApplicationServiceClient {
   func call<Arguments: Encodable & Sendable, Value: Decodable & Sendable>(
     _ method: ApplicationServiceRPCMethod,
     _ arguments: Arguments,
-    timeoutSeconds: TimeInterval = applicationServiceDefaultReplyTimeoutSeconds
+    timeoutSeconds: TimeInterval = applicationServiceDefaultReplyTimeoutSeconds,
+    closedWithoutReply: LocalServiceRPCClosedWithoutReply = .peerRejected
   ) async throws -> Value {
     guard stateLock.withLock({ connected }) else {
       throw ApplicationServiceClientError.notConnected
@@ -14,7 +15,8 @@ extension ApplicationServiceClient {
         method: method.rawValue,
         arguments: arguments,
         timeoutSeconds: timeoutSeconds,
-        socketPath: socketPath
+        socketPath: socketPath,
+        closedWithoutReply: closedWithoutReply
       )
     } catch LocalServiceRPCError.timeout { throw ApplicationServiceClientError.timeout }
   }

@@ -228,15 +228,12 @@
     }
 
     private func confirmDisconnectWireless(_ device: ApplicationServiceDeviceDescription) {
+      let confirmation = WirelessDisconnectConfirmation(controllerName: device.name)
       let alert = NSAlert()
       alert.alertStyle = .warning
-      alert.messageText = OJDLocalized.string("controllers.disconnectWirelessConfirmTitle")
-      alert.informativeText = OJDLocalized.formatted(
-        "controllers.disconnectWirelessConfirmMessage",
-        device.name
-      )
-      alert.addButton(withTitle: OJDLocalized.string("controllers.disconnectWirelessConfirm"))
-        .hasDestructiveAction = true
+      alert.messageText = confirmation.title
+      alert.informativeText = confirmation.message
+      alert.addButton(withTitle: confirmation.confirmTitle).hasDestructiveAction = true
       alert.addButton(withTitle: OJDLocalized.string("common.cancel"))
       guard alert.runActivatingApp() == .alertFirstButtonReturn else { return }
       Task { @MainActor in await viewModel.disconnectWirelessController(device) }

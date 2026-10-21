@@ -30,12 +30,17 @@ struct MainWindowProblemTests {
       MainWindowProblem.current(
         permissions: permissions(.granted),
         status: status(inputRead: .granted),
-        driver: .active
+        driver: .active,
+        liveUpdatesFallbackReason: nil
       ).isEmpty
     )
     #expect(
-      MainWindowProblem.current(permissions: .loading, status: .loading, driver: .checking)
-        .isEmpty
+      MainWindowProblem.current(
+        permissions: .loading,
+        status: .loading,
+        driver: .checking,
+        liveUpdatesFallbackReason: nil
+      ).isEmpty
     )
   }
 
@@ -55,7 +60,8 @@ struct MainWindowProblemTests {
       let problems = MainWindowProblem.current(
         permissions: reading,
         status: payload,
-        driver: .active
+        driver: .active,
+        liveUpdatesFallbackReason: nil
       )
       #expect(problems.contains(.accessMissing) == isMissing, "\(reading)")
     }
@@ -63,7 +69,8 @@ struct MainWindowProblemTests {
       !MainWindowProblem.current(
         permissions: permissions(.granted),
         status: status(inputRead: .denied),
-        driver: .active
+        driver: .active,
+        liveUpdatesFallbackReason: nil
       ).contains(.accessMissing)
     )
   }
@@ -74,7 +81,8 @@ struct MainWindowProblemTests {
       MainWindowProblem.current(
         permissions: .unavailable,
         status: .unavailable("down"),
-        driver: .awaitingApproval
+        driver: .awaitingApproval,
+        liveUpdatesFallbackReason: nil
       )
         == [.serviceUnavailable("down"), .driver(.awaitingApproval)]
     )
@@ -82,7 +90,8 @@ struct MainWindowProblemTests {
       MainWindowProblem.current(
         permissions: permissions(.denied),
         status: status(inputRead: .denied),
-        driver: .failed
+        driver: .failed,
+        liveUpdatesFallbackReason: nil
       )
         == [.driver(.failed), .accessMissing]
     )
@@ -107,7 +116,22 @@ struct MainWindowProblemTests {
   }
 
   @Test
-  func anEmptyOrMissingValueShowsAHyphen() {
+  func pollingInsteadOfLiveUpdatesIsAQuietProblemWithItsReason() {
+    let problems = MainWindowProblem.current(
+      permissions: permissions(.granted),
+      status: status(inputRead: .granted),
+      driver: .active,
+      liveUpdatesFallbackReason: .timeout
+    )
+    #expect(problems == [.liveUpdatesPolling(.timeout)])
+    #expect(problems.first?.isFailure == false)
+    #expect(problems.first?.action == nil)
+    #expect(problems.first?.titleKey == "banner.liveUpdates.title")
+    #expect(problems.first?.detailKey == "banner.liveUpdates.detail.timeout")
+  }
+
+  @Test
+  func anEmptyOrMissingValueShowsNone() {
     #expect(OJDValue(nil).displayText == OJDLocalized.string("common.none"))
     #expect(OJDValue("").displayText == OJDLocalized.string("common.none"))
     #expect(OJDValue(nil).accessibilityKey == "common.none")
@@ -116,7 +140,7 @@ struct MainWindowProblemTests {
   }
 
   @Test
-  func reportedValuesWithoutContentShowAHyphen() {
+  func reportedValuesWithoutContentShowNone() {
     #expect(OJDValue.reported("  \n") == .none)
     #expect(OJDValue.reported(nil) == .none)
     #expect(OJDValue.reported(" USB ") == .text("USB"))
@@ -154,7 +178,7 @@ struct MainWindowProblemTests {
   }
 
   @Test
-  func aMissingSerialNumberShowsTheHyphenWithoutAnEye() {
+  func aMissingSerialNumberShowsNoneWithoutAnEye() {
     let presentation = SerialNumberVisibility().presentation(of: .none)
     #expect(!presentation.canToggle)
     #expect(!presentation.isObscured)

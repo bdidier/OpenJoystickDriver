@@ -512,6 +512,7 @@
 "keyboard.alt" = "Option";
 "keyboard.shift" = "Shift";
 "mapping.automatic" = "Otomatis";
+"virtualProfile.automaticSelected" = "Otomatis (%@)";
 "setup.activeDetail" = "Driver USB Xbox terbatas telah terinstal dan siap.";
 "setup.approvalDetail" = "Setujui driver di Pengaturan Sistem untuk menggunakan pengontrol USB Microsoft yang didukung.";
 "setup.checkingDetail" = "Memeriksa driver USB Xbox yang terinstal.";
@@ -526,6 +527,10 @@
 "banner.service.title" = "OpenJoystickDriver tidak dapat terhubung ke layanannya";
 "banner.access.title" = "Izin diperlukan";
 "banner.access.detail" = "macOS belum mengizinkan semua yang dibutuhkan OpenJoystickDriver untuk membaca pengontrol dan memublikasikannya ke game.";
+"banner.liveUpdates.title" = "Pembaruan langsung tidak tersedia";
+"banner.liveUpdates.detail.closed" = "Layanan menutup koneksi. Sebagai gantinya, OpenJoystickDriver memeriksa perubahan pengontrol setiap detik.";
+"banner.liveUpdates.detail.timeout" = "Layanan tidak menjawab tepat waktu. Sebagai gantinya, OpenJoystickDriver memeriksa perubahan pengontrol secara berkala.";
+"banner.liveUpdates.detail.other" = "Pembaruan langsung dari layanan tidak berfungsi. Sebagai gantinya, OpenJoystickDriver memeriksa perubahan pengontrol secara berkala.";
 "cli.login.uninstall_action" = "Copot";
 "console.all" = "Semua";
 "console.empty" = "Tidak ada entri log.";
@@ -791,16 +796,8 @@
 
 /* Controller session lifecycle */
 "controllers.suspended" = "Ditangguhkan";
-"controllers.sessionActive" = "Dikelola oleh OpenJoystickDriver";
-"controllers.suspendedSummary" = "Input dan output OpenJoystickDriver dijeda hingga Anda melanjutkan.";
-"controllers.disconnectSummary" = "Jeda input, efek fisik, dan output virtual OpenJoystickDriver.";
-"controllers.resume" = "Lanjutkan";
-"controllers.disconnectFromOJD" = "Putuskan Hubungan dari OpenJoystickDriver";
 "error.controllerSessionChangeRejected" = "Sesi pengontrol tidak dapat diubah.";
 
-"controllers.disconnectWireless" = "Putuskan Hubungan Pengontrol Nirkabel…";
-"controllers.disconnectWirelessButton" = "Putuskan Hubungan…";
-"controllers.disconnectWirelessSummary" = "Hentikan koneksi Bluetooth ini tanpa memengaruhi pengontrol lain.";
 "controllers.disconnectWirelessConfirmTitle" = "Putuskan Hubungan Pengontrol Nirkabel?";
 "controllers.disconnectWirelessConfirmMessage" = "%@ akan tetap terputus hingga Anda menghubungkannya lagi secara manual.";
 "controllers.disconnectWirelessConfirm" = "Putuskan Hubungan";
@@ -1941,3 +1938,49 @@
 "cli.setting.reset.confirm" = "Pindahkan file pengaturan ke Tong Sampah dan kembalikan setiap pengaturan ke nilai default?";
 "cli.setting.reset.success" = "%@ dipindahkan ke Tong Sampah.";
 "cli.setting.reset.none" = "Tidak ada file pengaturan di %@.";
+/* Why a controller is not published as a virtual device, and a failed send. */
+"controllers.publication.reason.outputDisabled" = "Output virtual mati";
+"controllers.publication.reason.systemGamepad" = "macOS melayaninya sebagai gamepad";
+"controllers.publication.reason.nativeHIDPassThrough" = "macOS menangani inputnya secara langsung";
+"controllers.publication.reason.upstreamVirtualDevice" = "Perangkat virtual lain sudah mewakilinya";
+"controllers.publication.reason.sessionSuspended" = "Sesi ditangguhkan";
+"controllers.publication.reason.noVirtualProfile" = "Tidak ada profil virtual yang cocok";
+"controllers.publication.reason.suppressed" = "Output dijeda";
+"controllers.publication.reason.noInputYet" = "Menunggu input pertama";
+/* Publication state with its reason or failure, for example "Not published (Waiting for the first input)". %1$@ is the state and %2$@ the reason. */
+"controllers.publication.withReason" = "%1$@ (%2$@)";
+"controllers.publication.failedSend" = "Pengiriman terakhir gagal: %@";
+/* Serving route with why it publishes nothing, for example "Output off (No virtual profile fits it)". %1$@ is the route and %2$@ the reason. */
+"controllers.serving.withReason" = "%1$@ (%2$@)";
+/* Why a controller's input health is failing. */
+"controllers.inputHealth.reason.missingReports" = "Tidak ada laporan masuk";
+"controllers.inputHealth.reason.freshnessNotAdvancing" = "Laporan tidak berubah";
+/* Input health state with its failure reason, for example "Stale (No reports arriving)". %1$@ is the state and %2$@ the reason. */
+"controllers.inputHealth.withReason" = "%1$@ (%2$@)";
+/* How a controller was discovered. */
+"controllers.discovery.hid" = "HID";
+"controllers.discovery.rawUSB" = "USB mentah";
+/* Who holds the physical controller. */
+"controllers.physicalOwnership.exclusiveHID" = "HID eksklusif";
+"controllers.physicalOwnership.exclusiveRawUSB" = "USB mentah eksklusif";
+"controllers.physicalOwnership.extensionOwnedUSB" = "Ekstensi USB";
+"controllers.physicalOwnership.systemHIDVisible" = "HID sistem";
+"controllers.physicalOwnership.systemGamepad" = "Gamepad sistem";
+"controllers.physicalOwnership.upstreamVirtualDevice" = "Perangkat virtual hulu";
+"controllers.physicalOwnership.unknown" = "Tidak diketahui";
+/* Result of acquiring HID input. */
+"controllers.hidInputOwnership.unknown" = "Tidak diketahui";
+"controllers.hidInputOwnership.exclusive" = "Eksklusif";
+"controllers.hidInputOwnership.shared" = "Dibagikan";
+"controllers.hidInputOwnership.accessDenied" = "Akses ditolak";
+"controllers.hidInputOwnership.ownedByAnotherClient" = "Dimiliki app lain";
+"controllers.hidInputOwnership.acquisitionFailed" = "Gagal mengambil alih";
+/* Ownership summary: %1$@ is the discovery route, %2$@ the owner and %3$@ the HID input result. */
+"controllers.ownership.value" = "Ditemukan melalui %1$@. Pemilik: %2$@. Input HID: %3$@.";
+/* Why closing a controller's Bluetooth link failed. */
+"controllers.disconnectWireless.failure.notFound" = "Pengontrol tidak lagi terhubung";
+"controllers.disconnectWireless.failure.notBluetooth" = "Pengontrol tidak terhubung melalui Bluetooth";
+"controllers.disconnectWireless.failure.bluetoothLEUnsupported" = "Pengontrol Bluetooth LE tidak dapat diputuskan dari sini";
+"controllers.disconnectWireless.failure.missingAddress" = "Alamat Bluetooth pengontrol tidak diketahui";
+"controllers.disconnectWireless.failure.disconnectFailed" = "Bluetooth tidak memutuskan pengontrol";
+"controllers.disconnectWireless.failure.timedOut" = "Waktu pemutusan habis";

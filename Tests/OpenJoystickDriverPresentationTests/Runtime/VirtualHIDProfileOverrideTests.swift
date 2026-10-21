@@ -285,7 +285,7 @@ struct VirtualHIDProfileOverrideTests {
   }
 
   @Test
-  func automaticLiveProfileIsThePublishedIdentityInEveryPlace() {
+  func automaticLiveProfileIsThePublishedIdentityInEveryPlace() throws {
     var pad = Self.device(
       profile: ApplicationServiceVirtualHIDProfileStatus(
         profile: .generic,
@@ -299,7 +299,11 @@ struct VirtualHIDProfileOverrideTests {
     let label = VirtualHIDProfileID.generic.identity.publishedUSBIdentityLabel
     #expect(pad.publishedIdentityLabel == label)
     #expect(pad.publishedIdentityLabel != RuntimePresentation.noVirtualHIDProfileLabel)
-    #expect(ControllerDetailFacts.persona(pad) == .text(label))
+    let name = try #require(pad.publishedVirtualProfile?.productName)
+    #expect(
+      ControllerDetailFacts.automaticProfileLabel(pad)
+        == OJDLocalized.formatted("virtualProfile.automaticSelected", name)
+    )
     #expect(pad.publishedIdentityPresentation == VirtualHIDProfileID.generic.identity.presentation)
   }
 
@@ -329,6 +333,29 @@ struct VirtualHIDProfileOverrideTests {
 
     #expect(sixaxis.publishedIdentityPresentation == .playstation)
     #expect(sixaxis.publishedIdentityPresentation.glyphFamily != .xbox)
+  }
+
+  @Test
+  func aPublishedStatusWithoutASelectionShowsThePhysicalIdentity() {
+    var pad = Self.device(
+      protocolBinding: ProtocolBindingID(.sonySixaxis, variant: .usb),
+      ownership: .systemGamepad
+    )
+    pad.publication = ApplicationServicePublicationStatus.published(target: .sdlCompatible)
+
+    #expect(pad.publishedVirtualProfile == nil)
+    #expect(!pad.presentedIdentity.publishesVirtualDevice)
+    #expect(pad.presentedIdentity.presentation == .playstation)
+    #expect(
+      pad.presentedIdentity.label == OJDLocalized.string("controllers.systemGamepadNotPublished")
+    )
+  }
+
+  @Test
+  func theInputTestShowsTheListGlyphsOrTheGenericOnesWithoutAController() {
+    #expect(InputTestView.presentation(of: nil) == .generic)
+    let pad = Self.device(protocolBinding: ProtocolBindingID(.sonySixaxis, variant: .usb))
+    #expect(InputTestView.presentation(of: pad) == pad.publishedIdentityPresentation)
   }
 
   @Test

@@ -10,11 +10,18 @@
     var body: some View {
       Form {
         Section { controllerHeader }
-        Section {
-          controllerSessionAction
-          if device.supportsWirelessDisconnect { wirelessDisconnectAction }
-          if let failure = viewModel.controllerActionFailures[device.sessionToken.rawValue] {
-            controllerActionFailure(failure)
+        if showsSessionState {
+          Section {
+            if device.sessionState == .suspended {
+              OJDLabeledRow(OJDLocalized.string("controllers.suspended")) {
+                Button(OJDLocalized.string("mainMenu.controller.resume")) {
+                  Task { @MainActor in await viewModel.resumeController(device) }
+                }
+              }
+            }
+            if let failure = viewModel.controllerActionFailures[device.sessionToken.rawValue] {
+              controllerActionFailure(failure)
+            }
           }
         }
         Section {
@@ -76,29 +83,7 @@
         ControllerFilePanels.save(request) { actions.finishSave(to: $0) }
       }.ojdGroupedForm().ojdAccessibilityLabel(device.name).ojdAccessibilityValue(
         accessibilityValue
-      ).alert(
-        isPresented: $confirmsWirelessDisconnect
-      ) {
-        Alert(
-          title: Text(
-            OJDLocalized.string(
-              "controllers.disconnectWirelessConfirmTitle"
-            )
-          ),
-          message: Text(
-            OJDLocalized.formatted(
-              "controllers.disconnectWirelessConfirmMessage",
-              device.name
-            )
-          ),
-          primaryButton: .destructive(
-            Text(
-              OJDLocalized.string("controllers.disconnectWirelessConfirm")
-            )
-          ) { Task { @MainActor in await viewModel.disconnectWirelessController(device) } },
-          secondaryButton: .cancel()
-        )
-      }
+      )
     }
 
     /// Reloads the record when the controller or who serves its model changes.
@@ -129,12 +114,11 @@
       }
     }
 
-    private var wirelessDisconnectAction: some View {
-      OJDLabeledRow(OJDLocalized.string("controllers.disconnectWireless")) {
-        Button(OJDLocalized.string("controllers.disconnectWirelessButton")) {
-          confirmsWirelessDisconnect = true
-        }
-      }
+    /// Suspending, resuming and disconnecting a wireless link are commands of the Controller menu
+    /// and the status item; the detail shows only a suspended session and a failed command.
+    private var showsSessionState: Bool {
+      device.sessionState == .suspended
+        || viewModel.controllerActionFailures[device.sessionToken.rawValue] != nil
     }
 
     /// The identifiers and endpoints. The whole label row toggles, not only the chevron.
@@ -170,24 +154,6 @@
         Button(OJDLocalized.string("inputTest.open")) {
           openInputTest(device)
         }.disabled(device.sessionState == .suspended)
-      }
-    }
-
-    private var controllerSessionAction: some View {
-      OJDLabeledRow(
-        device.sessionState == .suspended
-          ? OJDLocalized.string("controllers.suspended")
-          : OJDLocalized.string("controllers.sessionActive")
-      ) {
-        if device.sessionState == .suspended {
-          Button(OJDLocalized.string("controllers.resume")) {
-            Task { @MainActor in await viewModel.resumeController(device) }
-          }
-        } else {
-          Button(OJDLocalized.string("controllers.disconnectFromOJD")) {
-            Task { @MainActor in await viewModel.suspendController(device) }
-          }
-        }
       }
     }
 

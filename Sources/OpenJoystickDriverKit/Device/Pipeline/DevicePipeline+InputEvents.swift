@@ -24,13 +24,16 @@ extension DevicePipeline {
       {
         await retireOutputAfterLivenessLoss()
       }
-      if event?.isFresh == true { lastLiveInputReportNanoseconds = now }
+      if event?.isFresh == true {
+        lastLiveInputReportNanoseconds = now
+        armStaleWatch()
+      }
       if awaitingNeutralAfterLivenessLoss {
         guard let event, event.isFresh, event.state.isEffectivelyNeutral else { return }
         currentInputState = .neutral
         foregroundMask = nil
-        awaitingNeutralAfterLivenessLoss = false
         inputHealthRecoveryCount += 1
+        awaitingNeutralAfterLivenessLoss = false
         await activateOutput()
         return
       }

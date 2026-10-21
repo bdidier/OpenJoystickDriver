@@ -512,6 +512,7 @@
 "keyboard.alt" = "Option";
 "keyboard.shift" = "Shift";
 "mapping.automatic" = "تلقائي";
+"virtualProfile.automaticSelected" = "تلقائي (%@)";
 "setup.activeDetail" = "مُثبَّت برنامج تشغيل Xbox USB المقيَّد وجاهز.";
 "setup.approvalDetail" = "وافق على برنامج التشغيل في إعدادات النظام لاستخدام وحدات تحكم Microsoft USB المدعومة.";
 "setup.checkingDetail" = "جارٍ التحقق من برنامج تشغيل Xbox USB المثبَّت.";
@@ -526,6 +527,10 @@
 "banner.service.title" = "لا يستطيع OpenJoystickDriver الوصول إلى خدمته";
 "banner.access.title" = "الإذن مطلوب";
 "banner.access.detail" = "لم يسمح macOS بكل ما يحتاجه OpenJoystickDriver لقراءة وحدات التحكم ونشرها للألعاب.";
+"banner.liveUpdates.title" = "التحديثات الفورية غير متاحة";
+"banner.liveUpdates.detail.closed" = "أغلقت الخدمة الاتصال. يتحقق OpenJoystickDriver من تغييرات وحدات التحكم كل ثانية بدلًا من ذلك.";
+"banner.liveUpdates.detail.timeout" = "لم تستجب الخدمة في الوقت المناسب. يتحقق OpenJoystickDriver من تغييرات وحدات التحكم بشكل دوري بدلًا من ذلك.";
+"banner.liveUpdates.detail.other" = "لا تعمل التحديثات الفورية من الخدمة. يتحقق OpenJoystickDriver من تغييرات وحدات التحكم بشكل دوري بدلًا من ذلك.";
 "cli.login.uninstall_action" = "إلغاء التثبيت";
 "console.all" = "الكل";
 "console.empty" = "لا توجد إدخالات في السجل.";
@@ -791,16 +796,8 @@
 
 /* Controller session lifecycle */
 "controllers.suspended" = "معلّقة";
-"controllers.sessionActive" = "تديرها OpenJoystickDriver";
-"controllers.suspendedSummary" = "يتوقف الإدخال وإخراج OpenJoystickDriver مؤقتًا حتى تستأنف.";
-"controllers.disconnectSummary" = "أوقف الإدخال والتأثيرات الفعلية والإخراج الافتراضي لـ OpenJoystickDriver مؤقتًا.";
-"controllers.resume" = "استئناف";
-"controllers.disconnectFromOJD" = "فصل عن OpenJoystickDriver";
 "error.controllerSessionChangeRejected" = "تعذّر تغيير جلسة وحدة التحكم.";
 
-"controllers.disconnectWireless" = "فصل وحدة التحكم اللاسلكية…";
-"controllers.disconnectWirelessButton" = "فصل…";
-"controllers.disconnectWirelessSummary" = "أوقف اتصال Bluetooth هذا دون التأثير في وحدات التحكم الأخرى.";
 "controllers.disconnectWirelessConfirmTitle" = "هل تريد فصل وحدة التحكم اللاسلكية؟";
 "controllers.disconnectWirelessConfirmMessage" = "ستبقى %@ مفصولة حتى توصلها مرة أخرى يدويًا.";
 "controllers.disconnectWirelessConfirm" = "قطع الاتصال";
@@ -1941,3 +1938,49 @@
 "cli.setting.reset.confirm" = "هل تريد نقل ملف الإعدادات إلى سلة المهملات وإعادة كل الإعدادات إلى قيمها الافتراضية؟";
 "cli.setting.reset.success" = "تم نقل %@ إلى سلة المهملات.";
 "cli.setting.reset.none" = "لا يوجد ملف إعدادات في %@.";
+/* Why a controller is not published as a virtual device, and a failed send. */
+"controllers.publication.reason.outputDisabled" = "الإخراج الافتراضي متوقف";
+"controllers.publication.reason.systemGamepad" = "يتعامل macOS معها كذراع ألعاب";
+"controllers.publication.reason.nativeHIDPassThrough" = "يتعامل macOS مع إدخالها مباشرة";
+"controllers.publication.reason.upstreamVirtualDevice" = "جهاز افتراضي آخر يمثلها بالفعل";
+"controllers.publication.reason.sessionSuspended" = "الجلسة معلّقة";
+"controllers.publication.reason.noVirtualProfile" = "لا يوجد ملف افتراضي مناسب لها";
+"controllers.publication.reason.suppressed" = "الإخراج متوقف مؤقتًا";
+"controllers.publication.reason.noInputYet" = "في انتظار أول إدخال";
+/* Publication state with its reason or failure, for example "Not published (Waiting for the first input)". %1$@ is the state and %2$@ the reason. */
+"controllers.publication.withReason" = "%1$@ (%2$@)";
+"controllers.publication.failedSend" = "فشل آخر إرسال: %@";
+/* Serving route with why it publishes nothing, for example "Output off (No virtual profile fits it)". %1$@ is the route and %2$@ the reason. */
+"controllers.serving.withReason" = "%1$@ (%2$@)";
+/* Why a controller's input health is failing. */
+"controllers.inputHealth.reason.missingReports" = "لا تصل أي تقارير";
+"controllers.inputHealth.reason.freshnessNotAdvancing" = "التقارير لا تتقدم";
+/* Input health state with its failure reason, for example "Stale (No reports arriving)". %1$@ is the state and %2$@ the reason. */
+"controllers.inputHealth.withReason" = "%1$@ (%2$@)";
+/* How a controller was discovered. */
+"controllers.discovery.hid" = "HID";
+"controllers.discovery.rawUSB" = "USB خام";
+/* Who holds the physical controller. */
+"controllers.physicalOwnership.exclusiveHID" = "HID حصري";
+"controllers.physicalOwnership.exclusiveRawUSB" = "USB خام حصري";
+"controllers.physicalOwnership.extensionOwnedUSB" = "امتداد USB";
+"controllers.physicalOwnership.systemHIDVisible" = "HID النظام";
+"controllers.physicalOwnership.systemGamepad" = "ذراع ألعاب النظام";
+"controllers.physicalOwnership.upstreamVirtualDevice" = "جهاز افتراضي في اتجاه المصدر";
+"controllers.physicalOwnership.unknown" = "غير معروف";
+/* Result of acquiring HID input. */
+"controllers.hidInputOwnership.unknown" = "غير معروف";
+"controllers.hidInputOwnership.exclusive" = "حصري";
+"controllers.hidInputOwnership.shared" = "مشترك";
+"controllers.hidInputOwnership.accessDenied" = "تم رفض الوصول";
+"controllers.hidInputOwnership.ownedByAnotherClient" = "مملوك لتطبيق آخر";
+"controllers.hidInputOwnership.acquisitionFailed" = "فشل الاستحواذ";
+/* Ownership summary: %1$@ is the discovery route, %2$@ the owner and %3$@ the HID input result. */
+"controllers.ownership.value" = "اكتُشفت عبر %1$@. المالك: %2$@. إدخال HID: %3$@.";
+/* Why closing a controller's Bluetooth link failed. */
+"controllers.disconnectWireless.failure.notFound" = "لم تعد وحدة التحكم متصلة";
+"controllers.disconnectWireless.failure.notBluetooth" = "وحدة التحكم غير متصلة عبر البلوتوث";
+"controllers.disconnectWireless.failure.bluetoothLEUnsupported" = "لا يمكن فصل وحدات التحكم بتقنية Bluetooth LE من هنا";
+"controllers.disconnectWireless.failure.missingAddress" = "عنوان البلوتوث لوحدة التحكم غير معروف";
+"controllers.disconnectWireless.failure.disconnectFailed" = "لم يفصل البلوتوث وحدة التحكم";
+"controllers.disconnectWireless.failure.timedOut" = "انتهت مهلة الفصل";

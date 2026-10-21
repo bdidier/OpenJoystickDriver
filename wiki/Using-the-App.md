@@ -95,7 +95,9 @@ The **Controllers** pane lists connected controllers and shows details and actio
 
 ### The List
 
-The list shows each connected controller. Click **Refresh controllers** to read the list again. If no controller appears, the pane shows **No controller connected**. For more information, see [Controller not detected](Troubleshooting.md).
+The list shows each connected controller and updates by itself when the service reports a change, such as a controller you connect or disconnect. If no controller appears, the pane shows **No controller connected**. For more information, see [Controller not detected](Troubleshooting.md).
+
+If the app cannot receive changes from the service, a **Live updates unavailable** banner appears below the toolbar after three failed attempts in a row. It says why: the service closed the connection, the service did not answer in time, or live updates are not working. The app then reads the controller list from the service instead, and tries to receive changes again on each read. The reads are one second apart after the service closes the connection, about 26 seconds apart after a timeout, and between one and six seconds apart for other failures. The banner disappears when live updates work again. A short service restart does not show the banner.
 
 ### Controller Details
 
@@ -113,11 +115,11 @@ A field that the controller does not report shows **Not reported**.
 
 ### Session Commands
 
-The Controller menu and the status menu hold the commands for the selected controller:
+The Controller menu and the status menu hold the commands for the selected controller. The controller's context menu in the list holds **Suspend** or **Resume**, and **Disconnect Wireless Link** for a wireless controller:
 
 - **Test Input** opens the test window. For more information, see [Testing a controller](Testing-a-Controller.md).
 - **Suspend** pauses input, physical effects, and virtual output for this controller. The controller then shows **Suspended**. **Resume** continues. **Test Input** is off while the controller shows **Suspended**.
-- **Disconnect Wireless Link** appears only for classic Bluetooth controllers. It closes the Bluetooth link. The controller stays disconnected until you connect it again by hand. OJD never reconnects Bluetooth by itself. OJD cannot disconnect a Bluetooth Low Energy controller: turn it off or disconnect it in System Settings > Bluetooth.
+- **Disconnect Wireless Link** appears only for classic Bluetooth controllers. It closes the Bluetooth link after you confirm. The controller stays disconnected until you connect it again by hand. OJD never reconnects Bluetooth by itself. OJD cannot disconnect a Bluetooth Low Energy controller: turn it off or disconnect it in System Settings > Bluetooth.
 
 ### Advanced Section
 

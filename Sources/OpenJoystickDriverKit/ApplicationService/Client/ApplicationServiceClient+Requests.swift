@@ -122,17 +122,21 @@ extension ApplicationServiceClient {
     )
   }
 
-  /// Waits until the controller inventory differs from generation `after`, or the service's hold
-  /// time passes with no change, and returns the service's current generation. A nil `after`
-  /// returns the current generation at once.
-  public func waitForControllerInventoryChange(
-    after: UInt64?
-  ) async throws -> ControllerInventoryChangePayload {
+  /// Waits until the service's status differs from revision `after`, or the service's hold time
+  /// passes with no change, and returns the service's current revision. A nil `after` returns
+  /// the current revision at once. When the service closes the connection without a reply during
+  /// a wait, the wait throws ``LocalServiceRPCError/serviceClosedConnection``: the first reply
+  /// proved the service accepts this process. A reply that rejects this process throws
+  /// ``LocalServiceRPCError/peerRejected``.
+  public func waitForServiceStatusChange(
+    after: ServiceStatusRevision?
+  ) async throws -> ServiceStatusRevision {
     try await call(
-      .waitForControllerInventoryChange,
-      LocalServiceRPCInventoryChangeArguments(after: after),
-      timeoutSeconds: ControllerInventoryChangePayload.holdSeconds
-        + applicationServiceDefaultReplyTimeoutSeconds
+      .waitForServiceStatusChange,
+      LocalServiceRPCStatusChangeArguments(after: after),
+      timeoutSeconds: ServiceStatusRevision.holdSeconds
+        + applicationServiceDefaultReplyTimeoutSeconds,
+      closedWithoutReply: after == nil ? .peerRejected : .serviceClosedConnection
     )
   }
 

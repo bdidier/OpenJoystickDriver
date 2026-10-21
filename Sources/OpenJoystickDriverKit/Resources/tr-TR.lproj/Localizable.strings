@@ -512,6 +512,7 @@
 "keyboard.alt" = "Option";
 "keyboard.shift" = "Shift";
 "mapping.automatic" = "Otomatik";
+"virtualProfile.automaticSelected" = "Otomatik (%@)";
 "setup.activeDetail" = "Kısıtlı Xbox USB sürücüsü yüklendi ve hazır.";
 "setup.approvalDetail" = "Desteklenen Microsoft USB kontrolcülerini kullanmak için sürücüyü Sistem Ayarları’nda onayla.";
 "setup.checkingDetail" = "Yüklü Xbox USB sürücüsü denetleniyor.";
@@ -526,6 +527,10 @@
 "banner.service.title" = "OpenJoystickDriver servisine ulaşamıyor";
 "banner.access.title" = "İzin gerekli";
 "banner.access.detail" = "macOS, OpenJoystickDriver’ın kontrolcüleri okumak ve oyunlara sunmak için ihtiyaç duyduğu her şeye izin vermedi.";
+"banner.liveUpdates.title" = "Canlı güncellemeler kullanılamıyor";
+"banner.liveUpdates.detail.closed" = "Hizmet bağlantıyı kapattı. OpenJoystickDriver bunun yerine kontrolcü değişikliklerini her saniye denetler.";
+"banner.liveUpdates.detail.timeout" = "Hizmet zamanında yanıt vermedi. OpenJoystickDriver bunun yerine kontrolcü değişikliklerini düzenli aralıklarla denetler.";
+"banner.liveUpdates.detail.other" = "Hizmetten canlı güncellemeler çalışmıyor. OpenJoystickDriver bunun yerine kontrolcü değişikliklerini düzenli aralıklarla denetler.";
 "cli.login.uninstall_action" = "Kaldır";
 "console.all" = "Tümü";
 "console.empty" = "Günlük kayıtları yok.";
@@ -791,16 +796,8 @@
 
 /* Controller session lifecycle */
 "controllers.suspended" = "Askıya Alındı";
-"controllers.sessionActive" = "OpenJoystickDriver Tarafından Yönetiliyor";
-"controllers.suspendedSummary" = "Devam ettirene kadar giriş ve OpenJoystickDriver çıkışı duraklatılır.";
-"controllers.disconnectSummary" = "Girişi, fiziksel efektleri ve OpenJoystickDriver sanal çıkışını duraklat.";
-"controllers.resume" = "Sürdür";
-"controllers.disconnectFromOJD" = "OpenJoystickDriver’dan Bağlantıyı Kes";
 "error.controllerSessionChangeRejected" = "Seçilen kontrolcü çıkışı etkinleştirilemedi.";
 
-"controllers.disconnectWireless" = "Kablosuz Kontrolcünün Bağlantısını Kes…";
-"controllers.disconnectWirelessButton" = "Bağlantıyı Kes…";
-"controllers.disconnectWirelessSummary" = "Diğer kontrolcüleri etkilemeden bu Bluetooth bağlantısını durdurur.";
 "controllers.disconnectWirelessConfirmTitle" = "Kablosuz kontrolcünün bağlantısı kesilsin mi?";
 "controllers.disconnectWirelessConfirmMessage" = "%@, siz elle yeniden bağlayana kadar bağlantısız kalacak.";
 "controllers.disconnectWirelessConfirm" = "Bağlantıyı Kes";
@@ -1941,3 +1938,49 @@
 "cli.setting.reset.confirm" = "Ayar dosyası Çöp Sepeti’ne taşınsın ve her ayar varsayılan değerine döndürülsün mü?";
 "cli.setting.reset.success" = "%@ Çöp Sepeti’ne taşındı.";
 "cli.setting.reset.none" = "%@ konumunda ayar dosyası yok.";
+/* Why a controller is not published as a virtual device, and a failed send. */
+"controllers.publication.reason.outputDisabled" = "Sanal çıkış kapalı";
+"controllers.publication.reason.systemGamepad" = "macOS bunu oyun kumandası olarak yönetiyor";
+"controllers.publication.reason.nativeHIDPassThrough" = "macOS girdisini doğrudan işliyor";
+"controllers.publication.reason.upstreamVirtualDevice" = "Başka bir sanal aygıt onu zaten temsil ediyor";
+"controllers.publication.reason.sessionSuspended" = "Oturum askıya alındı";
+"controllers.publication.reason.noVirtualProfile" = "Uygun sanal profil yok";
+"controllers.publication.reason.suppressed" = "Çıkış duraklatıldı";
+"controllers.publication.reason.noInputYet" = "İlk girdi bekleniyor";
+/* Publication state with its reason or failure, for example "Not published (Waiting for the first input)". %1$@ is the state and %2$@ the reason. */
+"controllers.publication.withReason" = "%1$@ (%2$@)";
+"controllers.publication.failedSend" = "Son gönderim başarısız oldu: %@";
+/* Serving route with why it publishes nothing, for example "Output off (No virtual profile fits it)". %1$@ is the route and %2$@ the reason. */
+"controllers.serving.withReason" = "%1$@ (%2$@)";
+/* Why a controller's input health is failing. */
+"controllers.inputHealth.reason.missingReports" = "Rapor gelmiyor";
+"controllers.inputHealth.reason.freshnessNotAdvancing" = "Raporlar ilerlemiyor";
+/* Input health state with its failure reason, for example "Stale (No reports arriving)". %1$@ is the state and %2$@ the reason. */
+"controllers.inputHealth.withReason" = "%1$@ (%2$@)";
+/* How a controller was discovered. */
+"controllers.discovery.hid" = "HID";
+"controllers.discovery.rawUSB" = "Ham USB";
+/* Who holds the physical controller. */
+"controllers.physicalOwnership.exclusiveHID" = "Özel HID";
+"controllers.physicalOwnership.exclusiveRawUSB" = "Özel ham USB";
+"controllers.physicalOwnership.extensionOwnedUSB" = "USB uzantısı";
+"controllers.physicalOwnership.systemHIDVisible" = "Sistem HID";
+"controllers.physicalOwnership.systemGamepad" = "Sistem oyun kumandası";
+"controllers.physicalOwnership.upstreamVirtualDevice" = "Üst akış sanal aygıtı";
+"controllers.physicalOwnership.unknown" = "Bilinmiyor";
+/* Result of acquiring HID input. */
+"controllers.hidInputOwnership.unknown" = "Bilinmiyor";
+"controllers.hidInputOwnership.exclusive" = "Özel";
+"controllers.hidInputOwnership.shared" = "Paylaşılan";
+"controllers.hidInputOwnership.accessDenied" = "Erişim reddedildi";
+"controllers.hidInputOwnership.ownedByAnotherClient" = "Başka bir uygulamaya ait";
+"controllers.hidInputOwnership.acquisitionFailed" = "Edinme başarısız";
+/* Ownership summary: %1$@ is the discovery route, %2$@ the owner and %3$@ the HID input result. */
+"controllers.ownership.value" = "%1$@ üzerinden bulundu. Sahip: %2$@. HID girdisi: %3$@.";
+/* Why closing a controller's Bluetooth link failed. */
+"controllers.disconnectWireless.failure.notFound" = "Kontrolcü artık bağlı değil";
+"controllers.disconnectWireless.failure.notBluetooth" = "Kontrolcü Bluetooth ile bağlı değil";
+"controllers.disconnectWireless.failure.bluetoothLEUnsupported" = "Bluetooth LE kontrolcüleri buradan bağlantıdan çıkarılamaz";
+"controllers.disconnectWireless.failure.missingAddress" = "Kontrolcünün Bluetooth adresi bilinmiyor";
+"controllers.disconnectWireless.failure.disconnectFailed" = "Bluetooth kontrolcünün bağlantısını kesmedi";
+"controllers.disconnectWireless.failure.timedOut" = "Bağlantıyı kesme zaman aşımına uğradı";

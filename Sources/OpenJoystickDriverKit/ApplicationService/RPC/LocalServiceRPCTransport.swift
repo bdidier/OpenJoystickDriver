@@ -106,12 +106,28 @@ public struct LocalServiceRPCColorPreviewReleaseArguments: Codable, Sendable {
   }
 }
 
+/// What a call reports when the server ends the connection without a reply.
+package enum LocalServiceRPCClosedWithoutReply: Sendable {
+  /// The server turned this process away.
+  case peerRejected
+  /// The server, which had accepted this process, ended the connection.
+  case serviceClosedConnection
+
+  var error: LocalServiceRPCError {
+    switch self {
+    case .peerRejected: return .peerRejected
+    case .serviceClosedConnection: return .serviceClosedConnection
+    }
+  }
+}
+
 package enum LocalServiceRPCError: Error, Equatable, LocalizedError, Sendable {
   case alreadyRunning
   case connectionFailed(Int32)
   case invalidFrame
   case peerRejected
   case remote(String)
+  case serviceClosedConnection
   case timeout
 
   package var errorDescription: String? {
@@ -124,6 +140,7 @@ package enum LocalServiceRPCError: Error, Equatable, LocalizedError, Sendable {
       return "The running main application rejected this CLI executable. Use the CLI inside "
         + "/Applications/OpenJoystickDriver.app, or install and relaunch a matching signed build."
     case .remote(let message): return message
+    case .serviceClosedConnection: return "The main application closed the connection."
     case .timeout: return "Main application RPC timed out."
     }
   }

@@ -12,8 +12,6 @@
     var viewModel: RuntimeViewModel
     let openInputTest: @MainActor (ApplicationServiceDeviceDescription) -> Void
     @State
-    var confirmsWirelessDisconnect = false
-    @State
     var serialVisibility = SerialNumberVisibility()
     @State
     var showsAdvanced = false

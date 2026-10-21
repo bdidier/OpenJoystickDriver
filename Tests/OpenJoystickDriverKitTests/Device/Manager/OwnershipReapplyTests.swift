@@ -166,6 +166,46 @@ struct OwnershipReapplyTests {
     }
   }
 
+  private final class Posts: @unchecked Sendable {
+    private let lock = NSLock()
+    private var posts = 0
+    var count: Int { lock.withLock { posts } }
+    func increment() { lock.withLock { posts += 1 } }
+  }
+
+  /// A changed HID ownership announces a status change from the manager once, and an unchanged
+  /// one announces nothing.
+  @Test
+  func aChangedHIDOwnershipAnnouncesOnceAndTheSameOwnershipAnnouncesNothing() async throws {
+    let backend = ScriptedHIDAccessBackend()
+    let manager = DeviceManager(
+      dispatcher: HIDRoleEventRecorder(),
+      installationKey: testPortKeyInstallationKey,
+      hidManager: HIDManager(backend: backend)
+    )
+    await manager.markStartedForTest()
+    let locationID: UInt32 = 0x0021_0000
+    let connection = Self.gameSir(productID: 0x100B, locationID: locationID, native: false)
+    await backend.setConnectionSnapshots([
+      HIDDeviceConnectionSnapshot(connection: connection, ownership: .exclusive)
+    ])
+    await manager.handleHIDEvent(.connected(connection: connection, ownership: .exclusive))
+    let posts = Posts()
+    let observer = NotificationCenter.default.addObserver(
+      forName: .ojdServiceStatusDidChange,
+      object: manager,
+      queue: nil
+    ) { _ in posts.increment() }
+    defer { NotificationCenter.default.removeObserver(observer) }
+    let address = ControllerConnectionAddress.ioKit(locationID: locationID, interfaceNumber: nil)
+
+    await manager.handleHIDEvent(.ownershipChanged(address: address, ownership: .shared))
+    #expect(posts.count == 1)
+    await manager.handleHIDEvent(.ownershipChanged(address: address, ownership: .shared))
+    #expect(posts.count == 1)
+    await manager.stop()
+  }
+
   private static func gameSir(
     productID: UInt16,
     locationID: UInt32,

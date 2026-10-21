@@ -63,6 +63,7 @@ extension LocalServiceRPCClient {
     arguments: Arguments,
     timeoutSeconds: TimeInterval,
     socketPath: String = LocalServiceRPCTransport.defaultSocketPath,
+    closedWithoutReply: LocalServiceRPCClosedWithoutReply = .peerRejected,
     as type: Value.Type = Value.self
   ) async throws -> Value {
     let requestData = try JSONEncoder().encode(
@@ -75,7 +76,8 @@ extension LocalServiceRPCClient {
           requestData,
           state: state,
           timeoutSeconds: timeoutSeconds,
-          socketPath: socketPath
+          socketPath: socketPath,
+          closedWithoutReply: closedWithoutReply
         )
       }
     } onCancel: {
@@ -94,7 +96,8 @@ extension LocalServiceRPCClient {
     _ requestData: Data,
     state: CallState,
     timeoutSeconds: TimeInterval,
-    socketPath: String
+    socketPath: String,
+    closedWithoutReply: LocalServiceRPCClosedWithoutReply
   ) throws -> Data {
     guard !state.isCancelled else { throw CancellationError() }
     let descriptor: Int32
@@ -113,15 +116,21 @@ extension LocalServiceRPCClient {
     }
     defer { state.close() }
     do {
+      // A server that rejects the peer replies and closes without reading the request, so a
+      // failed send still reads the reply that may be waiting.
+      var sendFailed = false
       do {
         try LocalServiceRPCTransport.sendFrame(requestData, to: descriptor)
       } catch LocalServiceRPCError.connectionFailed(let code)
         where code == EPIPE || code == ECONNRESET
-      { throw LocalServiceRPCError.peerRejected }
-      let responseData = try LocalServiceRPCTransport.receiveFrame(
-        from: descriptor,
-        closedBeforeFrameError: .peerRejected
-      )
+      { sendFailed = true }
+      let responseData: Data
+      do {
+        responseData = try LocalServiceRPCTransport.receiveFrame(
+          from: descriptor,
+          closedBeforeFrameError: closedWithoutReply.error
+        )
+      } catch  where sendFailed && !state.isCancelled { throw closedWithoutReply.error }
       guard !state.isCancelled else { throw CancellationError() }
       return responseData
     } catch {

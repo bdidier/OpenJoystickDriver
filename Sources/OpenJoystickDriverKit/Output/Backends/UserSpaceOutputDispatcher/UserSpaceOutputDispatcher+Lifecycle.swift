@@ -186,7 +186,7 @@ extension UserSpaceOutputDispatcher {
           .value()
 
       }
-      registryLock.withLock { recomputeStatusLocked() }
+      withRegistry { recomputeStatusLocked() }
     } catch {
       await close()
       throw error
@@ -199,7 +199,7 @@ extension UserSpaceOutputDispatcher {
       let entry = try await entry(for: identifier)
       guard lifecycle.isOpen else { throw CancellationError() }
       try await entry.sender.submit { [entry] in [entry.inputReportState.currentReport()] }.value()
-      registryLock.withLock { recomputeStatusLocked() }
+      withRegistry { recomputeStatusLocked() }
     } catch {
       await close()
       throw error
@@ -208,7 +208,7 @@ extension UserSpaceOutputDispatcher {
 
   @discardableResult
   func beginClose() -> Task<Void, Never> {
-    registryLock.withLock {
+    withRegistry {
       if let shutdownTask { return shutdownTask }
       _ = lifecycle.close()
       let resources = Array(entries.values)

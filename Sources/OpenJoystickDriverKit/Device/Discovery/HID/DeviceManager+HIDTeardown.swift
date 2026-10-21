@@ -102,7 +102,7 @@ extension DeviceManager {
       return
     }
     deviceInfos.removeValue(forKey: identifier)
-    notifyControllerInventoryChanged()
+    notifyServiceStatusChanged()
     lastPhysicalHIDOutputNanoseconds.removeValue(forKey: identifier)
     if let outputQueue { retireOutputQueue(for: identifier, expected: outputQueue) }
     await pipeline?.stop()

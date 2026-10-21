@@ -4,7 +4,7 @@ import OpenJoystickDriverKit
 /// One labelled fact of the Controllers detail.
 struct ControllerFact: Equatable, Identifiable {
   enum Kind: Hashable {
-    case persona, publication, serving, controllerProtocol, serialNumber, inputHealth
+    case publication, serving, controllerProtocol, serialNumber, inputHealth
     case battery, chargingState, cableState
     case rumble, lighting, adaptiveTriggers, motion, touchContacts
     case unitID, ownership, duplicateExposureRisk, outputOwner, record, controls
@@ -31,7 +31,6 @@ enum ControllerDetailFacts {
   ) -> [ControllerFact] {
     let output = device.physicalOutputCapabilities
     let always = [
-      fact(.persona, "cli.controller.show.label.persona", persona(device)),
       fact(.publication, "cli.controller.show.label.publication", publication(device)),
       fact(.serving, "controllers.serving.label", .text(servingText(device))),
       fact(.controllerProtocol, "common.protocol", .text(device.protocolBinding.displayLabel)),
@@ -124,7 +123,7 @@ enum ControllerDetailFacts {
       fact(
         .duplicateExposureRisk,
         "controllers.duplicateExposureRisk",
-        .text(CommandLineName.kebab(device.duplicateExposureRisk.rawValue))
+        .text(duplicateExposureText(device.duplicateExposureRisk))
       ),
       fact(.record, "cli.controller.show.label.record", .text(recordText(record))),
     ] + optional + [
@@ -134,16 +133,19 @@ enum ControllerDetailFacts {
     ]
   }
 
-  /// The virtual HID profile the service selected for the controller, as `ojd controller show`
-  /// prints `serving.persona`; "None" when none is selected. Whether it is published is the
-  /// separate ``publication(_:)``.
-  static func persona(_ device: ApplicationServiceDeviceDescription) -> OJDValue {
-    guard let selection = device.servingDecision.selection else { return .none }
-    return .text(selection.profileID.identity.publishedUSBIdentityLabel)
+  /// The Automatic choice of the Virtual HID profile picker. It names the profile the service
+  /// selected on its own, so the picker is the one place the published profile is shown; it is
+  /// plain "Automatic" while an override is the selection or when no profile is selected.
+  static func automaticProfileLabel(_ device: ApplicationServiceDeviceDescription) -> String {
+    let automatic = OJDLocalized.string("mapping.automatic")
+    guard let status = device.virtualHIDProfile, let profile = status.profile,
+      status.source != .override
+    else { return automatic }
+    return OJDLocalized.formatted("virtualProfile.automaticSelected", profile.identity.productName)
   }
 
-  /// Whether a virtual device publishes the controller and why not, as `publication.state` and
-  /// `publication.reason`; "None" when the service reports none.
+  /// Whether a virtual device publishes the controller, why not, and for a failed send the
+  /// failure text, localized; "None" when the service reports none.
   static func publication(_ device: ApplicationServiceDeviceDescription) -> OJDValue {
     device.publication.map { .text(publicationText($0)) } ?? .none
   }
@@ -153,23 +155,46 @@ enum ControllerDetailFacts {
     guard let reason = device.servingDecision.route.disabledReason else {
       return device.servingRouteLabel
     }
-    return "\(device.servingRouteLabel) (\(CommandLineName.kebab(reason.rawValue)))"
+    return OJDLocalized.formatted(
+      "controllers.serving.withReason",
+      device.servingRouteLabel,
+      OJDLocalized.string(ControllerDetailLabels.servingReasonKey(reason))
+    )
   }
 
   /// The input health state, with its failure reason when it has one.
   static func inputHealthText(_ device: ApplicationServiceDeviceDescription) -> String {
     let state = OJDLocalized.string(inputHealthKey(device.inputHealth.state))
     guard let reason = device.inputHealth.failureReason else { return state }
-    return "\(state) (\(CommandLineName.kebab(reason.rawValue)))"
+    return OJDLocalized.formatted(
+      "controllers.inputHealth.withReason",
+      state,
+      OJDLocalized.string(ControllerDetailLabels.inputHealthReasonKey(reason))
+    )
   }
 
   static func ownershipText(_ device: ApplicationServiceDeviceDescription) -> String {
     OJDLocalized.formatted(
-      "cli.controller.show.ownership",
-      CommandLineName.kebab(device.discoverySource.rawValue),
-      CommandLineName.kebab(device.physicalOwnership.rawValue),
-      CommandLineName.kebab(device.hidInputOwnership.rawValue)
+      "controllers.ownership.value",
+      OJDLocalized.string(ControllerDetailLabels.discoveryKey(device.discoverySource)),
+      OJDLocalized.string(ControllerDetailLabels.physicalOwnershipKey(device.physicalOwnership)),
+      OJDLocalized.string(ControllerDetailLabels.hidInputOwnershipKey(device.hidInputOwnership))
     )
+  }
+
+  /// The duplicate-exposure concern of the physical ownership, localized.
+  static func duplicateExposureText(_ risk: DuplicateExposureRisk) -> String {
+    switch risk {
+    case .none: return OJDLocalized.string("common.none")
+    case .systemHIDVisible:
+      return OJDLocalized.string(ControllerDetailLabels.physicalOwnershipKey(.systemHIDVisible))
+    case .upstreamVirtualDevice:
+      return OJDLocalized.string(
+        ControllerDetailLabels.physicalOwnershipKey(.upstreamVirtualDevice)
+      )
+    case .unknownOwnership:
+      return OJDLocalized.string(ControllerDetailLabels.physicalOwnershipKey(.unknown))
+    }
   }
 
   /// The record layer, and the file when a user or package file sets the record.
@@ -199,11 +224,17 @@ enum ControllerDetailFacts {
 
   static func publicationText(_ publication: ApplicationServicePublicationStatus) -> String {
     let state = OJDLocalized.string(publicationKey(publication.state))
-    guard
-      let detail = publication.reason.map({ CommandLineName.kebab($0.rawValue) })
-        ?? publication.failure
-    else { return state }
-    return "\(state) (\(detail))"
+    let detail: String
+    switch publication.state {
+    case .published: return state
+    case .notPublished:
+      guard let reason = publication.reason else { return state }
+      detail = OJDLocalized.string(ControllerDetailLabels.notPublishedReasonKey(reason))
+    case .failed:
+      guard let failure = publication.failure else { return state }
+      detail = OJDLocalized.formatted("controllers.publication.failedSend", failure)
+    }
+    return OJDLocalized.formatted("controllers.publication.withReason", state, detail)
   }
 
   static func serialNumber(_ device: ApplicationServiceDeviceDescription) -> OJDValue {

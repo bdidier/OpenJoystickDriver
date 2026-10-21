@@ -50,9 +50,17 @@
       ).map { SettingsFileStartup.statusItemIsShown(showInMenuBar: $0, settingsError: $1) }
         .removeDuplicates().sink { [weak self] shown in self?.applyShowInMenuBar(shown) }
       Task { @MainActor in self.offerSettingsRecovery() }
-      let updates = ControllerLiveUpdates(source: gatewayChangeSource) { [weak self] in
-        await self?.refreshLiveStatusNow()
-      }
+      let updates = ControllerLiveUpdates(
+        source: gatewayChangeSource,
+        modeChanged: { [weak self] mode in
+          if case .polling(let failure, _) = mode {
+            self?.viewModel.liveUpdatesFallbackReason = failure
+          } else {
+            self?.viewModel.liveUpdatesFallbackReason = nil
+          }
+        },
+        refresh: { [weak self] in await self?.refreshLiveStatusNow() }
+      )
       controllerLiveUpdates = updates
       updates.start()
     }

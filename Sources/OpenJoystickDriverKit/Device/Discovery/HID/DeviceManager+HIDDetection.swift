@@ -254,6 +254,7 @@ extension DeviceManager {
         info.physicalDevice?.nativePassThrough != true
       else { continue }
       deviceInfos[identifier]?.hidInputOwnership = ownership
+      if info.hidInputOwnership != ownership { notifyServiceStatusChanged() }
       if ownership == .ownedByAnotherClient, info.hidInputOwnership != .ownedByAnotherClient {
         if let pipeline = pipelines[identifier] {
           await neutralizePhysicalOutputs(for: identifier, pipeline: pipeline)

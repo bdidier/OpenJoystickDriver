@@ -12,6 +12,8 @@
     private var screen: ControllersViewModel
     let column: MainWindowColumn
     let openInputTest: @MainActor (ApplicationServiceDeviceDescription) -> Void
+    @State
+    private var wirelessDisconnectRequest: WirelessDisconnectRequest?
 
     init(
       screen: ControllersViewModel,
@@ -105,8 +107,43 @@
             device.name
           )
           .ojdAccessibilityValue(device.protocolBinding.displayLabel)
+          .contextMenu { sessionCommands(for: device) }
         }
-      }.listStyle(InsetListStyle())
+      }.listStyle(InsetListStyle()).alert(item: $wirelessDisconnectRequest) { request in
+        wirelessDisconnectAlert(for: request)
+      }
+    }
+
+    /// The Controller menu's session commands for one controller.
+    @ViewBuilder
+    private func sessionCommands(for device: ApplicationServiceDeviceDescription) -> some View {
+      if device.sessionState == .suspended {
+        Button(OJDLocalized.string("mainMenu.controller.resume")) {
+          Task { @MainActor in await viewModel.resumeController(device) }
+        }
+      } else {
+        Button(OJDLocalized.string("mainMenu.controller.suspend")) {
+          Task { @MainActor in await viewModel.suspendController(device) }
+        }
+      }
+      if device.supportsWirelessDisconnect {
+        Button(OJDLocalized.string("mainMenu.controller.disconnectWirelessLink")) {
+          wirelessDisconnectRequest = WirelessDisconnectRequest(device: device)
+        }
+      }
+    }
+
+    private func wirelessDisconnectAlert(for request: WirelessDisconnectRequest) -> Alert {
+      let confirmation = request.confirmation
+      let device = request.device
+      return Alert(
+        title: Text(confirmation.title),
+        message: Text(confirmation.message),
+        primaryButton: .destructive(Text(confirmation.confirmTitle)) {
+          Task { @MainActor in await viewModel.disconnectWirelessController(device) }
+        },
+        secondaryButton: .cancel()
+      )
     }
 
     private var selectedDeviceIdentifier: Binding<String?> {

@@ -108,7 +108,8 @@
           problems: MainWindowProblem.current(
             permissions: runtime.permissionState,
             status: runtime.statusState,
-            driver: runtime.systemExtensionSetupState
+            driver: runtime.systemExtensionSetupState,
+            liveUpdatesFallbackReason: runtime.liveUpdatesFallbackReason
           ),
           perform: perform
         )

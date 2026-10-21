@@ -512,6 +512,7 @@
 "keyboard.alt" = "Option";
 "keyboard.shift" = "Maj";
 "mapping.automatic" = "Automatique";
+"virtualProfile.automaticSelected" = "Automatique (%@)";
 "setup.activeDetail" = "Le pilote USB Xbox restreint est installé et prêt.";
 "setup.approvalDetail" = "Approuvez le pilote dans Réglages Système pour utiliser les manettes USB Microsoft prises en charge.";
 "setup.checkingDetail" = "Vérification du pilote USB Xbox installé.";
@@ -526,6 +527,10 @@
 "banner.service.title" = "OpenJoystickDriver ne peut pas joindre son service";
 "banner.access.title" = "Autorisation requise";
 "banner.access.detail" = "macOS n’a pas autorisé tout ce dont OpenJoystickDriver a besoin pour lire les manettes et les publier dans les jeux.";
+"banner.liveUpdates.title" = "Mises à jour en direct indisponibles";
+"banner.liveUpdates.detail.closed" = "Le service a fermé la connexion. À la place, OpenJoystickDriver recherche les changements de manettes toutes les secondes.";
+"banner.liveUpdates.detail.timeout" = "Le service n’a pas répondu à temps. À la place, OpenJoystickDriver recherche les changements de manettes périodiquement.";
+"banner.liveUpdates.detail.other" = "Les mises à jour en direct du service ne fonctionnent pas. À la place, OpenJoystickDriver recherche les changements de manettes périodiquement.";
 "cli.login.uninstall_action" = "Désinstaller";
 "console.all" = "Tout";
 "console.empty" = "Aucune entrée de journal.";
@@ -791,16 +796,8 @@
 
 /* Controller session lifecycle */
 "controllers.suspended" = "Suspendue";
-"controllers.sessionActive" = "Géré par OpenJoystickDriver";
-"controllers.suspendedSummary" = "L’entrée et la sortie d’OpenJoystickDriver sont suspendues jusqu’à la reprise.";
-"controllers.disconnectSummary" = "Suspend l’entrée, les effets physiques et la sortie virtuelle d’OpenJoystickDriver.";
-"controllers.resume" = "Reprendre";
-"controllers.disconnectFromOJD" = "Déconnecter d’OpenJoystickDriver";
 "error.controllerSessionChangeRejected" = "Impossible de modifier la session de la manette.";
 
-"controllers.disconnectWireless" = "Déconnecter la manette sans fil…";
-"controllers.disconnectWirelessButton" = "Déconnecter…";
-"controllers.disconnectWirelessSummary" = "Interrompt cette connexion Bluetooth sans affecter les autres manettes.";
 "controllers.disconnectWirelessConfirmTitle" = "Déconnecter la manette sans fil?";
 "controllers.disconnectWirelessConfirmMessage" = "%@ restera déconnectée jusqu’à ce que vous la reconnectiez manuellement.";
 "controllers.disconnectWirelessConfirm" = "Déconnecter";
@@ -1942,3 +1939,49 @@
 "cli.setting.reset.confirm" = "Placer le fichier de réglages dans la corbeille et rétablir chaque réglage à sa valeur par défaut?";
 "cli.setting.reset.success" = "%@ a été placé dans la corbeille.";
 "cli.setting.reset.none" = "Il n’y a aucun fichier de réglages à l’emplacement %@.";
+/* Why a controller is not published as a virtual device, and a failed send. */
+"controllers.publication.reason.outputDisabled" = "La sortie virtuelle est désactivée";
+"controllers.publication.reason.systemGamepad" = "macOS la gère comme une manette de jeu";
+"controllers.publication.reason.nativeHIDPassThrough" = "macOS gère directement ses entrées";
+"controllers.publication.reason.upstreamVirtualDevice" = "Un autre appareil virtuel la représente déjà";
+"controllers.publication.reason.sessionSuspended" = "Session suspendue";
+"controllers.publication.reason.noVirtualProfile" = "Aucun profil virtuel ne lui convient";
+"controllers.publication.reason.suppressed" = "Sortie en pause";
+"controllers.publication.reason.noInputYet" = "En attente de la première entrée";
+/* Publication state with its reason or failure, for example "Not published (Waiting for the first input)". %1$@ is the state and %2$@ the reason. */
+"controllers.publication.withReason" = "%1$@ (%2$@)";
+"controllers.publication.failedSend" = "Le dernier envoi a échoué : %@";
+/* Serving route with why it publishes nothing, for example "Output off (No virtual profile fits it)". %1$@ is the route and %2$@ the reason. */
+"controllers.serving.withReason" = "%1$@ (%2$@)";
+/* Why a controller's input health is failing. */
+"controllers.inputHealth.reason.missingReports" = "Aucun rapport reçu";
+"controllers.inputHealth.reason.freshnessNotAdvancing" = "Les rapports n’avancent pas";
+/* Input health state with its failure reason, for example "Stale (No reports arriving)". %1$@ is the state and %2$@ the reason. */
+"controllers.inputHealth.withReason" = "%1$@ (%2$@)";
+/* How a controller was discovered. */
+"controllers.discovery.hid" = "HID";
+"controllers.discovery.rawUSB" = "USB brut";
+/* Who holds the physical controller. */
+"controllers.physicalOwnership.exclusiveHID" = "HID exclusif";
+"controllers.physicalOwnership.exclusiveRawUSB" = "USB brut exclusif";
+"controllers.physicalOwnership.extensionOwnedUSB" = "Extension USB";
+"controllers.physicalOwnership.systemHIDVisible" = "HID système";
+"controllers.physicalOwnership.systemGamepad" = "Manette de jeu système";
+"controllers.physicalOwnership.upstreamVirtualDevice" = "Appareil virtuel en amont";
+"controllers.physicalOwnership.unknown" = "Inconnu";
+/* Result of acquiring HID input. */
+"controllers.hidInputOwnership.unknown" = "Inconnu";
+"controllers.hidInputOwnership.exclusive" = "Exclusif";
+"controllers.hidInputOwnership.shared" = "Partagé";
+"controllers.hidInputOwnership.accessDenied" = "Accès refusé";
+"controllers.hidInputOwnership.ownedByAnotherClient" = "Utilisé par une autre app";
+"controllers.hidInputOwnership.acquisitionFailed" = "Échec de la prise en charge";
+/* Ownership summary: %1$@ is the discovery route, %2$@ the owner and %3$@ the HID input result. */
+"controllers.ownership.value" = "Détectée via %1$@. Propriétaire : %2$@. Entrée HID : %3$@.";
+/* Why closing a controller's Bluetooth link failed. */
+"controllers.disconnectWireless.failure.notFound" = "La manette n’est plus connectée";
+"controllers.disconnectWireless.failure.notBluetooth" = "La manette n’est pas connectée en Bluetooth";
+"controllers.disconnectWireless.failure.bluetoothLEUnsupported" = "Les manettes Bluetooth LE ne peuvent pas être déconnectées d’ici";
+"controllers.disconnectWireless.failure.missingAddress" = "L’adresse Bluetooth de la manette est inconnue";
+"controllers.disconnectWireless.failure.disconnectFailed" = "Le Bluetooth n’a pas déconnecté la manette";
+"controllers.disconnectWireless.failure.timedOut" = "Délai de déconnexion dépassé";

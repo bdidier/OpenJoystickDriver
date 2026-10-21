@@ -1,87 +1,195 @@
 import Foundation
 import Testing
 
+@testable import OpenJoystickDriverKit
 @testable import OpenJoystickDriverPresentation
 
 @Suite(.timeLimit(.minutes(1)))
 @MainActor
 struct ControllerLiveUpdatesTests {
-  @Test
-  func aServiceNotificationRefreshesWithinOneSecond() async {
-    let source = ScriptedChangeSource()
-    let refreshed = Counter()
-    let updates = ControllerLiveUpdates(
+  private func makeUpdates(
+    _ source: ScriptedChangeSource,
+    refreshed: Counter,
+    logged: LogLines = LogLines(),
+    modes: Modes = Modes()
+  ) -> ControllerLiveUpdates {
+    ControllerLiveUpdates(
       source: source,
-      log: { _ in },
+      fallbackPollSeconds: 0.01,
+      log: { logged.lines.append($0) },
+      modeChanged: { modes.values.append($0) },
       refresh: { refreshed.increment() }
     )
+  }
+
+  @Test
+  func theFirstAnswerRefreshesOnceAndAServiceNotificationRefreshesWithinOneSecond() async {
+    let source = ScriptedChangeSource()
+    let refreshed = Counter()
+    let updates = makeUpdates(source, refreshed: refreshed)
     updates.start()
     defer { updates.stop() }
-    source.answer(1)
-    await refreshed.waitUntil(1, timeout: 0.2)
+    source.answer(.revision(1))
+    await refreshed.waitUntil(1, timeout: 30)
     #expect(updates.mode == .subscribed)
-    #expect(refreshed.value == 0)
-
-    let clock = ContinuousClock()
-    let start = clock.now
-    source.answer(2)
-    await refreshed.waitUntil(1, timeout: 1)
-
     #expect(refreshed.value == 1)
-    #expect(clock.now - start < .seconds(1))
+
+    source.answer(.revision(2))
+    await refreshed.waitUntil(2, timeout: 30)
+
+    #expect(refreshed.value == 2)
   }
 
   @Test
-  func anUnavailableSubscriptionPollsAndLogsTheNamedFallbackOnce() async {
+  func aHoldTimeAnswerWithNoChangeRefreshesNothing() async {
+    let source = ScriptedChangeSource()
+    let refreshed = Counter()
+    let updates = makeUpdates(source, refreshed: refreshed)
+    updates.start()
+    defer { updates.stop() }
+    source.answer(.revision(1))
+    source.answer(.revision(1))
+    source.answer(.revision(2))
+    await refreshed.waitUntil(2, timeout: 30)
+
+    #expect(refreshed.value == 2)
+  }
+
+  @Test
+  func aRestartedServiceWithTheSameCountRefreshes() async {
+    let source = ScriptedChangeSource()
+    let refreshed = Counter()
+    let updates = makeUpdates(source, refreshed: refreshed)
+    updates.start()
+    defer { updates.stop() }
+    source.answer(.revision(0))
+    await refreshed.waitUntil(1, timeout: 30)
+    source.answer(.revision(0, instance: "00000000-0000-0000-0000-000000000002"))
+    await refreshed.waitUntil(2, timeout: 30)
+
+    #expect(refreshed.value == 2)
+  }
+
+  @Test
+  func pollingIsLoggedOnceAndReportedOnlyAfterSeveralConsecutiveFailures() async {
     let source = ScriptedChangeSource()
     let refreshed = Counter()
     let logged = LogLines()
-    let updates = ControllerLiveUpdates(
-      source: source,
-      fallbackPollSeconds: 0.02,
-      log: { logged.lines.append($0) },
-      refresh: { refreshed.increment() }
-    )
+    let modes = Modes()
+    let updates = makeUpdates(source, refreshed: refreshed, logged: logged, modes: modes)
     updates.start()
     defer { updates.stop() }
 
-    source.fail(ScriptedFailure.unreachable)
-    await refreshed.waitUntil(1, timeout: 1)
-    source.fail(ScriptedFailure.unreachable)
-    await refreshed.waitUntil(2, timeout: 1)
-
-    #expect(updates.mode == .polling(reason: ScriptedFailure.unreachable.localizedDescription))
+    for _ in 0..<(ControllerLiveUpdates.failuresBeforeReporting - 1) {
+      source.fail(ScriptedFailure.unreachable)
+    }
+    await refreshed.waitUntil(ControllerLiveUpdates.failuresBeforeReporting - 1, timeout: 30)
+    #expect(modes.values.isEmpty)
     #expect(logged.lines.count == 1)
-    #expect(logged.lines.first?.contains("polling") == true)
+    #expect(logged.lines.first?.contains("polling every 0.01 s") == true)
+    #expect(logged.lines.first?.contains("The service is unreachable.") == true)
+
+    source.fail(ScriptedFailure.unreachable)
+    await refreshed.waitUntil(ControllerLiveUpdates.failuresBeforeReporting, timeout: 30)
+
+    let expected = ControllerLiveUpdateMode.polling(
+      failure: .other,
+      detail: ScriptedFailure.unreachable.localizedDescription
+    )
+    #expect(updates.mode == expected)
+    #expect(modes.values == [expected])
+    #expect(logged.lines.count == 1)
   }
 
   @Test
-  func aRestoredSubscriptionStopsPollingAndRefreshesOnce() async {
+  func aFailureWithChangingTextOfTheSameKindIsReportedOnce() async {
+    let source = ScriptedChangeSource()
+    let refreshed = Counter()
+    let modes = Modes()
+    let updates = makeUpdates(source, refreshed: refreshed, modes: modes)
+    updates.start()
+    defer { updates.stop() }
+    for _ in 0..<ControllerLiveUpdates.failuresBeforeReporting {
+      source.fail(ScriptedFailure.unreachable)
+    }
+    await refreshed.waitUntil(ControllerLiveUpdates.failuresBeforeReporting, timeout: 30)
+    source.fail(ScriptedFailure.other("first"))
+    source.fail(ScriptedFailure.other("second"))
+    await refreshed.waitUntil(ControllerLiveUpdates.failuresBeforeReporting + 2, timeout: 30)
+
+    #expect(modes.values.count == 1)
+
+    source.fail(ApplicationServiceClientError.timeout)
+    await refreshed.waitUntil(ControllerLiveUpdates.failuresBeforeReporting + 3, timeout: 30)
+
+    #expect(modes.values.count == 2)
+  }
+
+  @Test
+  func aRecoveryBeforeTheThresholdNeverReportsPolling() async {
     let source = ScriptedChangeSource()
     let refreshed = Counter()
     let logged = LogLines()
-    let updates = ControllerLiveUpdates(
-      source: source,
-      fallbackPollSeconds: 0.02,
-      log: { logged.lines.append($0) },
-      refresh: { refreshed.increment() }
-    )
+    let modes = Modes()
+    let updates = makeUpdates(source, refreshed: refreshed, logged: logged, modes: modes)
     updates.start()
     defer { updates.stop() }
     source.fail(ScriptedFailure.unreachable)
-    await refreshed.waitUntil(1, timeout: 1)
-
-    source.answer(5)
-    await refreshed.waitUntil(2, timeout: 1)
+    await refreshed.waitUntil(1, timeout: 30)
+    source.answer(.revision(5))
+    await refreshed.waitUntil(2, timeout: 30)
 
     #expect(updates.mode == .subscribed)
+    #expect(modes.values.isEmpty)
     #expect(logged.lines.count == 2)
+  }
+
+  @Test
+  func aRestoredWaitAfterAReportedFallbackIsReportedOnceAndRefreshes() async {
+    let source = ScriptedChangeSource()
+    let refreshed = Counter()
+    let modes = Modes()
+    let updates = makeUpdates(source, refreshed: refreshed, modes: modes)
+    updates.start()
+    defer { updates.stop() }
+    for _ in 0..<ControllerLiveUpdates.failuresBeforeReporting {
+      source.fail(ScriptedFailure.unreachable)
+    }
+    await refreshed.waitUntil(ControllerLiveUpdates.failuresBeforeReporting, timeout: 30)
+
+    source.answer(.revision(5))
+    await refreshed.waitUntil(ControllerLiveUpdates.failuresBeforeReporting + 1, timeout: 30)
+
+    #expect(updates.mode == .subscribed)
+    #expect(modes.values.last == .subscribed)
+    #expect(modes.values.count == 2)
+  }
+
+  @Test
+  func failuresMapToOneBannerReasonEach() {
+    #expect(
+      ControllerLiveUpdateFailure(LocalServiceRPCError.serviceClosedConnection)
+        == .serviceClosedConnection
+    )
+    #expect(ControllerLiveUpdateFailure(ApplicationServiceClientError.timeout) == .timeout)
+    #expect(ControllerLiveUpdateFailure(ScriptedFailure.unreachable) == .other)
+    let keys = [
+      ControllerLiveUpdateFailure.serviceClosedConnection, .timeout, .other,
+    ].map(\.detailKey)
+    #expect(Set(keys).count == 3)
+    for key in keys { #expect(OJDLocalized.string(key) != key) }
   }
 }
 
 private enum ScriptedFailure: Error, LocalizedError {
   case unreachable
-  var errorDescription: String? { "The service is unreachable." }
+  case other(String)
+  var errorDescription: String? {
+    switch self {
+    case .unreachable: return "The service is unreachable."
+    case .other(let text): return text
+    }
+  }
 }
 
 @MainActor
@@ -98,15 +206,27 @@ private final class Counter {
 @MainActor
 private final class LogLines { var lines: [String] = [] }
 
+@MainActor
+private final class Modes { var values: [ControllerLiveUpdateMode] = [] }
+
+extension ServiceStatusRevision {
+  static func revision(
+    _ generation: UInt64,
+    instance: String = "00000000-0000-0000-0000-000000000001"
+  ) -> Self {
+    Self(instance: UUID(uuidString: instance)!, generation: generation)
+  }
+}
+
 /// A change source whose waits finish only when the test answers or fails them.
 private final class ScriptedChangeSource: ControllerChangeSource, @unchecked Sendable {
   private let lock = NSLock()
-  private var pending: [CheckedContinuation<UInt64, Error>] = []
-  private var queued: [Result<UInt64, Error>] = []
+  private var pending: [CheckedContinuation<ServiceStatusRevision, Error>] = []
+  private var queued: [Result<ServiceStatusRevision, Error>] = []
 
-  func waitForChange(after generation: UInt64?) async throws -> UInt64 {
+  func waitForChange(after revision: ServiceStatusRevision?) async throws -> ServiceStatusRevision {
     try await withCheckedThrowingContinuation { continuation in
-      let ready = lock.withLock { () -> Result<UInt64, Error>? in
+      let ready = lock.withLock { () -> Result<ServiceStatusRevision, Error>? in
         if queued.isEmpty {
           pending.append(continuation)
           return nil
@@ -117,11 +237,11 @@ private final class ScriptedChangeSource: ControllerChangeSource, @unchecked Sen
     }
   }
 
-  func answer(_ generation: UInt64) { deliver(.success(generation)) }
+  func answer(_ revision: ServiceStatusRevision) { deliver(.success(revision)) }
   func fail(_ error: Error) { deliver(.failure(error)) }
 
-  private func deliver(_ result: Result<UInt64, Error>) {
-    let waiting = lock.withLock { () -> CheckedContinuation<UInt64, Error>? in
+  private func deliver(_ result: Result<ServiceStatusRevision, Error>) {
+    let waiting = lock.withLock { () -> CheckedContinuation<ServiceStatusRevision, Error>? in
       if pending.isEmpty {
         queued.append(result)
         return nil

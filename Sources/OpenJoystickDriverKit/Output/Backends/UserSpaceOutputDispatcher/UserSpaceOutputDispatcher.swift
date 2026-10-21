@@ -29,7 +29,12 @@ public final class UserSpaceOutputDispatcher: VirtualOutputDispatching,
   internal var shutdownTask: Task<Void, Never>?
   internal var _suppressOutput = false
   internal var remappingOutputSuppressed = false
-  internal var _status: VirtualOutputBackendStatus = .off
+  /// Written only under `registryLock`; a change sets `statusChangePending`, and
+  /// ``withRegistry(_:)`` announces it after the lock is released.
+  internal var _status: VirtualOutputBackendStatus = .off {
+    didSet { if oldValue != _status { statusChangePending = true } }
+  }
+  internal var statusChangePending = false
   internal var _lastRumbleStatus: String?
 
   static let requiredVirtualDeviceEntitlement = "com.apple.developer.hid.virtual.device"
@@ -69,7 +74,7 @@ public final class UserSpaceOutputDispatcher: VirtualOutputDispatching,
 
 extension UserSpaceOutputDispatcher: ControllerLifecycleListener {
   public func controllerDidStop(_ identifier: LogicalControllerID) async {
-    let resources = registryLock.withLock { () -> (Entry?, Task<Entry, Error>?) in
+    let resources = withRegistry { () -> (Entry?, Task<Entry, Error>?) in
       lifecycleGenerations[identifier, default: 0] &+= 1
       let creationTask = creationTasks.removeValue(forKey: identifier)
       creationRetryPolicies.removeValue(forKey: identifier)
