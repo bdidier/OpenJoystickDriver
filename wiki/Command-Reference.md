@@ -337,7 +337,7 @@ ojd access list
 ojd access grant CLIENT [--scope read|control]... [--force]
 ojd access grant --token NAME [--origin URL]... [--scope read|control]... [--force]
 ojd access revoke CLIENT|token:NAME [--scope read|control]...
-ojd access web enable [--port PORT | --automatic] [--force]
+ojd access web enable [--port PORT] [--automatic] [--force]
 ojd access web disable
 ```
 

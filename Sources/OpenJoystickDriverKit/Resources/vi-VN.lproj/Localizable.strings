@@ -1623,7 +1623,6 @@
 "a11y.access.done" = "Đóng token";
 "a11y.access.scope" = "Phạm vi %@";
 "a11y.access.cancel" = "Hủy và giữ nguyên quyền truy cập";
-"a11y.value.none" = "Không có";
 "mainMenu.app.about" = "Giới thiệu về %@";
 "mainMenu.app.settings" = "Cài đặt…";
 "mainMenu.app.services" = "Dịch vụ";

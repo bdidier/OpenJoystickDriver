@@ -1623,7 +1623,6 @@
 "a11y.access.done" = "토큰 닫기";
 "a11y.access.scope" = "%@ 범위";
 "a11y.access.cancel" = "취소하고 접근을 그대로 유지";
-"a11y.value.none" = "없음";
 "mainMenu.app.about" = "%@ 정보";
 "mainMenu.app.settings" = "설정…";
 "mainMenu.app.services" = "서비스";

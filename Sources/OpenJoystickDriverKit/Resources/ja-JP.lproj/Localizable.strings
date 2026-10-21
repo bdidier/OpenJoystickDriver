@@ -1623,7 +1623,6 @@
 "a11y.access.done" = "トークンを閉じる";
 "a11y.access.scope" = "%@スコープ";
 "a11y.access.cancel" = "キャンセルして、アクセスをそのままにする";
-"a11y.value.none" = "なし";
 "mainMenu.app.about" = "%@について";
 "mainMenu.app.settings" = "設定…";
 "mainMenu.app.services" = "サービス";

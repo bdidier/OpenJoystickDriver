@@ -1734,7 +1734,6 @@
 "a11y.access.done" = "Sluit het token";
 "a11y.access.scope" = "Bereik %@";
 "a11y.access.cancel" = "Annuleer en laat de toegang ongewijzigd";
-"a11y.value.none" = "Geen";
 "mainMenu.app.about" = "Over %@";
 "mainMenu.app.settings" = "Instellingen…";
 "mainMenu.app.services" = "Voorzieningen";

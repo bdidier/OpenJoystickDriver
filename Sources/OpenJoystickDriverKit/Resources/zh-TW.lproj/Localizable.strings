@@ -920,7 +920,7 @@
 "cli.access.web.enable.confirm" = "要開啟 WebSocket，讓您為其授權權杖的來源所屬頁面可以使用端點嗎？";
 "cli.access.web.enable.discussion" = "會先要求確認。未指定 --port 時，會使用已儲存的連接埠；首次由系統選擇一個空閒連接埠，並由服務儲存。";
 "cli.access.web.port" = "127.0.0.1 上的連接埠，範圍為 1024 至 65535。";
-"cli.access.web.automatic" = "由系統選擇閒置的連接埠，而不是已儲存的連接埠。";
+"cli.access.web.automatic" = "由系統選擇可用的連接埠，而不是已儲存的連接埠。";
 "cli.access.web.automatic_conflict" = "--automatic 不能與 --port 同時使用。";
 "cli.access.web.port_range" = "--port 必須介於 1024 和 65535 之間。";
 "cli.diagnose.abstract" = "執行所有檢查並回報問題。";
@@ -1557,7 +1557,7 @@
 "access.web.enable.title" = "要開啟 WebSocket 嗎？";
 "access.web.enable.message" = "來自權杖所列來源的網頁隨後可以連接到這部 Mac 上的端點。";
 "access.web.enable.port" = "連接埠：%lld";
-"access.web.enable.automatic" = "系統會選擇一個閒置的連接埠。";
+"access.web.enable.automatic" = "系統會選擇一個可用的連接埠。";
 "access.grants" = "具有取用權限的程式";
 "access.grantProgram" = "授權程式…";
 "access.grant" = "授權";
@@ -1623,7 +1623,6 @@
 "a11y.access.done" = "關閉權杖";
 "a11y.access.scope" = "%@範圍";
 "a11y.access.cancel" = "取消並維持取用權限不變";
-"a11y.value.none" = "無";
 "mainMenu.app.about" = "關於 %@";
 "mainMenu.app.settings" = "設定…";
 "mainMenu.app.services" = "服務";

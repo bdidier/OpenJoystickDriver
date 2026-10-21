@@ -1623,7 +1623,6 @@
 "a11y.access.done" = "ปิดโทเค็น";
 "a11y.access.scope" = "ขอบเขต %@";
 "a11y.access.cancel" = "ยกเลิกและคงสิทธิ์การเข้าถึงไว้ตามเดิม";
-"a11y.value.none" = "ไม่มี";
 "mainMenu.app.about" = "เกี่ยวกับ %@";
 "mainMenu.app.settings" = "การตั้งค่า…";
 "mainMenu.app.services" = "บริการ";

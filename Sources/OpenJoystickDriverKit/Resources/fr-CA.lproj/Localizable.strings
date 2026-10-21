@@ -1734,7 +1734,6 @@
 "a11y.access.done" = "Fermer le jeton";
 "a11y.access.scope" = "Portée %@";
 "a11y.access.cancel" = "Annuler et laisser l’accès tel quel";
-"a11y.value.none" = "Aucun";
 "mainMenu.app.about" = "À propos de %@";
 "mainMenu.app.settings" = "Réglages…";
 "mainMenu.app.services" = "Services";

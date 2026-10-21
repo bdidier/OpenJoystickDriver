@@ -920,7 +920,7 @@
 "cli.access.web.enable.confirm" = "Aktifkan WebSocket, sehingga halaman dari asal yang Anda beri akses tokennya dapat menggunakan endpoint?";
 "cli.access.web.enable.discussion" = "Meminta konfirmasi terlebih dahulu. Tanpa --port, menggunakan port yang disimpan; pertama kali, sistem memilih port kosong, dan layanan menyimpannya.";
 "cli.access.web.port" = "Port di 127.0.0.1, dari 1024 hingga 65535.";
-"cli.access.web.automatic" = "Biarkan sistem memilih port kosong, bukan port tersimpan.";
+"cli.access.web.automatic" = "Biarkan sistem memilih port yang tersedia, bukan port tersimpan.";
 "cli.access.web.automatic_conflict" = "--automatic tidak dapat digunakan bersama --port.";
 "cli.access.web.port_range" = "--port harus antara 1024 dan 65535.";
 "cli.diagnose.abstract" = "Jalankan semua pemeriksaan dan laporkan apa yang salah.";
@@ -1557,7 +1557,7 @@
 "access.web.enable.title" = "Nyalakan WebSocket?";
 "access.web.enable.message" = "Laman web dari asal sebuah token kemudian dapat tersambung ke titik akhir di Mac ini.";
 "access.web.enable.port" = "Port: %lld";
-"access.web.enable.automatic" = "Sistem memilih port yang kosong.";
+"access.web.enable.automatic" = "Sistem memilih port yang tersedia.";
 "access.grants" = "Program dengan akses";
 "access.grantProgram" = "Beri Akses ke Program…";
 "access.grant" = "Beri Akses";
@@ -1623,7 +1623,6 @@
 "a11y.access.done" = "Tutup token";
 "a11y.access.scope" = "Cakupan %@";
 "a11y.access.cancel" = "Batalkan dan biarkan akses apa adanya";
-"a11y.value.none" = "Tidak Ada";
 "mainMenu.app.about" = "Tentang %@";
 "mainMenu.app.settings" = "Pengaturan…";
 "mainMenu.app.services" = "Layanan";

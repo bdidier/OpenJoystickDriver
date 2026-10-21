@@ -290,7 +290,7 @@ Keep `.strings` and `.stringsdict` (option A). `.xcstrings` is not compiled by S
 | `ui.menu.*` | `ui.menu.file.saveSupportReport` |
 | `ui.extra.*` | `ui.extra.controllers.suspend` |
 | `ui.settings.<pane>.*` | `ui.settings.general.launchAtLogin` |
-| `a11y.*` | `a11y.value.none` |
+| `a11y.*` | `a11y.settingsPane.general` |
 | `cli.<group>.<command>.*` | `cli.virtual.exportMapping.summary` |
 | `error.<code>.*` | `error.E2023.message` |
 | `notify.*` | `notify.controller.connected` |

@@ -1623,7 +1623,6 @@
 "a11y.access.done" = "Token’ı kapat";
 "a11y.access.scope" = "%@ kapsamı";
 "a11y.access.cancel" = "Vazgeç ve erişimi olduğu gibi bırak";
-"a11y.value.none" = "Yok";
 "mainMenu.app.about" = "%@ Hakkında";
 "mainMenu.app.settings" = "Ayarlar…";
 "mainMenu.app.services" = "Hizmetler";

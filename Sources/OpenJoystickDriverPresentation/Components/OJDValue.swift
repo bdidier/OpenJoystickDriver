@@ -30,7 +30,7 @@ enum OJDValue: Equatable, Sendable {
   var accessibilityKey: String? {
     switch self {
     case .text: return nil
-    case .none: return "a11y.value.none"
+    case .none: return "common.none"
     }
   }
 }
@@ -57,7 +57,7 @@ extension OJDValue {
   var spokenText: String {
     switch self {
     case .text(let value): return value
-    case .none: return OJDLocalized.string("a11y.value.none")
+    case .none: return OJDLocalized.string("common.none")
     }
   }
 }

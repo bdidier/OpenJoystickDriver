@@ -1609,7 +1609,7 @@
 "a11y.access.dismissError" = "त्रुटि ख़ारिज करें";
 "a11y.access.tryAgain" = "ऐक्सेस सेटिंग्स फिर से पढ़ें";
 "a11y.access.restart" = "नई अनुमतियाँ लागू करने के लिए ऐप फिर से शुरू करें";
-"a11y.access.webPort" = "WebSocket पोर्ट; सहेजा गया पोर्ट रखने या सिस्टम से चुनवाने के लिए खाली छोड़ें";
+"a11y.access.webPort" = "WebSocket पोर्ट; सहेजा गया पोर्ट रखने या सिस्टम द्वारा चुने जाने के लिए खाली छोड़ें";
 "a11y.access.grantProgram" = "आपके चुने प्रोग्राम को ऐक्सेस दें";
 "a11y.access.grantRefused" = "%@ को ऐक्सेस दें";
 "a11y.access.revokeGrant" = "%@ का ऐक्सेस वापस लें";
@@ -1623,7 +1623,6 @@
 "a11y.access.done" = "टोकन बंद करें";
 "a11y.access.scope" = "%@ स्कोप";
 "a11y.access.cancel" = "रद्द करें और ऐक्सेस जैसा है वैसा रखें";
-"a11y.value.none" = "कोई नहीं";
 "mainMenu.app.about" = "%@ के बारे में";
 "mainMenu.app.settings" = "सेटिंग्स…";
 "mainMenu.app.services" = "सेवाएँ";

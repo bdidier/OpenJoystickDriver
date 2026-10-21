@@ -1734,7 +1734,6 @@
 "a11y.access.done" = "Das Token schließen";
 "a11y.access.scope" = "Bereich %@";
 "a11y.access.cancel" = "Abbrechen und den Zugriff unverändert lassen";
-"a11y.value.none" = "Keine";
 "mainMenu.app.about" = "Über %@";
 "mainMenu.app.settings" = "Einstellungen…";
 "mainMenu.app.services" = "Dienste";

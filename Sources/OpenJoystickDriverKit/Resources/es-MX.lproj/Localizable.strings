@@ -920,7 +920,7 @@
 "cli.access.web.enable.confirm" = "¿Activar el WebSocket para que las páginas de los orígenes para los que autorices tokens puedan usar el punto de conexión?";
 "cli.access.web.enable.discussion" = "Pide confirmación primero. Sin --port, usa el puerto guardado; la primera vez, el sistema elige un puerto libre y el servicio lo guarda.";
 "cli.access.web.port" = "El puerto en 127.0.0.1, de 1024 a 65535.";
-"cli.access.web.automatic" = "Deja que el sistema elija un puerto libre en lugar del guardado.";
+"cli.access.web.automatic" = "Hace que el sistema elija un puerto libre en lugar del guardado.";
 "cli.access.web.automatic_conflict" = "--automatic no se puede usar con --port.";
 "cli.access.web.port_range" = "--port debe estar entre 1024 y 65535.";
 "cli.diagnose.abstract" = "Ejecuta todas las comprobaciones e informa de lo que falla.";
@@ -1734,7 +1734,6 @@
 "a11y.access.done" = "Cerrar el token";
 "a11y.access.scope" = "Ámbito %@";
 "a11y.access.cancel" = "Cancelar y dejar el acceso como está";
-"a11y.value.none" = "Ninguno";
 "mainMenu.app.about" = "Acerca de %@";
 "mainMenu.app.settings" = "Ajustes…";
 "mainMenu.app.services" = "Servicios";

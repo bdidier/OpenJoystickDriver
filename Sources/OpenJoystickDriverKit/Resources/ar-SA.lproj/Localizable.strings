@@ -1623,7 +1623,6 @@
 "a11y.access.done" = "إغلاق الرمز المميز";
 "a11y.access.scope" = "نطاق %@";
 "a11y.access.cancel" = "إلغاء وإبقاء الوصول كما هو";
-"a11y.value.none" = "لا شيء";
 "mainMenu.app.about" = "حول %@";
 "mainMenu.app.settings" = "الإعدادات…";
 "mainMenu.app.services" = "الخدمات";

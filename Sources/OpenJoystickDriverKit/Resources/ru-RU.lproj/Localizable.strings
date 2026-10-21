@@ -1623,7 +1623,6 @@
 "a11y.access.done" = "Закрыть токен";
 "a11y.access.scope" = "Область: %@";
 "a11y.access.cancel" = "Отменить и оставить доступ без изменений";
-"a11y.value.none" = "Нет";
 "mainMenu.app.about" = "О программе %@";
 "mainMenu.app.settings" = "Настройки…";
 "mainMenu.app.services" = "Службы";
