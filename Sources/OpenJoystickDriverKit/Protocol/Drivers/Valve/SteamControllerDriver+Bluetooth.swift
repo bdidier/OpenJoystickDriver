@@ -15,8 +15,6 @@ enum SteamBluetooth {
   static let dataFlag: UInt8 = 0x80
   static let lastFlag: UInt8 = 0x40
   static let segmentNumberMask: UInt8 = 0x07
-  /// `SETTING_WIRELESS_PACKET_VERSION`; SDL sets it to 2 before reading Bluetooth state.
-  static let wirelessPacketVersionSetting: UInt8 = 49
 
   /// Splits one feature command into report-`0x03` segments.
   static func featureReports(_ command: [UInt8]) -> [PhysicalHIDOutputReport] {

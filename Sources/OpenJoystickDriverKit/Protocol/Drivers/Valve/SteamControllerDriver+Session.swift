@@ -39,23 +39,17 @@ extension SteamControllerDriver {
     return state
   }
 
-  /// Over Bluetooth LE the settings also select wireless packet version 2, as SDL
-  /// `ResetSteamController` does.
+  /// The description's activation reports for the transport. Over Bluetooth LE they also select
+  /// wireless packet version 2, as SDL `ResetSteamController` does.
   public func activationWrites() -> [PhysicalOutputWrite] {
-    var settings = steamControllerLizardModePayload
-    if isBluetooth {
-      settings += [SteamBluetooth.wirelessPacketVersionSetting, 2, 0]
-      settings[1] += 3
-    }
-    return
-      (steamFeatureReports(steamControllerClearDigitalMappingsPayload)
-      + steamFeatureReports(settings)).map { .hidFeature($0) }
+    PhysicalProtocolID.valveSteamController.protocolDescription.activationWrites(over: transport)
   }
 
   public func deactivationWrites() -> [PhysicalOutputWrite] {
-    (steamFeatureReports(steamControllerDefaultDigitalMappingsPayload)
-      + steamFeatureReports(steamControllerLoadDefaultSettingsPayload)).map { .hidFeature($0) }
+    PhysicalProtocolID.valveSteamController.protocolDescription.deactivationWrites(over: transport)
   }
+
+  private var transport: PhysicalTransport { isBluetooth ? .bluetoothLE : .usb }
 
   /// A dongle controller connecting or disconnecting activates or deactivates it.
   public func inputConnectionWrites(
@@ -105,7 +99,8 @@ extension SteamControllerDriver {
     durationMs: Int
   ) -> [PhysicalHIDOutputReport] {
     guard isLogicalControllerConnected else { return [] }
-    let effectiveDurationMs = durationMs > 0 ? min(durationMs, 5_000) : 65
+    let effectiveDurationMs =
+      durationMs > 0 ? min(durationMs, maxRumbleDurationMs) : steamControllerHeldPulseMilliseconds
     let totalMicroseconds = max(1, effectiveDurationMs * 1_000)
     let pulseDuration = min(totalMicroseconds, steamControllerMaximumPulseMicroseconds)
     let pulseCount = min(65_535, (totalMicroseconds + pulseDuration - 1) / pulseDuration)

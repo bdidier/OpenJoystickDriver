@@ -202,7 +202,8 @@ public final class ProtocolDriverRegistry: Sendable {
       return .success(
         XIDDriver(
           outEndpoint: transportProfile.outputEndpoint,
-          rumbleTemplate: record.rumbleTemplate
+          rumbleTemplate: record.rumbleTemplate,
+          tuning: tuning
         )
       )
     case .xboxXUSB:

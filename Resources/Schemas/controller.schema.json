@@ -2646,7 +2646,7 @@
                 "protocol": {
                   "properties": {
                     "family": {
-                      "enum": ["XboxGIP", "XboxXUSB"]
+                      "enum": ["XboxGIP", "XboxXID", "XboxXUSB"]
                     }
                   }
                 }

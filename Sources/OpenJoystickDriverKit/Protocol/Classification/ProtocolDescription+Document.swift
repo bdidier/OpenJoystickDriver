@@ -66,17 +66,23 @@ extension ProtocolDescription {
       let startup: ControllerRecordDocument.StartupList?
       let rumble: RumbleOutputTemplate?
       let keepAlive: KeepAlive?
+      let activation: [RecordStartupWrite]?
+      let deactivation: [RecordStartupWrite]?
       let subcommands: SubcommandPlan?
       let namedPackets: NamedPacketPlan?
       let handshakeAttempts: Int?
       let announceResendLimit: Int?
       let receiverInquiryResendLimit: Int?
+      let commandChannel: ProtocolDescription.CommandChannel?
+      let trailingStopPackets: Int?
 
       init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: DocumentKey.self)
         try container.rejectUnknown(allowed: [
-          "startup", "rumble", "keepAlive", "subcommands", "namedPackets", "handshakeAttempts",
-          "announceResendLimit", "receiverInquiryResendLimit",
+          "startup", "rumble", "keepAlive", "activation", "deactivation", "subcommands",
+          "namedPackets", "handshakeAttempts",
+          "announceResendLimit", "receiverInquiryResendLimit", "commandChannel",
+          "trailingStopPackets",
         ])
         guard !container.allKeys.isEmpty else {
           throw DecodingError.dataCorrupted(
@@ -92,6 +98,9 @@ extension ProtocolDescription {
           for: "rumble"
         )?.template
         keepAlive = try container.decodeOptional(KeepAlive.self, for: "keepAlive")
+        activation = try container.decodeOptional(SessionWriteList.self, for: "activation")?.writes
+        deactivation = try container.decodeOptional(SessionWriteList.self, for: "deactivation")?
+          .writes
         subcommands = try container.decodeOptional(SubcommandPlan.self, for: "subcommands")
         namedPackets = try container.decodeOptional(NamedPacketPlan.self, for: "namedPackets")
         func count(_ key: String, _ range: ClosedRange<Int>) throws -> Int? {
@@ -109,6 +118,44 @@ extension ProtocolDescription {
         handshakeAttempts = try count("handshakeAttempts", 1...10)
         announceResendLimit = try count("announceResendLimit", 1...100)
         receiverInquiryResendLimit = try count("receiverInquiryResendLimit", 1...100)
+        commandChannel = try container.decodeOptional(
+          ProtocolDescription.CommandChannel.self,
+          for: "commandChannel"
+        )
+        trailingStopPackets = try count("trailingStopPackets", 1...10)
+      }
+    }
+
+    /// `defaults.session.activation` or `deactivation`: 1...16 HID reports sent in order, each
+    /// with a report, its bytes and optionally the one transport it is sent on.
+    struct SessionWriteList: Decodable {
+      let writes: [RecordStartupWrite]
+
+      init(from decoder: any Decoder) throws {
+        var list = try decoder.unkeyedContainer()
+        var writes: [RecordStartupWrite] = []
+        while !list.isAtEnd {
+          let container = try list.nestedContainer(keyedBy: DocumentKey.self)
+          try container.rejectUnknown(allowed: ["report", "bytes", "transport"])
+          do {
+            writes.append(
+              try ControllerRecordDocument.StartupWrite.hidWrite(container, condition: .always)
+            )
+          } catch let problem as ControllerRecordProblem {
+            throw DecodingError.dataCorrupted(
+              .init(codingPath: decoder.codingPath, debugDescription: problem.description)
+            )
+          }
+        }
+        guard (1...16).contains(writes.count) else {
+          throw DecodingError.dataCorrupted(
+            .init(
+              codingPath: decoder.codingPath,
+              debugDescription: "activation and deactivation name 1...16 writes"
+            )
+          )
+        }
+        self.writes = writes
       }
     }
 

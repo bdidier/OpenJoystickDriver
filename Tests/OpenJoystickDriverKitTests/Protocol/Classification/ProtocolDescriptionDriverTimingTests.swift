@@ -16,6 +16,35 @@ struct ProtocolDescriptionDriverTimingTests {
   }
 
   @Test
+  func switch2ReadsTheCommandChannel() {
+    let channel = PhysicalProtocolID.nintendoSwitch2.protocolDescription.commandChannel
+    #expect(channel?.interface == 1)
+    #expect(channel?.inEndpoint == 0x82)
+    #expect(channel?.replyLength == 0x50)
+    #expect(channel?.usbReplyTimeoutMilliseconds == 100)
+    #expect(channel?.bluetoothLEReplyTimeoutMilliseconds == 500)
+    let usb = Switch2Driver(link: .usb).sessionPlan.usbCommandChannel
+    #expect(usb?.interfaceNumber == 1)
+    #expect(usb?.inEndpoint == 0x82)
+    #expect(usb?.replyLength == 0x50)
+    #expect(usb?.replyTimeoutMilliseconds == 100)
+    let bluetoothLE = Switch2Driver(link: .bluetoothLE).sessionPlan.usbCommandChannel
+    #expect(bluetoothLE?.replyTimeoutMilliseconds == 500)
+  }
+
+  @Test
+  func switch2ReadsTheTrailingStopPackets() {
+    let count = PhysicalProtocolID.nintendoSwitch2.described(limit: \.trailingStopPackets)
+    #expect(count == 2)
+    let driver = Switch2Driver(layout: .pro)
+    let half = RumbleIntensities(lowFrequency: UnipolarValue(0x8000), highFrequency: .min)
+    _ = driver.encoded(.setRumble(half, duration: .milliseconds(100)))
+    _ = driver.encoded(.stopRumble)
+    let stops = (0..<(count + 2)).map { _ in driver.keepAliveWrites().hidOutputs.count }
+    #expect(stops == [Int](repeating: 1, count: count) + [0, 0])
+  }
+
+  @Test
   func switch2ReadsTheCommandTimeout() {
     #expect(Switch2Driver().commandTimeoutMilliseconds == 1_000)
     let tuned = Switch2Driver(tuning: .init(usbCommandTimeoutMilliseconds: 250))
@@ -93,6 +122,15 @@ struct ProtocolDescriptionDriverTimingTests {
     #expect(
       XUSBDriver(tuning: .init(usbTransferTimeoutMilliseconds: 750)).usbTimeoutMilliseconds == 750
     )
+  }
+
+  @Test
+  func xidReadsTheTransferTimeout() {
+    #expect(XIDDriver().usbTimeoutMilliseconds == 2_000)
+    let tuned = XIDDriver(tuning: .init(usbTransferTimeoutMilliseconds: 750))
+    #expect(tuned.usbTimeoutMilliseconds == 750)
+    let plan = try? tuned.encode(.stopRumble)
+    #expect(plan.onlyPacket.timeoutMilliseconds == 750)
   }
 
   @Test

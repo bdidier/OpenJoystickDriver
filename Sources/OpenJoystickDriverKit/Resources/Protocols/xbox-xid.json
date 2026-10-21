@@ -19,7 +19,11 @@
   "controls": {
     "base": "Xbox"
   },
+  "rawUSBTuningKeys": ["usbTransferTimeoutMs"],
   "defaults": {
+    "tuning": {
+      "usbTransferTimeoutMs": 2000
+    },
     "session": {
       "rumble": {
         "report": {

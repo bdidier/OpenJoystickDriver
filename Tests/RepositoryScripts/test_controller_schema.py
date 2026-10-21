@@ -29,6 +29,7 @@ def record(
 
 GIP = {"family": "XboxGIP"}
 XUSB = {"family": "XboxXUSB", "variant": "Wired"}
+XID = {"family": "XboxXID", "variant": "Gamepad"}
 DUALSENSE = {"family": "SonyDualSense"}
 
 
@@ -1123,6 +1124,7 @@ class SwiftParityTests(unittest.TestCase):
                 "handshake pacing on GIP": record(GIP, tuning=handshake),
                 "transfer timeout on GIP": record(GIP, tuning=transfer),
                 "transfer timeout on XUSB": record(XUSB, tuning=transfer),
+                "transfer timeout on XID": record(XID, tuning=transfer),
             },
             {
                 "lizard resend on GIP": record(GIP, tuning=lizard),

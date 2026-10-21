@@ -267,12 +267,12 @@ FIELD_NAME_ENUMS: list[tuple[str, str, Any]] = [
     ("protocol-description", "/properties/recordSections/items/enum", RECORD + SESSION),
     (
         "protocol-description",
-        "/allOf/21/if/not/anyOf/0/properties/recordSections/contains/const",
+        "/allOf/22/if/not/anyOf/0/properties/recordSections/contains/const",
         RECORD,
     ),
     (
         "protocol-description",
-        "/allOf/22/if/not/properties/recordSections/contains/const",
+        "/allOf/23/if/not/properties/recordSections/contains/const",
         SESSION,
     ),
     (

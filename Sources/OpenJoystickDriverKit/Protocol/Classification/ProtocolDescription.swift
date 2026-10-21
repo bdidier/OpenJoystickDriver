@@ -89,6 +89,12 @@ struct ProtocolDescription: Sendable {
   /// The family's keep-alive: its interval, the one place the interval is set, and the fixed
   /// writes of each run.
   let keepAlive: KeepAlive?
+  /// The HID reports sent in order when a Valve controller is activated, each limited by its
+  /// transport. Only the Valve families have them.
+  let activation: [RecordStartupWrite]
+  /// The HID reports sent in order when a Valve controller is deactivated, each limited by its
+  /// transport. Only the Valve families have them.
+  let deactivation: [RecordStartupWrite]
   /// The family's subcommand reports: the report id, the rolling counter rule and the startup
   /// requests. Only `NintendoSwitch1` has them.
   let subcommands: SubcommandPlan?
@@ -101,6 +107,11 @@ struct ProtocolDescription: Sendable {
   let announceResendLimit: Int?
   /// The most presence inquiry resends for a receiver slot. Only `XboxXUSB` has it.
   let receiverInquiryResendLimit: Int?
+  /// The USB interface that carries commands and their replies. Only `NintendoSwitch2` has it.
+  let commandChannel: CommandChannel?
+  /// The zero-amplitude packets the rumble refresh sends after a stop. Only `NintendoSwitch2` has
+  /// it.
+  let trailingStopPackets: Int?
   let inputLayout: ControllerInputLayout?
   /// The map every `HIDDescriptor` record layers over (``HIDUsageMap``).
   let hidUsageMap: HIDUsageMap?
@@ -283,11 +294,15 @@ struct ProtocolDescription: Sendable {
       startupWrites: document.defaults?.session?.startup?.hid ?? [],
       usbStartupWrites: usbStartupWrites,
       keepAlive: document.defaults?.session?.keepAlive,
+      activation: document.defaults?.session?.activation ?? [],
+      deactivation: document.defaults?.session?.deactivation ?? [],
       subcommands: document.defaults?.session?.subcommands,
       namedPackets: document.defaults?.session?.namedPackets,
       handshakeAttempts: document.defaults?.session?.handshakeAttempts,
       announceResendLimit: document.defaults?.session?.announceResendLimit,
       receiverInquiryResendLimit: document.defaults?.session?.receiverInquiryResendLimit,
+      commandChannel: document.defaults?.session?.commandChannel,
+      trailingStopPackets: document.defaults?.session?.trailingStopPackets,
       inputLayout: document.defaults?.input?.layout,
       hidUsageMap: document.defaults?.input?.usageMap,
       hidUsageShapes: document.defaults?.input?.shapes ?? [],
@@ -387,6 +402,16 @@ struct ProtocolDescription: Sendable {
     }
   }
 
+  /// The activation reports of a controller reached over `transport`.
+  func activationWrites(over transport: PhysicalTransport?) -> [PhysicalOutputWrite] {
+    activation.filter { $0.applies(to: transport) }.map(\.write)
+  }
+
+  /// The deactivation reports of a controller reached over `transport`.
+  func deactivationWrites(over transport: PhysicalTransport?) -> [PhysicalOutputWrite] {
+    deactivation.filter { $0.applies(to: transport) }.map(\.write)
+  }
+
   /// The raw-USB startup packets that a controller on `variant` whose record sets `parameters`
   /// receives from this description.
   func usbStartupWrites(
@@ -426,6 +451,18 @@ struct ProtocolDescription: Sendable {
     if (subcommands != nil) != (family == .nintendoSwitch1) {
       return "only NintendoSwitch1 has subcommands, and it must have them"
     }
+    let isValve = [.valveSteamController, .valveSteamDeck, .valveSteamTriton].contains(family)
+    if activation.isEmpty == isValve || deactivation.isEmpty == isValve {
+      return "only the Valve families have activation and deactivation, and they must have them"
+    }
+    let sessionTransports: [PhysicalTransport] =
+      family == .valveSteamController ? [.usb, .bluetoothLE] : []
+    if (activation + deactivation).contains(where: {
+      $0.transport.map { !sessionTransports.contains($0) } ?? false
+    }) {
+      return "activation and deactivation name a transport only for ValveSteamController, "
+        + "and then USB or BluetoothLE"
+    }
     if namedPackets != nil, family != .xboxGIP {
       return "only XboxGIP has named packets"
     }
@@ -439,6 +476,12 @@ struct ProtocolDescription: Sendable {
     }
     if (receiverInquiryResendLimit != nil) != (family == .xboxXUSB) {
       return "only XboxXUSB has receiverInquiryResendLimit, and it must have it"
+    }
+    if (commandChannel != nil) != (family == .nintendoSwitch2)
+      || (trailingStopPackets != nil) != (family == .nintendoSwitch2)
+    {
+      return
+        "only NintendoSwitch2 has commandChannel and trailingStopPackets, and it must have them"
     }
     if rawUSB == .always, !tuningKeys.isEmpty {
       return "a family that is always raw USB reads its tuning through rawUSBTuningKeys"

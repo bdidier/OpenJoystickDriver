@@ -1,12 +1,5 @@
 import Foundation
 
-let steamTritonFeatureReportID: UInt8 = 0x01
-let steamTritonFeatureReportLength = 64
-let steamTritonSetSettingsValuesCommand: UInt8 = 0x87
-let steamTritonLizardModeSetting: UInt8 = 9
-let steamTritonIMUModeSetting: UInt8 = 48
-/// `SETTING_GYRO_MODE_SEND_RAW_ACCEL | SETTING_GYRO_MODE_SEND_RAW_GYRO`.
-let steamTritonRawIMUMode: UInt8 = 0x18
 let steamTritonRumbleReportID: UInt8 = 0x80
 let steamTritonRumbleReportLength = 10
 
@@ -83,16 +76,13 @@ public final class SteamTritonDriver: PhysicalProtocolDriver {
   /// Lizard mode off and raw IMU on; the keep-alive repeats lizard mode off.
   public func activationWrites() -> [PhysicalOutputWrite] {
     keepAliveTick = 0
-    return [
-      .hidFeature(Self.setting(steamTritonLizardModeSetting, value: 0)),
-      .hidFeature(Self.setting(steamTritonIMUModeSetting, value: UInt16(steamTritonRawIMUMode))),
-    ]
+    return PhysicalProtocolID.valveSteamTriton.protocolDescription.activationWrites(over: nil)
   }
 
   /// IMU off. SDL sends no lizard-mode-on: the firmware restores it once the resends stop.
   public func deactivationWrites() -> [PhysicalOutputWrite] {
     rumble = (0, 0)
-    return [.hidFeature(Self.setting(steamTritonIMUModeSetting, value: 0))]
+    return PhysicalProtocolID.valveSteamTriton.protocolDescription.deactivationWrites(over: nil)
   }
 
   public func inputConnectionWrites(
@@ -140,17 +130,5 @@ public final class SteamTritonDriver: PhysicalProtocolDriver {
     bytes[7] = UInt8(truncatingIfNeeded: rumble.right)
     bytes[8] = UInt8(truncatingIfNeeded: rumble.right >> 8)
     return PhysicalHIDOutputReport(reportID: steamTritonRumbleReportID, bytes: bytes)
-  }
-
-  /// `ID_SET_SETTINGS_VALUES` with one `ControllerSetting` (number, 16-bit value).
-  static func setting(_ number: UInt8, value: UInt16) -> PhysicalHIDOutputReport {
-    var bytes = [UInt8](repeating: 0, count: steamTritonFeatureReportLength)
-    bytes[0] = steamTritonFeatureReportID
-    bytes[1] = steamTritonSetSettingsValuesCommand
-    bytes[2] = 3
-    bytes[3] = number
-    bytes[4] = UInt8(truncatingIfNeeded: value)
-    bytes[5] = UInt8(truncatingIfNeeded: value >> 8)
-    return PhysicalHIDOutputReport(reportID: steamTritonFeatureReportID, bytes: bytes)
   }
 }

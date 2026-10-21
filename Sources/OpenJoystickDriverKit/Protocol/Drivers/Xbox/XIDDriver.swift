@@ -4,7 +4,6 @@ import Foundation
 private let xidInputReportLength = 20
 private let xidTriggerMax: Float = 255
 private let xidStickMax = Float(Int16.max)
-private let xidOutputTimeoutMilliseconds: UInt32 = 2_000
 
 /// Driver for original Xbox XID pads (`xpad` `XTYPE_XBOX`).
 ///
@@ -16,14 +15,26 @@ private let xidOutputTimeoutMilliseconds: UInt32 = 2_000
 public final class XIDDriver: PhysicalProtocolDriver {
   private let outEndpoint: UInt8
   private let rumbleTemplate: RumbleOutputTemplate
+  /// The timeout of one output packet (`usbTransferTimeoutMs`).
+  let usbTimeoutMilliseconds: Int
   private var state = ControllerState.neutral
   private var lastRumble = RumbleIntensities.off
 
   /// - Parameters:
   ///   - outEndpoint: Interrupt OUT endpoint address.
   ///   - rumbleTemplate: The record's rumble template; the description's when nil.
-  public init(outEndpoint: UInt8 = 0x02, rumbleTemplate: RumbleOutputTemplate? = nil) {
+  ///   - tuning: The effective tuning of the controller's record; the description's defaults
+  ///     apply to every key it leaves unset.
+  public init(
+    outEndpoint: UInt8 = 0x02,
+    rumbleTemplate: RumbleOutputTemplate? = nil,
+    tuning: ControllerTuning? = nil
+  ) {
     self.outEndpoint = outEndpoint
+    usbTimeoutMilliseconds = PhysicalProtocolID.xboxXID.described(
+      \.usbTransferTimeoutMilliseconds,
+      in: tuning
+    )
     self.rumbleTemplate = PhysicalProtocolID.xboxXID.describedRumbleTemplate(
       variant: .gamepad,
       record: rumbleTemplate
@@ -74,7 +85,7 @@ public final class XIDDriver: PhysicalProtocolDriver {
       PhysicalUSBOutputPacket(
         endpoint: outEndpoint,
         bytes: rumbleTemplate.reportBytes(intensities),
-        timeoutMilliseconds: xidOutputTimeoutMilliseconds
+        timeoutMilliseconds: UInt32(usbTimeoutMilliseconds)
       )
     )
   }

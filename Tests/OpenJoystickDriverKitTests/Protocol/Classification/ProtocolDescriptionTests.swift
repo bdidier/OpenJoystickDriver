@@ -90,6 +90,7 @@ struct ProtocolDescriptionTests {
     #expect(bundled[.xboxGIP]?.tuning?.usbStartupRetryDelayMilliseconds == 1_000)
     #expect(bundled[.xboxGIP]?.tuning?.usbTransferTimeoutMilliseconds == 2_000)
     #expect(bundled[.xboxXUSB]?.tuning?.usbTransferTimeoutMilliseconds == 2_000)
+    #expect(bundled[.xboxXID]?.tuning?.usbTransferTimeoutMilliseconds == 2_000)
     #expect(bundled[.xboxGIP]?.handshakeAttempts == 3)
     #expect(bundled[.xboxGIP]?.announceResendLimit == 8)
     #expect(bundled[.xboxXUSB]?.receiverInquiryResendLimit == 8)
@@ -132,6 +133,10 @@ struct ProtocolDescriptionTests {
         == [
           .stickDeadzone, .frameQueueCapacity, .presenceResendReports, .usbTransferTimeoutMs,
         ]
+    )
+    #expect(
+      ControllerTuning.scope(protocolID: .xboxXID, variant: nil)
+        == [.stickDeadzone, .frameQueueCapacity, .usbTransferTimeoutMs]
     )
     #expect(
       ControllerTuning.scope(protocolID: nil, variant: nil) == [
@@ -702,7 +707,8 @@ struct ProtocolDescriptionTests {
   func aFamilysKeepAliveIntervalComesFromItsDescription() throws {
     let edited = try decode(
       family: .valveSteamDeck,
-      #""defaults": {"session": {"keepAlive": {"intervalMilliseconds": 777}}}"#
+      #""defaults": {"session": {"keepAlive": {"intervalMilliseconds": 777}, "#
+        + Self.valveSessionWrites + "}}"
     )
     let plan = DriverSessionPlan(keepAliveChannels: [.hid]).withKeepAlive(of: edited)
     #expect(plan.hidKeepAliveIntervalNanoseconds == 777_000_000)
@@ -739,6 +745,94 @@ struct ProtocolDescriptionTests {
       checked.insert(profile.physicalProtocolID)
     }
     #expect(checked == families)
+  }
+
+  private static let valveFeature = #"{"report": {"kind": "Feature", "id": 0, "length": 2}"#
+  private static let valveSessionWrites =
+    #""activation": ["# + valveFeature + #", "bytes": "81 00"}], "deactivation": ["#
+    + valveFeature + #", "bytes": "85 00"}]"#
+
+  @Test
+  func decodesValveActivationFilteredByTransport() throws {
+    let description = try decode(
+      family: .valveSteamController,
+      #""defaults": {"session": {"activation": ["#
+        + Self.valveFeature + #", "bytes": "81 00", "transport": "USB"}, "#
+        + Self.valveFeature + #", "bytes": "82 00", "transport": "BluetoothLE"}, "#
+        + Self.valveFeature + #", "bytes": "83 00"}], "deactivation": ["#
+        + Self.valveFeature + #", "bytes": "85 00"}]}}"#
+    )
+    #expect(description.activationWrites(over: .usb).count == 2)
+    #expect(description.activationWrites(over: .bluetoothLE).count == 2)
+    #expect(description.activationWrites(over: .bluetoothClassic).count == 1)
+    #expect(description.deactivationWrites(over: .usb).count == 1)
+  }
+
+  @Test(
+    arguments: [
+      (PhysicalProtocolID.valveSteamController, "BluetoothClassic", false),
+      (.valveSteamController, "USB", true), (.valveSteamController, "BluetoothLE", true),
+      (.valveSteamDeck, "USB", false), (.valveSteamTriton, "BluetoothLE", false),
+    ]
+  )
+  func activationTransportIsOneTheDriverReads(
+    family: PhysicalProtocolID,
+    transport: String,
+    accepted: Bool
+  ) {
+    let write = Self.valveFeature + #", "bytes": "81 00", "transport": "\#(transport)"}"#
+    for key in ["activation", "deactivation"] {
+      let other = key == "activation" ? "deactivation" : "activation"
+      let body =
+        #""defaults": {"session": {"\#(key)": ["# + write + #"], "\#(other)": ["#
+        + Self.valveFeature + #", "bytes": "85 00"}]}}"#
+      #expect((rejection(family: family, body) == nil) == accepted, "\(family) \(transport)")
+    }
+  }
+
+  @Test
+  func activationBelongsToTheValveFamilies() {
+    let body = #""defaults": {"session": {"# + Self.valveSessionWrites + "}}"
+    for family in [PhysicalProtocolID.sonyDualSense, .xboxGIP, .nintendoSwitch1] {
+      let problem = rejection(family: family, body)
+      #expect(problem?.code == .invalidProtocolDescription, "\(family.rawValue)")
+    }
+    for family in [PhysicalProtocolID.valveSteamController, .valveSteamDeck, .valveSteamTriton] {
+      #expect(rejection(family: family, body) == nil, "\(family.rawValue)")
+      let missing = rejection(
+        family: family,
+        #""defaults": {"session": {"activation": ["# + Self.valveFeature
+          + #", "bytes": "81 00"}]}}"#
+      )
+      #expect(missing?.code == .invalidProtocolDescription, "\(family.rawValue)")
+    }
+  }
+
+  @Test(
+    arguments: [
+      "[]", #"[{"bytes": "81 00"}]"#, #"[{"report": {"kind": "Feature", "id": 0, "length": 2}}]"#,
+      #"[{"report": {"kind": "Feature", "id": 0, "length": 2}, "bytes": "81"}]"#,
+    ]
+  )
+  func rejectsMalformedValveActivation(writes: String) {
+    let body =
+      #""defaults": {"session": {"activation": "# + writes + #", "deactivation": "#
+      + writes + "}}"
+    #expect(rejection(family: .valveSteamDeck, body)?.code == .invalidProtocolDescription)
+  }
+
+  @Test(
+    arguments: [
+      #""phase": "Startup""#, #""variants": ["Wired"]"#, #""transport": "Radio""#,
+      #""delayMilliseconds": 5"#, #""crc32Seed": 1"#,
+    ]
+  )
+  func rejectsValveActivationMembersOfAStartupWrite(field: String) {
+    let write = "[" + Self.valveFeature + #", "bytes": "81 00", "# + field + "}]"
+    let body =
+      #""defaults": {"session": {"activation": "# + write + #", "deactivation": "#
+      + write + "}}"
+    #expect(rejection(family: .valveSteamDeck, body)?.code == .invalidProtocolDescription)
   }
 
   @Test

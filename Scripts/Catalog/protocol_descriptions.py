@@ -137,6 +137,7 @@ def semantic_violations(
     found += keep_alive_violations(description, variants)
     found += subcommand_violations(description)
     found += named_packet_violations(description)
+    found += session_write_violations(description)
     return found
 
 
@@ -408,6 +409,49 @@ def named_packet_violations(description: dict[str, Any]) -> list[tuple[str, str]
         for identifier in identifiers
         if not identifier.startswith(prefix)
     ]
+    return found
+
+
+def session_write_violations(description: dict[str, Any]) -> list[tuple[str, str]]:
+    """What `defaults.session.activation` and `deactivation` may hold, as `RecordStartupWrite`
+    checks it in Swift.
+
+    The bytes fill every writable byte of the report: all of it when the report ID is zero,
+    otherwise the bytes after the ID. A schema cannot say so.
+    """
+    session = description.get("defaults", {}).get("session", {})
+    found: list[tuple[str, str]] = []
+    for key in ("activation", "deactivation"):
+        for index, write in enumerate(session.get(key, ())):
+            report = write["report"]
+            expected = report["length"] - (1 if report["id"] != 0 else 0)
+            transport = write.get("transport")
+            allowed = (
+                ("USB", "BluetoothLE")
+                if description["family"] == "ValveSteamController"
+                else ()
+            )
+            if transport is not None and transport not in allowed:
+                found.append(
+                    (
+                        "E5002",
+                        (
+                            f"defaults.session.{key}[{index}]: transport {transport} is not one "
+                            "this family's driver reads"
+                        ),
+                    )
+                )
+            count = len(write["bytes"].split(" "))
+            if count != expected:
+                found.append(
+                    (
+                        "E5002",
+                        (
+                            f"defaults.session.{key}[{index}]: bytes lists {count} bytes, "
+                            f"and the report has {expected} after its ID"
+                        ),
+                    )
+                )
     return found
 
 

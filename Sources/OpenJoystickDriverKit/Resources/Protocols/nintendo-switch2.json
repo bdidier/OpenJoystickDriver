@@ -19,6 +19,14 @@
   },
   "defaults": {
     "session": {
+      "commandChannel": {
+        "interface": 1,
+        "inEndpoint": 130,
+        "replyLength": 80,
+        "usbReplyTimeoutMilliseconds": 100,
+        "bluetoothLEReplyTimeoutMilliseconds": 500
+      },
+      "trailingStopPackets": 2,
       "startup": [
         {
           "bytes": "02 91 00 01 00 08 00 00 00 00 00 00 80 30 01 00",

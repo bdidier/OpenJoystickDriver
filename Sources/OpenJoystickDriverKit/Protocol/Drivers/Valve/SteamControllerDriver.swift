@@ -5,37 +5,19 @@ let steamControllerReportPrefix1: UInt8 = 0x00
 let steamControllerStateMessageID: UInt8 = 0x01
 let steamControllerWirelessMessageID: UInt8 = 0x03
 let steamControllerStatusMessageID: UInt8 = 0x04
-let steamControllerIMUModeSetting: UInt8 = 48
-let steamControllerRawIMUMode: UInt8 = 0x18
 let steamControllerReportLength = 64
 let steamControllerTriggerMax: Float = 255
 let steamControllerStickMax: Float = 32767
 let steamControllerWirelessDisconnected: UInt8 = 0x01
 let steamControllerWirelessConnected: UInt8 = 0x02
-let steamControllerSetDefaultDigitalMappingsCommand: UInt8 = 0x85
-let steamControllerLoadDefaultSettingsCommand: UInt8 = 0x8E
-let steamControllerClearDigitalMappingsCommand: UInt8 = 0x81
 let steamControllerSetSettingsValuesCommand: UInt8 = 0x87
 let steamControllerGetWirelessStateCommand: UInt8 = 0xB4
 let steamControllerHapticPulseCommand: UInt8 = 0x8F
 let steamControllerHapticPulsePayloadLength: UInt8 = 8
 let steamControllerUserLEDBrightnessSetting: UInt8 = 45
 let steamControllerMaximumPulseMicroseconds = 65_535
-let steamControllerTrackpadNone: UInt8 = 0x07
-let steamControllerLeftTrackpadModeSetting: UInt8 = 0x07
-let steamControllerRightTrackpadModeSetting: UInt8 = 0x08
-let steamControllerClearDigitalMappingsPayload: [UInt8] = [
-  steamControllerClearDigitalMappingsCommand
-]
-let steamControllerLizardModePayload: [UInt8] = [
-  steamControllerSetSettingsValuesCommand, 9, steamControllerLeftTrackpadModeSetting,
-  steamControllerTrackpadNone, 0, steamControllerRightTrackpadModeSetting,
-  steamControllerTrackpadNone, 0, steamControllerIMUModeSetting, steamControllerRawIMUMode, 0,
-]
-let steamControllerDefaultDigitalMappingsPayload: [UInt8] = [
-  steamControllerSetDefaultDigitalMappingsCommand
-]
-let steamControllerLoadDefaultSettingsPayload: [UInt8] = [steamControllerLoadDefaultSettingsCommand]
+/// The length of the pulse that stands for a held rumble, which the pad cannot hold open-ended.
+let steamControllerHeldPulseMilliseconds = 65
 
 /// Driver for Valve Steam Controller input reports.
 ///

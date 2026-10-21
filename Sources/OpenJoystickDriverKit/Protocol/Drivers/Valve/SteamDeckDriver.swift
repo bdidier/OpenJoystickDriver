@@ -2,10 +2,6 @@ import Foundation
 
 let steamDeckStateMessageID: UInt8 = 0x09
 let steamDeckTriggerRumbleCommand: UInt8 = 0xEB
-let steamDeckSmoothAbsoluteMouseSetting: UInt8 = 24
-let steamDeckLeftTrackpadClickPressureSetting: UInt8 = 52
-let steamDeckRightTrackpadClickPressureSetting: UInt8 = 53
-let steamDeckWatchdogEnableSetting: UInt8 = 71
 
 /// Driver for the Steam Deck's built-in controller (Neptune).
 ///
@@ -55,25 +51,12 @@ public final class SteamDeckDriver: PhysicalProtocolDriver {
   /// off. Linux `steam_set_lizard_mode` also turns off the watchdog that restores lizard mode
   /// while Steam is not running.
   public func activationWrites() -> [PhysicalOutputWrite] {
-    let settings: [(UInt8, UInt16)] = [
-      (steamDeckSmoothAbsoluteMouseSetting, 0),
-      (steamControllerLeftTrackpadModeSetting, UInt16(steamControllerTrackpadNone)),
-      (steamControllerRightTrackpadModeSetting, UInt16(steamControllerTrackpadNone)),
-      (steamDeckLeftTrackpadClickPressureSetting, 0xFFFF),
-      (steamDeckRightTrackpadClickPressureSetting, 0xFFFF), (steamDeckWatchdogEnableSetting, 0),
-    ]
-    return [
-      .hidFeature(Self.featureReport(steamControllerClearDigitalMappingsPayload)),
-      .hidFeature(Self.settingsReport(settings)),
-    ]
+    PhysicalProtocolID.valveSteamDeck.protocolDescription.activationWrites(over: nil)
   }
 
   /// Linux `steam_set_lizard_mode(true)`: default digital mappings, then default settings.
   public func deactivationWrites() -> [PhysicalOutputWrite] {
-    [
-      .hidFeature(Self.featureReport(steamControllerDefaultDigitalMappingsPayload)),
-      .hidFeature(Self.featureReport(steamControllerLoadDefaultSettingsPayload)),
-    ]
+    PhysicalProtocolID.valveSteamDeck.protocolDescription.deactivationWrites(over: nil)
   }
 
   /// SDL `FeedDeckLizardWatchdog`, for firmware that ignores the watchdog setting.
@@ -102,15 +85,6 @@ public final class SteamDeckDriver: PhysicalProtocolDriver {
       UInt8(truncatingIfNeeded: right >> 8), 2, 0,
     ]
     return PhysicalOutputPlan(writes: [.hidFeature(Self.featureReport(rumble))])
-  }
-
-  /// `ID_SET_SETTINGS_VALUES` with one 3-byte `ControllerSetting` per entry.
-  static func settingsReport(_ settings: [(UInt8, UInt16)]) -> PhysicalHIDOutputReport {
-    var command = [steamControllerSetSettingsValuesCommand, UInt8(settings.count * 3)]
-    for (number, value) in settings {
-      command += [number, UInt8(truncatingIfNeeded: value), UInt8(truncatingIfNeeded: value >> 8)]
-    }
-    return featureReport(command)
   }
 
   static func featureReport(_ command: [UInt8]) -> PhysicalHIDOutputReport {

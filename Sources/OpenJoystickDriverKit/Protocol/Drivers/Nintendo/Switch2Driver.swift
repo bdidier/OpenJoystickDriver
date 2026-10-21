@@ -4,9 +4,6 @@ private let switch2StateReportID: UInt8 = 0x05
 private let switch2StateReportLength = 64
 /// SDL `RUMBLE_MAX`: the HD rumble amplitude cap.
 private let switch2RumbleMaxAmplitude = 29_000
-/// Zero-amplitude packets sent by the rumble refresh after a stop. A refresh built before the stop
-/// can still arrive after it, and the next one must stop the motors again.
-private let switch2TrailingStopPackets = 2
 
 public enum Switch2ControllerLayout: Sendable {
   case pro
@@ -101,6 +98,16 @@ public final class Switch2Driver: PhysicalProtocolDriver {
     PhysicalProtocolID.nintendoSwitch2.descriptionOutputEndpoint
   }
 
+  /// The USB interface that carries commands and replies, from the description. A description
+  /// that sets none is a defect.
+  static var commandChannel: ProtocolDescription.CommandChannel {
+    guard let channel = PhysicalProtocolID.nintendoSwitch2.protocolDescription.commandChannel
+    else {
+      preconditionFailure("nintendo-switch2.json sets no commandChannel")
+    }
+    return channel
+  }
+
   /// `tuning` is the effective tuning of the controller's record; the description's defaults
   /// when nil.
   public init(
@@ -160,18 +167,20 @@ public final class Switch2Driver: PhysicalProtocolDriver {
   public var defaultColor: ControllerColor? { nil }
 
   /// SDL reads USB replies of up to `0x50` bytes in 64-byte chunks, 100 ms each. A BLE reply
-  /// waits for a connection interval, so its read timeout is longer. SDL `RUMBLE_INTERVAL`: the
-  /// description's keep-alive interval is the period the rumble packet is re-sent while any motor
-  /// runs.
+  /// waits for a connection interval, so its read timeout is longer. The description's command
+  /// channel sets both. SDL `RUMBLE_INTERVAL`: the description's keep-alive interval is the
+  /// period the rumble packet is re-sent while any motor runs.
   public var sessionPlan: DriverSessionPlan {
-    DriverSessionPlan(
+    let channel = Self.commandChannel
+    return DriverSessionPlan(
       keepAliveChannels: [.hid],
       usbCommandChannel: USBCommandChannel(
-        interfaceNumber: 1,
+        interfaceNumber: channel.interface,
         outEndpoint: Self.commandOutEndpoint,
-        inEndpoint: 0x82,
-        replyLength: 0x50,
-        replyTimeoutMilliseconds: link == .usb ? 100 : 500
+        inEndpoint: channel.inEndpoint,
+        replyLength: channel.replyLength,
+        replyTimeoutMilliseconds: link == .usb
+          ? channel.usbReplyTimeoutMilliseconds : channel.bluetoothLEReplyTimeoutMilliseconds
       )
     ).withKeepAlive(of: .nintendoSwitch2)
   }
@@ -252,7 +261,9 @@ public final class Switch2Driver: PhysicalProtocolDriver {
       return PhysicalOutputPlan(writes: [self.command(led + [UInt8](repeating: 0, count: 7))])
     default: throw .unsupportedCapability(command.capability)
     }
-    pendingStopPackets = rumbleLow == 0 && rumbleHigh == 0 ? switch2TrailingStopPackets : 0
+    pendingStopPackets =
+      rumbleLow == 0 && rumbleHigh == 0
+      ? PhysicalProtocolID.nintendoSwitch2.described(limit: \.trailingStopPackets) : 0
     return PhysicalOutputPlan(writes: [.hidOutput(rumbleReport())])
   }
 

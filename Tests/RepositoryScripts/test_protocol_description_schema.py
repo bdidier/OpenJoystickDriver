@@ -22,9 +22,31 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 
 
 # The counts a family's description sets for its driver.
-SESSION_LIMITS: dict[str, dict[str, int]] = {
+SESSION_LIMITS: dict[str, dict[str, Any]] = {
     "XboxGIP": {"handshakeAttempts": 3, "announceResendLimit": 8},
     "XboxXUSB": {"receiverInquiryResendLimit": 8},
+    "NintendoSwitch2": {
+        "commandChannel": {
+            "interface": 1,
+            "inEndpoint": 130,
+            "replyLength": 80,
+            "usbReplyTimeoutMilliseconds": 100,
+            "bluetoothLEReplyTimeoutMilliseconds": 500,
+        },
+        "trailingStopPackets": 2,
+    },
+}
+
+
+# The activation and deactivation reports each Valve family's description must state.
+VALVE_FAMILIES = ("ValveSteamController", "ValveSteamDeck", "ValveSteamTriton")
+VALVE_SESSION: dict[str, Any] = {
+    "activation": [
+        {"report": {"kind": "Feature", "id": 0, "length": 2}, "bytes": "81 00"}
+    ],
+    "deactivation": [
+        {"report": {"kind": "Feature", "id": 0, "length": 2}, "bytes": "85 00"}
+    ],
 }
 
 
@@ -207,6 +229,8 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             document["defaults"] = {"session": {"subcommands": self.subcommands()}}
         elif family in SESSION_LIMITS:
             document["defaults"] = {"session": dict(SESSION_LIMITS[family])}
+        elif family in VALVE_FAMILIES:
+            document["defaults"] = {"session": dict(VALVE_SESSION)}
         return document
 
     def test_every_family_has_a_variant_rule(self) -> None:
@@ -359,6 +383,10 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             defaults = dict(document.get("defaults", {}))
             defaults["session"] = {**limits, **defaults.get("session", {})}
             document["defaults"] = defaults
+        if family in VALVE_FAMILIES:
+            defaults = dict(document.get("defaults", {}))
+            defaults["session"] = {**VALVE_SESSION, **defaults.get("session", {})}
+            document["defaults"] = defaults
         return document
 
     def test_accepts_parameters_and_defaults(self) -> None:
@@ -469,11 +497,19 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                 bare = self.with_body(family)
                 del bare["defaults"]
                 self.assert_rejected(bare)
-        for family in ("XboxGIP", "XboxXUSB", "XboxXID", "SonyDualSense"):
+        for family in (
+            "XboxGIP",
+            "XboxXUSB",
+            "XboxXID",
+            "SonyDualSense",
+            "NintendoSwitch2",
+        ):
             for key in (
                 "handshakeAttempts",
                 "announceResendLimit",
                 "receiverInquiryResendLimit",
+                "commandChannel",
+                "trailingStopPackets",
             ):
                 if key in SESSION_LIMITS.get(family, {}):
                     continue
@@ -484,11 +520,44 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                     ] = 3
                     self.assert_rejected(document)
 
+    def test_command_channel_has_ranges(self) -> None:
+        def channel_with(path: tuple[str, ...], value: Any) -> dict[str, Any]:
+            document = copy.deepcopy(self.with_body("NintendoSwitch2"))
+            target = document["defaults"]["session"]["commandChannel"]
+            for key in path[:-1]:
+                target = target[key]
+            target[path[-1]] = value
+            return document
+
+        for path, low, high in (
+            (("interface",), 0, 255),
+            (("inEndpoint",), 128, 255),
+            (("replyLength",), 1, 4096),
+            (("usbReplyTimeoutMilliseconds",), 1, 60000),
+            (("bluetoothLEReplyTimeoutMilliseconds",), 1, 60000),
+        ):
+            for value in (low, high):
+                with self.subTest(path=path, value=value):
+                    self.check(channel_with(path, value))
+            for value in (low - 1, high + 1):
+                with self.subTest(path=path, value=value):
+                    self.assert_rejected(channel_with(path, value))
+            with self.subTest(path=path, case="required"):
+                missing = channel_with(path, 1)
+                target = missing["defaults"]["session"]["commandChannel"]
+                for key in path[:-1]:
+                    target = target[key]
+                del target[path[-1]]
+                self.assert_rejected(missing)
+        with self.subTest(case="unknown channel member"):
+            self.assert_rejected(channel_with(("outEndpoint",), 2))
+
     def test_session_limits_have_ranges(self) -> None:
         for family, key, low, high in (
             ("XboxGIP", "handshakeAttempts", 1, 10),
             ("XboxGIP", "announceResendLimit", 1, 100),
             ("XboxXUSB", "receiverInquiryResendLimit", 1, 100),
+            ("NintendoSwitch2", "trailingStopPackets", 1, 10),
         ):
             for value in (low, high):
                 with self.subTest(key=key, value=value):
@@ -933,6 +1002,96 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         for family in ("SonyDualSense", "XboxGIP", "XboxXID", "HIDReportLayout"):
             with self.subTest(family=family):
                 self.assert_rejected(self.subcommand_body(self.subcommands(), family))
+
+    # Valve activation and deactivation.
+
+    @staticmethod
+    def session_write(**members: Any) -> dict[str, Any]:
+        return {
+            "report": {"kind": "Feature", "id": 0, "length": 2},
+            "bytes": "81 00",
+            **members,
+        }
+
+    def valve_body(self, family: str, **session: Any) -> dict[str, Any]:
+        return self.with_body(family, defaults={"session": session})
+
+    def test_accepts_valve_activation_and_deactivation(self) -> None:
+        for family in VALVE_FAMILIES:
+            with self.subTest(family=family):
+                self.check(self.valve_body(family))
+        self.check(
+            self.valve_body(
+                "ValveSteamController",
+                activation=[
+                    self.session_write(transport="USB"),
+                    self.session_write(
+                        report={"kind": "Feature", "id": 3, "length": 4},
+                        bytes="C0 81 00",
+                        transport="BluetoothLE",
+                    ),
+                ],
+            )
+        )
+
+    def test_rejects_malformed_valve_activation(self) -> None:
+        for writes in (
+            [],
+            [self.session_write() for _ in range(17)],
+            [self.session_write(bytes="81")],
+            [self.session_write(bytes="81 00 00")],
+            [self.session_write(transport="Radio")],
+            [self.session_write(phase="Startup")],
+            [self.session_write(variants=["Wired"])],
+            [self.session_write(delayMilliseconds=5)],
+            [{"bytes": "81 00"}],
+            [{"report": {"kind": "Feature", "id": 0, "length": 2}}],
+        ):
+            for key in ("activation", "deactivation"):
+                with self.subTest(key=key, writes=writes):
+                    self.assert_rejected(
+                        self.valve_body("ValveSteamDeck", **{key: writes})
+                    )
+
+    def test_activation_transport_is_only_one_the_driver_reads(self) -> None:
+        for family, transport, accepted in (
+            ("ValveSteamController", "USB", True),
+            ("ValveSteamController", "BluetoothLE", True),
+            ("ValveSteamController", "BluetoothClassic", False),
+            ("ValveSteamDeck", "USB", False),
+            ("ValveSteamTriton", "BluetoothLE", False),
+        ):
+            for key in ("activation", "deactivation"):
+                with self.subTest(family=family, key=key, transport=transport):
+                    document = self.valve_body(
+                        family, **{key: [self.session_write(transport=transport)]}
+                    )
+                    if accepted:
+                        self.check(document)
+                    else:
+                        self.assert_rejected(document)
+
+    def test_only_the_valve_families_have_activation_and_they_must_have_it(
+        self,
+    ) -> None:
+        for family in ("SonyDualSense", "XboxGIP", "XboxXUSB", "NintendoSwitch1"):
+            for key in ("activation", "deactivation"):
+                with self.subTest(family=family, key=key):
+                    document = self.with_body(
+                        family,
+                        defaults={"session": {key: [self.session_write()]}},
+                    )
+                    self.assert_rejected(document)
+        for family in VALVE_FAMILIES:
+            for key in ("activation", "deactivation"):
+                with self.subTest(family=family, missing=key):
+                    document = self.valve_body(family)
+                    del document["defaults"]["session"][key]
+                    self.assert_rejected(document)
+            with self.subTest(family=family, missing="defaults"):
+                document = self.with_body(family)
+                del document["defaults"]
+                self.assert_rejected(document)
 
     # GIP named packets.
 
