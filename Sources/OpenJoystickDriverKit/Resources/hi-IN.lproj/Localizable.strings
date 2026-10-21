@@ -1531,7 +1531,6 @@
 "access.web.closed" = "चालू है, पर पोर्ट %@ पर सुन नहीं रहा";
 "access.web.pages" = "पेज फ़ोल्डर: %@";
 "access.web.port" = "पोर्ट";
-"access.web.port.saved" = "सहेजा गया पोर्ट";
 "access.web.portRange" = "पोर्ट %lld और %lld के बीच होना चाहिए।";
 "access.web.enable.title" = "WebSocket चालू करें?";
 "access.web.enable.message" = "किसी टोकन के ऑरिजिन के वेब पेज फिर इस Mac के एंडपॉइंट से कनेक्ट हो सकते हैं।";
@@ -1888,6 +1887,12 @@
 "controllers.captureDurationInvalid" = "0 से अधिक सेकंड की संख्या दर्ज करें।";
 "controllers.fileSaved" = "%@ सहेजा गया।";
 "controllers.virtual.currentScope" = "मौजूदा ओवरराइड का दायरा: %@";
+"controllers.publication.published" = "प्रकाशित";
+"controllers.publication.notPublished" = "प्रकाशित नहीं";
+"controllers.publication.failed" = "विफल";
+"controllers.inputHealth.healthy" = "सामान्य";
+"controllers.inputHealth.stale" = "पुराना";
+"controllers.inputHealth.waitingForNeutral" = "न्यूट्रल की प्रतीक्षा";
 "settings.error.damaged" = "सेटिंग्स फ़ाइल %@ क्षतिग्रस्त है। इसे ठीक करें, या `ojd setting reset` से इसे ट्रैश में भेजें।";
 "settings.error.unsupported" = "सेटिंग्स फ़ाइल %@ समर्थित नहीं है। फ़ाइल को समर्थित apiVersion के लिए दोबारा लिखें, या `ojd setting reset` से इसे ट्रैश में भेजें।";
 "settings.error.unwritable" = "सेटिंग्स फ़ाइल %@ में लिखा नहीं जा सकता।";

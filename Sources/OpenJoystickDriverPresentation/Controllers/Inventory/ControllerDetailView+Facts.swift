@@ -218,7 +218,10 @@
           OJDLocalized.string("status.checking")
         )
       case .noProfile:
-        OJDLabeledValue(OJDLocalized.string("controllers.activeProfile"), OJDValue.none)
+        OJDLabeledValue(
+          OJDLocalized.string("controllers.activeProfile"),
+          OJDLocalized.string("common.none")
+        )
       case .profile(let name):
         OJDLabeledValue(OJDLocalized.string("controllers.activeProfile"), name)
       case .unavailable(let message):

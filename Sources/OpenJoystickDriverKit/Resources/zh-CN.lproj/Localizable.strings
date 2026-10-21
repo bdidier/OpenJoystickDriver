@@ -1531,7 +1531,6 @@
 "access.web.closed" = "已开启，但未在端口 %@ 上监听";
 "access.web.pages" = "页面文件夹：%@";
 "access.web.port" = "端口";
-"access.web.port.saved" = "已保存的端口";
 "access.web.portRange" = "端口必须介于 %lld 和 %lld 之间。";
 "access.web.enable.title" = "要打开 WebSocket 吗？";
 "access.web.enable.message" = "来自令牌所列来源的网页随后可以连接到这台 Mac 上的端点。";
@@ -1888,6 +1887,12 @@
 "controllers.captureDurationInvalid" = "请输入大于 0 的秒数。";
 "controllers.fileSaved" = "已存储 %@。";
 "controllers.virtual.currentScope" = "当前覆盖的范围：%@";
+"controllers.publication.published" = "已发布";
+"controllers.publication.notPublished" = "未发布";
+"controllers.publication.failed" = "失败";
+"controllers.inputHealth.healthy" = "正常";
+"controllers.inputHealth.stale" = "已过时";
+"controllers.inputHealth.waitingForNeutral" = "等待回中";
 "settings.error.damaged" = "设置文件 %@ 已损坏。请修复它，或用 `ojd setting reset` 将其移到废纸篓。";
 "settings.error.unsupported" = "设置文件 %@ 不受支持。请按受支持的 apiVersion 重写该文件，或用 `ojd setting reset` 将其移到废纸篓。";
 "settings.error.unwritable" = "无法写入设置文件 %@。";

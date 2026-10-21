@@ -1531,7 +1531,6 @@
 "access.web.closed" = "オンですが、ポート%@で待ち受けていません";
 "access.web.pages" = "ページフォルダ: %@";
 "access.web.port" = "ポート";
-"access.web.port.saved" = "保存済みのポート";
 "access.web.portRange" = "ポートは%lld〜%lldの範囲で指定してください。";
 "access.web.enable.title" = "WebSocketをオンにしますか？";
 "access.web.enable.message" = "トークンのオリジンのWebページは、このMac上のエンドポイントに接続できるようになります。";
@@ -1888,6 +1887,12 @@
 "controllers.captureDurationInvalid" = "0より大きい秒数を入力してください。";
 "controllers.fileSaved" = "%@を保存しました。";
 "controllers.virtual.currentScope" = "現在の上書きの適用範囲：%@";
+"controllers.publication.published" = "公開済み";
+"controllers.publication.notPublished" = "未公開";
+"controllers.publication.failed" = "失敗";
+"controllers.inputHealth.healthy" = "正常";
+"controllers.inputHealth.stale" = "古い";
+"controllers.inputHealth.waitingForNeutral" = "ニュートラル待ち";
 "settings.error.damaged" = "設定ファイル %@ が破損しています。修正するか、`ojd setting reset` でゴミ箱に移動してください。";
 "settings.error.unsupported" = "設定ファイル %@ はサポートされていません。サポートされている apiVersion に合わせてファイルを書き直すか、`ojd setting reset` でゴミ箱に移動してください。";
 "settings.error.unwritable" = "設定ファイル %@ に書き込めません。";

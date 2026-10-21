@@ -21,7 +21,7 @@ struct ControllerFact: Equatable, Identifiable {
 }
 
 /// The facts the Controllers detail lists for one controller, from the same service description
-/// `ojd controller show` reads. A fact that applies but has no value shows the hyphen; a fact the
+/// `ojd controller show` reads. A fact that applies but has no value shows "None"; a fact the
 /// controller cannot have, such as an unreported battery or a motion sensor it lacks, is left out.
 enum ControllerDetailFacts {
   /// The facts every user wants: what is published and how, the controller's state, and what it
@@ -135,7 +135,7 @@ enum ControllerDetailFacts {
   }
 
   /// The virtual HID profile the service selected for the controller, as `ojd controller show`
-  /// prints `serving.persona`; the hyphen when none is selected. Whether it is published is the
+  /// prints `serving.persona`; "None" when none is selected. Whether it is published is the
   /// separate ``publication(_:)``.
   static func persona(_ device: ApplicationServiceDeviceDescription) -> OJDValue {
     guard let selection = device.servingDecision.selection else { return .none }
@@ -143,7 +143,7 @@ enum ControllerDetailFacts {
   }
 
   /// Whether a virtual device publishes the controller and why not, as `publication.state` and
-  /// `publication.reason`; the hyphen when the service reports none.
+  /// `publication.reason`; "None" when the service reports none.
   static func publication(_ device: ApplicationServiceDeviceDescription) -> OJDValue {
     device.publication.map { .text(publicationText($0)) } ?? .none
   }
@@ -158,7 +158,7 @@ enum ControllerDetailFacts {
 
   /// The input health state, with its failure reason when it has one.
   static func inputHealthText(_ device: ApplicationServiceDeviceDescription) -> String {
-    let state = CommandLineName.kebab(device.inputHealth.state.rawValue)
+    let state = OJDLocalized.string(inputHealthKey(device.inputHealth.state))
     guard let reason = device.inputHealth.failureReason else { return state }
     return "\(state) (\(CommandLineName.kebab(reason.rawValue)))"
   }
@@ -181,8 +181,24 @@ enum ControllerDetailFacts {
     return OJDLocalized.formatted("cli.controller.show.record.user", file.path)
   }
 
+  private static func inputHealthKey(_ state: ControllerInputHealthState) -> String {
+    switch state {
+    case .healthy: return "controllers.inputHealth.healthy"
+    case .stale: return "controllers.inputHealth.stale"
+    case .waitingForNeutral: return "controllers.inputHealth.waitingForNeutral"
+    }
+  }
+
+  private static func publicationKey(_ state: ApplicationServicePublicationStatus.State) -> String {
+    switch state {
+    case .published: return "controllers.publication.published"
+    case .notPublished: return "controllers.publication.notPublished"
+    case .failed: return "controllers.publication.failed"
+    }
+  }
+
   static func publicationText(_ publication: ApplicationServicePublicationStatus) -> String {
-    let state = CommandLineName.kebab(publication.state.rawValue)
+    let state = OJDLocalized.string(publicationKey(publication.state))
     guard let reason = publication.reason else { return state }
     return "\(state) (\(reason))"
   }

@@ -1531,7 +1531,6 @@
 "access.web.closed" = "켜져 있지만 포트 %@에서 수신하지 않음";
 "access.web.pages" = "페이지 폴더: %@";
 "access.web.port" = "포트";
-"access.web.port.saved" = "저장된 포트";
 "access.web.portRange" = "포트는 %lld에서 %lld 사이여야 합니다.";
 "access.web.enable.title" = "WebSocket을 켜시겠습니까?";
 "access.web.enable.message" = "토큰의 출처에 해당하는 웹 페이지가 이 Mac의 엔드포인트에 연결할 수 있게 됩니다.";
@@ -1888,6 +1887,12 @@
 "controllers.captureDurationInvalid" = "0보다 큰 초 수를 입력하십시오.";
 "controllers.fileSaved" = "%@을(를) 저장했습니다.";
 "controllers.virtual.currentScope" = "현재 재정의의 적용 범위: %@";
+"controllers.publication.published" = "게시됨";
+"controllers.publication.notPublished" = "게시되지 않음";
+"controllers.publication.failed" = "실패";
+"controllers.inputHealth.healthy" = "정상";
+"controllers.inputHealth.stale" = "오래됨";
+"controllers.inputHealth.waitingForNeutral" = "중립 위치 대기 중";
 "settings.error.damaged" = "설정 파일 %@이(가) 손상되었습니다. 수정하거나 `ojd setting reset`을 실행해 휴지통으로 이동하세요.";
 "settings.error.unsupported" = "설정 파일 %@은(는) 지원되지 않습니다. 지원되는 apiVersion에 맞게 파일을 다시 작성하거나 `ojd setting reset`을 실행해 휴지통으로 이동하세요.";
 "settings.error.unwritable" = "설정 파일 %@에 쓸 수 없습니다.";

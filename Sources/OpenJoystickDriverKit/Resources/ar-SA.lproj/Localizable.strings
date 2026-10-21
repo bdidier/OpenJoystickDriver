@@ -1531,7 +1531,6 @@
 "access.web.closed" = "قيد التشغيل، لكنه لا يستمع على المنفذ %@";
 "access.web.pages" = "مجلد الصفحات: %@";
 "access.web.port" = "المنفذ";
-"access.web.port.saved" = "المنفذ المحفوظ";
 "access.web.portRange" = "يجب أن يكون المنفذ بين %lld و%lld.";
 "access.web.enable.title" = "هل تريد تشغيل WebSocket؟";
 "access.web.enable.message" = "يمكن لصفحات الويب من أصول الرمز المميز بعد ذلك الاتصال بنقطة النهاية على هذا الـ Mac.";
@@ -1888,6 +1887,12 @@
 "controllers.captureDurationInvalid" = "أدخل عدد ثوانٍ أكبر من 0.";
 "controllers.fileSaved" = "تم حفظ %@.";
 "controllers.virtual.currentScope" = "نطاق التجاوز الحالي: %@";
+"controllers.publication.published" = "منشور";
+"controllers.publication.notPublished" = "غير منشور";
+"controllers.publication.failed" = "فشل";
+"controllers.inputHealth.healthy" = "سليم";
+"controllers.inputHealth.stale" = "قديم";
+"controllers.inputHealth.waitingForNeutral" = "في انتظار الوضع المحايد";
 "settings.error.damaged" = "ملف الإعدادات %@ تالف. أصلحه أو انقله إلى سلة المهملات باستخدام `ojd setting reset`.";
 "settings.error.unsupported" = "ملف الإعدادات %@ غير مدعوم. أعد كتابة الملف وفق apiVersion المدعوم، أو انقله إلى سلة المهملات باستخدام `ojd setting reset`.";
 "settings.error.unwritable" = "تعذّرت الكتابة في ملف الإعدادات %@.";

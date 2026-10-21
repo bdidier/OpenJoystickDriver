@@ -1531,7 +1531,6 @@
 "access.web.closed" = "Включено, но порт %@ не прослушивается";
 "access.web.pages" = "Папка страниц: %@";
 "access.web.port" = "Порт";
-"access.web.port.saved" = "Сохранённый порт";
 "access.web.portRange" = "Порт должен быть в диапазоне от %lld до %lld.";
 "access.web.enable.title" = "Включить WebSocket?";
 "access.web.enable.message" = "Веб-страницы из источников токена смогут подключаться к конечной точке на этом Mac.";
@@ -1888,6 +1887,12 @@
 "controllers.captureDurationInvalid" = "Введите число секунд больше 0.";
 "controllers.fileSaved" = "%@ сохранён.";
 "controllers.virtual.currentScope" = "Область текущего переопределения: %@";
+"controllers.publication.published" = "Опубликован";
+"controllers.publication.notPublished" = "Не опубликован";
+"controllers.publication.failed" = "Ошибка";
+"controllers.inputHealth.healthy" = "Исправен";
+"controllers.inputHealth.stale" = "Устарел";
+"controllers.inputHealth.waitingForNeutral" = "Ожидание нейтрального положения";
 "settings.error.damaged" = "Файл настроек %@ повреждён. Исправьте его или переместите в Корзину командой `ojd setting reset`.";
 "settings.error.unsupported" = "Файл настроек %@ не поддерживается. Перепишите файл для поддерживаемой версии apiVersion или переместите его в Корзину командой `ojd setting reset`.";
 "settings.error.unwritable" = "Не удаётся записать файл настроек %@.";

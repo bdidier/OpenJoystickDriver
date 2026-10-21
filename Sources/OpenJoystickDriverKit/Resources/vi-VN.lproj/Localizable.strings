@@ -1531,7 +1531,6 @@
 "access.web.closed" = "Đã bật, nhưng không lắng nghe trên cổng %@";
 "access.web.pages" = "Thư mục trang: %@";
 "access.web.port" = "Cổng";
-"access.web.port.saved" = "Cổng đã lưu";
 "access.web.portRange" = "Cổng phải nằm trong khoảng từ %lld đến %lld.";
 "access.web.enable.title" = "Bật WebSocket?";
 "access.web.enable.message" = "Các trang web từ nguồn gốc của một token sau đó có thể kết nối với điểm cuối trên máy Mac này.";
@@ -1888,6 +1887,12 @@
 "controllers.captureDurationInvalid" = "Nhập số giây lớn hơn 0.";
 "controllers.fileSaved" = "Đã lưu %@.";
 "controllers.virtual.currentScope" = "Phạm vi của ghi đè hiện tại: %@";
+"controllers.publication.published" = "Đã xuất bản";
+"controllers.publication.notPublished" = "Chưa xuất bản";
+"controllers.publication.failed" = "Không thành công";
+"controllers.inputHealth.healthy" = "Bình thường";
+"controllers.inputHealth.stale" = "Lỗi thời";
+"controllers.inputHealth.waitingForNeutral" = "Đang chờ vị trí trung tính";
 "settings.error.damaged" = "Tệp cài đặt %@ bị hỏng. Hãy sửa tệp, hoặc chuyển tệp vào Thùng rác bằng `ojd setting reset`.";
 "settings.error.unsupported" = "Tệp cài đặt %@ không được hỗ trợ. Hãy viết lại tệp theo apiVersion được hỗ trợ, hoặc chuyển tệp vào Thùng rác bằng `ojd setting reset`.";
 "settings.error.unwritable" = "Không thể ghi tệp cài đặt %@.";

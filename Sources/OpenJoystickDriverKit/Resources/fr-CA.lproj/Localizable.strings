@@ -1642,7 +1642,6 @@
 "access.web.closed" = "Activé, mais n’écoute pas sur le port %@";
 "access.web.pages" = "Dossier des pages : %@";
 "access.web.port" = "Port";
-"access.web.port.saved" = "Port enregistré";
 "access.web.portRange" = "Le port doit être compris entre %lld et %lld.";
 "access.web.enable.title" = "Activer le WebSocket?";
 "access.web.enable.message" = "Les pages web issues des origines d’un jeton peuvent alors se connecter au point d’accès sur ce Mac.";
@@ -1889,6 +1888,12 @@
 "controllers.captureDurationInvalid" = "Saisissez un nombre de secondes supérieur à 0.";
 "controllers.fileSaved" = "%@ a été enregistré.";
 "controllers.virtual.currentScope" = "Portée du remplacement actuel : %@";
+"controllers.publication.published" = "Publié";
+"controllers.publication.notPublished" = "Non publié";
+"controllers.publication.failed" = "Échec";
+"controllers.inputHealth.healthy" = "Normal";
+"controllers.inputHealth.stale" = "Périmé";
+"controllers.inputHealth.waitingForNeutral" = "En attente de la position neutre";
 "settings.error.damaged" = "Le fichier de réglages %@ est endommagé. Corrigez-le ou placez-le dans la corbeille avec `ojd setting reset`.";
 "settings.error.unsupported" = "Le fichier de réglages %@ n’est pas pris en charge. Réécrivez le fichier pour l’apiVersion prise en charge ou placez-le dans la corbeille avec `ojd setting reset`.";
 "settings.error.unwritable" = "Impossible d’écrire dans le fichier de réglages %@.";

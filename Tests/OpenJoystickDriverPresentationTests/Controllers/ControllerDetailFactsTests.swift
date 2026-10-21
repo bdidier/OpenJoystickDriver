@@ -113,8 +113,8 @@ struct ControllerDetailFactsTests {
       target: .sdlCompatible
     )
     for (publication, text) in [
-      (published, "published"), (notPublished, "not-published (noInputYet)"),
-      (failed, "failed (send failed)"),
+      (published, "Published"), (notPublished, "Not published (noInputYet)"),
+      (failed, "Failed (send failed)"),
     ] {
       let facts = ControllerDetailFacts.general(
         for: device(override: .sdlCompatible, publication: publication)
@@ -160,7 +160,7 @@ struct ControllerDetailFactsTests {
   @Test
   func inputHealthNamesTheStateAndItsFailure() {
     let facts = ControllerDetailFacts.general(for: device())
-    #expect(Self.value(.inputHealth, in: facts) == .text("healthy"))
+    #expect(Self.value(.inputHealth, in: facts) == .text("Healthy"))
   }
 }
 
@@ -179,5 +179,22 @@ extension ControllerDetailFactsTests {
         #expect(row.text == "\(row.value) (\(row.layer ?? ""))")
       }
     }
+  }
+
+  @Test
+  func publicationAndInputHealthShowLocalizedWords() {
+    #expect(
+      ControllerDetailFacts.publicationText(ApplicationServicePublicationStatus(state: .published))
+        == OJDLocalized.string("controllers.publication.published")
+    )
+    #expect(
+      ControllerDetailFacts.publicationText(
+        ApplicationServicePublicationStatus(state: .notPublished, reason: "noInputYet")
+      ) == "\(OJDLocalized.string("controllers.publication.notPublished")) (noInputYet)"
+    )
+    #expect(
+      ControllerDetailFacts.inputHealthText(device())
+        == OJDLocalized.string("controllers.inputHealth.healthy")
+    )
   }
 }

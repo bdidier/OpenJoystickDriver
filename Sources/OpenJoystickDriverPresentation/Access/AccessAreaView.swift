@@ -166,11 +166,9 @@
           ).textSelection(.enabled)
         } else {
           OJDLabeledRow(OJDLocalized.string("access.web.port")) {
-            TextField(
-              OJDLocalized.string("access.web.port.saved"),
-              text: $model.portText
-            ).labelsHidden().textFieldStyle(RoundedBorderTextFieldStyle())
-              .multilineTextAlignment(.trailing).frame(maxWidth: 140)
+            TextField(OJDLocalized.string("access.web.port"), text: $model.portText)
+              .labelsHidden().textFieldStyle(RoundedBorderTextFieldStyle())
+              .multilineTextAlignment(.trailing).frame(width: 80)
               .ojdAccessibilityLabel(OJDLocalized.string("a11y.access.webPort"))
           }
         }

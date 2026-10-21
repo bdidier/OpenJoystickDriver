@@ -45,6 +45,8 @@
     private static let toolbarIdentifier = NSToolbar.Identifier(
       "OpenJoystickDriver.SettingsToolbar"
     )
+    /// The space left between a tall Settings window and the edges of the screen's visible area.
+    private static let screenMargin = 40.0
     private let panes: SettingsWindowPaneModel
     private let developerTools: DeveloperToolsViewModel
     private weak var toolbar: NSToolbar?
@@ -93,9 +95,13 @@
       )
       window.isReleasedWhenClosed = false
       window.hidesOnDeactivate = false
-      window.contentView = NSHostingView(
+      let hostingView = NSHostingView(
         rootView: SettingsWindowContent(panes: panes, content: makeContent)
       )
+      // The window height follows the pane through `paneChanged`, capped to the screen; the
+      // hosting view must not impose the content's ideal height as the window's minimum.
+      if #available(macOS 13, *) { hostingView.sizingOptions = [] }
+      window.contentView = hostingView
       super.init(window: window)
       window.delegate = self
       configureToolbar(on: window)
@@ -155,7 +161,7 @@
         (window.screen ?? NSScreen.main)?.visibleFrame.height ?? .greatestFiniteMagnitude
       let size = SettingsWindowPane.contentSize(
         fittingHeight: fitting,
-        availableHeight: available - chrome
+        availableHeight: available - chrome - Self.screenMargin
       )
       guard
         window.contentRect(forFrameRect: window.frame).size

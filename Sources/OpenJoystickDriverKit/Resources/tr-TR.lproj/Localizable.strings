@@ -1531,7 +1531,6 @@
 "access.web.closed" = "Açık, ancak %@ bağlantı noktası dinlenmiyor";
 "access.web.pages" = "Sayfalar klasörü: %@";
 "access.web.port" = "Bağlantı noktası";
-"access.web.port.saved" = "Kayıtlı bağlantı noktası";
 "access.web.portRange" = "Bağlantı noktası %lld ile %lld arasında olmalıdır.";
 "access.web.enable.title" = "WebSocket açılsın mı?";
 "access.web.enable.message" = "Bir token’ın kaynaklarındaki web sayfaları bundan sonra bu Mac’teki uç noktaya bağlanabilir.";
@@ -1888,6 +1887,12 @@
 "controllers.captureDurationInvalid" = "0’dan büyük bir saniye sayısı girin.";
 "controllers.fileSaved" = "%@ kaydedildi.";
 "controllers.virtual.currentScope" = "Geçerli geçersiz kılmanın kapsamı: %@";
+"controllers.publication.published" = "Yayımlandı";
+"controllers.publication.notPublished" = "Yayımlanmadı";
+"controllers.publication.failed" = "Başarısız";
+"controllers.inputHealth.healthy" = "Sağlıklı";
+"controllers.inputHealth.stale" = "Eski";
+"controllers.inputHealth.waitingForNeutral" = "Nötr konum bekleniyor";
 "settings.error.damaged" = "%@ ayar dosyası hasarlı. Dosyayı düzeltin ya da `ojd setting reset` ile Çöp Sepeti’ne taşıyın.";
 "settings.error.unsupported" = "%@ ayar dosyası desteklenmiyor. Dosyayı desteklenen apiVersion için yeniden yazın ya da `ojd setting reset` ile Çöp Sepeti’ne taşıyın.";
 "settings.error.unwritable" = "%@ ayar dosyasına yazılamıyor.";

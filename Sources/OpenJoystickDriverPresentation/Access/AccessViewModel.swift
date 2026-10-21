@@ -100,7 +100,8 @@ final class AccessViewModel: ObservableObject {
   var grantScopes: Set<EndpointScope> = [.read]
   @Published
   var tokenDraft = AccessTokenDraft()
-  /// The port field of the WebSocket form; empty keeps the saved port.
+  /// The port field of the WebSocket form, which shows the saved port; empty keeps the saved
+  /// port.
   @Published
   var portText = ""
 
@@ -141,7 +142,7 @@ final class AccessViewModel: ObservableObject {
   func dismissFailure() { failure = nil }
 
   func refresh() async {
-    do { load = .loaded(try await service.status()) } catch {
+    do { show(try await service.status()) } catch {
       load = .failed(AccessFailure(error))
     }
   }
@@ -387,6 +388,12 @@ final class AccessViewModel: ObservableObject {
     failure = nil
     busy = true
     defer { busy = false }
-    do { load = .loaded(try await request()) } catch { failure = AccessFailure(error) }
+    do { show(try await request()) } catch { failure = AccessFailure(error) }
+  }
+
+  /// Loads `status` and, while the port field is empty, fills it with the saved port.
+  private func show(_ status: AccessStatusPayload) {
+    load = .loaded(status)
+    if portText.isEmpty, let port = status.web.port { portText = String(port) }
   }
 }

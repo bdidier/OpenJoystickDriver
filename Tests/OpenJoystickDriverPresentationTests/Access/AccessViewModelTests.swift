@@ -137,6 +137,27 @@ struct AccessViewModelTests {
   }
 
   @Test
+  func thePortFieldShowsTheSavedPort() async throws {
+    let service = FakeAccessService()
+    service.payload = AccessStatusPayload(
+      enabled: false,
+      socketPath: "/tmp/ojd.sock",
+      connections: [],
+      grants: [],
+      refused: [],
+      web: AccessWebStatus(enabled: false, listening: false, port: 43_210, pagesPath: "/tmp/p"),
+      tokens: [],
+      refusedTokens: []
+    )
+    let model = AccessViewModel(service: service)
+
+    await model.refresh()
+
+    #expect(model.portText == "43210")
+    #expect(try model.webPort() == 43_210)
+  }
+
+  @Test
   func anEmptyPortKeepsTheSavedPort() async throws {
     let service = FakeAccessService()
     let model = AccessViewModel(service: service)

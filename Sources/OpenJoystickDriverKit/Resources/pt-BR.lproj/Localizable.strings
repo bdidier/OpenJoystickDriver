@@ -1642,7 +1642,6 @@
 "access.web.closed" = "Ativado, mas sem escutar na porta %@";
 "access.web.pages" = "Pasta de páginas: %@";
 "access.web.port" = "Porta";
-"access.web.port.saved" = "Porta salva";
 "access.web.portRange" = "A porta deve estar entre %lld e %lld.";
 "access.web.enable.title" = "Ativar o WebSocket?";
 "access.web.enable.message" = "As páginas web das origens de um token poderão se conectar ao endpoint neste Mac.";
@@ -1889,6 +1888,12 @@
 "controllers.captureDurationInvalid" = "Digite um número de segundos maior que 0.";
 "controllers.fileSaved" = "%@ foi salvo.";
 "controllers.virtual.currentScope" = "Escopo da substituição atual: %@";
+"controllers.publication.published" = "Publicado";
+"controllers.publication.notPublished" = "Não publicado";
+"controllers.publication.failed" = "Falhou";
+"controllers.inputHealth.healthy" = "Normal";
+"controllers.inputHealth.stale" = "Desatualizado";
+"controllers.inputHealth.waitingForNeutral" = "Aguardando posição neutra";
 "settings.error.damaged" = "O arquivo de ajustes %@ está danificado. Corrija-o ou mova-o para a Lixeira com `ojd setting reset`.";
 "settings.error.unsupported" = "O arquivo de ajustes %@ não é compatível. Reescreva o arquivo para a apiVersion compatível ou mova-o para a Lixeira com `ojd setting reset`.";
 "settings.error.unwritable" = "Não é possível gravar o arquivo de ajustes %@.";
