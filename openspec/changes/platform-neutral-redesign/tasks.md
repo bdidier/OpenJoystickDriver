@@ -286,15 +286,24 @@ Verify: `swift test`, lint pair. Hardware: H10.
 
 ## 20. AppKit GUI shell
 
-Owns: the app target, six areas, 13 screen groups.
+Owns: the app target, five areas (Controllers, Profiles, Library, Access, Activity), 13 screen groups.
 Depends: 17, 18.
 Verify: `swift test`, lint pair, `python3 Scripts/Quality/check_swift_file_length.py`.
 
-- [ ] 20.1 Build the shell: sidebar with six areas (Command-1 to Command-6), toolbar, detail panes. Verify: UI-free tests for the area model; manual launch. Progress: `MainWindow/` holds `MainWindowArea`, `MainWindowNavigationModel` (unsaved Profiles editor asks before leaving), `MainWindowController` (`NSSplitViewController`, toolbar with a sidebar toggle titled Show or Hide Sidebar by state and one `selectOne` area group, window title = area); Library and Access areas exist; the Settings window is `SettingsWindow/` (General, Notifications, Command Line, Advanced); `MainWindowAreaTests` and `MainWindowNavigationTests` pass. Open: the manual launch.
-- [ ] 20.2 Build the 13 screen groups one at a time. Each ends with a `/impeccable` pass and a gate where the user approves the visuals before the next group. Verify: user approval recorded per group in this file.
+- [ ] 20.1 Build the shell: a toolbar-only window with no sidebar, one segmented area control (Controllers, Profiles, Library, Access, Activity; Command-1 to Command-5), the window title naming the area, and the problem banner. Verify: UI-free area-model tests; manual launch approved by the user. Progress: `MainWindow/` holds `MainWindowArea`, `MainWindowNavigationModel` (unsaved Profiles editor asks before leaving), `MainWindowController`; the Settings window is `SettingsWindow/` (General, Notifications, Command Line, Advanced). Open: drop the sidebar, the sidebar toggle and the Status area; manual launch.
+- [ ] 20.2 Redesign the screen groups one at a time, in this order: shell with toolbar and problem banner; Controllers list and detail; Input Test in the detail; Profiles list, editor and creation sheet; Library; Access; Activity; Settings window; status item menu; main menu. Each group ends with an `/impeccable` pass, Apple HIG checks through the apple-docs MCP, and the user's approval recorded in this file before the next group starts. Verify: user approval recorded per group in this file.
+  User direction: "you don't need to retain any of the old layouts or textual conventions in GUI/MenuBar. use apple-docs + impeccable as complementary. A full redesign is completely fine. We do like the toolbar-based tabs though!" and "You can even reorder them more idiomatically." The redesign is free in layout, wording and order of areas, menus and sections; the toolbar tabs stay.
 - [ ] 20.3 Put every CLI action in the GUI per the coverage matrix in `design.md`. Verify: the 17.5 coverage test passes with no gaps.
 - [ ] 20.4 Add accessibility labels (`a11y.` keys) for every control. Verify: an audit script or test lists unlabeled controls and finds none.
 - [ ] 20.5 Show the error code of each damaged profile on the Profiles screen, from the `code` of the profile issue that `ojd profile list --json` prints. Part of the Profiles screen group of 20.2, with its visual approval gate. Verify: a UI-free test maps each issue to its code and text.
+- [ ] 20.6 Shell group: build one shared card component (header row with title and actions, compact empty line) and one shared hyphen value helper; remove the sidebar, in-content area titles, the "Areas" toolbar label and the overflow chevron when not needed. Verify: UI-free tests for the hyphen helper and the area model; manual launch; user approval recorded here.
+- [ ] 20.7 Controllers group: no manual Refresh and no "then choose Refresh" text (automatic detection; depends on 21.2 service push); show the published virtual HID profile once (it appears three times today), `-` when none; hide unknown battery, charging and cable; endpoints and IDs under Advanced; a lighter Managed and Disconnect block. Verify: model tests for the hyphen and hidden rows; manual check; user approval recorded here.
+- [ ] 20.8 Input Test group: keep one analog display (the Axis values panel duplicates the stick and trigger readouts); hide Motion calibration without a gyroscope and drop its stray Refresh; hide Lighting when unsupported; distinct D-pad direction symbols; at most one Refresh. Verify: model tests for the hidden sections; manual check; user approval recorded here.
+- [ ] 20.9 Profiles group: one create action (not both + and Create profile); the creation sheet picks a connected controller instead of typed Vendor and Product IDs; a default name from the controller. Verify: model tests for the controller choice and the default name; user approval recorded here.
+- [ ] 20.10 Library group: one Validate action in the card header; compact empty lines in cards; the built-in record count as a labelled number instead of "696 more records come with the app". Verify: model tests; user approval recorded here.
+- [ ] 20.11 Access group: compact permission rows instead of large mostly empty cards; hide items that are not needed; no full socket path by default; no large gaps between sections. Verify: model tests for the hidden rows; user approval recorded here.
+- [ ] 20.12 Activity group: no Console heading repeating the area; footnote placement. Verify: manual check; user approval recorded here.
+- [ ] 20.13 Status item group: the item reads Open Window; Grant Access shows only when something is missing (the logic is bug 24.44). Verify: model test; user approval recorded here.
 
 ## 21. Menu bar and main menu
 
@@ -377,9 +386,15 @@ Verify: the full check list.
 - [x] 24.34 Decide the frame-queue capacity of a controller with no record or no `frameQueueCapacity` (`UserSpaceReportSender.fallbackQueueCapacity`, `UserSpaceOutputDispatcher.frameQueueCapacity(for:)`), and the silent `max(1, queueCapacity)` clamp in `UserSpaceReportSender.init`. Either every protocol description carries `frameQueueCapacity`, so the value has one source and a missing one is a load error, or the default is a named, documented value of the schema. Verify: a test of the chosen source, and of a capacity below 1 being refused where it is read. Done: the default is the schema's (`default: 64` on `tuning.frameQueueCapacity` in `controller.schema.json`), mirrored by `ControllerTuning.defaultFrameQueueCapacity` and `frameQueueCapacityRange` (1...1024), which `FrameQueueCapacityTests` read back from the schema; the 18 copied description values are removed (a description may still set one), and `fallbackQueueCapacity` is gone. `UserSpaceOutputDispatcher.frameQueueCapacity(of:descriptions:)` takes the record's value, else its family description's, else the default; a controller with no record gets the default. The record and description decoders refuse 0 and 1025 (`ControllerRecordDocumentTests`, `FrameQueueCapacityTests`, `test_protocol_description_schema`), and `UserSpaceReportSender.init` replaces the `max(1, _)` clamp with a precondition on the range. Chosen with a second opinion (schema default, 0.76). `wiki/Controller-Records.md` names the default. `just check` passed (Swift 1924/425/302/255, Python 457).
 - [ ] 24.35 Spell acronyms upper case in field names too, as the naming rule does for values (`reportID`, `appID`, `vendorID`), in every schema, producer and consumer. Verify: the naming test applies the acronym check to property and `required` names with its pending list empty.
 - [ ] 24.36 Support Disconnect Wireless Link for Bluetooth LE controllers (Xbox Series, Switch 2, Steam Controller/Triton over LE). `DeviceManager.disconnectWirelessController` accepts only a classic Bluetooth link (`.bluetoothClassic`) because an LE route carries no `hidRoutingAddress` and the disconnector (IOBluetooth) is classic-only; the Controllers detail page, status item and main menu offer the action only for `supportsWirelessDisconnect`. Add an LE route address and an LE-capable disconnector, then widen the gate and `supportsWirelessDisconnect` together. Verify: an LE controller disconnects from the detail page; tests cover the LE accept path.
-- [ ] 24.37 Give Explain Error Code a GUI place (an entry in the Activity area that shows the `ojd explain` text for a typed code) and add Explain Error Code and Report a Problem to the main menu's Help menu, matching the status item's Help submenu. Verify: `MainMenuModelTests` lists both Help items with a GUI counterpart; a UI-free test maps a code to its explanation.
-- [ ] 24.38 Let the status item's Controllers submenu and the main menu's Controller menu act on a chosen controller when several are connected (today the status item acts on the first and the main menu only on a single controller). Verify: a model test with two controllers shows each one's actions.
-- [ ] 24.39 Remove the localization keys that no Swift source reads after the GUI rebuild (for example `settings.navigation`, `settings.overview` and the `menu.*` status-item keys), from the template and all 22 locales, after `rg` finds no reference. Verify: a check lists catalog keys with no reader and finds none, or names each key it keeps with its reason.
+- [x] 24.37 Give Explain Error Code a GUI place (an entry in the Activity area that shows the `ojd explain` text for a typed code) and add Explain Error Code and Report a Problem to the main menu's Help menu, matching the status item's Help submenu. Verify: `MainMenuModelTests` lists both Help items with a GUI counterpart; a UI-free test maps a code to its explanation.
+- [x] 24.38 Let the status item's Controllers submenu and the main menu's Controller menu act on a chosen controller when several are connected (today the status item acts on the first and the main menu only on a single controller). Verify: a model test with two controllers shows each one's actions.
+- [x] 24.39 Remove the localization keys that no Swift source reads after the GUI rebuild (for example `settings.navigation`, `settings.overview` and the `menu.*` status-item keys), from the template and all 22 locales, after `rg` finds no reference. Verify: a check lists catalog keys with no reader and finds none, or names each key it keeps with its reason.
+- [x] 24.40 Status reports "This app does not contain the Xbox USB driver" while the dext is installed and `[activated enabled]`; the driver check reads the real state. Verify: a test for the check on a bundle that contains the dext.
+- [ ] 24.41 Input Test names the GameSir G7 SE "OpenJoystickDriver Generic HID Gamepad" instead of the physical controller, and the Controllers detail shows "Published as: No virtual HID profile" while Advanced -> Live profile shows "OpenJoystickDriver Generic HID Gamepad (1209:4A4F) · Automatic"; both read the same live state. Verify: tests for the title and for Published as with an Automatic live profile.
+- [x] 24.42 Activity: the "Stream" control label wraps one letter per line; informational service messages ("Main app registered for login") appear as [ERR]; the Personas folder watcher logs "errno 2" when the folder does not exist. Verify: tests for stream classification and for watching a missing folder.
+- [x] 24.43 The new-profile sheet shows its red validation message before the user edits anything. Verify: a model test shows no message until a field is edited or Create is attempted.
+- [ ] 24.44 The status item menu shows a scroll chevron at its top and shows Grant Access... when every permission is granted. Verify: a model test hides Grant Access when access is complete; manual check of the chevron.
+- [x] 24.45 `signing configure` and `verify_profile_cert` read only the first certificate embedded in a provisioning profile; they accept any embedded certificate with an installed identity shared by the host and DriverKit profiles, and fail instead of continuing when identities cannot be read. Verify: `Tests/RepositoryScripts/test_signing_profiles.py`.
 
 ## Hardware checks (maintainer)
 
@@ -409,7 +424,7 @@ These need the maintainer and a device. Each result is recorded in `wiki` or the
 
 ## Continuing the work
 
-State at `feat/0.6.0-alpha.1`: 120 of 167 tasks done; every work branch is merged; one solo worktree remains (`.claude/worktrees/self-2424`, branch `feat/0.6.0-alpha.1-wiki-case`, merged). Nothing is pushed.
+State at `feat/0.6.0-alpha.1`: 136 of 192 tasks done; every work branch is merged; one solo worktree remains (`.claude/worktrees/self-2424`, branch `feat/0.6.0-alpha.1-wiki-case`, merged). Nothing is pushed.
 
 How to work:
 
@@ -422,8 +437,9 @@ How to work:
 
 Order of the open tasks:
 
-1. 15.8, 24.30, 24.30a, 24.30b, 24.30c, 9.1a, 9.1h, 9.3, 24.7, 17.1 with 17.1d, 17.4a, 17.2a.
-2. 20.1 to 20.5 and 21.1 to 21.4: each screen ends with the maintainer's visual check.
-3. 22.1 to 22.5 and 22.7.
-4. 24.16 after 17.1 and section 15; 24.18 after H6; 16.4 after H5; 16.5 after H7.
-5. 23.1 to 23.4 last.
+1. Bugs first: 24.40 to 24.45.
+2. The 20.x groups in order, each with its `/impeccable` pass, apple-docs HIG checks and the user's recorded approval: 20.1 and 20.6 (shell), 20.7 (Controllers), 20.8 (Input Test), 20.9 (Profiles), 20.10 (Library), 20.11 (Access), 20.12 (Activity), then the Settings window, 20.13 (status item) and main menu groups of 20.2; 20.3 to 20.5 and 21.1 to 21.4 alongside.
+3. 9.1h, then 15.8, 24.30, 24.30a, 24.30b, 24.30c, 9.1a, 9.3, 24.7, 17.1 with 17.1d, 17.4a, 17.2a.
+4. 22.1 to 22.5 and 22.7.
+5. 24.16 after 17.1 and section 15; 24.18 after H6; 16.4 after H5; 16.5 after H7.
+6. 23.1 to 23.4 last.

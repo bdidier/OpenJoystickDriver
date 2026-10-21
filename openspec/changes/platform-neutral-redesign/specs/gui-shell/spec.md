@@ -9,14 +9,140 @@ Every CLI command SHALL have a place in the GUI. A repository test SHALL list th
 - **WHEN** a command is added without a GUI mapping
 - **THEN** the coverage test fails
 
-### Requirement: Main window structure
+### Requirement: One obvious way
 
-The main window SHALL use a split view with a sidebar. The toolbar SHALL hold a sidebar toggle and area buttons Status, Controllers, Profiles, Library, Access and Activity. The window title SHALL be the current area. `Command-1` to `Command-6` SHALL select the areas.
+Each action SHALL appear once on a screen, and each fact SHALL appear once on a screen. A capability that a controller does not have, and a value that is unknown, SHALL be hidden: no row, box or card reads "Unknown", "Not needed" or "Unavailable". An area SHALL NOT repeat its own name as a heading or footnote. No screen SHALL ask the user to refresh to see connected controllers or live input.
+
+#### Scenario: Action offered twice
+
+- **WHEN** a screen would offer the same action in a second place
+- **THEN** the second control is not shown
+
+#### Scenario: Unknown battery
+
+- **WHEN** a controller reports no battery level
+- **THEN** the Controllers detail shows no battery, charging or cable row
+
+### Requirement: Unknown values
+
+A value field whose value is unknown, missing or not applicable SHALL show a single hyphen `-`, produced by one shared helper that every screen uses. No screen SHALL show a sentence, "Unknown", "None" or "N/A" in a value field in its place. A field that can never apply to the selected controller SHALL be hidden instead.
+
+#### Scenario: No virtual HID profile published
+
+- **WHEN** the selected controller has no published virtual HID profile
+- **THEN** the Published as value reads `-`
+
+#### Scenario: Unsupported capability
+
+- **WHEN** the selected controller has no lighting
+- **THEN** the detail shows no Lighting row or section
+
+### Requirement: Cards
+
+Each section of a screen SHALL be one card built from one shared card component. The card header row SHALL hold the section title and the section's actions. An empty section SHALL show one compact line of text inside its card, with no illustration and no extra spacing. Cards SHALL share one corner radius, padding and spacing and SHALL NOT nest.
+
+#### Scenario: Section with an action
+
+- **WHEN** a section has an action such as Validate
+- **THEN** the action sits in the card header row beside the title
+
+#### Scenario: Empty section
+
+- **WHEN** a section has no content
+- **THEN** its card shows one line of text and keeps no reserved empty space
+
+### Requirement: Main window navigation
+
+The main window SHALL switch areas from one segmented control in the toolbar. The window SHALL have no sidebar and no sidebar toggle. The control SHALL hold five areas in this order: Controllers, Profiles, Library, Access and Activity. `Command-1` to `Command-5` SHALL select the areas in that order. The window title SHALL name the selected area, and the content SHALL NOT repeat that name.
 
 #### Scenario: Area switch
 
-- **WHEN** the user presses `Command-3`
+- **WHEN** the user presses `Command-2`
 - **THEN** Profiles is selected and the title reads Profiles
+
+#### Scenario: Window opens
+
+- **WHEN** the main window opens
+- **THEN** the toolbar holds the five areas and no sidebar toggle, and no sidebar is shown
+
+### Requirement: Problem banner
+
+The main window SHALL show one banner at its top only while the driver or the service has a problem. The banner SHALL state the problem in one line and offer Details, which shows the `ojd explain` text. The banner SHALL disappear when the problem clears. The banner SHALL NOT show controller counts.
+
+#### Scenario: Healthy app
+
+- **WHEN** the driver and the service are healthy
+- **THEN** no banner is shown
+
+#### Scenario: Driver installed and active
+
+- **WHEN** the driver extension is installed and activated
+- **THEN** the banner does not report the driver as missing
+
+### Requirement: Controllers area
+
+The Controllers area SHALL detect controllers automatically and SHALL show the count of connected controllers. It SHALL have no Refresh control. With no controller connected, it SHALL show one line of empty-state text and no button. The controller detail SHALL show the virtual HID profile once, in its Published as row. Endpoints SHALL appear under Advanced. Ownership SHALL appear as one row with one action.
+
+#### Scenario: Controller attaches
+
+- **WHEN** a controller is attached
+- **THEN** it appears in the list without any user action
+
+#### Scenario: Empty state
+
+- **WHEN** no controller is connected
+- **THEN** the area shows one line of text and no button
+
+### Requirement: Input Test
+
+Input Test SHALL be the Test section of the selected controller's detail in the Controllers area. It SHALL NOT open a separate window and SHALL NOT have an Open Input Test control. The Test section SHALL name the physical controller. Stick and trigger readouts SHALL be the only display of analog values. Motion calibration SHALL appear only for a controller with a gyroscope. Lighting SHALL appear only for a controller that supports it. Each D-pad direction SHALL have its own symbol.
+
+#### Scenario: Test Input from the status item
+
+- **WHEN** the user chooses Test Input for a controller in the status item
+- **THEN** the Controllers area opens that controller's Test section
+
+#### Scenario: Controller without gyroscope
+
+- **WHEN** the selected controller has no gyroscope
+- **THEN** the Test section shows no Motion calibration
+
+#### Scenario: Physical name
+
+- **WHEN** the GameSir G7 SE is selected
+- **THEN** the Test section names the GameSir G7 SE, not the virtual device
+
+### Requirement: Profiles area and profile creation
+
+The Profiles area SHALL have one control that creates a profile. The creation sheet SHALL choose from connected controllers and SHALL NOT ask for vendor or product IDs. The default profile name SHALL come from the chosen controller. The sheet SHALL show no validation message until a field is edited or Create is pressed.
+
+#### Scenario: Controller chosen
+
+- **WHEN** the user opens the creation sheet with a controller connected
+- **THEN** the sheet lists that controller and proposes its name as the profile name
+
+#### Scenario: No controller connected
+
+- **WHEN** the user opens the creation sheet with no controller connected
+- **THEN** the sheet lists no controller and Create is disabled
+
+### Requirement: Library area
+
+The Library area SHALL have one Validate control, in its card header, and one empty state. The number of built-in records SHALL appear as a labelled count, not as a sentence.
+
+#### Scenario: Built-in records
+
+- **WHEN** the Library lists the built-in controller records
+- **THEN** the count appears as a labelled number
+
+### Requirement: Access area
+
+The Access area SHALL show each access grant as one row with its status. A grant that the app does not need SHALL NOT appear. The full socket path SHALL NOT appear.
+
+#### Scenario: Grant not needed
+
+- **WHEN** the app does not need keyboard and pointer access
+- **THEN** no keyboard and pointer row appears
 
 ### Requirement: Settings window
 
@@ -34,11 +160,11 @@ The shell SHALL run on macOS 12 using AppKit containers with SwiftUI content. It
 #### Scenario: macOS 12 launch
 
 - **WHEN** the app launches on the macOS 12 host
-- **THEN** all six areas and the Settings window open
+- **THEN** all five areas and the Settings window open
 
 ### Requirement: Confirmations and errors
 
-Destructive actions SHALL ask through window-modal sheets whose text matches the action (an uninstall sheet SHALL NOT show repair text). Errors SHALL use one inline pattern: symbol, text, and a Details control that shows the `ojd explain` text.
+Destructive actions SHALL ask through window-modal sheets whose text matches the action (an uninstall sheet SHALL NOT show repair text). Errors SHALL use one inline pattern: symbol, text, and a Details control that shows the `ojd explain` text. The problem banner SHALL use the same pattern.
 
 #### Scenario: Uninstall
 
@@ -60,12 +186,12 @@ All controls SHALL have accessibility labels from `a11y.*` keys, support Increas
 
 #### Scenario: VoiceOver
 
-- **WHEN** VoiceOver is on and the sidebar toggle is focused
-- **THEN** it reads "Show Sidebar" or "Hide Sidebar" according to state
+- **WHEN** VoiceOver is on and the Controllers segment is focused
+- **THEN** it reads the area name and whether the area is selected
 
 ### Requirement: Visual approval
 
-Each of the 13 screen groups (shell, Status, Controllers, Input Test, Profiles, Library, Access, Activity, Settings window, status item, destructive confirmations, errors, main menu) SHALL be shown to the user in light and dark appearance and approved before it counts as done.
+Each of the 13 screen groups (shell, problem banner, Controllers, Input Test, Profiles, Library, Access, Activity, Settings window, status item, main menu, destructive confirmations, errors) SHALL be shown in light and dark appearance and approved before it counts as done.
 
 #### Scenario: Unapproved group
 

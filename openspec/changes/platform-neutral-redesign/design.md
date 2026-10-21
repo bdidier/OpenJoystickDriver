@@ -231,8 +231,8 @@ CLI is a subset of GUI (every command has a GUI place); the menu bar is a subset
 
 | CLI group | GUI area | Main menu | Status item |
 | --- | --- | --- | --- |
-| `status`, `transport-extension`, `permission`, `service` | Status | View > Status (`Command-1`) | status line, Open Window |
-| `controller`, `virtual`, `config show` | Controllers (list, detail, Input Test, persona, serving) | Controller menu | Controllers submenu |
+| `status`, `transport-extension`, `permission`, `service` | problem banner, Controllers (connected count), Access | none | status line, Open Window |
+| `controller`, `virtual`, `config show` | Controllers (list, detail with Test section, persona, serving) | Controller menu | Controllers submenu |
 | `profile`, `binding` | Profiles | Profile menu, File > Import/Export Profile | Profiles submenu |
 | `record`, `mod` | Library | File > Install Record or Mod | none |
 | `access` | Access | none | Grant Access |
@@ -241,30 +241,35 @@ CLI is a subset of GUI (every command has a GUI place); the menu bar is a subset
 
 ### D11 GUI
 
-The GUI is redone entirely as an AppKit shell for macOS 12: `NSSplitViewController`, `NSToolbar`, `NSStatusItem` with `NSMenu`, `NSWindowController` for Settings; SwiftUI content inside `NSHostingController`. `NavigationSplitView`, `MenuBarExtra` and `Window` need macOS 13, and `.inspector` needs macOS 14, so they are not used. `NSToolbarItemGroup` `selectOne` and `NSTrackingSeparatorToolbarItem` (macOS 11) are available.
+The GUI is redone entirely as an AppKit shell for macOS 12: `NSToolbar`, `NSStatusItem` with `NSMenu`, `NSWindowController` for Settings; SwiftUI content inside `NSHostingController`. `NavigationSplitView`, `MenuBarExtra` and `Window` need macOS 13, and `.inspector` needs macOS 14, so they are not used. `NSToolbarItemGroup` `selectOne` and `NSTrackingSeparatorToolbarItem` (macOS 11) are available.
 
-- Main window: toolbar = sidebar toggle + area buttons Status, Controllers, Profiles, Library, Access, Activity. Window title is the current area. `Command-1` to `Command-6` select areas. Confirmations are window-modal sheets. Errors use one inline pattern (symbol, text, Details revealing `ojd explain`).
+- Main window: no sidebar. One `NSToolbarItemGroup` `selectOne` segmented control holds the five areas Controllers, Profiles, Library, Access and Activity; `Command-1` to `Command-5` select them. The window title names the area and the content does not repeat it. Confirmations are window-modal sheets. Errors use one inline pattern (symbol, text, Details revealing `ojd explain`).
+- Problem banner: one line at the top of the window, shown only while the driver or the service has a problem, with Details; it shows no controller counts. The connected-controller count lives in Controllers, which detects controllers automatically and has no Refresh.
+- Input Test is the Test section of the Controllers detail: no window, no Open Input Test button. It names the physical controller, shows analog values once, and hides Motion calibration and Lighting for a controller without them.
+- One obvious way: each action and each fact appears once on a screen; capabilities a controller lacks are hidden.
+- Unknown values: a value that is unknown, missing or not applicable shows `-` from one shared helper; fields that can never apply are hidden.
+- Cards: each section is a card from one shared component; the header row holds the title and the actions; an empty section is one compact line.
 - Settings window: the `6858be2e` pattern (an `NSToolbarItemGroup` `OpenJoystickDriver.SettingsPanes`, `selectOne`, expanded, icon and label, no customization, per-pane minimum sizes) with panes General (launch at login, show in menu bar, updates), Notifications, Command Line, Advanced (developer tools).
-- Apple HIG pages followed: Toolbars, Sidebars, Segmented controls, Tab views, Settings, Windows, The menu bar.
-- Known bugs the rebuild must not reproduce: uninstall alert shows repair text (`SetupCard.swift:64-70`); sidebar toggle labelled "Settings navigation" (`WindowController.swift:196-204`); window titled with app name (`:85`); orphan `saveSupportReport`/`saveSupportLogs` actions (`MenuBarCoordinator+ApplicationMenu.swift:121-142`); hard-coded English `sharingWarning` (`ApplicationServiceLogService.swift:39-41`); `wiki/Using-the-App.md:160` names nonexistent `app login disable`; "Controller Test" button only switches pane; Copy Support Report gives no feedback; CLI-tool uninstall has no confirmation; Bluetooth detected by comparing the English string "Bluetooth" (`ControllerDetailView+Facts.swift:64-66`, `MenuBarCoordinator+Lifecycle.swift:325`); status line built by joining with " · " (`MenuBarViewModel.swift:24-52`).
-- Visual design: `/impeccable` passes with 13 reference screen groups (shell, Status, Controllers, Input Test, Profiles, Library, Access, Activity, Settings window, status item, destructive confirmations, errors, main menu), each in light and dark, with a subset under Increase Contrast, Reduce Transparency, larger text, VoiceOver, `de-DE` and `ar-SA`. The user judges each visually; no group is called done without that approval.
+- Apple HIG pages followed: Toolbars, Segmented controls, Tab views, Settings, Windows, The menu bar.
+- Known bugs the rebuild must not reproduce: uninstall alert shows repair text (`SetupCard.swift:64-70`); a sidebar toggle labelled "Settings navigation" (`WindowController.swift:196-204`); window titled with app name (`:85`); orphan `saveSupportReport`/`saveSupportLogs` actions (`MenuBarCoordinator+ApplicationMenu.swift:121-142`); hard-coded English `sharingWarning` (`ApplicationServiceLogService.swift:39-41`); `wiki/Using-the-App.md:160` names nonexistent `app login disable`; "Controller Test" button only switches pane; Copy Support Report gives no feedback; CLI-tool uninstall has no confirmation; Bluetooth detected by comparing the English string "Bluetooth" (`ControllerDetailView+Facts.swift:64-66`, `MenuBarCoordinator+Lifecycle.swift:325`); status line built by joining with " · " (`MenuBarViewModel.swift:24-52`).
+- Visual design: `/impeccable` passes with 13 reference screen groups (shell with problem banner, Controllers, Input Test, Profiles, Library, Access, Activity, Settings window, status item, main menu, destructive confirmations, errors), each in light and dark, with a subset under Increase Contrast, Reduce Transparency, larger text, VoiceOver, `de-DE` and `ar-SA`. The user judges each visually; no group is called done without that approval.
 
 ### D12 Menu bar
 
-Fixed item set; items are disabled, never hidden. Status item uses a template image. The state comes from the service by notification, with polling only as a fallback (today: 1 s polling).
+Fixed item set; items are disabled, never hidden, except Grant Access, which is shown only while a permission is missing. Status item uses a template image. The state comes from the service by notification, with polling only as a fallback (today: 1 s polling).
 
 ```text
 Status line
-Controllers >  Suspend/Resume, Test Input..., Active Profile >, Disconnect Wireless Link... (disabled unless wireless), Show in Window
+Controllers >  one submenu per connected controller: Suspend/Resume, Test Input..., Active Profile >, Disconnect Wireless Link... (disabled unless wireless), Show in Window
 Profiles >     Activate, Deactivate
-Grant Access...
+Grant Access...   (only while a permission is missing)
 Open Window
 Settings...
 Help >         Activity Log..., Explain Error Code..., Report a Problem..., Project Website
 Quit
 ```
 
-Main menu: App (About, Settings, Services, Hide, Hide Others, Show All, Quit), File (Import/Export Profile, Install Record or Mod, Save Support Report, Save Activity Log), Edit, View (areas `Command-1` to `Command-6`, Show/Hide Sidebar `Control-Command-S`, Full Screen), Controller, Profile, Window, Help.
+Main menu: App (About, Settings, Services, Hide, Hide Others, Show All, Quit), File (Import/Export Profile, Install Record or Mod, Save Support Report, Save Activity Log), Edit, View (the five areas `Command-1` to `Command-5`, Full Screen), Controller, Profile, Window, Help.
 
 ### D13 Localization
 
@@ -279,7 +284,7 @@ Keep `.strings` and `.stringsdict` (option A). `.xcstrings` is not compiled by S
 | `ui.menu.*` | `ui.menu.file.saveSupportReport` |
 | `ui.extra.*` | `ui.extra.controllers.suspend` |
 | `ui.settings.<pane>.*` | `ui.settings.general.launchAtLogin` |
-| `a11y.*` | `a11y.sidebar.toggle` |
+| `a11y.*` | `a11y.value.none` |
 | `cli.<group>.<command>.*` | `cli.virtual.exportMapping.summary` |
 | `error.<code>.*` | `error.E2023.message` |
 | `notify.*` | `notify.controller.connected` |
