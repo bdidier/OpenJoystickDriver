@@ -167,6 +167,49 @@ struct LocalRPCBridgeTests {
   }
 
   @Test
+  func aClientThatClosesDuringAHeldWaitLeavesTheHeldCountAndMissesTheAnnouncement() async throws {
+    try await withServer { server in
+      let socketPath = "/tmp/com.openjoystickdriver.bridge.\(UUID().uuidString).rpc"
+      let rpcServer = LocalServiceRPCServer(
+        socketPath: socketPath,
+        authentication: { _ in true },
+        cancellableHandler: { await server.handleLocalRPC($0) }
+      )
+      try rpcServer.start()
+      defer { rpcServer.stop() }
+      let app = ApplicationServiceClient(socketPath: socketPath)
+      await app.connect()
+      let baseline = try await app.waitForServiceStatusChange(after: nil).revision
+
+      let descriptor = try LocalServiceRPCTransport.openConnectedSocket(
+        timeoutSeconds: 5,
+        socketPath: socketPath
+      )
+      let request = LocalServiceRPCRequest(
+        method: ApplicationServiceRPCMethod.waitForServiceStatusChange.rawValue,
+        arguments: try JSONEncoder().encode(LocalServiceRPCStatusChangeArguments(after: baseline))
+      )
+      try LocalServiceRPCTransport.sendFrame(try JSONEncoder().encode(request), to: descriptor)
+      while server.statusChanges.heldWaitCount < 1 { try await Task.sleep(nanoseconds: 1_000_000) }
+
+      Darwin.close(descriptor)
+      let deadline = ContinuousClock.now + .seconds(5)
+      while server.statusChanges.heldWaitCount > 0, ContinuousClock.now < deadline {
+        try await Task.sleep(nanoseconds: 5_000_000)
+      }
+      #expect(server.statusChanges.heldWaitCount == 0)
+
+      async let outcome = app.sendTestNotification()
+      let reply = try await app.waitForServiceStatusChange(after: baseline)
+      let id = try #require(reply.announcement)
+      #expect(
+        try await app.reportTestNotificationResult(announcement: id, outcome: .shown)
+      )
+      #expect(try await outcome == .shown)
+    }
+  }
+
+  @Test
   func aVirtualOutputStatusChangeAnnouncesOnceAfterTheLockIsReleased() async throws {
     try await withServer { server in
       let lockHeldDuringPost = LockedFlag()

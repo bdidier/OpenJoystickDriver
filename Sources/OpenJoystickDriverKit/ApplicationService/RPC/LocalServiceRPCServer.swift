@@ -6,8 +6,24 @@ public final class LocalServiceRPCServer: @unchecked Sendable {
   public typealias Completion = @Sendable (LocalServiceRPCResponse) -> Void
   public typealias Handler = @Sendable (LocalServiceRPCRequest, @escaping Completion) -> Void
 
+  /// Answers a request and is cancelled when the client closes its end first.
+  package typealias CancellableHandler =
+    @Sendable (LocalServiceRPCRequest) async -> LocalServiceRPCResponse
+
+  /// How a request is answered.
+  private enum Dispatch {
+    /// The handler completes on its own schedule and is never told that the client left.
+    case callback(Handler)
+    /// The server runs the handler in a task and cancels the task when the client hangs up
+    /// before the response, so a held request does not outlive its client.
+    case cancellable(CancellableHandler)
+  }
+
+  /// How often a pending cancellable request checks whether its handler finished.
+  private static let pendingPollMilliseconds: Int32 = 50
+
   private let authentication: Authentication
-  private let handler: Handler
+  private let dispatch: Dispatch
   package let socketPath: String
   private let stateLock = NSLock()
   private var listener: Listener?
@@ -62,7 +78,20 @@ public final class LocalServiceRPCServer: @unchecked Sendable {
   ) {
     self.socketPath = socketPath
     self.authentication = authentication
-    self.handler = handler
+    self.dispatch = .callback(handler)
+  }
+
+  /// A server whose handler is cancelled when the client closes its connection before the
+  /// response. A client sends one request and then only reads, so any event on the connection
+  /// while the handler runs, a hang-up, an error or stray bytes, ends the request.
+  package init(
+    socketPath: String = LocalServiceRPCTransport.defaultSocketPath,
+    authentication: @escaping Authentication,
+    cancellableHandler: @escaping CancellableHandler
+  ) {
+    self.socketPath = socketPath
+    self.authentication = authentication
+    self.dispatch = .cancellable(cancellableHandler)
   }
 
   public func start() throws {
@@ -271,10 +300,15 @@ public final class LocalServiceRPCServer: @unchecked Sendable {
       }
       let data = try LocalServiceRPCTransport.receiveFrame(from: descriptor)
       let request = try JSONDecoder().decode(LocalServiceRPCRequest.self, from: data)
-      handler(request) { response in
-        defer { Darwin.close(descriptor) }
-        guard let encoded = try? JSONEncoder().encode(response) else { return }
-        try? LocalServiceRPCTransport.sendFrame(encoded, to: descriptor)
+      switch dispatch {
+      case .callback(let handler):
+        handler(request) { response in
+          defer { Darwin.close(descriptor) }
+          guard let encoded = try? JSONEncoder().encode(response) else { return }
+          try? LocalServiceRPCTransport.sendFrame(encoded, to: descriptor)
+        }
+      case .cancellable(let handler):
+        answer(request, on: descriptor, with: handler)
       }
     } catch {
       let response = LocalServiceRPCResponse(result: nil, error: error.localizedDescription)
@@ -283,6 +317,35 @@ public final class LocalServiceRPCServer: @unchecked Sendable {
       }
       Darwin.close(descriptor)
     }
+  }
+
+  /// Runs `handler` for `request` and sends its response, cancelling it if the client leaves
+  /// first. Returns after the connection is closed.
+  private func answer(
+    _ request: LocalServiceRPCRequest,
+    on descriptor: Int32,
+    with handler: @escaping CancellableHandler
+  ) {
+    let finished = DispatchSemaphore(value: 0)
+    let done = Locked(false)
+    let task = Task {
+      let response = await handler(request)
+      if let encoded = try? JSONEncoder().encode(response) {
+        try? LocalServiceRPCTransport.sendFrame(encoded, to: descriptor)
+      }
+      done.withLock { $0 = true }
+      finished.signal()
+    }
+    var events = pollfd(fd: descriptor, events: Int16(POLLIN), revents: 0)
+    while !done.withLock({ $0 }) {
+      let ready = poll(&events, 1, Self.pendingPollMilliseconds)
+      if ready > 0 || (ready < 0 && errno != EINTR) {
+        task.cancel()
+        break
+      }
+    }
+    finished.wait()
+    Darwin.close(descriptor)
   }
 
   private func removeStaleSocket(at path: String) throws {
