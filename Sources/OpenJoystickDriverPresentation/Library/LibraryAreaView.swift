@@ -36,7 +36,8 @@
           ForEach(LibraryScope.allCases) { scope in
             Text(OJDLocalized.string(scope.titleKey)).tag(scope)
           }
-        }.pickerStyle(SegmentedPickerStyle()).labelsHidden().padding(8)
+        }.pickerStyle(SegmentedPickerStyle()).labelsHidden().padding(.horizontal, 16)
+          .padding(.vertical, 12)
         List(selection: selection) {
           Section(header: recordsHeader) {
             if model.visibleRecords.isEmpty && (isSearching || model.records.skipped.isEmpty) {

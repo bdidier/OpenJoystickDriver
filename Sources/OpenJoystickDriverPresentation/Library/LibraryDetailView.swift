@@ -14,16 +14,7 @@
     var model: LibraryViewModel
 
     var body: some View {
-      Form {
-        feedback
-        if let detail = model.recordDetail {
-          recordSections(detail)
-        } else if let mod = model.selectedMod {
-          modSections(mod)
-        } else {
-          Section { Text(OJDLocalized.string("library.detail.empty")).foregroundColor(.secondary) }
-        }
-      }.ojdGroupedForm().sheet(item: $model.pending) { pending in
+      content.sheet(item: $model.pending) { pending in
         LibraryConfirmationSheet(
           confirmation: pending.confirmation,
           cancel: { model.cancelPending() },
@@ -31,6 +22,34 @@
             if model.confirmPending() { Task { @MainActor in await runtime.refresh() } }
           }
         )
+      }
+    }
+
+    @ViewBuilder
+    private var content: some View {
+      if let detail = model.recordDetail {
+        Form {
+          feedback
+          recordSections(detail)
+        }.ojdGroupedForm()
+      } else if let mod = model.selectedMod {
+        Form {
+          feedback
+          modSections(mod)
+        }.ojdGroupedForm()
+      } else {
+        ZStack {
+          EmptyStateView(
+            symbol: "books.vertical",
+            title: OJDLocalized.string("library.detail.empty")
+          )
+          if model.failure != nil || model.notice != nil {
+            VStack(spacing: 0) {
+              Form { feedback }.ojdGroupedForm().fixedSize(horizontal: false, vertical: true)
+              Spacer(minLength: 0)
+            }
+          }
+        }
       }
     }
 

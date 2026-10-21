@@ -5,7 +5,8 @@
   import SwiftUI
 
   /// A titled switch with a one-line description below it; while the switch is disabled and has
-  /// a `disabledReason`, the reason replaces the description.
+  /// a `disabledReason`, the reason follows the description as a second line and is the switch's
+  /// tooltip.
   struct SettingsSwitchRow: View {
     let title: String
     let description: String
@@ -13,12 +14,21 @@
     var isEnabled = true
     var disabledReason: String?
 
+    private var lockReason: String? { isEnabled ? nil : disabledReason }
+
     var body: some View {
       VStack(alignment: .leading, spacing: 2) {
-        Toggle(title, isOn: isOn).disabled(!isEnabled)
-        Text(isEnabled ? description : disabledReason ?? description).font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor))
-          .fixedSize(horizontal: false, vertical: true)
+        Toggle(title, isOn: isOn).disabled(!isEnabled).help(lockReason ?? "")
+        footnote(description)
+        if let lockReason { footnote(lockReason) }
       }
+    }
+
+    private func footnote(_ text: String) -> some View {
+      Text(text).font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor)).fixedSize(
+        horizontal: false,
+        vertical: true
+      )
     }
   }
 

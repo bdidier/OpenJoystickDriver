@@ -1642,6 +1642,7 @@
 "access.web.closed" = "On, but not listening on port %@";
 "access.web.pages" = "Pages folder: %@";
 "access.web.port" = "Port";
+"access.web.port.saved" = "Saved port";
 "access.web.portRange" = "The port must be between %lld and %lld.";
 "access.web.enable.title" = "Turn on the WebSocket?";
 "access.web.enable.message" = "Web pages from the origins of a token can then connect to the endpoint on this Mac.";

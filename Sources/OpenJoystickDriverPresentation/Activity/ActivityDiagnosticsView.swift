@@ -5,7 +5,8 @@
   import SwiftUI
 
   /// The `ojd diagnose` checks as a table: each check with its result, its details and, for a
-  /// warning or failure the app can fix, a button for the fix.
+  /// warning or failure the app can fix, a button for the fix. A table row has one line, so the
+  /// tooltip of a long detail shows it in full.
   struct ActivityDiagnosticsView: View {
     @ObservedObject
     var model: ActivityDiagnosticsModel
@@ -30,10 +31,11 @@
           }.width(min: 90, ideal: 110, max: 140)
           TableColumn(OJDLocalized.string("activity.column.check")) { row in
             Text(row.nameKey.map { OJDLocalized.string($0) } ?? row.id).help(row.id)
-          }.width(min: 140, ideal: 200)
+          }.width(min: 140, ideal: 200, max: 240)
           TableColumn(OJDLocalized.string("activity.column.details")) { row in
             HStack {
-              Text(row.detail).textSelection(.enabled)
+              Text(row.detail).lineLimit(1).truncationMode(.tail).textSelection(.enabled)
+                .help(row.detail)
               Spacer(minLength: 8)
               if let fix = row.fix {
                 Button(OJDLocalized.string(fix.titleKey)) { perform(fix) }

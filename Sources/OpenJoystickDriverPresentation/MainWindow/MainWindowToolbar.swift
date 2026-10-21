@@ -182,10 +182,24 @@
     }
   }
 
+  extension NSSearchToolbarItem {
+    /// Keeps the search field at the toolbar's search width instead of growing into the free
+    /// toolbar space.
+    func fixSearchFieldWidth() {
+      preferredWidthForSearchField = MainWindowToolbarLayout.searchFieldWidth
+      searchField.widthAnchor.constraint(
+        lessThanOrEqualToConstant: MainWindowToolbarLayout.searchFieldWidth
+      ).isActive = true
+    }
+  }
+
   /// Toolbar layout of the main window: the sidebar toggle, then the separator that follows the
   /// sidebar's edge, then flexible space that pushes the selected area's actions to the trailing
   /// edge. The window title and subtitle sit after the separator.
   enum MainWindowToolbarLayout {
+    /// The width of a toolbar search field, as in Mail and Finder.
+    static let searchFieldWidth: CGFloat = 220
+
     static let toolbar = NSToolbar.Identifier("OpenJoystickDriver.MainWindowToolbar")
 
     static let fixedItems: [NSToolbarItem.Identifier] = [
@@ -218,6 +232,9 @@
         accessibilityDescription: description
       )
       item.isBordered = true
+      if let search = item as? NSSearchToolbarItem {
+        search.fixSearchFieldWidth()
+      }
       return item
     }
   }

@@ -1531,6 +1531,7 @@
 "access.web.closed" = "オンですが、ポート%@で待ち受けていません";
 "access.web.pages" = "ページフォルダ: %@";
 "access.web.port" = "ポート";
+"access.web.port.saved" = "保存済みのポート";
 "access.web.portRange" = "ポートは%lld〜%lldの範囲で指定してください。";
 "access.web.enable.title" = "WebSocketをオンにしますか？";
 "access.web.enable.message" = "トークンのオリジンのWebページは、このMac上のエンドポイントに接続できるようになります。";

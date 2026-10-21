@@ -1642,6 +1642,7 @@
 "access.web.closed" = "Activado, pero sin escuchar en el puerto %@";
 "access.web.pages" = "Carpeta de páginas: %@";
 "access.web.port" = "Puerto";
+"access.web.port.saved" = "Puerto guardado";
 "access.web.portRange" = "El puerto debe estar entre %lld y %lld.";
 "access.web.enable.title" = "¿Activar el WebSocket?";
 "access.web.enable.message" = "Las páginas web de los orígenes de un token podrán conectarse entonces al punto de conexión de este Mac.";

@@ -164,7 +164,7 @@
             message: OJDLocalized.string(
               "controllers.emptyMessage"
             )
-          ).padding(28).frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+          )
         }
       }
     }

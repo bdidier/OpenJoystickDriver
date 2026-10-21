@@ -98,6 +98,7 @@
       item.label = OJDLocalized.string(action.labelKey)
       item.paletteLabel = item.label
       item.toolTip = OJDLocalized.string(action.descriptionKey)
+      item.fixSearchFieldWidth()
       item.searchField.placeholderString = item.label
       item.searchField.stringValue = screens.activity.log.searchText
       item.searchField.sendsSearchStringImmediately = true

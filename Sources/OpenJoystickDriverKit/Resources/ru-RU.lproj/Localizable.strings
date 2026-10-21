@@ -1531,6 +1531,7 @@
 "access.web.closed" = "Включено, но порт %@ не прослушивается";
 "access.web.pages" = "Папка страниц: %@";
 "access.web.port" = "Порт";
+"access.web.port.saved" = "Сохранённый порт";
 "access.web.portRange" = "Порт должен быть в диапазоне от %lld до %lld.";
 "access.web.enable.title" = "Включить WebSocket?";
 "access.web.enable.message" = "Веб-страницы из источников токена смогут подключаться к конечной точке на этом Mac.";

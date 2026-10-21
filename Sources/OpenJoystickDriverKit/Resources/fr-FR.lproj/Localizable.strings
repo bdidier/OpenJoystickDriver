@@ -1642,6 +1642,7 @@
 "access.web.closed" = "Activé, mais n’écoute pas sur le port %@";
 "access.web.pages" = "Dossier des pages : %@";
 "access.web.port" = "Port";
+"access.web.port.saved" = "Port enregistré";
 "access.web.portRange" = "Le port doit être compris entre %lld et %lld.";
 "access.web.enable.title" = "Activer le WebSocket ?";
 "access.web.enable.message" = "Les pages web issues des origines d’un jeton peuvent alors se connecter au point d’accès sur ce Mac.";

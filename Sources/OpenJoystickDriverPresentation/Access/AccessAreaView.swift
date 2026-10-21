@@ -165,8 +165,14 @@
             Color(NSColor.secondaryLabelColor)
           ).textSelection(.enabled)
         } else {
-          TextField(OJDLocalized.string("access.web.port"), text: $model.portText)
-            .ojdAccessibilityLabel(OJDLocalized.string("a11y.access.webPort"))
+          OJDLabeledRow(OJDLocalized.string("access.web.port")) {
+            TextField(
+              OJDLocalized.string("access.web.port.saved"),
+              text: $model.portText
+            ).labelsHidden().textFieldStyle(RoundedBorderTextFieldStyle())
+              .multilineTextAlignment(.trailing).frame(maxWidth: 140)
+              .ojdAccessibilityLabel(OJDLocalized.string("a11y.access.webPort"))
+          }
         }
       }
     }

@@ -1531,6 +1531,7 @@
 "access.web.closed" = "Açık, ancak %@ bağlantı noktası dinlenmiyor";
 "access.web.pages" = "Sayfalar klasörü: %@";
 "access.web.port" = "Bağlantı noktası";
+"access.web.port.saved" = "Kayıtlı bağlantı noktası";
 "access.web.portRange" = "Bağlantı noktası %lld ile %lld arasında olmalıdır.";
 "access.web.enable.title" = "WebSocket açılsın mı?";
 "access.web.enable.message" = "Bir token’ın kaynaklarındaki web sayfaları bundan sonra bu Mac’teki uç noktaya bağlanabilir.";

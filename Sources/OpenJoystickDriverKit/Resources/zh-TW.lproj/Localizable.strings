@@ -1531,6 +1531,7 @@
 "access.web.closed" = "已開啟，但未在連接埠 %@ 上監聽";
 "access.web.pages" = "頁面資料夾：%@";
 "access.web.port" = "連接埠";
+"access.web.port.saved" = "已儲存的連接埠";
 "access.web.portRange" = "連接埠必須介於 %lld 和 %lld 之間。";
 "access.web.enable.title" = "要開啟 WebSocket 嗎？";
 "access.web.enable.message" = "來自權杖所列來源的網頁隨後可以連接到這部 Mac 上的端點。";

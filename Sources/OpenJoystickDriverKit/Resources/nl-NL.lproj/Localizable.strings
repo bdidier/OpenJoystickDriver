@@ -1642,6 +1642,7 @@
 "access.web.closed" = "Aan, maar luistert niet op poort %@";
 "access.web.pages" = "Paginamap: %@";
 "access.web.port" = "Poort";
+"access.web.port.saved" = "Opgeslagen poort";
 "access.web.portRange" = "De poort moet tussen %lld en %lld liggen.";
 "access.web.enable.title" = "De WebSocket aanzetten?";
 "access.web.enable.message" = "Webpagina’s met een van de weboorsprongen van een token kunnen dan verbinding maken met het eindpunt op deze Mac.";

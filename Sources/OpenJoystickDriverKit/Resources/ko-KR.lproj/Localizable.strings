@@ -1531,6 +1531,7 @@
 "access.web.closed" = "켜져 있지만 포트 %@에서 수신하지 않음";
 "access.web.pages" = "페이지 폴더: %@";
 "access.web.port" = "포트";
+"access.web.port.saved" = "저장된 포트";
 "access.web.portRange" = "포트는 %lld에서 %lld 사이여야 합니다.";
 "access.web.enable.title" = "WebSocket을 켜시겠습니까?";
 "access.web.enable.message" = "토큰의 출처에 해당하는 웹 페이지가 이 Mac의 엔드포인트에 연결할 수 있게 됩니다.";

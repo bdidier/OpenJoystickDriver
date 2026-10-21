@@ -1531,6 +1531,7 @@
 "access.web.closed" = "เปิดอยู่ แต่ไม่ได้รอรับการเชื่อมต่อบนพอร์ต %@";
 "access.web.pages" = "โฟลเดอร์หน้าเว็บ: %@";
 "access.web.port" = "พอร์ต";
+"access.web.port.saved" = "พอร์ตที่บันทึกไว้";
 "access.web.portRange" = "พอร์ตต้องอยู่ระหว่าง %lld ถึง %lld";
 "access.web.enable.title" = "เปิด WebSocket หรือไม่";
 "access.web.enable.message" = "หน้าเว็บจากต้นทางของโทเค็นจะเชื่อมต่อกับปลายทางบน Mac เครื่องนี้ได้";

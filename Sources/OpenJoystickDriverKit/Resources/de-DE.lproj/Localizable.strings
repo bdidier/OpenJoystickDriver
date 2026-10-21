@@ -1642,6 +1642,7 @@
 "access.web.closed" = "An, aber Port %@ wird nicht überwacht";
 "access.web.pages" = "Seitenordner: %@";
 "access.web.port" = "Port";
+"access.web.port.saved" = "Gespeicherter Port";
 "access.web.portRange" = "Der Port muss zwischen %lld und %lld liegen.";
 "access.web.enable.title" = "WebSocket einschalten?";
 "access.web.enable.message" = "Webseiten, die von den Ursprüngen eines Tokens stammen, können sich dann mit dem Endpunkt auf diesem Mac verbinden.";

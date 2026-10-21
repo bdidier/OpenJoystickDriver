@@ -151,21 +151,12 @@
         }
     }
 
-    @ViewBuilder
     var noProfilesState: some View {
-      if #available(macOS 14, *) {
-        ContentUnavailableView(
-          OJDLocalized.string("profiles.none"),
-          systemImage: "slider.horizontal.3",
-          description: Text(OJDLocalized.string("profiles.createMessage"))
-        )
-      } else {
-        VStack(spacing: 4) {
-          Text(OJDLocalized.string("profiles.none")).font(.headline)
-          Text(OJDLocalized.string("profiles.createMessage"))
-            .foregroundColor(Color(NSColor.secondaryLabelColor))
-        }.frame(maxWidth: .infinity, maxHeight: .infinity)
-      }
+      EmptyStateView(
+        symbol: "slider.horizontal.3",
+        title: OJDLocalized.string("profiles.none"),
+        message: OJDLocalized.string("profiles.createMessage")
+      )
     }
 
     func assignmentCountLabel(_ count: Int) -> String {
