@@ -312,12 +312,12 @@ extension ApplicationServiceServer {
   static func notPublishedReason(
     of route: ServingRoute,
     observation: ControllerOwnershipObservation
-  ) -> String? {
+  ) -> ApplicationServicePublicationStatus.NotPublishedReason? {
     switch route {
     case .nativePassThrough:
-      observation == .systemGamepad ? "systemGamepad" : "nativeHIDPassThrough"
-    case .outputDisabled(.upstreamVirtualDevice): "upstreamVirtualDevice"
-    case .outputDisabled(.userDisabled): "outputDisabled"
+      observation == .systemGamepad ? .systemGamepad : .nativeHIDPassThrough
+    case .outputDisabled(.upstreamVirtualDevice): .upstreamVirtualDevice
+    case .outputDisabled(.userDisabled): .outputDisabled
     case .outputDisabled(.noVirtualProfile), .virtualHID, .extensionOwned: nil
     }
   }
@@ -329,19 +329,19 @@ extension ApplicationServiceServer {
     automatic: AutomaticUserSpaceOutputDispatcher?,
     unavailable: Bool
   ) -> ApplicationServicePublicationStatus {
-    let notPublished = { (reason: String) in
+    let notPublished = { (reason: ApplicationServicePublicationStatus.NotPublishedReason) in
       ApplicationServicePublicationStatus(state: .notPublished, reason: reason)
     }
-    guard let automatic else { return notPublished("outputDisabled") }
+    guard let automatic else { return notPublished(.outputDisabled) }
     let recorded = automatic.publicationStatus(for: identifier)
     if let recorded, recorded.state != .notPublished { return recorded }
     let route = ServingPolicy.route(for: device, override: recorded?.target)
     if let reason = Self.notPublishedReason(of: route, observation: device.physicalOwnership) {
       return notPublished(reason)
     }
-    if device.sessionState == .suspended { return notPublished("sessionSuspended") }
-    if unavailable { return notPublished("noVirtualProfile") }
-    return recorded ?? notPublished("noInputYet")
+    if device.sessionState == .suspended { return notPublished(.sessionSuspended) }
+    if unavailable { return notPublished(.noVirtualProfile) }
+    return recorded ?? notPublished(.noInputYet)
   }
 
   /// Clears every virtual HID profile override.

@@ -23,7 +23,7 @@ struct ServingRouteLabelTests {
     if !fixture.outputEnabled {
       device.publication = ApplicationServicePublicationStatus(
         state: .notPublished,
-        reason: "outputDisabled"
+        reason: .outputDisabled
       )
     }
     return device
