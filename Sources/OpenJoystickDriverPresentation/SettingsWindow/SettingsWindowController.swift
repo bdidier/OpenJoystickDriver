@@ -148,7 +148,7 @@
     }
 
     /// Sets the title of the selected pane and resizes the window's height to the pane's height,
-    /// keeping its top edge in place.
+    /// keeping its top edge in place unless the window would then leave the screen's visible area.
     private func paneChanged(animated: Bool) {
       guard let window else { return }
       window.title = OJDLocalized.string(panes.titleKey)
@@ -174,6 +174,9 @@
         forContentRect: NSRect(x: 0, y: 0, width: size.width, height: size.height)
       )
       frame.origin = NSPoint(x: window.frame.minX, y: window.frame.maxY - frame.height)
+      if let screen = window.screen ?? NSScreen.main {
+        frame = window.constrainFrameRect(frame, to: screen)
+      }
       window.setFrame(frame, display: true, animate: animated)
     }
 
