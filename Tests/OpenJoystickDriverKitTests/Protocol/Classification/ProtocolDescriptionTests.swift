@@ -294,39 +294,13 @@ struct ProtocolDescriptionTests {
   }
 
   @Test
-  func sessionLimitsBelongToTheirFamily() throws {
+  func sessionLimitsComeFromTheirFamily() throws {
     let gip = try decode(family: .xboxGIP, #""rawUSB": true"#)
     #expect(gip.handshakeAttempts == 3 && gip.announceResendLimit == 8)
     #expect(gip.receiverInquiryResendLimit == nil)
     let xusb = try decode(family: .xboxXUSB, #""rawUSB": true"#)
     #expect(xusb.receiverInquiryResendLimit == 8)
     #expect(xusb.handshakeAttempts == nil && xusb.announceResendLimit == nil)
-
-    let missing: [(PhysicalProtocolID, String)] = [
-      (.xboxGIP, #""rawUSB": true"#),
-      (.xboxGIP, #""rawUSB": true, "defaults": {"session": {"handshakeAttempts": 3}}"#),
-      (.xboxGIP, #""rawUSB": true, "defaults": {"session": {"announceResendLimit": 8}}"#),
-      (.xboxXUSB, #""rawUSB": true"#),
-    ]
-    for (family, body) in missing {
-      #expect(
-        rejection(exactly: family, body)?.code == .invalidProtocolDescription,
-        "\(family) \(body)"
-      )
-    }
-
-    let foreign: [(PhysicalProtocolID, String)] = [
-      (.xboxXUSB, "handshakeAttempts"), (.xboxXUSB, "announceResendLimit"),
-      (.xboxGIP, "receiverInquiryResendLimit"), (.xboxXID, "handshakeAttempts"),
-      (.sonyDualSense, "announceResendLimit"), (.sonyDualSense, "receiverInquiryResendLimit"),
-    ]
-    for (family, key) in foreign {
-      let body = #""defaults": {"session": {"\#(key)": 3}}"#
-      #expect(
-        rejection(family: family, body)?.code == .invalidProtocolDescription,
-        "\(family) \(key)"
-      )
-    }
   }
 
   @Test(
@@ -756,7 +730,7 @@ struct ProtocolDescriptionTests {
   func decodesValveActivationFilteredByTransport() throws {
     let description = try decode(
       family: .valveSteamController,
-      #""defaults": {"session": {"activation": ["#
+      #""writeTransports": ["USB", "BluetoothLE"], "defaults": {"session": {"activation": ["#
         + Self.valveFeature + #", "bytes": "81 00", "transport": "USB"}, "#
         + Self.valveFeature + #", "bytes": "82 00", "transport": "BluetoothLE"}, "#
         + Self.valveFeature + #", "bytes": "83 00"}], "deactivation": ["#
@@ -775,36 +749,20 @@ struct ProtocolDescriptionTests {
       (.valveSteamDeck, "USB", false), (.valveSteamTriton, "BluetoothLE", false),
     ]
   )
-  func activationTransportIsOneTheDriverReads(
+  func activationTransportIsOneWriteTransportsLists(
     family: PhysicalProtocolID,
     transport: String,
     accepted: Bool
   ) {
     let write = Self.valveFeature + #", "bytes": "81 00", "transport": "\#(transport)"}"#
+    let transports =
+      family == .valveSteamController ? #""writeTransports": ["USB", "BluetoothLE"], "# : ""
     for key in ["activation", "deactivation"] {
       let other = key == "activation" ? "deactivation" : "activation"
       let body =
-        #""defaults": {"session": {"\#(key)": ["# + write + #"], "\#(other)": ["#
+        transports + #""defaults": {"session": {"\#(key)": ["# + write + #"], "\#(other)": ["#
         + Self.valveFeature + #", "bytes": "85 00"}]}}"#
       #expect((rejection(family: family, body) == nil) == accepted, "\(family) \(transport)")
-    }
-  }
-
-  @Test
-  func activationBelongsToTheValveFamilies() {
-    let body = #""defaults": {"session": {"# + Self.valveSessionWrites + "}}"
-    for family in [PhysicalProtocolID.sonyDualSense, .xboxGIP, .nintendoSwitch1] {
-      let problem = rejection(family: family, body)
-      #expect(problem?.code == .invalidProtocolDescription, "\(family.rawValue)")
-    }
-    for family in [PhysicalProtocolID.valveSteamController, .valveSteamDeck, .valveSteamTriton] {
-      #expect(rejection(family: family, body) == nil, "\(family.rawValue)")
-      let missing = rejection(
-        family: family,
-        #""defaults": {"session": {"activation": ["# + Self.valveFeature
-          + #", "bytes": "81 00"}]}}"#
-      )
-      #expect(missing?.code == .invalidProtocolDescription, "\(family.rawValue)")
     }
   }
 

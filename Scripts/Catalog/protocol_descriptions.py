@@ -176,6 +176,7 @@ def semantic_violations(description: dict[str, Any]) -> list[tuple[str, str]]:
     found += subcommand_violations(description)
     found += named_packet_violations(description)
     found += session_write_violations(description)
+    found += parameter_rule_violations(description)
     return found
 
 
@@ -464,11 +465,7 @@ def session_write_violations(description: dict[str, Any]) -> list[tuple[str, str
             report = write["report"]
             expected = report["length"] - (1 if report["id"] != 0 else 0)
             transport = write.get("transport")
-            allowed = (
-                ("USB", "BluetoothLE")
-                if description["family"] == "ValveSteamController"
-                else ()
-            )
+            allowed = description.get("writeTransports", ())
             if transport is not None and transport not in allowed:
                 found.append(
                     (
@@ -490,6 +487,78 @@ def session_write_violations(description: dict[str, Any]) -> list[tuple[str, str
                         ),
                     )
                 )
+    return found
+
+
+def parameters_problem(
+    description: dict[str, Any], variant: str | None, parameters: dict[str, Any]
+) -> str | None:
+    """Why a record's parameters do not fit the family, or None, as
+    `ProtocolParameters.violation` in Swift.
+
+    Each name is declared by the description, each value fits its declaration, and each
+    `parameterRules` entry for the variant holds.
+    """
+    declared = description.get("parameters", {})
+    if not set(parameters) <= set(declared):
+        return "parameters must be declared by the selected driver"
+    for name, value in parameters.items():
+        declaration = declared[name]
+        kind = declaration["type"]
+        if kind == "Flag" and value is not True:
+            return f"{name} is true or omitted"
+        if kind == "Enum" and value not in declaration["values"]:
+            return f"{name} {value} is not one of {declaration['values']}"
+        if kind == "Object":
+            fields = declaration["fields"]
+            if not isinstance(value, dict) or set(value) != set(fields):
+                return f"{name} must hold exactly {sorted(fields)}"
+            for field, bounds in fields.items():
+                number = value[field]
+                if (
+                    not isinstance(number, int)
+                    or isinstance(number, bool)
+                    or not bounds["minimum"] <= number <= bounds["maximum"]
+                ):
+                    return f"{name}.{field} must be in {bounds['minimum']}...{bounds['maximum']}"
+    names = set(parameters)
+    for rule in description.get("parameterRules", ()):
+        if "variants" in rule and variant not in rule["variants"]:
+            continue
+        listed = set(rule.get("parameters", ()))
+        text = ", ".join(sorted(listed))
+        match rule["rule"]:
+            case "None" if names:
+                return "the variant takes no parameters"
+            case "AtMostOne" if len(names & listed) > 1:
+                return f"at most one of {text} may be set"
+            case "ExactlyOne" if len(names & listed) != 1:
+                return f"exactly one of {text} must be set"
+            case "Requires" if names and not listed <= names:
+                return f"parameters require {text}"
+    return None
+
+
+def parameter_rule_violations(description: dict[str, Any]) -> list[tuple[str, str]]:
+    """The variants and parameters `parameterRules` names must be the family's own, which a
+    schema cannot say; `ProtocolDescription` rejects the same in Swift."""
+    found: list[tuple[str, str]] = []
+    variants = family_variants(description)
+    declared = description.get("parameters", {})
+    for rule in description.get("parameterRules", ()):
+        found += [
+            ("E5004", f"parameterRules names {v}, which the family does not have")
+            for v in rule.get("variants", ())
+            if v not in variants
+        ]
+        found += [
+            (
+                "E5002",
+                f"parameterRules names {n}, which the description does not declare",
+            )
+            for n in rule.get("parameters", ())
+            if n not in declared
+        ]
     return found
 
 

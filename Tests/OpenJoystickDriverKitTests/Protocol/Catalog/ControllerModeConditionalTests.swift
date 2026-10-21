@@ -128,7 +128,7 @@ struct ControllerModeConditionalTests {
           "bluetoothLE": ["vibrationCharacteristic": "00000000-0000-0000-0000-000000000000"]
         ]
       ),
-      "bluetoothLE requires a Switch 2 controller"
+      "bluetoothLE requires a driver that reads it"
     )
   }
 
@@ -155,7 +155,7 @@ struct ControllerModeConditionalTests {
         match: Self.hidMatch,
         fields: ["input": ["hidUsageMap": ["usages": [usage]]]]
       ),
-      "a HID usage map applies only to HIDDescriptor in every mode"
+      "a HID usage map applies only to a driver that reads one, in every mode"
     )
   }
 

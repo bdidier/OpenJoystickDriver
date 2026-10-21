@@ -240,6 +240,8 @@ EXCEPTIONS: dict[tuple[str, str], tuple[tuple[str, ...], str]] = {
 TUNING = [("controller", "/$defs/tuning/properties")]
 RECORD = [("controller", "/properties")]
 SESSION = [("controller", "/$defs/session/properties")]
+PROTOCOL = [("controller", "/$defs/protocol/properties")]
+HID_INPUT = [("controller", "/$defs/hidInput/properties")]
 SETTING_PATHS = "dotted paths through the properties of settings"
 PROTOCOL_PARAMETERS = "the keys of `parameters` in Resources/Protocols/*.json"
 
@@ -251,13 +253,6 @@ UNSTORED_SETTINGS = {
     )
 }
 
-PARAMETER_ENUMS = [
-    (
-        "protocol-description",
-        f"/allOf/{index}/then/properties/parameters/propertyNames/enum",
-    )
-    for index in (4, 6, 7, 8, 9, 15, 16, 17)
-]
 
 # (schema, pointer, source): the values at `pointer` name fields, so they are lowerCamelCase
 # (dotted for nested settings) and each is a property name found at `source`.
@@ -274,15 +269,24 @@ FIELD_NAME_ENUMS: list[tuple[str, str, Any]] = [
         "/$defs/descriptionKeepAliveUSBWrite/properties/resendTuning/enum",
         TUNING,
     ),
-    ("protocol-description", "/properties/recordSections/items/enum", RECORD + SESSION),
     (
         "protocol-description",
-        "/allOf/22/if/not/anyOf/0/properties/recordSections/contains/const",
+        "/properties/recordSections/items/enum",
+        RECORD + SESSION + PROTOCOL + HID_INPUT,
+    ),
+    (
+        "protocol-description",
+        "/allOf/3/if/not/anyOf/0/properties/recordSections/contains/const",
         RECORD,
     ),
     (
         "protocol-description",
-        "/allOf/23/if/not/properties/recordSections/contains/const",
+        "/allOf/3/if/not/anyOf/1/properties/recordSections/contains/const",
+        HID_INPUT,
+    ),
+    (
+        "protocol-description",
+        "/allOf/4/if/not/properties/recordSections/contains/const",
         SESSION,
     ),
     (
@@ -295,7 +299,11 @@ FIELD_NAME_ENUMS: list[tuple[str, str, Any]] = [
         "/$defs/startupWhen/properties/parameter/enum",
         PROTOCOL_PARAMETERS,
     ),
-    *[(schema, pointer, PROTOCOL_PARAMETERS) for schema, pointer in PARAMETER_ENUMS],
+    (
+        "protocol-description",
+        "/properties/parameters/propertyNames/enum",
+        PROTOCOL_PARAMETERS,
+    ),
     ("controller-patch", "/then/properties/patch/propertyNames/const", RECORD),
     (
         "cli-output",

@@ -136,11 +136,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         paths = sorted(validate_schemas.PROTOCOL_DESCRIPTIONS.glob("*.json"))
         self.assertEqual(
             [path.stem for path in paths],
-            sorted(
-                protocol_descriptions.FILE_STEMS[family["const"]]
-                for rule in self.schema["allOf"]
-                if (family := rule["if"].get("properties", {}).get("family"))
-            ),
+            sorted(protocol_descriptions.FILE_STEMS.values()),
         )
         with patch.object(validate_schemas, "ROOT", REPOSITORY_ROOT):
             validate_schemas.validate_protocol_descriptions(
@@ -303,9 +299,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                 self.assert_rejected(document)
 
     def test_each_family_accepts_only_its_own_variants(self) -> None:
-        every = self.schema["$defs"]["interfaceSignature"]["properties"]["variant"][
-            "enum"
-        ]
+        every = self.schema["$defs"]["variant"]["enum"]
         for family, allowed in self.family_variants().items():
             for variant in every:
                 with self.subTest(family=family, variant=variant):
@@ -337,13 +331,11 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                 self.assert_rejected(document, name="xbox-gip.json")
 
     def test_file_stems_cover_every_family_and_file(self) -> None:
-        families = self.schema["allOf"]
-        schema_families = {
-            rule["if"]["properties"]["family"]["const"]
-            for rule in families
-            if "const" in rule["if"].get("properties", {}).get("family", {})
-        }
-        self.assertEqual(set(protocol_descriptions.FILE_STEMS), schema_families)
+        controller: Any = self.documents["controller.schema.json"]
+        schema_families = controller["$defs"]["protocol"]["properties"]["family"][
+            "enum"
+        ]
+        self.assertEqual(set(protocol_descriptions.FILE_STEMS), set(schema_families))
         self.assertEqual(
             sorted(protocol_descriptions.FILE_STEMS.values()),
             sorted(
@@ -540,47 +532,12 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
     def test_rejects_a_parameter_the_family_does_not_declare(self) -> None:
         flag = {"type": "Flag"}
         self.assert_rejected(self.with_body("SonyDualSense", parameters={"x": flag}))
-        self.assert_rejected(
-            self.with_body("SonyDualSense", parameters={"layout": flag})
-        )
-        self.assert_rejected(self.with_body("XboxXID", parameters={"layout": flag}))
         self.assert_rejected(self.with_body("SonyDualSense", parameters={}))
 
-    def test_session_limits_belong_to_their_family(self) -> None:
-        for family, limits in SESSION_LIMITS.items():
-            document = self.with_body(family)
-            self.check(document)
-            for key in limits:
-                with self.subTest(family=family, key=key, case="required"):
-                    missing = self.with_body(family)
-                    del missing["defaults"]["session"][key]
-                    self.assert_rejected(missing)
-            with self.subTest(family=family, case="no session"):
-                bare = self.with_body(family)
-                del bare["defaults"]
-                self.assert_rejected(bare)
-        for family in (
-            "XboxGIP",
-            "XboxXUSB",
-            "XboxXID",
-            "SonyDualSense",
-            "NintendoSwitch2",
-        ):
-            for key in (
-                "handshakeAttempts",
-                "announceResendLimit",
-                "receiverInquiryResendLimit",
-                "commandChannel",
-                "trailingStopPackets",
-            ):
-                if key in SESSION_LIMITS.get(family, {}):
-                    continue
-                with self.subTest(family=family, key=key, case="forbidden"):
-                    document = self.with_body(family)
-                    document.setdefault("defaults", {}).setdefault("session", {})[
-                        key
-                    ] = 3
-                    self.assert_rejected(document)
+    def test_session_limits_are_accepted_for_their_family(self) -> None:
+        for family in SESSION_LIMITS:
+            with self.subTest(family=family):
+                self.check(self.with_body(family))
 
     def test_command_channel_has_ranges(self) -> None:
         def channel_with(path: tuple[str, ...], value: Any) -> dict[str, Any]:
@@ -1054,17 +1011,6 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             with self.subTest(subcommands=subcommands):
                 self.assert_rejected(self.subcommand_body(subcommands))
 
-    def test_only_switch_1_has_subcommands_and_it_must_have_them(self) -> None:
-        self.assert_rejected(self.with_body("NintendoSwitch1"))
-        self.assert_rejected(
-            self.with_body(
-                "NintendoSwitch1", defaults={"tuning": {"stickDeadzone": 0.1}}
-            )
-        )
-        for family in ("SonyDualSense", "XboxGIP", "XboxXID", "HIDReportLayout"):
-            with self.subTest(family=family):
-                self.assert_rejected(self.subcommand_body(self.subcommands(), family))
-
     # Valve activation and deactivation.
 
     @staticmethod
@@ -1076,7 +1022,12 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         }
 
     def valve_body(self, family: str, **session: Any) -> dict[str, Any]:
-        return self.with_body(family, defaults={"session": session})
+        transports: dict[str, Any] = (
+            {"writeTransports": ["USB", "BluetoothLE"]}
+            if family == "ValveSteamController"
+            else {}
+        )
+        return self.with_body(family, defaults={"session": session}, **transports)
 
     def test_accepts_valve_activation_and_deactivation(self) -> None:
         for family in VALVE_FAMILIES:
@@ -1115,7 +1066,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                         self.valve_body("ValveSteamDeck", **{key: writes})
                     )
 
-    def test_activation_transport_is_only_one_the_driver_reads(self) -> None:
+    def test_activation_transport_is_only_one_writeTransports_lists(self) -> None:
         for family, transport, accepted in (
             ("ValveSteamController", "USB", True),
             ("ValveSteamController", "BluetoothLE", True),
@@ -1132,28 +1083,6 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                         self.check(document)
                     else:
                         self.assert_rejected(document)
-
-    def test_only_the_valve_families_have_activation_and_they_must_have_it(
-        self,
-    ) -> None:
-        for family in ("SonyDualSense", "XboxGIP", "XboxXUSB", "NintendoSwitch1"):
-            for key in ("activation", "deactivation"):
-                with self.subTest(family=family, key=key):
-                    document = self.with_body(
-                        family,
-                        defaults={"session": {key: [self.session_write()]}},
-                    )
-                    self.assert_rejected(document)
-        for family in VALVE_FAMILIES:
-            for key in ("activation", "deactivation"):
-                with self.subTest(family=family, missing=key):
-                    document = self.valve_body(family)
-                    del document["defaults"]["session"][key]
-                    self.assert_rejected(document)
-            with self.subTest(family=family, missing="defaults"):
-                document = self.with_body(family)
-                del document["defaults"]
-                self.assert_rejected(document)
 
     # GIP named packets.
 
@@ -1204,13 +1133,6 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         ):
             with self.subTest(packets=packets):
                 self.assert_rejected(self.named_packet_body(packets))
-
-    def test_only_gip_has_named_packets(self) -> None:
-        for family in ("SonyDualSense", "XboxXUSB", "XboxXID", "NintendoSwitch2"):
-            with self.subTest(family=family):
-                self.assert_rejected(
-                    self.named_packet_body([self.named_packet()], family)
-                )
 
     def test_the_bundled_gip_description_names_the_eight_packets(self) -> None:
         packets = protocol_descriptions.bundled()["XboxGIP"]["defaults"]["session"][
@@ -1705,30 +1627,76 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         document = self.described("HIDDescriptor", "USB")
         self.assert_rejected(document, code="E5004")
 
-    def test_family_parameters_match_the_controller_schema(self) -> None:
-        """Each family declares the parameters that controller records may set for it."""
-        controller: Any = self.documents["controller.schema.json"]
-        records: dict[str, set[str]] = {}
-        for rule in controller["$defs"]["protocol"]["allOf"]:
-            families = rule["if"]["properties"]["family"]
-            names = families.get("enum") or [families.get("const")]
-            if None in names:
-                continue
-            parameters = rule["then"]["properties"].get("parameters", {})
-            for family in names:
-                records.setdefault(family, set()).update(
-                    parameters.get("properties", {})
-                )
-        for rule in self.family_rules():
-            family = rule["if"]["properties"]["family"]["const"]
-            declared = rule["then"]["properties"]["parameters"]
-            allowed = (
-                set(declared["propertyNames"]["enum"])
-                if declared is not False
-                else set()
+    def test_declared_parameters_are_the_vocabulary_of_the_schema(self) -> None:
+        vocabulary = set(
+            self.schema["properties"]["parameters"]["propertyNames"]["enum"]
+        )
+        declared = {
+            name
+            for description in protocol_descriptions.bundled().values()
+            for name in description.get("parameters", {})
+        }
+        self.assertEqual(declared, vocabulary)
+
+    def test_parameter_rules_name_the_family_own_variants_and_parameters(self) -> None:
+        rule = {"rule": "AtMostOne", "parameters": ["maker", "role"]}
+        parameters = {
+            "maker": {"type": "Enum", "values": ["ThirdParty"]},
+            "role": {"type": "Enum", "values": ["Receiver"]},
+        }
+        self.check(
+            self.with_body(
+                "SonyDualSense", parameters=parameters, parameterRules=[rule]
             )
-            with self.subTest(family=family):
-                self.assertEqual(allowed, records.get(family, set()))
+        )
+        self.assert_rejected(
+            self.with_body(
+                "SonyDualSense",
+                parameters=parameters,
+                parameterRules=[{**rule, "parameters": ["maker", "layout"]}],
+            )
+        )
+        self.assert_rejected(
+            self.with_body(
+                "SonyDualSense",
+                parameters=parameters,
+                parameterRules=[{**rule, "variants": ["Wired"]}],
+            ),
+            code="E5004",
+        )
+        for malformed in (
+            {"rule": "None", "parameters": ["maker"]},
+            {"rule": "AtMostOne"},
+            {"rule": "Sometimes", "parameters": ["maker"]},
+        ):
+            with self.subTest(rule=malformed):
+                self.assert_rejected(
+                    self.with_body(
+                        "SonyDualSense",
+                        parameters=parameters,
+                        parameterRules=[malformed],
+                    )
+                )
+
+    def test_parameters_problem_applies_each_rule(self) -> None:
+        problem = protocol_descriptions.parameters_problem
+        gamesir = protocol_descriptions.bundled()["VendorGameSir"]
+        self.assertIsNone(problem(gamesir, "USB", {}))
+        self.assertIsNotNone(problem(gamesir, "USB", {"innerGrips": True}))
+        self.assertIsNotNone(problem(gamesir, "EnhancedHID", {}))
+        self.assertIsNone(problem(gamesir, "EnhancedHID", {"innerGrips": True}))
+        self.assertIsNotNone(
+            problem(
+                gamesir,
+                "EnhancedHID",
+                {"innerGrips": True, "lightingMemory": "ProfileSlots"},
+            )
+        )
+        dualsense = protocol_descriptions.bundled()["SonyDualSense"]
+        self.assertIsNotNone(problem(dualsense, None, {"forcedVibration": True}))
+        self.assertIsNone(
+            problem(dualsense, None, {"maker": "ThirdParty", "forcedVibration": True})
+        )
 
 
 if __name__ == "__main__":

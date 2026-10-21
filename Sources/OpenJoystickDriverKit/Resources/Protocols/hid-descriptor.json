@@ -6,6 +6,7 @@
     "in": 130,
     "out": 2
   },
+  "recordSections": ["hidUsageMap"],
   "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
   "defaults": {
     "input": {

@@ -284,28 +284,10 @@ public struct ProtocolParameters: Codable, Equatable, Sendable {
     guard setNames.isSubset(of: Self.declared(by: family)) else {
       return "parameters must be declared by the selected driver"
     }
-    switch family {
-    case .nintendoSwitch1:
-      if layout == .gameCube { return "GameCube is a Switch 2 layout" }
-      // A Bluetooth-only pad has no USB link to lay out.
-      if usbProtocol != nil, layout != nil {
-        return "a Bluetooth-only Switch pad selects no other layout"
+    if let description = ProtocolDescription.bundled[family] {
+      for rule in description.parameterRules where rule.applies(to: variant) {
+        if let problem = rule.violation(setting: setNames) { return problem }
       }
-    case .vendorGameSir:
-      if variant == .usb, !isEmpty { return "GameSir vendor USB declares no parameters" }
-      // An unknown model must not receive a guessed lighting-memory layout.
-      if variant == .enhancedHID, (innerGrips != nil) == (lightingMemory != nil) {
-        return "GameSir enhanced HID must select exactly one model parameter"
-      }
-    case .sonyDualShock4:
-      if let role, role != .wirelessAdapter { return "a DualShock 4 role is WirelessAdapter" }
-      if role != nil, motionScale != nil { return "a DualShock 4 row selects at most one model" }
-    case .sonyDualSense:
-      if let role, role != .receiver { return "a DualSense role is Receiver" }
-      // Every other DualSense parameter describes a third-party model, which means nothing
-      // without the mode.
-      if maker == nil, !isEmpty { return "DualSense model parameters require maker ThirdParty" }
-    default: break
     }
     return valueViolation(family: family)
   }

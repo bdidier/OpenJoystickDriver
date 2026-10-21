@@ -24,6 +24,12 @@
       "values": ["ChargingOnly"]
     }
   },
+  "parameterRules": [
+    {
+      "rule": "AtMostOne",
+      "parameters": ["layout", "usbProtocol"]
+    }
+  ],
   "defaults": {
     "session": {
       "rumble": {

@@ -108,8 +108,7 @@ extension ProtocolClassifierTests {
       JSONSerialization.jsonObject(with: Data(contentsOf: url)) as? [String: Any]
     )
     let definitions = schema["$defs"] as? [String: Any]
-    let signature = definitions?["interfaceSignature"] as? [String: Any]
-    let variant = (signature?["properties"] as? [String: Any])?["variant"] as? [String: Any]
+    let variant = definitions?["variant"] as? [String: Any]
     #expect(variant?["enum"] as? [String] == PhysicalProtocolVariantID.allCases.map(\.rawValue))
   }
 

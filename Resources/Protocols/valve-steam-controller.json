@@ -8,6 +8,7 @@
     "in": 130,
     "out": 2
   },
+  "writeTransports": ["USB", "BluetoothLE"],
   "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
   "controls": {
     "base": "Xbox",
