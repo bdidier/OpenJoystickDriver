@@ -171,7 +171,6 @@
 "capture.buttonsHeld" = "Boutons maintenus : %@";
 "capture.profileNameValidation" = "Saisissez un nom de profil.";
 "profiles.new" = "Nouveau profil";
-"profiles.defaultName" = "Ma manette";
 "profiles.deleteTitle" = "Supprimer le profil ?";
 "profiles.deleteMessage" = "Cela retire le profil d’OpenJoystickDriver.";
 "profiles.discardMessage" = "Les modifications de ce profil n’ont pas été enregistrées.";
@@ -181,7 +180,6 @@
 "profiles.refreshError" = "Impossible d’actualiser l’état du profil";
 "profiles.none" = "Aucun profil";
 "profiles.createMessage" = "Créez un profil pour commencer à attribuer des commandes.";
-"profiles.create" = "Créer un profil…";
 "profiles.refreshing" = "Actualisation de l’état du profil…";
 "profiles.stateUnavailable" = "L’état du profil est indisponible";
 "profiles.draftPreserved" = "Votre brouillon actuel est conservé. %@";
@@ -241,7 +239,6 @@
 "profiles.layerName" = "Nom de la couche";
 "profiles.layers" = "Couches";
 "profiles.longHold" = "Maintien long";
-"profiles.manualDevice" = "Identifiants manuels";
 "profiles.noChords" = "Aucun accord configuré.";
 "profiles.noLayers" = "Aucune couche configurée.";
 "profiles.noSequences" = "Aucune séquence configurée.";

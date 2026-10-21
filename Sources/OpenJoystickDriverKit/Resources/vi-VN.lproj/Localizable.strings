@@ -171,7 +171,6 @@
 "capture.buttonsHeld" = "Nút đang giữ: %@";
 "capture.profileNameValidation" = "Nhập tên cấu hình.";
 "profiles.new" = "Cấu hình mới";
-"profiles.defaultName" = "Bộ điều khiển của tôi";
 "profiles.deleteTitle" = "Xóa cấu hình?";
 "profiles.deleteMessage" = "Thao tác này sẽ xóa cấu hình khỏi OpenJoystickDriver.";
 "profiles.discardMessage" = "Các thay đổi của bạn đối với cấu hình này chưa được lưu.";
@@ -181,7 +180,6 @@
 "profiles.refreshError" = "Không thể làm mới trạng thái cấu hình";
 "profiles.none" = "Không có cấu hình";
 "profiles.createMessage" = "Tạo cấu hình để bắt đầu gán các thành phần điều khiển.";
-"profiles.create" = "Tạo cấu hình…";
 "profiles.refreshing" = "Đang làm mới trạng thái cấu hình…";
 "profiles.stateUnavailable" = "Trạng thái cấu hình không khả dụng";
 "profiles.draftPreserved" = "Bản nháp hiện tại của bạn được giữ nguyên. %@";
@@ -241,7 +239,6 @@
 "profiles.layerName" = "Tên lớp";
 "profiles.layers" = "Lớp";
 "profiles.longHold" = "Giữ lâu";
-"profiles.manualDevice" = "Mã định danh thủ công";
 "profiles.noChords" = "Chưa cấu hình tổ hợp nút nào.";
 "profiles.noLayers" = "Chưa cấu hình lớp nào.";
 "profiles.noSequences" = "Chưa cấu hình chuỗi nút nào.";

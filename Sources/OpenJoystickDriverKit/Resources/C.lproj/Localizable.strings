@@ -171,7 +171,6 @@
 "capture.buttonsHeld" = "Buttons held: %@";
 "capture.profileNameValidation" = "Enter a profile name.";
 "profiles.new" = "New profile";
-"profiles.defaultName" = "My controller";
 "profiles.deleteTitle" = "Delete profile?";
 "profiles.deleteMessage" = "This removes the profile from OpenJoystickDriver.";
 "profiles.discardMessage" = "Your changes to this profile have not been saved.";
@@ -181,7 +180,6 @@
 "profiles.refreshError" = "Could not refresh profile state";
 "profiles.none" = "No profiles";
 "profiles.createMessage" = "Create a profile to start assigning controls.";
-"profiles.create" = "Create profile...";
 "profiles.refreshing" = "Refreshing profile state...";
 "profiles.stateUnavailable" = "Profile state is unavailable";
 "profiles.draftPreserved" = "Your current draft is preserved. %@";
@@ -241,7 +239,6 @@
 "profiles.layerName" = "Layer name";
 "profiles.layers" = "Layers";
 "profiles.longHold" = "Long hold";
-"profiles.manualDevice" = "Manual identifiers";
 "profiles.noChords" = "No chords configured.";
 "profiles.noLayers" = "No layers configured.";
 "profiles.noSequences" = "No sequences configured.";

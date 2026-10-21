@@ -78,7 +78,6 @@
         EmptyView().sheet(isPresented: $screen.isCreatingProfile) {
           ProfileNameSheet(
             title: OJDLocalized.string("profiles.new"),
-            initialName: OJDLocalized.string("profiles.defaultName"),
             devices: connectedDevices
           ) { name, device, scope in createProfile(named: name, for: device, scope: scope) }
         }
@@ -294,19 +293,14 @@
               )
             }
             VStack(alignment: .leading, spacing: 2) {
-              Text(
-                OJDLocalized.string(
-                  issue.kind == .damagedProfile
-                    ? "profiles.damagedProfile" : "profiles.damagedLibrary"
-                )
-              ).lineLimit(1)
-              Text(OJDLocalized.string("common.needsAttention")).font(
-                .caption
-              ).foregroundColor(Color(NSColor.secondaryLabelColor))
+              Text(ProfileIssuePresentation(issue).title).lineLimit(1)
+              Text(ProfileIssuePresentation(issue).code).font(.caption).foregroundColor(
+                Color(NSColor.secondaryLabelColor)
+              )
             }
             Spacer(minLength: 0)
           }.padding(.vertical, 4).tag(ProfileListSelection.issue(issue.id)).ojdAccessibilityValue(
-            profileIssueMessage(issue)
+            ProfileIssuePresentation(issue).accessibilityValue
           )
         }
       }.listStyle(InsetListStyle()).disabled(isMutationActive || library.profileRecoveryInFlight)

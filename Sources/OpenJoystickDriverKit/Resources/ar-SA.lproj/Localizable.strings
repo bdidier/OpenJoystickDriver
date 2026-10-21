@@ -171,7 +171,6 @@
 "capture.buttonsHeld" = "الأزرار المضغوطة: %@";
 "capture.profileNameValidation" = "أدخل اسم ملف تعريف.";
 "profiles.new" = "ملف تعريف جديد";
-"profiles.defaultName" = "وحدة التحكم الخاصة بي";
 "profiles.deleteTitle" = "هل تريد حذف ملف التعريف؟";
 "profiles.deleteMessage" = "يزيل هذا ملف التعريف من OpenJoystickDriver.";
 "profiles.discardMessage" = "لم تُحفظ تغييراتك على ملف التعريف هذا.";
@@ -181,7 +180,6 @@
 "profiles.refreshError" = "تعذر تحديث حالة ملف التعريف";
 "profiles.none" = "لا توجد ملفات تعريف";
 "profiles.createMessage" = "أنشئ ملف تعريف لبدء تعيين العناصر.";
-"profiles.create" = "إنشاء ملف تعريف…";
 "profiles.refreshing" = "جارٍ تحديث حالة ملف التعريف…";
 "profiles.stateUnavailable" = "حالة ملف التعريف غير متوفرة";
 "profiles.draftPreserved" = "حُفظت المسودة الحالية. %@";
@@ -241,7 +239,6 @@
 "profiles.layerName" = "اسم الطبقة";
 "profiles.layers" = "الطبقات";
 "profiles.longHold" = "إبقاء مطوّل";
-"profiles.manualDevice" = "المعرّفات اليدوية";
 "profiles.noChords" = "لا توجد تركيبات مضبوطة.";
 "profiles.noLayers" = "لا توجد طبقات مضبوطة.";
 "profiles.noSequences" = "لا توجد تسلسلات مضبوطة.";

@@ -171,7 +171,6 @@
 "capture.buttonsHeld" = "Basılı tutulan düğmeler: %@";
 "capture.profileNameValidation" = "Bir profil adı gir.";
 "profiles.new" = "Yeni Profil";
-"profiles.defaultName" = "Kontrolcüm";
 "profiles.deleteTitle" = "Profil silinsin mi?";
 "profiles.deleteMessage" = "Bu, profili OpenJoystickDriver’dan kaldırır.";
 "profiles.discardMessage" = "Bu profile yaptığın değişiklikler kaydedilmedi.";
@@ -181,7 +180,6 @@
 "profiles.refreshError" = "Profil durumu yenilenemedi";
 "profiles.none" = "Profil Yok";
 "profiles.createMessage" = "Denetim atamaya başlamak için bir profil oluştur.";
-"profiles.create" = "Profil Oluştur…";
 "profiles.refreshing" = "Profil Durumu Yenileniyor…";
 "profiles.stateUnavailable" = "Profil Durumu Kullanılamıyor";
 "profiles.draftPreserved" = "Geçerli taslağın korunuyor. %@";
@@ -241,7 +239,6 @@
 "profiles.layerName" = "Katman Adı";
 "profiles.layers" = "Katmanlar";
 "profiles.longHold" = "Uzun Basılı Tutma";
-"profiles.manualDevice" = "Elle Girilen Tanımlayıcılar";
 "profiles.noChords" = "Yapılandırılmış kombinasyon yok.";
 "profiles.noLayers" = "Yapılandırılmış katman yok.";
 "profiles.noSequences" = "Yapılandırılmış dizi yok.";

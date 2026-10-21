@@ -171,7 +171,6 @@
 "capture.buttonsHeld" = "按住的按钮：%@";
 "capture.profileNameValidation" = "请输入配置文件名称。";
 "profiles.new" = "新建配置文件";
-"profiles.defaultName" = "我的控制器";
 "profiles.deleteTitle" = "要删除配置文件吗？";
 "profiles.deleteMessage" = "这会从 OpenJoystickDriver 中移除此配置文件。";
 "profiles.discardMessage" = "对此配置文件的更改尚未存储。";
@@ -181,7 +180,6 @@
 "profiles.refreshError" = "无法刷新配置文件状态";
 "profiles.none" = "没有配置文件";
 "profiles.createMessage" = "创建配置文件以开始映射控件。";
-"profiles.create" = "创建配置文件…";
 "profiles.refreshing" = "正在刷新配置文件状态…";
 "profiles.stateUnavailable" = "配置文件状态不可用";
 "profiles.draftPreserved" = "当前草稿已保留。%@";
@@ -241,7 +239,6 @@
 "profiles.layerName" = "层名称";
 "profiles.layers" = "层";
 "profiles.longHold" = "长按";
-"profiles.manualDevice" = "手动指定标识符";
 "profiles.noChords" = "尚未配置组合键。";
 "profiles.noLayers" = "尚未配置层。";
 "profiles.noSequences" = "尚未配置序列。";

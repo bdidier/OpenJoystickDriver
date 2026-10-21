@@ -171,7 +171,6 @@
 "capture.buttonsHeld" = "Gehaltene Tasten: %@";
 "capture.profileNameValidation" = "Gib einen Profilnamen ein.";
 "profiles.new" = "Neues Profil";
-"profiles.defaultName" = "Mein Controller";
 "profiles.deleteTitle" = "Profil löschen?";
 "profiles.deleteMessage" = "Dadurch wird das Profil aus OpenJoystickDriver entfernt.";
 "profiles.discardMessage" = "Die Änderungen an diesem Profil wurden nicht gesichert.";
@@ -181,7 +180,6 @@
 "profiles.refreshError" = "Profilstatus konnte nicht aktualisiert werden";
 "profiles.none" = "Keine Profile";
 "profiles.createMessage" = "Erstelle ein Profil, um Steuerungen zuzuweisen.";
-"profiles.create" = "Profil erstellen…";
 "profiles.refreshing" = "Profilstatus wird aktualisiert…";
 "profiles.stateUnavailable" = "Profilstatus ist nicht verfügbar";
 "profiles.draftPreserved" = "Der aktuelle Entwurf bleibt erhalten. %@";
@@ -241,7 +239,6 @@
 "profiles.layerName" = "Ebenenname";
 "profiles.layers" = "Ebenen";
 "profiles.longHold" = "Langes Halten";
-"profiles.manualDevice" = "Manuelle Kennungen";
 "profiles.noChords" = "Keine Akkorde konfiguriert.";
 "profiles.noLayers" = "Keine Ebenen konfiguriert.";
 "profiles.noSequences" = "Keine Sequenzen konfiguriert.";

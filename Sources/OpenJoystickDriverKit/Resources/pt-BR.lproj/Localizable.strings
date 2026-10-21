@@ -171,7 +171,6 @@
 "capture.buttonsHeld" = "Botões pressionados: %@";
 "capture.profileNameValidation" = "Digite um nome de perfil.";
 "profiles.new" = "Novo Perfil";
-"profiles.defaultName" = "Meu Controle";
 "profiles.deleteTitle" = "Apagar perfil?";
 "profiles.deleteMessage" = "Isso remove o perfil do OpenJoystickDriver.";
 "profiles.discardMessage" = "As alterações neste perfil não foram salvas.";
@@ -181,7 +180,6 @@
 "profiles.refreshError" = "Não foi possível atualizar o estado do perfil";
 "profiles.none" = "Nenhum Perfil";
 "profiles.createMessage" = "Crie um perfil para começar a atribuir comandos.";
-"profiles.create" = "Criar Perfil…";
 "profiles.refreshing" = "Atualizando o estado do perfil…";
 "profiles.stateUnavailable" = "O estado do perfil está indisponível";
 "profiles.draftPreserved" = "O rascunho atual foi preservado. %@";
@@ -241,7 +239,6 @@
 "profiles.layerName" = "Nome da Camada";
 "profiles.layers" = "Camadas";
 "profiles.longHold" = "Segurar por Muito Tempo";
-"profiles.manualDevice" = "Identificadores Manuais";
 "profiles.noChords" = "Nenhuma combinação configurada.";
 "profiles.noLayers" = "Não há camadas configuradas.";
 "profiles.noSequences" = "Não há sequências configuradas.";

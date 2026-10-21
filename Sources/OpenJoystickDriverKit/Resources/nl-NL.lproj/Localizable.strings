@@ -171,7 +171,6 @@
 "capture.buttonsHeld" = "Ingedrukte knoppen: %@";
 "capture.profileNameValidation" = "Voer een profielnaam in.";
 "profiles.new" = "Nieuw profiel";
-"profiles.defaultName" = "Mijn controller";
 "profiles.deleteTitle" = "Profiel verwijderen?";
 "profiles.deleteMessage" = "Hiermee wordt het profiel uit OpenJoystickDriver verwijderd.";
 "profiles.discardMessage" = "De wijzigingen in dit profiel zijn niet bewaard.";
@@ -181,7 +180,6 @@
 "profiles.refreshError" = "Profielstatus kon niet worden vernieuwd";
 "profiles.none" = "Geen profielen";
 "profiles.createMessage" = "Maak een profiel om besturingen toe te wijzen.";
-"profiles.create" = "Maak profiel…";
 "profiles.refreshing" = "Profielstatus vernieuwen…";
 "profiles.stateUnavailable" = "Profielstatus is niet beschikbaar";
 "profiles.draftPreserved" = "Het huidige concept blijft bewaard. %@";
@@ -241,7 +239,6 @@
 "profiles.layerName" = "Naam van de laag";
 "profiles.layers" = "Lagen";
 "profiles.longHold" = "Lang vasthouden";
-"profiles.manualDevice" = "Handmatige identificaties";
 "profiles.noChords" = "Geen akkoorden geconfigureerd.";
 "profiles.noLayers" = "Geen lagen geconfigureerd.";
 "profiles.noSequences" = "Geen sequenties geconfigureerd.";

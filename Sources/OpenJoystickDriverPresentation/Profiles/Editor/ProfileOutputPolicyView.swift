@@ -7,7 +7,7 @@
     let onChange: (RemappingOutputPolicy) -> Void
 
     var body: some View {
-      VStack(alignment: .leading, spacing: 8) {
+      Group {
         Picker(
           OJDLocalized.string("profiles.virtualOutput"),
           selection: Binding(

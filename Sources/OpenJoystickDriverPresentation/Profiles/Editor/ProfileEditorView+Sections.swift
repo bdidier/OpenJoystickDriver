@@ -8,10 +8,9 @@
   extension ProfileEditorView {
 
     func editorContent(width: CGFloat) -> some View {
-      ScrollView {
+      Form {
         sectionContent(assignmentLayout: ProfilePresentationPolicy.assignmentRowLayout(for: width))
-          .padding(28).frame(maxWidth: .infinity, alignment: .leading)
-      }.id(selectedSection)
+      }.ojdGroupedForm().id(selectedSection)
     }
 
     @ViewBuilder
@@ -46,10 +45,11 @@
       }
     }
 
+    @ViewBuilder
     func assignmentsSection(rowLayout: ProfileAssignmentRowLayout) -> some View {
-      VStack(alignment: .leading, spacing: 18) {
-        HStack(alignment: .firstTextBaseline) {
-          Text(OJDLocalized.string("common.assignments")).font(.headline)
+      Section(
+        header: HStack(alignment: .firstTextBaseline) {
+          Text(OJDLocalized.string("common.assignments"))
           Spacer()
           OJDCompactSymbolButton(
             symbolName: "plus",
@@ -59,35 +59,31 @@
             confirmation = .clearInputs
           }.disabled(isEditingDisabled)
         }
+      ) {
         if draft.profile.bindings.isEmpty {
-          EmptyStateView(
-            symbol: "plus.circle",
-            title: OJDLocalized.string("profiles.noAssignments"),
-            message: OJDLocalized.string(
-              "profiles.assignmentInstructions"
-            )
-          )
-        } else {
-          ForEach(bindingGroups, id: \.title) { group in
-            AssignmentGroupView(
-              title: group.title,
-              bindings: group.bindings,
-              capabilities: capabilities,
-              draft: $editor.draft,
-              isEditingDisabled: isEditingDisabled,
-              onRemove: removeBinding,
-              onError: { localError = $0 },
-              onAdjust: { activeSheet = .adjustment($0) },
-              onBehavior: { activeSheet = .behavior($0) },
-              onEditingStateChanged: {
-                localError = nil
-                saveError = nil
-                reportEditingState()
-              },
-              rowLayout: rowLayout
-            )
-          }
+          Text(OJDLocalized.string("profiles.noAssignments"))
+          Text(OJDLocalized.string("profiles.assignmentInstructions"))
+            .foregroundColor(Color(NSColor.secondaryLabelColor))
         }
+      }
+      ForEach(bindingGroups, id: \.title) { group in
+        AssignmentGroupView(
+          title: group.title,
+          bindings: group.bindings,
+          capabilities: capabilities,
+          draft: $editor.draft,
+          isEditingDisabled: isEditingDisabled,
+          onRemove: removeBinding,
+          onError: { localError = $0 },
+          onAdjust: { activeSheet = .adjustment($0) },
+          onBehavior: { activeSheet = .behavior($0) },
+          onEditingStateChanged: {
+            localError = nil
+            saveError = nil
+            reportEditingState()
+          },
+          rowLayout: rowLayout
+        )
       }
     }
 

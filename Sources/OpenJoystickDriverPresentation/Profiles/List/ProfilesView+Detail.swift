@@ -29,7 +29,7 @@
     @ViewBuilder
     var profileDetail: some View {
       if let selectedRecoveryIssue {
-        profileRecoveryDetail(selectedRecoveryIssue).padding(28)
+        profileRecoveryDetail(selectedRecoveryIssue)
       } else if let selectedProfile {
         VStack(alignment: .leading, spacing: 0) {
           refreshStatus
@@ -81,7 +81,7 @@
             message: message,
             retry: refreshProfiles
           ).padding(28)
-        case .available: noProfilesState.padding(28)
+        case .available: noProfilesState
         }
       }
     }
@@ -89,48 +89,24 @@
     private func profileRecoveryDetail(
       _ issue: ApplicationServiceRemappingProfileIssue
     ) -> some View {
-      VStack(alignment: .leading, spacing: 14) {
-        OJDSystemSymbol(
-          name: issue.kind == .damagedProfile
-            ? "exclamationmark.triangle.fill" : "xmark.octagon.fill",
-          fallback: OJDLocalized.string("common.needsAttention")
-        ).font(.largeTitle).foregroundColor(
-          Color(
-            (issue.kind == .damagedProfile ? SemanticState.attention : .failure).presentation.tone
-              .color
-          )
-        ).accessibilityHidden(true)
-        Text(
-          OJDLocalized.string(
-            issue.kind == .damagedProfile ? "profiles.damagedProfile" : "profiles.damagedLibrary"
-          )
-        ).font(.title.weight(.semibold))
-        Text(profileIssueMessage(issue)).foregroundColor(Color(NSColor.secondaryLabelColor))
-          .fixedSize(horizontal: false, vertical: true)
-        Button(
-          OJDLocalized.string(
-            issue.kind == .damagedProfile
-              ? "profiles.deleteDamagedButton" : "profiles.resetLibraryButton"
-          )
-        ) {
-          activeAlert =
-            issue.kind == .damagedProfile
-            ? .deleteDamagedProfile(issue.id) : .resetLibrary(issue.id)
-        }.disabled(library.profileRecoveryInFlight)
-        Spacer()
-      }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .ojdAccessibilityLabel(
-          OJDLocalized.string(
-            issue.kind == .damagedProfile ? "profiles.damagedProfile" : "profiles.damagedLibrary"
-          )
-        ).ojdAccessibilityValue(profileIssueMessage(issue))
-    }
-
-    func profileIssueMessage(_ issue: ApplicationServiceRemappingProfileIssue) -> String {
-      OJDLocalized.string(
-        issue.kind == .damagedProfile
-          ? "profiles.damagedProfileMessage" : "profiles.damagedSelectionsMessage"
-      )
+      let presentation = ProfileIssuePresentation(issue)
+      return Form {
+        Section(header: Text(presentation.titleWithCode)) {
+          Text(presentation.message).foregroundColor(Color(NSColor.secondaryLabelColor))
+            .fixedSize(horizontal: false, vertical: true)
+          Button(
+            OJDLocalized.string(
+              issue.kind == .damagedProfile
+                ? "profiles.deleteDamagedButton" : "profiles.resetLibraryButton"
+            )
+          ) {
+            activeAlert =
+              issue.kind == .damagedProfile
+              ? .deleteDamagedProfile(issue.id) : .resetLibrary(issue.id)
+          }.disabled(library.profileRecoveryInFlight)
+        }
+      }.ojdGroupedForm().ojdAccessibilityLabel(presentation.title)
+        .ojdAccessibilityValue(presentation.accessibilityValue)
     }
 
     @ViewBuilder
@@ -176,18 +152,18 @@
         }
     }
 
+    @ViewBuilder
     var noProfilesState: some View {
-      VStack(alignment: .leading, spacing: 12) {
-        EmptyStateView(
-          symbol: "plus.circle",
-          title: OJDLocalized.string("profiles.none"),
-          message: OJDLocalized.string(
-            "profiles.createMessage"
-          )
+      if #available(macOS 14, *) {
+        ContentUnavailableView(
+          OJDLocalized.string("profiles.none"),
+          systemImage: "slider.horizontal.3",
+          description: Text(OJDLocalized.string("profiles.createMessage"))
         )
-        Button(OJDLocalized.string("profiles.create")) {
-          isCreatingProfile = true
-        }.disabled(isProfileActionBlocked)
+      } else {
+        Text(OJDLocalized.string("profiles.createMessage"))
+          .foregroundColor(Color(NSColor.secondaryLabelColor))
+          .frame(maxWidth: .infinity, maxHeight: .infinity)
       }
     }
 

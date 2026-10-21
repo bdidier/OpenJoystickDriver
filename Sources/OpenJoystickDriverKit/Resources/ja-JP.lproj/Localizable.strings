@@ -171,7 +171,6 @@
 "capture.buttonsHeld" = "押されているボタン: %@";
 "capture.profileNameValidation" = "プロファイル名を入力してください。";
 "profiles.new" = "新規プロファイル";
-"profiles.defaultName" = "マイコントローラ";
 "profiles.deleteTitle" = "プロファイルを削除しますか？";
 "profiles.deleteMessage" = "このプロファイルはOpenJoystickDriverから削除されます。";
 "profiles.discardMessage" = "このプロファイルへの変更は保存されていません。";
@@ -181,7 +180,6 @@
 "profiles.refreshError" = "プロファイルの状態を更新できませんでした";
 "profiles.none" = "プロファイルなし";
 "profiles.createMessage" = "操作の割り当てを始めるにはプロファイルを作成してください。";
-"profiles.create" = "プロファイルを作成…";
 "profiles.refreshing" = "プロファイルの状態を更新中…";
 "profiles.stateUnavailable" = "プロファイルの状態を利用できません";
 "profiles.draftPreserved" = "現在の下書きは保持されています。%@";
@@ -241,7 +239,6 @@
 "profiles.layerName" = "レイヤー名";
 "profiles.layers" = "レイヤー";
 "profiles.longHold" = "長押し";
-"profiles.manualDevice" = "識別子を手動で入力";
 "profiles.noChords" = "同時押しは設定されていません。";
 "profiles.noLayers" = "レイヤーは設定されていません。";
 "profiles.noSequences" = "シーケンスは設定されていません。";

@@ -171,7 +171,6 @@
 "capture.buttonsHeld" = "按住的按鈕：%@";
 "capture.profileNameValidation" = "請輸入設定檔名稱。";
 "profiles.new" = "新增設定檔";
-"profiles.defaultName" = "我的控制器";
 "profiles.deleteTitle" = "要刪除設定檔嗎？";
 "profiles.deleteMessage" = "這會從 OpenJoystickDriver 移除此設定檔。";
 "profiles.discardMessage" = "您對此設定檔的更改尚未儲存。";
@@ -181,7 +180,6 @@
 "profiles.refreshError" = "無法重新整理設定檔狀態";
 "profiles.none" = "沒有設定檔";
 "profiles.createMessage" = "建立設定檔以開始對應控制項。";
-"profiles.create" = "建立設定檔…";
 "profiles.refreshing" = "正在重新整理設定檔狀態…";
 "profiles.stateUnavailable" = "無法使用設定檔狀態";
 "profiles.draftPreserved" = "目前的草稿已保留。%@";
@@ -241,7 +239,6 @@
 "profiles.layerName" = "層名稱";
 "profiles.layers" = "層";
 "profiles.longHold" = "長按";
-"profiles.manualDevice" = "手動指定識別碼";
 "profiles.noChords" = "尚未設定組合鍵。";
 "profiles.noLayers" = "尚未設定層。";
 "profiles.noSequences" = "尚未設定序列。";

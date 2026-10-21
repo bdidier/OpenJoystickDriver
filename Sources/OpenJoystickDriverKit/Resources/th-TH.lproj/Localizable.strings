@@ -171,7 +171,6 @@
 "capture.buttonsHeld" = "ปุ่มที่กดค้างไว้: %@";
 "capture.profileNameValidation" = "ป้อนชื่อโปรไฟล์";
 "profiles.new" = "โปรไฟล์ใหม่";
-"profiles.defaultName" = "คอนโทรลเลอร์ของฉัน";
 "profiles.deleteTitle" = "ลบโปรไฟล์หรือไม่";
 "profiles.deleteMessage" = "การดำเนินการนี้จะเอาโปรไฟล์ออกจาก OpenJoystickDriver";
 "profiles.discardMessage" = "การแก้ไขโปรไฟล์นี้ของคุณยังไม่ได้ถูกบันทึก";
@@ -181,7 +180,6 @@
 "profiles.refreshError" = "ไม่สามารถดึงข้อมูลสถานะโปรไฟล์ใหม่ได้";
 "profiles.none" = "ไม่มีโปรไฟล์";
 "profiles.createMessage" = "สร้างโปรไฟล์เพื่อเริ่มกำหนดตัวควบคุม";
-"profiles.create" = "สร้างโปรไฟล์…";
 "profiles.refreshing" = "กำลังดึงข้อมูลสถานะโปรไฟล์ใหม่…";
 "profiles.stateUnavailable" = "สถานะโปรไฟล์ไม่พร้อมใช้งาน";
 "profiles.draftPreserved" = "ร่างปัจจุบันของคุณถูกเก็บรักษาไว้ %@";
@@ -241,7 +239,6 @@
 "profiles.layerName" = "ชื่อเลเยอร์";
 "profiles.layers" = "เลเยอร์";
 "profiles.longHold" = "กดค้างนาน";
-"profiles.manualDevice" = "ตัวระบุที่ป้อนเอง";
 "profiles.noChords" = "ไม่ได้กำหนดค่าคอร์ด";
 "profiles.noLayers" = "ไม่ได้กำหนดค่าเลเยอร์";
 "profiles.noSequences" = "ไม่ได้กำหนดค่าลำดับ";

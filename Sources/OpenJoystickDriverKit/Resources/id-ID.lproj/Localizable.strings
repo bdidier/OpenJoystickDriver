@@ -171,7 +171,6 @@
 "capture.buttonsHeld" = "Tombol yang ditahan: %@";
 "capture.profileNameValidation" = "Masukkan nama profil.";
 "profiles.new" = "Profil baru";
-"profiles.defaultName" = "Pengontrol saya";
 "profiles.deleteTitle" = "Hapus profil?";
 "profiles.deleteMessage" = "Tindakan ini menghapus profil dari OpenJoystickDriver.";
 "profiles.discardMessage" = "Perubahan Anda pada profil ini belum disimpan.";
@@ -181,7 +180,6 @@
 "profiles.refreshError" = "Tidak dapat menyegarkan status profil";
 "profiles.none" = "Tidak ada profil";
 "profiles.createMessage" = "Buat profil untuk mulai menetapkan kontrol.";
-"profiles.create" = "Buat profil…";
 "profiles.refreshing" = "Menyegarkan status profil…";
 "profiles.stateUnavailable" = "Status profil tidak tersedia";
 "profiles.draftPreserved" = "Draf Anda saat ini dipertahankan. %@";
@@ -241,7 +239,6 @@
 "profiles.layerName" = "Nama lapisan";
 "profiles.layers" = "Lapisan";
 "profiles.longHold" = "Tahan lama";
-"profiles.manualDevice" = "Pengenal manual";
 "profiles.noChords" = "Tidak ada kombinasi tombol yang dikonfigurasi.";
 "profiles.noLayers" = "Tidak ada lapisan yang dikonfigurasi.";
 "profiles.noSequences" = "Tidak ada urutan yang dikonfigurasi.";
