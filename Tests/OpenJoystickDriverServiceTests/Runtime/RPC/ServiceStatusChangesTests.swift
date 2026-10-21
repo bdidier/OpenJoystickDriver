@@ -1,5 +1,6 @@
 import AppKit
 import Foundation
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -20,13 +21,16 @@ struct ServiceStatusChangesTests {
     await changes.wait(after: nil, holdSeconds: 30).revision
   }
 
-  /// Polls until `count` waits are held, for at most ten seconds.
-  private static func waitForHeldWaits(_ count: Int, in changes: ServiceStatusChanges) async {
-    let deadline = ContinuousClock.now + .seconds(10)
-    while changes.heldWaitCount < count, ContinuousClock.now < deadline {
-      try? await Task.sleep(nanoseconds: 1_000_000)
-    }
-    #expect(changes.heldWaitCount >= count)
+  /// A stream that yields once for each wait that becomes held; set before the wait starts.
+  private static func heldWaits(_ changes: ServiceStatusChanges) -> AsyncStream<Void> {
+    let (registered, gate) = AsyncStream.makeStream(of: Void.self)
+    changes.heldWaitDidRegister = { gate.yield() }
+    return registered
+  }
+
+  /// Returns once the next wait has become held.
+  private static func nextHeldWait(_ registered: AsyncStream<Void>) async {
+    for await _ in registered { return }
   }
 
   @Test
@@ -51,8 +55,9 @@ struct ServiceStatusChangesTests {
     let clock = ContinuousClock()
 
     let start = clock.now
+    let registered = Self.heldWaits(changes)
     async let next = changes.wait(after: baseline, holdSeconds: 30)
-    await Self.waitForHeldWaits(1, in: changes)
+    await Self.nextHeldWait(registered)
     center.post(name: .ojdServiceStatusDidChange, object: nil)
 
     #expect(await next.revision.generation == 1)
@@ -136,8 +141,9 @@ struct ServiceStatusChangesTests {
   func aHeldWaitTakesTheAnnouncementAndTheReportEndsTheRequest() async throws {
     let changes = ServiceStatusChanges(center: NotificationCenter())
     let baseline = await Self.revision(changes)
+    let registered = Self.heldWaits(changes)
     async let held = changes.wait(after: baseline, holdSeconds: 30)
-    await Self.waitForHeldWaits(1, in: changes)
+    await Self.nextHeldWait(registered)
 
     async let outcome = changes.announceTestNotification()
     let reply = await held
@@ -209,8 +215,9 @@ struct ServiceStatusChangesTests {
   func aHeldWaitCancelledAsItTakesTheAnnouncementGivesItBackForTheNextWait() async throws {
     let changes = ServiceStatusChanges(center: NotificationCenter())
     let baseline = await Self.revision(changes)
+    let registered = Self.heldWaits(changes)
     let held = Task { await changes.wait(after: baseline, holdSeconds: 30) }
-    await Self.waitForHeldWaits(1, in: changes)
+    await Self.nextHeldWait(registered)
     changes.announcementWillReachWait = { held.cancel() }
 
     async let outcome = changes.announceTestNotification()
@@ -219,6 +226,46 @@ struct ServiceStatusChangesTests {
     let id = try #require(Self.announcementID(await changes.wait(after: nil, holdSeconds: 30)))
     #expect(changes.reportTestNotification(id, outcome: .shown))
     #expect(await outcome == .shown)
+  }
+
+  @Test
+  func anAnnouncementGivenBackAfterThePickupDeadlineExpiresInsteadOfReachingAHeldWait()
+    async throws
+  {
+    let changes = ServiceStatusChanges(
+      center: NotificationCenter(),
+      pickupSeconds: 0.01,
+      answerSeconds: 0.5
+    )
+    let baseline = await Self.revision(changes)
+    let registered = Self.heldWaits(changes)
+    let first = Task { await changes.wait(after: baseline, holdSeconds: 30) }
+    await Self.nextHeldWait(registered)
+    let secondRegistered = DispatchSemaphore(value: 0)
+    let second = Locked<Task<ServiceStatusReply, Never>?>(nil)
+    changes.heldWaitDidRegister = { secondRegistered.signal() }
+    // The hook runs for each wait an announcement is handed to; only the first hand-over is set up.
+    let handedOver = Locked(false)
+    changes.announcementWillReachWait = {
+      guard
+        !handedOver.withLock({ value in
+          defer { value = true }; return value
+        })
+      else { return }
+      first.cancel()
+      second.withLock { $0 = Task { await changes.wait(after: baseline, holdSeconds: 30) } }
+      _ = secondRegistered.wait(timeout: .now() + 10)
+      // Lets the pickup deadline pass while the first wait still holds the announcement.
+      Thread.sleep(forTimeInterval: 0.05)
+    }
+
+    let outcome = await changes.announceTestNotification()
+    let secondWait = try #require(second.withLock { $0 })
+    secondWait.cancel()
+
+    #expect(await first.value.event == .holdElapsed)
+    #expect(outcome == .noAnswer)
+    #expect(await secondWait.value.event == .holdElapsed)
   }
 
   @Test

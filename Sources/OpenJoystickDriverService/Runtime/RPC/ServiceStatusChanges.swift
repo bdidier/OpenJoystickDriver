@@ -234,13 +234,15 @@ final class ServiceStatusChanges: @unchecked Sendable {
 
   /// Puts announcement `id`, taken by a wait that was cancelled before it returned, back to
   /// pending: the next wait takes it, or a wait already held does now. The pickup deadline stays
-  /// the one the request set.
+  /// the one the request set; when it has passed, the announcement ends with `noAnswer` and no
+  /// wait, held or later, takes it.
   private func giveBack(_ id: UUID) {
     let handoff = lock.withLock { () -> (Waiter, ServiceStatusReply)? in
       guard let pending, pending.id == id, pending.taken else { return nil }
       pending.taken = false
-      schedule(pending, after: max(0, pending.pickupBy.timeIntervalSinceNow))
-      return handToHeldWait(pending)
+      let remaining = pending.pickupBy.timeIntervalSinceNow
+      schedule(pending, after: max(0, remaining))
+      return remaining > 0 ? handToHeldWait(pending) : nil
     }
     if let handoff { deliver(handoff) }
   }
