@@ -32,4 +32,15 @@ package enum BlockingWork {
   package static func detach(label: String, _ work: @escaping @Sendable () -> Void) {
     DispatchQueue(label: label).async(execute: work)
   }
+
+  /// Runs `work` on a thread of its own that takes no thread of Grand Central Dispatch's pool,
+  /// without waiting for it.
+  ///
+  /// Use it for loops that block for as long as the process lives, such as an accept loop, and
+  /// for waits that must fire on time while the pool is saturated.
+  package static func detachThread(name: String, _ work: @escaping @Sendable () -> Void) {
+    let thread = Thread(block: work)
+    thread.name = name
+    thread.start()
+  }
 }

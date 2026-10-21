@@ -494,24 +494,6 @@ struct EndpointWebSocketTests {
     }
   }
 
-  /// A listener swapped out while its accept loop is still blocked must not keep the new
-  /// listener's loop from starting.
-  @Test
-  func aStaleAcceptLoopDoesNotBlockTheNewListener() async throws {
-    try await withWeb { server, fixture, _, _ in
-      try write("<p>pad</p>", to: "index.html", in: fixture)
-      try server.setWebEnabled(false, port: nil)
-      let stale = DispatchSemaphore(value: 0)
-      defer { stale.signal() }
-      server.webAcceptQueue.async { stale.wait() }
-      let free = try server.openWebListener(port: 0)
-      close(free.descriptor)
-      try server.setWebEnabled(true, port: free.port)
-
-      #expect(await page("/", port: free.port)?.status == 200)
-    }
-  }
-
   @Test(arguments: [EMFILE, ENFILE, ENOBUFS, ENOMEM])
   func anAcceptFailureFromResourceExhaustionIsRetried(code: Int32) {
     #expect(EndpointServer.acceptFailure(code) == .backOff)

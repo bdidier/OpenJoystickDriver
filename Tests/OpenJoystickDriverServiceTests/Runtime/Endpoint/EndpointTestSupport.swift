@@ -64,29 +64,29 @@ func offPool<Result: Sendable>(_ work: @escaping @Sendable () -> Result) async -
   }
 }
 
-/// Parks blocked work items on Grand Central Dispatch's global queues until its thread pool stops
-/// growing, runs `body`, then releases them. A connection that depends on a pool thread starves
-/// meanwhile, which is how the endpoint behaved when connections ran on a concurrent queue.
+/// Whether the kernel reports that this process's dispatch workqueue reached
+/// `kern.wq_max_constrained_threads`, the limit on threads that Grand Central Dispatch's global
+/// queues run blocked work on (`WQ_EXCEEDED_CONSTRAINED_THREAD_LIMIT` in `sys/proc_info.h`).
+/// The flag is set while blocked items queue behind the limit and clears once they finish. A
+/// process with no workqueue, which `proc_pidinfo` answers with `ESRCH`, has not reached it.
+func dispatchPoolIsSaturated() -> Bool {
+  var info = proc_workqueueinfo()
+  let size = Int32(MemoryLayout<proc_workqueueinfo>.size)
+  let result = proc_pidinfo(getpid(), PROC_PIDWORKQUEUEINFO, 0, &info, size)
+  if result == 0, errno == ESRCH { return false }
+  precondition(result == size, "proc_pidinfo(PROC_PIDWORKQUEUEINFO) failed: errno \(errno)")
+  return info.pwq_state & UInt32(WQ_EXCEEDED_CONSTRAINED_THREAD_LIMIT) != 0
+}
+
+/// Parks blocked work items on Grand Central Dispatch's global queues until the kernel reports the
+/// pool's thread limit reached (`dispatchPoolIsSaturated`), runs `body`, then releases them. A
+/// connection that depends on a pool thread starves meanwhile.
 func withSaturatedDispatchPool(_ body: () async throws -> Void) async rethrows {
   let release = DispatchSemaphore(value: 0)
-  let started = NSLock()
-  nonisolated(unsafe) var count = 0
   let items = 512
-  for _ in 0..<items {
-    DispatchQueue.global().async {
-      started.withLock { count += 1 }
-      release.wait()
-    }
-  }
+  for _ in 0..<items { DispatchQueue.global().async { release.wait() } }
   defer { for _ in 0..<items { release.signal() } }
-  var last = -1
-  var stable = 0
-  while stable < 5 {
-    try? await Task.sleep(nanoseconds: 100_000_000)
-    let now = started.withLock { count }
-    stable = now == last ? stable + 1 : 0
-    last = now
-  }
+  await waitUntil("the dispatch pool reaches its thread limit") { dispatchPoolIsSaturated() }
   try await body()
 }
 

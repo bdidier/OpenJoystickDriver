@@ -41,20 +41,7 @@ final class EndpointServer: @unchecked Sendable {
   /// nanoseconds just after the send.
   let streamDelivered: (@Sendable (ControllerSessionToken, UInt64) async -> Void)?
   let lock = NSLock()
-  private let acceptQueue = DispatchQueue(label: "com.openjoystickdriver.endpoint.accept")
-  /// Runs only the short handshake timers; each connection itself runs on a thread of its own
-  /// (`BlockingWork.detach`), because a concurrent queue grows its threads slowly for blocked
-  /// work and new connections would wait behind idle ones.
-  let handshakeTimerQueue = DispatchQueue(
-    label: "com.openjoystickdriver.endpoint.handshake-timers",
-    attributes: .concurrent
-  )
   private var listeningDescriptor: Int32 = -1
-  /// Concurrent, so a stale listener's loop, which may stay blocked, never holds up a new one.
-  let webAcceptQueue = DispatchQueue(
-    label: "com.openjoystickdriver.endpoint.web-accept",
-    attributes: .concurrent
-  )
   var webDescriptor: Int32 = -1
   /// The port `webDescriptor` listens on.
   var webPort = 0
@@ -265,7 +252,15 @@ final class EndpointServer: @unchecked Sendable {
       throw error
     }
     listeningDescriptor = descriptor
-    acceptQueue.async { [weak self] in self?.acceptConnections(descriptor) }
+    // The accept loops and the handshake timers run on threads of their own (`detachThread`),
+    // never on a constrained pool thread of Grand Central Dispatch: those threads are limited,
+    // and a saturated pool would delay accepts and handshake timeouts. Each connection runs on a
+    // serial queue of its own (`detach`), which starts at once even when the pool is saturated.
+    // A stale web listener's loop, which may stay blocked, holds only its own thread and never
+    // holds up a new one.
+    BlockingWork.detachThread(name: "com.openjoystickdriver.endpoint.accept") { [weak self] in
+      self?.acceptConnections(descriptor)
+    }
   }
 
   /// Call with `lock` held.

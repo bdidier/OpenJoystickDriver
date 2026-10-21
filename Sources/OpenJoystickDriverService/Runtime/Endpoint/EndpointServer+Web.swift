@@ -74,7 +74,8 @@ extension EndpointServer {
     webPort = listener.port
     webGeneration += 1
     let generation = webGeneration
-    webAcceptQueue.async { [weak self] in
+    BlockingWork.detachThread(name: "com.openjoystickdriver.endpoint.web-accept") {
+      [weak self] in
       self?.acceptWebConnections(listener, generation: generation)
     }
   }

@@ -39,13 +39,19 @@ extension EndpointServer {
       seconds: TimeInterval(Self.handshakeSeconds)
     )
     // The receive timeout restarts with each byte; this bounds the whole handshake.
-    handshakeTimerQueue.asyncAfter(deadline: .now() + .seconds(Self.handshakeSeconds)) {
+    // A thread of its own waits out the time and ends early when the handshake does.
+    let handshakeEnded = DispatchSemaphore(value: 0)
+    BlockingWork.detachThread(name: "com.openjoystickdriver.endpoint.handshake-timer") {
       [weak connection] in
-      guard let connection, connection.session == nil else { return }
+      guard handshakeEnded.wait(timeout: .now() + .seconds(Self.handshakeSeconds)) == .timedOut,
+        let connection, connection.session == nil
+      else { return }
       connection.close(Self.invalid("Send hello within \(Self.handshakeSeconds) seconds."))
     }
     let challenge = Challenge(nonce: nonce, origin: origin ?? "", port: port.map(String.init) ?? "")
-    guard handshake(connection, peer: peer, origin: origin, challenge: challenge) else { return }
+    let welcomed = handshake(connection, peer: peer, origin: origin, challenge: challenge)
+    handshakeEnded.signal()
+    guard welcomed else { return }
     connection.setReceiveTimeout(seconds: 0)
 
     guard let request = readRequest(connection, accepting: ["Subscription", "FeedRequest"]) else {
