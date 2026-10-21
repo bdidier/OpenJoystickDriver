@@ -30,7 +30,6 @@
 "settings.controllers" = "Controles";
 "settings.profiles" = "Perfis";
 "settings.accessReadiness" = "Acesso e Prontidão";
-"settings.accessReadinessAccessibility" = "Acesso e Prontidão";
 "settings.checkUpdates" = "Verificar Agora";
 "settings.contactingGitHub" = "Contatando o GitHub…";
 "settings.controllerConnectedShort" = "Conectado";
@@ -524,6 +523,10 @@
 "setup.uninstallDetail" = "Os controles USB Xbox param de funcionar até que o driver seja instalado novamente.";
 "setup.repairDriver" = "Reparar Driver USB Xbox";
 "banner.service.title" = "O OpenJoystickDriver não consegue acessar o serviço";
+"banner.service.start" = "Iniciar serviço";
+"banner.service.startFailed" = "O OpenJoystickDriver não conseguiu iniciar o serviço.";
+"banner.service.noBundle" = "Esta cópia do OpenJoystickDriver não está dentro de um app e não pode iniciar o serviço.";
+"banner.service.notReady" = "O serviço foi iniciado, mas não aceitou solicitações a tempo.";
 "banner.access.title" = "Permissão necessária";
 "banner.access.detail" = "O macOS não permitiu tudo o que o OpenJoystickDriver precisa para ler os controles e publicá-los nos jogos.";
 "cli.login.uninstall_action" = "Desinstalar";
@@ -1627,13 +1630,9 @@
 "access.loading" = "Lendo os ajustes de acesso…";
 "access.done" = "Concluído";
 "access.choose" = "Escolher";
-"access.none" = "Nenhum";
 "access.endpoint" = "Endpoint local";
-"access.on" = "Ativado";
-"access.off" = "Desativado";
 "access.socket" = "Soquete: %@";
 "access.enable" = "Ativar";
-"access.disable" = "Desativar";
 "access.enable.title" = "Ativar o endpoint local?";
 "access.enable.message" = "Os programas aos quais você conceder acesso poderão ler o estado dos controles e, com o escopo Controle, alterá-lo.";
 "access.web" = "WebSocket";
@@ -1659,6 +1658,8 @@
 "access.revoke" = "Revogar";
 "access.revoke.title" = "Revogar o acesso de %@?";
 "access.revoke.message" = "O programa perde todos os seus escopos e as conexões abertas dele são fechadas.";
+"access.revoke.all" = "Todos os escopos";
+"access.revokeScope.message" = "Apenas o escopo %@ é removido. Os outros escopos permanecem e as conexões abertas que o usam são fechadas.";
 "access.revokeToken.title" = "Revogar o token %@?";
 "access.revokeToken.message" = "As páginas e os programas que usam o token perdem o acesso e as conexões abertas deles são fechadas.";
 "access.tokens" = "Tokens";

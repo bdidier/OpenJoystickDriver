@@ -30,7 +30,6 @@
 "settings.controllers" = "Controller";
 "settings.profiles" = "Profili";
 "settings.accessReadiness" = "Accesso e prontezza";
-"settings.accessReadinessAccessibility" = "Accesso e prontezza";
 "settings.checkUpdates" = "Controlla ora";
 "settings.contactingGitHub" = "Connessione a GitHub…";
 "settings.controllerConnectedShort" = "Connesso";
@@ -524,6 +523,10 @@
 "setup.uninstallDetail" = "I controller USB Xbox smettono di funzionare finché il driver non viene installato di nuovo.";
 "setup.repairDriver" = "Ripara driver USB Xbox";
 "banner.service.title" = "OpenJoystickDriver non riesce a raggiungere il proprio servizio";
+"banner.service.start" = "Avvia servizio";
+"banner.service.startFailed" = "OpenJoystickDriver non è riuscito ad avviare il proprio servizio.";
+"banner.service.noBundle" = "Questa copia di OpenJoystickDriver non si trova in un’app, quindi non può avviare il servizio.";
+"banner.service.notReady" = "Il servizio è stato avviato, ma non ha accettato richieste in tempo.";
 "banner.access.title" = "Autorizzazione necessaria";
 "banner.access.detail" = "macOS non ha consentito tutto ciò che OpenJoystickDriver richiede per leggere i controller e pubblicarli nei giochi.";
 "cli.login.uninstall_action" = "Disinstalla";
@@ -1627,13 +1630,9 @@
 "access.loading" = "Lettura delle impostazioni di accesso…";
 "access.done" = "Fine";
 "access.choose" = "Scegli";
-"access.none" = "Nessuno";
 "access.endpoint" = "Endpoint locale";
-"access.on" = "Attivo";
-"access.off" = "Disattivato";
 "access.socket" = "Socket locale: %@";
 "access.enable" = "Attiva";
-"access.disable" = "Disattiva";
 "access.enable.title" = "Attivare l’endpoint locale?";
 "access.enable.message" = "I programmi a cui concedi l’accesso possono quindi leggere lo stato dei controller e, con l’ambito Controllo, modificarlo.";
 "access.web" = "WebSocket";
@@ -1659,6 +1658,8 @@
 "access.revoke" = "Revoca";
 "access.revoke.title" = "Revocare l’accesso di %@?";
 "access.revoke.message" = "Il programma perde tutti i suoi ambiti e le sue connessioni aperte vengono chiuse.";
+"access.revoke.all" = "Tutti gli ambiti";
+"access.revokeScope.message" = "Viene rimosso solo l’ambito %@. Gli altri ambiti restano e le connessioni aperte che lo usano vengono chiuse.";
 "access.revokeToken.title" = "Revocare il token %@?";
 "access.revokeToken.message" = "Le pagine e i programmi che usano il token perdono l’accesso e le loro connessioni aperte vengono chiuse.";
 "access.tokens" = "Token";

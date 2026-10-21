@@ -30,7 +30,6 @@
 "settings.controllers" = "コントローラ";
 "settings.profiles" = "プロファイル";
 "settings.accessReadiness" = "アクセスと準備状況";
-"settings.accessReadinessAccessibility" = "アクセスと準備状況";
 "settings.checkUpdates" = "今すぐ確認";
 "settings.contactingGitHub" = "GitHubに接続中…";
 "settings.controllerConnectedShort" = "接続済み";
@@ -524,6 +523,10 @@
 "setup.uninstallDetail" = "ドライバを再インストールするまで、Xbox USBコントローラは動作しません。";
 "setup.repairDriver" = "Xbox USBドライバを修復";
 "banner.service.title" = "OpenJoystickDriverがサービスに接続できません";
+"banner.service.start" = "サービスを開始";
+"banner.service.startFailed" = "OpenJoystickDriverがサービスを開始できませんでした。";
+"banner.service.noBundle" = "このOpenJoystickDriverはAppの中にないため、サービスを開始できません。";
+"banner.service.notReady" = "サービスは開始されましたが、時間内にリクエストを受け付けませんでした。";
 "banner.access.title" = "権限が必要です";
 "banner.access.detail" = "macOSは、OpenJoystickDriverがコントローラを読み取り、ゲームに公開するために必要な権限をすべては許可していません。";
 "cli.login.uninstall_action" = "アンインストール";
@@ -1516,13 +1519,9 @@
 "access.loading" = "アクセス設定を読み込んでいます…";
 "access.done" = "完了";
 "access.choose" = "選択";
-"access.none" = "なし";
 "access.endpoint" = "ローカルエンドポイント";
-"access.on" = "オン";
-"access.off" = "オフ";
 "access.socket" = "ソケット: %@";
 "access.enable" = "オンにする";
-"access.disable" = "オフにする";
 "access.enable.title" = "ローカルエンドポイントをオンにしますか？";
 "access.enable.message" = "アクセスを許可したプログラムは、コントローラの状態を読み取れるようになり、制御スコープがあれば状態を変更することもできます。";
 "access.web" = "WebSocket";
@@ -1548,6 +1547,8 @@
 "access.revoke" = "取り消す";
 "access.revoke.title" = "%@のアクセスを取り消しますか？";
 "access.revoke.message" = "プログラムはすべてのスコープを失い、開いている接続は閉じられます。";
+"access.revoke.all" = "すべてのスコープ";
+"access.revokeScope.message" = "「%@」スコープのみが削除されます。他のスコープは残り、このスコープを使用している接続は閉じられます。";
 "access.revokeToken.title" = "トークン「%@」を取り消しますか？";
 "access.revokeToken.message" = "このトークンを使うページとプログラムはアクセスを失い、開いている接続は閉じられます。";
 "access.tokens" = "トークン";

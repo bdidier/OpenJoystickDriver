@@ -30,7 +30,6 @@
 "settings.controllers" = "وحدات التحكم";
 "settings.profiles" = "ملفات التعريف";
 "settings.accessReadiness" = "الوصول والجاهزية";
-"settings.accessReadinessAccessibility" = "الوصول والجاهزية";
 "settings.checkUpdates" = "تحقق الآن";
 "settings.contactingGitHub" = "جارٍ الاتصال بـ GitHub…";
 "settings.controllerConnectedShort" = "متصل";
@@ -524,6 +523,10 @@
 "setup.uninstallDetail" = "تتوقف وحدات تحكم Xbox USB عن العمل إلى أن يُثبَّت برنامج التشغيل مرة أخرى.";
 "setup.repairDriver" = "إصلاح برنامج تشغيل Xbox USB";
 "banner.service.title" = "لا يستطيع OpenJoystickDriver الوصول إلى خدمته";
+"banner.service.start" = "بدء الخدمة";
+"banner.service.startFailed" = "تعذّر على OpenJoystickDriver بدء خدمته.";
+"banner.service.noBundle" = "هذه النسخة من OpenJoystickDriver ليست داخل تطبيق، لذلك لا يمكنها بدء الخدمة.";
+"banner.service.notReady" = "بدأت الخدمة لكنها لم تقبل الطلبات في الوقت المناسب.";
 "banner.access.title" = "الإذن مطلوب";
 "banner.access.detail" = "لم يسمح macOS بكل ما يحتاجه OpenJoystickDriver لقراءة وحدات التحكم ونشرها للألعاب.";
 "cli.login.uninstall_action" = "إلغاء التثبيت";
@@ -1516,13 +1519,9 @@
 "access.loading" = "جارٍ قراءة إعدادات الوصول…";
 "access.done" = "تم";
 "access.choose" = "اختيار";
-"access.none" = "لا شيء";
 "access.endpoint" = "نقطة النهاية المحلية";
-"access.on" = "قيد التشغيل";
-"access.off" = "متوقف";
 "access.socket" = "المقبس: %@";
 "access.enable" = "تشغيل";
-"access.disable" = "إيقاف التشغيل";
 "access.enable.title" = "هل تريد تشغيل نقطة النهاية المحلية؟";
 "access.enable.message" = "يمكن للبرامج التي تمنحها الوصول بعد ذلك قراءة حالة وحدات التحكم، وتغييرها إذا كان لديها نطاق التحكم.";
 "access.web" = "WebSocket";
@@ -1548,6 +1547,8 @@
 "access.revoke" = "سحب الوصول";
 "access.revoke.title" = "هل تريد سحب وصول %@؟";
 "access.revoke.message" = "يفقد البرنامج جميع نطاقاته وتُغلق اتصالاته المفتوحة.";
+"access.revoke.all" = "جميع النطاقات";
+"access.revokeScope.message" = "يُسحب النطاق %@ فقط. تبقى النطاقات الأخرى وتُغلق الاتصالات المفتوحة التي تستخدمه.";
 "access.revokeToken.title" = "هل تريد سحب الرمز المميز %@؟";
 "access.revokeToken.message" = "تفقد الصفحات والبرامج التي تستخدم الرمز المميز الوصول وتُغلق اتصالاتها المفتوحة.";
 "access.tokens" = "الرموز المميزة";

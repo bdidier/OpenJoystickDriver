@@ -6,6 +6,44 @@ struct AccessReadinessStatus: Equatable {
   let isActionable: Bool
 }
 
+extension AccessReadinessStatus {
+  /// Whether the permission is missing or needs a change in System Settings. A permission that
+  /// is allowed, not needed or still being checked has nothing to act on.
+  var isMissing: Bool { isActionable && tone == .caution }
+}
+
+/// One permission row of the Access form.
+struct AccessPermissionRow: Equatable, Identifiable {
+  enum Kind: String, CaseIterable {
+    case inputRead
+    case inputInject
+    case postEvent
+    case notification
+  }
+
+  let kind: Kind
+  let status: AccessReadinessStatus
+  /// Whether macOS has not been asked yet, so the button asks instead of opening System Settings.
+  var needsRequest = false
+
+  var id: String { kind.rawValue }
+
+  var titleKey: String {
+    switch kind {
+    case .inputRead: return "common.inputRead"
+    case .inputInject: return "common.inputInject"
+    case .postEvent: return "common.keyboardPointer"
+    case .notification: return "settings.notifications"
+    }
+  }
+
+  /// The button of a missing permission; nil while nothing is missing.
+  var actionTitleKey: String? {
+    guard status.isMissing else { return nil }
+    return needsRequest ? "common.request" : "setup.openSystemSettings"
+  }
+}
+
 /// The macOS permissions the app and its service need, as the Access area shows them.
 struct AccessReadiness {
   let permissionState: RuntimePermissionLoadState
@@ -64,7 +102,31 @@ struct AccessReadiness {
     }
   }
 
-  /// The four values in card order, for the accessibility value of the group.
+  /// The rows to show, in order. A permission the app does not need is left out.
+  var rows: [AccessPermissionRow] {
+    var rows = [
+      AccessPermissionRow(kind: .inputRead, status: inputRead),
+      AccessPermissionRow(kind: .inputInject, status: inputInject),
+    ]
+    if !postEventIsNotNeeded {
+      rows.append(AccessPermissionRow(kind: .postEvent, status: postEvent))
+    }
+    rows.append(
+      AccessPermissionRow(
+        kind: .notification,
+        status: notification,
+        needsRequest: notificationState == .notDetermined
+      )
+    )
+    return rows
+  }
+
+  private var postEventIsNotNeeded: Bool {
+    guard case .available(let status) = statusState else { return false }
+    return status.requiresPostEventAccess == false
+  }
+
+  /// The four values in row order, for the accessibility value of the group.
   var summaryValue: String {
     [inputRead.value, inputInject.value, postEvent.value, notification.value].joined(
       separator: ", "

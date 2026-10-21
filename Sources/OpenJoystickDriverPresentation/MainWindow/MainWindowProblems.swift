@@ -45,7 +45,7 @@ enum MainWindowProblem: Equatable, Sendable, Identifiable {
 
   var action: MainWindowProblemAction? {
     switch self {
-    case .serviceUnavailable: return .retryService
+    case .serviceUnavailable: return .startService
     case .driver(let state):
       switch state {
       case .awaitingApproval: return .openDriverApproval
@@ -93,14 +93,14 @@ enum MainWindowProblem: Equatable, Sendable, Identifiable {
 }
 
 enum MainWindowProblemAction: Equatable, Sendable {
-  case retryService
+  case startService
   case openDriverApproval
   case repairDriver
   case showAccess
 
   var titleKey: String {
     switch self {
-    case .retryService: return "common.tryAgain"
+    case .startService: return "banner.service.start"
     case .openDriverApproval: return "setup.openSystemSettings"
     case .repairDriver: return "setup.repairDriver"
     case .showAccess: return "menuBar.grantAccess"

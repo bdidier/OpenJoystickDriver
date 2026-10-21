@@ -30,7 +30,6 @@
 "settings.controllers" = "Pengontrol";
 "settings.profiles" = "Profil";
 "settings.accessReadiness" = "Akses & kesiapan";
-"settings.accessReadinessAccessibility" = "Akses dan kesiapan";
 "settings.checkUpdates" = "Periksa Sekarang";
 "settings.contactingGitHub" = "Menghubungi GitHub…";
 "settings.controllerConnectedShort" = "Terhubung";
@@ -524,6 +523,10 @@
 "setup.uninstallDetail" = "Pengontrol USB Xbox berhenti berfungsi sampai driver diinstal ulang.";
 "setup.repairDriver" = "Perbaiki Driver USB Xbox";
 "banner.service.title" = "OpenJoystickDriver tidak dapat terhubung ke layanannya";
+"banner.service.start" = "Mulai Layanan";
+"banner.service.startFailed" = "OpenJoystickDriver tidak dapat memulai layanannya.";
+"banner.service.noBundle" = "Salinan OpenJoystickDriver ini tidak berada di dalam app, jadi tidak dapat memulai layanan.";
+"banner.service.notReady" = "Layanan sudah dimulai, tetapi tidak menerima permintaan tepat waktu.";
 "banner.access.title" = "Izin diperlukan";
 "banner.access.detail" = "macOS belum mengizinkan semua yang dibutuhkan OpenJoystickDriver untuk membaca pengontrol dan memublikasikannya ke game.";
 "cli.login.uninstall_action" = "Copot";
@@ -1516,13 +1519,9 @@
 "access.loading" = "Membaca pengaturan akses…";
 "access.done" = "Selesai";
 "access.choose" = "Pilih";
-"access.none" = "Tidak Ada";
 "access.endpoint" = "Titik akhir lokal";
-"access.on" = "Nyala";
-"access.off" = "Mati";
 "access.socket" = "Soket: %@";
 "access.enable" = "Nyalakan";
-"access.disable" = "Matikan";
 "access.enable.title" = "Nyalakan titik akhir lokal?";
 "access.enable.message" = "Program yang Anda beri akses kemudian dapat membaca status pengontrol dan, dengan cakupan Kontrol, mengubahnya.";
 "access.web" = "WebSocket";
@@ -1548,6 +1547,8 @@
 "access.revoke" = "Cabut";
 "access.revoke.title" = "Cabut akses %@?";
 "access.revoke.message" = "Program kehilangan semua cakupannya dan koneksinya yang terbuka ditutup.";
+"access.revoke.all" = "Semua Cakupan";
+"access.revokeScope.message" = "Hanya cakupan %@ yang dihapus. Cakupan lainnya tetap ada dan koneksi terbuka yang memakainya ditutup.";
 "access.revokeToken.title" = "Cabut token %@?";
 "access.revokeToken.message" = "Laman dan program yang memakai token kehilangan akses dan koneksinya yang terbuka ditutup.";
 "access.tokens" = "Token";

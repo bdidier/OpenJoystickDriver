@@ -100,6 +100,8 @@
     let screens: MainWindowScreens
     @State
     private var driverApprovalFailed = false
+    @State
+    private var serviceStartFailure: String?
 
     var body: some View {
       VStack(spacing: 0) {
@@ -119,6 +121,19 @@
         Color.clear.alert(isPresented: $navigation.isMutationRefusalPresented) {
           Alert(
             title: Text(OJDLocalized.string("mainWindow.profileMutationRunning")),
+            dismissButton: .default(Text(OJDLocalized.string("common.ok")))
+          )
+        }
+      ).background(
+        Color.clear.alert(
+          isPresented: Binding(
+            get: { serviceStartFailure != nil },
+            set: { if !$0 { serviceStartFailure = nil } }
+          )
+        ) {
+          Alert(
+            title: Text(OJDLocalized.string("banner.service.startFailed")),
+            message: Text(serviceStartFailure ?? ""),
             dismissButton: .default(Text(OJDLocalized.string("common.ok")))
           )
         }
@@ -173,10 +188,20 @@
 
     private func perform(_ action: MainWindowProblemAction) {
       switch action {
-      case .retryService: Task { @MainActor in await runtime.refresh() }
+      case .startService: startService()
       case .openDriverApproval: driverApprovalFailed = !SystemExtensionApproval.openSystemSettings()
       case .repairDriver: Task { @MainActor in await runtime.repairSystemExtension() }
       case .showAccess: navigation.requestArea(.access)
+      }
+    }
+
+    /// Starts the service, then reads the state again; a failure opens an alert.
+    private func startService() {
+      Task { @MainActor in
+        do { try await ServiceStarter().start() } catch let failure as ServiceStarter.Failure {
+          serviceStartFailure = failure.message
+        } catch { serviceStartFailure = error.localizedDescription }
+        await runtime.refresh()
       }
     }
 

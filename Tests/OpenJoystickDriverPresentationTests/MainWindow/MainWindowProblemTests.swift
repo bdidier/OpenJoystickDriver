@@ -40,7 +40,9 @@ struct MainWindowProblemTests {
 
   @Test
   func eachProblemNamesItsAction() {
-    #expect(MainWindowProblem.serviceUnavailable("down").action == .retryService)
+    #expect(MainWindowProblem.serviceUnavailable("down").action == .startService)
+    #expect(MainWindowProblemAction.startService.titleKey == "banner.service.start")
+    #expect(OJDLocalized.string("banner.service.start") != "banner.service.start")
     #expect(MainWindowProblem.driver(.awaitingApproval).action == .openDriverApproval)
     #expect(MainWindowProblem.driver(.needsActivation).action == .repairDriver)
     #expect(MainWindowProblem.driver(.invalid).action == .repairDriver)

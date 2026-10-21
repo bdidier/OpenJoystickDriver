@@ -63,8 +63,10 @@ private final class FakeAccessService: AccessService, @unchecked Sendable {
     )
   }
 
-  func revoke(id: String) throws -> AccessRevokeResult {
-    calls.append("revoke:\(id)")
+  func revoke(id: String, scopes: [EndpointScope]?) throws -> AccessRevokeResult {
+    calls.append(
+      "revoke:\(id):\(scopes.map { $0.map(\.rawValue).joined(separator: ",") } ?? "all")"
+    )
     return AccessRevokeResult(id: id, grant: nil, token: nil, closedConnections: 0)
   }
 }
@@ -252,7 +254,7 @@ struct AccessViewModelTests {
   func revokingAsksThenRevokesById() async {
     let service = FakeAccessService()
     let model = AccessViewModel(service: service)
-    let pending = AccessPending.revokeToken(id: "token:tool", name: "tool")
+    let pending = AccessPending.revokeToken(id: "token:tool", name: "tool", scopes: nil)
 
     model.requestRevoke(
       AccessTokenSummary(name: "tool", origins: [], scopes: [.read], grantTime: "")
@@ -261,7 +263,49 @@ struct AccessViewModelTests {
     #expect(model.confirmation(for: pending).isDestructive)
     await model.confirm(pending)
 
-    #expect(service.calls == ["revoke:token:tool"])
+    #expect(service.calls == ["revoke:token:tool:all"])
+  }
+
+  @Test
+  func revokingOneScopeAsksThenRevokesOnlyThatScope() async {
+    let service = FakeAccessService()
+    let model = AccessViewModel(service: service)
+    let grant = AccessGrantSummary(
+      AccessGrant(
+        identity: signed,
+        scopes: [.read, .control],
+        grantedAt: "2026-01-01T00:00:00Z",
+        path: "/Applications/Example.app"
+      )
+    )
+    let pending = AccessPending.revokeGrant(
+      id: grant.id,
+      name: grant.identifier,
+      scopes: [.control]
+    )
+
+    model.requestRevoke(grant, scope: .control)
+    #expect(model.sheet == .confirm(pending))
+    #expect(
+      model.confirmation(for: pending).lines.joined().contains(AccessPresentation.scope(.control))
+    )
+    #expect(model.confirmation(for: pending).isDestructive)
+    await model.confirm(pending)
+
+    #expect(service.calls == ["revoke:\(grant.id):Control"])
+  }
+
+  @Test
+  func onlyAGrantWithSeveralScopesOffersToRevokeOne() {
+    #expect(AccessViewModel.scopeChoices(of: [.read]).isEmpty)
+    #expect(AccessViewModel.scopeChoices(of: [.read, .control]) == [.read, .control])
+  }
+
+  @Test
+  func theWholeAndThePartialRevokeOfOneGrantAreDistinctSheets() {
+    let whole = AccessPending.revokeGrant(id: "g", name: "g", scopes: nil)
+    let partial = AccessPending.revokeGrant(id: "g", name: "g", scopes: [.read])
+    #expect(whole.id != partial.id)
   }
 
   @Test

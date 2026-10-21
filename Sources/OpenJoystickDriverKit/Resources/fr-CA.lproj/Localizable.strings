@@ -30,7 +30,6 @@
 "settings.controllers" = "Manettes";
 "settings.profiles" = "Profils";
 "settings.accessReadiness" = "Accès et disponibilité";
-"settings.accessReadinessAccessibility" = "Accès et disponibilité";
 "settings.checkUpdates" = "Vérifier maintenant";
 "settings.contactingGitHub" = "Contact de GitHub…";
 "settings.controllerConnectedShort" = "Connectée";
@@ -524,6 +523,10 @@
 "setup.uninstallDetail" = "Les manettes USB Xbox cessent de fonctionner tant que le pilote n’est pas réinstallé.";
 "setup.repairDriver" = "Réparer le pilote USB Xbox";
 "banner.service.title" = "OpenJoystickDriver ne peut pas joindre son service";
+"banner.service.start" = "Démarrer le service";
+"banner.service.startFailed" = "OpenJoystickDriver n’a pas pu démarrer son service.";
+"banner.service.noBundle" = "Cette copie d’OpenJoystickDriver n’est pas dans une app, elle ne peut donc pas démarrer le service.";
+"banner.service.notReady" = "Le service a démarré, mais n’a pas accepté de requêtes à temps.";
 "banner.access.title" = "Autorisation requise";
 "banner.access.detail" = "macOS n’a pas autorisé tout ce dont OpenJoystickDriver a besoin pour lire les manettes et les publier dans les jeux.";
 "cli.login.uninstall_action" = "Désinstaller";
@@ -1627,13 +1630,9 @@
 "access.loading" = "Lecture des réglages d’accès…";
 "access.done" = "Terminé";
 "access.choose" = "Choisir";
-"access.none" = "Aucun";
 "access.endpoint" = "Point d’accès local";
-"access.on" = "Activé";
-"access.off" = "Désactivé";
 "access.socket" = "Socket : %@";
 "access.enable" = "Activer";
-"access.disable" = "Désactiver";
 "access.enable.title" = "Activer le point d’accès local?";
 "access.enable.message" = "Les programmes auxquels vous accordez l’accès peuvent alors lire l’état des manettes et, avec la portée control, le modifier.";
 "access.web" = "WebSocket";
@@ -1659,6 +1658,8 @@
 "access.revoke" = "Révoquer";
 "access.revoke.title" = "Révoquer l’accès de %@?";
 "access.revoke.message" = "Le programme perd toutes ses portées et ses connexions ouvertes se ferment.";
+"access.revoke.all" = "Toutes les portées";
+"access.revokeScope.message" = "Seule la portée %@ est retirée. Les autres portées restent et les connexions ouvertes qui l’utilisent se ferment.";
 "access.revokeToken.title" = "Révoquer le jeton %@?";
 "access.revokeToken.message" = "Les pages et les programmes qui utilisent le jeton perdent l’accès et leurs connexions ouvertes se ferment.";
 "access.tokens" = "Jetons";

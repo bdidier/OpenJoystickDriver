@@ -30,7 +30,6 @@
 "settings.controllers" = "คอนโทรลเลอร์";
 "settings.profiles" = "โปรไฟล์";
 "settings.accessReadiness" = "การเข้าถึงและความพร้อม";
-"settings.accessReadinessAccessibility" = "การเข้าถึงและความพร้อม";
 "settings.checkUpdates" = "ตรวจสอบเลย";
 "settings.contactingGitHub" = "กำลังติดต่อ GitHub…";
 "settings.controllerConnectedShort" = "เชื่อมต่ออยู่";
@@ -524,6 +523,10 @@
 "setup.uninstallDetail" = "คอนโทรลเลอร์ Xbox USB จะหยุดทำงานจนกว่าจะติดตั้งไดรเวอร์อีกครั้ง";
 "setup.repairDriver" = "ซ่อมแซมไดรเวอร์ Xbox USB";
 "banner.service.title" = "OpenJoystickDriver ไม่สามารถเชื่อมต่อกับบริการของตนได้";
+"banner.service.start" = "เริ่มบริการ";
+"banner.service.startFailed" = "OpenJoystickDriver ไม่สามารถเริ่มบริการของตนได้";
+"banner.service.noBundle" = "สำเนา OpenJoystickDriver นี้ไม่ได้อยู่ในแอป จึงไม่สามารถเริ่มบริการได้";
+"banner.service.notReady" = "บริการเริ่มทำงานแล้วแต่ไม่รับคำขอภายในเวลาที่กำหนด";
 "banner.access.title" = "ต้องมีสิทธิ์";
 "banner.access.detail" = "macOS ยังไม่ได้อนุญาตทั้งหมดที่ OpenJoystickDriver ต้องใช้ในการอ่านคอนโทรลเลอร์และเผยแพร่ไปยังเกม";
 "cli.login.uninstall_action" = "ถอนการติดตั้ง";
@@ -1516,13 +1519,9 @@
 "access.loading" = "กำลังอ่านการตั้งค่าการเข้าถึง…";
 "access.done" = "เสร็จสิ้น";
 "access.choose" = "เลือก";
-"access.none" = "ไม่มี";
 "access.endpoint" = "ปลายทางภายในเครื่อง";
-"access.on" = "เปิดอยู่";
-"access.off" = "ปิดอยู่";
 "access.socket" = "ซ็อกเก็ต: %@";
 "access.enable" = "เปิด";
-"access.disable" = "ปิด";
 "access.enable.title" = "เปิดปลายทางภายในเครื่องหรือไม่";
 "access.enable.message" = "โปรแกรมที่คุณให้สิทธิ์การเข้าถึงจะอ่านสถานะคอนโทรลเลอร์ได้ และเปลี่ยนสถานะได้หากมีขอบเขตควบคุม";
 "access.web" = "WebSocket";
@@ -1548,6 +1547,8 @@
 "access.revoke" = "เพิกถอน";
 "access.revoke.title" = "เพิกถอนสิทธิ์การเข้าถึงของ %@ หรือไม่";
 "access.revoke.message" = "โปรแกรมจะสูญเสียขอบเขตทั้งหมดและการเชื่อมต่อที่เปิดอยู่จะถูกปิด";
+"access.revoke.all" = "ขอบเขตทั้งหมด";
+"access.revokeScope.message" = "จะนำออกเฉพาะขอบเขต %@ ขอบเขตอื่นยังคงอยู่ และการเชื่อมต่อที่เปิดอยู่ซึ่งใช้ขอบเขตนี้จะถูกปิด";
 "access.revokeToken.title" = "เพิกถอนโทเค็น %@ หรือไม่";
 "access.revokeToken.message" = "หน้าเว็บและโปรแกรมที่ใช้โทเค็นจะสูญเสียสิทธิ์การเข้าถึงและการเชื่อมต่อที่เปิดอยู่จะถูกปิด";
 "access.tokens" = "โทเค็น";

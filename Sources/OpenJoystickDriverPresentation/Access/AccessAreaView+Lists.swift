@@ -1,0 +1,159 @@
+#if canImport(SwiftUI)
+
+  import AppKit
+  import Foundation
+  import OpenJoystickDriverKit
+  import SwiftUI
+
+  extension AccessAreaView {
+    /// The lists of programs, tokens, refused clients and open connections; a list with nothing
+    /// in it is left out.
+    @ViewBuilder
+    func listSections(_ status: AccessStatusPayload) -> some View {
+      let layout = AccessLayout(status)
+      if layout.showsGrants { grantsSection(status) }
+      if layout.showsTokens { tokensSection(status) }
+      if layout.showsRefused { refusedSection(status) }
+      if layout.showsConnections { connectionsSection(status) }
+    }
+
+    private func grantsSection(_ status: AccessStatusPayload) -> some View {
+      Section(header: Text(OJDLocalized.string("access.grants"))) {
+        ForEach(status.grants, id: \.id) { grant in
+          row(
+            title: grant.identifier,
+            detail: OJDLocalized.formatted(
+              "access.detail.pair",
+              AccessPresentation.signer(grant.publisher.kind, grant.publisher.id),
+              AccessPresentation.scopes(grant.scopes)
+            ),
+            help: grant.path
+          ) {
+            revokeControl(
+              scopes: grant.scopes,
+              label: OJDLocalized.formatted("a11y.access.revokeGrant", grant.identifier),
+            ) { model.requestRevoke(grant, scope: $0) }
+          }
+        }
+      }
+    }
+
+    private func tokensSection(_ status: AccessStatusPayload) -> some View {
+      Section(header: Text(OJDLocalized.string("access.tokens"))) {
+        ForEach(status.tokens, id: \.id) { token in
+          row(
+            title: token.name,
+            detail: token.origins.isEmpty
+              ? AccessPresentation.scopes(token.scopes)
+              : OJDLocalized.formatted(
+                "access.detail.pair",
+                AccessPresentation.scopes(token.scopes),
+                token.origins.joined(separator: ", ")
+              ),
+            help: nil
+          ) {
+            revokeControl(
+              scopes: token.scopes,
+              label: OJDLocalized.formatted("a11y.access.revokeToken", token.name),
+            ) { model.requestRevoke(token, scope: $0) }
+          }
+        }
+      }
+    }
+
+    private func refusedSection(_ status: AccessStatusPayload) -> some View {
+      Section(
+        header: Text(OJDLocalized.string("access.refused")),
+        footer: Text(OJDLocalized.string("access.refused.message"))
+      ) {
+        ForEach(status.refused, id: \.id) { client in
+          row(
+            title: client.identifier,
+            detail: OJDLocalized.formatted(
+              "access.detail.triple",
+              AccessPresentation.signer(client.publisher.kind, client.publisher.id),
+              AccessPresentation.scopes(client.scopes),
+              client.reason
+            ),
+            help: client.path
+          ) {
+            Button(OJDLocalized.string("access.grant")) { model.requestRefusedGrant(client) }
+              .disabled(model.busy).ojdAccessibilityLabel(
+                OJDLocalized.formatted("a11y.access.grantRefused", client.identifier)
+              )
+          }
+        }
+        ForEach(Array(status.refusedTokens.enumerated()), id: \.offset) { _, token in
+          row(
+            title: token.name.map { OJDLocalized.formatted("access.token.named", $0) }
+              ?? OJDLocalized.string("access.token.unknown"),
+            detail: OJDLocalized.formatted(
+              "access.detail.triple",
+              AccessPresentation.transport(token.transport),
+              AccessPresentation.scopes(token.scopes),
+              token.reason
+            ),
+            help: token.origin
+          ) {}
+        }
+      }
+    }
+
+    private func connectionsSection(_ status: AccessStatusPayload) -> some View {
+      Section(header: Text(OJDLocalized.string("access.connections"))) {
+        ForEach(status.connections, id: \.id) { connection in
+          row(
+            title: connection.identifier,
+            detail: OJDLocalized.formatted(
+              "access.detail.pair",
+              AccessPresentation.transport(connection.transport),
+              AccessPresentation.scopes(connection.scopes)
+            ),
+            help: nil
+          ) {}
+        }
+      }
+    }
+
+    /// A title with its detail line and a trailing control. `help` is the tooltip: a path or
+    /// origin that is not shown in the row.
+    private func row<Trailing: View>(
+      title: String,
+      detail: String,
+      help: String?,
+      @ViewBuilder trailing: () -> Trailing
+    ) -> some View {
+      HStack(alignment: .firstTextBaseline) {
+        VStack(alignment: .leading, spacing: 2) {
+          Text(title)
+          Text(detail).font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor))
+        }.textSelection(.enabled)
+        Spacer(minLength: 8)
+        trailing()
+      }.help(help ?? "").ojdAccessibilityLabel(title).ojdAccessibilityValue(detail)
+    }
+
+    /// Revoke for a grant or token: a button for the whole grant, or a menu of the whole grant
+    /// and each scope when it has several.
+    @ViewBuilder
+    private func revokeControl(
+      scopes: [EndpointScope],
+      label: String,
+      revoke: @escaping (EndpointScope?) -> Void
+    ) -> some View {
+      let choices = AccessViewModel.scopeChoices(of: scopes)
+      if choices.isEmpty {
+        Button(OJDLocalized.string("access.revoke")) { revoke(nil) }.disabled(model.busy)
+          .ojdAccessibilityLabel(label)
+      } else {
+        Menu(OJDLocalized.string("access.revoke")) {
+          Button(OJDLocalized.string("access.revoke.all")) { revoke(nil) }
+          ForEach(choices, id: \.self) { scope in
+            Button(AccessPresentation.scope(scope)) { revoke(scope) }
+          }
+        }.fixedSize().disabled(model.busy).ojdAccessibilityLabel(label)
+      }
+    }
+  }
+
+#endif

@@ -30,7 +30,6 @@
 "settings.controllers" = "कंट्रोलर";
 "settings.profiles" = "प्रोफ़ाइल";
 "settings.accessReadiness" = "ऐक्सेस और तैयारी";
-"settings.accessReadinessAccessibility" = "ऐक्सेस और तैयारी";
 "settings.checkUpdates" = "अब जाँचें";
 "settings.contactingGitHub" = "GitHub से संपर्क किया जा रहा है…";
 "settings.controllerConnectedShort" = "कनेक्टेड";
@@ -524,6 +523,10 @@
 "setup.uninstallDetail" = "ड्राइवर फिर से इंस्टॉल होने तक Xbox USB कंट्रोलर काम करना बंद कर देते हैं।";
 "setup.repairDriver" = "Xbox USB ड्राइवर ठीक करें";
 "banner.service.title" = "OpenJoystickDriver अपनी सेवा तक नहीं पहुँच पा रहा है";
+"banner.service.start" = "सेवा शुरू करें";
+"banner.service.startFailed" = "OpenJoystickDriver अपनी सेवा शुरू नहीं कर सका।";
+"banner.service.noBundle" = "OpenJoystickDriver की यह प्रति किसी ऐप के भीतर नहीं है, इसलिए यह सेवा शुरू नहीं कर सकती।";
+"banner.service.notReady" = "सेवा शुरू हुई, पर समय पर अनुरोध स्वीकार नहीं कर सकी।";
 "banner.access.title" = "अनुमति आवश्यक है";
 "banner.access.detail" = "OpenJoystickDriver को कंट्रोलर पढ़ने और उन्हें गेम में प्रकाशित करने के लिए जो कुछ चाहिए, macOS ने उसकी पूरी अनुमति नहीं दी है।";
 "cli.login.uninstall_action" = "अनइंस्टॉल करें";
@@ -1516,13 +1519,9 @@
 "access.loading" = "ऐक्सेस सेटिंग्स पढ़ी जा रही हैं…";
 "access.done" = "पूर्ण";
 "access.choose" = "चुनें";
-"access.none" = "कोई नहीं";
 "access.endpoint" = "स्थानीय एंडपॉइंट";
-"access.on" = "चालू";
-"access.off" = "बंद";
 "access.socket" = "सॉकेट: %@";
 "access.enable" = "चालू करें";
-"access.disable" = "बंद करें";
 "access.enable.title" = "स्थानीय एंडपॉइंट चालू करें?";
 "access.enable.message" = "जिन प्रोग्राम को आप ऐक्सेस देते हैं वे फिर कंट्रोलर की स्थिति पढ़ सकते हैं और कंट्रोल स्कोप होने पर उसे बदल भी सकते हैं।";
 "access.web" = "WebSocket";
@@ -1548,6 +1547,8 @@
 "access.revoke" = "वापस लें";
 "access.revoke.title" = "%@ का ऐक्सेस वापस लें?";
 "access.revoke.message" = "प्रोग्राम अपने सभी स्कोप खो देता है और उसके खुले कनेक्शन बंद हो जाते हैं।";
+"access.revoke.all" = "सभी स्कोप";
+"access.revokeScope.message" = "केवल %@ स्कोप हटाया जाता है। अन्य स्कोप बने रहते हैं और इसका उपयोग करने वाले खुले कनेक्शन बंद हो जाते हैं।";
 "access.revokeToken.title" = "टोकन %@ वापस लें?";
 "access.revokeToken.message" = "टोकन का उपयोग करने वाले पेज और प्रोग्राम ऐक्सेस खो देते हैं और उनके खुले कनेक्शन बंद हो जाते हैं।";
 "access.tokens" = "टोकन";

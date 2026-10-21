@@ -30,7 +30,6 @@
 "settings.controllers" = "Контроллеры";
 "settings.profiles" = "Профили";
 "settings.accessReadiness" = "Доступ и готовность";
-"settings.accessReadinessAccessibility" = "Доступ и готовность";
 "settings.checkUpdates" = "Проверить сейчас";
 "settings.contactingGitHub" = "Подключение к GitHub…";
 "settings.controllerConnectedShort" = "Подключён";
@@ -524,6 +523,10 @@
 "setup.uninstallDetail" = "USB-контроллеры Xbox перестают работать, пока драйвер не будет установлен снова.";
 "setup.repairDriver" = "Восстановить USB-драйвер Xbox";
 "banner.service.title" = "OpenJoystickDriver не может связаться со своей службой";
+"banner.service.start" = "Запустить службу";
+"banner.service.startFailed" = "OpenJoystickDriver не удалось запустить свою службу.";
+"banner.service.noBundle" = "Эта копия OpenJoystickDriver находится не внутри приложения, поэтому не может запустить службу.";
+"banner.service.notReady" = "Служба запущена, но не приняла запросы вовремя.";
 "banner.access.title" = "Требуется разрешение";
 "banner.access.detail" = "macOS разрешила не всё, что нужно OpenJoystickDriver, чтобы считывать контроллеры и публиковать их для игр.";
 "cli.login.uninstall_action" = "Удалить";
@@ -1516,13 +1519,9 @@
 "access.loading" = "Чтение настроек доступа…";
 "access.done" = "Готово";
 "access.choose" = "Выбрать";
-"access.none" = "Нет";
 "access.endpoint" = "Локальная конечная точка";
-"access.on" = "Вкл.";
-"access.off" = "Выкл.";
 "access.socket" = "Сокет: %@";
 "access.enable" = "Включить";
-"access.disable" = "Выключить";
 "access.enable.title" = "Включить локальную конечную точку?";
 "access.enable.message" = "Программы, которым вы предоставите доступ, смогут читать состояние контроллеров и, при наличии области «Управление», изменять его.";
 "access.web" = "WebSocket";
@@ -1548,6 +1547,8 @@
 "access.revoke" = "Отозвать";
 "access.revoke.title" = "Отозвать доступ «%@»?";
 "access.revoke.message" = "Программа потеряет все области, а её открытые подключения закроются.";
+"access.revoke.all" = "Все области";
+"access.revokeScope.message" = "Будет удалена только область «%@». Остальные области сохранятся, а открытые подключения, использующие её, закроются.";
 "access.revokeToken.title" = "Отозвать токен «%@»?";
 "access.revokeToken.message" = "Страницы и программы, которые используют токен, потеряют доступ, а их открытые подключения закроются.";
 "access.tokens" = "Токены";

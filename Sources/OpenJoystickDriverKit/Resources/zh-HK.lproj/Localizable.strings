@@ -30,7 +30,6 @@
 "settings.controllers" = "控制器";
 "settings.profiles" = "設定檔";
 "settings.accessReadiness" = "取用與就緒狀態";
-"settings.accessReadinessAccessibility" = "取用與就緒狀態";
 "settings.checkUpdates" = "立即檢查";
 "settings.contactingGitHub" = "正在連接 GitHub…";
 "settings.controllerConnectedShort" = "已連接";
@@ -524,6 +523,10 @@
 "setup.uninstallDetail" = "在重新安裝驅動程式之前，Xbox USB 控制器將無法運作。";
 "setup.repairDriver" = "修復 Xbox USB 驅動程式";
 "banner.service.title" = "OpenJoystickDriver 無法連接其服務";
+"banner.service.start" = "啟動服務";
+"banner.service.startFailed" = "OpenJoystickDriver 無法啟動其服務。";
+"banner.service.noBundle" = "此 OpenJoystickDriver 副本不在 App 內，因此無法啟動服務。";
+"banner.service.notReady" = "服務已啟動，但未及時接受要求。";
 "banner.access.title" = "需要權限";
 "banner.access.detail" = "macOS 尚未授予 OpenJoystickDriver 讀取控制器並將其發佈給遊戲所需的全部權限。";
 "cli.login.uninstall_action" = "解除安裝";
@@ -1516,13 +1519,9 @@
 "access.loading" = "正在讀取取用權限設定…";
 "access.done" = "完成";
 "access.choose" = "選擇";
-"access.none" = "無";
 "access.endpoint" = "本機端點";
-"access.on" = "開";
-"access.off" = "關";
 "access.socket" = "通訊端：%@";
 "access.enable" = "開啟";
-"access.disable" = "關閉";
 "access.enable.title" = "要開啟本機端點嗎？";
 "access.enable.message" = "您授予取用權限的程式隨後可以讀取控制器狀態，若具有控制範圍，還可以更改狀態。";
 "access.web" = "WebSocket";
@@ -1548,6 +1547,8 @@
 "access.revoke" = "撤銷";
 "access.revoke.title" = "要撤銷 %@ 的取用權限嗎？";
 "access.revoke.message" = "該程式將失去所有範圍，其已開啟的連接將關閉。";
+"access.revoke.all" = "所有範圍";
+"access.revokeScope.message" = "僅移除 %@ 範圍。其他範圍維持不變，使用此範圍的已開啟連接將關閉。";
 "access.revokeToken.title" = "要撤銷權杖 %@ 嗎？";
 "access.revokeToken.message" = "使用該權杖的頁面和程式將失去取用權限，其已開啟的連接將關閉。";
 "access.tokens" = "權杖";

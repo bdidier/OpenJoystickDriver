@@ -30,7 +30,6 @@
 "settings.controllers" = "Kontrolcüler";
 "settings.profiles" = "Profiller";
 "settings.accessReadiness" = "Erişim ve Hazırlık";
-"settings.accessReadinessAccessibility" = "Erişim ve Hazırlık";
 "settings.checkUpdates" = "Şimdi Denetle";
 "settings.contactingGitHub" = "GitHub ile İletişim Kuruluyor…";
 "settings.controllerConnectedShort" = "Bağlı";
@@ -524,6 +523,10 @@
 "setup.uninstallDetail" = "Sürücü yeniden yüklenene kadar Xbox USB kontrolcüleri çalışmaz.";
 "setup.repairDriver" = "Xbox USB Sürücüsünü Onar";
 "banner.service.title" = "OpenJoystickDriver servisine ulaşamıyor";
+"banner.service.start" = "Servisi Başlat";
+"banner.service.startFailed" = "OpenJoystickDriver servisini başlatamadı.";
+"banner.service.noBundle" = "OpenJoystickDriver’ın bu kopyası bir uygulamanın içinde değil, bu yüzden servisi başlatamaz.";
+"banner.service.notReady" = "Servis başlatıldı ancak istekleri zamanında kabul etmedi.";
 "banner.access.title" = "İzin gerekli";
 "banner.access.detail" = "macOS, OpenJoystickDriver’ın kontrolcüleri okumak ve oyunlara sunmak için ihtiyaç duyduğu her şeye izin vermedi.";
 "cli.login.uninstall_action" = "Kaldır";
@@ -1516,13 +1519,9 @@
 "access.loading" = "Erişim ayarları okunuyor…";
 "access.done" = "Bitti";
 "access.choose" = "Seç";
-"access.none" = "Yok";
 "access.endpoint" = "Yerel uç nokta";
-"access.on" = "Açık";
-"access.off" = "Kapalı";
 "access.socket" = "Soket: %@";
 "access.enable" = "Aç";
-"access.disable" = "Kapat";
 "access.enable.title" = "Yerel uç nokta açılsın mı?";
 "access.enable.message" = "Erişim verdiğiniz programlar bundan sonra kontrolcü durumunu okuyabilir ve Kontrol kapsamıyla değiştirebilir.";
 "access.web" = "WebSocket";
@@ -1548,6 +1547,8 @@
 "access.revoke" = "Geri Çek";
 "access.revoke.title" = "Şunun erişimi geri çekilsin mi: %@?";
 "access.revoke.message" = "Program tüm kapsamlarını kaybeder ve açık bağlantıları kapanır.";
+"access.revoke.all" = "Tüm Kapsamlar";
+"access.revokeScope.message" = "Yalnızca %@ kapsamı kaldırılır. Diğer kapsamlar kalır ve onu kullanan açık bağlantılar kapanır.";
 "access.revokeToken.title" = "Şu token geri çekilsin mi: %@?";
 "access.revokeToken.message" = "Token’ı kullanan sayfalar ve programlar erişimi kaybeder ve açık bağlantıları kapanır.";
 "access.tokens" = "Token’lar";
