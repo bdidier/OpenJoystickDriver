@@ -1585,7 +1585,7 @@
 /* VoiceOver label for the hexadecimal reading shown after the vendorID and productID lines of a record in the Library. %1$@ is the member name, vendorID or productID, which stays as written; %2$@ is the value in hexadecimal, such as 0x353D. */
 "a11y.library.recordHexadecimal" = "%1$@ เลขฐานสิบหก %2$@";
 /* Shown in the Record section of a record in the Library when the record text cannot be read for display. %@ is the controller identity, such as 045E:028E. */
-"ui.library.recordUnreadable" = "ข้อความของระเบียน %@ ไม่ใช่ JSON ที่ถูกต้อง จึงแสดงไม่ได้";
+"ui.library.recordUnreadable" = "อ่านข้อความของระเบียน %@ ไม่ได้ จึงแสดงไม่ได้";
 "access.details" = "รายละเอียด";
 "access.dismiss" = "ปิดทิ้ง";
 "access.tryAgain" = "ลองอีกครั้ง";

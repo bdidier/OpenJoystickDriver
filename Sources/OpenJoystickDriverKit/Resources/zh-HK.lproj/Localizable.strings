@@ -1585,7 +1585,7 @@
 /* VoiceOver label for the hexadecimal reading shown after the vendorID and productID lines of a record in the Library. %1$@ is the member name, vendorID or productID, which stays as written; %2$@ is the value in hexadecimal, such as 0x353D. */
 "a11y.library.recordHexadecimal" = "%1$@，十六進位 %2$@";
 /* Shown in the Record section of a record in the Library when the record text cannot be read for display. %@ is the controller identity, such as 045E:028E. */
-"ui.library.recordUnreadable" = "記錄 %@ 的文字不是有效的 JSON，無法顯示。";
+"ui.library.recordUnreadable" = "無法讀取記錄 %@ 的文字，因此無法顯示。";
 "access.details" = "詳細資料";
 "access.dismiss" = "忽略";
 "access.tryAgain" = "重試";

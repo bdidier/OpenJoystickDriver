@@ -1585,7 +1585,7 @@
 /* VoiceOver label for the hexadecimal reading shown after the vendorID and productID lines of a record in the Library. %1$@ is the member name, vendorID or productID, which stays as written; %2$@ is the value in hexadecimal, such as 0x353D. */
 "a11y.library.recordHexadecimal" = "%1$@, thập lục phân %2$@";
 /* Shown in the Record section of a record in the Library when the record text cannot be read for display. %@ is the controller identity, such as 045E:028E. */
-"ui.library.recordUnreadable" = "Văn bản của bản ghi %@ không phải JSON hợp lệ nên không thể hiển thị.";
+"ui.library.recordUnreadable" = "Không thể đọc văn bản của bản ghi %@ nên không thể hiển thị.";
 "access.details" = "Chi tiết";
 "access.dismiss" = "Bỏ qua";
 "access.tryAgain" = "Thử lại";

@@ -24,8 +24,11 @@ struct JSONSyntaxToken: Equatable, Sendable {
   let depth: Int
 }
 
-/// Text the tokenizer cannot read. The app produces the text itself, so this is a programming
-/// error, never user input.
+/// Text the tokenizer cannot read because it breaks the JSON grammar. The text is a record's
+/// ``ControllerRecord/text``, which the catalog lays out with ``OrderedJSON/formatted()``, so a
+/// failure means the catalog handed the Library text that is not one standard JSON value; the
+/// tokenizer checks the grammar only, not duplicate member names or the encoding. It is a
+/// defect in the catalog's text, not a user's input.
 struct JSONSyntaxError: Error, Equatable, CustomStringConvertible {
   /// The position in unicode scalars from the start of the text.
   let offset: Int
