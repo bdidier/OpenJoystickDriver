@@ -1231,5 +1231,23 @@ class CapabilityOverlapTests(unittest.TestCase):
                         validate_profiles.validate_record(path, enforce_path=False)
 
 
+class RecordTextTests(unittest.TestCase):
+    def test_refuses_text_that_is_not_utf8(self) -> None:
+        import tempfile
+        from pathlib import Path
+
+        for name, data in (
+            ("UTF-16", '{"apiVersion": 1}'.encode("utf-16")),
+            ("Latin-1", '{"name": "caf\u00e9"}'.encode("latin-1")),
+        ):
+            with self.subTest(name), tempfile.TemporaryDirectory() as directory:
+                path = Path(directory) / "record.json"
+                path.write_bytes(data)
+                with self.assertRaises(validate_profiles.ValidationError) as caught:
+                    validate_profiles.validate_record(path, enforce_path=False)
+                self.assertEqual(caught.exception.code, "E5007")
+                self.assertIn("the text is not UTF-8 (byte", str(caught.exception))
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -362,8 +362,21 @@ def expected_relative_path(vendor_id: int, product_id: int) -> pathlib.Path:
 
 
 def load_object(path: pathlib.Path) -> dict[str, Any]:
+    """The JSON object in `path`, read as strict UTF-8.
+
+    Text that does not decode is refused with E5007. This reader keeps the last value of a
+    member named twice; the byte-level refusals (a member named twice, a byte order mark,
+    UTF-16 or UTF-32 text) belong to `OrderedJSON` in Swift.
+    """
     try:
-        value = json.loads(path.read_text())
+        text = path.read_bytes().decode("utf-8")
+    except UnicodeDecodeError as error:
+        raise ValidationError(
+            f"{path}: the text is not UTF-8 (byte {error.start})",
+            INVALID_CONTROLLER_RECORD,
+        ) from error
+    try:
+        value = json.loads(text)
     except json.JSONDecodeError as error:
         raise ValidationError(
             f"{path}: invalid JSON: {error}", INVALID_CONTROLLER_RECORD
