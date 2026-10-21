@@ -6,6 +6,7 @@
     "in": 130,
     "out": 2
   },
+  "sessionKeys": ["keepAlive"],
   "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
   "controls": {
     "base": "Xbox",

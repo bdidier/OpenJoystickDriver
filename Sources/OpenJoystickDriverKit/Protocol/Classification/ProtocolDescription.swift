@@ -105,6 +105,14 @@ struct ProtocolDescription: Sendable {
     }
   }
 
+  /// A general `defaults.session` key a family's driver reads beyond the rumble template.
+  enum SessionKey: String, Sendable {
+    /// The startup writes.
+    case startup
+    /// The keep-alive.
+    case keepAlive
+  }
+
   /// The `kind` of a protocol description.
   static let kind = "ProtocolDescription"
 
@@ -117,6 +125,9 @@ struct ProtocolDescription: Sendable {
   let endpoints: Endpoints
   let rawUSB: RawUSB
   let recordSections: Set<RecordSection>
+  /// The general `defaults.session` keys the driver reads beyond the rumble template, which
+  /// `recordSections` governs; none when the description lists none.
+  let sessionKeys: Set<SessionKey>
   /// The `tuning` keys the family reads beyond `stickDeadzone` and `frameQueueCapacity` through
   /// IOHID; none when every variant is raw USB.
   let tuningKeys: Set<ControllerTuning.Key>
@@ -394,6 +405,7 @@ struct ProtocolDescription: Sendable {
       endpoints: document.endpoints,
       rawUSB: rawUSB,
       recordSections: document.recordSections,
+      sessionKeys: document.sessionKeys,
       tuningKeys: document.tuningKeys,
       rawUSBTuningKeys: document.rawUSBTuningKeys,
       macOSOwnedOutput: document.macOSOwnedOutput,

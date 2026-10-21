@@ -73,8 +73,14 @@ extension ProtocolDescription {
     if !startupWrites.isEmpty, rawUSB == .always {
       return "HID startup writes apply only to HID controllers"
     }
-    if family == .xboxXID, !startupWrites.isEmpty || !usbStartupWrites.isEmpty || keepAlive != nil {
-      return "XboxXID's session holds only a rumble template"
+    if sessionKeys != family.generalSessionFields {
+      let read = family.generalSessionFields.map(\.rawValue).sorted()
+      return read.isEmpty
+        ? "\(family.rawValue) reads no session keys"
+        : "\(family.rawValue) reads the session keys \(read.joined(separator: ", "))"
+    }
+    if let unlisted = presentGeneralSessionFields.subtracting(sessionKeys).map(\.rawValue).min() {
+      return "defaults.session sets \(unlisted), which sessionKeys does not list"
     }
     if let violation = keepAliveViolation { return violation }
     if (activation + deactivation).contains(where: {
@@ -113,6 +119,14 @@ extension ProtocolDescription {
       }
     }
     return nil
+  }
+
+  /// The general `defaults.session` keys the description sets, rumble aside.
+  var presentGeneralSessionFields: Set<SessionKey> {
+    var keys: Set<SessionKey> = []
+    if !startupWrites.isEmpty || !usbStartupWrites.isEmpty { keys.insert(.startup) }
+    if keepAlive != nil { keys.insert(.keepAlive) }
+    return keys
   }
 
   /// Why a rumble template targets a packet kind that its variants do not use, or nil: a raw-USB

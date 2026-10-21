@@ -82,9 +82,12 @@ def xusb_description() -> dict[str, Any]:
 
 
 def with_variant_facts(document: dict[str, Any]) -> dict[str, Any]:
-    """The document with its family's `variants` and `storesVariant` when it states neither, so a
-    test that varies something else need not repeat them."""
+    """The document with its family's `variants` and `storesVariant` when it states neither, and
+    its `sessionKeys` when it states none, so a test that varies something else need not repeat
+    them."""
     facts = protocol_descriptions.bundled().get(str(document.get("family")), {})
+    if "sessionKeys" not in document and "sessionKeys" in facts:
+        document = {"sessionKeys": facts["sessionKeys"], **document}
     if "variants" in document or "storesVariant" in document:
         return document
     return {
@@ -767,9 +770,9 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                 self.usb_write(endpoint=2, timeoutMilliseconds=2000, sessionByte=2),
             ),
             ("XboxXUSB", self.usb_write(delayMilliseconds=0, toleratesRejection=True)),
-            ("SonyDualSense", self.hid_write(phase="Startup", delayMilliseconds=5)),
+            ("SonyDualShock4", self.hid_write(phase="Startup", delayMilliseconds=5)),
             (
-                "SonyDualSense",
+                "SonyDualShock4",
                 self.hid_write(
                     report={"kind": "Output", "id": 17, "length": 78},
                     bytes=zeros(73),
@@ -799,24 +802,24 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                 "XboxGIP",
                 self.usb_write(report={"kind": "Output", "id": 1, "length": 4}),
             ),
-            ("SonyDualSense", self.hid_write(phase="Later")),
-            ("SonyDualSense", self.hid_write(delayMilliseconds=1001)),
-            ("SonyDualSense", self.hid_write(crc32Seed=256)),
-            ("SonyDualSense", self.hid_write(crc32Seed=1)),
+            ("SonyDualShock4", self.hid_write(phase="Later")),
+            ("SonyDualShock4", self.hid_write(delayMilliseconds=1001)),
+            ("SonyDualShock4", self.hid_write(crc32Seed=256)),
+            ("SonyDualShock4", self.hid_write(crc32Seed=1)),
             (
-                "SonyDualSense",
+                "SonyDualShock4",
                 self.hid_write(report={"kind": "Output", "id": 1, "length": 129}),
             ),
-            ("SonyDualSense", self.hid_write(variants=[])),
-            ("SonyDualSense", self.hid_write(variants=["USB", "USB"])),
-            ("SonyDualSense", self.hid_write(when={"parameter": "layout"})),
+            ("SonyDualShock4", self.hid_write(variants=[])),
+            ("SonyDualShock4", self.hid_write(variants=["USB", "USB"])),
+            ("SonyDualShock4", self.hid_write(when={"parameter": "layout"})),
             (
-                "SonyDualSense",
+                "SonyDualShock4",
                 self.hid_write(when={"parameter": "role", "is": ["A"], "isNot": ["B"]}),
             ),
-            ("SonyDualSense", self.hid_write(when={"parameter": "role", "is": []})),
+            ("SonyDualShock4", self.hid_write(when={"parameter": "role", "is": []})),
             (
-                "SonyDualSense",
+                "SonyDualShock4",
                 self.hid_write(when={"parameter": "color", "is": ["A"]}),
             ),
         ):
@@ -828,7 +831,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
     def test_rejects_startup_writes_mixing_hid_and_usb_formats(self) -> None:
         self.assert_rejected(
             self.with_body(
-                "SonyDualSense",
+                "SonyDualShock4",
                 defaults={"session": {"startup": [self.hid_write(), self.usb_write()]}},
             )
         )
@@ -1316,7 +1319,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         )
         self.assert_rejected(
             self.with_body(
-                "SonyDualSense",
+                "ValveSteamDeck",
                 defaults={
                     "session": {"keepAlive": {**interval, "writes": [self.usb_write()]}}
                 },
@@ -1631,6 +1634,67 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             ),
             code="E5002",
         )
+
+    def test_session_keys_are_the_ones_the_driver_reads(self) -> None:
+        usb_rumble = {"session": {"rumble": self.usb_rumble_template()}}
+        self.check(self.with_body("XboxXID", defaults=usb_rumble))
+        for family, keys in (
+            ("XboxXID", ["keepAlive"]),
+            ("XboxXID", ["startup"]),
+            ("SonyDualShock4", ["keepAlive"]),
+            ("SonyDualShock4", ["startup", "keepAlive"]),
+            ("XboxGIP", ["startup"]),
+            ("XboxXID", ["startup", "startup"]),
+            ("XboxXID", ["rumble"]),
+            ("XboxXID", ["subcommands"]),
+            ("XboxXID", []),
+        ):
+            with self.subTest(family=family, keys=keys):
+                self.assert_rejected(self.with_body(family, sessionKeys=keys))
+        for session in (
+            {"startup": [{"bytes": "01 02"}]},
+            {"keepAlive": {"intervalMilliseconds": 500}},
+        ):
+            with self.subTest(session=session):
+                self.assert_rejected(
+                    self.with_body("XboxXID", defaults={"session": session})
+                )
+
+    def test_input_shape_follows_the_record_sections(self) -> None:
+        usage_map = {
+            "hidUsageMap": {
+                "usages": [
+                    {"kind": "Button", "page": 9, "usage": 1, "control": "South"}
+                ]
+            }
+        }
+        layout = {
+            "report": {"length": 1},
+            "buttons": [{"control": "South", "byte": 0, "mask": 1}],
+        }
+        self.assert_rejected(self.with_body("XboxXID", defaults={"input": usage_map}))
+        self.assert_rejected(
+            self.with_body("HIDReportLayout", defaults={"input": usage_map})
+        )
+        self.assert_rejected(
+            self.with_body(
+                "HIDDescriptor",
+                recordSections=["hidUsageMap"],
+                defaults={"input": layout},
+            )
+        )
+
+    def test_rejects_tuning_keys_a_hid_family_driver_does_not_read(self) -> None:
+        for family, tuning in (
+            ("HIDDescriptor", {"inputLivenessTimeoutMs": 5}),
+            ("HIDReportLayout", {"hidStartupRecoveryRounds": 2}),
+            ("XboxXID", {"hidStartupIntervalMs": 5}),
+            ("XboxXID", {"minimumHIDOutputIntervalMs": 5}),
+        ):
+            with self.subTest(family=family, tuning=tuning):
+                self.assert_rejected(
+                    self.with_body(family, defaults={"tuning": tuning})
+                )
 
     def test_rejects_variant_defaults_the_family_does_not_have(self) -> None:
         self.assert_rejected(

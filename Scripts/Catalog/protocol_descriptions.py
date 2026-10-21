@@ -178,6 +178,7 @@ def semantic_violations(description: dict[str, Any]) -> list[tuple[str, str]]:
     found += session_write_violations(description)
     found += parameter_rule_violations(description)
     found += session_field_violations(description)
+    found += session_key_violations(description)
     return found
 
 
@@ -587,6 +588,44 @@ def session_field_violations(description: dict[str, Any]) -> list[tuple[str, str
     found += [
         ("E5002", f"parameters.{name}: {family} does not read it")
         for name in sorted(set(description.get("parameters", {})) - read_parameters)
+    ]
+    return found
+
+
+def session_keys(description: dict[str, Any]) -> frozenset[str]:
+    """The general `defaults.session` keys the description's driver reads beyond the rumble
+    template, which `recordSections` governs; none when it lists none.
+    `ProtocolDescription.sessionKeys` in Swift is the same list."""
+    return frozenset(description.get("sessionKeys", ()))
+
+
+def session_key_violations(description: dict[str, Any]) -> list[tuple[str, str]]:
+    """The general session keys a description sets are the ones its driver reads, as
+    `ProtocolDescription` checks in Swift.
+
+    `sessionKeys` equals the bundled description of the family, which a Swift test pins to the
+    driver, and `defaults.session` sets no startup or keepAlive it does not list.
+    """
+    family = description["family"]
+    allowed = session_keys(description)
+    read = session_keys(bundled()[family])
+    found: list[tuple[str, str]] = []
+    if allowed != read:
+        found.append(
+            (
+                "E5002",
+                f"{family} reads the session keys {', '.join(sorted(read))}"
+                if read
+                else f"{family} reads no session keys",
+            )
+        )
+    present = set(description.get("defaults", {}).get("session", {})) & {
+        "startup",
+        "keepAlive",
+    }
+    found += [
+        ("E5002", f"defaults.session sets {name}, which sessionKeys does not list")
+        for name in sorted(present - allowed)
     ]
     return found
 

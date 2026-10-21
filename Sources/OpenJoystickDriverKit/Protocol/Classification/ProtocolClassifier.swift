@@ -48,6 +48,22 @@ public enum PhysicalProtocolID: String, CaseIterable, Codable, Sendable {
     }
   }
 
+  /// The general `defaults.session` keys this family uses beyond the rumble template, which
+  /// `recordSections` governs: the keys its description may set. Its description lists exactly
+  /// these as `sessionKeys`. HID startup writes run through one shared pipeline, so this names
+  /// what the family uses, not what its driver reads itself.
+  var generalSessionFields: Set<ProtocolDescription.SessionKey> {
+    switch self {
+    case .xboxXUSB, .nintendoSwitch1, .sonyDualShock4: [.startup]
+    case .xboxGIP, .nintendoSwitch2, .vendorGameSir: [.startup, .keepAlive]
+    case .valveSteamTriton, .valveSteamDeck: [.keepAlive]
+    case .hidDescriptor, .hidReportLayout, .xboxXID, .sonySixaxis, .sonyDualSense,
+      .nintendoSwitchInputOnly, .valveSteamController, .vendorFlydigi, .vendorPS3ThirdParty,
+      .vendorNVIDIAShield:
+      []
+    }
+  }
+
   /// The parameter names this family's driver reads. Loading refuses a description that declares
   /// others, and the bundled descriptions declare exactly these, as a test checks.
   var readParameters: Set<String> {
