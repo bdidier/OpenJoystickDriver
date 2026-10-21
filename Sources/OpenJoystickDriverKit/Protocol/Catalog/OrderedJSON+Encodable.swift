@@ -11,8 +11,9 @@ extension OrderedJSON: Encodable {
   /// Encodes the value for `JSONEncoder`, which orders an object's members itself (`ojd` sorts
   /// them) and writes a number's value, not its text: an integer that fits 64 bits as an
   /// integer, a larger one as a `Decimal` when it holds every digit, and any other number as a
-  /// `Double`, so `1.0` is written `1` and `1e3` `1000`. A number none of these holds exactly
-  /// throws.
+  /// `Double` that has the decimal value of the text, so `1.0` is written `1` and `1e3` `1000`. A
+  /// number none of these holds exactly throws: `1e-400` would become 0 and
+  /// `1.23456789012345678901` would lose digits as a `Double`.
   public func encode(to encoder: any Encoder) throws {
     switch self {
     case .object(let members):
@@ -41,12 +42,15 @@ extension OrderedJSON: Encodable {
             .init(codingPath: encoder.codingPath, debugDescription: "\(text) has too many digits")
           )
         }
-      } else if let double = Double(text), double.isFinite {
+      } else if let double = Double(text), Self.isExact(double, for: text) {
         try container.encode(double)
       } else {
         throw EncodingError.invalidValue(
           text,
-          .init(codingPath: encoder.codingPath, debugDescription: "\(text) is not a finite Double")
+          .init(
+            codingPath: encoder.codingPath,
+            debugDescription: "\(text) is not exactly a finite Double"
+          )
         )
       }
     case .bool(let flag):
@@ -56,5 +60,16 @@ extension OrderedJSON: Encodable {
       var container = encoder.singleValueContainer()
       try container.encodeNil()
     }
+  }
+
+  /// Whether `double` has exactly the decimal value of the JSON number `text`: it is finite, the
+  /// text fits a `Decimal`, and a nonzero text did not round to zero.
+  private static func isExact(_ double: Double, for text: String) -> Bool {
+    let mantissa = text.prefix { $0 != "e" && $0 != "E" }
+    if double == 0 { return !mantissa.contains { "123456789".contains($0) } }
+    guard double.isFinite, let written = Decimal(string: text),
+      let held = Decimal(string: "\(double)")
+    else { return false }
+    return written == held
   }
 }

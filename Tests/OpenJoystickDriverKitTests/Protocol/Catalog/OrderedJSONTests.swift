@@ -307,8 +307,20 @@ struct OrderedJSONTests {
     #expect(encoded == #"{"a":1000,"m":[18446744073709551615,0,0.25],"n":null,"s":"x","z":1}"#)
   }
 
-  @Test(arguments: ["1e400", "123456789012345678901234567890123456789012"])
+  @Test(arguments: [
+    "1e400", "123456789012345678901234567890123456789012", "1e-400", "-1e-400",
+    "1.23456789012345678901", "0.10000000000000000001",
+  ])
   func aNumberNoEncodableTypeHoldsThrows(_ text: String) {
     #expect(throws: EncodingError.self) { try JSONEncoder().encode(OrderedJSON.number(text)) }
+  }
+
+  @Test(arguments: [
+    ("0.1", "0.1"), ("1.5", "1.5"), ("-2e3", "-2000"), ("0", "0"), ("0.0", "0"),
+    ("0e-400", "0"), ("2.5E-3", "0.0025"), ("1e22", "1e+22"),
+  ])
+  func anOrdinaryNumberEncodesWithItsValue(_ text: String, _ written: String) throws {
+    let encoded = try JSONEncoder().encode([OrderedJSON.number(text)])
+    #expect(String(bytes: encoded, encoding: .utf8) == "[\(written)]")
   }
 }
