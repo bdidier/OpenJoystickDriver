@@ -42,13 +42,16 @@ struct ControllerActionFailureTests {
   }
 
   @Test
-  func failedWirelessDisconnectShowsTheServiceStageAndCause() async {
+  func failedWirelessDisconnectShowsALocalizedMessageWithoutServiceIdentifiers() async {
     let viewModel = RuntimeViewModel(gateway: GatewayStub())
 
     await viewModel.disconnectWirelessController(Self.device(sessionToken: "pad-b"))
 
     let failure = viewModel.controllerActionFailures[token("pad-b")]
-    #expect(failure?.contains(WirelessControllerDisconnectFailure.notFound.rawValue) == true)
+    #expect(
+      failure == OJDLocalized.string("controllers.disconnectWireless.failure.notFound")
+    )
+    #expect(failure?.contains(WirelessControllerDisconnectFailure.notFound.rawValue) == false)
   }
 
   @Test

@@ -128,7 +128,13 @@
     /// The glyphs of the identity the Controllers list shows for this controller; the generic
     /// glyphs when no controller is selected.
     private var presentation: VirtualIdentityPresentation {
-      model.device?.publishedIdentityPresentation ?? .generic
+      Self.presentation(of: model.device)
+    }
+
+    static func presentation(
+      of device: ApplicationServiceDeviceDescription?
+    ) -> VirtualIdentityPresentation {
+      device?.publishedIdentityPresentation ?? .generic
     }
 
     var liveInput: some View {

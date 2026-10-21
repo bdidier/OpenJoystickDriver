@@ -336,6 +336,32 @@ struct VirtualHIDProfileOverrideTests {
   }
 
   @Test
+  func aPublishedStatusWithoutASelectionShowsThePhysicalIdentity() {
+    var pad = Self.device(
+      protocolBinding: ProtocolBindingID(.sonySixaxis, variant: .usb),
+      ownership: .systemGamepad
+    )
+    pad.publication = ApplicationServicePublicationStatus(
+      state: .published,
+      target: .sdlCompatible
+    )
+
+    #expect(pad.publishedVirtualProfile == nil)
+    #expect(!pad.presentedIdentity.publishesVirtualDevice)
+    #expect(pad.presentedIdentity.presentation == .playstation)
+    #expect(
+      pad.presentedIdentity.label == OJDLocalized.string("controllers.systemGamepadNotPublished")
+    )
+  }
+
+  @Test
+  func theInputTestShowsTheListGlyphsOrTheGenericOnesWithoutAController() {
+    #expect(InputTestView.presentation(of: nil) == .generic)
+    let pad = Self.device(protocolBinding: ProtocolBindingID(.sonySixaxis, variant: .usb))
+    #expect(InputTestView.presentation(of: pad) == pad.publishedIdentityPresentation)
+  }
+
+  @Test
   func iconAndLabelComeFromOnePresentedIdentity() {
     let profile = ApplicationServiceVirtualHIDProfileStatus(
       profile: .sdlCompatible,

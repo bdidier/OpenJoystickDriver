@@ -9,7 +9,8 @@ enum LocalizationCatalogAudit {
     "controller.standardHID", "controller.steamController", "controller.switchPro",
     "controller.switchProController", "controller.xbox360", "controller.xbox360Wireless",
     "controller.xbox360WirelessDeveloper", "controller.xboxOne", "controller.xboxOriginal",
-    "controllers.usbIdentifier", "developer.hid", "developer.usbID", "inputTest.yTriangle",
+    "controllers.usbIdentifier", "controllers.discovery.hid", "developer.hid", "developer.usbID",
+    "inputTest.yTriangle",
     "mapping.buttonNorth", "mapping.dpadDirection", "menu.projectPage", "profiles.sectionDpad",
     "access.transport.web", "access.web",
   ]
