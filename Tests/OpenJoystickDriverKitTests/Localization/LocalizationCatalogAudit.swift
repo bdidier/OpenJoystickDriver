@@ -3,9 +3,9 @@ import Foundation
 @testable import OpenJoystickDriverKit
 
 enum LocalizationCatalogAudit {
-  static let nonLinguisticSourceIdenticalKeys: Set<String> = [
-    "app.name",
-    // Protocol family names that are brand and product names, the same in every language.
+  /// Brand, product and technical names that every language writes as `en-US` does: a test
+  /// requires each to equal `en-US` in every locale.
+  static let sameInEveryLocaleKeys: Set<String> = [
     "term.protocolFamily.nintendoSwitch1", "term.protocolFamily.nintendoSwitch2",
     "term.protocolFamily.sonyDualSense", "term.protocolFamily.sonyDualShock4",
     "term.protocolFamily.sonySixaxis", "term.protocolFamily.valveSteamController",
@@ -13,13 +13,18 @@ enum LocalizationCatalogAudit {
     "term.protocolFamily.vendorFlydigi", "term.protocolFamily.vendorGameSir",
     "term.protocolFamily.vendorNvidiaShield", "term.protocolFamily.xboxGip",
     "term.protocolFamily.xboxXid", "term.protocolFamily.xboxXusb",
-    // Technical names. Korean and Chinese write Bluetooth in their script.
-    "term.protocolVariant.usb", "term.protocolVariant.bluetoothLe",
+    "term.protocolVariant.usb",
+  ]
+
+  static let nonLinguisticSourceIdenticalKeys: Set<String> = sameInEveryLocaleKeys.union([
+    "app.name",
+    // Bluetooth LE as the system writes it; Korean and Chinese write Bluetooth in their script.
+    "term.protocolVariant.bluetoothLe",
     "controllers.usbIdentifier", "controllers.discovery.hid", "developer.hid", "developer.usbID",
     "inputTest.yTriangle",
     "mapping.buttonNorth", "mapping.dpadDirection", "menu.projectPage", "profiles.sectionDpad",
     "access.transport.web", "access.web",
-  ]
+  ])
 
   private static let spanishTerms: Set<String> = [
     "developer.packetColumnBytes", "inputTest.color", "keyboard.control", "profiles.controlNumber",
@@ -180,6 +185,11 @@ enum LocalizationCatalogAudit {
         $0.key.caseInsensitiveCompare(localization) == .orderedSame
       }?.value ?? []
     return nonLinguisticSourceIdenticalKeys.union(terms)
+  }
+
+  /// The `.strings` values of `localization`, by key.
+  static func values(for localization: String) -> [String: String] {
+    stringsData(for: localization).map(parseStrings) ?? [:]
   }
 
   static func keys(for localization: String) -> Set<String> {

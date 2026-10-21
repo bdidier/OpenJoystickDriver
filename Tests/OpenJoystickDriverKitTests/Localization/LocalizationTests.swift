@@ -319,4 +319,17 @@ struct LocalizationTests {
       #expect(binding.displayName == binding.protocolID.displayName, "\(binding)")
     }
   }
+
+  @Test
+  func brandAndTechnicalNamesEqualTheSourceInEveryLocale() {
+    let source = LocalizationCatalogAudit.values(for: Localization.sourceLocalization)
+    let listed = LocalizationCatalogAudit.sameInEveryLocaleKeys
+    #expect(listed.isSubset(of: Set(source.keys)), "\(listed.subtracting(source.keys).sorted())")
+    for locale in Localization.availableLocalizations() {
+      let values = LocalizationCatalogAudit.values(for: locale)
+      for key in listed.sorted() {
+        #expect(values[key] == source[key], "\(locale) \(key)")
+      }
+    }
+  }
 }
