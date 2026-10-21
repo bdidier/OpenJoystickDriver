@@ -1073,10 +1073,10 @@
 "cli.controller.capture.no_packets" = "لم تصل أي حزم.";
 "cli.controller.capture.started" = "جارٍ التقاط الحزم من %@ (%@). اضغط أزرار وحدة التحكم.";
 "cli.controller.capture.warning" = "تختلف محتويات الحزم من وحدة تحكم إلى أخرى. راجعها قبل مشاركتها.";
-"cli.controller.disconnect.abstract" = "افصل وحدة تحكم Bluetooth.";
-"cli.controller.disconnect.discussion" = "يغلق اتصال Bluetooth. تبقى وحدة التحكم مقترنة وتعيد الاتصال عند تشغيلها مرة أخرى. ينتظر 6 ثوانٍ على الأقل حتى يؤكد Bluetooth.";
+"cli.controller.disconnect.abstract" = "افصل وحدة تحكم Bluetooth الكلاسيكي.";
+"cli.controller.disconnect.discussion" = "يغلق اتصال Bluetooth الكلاسيكي. تبقى وحدة التحكم مقترنة وتعيد الاتصال عند تشغيلها مرة أخرى. ينتظر 6 ثوانٍ على الأقل حتى يؤكد Bluetooth. لا تستطيع الخدمة فصل وحدة تحكم Bluetooth Low Energy. أوقف تشغيلها أو افصلها في إعدادات النظام > Bluetooth.";
 "cli.controller.disconnect.done" = "تم فصل %@.";
-"cli.controller.disconnect.bluetooth_le" = "%@ متصلة عبر Bluetooth Low Energy، ولا تستطيع الخدمة فصلها. أوقف تشغيل وحدة التحكم أو افصلها في إعدادات النظام ‹ Bluetooth.";
+"cli.controller.disconnect.bluetooth_le" = "%@ متصلة عبر Bluetooth Low Energy، ولا تستطيع الخدمة فصلها. أوقف تشغيل وحدة التحكم أو افصلها في إعدادات النظام > Bluetooth.";
 "cli.controller.disconnect.failed" = "فشل فصل Bluetooth أثناء %@: %@.";
 "cli.controller.disconnect.not_bluetooth" = "%@ غير متصلة عبر Bluetooth. افصل الكابل لفصلها.";
 "cli.controller.discussion" = "CONTROLLER هو معرّف من «ojd controller list» أو VVVV:PPPP (معرّف المورّد والمنتج بالنظام الست عشري) عندما تحمله وحدة تحكم متصلة واحدة فقط. تحتاج كل أوامر وحدة التحكم إلى الخدمة.";

@@ -1073,10 +1073,10 @@
 "cli.controller.capture.no_packets" = "Keine Pakete empfangen.";
 "cli.controller.capture.started" = "Pakete von %@ (%@) werden aufgezeichnet. Drücke Tasten am Controller.";
 "cli.controller.capture.warning" = "Der Paketinhalt unterscheidet sich je nach Controller. Prüfe ihn, bevor du ihn weitergibst.";
-"cli.controller.disconnect.abstract" = "Einen Bluetooth-Controller trennen.";
-"cli.controller.disconnect.discussion" = "Beendet die Bluetooth-Verbindung. Der Controller bleibt gekoppelt und verbindet sich wieder, wenn du ihn erneut einschaltest. Wartet mindestens 6 Sekunden auf die Bestätigung von Bluetooth.";
+"cli.controller.disconnect.abstract" = "Einen klassischen Bluetooth-Controller trennen.";
+"cli.controller.disconnect.discussion" = "Beendet die klassische Bluetooth-Verbindung. Der Controller bleibt gekoppelt und verbindet sich wieder, wenn du ihn erneut einschaltest. Wartet mindestens 6 Sekunden auf die Bestätigung von Bluetooth. Der Dienst kann einen Controller mit Bluetooth Low Energy nicht trennen. Schalte ihn aus oder trenne ihn in den Systemeinstellungen > Bluetooth.";
 "cli.controller.disconnect.done" = "%@ getrennt.";
-"cli.controller.disconnect.bluetooth_le" = "%@ ist über Bluetooth Low Energy verbunden, und der Dienst kann die Verbindung nicht trennen. Schalte den Controller aus oder trenne ihn in den Systemeinstellungen › Bluetooth.";
+"cli.controller.disconnect.bluetooth_le" = "%@ ist über Bluetooth Low Energy verbunden, und der Dienst kann die Verbindung nicht trennen. Schalte den Controller aus oder trenne ihn in den Systemeinstellungen > Bluetooth.";
 "cli.controller.disconnect.failed" = "Bluetooth-Trennung fehlgeschlagen bei %@: %@.";
 "cli.controller.disconnect.not_bluetooth" = "%@ ist nicht per Bluetooth verbunden. Ziehe das Kabel ab, um ihn zu trennen.";
 "cli.controller.discussion" = "CONTROLLER ist eine ID aus „ojd controller list“ oder VVVV:PPPP (hexadezimale Hersteller- und Produkt-ID), wenn genau ein verbundener Controller sie hat. Jeder Controller-Befehl benötigt den Dienst.";

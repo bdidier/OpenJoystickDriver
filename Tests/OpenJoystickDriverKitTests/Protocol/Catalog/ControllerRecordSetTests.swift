@@ -299,7 +299,8 @@ struct ControllerRecordSetTests {
     defer { try? FileManager.default.removeItem(at: directory) }
     let document =
       #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"ControllerPatch","#
-      + #""selector":{"vendorID":13932,"productID":5},"patch":{}}"#
+      + #""selector":{"vendorID":13932,"productID":5},"patch":{"modes":[{"id":"default","#
+      + #""protocol":{"family":"XboxGIP","keepAlive":false}}]}}"#
     try Data(document.utf8).write(to: directory.appendingPathComponent("366c-0005.patch.json"))
 
     let set = ControllerRecordSet.load(userDirectory: directory)

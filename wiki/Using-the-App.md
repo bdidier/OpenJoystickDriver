@@ -37,7 +37,7 @@ The menu contains these items, from top to bottom:
 Each controller in the **Controllers** submenu has its own submenu:
 
 - **Controllers...** opens the **Controllers** pane.
-- **Disconnect Wireless Controller...** appears only for Bluetooth controllers. OJD shows a **Disconnect Wireless Controller?** alert to confirm. The controller stays disconnected until you connect it again by hand.
+- **Disconnect Wireless Link** appears only for classic Bluetooth controllers. OJD shows a **Disconnect Wireless Controller?** alert to confirm. The controller stays disconnected until you connect it again by hand. OJD cannot disconnect a Bluetooth Low Energy controller: turn it off or disconnect it in System Settings > Bluetooth.
 
 ### Quit and Reopen
 
@@ -111,24 +111,24 @@ Select a controller to see its details. The details include these fields when th
 
 A field that the controller does not report shows **Not reported**.
 
-### Actions
+### Session Commands
 
-- **Open Input Test...** opens the test window. For more information, see [Testing a controller](Testing-a-Controller.md).
-- **Disconnect from OpenJoystickDriver** pauses input, physical effects, and virtual output for this controller. The controller then shows **Suspended**. Click **Resume** to continue. **Open Input Test...** is off while the controller shows **Suspended**.
-- **Disconnect Wireless Controller...** appears only for Bluetooth controllers. It closes the Bluetooth link. The controller stays disconnected until you connect it again by hand. OJD never reconnects Bluetooth by itself.
+The Controller menu and the status menu hold the commands for the selected controller:
+
+- **Test Input** opens the test window. For more information, see [Testing a controller](Testing-a-Controller.md).
+- **Suspend** pauses input, physical effects, and virtual output for this controller. The controller then shows **Suspended**. **Resume** continues. **Test Input** is off while the controller shows **Suspended**.
+- **Disconnect Wireless Link** appears only for classic Bluetooth controllers. It closes the Bluetooth link. The controller stays disconnected until you connect it again by hand. OJD never reconnects Bluetooth by itself. OJD cannot disconnect a Bluetooth Low Energy controller: turn it off or disconnect it in System Settings > Bluetooth.
 
 ### Advanced Section
 
 The **Advanced** section appears for controllers that macOS does not handle itself. It contains the **Virtual HID profile** menu:
 
-- **Automatic** lets OJD choose the virtual controller profile.
+- **Automatic (<profile name>)** lets OJD choose the virtual controller profile and names the profile it chose.
 - **Xbox Wireless Controller (SDLCompatible)** forces the Xbox profile.
 - **OpenJoystickDriver Generic HID Gamepad (Generic)** forces the generic profile.
 
-The **Live profile** row shows the profile in use and its source: **Automatic**, **Override**, or **Automatic, override rejected**.
-
 > [!NOTE]
-> The override applies to every connected controller of the same model, because OJD stores it per VID:PID.
+> **Apply to** chooses whether the override applies to every connected controller of the same model or to this controller only. It appears for controllers that have a unit ID. **Reset all overrides** clears every override.
 
 The change takes effect at once. **Updating virtual HID profile...** shows while it applies. If activation fails, OJD restores the previous profile and shows a message. For more information, see [How games see your controller](Playing-Games.md).
 

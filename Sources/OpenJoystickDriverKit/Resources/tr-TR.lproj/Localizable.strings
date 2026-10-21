@@ -1073,10 +1073,10 @@
 "cli.controller.capture.no_packets" = "Paket alınmadı.";
 "cli.controller.capture.started" = "%@ (%@) kontrolcüsünden paketler yakalanıyor. Kontrolcü düğmelerine basın.";
 "cli.controller.capture.warning" = "Paket içeriği kontrolcüye göre değişir. Paylaşmadan önce kontrol edin.";
-"cli.controller.disconnect.abstract" = "Bir Bluetooth kontrolcüsünün bağlantısını keser.";
-"cli.controller.disconnect.discussion" = "Bluetooth bağlantısını kapatır. Kontrolcü eşleşmiş kalır ve yeniden açtığınızda tekrar bağlanır. Bluetooth’un onaylaması için en az 6 saniye bekler.";
+"cli.controller.disconnect.abstract" = "Bir klasik Bluetooth kontrolcüsünün bağlantısını keser.";
+"cli.controller.disconnect.discussion" = "Klasik Bluetooth bağlantısını kapatır. Kontrolcü eşleşmiş kalır ve yeniden açtığınızda tekrar bağlanır. Bluetooth’un onaylaması için en az 6 saniye bekler. Hizmet, Bluetooth Low Energy kontrolcüsünün bağlantısını kesemez. Kontrolcüyü kapatın veya Sistem Ayarları > Bluetooth içinde bağlantısını kesin.";
 "cli.controller.disconnect.done" = "%@ bağlantısı kesildi.";
-"cli.controller.disconnect.bluetooth_le" = "%@ Bluetooth Low Energy ile bağlı ve hizmet bağlantısını kesemez. Kontrol cihazını kapatın veya Sistem Ayarları › Bluetooth içinde bağlantısını kesin.";
+"cli.controller.disconnect.bluetooth_le" = "%@ Bluetooth Low Energy ile bağlı ve hizmet bağlantısını kesemez. Kontrolcüyü kapatın veya Sistem Ayarları > Bluetooth içinde bağlantısını kesin.";
 "cli.controller.disconnect.failed" = "%@ için Bluetooth bağlantısı kesilemedi: %@.";
 "cli.controller.disconnect.not_bluetooth" = "%@ Bluetooth ile bağlı değil. Bağlantısını kesmek için fişini çekin.";
 "cli.controller.discussion" = "CONTROLLER, “ojd controller list” çıktısındaki bir kimliktir; bağlı kontrolcülerden yalnızca biri sahipse VVVV:PPPP (onaltılık üretici ve ürün kimliği) da olabilir. Her kontrolcü komutu servise ihtiyaç duyar.";

@@ -1073,10 +1073,10 @@
 "cli.controller.capture.no_packets" = "未收到数据包。";
 "cli.controller.capture.started" = "正在捕获 %@（%@）的数据包。请按下控制器上的按键。";
 "cli.controller.capture.warning" = "数据包内容因控制器而异。分享前请先检查。";
-"cli.controller.disconnect.abstract" = "断开蓝牙控制器。";
-"cli.controller.disconnect.discussion" = "关闭蓝牙连接。控制器保持配对，再次开机时会自动重新连接。最少等待 6 秒，以便蓝牙确认。";
+"cli.controller.disconnect.abstract" = "断开经典蓝牙控制器。";
+"cli.controller.disconnect.discussion" = "关闭经典蓝牙连接。控制器保持配对，再次开机时会自动重新连接。最少等待 6 秒，以便蓝牙确认。服务无法断开 Bluetooth Low Energy 控制器。请将其关闭，或在系统设置 > 蓝牙中断开。";
 "cli.controller.disconnect.done" = "已断开 %@。";
-"cli.controller.disconnect.bluetooth_le" = "%@ 通过 Bluetooth Low Energy 连接，服务无法将其断开。请关闭控制器，或在系统设置 › 蓝牙中断开。";
+"cli.controller.disconnect.bluetooth_le" = "%@ 通过 Bluetooth Low Energy 连接，服务无法将其断开。请关闭控制器，或在系统设置 > 蓝牙中断开。";
 "cli.controller.disconnect.failed" = "断开 %@ 的蓝牙连接失败：%@。";
 "cli.controller.disconnect.not_bluetooth" = "%@ 不是通过蓝牙连接的。拔下它即可断开。";
 "cli.controller.discussion" = "CONTROLLER 是 “ojd controller list” 中的 ID，或 VVVV:PPPP（十六进制供应商和产品 ID，仅当恰好有一个已连接的控制器具有该 ID 时）。所有控制器命令都需要服务。";

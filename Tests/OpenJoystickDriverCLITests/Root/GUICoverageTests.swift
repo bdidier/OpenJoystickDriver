@@ -136,7 +136,10 @@ struct GUICoverageTests {
     )
     #expect(
       named == expected,
-      "D10 lacks \(expected.subtracting(named).sorted()); D10 names more: \(named.subtracting(expected).sorted())"
+      """
+      D10 lacks \(expected.subtracting(named).sorted()); \
+      D10 names more: \(named.subtracting(expected).sorted())
+      """
     )
   }
 

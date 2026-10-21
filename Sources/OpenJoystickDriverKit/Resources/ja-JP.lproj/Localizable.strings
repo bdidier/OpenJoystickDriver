@@ -1073,10 +1073,10 @@
 "cli.controller.capture.no_packets" = "パケットを受信していません。";
 "cli.controller.capture.started" = "%@ (%@) のパケットをキャプチャしています。コントローラのボタンを押してください。";
 "cli.controller.capture.warning" = "パケットの内容はコントローラによって異なります。共有する前に内容を確認してください。";
-"cli.controller.disconnect.abstract" = "Bluetooth コントローラを切断します。";
-"cli.controller.disconnect.discussion" = "Bluetooth 接続を閉じます。コントローラはペアリングされたままで、再び電源を入れると再接続します。Bluetooth の確認を最低 6 秒待ちます。";
+"cli.controller.disconnect.abstract" = "Bluetooth クラシックのコントローラを切断します。";
+"cli.controller.disconnect.discussion" = "Bluetooth クラシックの接続を閉じます。コントローラはペアリングされたままで、再び電源を入れると再接続します。Bluetooth の確認を最低 6 秒待ちます。サービスでは Bluetooth Low Energy のコントローラを切断できません。電源を切るか、システム設定 > Bluetooth で切断してください。";
 "cli.controller.disconnect.done" = "%@ を切断しました。";
-"cli.controller.disconnect.bluetooth_le" = "%@ は Bluetooth Low Energy で接続されており、サービスから切断できません。コントローラの電源を切るか、システム設定 › Bluetooth で切断してください。";
+"cli.controller.disconnect.bluetooth_le" = "%@ は Bluetooth Low Energy で接続されており、サービスでは切断できません。コントローラの電源を切るか、システム設定 > Bluetooth で切断してください。";
 "cli.controller.disconnect.failed" = "%@ の Bluetooth 切断中に失敗しました: %@。";
 "cli.controller.disconnect.not_bluetooth" = "%@ は Bluetooth で接続されていません。切断するにはケーブルを抜いてください。";
 "cli.controller.discussion" = "CONTROLLER には「ojd controller list」で表示される ID、または接続中のコントローラの中で 1 台だけが持つ VVVV:PPPP (16進のベンダー ID とプロダクト ID) を指定します。すべてのコントローラコマンドにはサービスが必要です。";

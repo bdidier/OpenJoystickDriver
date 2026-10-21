@@ -77,7 +77,7 @@ enum GUICoverageEntries {
         command: nil,
         option: "--timeout",
         reason:
-          "bounds how long a terminal command waits for the service; a window has no command to wait on"
+          "bounds how long a terminal command waits for the service; a window has no such wait"
       )
     ]
     + ["--force", "--dry-run"].map {
@@ -349,8 +349,8 @@ enum GUISources {
     let chars = Array(source)
     var output = ""
     var index = 0
-    /// One open string literal: its closing quote count and `#` count, and the paren depth of an
-    /// open interpolation (0 while in text).
+    // One open string literal: its closing quote count and `#` count, and the paren depth of an
+    // open interpolation (0 while in text).
     struct Literal {
       let quotes: Int
       let hashes: Int
