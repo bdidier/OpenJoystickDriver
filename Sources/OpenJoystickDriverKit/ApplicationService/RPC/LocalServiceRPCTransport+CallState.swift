@@ -117,12 +117,13 @@ extension LocalServiceRPCClient {
     defer { state.close() }
     do {
       // A server that rejects the peer replies and closes without reading the request, so a
-      // failed send still reads the reply that may be waiting.
+      // failed send still reads the reply that may be waiting. Darwin reports that closed peer
+      // as EPIPE, ECONNRESET or, when the close lands during the send, ENOTCONN.
       var sendFailed = false
       do {
         try LocalServiceRPCTransport.sendFrame(requestData, to: descriptor)
       } catch LocalServiceRPCError.connectionFailed(let code)
-        where code == EPIPE || code == ECONNRESET
+        where code == EPIPE || code == ECONNRESET || code == ENOTCONN
       { sendFailed = true }
       let responseData: Data
       do {
