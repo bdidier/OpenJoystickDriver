@@ -16,6 +16,17 @@ struct PermissionCommandTests {
     inputInject: .granted
   )
 
+  private static let noProfiles = ApplicationServiceRemappingSnapshotPayload(
+    profiles: [],
+    activeProfiles: [],
+    routes: [],
+    postEventAccess: .granted
+  )
+
+  private static let notAuthorizedLocally: @Sendable () -> RemappingPostEventAccessState = {
+    .notAuthorized
+  }
+
   private static let deniedLocally: @Sendable () -> PermissionManager.Snapshot = {
     PermissionManager.Snapshot(inputRead: .denied, inputInject: .granted)
   }
@@ -26,6 +37,7 @@ struct PermissionCommandTests {
     status: (input: PermissionManager.AccessState, inputInject: PermissionManager.AccessState) =
       (.granted, .granted),
     snapshot: PermissionManager.Snapshot = Self.allGranted,
+    remapping: ApplicationServiceRemappingSnapshotPayload = Self.noProfiles,
     socketPath: String,
     received: Locked<[String]> = Locked([])
   ) throws -> LocalServiceRPCServer {
@@ -39,6 +51,7 @@ struct PermissionCommandTests {
       )
     )
     let snapshotResult = try JSONEncoder().encode(snapshot)
+    let remappingResult = try JSONEncoder().encode(remapping)
     let server = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in true },
@@ -47,6 +60,8 @@ struct PermissionCommandTests {
         switch request.method {
         case ApplicationServiceRPCMethod.getStatus.rawValue:
           completion(LocalServiceRPCResponse(result: statusResult, error: nil))
+        case ApplicationServiceRPCMethod.getRemappingSnapshot.rawValue:
+          completion(LocalServiceRPCResponse(result: remappingResult, error: nil))
         case ApplicationServiceRPCMethod.requestRequiredAccess.rawValue,
           ApplicationServiceRPCMethod.requestAccess.rawValue:
           completion(LocalServiceRPCResponse(result: snapshotResult, error: nil))
@@ -63,7 +78,9 @@ struct PermissionCommandTests {
     await ServiceConnection.$socketPath.withValue(socketPath) {
       await StatusCommand.$extensionProbe.withValue(Self.inactiveExtension) {
         await PermissionListCommand.$localSnapshot.withValue(Self.deniedLocally) {
-          await CLIRun.run(arguments + ["--timeout", "5"])
+          await PermissionListCommand.$localPostEventAccess.withValue(Self.notAuthorizedLocally) {
+            await CLIRun.run(arguments + ["--timeout", "5"])
+          }
         }
       }
     }
@@ -80,14 +97,23 @@ struct PermissionCommandTests {
 
     #expect(jsonRun.code == 0, "\(jsonRun.standardError)")
     #expect(jsonRun.standardError.isEmpty)
-    let entries = try #require(try jsonRun.json()["items"] as? [[String: String]])
-    #expect(entries.map { $0["id"] } == ["InputRead", "InputInject", "USBTransport"])
-    #expect(entries.map { $0["state"] } == ["Denied", "Granted", "Unknown"])
-    #expect(entries[0]["name"] == "Input read")
-    #expect(entries[0]["purpose"] == "Read input from physical controllers")
+    let entries = try #require(try jsonRun.json()["items"] as? [[String: Any]])
+    #expect(
+      entries.map { $0["id"] as? String } == [
+        "InputRead", "InputInject", "USBTransport", "PostEvent",
+      ]
+    )
+    #expect(
+      entries.map { $0["state"] as? String } == ["Denied", "Granted", "Unknown", "Granted"]
+    )
+    #expect(entries[0]["name"] as? String == "Input read")
+    #expect(entries[0]["purpose"] as? String == "Read input from physical controllers")
+    #expect(entries[0]["requiredByActiveProfile"] == nil)
+    #expect(entries[3]["requiredByActiveProfile"] as? Bool == false)
     #expect(
       plainRun.standardOutput
         == "input-read\tdenied\ninput-inject\tgranted\nusb-transport\tunknown\n"
+        + "post-event\tgranted\tnot-required\n"
     )
   }
 
@@ -97,8 +123,9 @@ struct PermissionCommandTests {
 
     #expect(result.code == 0)
     #expect(!result.standardError.isEmpty)
-    let entries = try #require(try result.json()["items"] as? [[String: String]])
-    #expect(entries.map { $0["state"] } == ["Denied", "Granted", "Unknown"])
+    let entries = try #require(try result.json()["items"] as? [[String: Any]])
+    #expect(entries.map { $0["state"] as? String } == ["Denied", "Granted", "Unknown", "Denied"])
+    #expect(entries[3]["requiredByActiveProfile"] == nil)
   }
 
   @Test
@@ -106,10 +133,52 @@ struct PermissionCommandTests {
     let result = await run(["permission", "list"], socketPath: temporarySocketPath())
 
     let rows = result.standardOutput.split(separator: "\n")
-    #expect(rows.count == 3)
+    #expect(rows.count == 4)
     #expect(rows[0].hasPrefix(PermissionID.inputRead.localizedName))
     #expect(rows[0].contains("denied"))
     #expect(rows[0].hasSuffix(PermissionID.inputRead.localizedPurpose))
+  }
+
+  @Test
+  func listReportsPostEventAccessNotAuthorizedAndRequiredByTheActiveProfile() async throws {
+    let socketPath = temporarySocketPath()
+    let profile = RemappingProfile(
+      name: "Keys",
+      device: RemappingDeviceScope(vendorID: 1, productID: 2),
+      applicationScope: .global,
+      bindings: [
+        RemappingBinding(source: .button(.south), destination: .keyboard(key: .a, modifiers: []))
+      ]
+    )
+    let remapping = ApplicationServiceRemappingSnapshotPayload(
+      profiles: [profile],
+      activeProfiles: [
+        ApplicationServiceRemappingActiveProfilePayload(
+          vendorID: 1,
+          productID: 2,
+          profileID: profile.id,
+          profileName: profile.name,
+          applicationScope: .global
+        )
+      ],
+      routes: [],
+      postEventAccess: .notAuthorized
+    )
+    let server = try serve(remapping: remapping, socketPath: socketPath)
+    defer { server.stop() }
+
+    let json = await run(["permission", "list", "--json"], socketPath: socketPath)
+    let plain = await run(["permission", "list", "--plain"], socketPath: socketPath)
+    let human = await run(["permission", "list"], socketPath: socketPath)
+
+    let entries = try #require(try json.json()["items"] as? [[String: Any]])
+    #expect(entries[3]["id"] as? String == "PostEvent")
+    #expect(entries[3]["state"] as? String == "Denied")
+    #expect(entries[3]["requiredByActiveProfile"] as? Bool == true)
+    #expect(plain.standardOutput.hasSuffix("post-event\tdenied\trequired\n"))
+    let last = try #require(human.standardOutput.split(separator: "\n").last)
+    #expect(last.hasPrefix(PermissionID.postEvent.localizedName))
+    #expect(last.hasSuffix("(" + CLILocalized.text("cli.permission.required_by_profile") + ")"))
   }
 
   @Test

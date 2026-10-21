@@ -998,6 +998,9 @@
 "cli.permission.name.input_inject" = "손쉬운 사용";
 "cli.permission.name.usb_transport" = "드라이버 확장 프로그램 승인";
 "cli.permission.name.input_read" = "입력 모니터링";
+"cli.permission.name.post_event" = "키보드 및 마우스 출력";
+"cli.permission.purpose.post_event" = "리매핑된 키보드, 포인터, 스크롤 이벤트 보내기";
+"cli.permission.required_by_profile" = "활성 프로파일에 필요함";
 "cli.permission.pane.input_inject" = "개인정보 보호 및 보안 > 손쉬운 사용";
 "cli.permission.pane.usb_transport" = "일반 > 로그인 항목 및 확장 프로그램 > 드라이버 확장 프로그램";
 "cli.permission.pane.input_read" = "개인정보 보호 및 보안 > 입력 모니터링";

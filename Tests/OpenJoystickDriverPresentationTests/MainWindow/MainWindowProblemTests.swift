@@ -41,22 +41,23 @@ struct MainWindowProblemTests {
 
   @Test
   func theAccessProblemFollowsTheSameRuleAsTheStatusItemAndTheAccessArea() {
-    for (reading, payload) in [
-      (permissions(.granted), status(inputRead: .denied)),
-      (permissions(.denied), status(inputRead: .granted)),
-      (permissions(.unknown), .loading),
-      (.unavailable, .unavailable("down")),
-    ] as [(RuntimePermissionLoadState, RuntimeStatusState)] {
-      let expected = AccessReadiness.hasMissingPermission(
-        permissionState: reading,
-        statusState: payload
-      )
+    let cases: [(RuntimePermissionLoadState, RuntimeStatusState, Bool)] = [
+      (permissions(.granted), status(inputRead: .denied), false),
+      (permissions(.denied), status(inputRead: .granted), true),
+      (permissions(.unknown), .loading, true),
+      (.requesting, status(inputRead: .unknown), false),
+      (.loading, status(inputRead: .unknown), false),
+      (.error("failed"), status(inputRead: .unknown), true),
+      (.unavailable, status(inputRead: .denied), true),
+      (.unavailable, .unavailable("down"), false),
+    ]
+    for (reading, payload, isMissing) in cases {
       let problems = MainWindowProblem.current(
         permissions: reading,
         status: payload,
         driver: .active
       )
-      #expect(problems.contains(.accessMissing) == expected)
+      #expect(problems.contains(.accessMissing) == isMissing, "\(reading)")
     }
     #expect(
       !MainWindowProblem.current(

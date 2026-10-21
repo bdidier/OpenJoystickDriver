@@ -998,6 +998,9 @@
 "cli.permission.name.input_inject" = "Toegankelijkheid";
 "cli.permission.name.usb_transport" = "Goedkeuring van stuurprogramma-extensie";
 "cli.permission.name.input_read" = "Invoermonitoring";
+"cli.permission.name.post_event" = "Toetsenbord- en muisuitvoer";
+"cli.permission.purpose.post_event" = "Opnieuw toegewezen toetsenbord-, aanwijzer- en scrollgebeurtenissen versturen";
+"cli.permission.required_by_profile" = "vereist door het actieve profiel";
 "cli.permission.pane.input_inject" = "Privacy en beveiliging > Toegankelijkheid";
 "cli.permission.pane.usb_transport" = "Algemeen > Inlogonderdelen en extensies > Stuurprogramma-extensies";
 "cli.permission.pane.input_read" = "Privacy en beveiliging > Invoermonitoring";
@@ -1741,8 +1744,8 @@
 "mainMenu.view.exitFullScreen" = "Verlaat volledig scherm";
 "mainMenu.view.showSidebar" = "Toon navigatiekolom";
 "mainMenu.view.hideSidebar" = "Verberg navigatiekolom";
-"mainMenu.view.showToolbar" = "Toon gereedschapsbalk";
-"mainMenu.view.hideToolbar" = "Verberg gereedschapsbalk";
+"mainMenu.view.showToolbar" = "Toon knoppenbalk";
+"mainMenu.view.hideToolbar" = "Verberg knoppenbalk";
 "mainMenu.controller" = "Controller";
 "mainMenu.controller.suspend" = "Onderbreek";
 "mainMenu.controller.resume" = "Hervat";

@@ -998,6 +998,9 @@
 "cli.permission.name.input_inject" = "Accessibilité";
 "cli.permission.name.usb_transport" = "Approbation de l’extension de pilote";
 "cli.permission.name.input_read" = "Surveillance des entrées";
+"cli.permission.name.post_event" = "Sortie clavier et souris";
+"cli.permission.purpose.post_event" = "Envoyer les événements de clavier, de pointeur et de défilement remappés";
+"cli.permission.required_by_profile" = "requis par le profil actif";
 "cli.permission.pane.input_inject" = "Confidentialité et sécurité > Accessibilité";
 "cli.permission.pane.usb_transport" = "Général > Ouverture et extensions > Extensions de pilote";
 "cli.permission.pane.input_read" = "Confidentialité et sécurité > Surveillance des entrées";

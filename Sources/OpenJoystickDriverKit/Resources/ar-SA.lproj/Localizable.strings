@@ -998,6 +998,9 @@
 "cli.permission.name.input_inject" = "تسهيلات الاستخدام";
 "cli.permission.name.usb_transport" = "موافقة امتداد برنامج التشغيل";
 "cli.permission.name.input_read" = "مراقبة الإدخال";
+"cli.permission.name.post_event" = "إخراج لوحة المفاتيح والماوس";
+"cli.permission.purpose.post_event" = "إرسال أحداث لوحة المفاتيح والمؤشر والتمرير المعاد تعيينها";
+"cli.permission.required_by_profile" = "مطلوب من ملف التعريف النشط";
 "cli.permission.pane.input_inject" = "الخصوصية والأمان > تسهيلات الاستخدام";
 "cli.permission.pane.usb_transport" = "عام > عناصر تسجيل الدخول والامتدادات > امتدادات برامج التشغيل";
 "cli.permission.pane.input_read" = "الخصوصية والأمان > مراقبة الإدخال";

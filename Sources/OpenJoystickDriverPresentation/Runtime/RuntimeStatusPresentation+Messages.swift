@@ -46,7 +46,7 @@ extension RuntimeStatusPresentation {
     _ snapshot: ApplicationServiceRemappingSnapshotPayload,
     postEventAccess: RemappingPostEventAccessState?
   ) -> Self {
-    let requiresPostEventAccess = Self.requiresPostEventAccess(in: snapshot)
+    let requiresPostEventAccess = snapshot.requiresPostEventAccess
     return Self(
       permissions: permissions,
       devices: devices,
@@ -132,19 +132,5 @@ extension RuntimeStatusPresentation {
     guard !requiresPostEventAccess || postEventAccess == .granted else { return .needsAttention }
     guard devices.allSatisfy({ $0.inputHealth.state == .healthy }) else { return .needsAttention }
     return devices.isEmpty ? .noController : .ready
-  }
-
-  static func requiresPostEventAccess(
-    in snapshot: ApplicationServiceRemappingSnapshotPayload
-  ) -> Bool {
-    snapshot.activeProfiles.contains { activeProfile in
-      guard let profile = snapshot.profiles.first(where: { $0.id == activeProfile.profileID })
-      else {
-        // An active profile without its record is an incomplete snapshot.  Keep the readiness
-        // indicator conservative rather than claiming output is safe to dispatch.
-        return true
-      }
-      return profile.hasOutputMappings && profile.requiresSystemInputAccess
-    }
   }
 }

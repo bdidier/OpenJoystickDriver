@@ -21,11 +21,13 @@ struct PermissionCommand: AsyncParsableCommand {
     case .json: try CLIOutput.json(report)
     case .plain: CLIOutput.plain(report.plainRows)
     case .human:
-      let rows = PermissionID.allCases.map {
-        (
-          $0.localizedName, CommandLineName.kebab(report.state(of: $0).rawValue),
-          $0.localizedPurpose
-        )
+      let rows = report.permissions.compactMap { entry -> (String, String, String)? in
+        guard let id = PermissionID(rawValue: entry.id) else { return nil }
+        var purpose = id.localizedPurpose
+        if entry.requiredByActiveProfile == true {
+          purpose += " (" + CLILocalized.text("cli.permission.required_by_profile") + ")"
+        }
+        return (id.localizedName, CommandLineName.kebab(entry.state.rawValue), purpose)
       }
       let nameWidth = rows.map(\.0.count).max() ?? 0
       let stateWidth = rows.map(\.1.count).max() ?? 0
@@ -56,14 +58,25 @@ struct PermissionListCommand: AsyncParsableCommand {
   func run() async throws {
     try await global.run {
       let snapshot: PermissionManager.Snapshot
+      let postEvent: PermissionReport.PostEvent
       do {
-        let payload = try await ServiceConnection.request { try await $0.getStatus() }
+        let (payload, remapping) = try await ServiceConnection.request { client in
+          (try await client.getStatus(), try await client.getRemappingSnapshot())
+        }
         snapshot = PermissionManager.Snapshot(
           inputRead: payload.inputRead,
           inputInject: payload.inputInject
         )
+        postEvent = PermissionReport.PostEvent(
+          state: remapping.postEventAccess == .granted ? .granted : .denied,
+          requiredByActiveProfile: remapping.requiresPostEventAccess
+        )
       } catch let failure as CLIFailure where failure.code == .serviceUnavailable {
         snapshot = Self.localSnapshot()
+        postEvent = PermissionReport.PostEvent(
+          state: Self.localPostEventAccess() == .granted ? .granted : .denied,
+          requiredByActiveProfile: nil
+        )
         CLIOutput.stderr(
           CLILocalized.text(
             "cli.permission.list.local_state"
@@ -71,7 +84,11 @@ struct PermissionListCommand: AsyncParsableCommand {
         )
       }
       try PermissionCommand.print(
-        PermissionReport(snapshot: snapshot, extensionStatus: StatusCommand.extensionProbe()),
+        PermissionReport(
+          snapshot: snapshot,
+          extensionStatus: StatusCommand.extensionProbe(),
+          postEvent: postEvent
+        ),
         asList: true
       )
     }
@@ -84,6 +101,12 @@ struct PermissionListCommand: AsyncParsableCommand {
       inputRead: PermissionManager.currentInputReadAccessState(),
       inputInject: PermissionManager.currentInputInjectAccessState()
     )
+  }
+
+  /// Reads the Post Event access of this process, as the service would if it were running.
+  @TaskLocal
+  static var localPostEventAccess: @Sendable () -> RemappingPostEventAccessState = {
+    PermissionManager.currentPostEventAccessState()
   }
 }
 

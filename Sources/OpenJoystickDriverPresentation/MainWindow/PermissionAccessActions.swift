@@ -45,7 +45,7 @@
           return
         }
         guard case .available(let status) = viewModel.statusState,
-          status.requiresPostEventAccess == true, status.postEventAccess != .granted
+          AccessReadiness.postEventAccessNeedsRequest(in: status)
         else { return }
         guard let access = await viewModel.requestPostEventAccess() else { return }
         if access != .granted { openPrivacySettings(pane: "Privacy_Accessibility") }

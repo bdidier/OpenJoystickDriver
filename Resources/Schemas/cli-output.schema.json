@@ -2786,7 +2786,12 @@
             "additionalProperties": false,
             "properties": {
               "id": {
-                "enum": ["InputRead", "InputInject", "USBTransport"]
+                "enum": [
+                  "InputRead",
+                  "InputInject",
+                  "USBTransport",
+                  "PostEvent"
+                ]
               },
               "name": {
                 "type": "string"
@@ -2796,6 +2801,9 @@
               },
               "state": {
                 "enum": ["Granted", "Denied", "Unknown"]
+              },
+              "requiredByActiveProfile": {
+                "type": "boolean"
               }
             }
           }

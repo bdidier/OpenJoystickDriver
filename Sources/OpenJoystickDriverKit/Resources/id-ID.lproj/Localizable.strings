@@ -998,6 +998,9 @@
 "cli.permission.name.input_inject" = "Aksesibilitas";
 "cli.permission.name.usb_transport" = "Persetujuan Ekstensi Driver";
 "cli.permission.name.input_read" = "Pengawasan Input";
+"cli.permission.name.post_event" = "Keluaran keyboard dan mouse";
+"cli.permission.purpose.post_event" = "Kirim event keyboard, penunjuk, dan gulir hasil pemetaan ulang";
+"cli.permission.required_by_profile" = "diperlukan oleh profil aktif";
 "cli.permission.pane.input_inject" = "Privasi & Keamanan > Aksesibilitas";
 "cli.permission.pane.usb_transport" = "Umum > Item Login & Ekstensi > Ekstensi Driver";
 "cli.permission.pane.input_read" = "Privasi & Keamanan > Pengawasan Input";

@@ -998,6 +998,9 @@
 "cli.permission.name.input_inject" = "Trợ năng";
 "cli.permission.name.usb_transport" = "Phê duyệt phần mở rộng trình điều khiển";
 "cli.permission.name.input_read" = "Giám sát đầu vào";
+"cli.permission.name.post_event" = "Đầu ra bàn phím và chuột";
+"cli.permission.purpose.post_event" = "Gửi sự kiện bàn phím, con trỏ và cuộn đã ánh xạ lại";
+"cli.permission.required_by_profile" = "hồ sơ đang dùng yêu cầu";
 "cli.permission.pane.input_inject" = "Quyền riêng tư & Bảo mật > Trợ năng";
 "cli.permission.pane.usb_transport" = "Cài đặt chung > Mục đăng nhập & Phần mở rộng > Phần mở rộng trình điều khiển";
 "cli.permission.pane.input_read" = "Quyền riêng tư & Bảo mật > Giám sát đầu vào";

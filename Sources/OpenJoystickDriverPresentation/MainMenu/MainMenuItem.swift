@@ -164,7 +164,7 @@ struct MainMenuState: Equatable, Sendable {
   var hasMainWindow = false
   var hasSettingsWindow = false
   var isFullScreen = false
-  var isToolbarVisible = true
+  var isToolbarVisible = false
   var isSidebarVisible = true
 
   /// The controller the Controller and Profile menus act on: the one selected in the Controllers

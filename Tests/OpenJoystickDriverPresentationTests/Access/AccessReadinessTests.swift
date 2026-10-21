@@ -187,4 +187,46 @@ struct AccessReadinessTests {
       )
     )
   }
+
+  @Test
+  func permissionsBeingReadOrRequestedAreCheckingNotMissing() {
+    let placeholder = status(postEvent: nil, requiresPostEvent: false, inputRead: .unknown)
+    for state in [RuntimePermissionLoadState.requesting, .loading] {
+      #expect(
+        !AccessReadiness.hasMissingPermission(permissionState: state, statusState: placeholder)
+      )
+    }
+    #expect(
+      !AccessReadiness.hasMissingPermission(permissionState: .unavailable, statusState: .loading)
+    )
+  }
+
+  @Test
+  func aFailedPermissionReadIsMissingBecauseTheAccessAreaSaysNeedsAttention() {
+    let placeholder = status(postEvent: nil, requiresPostEvent: false, inputRead: .unknown)
+    #expect(
+      AccessReadiness.hasMissingPermission(
+        permissionState: .error("failed"),
+        statusState: placeholder
+      )
+    )
+    let value = readiness(permissions: .error("failed"))
+    #expect(value.inputRead.tone == .caution)
+  }
+
+  @Test
+  func theStatusReadingDecidesWhileTheAppHasNotReadPermissions() {
+    #expect(
+      AccessReadiness.hasMissingPermission(
+        permissionState: .unavailable,
+        statusState: status(postEvent: nil, requiresPostEvent: false, inputRead: .denied)
+      )
+    )
+    #expect(
+      !AccessReadiness.hasMissingPermission(
+        permissionState: .unavailable,
+        statusState: status(postEvent: nil, requiresPostEvent: false, inputRead: .granted)
+      )
+    )
+  }
 }

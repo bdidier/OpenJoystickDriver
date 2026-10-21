@@ -998,6 +998,9 @@
 "cli.permission.name.input_inject" = "辅助功能";
 "cli.permission.name.usb_transport" = "驱动程序扩展批准";
 "cli.permission.name.input_read" = "输入监控";
+"cli.permission.name.post_event" = "键盘和鼠标输出";
+"cli.permission.purpose.post_event" = "发送重新映射的键盘、指针和滚动事件";
+"cli.permission.required_by_profile" = "当前配置文件需要";
 "cli.permission.pane.input_inject" = "隐私与安全性 > 辅助功能";
 "cli.permission.pane.usb_transport" = "通用 > 登录项与扩展 > 驱动程序扩展";
 "cli.permission.pane.input_read" = "隐私与安全性 > 输入监控";

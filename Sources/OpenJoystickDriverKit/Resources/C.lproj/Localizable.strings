@@ -998,6 +998,9 @@
 "cli.permission.name.input_inject" = "Accessibility";
 "cli.permission.name.usb_transport" = "Driver Extension approval";
 "cli.permission.name.input_read" = "Input Monitoring";
+"cli.permission.name.post_event" = "Keyboard and mouse output";
+"cli.permission.purpose.post_event" = "Send remapped keyboard, pointer, and scroll events";
+"cli.permission.required_by_profile" = "needed by the active profile";
 "cli.permission.pane.input_inject" = "Privacy & Security > Accessibility";
 "cli.permission.pane.usb_transport" = "General > Login Items & Extensions > Driver Extensions";
 "cli.permission.pane.input_read" = "Privacy & Security > Input Monitoring";

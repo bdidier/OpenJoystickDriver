@@ -998,6 +998,9 @@
 "cli.permission.name.input_inject" = "Erişilebilirlik";
 "cli.permission.name.usb_transport" = "Sürücü Uzantısı Onayı";
 "cli.permission.name.input_read" = "Giriş İzleme";
+"cli.permission.name.post_event" = "Klavye ve fare çıkışı";
+"cli.permission.purpose.post_event" = "Yeniden eşlenen klavye, işaretçi ve kaydırma olaylarını gönder";
+"cli.permission.required_by_profile" = "etkin profil için gerekli";
 "cli.permission.pane.input_inject" = "Gizlilik ve Güvenlik > Erişilebilirlik";
 "cli.permission.pane.usb_transport" = "Genel > Giriş Öğeleri ve Uzantılar > Sürücü Uzantıları";
 "cli.permission.pane.input_read" = "Gizlilik ve Güvenlik > Giriş İzleme";
@@ -1614,7 +1617,7 @@
 "mainMenu.file.importProfile" = "Profili İçe Aktar…";
 "mainMenu.file.exportProfile" = "Profili Dışa Aktar…";
 "mainMenu.file.installRecordOrMod" = "Kayıt veya Mod Yükle…";
-"mainMenu.file.close" = "Pencereyi Kapat";
+"mainMenu.file.close" = "Kapat";
 "mainMenu.file.saveSupportReport" = "Destek Raporunu Kaydet…";
 "mainMenu.file.saveActivityLog" = "Etkinlik Günlüğünü Kaydet…";
 "mainMenu.file.saveFailed" = "Dosya kaydedilemedi";

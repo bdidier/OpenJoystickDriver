@@ -998,6 +998,9 @@
 "cli.permission.name.input_inject" = "Acessibilidade";
 "cli.permission.name.usb_transport" = "Aprovação da Extensão de Driver";
 "cli.permission.name.input_read" = "Monitoramento de Entrada";
+"cli.permission.name.post_event" = "Saída de teclado e mouse";
+"cli.permission.purpose.post_event" = "Enviar eventos de teclado, ponteiro e rolagem remapeados";
+"cli.permission.required_by_profile" = "exigido pelo perfil ativo";
 "cli.permission.pane.input_inject" = "Privacidade e Segurança > Acessibilidade";
 "cli.permission.pane.usb_transport" = "Geral > Itens de Login e Extensões > Extensões de Driver";
 "cli.permission.pane.input_read" = "Privacidade e Segurança > Monitoramento de Entrada";

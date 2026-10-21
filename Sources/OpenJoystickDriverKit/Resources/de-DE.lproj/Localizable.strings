@@ -998,6 +998,9 @@
 "cli.permission.name.input_inject" = "Bedienungshilfen";
 "cli.permission.name.usb_transport" = "Genehmigung der Treibererweiterung";
 "cli.permission.name.input_read" = "Eingabeüberwachung";
+"cli.permission.name.post_event" = "Tastatur- und Mausausgabe";
+"cli.permission.purpose.post_event" = "Neu zugewiesene Tastatur-, Zeiger- und Scroll-Ereignisse senden";
+"cli.permission.required_by_profile" = "vom aktiven Profil benötigt";
 "cli.permission.pane.input_inject" = "Datenschutz & Sicherheit > Bedienungshilfen";
 "cli.permission.pane.usb_transport" = "Allgemein > Anmeldeobjekte & Erweiterungen > Treibererweiterungen";
 "cli.permission.pane.input_read" = "Datenschutz & Sicherheit > Eingabeüberwachung";
@@ -1741,8 +1744,8 @@
 "mainMenu.view.exitFullScreen" = "Vollbildmodus beenden";
 "mainMenu.view.showSidebar" = "Seitenleiste einblenden";
 "mainMenu.view.hideSidebar" = "Seitenleiste ausblenden";
-"mainMenu.view.showToolbar" = "Tool-Leiste einblenden";
-"mainMenu.view.hideToolbar" = "Tool-Leiste ausblenden";
+"mainMenu.view.showToolbar" = "Symbolleiste einblenden";
+"mainMenu.view.hideToolbar" = "Symbolleiste ausblenden";
 "mainMenu.controller" = "Controller";
 "mainMenu.controller.suspend" = "Pausieren";
 "mainMenu.controller.resume" = "Fortsetzen";

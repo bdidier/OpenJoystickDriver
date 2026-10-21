@@ -267,10 +267,10 @@ ojd permission list
 ojd permission request [input-read] [input-inject]
 ```
 
-- `permission list`: Show each permission, its state (`Granted`, `Denied`, or `Unknown` with `--json`; `granted`, `denied`, or `unknown` with `--plain`), and what OpenJoystickDriver uses it for. The permissions are `input-read`, `input-inject`, and `usb-transport` (`InputRead`, `InputInject`, and `USBTransport` with `--json`). When the service is stopped, `ojd` reads the states itself and says so on stderr.
+- `permission list`: Show each permission, its state (`Granted`, `Denied`, or `Unknown` with `--json`; `granted`, `denied`, or `unknown` with `--plain`), and what OpenJoystickDriver uses it for. The permissions are `input-read`, `input-inject`, `usb-transport`, and `post-event` (`InputRead`, `InputInject`, `USBTransport`, and `PostEvent` with `--json`). `post-event` is the access that lets remapped keyboard, pointer, and scroll events reach other apps; its state is `granted`, or `denied` when it is not authorized. When the service is stopped, `ojd` reads the states itself and says so on stderr; it cannot tell then whether the active profile needs `post-event`.
 - `permission request`: Ask the service to request each permission you name, or both `input-read` and `input-inject` when you name none. macOS shows its own prompt. The command never prompts in the terminal. It exits with code 77 when a permission is still not granted.
 
-With `--json`, `permission list` prints a `PermissionList` with `items`, each with `id`, `name`, `state`, and `purpose`.
+With `--json`, `permission list` prints a `PermissionList` with `items`, each with `id`, `name`, `state`, and `purpose`. The `PostEvent` item also has `requiredByActiveProfile` (`true` or `false`) when the service reported it. With `--plain`, the `post-event` row has a third column, `required` or `not-required`, under the same condition.
 
 ## extension
 

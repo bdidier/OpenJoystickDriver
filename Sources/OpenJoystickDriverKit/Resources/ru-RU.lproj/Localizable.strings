@@ -998,6 +998,9 @@
 "cli.permission.name.input_inject" = "Универсальный доступ";
 "cli.permission.name.usb_transport" = "Подтверждение расширения драйвера";
 "cli.permission.name.input_read" = "Мониторинг ввода";
+"cli.permission.name.post_event" = "Вывод клавиатуры и мыши";
+"cli.permission.purpose.post_event" = "Отправка переназначенных событий клавиатуры, указателя и прокрутки";
+"cli.permission.required_by_profile" = "требуется активному профилю";
 "cli.permission.pane.input_inject" = "Конфиденциальность и безопасность > Универсальный доступ";
 "cli.permission.pane.usb_transport" = "Основные > Объекты входа и расширения > Расширения драйверов";
 "cli.permission.pane.input_read" = "Конфиденциальность и безопасность > Мониторинг ввода";

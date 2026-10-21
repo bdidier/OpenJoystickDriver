@@ -69,7 +69,7 @@
         runtime: runtime
       )
       let minimum = panes.minimumContentSize
-      let window = NSWindow(
+      let window = SettingsWindow(
         contentRect: NSRect(x: 0, y: 0, width: minimum.width, height: minimum.height),
         styleMask: [.titled, .closable],
         backing: .buffered,

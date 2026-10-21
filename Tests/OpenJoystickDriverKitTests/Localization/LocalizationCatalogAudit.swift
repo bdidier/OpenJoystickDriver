@@ -215,6 +215,7 @@ enum LocalizationCatalogAudit {
   /// Source texts that one word may translate in any language.
   private static let sharedTranslationSourceGroups: [Set<String>] = [
     ["deactivated", "disabled", "off"], ["delete", "remove", "uninstall"],
+    ["close", "dismiss", "off", "turn off"],
   ]
 
   /// Keys whose value starts like a subtitle line (`- Yes.`) where the source has no `-` token.

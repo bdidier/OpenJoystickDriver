@@ -998,6 +998,9 @@
 "cli.permission.name.input_inject" = "ऐक्सेसिबिलिटी";
 "cli.permission.name.usb_transport" = "ड्राइवर एक्सटेंशन की स्वीकृति";
 "cli.permission.name.input_read" = "इनपुट मॉनिटरिंग";
+"cli.permission.name.post_event" = "कीबोर्ड और माउस आउटपुट";
+"cli.permission.purpose.post_event" = "रीमैप किए गए कीबोर्ड, पॉइंटर और स्क्रोल इवेंट भेजें";
+"cli.permission.required_by_profile" = "सक्रिय प्रोफ़ाइल को आवश्यक";
 "cli.permission.pane.input_inject" = "गोपनीयता और सुरक्षा > ऐक्सेसिबिलिटी";
 "cli.permission.pane.usb_transport" = "सामान्य > लॉगिन आइटम और एक्सटेंशन > ड्राइवर एक्सटेंशन";
 "cli.permission.pane.input_read" = "गोपनीयता और सुरक्षा > इनपुट मॉनिटरिंग";

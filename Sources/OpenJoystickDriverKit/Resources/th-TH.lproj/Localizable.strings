@@ -998,6 +998,9 @@
 "cli.permission.name.input_inject" = "การช่วยการเข้าถึง";
 "cli.permission.name.usb_transport" = "การอนุญาตส่วนขยายไดรเวอร์";
 "cli.permission.name.input_read" = "การตรวจสอบสัญญาณเข้า";
+"cli.permission.name.post_event" = "เอาต์พุตแป้นพิมพ์และเมาส์";
+"cli.permission.purpose.post_event" = "ส่งเหตุการณ์แป้นพิมพ์ ตัวชี้ และการเลื่อนที่แมปใหม่";
+"cli.permission.required_by_profile" = "โปรไฟล์ที่ใช้งานอยู่ต้องการ";
 "cli.permission.pane.input_inject" = "ความเป็นส่วนตัวและความปลอดภัย > การช่วยการเข้าถึง";
 "cli.permission.pane.usb_transport" = "ทั่วไป > รายการเข้าสู่ระบบและส่วนขยาย > ส่วนขยายไดรเวอร์";
 "cli.permission.pane.input_read" = "ความเป็นส่วนตัวและความปลอดภัย > การตรวจสอบสัญญาณเข้า";
@@ -1614,7 +1617,7 @@
 "mainMenu.file.importProfile" = "นำเข้าโปรไฟล์…";
 "mainMenu.file.exportProfile" = "ส่งออกโปรไฟล์…";
 "mainMenu.file.installRecordOrMod" = "ติดตั้งระเบียนหรือม็อด…";
-"mainMenu.file.close" = "ปิดหน้าต่าง";
+"mainMenu.file.close" = "ปิด";
 "mainMenu.file.saveSupportReport" = "บันทึกรายงานการสนับสนุน…";
 "mainMenu.file.saveActivityLog" = "บันทึกบันทึกกิจกรรมลงไฟล์…";
 "mainMenu.file.saveFailed" = "ไม่สามารถบันทึกไฟล์ได้";

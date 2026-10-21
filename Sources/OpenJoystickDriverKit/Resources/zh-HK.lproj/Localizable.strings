@@ -998,6 +998,9 @@
 "cli.permission.name.input_inject" = "輔助使用";
 "cli.permission.name.usb_transport" = "驅動程式延伸功能核准";
 "cli.permission.name.input_read" = "輸入監控";
+"cli.permission.name.post_event" = "鍵盤與滑鼠輸出";
+"cli.permission.purpose.post_event" = "傳送重新對應的鍵盤、指標和捲動事件";
+"cli.permission.required_by_profile" = "使用中的設定檔需要";
 "cli.permission.pane.input_inject" = "私隱與保安 > 輔助使用";
 "cli.permission.pane.usb_transport" = "一般 > 登入項目與延伸功能 > 驅動程式延伸功能";
 "cli.permission.pane.input_read" = "私隱與保安 > 輸入監控";

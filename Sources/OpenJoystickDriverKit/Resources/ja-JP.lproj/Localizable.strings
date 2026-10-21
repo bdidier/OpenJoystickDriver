@@ -998,6 +998,9 @@
 "cli.permission.name.input_inject" = "アクセシビリティ";
 "cli.permission.name.usb_transport" = "ドライバ機能拡張の承認";
 "cli.permission.name.input_read" = "入力監視";
+"cli.permission.name.post_event" = "キーボードとマウスの出力";
+"cli.permission.purpose.post_event" = "リマップしたキーボード、ポインタ、スクロールのイベントを送信";
+"cli.permission.required_by_profile" = "有効なプロファイルが必要としています";
 "cli.permission.pane.input_inject" = "プライバシーとセキュリティ > アクセシビリティ";
 "cli.permission.pane.usb_transport" = "一般 > ログイン項目と機能拡張 > ドライバ機能拡張";
 "cli.permission.pane.input_read" = "プライバシーとセキュリティ > 入力監視";
