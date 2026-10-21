@@ -52,14 +52,16 @@
     package init(
       stopRuntime: @escaping @MainActor () async -> Void,
       gateway: ApplicationServiceClientGateway,
-      systemExtensionSetup: any SystemExtensionSetupClient
+      systemExtensionSetup: any SystemExtensionSetupClient,
+      listenerState: ServiceListenerState
     ) {
       self.stopRuntime = stopRuntime
       self.gateway = gateway
       self.gatewayChangeSource = gateway
       self.viewModel = RuntimeViewModel(
         gateway: gateway,
-        systemExtensionSetup: SystemExtensionSetupCoordinator(client: systemExtensionSetup)
+        systemExtensionSetup: SystemExtensionSetupCoordinator(client: systemExtensionSetup),
+        listenerState: listenerState
       )
       self.menuBarViewModel = MenuBarViewModel(runtime: self.viewModel)
       self.supportReport = SupportReportModel(gateway: gateway)

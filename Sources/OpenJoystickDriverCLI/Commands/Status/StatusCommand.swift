@@ -37,6 +37,9 @@ struct StatusCommand: AsyncParsableCommand {
         failure as CLIFailure where failure.code == .serviceUnavailable
       { payload = nil }
       let records = RecordStore.load()
+      let reading =
+        payload == nil
+        ? ServiceListenerFailure.read(socketPath: ServiceConnection.socketPath) : .absent
       let report = StatusReport(
         payload: payload,
         extensionStatus: Self.extensionProbe(),
@@ -44,13 +47,28 @@ struct StatusCommand: AsyncParsableCommand {
         skippedRecords: records.problems.map(SkippedRecord.init),
         ignoredDefaults: SkippedRecord(records.defaults),
         skippedPersonas: RecordStore.personaFiles().filter { $0.problem != nil }
-          .map(SkippedRecord.init)
+          .map(SkippedRecord.init),
+        listenerFailure: reading
       )
       switch CLIContext.current.format {
       case .json: try CLIOutput.json(report)
       case .plain: CLIOutput.plain(Self.plainRows(report))
       case .human: Self.printHuman(report)
       }
+      try Self.failIfListenerBroken(reading)
+    }
+  }
+
+  /// A service that is unreachable because its request listener stopped fails with `E2034`, and one
+  /// whose record of that cannot be used with `E2035`, after the report. A record of a service
+  /// that is not running only informs.
+  static func failIfListenerBroken(_ reading: ServiceListenerFailure.Reading) throws {
+    switch reading {
+    case .absent, .earlier: return
+    case .stopped(let failure):
+      throw CLIFailure(failure.code, failure.code.localizedExplanation)
+    case .unreadable(let problem):
+      throw CLIFailure(.damagedListenerFailureRecord, problem.explanation)
     }
   }
 
@@ -69,6 +87,15 @@ struct StatusCommand: AsyncParsableCommand {
         report.commandLineTool.path,
       ],
     ]
+    if let failure = report.service.listenerFailure {
+      rows.append([
+        "listener-failure", failure.code, String(failure.errorNumber), failure.time,
+        failure.current ? "current" : "earlier",
+      ])
+    }
+    if let problem = report.service.listenerFailureProblem {
+      rows.append(["listener-failure-problem", problem])
+    }
     if let permissions = report.permissions {
       rows.append([
         "permission", "input-read", CommandLineName.kebab(permissions.inputRead.rawValue),
@@ -133,6 +160,12 @@ struct StatusCommand: AsyncParsableCommand {
           + report.commandLineTool.path
       ),
     ]
+    if let failure = report.service.listenerFailure {
+      rows.append((CLILocalized.text("cli.status.listenerFailure.label"), failure.message))
+    }
+    if let problem = report.service.listenerFailureProblem {
+      rows.append((CLILocalized.text("cli.status.listenerFailure.label"), problem))
+    }
     if let permissions = report.permissions {
       rows.append(
         (

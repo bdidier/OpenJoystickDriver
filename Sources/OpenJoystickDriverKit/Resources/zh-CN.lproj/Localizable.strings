@@ -1324,6 +1324,7 @@
 "error.E2032" = "带源的令牌不能拥有 control 范围，因为网页绝不能操控虚拟游戏手柄。请把 control 授予不带源的令牌。";
 "error.E2033" = "无法启动程序。请检查其路径指向可执行文件或 App，并且你有权运行它。";
 "error.E2034" = "服务已停止接受请求。请退出并重新打开 OpenJoystickDriver，然后重试。";
+"error.E2035" = "无法使用记录请求监听停止原因的文件。请删除该文件，然后重新打开 OpenJoystickDriver。";
 "cli.record.usb_not_claimed" = "该系列使用原始 USB，USB 扩展无法接管此控制器，因为其产品列表由 Apple 签名。只有在 macOS 允许时，OJD 才能通过直接 USB 访问使用它。";
 "cli.record.usb_only_switch2" = "仅限 USB：要通过低功耗蓝牙连接控制器，请将 bluetoothLE.vibrationCharacteristic 添加到此 Switch 2 记录。";
 "cli.record.validate.abstract" = "检查控制器记录，但不安装。";
@@ -1985,3 +1986,26 @@
 "controllers.disconnectWireless.failure.missingAddress" = "控制器的蓝牙地址未知";
 "controllers.disconnectWireless.failure.disconnectFailed" = "蓝牙未断开控制器";
 "controllers.disconnectWireless.failure.timedOut" = "断开连接超时";
+
+/* Status line of a service that cannot be reached because its request listener stopped. %1$@ is the error code, %2$@ its explanation, %3$@ the error number of the failed call, %4$@ the time it stopped. */
+"status.listenerFailure.detail" = "%1$@：%2$@（错误编号 %3$@，%4$@）";
+/* Reason the listener failure file cannot be used: its size exceeds what the service writes. Fills the reason in the error E2035 message. */
+"status.listenerFailure.tooLarge" = "该文件过大";
+/* Row label in the ojd status table that gives why the stopped service's request listener stopped. */
+"cli.status.listenerFailure.label" = "请求监听";
+/* Label of the button in the problem banner that starts the service's stopped request listener again. */
+"status.listenerFailure.restart" = "重新启动请求监听";
+/* Status line when restarting the request listener failed. %@ is the error number of the failed call. */
+"status.listenerFailure.restartFailed" = "无法重新启动请求监听（错误编号 %@）。请退出并重新打开 OpenJoystickDriver。";
+/* Status line of a service that is not running when its last request listener stopped with an error. %@ is the error code with its explanation, the error number and the time. */
+"status.listenerFailure.earlier" = "服务未运行。其最后一次请求监听已停止：%@";
+/* Status line when the request listener cannot be restarted because the service is stopping or has not started. */
+"status.listenerFailure.restartUnavailable" = "服务正在停止或尚未启动，因此无法重新启动请求监听。";
+/* Status line when restarting the request listener failed for a reason that is not an error number. %@ is the reason. */
+"status.listenerFailure.restartFailedReason" = "无法重新启动请求监听：%@。请退出并重新打开 OpenJoystickDriver。";
+/* Reason the listener failure file cannot be used: it is not a regular file. Fills the reason in the error E2035 message. */
+"status.listenerFailure.notRegularFile" = "该文件不是普通文件";
+/* Reason the listener failure file cannot be used: another user owns it, so ojd must run as that user. Fills the reason in the error E2035 message. */
+"status.listenerFailure.otherUser" = "该记录属于其他用户；请以该用户身份运行 ojd";
+/* Reason the listener failure file cannot be used: the system would not say whether the process that wrote it runs. %1$@ is the system's reason, %2$@ the error number. Fills the reason in the error E2035 message. */
+"status.listenerFailure.processCheckFailed" = "无法检查服务进程是否在运行：%1$@（错误编号 %2$@）";

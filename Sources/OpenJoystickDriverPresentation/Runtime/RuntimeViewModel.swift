@@ -62,13 +62,63 @@ final class RuntimeViewModel: ObservableObject {
   var scopedRefreshWaiters: [CheckedContinuation<Void, Never>] = []
   var exclusiveOperationWaiters: [CheckedContinuation<Void, Never>] = []
   private let systemExtensionSetup: SystemExtensionSetupCoordinator
+  /// The in-process service's request listener: its failure and the way to start it again.
+  private let listenerState: ServiceListenerState
+  /// Why the request listener stopped, or nil while it listens.
+  @Published
+  private(set) var listenerFailure: ServiceListenerFailure?
 
   init(
     gateway: any ApplicationServiceGateway,
-    systemExtensionSetup: SystemExtensionSetupCoordinator
+    systemExtensionSetup: SystemExtensionSetupCoordinator,
+    listenerState: ServiceListenerState
   ) {
     self.gateway = gateway
     self.systemExtensionSetup = systemExtensionSetup
+    self.listenerState = listenerState
+    listenerFailure = listenerState.failure
+    listenerState.observe { [weak self] in
+      Task { @MainActor in await self?.listenerStateChanged() }
+    }
+  }
+
+  /// Shows the listener's new state at once: the failure is read again, and the status line and
+  /// the problem banner follow from a refresh.
+  private func listenerStateChanged() async {
+    listenerFailure = listenerState.failure
+    await refresh()
+  }
+
+  /// Starts the request listener again. A start that works clears the failure; one that fails
+  /// leaves it and says why in the status line. A listener that already runs counts as started.
+  func restartListener() async {
+    do { try listenerState.restart() } catch LocalServiceRPCError.alreadyRunning {
+      listenerState.set(nil)
+    } catch {
+      await refresh()
+      let reason: String
+      switch error {
+      case LocalServiceRPCError.connectionFailed(let code):
+        reason = OJDLocalized.formatted("status.listenerFailure.restartFailed", String(code))
+      case ServiceListenerState.RestartError.unavailable, LocalServiceRPCError.stopping:
+        reason = OJDLocalized.string("status.listenerFailure.restartUnavailable")
+      default:
+        reason = OJDLocalized.formatted(
+          "status.listenerFailure.restartFailedReason",
+          error.localizedDescription
+        )
+      }
+      statusState = .unavailable(
+        [reason, listenerFailure?.localizedSummary].compactMap { $0 }.joined(separator: " ")
+      )
+    }
+  }
+
+  /// The status line for a failed status request. A service that stopped its request listener
+  /// explains why, with the code and the error number, whatever the request failed with: the
+  /// stopped listener removed the socket.
+  func statusFailureMessage(_ error: Error) -> String {
+    listenerFailure?.localizedSummary ?? RuntimePresentation.userFacingError(error)
   }
 
   /// Waits for scoped refreshes and exclusive operations, then claims the exclusive slot for a
@@ -165,7 +215,7 @@ final class RuntimeViewModel: ObservableObject {
       loadedAny = true
     } catch {
       guard generation == refreshGeneration else { return }
-      let message = RuntimePresentation.userFacingError(error)
+      let message = statusFailureMessage(error)
       statusState =
         RuntimePresentation.isUnavailable(error) ? .unavailable(message) : .error(message)
       if permissionGeneration == permissionRefreshGeneration { permissionState = .error(message) }

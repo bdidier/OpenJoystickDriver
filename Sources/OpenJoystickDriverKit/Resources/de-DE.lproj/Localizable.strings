@@ -1324,6 +1324,7 @@
 "error.E2032" = "Ein Token mit Origins darf den Bereich control nicht haben, weil eine Seite nie ein virtuelles Gamepad steuern darf. Erteile control einem Token ohne Origins.";
 "error.E2033" = "Das Programm konnte nicht gestartet werden. Prüfen Sie, ob sein Pfad eine ausführbare Datei oder eine App benennt und ob Sie sie ausführen dürfen.";
 "error.E2034" = "Der Dienst nimmt keine Anfragen mehr an. Beende OpenJoystickDriver, öffne es erneut und versuche es dann noch einmal.";
+"error.E2035" = "Die Datei, die festhält, warum die Anfrageannahme beendet wurde, lässt sich nicht verwenden. Lösche die Datei und öffne OpenJoystickDriver dann erneut.";
 "cli.record.usb_not_claimed" = "Die Familie nutzt rohes USB, und die USB-Erweiterung kann diesen Controller nicht übernehmen, weil ihre Produktliste von Apple signiert ist. OJD erreicht ihn nur über direkten USB-Zugriff, sofern macOS ihn erlaubt.";
 "cli.record.usb_only_switch2" = "Nur USB: bluetoothLE.vibrationCharacteristic zu diesem Switch 2-Eintrag hinzufügen, um den Controller über Bluetooth LE zu verbinden.";
 "cli.record.validate.abstract" = "Einen Controller-Eintrag prüfen, ohne ihn zu installieren.";
@@ -1986,3 +1987,26 @@
 "controllers.disconnectWireless.failure.missingAddress" = "Die Bluetooth-Adresse des Controllers ist unbekannt";
 "controllers.disconnectWireless.failure.disconnectFailed" = "Bluetooth hat den Controller nicht getrennt";
 "controllers.disconnectWireless.failure.timedOut" = "Zeitüberschreitung beim Trennen";
+
+/* Status line of a service that cannot be reached because its request listener stopped. %1$@ is the error code, %2$@ its explanation, %3$@ the error number of the failed call, %4$@ the time it stopped. */
+"status.listenerFailure.detail" = "%1$@: %2$@ (Fehlernummer %3$@, %4$@)";
+/* Reason the listener failure file cannot be used: its size exceeds what the service writes. Fills the reason in the error E2035 message. */
+"status.listenerFailure.tooLarge" = "die Datei ist zu groß";
+/* Row label in the ojd status table that gives why the stopped service's request listener stopped. */
+"cli.status.listenerFailure.label" = "Anfrageannahme";
+/* Label of the button in the problem banner that starts the service's stopped request listener again. */
+"status.listenerFailure.restart" = "Anfrageannahme neu starten";
+/* Status line when restarting the request listener failed. %@ is the error number of the failed call. */
+"status.listenerFailure.restartFailed" = "Die Anfrageannahme ließ sich nicht neu starten (Fehlernummer %@). Beende OpenJoystickDriver und öffne es erneut.";
+/* Status line of a service that is not running when its last request listener stopped with an error. %@ is the error code with its explanation, the error number and the time. */
+"status.listenerFailure.earlier" = "Der Dienst läuft nicht. Seine letzte Anfrageannahme wurde beendet: %@";
+/* Status line when the request listener cannot be restarted because the service is stopping or has not started. */
+"status.listenerFailure.restartUnavailable" = "Der Dienst wird beendet oder ist noch nicht gestartet, daher lässt sich die Anfrageannahme nicht neu starten.";
+/* Status line when restarting the request listener failed for a reason that is not an error number. %@ is the reason. */
+"status.listenerFailure.restartFailedReason" = "Die Anfrageannahme ließ sich nicht neu starten: %@. Beende OpenJoystickDriver und öffne es erneut.";
+/* Reason the listener failure file cannot be used: it is not a regular file. Fills the reason in the error E2035 message. */
+"status.listenerFailure.notRegularFile" = "die Datei ist keine normale Datei";
+/* Reason the listener failure file cannot be used: another user owns it, so ojd must run as that user. Fills the reason in the error E2035 message. */
+"status.listenerFailure.otherUser" = "die Datei gehört einem anderen Benutzer; führe ojd als dieser Benutzer aus";
+/* Reason the listener failure file cannot be used: the system would not say whether the process that wrote it runs. %1$@ is the system's reason, %2$@ the error number. Fills the reason in the error E2035 message. */
+"status.listenerFailure.processCheckFailed" = "es ließ sich nicht prüfen, ob der Dienstprozess läuft: %1$@ (Fehlernummer %2$@)";

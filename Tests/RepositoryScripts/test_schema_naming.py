@@ -195,6 +195,7 @@ EXCEPTIONS: dict[tuple[str, str], tuple[tuple[str, ...], str]] = {
             ("profile", "/properties/apiVersion/const"),
             ("protocol-description", "/properties/apiVersion/const"),
             ("report", "/$defs/supportDiagnosticData/properties/apiVersion/const"),
+            ("service-listener-failure", "/properties/apiVersion/const"),
             ("settings", "/properties/apiVersion/const"),
             ("virtual-device", "/properties/apiVersion/const"),
         )

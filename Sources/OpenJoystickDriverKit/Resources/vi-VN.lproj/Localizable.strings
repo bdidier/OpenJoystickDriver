@@ -1324,6 +1324,7 @@
 "error.E2032" = "Mã thông báo có nguồn gốc không thể có phạm vi control, vì một trang không bao giờ được điều khiển tay cầm ảo. Hãy cấp control cho mã thông báo không có nguồn gốc.";
 "error.E2033" = "Không thể khởi động chương trình. Hãy kiểm tra đường dẫn của nó chỉ tới một tệp thực thi hoặc một ứng dụng và bạn có quyền chạy nó.";
 "error.E2034" = "Dịch vụ đã ngừng nhận yêu cầu. Hãy thoát OpenJoystickDriver, mở lại, rồi thử lại.";
+"error.E2035" = "Không dùng được tệp ghi lại lý do trình lắng nghe yêu cầu dừng. Hãy xóa tệp, rồi mở lại OpenJoystickDriver.";
 "cli.record.usb_not_claimed" = "Họ thiết bị này dùng USB thô, và phần mở rộng USB không thể chiếm bộ điều khiển này, vì danh sách sản phẩm của nó do Apple ký. OJD chỉ truy cập được nó qua truy cập USB trực tiếp, khi macOS cho phép.";
 "cli.record.usb_only_switch2" = "Chỉ USB: thêm bluetoothLE.vibrationCharacteristic vào bản ghi Switch 2 này để kết nối bộ điều khiển qua Bluetooth LE.";
 "cli.record.validate.abstract" = "Kiểm tra một bản ghi bộ điều khiển mà không cài đặt.";
@@ -1985,3 +1986,26 @@
 "controllers.disconnectWireless.failure.missingAddress" = "Không rõ địa chỉ Bluetooth của bộ điều khiển";
 "controllers.disconnectWireless.failure.disconnectFailed" = "Bluetooth không ngắt kết nối bộ điều khiển";
 "controllers.disconnectWireless.failure.timedOut" = "Hết thời gian ngắt kết nối";
+
+/* Status line of a service that cannot be reached because its request listener stopped. %1$@ is the error code, %2$@ its explanation, %3$@ the error number of the failed call, %4$@ the time it stopped. */
+"status.listenerFailure.detail" = "%1$@: %2$@ (mã lỗi %3$@, %4$@)";
+/* Reason the listener failure file cannot be used: its size exceeds what the service writes. Fills the reason in the error E2035 message. */
+"status.listenerFailure.tooLarge" = "tệp quá lớn";
+/* Row label in the ojd status table that gives why the stopped service's request listener stopped. */
+"cli.status.listenerFailure.label" = "Trình lắng nghe yêu cầu";
+/* Label of the button in the problem banner that starts the service's stopped request listener again. */
+"status.listenerFailure.restart" = "Khởi động lại trình lắng nghe";
+/* Status line when restarting the request listener failed. %@ is the error number of the failed call. */
+"status.listenerFailure.restartFailed" = "Không khởi động lại được trình lắng nghe yêu cầu (mã lỗi %@). Hãy thoát OpenJoystickDriver rồi mở lại.";
+/* Status line of a service that is not running when its last request listener stopped with an error. %@ is the error code with its explanation, the error number and the time. */
+"status.listenerFailure.earlier" = "Dịch vụ không chạy. Trình lắng nghe yêu cầu gần nhất của nó đã dừng: %@";
+/* Status line when the request listener cannot be restarted because the service is stopping or has not started. */
+"status.listenerFailure.restartUnavailable" = "Dịch vụ đang dừng hoặc chưa khởi động, nên không thể khởi động lại trình lắng nghe yêu cầu.";
+/* Status line when restarting the request listener failed for a reason that is not an error number. %@ is the reason. */
+"status.listenerFailure.restartFailedReason" = "Không khởi động lại được trình lắng nghe yêu cầu: %@. Hãy thoát OpenJoystickDriver rồi mở lại.";
+/* Reason the listener failure file cannot be used: it is not a regular file. Fills the reason in the error E2035 message. */
+"status.listenerFailure.notRegularFile" = "tệp không phải tệp thông thường";
+/* Reason the listener failure file cannot be used: another user owns it, so ojd must run as that user. Fills the reason in the error E2035 message. */
+"status.listenerFailure.otherUser" = "bản ghi thuộc về người dùng khác; hãy chạy ojd bằng người dùng đó";
+/* Reason the listener failure file cannot be used: the system would not say whether the process that wrote it runs. %1$@ is the system's reason, %2$@ the error number. Fills the reason in the error E2035 message. */
+"status.listenerFailure.processCheckFailed" = "không thể kiểm tra tiến trình của dịch vụ có đang chạy không: %1$@ (mã lỗi %2$@)";

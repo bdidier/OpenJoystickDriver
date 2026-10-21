@@ -43,8 +43,17 @@ package enum AcceptFailure: Equatable, Sendable {
     }
   }
 
+  /// What an accept loop does next after a failure.
+  package enum Continuation: Equatable, Sendable {
+    /// Accept again.
+    case goOn
+    /// The server was stopped while the loop waited for resources.
+    case stopped
+    /// The loop ends on its own, with this error number.
+    case ended(Int32)
+  }
+
   /// Applies the failure `code` of `server`'s accept loop and returns whether the loop goes on.
-  /// A wait for resources ends early, and the loop ends, when `wake` becomes readable or hangs up.
   package static func continuesAfter(
     errno code: Int32,
     server: String,
@@ -54,23 +63,46 @@ package enum AcceptFailure: Equatable, Sendable {
     pollCall: PollCall = Darwin.poll,
     report: (String) -> Void
   ) -> Bool {
+    continuation(
+      errno: code,
+      server: server,
+      wake: wake,
+      waitMilliseconds: waitMilliseconds,
+      ended: ended,
+      pollCall: pollCall,
+      report: report
+    ) == .goOn
+  }
+
+  /// Applies the failure `code` of `server`'s accept loop and returns what the loop does next.
+  /// A wait for resources ends early, and the loop stops, when `wake` becomes readable or hangs
+  /// up.
+  package static func continuation(
+    errno code: Int32,
+    server: String,
+    wake: Int32,
+    waitMilliseconds: Int32 = resourceWaitMilliseconds,
+    ended: ErrorCode? = nil,
+    pollCall: PollCall = Darwin.poll,
+    report: (String) -> Void
+  ) -> Continuation {
     let action = Self(errno: code)
     switch action {
-    case .retry: return true
+    case .retry: return .goOn
     case .waitForResources:
       report(
         message(server: server, errno: code, action: action, waitMilliseconds: waitMilliseconds)
       )
       switch wait(milliseconds: waitMilliseconds, wake: wake, pollCall: pollCall) {
-      case .elapsed: return true
-      case .woken: return false
+      case .elapsed: return .goOn
+      case .woken: return .stopped
       case .failed(let pollCode):
         report(message(server: server, errno: pollCode, action: .fatal, ended: ended))
-        return false
+        return .ended(pollCode)
       }
     case .fatal:
       report(message(server: server, errno: code, action: action, ended: ended))
-      return false
+      return .ended(code)
     }
   }
 

@@ -1540,6 +1540,7 @@
 "error.E2032" = "A token with origins cannot have the control scope, because a page must never drive a virtual gamepad. Grant control to a token without origins.";
 "error.E2033" = "The program could not be started. Check that its path names an executable file or an app, and that you may run it.";
 "error.E2034" = "The service stopped accepting requests. Quit and reopen OpenJoystickDriver, then try again.";
+"error.E2035" = "The file that records why the request listener stopped cannot be used. Delete the file, then open OpenJoystickDriver again.";
 "error.E3001" = "The controller is not connected or not ready for remapping. Reconnect it and try again.";
 "error.E3002" = "The selected Joy-Cons could not be paired. Refresh the connected controllers and try again.";
 "error.E3003" = "The controller does not report motion data. Choose a controller with motion sensors, or leave motion options off.";
@@ -1986,3 +1987,26 @@
 "controllers.disconnectWireless.failure.missingAddress" = "The controller's Bluetooth address is unknown";
 "controllers.disconnectWireless.failure.disconnectFailed" = "Bluetooth did not disconnect the controller";
 "controllers.disconnectWireless.failure.timedOut" = "Disconnecting timed out";
+
+/* Status line of a service that cannot be reached because its request listener stopped. %1$@ is the error code, %2$@ its explanation, %3$@ the error number of the failed call, %4$@ the time it stopped. */
+"status.listenerFailure.detail" = "%1$@: %2$@ (error number %3$@, %4$@)";
+/* Reason the listener failure file cannot be used: its size exceeds what the service writes. Fills the reason in the error E2035 message. */
+"status.listenerFailure.tooLarge" = "the file is too large";
+/* Row label in the ojd status table that gives why the stopped service's request listener stopped. */
+"cli.status.listenerFailure.label" = "Request listener";
+/* Label of the button in the problem banner that starts the service's stopped request listener again. */
+"status.listenerFailure.restart" = "Restart listener";
+/* Status line when restarting the request listener failed. %@ is the error number of the failed call. */
+"status.listenerFailure.restartFailed" = "The request listener did not restart (error number %@). Quit and reopen OpenJoystickDriver.";
+/* Status line of a service that is not running when its last request listener stopped with an error. %@ is the error code with its explanation, the error number and the time. */
+"status.listenerFailure.earlier" = "The service is not running. Its last request listener stopped: %@";
+/* Status line when the request listener cannot be restarted because the service is stopping or has not started. */
+"status.listenerFailure.restartUnavailable" = "The service is stopping or has not started, so the request listener cannot restart.";
+/* Status line when restarting the request listener failed for a reason that is not an error number. %@ is the reason. */
+"status.listenerFailure.restartFailedReason" = "The request listener did not restart: %@. Quit and reopen OpenJoystickDriver.";
+/* Reason the listener failure file cannot be used: it is not a regular file. Fills the reason in the error E2035 message. */
+"status.listenerFailure.notRegularFile" = "the file is not a regular file";
+/* Reason the listener failure file cannot be used: another user owns it, so ojd must run as that user. Fills the reason in the error E2035 message. */
+"status.listenerFailure.otherUser" = "the record belongs to another user; run ojd as that user";
+/* Reason the listener failure file cannot be used: the system would not say whether the process that wrote it runs. %1$@ is the system's reason, %2$@ the error number. Fills the reason in the error E2035 message. */
+"status.listenerFailure.processCheckFailed" = "could not check whether the service process is running: %1$@ (error number %2$@)";

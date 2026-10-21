@@ -1324,6 +1324,7 @@
 "error.E2032" = "ऑरिजिन वाले टोकन के पास control स्कोप नहीं हो सकता, क्योंकि कोई पेज कभी वर्चुअल गेमपैड नहीं चला सकता। control ऐसे टोकन को दें जिसमें ऑरिजिन न हों।";
 "error.E2033" = "प्रोग्राम शुरू नहीं किया जा सका। जाँचें कि उसका पाथ किसी एक्ज़ीक्यूटेबल फ़ाइल या ऐप को दर्शाता है और आपको उसे चलाने की अनुमति है।";
 "error.E2034" = "सेवा ने अनुरोध स्वीकार करना बंद कर दिया है। OpenJoystickDriver को बंद करके दोबारा खोलें, फिर दोबारा कोशिश करें।";
+"error.E2035" = "वह फ़ाइल उपयोग नहीं की जा सकती जिसमें दर्ज है कि अनुरोध श्रोता क्यों रुका। फ़ाइल हटाएँ, फिर OpenJoystickDriver को दोबारा खोलें।";
 "cli.record.usb_not_claimed" = "यह परिवार रॉ USB इस्तेमाल करता है, और USB एक्सटेंशन इस कंट्रोलर को क्लेम नहीं कर सकता, क्योंकि उसकी प्रोडक्ट सूची पर Apple के हस्ताक्षर हैं। OJD उस तक केवल सीधे USB एक्सेस से पहुँचता है, जब macOS अनुमति देता है।";
 "cli.record.usb_only_switch2" = "केवल USB: कंट्रोलर को Bluetooth LE से कनेक्ट करने के लिए इस Switch 2 रिकॉर्ड में bluetoothLE.vibrationCharacteristic जोड़ें।";
 "cli.record.validate.abstract" = "इंस्टॉल किए बिना कंट्रोलर रिकॉर्ड जाँचें।";
@@ -1985,3 +1986,26 @@
 "controllers.disconnectWireless.failure.missingAddress" = "कंट्रोलर का ब्लूटूथ पता अज्ञात है";
 "controllers.disconnectWireless.failure.disconnectFailed" = "ब्लूटूथ ने कंट्रोलर को डिस्कनेक्ट नहीं किया";
 "controllers.disconnectWireless.failure.timedOut" = "डिस्कनेक्ट करने में समय समाप्त हो गया";
+
+/* Status line of a service that cannot be reached because its request listener stopped. %1$@ is the error code, %2$@ its explanation, %3$@ the error number of the failed call, %4$@ the time it stopped. */
+"status.listenerFailure.detail" = "%1$@: %2$@ (त्रुटि संख्या %3$@, %4$@)";
+/* Reason the listener failure file cannot be used: its size exceeds what the service writes. Fills the reason in the error E2035 message. */
+"status.listenerFailure.tooLarge" = "फ़ाइल बहुत बड़ी है";
+/* Row label in the ojd status table that gives why the stopped service's request listener stopped. */
+"cli.status.listenerFailure.label" = "अनुरोध श्रोता";
+/* Label of the button in the problem banner that starts the service's stopped request listener again. */
+"status.listenerFailure.restart" = "श्रोता को फिर से शुरू करें";
+/* Status line when restarting the request listener failed. %@ is the error number of the failed call. */
+"status.listenerFailure.restartFailed" = "अनुरोध श्रोता फिर से शुरू नहीं हुआ (त्रुटि संख्या %@)। OpenJoystickDriver को बंद करके दोबारा खोलें।";
+/* Status line of a service that is not running when its last request listener stopped with an error. %@ is the error code with its explanation, the error number and the time. */
+"status.listenerFailure.earlier" = "सेवा चल नहीं रही है। उसका पिछला अनुरोध श्रोता रुक गया: %@";
+/* Status line when the request listener cannot be restarted because the service is stopping or has not started. */
+"status.listenerFailure.restartUnavailable" = "सेवा बंद हो रही है या अभी शुरू नहीं हुई है, इसलिए अनुरोध श्रोता फिर से शुरू नहीं किया जा सकता।";
+/* Status line when restarting the request listener failed for a reason that is not an error number. %@ is the reason. */
+"status.listenerFailure.restartFailedReason" = "अनुरोध श्रोता फिर से शुरू नहीं हुआ: %@। OpenJoystickDriver को बंद करके दोबारा खोलें।";
+/* Reason the listener failure file cannot be used: it is not a regular file. Fills the reason in the error E2035 message. */
+"status.listenerFailure.notRegularFile" = "फ़ाइल कोई सामान्य फ़ाइल नहीं है";
+/* Reason the listener failure file cannot be used: another user owns it, so ojd must run as that user. Fills the reason in the error E2035 message. */
+"status.listenerFailure.otherUser" = "रिकॉर्ड किसी दूसरे उपयोगकर्ता का है; ojd को उसी उपयोगकर्ता के रूप में चलाएँ";
+/* Reason the listener failure file cannot be used: the system would not say whether the process that wrote it runs. %1$@ is the system's reason, %2$@ the error number. Fills the reason in the error E2035 message. */
+"status.listenerFailure.processCheckFailed" = "यह जाँचा नहीं जा सका कि सेवा की प्रक्रिया चल रही है या नहीं: %1$@ (त्रुटि संख्या %2$@)";

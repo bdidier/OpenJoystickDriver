@@ -1324,6 +1324,7 @@
 "error.E2032" = "Een token met herkomsten kan het bereik control niet hebben, omdat een pagina nooit een virtuele gamepad mag besturen. Verleen control aan een token zonder herkomsten.";
 "error.E2033" = "Het programma kon niet worden gestart. Controleer of het pad een uitvoerbaar bestand of een app aanwijst en of je het mag uitvoeren.";
 "error.E2034" = "De service accepteert geen verzoeken meer. Sluit OpenJoystickDriver af, open het opnieuw en probeer het opnieuw.";
+"error.E2035" = "Het bestand dat vastlegt waarom de verzoeklistener is gestopt, kan niet worden gebruikt. Verwijder het bestand en open OpenJoystickDriver daarna opnieuw.";
 "cli.record.usb_not_claimed" = "De familie gebruikt onbewerkte USB en de USB-extensie kan deze controller niet claimen, omdat de productlijst door Apple is ondertekend. OJD bereikt hem alleen via directe USB-toegang, wanneer macOS dat toestaat.";
 "cli.record.usb_only_switch2" = "Alleen USB: voeg bluetoothLE.vibrationCharacteristic toe aan dit Switch 2-record om de controller via Bluetooth LE te verbinden.";
 "cli.record.validate.abstract" = "Controleert een controllerrecord zonder het te installeren.";
@@ -1986,3 +1987,26 @@
 "controllers.disconnectWireless.failure.missingAddress" = "Het Bluetooth-adres van de controller is onbekend";
 "controllers.disconnectWireless.failure.disconnectFailed" = "Bluetooth heeft de controller niet losgekoppeld";
 "controllers.disconnectWireless.failure.timedOut" = "Time-out bij het loskoppelen";
+
+/* Status line of a service that cannot be reached because its request listener stopped. %1$@ is the error code, %2$@ its explanation, %3$@ the error number of the failed call, %4$@ the time it stopped. */
+"status.listenerFailure.detail" = "%1$@: %2$@ (foutnummer %3$@, %4$@)";
+/* Reason the listener failure file cannot be used: its size exceeds what the service writes. Fills the reason in the error E2035 message. */
+"status.listenerFailure.tooLarge" = "het bestand is te groot";
+/* Row label in the ojd status table that gives why the stopped service's request listener stopped. */
+"cli.status.listenerFailure.label" = "Verzoeklistener";
+/* Label of the button in the problem banner that starts the service's stopped request listener again. */
+"status.listenerFailure.restart" = "Listener opnieuw starten";
+/* Status line when restarting the request listener failed. %@ is the error number of the failed call. */
+"status.listenerFailure.restartFailed" = "De verzoeklistener kon niet opnieuw starten (foutnummer %@). Sluit OpenJoystickDriver af en open het opnieuw.";
+/* Status line of a service that is not running when its last request listener stopped with an error. %@ is the error code with its explanation, the error number and the time. */
+"status.listenerFailure.earlier" = "De service draait niet. De laatste verzoeklistener is gestopt: %@";
+/* Status line when the request listener cannot be restarted because the service is stopping or has not started. */
+"status.listenerFailure.restartUnavailable" = "De service wordt afgesloten of is nog niet gestart, dus de verzoeklistener kan niet opnieuw starten.";
+/* Status line when restarting the request listener failed for a reason that is not an error number. %@ is the reason. */
+"status.listenerFailure.restartFailedReason" = "De verzoeklistener kon niet opnieuw starten: %@. Sluit OpenJoystickDriver af en open het opnieuw.";
+/* Reason the listener failure file cannot be used: it is not a regular file. Fills the reason in the error E2035 message. */
+"status.listenerFailure.notRegularFile" = "het bestand is geen gewoon bestand";
+/* Reason the listener failure file cannot be used: another user owns it, so ojd must run as that user. Fills the reason in the error E2035 message. */
+"status.listenerFailure.otherUser" = "het record is van een andere gebruiker; voer ojd uit als die gebruiker";
+/* Reason the listener failure file cannot be used: the system would not say whether the process that wrote it runs. %1$@ is the system's reason, %2$@ the error number. Fills the reason in the error E2035 message. */
+"status.listenerFailure.processCheckFailed" = "kon niet controleren of het serviceproces draait: %1$@ (foutnummer %2$@)";

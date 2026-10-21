@@ -49,6 +49,8 @@ public final class ApplicationServiceServer: @unchecked Sendable {
   /// Guards `rpcServer` and `endpointServer`.
   let rpcServerLock = NSLock()
   var rpcServer: LocalServiceRPCServer?
+  /// Whether the request listener runs, and the way to start it again after it stopped.
+  package let listenerState = ServiceListenerState()
   var endpointServer: EndpointServer?
   var virtualOutputServerStopped = false
 
@@ -112,6 +114,8 @@ public final class ApplicationServiceServer: @unchecked Sendable {
       }
       Task { completion(await self.handleLocalRPC(request)) }
     }
+    let state = listenerState
+    server.listenerFailureChanged = { state.set($0) }
     try server.start()
     let streamDelivered: @Sendable (ControllerSessionToken, UInt64) async -> Void = {
       [weak self] token, nanoseconds in
@@ -126,6 +130,12 @@ public final class ApplicationServiceServer: @unchecked Sendable {
     rpcServerLock.withLock {
       rpcServer = server
       endpointServer = endpoint
+    }
+    // A restart takes the same lock as `stop()` and refuses once the server is no longer current,
+    // so it never starts a listener on a service that is stopping.
+    state.setRestart { [weak self, weak server] in
+      guard let self, let server else { throw LocalServiceRPCError.stopping }
+      try self.restartListener(of: server)
     }
     print("[ApplicationServiceServer] Listening on authenticated local RPC socket")
   }
@@ -149,6 +159,16 @@ extension ApplicationServiceServer {
     }
   }
 
+  /// Starts the listener of `server` again. It takes the lock that `stop()` takes and refuses with
+  /// `LocalServiceRPCError.stopping` once `server` is no longer the current one, so a restart never
+  /// starts a listener on a service that is stopping.
+  func restartListener(of server: LocalServiceRPCServer) throws {
+    try rpcServerLock.withLock {
+      guard rpcServer === server else { throw LocalServiceRPCError.stopping }
+      try server.start()
+    }
+  }
+
   public func stop() async {
     let (server, endpoint) = rpcServerLock.withLock {
       () -> (LocalServiceRPCServer?, EndpointServer?) in
@@ -158,6 +178,7 @@ extension ApplicationServiceServer {
       }
       return (rpcServer, endpointServer)
     }
+    listenerState.setRestart(nil)
     endpoint?.stop()
     server?.stop()
     userSpaceLock.withLock { virtualOutputServerStopped = true }

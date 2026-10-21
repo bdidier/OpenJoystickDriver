@@ -4,9 +4,7 @@
   import SwiftUI
 
   /// The strip under the toolbar that lists what stops controllers from working. It exists
-  /// only while
-  /// ``MainWindowProblem/current(permissions:status:driver:liveUpdatesFallbackReason:)`` returns
-  /// problems.
+  /// only while `MainWindowProblem.current` returns problems.
   struct MainWindowProblemBanner: View {
     let problems: [MainWindowProblem]
     let perform: @MainActor (MainWindowProblemAction) -> Void
@@ -48,6 +46,7 @@
 
     private func detailText(_ problem: MainWindowProblem) -> String {
       if case .serviceUnavailable(let message) = problem { return message }
+      if case .listenerStopped(let message) = problem { return message }
       guard let key = problem.detailKey else { return "" }
       return OJDLocalized.string(key)
     }

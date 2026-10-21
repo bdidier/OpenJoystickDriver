@@ -1324,6 +1324,7 @@
 "error.E2032" = "오리진이 있는 토큰은 control 범위를 가질 수 없습니다. 페이지가 가상 게임패드를 조작해서는 안 되기 때문입니다. 오리진이 없는 토큰에 control을 허용하세요.";
 "error.E2033" = "프로그램을 시작할 수 없습니다. 경로가 실행 파일 또는 앱을 가리키는지, 실행할 권한이 있는지 확인하세요.";
 "error.E2034" = "서비스가 더 이상 요청을 받지 않습니다. OpenJoystickDriver를 종료했다가 다시 열고 다시 시도하세요.";
+"error.E2035" = "요청 수신기가 중지된 이유를 기록한 파일을 사용할 수 없습니다. 파일을 삭제한 다음 OpenJoystickDriver를 다시 여세요.";
 "cli.record.usb_not_claimed" = "이 제품군은 원시 USB를 사용하며, 제품 목록이 Apple에서 서명되어 있으므로 USB 확장 프로그램이 이 컨트롤러를 점유할 수 없습니다. OJD는 macOS가 허용하는 경우에만 직접 USB 접근으로 이 컨트롤러에 도달합니다.";
 "cli.record.usb_only_switch2" = "USB 전용: 컨트롤러를 Bluetooth LE로 연결하려면 이 Switch 2 레코드에 bluetoothLE.vibrationCharacteristic을 추가하십시오.";
 "cli.record.validate.abstract" = "컨트롤러 레코드를 설치하지 않고 확인합니다.";
@@ -1985,3 +1986,26 @@
 "controllers.disconnectWireless.failure.missingAddress" = "컨트롤러의 블루투스 주소를 알 수 없음";
 "controllers.disconnectWireless.failure.disconnectFailed" = "블루투스가 컨트롤러 연결을 끊지 못함";
 "controllers.disconnectWireless.failure.timedOut" = "연결 해제 시간이 초과됨";
+
+/* Status line of a service that cannot be reached because its request listener stopped. %1$@ is the error code, %2$@ its explanation, %3$@ the error number of the failed call, %4$@ the time it stopped. */
+"status.listenerFailure.detail" = "%1$@: %2$@ (오류 번호 %3$@, %4$@)";
+/* Reason the listener failure file cannot be used: its size exceeds what the service writes. Fills the reason in the error E2035 message. */
+"status.listenerFailure.tooLarge" = "파일이 너무 큽니다";
+/* Row label in the ojd status table that gives why the stopped service's request listener stopped. */
+"cli.status.listenerFailure.label" = "요청 수신기";
+/* Label of the button in the problem banner that starts the service's stopped request listener again. */
+"status.listenerFailure.restart" = "수신기 다시 시작";
+/* Status line when restarting the request listener failed. %@ is the error number of the failed call. */
+"status.listenerFailure.restartFailed" = "요청 수신기를 다시 시작하지 못했습니다(오류 번호 %@). OpenJoystickDriver를 종료했다가 다시 여세요.";
+/* Status line of a service that is not running when its last request listener stopped with an error. %@ is the error code with its explanation, the error number and the time. */
+"status.listenerFailure.earlier" = "서비스가 실행 중이 아닙니다. 마지막 요청 수신기가 중지되었습니다: %@";
+/* Status line when the request listener cannot be restarted because the service is stopping or has not started. */
+"status.listenerFailure.restartUnavailable" = "서비스가 중지되는 중이거나 아직 시작되지 않아 요청 수신기를 다시 시작할 수 없습니다.";
+/* Status line when restarting the request listener failed for a reason that is not an error number. %@ is the reason. */
+"status.listenerFailure.restartFailedReason" = "요청 수신기를 다시 시작하지 못했습니다: %@. OpenJoystickDriver를 종료했다가 다시 여세요.";
+/* Reason the listener failure file cannot be used: it is not a regular file. Fills the reason in the error E2035 message. */
+"status.listenerFailure.notRegularFile" = "파일이 일반 파일이 아닙니다";
+/* Reason the listener failure file cannot be used: another user owns it, so ojd must run as that user. Fills the reason in the error E2035 message. */
+"status.listenerFailure.otherUser" = "기록이 다른 사용자의 것입니다. 해당 사용자로 ojd를 실행하세요";
+/* Reason the listener failure file cannot be used: the system would not say whether the process that wrote it runs. %1$@ is the system's reason, %2$@ the error number. Fills the reason in the error E2035 message. */
+"status.listenerFailure.processCheckFailed" = "서비스 프로세스가 실행 중인지 확인하지 못했습니다: %1$@ (오류 번호 %2$@)";

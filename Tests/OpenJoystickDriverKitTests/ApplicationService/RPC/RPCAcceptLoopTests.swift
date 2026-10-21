@@ -26,6 +26,14 @@ private final class Reports: @unchecked Sendable {
   var all: [String] { lock.withLock { lines } }
 }
 
+private final class Changes: @unchecked Sendable {
+  private let lock = NSLock()
+  private var values: [ServiceListenerFailure?] = []
+
+  func add(_ failure: ServiceListenerFailure?) { lock.withLock { values.append(failure) } }
+  var all: [ServiceListenerFailure?] { lock.withLock { values } }
+}
+
 @Suite(.serialized)
 struct RPCAcceptLoopTests {
   private func makeServer(
@@ -203,8 +211,10 @@ struct RPCAcceptLoopTests {
     let reports = Reports()
     let exited = DispatchSemaphore(value: 0)
     let failures = Counter()
+    let changes = Changes()
     server.report = reports.add
     server.acceptLoopDidExit = { exited.signal() }
+    server.listenerFailureChanged = changes.add
     server.acceptConnection = { descriptor in
       if failures.next() == 0 {
         errno = EBADF
@@ -220,11 +230,105 @@ struct RPCAcceptLoopTests {
     let line = try #require(reports.all.first)
     #expect(line.contains(ErrorCode.requestListenerStopped.rawValue))
     #expect(line.contains(ErrorCode.requestListenerStopped.localizedExplanation))
+    // The service records why and tells its owner; the process keeps running.
+    guard case .stopped(let recorded) = ServiceListenerFailure.read(socketPath: server.socketPath)
+    else {
+      Issue.record("Expected the listener failure file")
+      return
+    }
+    #expect(recorded.code == .requestListenerStopped)
+    #expect(recorded.errorNumber == EBADF)
+    #expect(recorded.process == .current)
+    #expect(abs(recorded.time.timeIntervalSinceNow) < 60)
+    // The start cleared the record (nil), then the loop's failure arrived.
+    #expect(changes.all == [nil, recorded])
     // The loop released the listener, so the server starts again and stopping is safe.
     server.stop()
     try server.start()
     defer { server.stop() }
     #expect(try await call(server) == 5)
+    // A successful start deletes the record of the last failure and tells the owner.
+    #expect(ServiceListenerFailure.read(socketPath: server.socketPath) == .absent)
+    #expect(changes.all == [nil, recorded, nil])
+  }
+
+  @Test
+  func aFailedPollEndsTheLoopAsAFailureToo() async throws {
+    let server = makeServer()
+    let exited = DispatchSemaphore(value: 0)
+    let changes = Changes()
+    server.acceptLoopDidExit = { exited.signal() }
+    server.listenerFailureChanged = changes.add
+    server.report = { _ in }
+    server.acceptConnection = { _ in
+      errno = EINVAL
+      return -1
+    }
+    try server.start()
+    let client = try connect(server)
+    defer { Darwin.close(client) }
+
+    #expect(try await waitForExit(exited))
+    guard case .stopped(let recorded) = ServiceListenerFailure.read(socketPath: server.socketPath)
+    else {
+      Issue.record("Expected the listener failure file")
+      return
+    }
+    #expect(recorded.errorNumber == EINVAL)
+    try ServiceListenerFailure.clear(socketPath: server.socketPath)
+  }
+
+  @Test
+  func stoppingTheServerRecordsNoFailure() async throws {
+    let server = makeServer()
+    let exited = DispatchSemaphore(value: 0)
+    let changes = Changes()
+    server.acceptLoopDidExit = { exited.signal() }
+    server.listenerFailureChanged = changes.add
+    try server.start()
+    server.stop()
+
+    #expect(try await waitForExit(exited))
+    #expect(changes.all == [nil])
+    #expect(ServiceListenerFailure.read(socketPath: server.socketPath) == .absent)
+  }
+
+  @Test
+  func anOrderlyStopDeletesTheRecordOfAFailedListener() async throws {
+    let server = makeServer()
+    let exited = DispatchSemaphore(value: 0)
+    server.acceptLoopDidExit = { exited.signal() }
+    server.report = { _ in }
+    server.acceptConnection = { _ in
+      errno = EBADF
+      return -1
+    }
+    try server.start()
+    let client = try connect(server)
+    defer { Darwin.close(client) }
+    #expect(try await waitForExit(exited))
+    guard case .stopped = ServiceListenerFailure.read(socketPath: server.socketPath) else {
+      Issue.record("Expected the listener failure file")
+      return
+    }
+
+    server.stop()
+
+    #expect(ServiceListenerFailure.read(socketPath: server.socketPath) == .absent)
+  }
+
+  @Test
+  func aStartDeletesTheFileOfAnEarlierFailure() throws {
+    let server = makeServer()
+    try ServiceListenerFailure(errorNumber: EBADF, time: Date(), process: .current)
+      .write(
+        socketPath: server.socketPath
+      )
+
+    try server.start()
+    defer { server.stop() }
+
+    #expect(ServiceListenerFailure.read(socketPath: server.socketPath) == .absent)
   }
 }
 

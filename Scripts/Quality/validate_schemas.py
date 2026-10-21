@@ -48,6 +48,9 @@ ACCESS_GRANT_FIXTURES = (
 SETTINGS_FIXTURES = (
     ROOT / "Tests" / "RepositoryScripts" / "fixtures" / "settings.json",
 )
+SERVICE_LISTENER_FAILURE_FIXTURES = (
+    ROOT / "Tests" / "RepositoryScripts" / "fixtures" / "service_listener_failure.json",
+)
 # The schema of each kind of file in the sample mod package, by its folder. A `Controllers`
 # file is a `ControllerPatch` or a `Controller`, which its `kind` tells apart.
 SAMPLE_FOLDER_SCHEMAS = {
@@ -380,6 +383,11 @@ def main() -> int:
         validate_documents(
             documents["settings.schema.json"], registry, list(SETTINGS_FIXTURES)
         )
+        validate_documents(
+            documents["service-listener-failure.schema.json"],
+            registry,
+            list(SERVICE_LISTENER_FAILURE_FIXTURES),
+        )
         validate_live_support_report(documents["report.schema.json"], registry)
     except (
         OSError,
@@ -400,7 +408,9 @@ def main() -> int:
         f"{len(protocols)} protocol descriptions, "
         f"{len(virtual_devices)} virtual devices, {len(samples)} sample mod files, "
         f"{len(ACCESS_GRANT_FIXTURES)} access grant fixtures, "
-        f"{len(SETTINGS_FIXTURES)} settings fixtures, the error code catalog, the control crosswalk, "
+        f"{len(SETTINGS_FIXTURES)} settings fixtures, "
+        f"{len(SERVICE_LISTENER_FAILURE_FIXTURES)} service listener failure fixtures, "
+        "the error code catalog, the control crosswalk, "
         "and one live support report."
     )
     return 0

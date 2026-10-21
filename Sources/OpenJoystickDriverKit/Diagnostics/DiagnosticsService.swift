@@ -33,31 +33,38 @@ public struct DiagnoseServiceSnapshot: Sendable {
   public let status: ApplicationServiceStatusPayload?
   public let virtualDiagnostics: ApplicationServiceVirtualDeviceDiagnosticsPayload?
   public let frameTimings: ApplicationServiceFrameTimingsPayload?
+  /// The record of why the service's request listener stopped; only read while the service is
+  /// stopped.
+  public let listenerFailure: ServiceListenerFailure.Reading
 
   public init(
     availability: Availability,
     status: ApplicationServiceStatusPayload?,
     virtualDiagnostics: ApplicationServiceVirtualDeviceDiagnosticsPayload?,
-    frameTimings: ApplicationServiceFrameTimingsPayload?
+    frameTimings: ApplicationServiceFrameTimingsPayload?,
+    listenerFailure: ServiceListenerFailure.Reading
   ) {
     self.availability = availability
     self.status = status
     self.virtualDiagnostics = virtualDiagnostics
     self.frameTimings = frameTimings
+    self.listenerFailure = listenerFailure
   }
 }
 
 extension DiagnoseServiceSnapshot {
   /// Asks the service once; a stopped or failing service never throws. `classify` turns the error
   /// of a failed status request into the availability; ``availability(after:)`` is the rule for
-  /// the Kit client errors.
+  /// the Kit client errors. A stopped service gets `listenerFailure`, the record of why its
+  /// request listener stopped.
   @preconcurrency
   public static func gather(
     status: @Sendable () async throws -> ApplicationServiceStatusPayload,
     virtualDiagnostics:
       @Sendable () async throws -> ApplicationServiceVirtualDeviceDiagnosticsPayload,
     frameTimings: @Sendable () async throws -> ApplicationServiceFrameTimingsPayload,
-    classify: @Sendable (any Error) -> Availability = { availability(after: $0) }
+    classify: @Sendable (any Error) -> Availability = { availability(after: $0) },
+    listenerFailure: @Sendable () -> ServiceListenerFailure.Reading
   ) async -> Self {
     do {
       let payload = try await status()
@@ -65,14 +72,17 @@ extension DiagnoseServiceSnapshot {
         availability: .running,
         status: payload,
         virtualDiagnostics: try? await virtualDiagnostics(),
-        frameTimings: try? await frameTimings()
+        frameTimings: try? await frameTimings(),
+        listenerFailure: .absent
       )
     } catch {
+      let availability = classify(error)
       return Self(
-        availability: classify(error),
+        availability: availability,
         status: nil,
         virtualDiagnostics: nil,
-        frameTimings: nil
+        frameTimings: nil,
+        listenerFailure: availability == .stopped ? listenerFailure() : .absent
       )
     }
   }
@@ -191,7 +201,16 @@ public enum DiagnosticsService {
         localization.formatted("cli.diagnose.service.running", arguments: [version])
       )
     case .stopped:
-      return DiagnoseCheck("service", .warn, localization.string("cli.diagnose.service.stopped"))
+      switch snapshot.listenerFailure {
+      case .absent:
+        return DiagnoseCheck("service", .warn, localization.string("cli.diagnose.service.stopped"))
+      case .stopped(let failure):
+        return DiagnoseCheck("service", .fail, failure.localizedSummary)
+      case .earlier(let failure):
+        return DiagnoseCheck("service", .warn, failure.localizedEarlierSummary)
+      case .unreadable(let problem):
+        return DiagnoseCheck("service", .fail, problem.localizedDescription)
+      }
     case .failed(let message): return DiagnoseCheck("service", .fail, message)
     }
   }

@@ -3443,6 +3443,37 @@
             },
             "version": {
               "type": "string"
+            },
+            "listenerFailure": {
+              "description": "Present while the service is stopped and left a record that its request listener stopped.",
+              "type": "object",
+              "required": ["code", "errno", "time", "message", "current"],
+              "additionalProperties": false,
+              "properties": {
+                "code": {
+                  "const": "E2034"
+                },
+                "errno": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "time": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "message": {
+                  "description": "The code with its localized text, the error number and the time.",
+                  "type": "string"
+                },
+                "current": {
+                  "description": "True while the process that recorded the failure runs; false when the service is not running and the failure is why its last listener stopped.",
+                  "type": "boolean"
+                }
+              }
+            },
+            "listenerFailureProblem": {
+              "description": "Present while the service is stopped and the record of its listener failure cannot be used: the localized problem.",
+              "type": "string"
             }
           }
         },

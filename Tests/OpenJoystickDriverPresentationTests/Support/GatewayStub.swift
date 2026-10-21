@@ -34,6 +34,8 @@ actor GatewayStub: ApplicationServiceGateway {
   var statusPayload: ApplicationServiceStatusPayload
   var snapshotPayload: ApplicationServiceRemappingSnapshotPayload
   var statusShouldFail: Bool
+  /// The error a status read throws instead of `.timeout` when `statusShouldFail`.
+  let statusError: ApplicationServiceClientError
   let statusReadDelayNanoseconds: UInt64
   let inputState: ControllerState?
   let inputSequence: [ControllerState]?
@@ -92,6 +94,7 @@ actor GatewayStub: ApplicationServiceGateway {
         postEventAccess: .granted
       ),
     statusShouldFail: Bool = false,
+    statusError: ApplicationServiceClientError = .timeout,
     statusReadDelayNanoseconds: UInt64 = 0,
     inputState: ControllerState? = nil,
     inputSequence: [ControllerState]? = nil,
@@ -108,6 +111,7 @@ actor GatewayStub: ApplicationServiceGateway {
     self.statusPayload = statusPayload
     self.snapshotPayload = snapshotPayload
     self.statusShouldFail = statusShouldFail
+    self.statusError = statusError
     self.statusReadDelayNanoseconds = statusReadDelayNanoseconds
     self.inputState = inputState
     self.inputSequence = inputSequence
@@ -134,7 +138,7 @@ actor GatewayStub: ApplicationServiceGateway {
       try await Task.sleep(nanoseconds: statusReadDelayNanoseconds)
     }
     if statusReadsAreGated { await withCheckedContinuation { statusReadContinuations.append($0) } }
-    if statusShouldFail { throw ApplicationServiceClientError.timeout }
+    if statusShouldFail { throw statusError }
     return statusPayload
   }
 

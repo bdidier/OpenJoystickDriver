@@ -18,7 +18,8 @@ struct DiagnosticsServiceTests {
         availability: .running,
         status: status,
         virtualDiagnostics: nil,
-        frameTimings: nil
+        frameTimings: nil,
+        listenerFailure: .absent
       )
     )
 

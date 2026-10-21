@@ -4,6 +4,7 @@ import OpenJoystickDriverKit
 extension DiagnoseServiceSnapshot {
   /// Asks the service once; a stopped or failing service never throws.
   static func fetch() async -> Self {
+    let socketPath = ServiceConnection.socketPath
     do {
       return try await ServiceConnection.request { client in
         await gather(
@@ -16,18 +17,26 @@ extension DiagnoseServiceSnapshot {
               return .stopped
             }
             return .failed((failure as? CLIFailure)?.message ?? failure.localizedDescription)
-          }
+          },
+          listenerFailure: { ServiceListenerFailure.read(socketPath: socketPath) }
         )
       }
     } catch let failure as CLIFailure where failure.code == .serviceUnavailable {
-      return Self(availability: .stopped, status: nil, virtualDiagnostics: nil, frameTimings: nil)
+      return Self(
+        availability: .stopped,
+        status: nil,
+        virtualDiagnostics: nil,
+        frameTimings: nil,
+        listenerFailure: ServiceListenerFailure.read(socketPath: socketPath)
+      )
     } catch {
       let message = (error as? CLIFailure)?.message ?? error.localizedDescription
       return Self(
         availability: .failed(message),
         status: nil,
         virtualDiagnostics: nil,
-        frameTimings: nil
+        frameTimings: nil,
+        listenerFailure: .absent
       )
     }
   }

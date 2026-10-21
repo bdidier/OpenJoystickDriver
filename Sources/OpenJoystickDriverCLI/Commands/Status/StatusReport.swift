@@ -6,9 +6,61 @@ import OpenJoystickDriverKit
 /// Keys and enum values are stable identifiers. Fields that only the service can report are
 /// absent while it is stopped.
 struct StatusReport: Encodable, Equatable {
+  /// Why the stopped service's request listener stopped, from the record that the service
+  /// leaves beside its socket.
+  struct ListenerFailure: Encodable, Equatable {
+    let code: String
+    let errorNumber: Int
+    let time: String
+    /// The code with its localized text, the error number and the time.
+    let message: String
+    /// True while the process that recorded the failure runs; false when the service is not
+    /// running and the failure is the reason its last listener stopped.
+    let current: Bool
+
+    enum CodingKeys: String, CodingKey {
+      case code, errorNumber = "errno", time, message, current
+    }
+
+    init(_ failure: ServiceListenerFailure, current: Bool) {
+      self.current = current
+      code = failure.code.rawValue
+      errorNumber = Int(failure.errorNumber)
+      time = failure.time.formatted(Date.ISO8601FormatStyle())
+      message = current ? failure.localizedSummary : failure.localizedEarlierSummary
+    }
+  }
+
   struct Service: Encodable, Equatable {
     let state: ServiceStateResult.State
     let version: String?
+    /// Present while the service is stopped and left a record of its listener failure.
+    let listenerFailure: ListenerFailure?
+    /// Present while the service is stopped and the record cannot be used: the localized problem.
+    let listenerFailureProblem: String?
+
+    init(
+      state: ServiceStateResult.State,
+      version: String?,
+      listenerFailure: ServiceListenerFailure.Reading
+    ) {
+      self.state = state
+      self.version = version
+      switch listenerFailure {
+      case .absent:
+        self.listenerFailure = nil
+        listenerFailureProblem = nil
+      case .stopped(let failure):
+        self.listenerFailure = ListenerFailure(failure, current: true)
+        listenerFailureProblem = nil
+      case .earlier(let failure):
+        self.listenerFailure = ListenerFailure(failure, current: false)
+        listenerFailureProblem = nil
+      case .unreadable(let problem):
+        self.listenerFailure = nil
+        listenerFailureProblem = problem.localizedDescription
+      }
+    }
   }
 
   struct Extension: Encodable, Equatable {
@@ -104,7 +156,8 @@ struct StatusReport: Encodable, Equatable {
     commandLineTool: CommandLineToolLinkStatus,
     skippedRecords: [SkippedRecord] = [],
     ignoredDefaults: SkippedRecord? = nil,
-    skippedPersonas: [SkippedRecord] = []
+    skippedPersonas: [SkippedRecord] = [],
+    listenerFailure: ServiceListenerFailure.Reading
   ) {
     self.transportExtension = Extension(extensionStatus)
     self.commandLineTool = CommandLineTool(commandLineTool)
@@ -112,7 +165,7 @@ struct StatusReport: Encodable, Equatable {
     self.ignoredDefaults = ignoredDefaults
     self.skippedPersonas = skippedPersonas
     guard let payload else {
-      service = Service(state: .stopped, version: nil)
+      service = Service(state: .stopped, version: nil, listenerFailure: listenerFailure)
       permissions = nil
       virtualDevice = nil
       controllers = nil
@@ -120,7 +173,11 @@ struct StatusReport: Encodable, Equatable {
       passThroughDevices = nil
       return
     }
-    service = Service(state: .running, version: payload.buildIdentity.semanticVersion)
+    service = Service(
+      state: .running,
+      version: payload.buildIdentity.semanticVersion,
+      listenerFailure: .absent
+    )
     permissions = Permissions(
       inputRead: payload.inputRead,
       inputInject: payload.inputInject

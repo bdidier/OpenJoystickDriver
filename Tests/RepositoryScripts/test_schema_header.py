@@ -44,6 +44,7 @@ def instances() -> dict[str, dict[str, Any]]:
         "access-grants": load(FIXTURES / "access_grants.json"),
         "protocol-description": load(ROOT / "Resources/Protocols/xbox-xusb.json"),
         "settings": load(FIXTURES / "settings.json"),
+        "service-listener-failure": load(FIXTURES / "service_listener_failure.json"),
     }
 
 
