@@ -22,7 +22,7 @@ package struct RepositoryProblem: Error, Equatable, Sendable {
   /// of that kind. A ``RepositoryProblem`` is reported as it is. An error that no record rule
   /// names is ``ErrorCode/unexpected``.
   init(file: String, error: any Error, document: String) {
-    if let problem = error as? RepositoryProblem {
+    if let problem = error as? Self {
       self = problem
       return
     }
@@ -43,7 +43,7 @@ package struct RepositoryProblem: Error, Equatable, Sendable {
   }
 
   /// The bytes of the file `url`, or the ``ErrorCode/fileAccessFailed`` problem of reading it.
-  static func read(_ url: URL) throws(RepositoryProblem) -> Data {
+  static func read(_ url: URL) throws(Self) -> Data {
     do { return try Data(contentsOf: url) } catch { throw fileAccess(url.path, error) }
   }
 }
