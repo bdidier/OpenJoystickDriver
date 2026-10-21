@@ -1313,6 +1313,7 @@
 "cli.record.draft.next" = "將記錄儲存到檔案，檢查每個控制項，然後執行「ojd record validate FILE」。";
 "cli.record.draft.no_layout" = "無法從 %@ 的 HID 報告描述元讀取任何控制項，而且其內建記錄已指定協定系列。「ojd record show %@」會顯示該記錄。";
 "cli.record.draft.started" = "按下 %@（%@）上的每個控制項，並移動每個搖桿和扳機。";
+"cli.record.draft.unwritableNumber" = "--json 無法在不改變數值的情況下寫出數字 %1$@（位於 %2$@）。請不加 --json 執行「ojd record draft」，以查看記錄文字。";
 "cli.record.error.unreadable" = "無法讀取 %@：%@";
 "cli.record.file" = "記錄檔案，或用 - 從 stdin 讀取記錄。";
 "cli.record.identity" = "控制器型號，格式為 VVVV:PPPP。";
@@ -1335,6 +1336,7 @@
 "cli.record.remove.success" = "已刪除 %@。";
 "cli.record.show.abstract" = "顯示某一控制器型號的生效記錄，以及各部分所屬的層。";
 "cli.record.show.not_found" = "沒有 %@ 的控制器記錄。「ojd record list」會顯示所有記錄。";
+"cli.record.show.unwritableNumber" = "--json 無法在不改變數值的情況下寫出數字 %1$@（位於 %2$@）。請不加 --json 執行「ojd record show」，以查看記錄文字。";
 "cli.record.skipped" = "已略過 %@：%@";
 "cli.record.test.abstract" = "以記錄的解析器重播已擷取的報告，並比較解析出的狀態。";
 "cli.record.test.capture_invalid" = "%@ 不是封包擷取檔：%@";
@@ -1362,6 +1364,7 @@
 "error.E2033" = "無法啟動程式。請檢查其路徑指向可執行檔或 App，並且你有權執行它。";
 "error.E2034" = "服務已停止接受要求。請結束並重新打開 OpenJoystickDriver，然後重試。";
 "error.E2035" = "無法使用記錄要求監聽停止原因的檔案。請刪除該檔案，然後重新打開 OpenJoystickDriver。";
+"error.E2036" = "--json 輸出無法在不改變數值的情況下寫出記錄中的某個數字。請不加 --json 執行指令，以查看記錄文字。";
 "cli.record.usb_not_claimed" = "此系列使用原始 USB，USB 延伸功能無法接管此控制器，因為其產品清單由 Apple 簽署。只有在 macOS 允許時，OJD 才能透過直接 USB 存取使用它。";
 "cli.record.usb_only_switch2" = "僅限 USB：如要透過低功耗藍牙連接控制器，請將 bluetoothLE.vibrationCharacteristic 加入此 Switch 2 記錄。";
 "cli.record.validate.abstract" = "檢查控制器記錄，但不安裝。";

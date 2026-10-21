@@ -1313,6 +1313,7 @@
 "cli.record.draft.next" = "Save the record to a file, check each control, then run 'ojd record validate FILE'.";
 "cli.record.draft.no_layout" = "No control of %@ could be read from its HID report descriptor, and its bundled record already names its family. 'ojd record show %@' shows that record.";
 "cli.record.draft.started" = "Press every control on %@ (%@), and move each stick and trigger.";
+"cli.record.draft.unwritableNumber" = "--json cannot write the number %1$@ at %2$@ without changing its value. Run 'ojd record draft' without --json to see the record text.";
 "cli.record.error.unreadable" = "Cannot read %@: %@";
 "cli.record.file" = "A record file, or - to read the record from stdin.";
 "cli.record.identity" = "The controller model, as VVVV:PPPP.";
@@ -1335,6 +1336,7 @@
 "cli.record.remove.success" = "Deleted %@.";
 "cli.record.show.abstract" = "Show the effective record of one controller model and the layer of each part.";
 "cli.record.show.not_found" = "No controller record for %@. 'ojd record list' shows every record.";
+"cli.record.show.unwritableNumber" = "--json cannot write the number %1$@ at %2$@ without changing its value. Run 'ojd record show' without --json to see the record text.";
 "cli.record.skipped" = "Skipped %@: %@";
 "cli.record.test.abstract" = "Replay captured reports through a record's parser and compare the parsed state.";
 "cli.record.test.capture_invalid" = "%@ is not a packet capture: %@";
@@ -1578,6 +1580,7 @@
 "error.E2033" = "The program could not be started. Check that its path names an executable file or an app, and that you may run it.";
 "error.E2034" = "The service stopped accepting requests. Quit and reopen OpenJoystickDriver, then try again.";
 "error.E2035" = "The file that records why the request listener stopped cannot be used. Delete the file, then open OpenJoystickDriver again.";
+"error.E2036" = "The --json output cannot write a number of the record without changing its value. Run the command without --json to see the record text.";
 "error.E3001" = "The controller is not connected or not ready for remapping. Reconnect it and try again.";
 "error.E3002" = "The selected Joy-Cons could not be paired. Refresh the connected controllers and try again.";
 "error.E3003" = "The controller does not report motion data. Choose a controller with motion sensors, or leave motion options off.";

@@ -1313,6 +1313,7 @@
 "cli.record.draft.next" = "Speichere den Eintrag in einer Datei, prüfe jedes Bedienelement und führe dann „ojd record validate FILE“ aus.";
 "cli.record.draft.no_layout" = "Aus dem HID-Report-Deskriptor von %@ ließ sich kein Bedienelement auslesen, und der mitgelieferte Eintrag nennt bereits die Familie. „ojd record show %@“ zeigt diesen Eintrag.";
 "cli.record.draft.started" = "Betätige jedes Bedienelement an %@ (%@) und bewege jeden Stick und jeden Trigger.";
+"cli.record.draft.unwritableNumber" = "--json kann die Zahl %1$@ unter %2$@ nicht schreiben, ohne ihren Wert zu ändern. Führe „ojd record draft“ ohne --json aus, um den Text des Eintrags zu sehen.";
 "cli.record.error.unreadable" = "%@ kann nicht gelesen werden: %@";
 "cli.record.file" = "Eine Eintragsdatei oder -, um den Eintrag von der Standardeingabe zu lesen.";
 "cli.record.identity" = "Das Controller-Modell als VVVV:PPPP.";
@@ -1335,6 +1336,7 @@
 "cli.record.remove.success" = "%@ wurde gelöscht.";
 "cli.record.show.abstract" = "Den wirksamen Eintrag eines Controller-Modells und die Ebene jedes Teils anzeigen.";
 "cli.record.show.not_found" = "Kein Controller-Eintrag für %@. „ojd record list“ zeigt jeden Eintrag.";
+"cli.record.show.unwritableNumber" = "--json kann die Zahl %1$@ unter %2$@ nicht schreiben, ohne ihren Wert zu ändern. Führe „ojd record show“ ohne --json aus, um den Text des Eintrags zu sehen.";
 "cli.record.skipped" = "%@ übersprungen: %@";
 "cli.record.test.abstract" = "Aufgezeichnete Reports durch den Parser eines Eintrags laufen lassen und den geparsten Zustand vergleichen.";
 "cli.record.test.capture_invalid" = "%@ ist keine Paketaufzeichnung: %@";
@@ -1362,6 +1364,7 @@
 "error.E2033" = "Das Programm konnte nicht gestartet werden. Prüfen Sie, ob sein Pfad eine ausführbare Datei oder eine App benennt und ob Sie sie ausführen dürfen.";
 "error.E2034" = "Der Dienst nimmt keine Anfragen mehr an. Beende OpenJoystickDriver, öffne es erneut und versuche es dann noch einmal.";
 "error.E2035" = "Die Datei, die festhält, warum die Anfrageannahme beendet wurde, lässt sich nicht verwenden. Lösche die Datei und öffne OpenJoystickDriver dann erneut.";
+"error.E2036" = "Die Ausgabe mit --json kann eine Zahl des Eintrags nicht schreiben, ohne ihren Wert zu ändern. Führe den Befehl ohne --json aus, um den Text des Eintrags zu sehen.";
 "cli.record.usb_not_claimed" = "Die Familie nutzt rohes USB, und die USB-Erweiterung kann diesen Controller nicht übernehmen, weil ihre Produktliste von Apple signiert ist. OJD erreicht ihn nur über direkten USB-Zugriff, sofern macOS ihn erlaubt.";
 "cli.record.usb_only_switch2" = "Nur USB: bluetoothLE.vibrationCharacteristic zu diesem Switch 2-Eintrag hinzufügen, um den Controller über Bluetooth LE zu verbinden.";
 "cli.record.validate.abstract" = "Einen Controller-Eintrag prüfen, ohne ihn zu installieren.";

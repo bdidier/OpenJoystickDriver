@@ -1313,6 +1313,7 @@
 "cli.record.draft.next" = "Simpan catatan ke file, periksa setiap kontrol, lalu jalankan “ojd record validate FILE”.";
 "cli.record.draft.no_layout" = "Tidak ada kontrol %@ yang dapat dibaca dari deskriptor laporan HID-nya, dan catatan bawaannya sudah menyebut familinya. “ojd record show %@” menampilkan catatan itu.";
 "cli.record.draft.started" = "Tekan setiap kontrol pada %@ (%@), dan gerakkan setiap stik dan pemicu.";
+"cli.record.draft.unwritableNumber" = "--json tidak dapat menulis angka %1$@ di %2$@ tanpa mengubah nilainya. Jalankan “ojd record draft” tanpa --json untuk melihat teks catatan.";
 "cli.record.error.unreadable" = "Tidak dapat membaca %@: %@";
 "cli.record.file" = "File catatan, atau - untuk membaca catatan dari stdin.";
 "cli.record.identity" = "Model pengontrol, sebagai VVVV:PPPP.";
@@ -1335,6 +1336,7 @@
 "cli.record.remove.success" = "%@ dihapus.";
 "cli.record.show.abstract" = "Tampilkan catatan efektif satu model pengontrol dan lapisan setiap bagiannya.";
 "cli.record.show.not_found" = "Tidak ada catatan pengontrol untuk %@. “ojd record list” menampilkan setiap catatan.";
+"cli.record.show.unwritableNumber" = "--json tidak dapat menulis angka %1$@ di %2$@ tanpa mengubah nilainya. Jalankan “ojd record show” tanpa --json untuk melihat teks catatan.";
 "cli.record.skipped" = "%@ dilewati: %@";
 "cli.record.test.abstract" = "Putar ulang laporan yang ditangkap melalui parser sebuah catatan dan bandingkan status hasil parse.";
 "cli.record.test.capture_invalid" = "%@ bukan tangkapan paket: %@";
@@ -1362,6 +1364,7 @@
 "error.E2033" = "Program tidak dapat dimulai. Periksa bahwa jalurnya menunjuk berkas yang dapat dieksekusi atau sebuah app, dan Anda boleh menjalankannya.";
 "error.E2034" = "Layanan berhenti menerima permintaan. Tutup OpenJoystickDriver, buka lagi, lalu coba lagi.";
 "error.E2035" = "File yang mencatat alasan pendengar permintaan berhenti tidak dapat digunakan. Hapus file itu, lalu buka OpenJoystickDriver lagi.";
+"error.E2036" = "Keluaran --json tidak dapat menulis sebuah angka dari catatan tanpa mengubah nilainya. Jalankan perintah tanpa --json untuk melihat teks catatan.";
 "cli.record.usb_not_claimed" = "Famili ini menggunakan USB mentah, dan ekstensi USB tidak dapat mengklaim pengontrol ini, karena daftar produknya ditandatangani Apple. OJD hanya menjangkaunya melalui akses USB langsung, jika macOS mengizinkan.";
 "cli.record.usb_only_switch2" = "Hanya USB: tambahkan bluetoothLE.vibrationCharacteristic ke catatan Switch 2 ini untuk menghubungkan pengontrol melalui Bluetooth LE.";
 "cli.record.validate.abstract" = "Periksa catatan pengontrol tanpa menginstalnya.";

@@ -289,4 +289,28 @@ struct RecordCommandTests {
     #expect(result.code == 1)
     #expect(result.standardError.contains("ojd record show 045E:028E"))
   }
+
+  /// A record number that `--json` cannot write without changing its value fails the command
+  /// with E2036 and names the number and its place in the document, for `record show` and
+  /// `record draft`.
+  @Test(arguments: ["cli.record.show.unwritableNumber", "cli.record.draft.unwritableNumber"])
+  func aRecordNumberThatJSONCannotHoldFailsWithItsPlace(_ key: String) {
+    struct Output: Encodable { let record: OrderedJSON }
+    let scale = OrderedJSON.object([OrderedJSON.Member(key: "scale", value: .number("1e400"))])
+    let record = OrderedJSON.object([OrderedJSON.Member(key: "modes", value: .array([scale]))])
+    let failure = #expect(throws: CLIFailure.self) {
+      try RecordJSONOutput.print(
+        message: { CLILocalized.format(key, $0, $1) },
+        Output(record: record)
+      )
+    }
+    #expect(failure?.id == .unwritableJSONNumber)
+    #expect(failure?.code == CLIExitCode(for: .unwritableJSONNumber))
+    #expect(
+      failure?.line
+        == "error[E2036]: --json cannot write the number 1e400 at record.modes.0.scale without "
+        + "changing its value. Run 'ojd record \(key.contains("show") ? "show" : "draft")' "
+        + "without --json to see the record text."
+    )
+  }
 }

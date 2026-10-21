@@ -1313,6 +1313,7 @@
 "cli.record.draft.next" = "レコードをファイルに保存し、各操作部を確認してから 「ojd record validate FILE」 を実行してください。";
 "cli.record.draft.no_layout" = "%@ の HID レポート記述子から読み取れる操作部がなく、同梱のレコードがすでにファミリーを指定しています。「ojd record show %@」 でそのレコードを確認できます。";
 "cli.record.draft.started" = "%@ (%@) のすべての操作部を押し、各スティックとトリガーを動かしてください。";
+"cli.record.draft.unwritableNumber" = "--json では、数値 %1$@ を %2$@ の位置にその値のまま書き出せません。レコードのテキストを確認するには、--json を付けずに「ojd record draft」を実行してください。";
 "cli.record.error.unreadable" = "%@ を読み取れません: %@";
 "cli.record.file" = "レコードファイル。- を指定すると stdin から読み込みます。";
 "cli.record.identity" = "コントローラのモデル (VVVV:PPPP 形式)。";
@@ -1335,6 +1336,7 @@
 "cli.record.remove.success" = "%@ を削除しました。";
 "cli.record.show.abstract" = "1 つのコントローラモデルの有効なレコードと、各部分のレイヤを表示します。";
 "cli.record.show.not_found" = "%@ のコントローラレコードはありません。「ojd record list」ですべてのレコードを確認できます。";
+"cli.record.show.unwritableNumber" = "--json では、数値 %1$@ を %2$@ の位置にその値のまま書き出せません。レコードのテキストを確認するには、--json を付けずに「ojd record show」を実行してください。";
 "cli.record.skipped" = "%@ をスキップしました: %@";
 "cli.record.test.abstract" = "キャプチャしたレポートをレコードのパーサーで再生し、解析した状態を比較します。";
 "cli.record.test.capture_invalid" = "%@ はパケットキャプチャではありません: %@";
@@ -1362,6 +1364,7 @@
 "error.E2033" = "プログラムを起動できませんでした。パスが実行可能ファイルまたは App を指していること、実行する権限があることを確認してください。";
 "error.E2034" = "サービスがリクエストを受け付けなくなりました。OpenJoystickDriverを終了して開き直してから、もう一度お試しください。";
 "error.E2035" = "リクエストの待ち受けが停止した理由を記録したファイルは使用できません。ファイルを削除してから、OpenJoystickDriverを開き直してください。";
+"error.E2036" = "--json の出力では、レコードに含まれる数値をその値のまま書き出せません。レコードのテキストを確認するには、--json を付けずにコマンドを実行してください。";
 "cli.record.usb_not_claimed" = "このファミリーは生の USB を使用しますが、製品リストが Apple によって署名されているため、USB 機能拡張はこのコントローラを占有できません。OJD は、macOS が許可する場合にのみ、直接 USB アクセスでこのコントローラに接続します。";
 "cli.record.usb_only_switch2" = "USB のみ。コントローラを Bluetooth LE で接続するには、この Switch 2 レコードに bluetoothLE.vibrationCharacteristic を追加してください。";
 "cli.record.validate.abstract" = "コントローラのレコードをインストールせずに確認します。";
