@@ -314,7 +314,7 @@ enum GUICoverageEntries {
 /// The GUI sources, scanned for the declarations the entries name.
 enum GUISources {
   /// The repository root, from this file's place under `Tests/<target>/Support`.
-  static let root: URL = URL(fileURLWithPath: #filePath)
+  static let root = URL(fileURLWithPath: #filePath)
     .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
     .deletingLastPathComponent()
 
