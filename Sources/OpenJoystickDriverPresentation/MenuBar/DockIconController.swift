@@ -40,7 +40,8 @@
       guard desiredPolicy != appliedPolicy else { return }
       guard setActivationPolicy(desiredPolicy) else {
         fputs(
-          "macOS refused the Dock icon change to \(desiredPolicy); the next window or setting change retries it.\n",
+          "macOS refused the Dock icon change to \(desiredPolicy); "
+            + "the next window or setting change retries it.\n",
           stderr
         )
         return

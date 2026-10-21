@@ -4,8 +4,8 @@
   import OpenJoystickDriverKit
   import SwiftUI
 
-  /// The command-line tool link, the Xbox USB driver extension, the developer tools switch and, while it is on, the
-  /// developer tools.
+  /// The command-line tool link, the Xbox USB driver extension, the developer tools switch and,
+  /// while it is on, the developer tools.
   struct AdvancedPaneView: View {
     @ObservedObject
     var preferences: SettingsPreferencesModel

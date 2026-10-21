@@ -9,7 +9,7 @@ struct RunLoopCoalescerTests {
   func manySchedulesBeforeTheDeferredTurnRunTheActionOnce() {
     var turns: [@MainActor () -> Void] = []
     var runs = 0
-    let coalescer = RunLoopCoalescer(deferring: { turns.append($0) }) { runs += 1 }
+    let coalescer = RunLoopCoalescer(deferring: { turns.append($0) }, action: { runs += 1 })
 
     coalescer.schedule()
     coalescer.schedule()
@@ -25,7 +25,7 @@ struct RunLoopCoalescerTests {
   func aScheduleAfterTheTurnRunsAgain() {
     var turns: [@MainActor () -> Void] = []
     var runs = 0
-    let coalescer = RunLoopCoalescer(deferring: { turns.append($0) }) { runs += 1 }
+    let coalescer = RunLoopCoalescer(deferring: { turns.append($0) }, action: { runs += 1 })
 
     coalescer.schedule()
     turns.removeFirst()()
