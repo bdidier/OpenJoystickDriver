@@ -185,7 +185,7 @@ struct ControllerClaimCommandTests {
     )
     let beforeOwnership = try #require(try before.json()["ownership"] as? [String: Any])
     #expect(beforeOwnership["server"] as? String == "System")
-    #expect(beforeOwnership["serverSource"] as? String == "default")
+    #expect(beforeOwnership["serverSource"] as? String == "Default")
 
     _ = try await Self.run(
       ["controller", "claim", token("pad-1")],
@@ -199,7 +199,7 @@ struct ControllerClaimCommandTests {
     )
     let afterOwnership = try #require(try after.json()["ownership"] as? [String: Any])
     #expect(afterOwnership["server"] as? String == "OJD")
-    #expect(afterOwnership["serverSource"] as? String == "user")
+    #expect(afterOwnership["serverSource"] as? String == "User")
 
     let plain = try await Self.run(
       ["controller", "show", token("pad-1"), "--plain"],

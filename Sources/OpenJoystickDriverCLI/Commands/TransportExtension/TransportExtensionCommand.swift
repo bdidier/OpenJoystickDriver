@@ -57,19 +57,20 @@ struct TransportExtensionStatusCommand: AsyncParsableCommand {
       case .json: try CLIOutput.json(report)
       case .plain:
         CLIOutput.plain([
-          ["bundle", report.bundle.rawValue], ["registration", report.registration.rawValue],
+          ["bundle", CommandLineName.kebab(report.bundle.rawValue)],
+          ["registration", CommandLineName.kebab(report.registration.rawValue)],
         ])
       case .human:
         CLIOutput.stdout(
           CLILocalized.format(
             "cli.transport_extension.status.bundle",
-            report.bundle.rawValue
+            CommandLineName.kebab(report.bundle.rawValue)
           )
         )
         CLIOutput.stdout(
           CLILocalized.format(
             "cli.transport_extension.status.registration",
-            report.registration.rawValue
+            CommandLineName.kebab(report.registration.rawValue)
           )
         )
         if let detail = report.detail, report.registration != .unavailable {
@@ -92,9 +93,9 @@ struct TransportExtensionStatusCommand: AsyncParsableCommand {
 /// The `--json` result of `transport-extension activate` and `transport-extension deactivate`.
 struct TransportExtensionResult: Encodable, Equatable {
   enum State: String, Encodable {
-    case active
-    case inactive
-    case awaitingApproval
+    case active = "Active"
+    case inactive = "Inactive"
+    case awaitingApproval = "AwaitingApproval"
   }
 
   let state: State
@@ -128,7 +129,7 @@ private func submit(
   }
   switch CLIContext.current.format {
   case .json: try CLIOutput.json(TransportExtensionResult(state: result))
-  case .plain: CLIOutput.plain([["state", result.rawValue]])
+  case .plain: CLIOutput.plain([["state", CommandLineName.kebab(result.rawValue)]])
   case .human:
     if result == .awaitingApproval {
       CLIOutput.stderr(

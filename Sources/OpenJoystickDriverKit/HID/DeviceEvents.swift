@@ -10,12 +10,12 @@ public extension Notification.Name {
 
 /// Observed result of acquiring one physical HID interface, independent of virtual output.
 public enum HIDInputOwnership: String, Codable, Equatable, Sendable {
-  case unknown
-  case exclusive
-  case shared
-  case accessDenied
-  case ownedByAnotherClient
-  case acquisitionFailed
+  case unknown = "Unknown"
+  case exclusive = "Exclusive"
+  case shared = "Shared"
+  case accessDenied = "AccessDenied"
+  case ownedByAnotherClient = "OwnedByAnotherClient"
+  case acquisitionFailed = "AcquisitionFailed"
 
   /// Every interface must be exclusively owned before the location can promise isolation.
   static func combined(_ observations: [Self]) -> Self {

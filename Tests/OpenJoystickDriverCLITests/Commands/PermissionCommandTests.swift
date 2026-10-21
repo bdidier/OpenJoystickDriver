@@ -23,7 +23,8 @@ struct PermissionCommandTests {
   /// A service that answers `getStatus` with `status` and access requests with `snapshot`,
   /// and records the methods it received.
   private func serve(
-    status: (input: String, inputInject: String) = ("granted", "granted"),
+    status: (input: PermissionManager.AccessState, inputInject: PermissionManager.AccessState) =
+      (.granted, .granted),
     snapshot: PermissionManager.Snapshot = Self.allGranted,
     socketPath: String,
     received: Locked<[String]> = Locked([])
@@ -71,7 +72,7 @@ struct PermissionCommandTests {
   @Test
   func listReadsTheRunningServiceAsJSONAndPlainRows() async throws {
     let socketPath = temporarySocketPath()
-    let server = try serve(status: ("denied", "granted"), socketPath: socketPath)
+    let server = try serve(status: (.denied, .granted), socketPath: socketPath)
     defer { server.stop() }
 
     let jsonRun = await run(["permission", "list", "--json"], socketPath: socketPath)
@@ -80,8 +81,8 @@ struct PermissionCommandTests {
     #expect(jsonRun.code == 0, "\(jsonRun.standardError)")
     #expect(jsonRun.standardError.isEmpty)
     let entries = try #require(try jsonRun.json()["items"] as? [[String: String]])
-    #expect(entries.map { $0["id"] } == ["input-read", "input-inject", "usb-transport"])
-    #expect(entries.map { $0["state"] } == ["denied", "granted", "unknown"])
+    #expect(entries.map { $0["id"] } == ["InputRead", "InputInject", "USBTransport"])
+    #expect(entries.map { $0["state"] } == ["Denied", "Granted", "Unknown"])
     #expect(entries[0]["name"] == "Input read")
     #expect(entries[0]["purpose"] == "Read input from physical controllers")
     #expect(
@@ -97,7 +98,7 @@ struct PermissionCommandTests {
     #expect(result.code == 0)
     #expect(!result.standardError.isEmpty)
     let entries = try #require(try result.json()["items"] as? [[String: String]])
-    #expect(entries.map { $0["state"] } == ["denied", "granted", "unknown"])
+    #expect(entries.map { $0["state"] } == ["Denied", "Granted", "Unknown"])
   }
 
   @Test
@@ -179,7 +180,7 @@ struct PermissionCommandTests {
 
     #expect(result.code == 0, "\(result.standardError)")
     let entries = try #require(try result.json()["permissions"] as? [[String: String]])
-    #expect(entries.map { $0["state"] } == ["granted", "granted", "unknown"])
+    #expect(entries.map { $0["state"] } == ["Granted", "Granted", "Unknown"])
     let method = ApplicationServiceRPCMethod.requestRequiredAccess.rawValue
     #expect(received.withLock { $0 } == [method])
   }

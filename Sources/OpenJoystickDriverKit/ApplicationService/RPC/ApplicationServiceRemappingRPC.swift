@@ -37,8 +37,8 @@ public struct ApplicationServiceRemappingProfileIssueArguments: Codable, Sendabl
 
 public struct ApplicationServiceRemappingProfileIssue: Codable, Equatable, Sendable, Identifiable {
   public enum Kind: String, Codable, Sendable {
-    case damagedProfile
-    case unusableLibrary
+    case damagedProfile = "DamagedProfile"
+    case unusableLibrary = "UnusableLibrary"
   }
 
   public let id: UUID

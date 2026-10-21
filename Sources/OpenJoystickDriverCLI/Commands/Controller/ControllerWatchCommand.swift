@@ -382,9 +382,14 @@ struct ControllerCaptureCommand: AsyncParsableCommand {
     switch CLIContext.current.format {
     case .json: try CLIOutput.jsonLine(JSONPacket(entry))
     case .plain:
-      CLIOutput.plain([[time, entry.direction.rawValue, String(entry.length), entry.hex]])
+      CLIOutput.plain([
+        [time, CommandLineName.kebab(entry.direction.rawValue), String(entry.length), entry.hex]
+      ])
     case .human:
-      CLIOutput.stdout("\(time) \(entry.direction.rawValue) len=\(entry.length) \(entry.hex)")
+      CLIOutput.stdout(
+        "\(time) \(CommandLineName.kebab(entry.direction.rawValue)) len=\(entry.length) "
+          + entry.hex
+      )
     }
   }
 }

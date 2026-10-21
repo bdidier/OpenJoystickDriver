@@ -147,7 +147,8 @@ struct ControllerShowCommand: AsyncParsableCommand {
     if let unit = detail.unit { rows.append(["unit", unit]) }
     rows += [
       ["identity", deviceIdentity(vendorID: detail.vendorID, productID: detail.productID)],
-      ["name", detail.name], ["connection", detail.connection], ["protocol", detail.protocol],
+      ["name", detail.name], ["connection", detail.connection],
+      ["protocol", CommandLineName.kebab(detail.protocol)],
       ["session", CommandLineName.kebab(detail.session)],
     ]
     if let power = detail.power {
@@ -158,25 +159,42 @@ struct ControllerShowCommand: AsyncParsableCommand {
     }
     rows += [
       ["input-health", CommandLineName.kebab(detail.inputHealth.state)],
-      ["ownership", detail.ownership.physical],
+      ["ownership", CommandLineName.kebab(detail.ownership.physical)],
       [
         "server", CommandLineName.kebab(detail.ownership.server.rawValue),
-        detail.ownership.serverSource,
+        CommandLineName.kebab(detail.ownership.serverSource),
       ],
-      ["serving-route", detail.serving.route, detail.serving.reason ?? ""],
-      ["persona", detail.serving.persona ?? ""],
-      ["controls", detail.capabilities.controls.joined(separator: ",")],
-      ["rumble-motors", detail.capabilities.rumbleMotors.joined(separator: ",")],
-      ["lighting", detail.capabilities.lightingFeatures.joined(separator: ",")],
+      [
+        "serving-route", CommandLineName.kebab(detail.serving.route),
+        detail.serving.reason.map(CommandLineName.kebab) ?? "",
+      ],
+      ["persona", detail.serving.persona.map(CommandLineName.kebab) ?? ""],
+      ["controls", detail.capabilities.controls.map(CommandLineName.kebab).joined(separator: ",")],
+      [
+        "rumble-motors",
+        detail.capabilities.rumbleMotors.map(CommandLineName.kebab).joined(separator: ","),
+      ],
+      [
+        "lighting",
+        detail.capabilities.lightingFeatures.map(CommandLineName.kebab).joined(separator: ","),
+      ],
       ["output-owner", CommandLineName.kebab(detail.capabilities.outputOwner)],
     ]
-    rows.append(["record", detail.record?.layer ?? "none", detail.record?.file ?? ""])
+    rows.append([
+      "record", detail.record.map { CommandLineName.kebab($0.layer) } ?? "none",
+      detail.record?.file ?? "",
+    ])
     if let tuning = detail.tuning { rows.append(["tuning"] + tuning.rows) }
     if let virtual = detail.virtual {
-      rows.append(["virtual-profile", virtual.profile ?? "", virtual.source?.rawValue ?? ""])
+      rows.append([
+        "virtual-profile", virtual.profile.map(CommandLineName.kebab) ?? "",
+        virtual.source.map { CommandLineName.kebab($0.rawValue) } ?? "",
+      ])
     }
     if let publication = detail.publication {
-      rows.append(["publication", publication.state, publication.reason ?? ""])
+      rows.append([
+        "publication", CommandLineName.kebab(publication.state), publication.reason ?? "",
+      ])
     }
     rows += detail.outputChecks.map { ["output-check", $0.id, $0.command] }
     return rows
@@ -208,7 +226,10 @@ struct ControllerShowCommand: AsyncParsableCommand {
         deviceIdentity(vendorID: detail.vendorID, productID: detail.productID)
       ),
       (CLILocalized.text("cli.controller.show.label.connection"), detail.connection),
-      (CLILocalized.text("cli.controller.show.label.protocol"), detail.protocol),
+      (
+        CLILocalized.text("cli.controller.show.label.protocol"),
+        CommandLineName.kebab(detail.protocol)
+      ),
       (
         CLILocalized.text("cli.controller.show.label.session"),
         CommandLineName.kebab(detail.session)
@@ -244,21 +265,22 @@ struct ControllerShowCommand: AsyncParsableCommand {
         CLILocalized.format(
           "cli.controller.show.server",
           detail.ownership.server.rawValue,
-          detail.ownership.serverSource
+          CommandLineName.kebab(detail.ownership.serverSource)
         )
       ),
       (
         CLILocalized.text("cli.controller.show.label.serving"),
-        detail.serving.route + (detail.serving.reason.map { " (\($0))" } ?? "")
+        CommandLineName.kebab(detail.serving.route)
+          + (detail.serving.reason.map { " (\(CommandLineName.kebab($0)))" } ?? "")
       ),
       (
         CLILocalized.text("cli.controller.show.label.persona"),
-        detail.serving.persona ?? none
+        detail.serving.persona.map(CommandLineName.kebab) ?? none
       ),
       (CLILocalized.text("cli.controller.show.label.record"), recordText(detail.record)),
       (
         CLILocalized.text("cli.controller.show.label.controls"),
-        list(detail.capabilities.controls)
+        list(detail.capabilities.controls.map(CommandLineName.kebab))
       ),
       (
         CLILocalized.text("cli.controller.show.label.rumble"),
@@ -287,7 +309,10 @@ struct ControllerShowCommand: AsyncParsableCommand {
       rows.append(
         (
           CLILocalized.text("cli.controller.show.label.virtual"),
-          virtual.profile.map { "\($0) (\(virtual.source?.rawValue ?? ""))" } ?? none
+          virtual.profile.map { profile in
+            let source = virtual.source.map { CommandLineName.kebab($0.rawValue) } ?? ""
+            return "\(CommandLineName.kebab(profile)) (\(source))"
+          } ?? none
         )
       )
     }
@@ -295,7 +320,8 @@ struct ControllerShowCommand: AsyncParsableCommand {
       rows.append(
         (
           CLILocalized.text("cli.controller.show.label.publication"),
-          publication.state + (publication.reason.map { " (\($0))" } ?? "")
+          CommandLineName.kebab(publication.state)
+            + (publication.reason.map { " (\($0))" } ?? "")
         )
       )
     }

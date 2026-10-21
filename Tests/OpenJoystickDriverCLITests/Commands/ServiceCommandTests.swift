@@ -40,10 +40,10 @@ struct ServiceCommandTests {
     #expect(result.code == 0)
     let json = try result.json()
     let service = try #require(json["service"] as? [String: Any])
-    #expect(service["state"] as? String == "stopped")
+    #expect(service["state"] as? String == "Stopped")
     let extensionState = try #require(json["transportExtension"] as? [String: Any])
-    #expect(extensionState["bundle"] as? String == "present")
-    #expect(extensionState["registration"] as? String == "absent")
+    #expect(extensionState["bundle"] as? String == "Present")
+    #expect(extensionState["registration"] as? String == "Absent")
     #expect(json["extension"] == nil)
     #expect(json["controllers"] == nil)
     #expect((json["skippedRecords"] as? [Any])?.isEmpty == true)
@@ -105,8 +105,8 @@ struct ServiceCommandTests {
   func statusReportsTheRunningServiceInJSONAndPlainRows() async throws {
     let socketPath = temporarySocketPath()
     let payload = ApplicationServiceStatusPayload(
-      inputRead: "granted",
-      inputInject: "denied",
+      inputRead: .granted,
+      inputInject: .denied,
       connectedDevices: [
         ApplicationServiceDeviceDescription(
           name: "Test Pad",
@@ -145,10 +145,10 @@ struct ServiceCommandTests {
     #expect(jsonRun.code == 0, "\(jsonRun.standardError)")
     let json = try jsonRun.json()
     let service = try #require(json["service"] as? [String: Any])
-    #expect(service["state"] as? String == "running")
+    #expect(service["state"] as? String == "Running")
     let permissions = try #require(json["permissions"] as? [String: Any])
-    #expect(permissions["inputRead"] as? String == "granted")
-    #expect(permissions["inputInject"] as? String == "denied")
+    #expect(permissions["inputRead"] as? String == "Granted")
+    #expect(permissions["inputInject"] as? String == "Denied")
     let controllers = try #require(json["controllers"] as? [[String: Any]])
     #expect(controllers.count == 1)
     #expect(controllers.first?["id"] as? String == token("pad-1"))
@@ -168,7 +168,7 @@ struct ServiceCommandTests {
     let service = try FakeService(devices: [])
     let result = await service.run(["service", verb, "--json"])
     #expect(result.code == 0, "\(result.standardError)")
-    #expect(try result.json()["state"] as? String == "running")
+    #expect(try result.json()["state"] as? String == "Running")
   }
 
   @Test
@@ -188,7 +188,7 @@ struct ServiceCommandTests {
       await CLIRun.run(["service", "stop", "--json"])
     }
     #expect(result.code == 0)
-    #expect(try result.json()["state"] as? String == "stopped")
+    #expect(try result.json()["state"] as? String == "Stopped")
   }
 
   @Test

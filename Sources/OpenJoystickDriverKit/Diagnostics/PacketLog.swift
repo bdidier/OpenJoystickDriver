@@ -3,9 +3,9 @@ import Foundation
 /// Transfer direction of a logged packet; raw values are the packet-log wire strings.
 public enum PacketLogDirection: String, Codable, Sendable {
   /// Incoming from the controller.
-  case received = "rx"
+  case received = "Rx"
   /// Outgoing to the controller.
-  case transmitted = "tx"
+  case transmitted = "Tx"
 }
 
 public enum PacketLogClassification: Sendable, Equatable {

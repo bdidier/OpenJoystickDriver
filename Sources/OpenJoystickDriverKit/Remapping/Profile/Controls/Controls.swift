@@ -29,7 +29,7 @@ public enum RemappingAxis: String, Codable, CaseIterable, Hashable, Sendable {
   }
 }
 
-public enum RemappingAxisDirection: String, Codable, Hashable, Sendable {
+public enum RemappingAxisDirection: String, Codable, CaseIterable, Hashable, Sendable {
   case negative = "Negative"
   case positive = "Positive"
 }

@@ -89,7 +89,7 @@ struct VirtualCommandTests {
     }
     let result = await service.run(["virtual", "reset", "--all", "--force", "--json"])
     #expect(result.code == 0, "\(result.standardError)")
-    #expect(try result.details()["reset"] as? String == "all")
+    #expect(try result.details()["reset"] as? String == "All")
     #expect(service.arguments(of: .resetSettings).count == 1)
   }
 
@@ -175,7 +175,7 @@ struct VirtualCommandTests {
     let result = await service.run(["virtual", "export-mapping", "--format", "sdl", "--json"])
     #expect(result.code == 0, "\(result.standardError)")
     let json = try result.json()
-    #expect(json["format"] as? String == "sdl")
+    #expect(json["format"] as? String == "SDL")
     let mappings = try #require(json["mappings"] as? [[String: Any]])
     #expect(
       mappings.map { $0["profile"] as? String } == VirtualHIDProfileID.allCases.map(\.rawValue)

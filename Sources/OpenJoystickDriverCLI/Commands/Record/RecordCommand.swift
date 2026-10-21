@@ -51,13 +51,26 @@ struct RecordListCommand: AsyncParsableCommand {
       case .json:
         try CLIOutput.json(CLIList(items: records))
       case .plain:
-        CLIOutput.plain(records.map { [$0.identity, $0.family, $0.layer, $0.file ?? ""] })
+        CLIOutput.plain(
+          records.map {
+            [
+              $0.identity, CommandLineName.kebab($0.family), CommandLineName.kebab($0.layer),
+              $0.file ?? "",
+            ]
+          }
+        )
       case .human:
-        let width = records.map(\.family.count).max() ?? 0
+        let width = records.map { CommandLineName.kebab($0.family).count }.max() ?? 0
         for record in records {
-          let family = record.family.padding(toLength: width, withPad: " ", startingAt: 0)
+          let family = CommandLineName.kebab(record.family).padding(
+            toLength: width,
+            withPad: " ",
+            startingAt: 0
+          )
           let file = record.file.map { "  \($0)" } ?? ""
-          CLIOutput.stdout("\(record.identity)  \(family)  \(record.layer)\(file)")
+          CLIOutput.stdout(
+            "\(record.identity)  \(family)  \(CommandLineName.kebab(record.layer))\(file)"
+          )
         }
       }
       if !bundled { RecordStore.warn(set.problems) }
@@ -124,15 +137,22 @@ struct RecordShowCommand: AsyncParsableCommand {
             record: try RecordJSON(data: record.document)
           )
         )
-      case .plain: CLIOutput.plain(fields.sorted { $0.key < $1.key }.map { [$0.key, $0.value] })
+      case .plain:
+        CLIOutput.plain(
+          fields.sorted { $0.key < $1.key }.map { [$0.key, CommandLineName.kebab($0.value)] }
+        )
       case .human:
         let file = record.file.map { " (\($0.path))" } ?? ""
-        CLIOutput.stdout("\(model.description)  \(record.family)  \(record.layer.rawValue)\(file)")
+        CLIOutput.stdout(
+          "\(model.description)  \(CommandLineName.kebab(record.family))  "
+            + "\(CommandLineName.kebab(record.layer.rawValue))\(file)"
+        )
         if let note = RecordValidation.bluetoothLENote(record) { CLIOutput.stdout(note) }
         let width = fields.keys.map(\.count).max() ?? 0
         for (field, layer) in fields.sorted(by: { $0.key < $1.key }) {
           CLIOutput.stdout(
-            "  \(field.padding(toLength: width, withPad: " ", startingAt: 0))  \(layer)"
+            "  \(field.padding(toLength: width, withPad: " ", startingAt: 0))  "
+              + CommandLineName.kebab(layer)
           )
         }
         CLIOutput.stdout("")

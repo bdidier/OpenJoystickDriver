@@ -280,8 +280,8 @@ struct SupportReportBindingTests {
       applicationServiceHealth: nil,
       frameTimings: frameTimings,
       status: ApplicationServiceStatusPayload(
-        inputRead: "granted",
-        inputInject: "granted",
+        inputRead: .granted,
+        inputInject: .granted,
         connectedDevices: connected,
         unboundDevices: unbound
       ),

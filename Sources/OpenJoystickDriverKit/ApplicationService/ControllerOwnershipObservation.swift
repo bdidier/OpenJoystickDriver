@@ -2,14 +2,14 @@ import Foundation
 
 /// How OJD owns or observes the physical controller input path.
 public enum ControllerOwnershipObservation: String, Codable, CaseIterable, Equatable, Sendable {
-  case exclusiveHID
-  case exclusiveRawUSB
+  case exclusiveHID = "ExclusiveHID"
+  case exclusiveRawUSB = "ExclusiveRawUSB"
   case extensionOwnedUSB = "ExtensionOwnedUSB"
   case systemHIDVisible = "SystemHIDVisible"
   /// macOS serves the controller as a native gamepad; OJD only observes its shared input.
   case systemGamepad = "SystemGamepad"
-  case upstreamVirtualDevice
-  case unknown
+  case upstreamVirtualDevice = "UpstreamVirtualDevice"
+  case unknown = "Unknown"
 
   /// Whether the system serves the controller itself, so OJD publishes no virtual device for it.
   /// The decision depends on who serves the input, not on which OS does.
@@ -24,10 +24,10 @@ public enum ControllerOwnershipObservation: String, Codable, CaseIterable, Equat
 
 /// The duplicate-device concern associated with the physical ownership observation.
 public enum DuplicateExposureRisk: String, Codable, Equatable, Sendable {
-  case none
+  case none = "None"
   case systemHIDVisible = "SystemHIDVisible"
-  case upstreamVirtualDevice
-  case unknownOwnership
+  case upstreamVirtualDevice = "UpstreamVirtualDevice"
+  case unknownOwnership = "UnknownOwnership"
 
 }
 

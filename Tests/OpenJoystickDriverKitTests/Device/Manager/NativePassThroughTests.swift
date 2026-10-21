@@ -252,8 +252,8 @@ struct NativePassThroughTests {
       connection: "Bluetooth"
     )
     let payload = ApplicationServiceStatusPayload(
-      inputRead: "granted",
-      inputInject: "granted",
+      inputRead: .granted,
+      inputInject: .granted,
       connectedDevices: [],
       passThroughDevices: [device]
     )

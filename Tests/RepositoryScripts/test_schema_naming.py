@@ -5,8 +5,8 @@ Enum values, string constants and string defaults of an enum are UpperCamelCase.
 
 - EXCEPTIONS: names fixed by an external format.
 - FIELD_NAME_ENUMS: values that name a field, so they follow the field rule and must be a field.
-- NOT_YET_UPPER_CAMEL_CASE: values that still break the rule, grouped by schema in
-  `schema_naming_pending.json`. The list only shrinks; an entry that no longer matches fails.
+- `schema_naming_pending.json`: values that break the rule, grouped by schema. The list holds no
+  entry; an entry that no longer matches fails.
 """
 
 from __future__ import annotations
@@ -417,6 +417,9 @@ class SchemaNamingTests(unittest.TestCase):
             self.assertEqual(
                 {(schema, pointer) for pointer in pointers} & set(EXCEPTIONS), set()
             )
+
+    def test_the_pending_list_is_empty(self) -> None:
+        self.assertEqual({schema: p for schema, p in pending().items() if p}, {})
 
     def test_every_pending_entry_still_breaks_the_rule(self) -> None:
         for schema, pointers in pending().items():

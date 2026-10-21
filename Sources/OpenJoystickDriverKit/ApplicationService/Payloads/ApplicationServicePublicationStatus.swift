@@ -4,17 +4,17 @@ public struct ApplicationServicePublicationStatus: Codable, Equatable, Sendable 
   /// The publication state of a controller.
   public enum State: String, Codable, Equatable, Sendable {
     /// A virtual device is installed for the controller.
-    case published
+    case published = "Published"
     /// No virtual device is installed; `reason` says why.
-    case notPublished
+    case notPublished = "NotPublished"
     /// The last send to the virtual device failed; `reason` carries the failure.
-    case failed
+    case failed = "Failed"
   }
 
   public let state: State
   /// Why the controller is not published: `outputDisabled`, `systemGamepad`,
   /// `nativeHIDPassThrough`, `upstreamVirtualDevice`, `sessionSuspended`, `noVirtualProfile`,
-  /// `suppressed`, or `noInputYet`; the failure text when `state` is `failed`; nil when
+  /// `suppressed`, or `noInputYet`; the failure text when `state` is `Failed`; nil when
   /// published.
   public let reason: String?
   /// The virtual HID profile the controller publishes or tries to publish.

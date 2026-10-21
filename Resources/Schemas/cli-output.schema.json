@@ -399,16 +399,16 @@
               "layer": {
                 "description": "The layer that set the value, lowest first.",
                 "enum": [
-                  "driver",
-                  "bundled",
-                  "package",
-                  "global",
-                  "user",
-                  "profile"
+                  "Driver",
+                  "Bundled",
+                  "Package",
+                  "Global",
+                  "User",
+                  "Profile"
                 ]
               },
               "value": {
-                "description": "Absent while only the driver default applies.",
+                "description": "Absent while only the Driver default applies.",
                 "type": "number"
               },
               "families": {
@@ -488,7 +488,7 @@
           "const": "RawReport"
         },
         "direction": {
-          "enum": ["rx", "tx"]
+          "enum": ["Rx", "Tx"]
         },
         "hex": {
           "type": "string",
@@ -820,39 +820,39 @@
               "$ref": "#/$defs/sharedServer"
             },
             "serverSource": {
-              "description": "The record layer that sets server, or default when no layer sets it and macOS serves the controller.",
-              "enum": ["bundled", "package", "user", "default"]
+              "description": "The record layer that sets server, or Default when no layer sets it and macOS serves the controller.",
+              "enum": ["Bundled", "Package", "User", "Default"]
             },
             "discoverySource": {
-              "enum": ["hid", "rawUSB"]
+              "enum": ["HID", "RawUSB"]
             },
             "duplicateExposureRisk": {
               "enum": [
-                "none",
+                "None",
                 "SystemHIDVisible",
-                "upstreamVirtualDevice",
-                "unknownOwnership"
+                "UpstreamVirtualDevice",
+                "UnknownOwnership"
               ]
             },
             "hidInput": {
               "enum": [
-                "unknown",
-                "exclusive",
-                "shared",
-                "accessDenied",
-                "ownedByAnotherClient",
-                "acquisitionFailed"
+                "Unknown",
+                "Exclusive",
+                "Shared",
+                "AccessDenied",
+                "OwnedByAnotherClient",
+                "AcquisitionFailed"
               ]
             },
             "physical": {
               "enum": [
-                "exclusiveHID",
-                "exclusiveRawUSB",
+                "ExclusiveHID",
+                "ExclusiveRawUSB",
                 "ExtensionOwnedUSB",
                 "SystemHIDVisible",
                 "SystemGamepad",
-                "upstreamVirtualDevice",
-                "unknown"
+                "UpstreamVirtualDevice",
+                "Unknown"
               ]
             }
           }
@@ -889,7 +889,7 @@
               "type": "string"
             },
             "state": {
-              "enum": ["published", "notPublished", "failed"]
+              "enum": ["Published", "NotPublished", "Failed"]
             },
             "target": {
               "enum": ["SDLCompatible", "Generic"]
@@ -912,7 +912,7 @@
               "type": "string"
             },
             "layer": {
-              "enum": ["bundled", "package", "user"]
+              "enum": ["Bundled", "Package", "User"]
             }
           }
         },
@@ -929,9 +929,9 @@
             "reason": {
               "description": "Why the route publishes nothing. Present only with OutputDisabled.",
               "enum": [
-                "userDisabled",
-                "upstreamVirtualDevice",
-                "noVirtualProfile"
+                "UserDisabled",
+                "UpstreamVirtualDevice",
+                "NoVirtualProfile"
               ]
             },
             "route": {
@@ -973,7 +973,7 @@
               "enum": ["SDLCompatible", "Generic"]
             },
             "overrideScope": {
-              "enum": ["unit", "model"],
+              "enum": ["Unit", "Model"],
               "description": "Whether override is the controller's own choice or its model's."
             },
             "profile": {
@@ -1155,7 +1155,7 @@
                 "type": "string"
               },
               "status": {
-                "enum": ["pass", "warn", "fail", "skip"]
+                "enum": ["Pass", "Warn", "Fail", "Skip"]
               }
             }
           }
@@ -1223,13 +1223,13 @@
           "const": "TransportExtension"
         },
         "bundle": {
-          "enum": ["present", "missing", "invalid"]
+          "enum": ["Present", "Missing", "Invalid"]
         },
         "detail": {
           "type": "string"
         },
         "registration": {
-          "enum": ["active", "inactive", "absent", "unavailable"]
+          "enum": ["Active", "Inactive", "Absent", "Unavailable"]
         }
       }
     },
@@ -1315,7 +1315,7 @@
                     "type": "string"
                   },
                   "stream": {
-                    "enum": ["standardOutput", "standardError"]
+                    "enum": ["StandardOutput", "StandardError"]
                   },
                   "truncated": {
                     "type": "boolean"
@@ -1340,7 +1340,7 @@
               "type": "string"
             },
             "stream": {
-              "enum": ["standardOutput", "standardError"]
+              "enum": ["StandardOutput", "StandardError"]
             }
           }
         }
@@ -1845,7 +1845,7 @@
           "type": "string"
         },
         "operation": {
-          "enum": ["add", "patch"]
+          "enum": ["Add", "Patch"]
         },
         "record": {
           "description": "The drafted controller record, as 'ojd record install' reads it.",
@@ -1948,7 +1948,7 @@
                 "pattern": "^[0-9A-F]{4}:[0-9A-F]{4}$"
               },
               "layer": {
-                "enum": ["bundled", "package", "user"]
+                "enum": ["Bundled", "Package", "User"]
               },
               "productID": {
                 "type": "integer",
@@ -2009,7 +2009,7 @@
         "fields": {
           "type": "object",
           "additionalProperties": {
-            "enum": ["bundled", "package", "user"]
+            "enum": ["Bundled", "Package", "User"]
           }
         },
         "file": {
@@ -2020,17 +2020,17 @@
           "pattern": "^[0-9A-F]{4}:[0-9A-F]{4}$"
         },
         "layer": {
-          "enum": ["bundled", "package", "user"]
+          "enum": ["Bundled", "Package", "User"]
         },
         "record": {
           "description": "The merged controller record.",
           "$ref": "controller.schema.json"
         },
         "transport": {
-          "enum": ["hid", "usb"]
+          "enum": ["HID", "USB"]
         },
         "transportClaim": {
-          "enum": ["claimed", "unclaimed"]
+          "enum": ["Claimed", "Unclaimed"]
         }
       }
     },
@@ -2384,13 +2384,13 @@
               },
               "outcome": {
                 "enum": [
-                  "delivered",
-                  "notFound",
-                  "unsupportedCapability",
-                  "notReady",
-                  "invalidValue",
-                  "writeFailed",
-                  "cancelled"
+                  "Delivered",
+                  "NotFound",
+                  "UnsupportedCapability",
+                  "NotReady",
+                  "InvalidValue",
+                  "WriteFailed",
+                  "Cancelled"
                 ]
               }
             }
@@ -2696,7 +2696,7 @@
           "type": "string"
         },
         "state": {
-          "enum": ["active", "inactive", "awaitingApproval"]
+          "enum": ["Active", "Inactive", "AwaitingApproval"]
         }
       }
     },
@@ -2786,7 +2786,7 @@
             "additionalProperties": false,
             "properties": {
               "id": {
-                "enum": ["input-read", "input-inject", "usb-transport"]
+                "enum": ["InputRead", "InputInject", "USBTransport"]
               },
               "name": {
                 "type": "string"
@@ -2795,7 +2795,7 @@
                 "type": "string"
               },
               "state": {
-                "enum": ["granted", "denied", "unknown"]
+                "enum": ["Granted", "Denied", "Unknown"]
               }
             }
           }
@@ -2812,7 +2812,7 @@
           "pattern": "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$"
         },
         "kind": {
-          "enum": ["damagedProfile", "unusableLibrary"]
+          "enum": ["DamagedProfile", "UnusableLibrary"]
         },
         "code": {
           "type": "string",
@@ -2893,16 +2893,16 @@
           "pattern": "^[0-9A-F]{4}:[0-9A-F]{4}$"
         },
         "operation": {
-          "enum": ["add", "patch"]
+          "enum": ["Add", "Patch"]
         },
         "problem": {
           "type": "string"
         },
         "transport": {
-          "enum": ["hid", "usb"]
+          "enum": ["HID", "USB"]
         },
         "transportClaim": {
-          "enum": ["claimed", "unclaimed"]
+          "enum": ["Claimed", "Unclaimed"]
         },
         "valid": {
           "type": "boolean"
@@ -2921,7 +2921,7 @@
           "type": "string"
         },
         "state": {
-          "enum": ["running", "stopped"]
+          "enum": ["Running", "Stopped"]
         }
       }
     },
@@ -3273,7 +3273,7 @@
           "const": "SystemStatus"
         },
         "commandLineTool": {
-          "description": "The ojd link the app installs: installed when it points to this app's executable, linkedElsewhere when it points to another existing file such as another app copy, broken when its target does not exist, blockedByFile when the path is a file or folder that is not a link, and missing when nothing is at the path. target is what the link points to and appears only for a link.",
+          "description": "The ojd link the app installs: Installed when it points to this app's executable, LinkedElsewhere when it points to another existing file such as another app copy, Broken when its target does not exist, BlockedByFile when the path is a file or folder that is not a link, and Missing when nothing is at the path. target is what the link points to and appears only for a link.",
           "type": "object",
           "required": ["path", "state"],
           "additionalProperties": false,
@@ -3283,11 +3283,11 @@
             },
             "state": {
               "enum": [
-                "installed",
-                "linkedElsewhere",
-                "broken",
-                "blockedByFile",
-                "missing"
+                "Installed",
+                "LinkedElsewhere",
+                "Broken",
+                "BlockedByFile",
+                "Missing"
               ]
             },
             "target": {
@@ -3330,10 +3330,10 @@
           "additionalProperties": false,
           "properties": {
             "bundle": {
-              "enum": ["present", "missing", "invalid"]
+              "enum": ["Present", "Missing", "Invalid"]
             },
             "registration": {
-              "enum": ["active", "inactive", "absent", "unavailable"]
+              "enum": ["Active", "Inactive", "Absent", "Unavailable"]
             }
           }
         },
@@ -3349,10 +3349,10 @@
           "additionalProperties": false,
           "properties": {
             "inputInject": {
-              "enum": ["granted", "denied", "unknown"]
+              "enum": ["Granted", "Denied", "Unknown"]
             },
             "inputRead": {
-              "enum": ["granted", "denied", "unknown"]
+              "enum": ["Granted", "Denied", "Unknown"]
             }
           }
         },
@@ -3362,7 +3362,7 @@
           "additionalProperties": false,
           "properties": {
             "state": {
-              "enum": ["running", "stopped"]
+              "enum": ["Running", "Stopped"]
             },
             "version": {
               "type": "string"
@@ -3459,7 +3459,7 @@
           "type": "string"
         },
         "status": {
-          "enum": ["upToDate", "available"]
+          "enum": ["UpToDate", "Available"]
         }
       }
     },
@@ -3475,7 +3475,7 @@
           "const": "VirtualGamepadMapping"
         },
         "format": {
-          "enum": ["sdl", "w3c"]
+          "enum": ["SDL", "W3C"]
         },
         "mappings": {
           "description": "One entry per virtual gamepad profile, with only the member of the requested format.",
@@ -3521,7 +3521,7 @@
               "additionalProperties": false,
               "properties": {
                 "reset": {
-                  "const": "all"
+                  "const": "All"
                 }
               }
             }
@@ -3574,7 +3574,7 @@
                 "enum": ["SDLCompatible", "Generic"]
               },
               "overrideScope": {
-                "enum": ["unit", "model"],
+                "enum": ["Unit", "Model"],
                 "description": "Whether override is the controller's own choice or its model's."
               },
               "productID": {

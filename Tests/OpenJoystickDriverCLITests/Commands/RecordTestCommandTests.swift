@@ -11,8 +11,8 @@ struct RecordTestCommandTests {
   /// A capture of an acknowledgement-sized packet that the parser ignores, a transmitted packet,
   /// and one input report with A held (button bit 12).
   private static let capture = """
-    {"timestamp": 0, "direction": "tx", "hex": "01 03 00", "length": 3}
-    {"timestamp": 1, "direction": "rx", "length": 20, "hex": "\
+    {"timestamp": 0, "direction": "Tx", "hex": "01 03 00", "length": 3}
+    {"timestamp": 1, "direction": "Rx", "length": 20, "hex": "\
     00 14 00 10 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00"}
 
     """

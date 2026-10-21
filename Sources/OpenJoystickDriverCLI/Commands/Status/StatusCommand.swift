@@ -56,16 +56,26 @@ struct StatusCommand: AsyncParsableCommand {
 
   static func plainRows(_ report: StatusReport) -> [[String]] {
     var rows = [
-      ["service", report.service.state.rawValue, report.service.version ?? ""],
       [
-        "transport-extension", report.transportExtension.bundle.rawValue,
-        report.transportExtension.registration.rawValue,
+        "service", CommandLineName.kebab(report.service.state.rawValue),
+        report.service.version ?? "",
       ],
-      ["command-line-tool", report.commandLineTool.state.rawValue, report.commandLineTool.path],
+      [
+        "transport-extension", CommandLineName.kebab(report.transportExtension.bundle.rawValue),
+        CommandLineName.kebab(report.transportExtension.registration.rawValue),
+      ],
+      [
+        "command-line-tool", CommandLineName.kebab(report.commandLineTool.state.rawValue),
+        report.commandLineTool.path,
+      ],
     ]
     if let permissions = report.permissions {
-      rows.append(["permission", "input-read", permissions.inputRead.rawValue])
-      rows.append(["permission", "input-inject", permissions.inputInject.rawValue])
+      rows.append([
+        "permission", "input-read", CommandLineName.kebab(permissions.inputRead.rawValue),
+      ])
+      rows.append([
+        "permission", "input-inject", CommandLineName.kebab(permissions.inputInject.rawValue),
+      ])
     }
     if let virtual = report.virtualDevice {
       rows.append([
@@ -109,28 +119,31 @@ struct StatusCommand: AsyncParsableCommand {
     var rows: [(String, String)] = [
       (
         CLILocalized.text("cli.status.label.service"),
-        report.service.state.rawValue + (report.service.version.map { " (\($0))" } ?? "")
+        CommandLineName.kebab(report.service.state.rawValue)
+          + (report.service.version.map { " (\($0))" } ?? "")
       ),
       (
         CLILocalized.text("cli.status.label.transport_extension"),
-        "\(transport.bundle.rawValue), \(transport.registration.rawValue)"
+        "\(CommandLineName.kebab(transport.bundle.rawValue)), "
+          + CommandLineName.kebab(transport.registration.rawValue)
       ),
       (
         CLILocalized.text("cli.status.label.command_line_tool"),
-        "\(report.commandLineTool.state.rawValue), \(report.commandLineTool.path)"
+        "\(CommandLineName.kebab(report.commandLineTool.state.rawValue)), "
+          + report.commandLineTool.path
       ),
     ]
     if let permissions = report.permissions {
       rows.append(
         (
           CLILocalized.text("cli.status.label.input_read"),
-          permissions.inputRead.rawValue
+          CommandLineName.kebab(permissions.inputRead.rawValue)
         )
       )
       rows.append(
         (
           CLILocalized.text("cli.status.label.input_inject"),
-          permissions.inputInject.rawValue
+          CommandLineName.kebab(permissions.inputInject.rawValue)
         )
       )
     }

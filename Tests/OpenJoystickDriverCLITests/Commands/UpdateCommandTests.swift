@@ -41,7 +41,7 @@ struct UpdateCommandTests {
     #expect(human.standardError.isEmpty)
     #expect(prereleases.withLock { $0 } == [true])
     let object = try json.json()
-    #expect(object["status"] as? String == "available")
+    #expect(object["status"] as? String == "Available")
     #expect(object["latestVersion"] as? String == "v9.0.0")
     #expect(object["includePrereleases"] as? Bool == false)
   }
@@ -51,7 +51,7 @@ struct UpdateCommandTests {
     let plain = await run(["update", "check", "--plain"], state: .upToDate("v1.0.0"))
 
     #expect(plain.code == 0)
-    #expect(plain.standardOutput.hasPrefix("upToDate\t"))
+    #expect(plain.standardOutput.hasPrefix("up-to-date\t"))
     #expect(plain.standardOutput.contains("\tv1.0.0\t"))
   }
 

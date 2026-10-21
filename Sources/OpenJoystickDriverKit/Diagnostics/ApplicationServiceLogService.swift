@@ -2,8 +2,8 @@ import Darwin
 import Foundation
 
 public enum ApplicationServiceLogStream: String, CaseIterable, Codable, Sendable {
-  case standardOutput
-  case standardError
+  case standardOutput = "StandardOutput"
+  case standardError = "StandardError"
 }
 
 public struct ApplicationServiceLogSnapshot: Codable, Equatable, Sendable {

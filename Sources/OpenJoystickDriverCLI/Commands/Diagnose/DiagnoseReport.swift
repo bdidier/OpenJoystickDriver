@@ -14,7 +14,7 @@ struct DiagnoseReport: Encodable, Equatable {
   /// One `id`, `status`, `detail` row per check, then one `timing`, controller, sequence, stage,
   /// nanoseconds row per recorded stage.
   var plainRows: [[String]] {
-    checks.map { [$0.id, $0.status.rawValue, $0.detail] }
+    checks.map { [$0.id, CommandLineName.kebab($0.status.rawValue), $0.detail] }
       + timings.flatMap { controller in
         controller.frames.flatMap { frame in
           frame.stages.map {

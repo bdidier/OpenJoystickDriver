@@ -4,25 +4,25 @@ import Foundation
 /// order, lowest first: a later layer wins over an earlier one.
 public enum ControllerRecordLayer: String, Codable, CaseIterable, Sendable {
   /// OJD's built-in default, used when no other layer sets a value.
-  case driver
+  case driver = "Driver"
   /// The signed catalog in the app bundle, with its built-in patches.
-  case bundled
+  case bundled = "Bundled"
   /// A file of an installed mod package.
-  case package
+  case package = "Package"
   /// The user's `all` patch, `all.patch.json`: the first patch of the user layer.
-  case global
+  case global = "Global"
   /// A file in the user's controller-record directory.
-  case user
+  case user = "User"
   /// The active remapping profile.
-  case profile
+  case profile = "Profile"
 }
 
 /// The kind of a user controller record file.
 public enum ControllerRecordOperation: String, Codable, Sendable {
   /// A Controller file: a record for a model the bundled catalog does not have.
-  case add
+  case add = "Add"
   /// A ControllerPatch file: a merge patch over the records its selector names.
-  case patch
+  case patch = "Patch"
 }
 
 /// One effective controller record: a bundled record, a Controller file that adds one, or a
@@ -34,7 +34,7 @@ public struct ControllerRecord: Sendable {
   /// The layer of each top-level field of `document`, except `apiVersion`, `kind`, `vendorID`, and
   /// `productID`.
   public let fieldLayers: [String: ControllerRecordLayer]
-  /// The layer of each effective `tuning` key, by its JSON name: `bundled`, `user`, or `global`.
+  /// The layer of each effective `tuning` key, by its JSON name: `Bundled`, `User`, or `Global`.
   /// A key no layer sets is absent, and the driver default applies.
   public let tuningLayers: [String: ControllerRecordLayer]
   /// The user file that adds or patches this record, or nil for a bundled record. An `all` patch
@@ -74,8 +74,8 @@ public struct ControllerRecord: Sendable {
   /// The file of the highest layer that adds or patches this record, or nil for a bundled one.
   public var file: URL? { userFile ?? packageFile }
 
-  /// `user` when a user file adds or patches the record, else `package` when a package does,
-  /// `bundled` otherwise.
+  /// `User` when a user file adds or patches the record, else `Package` when a package does,
+  /// `Bundled` otherwise.
   public var layer: ControllerRecordLayer {
     userFile != nil ? .user : packageFile != nil ? .package : .bundled
   }

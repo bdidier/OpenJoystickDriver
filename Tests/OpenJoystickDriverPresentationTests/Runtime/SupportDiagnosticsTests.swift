@@ -126,8 +126,8 @@ struct SupportDiagnosticsTests {
     )
     let gateway = SupportDiagnosticsGatewayStub(
       statusPayload: ApplicationServiceStatusPayload(
-        inputRead: "granted",
-        inputInject: "granted",
+        inputRead: .granted,
+        inputInject: .granted,
         connectedDevices: [device],
         userSpaceVirtualDeviceEnabled: true,
         userSpaceVirtualDeviceStatus: .backend("ready")
@@ -237,8 +237,8 @@ private actor SupportDiagnosticsGatewayStub: ApplicationServiceGateway {
 
   init(
     statusPayload: ApplicationServiceStatusPayload = ApplicationServiceStatusPayload(
-      inputRead: "granted",
-      inputInject: "granted",
+      inputRead: .granted,
+      inputInject: .granted,
       connectedDevices: [],
       userSpaceVirtualDeviceEnabled: true,
       userSpaceVirtualDeviceStatus: .backend("ready")

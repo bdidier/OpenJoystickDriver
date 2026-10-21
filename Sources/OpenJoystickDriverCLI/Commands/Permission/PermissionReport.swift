@@ -1,11 +1,14 @@
 import OpenJoystickDriverKit
 
-/// A permission `ojd` reports. The raw values are the stable ids used on the command line,
-/// in `--json`, and in `--plain` rows.
+/// A permission `ojd` reports. The raw values are the ids in `--json`; the command line and
+/// `--plain` rows spell them in lowercase kebab-case, such as `input-read`.
 enum PermissionID: String, CaseIterable, Sendable {
-  case inputRead = "input-read"
-  case inputInject = "input-inject"
-  case usbTransport = "usb-transport"
+  case inputRead = "InputRead"
+  case inputInject = "InputInject"
+  case usbTransport = "USBTransport"
+
+  /// The id on the command line and in `--plain` rows.
+  var commandLineName: String { CommandLineName.kebab(rawValue) }
 
   /// The macOS privacy permissions that `ojd permission request` can ask for.
   static let requestable: [Self] = [.inputRead, .inputInject]
@@ -92,5 +95,7 @@ struct PermissionReport: Encodable, Equatable {
     permissions.first { $0.id == permission.rawValue }?.state ?? .unknown
   }
 
-  var plainRows: [[String]] { permissions.map { [$0.id, $0.state.rawValue] } }
+  var plainRows: [[String]] {
+    permissions.map { [CommandLineName.kebab($0.id), CommandLineName.kebab($0.state.rawValue)] }
+  }
 }

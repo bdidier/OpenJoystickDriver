@@ -21,8 +21,8 @@ struct DiagnoseCommandTests {
     let statusResult = try JSONEncoder().encode(
       try JSONEncoder().encode(
         ApplicationServiceStatusPayload(
-          inputRead: "granted",
-          inputInject: "granted",
+          inputRead: .granted,
+          inputInject: .granted,
           connectedDevices: [],
           userSpaceVirtualDeviceEnabled: true
         )
@@ -116,8 +116,8 @@ struct DiagnoseCommandTests {
 
     #expect(result.code == 0, "\(result.standardError)")
     let statuses = try statuses(result)
-    #expect(statuses.filter { $0.value == "skip" }.keys.sorted() == ["runtime-health"])
-    #expect(statuses.values.allSatisfy { $0 == "pass" || $0 == "skip" })
+    #expect(statuses.filter { $0.value == "Skip" }.keys.sorted() == ["runtime-health"])
+    #expect(statuses.values.allSatisfy { $0 == "Pass" || $0 == "Skip" })
     #expect(try result.json()["output"] == nil)
   }
 
@@ -183,7 +183,7 @@ struct DiagnoseCommandTests {
     #expect(human.standardOutput.contains("transport-extension-bundle"))
     #expect(!human.standardError.isEmpty)
     #expect(json.code == 1)
-    #expect(try statuses(json)["transport-extension-bundle"] == "fail")
+    #expect(try statuses(json)["transport-extension-bundle"] == "Fail")
     #expect(plain.code == 1)
     #expect(plain.standardOutput.contains("transport-extension-bundle\tfail\t"))
   }
@@ -209,9 +209,9 @@ struct DiagnoseCommandTests {
     #expect(result.code == 0, "\(result.standardError)")
     let statuses = try statuses(result)
     for id in ["input-read", "input-inject", "virtual-device", "runtime-health"] {
-      #expect(statuses[id] == "skip", "\(id)")
+      #expect(statuses[id] == "Skip", "\(id)")
     }
-    #expect(statuses["service"] == "warn")
+    #expect(statuses["service"] == "Warn")
     let checks = try #require(try result.json()["checks"] as? [[String: String]])
     #expect(checks.first { $0["id"] == "input-inject" }?["detail"]?.isEmpty == false)
   }
@@ -235,7 +235,7 @@ struct DiagnoseCommandTests {
     let result = await run(["--json"], socketPath: temporarySocketPath(), usb: failingScan)
 
     #expect(result.code == 0)
-    #expect(try statuses(result)["usb-access"] == "warn")
+    #expect(try statuses(result)["usb-access"] == "Warn")
   }
 
   @Test
@@ -347,7 +347,7 @@ struct DiagnoseCommandTests {
     }
 
     #expect(recorded.withLock { $0 } == [7, 250])
-    #expect(try statuses(result)["runtime-health"] == "fail")
+    #expect(try statuses(result)["runtime-health"] == "Fail")
     #expect(result.code == 1)
   }
 
@@ -366,7 +366,7 @@ struct DiagnoseCommandTests {
     #expect(result.code == 0)
     let checks = try #require(try result.json()["checks"] as? [[String: String]])
     let records = try #require(checks.first { $0["id"] == "controller-records" })
-    #expect(records["status"] == "warn")
+    #expect(records["status"] == "Warn")
     #expect(records["detail"]?.contains("broken.json (the file is not a JSON object)") == true)
   }
 
@@ -395,11 +395,11 @@ struct DiagnoseCommandTests {
     #expect(result.code == 0)
     let checks = try #require(try result.json()["checks"] as? [[String: String]])
     let config = try #require(checks.first { $0["id"] == "config-files" })
-    #expect(config["status"] == "warn")
+    #expect(config["status"] == "Warn")
     #expect(config["detail"]?.contains("all.patch.json (the file is not a JSON object)") == true)
     #expect(config["detail"]?.contains("broken.json (the file is not a JSON object)") == true)
     let clean = await run(["--json"], socketPath: temporarySocketPath())
     let cleanChecks = try #require(try clean.json()["checks"] as? [[String: String]])
-    #expect(cleanChecks.first { $0["id"] == "config-files" }?["status"] == "pass")
+    #expect(cleanChecks.first { $0["id"] == "config-files" }?["status"] == "Pass")
   }
 }

@@ -70,7 +70,7 @@ struct CLIOutputSchemaTests {
   func aStreamLineOfAnUnknownKindIsRefused(kind: String) throws {
     let line =
       #"{"apiVersion":"openjoystickdriver/v1alpha1","kind":"\#(kind)","#
-      + #""direction":"rx","hex":"01 02","length":2,"captureTime":"1970-01-01T00:00:01.500Z"}"#
+      + #""direction":"Rx","hex":"01 02","length":2,"captureTime":"1970-01-01T00:00:01.500Z"}"#
     #expect(try !CLIOutputSchema.issues(in: line, path: ["controller", "capture"]).isEmpty)
   }
 
@@ -108,7 +108,7 @@ struct CLIOutputSchemaTests {
   func eachLineOfAStreamIsChecked() throws {
     let good =
       #"{"apiVersion":"openjoystickdriver/v1alpha1","kind":"RawReport","#
-      + #""direction":"rx","hex":"01 02","length":2,"captureTime":"1970-01-01T00:00:01.500Z"}"#
+      + #""direction":"Rx","hex":"01 02","length":2,"captureTime":"1970-01-01T00:00:01.500Z"}"#
     #expect(
       try CLIOutputSchema.issues(in: good + "\n" + good, path: ["controller", "capture"]).isEmpty
     )

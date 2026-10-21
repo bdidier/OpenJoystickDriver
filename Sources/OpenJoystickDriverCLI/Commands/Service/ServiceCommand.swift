@@ -19,8 +19,8 @@ struct ServiceCommand: AsyncParsableCommand {
 /// The `--json` result of the `service` commands.
 struct ServiceStateResult: Encodable {
   enum State: String, Encodable {
-    case running
-    case stopped
+    case running = "Running"
+    case stopped = "Stopped"
   }
 
   let state: State
@@ -28,7 +28,7 @@ struct ServiceStateResult: Encodable {
   static func print(_ state: State, message: @autoclosure () -> String) throws {
     switch CLIContext.current.format {
     case .json: try CLIOutput.json(Self(state: state))
-    case .plain: CLIOutput.plain([["state", state.rawValue]])
+    case .plain: CLIOutput.plain([["state", CommandLineName.kebab(state.rawValue)]])
     case .human: CLIOutput.success(message())
     }
   }

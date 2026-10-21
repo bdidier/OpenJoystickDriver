@@ -10,7 +10,7 @@ struct ControllerShowReport: Encodable, Equatable {
     let duplicateExposureRisk: String
     /// Who the record lets serve the model: `system` or `ojd`, the `server` setting.
     let server: ControllerServer
-    /// The record layer that sets `server`: `bundled`, `package`, or `user`; `default` when no
+    /// The record layer that sets `server`: `Bundled`, `Package`, or `User`; `Default` when no
     /// layer sets it.
     let serverSource: String
   }
@@ -97,7 +97,7 @@ struct ControllerShowReport: Encodable, Equatable {
     let profile: String?
     let source: VirtualHIDProfileSource?
     let override: String?
-    /// `unit` or `model`: which choice `override` is.
+    /// `Unit` or `Model`: which choice `override` is.
     let overrideScope: VirtualHIDProfileOverrideScope?
     let unavailable: Bool
   }
@@ -214,7 +214,7 @@ struct ControllerShowReport: Encodable, Equatable {
         hidInput: device.hidInputOwnership.rawValue,
         duplicateExposureRisk: device.duplicateExposureRisk.rawValue,
         server: record?.server ?? .system,
-        serverSource: record?.fieldLayers["server"]?.rawValue ?? "default"
+        serverSource: record?.fieldLayers["server"]?.rawValue ?? "Default"
       ),
       serving: Serving(device.servingDecision),
       parameters: device.parameters,

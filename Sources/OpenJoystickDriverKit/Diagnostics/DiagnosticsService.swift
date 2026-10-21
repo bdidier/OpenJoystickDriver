@@ -2,10 +2,10 @@ import Foundation
 
 /// The outcome of one `ojd diagnose` check. The raw values are stable identifiers.
 public enum DiagnoseStatus: String, Encodable, Equatable, Sendable {
-  case pass
-  case warn
-  case fail
-  case skip
+  case pass = "Pass"
+  case warn = "Warn"
+  case fail = "Fail"
+  case skip = "Skip"
 }
 
 /// One `ojd diagnose` check: a stable kebab-case `id`, its `status`, and a one-line `detail`.
@@ -143,8 +143,13 @@ public enum DiagnosticsService {
     ]
   }
 
-  private static func permissionCheck(_ id: String, _ value: String) -> DiagnoseCheck {
-    switch PermissionManager.AccessState(status: value) {
+  private static func permissionCheck(
+    _ id: String,
+    _ value: PermissionManager.AccessState
+  )
+    -> DiagnoseCheck
+  {
+    switch value {
     case .granted: DiagnoseCheck(id, .pass, "granted")
     case .denied:
       DiagnoseCheck(id, .fail, localization.string("cli.diagnose.permission.denied"))

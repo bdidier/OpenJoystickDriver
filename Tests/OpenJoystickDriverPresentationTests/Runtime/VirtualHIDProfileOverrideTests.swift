@@ -35,8 +35,8 @@ struct VirtualHIDProfileOverrideTests {
     _ devices: [ApplicationServiceDeviceDescription]
   ) -> ApplicationServiceStatusPayload {
     ApplicationServiceStatusPayload(
-      inputRead: "granted",
-      inputInject: "granted",
+      inputRead: .granted,
+      inputInject: .granted,
       connectedDevices: devices,
       userSpaceVirtualDeviceEnabled: true,
       userSpaceVirtualDeviceStatus: .backend("ready")
@@ -248,8 +248,8 @@ struct VirtualHIDProfileOverrideTests {
   func overrideStoreProblemsAppearInTheStatusSummary() {
     let status = RuntimeStatusPresentation(
       payload: ApplicationServiceStatusPayload(
-        inputRead: "granted",
-        inputInject: "granted",
+        inputRead: .granted,
+        inputInject: .granted,
         connectedDevices: [],
         virtualHIDProfileOverrideError: "unsupported-schema"
       )

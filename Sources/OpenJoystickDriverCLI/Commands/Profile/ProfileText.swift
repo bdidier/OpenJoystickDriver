@@ -16,10 +16,10 @@ enum ProfileText {
 
   static func source(_ source: RemappingSource) -> String {
     switch source {
-    case .button(let value): "button:\(value.rawValue)"
-    case .dpad(let value): "dpad:\(value.rawValue)"
-    case .axis(let value): "axis:\(value.rawValue)"
-    case .axisDirection(let axis, let direction): "axis:\(axis.rawValue):\(direction.rawValue)"
+    case .button(let value): "button:\(word(value))"
+    case .dpad(let value): "dpad:\(word(value))"
+    case .axis(let value): "axis:\(word(value))"
+    case .axisDirection(let axis, let direction): "axis:\(word(axis)):\(word(direction))"
     case .triggerStage(let trigger, let stage): "trigger:\(word(trigger)):\(word(stage))"
     case .motionLean(let direction): "motion:lean:\(word(direction))"
     case .touchContact(let surface): "touch:\(word(surface)):contact"
@@ -32,14 +32,14 @@ enum ProfileText {
 
   static func destination(_ destination: RemappingDestination) -> String {
     switch destination {
-    case .gamepadAxis(let axis): return "gamepad:axis:\(axis.rawValue)"
-    case .gamepadDpad(let direction): return "gamepad:dpad:\(direction.rawValue)"
-    case .gamepadButton(let button): return "gamepad:button:\(button.rawValue)"
+    case .gamepadAxis(let axis): return "gamepad:axis:\(word(axis))"
+    case .gamepadDpad(let direction): return "gamepad:dpad:\(word(direction))"
+    case .gamepadButton(let button): return "gamepad:button:\(word(button))"
     case .keyboard(let key, let modifiers):
       let suffix =
         modifiers.isEmpty
-        ? "" : ":mods=" + modifiers.map(\.rawValue).sorted().joined(separator: ",")
-      return "key:\(key.rawValue)\(suffix)"
+        ? "" : ":mods=" + modifiers.map(word).sorted().joined(separator: ",")
+      return "key:\(word(key))\(suffix)"
     case .mouseButton(let value): return "mouse:\(word(value))"
     case .mouseMovement(let value): return "move:\(word(value))"
     case .scroll(let value): return "scroll:\(word(value))"

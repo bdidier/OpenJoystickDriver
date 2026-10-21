@@ -15,15 +15,12 @@ public actor PermissionManager {
     case inputInject
   }
 
-  public enum AccessState: String, Codable, Sendable, Equatable, CustomStringConvertible {
-    case granted
-    case denied
-    case unknown
-
-    public init(status: String) {
-      let token = status.split { $0.isWhitespace }.last
-      self = token.flatMap { Self(rawValue: String($0).lowercased()) } ?? .unknown
-    }
+  public enum AccessState: String, Codable, CaseIterable, Sendable, Equatable,
+    CustomStringConvertible
+  {
+    case granted = "Granted"
+    case denied = "Denied"
+    case unknown = "Unknown"
 
     public var description: String { rawValue }
 

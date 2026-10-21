@@ -2,21 +2,21 @@ import Foundation
 
 /// What became of one output command sent with `DeviceManager.sendControllerOutput`.
 ///
-/// JSON: `{"outcome":"delivered","droppedRumbleChannels":["leftTrigger"]}`. A partially supported
-/// `set-rumble` is `delivered` on the channels the controller has and lists the rest in
+/// JSON: `{"outcome":"Delivered","droppedRumbleChannels":["LeftTrigger"]}`. A partially supported
+/// `set-rumble` is `Delivered` on the channels the controller has and lists the rest in
 /// `droppedRumbleChannels`.
 public struct ControllerOutputResult: Codable, Equatable, Hashable, Sendable {
   public enum Outcome: String, Codable, CaseIterable, Hashable, Sendable {
-    case delivered
+    case delivered = "Delivered"
     /// No connected controller matches the selector exactly once.
-    case notFound
-    case unsupportedCapability
+    case notFound = "NotFound"
+    case unsupportedCapability = "UnsupportedCapability"
     /// The protocol session cannot carry the command yet.
-    case notReady
-    case invalidValue
-    case writeFailed
+    case notReady = "NotReady"
+    case invalidValue = "InvalidValue"
+    case writeFailed = "WriteFailed"
     /// The controller disconnected or was replaced before the command was written.
-    case cancelled
+    case cancelled = "Cancelled"
 
     init(_ error: ControllerOutputError) {
       switch error {

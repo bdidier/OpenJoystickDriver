@@ -44,8 +44,16 @@ struct VirtualW3CReport: Encodable, Equatable {
 
 /// The formats `ojd virtual export-mapping` writes.
 enum VirtualMappingFormat: String, CaseIterable, ExpressibleByArgument {
-  case sdl
-  case w3c
+  case sdl = "SDL"
+  case w3c = "W3C"
+
+  /// A format on the command line is its lowercase name: `sdl` or `w3c`.
+  init?(argument: String) {
+    guard let format = CommandLineName.value(of: argument, in: Self.self) else { return nil }
+    self = format
+  }
+
+  static var allValueStrings: [String] { allCases.map { CommandLineName.kebab($0.rawValue) } }
 }
 
 /// The `ojd virtual export-mapping --json` result: one entry per persona, carrying only the
@@ -61,9 +69,10 @@ struct VirtualMappingExport: Encodable, Equatable {
   let mappings: [Entry]
 }
 
-/// The note for a persona that SDL does not recognize with its default hints.
+/// The note for a persona that SDL does not recognize with its default hints; it names the
+/// persona as the command line does.
 func sdlHintsNote(_ profile: String) -> String {
-  CLILocalized.format("cli.virtual.sdl_hints_note", profile)
+  CLILocalized.format("cli.virtual.sdl_hints_note", CommandLineName.kebab(profile))
 }
 
 struct VirtualExportMappingCommand: AsyncParsableCommand {
@@ -113,10 +122,16 @@ struct VirtualExportMappingCommand: AsyncParsableCommand {
 
   private static func plainRows(_ report: VirtualMappingExport) -> [[String]] {
     report.mappings.flatMap { entry -> [[String]] in
-      if let sdl = entry.sdl { return [[entry.profile, sdl.guid, sdl.mapping]] }
+      if let sdl = entry.sdl {
+        return [[CommandLineName.kebab(entry.profile), sdl.guid, sdl.mapping]]
+      }
       guard let w3c = entry.w3c else { return [] }
-      return w3c.buttons.map { [entry.profile, "button", "\($0.index)", $0.control, $0.source] }
-        + w3c.axes.map { [entry.profile, "axis", "\($0.index)", $0.control, $0.source] }
+      return w3c.buttons.map {
+        [CommandLineName.kebab(entry.profile), "button", "\($0.index)", $0.control, $0.source]
+      }
+        + w3c.axes.map {
+          [CommandLineName.kebab(entry.profile), "axis", "\($0.index)", $0.control, $0.source]
+        }
     }
   }
 

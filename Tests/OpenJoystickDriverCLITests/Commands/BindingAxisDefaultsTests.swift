@@ -11,7 +11,7 @@ struct BindingAxisDefaultsTests {
     let service = try FakeService(devices: [], respond: library.respond)
 
     let result = await service.run([
-      "binding", "set", "Pad", "axis:LeftStickX:Positive", "key:KeyD", "--invert",
+      "binding", "set", "Pad", "axis:left-stick-x:positive", "key:key-d", "--invert",
     ])
 
     #expect(result.code == 0, "\(result.standardError)")
@@ -32,7 +32,7 @@ struct BindingAxisDefaultsTests {
     let service = try FakeService(devices: [], respond: library.respond)
 
     let result = await service.run(
-      ["binding", "set", "Pad", "axis:LeftStickX:Positive", "key:KeyD"] + option
+      ["binding", "set", "Pad", "axis:left-stick-x:positive", "key:key-d"] + option
     )
 
     #expect(result.code != 0)

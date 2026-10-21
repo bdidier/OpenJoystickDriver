@@ -29,8 +29,8 @@ struct ControllerServerFeedbackTests {
     _ devices: [ApplicationServiceDeviceDescription]
   ) -> ApplicationServiceStatusPayload {
     ApplicationServiceStatusPayload(
-      inputRead: "granted",
-      inputInject: "granted",
+      inputRead: .granted,
+      inputInject: .granted,
       connectedDevices: devices,
       userSpaceVirtualDeviceEnabled: true,
       userSpaceVirtualDeviceStatus: .backend("ready")

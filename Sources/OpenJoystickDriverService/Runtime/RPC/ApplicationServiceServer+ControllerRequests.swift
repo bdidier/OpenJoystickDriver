@@ -19,8 +19,8 @@ extension ApplicationServiceServer {
     )
     let userSnapshot = userSpaceStatusSnapshot()
     let payload = ApplicationServiceStatusPayload(
-      inputRead: "\(permissions.inputRead)",
-      inputInject: "\(permissions.inputInject)",
+      inputRead: permissions.inputRead,
+      inputInject: permissions.inputInject,
       connectedDevices: devices,
       unboundDevices: unboundDevices,
       passThroughDevices: passThroughDevices,

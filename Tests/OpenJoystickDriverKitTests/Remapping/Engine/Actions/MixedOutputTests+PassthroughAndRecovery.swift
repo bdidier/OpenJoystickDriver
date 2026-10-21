@@ -76,7 +76,9 @@ extension RemappingMixedOutputTests {
     )
     #expect(decoded == profile)
     #expect(
-      try RemappingCommandValueParser.destination("gamepad:axis:\(destination.rawValue)")
+      try RemappingCommandValueParser.destination(
+        "gamepad:axis:\(CommandLineName.kebab(destination.rawValue))"
+      )
         == .gamepadAxis(destination)
     )
     try await engine.process(
@@ -111,7 +113,9 @@ extension RemappingMixedOutputTests {
       from: JSONEncoder().encode(profile)
     )
     #expect(decoded == profile)
-    #expect(try RemappingCommandValueParser.destination("gamepad:dpad:DpadUp") == .gamepadDpad(.up))
+    #expect(
+      try RemappingCommandValueParser.destination("gamepad:dpad:dpad-up") == .gamepadDpad(.up)
+    )
     #expect(!profile.requiresSystemInputAccess)
     try await engine.process(inputs: [.press(.south)], from: device, using: decoded, at: 0)
     try await engine.process(inputs: [.press(.east)], from: device, using: decoded, at: 1)
@@ -220,7 +224,7 @@ extension RemappingMixedOutputTests {
     )
     #expect(throws: RemappingValidationError.virtualOutputRequired) { try profile.validate() }
     #expect(
-      try RemappingCommandValueParser.destination("gamepad:button:North") == .gamepadButton(.north)
+      try RemappingCommandValueParser.destination("gamepad:button:north") == .gamepadButton(.north)
     )
   }
 

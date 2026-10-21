@@ -66,7 +66,7 @@ struct StatusCommandLinkTests {
 
     #expect(json.code == 0, "\(json.standardError)")
     let report = try tool(json)
-    #expect(report["state"] as? String == "installed")
+    #expect(report["state"] as? String == "Installed")
     #expect(report["path"] as? String == folder.link)
     #expect(report["target"] as? String == folder.app)
     #expect(plain.standardOutput.contains("command-line-tool\tinstalled\t\(folder.link)\n"))
@@ -83,7 +83,7 @@ struct StatusCommandLinkTests {
 
     #expect(json.code == 0, "\(json.standardError)")
     let report = try tool(json)
-    #expect(report["state"] as? String == "missing")
+    #expect(report["state"] as? String == "Missing")
     #expect(report["path"] as? String == folder.link)
     #expect(report["target"] == nil)
     #expect(plain.standardOutput.contains("command-line-tool\tmissing\t\(folder.link)\n"))
@@ -101,7 +101,7 @@ struct StatusCommandLinkTests {
 
     #expect(json.code == 0, "\(json.standardError)")
     let report = try tool(json)
-    #expect(report["state"] as? String == "broken")
+    #expect(report["state"] as? String == "Broken")
     #expect(report["target"] as? String == folder.app)
     #expect(plain.standardOutput.contains("command-line-tool\tbroken\t\(folder.link)\n"))
   }
@@ -118,7 +118,7 @@ struct StatusCommandLinkTests {
       await runStatus(["--json"], link: folder.link, executable: folder.app)
     )
 
-    #expect(report["state"] as? String == "linkedElsewhere")
+    #expect(report["state"] as? String == "LinkedElsewhere")
     #expect(report["target"] as? String == other)
   }
 
@@ -135,7 +135,7 @@ struct StatusCommandLinkTests {
       await runStatus(["--json"], link: folder.link, executable: folder.app)
     )
 
-    #expect(report["state"] as? String == "installed")
+    #expect(report["state"] as? String == "Installed")
     #expect(report["target"] as? String == "OpenJoystickDriver")
   }
 
@@ -147,7 +147,7 @@ struct StatusCommandLinkTests {
 
     let report = try tool(await runStatus(["--json"], link: folder.link, executable: folder.app))
 
-    #expect(report["state"] as? String == "blockedByFile")
+    #expect(report["state"] as? String == "BlockedByFile")
     #expect(report["target"] == nil)
   }
 }

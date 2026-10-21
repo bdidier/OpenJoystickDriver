@@ -53,6 +53,15 @@ class ReportSchemaTests(unittest.TestCase):
 
         self.validator.validate(report)
 
+    def test_rejects_a_permission_state_that_is_not_a_listed_value(self) -> None:
+        for field in ("inputRead", "inputInject"):
+            for state in ("granted", "denied", "unknown", "GRANTED", "", "Allowed"):
+                with self.subTest(field=field, state=state):
+                    report = copy.deepcopy(load_fixture())
+                    report["data"]["permissions"][field] = state
+                    with self.assertRaises(validate_schemas.ValidationError):
+                        self.validator.validate(report)
+
     def test_rejects_an_unknown_frame_stage(self) -> None:
         report = copy.deepcopy(load_fixture())
         report["data"]["frameTimings"][0]["frames"][0]["stages"][0]["stage"] = "wire"

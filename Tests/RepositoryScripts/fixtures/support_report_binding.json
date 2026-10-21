@@ -105,8 +105,8 @@
       "System gamepad catalog audit was unavailable."
     ],
     "permissions": {
-      "inputInject": "granted",
-      "inputRead": "granted"
+      "inputInject": "Granted",
+      "inputRead": "Granted"
     },
     "privacy": {
       "includesDeviceProductNames": true,

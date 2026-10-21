@@ -15,7 +15,7 @@ public struct ControllerRecordDraft: Sendable {
     public let maximum: Int
   }
 
-  /// `add`, a Controller document, for a model without a bundled record, otherwise `patch`, a
+  /// `Add`, a Controller document, for a model without a bundled record, otherwise `Patch`, a
   /// ControllerPatch document.
   public let operation: ControllerRecordOperation
   /// The protocol family the draft names: `HIDReportLayout` when a control mapped, otherwise

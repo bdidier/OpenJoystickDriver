@@ -1,11 +1,11 @@
 /// Why OJD serves a controller no output.
 public enum OutputDisabledReason: String, Codable, CaseIterable, Equatable, Sendable {
   /// The user turned virtual output off.
-  case userDisabled
+  case userDisabled = "UserDisabled"
   /// Another virtual device already stands for the controller, so a second one would duplicate it.
-  case upstreamVirtualDevice
+  case upstreamVirtualDevice = "UpstreamVirtualDevice"
   /// No persona can represent the controller's primary controls.
-  case noVirtualProfile
+  case noVirtualProfile = "NoVirtualProfile"
 }
 
 /// The one way OJD serves a controller. Exactly one route holds for each controller.

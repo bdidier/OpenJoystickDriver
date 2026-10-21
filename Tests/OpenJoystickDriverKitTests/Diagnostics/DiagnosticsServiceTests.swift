@@ -7,8 +7,8 @@ struct DiagnosticsServiceTests {
   @Test
   func aVirtualDeviceErrorShowsItsMessageOnce() {
     let status = ApplicationServiceStatusPayload(
-      inputRead: "granted",
-      inputInject: "granted",
+      inputRead: .granted,
+      inputInject: .granted,
       connectedDevices: [],
       userSpaceVirtualDeviceEnabled: true,
       userSpaceVirtualDeviceStatus: .error("Missing entitlement")

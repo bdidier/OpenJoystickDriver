@@ -277,12 +277,6 @@
             isActionable: true
           )
         }
-      case .unavailable:
-        return OverviewAccessStatus(
-          value: OJDLocalized.string("common.unavailable"),
-          tone: .caution,
-          isActionable: true
-        )
       }
     }
 

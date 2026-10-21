@@ -69,8 +69,8 @@ actor GatewayStub: ApplicationServiceGateway {
 
   init(
     statusPayload: ApplicationServiceStatusPayload = ApplicationServiceStatusPayload(
-      inputRead: "granted",
-      inputInject: "granted",
+      inputRead: .granted,
+      inputInject: .granted,
       connectedDevices: [],
       userSpaceVirtualDeviceEnabled: true,
       userSpaceVirtualDeviceStatus: .backend("ready")

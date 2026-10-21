@@ -192,8 +192,8 @@ extension InputTestTests {
     model.selectDevice(device)
     let status = RuntimeStatusPresentation(
       payload: ApplicationServiceStatusPayload(
-        inputRead: "denied",
-        inputInject: "granted",
+        inputRead: .denied,
+        inputInject: .granted,
         connectedDevices: [device],
         userSpaceVirtualDeviceEnabled: true,
         userSpaceVirtualDeviceStatus: .backend("ready")
@@ -217,8 +217,8 @@ extension InputTestTests {
     await gateway.waitForInputCalls(1)
     let status = RuntimeStatusPresentation(
       payload: ApplicationServiceStatusPayload(
-        inputRead: "denied",
-        inputInject: "granted",
+        inputRead: .denied,
+        inputInject: .granted,
         connectedDevices: [],
         userSpaceVirtualDeviceEnabled: true,
         userSpaceVirtualDeviceStatus: .backend("ready")

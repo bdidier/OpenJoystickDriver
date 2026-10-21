@@ -243,10 +243,12 @@
       "additionalProperties": false,
       "properties": {
         "inputRead": {
-          "type": "string"
+          "description": "Unknown when the service did not reply.",
+          "enum": ["Granted", "Denied", "Unknown"]
         },
         "inputInject": {
-          "type": "string"
+          "description": "Unknown when the service did not reply.",
+          "enum": ["Granted", "Denied", "Unknown"]
         }
       }
     },

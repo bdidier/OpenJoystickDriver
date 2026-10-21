@@ -56,7 +56,7 @@ struct ConfigCommandTests {
     #expect(run.code == 0, "\(run.standardError)")
     let values = try values(run)
     #expect(values.count == ControllerTuning.Key.allCases.count)
-    #expect(values.values.allSatisfy { $0["layer"] as? String == "driver" && $0["value"] == nil })
+    #expect(values.values.allSatisfy { $0["layer"] as? String == "Driver" && $0["value"] == nil })
   }
 
   @Test
@@ -69,7 +69,7 @@ struct ConfigCommandTests {
     #expect(run.code == 0, "\(run.standardError)")
     let stick = try #require(try values(run)["stickDeadzone"])
     #expect(stick["value"] as? Double == 0.2)
-    #expect(stick["layer"] as? String == "global")
+    #expect(stick["layer"] as? String == "Global")
   }
 
   @Test
@@ -82,8 +82,8 @@ struct ConfigCommandTests {
 
     #expect(run.code == 0, "\(run.standardError)")
     #expect(try run.json()["controller"] as? String == identity)
-    #expect(try values(run)["stickDeadzone"]?["layer"] as? String == "global")
-    #expect(try values(run)["inputLivenessTimeoutMs"]?["layer"] as? String == "driver")
+    #expect(try values(run)["stickDeadzone"]?["layer"] as? String == "Global")
+    #expect(try values(run)["inputLivenessTimeoutMs"]?["layer"] as? String == "Driver")
   }
 
   @Test
@@ -128,8 +128,8 @@ struct ConfigCommandTests {
     let values = try values(run)
     #expect(values["stickMappings.0.tuning.innerDeadzone"]?["value"] as? Double == 0.1)
     #expect(values["stickMappings.1.tuning.innerDeadzone"]?["value"] as? Double == 0.25)
-    #expect(values["stickMappings.1.tuning.innerDeadzone"]?["layer"] as? String == "profile")
-    #expect(values["stickDeadzone"]?["layer"] as? String == "driver")
+    #expect(values["stickMappings.1.tuning.innerDeadzone"]?["layer"] as? String == "Profile")
+    #expect(values["stickDeadzone"]?["layer"] as? String == "Driver")
   }
 
   @Test

@@ -183,7 +183,7 @@ extension ControllerRecordSet {
   /// cross-field checks, or a ControllerPatch file's shape and the record it gives when applied
   /// over the bundled record of its selector. `file` becomes the record's
   /// ``ControllerRecord/userFile``, or its ``ControllerRecord/packageFile`` when `layer` is
-  /// `package`. A patch of a model with no bundled record applies over its record in `packages`,
+  /// `Package`. A patch of a model with no bundled record applies over its record in `packages`,
   /// the installed package records. An `all` patch gives no record; its `tuning` is range-checked.
   public static func validate(
     _ data: Data,

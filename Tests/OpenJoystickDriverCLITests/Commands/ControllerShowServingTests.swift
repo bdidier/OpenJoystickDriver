@@ -41,15 +41,20 @@ struct ControllerShowServingTests {
   func plainAndHumanOutputNameTheRoute(_ fixture: ServingFixture) async throws {
     let decision = ServingPolicy.decision(ServingInput(Self.device(fixture)))
     let plain = try await Self.show(fixture, ["--plain"])
-    let reason = decision.route.disabledReason?.rawValue ?? ""
+    let reason = decision.route.disabledReason.map { CommandLineName.kebab($0.rawValue) } ?? ""
     #expect(
-      plain.standardOutput.contains("serving-route\t\(decision.route.id)\t\(reason)\n"),
+      plain.standardOutput.contains(
+        "serving-route\t\(CommandLineName.kebab(decision.route.id))\t\(reason)\n"
+      ),
       "\(fixture.name)"
     )
-    let persona = decision.selection?.profileID.rawValue ?? ""
+    let persona = decision.selection.map { CommandLineName.kebab($0.profileID.rawValue) } ?? ""
     #expect(plain.standardOutput.contains("persona\t\(persona)\n"), "\(fixture.name)")
     let human = try await Self.show(fixture, [])
-    #expect(human.standardOutput.contains(decision.route.id), "\(fixture.name)")
+    #expect(
+      human.standardOutput.contains(CommandLineName.kebab(decision.route.id)),
+      "\(fixture.name)"
+    )
   }
 
   @Test

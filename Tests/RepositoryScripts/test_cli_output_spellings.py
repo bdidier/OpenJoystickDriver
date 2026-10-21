@@ -1,6 +1,7 @@
 import unittest
 from typing import Any
 
+from Scripts.Catalog.command_line_name import kebab
 from Scripts.Quality import validate_schemas
 
 SCHEMA = "cli-output.schema.json"
@@ -16,6 +17,128 @@ INTENSITIES = {
         "rightHaptic",
     )
 }
+
+D = "/$defs"
+OWNERSHIP = f"{D}/controllerShow/properties/ownership/properties"
+PERMISSIONS = f"{D}/sharedPermissions/properties/permissions/items/properties"
+STATUS = f"{D}/status/properties"
+EXTENSION = f"{STATUS}/transportExtension/properties"
+BUNDLE = ("Present", "Missing", "Invalid")
+REGISTRATION = ("Active", "Inactive", "Absent", "Unavailable")
+LAYERS = ("Bundled", "Package", "User")
+PERMISSION_STATES = ("Granted", "Denied", "Unknown")
+OUTCOMES = (
+    "Delivered",
+    "NotFound",
+    "UnsupportedCapability",
+    "NotReady",
+    "InvalidValue",
+    "WriteFailed",
+    "Cancelled",
+)
+LOG_STREAMS = ("StandardOutput", "StandardError")
+
+# pointer -> the values the schema lists. Each value in its first-letter-lowercase form, and
+# the lowercase kebab-case form, is not a value.
+VALUES: dict[str, tuple[str, ...]] = {
+    f"{D}/configShow/properties/values/items/properties/layer": (
+        "Driver",
+        "Bundled",
+        "Package",
+        "Global",
+        "User",
+        "Profile",
+    ),
+    f"{D}/controllerCapture/properties/direction": ("Rx", "Tx"),
+    f"{OWNERSHIP}/discoverySource": ("HID", "RawUSB"),
+    f"{OWNERSHIP}/duplicateExposureRisk": (
+        "None",
+        "SystemHIDVisible",
+        "UpstreamVirtualDevice",
+        "UnknownOwnership",
+    ),
+    f"{OWNERSHIP}/hidInput": (
+        "Unknown",
+        "Exclusive",
+        "Shared",
+        "AccessDenied",
+        "OwnedByAnotherClient",
+        "AcquisitionFailed",
+    ),
+    f"{OWNERSHIP}/physical": (
+        "ExclusiveHID",
+        "ExclusiveRawUSB",
+        "UpstreamVirtualDevice",
+        "Unknown",
+    ),
+    f"{OWNERSHIP}/serverSource": ("Bundled", "Package", "User", "Default"),
+    f"{D}/controllerShow/properties/publication/properties/state": (
+        "Published",
+        "NotPublished",
+        "Failed",
+    ),
+    f"{D}/controllerShow/properties/record/properties/layer": LAYERS,
+    f"{D}/controllerShow/properties/serving/properties/reason": (
+        "UserDisabled",
+        "UpstreamVirtualDevice",
+        "NoVirtualProfile",
+    ),
+    f"{D}/controllerShow/properties/virtual/properties/overrideScope": (
+        "Unit",
+        "Model",
+    ),
+    f"{D}/virtualShow/properties/controllers/items/properties/overrideScope": (
+        "Unit",
+        "Model",
+    ),
+    f"{D}/diagnose/properties/checks/items/properties/status": (
+        "Pass",
+        "Warn",
+        "Fail",
+        "Skip",
+    ),
+    f"{D}/logShow/oneOf/1/properties/stream": LOG_STREAMS,
+    f"{D}/logShow/oneOf/0/properties/logs/items/properties/stream": LOG_STREAMS,
+    f"{D}/recordDraft/properties/operation": ("Add", "Patch"),
+    f"{D}/sharedRecordValidation/properties/operation": ("Add", "Patch"),
+    f"{D}/recordList/properties/items/items/properties/layer": LAYERS,
+    f"{D}/recordShow/properties/fields/additionalProperties": LAYERS,
+    f"{D}/recordShow/properties/layer": LAYERS,
+    f"{D}/recordShow/properties/transport": ("HID", "USB"),
+    f"{D}/sharedRecordValidation/properties/transport": ("HID", "USB"),
+    f"{D}/recordShow/properties/transportClaim": ("Claimed", "Unclaimed"),
+    f"{D}/sharedRecordValidation/properties/transportClaim": ("Claimed", "Unclaimed"),
+    f"{D}/sharedControllerOutput/properties/results/items/properties/outcome": OUTCOMES,
+    f"{PERMISSIONS}/id": ("InputRead", "InputInject", "USBTransport"),
+    f"{PERMISSIONS}/state": PERMISSION_STATES,
+    f"{STATUS}/permissions/properties/inputRead": PERMISSION_STATES,
+    f"{STATUS}/permissions/properties/inputInject": PERMISSION_STATES,
+    f"{D}/sharedProfileIssue/properties/kind": ("DamagedProfile", "UnusableLibrary"),
+    f"{D}/sharedServiceState/properties/state": ("Running", "Stopped"),
+    f"{STATUS}/service/properties/state": ("Running", "Stopped"),
+    f"{D}/sharedTransportExtensionState/properties/state": (
+        "Active",
+        "Inactive",
+        "AwaitingApproval",
+    ),
+    f"{STATUS}/commandLineTool/properties/state": (
+        "Installed",
+        "LinkedElsewhere",
+        "Broken",
+        "BlockedByFile",
+        "Missing",
+    ),
+    f"{EXTENSION}/bundle": BUNDLE,
+    f"{EXTENSION}/registration": REGISTRATION,
+    f"{D}/transportExtensionStatus/properties/bundle": BUNDLE,
+    f"{D}/transportExtensionStatus/properties/registration": REGISTRATION,
+    f"{D}/updateCheck/properties/status": ("UpToDate", "Available"),
+    f"{D}/virtualExportMapping/properties/format": ("SDL", "W3C"),
+}
+
+
+def lower_first(value: str) -> str:
+    return value[0].lower() + value[1:]
 
 
 class CliOutputSpellingTests(unittest.TestCase):
@@ -102,6 +225,29 @@ class CliOutputSpellingTests(unittest.TestCase):
             with self.subTest(pointer=pointer, value=current):
                 self.assertTrue(self.accepts(pointer, current))
                 self.assertFalse(self.accepts(pointer, replaced))
+
+    def test_every_listed_value_is_upper_camel_case_and_its_earlier_spellings_are_not(
+        self,
+    ) -> None:
+        for pointer, values in VALUES.items():
+            for value in values:
+                with self.subTest(pointer=pointer, value=value):
+                    self.assertTrue(self.accepts(pointer, value))
+                    for refused in {lower_first(value), kebab(value), value.lower()} - {
+                        value
+                    }:
+                        self.assertFalse(self.accepts(pointer, refused), refused)
+
+    def test_the_reset_detail_takes_All(self) -> None:
+        pointer = f"{D}/virtualReset/oneOf/0/properties/details/properties/reset"
+        self.assertTrue(self.accepts(pointer, "All"))
+        self.assertFalse(self.accepts(pointer, "all"))
+
+    def test_the_permission_ids_are_not_the_kebab_case_names(self) -> None:
+        pointer = f"{PERMISSIONS}/id"
+        for refused in ("input-read", "input-inject", "usb-transport", "usbTransport"):
+            with self.subTest(value=refused):
+                self.assertFalse(self.accepts(pointer, refused))
 
 
 if __name__ == "__main__":

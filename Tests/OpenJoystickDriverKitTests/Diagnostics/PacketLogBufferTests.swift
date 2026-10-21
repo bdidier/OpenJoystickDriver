@@ -6,8 +6,8 @@ import Testing
 struct PacketLogBufferTests {
   @Test
   func directionRawValuesAreTheWireStrings() {
-    #expect(PacketLogDirection.received.rawValue == "rx")
-    #expect(PacketLogDirection.transmitted.rawValue == "tx")
+    #expect(PacketLogDirection.received.rawValue == "Rx")
+    #expect(PacketLogDirection.transmitted.rawValue == "Tx")
   }
 
   @Test

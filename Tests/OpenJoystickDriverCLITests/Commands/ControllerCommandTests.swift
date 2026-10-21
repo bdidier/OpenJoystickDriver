@@ -253,6 +253,30 @@ struct ControllerCommandTests {
   }
 
   @Test
+  func showPlainPrintsProtocolControlsAndRumbleMotorsInKebabCase() async throws {
+    let device = ApplicationServiceDeviceDescription.fixture(id: "pad-1", outputs: .dualMainRumble)
+    let service = try FakeService(devices: [device])
+    let protocolName = CommandLineName.kebab(device.protocolBinding.rawValue)
+
+    let plain = await service.run(["controller", "show", token("pad-1"), "--plain"])
+    let human = await service.run(["controller", "show", token("pad-1")])
+
+    #expect(plain.code == 0, "\(plain.standardError)")
+    let rows = plain.standardOutput.split(separator: "\n").map {
+      $0.split(separator: "\t", omittingEmptySubsequences: false).map(String.init)
+    }
+    func value(_ name: String) -> String? { rows.first { $0.first == name }?.dropFirst().first }
+    #expect(value("protocol") == protocolName)
+    #expect(protocolName != device.protocolBinding.rawValue)
+    #expect(value("rumble-motors") == "low-frequency,high-frequency")
+    for name in ["controls", "rumble-motors", "lighting"] {
+      let text = try #require(value(name))
+      #expect(text == text.lowercased(), "\(name)")
+    }
+    #expect(human.standardOutput.contains(protocolName))
+  }
+
+  @Test
   func showPrintsWhyTheControllerIsNotPublished() async throws {
     var device = ApplicationServiceDeviceDescription.fixture(id: "pad-1")
     device.publication = ApplicationServicePublicationStatus(
@@ -269,11 +293,11 @@ struct ControllerCommandTests {
     #expect(json.code == 0, "\(json.standardError)")
     let controller = try json.json()
     let publication = try #require(controller["publication"] as? [String: Any])
-    #expect(publication["state"] as? String == "notPublished")
+    #expect(publication["state"] as? String == "NotPublished")
     #expect(publication["reason"] as? String == "systemGamepad")
     #expect(publication["target"] as? String == VirtualHIDProfileID.sdlCompatible.rawValue)
-    #expect(plain.standardOutput.contains("\npublication\tnotPublished\tsystemGamepad\n"))
-    #expect(Self.rows(human, endingIn: "notPublished (systemGamepad)").count == 1)
+    #expect(plain.standardOutput.contains("\npublication\tnot-published\tsystemGamepad\n"))
+    #expect(Self.rows(human, endingIn: "not-published (systemGamepad)").count == 1)
   }
 
   @Test
@@ -485,7 +509,7 @@ struct ControllerCommandTests {
 
     #expect(json.result.code == 0, "\(json.result.standardError)")
     let controller = try json.result.json()
-    #expect(controller["record"] as? [String: String] == ["layer": "bundled"])
+    #expect(controller["record"] as? [String: String] == ["layer": "Bundled"])
     let bundled = CLILocalized.text("cli.controller.show.record.bundled")
     #expect(Self.rows(human.result, endingIn: bundled).count == 1)
     #expect(plain.result.standardOutput.contains("record\tbundled\t\n"))
@@ -500,7 +524,7 @@ struct ControllerCommandTests {
     #expect(json.result.code == 0, "\(json.result.standardError)")
     let controller = try json.result.json()
     #expect((controller["record"] as? [String: String])?.keys.sorted() == ["file", "layer"])
-    #expect((controller["record"] as? [String: String])?["layer"] == "user")
+    #expect((controller["record"] as? [String: String])?["layer"] == "User")
     #expect((controller["record"] as? [String: String])?["file"]?.hasSuffix(json.file) == true)
     #expect(
       human.result.standardOutput.split(separator: "\n").filter { $0.contains(human.file) }.count
@@ -540,7 +564,7 @@ struct ControllerCommandTests {
     #expect(status["status"] as? String == "Success")
     let details = try #require(status["details"] as? [String: Any])
     let results = try #require(details["results"] as? [[String: Any]])
-    #expect(results.allSatisfy { $0["outcome"] as? String == "delivered" })
+    #expect(results.allSatisfy { $0["outcome"] as? String == "Delivered" })
   }
 
   @Test
@@ -566,7 +590,7 @@ struct ControllerCommandTests {
   @Test
   func capturePrintsEachNewPacketAsAJSONLine() async throws {
     let reads = Counter()
-    let packet = #"{"direction":"rx","hex":"01 02","length":2,"timestamp":1.5}"#
+    let packet = #"{"direction":"Rx","hex":"01 02","length":2,"timestamp":1.5}"#
     let service = try FakeService(devices: [
       ApplicationServiceDeviceDescription.fixture(id: "pad-1")
     ]) { method, _ in
@@ -580,7 +604,7 @@ struct ControllerCommandTests {
     #expect(
       result.standardOutput
         == #"{"apiVersion":"openjoystickdriver/v1alpha1","captureTime":"1970-01-01T00:00:01.500Z","#
-        + #""direction":"rx","hex":"01 02","kind":"RawReport","length":2}"# + "\n"
+        + #""direction":"Rx","hex":"01 02","kind":"RawReport","length":2}"# + "\n"
     )
   }
 

@@ -234,7 +234,7 @@ struct DiagnoseCommand: AsyncParsableCommand {
     let idWidth = report.checks.map(\.id.count).max() ?? 0
     for check in report.checks {
       let id = check.id.padding(toLength: idWidth, withPad: " ", startingAt: 0)
-      let status = check.status.rawValue.uppercased().padding(
+      let status = CommandLineName.kebab(check.status.rawValue).uppercased().padding(
         toLength: 4,
         withPad: " ",
         startingAt: 0
@@ -264,9 +264,7 @@ struct DiagnoseCommand: AsyncParsableCommand {
     let report = SupportReportService.make(
       status: snapshot.status,
       virtualDiagnostics: snapshot.virtualDiagnostics,
-      inputRead: PermissionManager.AccessState(
-        status: snapshot.status?.inputRead ?? "unknown"
-      ),
+      inputRead: snapshot.status?.inputRead ?? .unknown,
       applicationServiceHealth: ApplicationServiceManager.ApplicationServiceHealth(
         installed: ApplicationServiceManager.isInstalled,
         activeCount: processIdentifier == nil ? 0 : 1,

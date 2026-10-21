@@ -62,8 +62,8 @@ extension ControllerModelID: ExpressibleByArgument {
 
 /// How OJD reaches a record's controller. The raw values are stable identifiers.
 enum RecordTransport: String, Encodable, Equatable {
-  case hid
-  case usb
+  case hid = "HID"
+  case usb = "USB"
 
   init(_ record: ControllerRecord) { self = record.usesRawUSB ? .usb : .hid }
 }
@@ -71,8 +71,8 @@ enum RecordTransport: String, Encodable, Equatable {
 /// Whether the signed USB extension can claim a raw-USB controller. Its USB entitlement is a
 /// product list Apple signs, so a user record cannot add a product to it.
 enum RecordTransportClaim: String, Encodable, Equatable {
-  case claimed
-  case unclaimed
+  case claimed = "Claimed"
+  case unclaimed = "Unclaimed"
 
   init?(_ record: ControllerRecord) {
     guard record.usesRawUSB else { return nil }

@@ -353,8 +353,8 @@ public protocol PhysicalProtocolDriver: AnyObject {
   var defaultColor: ControllerColor? { get }
 
   /// Writes that carry `command`. Encoding may advance protocol state (sequence numbers, the
-  /// last rumble a combined report repeats). Throws `unsupportedCapability` for a command the
-  /// protocol has no output for, and `notReady` while its session cannot carry the command yet.
+  /// last rumble a combined report repeats). Throws `UnsupportedCapability` for a command the
+  /// protocol has no output for, and `NotReady` while its session cannot carry the command yet.
   func encode(
     _ command: ControllerOutputCommand
   ) throws(ControllerOutputError) -> PhysicalOutputPlan

@@ -13,16 +13,16 @@ struct StatusReport: Encodable, Equatable {
 
   struct Extension: Encodable, Equatable {
     enum Bundle: String, Encodable {
-      case present
-      case missing
-      case invalid
+      case present = "Present"
+      case missing = "Missing"
+      case invalid = "Invalid"
     }
 
     enum Registration: String, Encodable {
-      case active
-      case inactive
-      case absent
-      case unavailable
+      case active = "Active"
+      case inactive = "Inactive"
+      case absent = "Absent"
+      case unavailable = "Unavailable"
     }
 
     let bundle: Bundle
@@ -122,8 +122,8 @@ struct StatusReport: Encodable, Equatable {
     }
     service = Service(state: .running, version: payload.buildIdentity.semanticVersion)
     permissions = Permissions(
-      inputRead: PermissionManager.AccessState(status: payload.inputRead),
-      inputInject: PermissionManager.AccessState(status: payload.inputInject)
+      inputRead: payload.inputRead,
+      inputInject: payload.inputInject
     )
     virtualDevice = VirtualDevice(
       enabled: payload.userSpaceVirtualDeviceEnabled,

@@ -12,7 +12,6 @@ enum RuntimePermissionState: String, Sendable, Equatable {
   case granted
   case denied
   case unknown
-  case unavailable
 }
 
 struct RuntimePermissionSummary: Sendable, Equatable {
@@ -43,15 +42,6 @@ struct RuntimePermissionSummary: Sendable, Equatable {
   var inputReadLabel: String { RuntimePresentation.permissionLabel(inputRead) }
 
   var accessibilityLabel: String { RuntimePresentation.permissionLabel(inputInject) }
-
-  static func state(for value: String) -> RuntimePermissionState {
-    switch value.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() {
-    case "granted": return .granted
-    case "denied": return .denied
-    case "unknown": return .unknown
-    default: return .unavailable
-    }
-  }
 
   static func state(for value: PermissionManager.AccessState) -> RuntimePermissionState {
     switch value {

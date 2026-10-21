@@ -150,5 +150,13 @@ extension RemappingResponseCurve: ExpressibleByArgument {
 }
 
 extension RemappingMotionCalibrationCommand: ExpressibleByArgument {
-  public init?(argument: String) { self.init(rawValue: argument) }
+  /// The lowercase kebab-case spelling of a case.
+  public init?(argument: String) {
+    guard let value = CommandLineName.value(of: argument, in: Self.self) else { return nil }
+    self = value
+  }
+
+  public static var allValueStrings: [String] {
+    allCases.map { CommandLineName.kebab($0.rawValue) }
+  }
 }

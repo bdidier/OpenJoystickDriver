@@ -100,9 +100,11 @@ struct RecordValidateCommand: AsyncParsableCommand {
       case .plain:
         CLIOutput.plain([
           [
-            result.operation ?? "", result.identity ?? "", result.family ?? "",
-            result.fileName ?? "", result.transport?.rawValue ?? "",
-            result.transportClaim?.rawValue ?? "",
+            result.operation.map(CommandLineName.kebab) ?? "", result.identity ?? "",
+            result.family.map(CommandLineName.kebab) ?? "",
+            result.fileName ?? "",
+            result.transport.map { CommandLineName.kebab($0.rawValue) } ?? "",
+            result.transportClaim.map { CommandLineName.kebab($0.rawValue) } ?? "",
           ]
         ])
       case .human:
@@ -110,9 +112,9 @@ struct RecordValidateCommand: AsyncParsableCommand {
           CLILocalized.format(
             "cli.record.validate.valid",
             file,
-            validated.operation.rawValue,
+            CommandLineName.kebab(validated.operation.rawValue),
             result.identity ?? "",
-            validated.record?.family ?? ""
+            validated.record.map { CommandLineName.kebab($0.family) } ?? ""
           )
         )
         if let note = RecordValidation.usbNote(validated) { CLIOutput.stdout(note) }

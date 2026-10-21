@@ -7,15 +7,15 @@ import Foundation
 public struct CommandLineToolLinkStatus: Equatable, Sendable {
   public enum State: String, Codable, CaseIterable, Equatable, Sendable {
     /// A link that points to this app's executable.
-    case installed
+    case installed = "Installed"
     /// A link whose target exists but is not this app's executable, such as another app copy.
-    case linkedElsewhere
+    case linkedElsewhere = "LinkedElsewhere"
     /// A link whose target does not exist.
-    case broken
+    case broken = "Broken"
     /// A file or folder that is not a link; the app never replaces it.
-    case blockedByFile
+    case blockedByFile = "BlockedByFile"
     /// Nothing is at the path.
-    case missing
+    case missing = "Missing"
   }
 
   /// Where the app puts the link.
@@ -37,7 +37,7 @@ public struct CommandLineToolLinkStatus: Equatable, Sendable {
     Bundle.main.executableURL ?? URL(fileURLWithPath: CommandLine.arguments[0])
   }
 
-  /// Reads the path without following the link, so a dangling link is `broken`, not `missing`.
+  /// Reads the path without following the link, so a dangling link is `Broken`, not `Missing`.
   /// A relative target is read from the folder that holds the link.
   public static func probe(
     path: String = defaultPath,

@@ -4,14 +4,47 @@ import Testing
 
 struct InputReadPermissionStateTests {
   @Test
-  func accessStateNormalizesMultilineProbeOutput() {
-    #expect(PermissionManager.AccessState(status: "granted") == .granted)
-    #expect(
-      PermissionManager.AccessState(
-        status: "[Application service] Starting permission-check probe mode\nDENIED\n"
-      ) == .denied
+  func anAccessStateDecodesOnlyItsListedSpellings() throws {
+    for state in PermissionManager.AccessState.allCases {
+      let data = Data("\"\(state.rawValue)\"".utf8)
+      #expect(try JSONDecoder().decode(PermissionManager.AccessState.self, from: data) == state)
+    }
+  }
+
+  @Test(arguments: ["granted", "GRANTED", "denied", "unknown", "", "Allowed"])
+  func anAccessStateRefusesAnyOtherSpelling(raw: String) {
+    #expect(PermissionManager.AccessState(rawValue: raw) == nil)
+    #expect(throws: DecodingError.self) {
+      try JSONDecoder().decode(
+        PermissionManager.AccessState.self,
+        from: Data("\"\(raw)\"".utf8)
+      )
+    }
+  }
+
+  @Test(arguments: ["granted", "Allowed", ""])
+  func aStatusPayloadRefusesAnInvalidPermissionState(raw: String) throws {
+    let valid = ApplicationServiceStatusPayload(
+      inputRead: .granted,
+      inputInject: .denied,
+      connectedDevices: []
     )
-    #expect(PermissionManager.AccessState(status: "unexpected") == .unknown)
+    var object = try #require(
+      JSONSerialization.jsonObject(with: JSONEncoder().encode(valid)) as? [String: Any]
+    )
+    for field in ["inputRead", "inputInject"] {
+      var copy = object
+      copy[field] = raw
+      let data = try JSONSerialization.data(withJSONObject: copy)
+      #expect(throws: DecodingError.self) {
+        try JSONDecoder().decode(ApplicationServiceStatusPayload.self, from: data)
+      }
+    }
+    object["inputRead"] = "Granted"
+    _ = try JSONDecoder().decode(
+      ApplicationServiceStatusPayload.self,
+      from: JSONSerialization.data(withJSONObject: object)
+    )
   }
 
   @Test

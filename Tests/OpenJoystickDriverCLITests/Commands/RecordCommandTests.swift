@@ -57,11 +57,11 @@ struct RecordCommandTests {
     #expect(json.code == 0, "\(json.standardError)")
     let result = try json.json()
     #expect(result["valid"] as? Bool == true)
-    #expect(result["operation"] as? String == "patch")
+    #expect(result["operation"] as? String == "Patch")
     #expect(result["identity"] as? String == "366C:0005")
     #expect(result["fileName"] as? String == "366c-0005.patch.json")
-    #expect(result["transport"] as? String == "usb")
-    #expect(result["transportClaim"] as? String == "unclaimed")
+    #expect(result["transport"] as? String == "USB")
+    #expect(result["transportClaim"] as? String == "Unclaimed")
     #expect(human.standardOutput.contains("366C:0005"))
     #expect(directory.fileNames.isEmpty)
   }
@@ -106,11 +106,11 @@ struct RecordCommandTests {
     let row = try #require(
       list.standardOutput.split(separator: "\n").first { $0.hasPrefix("366C:0005\t") }
     )
-    #expect(row.hasPrefix("366C:0005\tXboxGIP\tuser\t"))
+    #expect(row.hasPrefix("366C:0005\txbox-gip\tuser\t"))
     #expect(list.standardOutput.contains("\tbundled\t"))
     let shown = try show.json()
-    #expect(shown["layer"] as? String == "user")
-    #expect(shown["fields"] as? [String: String] == ["modes": "bundled", "tuning": "user"])
+    #expect(shown["layer"] as? String == "User")
+    #expect(shown["fields"] as? [String: String] == ["modes": "Bundled", "tuning": "User"])
     let record = try #require(shown["record"] as? [String: Any])
     #expect((record["tuning"] as? [String: Double])?["stickDeadzone"] == 0.08)
     #expect(plainShow.standardOutput == "modes\tbundled\ntuning\tuser\n")
@@ -131,7 +131,7 @@ struct RecordCommandTests {
     #expect(list.standardError.contains("366c-0005.patch.json"))
     let records = try #require(try bundled.json()["items"] as? [[String: Any]])
     #expect(records.count == ControllerRecordSet.bundled.records.count)
-    #expect(records.allSatisfy { $0["layer"] as? String == "bundled" })
+    #expect(records.allSatisfy { $0["layer"] as? String == "Bundled" })
     #expect((try bundled.json()["metadata"] as? [String: Any])?.isEmpty == true)
   }
 
@@ -221,9 +221,9 @@ struct RecordCommandTests {
   func draftPrintsARecordFromTheCapturedReports() async throws {
     let reads = Counter()
     let packets = """
-      [{"direction":"rx","hex":"00 01 02","length":3,"timestamp":1},
-       {"direction":"tx","hex":"00 00 00","length":3,"timestamp":2},
-       {"direction":"rx","hex":"00 01 05","length":3,"timestamp":3}]
+      [{"direction":"Rx","hex":"00 01 02","length":3,"timestamp":1},
+       {"direction":"Tx","hex":"00 00 00","length":3,"timestamp":2},
+       {"direction":"Rx","hex":"00 01 05","length":3,"timestamp":3}]
       """
     let service = try FakeService(
       devices: [
@@ -242,7 +242,7 @@ struct RecordCommandTests {
     }
     #expect(result.code == 0, "\(result.standardError)")
     let json = try result.json()
-    #expect(json["operation"] as? String == "add")
+    #expect(json["operation"] as? String == "Add")
     #expect(json["family"] as? String == "HIDDescriptor")
     #expect(json["capturedReports"] as? Int == 2)
     #expect(json["report"] as? [String: Int] == ["length": 3])

@@ -41,8 +41,8 @@ struct TransportExtensionCommandTests {
 
     #expect(jsonRun.code == 0)
     let json = try jsonRun.json()
-    #expect(json["bundle"] as? String == "present")
-    #expect(json["registration"] as? String == "active")
+    #expect(json["bundle"] as? String == "Present")
+    #expect(json["registration"] as? String == "Active")
     #expect(json["detail"] as? String == "record line")
     #expect(plainRun.standardOutput == "bundle\tpresent\nregistration\tactive\n")
   }
@@ -53,8 +53,8 @@ struct TransportExtensionCommandTests {
 
     #expect(result.code == 0)
     let json = try result.json()
-    #expect(json["bundle"] as? String == "missing")
-    #expect(json["registration"] as? String == "absent")
+    #expect(json["bundle"] as? String == "Missing")
+    #expect(json["registration"] as? String == "Absent")
     #expect(json["detail"] == nil)
   }
 
@@ -93,7 +93,7 @@ struct TransportExtensionCommandTests {
     let jsonRun = await submit("activate", ["--json"], outcome: .active, actions: actions)
     let humanRun = await submit("activate", outcome: .active, actions: actions)
 
-    #expect(try jsonRun.json()["state"] as? String == "active")
+    #expect(try jsonRun.json()["state"] as? String == "Active")
     #expect(humanRun.code == 0)
     #expect(humanRun.standardOutput.isEmpty)
     #expect(humanRun.standardError.split(separator: "\n").count == 1)
@@ -109,7 +109,7 @@ struct TransportExtensionCommandTests {
 
     #expect(result.code == 0)
     #expect(result.standardOutput == "state\tinactive\n")
-    #expect(try jsonRun.json()["state"] as? String == "inactive")
+    #expect(try jsonRun.json()["state"] as? String == "Inactive")
     #expect(actions.withLock { $0 } == [.deactivate, .deactivate])
   }
 
@@ -122,7 +122,7 @@ struct TransportExtensionCommandTests {
     #expect(human.code == 0)
     #expect(!human.standardError.isEmpty)
     #expect(!quiet.standardError.isEmpty)
-    #expect(try json.json()["state"] as? String == "awaitingApproval")
+    #expect(try json.json()["state"] as? String == "AwaitingApproval")
   }
 
   @Test(arguments: [SystemExtensionSetupRequestResult.failed, .timedOut])

@@ -146,7 +146,9 @@ struct LogShowCommand: AsyncParsableCommand {
     case .json: try CLIOutput.json(Snapshots(logs: snapshots))
     case .plain:
       CLIOutput.plain(
-        snapshots.flatMap { snapshot in snapshot.lines.map { [snapshot.stream.rawValue, $0] } }
+        snapshots.flatMap { snapshot in
+          snapshot.lines.map { [CommandLineName.kebab(snapshot.stream.rawValue), $0] }
+        }
       )
     case .human: CLIOutput.stdout(humanText(snapshots), terminator: "")
     }
@@ -155,7 +157,7 @@ struct LogShowCommand: AsyncParsableCommand {
   static func humanText(_ snapshots: [ApplicationServiceLogSnapshot]) -> String {
     var text = ""
     for snapshot in snapshots {
-      text += "== \(snapshot.stream.rawValue): \(snapshot.path) ==\n"
+      text += "== \(CommandLineName.kebab(snapshot.stream.rawValue)): \(snapshot.path) ==\n"
       if !snapshot.exists {
         text += CLILocalized.text("cli.log.show.missing") + "\n"
       } else if snapshot.lines.isEmpty {
@@ -184,7 +186,8 @@ struct LogShowCommand: AsyncParsableCommand {
                 StreamedLine(stream: line.stream, line: line.text),
                 kind: Self.streamedLineKind
               )
-            case .plain: CLIOutput.plain([[line.stream.rawValue, line.text]])
+            case .plain:
+              CLIOutput.plain([[CommandLineName.kebab(line.stream.rawValue), line.text]])
             case .human: CLIOutput.stdout(line.text)
             }
           }

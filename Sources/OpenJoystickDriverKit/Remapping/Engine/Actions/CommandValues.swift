@@ -12,25 +12,31 @@ public enum RemappingCommandValueError: Error, Equatable, LocalizedError, Sendab
   }
 }
 
-/// Parses the colon-separated source and target operands of `ojd binding`. Controls, axes, dpad
-/// directions and keys are spelled as in profiles; every other enumerated word is the lowercase
-/// kebab-case form of its profile value (`CommandLineName`).
+/// Parses the colon-separated source and target operands of `ojd binding`. Every part that is an
+/// enumerated value (control, axis, direction, key, modifier, surface, motor) is the lowercase
+/// kebab-case form of its profile value (`CommandLineName`), such as `axis:left-stick-x:negative`.
+/// Fixed words (`button`, `key`, `mods=`) and numbers are written as they are.
 public enum RemappingCommandValueParser {
   public static func source(_ raw: String) throws -> RemappingSource {
     let parts = raw.split(separator: ":", omittingEmptySubsequences: false).map(String.init)
-    if parts.count == 2, parts[0] == "button", let button = Control(rawValue: parts[1]) {
+    if parts.count == 2, parts[0] == "button",
+      let button = CommandLineName.value(of: parts[1], in: Control.self)
+    {
       return .button(button)
     }
     if parts.count == 2, parts[0] == "dpad",
-      let direction = RemappingDpadDirection(rawValue: parts[1])
+      let direction = CommandLineName.value(of: parts[1], in: RemappingDpadDirection.self)
     {
       return .dpad(direction)
     }
-    if parts.count == 2, parts[0] == "axis", let axis = RemappingAxis(rawValue: parts[1]) {
+    if parts.count == 2, parts[0] == "axis",
+      let axis = CommandLineName.value(of: parts[1], in: RemappingAxis.self)
+    {
       return .axis(axis)
     }
-    if parts.count == 3, parts[0] == "axis", let axis = RemappingAxis(rawValue: parts[1]),
-      let direction = RemappingAxisDirection(rawValue: parts[2])
+    if parts.count == 3, parts[0] == "axis",
+      let axis = CommandLineName.value(of: parts[1], in: RemappingAxis.self),
+      let direction = CommandLineName.value(of: parts[2], in: RemappingAxisDirection.self)
     {
       return .axisDirection(axis, direction)
     }
@@ -87,28 +93,33 @@ public enum RemappingCommandValueParser {
   public static func destination(_ raw: String) throws -> RemappingDestination {
     let parts = raw.split(separator: ":", omittingEmptySubsequences: false).map(String.init)
     if parts.count == 3, parts[0] == "gamepad", parts[1] == "axis",
-      let axis = RemappingAxis(rawValue: parts[2])
+      let axis = CommandLineName.value(of: parts[2], in: RemappingAxis.self)
     {
       return .gamepadAxis(axis)
     }
     if parts.count == 3, parts[0] == "gamepad", parts[1] == "dpad",
-      let direction = RemappingDpadDirection(rawValue: parts[2])
+      let direction = CommandLineName.value(of: parts[2], in: RemappingDpadDirection.self)
     {
       return .gamepadDpad(direction)
     }
     if parts.count == 3, parts[0] == "gamepad", parts[1] == "button",
-      let button = Control(rawValue: parts[2])
+      let button = CommandLineName.value(of: parts[2], in: Control.self)
     {
       return .gamepadButton(button)
     }
-    if parts.count == 2, parts[0] == "key", let key = RemappingKeyboardKey(rawValue: parts[1]) {
+    if parts.count == 2, parts[0] == "key",
+      let key = CommandLineName.value(of: parts[1], in: RemappingKeyboardKey.self)
+    {
       return .keyboard(key: key, modifiers: [])
     }
-    if parts.count == 3, parts[0] == "key", let key = RemappingKeyboardKey(rawValue: parts[1]),
+    if parts.count == 3, parts[0] == "key",
+      let key = CommandLineName.value(of: parts[1], in: RemappingKeyboardKey.self),
       parts[2].hasPrefix("mods=")
     {
       let names = parts[2].dropFirst(5).split(separator: ",").map(String.init)
-      let modifiers = names.compactMap(RemappingKeyModifier.init(rawValue:))
+      let modifiers = names.compactMap {
+        CommandLineName.value(of: $0, in: RemappingKeyModifier.self)
+      }
       if !names.isEmpty, modifiers.count == names.count, Set(modifiers).count == modifiers.count {
         return .keyboard(key: key, modifiers: Set(modifiers))
       }

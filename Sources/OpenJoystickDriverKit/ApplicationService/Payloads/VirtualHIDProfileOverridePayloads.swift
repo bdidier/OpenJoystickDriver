@@ -151,7 +151,7 @@ public struct ApplicationServiceVirtualHIDProfileStatus: Codable, Equatable, Sen
   /// The stored Advanced override in effect for this controller: its unit's, else its model's;
   /// nil when it selects automatically.
   public let override: VirtualHIDProfileID?
-  /// Whose override `override` is: `unit` or `model`; nil without an override.
+  /// Whose override `override` is: `Unit` or `Model`; nil without an override.
   public let overrideScope: VirtualHIDProfileOverrideScope?
   /// Whether no virtual profile can represent the controller's declared controls.
   public let unavailable: Bool
@@ -190,8 +190,8 @@ public enum VirtualHIDProfileSource: String, Codable, Equatable, Sendable {
 
 /// Whose stored override is in effect for a controller: its unit's or its model's.
 public enum VirtualHIDProfileOverrideScope: String, Codable, Equatable, Sendable {
-  case unit
-  case model
+  case unit = "Unit"
+  case model = "Model"
 }
 
 extension VirtualHIDProfileSelector.Selection.Source {

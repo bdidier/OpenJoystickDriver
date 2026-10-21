@@ -129,12 +129,12 @@ struct ControllerOutputCommandCodableTests {
   func resultsEncodeTheOutcomeAndDroppedChannels() throws {
     #expect(
       try json(ControllerOutputResult(.delivered, droppedRumbleChannels: [.leftTrigger]))
-        == #"{"droppedRumbleChannels":["LeftTrigger"],"outcome":"delivered"}"#
+        == #"{"droppedRumbleChannels":["LeftTrigger"],"outcome":"Delivered"}"#
     )
     #expect(
       ControllerOutputResult.Outcome.allCases.map(\.rawValue) == [
-        "delivered", "notFound", "unsupportedCapability", "notReady", "invalidValue",
-        "writeFailed", "cancelled",
+        "Delivered", "NotFound", "UnsupportedCapability", "NotReady", "InvalidValue",
+        "WriteFailed", "Cancelled",
       ]
     )
   }

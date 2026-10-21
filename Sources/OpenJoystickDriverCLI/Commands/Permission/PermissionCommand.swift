@@ -22,7 +22,10 @@ struct PermissionCommand: AsyncParsableCommand {
     case .plain: CLIOutput.plain(report.plainRows)
     case .human:
       let rows = PermissionID.allCases.map {
-        ($0.localizedName, report.state(of: $0).rawValue, $0.localizedPurpose)
+        (
+          $0.localizedName, CommandLineName.kebab(report.state(of: $0).rawValue),
+          $0.localizedPurpose
+        )
       }
       let nameWidth = rows.map(\.0.count).max() ?? 0
       let stateWidth = rows.map(\.1.count).max() ?? 0
@@ -56,8 +59,8 @@ struct PermissionListCommand: AsyncParsableCommand {
       do {
         let payload = try await ServiceConnection.request { try await $0.getStatus() }
         snapshot = PermissionManager.Snapshot(
-          inputRead: PermissionManager.AccessState(status: payload.inputRead),
-          inputInject: PermissionManager.AccessState(status: payload.inputInject)
+          inputRead: payload.inputRead,
+          inputInject: payload.inputInject
         )
       } catch let failure as CLIFailure where failure.code == .serviceUnavailable {
         snapshot = Self.localSnapshot()
@@ -109,7 +112,7 @@ struct PermissionRequestCommand: AsyncParsableCommand {
   var global: GlobalOptions
 
   func validate() throws {
-    let valid = PermissionID.requestable.map(\.rawValue)
+    let valid = PermissionID.requestable.map(\.commandLineName)
     for id in ids where !valid.contains(id) {
       throw ValidationError(
         CLILocalized.format(
@@ -123,7 +126,7 @@ struct PermissionRequestCommand: AsyncParsableCommand {
 
   func run() async throws {
     try await global.run {
-      let requested = ids.compactMap(PermissionID.init)
+      let requested = ids.compactMap { CommandLineName.value(of: $0, in: PermissionID.self) }
       let targets = requested.isEmpty ? PermissionID.requestable : requested
       let snapshot = try await ServiceConnection.request(
         timeout: CLIContext.current.timeout ?? ServiceTimeouts.permissionRequest

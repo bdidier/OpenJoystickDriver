@@ -84,7 +84,7 @@ struct ConfigShowCommand: AsyncParsableCommand {
       case .plain:
         CLIOutput.plain(
           result.values.map {
-            [$0.key, Self.text($0.value), $0.layer]
+            [$0.key, Self.text($0.value), CommandLineName.kebab($0.layer)]
               + [$0.families?.joined(separator: ",")].compactMap { $0 }
           }
         )
@@ -100,7 +100,10 @@ struct ConfigShowCommand: AsyncParsableCommand {
           let families = item.families.map {
             "  " + CLILocalized.format("cli.config.show.read_by", $0.joined(separator: ", "))
           }
-          CLIOutput.stdout("\(key)  \(Self.text(item.value))  (\(item.layer))\(families ?? "")")
+          CLIOutput.stdout(
+            "\(key)  \(Self.text(item.value))  (\(CommandLineName.kebab(item.layer)))"
+              + (families ?? "")
+          )
         }
       }
     }
@@ -197,7 +200,7 @@ struct ConfigShowCommand: AsyncParsableCommand {
       Value(
         key: "stickMappings.\(index).tuning.innerDeadzone",
         value: mapping.tuning.innerDeadzone,
-        layer: "profile",
+        layer: ControllerRecordLayer.profile.rawValue,
         families: nil
       )
     }

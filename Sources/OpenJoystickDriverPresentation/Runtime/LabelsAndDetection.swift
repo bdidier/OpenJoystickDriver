@@ -7,7 +7,6 @@ enum RuntimePresentation {
     case .granted: return OJDLocalized.string("status.allowed")
     case .denied: return OJDLocalized.string("common.needsAttention")
     case .unknown: return OJDLocalized.string("common.needsAttention")
-    case .unavailable: return OJDLocalized.string("common.unavailable")
     }
   }
 

@@ -48,8 +48,8 @@ struct UpdateCheckCommand: AsyncParsableCommand {
   /// The `--json` result.
   struct Result: Encodable, Equatable {
     enum Status: String, Encodable {
-      case upToDate
-      case available
+      case upToDate = "UpToDate"
+      case available = "Available"
     }
 
     let status: Status
@@ -98,7 +98,8 @@ struct UpdateCheckCommand: AsyncParsableCommand {
     case .plain:
       CLIOutput.plain([
         [
-          result.status.rawValue, result.currentVersion, result.latestVersion,
+          CommandLineName.kebab(result.status.rawValue), result.currentVersion,
+          result.latestVersion,
           result.releaseURL ?? "",
         ]
       ])

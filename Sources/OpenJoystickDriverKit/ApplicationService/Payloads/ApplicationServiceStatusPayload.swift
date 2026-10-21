@@ -83,15 +83,15 @@ extension ApplicationServicePassThroughDevice {
 
 /// Status snapshot returned by ``ApplicationServiceClient/getStatus()``.
 ///
-/// Contains the current macOS permission states (as human-readable strings like
-/// "granted" or "denied") and descriptions of all connected controllers.
+/// Contains the current permission states (`Granted`, `Denied` or `Unknown`) and descriptions of
+/// all connected controllers.
 public struct ApplicationServiceStatusPayload: Codable, Sendable {
   /// Exact source and app bundle identity that produced this status snapshot.
   public let buildIdentity: BuildIdentity
-  /// Input Monitoring permission state (e.g. "granted", "denied").
-  public let inputRead: String
+  /// Input Monitoring permission state.
+  public let inputRead: PermissionManager.AccessState
   /// Accessibility permission used to publish an IOHIDUserDevice.
-  public let inputInject: String
+  public let inputInject: PermissionManager.AccessState
   /// Structured descriptions of all connected controllers.
   public let connectedDevices: [ApplicationServiceDeviceDescription]
   /// Observed devices that no protocol driver bound.
@@ -109,8 +109,8 @@ public struct ApplicationServiceStatusPayload: Codable, Sendable {
   /// Creates a new ApplicationServiceStatusPayload.
   public init(
     buildIdentity: BuildIdentity = .current(),
-    inputRead: String,
-    inputInject: String,
+    inputRead: PermissionManager.AccessState,
+    inputInject: PermissionManager.AccessState,
     connectedDevices: [ApplicationServiceDeviceDescription],
     unboundDevices: [ApplicationServiceUnboundDevice] = [],
     passThroughDevices: [ApplicationServicePassThroughDevice] = [],

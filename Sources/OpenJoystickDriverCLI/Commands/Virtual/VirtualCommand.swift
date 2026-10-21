@@ -112,7 +112,11 @@ struct VirtualShowCommand: AsyncParsableCommand {
       case .plain:
         CLIOutput.plain(
           report.controllers.map {
-            [$0.id, $0.profile ?? "", $0.source?.rawValue ?? "", $0.override ?? "", $0.name]
+            [
+              $0.id, $0.profile.map(CommandLineName.kebab) ?? "",
+              $0.source.map { CommandLineName.kebab($0.rawValue) } ?? "",
+              $0.override.map(CommandLineName.kebab) ?? "", $0.name,
+            ]
           }
         )
       case .human: Self.printHuman(report)
@@ -133,7 +137,9 @@ struct VirtualShowCommand: AsyncParsableCommand {
       if controller.unavailable {
         profile = CLILocalized.text("cli.virtual.show.unavailable")
       } else if let live = controller.profile {
-        profile = "\(live) (\(controller.source?.rawValue ?? ""))"
+        profile =
+          "\(CommandLineName.kebab(live)) "
+          + "(\(controller.source.map { CommandLineName.kebab($0.rawValue) } ?? ""))"
       } else {
         profile = CLILocalized.text("cli.virtual.show.none")
       }
@@ -196,7 +202,13 @@ private func printChange(
   )
   switch CLIContext.current.format {
   case .json: try CLIOutput.json(report)
-  case .plain: CLIOutput.plain([[report.controller, report.live ?? "", report.source.rawValue]])
+  case .plain:
+    CLIOutput.plain([
+      [
+        report.controller, report.live.map(CommandLineName.kebab) ?? "",
+        CommandLineName.kebab(report.source.rawValue),
+      ]
+    ])
   case .human where stored:
     CLIOutput.success(
       CLILocalized.format(
@@ -209,8 +221,8 @@ private func printChange(
       CLILocalized.format(
         "cli.virtual.changed",
         device.name,
-        report.live ?? CLILocalized.text("cli.virtual.show.none"),
-        report.source.rawValue
+        report.live.map(CommandLineName.kebab) ?? CLILocalized.text("cli.virtual.show.none"),
+        CommandLineName.kebab(report.source.rawValue)
       )
     )
   }
@@ -376,7 +388,7 @@ struct VirtualResetCommand: AsyncParsableCommand {
       )
     }
     switch CLIContext.current.format {
-    case .json: try CLIOutput.json(CLIStatus(details: ["reset": "all"]), kind: "Status")
+    case .json: try CLIOutput.json(CLIStatus(details: ["reset": "All"]), kind: "Status")
     case .plain: CLIOutput.plain([["reset", "all"]])
     case .human:
       CLIOutput.success(

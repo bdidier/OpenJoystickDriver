@@ -11,7 +11,7 @@ SESSION = "01234567-89AB-CDEF-0123-456789ABCDEF"
 def raw_report(kind: str) -> dict[str, Any]:
     return {
         **schema_header.header(kind),
-        "direction": "rx",
+        "direction": "Rx",
         "hex": "01 02",
         "length": 2,
         "captureTime": "1970-01-01T00:00:01.500Z",

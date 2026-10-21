@@ -55,7 +55,7 @@ struct DeveloperToolsTests {
   @MainActor
   func activityFilterHidesGIPHousekeepingInBothDirections() async throws {
     let announce = try packetEntry(timestamp: 1, hex: "02 20 2A 1C 00")
-    let status = try packetEntry(timestamp: 2, direction: "tx", hex: "03 20 2B 00")
+    let status = try packetEntry(timestamp: 2, direction: "Tx", hex: "03 20 2B 00")
     let input = try packetEntry(timestamp: 3, hex: "20 00 47 20 00")
     let gateway = GatewayStub(
       statusPayload: statusPayload(device: device()),
@@ -293,8 +293,8 @@ struct DeveloperToolsTests {
     devices: [ApplicationServiceDeviceDescription]
   ) -> ApplicationServiceStatusPayload {
     ApplicationServiceStatusPayload(
-      inputRead: "granted",
-      inputInject: "granted",
+      inputRead: .granted,
+      inputInject: .granted,
       connectedDevices: devices,
       userSpaceVirtualDeviceEnabled: true,
       userSpaceVirtualDeviceStatus: .backend("ready")
@@ -309,7 +309,7 @@ struct DeveloperToolsTests {
 
   private func packetEntry(
     timestamp: TimeInterval,
-    direction: String = "rx",
+    direction: String = "Rx",
     hex: String,
     length: Int = 1
   ) throws -> PacketLogEntry {

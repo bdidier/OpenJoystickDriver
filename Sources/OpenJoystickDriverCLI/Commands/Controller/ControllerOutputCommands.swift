@@ -264,7 +264,7 @@ struct ControllerRumbleCommand: AsyncParsableCommand {
     case .plain:
       CLIOutput.plain([
         [
-          request.name, result.outcome.rawValue,
+          request.name, CommandLineName.kebab(result.outcome.rawValue),
           droppedTriggers.map { CommandLineName.kebab($0.rawValue) }.joined(separator: ","),
         ]
       ])

@@ -8,7 +8,7 @@ from Scripts.Catalog import schema_header
 from Scripts.Quality import validate_schemas
 
 SCHEMA = "cli-output.schema.json"
-LINK_STATES = ("installed", "linkedElsewhere", "broken", "blockedByFile", "missing")
+LINK_STATES = ("Installed", "LinkedElsewhere", "Broken", "BlockedByFile", "Missing")
 SETTING_KEYS = [
     "launchAtLogin",
     "notify.controllerConnected",
@@ -21,12 +21,12 @@ SETTING_KEYS = [
 ]
 
 
-def status_document(state: str = "installed") -> dict[str, Any]:
+def status_document(state: str = "Installed") -> dict[str, Any]:
     return {
         **schema_header.header("SystemStatus"),
         "commandLineTool": {"path": "/usr/local/bin/ojd", "state": state},
-        "transportExtension": {"bundle": "present", "registration": "active"},
-        "service": {"state": "running"},
+        "transportExtension": {"bundle": "Present", "registration": "Active"},
+        "service": {"state": "Running"},
         "skippedRecords": [],
     }
 
@@ -48,13 +48,22 @@ class StatusSchemaTests(unittest.TestCase):
                 self.validator.validate(status_document(state))
 
     def test_accepts_the_target_of_a_link(self) -> None:
-        document = status_document("linkedElsewhere")
+        document = status_document("LinkedElsewhere")
         document["commandLineTool"]["target"] = "/Applications/Other.app/ojd"
 
         self.validator.validate(document)
 
     def test_rejects_an_unknown_command_line_tool_state(self) -> None:
-        for state in ("linked", "notALink", ""):
+        for state in (
+            "linked",
+            "notALink",
+            "",
+            "installed",
+            "linkedElsewhere",
+            "broken",
+            "blockedByFile",
+            "missing",
+        ):
             with (
                 self.subTest(state=state),
                 self.assertRaises(validate_schemas.ValidationError),

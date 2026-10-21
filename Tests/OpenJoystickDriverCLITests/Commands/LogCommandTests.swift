@@ -74,15 +74,15 @@ struct LogCommandTests {
     let plain = await run(["log", "show", "--plain"], env)
 
     #expect(human.code == 0)
-    #expect(human.standardOutput.contains("== standardOutput: /logs/standardOutput.log ==\n"))
-    #expect(human.standardOutput.contains("standardError line\n"))
+    #expect(human.standardOutput.contains("== standard-output: /logs/StandardOutput.log ==\n"))
+    #expect(human.standardOutput.contains("StandardError line\n"))
     #expect(human.standardError.contains(ApplicationServiceLogService.sharingWarning))
     #expect(requested.withLock { $0.prefix(2) } == [7, 7])
     let logs = try #require(try json.json()["logs"] as? [[String: Any]])
     #expect(logs.count == 2)
     #expect(
       plain.standardOutput
-        == "standardOutput\tstandardOutput line\nstandardError\tstandardError line\n"
+        == "standard-output\tStandardOutput line\nstandard-error\tStandardError line\n"
     )
     #expect(paged.withLock { $0.isEmpty })
   }
@@ -99,7 +99,7 @@ struct LogCommandTests {
     #expect(human.standardOutput.isEmpty)
     let pages = paged.withLock { $0 }
     #expect(pages.count == 1)
-    #expect(pages.first?.contains("standardOutput line") == true)
+    #expect(pages.first?.contains("StandardOutput line") == true)
     #expect(!json.standardOutput.isEmpty)
   }
 
@@ -145,8 +145,8 @@ struct LogCommandTests {
     #expect(written.code == 0, "\(written.standardError)")
     #expect(written.standardError.contains(ApplicationServiceLogService.sharingWarning))
     let text = try String(contentsOf: file, encoding: .utf8)
-    #expect(text.contains("== standardOutput: /logs/standardOutput.log ==\nstandardOutput line\n"))
-    #expect(text.contains("standardError line\n"))
+    #expect(text.contains("== standard-output: /logs/StandardOutput.log ==\nStandardOutput line\n"))
+    #expect(text.contains("StandardError line\n"))
     #expect(again.code == 1)
     #expect(again.standardError.contains("--force"))
     #expect(forced.code == 0, "\(forced.standardError)")

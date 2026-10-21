@@ -152,8 +152,8 @@ struct UnboundHIDDeviceTests {
       interfaces: [ProtocolBindingResult.InterfaceSummary(gamepadHIDInterface(host: .usb))]
     )
     let payload = ApplicationServiceStatusPayload(
-      inputRead: "granted",
-      inputInject: "granted",
+      inputRead: .granted,
+      inputInject: .granted,
       connectedDevices: [],
       unboundDevices: [device]
     )

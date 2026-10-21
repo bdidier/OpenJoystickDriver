@@ -1,4 +1,4 @@
-public enum RemappingMotionCalibrationCommand: String, Codable, Sendable {
+public enum RemappingMotionCalibrationCommand: String, Codable, CaseIterable, Sendable {
   case start, pause, reset
 }
 

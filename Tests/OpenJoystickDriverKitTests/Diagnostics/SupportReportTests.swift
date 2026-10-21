@@ -21,8 +21,8 @@ struct SupportReportTests {
     let secretSerial = "SERIAL-SECRET-123"
     let secretPath = "/Users/alice/private/controller.txt"
     let status = ApplicationServiceStatusPayload(
-      inputRead: "granted",
-      inputInject: "granted",
+      inputRead: .granted,
+      inputInject: .granted,
       connectedDevices: [
         ApplicationServiceDeviceDescription(
           name: "Test Controller",

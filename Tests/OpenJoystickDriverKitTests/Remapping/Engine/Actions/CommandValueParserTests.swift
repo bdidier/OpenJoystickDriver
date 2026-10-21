@@ -6,9 +6,9 @@ import Testing
 struct CommandValueParserTests {
   @Test
   func parsesControllerSourceAndSystemTarget() throws {
-    #expect(try RemappingCommandValueParser.source("button:South") == .button(.south))
+    #expect(try RemappingCommandValueParser.source("button:south") == .button(.south))
     #expect(
-      try RemappingCommandValueParser.destination("key:KeyA:mods=Meta,Shift")
+      try RemappingCommandValueParser.destination("key:key-a:mods=meta,shift")
         == .keyboard(key: .a, modifiers: [.meta, .shift])
     )
   }
