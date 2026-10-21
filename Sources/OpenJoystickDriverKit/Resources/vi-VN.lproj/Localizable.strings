@@ -1231,6 +1231,7 @@
 "cli.virtual.feed.abstract" = "Cung cấp một tay cầm ảo do đầu vào chuẩn điều khiển.";
 "cli.virtual.feed.discussion" = "Đọc một đối tượng JSON mỗi dòng: “buttons” và “dpad” liệt kê các thành phần được nhấn, như South và up, và “axes” ánh xạ tên trục, như LeftStickX, tới giá trị. Thành phần bị thiếu ở trạng thái trung tính. Các cần chạy từ -1 đến 1 với Y hướng xuống; các cò chạy từ 0 đến 1. Các khung được phát theo thứ tự, mỗi khung ít nhất 8 ms; “holdMilliseconds” giữ một khung lâu hơn, tối đa 60000. In mỗi lệnh đầu ra mà trò chơi gửi đến tay cầm, như rung, thành một đối tượng JSON mỗi dòng. Dừng khi mọi khung đã phát xong sau khi đầu vào kết thúc.";
 "cli.virtual.feed.error.closed" = "Dịch vụ đã đóng tay cầm ảo. Hãy kiểm tra bằng “ojd status”.";
+"cli.virtual.feed.error.close_interrupted" = "Việc đóng tay cầm ảo đã bị gián đoạn. Hãy kiểm tra bằng “ojd status”.";
 "cli.virtual.feed.error.frame" = "Dòng %@ không phải là khung hợp lệ. “ojd virtual feed --help” hiển thị định dạng.";
 "cli.virtual.feed.profile" = "Cấu hình tay cầm ảo để cung cấp.";
 "cli.virtual.feed.started" = "Đang cung cấp tay cầm ảo %@. Hãy ghi các khung vào đầu vào chuẩn; kết thúc đầu vào hoặc nhấn Control-C để dừng.";
@@ -1324,6 +1325,7 @@
 "error.E2031" = "Cổng này trên 127.0.0.1 đang được dùng hoặc không thể mở. Hãy chọn cổng khác bằng --port.";
 "error.E2032" = "Mã thông báo có nguồn gốc không thể có phạm vi control, vì một trang không bao giờ được điều khiển tay cầm ảo. Hãy cấp control cho mã thông báo không có nguồn gốc.";
 "error.E2033" = "Không thể khởi động chương trình. Hãy kiểm tra đường dẫn của nó chỉ tới một tệp thực thi hoặc một ứng dụng và bạn có quyền chạy nó.";
+"error.E2034" = "Dịch vụ đã ngừng nhận yêu cầu. Hãy thoát OpenJoystickDriver, mở lại, rồi thử lại.";
 "cli.record.usb_not_claimed" = "Họ thiết bị này dùng USB thô, và phần mở rộng USB không thể chiếm bộ điều khiển này, vì danh sách sản phẩm của nó do Apple ký. OJD chỉ truy cập được nó qua truy cập USB trực tiếp, khi macOS cho phép.";
 "cli.record.usb_only_switch2" = "Chỉ USB: thêm bluetoothLE.vibrationCharacteristic vào bản ghi Switch 2 này để kết nối bộ điều khiển qua Bluetooth LE.";
 "cli.record.validate.abstract" = "Kiểm tra một bản ghi bộ điều khiển mà không cài đặt.";

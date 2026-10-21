@@ -12,7 +12,8 @@ import OpenJoystickDriverKit
 final class AcceptListener: @unchecked Sendable {
   let descriptor: Int32
   let port: Int
-  private let wakeRead: Int32
+  /// The read end of the wake pipe; it hangs up when `wake` runs.
+  let wakeRead: Int32
   private let wakeWrite: Int32
   private let lock = NSLock()
   private var placeholder: Int32

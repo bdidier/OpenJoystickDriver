@@ -328,8 +328,16 @@ final class EndpointServer: @unchecked Sendable {
       }
       guard let accepted = listener.accept() else {
         // EAGAIN: the pending connection was dropped between poll and accept; wait again.
-        // Running out of descriptors or memory is retried after a pause.
-        guard Self.pause(after: Self.acceptFailure(errno)) else { return }
+        // Running out of descriptors or memory is reported and retried after a wait that
+        // `stop` ends.
+        guard
+          AcceptFailure.continuesAfter(
+            errno: errno,
+            server: "EndpointServer",
+            wake: listener.wakeRead,
+            report: { print($0) }
+          )
+        else { return }
         continue
       }
       guard lock.withLock({ socketGeneration == generation }) else {
@@ -345,38 +353,6 @@ final class EndpointServer: @unchecked Sendable {
         }
         self.serve(EndpointConnection(descriptor: accepted))
       }
-    }
-  }
-
-  // MARK: - Accept failures
-
-  enum AcceptFailure: Equatable {
-    /// An interrupted or aborted accept, or none waiting; wait again at once.
-    case retry
-    /// The process or system is out of descriptors or memory; accept again after a pause.
-    case backOff
-    /// The listener is closed or broken.
-    case stop
-  }
-
-  static let acceptBackOffMicroseconds: useconds_t = 100_000
-
-  static func acceptFailure(_ code: Int32) -> AcceptFailure {
-    switch code {
-    case EINTR, ECONNABORTED, EAGAIN: .retry
-    case EMFILE, ENFILE, ENOBUFS, ENOMEM: .backOff
-    default: .stop
-    }
-  }
-
-  /// Waits out a back-off; false when the loop should end.
-  static func pause(after failure: AcceptFailure) -> Bool {
-    switch failure {
-    case .retry: return true
-    case .backOff:
-      usleep(acceptBackOffMicroseconds)
-      return true
-    case .stop: return false
     }
   }
 }

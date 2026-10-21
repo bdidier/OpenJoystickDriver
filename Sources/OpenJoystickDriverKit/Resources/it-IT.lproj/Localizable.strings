@@ -1231,6 +1231,7 @@
 "cli.virtual.feed.abstract" = "Pubblica un gamepad virtuale controllato dallo stdin.";
 "cli.virtual.feed.discussion" = "Legge un oggetto JSON per riga: «buttons» e «dpad» elencano i controlli premuti, ad esempio South e up, mentre «axes» associa dei valori ai nomi degli assi, ad esempio LeftStickX. I controlli mancanti restano neutri. Gli stick vanno da -1 a 1, con Y verso il basso; i grilletti vanno da 0 a 1. I fotogrammi vengono riprodotti in ordine, ciascuno per almeno 8 ms; «holdMilliseconds» mantiene un fotogramma più a lungo, fino a 60000. Stampa ogni comando di uscita che i giochi inviano al gamepad, ad esempio la vibrazione, come un oggetto JSON per riga. Termina quando tutti i fotogrammi sono stati riprodotti dopo la fine dell’input.";
 "cli.virtual.feed.error.closed" = "Il servizio ha chiuso il gamepad virtuale. Controlla con «ojd status».";
+"cli.virtual.feed.error.close_interrupted" = "La chiusura del gamepad virtuale è stata interrotta. Controlla con «ojd status».";
 "cli.virtual.feed.error.frame" = "La riga %@ non è un frame valido. «ojd virtual feed --help» mostra il formato.";
 "cli.virtual.feed.profile" = "Il profilo del gamepad virtuale da pubblicare.";
 "cli.virtual.feed.started" = "Pubblicazione di un gamepad virtuale %@. Scrivi i frame sullo stdin; termina l’input o premi Control-C per fermare.";
@@ -1324,6 +1325,7 @@
 "error.E2031" = "Questa porta su 127.0.0.1 è in uso o non può essere aperta. Scegline un’altra con --port.";
 "error.E2032" = "Un token con origini non può avere l’ambito control, perché una pagina non deve mai pilotare un gamepad virtuale. Concedi control a un token senza origini.";
 "error.E2033" = "Il programma non può essere avviato. Controlla che il suo percorso indichi un file eseguibile o un'app e che tu possa eseguirlo.";
+"error.E2034" = "Il servizio non accetta più richieste. Chiudi OpenJoystickDriver, riaprilo e riprova.";
 "cli.record.usb_not_claimed" = "La famiglia usa USB grezzo e l’estensione USB non può acquisire questo controller, perché il suo elenco di prodotti è firmato da Apple. OJD lo raggiunge solo tramite accesso USB diretto, quando macOS lo consente.";
 "cli.record.usb_only_switch2" = "Solo USB: aggiungi bluetoothLE.vibrationCharacteristic a questo record Switch 2 per collegare il controller tramite Bluetooth LE.";
 "cli.record.validate.abstract" = "Controlla un record del controller senza installarlo.";

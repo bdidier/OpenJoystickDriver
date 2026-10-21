@@ -1231,6 +1231,7 @@
 "cli.virtual.feed.abstract" = "Een virtueel gamepad publiceren dat door stdin wordt aangestuurd.";
 "cli.virtual.feed.discussion" = "Leest één JSON-object per regel: ‘buttons’ en ‘dpad’ geven de ingedrukte bedieningselementen weer, zoals South en up, en ‘axes’ koppelt namen van assen, zoals LeftStickX, aan waarden. Ontbrekende bedieningselementen blijven neutraal. Sticks lopen van -1 tot 1 met Y omlaag; triggers lopen van 0 tot 1. Frames worden op volgorde afgespeeld, elk minstens 8 ms; ‘holdMilliseconds’ houdt een frame langer vast, tot 60000. Drukt elk uitvoercommando dat games naar de gamepad sturen, zoals trillen, af als één JSON-object per regel. Stopt wanneer elk frame is afgespeeld nadat de invoer is geëindigd.";
 "cli.virtual.feed.error.closed" = "De service heeft het virtuele gamepad gesloten. Controleer dit met ‘ojd status’.";
+"cli.virtual.feed.error.close_interrupted" = "Het sluiten van het virtuele gamepad is onderbroken. Controleer dit met ‘ojd status’.";
 "cli.virtual.feed.error.frame" = "Regel %@ is geen geldig frame. ‘ojd virtual feed --help’ toont het formaat.";
 "cli.virtual.feed.profile" = "Het profiel van het virtuele gamepad dat moet worden gepubliceerd.";
 "cli.virtual.feed.started" = "Een virtueel gamepad (%@) wordt gepubliceerd. Schrijf frames naar stdin; beëindig de invoer of druk op Control-C om te stoppen.";
@@ -1324,6 +1325,7 @@
 "error.E2031" = "Deze poort op 127.0.0.1 is in gebruik of kan niet worden geopend. Kies een andere met --port.";
 "error.E2032" = "Een token met herkomsten kan het bereik control niet hebben, omdat een pagina nooit een virtuele gamepad mag besturen. Verleen control aan een token zonder herkomsten.";
 "error.E2033" = "Het programma kon niet worden gestart. Controleer of het pad een uitvoerbaar bestand of een app aanwijst en of je het mag uitvoeren.";
+"error.E2034" = "De service accepteert geen verzoeken meer. Sluit OpenJoystickDriver af, open het opnieuw en probeer het opnieuw.";
 "cli.record.usb_not_claimed" = "De familie gebruikt onbewerkte USB en de USB-extensie kan deze controller niet claimen, omdat de productlijst door Apple is ondertekend. OJD bereikt hem alleen via directe USB-toegang, wanneer macOS dat toestaat.";
 "cli.record.usb_only_switch2" = "Alleen USB: voeg bluetoothLE.vibrationCharacteristic toe aan dit Switch 2-record om de controller via Bluetooth LE te verbinden.";
 "cli.record.validate.abstract" = "Controleert een controllerrecord zonder het te installeren.";

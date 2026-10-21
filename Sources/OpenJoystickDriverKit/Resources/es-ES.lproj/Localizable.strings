@@ -1231,6 +1231,7 @@
 "cli.virtual.feed.abstract" = "Publicar un mando virtual controlado por stdin.";
 "cli.virtual.feed.discussion" = "Lee un objeto JSON por línea: «buttons» y «dpad» enumeran los controles pulsados, como South y up, y «axes» asigna valores a los nombres de los ejes, como LeftStickX. Los controles que faltan quedan en neutro. Los sticks van de -1 a 1, con Y hacia abajo; los gatillos van de 0 a 1. Los fotogramas se reproducen en orden, cada uno durante al menos 8 ms; «holdMilliseconds» mantiene un fotograma más tiempo, hasta 60000. Imprime cada comando de salida que los juegos envían al mando, como la vibración, como un objeto JSON por línea. Termina cuando se han reproducido todos los fotogramas después de que termine la entrada.";
 "cli.virtual.feed.error.closed" = "El servicio ha cerrado el mando virtual. Compruébalo con «ojd status».";
+"cli.virtual.feed.error.close_interrupted" = "Se interrumpió el cierre del mando virtual. Compruébalo con «ojd status».";
 "cli.virtual.feed.error.frame" = "La línea %@ no es un fotograma válido. «ojd virtual feed --help» muestra el formato.";
 "cli.virtual.feed.profile" = "El perfil del mando virtual que se va a publicar.";
 "cli.virtual.feed.started" = "Publicando un mando virtual %@. Escribe fotogramas en stdin; termina la entrada o pulsa Control-C para detener.";
@@ -1324,6 +1325,7 @@
 "error.E2031" = "Este puerto en 127.0.0.1 está en uso o no se puede abrir. Elige otro con --port.";
 "error.E2032" = "Un token con orígenes no puede tener el ámbito control, porque una página nunca debe manejar un mando virtual. Concede control a un token sin orígenes.";
 "error.E2033" = "No se pudo iniciar el programa. Comprueba que su ruta indique un archivo ejecutable o una app y que tengas permiso para ejecutarlo.";
+"error.E2034" = "El servicio ha dejado de aceptar solicitudes. Cierra OpenJoystickDriver, ábrelo de nuevo y vuelve a intentarlo.";
 "cli.record.usb_not_claimed" = "La familia usa USB sin procesar, y la extensión USB no puede reclamar este mando, porque su lista de productos está firmada por Apple. OJD solo llega a él mediante acceso USB directo, cuando macOS lo permite.";
 "cli.record.usb_only_switch2" = "Solo USB: añade bluetoothLE.vibrationCharacteristic a este registro de Switch 2 para conectar el mando por Bluetooth LE.";
 "cli.record.validate.abstract" = "Comprueba un registro de mando sin instalarlo.";

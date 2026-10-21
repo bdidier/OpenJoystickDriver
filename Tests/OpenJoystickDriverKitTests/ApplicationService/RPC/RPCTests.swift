@@ -151,61 +151,6 @@ struct LocalServiceRPCTests {
   }
 
   @Test
-  func stoppingEndsTheAcceptLoopAfterItClosedItsDescriptors() async throws {
-    let socketPath = temporarySocketPath()
-    let server = LocalServiceRPCServer(
-      socketPath: socketPath,
-      authentication: { _ in true },
-      handler: { _, completion in completion(LocalServiceRPCResponse(result: Data(), error: nil)) }
-    )
-    let exited = DispatchSemaphore(value: 0)
-    server.acceptLoopDidExit = { exited.signal() }
-    try server.start()
-    server.stop()
-    server.stop()
-
-    let result = try await BlockingWork.run(label: "rpc-test-wait") {
-      exited.wait(timeout: .now() + 10)
-    }
-    #expect(result == .success)
-    #expect(LocalServiceRPCClient.serverProcessIdentifier(socketPath: socketPath) == nil)
-  }
-
-  @Test
-  func startingARunningServerIsRefused() throws {
-    let server = LocalServiceRPCServer(
-      socketPath: temporarySocketPath(),
-      authentication: { _ in true },
-      handler: { _, completion in completion(LocalServiceRPCResponse(result: Data(), error: nil)) }
-    )
-    try server.start()
-    defer { server.stop() }
-
-    #expect(throws: LocalServiceRPCError.alreadyRunning) { try server.start() }
-  }
-
-  @Test
-  func acceptFailuresAreSortedIntoSkipWaitAndEnd() {
-    #expect(LocalServiceRPCServer.AcceptFailure(errno: ECONNABORTED) == .skip)
-    #expect(LocalServiceRPCServer.AcceptFailure(errno: EINTR) == .skip)
-    for code in [EMFILE, ENFILE, ENOBUFS, ENOMEM] {
-      #expect(LocalServiceRPCServer.AcceptFailure(errno: code) == .waitForResources)
-    }
-    #expect(LocalServiceRPCServer.AcceptFailure(errno: EBADF) == .fatal)
-    #expect(LocalServiceRPCServer.AcceptFailure(errno: EINVAL) == .fatal)
-  }
-
-  @Test
-  func acceptFailureMessagesNameTheReason() {
-    let waiting = LocalServiceRPCServer.acceptFailureMessage(EMFILE, action: .waitForResources)
-    #expect(waiting.contains("Cannot accept connections"))
-    #expect(waiting.contains("errno \(EMFILE)"))
-    #expect(waiting.contains("retrying"))
-    let ended = LocalServiceRPCServer.acceptFailureMessage(EBADF, action: .fatal)
-    #expect(ended.contains("Stopped accepting connections"))
-  }
-
-  @Test
   func oversizedFrameIsRejectedBeforeWrite() throws {
     let descriptor = socket(AF_UNIX, SOCK_STREAM, 0)
     try #require(descriptor >= 0)

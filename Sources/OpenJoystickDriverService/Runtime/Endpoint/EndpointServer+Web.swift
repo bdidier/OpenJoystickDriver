@@ -119,8 +119,16 @@ extension EndpointServer {
       }
       guard let accepted = listener.accept() else {
         // EAGAIN: the pending connection was dropped between poll and accept; wait again.
-        // Running out of descriptors or memory is retried after a pause.
-        guard Self.pause(after: Self.acceptFailure(errno)) else { return }
+        // Running out of descriptors or memory is reported and retried after a wait that
+        // `stop` ends.
+        guard
+          AcceptFailure.continuesAfter(
+            errno: errno,
+            server: "EndpointServer",
+            wake: listener.wakeRead,
+            report: { print($0) }
+          )
+        else { return }
         continue
       }
       guard lock.withLock({ webGeneration == generation }) else {

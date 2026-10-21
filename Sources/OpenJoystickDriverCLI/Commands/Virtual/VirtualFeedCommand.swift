@@ -50,19 +50,17 @@ struct VirtualFeedCommand: AsyncParsableCommand {
       let token = try await ServiceConnection.withDeadline(seconds: timeout) {
         try await client.openVirtualFeed(profile: name).token
       }
-      // The close runs in a task of its own: a feed that ended by cancellation still sends it, which
-      // a cancelled task would cut short.
+      // The close runs in a task of its own: a feed that ended by cancellation still sends it,
+      // which a cancelled task would cut short.
       let close: @Sendable () async -> Void = {
         await Task {
           do {
             _ = try await ServiceConnection.withDeadline(seconds: timeout) {
               try await client.closeVirtualFeed(token: token)
             }
-          } catch let failure as CLIFailure {
-            // The command's own outcome stands; a failed close is still reported.
-            CLIOutput.stderr(failure.line)
           } catch {
-            // Only a cancellation remains, and this task is never cancelled.
+            // The command's own outcome stands; a failed close is still reported.
+            CLIOutput.stderr(Self.closeFailure(error).line)
           }
         }.value
       }
@@ -81,6 +79,19 @@ struct VirtualFeedCommand: AsyncParsableCommand {
         }
         await close()
       }
+    }
+  }
+
+  /// The failure to print for a close that threw `error`. The close runs in a task that is not
+  /// cancelled, so a `CancellationError` is the close itself being interrupted.
+  static func closeFailure(_ error: any Error) -> CLIFailure {
+    switch ServiceConnection.failure(for: error) {
+    case let failure as CLIFailure: failure
+    default:
+      CLIFailure(
+        .serviceRequestFailed,
+        CLILocalized.text("cli.virtual.feed.error.close_interrupted")
+      )
     }
   }
 

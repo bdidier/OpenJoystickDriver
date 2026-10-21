@@ -199,4 +199,21 @@ struct VirtualFeedCommandTests {
     #expect(result.standardError.contains("--plain"))
     #expect(service.arguments(of: .openVirtualFeed).isEmpty)
   }
+
+  @Test
+  func aCloseThatWasInterruptedIsReportedWithItsOwnLocalizedText() {
+    let failure = VirtualFeedCommand.closeFailure(CancellationError())
+
+    #expect(failure.id == .serviceRequestFailed)
+    #expect(failure.message == CLILocalized.text("cli.virtual.feed.error.close_interrupted"))
+    #expect(!failure.line.contains("CancellationError"))
+  }
+
+  @Test
+  func aCloseThatTimedOutKeepsItsOwnFailure() {
+    #expect(
+      VirtualFeedCommand.closeFailure(CLIFailure.timedOut(seconds: 3))
+        == CLIFailure.timedOut(seconds: 3)
+    )
+  }
 }
