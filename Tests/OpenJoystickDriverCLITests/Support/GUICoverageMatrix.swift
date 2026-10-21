@@ -1,10 +1,10 @@
 /// The CLI-to-GUI coverage matrix of `design.md` D10, held as data. It lives with the tests
-/// because only the 17.5 coverage test reads it; the GUI does not consume it. Task 20.3 builds the
-/// GUI places and keeps this table as the check that none is missed.
+/// because only the coverage tests read it; the GUI does not consume it.
 ///
-/// D10 states the matrix per command group, so an entry covers every command whose path starts with
-/// its `prefix`. D10 lists no exemption: "CLI is a subset of GUI (every command has a GUI place)".
-/// Every command therefore maps to a place, and this file has no exemption list.
+/// D10 states the area matrix per command group, so a `GUIPlace` covers every command whose path
+/// starts with its `prefix`. Every command maps to a place. `GUICoverageEntries` names, per leaf
+/// and behavior-changing option, the GUI symbol that performs it, and lists what only a terminal
+/// can do.
 struct GUIPlace: Equatable {
   /// The command path the entry covers, such as `["config", "show"]`.
   let prefix: [String]
@@ -48,8 +48,8 @@ enum GUICoverageMatrix {
   static let places: [GUIPlace] =
     row(
       [["status"], ["transport-extension"], ["permission"], ["service"]],
-      area: "Status",
-      mainMenu: "View > Status (Command-1)",
+      area: "problem banner, Controllers, Access",
+      mainMenu: nil,
       statusItem: "status line, Open Window"
     )
     + row(
