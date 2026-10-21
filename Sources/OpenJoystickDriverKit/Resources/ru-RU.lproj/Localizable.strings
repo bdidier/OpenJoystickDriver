@@ -400,7 +400,7 @@
 "term.protocolFamily.xboxXid" = "Xbox (XID)";
 /* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
 "term.protocolFamily.xboxXusb" = "Xbox 360 (XUSB)";
-/* Name of a controller's protocol in the Controllers list and detail and in Input Test, also spoken by VoiceOver, for a protocol family whose variants the connection cannot tell apart. %1$@ is the protocol family name, such as Xbox 360 (XUSB); %2$@ is the variant name, such as Receiver. */
+/* Name of a controller's protocol in the Controllers list and detail and in Input Test, also spoken by VoiceOver, for a protocol family that stores its variant in its records, because the connection does not tell every variant apart. %1$@ is the protocol family name, such as Xbox 360 (XUSB); %2$@ is the variant name, such as Receiver. */
 "term.protocolBinding.familyWithVariant" = "%1$@, %2$@";
 /* Name of a protocol variant, shown after the protocol family name in the Controllers list and detail and in Input Test: the controller is connected over Bluetooth Low Energy. A technical name: keep Bluetooth LE as the system writes it in this language. */
 "term.protocolVariant.bluetoothLe" = "Bluetooth LE";
@@ -414,7 +414,7 @@
 "term.protocolVariant.usb" = "USB";
 /* Name of a protocol variant, shown after the protocol family name in the Controllers list and detail and in Input Test: the controller is connected by its cable. An adjective label, not a sentence. */
 "term.protocolVariant.wired" = "Проводной";
-/* Label of a fact under Advanced in the Controllers detail: the parser that reads the controller, shown as its identifier such as XboxXUSB:Receiver. */
+/* Label of a fact under Advanced in the Controllers detail: the parser that reads the controller, shown as its ojd spelling such as xbox-xusb:receiver. */
 "term.parser" = "Парсер";
 "developer.buttons" = "Кнопки";
 "developer.capturing" = "Идёт захват";

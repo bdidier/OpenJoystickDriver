@@ -73,8 +73,8 @@ enum ControllerDetailFacts {
     return always + (power + capabilities).filter { $0.value != .none }
   }
 
-  /// The technical facts, shown under Advanced: identifiers, the parser (the binding that
-  /// `ojd controller show` prints as the protocol, such as `XboxXUSB:Receiver`), ownership, the
+  /// The technical facts, shown under Advanced: identifiers, the parser (the binding that parses
+  /// the controller's input, in its `ojd` spelling, such as `xbox-xusb:receiver`), ownership, the
   /// record, publication timing, and the controls the parser emits. `record` is the controller
   /// model's effective record, if one matches.
   static func advanced(
@@ -124,7 +124,7 @@ enum ControllerDetailFacts {
     ].filter { $0.value != .none }
     return [
       fact(.unitID, "cli.controller.show.label.unit", .reported(device.portKey?.rawValue)),
-      fact(.parser, "term.parser", .reported(device.protocolBinding.rawValue)),
+      fact(.parser, "term.parser", .reported(device.protocolBinding.commandLineName)),
       fact(.ownership, "cli.controller.show.label.ownership", .text(ownershipText(device))),
       fact(
         .duplicateExposureRisk,

@@ -148,7 +148,7 @@ struct ControllerShowCommand: AsyncParsableCommand {
     rows += [
       ["identity", deviceIdentity(vendorID: detail.vendorID, productID: detail.productID)],
       ["name", detail.name], ["connection", detail.connection],
-      ["protocol", CommandLineName.kebab(detail.protocol)],
+      ["protocol", detail.protocol.commandLineName],
       ["session", CommandLineName.kebab(detail.session)],
     ]
     if let power = detail.power {
@@ -229,7 +229,7 @@ struct ControllerShowCommand: AsyncParsableCommand {
       (CLILocalized.text("cli.controller.show.label.connection"), detail.connection),
       (
         CLILocalized.text("cli.controller.show.label.protocol"),
-        CommandLineName.kebab(detail.protocol)
+        detail.protocol.commandLineName
       ),
       (
         CLILocalized.text("cli.controller.show.label.session"),

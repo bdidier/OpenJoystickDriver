@@ -26,8 +26,8 @@ extension ControllerPortKey {
 }
 
 extension ApplicationServiceDeviceDescription {
-  /// A USB `HIDDescriptor` controller whose session token is `.fixture(id)`, for tests that
-  /// list controllers.
+  /// A USB controller whose session token is `.fixture(id)`, bound to `protocolBinding`
+  /// (`HIDDescriptor` unless a test names another), for tests that list controllers.
   package static func fixture(
     id: String,
     name: String = "Test Pad",
@@ -38,13 +38,14 @@ extension ApplicationServiceDeviceDescription {
     power: ControllerConnectionState.Power? = nil,
     inputHealth: ControllerInputHealth = ControllerInputHealth(state: .healthy),
     physicalOutputOwner: ControllerServer = .ojd,
-    tuning: ControllerTuning = .none
+    tuning: ControllerTuning = .none,
+    protocolBinding: ProtocolBindingID = ProtocolBindingID(.hidDescriptor)
   ) -> ApplicationServiceDeviceDescription {
     ApplicationServiceDeviceDescription(
       name: name,
       vendorID: vendorID,
       productID: productID,
-      protocolBinding: ProtocolBindingID(.hidDescriptor),
+      protocolBinding: protocolBinding,
       connection: "USB",
       discoverySource: .rawUSB,
       serialNumber: nil,

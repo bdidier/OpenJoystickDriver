@@ -34,7 +34,8 @@
       )
       OJDLabeledValue(
         OJDLocalized.string("common.protocol"),
-        "\(device.protocolBinding.protocolID.displayName) (\(device.protocolBinding))"
+        "\(device.protocolBinding.protocolID.displayName) "
+          + "(\(device.protocolBinding.commandLineName))"
       )
       DeveloperSerialRow(serial: OJDValue.reported(device.serialNumber)).id(
         device.sessionToken.rawValue

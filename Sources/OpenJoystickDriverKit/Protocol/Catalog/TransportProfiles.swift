@@ -108,6 +108,14 @@ public struct ProtocolBindingID: Hashable, Sendable, RawRepresentable, Codable,
 
   public var description: String { rawValue }
 
+  /// The binding's token in `ojd` output and in the Parser fact of the Controllers detail: the
+  /// family's token, then `:` and the variant's kebab-case spelling, as in `xbox-xusb:receiver`.
+  /// Each side is spelled on its own, so the variant starts a word of its own after the `:`.
+  public var commandLineName: String {
+    let family = protocolID.commandLineName
+    return variant.map { "\(family):\(CommandLineName.kebab($0.rawValue))" } ?? family
+  }
+
   /// Whether this binding is reached through raw USB rather than IOHID.
   public var usesRawUSB: Bool { protocolID.usesRawUSB(storedVariant: variant) }
 }

@@ -96,7 +96,7 @@ struct ControllerDetailFactsTests {
   }
 
   @Test
-  func theProtocolFactNamesTheFamilyAndTheVariantTheTransportCannotTell() {
+  func theProtocolFactNamesTheFamilyAndTheStoredVariant() {
     let binding = ProtocolBindingID(.xboxXUSB, variant: .receiver)
     let facts = ControllerDetailFacts.general(for: device(binding: binding))
     #expect(
@@ -107,6 +107,13 @@ struct ControllerDetailFactsTests {
       Self.value(.controllerProtocol, in: facts)
         != .text(PhysicalProtocolID.xboxXUSB.displayName)
     )
+  }
+
+  @Test
+  func theParserFactSpellsTheBindingAsOJDDoes() {
+    let binding = ProtocolBindingID(.xboxXUSB, variant: .receiver)
+    let facts = ControllerDetailFacts.advanced(for: device(binding: binding), record: nil)
+    #expect(Self.value(.parser, in: facts) == .reported("xbox-xusb:receiver"))
   }
 
   @Test
@@ -180,7 +187,7 @@ struct ControllerDetailFactsTests {
     #expect(Self.value(.usbIdentifier, in: facts) == .text("1234:5678"))
     #expect(Self.value(.inputEndpoint, in: facts) == OJDValue.none)
     #expect(Self.value(.unitID, in: facts) == OJDValue.none)
-    #expect(Self.value(.parser, in: facts) == .reported("HIDDescriptor"))
+    #expect(Self.value(.parser, in: facts) == .reported("hid-descriptor"))
     #expect(facts.first { $0.kind == .parser }?.label == OJDLocalized.string("term.parser"))
     #expect(
       Self.value(.ownership, in: facts)

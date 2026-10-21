@@ -288,13 +288,22 @@ struct LocalizationTests {
       catalogVariantKeys == variantKeys,
       "\(catalogVariantKeys.subtracting(variantKeys).sorted())"
     )
-    let english = Localization(preferredLanguages: ["en-US"])
-    let names = variantKeys.map { english.string($0) }
-    #expect(Set(names).count == names.count)
+    for locale in Localization.availableLocalizations() {
+      let values = LocalizationCatalogAudit.values(for: locale)
+      let names = variantKeys.sorted().map { values[$0] }
+      #expect(Set(names).count == names.count, "\(locale) \(names)")
+    }
+  }
+
+  @Test(.enabled(if: Localization().resolvedLanguage == "en-US", "the literal is the en-US name"))
+  func aReceiverBindingReadsAsTheFamilyThenTheVariantInEnglish() {
+    #expect(
+      ProtocolBindingID(.xboxXUSB, variant: .receiver).displayName == "Xbox 360 (XUSB), Receiver"
+    )
   }
 
   @Test
-  func aBindingNamesItsVariantOnlyWhenTheTransportCannotTellIt() {
+  func aBindingNamesItsVariantOnlyWhenTheFamilyStoresIt() {
     let english = Localization(preferredLanguages: ["en-US"])
     #expect(english.string("term.protocolBinding.familyWithVariant", "A", "B") == "A, B")
     let receiver = ProtocolBindingID(.xboxXUSB, variant: .receiver)

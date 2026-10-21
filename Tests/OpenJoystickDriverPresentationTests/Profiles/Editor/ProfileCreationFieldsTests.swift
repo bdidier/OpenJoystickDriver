@@ -188,6 +188,29 @@ struct ProfileCreationFieldsTests {
   }
 
   @Test
+  func twoFamiliesThatShareATitleStayInSectionsOfTheirOwn() {
+    let choices = ProfileControllerChoice.choices(
+      devices: [],
+      profiles: [],
+      catalog: [
+        ControllerModelID(vendorID: 1, productID: 1): .valveSteamController,
+        ControllerModelID(vendorID: 1, productID: 2): .valveSteamDeck,
+        ControllerModelID(vendorID: 1, productID: 3): .valveSteamController,
+      ]
+    )
+    let sections = ProfileControllerGroup.sections(of: choices) { group in
+      if case .family = group { return "Valve" }
+      return ProfileControllerGroup.title(of: group)
+    }
+    #expect(sections.map(\.title) == ["Valve", "Valve"])
+    #expect(Set(sections.map(\.id)) == [.family(.valveSteamController), .family(.valveSteamDeck)])
+    #expect(sections.map(\.choices.count).sorted() == [1, 2])
+    for section in sections {
+      #expect(section.choices.allSatisfy { $0.group == section.group })
+    }
+  }
+
+  @Test
   func aProfileCanTargetAModelThatIsNotConnected() {
     let context = Self.context(
       devices: [],

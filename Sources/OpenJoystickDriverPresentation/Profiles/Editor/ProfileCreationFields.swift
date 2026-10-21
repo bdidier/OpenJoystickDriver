@@ -98,17 +98,24 @@ struct ProfileControllerGroup: Equatable, Identifiable {
   let choices: [ProfileControllerChoice]
   var id: ProfileControllerChoice.Group { group }
 
+  /// The title of the section of `group`: the family's display name for a catalog family.
+  static func title(of group: ProfileControllerChoice.Group) -> String {
+    switch group {
+    case .connected: OJDLocalized.string("settings.controllerConnectedShort")
+    case .profiles: OJDLocalized.string("profiles.controllersOfProfiles")
+    case .family(let family): family.displayName
+    }
+  }
+
   /// The sections of `choices`, in their order: connected controllers, controllers of existing
-  /// profiles, then one section per protocol family.
-  static func sections(of choices: [ProfileControllerChoice]) -> [Self] {
+  /// profiles, then one section per protocol family. A section is keyed by its group, so two
+  /// families whose `title` reads the same stay in sections of their own.
+  static func sections(
+    of choices: [ProfileControllerChoice],
+    title: (ProfileControllerChoice.Group) -> String = title(of:)
+  ) -> [Self] {
     var sections: [Self] = []
     for choice in choices {
-      let title: String
-      switch choice.group {
-      case .connected: title = OJDLocalized.string("settings.controllerConnectedShort")
-      case .profiles: title = OJDLocalized.string("profiles.controllersOfProfiles")
-      case .family(let family): title = family.displayName
-      }
       if let last = sections.last, last.group == choice.group {
         sections[sections.count - 1] = Self(
           group: last.group,
@@ -116,7 +123,7 @@ struct ProfileControllerGroup: Equatable, Identifiable {
           choices: last.choices + [choice]
         )
       } else {
-        sections.append(Self(group: choice.group, title: title, choices: [choice]))
+        sections.append(Self(group: choice.group, title: title(choice.group), choices: [choice]))
       }
     }
     return sections
