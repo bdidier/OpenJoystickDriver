@@ -20,6 +20,18 @@ struct LibraryRecordItem: Equatable, Identifiable {
   /// Only a record that a user file adds or patches can be removed here; a package's record
   /// goes with its package.
   var isRemovable: Bool { layer == .user }
+
+  /// Whether the record's `VVVV:PPPP`, or its family, contains `query`, ignoring case. An empty
+  /// query matches every record.
+  func matches(_ query: String) -> Bool {
+    Self.contains(query, in: [identity, family])
+  }
+
+  static func contains(_ query: String, in fields: [String]) -> Bool {
+    let query = query.trimmingCharacters(in: .whitespacesAndNewlines)
+    return query.isEmpty
+      || fields.contains { $0.range(of: query, options: .caseInsensitive) != nil }
+  }
 }
 
 /// A file in the record directory that OJD skipped, and why.
@@ -88,6 +100,9 @@ struct LibraryModItem: Equatable, Identifiable {
   let problem: String?
 
   var id: String { name }
+
+  /// Whether the mod's name contains `query`, ignoring case. An empty query matches every mod.
+  func matches(_ query: String) -> Bool { LibraryRecordItem.contains(query, in: [name]) }
 }
 
 /// What validation found in a mod package folder.

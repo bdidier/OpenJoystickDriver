@@ -64,6 +64,7 @@ struct MainWindowAreaTests {
     #expect(
       MainWindowArea.library.toolbarActions == [
         .installLibraryItem, .validateLibraryItem, .testLibraryRecord, .removeLibraryItem,
+        .searchLibrary,
       ]
     )
     #expect(MainWindowArea.access.toolbarActions.isEmpty)

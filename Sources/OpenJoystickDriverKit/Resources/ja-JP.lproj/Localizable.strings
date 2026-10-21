@@ -1496,6 +1496,8 @@
 "library.mod.remove.title" = "MOD「%@」を削除しますか？";
 "library.mod.remove.message" = "OpenJoystickDriverは、MODと、そのMODが追加したレコード、プロファイル、ペルソナを削除します。";
 "library.mod.removed" = "MOD「%@」を削除しました。";
+"library.search" = "検索";
+"library.search.noMatches" = "一致する項目はありません";
 "library.testRecord" = "レコードをテスト…";
 "library.installed" = "インストール済み";
 "library.builtIn" = "内蔵";

@@ -1496,6 +1496,8 @@
 "library.mod.remove.title" = "Hapus mod %@?";
 "library.mod.remove.message" = "OpenJoystickDriver menghapus mod beserta catatan, profil, dan persona yang ditambahkannya.";
 "library.mod.removed" = "Mod %@ telah dihapus.";
+"library.search" = "Cari";
+"library.search.noMatches" = "Tidak ada yang cocok";
 "library.testRecord" = "Uji Catatan…";
 "library.installed" = "Terpasang";
 "library.builtIn" = "Bawaan";

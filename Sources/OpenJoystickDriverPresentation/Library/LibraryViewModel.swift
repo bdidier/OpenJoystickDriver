@@ -103,6 +103,9 @@ final class LibraryViewModel: ObservableObject {
   var scope: LibraryScope = .installed {
     didSet { if scope != oldValue { select(nil) } }
   }
+  /// What the toolbar's search field holds; the list shows only records and mods that match.
+  @Published
+  var searchText = ""
   @Published
   private(set) var selection: LibrarySelection?
   @Published
@@ -136,11 +139,15 @@ final class LibraryViewModel: ObservableObject {
 
   /// The records the list shows under ``scope``.
   var visibleRecords: [LibraryRecordItem] {
-    scope == .installed ? records.installed : records.builtIn
+    (scope == .installed ? records.installed : records.builtIn).filter {
+      $0.matches(searchText)
+    }
   }
 
   /// The mods the list shows under ``scope``; built-in records come with no mods.
-  var visibleMods: [LibraryModItem] { scope == .installed ? mods : [] }
+  var visibleMods: [LibraryModItem] {
+    scope == .installed ? mods.filter { $0.matches(searchText) } : []
+  }
 
   var selectedMod: LibraryModItem? {
     guard case .mod(let name) = selection else { return nil }

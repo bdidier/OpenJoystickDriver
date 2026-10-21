@@ -1607,6 +1607,8 @@
 "library.mod.remove.title" = "¿Quitar el mod %@?";
 "library.mod.remove.message" = "OpenJoystickDriver elimina el mod y los registros, perfiles y personas que añadió.";
 "library.mod.removed" = "Se ha quitado el mod %@.";
+"library.search" = "Buscar";
+"library.search.noMatches" = "Sin coincidencias";
 "library.testRecord" = "Probar registro…";
 "library.installed" = "Instalados";
 "library.builtIn" = "Integrados";

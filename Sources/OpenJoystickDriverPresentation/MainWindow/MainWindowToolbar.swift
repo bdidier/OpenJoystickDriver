@@ -12,6 +12,7 @@
     case validateLibraryItem
     case testLibraryRecord
     case removeLibraryItem
+    case searchLibrary
 
     var identifier: NSToolbarItem.Identifier {
       NSToolbarItem.Identifier("OpenJoystickDriver.MainWindowToolbar.\(rawValue)")
@@ -33,6 +34,7 @@
       case .validateLibraryItem: return "checkmark.circle"
       case .testLibraryRecord: return "play.circle"
       case .removeLibraryItem: return "trash"
+      case .searchLibrary: return "magnifyingglass"
       }
     }
 
@@ -46,6 +48,7 @@
       case .validateLibraryItem: return "library.validate"
       case .testLibraryRecord: return "library.testRecord"
       case .removeLibraryItem: return "library.remove"
+      case .searchLibrary: return "library.search"
       }
     }
 
@@ -59,6 +62,7 @@
       case .validateLibraryItem: return "library.validate"
       case .testLibraryRecord: return "library.testRecord"
       case .removeLibraryItem: return "library.remove"
+      case .searchLibrary: return "library.search"
       }
     }
   }
@@ -70,7 +74,10 @@
       case .controllers: return [.refreshControllers]
       case .profiles: return [.newProfile, .importProfile]
       case .library:
-        return [.installLibraryItem, .validateLibraryItem, .testLibraryRecord, .removeLibraryItem]
+        return [
+          .installLibraryItem, .validateLibraryItem, .testLibraryRecord, .removeLibraryItem,
+          .searchLibrary,
+        ]
       case .access, .activity: return []
       }
     }
@@ -95,7 +102,10 @@
     }
 
     static func makeItem(for action: MainWindowToolbarAction) -> NSToolbarItem {
-      let item = NSToolbarItem(itemIdentifier: action.identifier)
+      let item =
+        action == .searchLibrary
+        ? NSSearchToolbarItem(itemIdentifier: action.identifier)
+        : NSToolbarItem(itemIdentifier: action.identifier)
       let description = OJDLocalized.string(action.descriptionKey)
       item.label = OJDLocalized.string(action.labelKey)
       item.paletteLabel = item.label

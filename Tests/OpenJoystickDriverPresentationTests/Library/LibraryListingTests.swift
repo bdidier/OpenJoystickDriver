@@ -150,6 +150,39 @@ struct LibraryListingTests {
   }
 
   @Test
+  func searchMatchesVendorProductFamilyAndModNameIgnoringCase() {
+    let (model, _) = loadedModel()
+
+    model.searchText = "1234:0001"
+    #expect(model.visibleRecords.map(\.model) == [userModel])
+    #expect(model.visibleMods.isEmpty)
+    model.searchText = "XBOX-gip"
+    #expect(model.visibleRecords.count == 1)
+    model.searchText = "ARC"
+    #expect(model.visibleRecords.isEmpty)
+    #expect(model.visibleMods.map(\.name) == ["arcade"])
+    model.searchText = "  "
+    #expect(model.visibleRecords.count == 1)
+    #expect(model.visibleMods.count == 1)
+  }
+
+  @Test
+  func searchAppliesInTheBuiltInScope() {
+    let (model, _) = loadedModel()
+    model.scope = .builtIn
+
+    model.searchText = "028e"
+    #expect(model.visibleRecords.map(\.model) == [builtInModel])
+    model.searchText = "zzz"
+    #expect(model.visibleRecords.isEmpty)
+  }
+
+  @Test
+  func theLibraryToolbarEndsWithSearch() {
+    #expect(MainWindowArea.library.toolbarActions.last == .searchLibrary)
+  }
+
+  @Test
   func theLibraryToolbarLabelsResolve() {
     for action in MainWindowArea.library.toolbarActions {
       #expect(OJDLocalized.string(action.labelKey) != action.labelKey)

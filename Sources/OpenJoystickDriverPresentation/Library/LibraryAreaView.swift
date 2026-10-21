@@ -39,22 +39,28 @@
         }.pickerStyle(SegmentedPickerStyle()).labelsHidden().padding(8)
         List(selection: selection) {
           Section(header: recordsHeader) {
-            if model.visibleRecords.isEmpty && model.records.skipped.isEmpty {
-              emptyLine("library.records.empty.title")
+            if model.visibleRecords.isEmpty && (isSearching || model.records.skipped.isEmpty) {
+              emptyLine(isSearching ? "library.search.noMatches" : "library.records.empty.title")
             }
             ForEach(model.visibleRecords) { item in recordRow(item) }
-            if model.scope == .installed {
+            if model.scope == .installed && !isSearching {
               ForEach(model.records.skipped) { skipped in skippedRow(skipped) }
             }
           }
           if model.scope == .installed {
             Section(header: Text(OJDLocalized.string("library.mods"))) {
-              if model.mods.isEmpty { emptyLine("library.mods.empty.title") }
-              ForEach(model.mods) { mod in modRow(mod) }
+              if model.visibleMods.isEmpty {
+                emptyLine(isSearching ? "library.search.noMatches" : "library.mods.empty.title")
+              }
+              ForEach(model.visibleMods) { mod in modRow(mod) }
             }
           }
         }.listStyle(InsetListStyle())
       }.onAppear { model.reload() }
+    }
+
+    private var isSearching: Bool {
+      !model.searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
     private var selection: Binding<LibrarySelection?> {

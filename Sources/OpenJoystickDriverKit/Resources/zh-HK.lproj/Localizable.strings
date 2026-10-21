@@ -1496,6 +1496,8 @@
 "library.mod.remove.title" = "要移除模組 %@ 嗎？";
 "library.mod.remove.message" = "OpenJoystickDriver 會刪除該模組及其新增的記錄、設定檔和人設。";
 "library.mod.removed" = "已移除模組 %@。";
+"library.search" = "搜尋";
+"library.search.noMatches" = "沒有相符項目";
 "library.testRecord" = "測試記錄…";
 "library.installed" = "已安裝";
 "library.builtIn" = "內建";
