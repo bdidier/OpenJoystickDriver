@@ -25,15 +25,34 @@
           isOn: Binding(get: { value.wrappedValue > 0 }, set: { value.wrappedValue = $0 ? 255 : 0 })
         )
       } else {
-        VStack(alignment: .leading, spacing: 3) {
-          HStack {
-            Text(title)
-            Spacer()
-            Text("\(Int(value.wrappedValue.rounded()))").font(
-              .system(.caption, design: .monospaced)
-            )
-          }
+        InputTestSliderRow(title: title, valueText: "\(Int(value.wrappedValue.rounded()))") {
           Slider(value: value, in: 0...255)
+        }
+      }
+    }
+  }
+
+  /// A slider on one form row: the title leads, the slider fills the trailing column and the
+  /// value follows in a fixed-width monospaced-digit column so every slider ends at the same edge.
+  struct InputTestSliderRow<Control: View>: View {
+    let title: String
+    let valueText: String
+    let control: Control
+
+    init(title: String, valueText: String, @ViewBuilder control: () -> Control) {
+      self.title = title
+      self.valueText = valueText
+      self.control = control()
+    }
+
+    var body: some View {
+      OJDLabeledRow(title) {
+        HStack(spacing: 8) {
+          control.labelsHidden().ojdAccessibilityLabel(title)
+          Text(valueText)
+            .font(.system(.body).monospacedDigit())
+            .foregroundColor(Color(NSColor.secondaryLabelColor))
+            .frame(width: 64, alignment: .trailing)
         }
       }
     }
@@ -107,17 +126,13 @@
       if model.capabilities.supportsRumble {
         Group {
           ForEach(model.capabilities.rumbleMotors, id: \.self) { rumbleControl(for: $0) }
-          VStack(alignment: .leading, spacing: 3) {
-            HStack {
-              Text(OJDLocalized.string("inputTest.duration"))
-              Spacer()
-              Text(
-                OJDLocalized.formatted(
-                  "inputTest.durationValue",
-                  Int(model.rumbleDurationMilliseconds)
-                )
-              ).font(.system(.caption, design: .monospaced))
-            }
+          InputTestSliderRow(
+            title: OJDLocalized.string("inputTest.duration"),
+            valueText: OJDLocalized.formatted(
+              "inputTest.durationValue",
+              Int(model.rumbleDurationMilliseconds)
+            )
+          ) {
             Slider(
               value: rumbleDurationBinding,
               in: Double(
