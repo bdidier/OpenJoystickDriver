@@ -1,6 +1,14 @@
 import Foundation
 
 extension VirtualDevice {
+  /// Where a document came from, which decides whether a header problem names a file.
+  enum Source {
+    /// A file of this name.
+    case file(String)
+    /// A document held in memory, such as one the caller reads and names itself.
+    case unnamed
+  }
+
   /// Decodes one `virtual-device.schema.json` document. `requiresMatch` refuses a document
   /// without `match`, which would otherwise be read as a persona definition.
   ///
@@ -8,7 +16,7 @@ extension VirtualDevice {
   ///   supported one, and ``ControllerRecordProblem`` for any other violation of the schema.
   static func decode(
     _ data: Data,
-    fileName: String? = nil,
+    source: Source,
     requiresMatch: Bool
   ) throws -> Self {
     guard let object = try? JSONSerialization.jsonObject(with: data),
@@ -19,7 +27,11 @@ extension VirtualDevice {
       kind: document["kind"],
       expected: kind
     ) {
-      let located = fileName.map { problem.located(in: $0).message } ?? problem.message
+      let located: String
+      switch source {
+      case .file(let name): located = problem.located(in: name).message
+      case .unnamed: located = problem.message
+      }
       throw DocumentHeaderProblem(code: .unsupportedAPIVersion, located)
     }
     let allowed: Set<String> = [

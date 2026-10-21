@@ -53,7 +53,7 @@ struct VirtualDevice: Equatable, Sendable {
       else { throw ControllerRecordProblem(code: nil, "no record for \(persona.rawValue)") }
       let device = try decode(
         Data(contentsOf: url),
-        fileName: url.lastPathComponent,
+        source: .file(url.lastPathComponent),
         requiresMatch: false
       )
       guard device.match == nil, device.persona == persona else {
