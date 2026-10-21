@@ -77,24 +77,49 @@ extension LibraryPending {
   }
 }
 
-/// The Library list's rows; the detail column shows the selected one.
-enum LibrarySection: String, CaseIterable, Identifiable {
-  case records
-  case mods
+/// Which records the Library list shows: those a file or a mod adds, or those the app comes with.
+enum LibraryScope: String, CaseIterable, Identifiable {
+  case installed
+  case builtIn
 
   var id: String { rawValue }
-  var titleKey: String { "library.\(rawValue)" }
-  var symbolName: String { self == .records ? "doc.text" : "shippingbox" }
+  var titleKey: String {
+    switch self {
+    case .installed: return "library.installed"
+    case .builtIn: return "library.builtIn"
+    }
+  }
+}
+
+/// The record or mod the detail column shows.
+enum LibrarySelection: Hashable {
+  case record(ControllerModelID)
+  case mod(String)
 }
 
 @MainActor
 final class LibraryViewModel: ObservableObject {
   @Published
-  var selectedSection: LibrarySection = .records
+  var scope: LibraryScope = .installed {
+    didSet { if scope != oldValue { select(nil) } }
+  }
+  /// What the toolbar's search field holds; the list shows only records and mods that match.
+  @Published
+  var searchText = "" {
+    didSet { if searchText != oldValue { select(selection) } }
+  }
+  @Published
+  private(set) var selection: LibrarySelection?
   @Published
   private(set) var records = LibraryRecordListing()
   @Published
   private(set) var mods: [LibraryModItem] = []
+  /// The full record of the selected record.
+  @Published
+  private(set) var recordDetail: LibraryRecordDetail?
+  /// The latest test of the selected record.
+  @Published
+  private(set) var testRun: LibraryTestRun?
   @Published
   private(set) var failure: LibraryFailure?
   /// The result of the latest successful operation, in words.
@@ -114,23 +139,72 @@ final class LibraryViewModel: ObservableObject {
     self.readFile = readFile
   }
 
+  /// The records the list shows under ``scope``.
+  var visibleRecords: [LibraryRecordItem] {
+    (scope == .installed ? records.installed : records.builtIn).filter {
+      $0.matches(searchText)
+    }
+  }
+
+  /// The mods the list shows under ``scope``; built-in records come with no mods.
+  var visibleMods: [LibraryModItem] {
+    scope == .installed ? mods.filter { $0.matches(searchText) } : []
+  }
+
+  var selectedMod: LibraryModItem? {
+    guard case .mod(let name) = selection else { return nil }
+    return mods.first { $0.name == name }
+  }
+
+  /// Whether Remove applies: a user's record file, or a mod.
+  var canRemoveSelection: Bool {
+    if selectedMod != nil { return true }
+    return recordDetail?.item.isRemovable == true
+  }
+
+  var canTestSelection: Bool { recordDetail != nil }
+
   func reload() {
-    records = store.installedRecords()
+    records = store.records()
     mods = store.installedMods()
+    select(selection)
+  }
+
+  /// Shows `selection`; a record or mod that the list does not show selects nothing.
+  func select(_ selection: LibrarySelection?) {
+    switch selection {
+    case .record(let model)?:
+      recordDetail =
+        visibleRecords.contains { $0.model == model } ? store.recordDetail(model) : nil
+      self.selection = recordDetail == nil ? nil : selection
+    case .mod(let name)?:
+      recordDetail = nil
+      self.selection = visibleMods.contains { $0.name == name } ? selection : nil
+    case nil:
+      recordDetail = nil
+      self.selection = nil
+    }
+    if testRun?.model != recordDetail?.item.model { testRun = nil }
   }
 
   func dismissFailure() { failure = nil }
 
   func dismissNotice() { notice = nil }
 
-  func validateRecord(at url: URL) {
+  /// Checks the record file or mod folder at `url` without installing it; a folder is a mod.
+  func validate(at url: URL) {
     perform {
-      let check = try store.checkRecord(try read(url))
-      notice = OJDLocalized.formatted(
-        "library.record.valid",
-        url.lastPathComponent,
-        check.identity
-      )
+      if try isFolder(url) {
+        let check = try store.checkMod(folder: url)
+        notice = OJDLocalized.formatted("library.mod.valid", url.lastPathComponent, check.name)
+      } else {
+        let check = try store.checkRecord(try read(url))
+        notice = OJDLocalized.formatted(
+          "library.record.valid",
+          url.lastPathComponent,
+          check.identity
+        )
+      }
     }
   }
 
@@ -143,23 +217,17 @@ final class LibraryViewModel: ObservableObject {
 
   /// Starts installing the record file or mod folder at `url`; a folder is a mod.
   func beginInstall(from url: URL) {
-    let isFolder: Bool
-    do {
-      isFolder = try url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory == true
-    } catch {
-      failure = LibraryFailure(
+    perform {
+      if try isFolder(url) { beginInstallMod(from: url) } else { beginInstallRecord(from: url) }
+    }
+  }
+
+  private func isFolder(_ url: URL) throws -> Bool {
+    do { return try url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory == true } catch {
+      throw LibraryFailure(
         message: OJDLocalized.formatted("library.unreadable", url.path, error.localizedDescription),
         code: .fileAccessFailed
       )
-      return
-    }
-    if isFolder { beginInstallMod(from: url) } else { beginInstallRecord(from: url) }
-  }
-
-  func validateMod(at folder: URL) {
-    perform {
-      let check = try store.checkMod(folder: folder)
-      notice = OJDLocalized.formatted("library.mod.valid", folder.lastPathComponent, check.name)
     }
   }
 
@@ -167,9 +235,35 @@ final class LibraryViewModel: ObservableObject {
     perform { pending = .installMod(folder: folder, check: try store.checkMod(folder: folder)) }
   }
 
-  func requestRemove(_ item: LibraryRecordItem) { pending = .removeRecord(item) }
+  /// Asks to remove the selected mod or record file.
+  func requestRemoveSelection() {
+    if let mod = selectedMod {
+      pending = .removeMod(mod)
+    } else if let item = recordDetail?.item, item.isRemovable {
+      pending = .removeRecord(item)
+    }
+  }
 
-  func requestRemove(_ item: LibraryModItem) { pending = .removeMod(item) }
+  /// Replays the capture at `capture` through the selected record's parser and compares the
+  /// state with the one at `expectation`.
+  func testSelectedRecord(capture: URL, expectation: URL) {
+    guard let model = recordDetail?.item.model else { return }
+    perform {
+      testRun = nil
+      let result = try store.testRecord(
+        model,
+        capture: try read(capture),
+        captureName: capture.lastPathComponent,
+        expectation: try read(expectation),
+        expectationName: expectation.lastPathComponent
+      )
+      testRun = LibraryTestRun(
+        model: model,
+        expectation: expectation.lastPathComponent,
+        result: result
+      )
+    }
+  }
 
   func cancelPending() { pending = nil }
 

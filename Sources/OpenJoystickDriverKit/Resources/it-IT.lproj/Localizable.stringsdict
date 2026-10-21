@@ -74,29 +74,5 @@
 			<string>%d dispositivi di output del controller rilevati</string>
 		</dict>
 	</dict>
-	<key>library.records.bundled</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@count@</string>
-		<key>count</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>d</string>
-			<key>one</key>
-			<string>È incluso %d altro record con l’app.</string>
-			<key>zero</key>
-			<string>Sono inclusi %d altri record con l’app.</string>
-			<key>two</key>
-			<string>Sono inclusi %d altri record con l’app.</string>
-			<key>few</key>
-			<string>Sono inclusi %d altri record con l’app.</string>
-			<key>many</key>
-			<string>Sono inclusi %d altri record con l’app.</string>
-			<key>other</key>
-			<string>Sono inclusi %d altri record con l’app.</string>
-		</dict>
-	</dict>
 </dict>
 </plist>

@@ -26,6 +26,14 @@ public struct PacketLogEntry: Codable, Sendable {
   /// Number of bytes in the packet.
   public let length: Int
 
+  /// The packet's bytes, from its `hex` string.
+  public var reportBytes: [UInt8] { Self.bytes(hex: hex) }
+
+  /// The bytes of a space-separated hex string; a group that is not hex is skipped.
+  public static func bytes(hex: String) -> [UInt8] {
+    hex.split(separator: " ").compactMap { UInt8($0, radix: 16) }
+  }
+
   /// Classifies demonstrated GIP announce and status commands as routine housekeeping.
   public var classification: PacketLogClassification {
     var command: UInt8 = 0

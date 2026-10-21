@@ -7,7 +7,8 @@
   import UniformTypeIdentifiers
 
   /// The Library area: the controller records and mod packages that `ojd record` and `ojd mod`
-  /// manage.
+  /// manage. The list column holds the records and mods; the detail column shows the selected
+  /// one in full.
   struct LibraryAreaView: View {
     @ObservedObject
     var runtime: RuntimeViewModel
@@ -19,182 +20,130 @@
     @ViewBuilder
     var body: some View {
       switch column {
-      case .list: sectionList
-      case .detail: detail
+      case .list: LibraryListView(model: model)
+      case .detail: LibraryDetailView(runtime: runtime, model: model)
       }
     }
+  }
 
-    private var sectionList: some View {
-      List(selection: sectionSelection) {
-        ForEach(LibrarySection.allCases) { section in
-          Label(OJDLocalized.string(section.titleKey), systemImage: section.symbolName)
-            .tag(section)
-        }
-      }.listStyle(InsetListStyle())
-    }
+  struct LibraryListView: View {
+    @ObservedObject
+    var model: LibraryViewModel
 
-    private var sectionSelection: Binding<LibrarySection?> {
-      Binding(
-        get: { model.selectedSection },
-        set: { section in if let section { model.selectedSection = section } }
-      )
-    }
-
-    private var detail: some View {
-      ScrollView {
-        VStack(alignment: .leading, spacing: 20) {
-          feedback
-          switch model.selectedSection {
-          case .records: recordsSection
-          case .mods: modsSection
+    var body: some View {
+      VStack(spacing: 0) {
+        Picker(OJDLocalized.string("library.records"), selection: $model.scope) {
+          ForEach(LibraryScope.allCases) { scope in
+            Text(OJDLocalized.string(scope.titleKey)).tag(scope)
           }
-        }.padding(28).frame(maxWidth: .infinity, alignment: .leading)
-      }.onAppear { model.reload() }.sheet(item: $model.pending) { pending in
-        LibraryConfirmationSheet(
-          confirmation: pending.confirmation,
-          cancel: { model.cancelPending() },
-          confirm: {
-            if model.confirmPending() { Task { @MainActor in await runtime.refresh() } }
+        }.pickerStyle(SegmentedPickerStyle()).labelsHidden().padding(8)
+        List(selection: selection) {
+          Section(header: recordsHeader) {
+            if model.visibleRecords.isEmpty && (isSearching || model.records.skipped.isEmpty) {
+              emptyLine(isSearching ? "library.search.noMatches" : "library.records.empty.title")
+            }
+            ForEach(model.visibleRecords) { item in recordRow(item) }
+            if model.scope == .installed && !isSearching {
+              ForEach(model.records.skipped) { skipped in skippedRow(skipped) }
+            }
           }
-        )
-      }
+          if model.scope == .installed {
+            Section(header: Text(OJDLocalized.string("library.mods"))) {
+              if model.visibleMods.isEmpty {
+                emptyLine(isSearching ? "library.search.noMatches" : "library.mods.empty.title")
+              }
+              ForEach(model.visibleMods) { mod in modRow(mod) }
+            }
+          }
+        }.listStyle(InsetListStyle())
+      }.onAppear { model.reload() }
     }
 
+    private var isSearching: Bool {
+      !model.searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
+    private var selection: Binding<LibrarySelection?> {
+      Binding(get: { model.selection }, set: { model.select($0) })
+    }
+
+    /// The built-in records show their number beside the title.
     @ViewBuilder
-    private var feedback: some View {
-      if let failure = model.failure {
-        InlineErrorView(
-          message: failure.message,
-          code: failure.code,
-          detailsTitle: OJDLocalized.string("library.details"),
-          detailsAccessibilityLabel: OJDLocalized.string("a11y.library.details"),
-          actionTitle: OJDLocalized.string("library.dismiss"),
-          actionAccessibilityLabel: OJDLocalized.string("a11y.library.dismissError")
-        ) { model.dismissFailure() }
-      }
-      if let notice = model.notice {
-        HStack(alignment: .firstTextBaseline) {
-          OJDSystemSymbol(
-            name: SemanticState.healthy.presentation.symbolName,
-            fallback: OJDLocalized.string("common.status")
-          ).foregroundColor(Color(SemanticState.healthy.presentation.tone.color))
-            .accessibilityHidden(true)
-          Text(notice).fixedSize(horizontal: false, vertical: true)
-          Spacer(minLength: 0)
-          Button(OJDLocalized.string("library.dismiss")) { model.dismissNotice() }
-            .ojdAccessibilityLabel(OJDLocalized.string("a11y.library.dismissNotice"))
-        }.ojdAccessibilityLabel(notice)
+    private var recordsHeader: some View {
+      switch model.scope {
+      case .installed: Text(OJDLocalized.string("library.records"))
+      case .builtIn:
+        HStack {
+          Text(OJDLocalized.string("library.builtIn"))
+          Spacer()
+          Text(model.records.builtIn.count.formatted())
+        }.ojdAccessibilityValue(model.records.builtIn.count.formatted())
       }
     }
 
-    private var recordsSection: some View {
-      VStack(alignment: .leading, spacing: 10) {
-        HStack {
-          Text(OJDLocalized.string("library.records")).font(.title2.weight(.semibold))
-            .accessibilityAddTraits(.isHeader)
-          Spacer()
-          Button(OJDLocalized.string("library.validate")) {
-            if let url = LibraryFilePicker.chooseRecordFile() { model.validateRecord(at: url) }
-          }.ojdAccessibilityLabel(OJDLocalized.string("a11y.library.validateRecord"))
-        }
-        Text(OJDLocalized.plural("library.records.bundled", count: model.records.bundledCount))
-          .font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor))
-        if model.records.items.isEmpty && model.records.skipped.isEmpty {
-          EmptyStateView(
-            symbol: "doc.badge.plus",
-            title: OJDLocalized.string("library.records.empty.title"),
-            message: OJDLocalized.string("library.records.empty.message")
-          )
-        }
-        ForEach(model.records.items) { item in recordRow(item) }
-        ForEach(model.records.skipped) { skipped in
-          VStack(alignment: .leading, spacing: 2) {
-            Text(skipped.path).font(.body.weight(.medium))
-            Text(OJDLocalized.formatted("library.record.skipped", skipped.problem)).font(.caption)
-              .foregroundColor(Color(NSColor.secondaryLabelColor))
-          }.frame(maxWidth: .infinity, alignment: .leading).textSelection(.enabled)
-            .ojdAccessibilityLabel(skipped.path).ojdAccessibilityValue(skipped.problem)
-        }
-      }
+    private func emptyLine(_ key: String) -> some View {
+      Text(OJDLocalized.string(key)).foregroundColor(.secondary)
     }
 
     private func recordRow(_ item: LibraryRecordItem) -> some View {
-      let layer = OJDLocalized.string(
-        item.layer == .package ? "library.layer.package" : "library.layer.user"
+      let summary = OJDLocalized.formatted(
+        "library.record.detail",
+        item.family,
+        item.layer.libraryTitle
       )
-      return GroupBox {
-        HStack(alignment: .firstTextBaseline) {
-          VStack(alignment: .leading, spacing: 2) {
-            Text(item.identity).font(.body.weight(.medium))
-            Text(OJDLocalized.formatted("library.record.detail", item.family, layer)).font(.caption)
-              .foregroundColor(
-                Color(NSColor.secondaryLabelColor)
-              )
-            if let file = item.file {
-              Text(file.path).font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor))
-                .textSelection(.enabled)
-            }
-          }
-          Spacer()
-          if item.isRemovable {
-            Button(OJDLocalized.string("library.remove")) { model.requestRemove(item) }
-              .ojdAccessibilityLabel(
-                OJDLocalized.formatted("a11y.library.removeRecord", item.identity)
-              )
-          }
-        }.padding(4)
-      }.ojdAccessibilityLabel(item.identity).ojdAccessibilityValue("\(item.family), \(layer)")
+      return VStack(alignment: .leading, spacing: 2) {
+        Text(item.identity)
+        Text(summary).font(.caption).foregroundColor(.secondary)
+        if let patch = item.patchedBy {
+          Text(OJDLocalized.formatted("library.record.patchedBy", patch)).font(.caption)
+            .foregroundColor(.secondary)
+        }
+      }.tag(LibrarySelection.record(item.model)).ojdAccessibilityLabel(item.identity)
+        .ojdAccessibilityValue(summary)
     }
 
-    private var modsSection: some View {
-      VStack(alignment: .leading, spacing: 10) {
-        HStack {
-          Text(OJDLocalized.string("library.mods")).font(.title2.weight(.semibold))
-            .accessibilityAddTraits(.isHeader)
-          Spacer()
-          Button(OJDLocalized.string("library.validate")) {
-            if let url = LibraryFilePicker.chooseModFolder() { model.validateMod(at: url) }
-          }.ojdAccessibilityLabel(OJDLocalized.string("a11y.library.validateMod"))
-        }
-        if model.mods.isEmpty {
-          EmptyStateView(
-            symbol: "shippingbox",
-            title: OJDLocalized.string("library.mods.empty.title"),
-            message: OJDLocalized.string("library.mods.empty.message")
-          )
-        }
-        ForEach(model.mods) { mod in modRow(mod) }
-      }
+    private func skippedRow(_ skipped: LibrarySkippedFile) -> some View {
+      VStack(alignment: .leading, spacing: 2) {
+        Text(skipped.path)
+        Text(OJDLocalized.formatted("library.record.skipped", skipped.problem)).font(.caption)
+          .foregroundColor(.secondary)
+      }.ojdAccessibilityLabel(skipped.path).ojdAccessibilityValue(skipped.problem)
     }
 
     private func modRow(_ mod: LibraryModItem) -> some View {
-      let summary: String
-      switch (mod.version, mod.author) {
+      VStack(alignment: .leading, spacing: 2) {
+        Text(mod.name)
+        if let summary = mod.summary {
+          Text(summary).font(.caption).foregroundColor(.secondary)
+        }
+      }.tag(LibrarySelection.mod(mod.name)).ojdAccessibilityLabel(mod.name)
+        .ojdAccessibilityValue(mod.summary ?? "")
+    }
+  }
+
+  extension LibraryModItem {
+    /// The version and author in one line; nil when the package names neither.
+    var summary: String? {
+      switch (version, author) {
       case (let version?, let author?):
-        summary = OJDLocalized.formatted("library.mod.detail", version, author)
-      case (let single?, nil), (nil, let single?): summary = single
-      case (nil, nil): summary = ""
+        return OJDLocalized.formatted("library.mod.detail", version, author)
+      case (let single?, nil), (nil, let single?): return single
+      case (nil, nil): return nil
       }
-      return GroupBox {
-        HStack(alignment: .firstTextBaseline) {
-          VStack(alignment: .leading, spacing: 2) {
-            Text(mod.name).font(.body.weight(.medium))
-            if !summary.isEmpty {
-              Text(summary).font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor))
-            }
-            ForEach(mod.files, id: \.self) { file in
-              Text(file).font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor))
-            }
-            if let problem = mod.problem {
-              Text(OJDLocalized.formatted("library.mod.unused", problem)).font(.caption)
-                .foregroundColor(Color(SemanticTone.caution.color))
-            }
-          }.textSelection(.enabled)
-          Spacer()
-          Button(OJDLocalized.string("library.remove")) { model.requestRemove(mod) }
-            .ojdAccessibilityLabel(OJDLocalized.formatted("a11y.library.removeMod", mod.name))
-        }.padding(4)
-      }.ojdAccessibilityLabel(mod.name).ojdAccessibilityValue(summary)
+    }
+  }
+
+  extension ControllerRecordLayer {
+    /// The layer's name for the person.
+    var libraryTitle: String {
+      switch self {
+      case .driver: return OJDLocalized.string("library.layer.driver")
+      case .bundled: return OJDLocalized.string("library.builtIn")
+      case .package: return OJDLocalized.string("library.layer.package")
+      case .global: return OJDLocalized.string("library.layer.global")
+      case .user: return OJDLocalized.string("library.layer.user")
+      case .profile: return OJDLocalized.string("controllers.activeProfile")
+      }
     }
   }
 
@@ -222,16 +171,6 @@
 
   @MainActor
   enum LibraryFilePicker {
-    static func chooseRecordFile() -> URL? {
-      let panel = NSOpenPanel()
-      panel.allowedContentTypes = [.json]
-      panel.allowsMultipleSelection = false
-      panel.canChooseDirectories = false
-      panel.message = OJDLocalized.string("library.record.pick")
-      panel.prompt = OJDLocalized.string("library.choose")
-      return panel.runModal() == .OK ? panel.url : nil
-    }
-
     static func chooseRecordOrModFolder() -> URL? {
       let panel = NSOpenPanel()
       panel.allowedContentTypes = [.json, .folder]
@@ -243,12 +182,21 @@
       return panel.runModal() == .OK ? panel.url : nil
     }
 
-    static func chooseModFolder() -> URL? {
+    /// The packet capture: JSON lines, which no content type names.
+    static func chooseCapture() -> URL? {
+      chooseFile(message: "library.test.packets.pick")
+    }
+
+    static func chooseExpectation() -> URL? {
+      chooseFile(message: "library.test.expect.pick", type: .json)
+    }
+
+    private static func chooseFile(message: String, type: UTType? = nil) -> URL? {
       let panel = NSOpenPanel()
+      if let type { panel.allowedContentTypes = [type] }
       panel.allowsMultipleSelection = false
-      panel.canChooseDirectories = true
-      panel.canChooseFiles = false
-      panel.message = OJDLocalized.string("library.mod.pick")
+      panel.canChooseDirectories = false
+      panel.message = OJDLocalized.string(message)
       panel.prompt = OJDLocalized.string("library.choose")
       return panel.runModal() == .OK ? panel.url : nil
     }

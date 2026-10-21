@@ -113,6 +113,7 @@
         runtime.scopedRefreshInFlightPublisher.map { _ in () }.eraseToAnyPublisher(),
         runtime.$remappingState.map { _ in () }.eraseToAnyPublisher(),
         screens.library.objectWillChange.map { _ in () }.eraseToAnyPublisher(),
+        screens.libraryArea.objectWillChange.map { _ in () }.eraseToAnyPublisher(),
         screens.profiles.objectWillChange.map { _ in () }.eraseToAnyPublisher(),
         screens.access.objectWillChange.map { _ in () }.eraseToAnyPublisher(),
         navigation.objectWillChange.map { _ in () }.eraseToAnyPublisher()
@@ -308,7 +309,24 @@
           screens.access.requestGrant(programAt: url)
         }
       case .createToken: screens.access.requestTokenForm()
+      case .validateLibraryItem:
+        if let url = LibraryFilePicker.chooseRecordOrModFolder() {
+          screens.libraryArea.validate(at: url)
+        }
+      case .testLibraryRecord:
+        if let capture = LibraryFilePicker.chooseCapture(),
+          let expectation = LibraryFilePicker.chooseExpectation()
+        {
+          screens.libraryArea.testSelectedRecord(capture: capture, expectation: expectation)
+        }
+      case .removeLibraryItem: screens.libraryArea.requestRemoveSelection()
+      case .searchLibrary: break
       }
+    }
+
+    @objc
+    func librarySearchChanged(_ sender: NSSearchField) {
+      screens.libraryArea.searchText = sender.stringValue
     }
 
     func isEnabled(_ action: MainWindowToolbarAction) -> Bool {
@@ -316,8 +334,10 @@
       case .refreshControllers: return !screens.runtime.isScopedRefreshInFlight
       case .newProfile, .importProfile:
         return !screens.profiles.isActionBlocked(library: screens.library, runtime: screens.runtime)
-      case .installLibraryItem: return true
+      case .installLibraryItem, .validateLibraryItem, .searchLibrary: return true
       case .grantProgram, .createToken: return screens.access.status != nil && !screens.access.busy
+      case .testLibraryRecord: return screens.libraryArea.canTestSelection
+      case .removeLibraryItem: return screens.libraryArea.canRemoveSelection
       }
     }
   }
@@ -355,6 +375,12 @@
       }
       guard let action = MainWindowToolbarAction(identifier: itemIdentifier) else { return nil }
       let item = MainWindowToolbarLayout.makeItem(for: action)
+      if let search = item as? NSSearchToolbarItem {
+        search.searchField.stringValue = screens.libraryArea.searchText
+        search.searchField.target = self
+        search.searchField.action = #selector(librarySearchChanged(_:))
+        return search
+      }
       item.target = self
       item.action = #selector(performToolbarAction(_:))
       return item

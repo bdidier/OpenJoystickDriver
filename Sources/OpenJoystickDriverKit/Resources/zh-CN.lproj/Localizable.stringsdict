@@ -74,29 +74,5 @@
 			<string>已检测到 %d 个控制器输出设备</string>
 		</dict>
 	</dict>
-	<key>library.records.bundled</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@count@</string>
-		<key>count</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>d</string>
-			<key>one</key>
-			<string>App 内置了另外 %d 条记录。</string>
-			<key>zero</key>
-			<string>App 内置了另外 %d 条记录。</string>
-			<key>two</key>
-			<string>App 内置了另外 %d 条记录。</string>
-			<key>few</key>
-			<string>App 内置了另外 %d 条记录。</string>
-			<key>many</key>
-			<string>App 内置了另外 %d 条记录。</string>
-			<key>other</key>
-			<string>App 内置了另外 %d 条记录。</string>
-		</dict>
-	</dict>
 </dict>
 </plist>

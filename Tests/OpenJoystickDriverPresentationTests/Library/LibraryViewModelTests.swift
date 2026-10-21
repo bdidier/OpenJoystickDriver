@@ -4,7 +4,7 @@ import Testing
 
 @testable import OpenJoystickDriverPresentation
 
-private final class FakeLibraryStore: LibraryStore, @unchecked Sendable {
+final class FakeLibraryStore: LibraryStore, @unchecked Sendable {
   var listing = LibraryRecordListing()
   var mods: [LibraryModItem] = []
   var recordCheck = LibraryRecordCheck(
@@ -21,13 +21,30 @@ private final class FakeLibraryStore: LibraryStore, @unchecked Sendable {
     files: [],
     replaces: false
   )
+  var details: [ControllerModelID: LibraryRecordDetail] = [:]
+  var testOutcome = ControllerRecordTestResult(inputReports: 1, differences: [])
+  var testedRecords: [ControllerModelID] = []
   var refusal: LibraryFailure?
   var recordInstalls: [Data] = []
   var modInstalls: [(URL, Bool)] = []
   var removedRecords: [ControllerModelID] = []
   var removedMods: [String] = []
 
-  func installedRecords() -> LibraryRecordListing { listing }
+  func records() -> LibraryRecordListing { listing }
+
+  func recordDetail(_ model: ControllerModelID) -> LibraryRecordDetail? { details[model] }
+
+  func testRecord(
+    _ model: ControllerModelID,
+    capture: Data,
+    captureName: String,
+    expectation: Data,
+    expectationName: String
+  ) throws -> ControllerRecordTestResult {
+    if let refusal { throw refusal }
+    testedRecords.append(model)
+    return testOutcome
+  }
 
   func checkRecord(_ data: Data) throws -> LibraryRecordCheck {
     if let refusal { throw refusal }
@@ -66,6 +83,21 @@ private final class FakeLibraryStore: LibraryStore, @unchecked Sendable {
 @MainActor
 struct LibraryViewModelTests {
   private let file = URL(fileURLWithPath: "/tmp/045e-028e.json")
+
+  private func temporaryFile() -> URL {
+    let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+    FileManager.default.createFile(atPath: url.path, contents: Data("{}".utf8))
+    return url
+  }
+
+  private func temporaryFolder() -> URL {
+    let url = FileManager.default.temporaryDirectory.appendingPathComponent(
+      UUID().uuidString,
+      isDirectory: true
+    )
+    try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
+    return url
+  }
 
   private func makeModel(
     _ store: FakeLibraryStore,
@@ -172,7 +204,10 @@ struct LibraryViewModelTests {
     struct Unreadable: Error {}
     let model = makeModel(FakeLibraryStore()) { _ in throw Unreadable() }
 
-    model.validateRecord(at: file)
+    let url = temporaryFile()
+    defer { try? FileManager.default.removeItem(at: url) }
+
+    model.validate(at: url)
 
     #expect(model.failure?.code == .fileAccessFailed)
     #expect(model.notice == nil)
@@ -183,7 +218,10 @@ struct LibraryViewModelTests {
     let store = FakeLibraryStore()
     let model = makeModel(store)
 
-    model.validateMod(at: file)
+    let url = temporaryFolder()
+    defer { try? FileManager.default.removeItem(at: url) }
+
+    model.validate(at: url)
 
     #expect(model.notice != nil)
     #expect(model.pending == nil)
@@ -199,9 +237,20 @@ struct LibraryViewModelTests {
       layer: .user,
       file: nil
     )
+    store.listing = LibraryRecordListing(installed: [item])
+    store.details[item.model] = LibraryRecordDetail(
+      item: item,
+      transport: "HID",
+      notes: [],
+      claimedByUSBExtension: nil,
+      fields: [],
+      document: nil
+    )
     let model = makeModel(store)
+    model.reload()
+    model.select(.record(item.model))
 
-    model.requestRemove(item)
+    model.requestRemoveSelection()
     #expect(store.removedRecords.isEmpty)
     #expect(model.pending?.confirmation.isDestructive == true)
     model.confirmPending()
@@ -219,11 +268,14 @@ struct LibraryViewModelTests {
   @Test
   func removingAModRemovesItByName() {
     let store = FakeLibraryStore()
-    let model = makeModel(store)
-
-    model.requestRemove(
+    store.mods = [
       LibraryModItem(name: "arcade", version: nil, author: nil, files: [], problem: nil)
-    )
+    ]
+    let model = makeModel(store)
+    model.reload()
+    model.select(.mod("arcade"))
+
+    model.requestRemoveSelection()
     model.confirmPending()
 
     #expect(store.removedMods == ["arcade"])
@@ -268,7 +320,7 @@ struct DirectoryLibraryStoreTests {
   func anEmptyStoreListsNothing() throws {
     let store = DirectoryLibraryStore(recordsDirectory: try directory())
 
-    #expect(store.installedRecords().items.isEmpty)
+    #expect(store.records().installed.isEmpty)
     #expect(store.installedMods().isEmpty)
   }
 
@@ -278,7 +330,7 @@ struct DirectoryLibraryStoreTests {
     try Data("{}".utf8).write(to: directory.appendingPathComponent("bad.json"))
     let store = DirectoryLibraryStore(recordsDirectory: directory)
 
-    let skipped = store.installedRecords().skipped
+    let skipped = store.records().skipped
 
     #expect(skipped.count == 1)
     #expect(skipped.allSatisfy { !$0.problem.isEmpty })

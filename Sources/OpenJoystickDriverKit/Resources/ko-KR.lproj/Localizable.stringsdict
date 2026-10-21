@@ -74,29 +74,5 @@
 			<string>컨트롤러 출력 기기 %d대 감지됨</string>
 		</dict>
 	</dict>
-	<key>library.records.bundled</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@count@</string>
-		<key>count</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>d</string>
-			<key>one</key>
-			<string>이 밖에 레코드 %d개가 앱에 포함되어 있습니다.</string>
-			<key>zero</key>
-			<string>이 밖에 레코드 %d개가 앱에 포함되어 있습니다.</string>
-			<key>two</key>
-			<string>이 밖에 레코드 %d개가 앱에 포함되어 있습니다.</string>
-			<key>few</key>
-			<string>이 밖에 레코드 %d개가 앱에 포함되어 있습니다.</string>
-			<key>many</key>
-			<string>이 밖에 레코드 %d개가 앱에 포함되어 있습니다.</string>
-			<key>other</key>
-			<string>이 밖에 레코드 %d개가 앱에 포함되어 있습니다.</string>
-		</dict>
-	</dict>
 </dict>
 </plist>

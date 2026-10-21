@@ -11,6 +11,10 @@
     case installLibraryItem
     case grantProgram
     case createToken
+    case validateLibraryItem
+    case testLibraryRecord
+    case removeLibraryItem
+    case searchLibrary
 
     var identifier: NSToolbarItem.Identifier {
       NSToolbarItem.Identifier("OpenJoystickDriver.MainWindowToolbar.\(rawValue)")
@@ -31,6 +35,10 @@
       case .installLibraryItem: return "square.and.arrow.down.on.square"
       case .grantProgram: return "person.badge.plus"
       case .createToken: return "key"
+      case .validateLibraryItem: return "checkmark.circle"
+      case .testLibraryRecord: return "play.circle"
+      case .removeLibraryItem: return "trash"
+      case .searchLibrary: return "magnifyingglass"
       }
     }
 
@@ -43,6 +51,10 @@
       case .installLibraryItem: return "library.install"
       case .grantProgram: return "access.grantProgram"
       case .createToken: return "access.grantToken"
+      case .validateLibraryItem: return "library.validate"
+      case .testLibraryRecord: return "library.testRecord"
+      case .removeLibraryItem: return "library.remove"
+      case .searchLibrary: return "library.search"
       }
     }
 
@@ -55,6 +67,10 @@
       case .installLibraryItem: return "mainMenu.file.installRecordOrMod"
       case .grantProgram: return "a11y.access.grantProgram"
       case .createToken: return "a11y.access.grantToken"
+      case .validateLibraryItem: return "library.validate"
+      case .testLibraryRecord: return "library.testRecord"
+      case .removeLibraryItem: return "library.remove"
+      case .searchLibrary: return "library.search"
       }
     }
   }
@@ -65,7 +81,11 @@
       switch self {
       case .controllers: return [.refreshControllers]
       case .profiles: return [.newProfile, .importProfile]
-      case .library: return [.installLibraryItem]
+      case .library:
+        return [
+          .installLibraryItem, .validateLibraryItem, .testLibraryRecord, .removeLibraryItem,
+          .searchLibrary,
+        ]
       case .access: return [.grantProgram, .createToken]
       case .activity: return []
       }
@@ -91,7 +111,10 @@
     }
 
     static func makeItem(for action: MainWindowToolbarAction) -> NSToolbarItem {
-      let item = NSToolbarItem(itemIdentifier: action.identifier)
+      let item =
+        action == .searchLibrary
+        ? NSSearchToolbarItem(itemIdentifier: action.identifier)
+        : NSToolbarItem(itemIdentifier: action.identifier)
       let description = OJDLocalized.string(action.descriptionKey)
       item.label = OJDLocalized.string(action.labelKey)
       item.paletteLabel = item.label

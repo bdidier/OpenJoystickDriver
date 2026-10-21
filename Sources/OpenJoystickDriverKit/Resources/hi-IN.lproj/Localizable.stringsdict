@@ -74,29 +74,5 @@
 			<string>%d कंट्रोलर आउटपुट डिवाइस पहचाने गए</string>
 		</dict>
 	</dict>
-	<key>library.records.bundled</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@count@</string>
-		<key>count</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>d</string>
-			<key>one</key>
-			<string>ऐप के साथ %d और रिकॉर्ड आता है।</string>
-			<key>zero</key>
-			<string>ऐप के साथ %d और रिकॉर्ड आते हैं।</string>
-			<key>two</key>
-			<string>ऐप के साथ %d और रिकॉर्ड आते हैं।</string>
-			<key>few</key>
-			<string>ऐप के साथ %d और रिकॉर्ड आते हैं।</string>
-			<key>many</key>
-			<string>ऐप के साथ %d और रिकॉर्ड आते हैं।</string>
-			<key>other</key>
-			<string>ऐप के साथ %d और रिकॉर्ड आते हैं।</string>
-		</dict>
-	</dict>
 </dict>
 </plist>

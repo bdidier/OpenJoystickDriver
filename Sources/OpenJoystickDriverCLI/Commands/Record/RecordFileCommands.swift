@@ -49,21 +49,6 @@ struct RecordValidation: Encodable, Equatable {
       )
     }
   }
-
-  /// Where OJD can reach the controller, in words, when the USB extension cannot claim it.
-  static func usbNote(_ validated: ValidatedControllerRecord) -> String? {
-    guard let record = validated.record, RecordTransportClaim(record) == .unclaimed else {
-      return nil
-    }
-    return CLILocalized.text(
-      "cli.record.usb_not_claimed"
-    )
-  }
-
-  /// Why OJD reaches a Switch 2 record without `bluetoothLE` only over USB.
-  static func bluetoothLENote(_ record: ControllerRecord) -> String? {
-    record.isSwitch2WithoutBluetoothLE ? CLILocalized.text("cli.record.usb_only_switch2") : nil
-  }
 }
 
 /// The `FILE|-` operand of `record validate` and `record install`.
@@ -117,8 +102,8 @@ struct RecordValidateCommand: AsyncParsableCommand {
             validated.record.map { CommandLineName.kebab($0.family) } ?? ""
           )
         )
-        if let note = RecordValidation.usbNote(validated) { CLIOutput.stdout(note) }
-        if let note = validated.record.flatMap(RecordValidation.bluetoothLENote) {
+        if let note = validated.record?.usbNote { CLIOutput.stdout(note) }
+        if let note = validated.record?.bluetoothLENote {
           CLIOutput.stdout(note)
         }
       }
@@ -203,7 +188,7 @@ struct RecordInstallCommand: AsyncParsableCommand {
           )
         }
       }
-      if let note = RecordValidation.usbNote(validated) { CLIOutput.stderr(note) }
+      if let note = validated.record?.usbNote { CLIOutput.stderr(note) }
     }
   }
 

@@ -74,29 +74,5 @@
 			<string>اكتُشف %d جهاز إخراج لوحدة التحكم</string>
 		</dict>
 	</dict>
-	<key>library.records.bundled</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@count@</string>
-		<key>count</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>d</string>
-			<key>one</key>
-			<string>%d سجل إضافي مضمّن مع التطبيق.</string>
-			<key>zero</key>
-			<string>%d سجل إضافي مضمّن مع التطبيق.</string>
-			<key>two</key>
-			<string>%d سجلان إضافيان مضمّنان مع التطبيق.</string>
-			<key>few</key>
-			<string>%d سجلات إضافية مضمّنة مع التطبيق.</string>
-			<key>many</key>
-			<string>%d سجلًا إضافيًا مضمّنًا مع التطبيق.</string>
-			<key>other</key>
-			<string>%d سجل إضافي مضمّن مع التطبيق.</string>
-		</dict>
-	</dict>
 </dict>
 </plist>
