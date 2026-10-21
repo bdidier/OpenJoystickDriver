@@ -166,12 +166,26 @@
           ).textSelection(.enabled)
         } else {
           OJDLabeledRow(OJDLocalized.string("access.web.port")) {
-            TextField(OJDLocalized.string("access.web.port"), text: $model.portText)
-              .labelsHidden().textFieldStyle(RoundedBorderTextFieldStyle())
+            portField.labelsHidden().textFieldStyle(RoundedBorderTextFieldStyle())
               .multilineTextAlignment(.trailing).frame(width: 80)
               .ojdAccessibilityLabel(OJDLocalized.string("a11y.access.webPort"))
           }
         }
+      }
+    }
+
+    /// The port field: the saved port, or "Automatic" until a port is saved, when enabling the
+    /// WebSocket picks a free one.
+    @ViewBuilder
+    private var portField: some View {
+      if #available(macOS 13, *) {
+        TextField(
+          OJDLocalized.string("access.web.port"),
+          text: $model.portText,
+          prompt: Text(OJDLocalized.string("access.web.port.automatic"))
+        )
+      } else {
+        TextField(OJDLocalized.string("access.web.port.automatic"), text: $model.portText)
       }
     }
 

@@ -1531,6 +1531,7 @@
 "access.web.closed" = "चालू है, पर पोर्ट %@ पर सुन नहीं रहा";
 "access.web.pages" = "पेज फ़ोल्डर: %@";
 "access.web.port" = "पोर्ट";
+"access.web.port.automatic" = "स्वचालित";
 "access.web.portRange" = "पोर्ट %lld और %lld के बीच होना चाहिए।";
 "access.web.enable.title" = "WebSocket चालू करें?";
 "access.web.enable.message" = "किसी टोकन के ऑरिजिन के वेब पेज फिर इस Mac के एंडपॉइंट से कनेक्ट हो सकते हैं।";

@@ -1531,6 +1531,7 @@
 "access.web.closed" = "已开启，但未在端口 %@ 上监听";
 "access.web.pages" = "页面文件夹：%@";
 "access.web.port" = "端口";
+"access.web.port.automatic" = "自动";
 "access.web.portRange" = "端口必须介于 %lld 和 %lld 之间。";
 "access.web.enable.title" = "要打开 WebSocket 吗？";
 "access.web.enable.message" = "来自令牌所列来源的网页随后可以连接到这台 Mac 上的端点。";

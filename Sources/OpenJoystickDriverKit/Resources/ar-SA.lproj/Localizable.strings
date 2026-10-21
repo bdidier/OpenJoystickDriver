@@ -1531,6 +1531,7 @@
 "access.web.closed" = "قيد التشغيل، لكنه لا يستمع على المنفذ %@";
 "access.web.pages" = "مجلد الصفحات: %@";
 "access.web.port" = "المنفذ";
+"access.web.port.automatic" = "تلقائي";
 "access.web.portRange" = "يجب أن يكون المنفذ بين %lld و%lld.";
 "access.web.enable.title" = "هل تريد تشغيل WebSocket؟";
 "access.web.enable.message" = "يمكن لصفحات الويب من أصول الرمز المميز بعد ذلك الاتصال بنقطة النهاية على هذا الـ Mac.";

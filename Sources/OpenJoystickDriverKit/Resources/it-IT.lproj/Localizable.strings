@@ -1642,6 +1642,7 @@
 "access.web.closed" = "Attivo, ma non in ascolto sulla porta %@";
 "access.web.pages" = "Cartella delle pagine: %@";
 "access.web.port" = "Porta";
+"access.web.port.automatic" = "Automatico";
 "access.web.portRange" = "La porta deve essere compresa tra %lld e %lld.";
 "access.web.enable.title" = "Attivare il WebSocket?";
 "access.web.enable.message" = "Le pagine web provenienti dalle origini di un token possono quindi connettersi all’endpoint su questo Mac.";

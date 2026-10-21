@@ -1531,6 +1531,7 @@
 "access.web.closed" = "Đã bật, nhưng không lắng nghe trên cổng %@";
 "access.web.pages" = "Thư mục trang: %@";
 "access.web.port" = "Cổng";
+"access.web.port.automatic" = "Tự động";
 "access.web.portRange" = "Cổng phải nằm trong khoảng từ %lld đến %lld.";
 "access.web.enable.title" = "Bật WebSocket?";
 "access.web.enable.message" = "Các trang web từ nguồn gốc của một token sau đó có thể kết nối với điểm cuối trên máy Mac này.";

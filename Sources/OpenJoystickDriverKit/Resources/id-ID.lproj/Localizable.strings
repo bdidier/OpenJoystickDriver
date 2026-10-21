@@ -1531,6 +1531,7 @@
 "access.web.closed" = "Nyala, tetapi tidak mendengarkan di port %@";
 "access.web.pages" = "Folder laman: %@";
 "access.web.port" = "Port";
+"access.web.port.automatic" = "Otomatis";
 "access.web.portRange" = "Port harus antara %lld dan %lld.";
 "access.web.enable.title" = "Nyalakan WebSocket?";
 "access.web.enable.message" = "Laman web dari asal sebuah token kemudian dapat tersambung ke titik akhir di Mac ini.";
