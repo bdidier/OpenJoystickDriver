@@ -78,7 +78,7 @@ Input flows through two protocols in `Streaming/`, which import nothing from a p
 | Physical output commands | the service's output requests | `DeviceManager` (`physicalOutput`) |
 | Mapped physical output | `RemappingPhysicalOutputBridge` | `DeviceManager` (`physicalOutput`), through `MappingOutputClaim`, `MappingOutputRelease` and `ProfileColorClaim` |
 
-The registry delivers the host's output commands to a feed's return sink one task at a time, so the client sees them in the order the host sent them, and holds them until the client has its `FeedSession` line. `Scripts/Quality/check_sink_boundary.py` fails when a Swift source calls `.dispatch(`, `.dispatchPublishing(`, `.activateOutput(for:`, `.setMappingPhysicalOutput(`, `.releaseMappingPhysicalOutputs(` or `.setProfilePhysicalColor(` outside a sink; the routers that forward to the output they wrap are listed in the script, and `test_sink_boundary.py` covers it.
+The registry delivers the host's output commands to a feed's return sink one task at a time, so the client sees them in the order the host sent them, and holds them until the client has its `FeedSession` line.
 
 ## Classification and Binding
 

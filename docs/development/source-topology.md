@@ -95,7 +95,7 @@ Sources/OpenJoystickDriver/
   platform/macos/      PlatformHostInstallation.swift and the App Intents (compiled into the app target for discovery)
 ```
 
-The neutral targets are `Sources/OpenJoystickDriverCLI` and the executable's files outside `Sources/OpenJoystickDriver/platform`. Each has an import allow-list in `Scripts/Quality/check_neutral_core_imports.py`: the CLI may import ArgumentParser, Darwin, Dispatch, Foundation, Glibc, and Kit; the executable may import Dispatch, Foundation, CLI, and Kit. Any other import or `canImport` fails, including `@_exported` and kinded imports, and block comments are skipped. `Tests/RepositoryScripts/test_neutral_core_imports.py` covers the script, and CI, `just`, and the AGENTS.md check list run it directly. Kit is macOS-bound and out of scope.
+The neutral targets are `Sources/OpenJoystickDriverCLI` and the executable's files outside `Sources/OpenJoystickDriver/platform`. The CLI may import ArgumentParser, Darwin, Dispatch, Foundation, Glibc, and Kit; the executable may import Dispatch, Foundation, CLI, and Kit. Kit is macOS-bound and out of scope.
 
 Kit `Diagnostics/` holds reports and health types that both the CLI and app read.
 
@@ -107,10 +107,7 @@ Each test target mirrors its source target and directory names: `Tests/OpenJoyst
 
 Extension files are `Type+Concern.swift`, where `Concern` is a noun phrase naming the content, such as `+Queries`, `+Parsing`, or `+Lifecycle`. Delete empty extension stubs.
 
-`python3 Scripts/Quality/check_swift_file_length.py` checks every Swift file under `Sources` and `Tests` that Git tracks or that is untracked and not ignored. It fails when:
-
-- a file has more than 500 code lines under `Sources`, or more than 1000 under `Tests`. Code lines are lines with Swift code; blank lines and comment-only lines do not count, and multiline string content does.
-- the concern after the last `+` is exactly `Behavior` or `Scenarios`, or ends in a digit (`+Behavior2`, `+Scenarios1`). These names hide what a file owns.
+SwiftLint `file_length` fails a Swift file with more than 500 lines under `Sources` and `Tools`, or more than 1000 under `Tests` (`Tests/.swiftlint.yml`). Comment-only lines do not count.
 
 ## Rules
 
