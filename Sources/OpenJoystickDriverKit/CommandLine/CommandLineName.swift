@@ -25,6 +25,15 @@ public enum CommandLineName {
     return result
   }
 
+  /// The kebab-case spelling of `value` in lowerCamelCase, the shape a catalog key segment takes:
+  /// `SonyDualShock4` is `sonyDualShock4`, `EnhancedHID` is `enhancedHid` and `BluetoothLE` is
+  /// `bluetoothLe`.
+  public static func keySegment(_ value: String) -> String {
+    kebab(value).split(separator: "-").enumerated().map { index, word in
+      index == 0 ? String(word) : word.prefix(1).uppercased() + word.dropFirst()
+    }.joined()
+  }
+
   /// The case of `Value` whose raw value spells `argument` on the command line, or `nil` when no
   /// case does.
   public static func value<Value: CaseIterable & RawRepresentable>(

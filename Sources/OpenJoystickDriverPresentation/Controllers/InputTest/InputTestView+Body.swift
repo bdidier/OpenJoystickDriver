@@ -115,7 +115,7 @@
         if let device = model.device {
           Text(
             "\(OJDValue.reported(device.connection).displayText) · "
-              + "\(device.protocolBinding.protocolID.displayName) · "
+              + "\(device.protocolBinding.displayName) · "
               + usbIdentifier(device).displayText
           ).font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor))
         }

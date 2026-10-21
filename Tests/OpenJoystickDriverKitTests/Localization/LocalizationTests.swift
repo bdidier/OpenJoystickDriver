@@ -266,4 +266,57 @@ struct LocalizationTests {
       english.string(PhysicalProtocolID.sonyDualShock4.displayNameKey) == "Sony DualShock 4"
     )
   }
+
+  @Test
+  func everyVariantThatABindingNamesHasOneDisplayNameKey() {
+    let sourceKeys = LocalizationCatalogAudit.keys(for: Localization.sourceLocalization)
+    let named = PhysicalProtocolID.allCases.filter(\.namesVariant)
+    #expect(
+      Set(named) == [.xboxXUSB, .valveSteamController, .valveSteamTriton, .vendorGameSir]
+    )
+    let variantKeys = Set(named.flatMap(\.variants).map(\.displayNameKey))
+    #expect(
+      variantKeys == [
+        "term.protocolVariant.wired", "term.protocolVariant.receiver",
+        "term.protocolVariant.dongle", "term.protocolVariant.usb",
+        "term.protocolVariant.enhancedHid", "term.protocolVariant.bluetoothLe",
+      ]
+    )
+    #expect(variantKeys.isSubset(of: sourceKeys), "\(variantKeys.subtracting(sourceKeys).sorted())")
+    let catalogVariantKeys = sourceKeys.filter { $0.hasPrefix("term.protocolVariant.") }
+    #expect(
+      catalogVariantKeys == variantKeys,
+      "\(catalogVariantKeys.subtracting(variantKeys).sorted())"
+    )
+    let english = Localization(preferredLanguages: ["en-US"])
+    let names = variantKeys.map { english.string($0) }
+    #expect(Set(names).count == names.count)
+  }
+
+  @Test
+  func aBindingNamesItsVariantOnlyWhenTheTransportCannotTellIt() {
+    let english = Localization(preferredLanguages: ["en-US"])
+    #expect(english.string("term.protocolBinding.familyWithVariant", "A", "B") == "A, B")
+    let receiver = ProtocolBindingID(.xboxXUSB, variant: .receiver)
+    #expect(
+      receiver.displayName
+        == Localization().string(
+          "term.protocolBinding.familyWithVariant",
+          PhysicalProtocolID.xboxXUSB.displayName,
+          Localization().string("term.protocolVariant.receiver")
+        )
+    )
+    #expect(receiver.displayName != ProtocolBindingID(.xboxXUSB, variant: .wired).displayName)
+    #expect(
+      ProtocolBindingID(.vendorGameSir, variant: .usb).displayName
+        != ProtocolBindingID(.vendorGameSir, variant: .enhancedHID).displayName
+    )
+    for binding in [
+      ProtocolBindingID(.xboxGIP, variant: .usb), ProtocolBindingID(.xboxXID, variant: .gamepad),
+      ProtocolBindingID(.sonyDualSense, variant: .bluetoothClassic),
+      ProtocolBindingID(.hidDescriptor),
+    ] {
+      #expect(binding.displayName == binding.protocolID.displayName, "\(binding)")
+    }
+  }
 }

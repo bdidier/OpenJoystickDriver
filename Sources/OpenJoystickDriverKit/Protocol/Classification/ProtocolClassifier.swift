@@ -92,14 +92,14 @@ public enum PhysicalProtocolID: String, CaseIterable, Codable, Sendable {
   /// lowerCamelCase (`sony-dual-shock4` is `sonyDualShock4`), the shape catalog key segments take.
   public var displayNameKey: String { "term.protocolFamily.\(keySegment)" }
 
-  /// The family's name as the app shows it to a person, in the preferred language.
-  public var displayName: String { Localization().string(displayNameKey) }
+  private var keySegment: String { CommandLineName.keySegment(rawValue) }
 
-  private var keySegment: String {
-    commandLineName.split(separator: "-").enumerated().map { index, word in
-      index == 0 ? String(word) : word.prefix(1).uppercased() + word.dropFirst()
-    }.joined()
-  }
+  /// The family's name as the app shows it to a person, in the preferred language.
+  public var displayName: String { protocolNameLocalization.string(displayNameKey) }
+
+  /// Whether a binding's name adds its variant: the family stores the variant in its records,
+  /// because the transport cannot tell its variants apart, and has more than one.
+  public var namesVariant: Bool { storesVariant && variants.count > 1 }
 
   /// Implemented variants, as the family's description lists them. An empty list means the family
   /// has one contract.
@@ -161,6 +161,33 @@ public enum PhysicalProtocolVariantID: String, CaseIterable, Sendable {
   case receiver = "Receiver"
   case dongle = "Dongle"
   case enhancedHID = "EnhancedHID"
+
+  /// The catalog key of the variant's display name. Its last segment is the variant's kebab-case
+  /// spelling in lowerCamelCase (`EnhancedHID` is `enhancedHid`). The catalog holds the key for
+  /// each variant of a family that names its variant (``PhysicalProtocolID/namesVariant``) and
+  /// for no other variant.
+  public var displayNameKey: String { "term.protocolVariant.\(keySegment)" }
+
+  private var keySegment: String { CommandLineName.keySegment(rawValue) }
+}
+
+/// The resolver of protocol family and variant names. Built once, so the Library search, which
+/// names every record on each keystroke, discovers the packaged locales once.
+private let protocolNameLocalization = Localization()
+
+extension ProtocolBindingID {
+  /// The binding's name as the app shows it to a person, in the preferred language: the family's
+  /// name, with the variant's name when the family names its variant
+  /// (``PhysicalProtocolID/namesVariant``), as in "Xbox 360 (XUSB), Receiver". For any other
+  /// family the transport already tells the variant, so the name is the family's alone.
+  public var displayName: String {
+    guard let variant, protocolID.namesVariant else { return protocolID.displayName }
+    return protocolNameLocalization.string(
+      "term.protocolBinding.familyWithVariant",
+      protocolID.displayName,
+      protocolNameLocalization.string(variant.displayNameKey)
+    )
+  }
 }
 
 /// Machine-readable reasons a device is not bound.

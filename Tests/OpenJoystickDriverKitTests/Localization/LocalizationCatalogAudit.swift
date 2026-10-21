@@ -13,6 +13,8 @@ enum LocalizationCatalogAudit {
     "term.protocolFamily.vendorFlydigi", "term.protocolFamily.vendorGameSir",
     "term.protocolFamily.vendorNvidiaShield", "term.protocolFamily.xboxGip",
     "term.protocolFamily.xboxXid", "term.protocolFamily.xboxXusb",
+    // Technical names. Korean and Chinese write Bluetooth in their script.
+    "term.protocolVariant.usb", "term.protocolVariant.bluetoothLe",
     "controllers.usbIdentifier", "controllers.discovery.hid", "developer.hid", "developer.usbID",
     "inputTest.yTriangle",
     "mapping.buttonNorth", "mapping.dpadDirection", "menu.projectPage", "profiles.sectionDpad",
@@ -47,6 +49,7 @@ enum LocalizationCatalogAudit {
       "keyboard.return", "keyboard.shift", "keyboard.tab",
     ],
     "de-DE": [
+      "term.parser", "term.protocolVariant.dongle",
       "library.field.version", "mainMenu.controller", "activity.filter",
       "activity.column.details",
       "access.details", "library.details",
@@ -75,6 +78,7 @@ enum LocalizationCatalogAudit {
     ]),
     "hi-IN": ["keyboard.escape", "keyboard.return"],
     "id-ID": [
+      "term.parser", "term.protocolVariant.dongle",
       "library.layer.driver", "access.token.issued.title", "access.token.named",
       "activity.filter", "activity.mode.log",
       "access.web.port", "access.web.enable.port", "mainMenu.window.zoom",
@@ -89,6 +93,7 @@ enum LocalizationCatalogAudit {
       "shortcuts.controller.model",
     ],
     "it-IT": [
+      "term.parser", "term.protocolVariant.dongle",
       "access.token.issued.title", "access.token.named",
       "mainMenu.controller", "mainMenu.file", "mainMenu.window.zoom",
       "cli.access.status.socket", "cli.controller.show.label.input",
@@ -108,6 +113,7 @@ enum LocalizationCatalogAudit {
       "keyboard.alt", "keyboard.return", "keyboard.shift",
     ],
     "nl-NL": [
+      "term.parser", "term.protocolVariant.dongle",
       "library.field.transport", "access.details", "library.details", "activity.filter",
       "activity.column.details",
       "access.token.issued.title", "access.token.named", "access.tokens", "library.mods",
@@ -131,6 +137,7 @@ enum LocalizationCatalogAudit {
       "shortcuts.controller.type", "shortcuts.parameter.controller",
     ],
     "pt-BR": [
+      "term.parser",
       "activity.mode.log",
       "access.token.issued.title", "access.token.named",
       "access.tokens", "library.mods",

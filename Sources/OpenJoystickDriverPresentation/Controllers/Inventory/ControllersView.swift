@@ -98,7 +98,7 @@
             }
             VStack(alignment: .leading, spacing: 2) {
               Text(device.name).lineLimit(1)
-              Text(device.protocolBinding.protocolID.displayName).font(.caption).foregroundColor(
+              Text(device.protocolBinding.displayName).font(.caption).foregroundColor(
                 Color(NSColor.secondaryLabelColor)
               ).lineLimit(1)
             }
@@ -106,7 +106,7 @@
           }.padding(.vertical, 4).tag(device.sessionToken.rawValue).ojdAccessibilityLabel(
             device.name
           )
-          .ojdAccessibilityValue(device.protocolBinding.protocolID.displayName)
+          .ojdAccessibilityValue(device.protocolBinding.displayName)
           .contextMenu { sessionCommands(for: device) }
         }
       }.listStyle(InsetListStyle()).alert(item: $wirelessDisconnectRequest) { request in

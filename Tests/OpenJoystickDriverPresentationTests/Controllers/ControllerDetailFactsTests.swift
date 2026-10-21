@@ -11,13 +11,14 @@ struct ControllerDetailFactsTests {
     override: VirtualHIDProfileID? = nil,
     publication: ApplicationServicePublicationStatus? = nil,
     output: PhysicalControllerOutputCapabilities = .none,
-    motion: Bool = false
+    motion: Bool = false,
+    binding: ProtocolBindingID = ProtocolBindingID(.hidDescriptor)
   ) -> ApplicationServiceDeviceDescription {
     var device = ApplicationServiceDeviceDescription(
       name: "Test Pad",
       vendorID: 0x1234,
       productID: 0x5678,
-      protocolBinding: ProtocolBindingID(.hidDescriptor),
+      protocolBinding: binding,
       connection: "USB",
       discoverySource: .rawUSB,
       physicalOwnership: ownership,
@@ -95,6 +96,20 @@ struct ControllerDetailFactsTests {
   }
 
   @Test
+  func theProtocolFactNamesTheFamilyAndTheVariantTheTransportCannotTell() {
+    let binding = ProtocolBindingID(.xboxXUSB, variant: .receiver)
+    let facts = ControllerDetailFacts.general(for: device(binding: binding))
+    #expect(
+      Self.value(.controllerProtocol, in: facts)
+        == .text(binding.displayName)
+    )
+    #expect(
+      Self.value(.controllerProtocol, in: facts)
+        != .text(PhysicalProtocolID.xboxXUSB.displayName)
+    )
+  }
+
+  @Test
   func missingSerialNumberShowsNone() {
     let facts = ControllerDetailFacts.general(for: device())
     #expect(Self.value(.serialNumber, in: facts) == OJDValue.none)
@@ -165,6 +180,8 @@ struct ControllerDetailFactsTests {
     #expect(Self.value(.usbIdentifier, in: facts) == .text("1234:5678"))
     #expect(Self.value(.inputEndpoint, in: facts) == OJDValue.none)
     #expect(Self.value(.unitID, in: facts) == OJDValue.none)
+    #expect(Self.value(.parser, in: facts) == .reported("HIDDescriptor"))
+    #expect(facts.first { $0.kind == .parser }?.label == OJDLocalized.string("term.parser"))
     #expect(
       Self.value(.ownership, in: facts)
         == .text(

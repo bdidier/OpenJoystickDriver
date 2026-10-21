@@ -12,7 +12,7 @@
         "controllers.accessibilityDetails",
         connectionValue.spokenText,
         profileAccessibilityValue,
-        device.protocolBinding.protocolID.displayName,
+        device.protocolBinding.displayName,
         OJDValue.reported(device.protocolBinding.rawValue).spokenText,
         serialVisibility.presentation(of: ControllerDetailFacts.serialNumber(device)).spokenText,
         ControllerDetailFacts.usbIdentifier(device).spokenText,

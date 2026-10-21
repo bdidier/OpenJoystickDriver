@@ -400,6 +400,22 @@
 "term.protocolFamily.xboxXid" = "Xbox (XID)";
 /* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
 "term.protocolFamily.xboxXusb" = "Xbox 360 (XUSB)";
+/* Name of a controller's protocol in the Controllers list and detail and in Input Test, also spoken by VoiceOver, for a protocol family whose variants the connection cannot tell apart. %1$@ is the protocol family name, such as Xbox 360 (XUSB); %2$@ is the variant name, such as Receiver. */
+"term.protocolBinding.familyWithVariant" = "%1$@，%2$@";
+/* Name of a protocol variant, shown after the protocol family name in the Controllers list and detail and in Input Test: the controller is connected over Bluetooth Low Energy. A technical name: keep Bluetooth LE as the system writes it in this language. */
+"term.protocolVariant.bluetoothLe" = "蓝牙 LE";
+/* Name of a protocol variant, shown after the protocol family name in the Controllers list and detail and in Input Test: the controller is connected through the small wireless USB adapter sold with it. A noun label. */
+"term.protocolVariant.dongle" = "无线适配器";
+/* Name of a protocol variant, shown after the protocol family name in the Controllers list and detail and in Input Test: the GameSir HID mode with extra reports for lighting, rumble and extra buttons, as opposed to its plain USB mode. Keep HID as written. */
+"term.protocolVariant.enhancedHid" = "增强型 HID";
+/* Name of a protocol variant, shown after the protocol family name in the Controllers list and detail and in Input Test: the controller is connected through a separate wireless receiver for Xbox 360 controllers. A noun label. */
+"term.protocolVariant.receiver" = "接收器";
+/* Name of a protocol variant, shown after the protocol family name in the Controllers list and detail and in Input Test: the GameSir mode that OJD reads over plain USB, as opposed to its enhanced HID mode. A technical name: keep USB as written. */
+"term.protocolVariant.usb" = "USB";
+/* Name of a protocol variant, shown after the protocol family name in the Controllers list and detail and in Input Test: the controller is connected by its cable. An adjective label, not a sentence. */
+"term.protocolVariant.wired" = "有线";
+/* Label of a fact under Advanced in the Controllers detail: the parser that reads the controller, shown as its identifier such as XboxXUSB:Receiver. */
+"term.parser" = "解析器";
 "developer.buttons" = "按钮";
 "developer.capturing" = "正在捕捉";
 "developer.connection" = "连接";
