@@ -13,7 +13,6 @@ from ..Catalog.schema_header import (
     SCHEMA_SUFFIX,
     schema_id,
 )
-from ..Command.execution import swift_command
 from . import repository_tool
 
 try:
@@ -194,24 +193,6 @@ def validate_swift_rules(samples: list[tuple[str, Path]]) -> None:
             repository_tool.check(["validate", check, *paths])
 
 
-def swift_binary_path() -> Path:
-    subprocess.run(
-        swift_command(["build", "--product", "OpenJoystickDriver"]),
-        cwd=ROOT,
-        check=True,
-        capture_output=True,
-        text=True,
-    )
-    bin_path = subprocess.run(
-        swift_command(["build", "--show-bin-path"]),
-        cwd=ROOT,
-        check=True,
-        capture_output=True,
-        text=True,
-    )
-    return Path(bin_path.stdout.strip()) / "OpenJoystickDriver"
-
-
 def validate_live_support_report(schema: dict[str, object], registry: Registry) -> None:
     with tempfile.TemporaryDirectory(prefix="ojd-schema-") as directory:
         report_path = Path(directory) / "support-report.json"
@@ -220,7 +201,7 @@ def validate_live_support_report(schema: dict[str, object], registry: Registry) 
         command = ["ojd", "diagnose", "--output", str(report_path)]
         result = subprocess.run(
             command,
-            executable=swift_binary_path(),
+            executable=repository_tool.build("OpenJoystickDriver"),
             cwd=ROOT,
             env={**os.environ, "OJD_RUN_REPOSITORY_CLI": "1"},
             check=False,

@@ -23,12 +23,11 @@ class ToolError(Exception):
     """The tool could not be built or run, or its output was not what it documents."""
 
 
-@cache
-def binary() -> Path:
-    """The built tool; builds it first."""
+def build(product: str) -> Path:
+    """The built executable of `product`; builds it first and raises `ToolError` when that fails."""
     try:
         subprocess.run(
-            swift_command(["build", "--product", PRODUCT]),
+            swift_command(["build", "--product", product]),
             cwd=ROOT,
             check=True,
             capture_output=True,
@@ -43,8 +42,14 @@ def binary() -> Path:
         )
     except subprocess.CalledProcessError as error:
         detail = error.stderr.strip() or error.stdout.strip() or str(error)
-        raise ToolError(f"cannot build {PRODUCT}: {detail}") from error
-    return Path(bin_path.stdout.strip()) / PRODUCT
+        raise ToolError(f"cannot build {product}: {detail}") from error
+    return Path(bin_path.stdout.strip()) / product
+
+
+@cache
+def binary() -> Path:
+    """The built tool."""
+    return build(PRODUCT)
 
 
 def problems(arguments: list[str]) -> list[dict[str, str]]:
