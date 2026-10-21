@@ -586,10 +586,12 @@
 "notifications.profileSwitchedBody" = "%@ → %@";
 "notifications.testBody" = "OpenJoystickDriver 可以就控制器和設定檔活動向您傳送通知。";
 "notifications.testTitle" = "通知已就緒";
-/* Shown in the Notifications settings pane and by the app's test notification report when the app runs outside an app bundle and has no notification center. */
+/* Failed outcome of the test notification when the app runs outside an app bundle and has no notification center. The inline error of the Settings window shows it for Send Test Notification and for a notification permission request, and `ojd setting test-notification` prints it as the reason of E2006. */
 "ui.settings.notifications.noNotificationCenter" = "通知無法使用，因為 OpenJoystickDriver 不是從其 App 套件執行的。請開啟 OpenJoystickDriver App，然後重試。";
-/* Shown in the Notifications settings pane when the ojd request that asked for the test notification ended before the app's report on it arrived. */
-"ui.settings.notifications.testReportLost" = "ojd 要求在測試通知的報告送達之前已結束。";
+/* Error message in the inline error of the Settings window when the service no longer waits for the app's report on a test notification: the ojd request that asked for it ended, or its answer time ran out. */
+"ui.settings.notifications.testReportLost" = "在測試通知的報告送達之前，ojd 要求已結束，或其回應時限已到。";
+/* Error text the service returns to an app that reports the outcome noAnswer for a test notification, which only the service decides. The inline error of the Settings window shows it. shown, denied, failed and noAnswer are outcome names and stay as written. */
+"ui.settings.notifications.testReportNoAnswer" = "測試通知的報告必須是 shown、denied 或 failed；noAnswer 只由服務決定。";
 "profiles.virtualOutput" = "虛擬遊戲控制器";
 "profiles.virtualDisabled" = "已停用";
 "profiles.virtualMapped" = "僅重新對應的控制項";

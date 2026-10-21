@@ -586,10 +586,12 @@
 "notifications.profileSwitchedBody" = "%@ → %@";
 "notifications.testBody" = "OpenJoystickDriver आपको कंट्रोलर और प्रोफ़ाइल गतिविधि के बारे में सूचित कर सकता है।";
 "notifications.testTitle" = "सूचनाएँ तैयार हैं";
-/* Shown in the Notifications settings pane and by the app's test notification report when the app runs outside an app bundle and has no notification center. */
+/* Failed outcome of the test notification when the app runs outside an app bundle and has no notification center. The inline error of the Settings window shows it for Send Test Notification and for a notification permission request, and `ojd setting test-notification` prints it as the reason of E2006. */
 "ui.settings.notifications.noNotificationCenter" = "सूचनाएँ उपलब्ध नहीं हैं, क्योंकि OpenJoystickDriver अपने ऐप बंडल से नहीं चल रहा है। OpenJoystickDriver ऐप खोलें, फिर दोबारा कोशिश करें।";
-/* Shown in the Notifications settings pane when the ojd request that asked for the test notification ended before the app's report on it arrived. */
-"ui.settings.notifications.testReportLost" = "परीक्षण सूचना की रिपोर्ट आने से पहले ही ojd का अनुरोध समाप्त हो गया।";
+/* Error message in the inline error of the Settings window when the service no longer waits for the app's report on a test notification: the ojd request that asked for it ended, or its answer time ran out. */
+"ui.settings.notifications.testReportLost" = "परीक्षण सूचना की रिपोर्ट आने से पहले ही ojd का अनुरोध समाप्त हो गया या उसके उत्तर का समय पूरा हो गया।";
+/* Error text the service returns to an app that reports the outcome noAnswer for a test notification, which only the service decides. The inline error of the Settings window shows it. shown, denied, failed and noAnswer are outcome names and stay as written. */
+"ui.settings.notifications.testReportNoAnswer" = "परीक्षण सूचना की रिपोर्ट shown, denied या failed होनी चाहिए; noAnswer केवल सेवा तय करती है।";
 "profiles.virtualOutput" = "वर्चुअल गेमपैड";
 "profiles.virtualDisabled" = "अक्षम";
 "profiles.virtualMapped" = "केवल रीमैप किए गए नियंत्रण";

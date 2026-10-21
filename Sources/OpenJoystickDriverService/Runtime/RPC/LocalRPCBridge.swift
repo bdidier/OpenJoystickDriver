@@ -9,8 +9,7 @@ enum TestNotificationReportError: Error, LocalizedError, Equatable {
   var errorDescription: String? {
     switch self {
     case .noAnswerReported:
-      "A test notification report must be shown, denied or failed; "
-        + "only the service decides noAnswer."
+      Localization().string("ui.settings.notifications.testReportNoAnswer")
     }
   }
 }

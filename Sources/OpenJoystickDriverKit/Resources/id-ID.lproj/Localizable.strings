@@ -586,10 +586,12 @@
 "notifications.profileSwitchedBody" = "%@ → %@";
 "notifications.testBody" = "OpenJoystickDriver dapat memberi tahu Anda tentang aktivitas pengontrol dan profil.";
 "notifications.testTitle" = "Pemberitahuan siap";
-/* Shown in the Notifications settings pane and by the app's test notification report when the app runs outside an app bundle and has no notification center. */
+/* Failed outcome of the test notification when the app runs outside an app bundle and has no notification center. The inline error of the Settings window shows it for Send Test Notification and for a notification permission request, and `ojd setting test-notification` prints it as the reason of E2006. */
 "ui.settings.notifications.noNotificationCenter" = "Pemberitahuan tidak tersedia karena OpenJoystickDriver tidak berjalan dari bundel app-nya. Buka app OpenJoystickDriver, lalu coba lagi.";
-/* Shown in the Notifications settings pane when the ojd request that asked for the test notification ended before the app's report on it arrived. */
-"ui.settings.notifications.testReportLost" = "Permintaan ojd berakhir sebelum laporan tentang pemberitahuan tes tiba.";
+/* Error message in the inline error of the Settings window when the service no longer waits for the app's report on a test notification: the ojd request that asked for it ended, or its answer time ran out. */
+"ui.settings.notifications.testReportLost" = "Permintaan ojd berakhir atau waktu jawabnya habis sebelum laporan tentang pemberitahuan tes tiba.";
+/* Error text the service returns to an app that reports the outcome noAnswer for a test notification, which only the service decides. The inline error of the Settings window shows it. shown, denied, failed and noAnswer are outcome names and stay as written. */
+"ui.settings.notifications.testReportNoAnswer" = "Laporan pemberitahuan tes harus shown, denied, atau failed; hanya layanan yang menentukan noAnswer.";
 "profiles.virtualOutput" = "Gamepad virtual";
 "profiles.virtualDisabled" = "Dinonaktifkan";
 "profiles.virtualMapped" = "Hanya kontrol yang dipetakan";

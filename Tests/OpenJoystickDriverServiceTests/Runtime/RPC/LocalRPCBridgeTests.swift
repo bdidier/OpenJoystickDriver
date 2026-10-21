@@ -262,6 +262,9 @@ struct LocalRPCBridgeTests {
 
       #expect(response.result == nil)
       #expect(response.error == TestNotificationReportError.noAnswerReported.errorDescription)
+      #expect(
+        response.error == Localization().string("ui.settings.notifications.testReportNoAnswer")
+      )
       #expect(response.error != ApplicationServiceClientError.invalidResponse.errorDescription)
     }
   }

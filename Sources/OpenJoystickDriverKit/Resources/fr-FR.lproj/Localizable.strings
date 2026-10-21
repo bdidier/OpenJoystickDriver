@@ -586,10 +586,12 @@
 "notifications.profileSwitchedBody" = "%@ → %@";
 "notifications.testBody" = "OpenJoystickDriver peut vous notifier de l’activité des manettes et des profils.";
 "notifications.testTitle" = "Les notifications sont prêtes";
-/* Shown in the Notifications settings pane and by the app's test notification report when the app runs outside an app bundle and has no notification center. */
+/* Failed outcome of the test notification when the app runs outside an app bundle and has no notification center. The inline error of the Settings window shows it for Send Test Notification and for a notification permission request, and `ojd setting test-notification` prints it as the reason of E2006. */
 "ui.settings.notifications.noNotificationCenter" = "Les notifications ne sont pas disponibles, car OpenJoystickDriver ne s’exécute pas depuis son bundle d’app. Ouvrez l’app OpenJoystickDriver, puis réessayez.";
-/* Shown in the Notifications settings pane when the ojd request that asked for the test notification ended before the app's report on it arrived. */
-"ui.settings.notifications.testReportLost" = "La requête ojd s’est terminée avant l’arrivée du rapport sur la notification test.";
+/* Error message in the inline error of the Settings window when the service no longer waits for the app's report on a test notification: the ojd request that asked for it ended, or its answer time ran out. */
+"ui.settings.notifications.testReportLost" = "La requête ojd s’est terminée ou son délai de réponse a expiré avant l’arrivée du rapport sur la notification test.";
+/* Error text the service returns to an app that reports the outcome noAnswer for a test notification, which only the service decides. The inline error of the Settings window shows it. shown, denied, failed and noAnswer are outcome names and stay as written. */
+"ui.settings.notifications.testReportNoAnswer" = "Un rapport sur la notification test doit valoir shown, denied ou failed ; seul le service décide de noAnswer.";
 "profiles.virtualOutput" = "Manette virtuelle";
 "profiles.virtualDisabled" = "Désactivée";
 "profiles.virtualMapped" = "Commandes réaffectées uniquement";

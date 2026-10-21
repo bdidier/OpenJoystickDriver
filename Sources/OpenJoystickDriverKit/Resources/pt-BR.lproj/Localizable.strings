@@ -586,10 +586,12 @@
 "notifications.profileSwitchedBody" = "%@ → %@";
 "notifications.testBody" = "O OpenJoystickDriver pode notificar você sobre a atividade de controles e perfis.";
 "notifications.testTitle" = "As Notificações Estão Prontas";
-/* Shown in the Notifications settings pane and by the app's test notification report when the app runs outside an app bundle and has no notification center. */
+/* Failed outcome of the test notification when the app runs outside an app bundle and has no notification center. The inline error of the Settings window shows it for Send Test Notification and for a notification permission request, and `ojd setting test-notification` prints it as the reason of E2006. */
 "ui.settings.notifications.noNotificationCenter" = "As notificações não estão disponíveis porque o OpenJoystickDriver não está sendo executado a partir do pacote do app. Abra o app OpenJoystickDriver e tente de novo.";
-/* Shown in the Notifications settings pane when the ojd request that asked for the test notification ended before the app's report on it arrived. */
-"ui.settings.notifications.testReportLost" = "A solicitação do ojd terminou antes de o relatório sobre a notificação de teste chegar.";
+/* Error message in the inline error of the Settings window when the service no longer waits for the app's report on a test notification: the ojd request that asked for it ended, or its answer time ran out. */
+"ui.settings.notifications.testReportLost" = "A solicitação do ojd terminou ou o tempo para responder se esgotou antes de o relatório sobre a notificação de teste chegar.";
+/* Error text the service returns to an app that reports the outcome noAnswer for a test notification, which only the service decides. The inline error of the Settings window shows it. shown, denied, failed and noAnswer are outcome names and stay as written. */
+"ui.settings.notifications.testReportNoAnswer" = "Um relatório da notificação de teste deve ser shown, denied ou failed; só o serviço decide noAnswer.";
 "profiles.virtualOutput" = "Controle Virtual";
 "profiles.virtualDisabled" = "Desativado";
 "profiles.virtualMapped" = "Apenas Comandos Remapeados";

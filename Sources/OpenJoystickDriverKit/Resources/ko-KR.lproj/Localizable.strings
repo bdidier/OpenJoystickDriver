@@ -586,10 +586,12 @@
 "notifications.profileSwitchedBody" = "%@ → %@";
 "notifications.testBody" = "OpenJoystickDriver는 컨트롤러 및 프로파일 활동에 대해 알려줄 수 있습니다.";
 "notifications.testTitle" = "알림이 준비되었습니다";
-/* Shown in the Notifications settings pane and by the app's test notification report when the app runs outside an app bundle and has no notification center. */
+/* Failed outcome of the test notification when the app runs outside an app bundle and has no notification center. The inline error of the Settings window shows it for Send Test Notification and for a notification permission request, and `ojd setting test-notification` prints it as the reason of E2006. */
 "ui.settings.notifications.noNotificationCenter" = "OpenJoystickDriver가 앱 번들에서 실행되고 있지 않아 알림을 사용할 수 없습니다. OpenJoystickDriver 앱을 연 다음 다시 시도하세요.";
-/* Shown in the Notifications settings pane when the ojd request that asked for the test notification ended before the app's report on it arrived. */
-"ui.settings.notifications.testReportLost" = "테스트 알림에 대한 보고가 도착하기 전에 ojd 요청이 종료되었습니다.";
+/* Error message in the inline error of the Settings window when the service no longer waits for the app's report on a test notification: the ojd request that asked for it ended, or its answer time ran out. */
+"ui.settings.notifications.testReportLost" = "테스트 알림에 대한 보고가 도착하기 전에 ojd 요청이 종료되었거나 응답 제한 시간이 지났습니다.";
+/* Error text the service returns to an app that reports the outcome noAnswer for a test notification, which only the service decides. The inline error of the Settings window shows it. shown, denied, failed and noAnswer are outcome names and stay as written. */
+"ui.settings.notifications.testReportNoAnswer" = "테스트 알림 보고는 shown, denied, failed 중 하나여야 합니다. noAnswer는 서비스만 결정합니다.";
 "profiles.virtualOutput" = "가상 게임패드";
 "profiles.virtualDisabled" = "비활성화됨";
 "profiles.virtualMapped" = "매핑된 컨트롤만";

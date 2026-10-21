@@ -586,10 +586,12 @@
 "notifications.profileSwitchedBody" = "%@ → %@";
 "notifications.testBody" = "OpenJoystickDriver может уведомлять о действиях контроллера и профиля.";
 "notifications.testTitle" = "Уведомления готовы";
-/* Shown in the Notifications settings pane and by the app's test notification report when the app runs outside an app bundle and has no notification center. */
+/* Failed outcome of the test notification when the app runs outside an app bundle and has no notification center. The inline error of the Settings window shows it for Send Test Notification and for a notification permission request, and `ojd setting test-notification` prints it as the reason of E2006. */
 "ui.settings.notifications.noNotificationCenter" = "Уведомления недоступны, потому что OpenJoystickDriver запущен не из пакета приложения. Откройте приложение OpenJoystickDriver и повторите попытку.";
-/* Shown in the Notifications settings pane when the ojd request that asked for the test notification ended before the app's report on it arrived. */
-"ui.settings.notifications.testReportLost" = "Запрос ojd завершился раньше, чем пришёл отчёт о тестовом уведомлении.";
+/* Error message in the inline error of the Settings window when the service no longer waits for the app's report on a test notification: the ojd request that asked for it ended, or its answer time ran out. */
+"ui.settings.notifications.testReportLost" = "Запрос ojd завершился или время ответа на него истекло раньше, чем пришёл отчёт о тестовом уведомлении.";
+/* Error text the service returns to an app that reports the outcome noAnswer for a test notification, which only the service decides. The inline error of the Settings window shows it. shown, denied, failed and noAnswer are outcome names and stay as written. */
+"ui.settings.notifications.testReportNoAnswer" = "Отчёт о тестовом уведомлении должен быть shown, denied или failed; noAnswer определяет только служба.";
 "profiles.virtualOutput" = "Виртуальный геймпад";
 "profiles.virtualDisabled" = "Выключено";
 "profiles.virtualMapped" = "Только назначенные элементы управления";
