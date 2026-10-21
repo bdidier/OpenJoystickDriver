@@ -10,7 +10,7 @@ struct ConnectionStampTests {
   static let binding = ProtocolBinding(
     protocolID: .xboxGIP,
     variant: .usb,
-    accessBackend: .ioUSBHost,
+    accessBackend: .rawUSB,
     interfaceNumber: nil,
     rule: .catalogRecord,
     matchedPredicates: [],
@@ -36,7 +36,7 @@ struct ConnectionStampTests {
     #expect(dispatcher.states.isEmpty)
     let read = try #require(await pipeline.inputState().connection)
     #expect(read.power == StatusFrameDriver.charging)
-    #expect(read.transport == .usb && read.backend == .ioUSBHost && read.isConnected)
+    #expect(read.transport == .usb && read.backend == .rawUSB && read.isConnected)
 
     // The next input is dispatched with the same stamped state; it never changes skip-if-unchanged.
     await pipeline.feedHIDData(Data([StatusFrameDriver.press]))

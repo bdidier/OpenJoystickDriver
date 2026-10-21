@@ -245,7 +245,7 @@ struct OwnershipObservationTests {
   private let descriptorBinding = ProtocolBinding(
     protocolID: .hidDescriptor,
     variant: nil,
-    accessBackend: .ioHID,
+    accessBackend: .hid,
     interfaceNumber: nil,
     rule: .hidDescriptor,
     matchedPredicates: [.hidDescriptorContract],
@@ -268,18 +268,18 @@ struct OwnershipObservationTests {
   @Test
   func inputReadRequirementFollowsDiscoverySource() {
     #expect(DeviceManager.DiscoverySource.hid.requiresInputRead)
-    #expect(!DeviceManager.DiscoverySource.rawUSB(route: .ioUSBHost).requiresInputRead)
-    #expect(!DeviceManager.DiscoverySource.rawUSB(route: .usbDriverKit).requiresInputRead)
+    #expect(!DeviceManager.DiscoverySource.rawUSB(route: .rawUSB).requiresInputRead)
+    #expect(!DeviceManager.DiscoverySource.rawUSB(route: .usbExtension).requiresInputRead)
   }
 
   @Test(arguments: [
     (DeviceManager.DiscoverySource.hid, ControllerOwnershipObservation.systemHidVisible),
     (
-      DeviceManager.DiscoverySource.rawUSB(route: .ioUSBHost),
+      DeviceManager.DiscoverySource.rawUSB(route: .rawUSB),
       ControllerOwnershipObservation.exclusiveRawUSB
     ),
     (
-      DeviceManager.DiscoverySource.rawUSB(route: .usbDriverKit),
+      DeviceManager.DiscoverySource.rawUSB(route: .usbExtension),
       ControllerOwnershipObservation.extensionOwnedUsb
     ),
   ])

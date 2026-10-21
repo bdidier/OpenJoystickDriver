@@ -85,7 +85,7 @@ public struct HIDDeviceConnection: Equatable, Sendable {
 
   /// How the host reaches this connection: Core Bluetooth for a GATT peripheral, IOHID otherwise.
   public var accessBackend: DeviceAccessBackend {
-    if case .gattPeripheral = routingAddress { .coreBluetoothGATT } else { .ioHID }
+    if case .gattPeripheral = routingAddress { .gatt } else { .hid }
   }
 }
 

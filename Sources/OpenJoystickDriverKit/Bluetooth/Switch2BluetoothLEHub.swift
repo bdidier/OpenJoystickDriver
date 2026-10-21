@@ -97,7 +97,7 @@ public final class Switch2BluetoothLEHub: @unchecked Sendable {
             interfaceClass: 0x03,
             hostTransport: .bluetoothLE,
             physicalTransport: .bluetoothLE,
-            accessBackend: .coreBluetoothGATT
+            accessBackend: .gatt
           )
         ]
       )

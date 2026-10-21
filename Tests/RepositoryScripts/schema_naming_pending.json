@@ -26,10 +26,6 @@
       "profile"
     ],
     "/$defs/controllerCapture/properties/direction/enum": ["rx", "tx"],
-    "/$defs/controllerList/properties/items/items/properties/session/enum": [
-      "active",
-      "suspended"
-    ],
     "/$defs/controllerShow/properties/ownership/properties/discoverySource/enum": [
       "hid",
       "rawUSB"
@@ -86,7 +82,6 @@
     "/$defs/controllerShow/properties/serving/properties/route/enum": [
       "VirtualHid"
     ],
-    "/$defs/controllerShow/properties/session/enum": ["active", "suspended"],
     "/$defs/controllerShow/properties/virtual/properties/override/enum": [
       "SdlCompatible"
     ],
@@ -102,13 +97,6 @@
       "warn",
       "fail",
       "skip"
-    ],
-    "/$defs/diagnose/properties/timings/items/properties/frames/items/properties/stages/items/properties/stage/enum": [
-      "read",
-      "parse",
-      "dispatch",
-      "delivery-virtual-device",
-      "delivery-endpoint"
     ],
     "/$defs/logShow/oneOf/0/properties/logs/items/properties/stream/enum": [
       "standardOutput",
@@ -172,11 +160,6 @@
       "invalidValue",
       "writeFailed",
       "cancelled"
-    ],
-    "/$defs/sharedControllerSession/properties/session/enum": [
-      "active",
-      "suspended",
-      "disconnected"
     ],
     "/$defs/sharedPermissions/properties/permissions/items/properties/id/enum": [
       "input-read",
@@ -295,105 +278,7 @@
     ]
   },
   "protocol-description": {},
-  "report": {
-    "/$defs/bindingInterface/properties/hostTransport/enum": [
-      "usb",
-      "bluetoothClassic",
-      "bluetoothLE",
-      "proprietaryRadioReceiver"
-    ],
-    "/$defs/bindingReason/enum": [
-      "noProtocolMatch",
-      "ambiguousProtocolMatch",
-      "interfaceContractMismatch",
-      "descriptorContractMismatch",
-      "packetContractMismatch",
-      "unsupportedProtocolVariant",
-      "unsupportedTransportVariant",
-      "requiredInitializationFailed",
-      "catalogConflict",
-      "virtualProfileUnavailable"
-    ],
-    "/$defs/bindingResult/if/properties/outcome/const": ["bound"],
-    "/$defs/bindingResult/properties/accessBackend/enum": [
-      "ioHID",
-      "ioUSBHost",
-      "usbDriverKit",
-      "coreBluetoothGATT"
-    ],
-    "/$defs/bindingResult/properties/matchedPredicates/items/enum": [
-      "catalogIdentity",
-      "catalogAccessPath",
-      "hostTransport",
-      "interfaceSignature",
-      "deviceClassSignature",
-      "interruptEndpointPair",
-      "hidDescriptorContract"
-    ],
-    "/$defs/bindingResult/properties/outcome/enum": ["bound", "unsupported"],
-    "/$defs/bindingResult/properties/rule/enum": [
-      "catalogRecord",
-      "interfaceSignature",
-      "hidDescriptor"
-    ],
-    "/$defs/buildIdentity/properties/sourceState/enum": [
-      "clean",
-      "dirty",
-      "unknown"
-    ],
-    "/$defs/controller/properties/binding/allOf/1/properties/outcome/const": [
-      "bound"
-    ],
-    "/$defs/controller/properties/sessionState/enum": ["active", "suspended"],
-    "/$defs/controllerConnectionState/properties/backend/enum": [
-      "ioHID",
-      "ioUSBHost",
-      "usbDriverKit",
-      "coreBluetoothGATT"
-    ],
-    "/$defs/controllerConnectionState/properties/power/properties/charging/enum": [
-      "unknown",
-      "discharging",
-      "charging",
-      "full",
-      "notChargeable"
-    ],
-    "/$defs/controllerConnectionState/properties/transport/enum": [
-      "usb",
-      "bluetoothClassic",
-      "bluetoothLE",
-      "proprietaryRadioReceiver"
-    ],
-    "/$defs/controllerFrameTimings/properties/frames/items/properties/stages/items/properties/stage/enum": [
-      "read",
-      "parse",
-      "dispatch",
-      "delivery-virtual-device",
-      "delivery-endpoint"
-    ],
-    "/$defs/controllerInputHealth/properties/failureReason/enum": [
-      "missingReports",
-      "freshnessNotAdvancing"
-    ],
-    "/$defs/controllerInputHealth/properties/state/enum": [
-      "healthy",
-      "stale",
-      "waitingForNeutral"
-    ],
-    "/$defs/hidGamepad/properties/serialKind/enum": [
-      "none",
-      "ojdUserSpace",
-      "present"
-    ],
-    "/$defs/systemGamepadAudit/properties/source/enum": [
-      "downloadedMobileAsset",
-      "preinstalledMobileAsset",
-      "unavailable"
-    ],
-    "/$defs/unboundDevice/properties/binding/allOf/1/properties/outcome/const": [
-      "unsupported"
-    ]
-  },
+  "report": {},
   "virtual-device": {
     "/properties/labels/enum": ["xbox", "generic"],
     "/properties/layout/enum": ["ojd-generic-gamepad", "xbox-one-s-bluetooth"],

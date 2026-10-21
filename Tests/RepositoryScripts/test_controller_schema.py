@@ -416,7 +416,10 @@ class OwnershipAndSessionTests(unittest.TestCase):
             "lowFrequency": {"byte": 3},
         }
         schema_rejected = {
-            "unknown encoding": {**base, "lowFrequency": {"byte": 3, "encoding": "Float"}},
+            "unknown encoding": {
+                **base,
+                "lowFrequency": {"byte": 3, "encoding": "Float"},
+            },
             "lowercase bytes": {**base, "bytes": "02 0a 00 00 00 00 00 00"},
             "resend of zero": {**base, "resendIntervalMilliseconds": 0},
             "usb packet with an id": {

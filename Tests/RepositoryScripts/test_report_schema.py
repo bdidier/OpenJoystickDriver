@@ -43,11 +43,11 @@ class ReportSchemaTests(unittest.TestCase):
         self.assertEqual(
             [stage["stage"] for stage in stages],
             [
-                "read",
-                "parse",
-                "dispatch",
-                "delivery-virtual-device",
-                "delivery-endpoint",
+                "Read",
+                "Parse",
+                "Dispatch",
+                "DeliveryVirtualDevice",
+                "DeliveryEndpoint",
             ],
         )
 
@@ -67,14 +67,12 @@ class ReportSchemaTests(unittest.TestCase):
         with self.assertRaises(validate_schemas.ValidationError):
             self.validator.validate(report)
 
-    def test_accepts_a_bluetooth_le_controller_on_a_core_bluetooth_gatt_link(
-        self,
-    ) -> None:
+    def test_accepts_a_bluetooth_le_controller_on_a_gatt_link(self) -> None:
         report = copy.deepcopy(load_fixture())
         controller = report["data"]["controllers"][0]
-        controller["binding"]["accessBackend"] = "coreBluetoothGATT"
-        controller["connectionState"]["backend"] = "coreBluetoothGATT"
-        controller["connectionState"]["transport"] = "bluetoothLE"
+        controller["binding"]["accessBackend"] = "GATT"
+        controller["connectionState"]["backend"] = "GATT"
+        controller["connectionState"]["transport"] = "BluetoothLE"
 
         self.validator.validate(report)
 
@@ -84,6 +82,93 @@ class ReportSchemaTests(unittest.TestCase):
 
         with self.assertRaises(validate_schemas.ValidationError):
             self.validator.validate(report)
+
+    def test_rejects_an_unknown_name_for_each_value_kind(self) -> None:
+        for path, name in self.unknown_names():
+            with self.subTest(path=path, name=name):
+                report = copy.deepcopy(load_fixture())
+                *parents, key = path
+                target: Any = report["data"]
+                for step in parents:
+                    target = target[step]
+                target[key] = name
+
+                with self.assertRaises(validate_schemas.ValidationError):
+                    self.validator.validate(report)
+
+    def unknown_names(self) -> list[tuple[list[str | int], str]]:
+        controller: list[str | int] = ["controllers", 0]
+        unbound: list[str | int] = ["unboundDevices", 0, "binding"]
+        names: list[tuple[list[str | int], str]] = [
+            (controller + ["binding", "accessBackend"], "ioHID"),
+            (controller + ["binding", "accessBackend"], "ioUSBHost"),
+            (controller + ["binding", "accessBackend"], "usbDriverKit"),
+            (controller + ["binding", "accessBackend"], "coreBluetoothGATT"),
+            (controller + ["binding", "outcome"], "bound"),
+            (controller + ["binding", "rule"], "interfaceSignature"),
+            (controller + ["binding", "matchedPredicates", 0], "interfaceSignature"),
+            (unbound + ["interfaces", 0, "hostTransport"], "usb"),
+            (controller + ["connectionState", "backend"], "ioUSBHost"),
+            (controller + ["connectionState", "transport"], "usb"),
+            (controller + ["connectionState", "transport"], "bluetoothClassic"),
+            (controller + ["connectionState", "transport"], "bluetoothLE"),
+            (
+                controller + ["connectionState", "transport"],
+                "proprietaryRadioReceiver",
+            ),
+            (controller + ["connectionState", "power", "charging"], "unknown"),
+            (controller + ["inputHealth", "state"], "healthy"),
+            (controller + ["sessionState"], "active"),
+            (unbound + ["outcome"], "unsupported"),
+            (unbound + ["reason"], "ambiguousProtocolMatch"),
+            (unbound + ["rejectedCandidates", 0, "reason"], "ambiguousProtocolMatch"),
+            (["frameTimings", 0, "frames", 0, "stages", 0, "stage"], "read"),
+            (
+                ["frameTimings", 0, "frames", 0, "stages", 3, "stage"],
+                "delivery-virtual-device",
+            ),
+            (
+                ["frameTimings", 0, "frames", 0, "stages", 4, "stage"],
+                "delivery-endpoint",
+            ),
+            (["system", "buildIdentity", "sourceState"], "clean"),
+        ]
+        return names
+
+    def test_rejects_an_unknown_audit_source(self) -> None:
+        report = self.system_words_report()
+        report["data"]["systemGamepadAudit"]["source"] = "downloadedMobileAsset"
+
+        with self.assertRaises(validate_schemas.ValidationError):
+            self.validator.validate(report)
+
+    def test_the_enums_hold_only_the_current_names(self) -> None:
+        schema = self.documents["report.schema.json"]
+        enums: dict[str, list[str]] = {
+            "/$defs/controllerInputHealth/properties/state/enum": ["waitingForNeutral"],
+            "/$defs/controllerInputHealth/properties/failureReason/enum": [
+                "missingReports",
+                "freshnessNotAdvancing",
+            ],
+            "/$defs/controllerConnectionState/properties/power/properties/charging/enum": [
+                "notChargeable"
+            ],
+            "/$defs/hidGamepad/properties/serialKind/enum": ["ojdUserSpace", "none"],
+            "/$defs/bindingResult/properties/rule/enum": ["hidDescriptor"],
+            "/$defs/bindingResult/properties/matchedPredicates/items/enum": [
+                "interruptEndpointPair",
+                "hidDescriptorContract",
+            ],
+            "/$defs/bindingReason/enum": ["virtualProfileUnavailable"],
+        }
+        for pointer, names in enums.items():
+            node: Any = schema
+            for step in pointer.removeprefix("/").split("/"):
+                node = node[step]
+            for name in names:
+                with self.subTest(pointer=pointer, name=name):
+                    self.assertNotIn(name, node)
+                    self.assertTrue(node)
 
     def test_rejects_a_top_level_catalog_record_id_on_an_unsupported_result(
         self,
@@ -107,7 +192,7 @@ class ReportSchemaTests(unittest.TestCase):
     def system_words_report(self) -> dict[str, Any]:
         report = copy.deepcopy(load_fixture())
         report["data"]["systemGamepadAudit"] = {
-            "source": "downloadedMobileAsset",
+            "source": "DownloadedMobileAsset",
             "bundleVersions": ["10.5.2"],
             "systemExactDeviceCount": 1,
             "skippedSystemDeviceCount": 0,

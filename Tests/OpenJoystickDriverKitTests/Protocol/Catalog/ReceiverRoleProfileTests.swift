@@ -171,7 +171,7 @@ struct ReceiverRoleProfileTests {
   private func bound(_ vendorID: UInt16, _ productID: UInt16) throws -> ProtocolBinding {
     let classification = registry.classify(
       PhysicalDevice(vendorID: vendorID, productID: productID),
-      backend: .ioUSBHost
+      backend: .rawUSB
     )
     guard case .bound(let binding) = classification else {
       Issue.record("did not bind: \(classification)")

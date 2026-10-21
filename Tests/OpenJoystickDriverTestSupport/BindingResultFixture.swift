@@ -7,7 +7,7 @@ extension ProtocolBindingResult {
     binding: ProtocolBinding(
       protocolID: .hidDescriptor,
       variant: nil,
-      accessBackend: .ioHID,
+      accessBackend: .hid,
       interfaceNumber: nil,
       rule: .hidDescriptor,
       matchedPredicates: [.hidDescriptorContract],

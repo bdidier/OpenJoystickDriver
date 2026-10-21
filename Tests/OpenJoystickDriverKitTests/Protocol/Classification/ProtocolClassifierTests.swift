@@ -12,10 +12,10 @@ struct ProtocolClassifierTests {
   func bindingReasonsAreTheTypedReasonIDs() {
     #expect(
       ProtocolBindingReason.allCases.map(\.rawValue) == [
-        "noProtocolMatch", "ambiguousProtocolMatch", "interfaceContractMismatch",
-        "descriptorContractMismatch", "packetContractMismatch", "unsupportedProtocolVariant",
-        "unsupportedTransportVariant", "requiredInitializationFailed", "catalogConflict",
-        "virtualProfileUnavailable",
+        "NoProtocolMatch", "AmbiguousProtocolMatch", "InterfaceContractMismatch",
+        "DescriptorContractMismatch", "PacketContractMismatch", "UnsupportedProtocolVariant",
+        "UnsupportedTransportVariant", "RequiredInitializationFailed", "CatalogConflict",
+        "VirtualProfileUnavailable",
       ]
     )
   }
@@ -39,7 +39,7 @@ struct ProtocolClassifierTests {
 
   @Test
   func catalogRecordBindsOnARawUSBBackend() throws {
-    for backend in [DeviceAccessBackend.ioUSBHost, .usbDriverKit] {
+    for backend in [DeviceAccessBackend.rawUSB, .usbExtension] {
       let result = classify(device(0x045E, 0x028E, interfaces: []), backend: backend)
       let binding = try bound(result)
       #expect(binding.protocolID == .xboxXUSB)
@@ -54,21 +54,21 @@ struct ProtocolClassifierTests {
 
   @Test
   func catalogRecordCarriesStoredVariants() throws {
-    let receiver = try bound(classify(device(0x045E, 0x0719, interfaces: []), backend: .ioUSBHost))
+    let receiver = try bound(classify(device(0x045E, 0x0719, interfaces: []), backend: .rawUSB))
     #expect(receiver.protocolID == .xboxXUSB)
     #expect(receiver.variant == .receiver)
 
-    let gameSir = try bound(classify(device(0x3537, 0x1003, interfaces: []), backend: .ioUSBHost))
+    let gameSir = try bound(classify(device(0x3537, 0x1003, interfaces: []), backend: .rawUSB))
     #expect(gameSir.protocolID == .vendorGameSir)
     #expect(gameSir.variant == .usb)
 
     let steamDongle = try bound(
-      classify(device(0x28DE, 0x1142, interfaces: [hidInterface(host: .usb)]), backend: .ioHID)
+      classify(device(0x28DE, 0x1142, interfaces: [hidInterface(host: .usb)]), backend: .hid)
     )
     #expect(steamDongle.protocolID == .valveSteamController)
     #expect(steamDongle.variant == .dongle)
     let steamWired = try bound(
-      classify(device(0x28DE, 0x1102, interfaces: [hidInterface(host: .usb)]), backend: .ioHID)
+      classify(device(0x28DE, 0x1102, interfaces: [hidInterface(host: .usb)]), backend: .hid)
     )
     #expect(steamWired.variant == .wired)
   }
@@ -76,7 +76,7 @@ struct ProtocolClassifierTests {
   @Test
   func rawUSBGIPRecordDerivesTheUSBVariant() throws {
     let binding = try bound(
-      classify(device(0x045E, 0x02EA, interfaces: []), backend: .usbDriverKit)
+      classify(device(0x045E, 0x02EA, interfaces: []), backend: .usbExtension)
     )
     #expect(binding.protocolID == .xboxGIP)
     #expect(binding.variant == .usb)
@@ -86,7 +86,7 @@ struct ProtocolClassifierTests {
   @Test
   func hidRecordDerivesTheTransportVariantFromTheHostTransport() throws {
     let usb = try bound(
-      classify(device(0x054C, 0x09CC, interfaces: [hidInterface(host: .usb)]), backend: .ioHID)
+      classify(device(0x054C, 0x09CC, interfaces: [hidInterface(host: .usb)]), backend: .hid)
     )
     #expect(usb.protocolID == .sonyDualShock4)
     #expect(usb.variant == .usb)
@@ -95,7 +95,7 @@ struct ProtocolClassifierTests {
     let bluetooth = try bound(
       classify(
         device(0x054C, 0x09CC, interfaces: [hidInterface(host: .bluetoothClassic)]),
-        backend: .ioHID
+        backend: .hid
       )
     )
     #expect(bluetooth.variant == .bluetoothClassic)
@@ -113,7 +113,7 @@ struct ProtocolClassifierTests {
     }
     let host = HIDDeviceStream.hostTransport(forTransportProperty: "Bluetooth")
     let binding = try bound(
-      classify(device(0x054C, 0x09CC, interfaces: [hidInterface(host: host)]), backend: .ioHID)
+      classify(device(0x054C, 0x09CC, interfaces: [hidInterface(host: host)]), backend: .hid)
     )
     #expect(binding.variant == .bluetoothClassic)
   }
@@ -140,11 +140,11 @@ struct ProtocolClassifierTests {
       #expect(
         classify(
           device(vendorID, productID, interfaces: [hidInterface(host: host)]),
-          backend: .ioHID
+          backend: .hid
         ) == expected
       )
     }
-    #expect(classify(device(vendorID, productID, interfaces: []), backend: .ioHID) == expected)
+    #expect(classify(device(vendorID, productID, interfaces: []), backend: .hid) == expected)
   }
 
   /// Bluetooth LE is the Switch 2 GATT link; a Switch 2 controller has no Classic link.
@@ -152,13 +152,13 @@ struct ProtocolClassifierTests {
   func switch2BindsUSBAndBluetoothLEButNotBluetoothClassic() throws {
     for host in [PhysicalTransport.usb, .bluetoothLE] {
       let binding = try bound(
-        classify(device(0x057E, 0x2069, interfaces: [hidInterface(host: host)]), backend: .ioHID)
+        classify(device(0x057E, 0x2069, interfaces: [hidInterface(host: host)]), backend: .hid)
       )
       #expect(binding.variant == (host == .usb ? .usb : .bluetoothLE))
     }
     let classic = classify(
       device(0x057E, 0x2069, interfaces: [hidInterface(host: .bluetoothClassic)]),
-      backend: .ioHID
+      backend: .hid
     )
     let expected = rejection(
       .unsupportedTransportVariant,
@@ -175,14 +175,14 @@ struct ProtocolClassifierTests {
     let classic = try bound(
       classify(
         device(vendorID, productID, interfaces: [hidInterface(host: .bluetoothClassic)]),
-        backend: .ioHID
+        backend: .hid
       )
     )
     #expect(classic.protocolID == .nintendoSwitch1)
     #expect(classic.variant == .bluetoothClassic)
     let usb = classify(
       device(vendorID, productID, interfaces: [hidInterface(host: .usb)]),
-      backend: .ioHID
+      backend: .hid
     )
     let expected = rejection(
       .unsupportedTransportVariant,
@@ -199,7 +199,7 @@ struct ProtocolClassifierTests {
     let generic = try bound(
       classify(
         device(identity.0, identity.1, interfaces: [hidInterface(host: nil, descriptor: gamepad)]),
-        backend: .ioHID
+        backend: .hid
       )
     )
     #expect(generic.protocolID == .hidDescriptor)
@@ -218,7 +218,7 @@ struct ProtocolClassifierTests {
       [hidInterface(host: .usb, descriptor: vendorOnly)], [],
     ] {
       #expect(
-        classify(device(identity.0, identity.1, interfaces: interfaces), backend: .ioHID)
+        classify(device(identity.0, identity.1, interfaces: interfaces), backend: .hid)
           == rejection(
             .descriptorContractMismatch,
             .hidDescriptor,
@@ -234,11 +234,11 @@ struct ProtocolClassifierTests {
     #expect(
       classify(
         device(0x045E, 0x028E, interfaces: [hidInterface(host: .usb, descriptor: gamepad)]),
-        backend: .ioHID
+        backend: .hid
       ) == rejection(.unsupportedTransportVariant, .xboxXUSB, record: "045e-028e")
     )
     // A HID record observed through raw USB.
-    for backend in [DeviceAccessBackend.ioUSBHost, .usbDriverKit] {
+    for backend in [DeviceAccessBackend.rawUSB, .usbExtension] {
       #expect(
         classify(device(0x054C, 0x09CC, interfaces: []), backend: backend)
           == rejection(.unsupportedTransportVariant, .sonyDualShock4, record: "054c-09cc")
@@ -250,7 +250,7 @@ struct ProtocolClassifierTests {
   @Test
   func xboxRecordYieldsToTheOtherXboxFamilysObservedSignature() throws {
     let asGIP = try bound(
-      classify(device(0x045E, 0x028E, interfaces: [gipInterface()]), backend: .ioUSBHost)
+      classify(device(0x045E, 0x028E, interfaces: [gipInterface()]), backend: .rawUSB)
     )
     #expect(asGIP.protocolID == .xboxGIP)
     #expect(asGIP.rule == .interfaceSignature)
@@ -259,7 +259,7 @@ struct ProtocolClassifierTests {
     let asXUSB = try bound(
       classify(
         device(0x045E, 0x02EA, interfaces: [usbInterface(0, 0xFF, 0x5D, 0x01)]),
-        backend: .ioUSBHost
+        backend: .rawUSB
       )
     )
     #expect(asXUSB.protocolID == .xboxXUSB)
@@ -271,7 +271,7 @@ struct ProtocolClassifierTests {
   func xboxRecordKeepsItsFamilyWhenItsOwnSignatureIsPresent() throws {
     let interfaces = [usbInterface(0, 0xFF, 0x5D, 0x01), usbInterface(1, 0xFF, 0x47, 0xD0)]
     let binding = try bound(
-      classify(device(0x045E, 0x028E, interfaces: interfaces), backend: .ioUSBHost)
+      classify(device(0x045E, 0x028E, interfaces: interfaces), backend: .rawUSB)
     )
     #expect(binding.protocolID == .xboxXUSB)
     #expect(binding.rule == .catalogRecord)
@@ -338,7 +338,7 @@ struct ProtocolClassifierTests {
     PhysicalInterfaceSignature(
       interfaceClass: 0x03,
       hostTransport: host,
-      accessBackend: .ioHID,
+      accessBackend: .hid,
       hidLayout: HIDLayoutSummary(reportDescriptor: descriptor)
     )
   }

@@ -28,7 +28,7 @@ struct SupportReportBindingTests {
     // 045E:028E is a catalogued raw-USB XUSB row.
     let classification = ProtocolClassifier.classify(
       PhysicalDevice(vendorID: 0x045E, productID: 0x028E),
-      backend: .ioUSBHost,
+      backend: .rawUSB,
       catalog: Self.catalog
     )
     guard case .bound(let binding) = classification else {
@@ -54,7 +54,7 @@ struct SupportReportBindingTests {
     #expect(reported.rule == .catalogRecord)
     #expect(reported.matchedPredicates == [.catalogIdentity, .catalogAccessPath])
     #expect(reported.catalogRecordID == "045e-028e")
-    #expect(reported.accessBackend == .ioUSBHost)
+    #expect(reported.accessBackend == .rawUSB)
     #expect(reported.interfaces == [ProtocolBindingResult.InterfaceSummary(interface)])
     #expect(reported.rejectedCandidates.isEmpty)
   }
@@ -65,7 +65,7 @@ struct SupportReportBindingTests {
       vendorID: 0x1234,
       productID: 0x5678,
       connection: "USB",
-      accessBackend: .ioHID,
+      accessBackend: .hid,
       reason: .descriptorContractMismatch,
       rejectedCandidates: [],
       interfaces: [ProtocolBindingResult.InterfaceSummary(hostHIDInterface(.usb))]
@@ -87,7 +87,7 @@ struct SupportReportBindingTests {
     let binding = ProtocolBinding(
       protocolID: .hidDescriptor,
       variant: nil,
-      accessBackend: .ioHID,
+      accessBackend: .hid,
       interfaceNumber: 0,
       rule: .hidDescriptor,
       matchedPredicates: [.hidDescriptorContract],
@@ -129,7 +129,7 @@ struct SupportReportBindingTests {
     // A signature-bound raw-USB GIP device whose HID interface, observed at the same location,
     // stays unbound with a non-empty rejected-candidate list (see HIDRawUSBDuplicateTests).
     let device = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 90,
       vendorID: 0x1234,
       productID: 0x5678,

@@ -240,12 +240,12 @@ public final class HIDManager: Sendable {
     roleProfileModels: @escaping @Sendable () -> [ControllerModelID] = { [] },
     bluetoothLEHub: Switch2BluetoothLEHub? = nil
   ) {
-    let ioHID = IOHIDAccessBackend(
+    let hid = IOHIDAccessBackend(
       additionalProfileModels: additionalProfileModels,
       roleProfileModels: roleProfileModels
     )
     backend =
-      bluetoothLEHub.map { BluetoothLECompositeHIDBackend(primary: ioHID, hub: $0) } ?? ioHID
+      bluetoothLEHub.map { BluetoothLECompositeHIDBackend(primary: hid, hub: $0) } ?? hid
   }
 
   public func deviceEvents() async -> AsyncStream<HIDDeviceEvent> { await backend.deviceEvents() }

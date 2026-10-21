@@ -21,7 +21,7 @@ struct ConnectionStateTests {
       name: "USB-HID DualShock 4",
       protocolID: .sonyDualShock4,
       variant: .usb,
-      backend: .ioHID,
+      backend: .hid,
       hostTransport: .usb,
       expected: .usb
     ),
@@ -29,7 +29,7 @@ struct ConnectionStateTests {
       name: "Bluetooth DualShock 4",
       protocolID: .sonyDualShock4,
       variant: .bluetoothClassic,
-      backend: .ioHID,
+      backend: .hid,
       hostTransport: .bluetoothClassic,
       expected: .bluetoothClassic
     ),
@@ -37,7 +37,7 @@ struct ConnectionStateTests {
       name: "raw-USB GIP",
       protocolID: .xboxGIP,
       variant: .usb,
-      backend: .ioUSBHost,
+      backend: .rawUSB,
       hostTransport: .usb,
       expected: .usb
     ),
@@ -45,7 +45,7 @@ struct ConnectionStateTests {
       name: "Steam dongle",
       protocolID: .valveSteamController,
       variant: .dongle,
-      backend: .ioHID,
+      backend: .hid,
       hostTransport: .usb,
       expected: .proprietaryRadioReceiver
     ),
@@ -53,7 +53,7 @@ struct ConnectionStateTests {
       name: "HID pad without link evidence",
       protocolID: .hidDescriptor,
       variant: nil,
-      backend: .ioHID,
+      backend: .hid,
       hostTransport: .usb,
       expected: nil
     ),

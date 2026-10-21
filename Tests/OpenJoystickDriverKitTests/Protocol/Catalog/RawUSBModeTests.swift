@@ -74,7 +74,7 @@ struct RawUSBModeTests {
       productID: Self.model.productID,
       interfaces: [PhysicalInterfaceSignature(interfaceNumber: 0, hostTransport: .usb)]
     )
-    for backend in [DeviceAccessBackend.ioUSBHost, .usbDriverKit] {
+    for backend in [DeviceAccessBackend.rawUSB, .usbExtension] {
       let selected = await ControllerModeSelector.select(
         from: profile,
         model: Self.model,
@@ -110,7 +110,7 @@ struct RawUSBModeTests {
     let selection = await ControllerModeSelector.select(
       from: profile,
       model: Self.model,
-      backend: .ioUSBHost,
+      backend: .rawUSB,
       reader: UnreadableModeProbeReader(),
       device: PhysicalDevice(vendorID: Self.model.vendorID, productID: Self.model.productID)
     ) { _ in }

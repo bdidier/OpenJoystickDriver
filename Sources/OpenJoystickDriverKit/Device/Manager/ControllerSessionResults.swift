@@ -1,8 +1,8 @@
 import Foundation
 
 public enum ControllerSessionState: String, Codable, Equatable, Sendable {
-  case active
-  case suspended
+  case active = "Active"
+  case suspended = "Suspended"
 }
 
 public enum ControllerSessionMutationFailure: String, Codable, Equatable, Sendable {

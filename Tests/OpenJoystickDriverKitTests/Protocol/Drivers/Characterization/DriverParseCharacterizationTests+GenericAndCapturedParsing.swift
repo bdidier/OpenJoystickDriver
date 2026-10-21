@@ -118,7 +118,7 @@ extension DriverParseCharacterizationTests {
       lines == [
         "cap0 [] hat=Neutral ls=-1279,-1023 rs=767,0 lt=0 rt=0 motion=1 touch=1 fresh",
         "  motion n=12705 w=-0.0076,0.0164,0.0076 a=-0.0204,-2.1452,9.3182",
-        "  touch Primary [0:0:53002,6755 1:0:0,0]", "  battery 100% full wired-power=yes",
+        "  touch Primary [0:0:53002,6755 1:0:0,0]", "  battery 100% Full wired-power=yes",
         "cap1 [] hat=Neutral ls=-255,-1023 rs=511,0 lt=0 rt=0 motion=1 touch=1 fresh",
         "  motion n=13448 w=-0.0087,0.0175,0.0076 a=-0.0287,-2.1632,9.3075",
         "  touch Primary [0:0:53002,6755 1:0:0,0]",

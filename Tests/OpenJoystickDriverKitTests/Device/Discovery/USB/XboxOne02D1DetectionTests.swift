@@ -26,7 +26,7 @@ struct XboxOne02D1DetectionTests {
   @Test
   func dextRouteServiceIsClaimedOnInterfaceZero() async {
     let device = USBTransportDevice(
-      route: .usbDriverKit,
+      route: .usbExtension,
       serviceID: 40,
       vendorID: Self.vendorID,
       productID: Self.productID,
@@ -88,7 +88,7 @@ struct XboxOne02D1DetectionTests {
   /// The device the DEXT route lists for the service: identity from the parent USB device, the
   /// service's registry ID for the user-client open.
   private static let dextDevice = USBTransportDevice(
-    route: .usbDriverKit,
+    route: .usbExtension,
     serviceID: 41,
     vendorID: vendorID,
     productID: productID,
@@ -137,7 +137,7 @@ struct XboxOne02D1DetectionTests {
   @Test
   func facadeSelectsDextRouteModel() {
     let direct = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 42,
       vendorID: Self.vendorID,
       productID: Self.productID,
@@ -157,7 +157,7 @@ struct XboxOne02D1DetectionTests {
   @Test
   func facadeKeepsTheModelOffDirectIOUSBHostWithoutADextService() {
     let direct = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 42,
       vendorID: Self.vendorID,
       productID: Self.productID,

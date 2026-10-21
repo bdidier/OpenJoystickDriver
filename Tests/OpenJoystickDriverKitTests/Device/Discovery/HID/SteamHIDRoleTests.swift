@@ -174,7 +174,7 @@ struct SteamHIDRoleTests {
       interfaces: [
         PhysicalInterfaceSignature(
           hostTransport: .usb,
-          accessBackend: .ioHID,
+          accessBackend: .hid,
           hidLayout: steamHIDInterface(number: 1).hidLayout
         )
       ]
@@ -208,7 +208,7 @@ struct SteamHIDRoleTests {
       interfaces: [
         PhysicalInterfaceSignature(
           hostTransport: .bluetoothLE,
-          accessBackend: .ioHID,
+          accessBackend: .hid,
           hidLayout: steamHIDInterface(number: 0).hidLayout
         )
       ]

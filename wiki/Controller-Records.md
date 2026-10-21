@@ -160,7 +160,7 @@ Raw bytes are uppercase hex pairs separated by single spaces, such as `42 03 00 
 
 ## Send Fixed Reports At Startup
 
-A HID controller that needs a fixed report before it sends input names it in the `session.startup` of its mode. The DualShock 3 record `054c:0268` and the Sixaxis clone record `2563:0523` use it in a `bluetooth` mode. A write applies on every link unless a `transport` limits it (`usb`, `bluetooth-classic`, or `bluetooth-le`; a write never names `proprietary-radio-receiver`):
+A HID controller that needs a fixed report before it sends input names it in the `session.startup` of its mode. The DualShock 3 record `054c:0268` and the Sixaxis clone record `2563:0523` use it in a `bluetooth` mode. A write applies on every link unless a `transport` limits it (`USB`, `BluetoothClassic`, or `BluetoothLE`; a write never names `ProprietaryRadioReceiver`):
 
 ```json
 "session": {

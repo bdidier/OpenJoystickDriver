@@ -83,7 +83,7 @@ struct StatusCommand: AsyncParsableCommand {
     for device in report.unboundDevices ?? [] {
       rows.append([
         "unbound", deviceIdentity(vendorID: device.vendorID, productID: device.productID),
-        device.connection, device.reason ?? "",
+        device.connection, device.reason.map(CommandLineName.kebab) ?? "",
       ])
     }
     for device in report.passThroughDevices ?? [] {
@@ -182,7 +182,9 @@ struct StatusCommand: AsyncParsableCommand {
       )
       for device in unbound {
         let identity = deviceIdentity(vendorID: device.vendorID, productID: device.productID)
-        CLIOutput.stdout("  \(identity)  \(device.connection)  \(device.reason ?? "")")
+        CLIOutput.stdout(
+          "  \(identity)  \(device.connection)  \(device.reason.map(CommandLineName.kebab) ?? "")"
+        )
       }
     }
     if let passThrough = report.passThroughDevices, !passThrough.isEmpty {

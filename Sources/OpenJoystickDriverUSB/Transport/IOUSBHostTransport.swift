@@ -19,7 +19,7 @@ public actor IOUSBHostTransportProvider: USBTransportProvider {
     _ device: USBTransportDevice,
     options: USBTransportOpenOptions
   ) async throws -> any USBTransportSession {
-    guard device.route == .ioUSBHost else { throw USBTransportError.notSupported }
+    guard device.route == .rawUSB else { throw USBTransportError.notSupported }
 
     try Self.configureDevice(device, options: options)
 
@@ -46,7 +46,7 @@ public actor IOUSBHostTransportProvider: USBTransportProvider {
   }
 
   public func resetDevice(_ device: USBTransportDevice) throws {
-    guard device.route == .ioUSBHost else { throw USBTransportError.notSupported }
+    guard device.route == .rawUSB else { throw USBTransportError.notSupported }
     let service = try Self.deviceService(for: device)
     defer { IOObjectRelease(service) }
     do {
@@ -64,7 +64,7 @@ public actor IOUSBHostTransportProvider: USBTransportProvider {
   static func devices(from facts: [IOUSBHostDeviceFacts]) -> [USBTransportDevice] {
     facts.map { device in
       USBTransportDevice(
-        route: .ioUSBHost,
+        route: .rawUSB,
         serviceID: device.serviceID,
         vendorID: device.vendorID,
         productID: device.productID,

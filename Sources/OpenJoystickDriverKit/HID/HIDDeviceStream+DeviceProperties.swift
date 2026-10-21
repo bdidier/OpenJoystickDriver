@@ -91,7 +91,7 @@ extension HIDDeviceStream {
         PhysicalInterfaceSignature(
           interfaceNumber: hostTransport == .usb ? Self.usbInterfaceNumber(for: device) : nil,
           hostTransport: hostTransport,
-          accessBackend: .ioHID,
+          accessBackend: .hid,
           hidLayout: hidLayout
         )
       ],

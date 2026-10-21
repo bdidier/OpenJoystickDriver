@@ -228,7 +228,7 @@ struct ControllerRecordStartupWriteTests {
       let selected = await ControllerModeSelector.select(
         from: base,
         model: model,
-        backend: .ioHID,
+        backend: .hid,
         reader: UnansweredProbeReader(),
         device: device(link)
       ) { _ in }

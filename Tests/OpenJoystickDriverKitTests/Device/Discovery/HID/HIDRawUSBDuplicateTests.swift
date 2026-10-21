@@ -10,7 +10,7 @@ struct HIDRawUSBDuplicateTests {
   @Test
   func cataloguedRawUSBRowObservedOverHIDStaysUnboundWhileItsPipelineRuns() async throws {
     let device = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 1,
       vendorID: 1_118,
       productID: 721,
@@ -54,7 +54,7 @@ struct HIDRawUSBDuplicateTests {
   @Test
   func signatureBoundDeviceKeepsItsHIDInterfaceUnbound() async throws {
     let device = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 90,
       vendorID: 0x1234,
       productID: 0x5678,

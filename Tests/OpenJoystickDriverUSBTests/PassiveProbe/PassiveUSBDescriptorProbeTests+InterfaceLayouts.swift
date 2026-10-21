@@ -128,7 +128,7 @@ extension PassiveUSBDescriptorProbeTests {
     let interfaces = PassiveUSBDescriptorProbe.structuralInterfaces(
       descriptor,
       configurationValue: nil,
-      route: .ioUSBHost
+      route: .rawUSB
     )
     #expect(interfaces?.count == 1)
     #expect(interfaces?.first?.interfaceClass == 0xFF)
@@ -137,14 +137,14 @@ extension PassiveUSBDescriptorProbeTests {
       PassiveUSBDescriptorProbe.structuralInterfaces(
         [9, 2, 32, 0, 1, 1, 0, 0xA0],
         configurationValue: nil,
-        route: .ioUSBHost
+        route: .rawUSB
       ) == nil
     )
   }
 
   private func razerDevice() -> USBTransportDevice {
     USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 12,
       vendorID: 0x1532,
       productID: 0x0A15,

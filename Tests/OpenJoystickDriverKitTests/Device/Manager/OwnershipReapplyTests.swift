@@ -183,7 +183,7 @@ struct OwnershipReapplyTests {
           PhysicalInterfaceSignature(
             interfaceNumber: interface,
             hostTransport: .usb,
-            accessBackend: .ioHID,
+            accessBackend: .hid,
             hidLayout: HIDLayoutSummary(reportDescriptor: Data(GamepadHIDDescriptor.descriptor))
           )
         ],

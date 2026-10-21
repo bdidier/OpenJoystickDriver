@@ -14,7 +14,7 @@ extension IOUSBHostTransportProvider {
     of device: USBTransportDevice,
     configurationValue: UInt8
   ) throws -> [UInt8]? {
-    guard device.route == .ioUSBHost else { throw USBTransportError.notSupported }
+    guard device.route == .rawUSB else { throw USBTransportError.notSupported }
     let service = try deviceService(for: device)
     defer { IOObjectRelease(service) }
     do {

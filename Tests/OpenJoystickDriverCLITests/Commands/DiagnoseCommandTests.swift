@@ -136,7 +136,7 @@ struct DiagnoseCommandTests {
     #expect(timings.first?["controller"] as? String == "ctrl-1")
     #expect(
       stages.compactMap { $0["stage"] as? String } == [
-        "read", "parse", "dispatch", "delivery-virtual-device", "delivery-endpoint",
+        "Read", "Parse", "Dispatch", "DeliveryVirtualDevice", "DeliveryEndpoint",
       ]
     )
     #expect(stages.compactMap { $0["nanoseconds"] as? Int } == [100, 150, 200, 260, 900])
@@ -277,7 +277,7 @@ struct DiagnoseCommandTests {
     #expect(timings.first?["controller"] as? String == "ctrl-1")
     #expect(
       stages.compactMap { $0["stage"] as? String } == [
-        "read", "parse", "dispatch", "delivery-virtual-device", "delivery-endpoint",
+        "Read", "Parse", "Dispatch", "DeliveryVirtualDevice", "DeliveryEndpoint",
       ]
     )
     #expect(stages.compactMap { $0["nanoseconds"] as? Int } == [100, 150, 200, 260, 900])

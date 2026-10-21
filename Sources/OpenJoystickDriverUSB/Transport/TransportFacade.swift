@@ -149,12 +149,12 @@ public actor OpenJoystickDriverUSBTransportProvider: USBTransportProvider,
 
   public func physicalDeviceObservation(for device: USBTransportDevice) async -> PhysicalDevice? {
     switch device.route {
-    case .ioUSBHost:
+    case .rawUSB:
       guard let observation = try? ioUSBHostObservation(device),
         observation.serviceAddress == device.serviceAddress
       else { return nil }
       return observation
-    case .usbDriverKit: return await usbDriverKitObservation(for: device)
+    case .usbExtension: return await usbDriverKitObservation(for: device)
     }
   }
 
@@ -163,7 +163,7 @@ public actor OpenJoystickDriverUSBTransportProvider: USBTransportProvider,
     for device: USBTransportDevice,
     configurationValue: UInt8
   ) throws -> PhysicalDevice? {
-    guard device.route == .ioUSBHost else { throw USBTransportError.notSupported }
+    guard device.route == .rawUSB else { throw USBTransportError.notSupported }
     let observation = try ioUSBHostConfigurationObservation(device, configurationValue)
     return observation?.serviceAddress == device.serviceAddress ? observation : nil
   }
@@ -173,15 +173,15 @@ public actor OpenJoystickDriverUSBTransportProvider: USBTransportProvider,
     options: USBTransportOpenOptions
   ) async throws -> any USBTransportSession {
     switch device.route {
-    case .ioUSBHost: return try await ioUSBHostProvider.open(device, options: options)
-    case .usbDriverKit: return try await usbDriverKitProvider.open(device, options: options)
+    case .rawUSB: return try await ioUSBHostProvider.open(device, options: options)
+    case .usbExtension: return try await usbDriverKitProvider.open(device, options: options)
     }
   }
 
   public func resetDevice(_ device: USBTransportDevice) async throws {
     switch device.route {
-    case .ioUSBHost: try await ioUSBHostProvider.resetDevice(device)
-    case .usbDriverKit: try await usbDriverKitProvider.resetDevice(device)
+    case .rawUSB: try await ioUSBHostProvider.resetDevice(device)
+    case .usbExtension: try await usbDriverKitProvider.resetDevice(device)
     }
   }
 
@@ -191,7 +191,7 @@ public actor OpenJoystickDriverUSBTransportProvider: USBTransportProvider,
   ) async -> USBTransportResolution {
     await Task.yield()
     switch device.route {
-    case .ioUSBHost:
+    case .rawUSB:
       do {
         guard let observation = try ioUSBHostObservation(device),
           observation.serviceAddress == device.serviceAddress
@@ -207,7 +207,7 @@ public actor OpenJoystickDriverUSBTransportProvider: USBTransportProvider,
         // the configured catalog profile when observation fails.
         return USBTransportResolution(profile: configured)
       }
-    case .usbDriverKit:
+    case .usbExtension:
       // DriverKit's service properties provide limited identity/route facts.
       // Do not probe the same service through direct IOUSBHost or infer an
       // interface from the extension's fixed personality.
@@ -222,7 +222,7 @@ public actor OpenJoystickDriverUSBTransportProvider: USBTransportProvider,
     configured: DeviceTransportProfile,
     observation: PhysicalDevice?
   ) -> DeviceTransportProfile {
-    guard route == .ioUSBHost, let observation else { return configured }
+    guard route == .rawUSB, let observation else { return configured }
     return USBDescriptorTransportResolver.resolve(configured: configured, observed: observation)
   }
 
@@ -231,7 +231,7 @@ public actor OpenJoystickDriverUSBTransportProvider: USBTransportProvider,
     // not change the exact supported-device selection or prevent diagnostics
     // from reporting devices discovered by either backend.
     let devices = try await devices()
-    let hasDriverKitDevices = devices.contains { $0.route == .usbDriverKit }
+    let hasDriverKitDevices = devices.contains { $0.route == .usbExtension }
     let driverKitObservations: [PhysicalDevice]
     if hasDriverKitDevices,
       let provider = usbDriverKitProvider as? any USBPhysicalDeviceObservationProvider
@@ -243,12 +243,12 @@ public actor OpenJoystickDriverUSBTransportProvider: USBTransportProvider,
 
     return devices.compactMap { device in
       switch device.route {
-      case .ioUSBHost:
+      case .rawUSB:
         guard let observation = try? ioUSBHostObservation(device),
           observation.serviceAddress == device.serviceAddress
         else { return nil }
         return observation
-      case .usbDriverKit:
+      case .usbExtension:
         return driverKitObservations.first { Self.driverKitObservation($0, matches: device) }
       }
     }

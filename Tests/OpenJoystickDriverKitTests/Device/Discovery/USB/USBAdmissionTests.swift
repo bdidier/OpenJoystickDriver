@@ -8,7 +8,7 @@ struct USBDetectionAdmissionTests {
   @Test
   func claimedInterfaceOutsideTheBoundContractIsLeftUnbound() async {
     let device = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 2,
       vendorID: 0x045E,
       productID: 0x02EA,
@@ -49,7 +49,7 @@ struct USBDetectionAdmissionTests {
   @Test
   func unsupportedDeviceNeverInvokesProfileResolution() async {
     let unknown = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 1,
       vendorID: 0x0001,
       productID: 0x0001,
@@ -78,7 +78,7 @@ struct USBDetectionAdmissionTests {
           vendorID: 0x0001,
           productID: 0x0001,
           connection: "USB",
-          accessBackend: .ioUSBHost,
+          accessBackend: .rawUSB,
           reason: .noProtocolMatch,
           rejectedCandidates: [],
           interfaces: []
@@ -90,7 +90,7 @@ struct USBDetectionAdmissionTests {
   @Test
   func competingPhysicalUSBRouteSkipsDescriptorResolution() async {
     let direct = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 1,
       vendorID: 1_118,
       productID: 721,
@@ -98,7 +98,7 @@ struct USBDetectionAdmissionTests {
       serialNumber: "serial"
     )
     let driverKit = USBTransportDevice(
-      route: .usbDriverKit,
+      route: .usbExtension,
       serviceID: 2,
       vendorID: 1_118,
       productID: 721,
@@ -134,7 +134,7 @@ struct USBDetectionAdmissionTests {
   @Test
   func unresolvedServiceIsRetriedAfterItDisappears() async {
     let device = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 11,
       vendorID: 1_118,
       productID: 721,
@@ -162,14 +162,14 @@ struct USBDetectionAdmissionTests {
   @Test
   func serviceReuseWithChangedDeviceFactsRemainsUnacknowledged() async {
     let original = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 11,
       vendorID: 0x045E,
       productID: 0x02D1,
       locationID: 9
     )
     let replacement = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 11,
       vendorID: 0x3537,
       productID: 0x1010,
@@ -188,7 +188,7 @@ struct USBDetectionAdmissionTests {
   @Test
   func enumerationFailureKeepsAcknowledgedServicesForSuccessfulRecovery() async {
     let device = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 31,
       vendorID: 0x045E,
       productID: 0x02D1,
@@ -215,7 +215,7 @@ struct USBDetectionAdmissionTests {
   @Test
   func changedFactsForReusedServiceEmitDetachBeforeAttach() async {
     let original = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 32,
       vendorID: 0x045E,
       productID: 0x02D1,
@@ -223,7 +223,7 @@ struct USBDetectionAdmissionTests {
       productName: "Original"
     )
     let replacement = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 32,
       vendorID: 0x045E,
       productID: 0x02D1,
@@ -245,14 +245,14 @@ struct USBDetectionAdmissionTests {
   @Test
   func physicalObservationMustIdentifyTheExactEnumeratedService() async {
     let device = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 11,
       vendorID: 1_118,
       productID: 721,
       locationID: 9
     )
     let otherService = PhysicalDevice(
-      serviceAddress: ControllerConnectionAddress.usbService(route: .ioUSBHost, serviceID: 12),
+      serviceAddress: ControllerConnectionAddress.usbService(route: .rawUSB, serviceID: 12),
       vendorID: device.vendorID,
       productID: device.productID,
       physicalLocationIdentifier: device.locationID
@@ -272,7 +272,7 @@ struct USBDetectionAdmissionTests {
   @Test
   func competingClaimsRetryAfterPostAwaitRecheckAndLaterClaimWithoutReplug() async {
     let device = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 11,
       vendorID: 1_118,
       productID: 721,

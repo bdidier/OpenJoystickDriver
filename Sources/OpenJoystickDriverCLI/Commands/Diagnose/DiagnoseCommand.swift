@@ -243,7 +243,9 @@ struct DiagnoseCommand: AsyncParsableCommand {
     }
     for controller in report.timings {
       for frame in controller.frames {
-        let stages = frame.stages.map { "\($0.stage.rawValue)=\($0.nanoseconds)" }
+        let stages = frame.stages.map {
+          "\(CommandLineName.kebab($0.stage.rawValue))=\($0.nanoseconds)"
+        }
         CLIOutput.stdout(
           CLILocalized.format(
             "cli.diagnose.timings.frame",

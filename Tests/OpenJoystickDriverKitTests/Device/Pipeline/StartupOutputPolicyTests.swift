@@ -197,7 +197,7 @@ struct USBStartupOutputPolicyTests {
   }
 
   private static let device = USBTransportDevice(
-    route: .ioUSBHost,
+    route: .rawUSB,
     serviceID: 1,
     vendorID: 0x3537,
     productID: 0x1010,

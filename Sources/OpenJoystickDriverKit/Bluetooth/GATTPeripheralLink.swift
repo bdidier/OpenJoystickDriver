@@ -1,6 +1,6 @@
 import Foundation
 
-/// The `coreBluetoothGATT` link of one Switch 2 controller: it carries notifications from a
+/// The `GATT` link of one Switch 2 controller: it carries notifications from a
 /// ``GATTPeripheral`` into the hub as input and command-reply frames, and carries the hub's
 /// writes back to the peripheral's command and vibration characteristics.
 ///

@@ -20,8 +20,8 @@ extension DeviceManager {
     var ownershipObservation: ControllerOwnershipObservation {
       switch self {
       case .hid: .systemHidVisible
-      case .rawUSB(.ioUSBHost): .exclusiveRawUSB
-      case .rawUSB(.usbDriverKit): .extensionOwnedUsb
+      case .rawUSB(.rawUSB): .exclusiveRawUSB
+      case .rawUSB(.usbExtension): .extensionOwnedUsb
       }
     }
   }

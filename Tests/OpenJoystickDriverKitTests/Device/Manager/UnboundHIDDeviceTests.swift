@@ -24,7 +24,7 @@ struct UnboundHIDDeviceTests {
           vendorID: 0x1234,
           productID: 0x5678,
           connection: "USB",
-          accessBackend: .ioHID,
+          accessBackend: .hid,
           reason: .descriptorContractMismatch,
           rejectedCandidates: [],
           interfaces: [ProtocolBindingResult.InterfaceSummary(hostHIDInterface(.usb))]
@@ -140,7 +140,7 @@ struct UnboundHIDDeviceTests {
       vendorID: 0x045E,
       productID: 0x02EA,
       connection: "USB",
-      accessBackend: .ioHID,
+      accessBackend: .hid,
       reason: .ambiguousProtocolMatch,
       rejectedCandidates: [
         .init(

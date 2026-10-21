@@ -92,7 +92,7 @@ struct AutomationServiceTests {
       bindingResult: .hidDescriptorFixture,
       connectionState: ControllerConnectionState(
         transport: .usb,
-        backend: .usbDriverKit,
+        backend: .usbExtension,
         isConnected: true,
         power: ControllerConnectionState.Power(
           charging: .discharging,

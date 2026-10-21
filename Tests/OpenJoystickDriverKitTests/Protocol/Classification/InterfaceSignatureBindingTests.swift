@@ -80,11 +80,11 @@ struct InterfaceSignatureBindingTests {
       configurationValue: 1,
       interfaces: [registryInterface(0, 0x03, 0x00, 0x00)]
     )
-    #expect(registry.classify(configured, backend: .ioUSBHost) == .unsupported(.noProtocolMatch))
+    #expect(registry.classify(configured, backend: .rawUSB) == .unsupported(.noProtocolMatch))
     #expect(ProtocolDriverRegistry.carriesProtocolSignature(configured))
     let unconfigured = PhysicalDevice(deviceClass: 0xFF, deviceSubclass: 0x47, deviceProtocol: 0xD0)
     #expect(
-      registry.classify(unconfigured, backend: .ioHID)
+      registry.classify(unconfigured, backend: .hid)
         == rejection(.unsupportedTransportVariant, .xboxGIP)
     )
   }
@@ -113,7 +113,7 @@ struct InterfaceSignatureBindingTests {
       registryInterface(0, 0xFF, 0x5D, 0x01), registryInterface(1, 0xFF, 0x47, 0xD0),
     ])
     #expect(
-      registry.classify(device, backend: .ioUSBHost)
+      registry.classify(device, backend: .rawUSB)
         == .conflict(.ambiguousProtocolMatch, candidates: [.xboxXUSB, .xboxGIP])
     )
   }
@@ -132,7 +132,7 @@ struct InterfaceSignatureBindingTests {
   func uncataloguedDeviceWithoutASignatureHasNoProtocolMatch() {
     let device = observed(interfaces: [registryInterface(0, 0xFF, 0x00, 0x00)])
     #expect(!ProtocolDriverRegistry.carriesProtocolSignature(device))
-    #expect(registry.classify(device, backend: .ioUSBHost) == .unsupported(.noProtocolMatch))
+    #expect(registry.classify(device, backend: .rawUSB) == .unsupported(.noProtocolMatch))
   }
 
   @Test
@@ -273,7 +273,7 @@ struct InterfaceSignatureBindingTests {
   }
 
   private func bound(_ device: PhysicalDevice) throws -> ProtocolBinding {
-    let classification = registry.classify(device, backend: .ioUSBHost)
+    let classification = registry.classify(device, backend: .rawUSB)
     guard case .bound(let binding) = classification else {
       Issue.record("did not bind: \(classification)")
       throw SignatureBindingFailure()
@@ -307,6 +307,6 @@ func registryInterface(
     interfaceProtocol: interfaceProtocol,
     configurationValue: 1,
     hostTransport: .usb,
-    usbRoute: .ioUSBHost
+    usbRoute: .rawUSB
   )
 }

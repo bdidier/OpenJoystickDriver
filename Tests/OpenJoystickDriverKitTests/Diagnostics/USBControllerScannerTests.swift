@@ -7,7 +7,7 @@ struct USBControllerScannerTests {
   @Test
   func scannerCarriesObservedTopologyAndCatalogBinding() async throws {
     let device = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 7,
       vendorID: 0x045E,
       productID: 0x028E,
@@ -26,7 +26,7 @@ struct USBControllerScannerTests {
           interfaceProtocol: 0x01,
           configurationValue: 1,
           hostTransport: .usb,
-          usbRoute: .ioUSBHost,
+          usbRoute: .rawUSB,
           endpoints: [
             PhysicalEndpointSignature(
               address: 0xA1,
@@ -58,14 +58,14 @@ struct USBControllerScannerTests {
     }
     #expect(binding.protocolID == .xboxXUSB)
     #expect(binding.variant == .wired)
-    #expect(binding.accessBackend == .ioUSBHost)
+    #expect(binding.accessBackend == .rawUSB)
     #expect(binding.rule == .catalogRecord)
   }
 
   @Test
   func incompleteDriverKitRouteObservationDoesNotProduceNegativeClassification() async throws {
     let device = USBTransportDevice(
-      route: .usbDriverKit,
+      route: .usbExtension,
       serviceID: 42,
       vendorID: 0x045E,
       productID: 0x028E,
@@ -78,8 +78,8 @@ struct USBControllerScannerTests {
       interfaces: [
         PhysicalInterfaceSignature(
           hostTransport: .usb,
-          accessBackend: .usbDriverKit,
-          usbRoute: .usbDriverKit
+          accessBackend: .usbExtension,
+          usbRoute: .usbExtension
         )
       ]
     )
@@ -95,7 +95,7 @@ struct USBControllerScannerTests {
   @Test
   func driverKitRouteClassifiesWithTheDriverKitBackend() async throws {
     let device = USBTransportDevice(
-      route: .usbDriverKit,
+      route: .usbExtension,
       serviceID: 8,
       vendorID: 0x1234,
       productID: 0x5678,
@@ -113,8 +113,8 @@ struct USBControllerScannerTests {
           interfaceSubclass: 0x47,
           interfaceProtocol: 0xD0,
           hostTransport: .usb,
-          accessBackend: .usbDriverKit,
-          usbRoute: .usbDriverKit,
+          accessBackend: .usbExtension,
+          usbRoute: .usbExtension,
           endpoints: [
             PhysicalEndpointSignature(address: 0x81, direction: .in, transferType: .interrupt),
             PhysicalEndpointSignature(address: 0x01, direction: .out, transferType: .interrupt),
@@ -133,7 +133,7 @@ struct USBControllerScannerTests {
     }
     #expect(binding.protocolID == .xboxGIP)
     #expect(binding.variant == .usb)
-    #expect(binding.accessBackend == .usbDriverKit)
+    #expect(binding.accessBackend == .usbExtension)
     #expect(binding.rule == .interfaceSignature)
   }
 
@@ -147,7 +147,7 @@ struct USBControllerScannerTests {
 
     for (index, endpoint) in incompleteEndpoints.enumerated() {
       let device = USBTransportDevice(
-        route: .ioUSBHost,
+        route: .rawUSB,
         serviceID: UInt64(20 + index),
         vendorID: 0x045E,
         productID: 0x028E,
@@ -165,7 +165,7 @@ struct USBControllerScannerTests {
             interfaceSubclass: 0x5D,
             interfaceProtocol: 0x01,
             hostTransport: .usb,
-            usbRoute: .ioUSBHost,
+            usbRoute: .rawUSB,
             endpoints: [endpoint]
           )
         ]
@@ -182,7 +182,7 @@ struct USBControllerScannerTests {
   @Test
   func hidInterfaceOnRawUSBIsNeverGenericHID() async throws {
     let device = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 30,
       vendorID: 0x1234,
       productID: 0x5678,
@@ -200,7 +200,7 @@ struct USBControllerScannerTests {
           interfaceSubclass: 0,
           interfaceProtocol: 0,
           hostTransport: .usb,
-          usbRoute: .ioUSBHost,
+          usbRoute: .rawUSB,
           endpoints: [
             PhysicalEndpointSignature(address: 0x81, direction: .in, transferType: .interrupt)
           ],
@@ -219,7 +219,7 @@ struct USBControllerScannerTests {
   @Test
   func observedEmptyInterfaceListCanReportUnsupported() async throws {
     let device = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 40,
       vendorID: 0x1234,
       productID: 0x5678,
@@ -244,7 +244,7 @@ struct USBControllerScannerTests {
   @Test
   func uncataloguedSignatureDeviceListsItsBindingLikeACatalogRow() async throws {
     let device = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 41,
       vendorID: 0x1234,
       productID: 0x5678,

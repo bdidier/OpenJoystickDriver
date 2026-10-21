@@ -8,7 +8,7 @@ struct USBSignatureDiscoveryTests {
   func unconfiguredUncataloguedGIPDeviceBindsWithItsDescriptorEndpoints() async throws {
     // Uncatalogued device shaped like the owner's Razer Wolverine TE: device class FF/47/D0,
     // unconfigured, GIP on interface 0 at 0x81/0x01.
-    let device = usbDevice(vendorID: 0x1234, productID: 0x5678, route: .ioUSBHost)
+    let device = usbDevice(vendorID: 0x1234, productID: 0x5678, route: .rawUSB)
     let provider = SignatureDiscoveryProvider(
       device: device,
       passive: unconfiguredGIP(device),
@@ -43,7 +43,7 @@ struct USBSignatureDiscoveryTests {
   @Test
   func unconfiguredCataloguedRowWithoutPinsIsConfiguredByTheOpen() async {
     // 1532:0A43 names only the GIP family and does not set configuration before the claim.
-    let device = usbDevice(vendorID: 0x1532, productID: 0x0A43, route: .ioUSBHost)
+    let device = usbDevice(vendorID: 0x1532, productID: 0x0A43, route: .rawUSB)
     let provider = SignatureDiscoveryProvider(
       device: device,
       passive: unconfiguredGIP(device),
@@ -70,7 +70,7 @@ struct USBSignatureDiscoveryTests {
   @Test
   func rejectedCataloguedRowReportsItsResolvedInterfaces() async {
     // A catalogued model classifies on identity alone; its interfaces come from resolution.
-    let device = usbDevice(vendorID: 0x1532, productID: 0x0A43, route: .ioUSBHost)
+    let device = usbDevice(vendorID: 0x1532, productID: 0x0A43, route: .rawUSB)
     let wrongInterface = PhysicalDevice(
       serviceAddress: device.serviceAddress,
       vendorID: device.vendorID,
@@ -100,7 +100,7 @@ struct USBSignatureDiscoveryTests {
 
   @Test
   func configuredCataloguedRowWithoutPinsResolvesItsDescriptorEndpoints() async {
-    let device = usbDevice(vendorID: 0x1532, productID: 0x0A43, route: .ioUSBHost)
+    let device = usbDevice(vendorID: 0x1532, productID: 0x0A43, route: .rawUSB)
     let provider = SignatureDiscoveryProvider(
       device: device,
       passive: configuredRegistryOnly(device),
@@ -124,7 +124,7 @@ struct USBSignatureDiscoveryTests {
   @Test
   func configuredSignatureDeviceStillReadsItsDescriptorEndpoints() async {
     // After a first run the device stays configured and the registry publishes interface triples.
-    let device = usbDevice(vendorID: 0x1234, productID: 0x5678, route: .ioUSBHost)
+    let device = usbDevice(vendorID: 0x1234, productID: 0x5678, route: .rawUSB)
     let provider = SignatureDiscoveryProvider(
       device: device,
       passive: configuredRegistryOnly(device),
@@ -145,7 +145,7 @@ struct USBSignatureDiscoveryTests {
 
   @Test
   func descriptorContractViolationLeavesTheDeviceUnboundBeforeAnyWrite() async {
-    let device = usbDevice(vendorID: 0x1234, productID: 0x5678, route: .ioUSBHost)
+    let device = usbDevice(vendorID: 0x1234, productID: 0x5678, route: .rawUSB)
     let wrongInterface = PhysicalDevice(
       serviceAddress: device.serviceAddress,
       vendorID: device.vendorID,
@@ -171,7 +171,7 @@ struct USBSignatureDiscoveryTests {
         [.init(protocolID: .xboxGIP, reason: .interfaceContractMismatch)]
       ]
     )
-    #expect(unbound.map(\.accessBackend) == [.ioUSBHost])
+    #expect(unbound.map(\.accessBackend) == [.rawUSB])
     // The configured observation's interfaces are reported, not the passive device-class facts.
     #expect(unbound.first?.interfaces.map(\.interfaceSubclass) == [0x5D])
   }
@@ -195,7 +195,7 @@ struct USBSignatureDiscoveryTests {
     let device = usbDevice(
       vendorID: model.model.vendorID,
       productID: model.model.productID,
-      route: .ioUSBHost
+      route: .rawUSB
     )
     let provider = SignatureDiscoveryProvider(
       device: device,
@@ -213,7 +213,7 @@ struct USBSignatureDiscoveryTests {
 
   @Test
   func registryOnlyDescriptorFactsLeaveASignatureDeviceUnbound() async {
-    let device = usbDevice(vendorID: 0x1234, productID: 0x5678, route: .ioUSBHost)
+    let device = usbDevice(vendorID: 0x1234, productID: 0x5678, route: .rawUSB)
     let provider = SignatureDiscoveryProvider(
       device: device,
       passive: configuredRegistryOnly(device),
@@ -228,7 +228,7 @@ struct USBSignatureDiscoveryTests {
 
   @Test
   func uncataloguedDeviceWithoutASignatureIsReportedWithNoProtocolMatch() async {
-    let device = usbDevice(vendorID: 0x1234, productID: 0x5678, route: .ioUSBHost)
+    let device = usbDevice(vendorID: 0x1234, productID: 0x5678, route: .rawUSB)
     let plain = PhysicalDevice(
       serviceAddress: device.serviceAddress,
       vendorID: device.vendorID,
@@ -247,7 +247,7 @@ struct USBSignatureDiscoveryTests {
   @Test
   func driverKitRouteNeverReadsTheConfiguration() async {
     // 045E:02EA is a catalogued GIP row reached through the DEXT in production.
-    let device = usbDevice(vendorID: 0x045E, productID: 0x02EA, route: .usbDriverKit)
+    let device = usbDevice(vendorID: 0x045E, productID: 0x02EA, route: .usbExtension)
     let provider = SignatureDiscoveryProvider(
       device: device,
       passive: unconfiguredGIP(device),

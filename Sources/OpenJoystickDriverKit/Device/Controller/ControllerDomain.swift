@@ -192,11 +192,11 @@ public struct BatteryLevel: Codable, Hashable, Sendable {
 /// Link and power state of one logical controller.
 public struct ControllerConnectionState: Codable, Equatable, Sendable {
   public enum Charging: String, Codable, Sendable {
-    case unknown
-    case discharging
-    case charging
-    case full
-    case notChargeable
+    case unknown = "Unknown"
+    case discharging = "Discharging"
+    case charging = "Charging"
+    case full = "Full"
+    case notChargeable = "NotChargeable"
   }
 
   /// Power facts a driver decodes from its own reports.

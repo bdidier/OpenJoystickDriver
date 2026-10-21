@@ -4,8 +4,8 @@ import Testing
 @testable import OpenJoystickDriverKit
 
 struct USBPipelineConflictTests {
-  private let service = ControllerConnectionAddress.usbService(route: .ioUSBHost, serviceID: 1)
-  private let otherService = ControllerConnectionAddress.usbService(route: .ioUSBHost, serviceID: 2)
+  private let service = ControllerConnectionAddress.usbService(route: .rawUSB, serviceID: 1)
+  private let otherService = ControllerConnectionAddress.usbService(route: .rawUSB, serviceID: 2)
 
   private func key(
     serial: String?,
@@ -111,7 +111,7 @@ struct USBPipelineConflictTests {
   @Test
   func sameServiceAdmittedTwiceConflicts() async {
     let device = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 1,
       vendorID: 1_118,
       productID: 721,
@@ -142,7 +142,7 @@ struct USBPipelineConflictTests {
   @Test
   func sameSerialFromAnotherServiceConflicts() async {
     let first = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 1,
       vendorID: 1_118,
       productID: 721,
@@ -150,7 +150,7 @@ struct USBPipelineConflictTests {
       serialNumber: "serial"
     )
     let second = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 2,
       vendorID: 1_118,
       productID: 721,

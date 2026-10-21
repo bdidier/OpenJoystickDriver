@@ -8,14 +8,14 @@ public enum ControllerInputConnectionState: Sendable, Equatable {
 }
 
 public enum ControllerInputHealthState: String, Codable, Sendable {
-  case healthy
-  case stale
-  case waitingForNeutral
+  case healthy = "Healthy"
+  case stale = "Stale"
+  case waitingForNeutral = "WaitingForNeutral"
 }
 
 public enum ControllerInputHealthFailureReason: String, Codable, Sendable {
-  case missingReports
-  case freshnessNotAdvancing
+  case missingReports = "MissingReports"
+  case freshnessNotAdvancing = "FreshnessNotAdvancing"
 }
 
 public struct ControllerInputHealth: Codable, Sendable {

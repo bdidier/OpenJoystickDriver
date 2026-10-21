@@ -162,7 +162,7 @@ struct SameIdentityDongleTests {
 
   private static func pad(serviceID: UInt64, interfaceProtocol: UInt8, outEndpoint: UInt8) -> Pad {
     let device = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: serviceID,
       vendorID: vendorID,
       productID: productID,

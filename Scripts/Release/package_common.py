@@ -68,12 +68,12 @@ def source_identity(project_dir: Path) -> tuple[str, str]:
     )
     if status.returncode:
         die("Unable to inspect the source working tree")
-    return commit.stdout.strip(), "dirty" if status.stdout else "clean"
+    return commit.stdout.strip(), "Dirty" if status.stdout else "Clean"
 
 
 def require_clean_source(project_dir: Path, build_kind: str) -> str:
     commit, state = source_identity(project_dir)
-    if state != "clean":
+    if state != "Clean":
         die(f"{build_kind} builds require a clean source working tree")
     return commit
 

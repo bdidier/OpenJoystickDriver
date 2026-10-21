@@ -57,8 +57,9 @@ struct ControllerListCommand: AsyncParsableCommand {
           report.items.map {
             [
               $0.id, deviceIdentity(vendorID: $0.vendorID, productID: $0.productID), $0.connection,
-              $0.session, $0.name, $0.unit ?? "", $0.power?.battery.percentageText ?? "",
-              $0.power?.charging.rawValue ?? "",
+              CommandLineName.kebab($0.session), $0.name, $0.unit ?? "",
+              $0.power?.battery.percentageText ?? "",
+              $0.power.map { CommandLineName.kebab($0.charging.rawValue) } ?? "",
             ]
           }
         )
@@ -147,16 +148,16 @@ struct ControllerShowCommand: AsyncParsableCommand {
     rows += [
       ["identity", deviceIdentity(vendorID: detail.vendorID, productID: detail.productID)],
       ["name", detail.name], ["connection", detail.connection], ["protocol", detail.protocol],
-      ["session", detail.session],
+      ["session", CommandLineName.kebab(detail.session)],
     ]
     if let power = detail.power {
       rows.append([
-        "power", power.charging.rawValue, power.battery.percentageText ?? "",
+        "power", CommandLineName.kebab(power.charging.rawValue), power.battery.percentageText ?? "",
         power.wiredPower.map(String.init) ?? "",
       ])
     }
     rows += [
-      ["input-health", detail.inputHealth.state],
+      ["input-health", CommandLineName.kebab(detail.inputHealth.state)],
       ["ownership", detail.ownership.physical],
       [
         "server", CommandLineName.kebab(detail.ownership.server.rawValue),
@@ -208,10 +209,14 @@ struct ControllerShowCommand: AsyncParsableCommand {
       ),
       (CLILocalized.text("cli.controller.show.label.connection"), detail.connection),
       (CLILocalized.text("cli.controller.show.label.protocol"), detail.protocol),
-      (CLILocalized.text("cli.controller.show.label.session"), detail.session),
+      (
+        CLILocalized.text("cli.controller.show.label.session"),
+        CommandLineName.kebab(detail.session)
+      ),
     ]
     if let power = detail.power {
-      let charging = power.charging == .unknown ? "" : " (\(power.charging.rawValue))"
+      let charging =
+        power.charging == .unknown ? "" : " (\(CommandLineName.kebab(power.charging.rawValue)))"
       rows.append(
         (
           CLILocalized.text("cli.controller.show.label.battery"),
@@ -222,7 +227,8 @@ struct ControllerShowCommand: AsyncParsableCommand {
     rows += [
       (
         CLILocalized.text("cli.controller.show.label.input"),
-        detail.inputHealth.state + (detail.inputHealth.failureReason.map { " (\($0))" } ?? "")
+        CommandLineName.kebab(detail.inputHealth.state)
+          + (detail.inputHealth.failureReason.map { " (\(CommandLineName.kebab($0)))" } ?? "")
       ),
       (
         CLILocalized.text("cli.controller.show.label.ownership"),

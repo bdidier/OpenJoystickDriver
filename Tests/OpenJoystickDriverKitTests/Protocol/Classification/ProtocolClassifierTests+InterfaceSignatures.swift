@@ -17,7 +17,7 @@ extension ProtocolClassifierTests {
     signature: (UInt8, UInt8, UInt8, PhysicalProtocolID, PhysicalProtocolVariantID)
   ) throws {
     let interface = usbInterface(0, signature.0, signature.1, signature.2)
-    let binding = try bound(classify(unknownDevice([interface]), backend: .ioUSBHost))
+    let binding = try bound(classify(unknownDevice([interface]), backend: .rawUSB))
     #expect(binding.protocolID == signature.3)
     #expect(binding.variant == signature.4)
     #expect(binding.interfaceNumber == 0)
@@ -29,7 +29,7 @@ extension ProtocolClassifierTests {
   @Test
   func xusbSignatureDoesNotRequireInterfaceZero() throws {
     let binding = try bound(
-      classify(unknownDevice([usbInterface(2, 0xFF, 0x5D, 0x81)]), backend: .ioUSBHost)
+      classify(unknownDevice([usbInterface(2, 0xFF, 0x5D, 0x81)]), backend: .rawUSB)
     )
     #expect(binding.protocolID == .xboxXUSB)
     #expect(binding.interfaceNumber == 2)
@@ -39,11 +39,11 @@ extension ProtocolClassifierTests {
   func gipBindsOnlyItsDataInterface() throws {
     // Xbox One controllers repeat FF/47/D0 on their audio and bulk interfaces.
     let audio = usbInterface(1, 0xFF, 0x47, 0xD0, endpoints: [])
-    let binding = try bound(classify(unknownDevice([audio, gipInterface()]), backend: .ioUSBHost))
+    let binding = try bound(classify(unknownDevice([audio, gipInterface()]), backend: .rawUSB))
     #expect(binding.interfaceNumber == 0)
 
     #expect(
-      classify(unknownDevice([usbInterface(1, 0xFF, 0x47, 0xD0)]), backend: .ioUSBHost)
+      classify(unknownDevice([usbInterface(1, 0xFF, 0x47, 0xD0)]), backend: .rawUSB)
         == rejection(.interfaceContractMismatch, .xboxGIP)
     )
   }
@@ -59,7 +59,7 @@ extension ProtocolClassifierTests {
       #expect(
         classify(
           unknownDevice([usbInterface(0, 0xFF, 0x5D, 0x01, endpoints: endpoints)]),
-          backend: .ioUSBHost
+          backend: .rawUSB
         ) == rejection(.interfaceContractMismatch, .xboxXUSB)
       )
     }
@@ -70,11 +70,11 @@ extension ProtocolClassifierTests {
     let xusb = usbInterface(0, 0xFF, 0x5D, 0x01, endpoints: [endpoint(0x81, .in)])
     let hid = hidInterface(host: .usb, descriptor: gamepad)
     #expect(
-      classify(unknownDevice([xusb, hid]), backend: .ioHID)
+      classify(unknownDevice([xusb, hid]), backend: .hid)
         == rejection(.unsupportedTransportVariant, .xboxXUSB)
     )
     #expect(
-      classify(unknownDevice([xusb, hid]), backend: .ioUSBHost)
+      classify(unknownDevice([xusb, hid]), backend: .rawUSB)
         == rejection(.interfaceContractMismatch, .xboxXUSB)
     )
   }
@@ -85,7 +85,7 @@ extension ProtocolClassifierTests {
     #expect(
       classify(
         unknownDevice([xusb, hidInterface(host: .usb, descriptor: gamepad)]),
-        backend: .ioHID
+        backend: .hid
       ) == rejection(.unsupportedTransportVariant, .xboxXUSB)
     )
   }
@@ -94,7 +94,7 @@ extension ProtocolClassifierTests {
   func twoSignatureFamiliesAreAmbiguous() {
     let result = classify(
       unknownDevice([usbInterface(0, 0xFF, 0x47, 0xD0), usbInterface(1, 0xFF, 0x5D, 0x01)]),
-      backend: .ioUSBHost
+      backend: .rawUSB
     )
     #expect(result == .conflict(.ambiguousProtocolMatch, candidates: [.xboxGIP, .xboxXUSB]))
   }
@@ -103,7 +103,7 @@ extension ProtocolClassifierTests {
   func signatureOrderFollowsInterfaceNumbersNotArrayOrder() {
     let result = classify(
       unknownDevice([usbInterface(1, 0xFF, 0x5D, 0x01), usbInterface(0, 0xFF, 0x47, 0xD0)]),
-      backend: .ioUSBHost
+      backend: .rawUSB
     )
     #expect(result == .conflict(.ambiguousProtocolMatch, candidates: [.xboxGIP, .xboxXUSB]))
   }
@@ -111,16 +111,16 @@ extension ProtocolClassifierTests {
   @Test
   func unknownVendorInterfaceOnRawUSBHasNoMatch() {
     #expect(
-      classify(unknownDevice([usbInterface(0, 0xFF, 0x5D, 0x02)]), backend: .ioUSBHost)
+      classify(unknownDevice([usbInterface(0, 0xFF, 0x5D, 0x02)]), backend: .rawUSB)
         == .unsupported(.noProtocolMatch)
     )
-    #expect(classify(unknownDevice([]), backend: .usbDriverKit) == .unsupported(.noProtocolMatch))
+    #expect(classify(unknownDevice([]), backend: .usbExtension) == .unsupported(.noProtocolMatch))
   }
 
   @Test
   func hidInterfaceOnRawUSBIsNeverGenericHID() {
     #expect(
-      classify(unknownDevice([hidInterface(host: .usb, descriptor: gamepad)]), backend: .ioUSBHost)
+      classify(unknownDevice([hidInterface(host: .usb, descriptor: gamepad)]), backend: .rawUSB)
         == .unsupported(.noProtocolMatch)
     )
   }
@@ -132,12 +132,12 @@ extension ProtocolClassifierTests {
     let binding = try bound(
       classify(
         unknownDevice([hidInterface(host: .bluetoothLE, descriptor: gamepad)]),
-        backend: .ioHID
+        backend: .hid
       )
     )
     #expect(binding.protocolID == .hidDescriptor)
     #expect(binding.variant == nil)
-    #expect(binding.accessBackend == .ioHID)
+    #expect(binding.accessBackend == .hid)
     #expect(binding.rule == .hidDescriptor)
     #expect(binding.matchedPredicates == [.hidDescriptorContract])
     #expect(binding.record == nil)
@@ -150,7 +150,7 @@ extension ProtocolClassifierTests {
       [hidInterface(host: .usb, descriptor: vendorOnly)], [],
     ] {
       #expect(
-        classify(unknownDevice(interfaces), backend: .ioHID)
+        classify(unknownDevice(interfaces), backend: .hid)
           == .unsupported(.descriptorContractMismatch)
       )
     }
@@ -180,10 +180,10 @@ extension ProtocolClassifierTests {
     }
     for (vendorID, productID) in [(0x054C, 0x09CC), (0x1234, 0x5678)] as [(UInt16, UInt16)] {
       let unnumbered = try bound(
-        classify(hidDevice(vendorID, productID, interface: nil), backend: .ioHID)
+        classify(hidDevice(vendorID, productID, interface: nil), backend: .hid)
       )
       let numbered = try bound(
-        classify(hidDevice(vendorID, productID, interface: 1), backend: .ioHID)
+        classify(hidDevice(vendorID, productID, interface: 1), backend: .hid)
       )
       #expect(numbered.interfaceNumber == 1)
       #expect(numbered.protocolID == unnumbered.protocolID)

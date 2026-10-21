@@ -221,7 +221,7 @@ struct ControllerCommandTests {
     let result = await service.run(["controller", "suspend", token("pad-1"), "--json"])
     #expect(result.code == 0, "\(result.standardError)")
     let json = try result.json()
-    #expect(json["session"] as? String == "suspended")
+    #expect(json["session"] as? String == "Suspended")
     #expect(json["changed"] as? Bool == false)
   }
 
@@ -312,7 +312,7 @@ struct ControllerCommandTests {
     #expect(json.code == 0, "\(json.standardError)")
     let controllers = try #require(try json.json()["items"] as? [[String: Any]])
     let power = controllers.map { $0["power"] as? [String: Any] }
-    #expect(power[0]?["charging"] as? String == "charging")
+    #expect(power[0]?["charging"] as? String == "Charging")
     #expect((power[0]?["battery"] as? [String: Any])?["percentage"] as? [Int] == [73, 73])
     #expect(power[0]?["wiredPower"] as? Bool == true)
     #expect((power[1]?["battery"] as? [String: Any])?["percentage"] as? [Int] == [0, 9])
@@ -346,7 +346,7 @@ struct ControllerCommandTests {
     #expect(json.code == 0, "\(json.standardError)")
     let controller = try json.json()
     let power = try #require(controller["power"] as? [String: Any])
-    #expect(power["charging"] as? String == "charging")
+    #expect(power["charging"] as? String == "Charging")
     #expect(plain.standardOutput.contains("\npower\tdischarging\t0-9%\t\n"))
     #expect(Self.rows(human, endingIn: "73% (charging)").count == 1)
     // An unknown level adds one row that reads `none`, next to the rows that already do.
@@ -558,9 +558,9 @@ struct ControllerCommandTests {
     let resume = await service.run(["controller", "resume", token("pad-1"), "--json"])
     let disconnect = await service.run(["controller", "disconnect", token("pad-1"), "--json"])
     #expect(resume.code == 0, "\(resume.standardError)")
-    #expect(try resume.json()["session"] as? String == "active")
+    #expect(try resume.json()["session"] as? String == "Active")
     #expect(disconnect.code == 0, "\(disconnect.standardError)")
-    #expect(try disconnect.json()["session"] as? String == "disconnected")
+    #expect(try disconnect.json()["session"] as? String == "Disconnected")
   }
 
   @Test
@@ -580,7 +580,7 @@ struct ControllerCommandTests {
     #expect(
       result.standardOutput
         == #"{"apiVersion":"openjoystickdriver/v1alpha1","captureTime":"1970-01-01T00:00:01.500Z","#
-        + #""direction":"rx","hex":"01 02","kind":"USBPacket","length":2}"# + "\n"
+        + #""direction":"rx","hex":"01 02","kind":"RawReport","length":2}"# + "\n"
     )
   }
 

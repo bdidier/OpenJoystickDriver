@@ -90,7 +90,7 @@ def main(argv: list[str]) -> int:
         )
     except CommandFailure as error:
         return error.returncode
-    tree_state = "clean"
+    tree_state = "Clean"
     safe = safe_version(short_version)
     artifact_dir = build_dir / "tester-artifacts"
     artifact = (

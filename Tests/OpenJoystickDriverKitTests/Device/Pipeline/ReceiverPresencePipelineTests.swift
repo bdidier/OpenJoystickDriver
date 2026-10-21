@@ -11,7 +11,7 @@ struct ReceiverPresencePipelineTests {
 
   let identifier = LogicalControllerID(vendorID: 0x045E, productID: 0x0719, locationID: 7)
   let device = USBTransportDevice(
-    route: .ioUSBHost,
+    route: .rawUSB,
     serviceID: 1,
     vendorID: 0x045E,
     productID: 0x0719,
@@ -86,7 +86,7 @@ struct ReceiverPresencePipelineTests {
     let binding = ProtocolBinding(
       protocolID: .xboxXUSB,
       variant: .receiver,
-      accessBackend: .ioUSBHost,
+      accessBackend: .rawUSB,
       interfaceNumber: 0,
       rule: .catalogRecord,
       matchedPredicates: [],
@@ -95,7 +95,7 @@ struct ReceiverPresencePipelineTests {
     let usbInterface = PhysicalInterfaceSignature(hostTransport: .usb)
     let empty = ControllerConnectionState(
       transport: .proprietaryRadioReceiver,
-      backend: .ioUSBHost,
+      backend: .rawUSB,
       isConnected: false,
       power: .unknown
     )

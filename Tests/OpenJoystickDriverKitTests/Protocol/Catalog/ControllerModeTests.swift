@@ -97,7 +97,7 @@ struct ControllerModeTests {
     await ControllerModeSelector.select(
       from: profile,
       model: model,
-      backend: .ioHID,
+      backend: .hid,
       reader: reader
     ) { line in log.withLock { $0.append(line) } }
   }
@@ -261,13 +261,13 @@ struct ControllerModeTests {
     let selection = await ControllerModeSelector.select(
       from: profile,
       model: Self.model,
-      backend: .coreBluetoothGATT,
+      backend: .gatt,
       reader: reader
     ) { line in log.withLock { $0.append(line) } }
     #expect(selection == .noProbeRoute)
     #expect(selection.modeID == nil)
     #expect(reader.readReports.isEmpty)
-    #expect(log.withLock { $0 }.first?.contains("coreBluetoothGATT") == true)
+    #expect(log.withLock { $0 }.first?.contains("GATT") == true)
   }
 
   @Test
@@ -367,14 +367,14 @@ struct ControllerModeTests {
     let answering = await ControllerModeSelector.select(
       from: profile,
       model: ds3,
-      backend: .ioHID,
+      backend: .hid,
       reader: ScriptedProbeReader([0xEF: .success(Data(repeating: 0, count: 49))])
     ) { _ in }
     #expect(answering == .matched(mode.id))
     let stalling = await ControllerModeSelector.select(
       from: profile,
       model: ds3,
-      backend: .ioHID,
+      backend: .hid,
       reader: ScriptedProbeReader([0xEF: stall])
     ) { _ in }
     #expect(stalling == .noModeMatched)

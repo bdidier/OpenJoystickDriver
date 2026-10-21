@@ -3,7 +3,7 @@ from __future__ import annotations
 import copy
 import json
 import unittest
-from typing import Any
+from typing import Any, cast
 
 from Scripts.Quality import validate_schemas
 
@@ -301,7 +301,7 @@ class VocabularyNameTests(unittest.TestCase):
     def test_the_output_schema_refuses_the_spelling_of_a_renamed_behavior_and_surface(
         self,
     ) -> None:
-        defs = self.documents["cli-output.schema.json"]["$defs"]
+        defs = cast(dict[str, Any], self.documents["cli-output.schema.json"]["$defs"])
         behavior = defs["sharedBindingSummary"]["properties"]["behavior"]
         surface = defs["sharedControllerState"]["properties"]["touch"]["items"][
             "properties"

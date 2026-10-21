@@ -71,7 +71,7 @@ struct USBDriverKitExtensionConfigurationTests {
     #expect(
       device
         == USBTransportDevice(
-          route: .usbDriverKit,
+          route: .usbExtension,
           serviceID: 42,
           vendorID: 0x3537,
           productID: 0x1010,
@@ -93,8 +93,8 @@ struct USBDriverKitExtensionConfigurationTests {
       observation.interfaces == [
         PhysicalInterfaceSignature(
           hostTransport: .usb,
-          accessBackend: .usbDriverKit,
-          usbRoute: .usbDriverKit
+          accessBackend: .usbExtension,
+          usbRoute: .usbExtension
         )
       ]
     )
@@ -122,7 +122,7 @@ struct USBDriverKitExtensionConfigurationTests {
       observation
         == PhysicalDevice(
           serviceAddress: ControllerConnectionAddress.usbService(
-            route: .usbDriverKit,
+            route: .usbExtension,
             serviceID: 42
           ),
           vendorID: 0x3537,
@@ -131,8 +131,8 @@ struct USBDriverKitExtensionConfigurationTests {
           interfaces: [
             PhysicalInterfaceSignature(
               hostTransport: .usb,
-              accessBackend: .usbDriverKit,
-              usbRoute: .usbDriverKit
+              accessBackend: .usbExtension,
+              usbRoute: .usbExtension
             )
           ]
         )

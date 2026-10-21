@@ -55,7 +55,7 @@ struct DriverLifecycleCharacterizationTests {
       productID: subject.model.productID,
       interfaces: record.usesRawUSB ? nil : [gamepadHIDInterface(host: host)]
     )
-    let backend: DeviceAccessBackend = record.usesRawUSB ? .ioUSBHost : .ioHID
+    let backend: DeviceAccessBackend = record.usesRawUSB ? .rawUSB : .hid
     guard case .bound(let binding) = Self.registry.classify(device, backend: backend) else {
       return nil
     }
@@ -185,7 +185,7 @@ struct DriverLifecycleCharacterizationTests {
       productID: subject.model.productID,
       interfaces: record.usesRawUSB ? nil : [gamepadHIDInterface(host: host)]
     )
-    let backend: DeviceAccessBackend = record.usesRawUSB ? .ioUSBHost : .ioHID
+    let backend: DeviceAccessBackend = record.usesRawUSB ? .rawUSB : .hid
     guard case .bound(let binding) = Self.registry.classify(device, backend: backend) else {
       return []
     }

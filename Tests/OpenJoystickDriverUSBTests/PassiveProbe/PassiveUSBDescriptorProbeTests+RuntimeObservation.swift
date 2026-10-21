@@ -9,7 +9,7 @@ extension PassiveUSBDescriptorProbeTests {
   @Test
   func runtimeObservationSelectsOnlyTheExactRegistryEntry() throws {
     let device = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 12,
       vendorID: 0x3537,
       productID: 0x1010,
@@ -44,7 +44,7 @@ extension PassiveUSBDescriptorProbeTests {
     registryEntryID: UInt64?
   ) throws {
     let device = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 12,
       vendorID: 0x3537,
       productID: 0x1010,

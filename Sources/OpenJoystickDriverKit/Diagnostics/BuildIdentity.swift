@@ -1,10 +1,15 @@
 import Foundation
 
+/// A build identity that the bundle's Info.plist cannot describe.
+public enum BuildIdentityError: Error, Equatable {
+  case invalidSourceState(String)
+}
+
 public struct BuildIdentity: Codable, Equatable, Sendable {
   public enum SourceState: String, Codable, Sendable {
-    case clean
-    case dirty
-    case unknown
+    case clean = "Clean"
+    case dirty = "Dirty"
+    case unknown = "Unknown"
   }
 
   public let semanticVersion: String
@@ -29,11 +34,27 @@ public struct BuildIdentity: Codable, Equatable, Sendable {
   public static func current(executableURL: URL? = Bundle.main.executableURL) -> Self {
     let bundle = applicationBundleURL(executableURL: executableURL).flatMap(Bundle.init(url:))
     let info = (bundle ?? .main).infoDictionary ?? [:]
-    return Self(
+    do { return try Self(info: info) } catch { preconditionFailure("\(error)") }
+  }
+
+  /// The identity an Info.plist dictionary describes. A missing `OJDSourceState` is `Unknown`, as
+  /// for an executable outside an app bundle; a present value must be a `SourceState`.
+  package init(info: [String: Any]) throws {
+    let state: SourceState
+    switch info["OJDSourceState"] {
+    case nil: state = .unknown
+    case let name as String:
+      guard let parsed = SourceState(rawValue: name) else {
+        throw BuildIdentityError.invalidSourceState(name)
+      }
+      state = parsed
+    case let other?: throw BuildIdentityError.invalidSourceState("\(other)")
+    }
+    self.init(
       semanticVersion: info["CFBundleShortVersionString"] as? String ?? "unknown",
       appBundleVersion: info["CFBundleVersion"] as? String ?? "unknown",
       sourceCommit: info["OJDSourceCommit"] as? String ?? "unknown",
-      sourceState: (info["OJDSourceState"] as? String).flatMap(SourceState.init) ?? .unknown
+      sourceState: state
     )
   }
 

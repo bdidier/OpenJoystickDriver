@@ -8,7 +8,7 @@ import Testing
 extension TransportFacadeTests {
   @Test
   func accessibleThirdPartyDeviceUsesDirectIOUSBHost() {
-    let direct = device(route: .ioUSBHost, serviceID: 1, vendorID: 0x054C, productID: 0x0268)
+    let direct = device(route: .rawUSB, serviceID: 1, vendorID: 0x054C, productID: 0x0268)
 
     #expect(
       OpenJoystickDriverUSBTransportProvider.selectDevices(
@@ -22,7 +22,7 @@ extension TransportFacadeTests {
 
   @Test
   func entitlementRestrictedModelNeverFallsBackToDirectIOUSBHost() {
-    let direct = device(route: .ioUSBHost, serviceID: 1, vendorID: 0x045E, productID: 0x0B12)
+    let direct = device(route: .rawUSB, serviceID: 1, vendorID: 0x045E, productID: 0x0B12)
 
     #expect(
       OpenJoystickDriverUSBTransportProvider.selectDevices(
@@ -37,21 +37,21 @@ extension TransportFacadeTests {
   @Test
   func observedDriverKitOwnerWinsOnlyForTheSamePhysicalDevice() {
     let directClaimed = device(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 1,
       vendorID: 0x3537,
       productID: 0x1010,
       locationID: 7
     )
     let driverKit = device(
-      route: .usbDriverKit,
+      route: .usbExtension,
       serviceID: 2,
       vendorID: 0x3537,
       productID: 0x1010,
       locationID: 7
     )
     let anotherDirect = device(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 3,
       vendorID: 0x3537,
       productID: 0x1010,
@@ -70,7 +70,7 @@ extension TransportFacadeTests {
 
   @Test
   func oneDiscoveryBackendCanOperateWhenTheOtherIsUnavailable() async throws {
-    let directDevice = device(route: .ioUSBHost, serviceID: 1)
+    let directDevice = device(route: .rawUSB, serviceID: 1)
     let direct = FakeUSBTransportProvider(devicesResult: .success([directDevice]))
     let unavailable = FakeUSBTransportProvider(devicesResult: .failure(.disconnected))
     let provider = OpenJoystickDriverUSBTransportProvider(
@@ -96,7 +96,7 @@ extension TransportFacadeTests {
 
     do {
       _ = try await provider.open(
-        device(route: .ioUSBHost, serviceID: 1),
+        device(route: .rawUSB, serviceID: 1),
         options: USBTransportOpenOptions(interfaceNumber: 2)
       )
       Issue.record("Expected the selected IOUSBHost backend to fail")
@@ -121,7 +121,7 @@ extension TransportFacadeTests {
     #expect(
       devices == [
         device(
-          route: .ioUSBHost,
+          route: .rawUSB,
           serviceID: 10,
           vendorID: 0x1234,
           productID: 0x5678,

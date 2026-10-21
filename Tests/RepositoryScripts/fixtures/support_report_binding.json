@@ -9,7 +9,7 @@
     "controllers": [
       {
         "binding": {
-          "accessBackend": "ioUSBHost",
+          "accessBackend": "RawUSB",
           "interfaces": [
             {
               "alternateSetting": 0,
@@ -19,25 +19,25 @@
               "interfaceSubclass": 71
             }
           ],
-          "matchedPredicates": ["interfaceSignature"],
-          "outcome": "bound",
+          "matchedPredicates": ["InterfaceSignature"],
+          "outcome": "Bound",
           "rejectedCandidates": [],
-          "rule": "interfaceSignature"
+          "rule": "InterfaceSignature"
         },
         "connection": "USB",
         "connectionState": {
-          "backend": "ioUSBHost",
+          "backend": "RawUSB",
           "isConnected": true,
           "power": {
             "battery": {},
-            "charging": "unknown"
+            "charging": "Unknown"
           },
-          "transport": "usb"
+          "transport": "USB"
         },
         "inputEndpoint": 129,
         "inputHealth": {
           "recoveryCount": 0,
-          "state": "healthy"
+          "state": "Healthy"
         },
         "name": "Controller 1234:5678",
         "needsSetConfiguration": true,
@@ -59,7 +59,7 @@
         "productID": 22136,
         "protocolBinding": "XboxGIP:USB",
         "serialNumberPresent": false,
-        "sessionState": "active",
+        "sessionState": "Active",
         "vendorID": 4660
       }
     ],
@@ -72,23 +72,23 @@
             "stages": [
               {
                 "nanoseconds": 100,
-                "stage": "read"
+                "stage": "Read"
               },
               {
                 "nanoseconds": 150,
-                "stage": "parse"
+                "stage": "Parse"
               },
               {
                 "nanoseconds": 200,
-                "stage": "dispatch"
+                "stage": "Dispatch"
               },
               {
                 "nanoseconds": 260,
-                "stage": "delivery-virtual-device"
+                "stage": "DeliveryVirtualDevice"
               },
               {
                 "nanoseconds": 900,
-                "stage": "delivery-endpoint"
+                "stage": "DeliveryEndpoint"
               }
             ]
           }
@@ -121,7 +121,7 @@
         "appBundleVersion": "1",
         "semanticVersion": "0.5.0",
         "sourceCommit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        "sourceState": "clean"
+        "sourceState": "Clean"
       },
       "osName": "macOS",
       "osVersion": "26.0.0"
@@ -129,20 +129,20 @@
     "unboundDevices": [
       {
         "binding": {
-          "accessBackend": "ioHID",
+          "accessBackend": "HID",
           "interfaces": [
             {
               "descriptorFingerprint": "0f776a810f493f1f40fafdf98f2ce3a57a132ba1007e685d45167a97df075af3",
-              "hostTransport": "usb"
+              "hostTransport": "USB"
             }
           ],
           "matchedPredicates": [],
-          "outcome": "unsupported",
-          "reason": "ambiguousProtocolMatch",
+          "outcome": "Unsupported",
+          "reason": "AmbiguousProtocolMatch",
           "rejectedCandidates": [
             {
               "protocolID": "HIDDescriptor",
-              "reason": "ambiguousProtocolMatch"
+              "reason": "AmbiguousProtocolMatch"
             }
           ]
         },

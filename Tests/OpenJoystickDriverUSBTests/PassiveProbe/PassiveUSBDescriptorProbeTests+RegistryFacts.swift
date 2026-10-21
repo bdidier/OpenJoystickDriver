@@ -82,7 +82,7 @@ extension PassiveUSBDescriptorProbeTests {
     #expect(result.observedUSBFacts.deviceRelease == 0x0210)
 
     let device = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 12,
       vendorID: tuple.vendorID,
       productID: tuple.productID,
@@ -192,7 +192,7 @@ extension PassiveUSBDescriptorProbeTests {
     #expect(interfaces.map { $0.endpoints.map(\.address) } == [[0x81], [0x02]])
 
     let device = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 12,
       vendorID: 0x3537,
       productID: 0x1010,
@@ -203,7 +203,7 @@ extension PassiveUSBDescriptorProbeTests {
     #expect(signatures.map(\.interfaceNumber) == [0, 0])
     #expect(signatures.map(\.alternateSetting) == [0, 1])
     #expect(signatures.compactMap { $0.endpoints?.first?.address } == [0x81, 0x02])
-    #expect(signatures.allSatisfy { $0.hostTransport == .usb && $0.usbRoute == .ioUSBHost })
+    #expect(signatures.allSatisfy { $0.hostTransport == .usb && $0.usbRoute == .rawUSB })
     #expect(signatures.allSatisfy { $0.physicalTransport == nil && $0.accessBackend == nil })
     #expect(physicalDevice.serviceAddress == device.serviceAddress)
     #expect(physicalDevice.physicalLocationIdentifier == 42)

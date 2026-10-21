@@ -19,7 +19,7 @@ struct BuildIdentityTests {
 
     #expect(object["semanticVersion"] as? String == "0.5.0-beta.4")
     #expect(object["appBundleVersion"] as? String == "1.4.89")
-    #expect(object["sourceState"] as? String == "clean")
+    #expect(object["sourceState"] as? String == "Clean")
   }
 
   @Test
@@ -75,7 +75,7 @@ struct BuildIdentityTests {
       "CFBundleShortVersionString": "0.5.0-beta.5",
       "CFBundleVersion": "1.5.1",
       "OJDSourceCommit": String(repeating: "c", count: 40),
-      "OJDSourceState": "clean",
+      "OJDSourceState": "Clean",
     ]
     try PropertyListSerialization.data(fromPropertyList: info, format: .xml, options: 0)
       .write(to: contents.appendingPathComponent("Info.plist"))
@@ -91,5 +91,19 @@ struct BuildIdentityTests {
     #expect(identity.semanticVersion == "0.5.0-beta.5")
     #expect(identity.appBundleVersion == "1.5.1")
     #expect(identity.sourceState == .clean)
+  }
+
+  @Test
+  func aMissingSourceStateIsUnknownAndAnInvalidOneIsRefused() throws {
+    #expect(try BuildIdentity(info: [:]).sourceState == .unknown)
+    #expect(try BuildIdentity(info: ["OJDSourceState": "Dirty"]).sourceState == .dirty)
+    for name in ["clean", "dirty", "unknown", "notAWord"] {
+      #expect(throws: BuildIdentityError.invalidSourceState(name)) {
+        try BuildIdentity(info: ["OJDSourceState": name])
+      }
+    }
+    #expect(throws: BuildIdentityError.invalidSourceState("1")) {
+      try BuildIdentity(info: ["OJDSourceState": 1])
+    }
   }
 }

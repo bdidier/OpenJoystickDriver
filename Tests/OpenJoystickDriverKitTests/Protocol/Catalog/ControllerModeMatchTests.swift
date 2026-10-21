@@ -100,7 +100,7 @@ struct ControllerModeMatchTests {
   private static func select(
     _ profile: DeviceRuntimeProfile,
     _ device: PhysicalDevice,
-    backend: DeviceAccessBackend = .ioHID,
+    backend: DeviceAccessBackend = .hid,
     reader: CountingProbeReader = CountingProbeReader()
   ) async -> ControllerModeSelection {
     await ControllerModeSelector.select(
@@ -377,14 +377,14 @@ struct ControllerModeMatchTests {
     let direct = await Self.select(
       profile,
       Self.device(link: .bluetoothClassic),
-      backend: .ioUSBHost,
+      backend: .rawUSB,
       reader: reader
     )
     #expect(direct == .matched("bluetooth"))
     let probed = await Self.select(
       profile,
       Self.device(link: .usb),
-      backend: .ioUSBHost,
+      backend: .rawUSB,
       reader: reader
     )
     #expect(probed == .noProbeRoute)
@@ -448,7 +448,7 @@ struct ControllerModeMatchTests {
     let selected = await ControllerModeSelector.select(
       from: profile,
       model: ds3,
-      backend: .ioHID,
+      backend: .hid,
       reader: CountingProbeReader(),
       device: bluetooth
     ) { _ in }
@@ -462,7 +462,7 @@ struct ControllerModeMatchTests {
     let wired = await ControllerModeSelector.select(
       from: profile,
       model: ds3,
-      backend: .ioHID,
+      backend: .hid,
       reader: CountingProbeReader(),
       device: usb
     ) { _ in }
@@ -496,7 +496,7 @@ struct ControllerModeMatchTests {
       guard
         case .bound(let binding) = ProtocolClassifier.classify(
           device,
-          backend: .ioHID,
+          backend: .hid,
           catalog: catalog,
           modeID: modeID
         )

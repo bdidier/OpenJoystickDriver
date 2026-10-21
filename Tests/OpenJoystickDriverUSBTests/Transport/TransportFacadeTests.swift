@@ -13,7 +13,7 @@ struct TransportFacadeTests {
     _ = provider
     #expect(
       OpenJoystickDriverUSBTransportProvider.selectDevices(
-        direct: [device(route: .ioUSBHost, serviceID: 1, vendorID: 0xFFFF, productID: 1)],
+        direct: [device(route: .rawUSB, serviceID: 1, vendorID: 0xFFFF, productID: 1)],
         driverKit: [],
         supportedRawUSBModels: [],
         requiredDriverKitModels: []
@@ -28,7 +28,7 @@ struct TransportFacadeTests {
 
     #expect(
       await provider.resolveTransport(
-        for: device(route: .ioUSBHost, serviceID: 1),
+        for: device(route: .rawUSB, serviceID: 1),
         configured: configured
       ) == USBTransportResolution(profile: configured)
     )
@@ -54,7 +54,7 @@ struct TransportFacadeTests {
 
     #expect(
       OpenJoystickDriverUSBTransportProvider.resolveTransportProfile(
-        route: .usbDriverKit,
+        route: .usbExtension,
         configured: configured,
         observation: observation
       ) == configured
@@ -81,7 +81,7 @@ struct TransportFacadeTests {
     )
 
     let resolved = OpenJoystickDriverUSBTransportProvider.resolveTransportProfile(
-      route: .ioUSBHost,
+      route: .rawUSB,
       configured: configured,
       observation: observation
     )
@@ -95,7 +95,7 @@ struct TransportFacadeTests {
   @Test
   func driverKitResolutionReturnsLimitedObservationWithoutDirectProbe() async throws {
     let device = device(
-      route: .usbDriverKit,
+      route: .usbExtension,
       serviceID: 42,
       vendorID: 0x3537,
       productID: 0x1010,
@@ -114,8 +114,8 @@ struct TransportFacadeTests {
       interfaces: [
         PhysicalInterfaceSignature(
           hostTransport: .usb,
-          accessBackend: .usbDriverKit,
-          usbRoute: .usbDriverKit
+          accessBackend: .usbExtension,
+          usbRoute: .usbExtension
         )
       ]
     )
@@ -144,16 +144,16 @@ struct TransportFacadeTests {
 
   @Test
   func driverKitObservationRejectsDifferentServiceIdentity() async throws {
-    let device = device(route: .usbDriverKit, serviceID: 42)
+    let device = device(route: .usbExtension, serviceID: 42)
     let mismatchedObservation = PhysicalDevice(
-      serviceAddress: ControllerConnectionAddress.usbService(route: .usbDriverKit, serviceID: 43),
+      serviceAddress: ControllerConnectionAddress.usbService(route: .usbExtension, serviceID: 43),
       vendorID: device.vendorID,
       productID: device.productID,
       interfaces: [
         PhysicalInterfaceSignature(
           hostTransport: .usb,
-          accessBackend: .usbDriverKit,
-          usbRoute: .usbDriverKit
+          accessBackend: .usbExtension,
+          usbRoute: .usbExtension
         )
       ]
     )

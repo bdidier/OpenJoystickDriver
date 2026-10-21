@@ -75,7 +75,7 @@ def main(argv: list[str]) -> int:
     env["OJD_BUNDLE_SHORT_VERSION"] = version
     env["OJD_BUNDLE_VERSION"] = current_commit_bundle_version(PROJECT_DIR)
     env["OJD_SOURCE_COMMIT"] = commit
-    env["OJD_SOURCE_STATE"] = "clean"
+    env["OJD_SOURCE_STATE"] = "Clean"
     artifact_dir.mkdir(parents=True, exist_ok=True)
 
     try:
@@ -109,7 +109,7 @@ def main(argv: list[str]) -> int:
             env["OJD_BUNDLE_VERSION"],
             version,
             commit,
-            "clean",
+            "Clean",
         )
         print("\n=== Verify signed app before notarization ===")
         run(

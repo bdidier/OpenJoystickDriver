@@ -11,7 +11,7 @@ struct ProtocolDriverRegistryTests {
     #expect(!registry.rawUSBModels.isEmpty)
     for model in registry.rawUSBModels {
       let record = try #require(registry.record(for: model))
-      for backend in [DeviceAccessBackend.ioUSBHost, .usbDriverKit] {
+      for backend in [DeviceAccessBackend.rawUSB, .usbExtension] {
         let binding = try bound(identityOnly(model), backend: backend)
         #expect(binding.protocolID == record.physicalProtocolID, "\(model)")
         let driver = try registry.makeDriver(
@@ -30,11 +30,11 @@ struct ProtocolDriverRegistryTests {
       let full = PhysicalDevice(
         vendorID: model.vendorID,
         productID: model.productID,
-        interfaces: [PhysicalInterfaceSignature(accessBackend: .ioUSBHost)]
+        interfaces: [PhysicalInterfaceSignature(accessBackend: .rawUSB)]
       )
       #expect(
-        registry.classify(identityOnly(model), backend: .ioUSBHost)
-          == registry.classify(full, backend: .ioUSBHost),
+        registry.classify(identityOnly(model), backend: .rawUSB)
+          == registry.classify(full, backend: .rawUSB),
         "\(model)"
       )
     }
@@ -71,7 +71,7 @@ struct ProtocolDriverRegistryTests {
     }
     for model in rows {
       #expect(
-        registry.classify(hidDevice(model, hostHIDInterface(.usb)), backend: .ioHID)
+        registry.classify(hidDevice(model, hostHIDInterface(.usb)), backend: .hid)
           == rejection(
             .descriptorContractMismatch,
             .hidDescriptor,
@@ -95,7 +95,7 @@ struct ProtocolDriverRegistryTests {
   func rawUSBRowObservedThroughHIDIsAnUnsupportedTransportVariant() {
     let model = ControllerModelID(vendorID: 0x045E, productID: 0x02EA)
     #expect(
-      registry.classify(hidDevice(model, gamepadHIDInterface(host: .usb)), backend: .ioHID)
+      registry.classify(hidDevice(model, gamepadHIDInterface(host: .usb)), backend: .hid)
         == rejection(.unsupportedTransportVariant, .xboxGIP, record: "045e-02ea")
     )
   }
@@ -106,7 +106,7 @@ struct ProtocolDriverRegistryTests {
     #expect(
       registry.classify(
         hidDevice(model, gamepadHIDInterface(host: .bluetoothLE)),
-        backend: .ioHID
+        backend: .hid
       ) == rejection(.unsupportedTransportVariant, .sonyDualShock4, record: "054c-09cc")
     )
   }
@@ -115,7 +115,7 @@ struct ProtocolDriverRegistryTests {
   func uncataloguedRawUSBHasNoProtocolMatch() {
     let model = ControllerModelID(vendorID: 0x1234, productID: 0x5678)
     #expect(
-      registry.classify(identityOnly(model), backend: .ioUSBHost)
+      registry.classify(identityOnly(model), backend: .rawUSB)
         == .unsupported(.noProtocolMatch)
     )
   }
@@ -124,7 +124,7 @@ struct ProtocolDriverRegistryTests {
   func uncataloguedHIDBindsOnlyWhenTheDescriptorPassesTheContract() throws {
     let model = ControllerModelID(vendorID: 0x1234, productID: 0x5678)
     #expect(
-      registry.classify(hidDevice(model, hostHIDInterface(.usb)), backend: .ioHID)
+      registry.classify(hidDevice(model, hostHIDInterface(.usb)), backend: .hid)
         == .unsupported(.descriptorContractMismatch)
     )
     let binding = try bound(hidDevice(model, gamepadHIDInterface(host: .usb)))
@@ -269,7 +269,7 @@ struct ProtocolDriverRegistryTests {
         configurationValue: 1,
         interfaces: [claimedInterface(record)]
       )
-      let binding = try bound(device, backend: .ioUSBHost)
+      let binding = try bound(device, backend: .rawUSB)
       let driver = try registry.makeDriver(
         for: binding,
         model: model,
@@ -281,7 +281,7 @@ struct ProtocolDriverRegistryTests {
     for model in registry.hidModels {
       for host in [PhysicalTransport.usb, .bluetoothClassic, .bluetoothLE] {
         let device = hidDevice(model, gamepadHIDInterface(host: host))
-        guard case .bound(let binding) = registry.classify(device, backend: .ioHID) else {
+        guard case .bound(let binding) = registry.classify(device, backend: .hid) else {
           continue
         }
         let driver = try registry.makeDriver(for: binding, model: model, claimed: nil)
@@ -301,7 +301,7 @@ struct ProtocolDriverRegistryTests {
   @Test
   func catalogRawUSBRowWithoutAClaimHasNoDriver() throws {
     let model = ControllerModelID(vendorID: 0x045E, productID: 0x02EA)
-    let binding = try bound(identityOnly(model), backend: .ioUSBHost)
+    let binding = try bound(identityOnly(model), backend: .rawUSB)
     #expect(binding.rule == .catalogRecord)
     let result = registry.makeDriver(for: binding, model: model, claimed: nil)
     guard case .failure(let reason) = result else {
@@ -317,7 +317,7 @@ struct ProtocolDriverRegistryTests {
   func driverKitClaimWithoutObservedFactsBuildsACatalogRow() throws {
     let model = ControllerModelID(vendorID: 0x045E, productID: 0x02EA)
     let record = try #require(registry.record(for: model))
-    let binding = try bound(identityOnly(model), backend: .usbDriverKit)
+    let binding = try bound(identityOnly(model), backend: .usbExtension)
     let unobserved = USBTransportResolution(profile: record.transportProfile)
     #expect(
       try registry.makeDriver(for: binding, model: model, claimed: unobserved).get()
@@ -326,7 +326,7 @@ struct ProtocolDriverRegistryTests {
     let limited = USBTransportResolution(
       profile: record.transportProfile,
       physicalDevice: PhysicalDevice(interfaces: [
-        PhysicalInterfaceSignature(accessBackend: .usbDriverKit, usbRoute: .usbDriverKit)
+        PhysicalInterfaceSignature(accessBackend: .usbExtension, usbRoute: .usbExtension)
       ])
     )
     #expect(
@@ -384,7 +384,7 @@ struct ProtocolDriverRegistryTests {
 
   private func bound(
     _ device: PhysicalDevice,
-    backend: DeviceAccessBackend = .ioHID
+    backend: DeviceAccessBackend = .hid
   ) throws -> ProtocolBinding {
     let classification = registry.classify(device, backend: backend)
     guard case .bound(let binding) = classification else {

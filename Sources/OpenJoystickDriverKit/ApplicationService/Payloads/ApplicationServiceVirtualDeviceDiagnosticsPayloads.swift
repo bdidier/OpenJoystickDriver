@@ -2,9 +2,9 @@ import Foundation
 
 /// Redacted serial number state for a HID device.
 public enum ApplicationServiceSerialKind: String, Codable, Sendable {
-  case none
-  case ojdUserSpace
-  case present
+  case none = "None"
+  case ojdUserSpace = "OJDUserSpace"
+  case present = "Present"
 }
 
 /// Safe (non-sensitive) snapshot of a HID "GamePad" device as seen by IOKit.

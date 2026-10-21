@@ -4,54 +4,30 @@ import Foundation
 /// Transport/link kind; each interface signature distinguishes host-facing from
 /// controller-side evidence.
 ///
-/// The UpperCamelCase `rawValue` is the spelling controller records use. Encoded output (reports,
-/// `--json`, the endpoint) uses the lowerCamelCase `outputName`; decoding accepts only that.
+/// The UpperCamelCase `rawValue` is the one spelling in controller records, reports, `--json` and
+/// the endpoint.
 public enum PhysicalTransport: String, CaseIterable, Codable, Equatable, Sendable {
   case usb = "USB"
   case bluetoothClassic = "BluetoothClassic"
   case bluetoothLE = "BluetoothLE"
   case proprietaryRadioReceiver = "ProprietaryRadioReceiver"
-
-  public var outputName: String {
-    switch self {
-    case .usb: "usb"
-    case .bluetoothClassic: "bluetoothClassic"
-    case .bluetoothLE: "bluetoothLE"
-    case .proprietaryRadioReceiver: "proprietaryRadioReceiver"
-    }
-  }
-
-  public init(from decoder: any Decoder) throws {
-    let name = try decoder.singleValueContainer().decode(String.self)
-    guard let transport = Self.allCases.first(where: { $0.outputName == name }) else {
-      throw DecodingError.dataCorrupted(
-        .init(codingPath: decoder.codingPath, debugDescription: "Unknown transport: \(name)")
-      )
-    }
-    self = transport
-  }
-
-  public func encode(to encoder: any Encoder) throws {
-    var container = encoder.singleValueContainer()
-    try container.encode(outputName)
-  }
 }
 
 /// Access-backend vocabulary: IOKit HID, raw USB through IOUSBHost or the DEXT, or a Bluetooth LE
 /// GATT link through Core Bluetooth.
 public enum DeviceAccessBackend: String, Codable, Equatable, Sendable {
-  case ioHID
-  case ioUSBHost
-  case usbDriverKit
-  case coreBluetoothGATT
+  case hid = "HID"
+  case rawUSB = "RawUSB"
+  case usbExtension = "USBExtension"
+  case gatt = "GATT"
 
   /// Whether the backend reaches the device as raw USB, with no HID layer in between.
-  public var usesRawUSB: Bool { self == .ioUSBHost || self == .usbDriverKit }
+  public var usesRawUSB: Bool { self == .rawUSB || self == .usbExtension }
 
   public init(route: USBTransportRoute) {
     switch route {
-    case .ioUSBHost: self = .ioUSBHost
-    case .usbDriverKit: self = .usbDriverKit
+    case .rawUSB: self = .rawUSB
+    case .usbExtension: self = .usbExtension
     }
   }
 }

@@ -287,7 +287,9 @@ def validate_protocol_descriptions(
         # would otherwise fail only at launch.
         family = document.get("family") if isinstance(document, dict) else None
         expected_stem = (
-            protocol_descriptions.FILE_STEMS.get(family) if isinstance(family, str) else None
+            protocol_descriptions.FILE_STEMS.get(family)
+            if isinstance(family, str)
+            else None
         )
         if path.stem != expected_stem:
             raise ValidationError(

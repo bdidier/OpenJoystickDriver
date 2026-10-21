@@ -73,7 +73,7 @@ private struct StructuralAlternate {
       interfaceProtocol: header[7],
       configurationValue: configurationValue,
       hostTransport: .usb,
-      accessBackend: route == .usbDriverKit ? .usbDriverKit : nil,
+      accessBackend: route == .usbExtension ? .usbExtension : nil,
       usbRoute: route,
       endpoints: isComplete ? endpoints : nil
     )

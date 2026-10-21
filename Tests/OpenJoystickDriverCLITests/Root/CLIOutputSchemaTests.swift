@@ -66,10 +66,48 @@ struct CLIOutputSchemaTests {
     )
   }
 
+  @Test(arguments: ["USBPacket", "JoyConPair", "rawReport"])
+  func aStreamLineOfAnUnknownKindIsRefused(kind: String) throws {
+    let line =
+      #"{"apiVersion":"openjoystickdriver/v1alpha1","kind":"\#(kind)","#
+      + #""direction":"rx","hex":"01 02","length":2,"captureTime":"1970-01-01T00:00:01.500Z"}"#
+    #expect(try !CLIOutputSchema.issues(in: line, path: ["controller", "capture"]).isEmpty)
+  }
+
+  @Test
+  func theCurrentPairAndSessionDocumentsPass() throws {
+    let pair =
+      #"{"apiVersion":"openjoystickdriver/v1alpha1","kind":"ControllerPair","gyro":"Left","#
+      + #""left":"a","profile":"p","right":"b","session":"01234567-89AB-CDEF-0123-456789ABCDEF"}"#
+    #expect(try CLIOutputSchema.issues(in: pair, path: ["controller", "pair"]).isEmpty)
+    let session =
+      #"{"apiVersion":"openjoystickdriver/v1alpha1","kind":"ControllerSession","#
+      + #""changed":false,"controller":"c","session":"Suspended"}"#
+    #expect(try CLIOutputSchema.issues(in: session, path: ["controller", "suspend"]).isEmpty)
+  }
+
+  @Test(arguments: ["JoyConPair", "controllerPair", "RawReport"])
+  func aPairDocumentOfAnUnknownKindIsRefused(kind: String) throws {
+    let document =
+      #"{"apiVersion":"openjoystickdriver/v1alpha1","kind":"\#(kind)","gyro":"Left","#
+      + #""left":"a","profile":"p","right":"b","session":"01234567-89AB-CDEF-0123-456789ABCDEF"}"#
+    #expect(try !CLIOutputSchema.issues(in: document, path: ["controller", "pair"]).isEmpty)
+  }
+
+  @Test(arguments: ["active", "suspended", "disconnected"])
+  func aSessionOfAnUnknownSpellingIsRefused(session: String) throws {
+    let document =
+      #"{"apiVersion":"openjoystickdriver/v1alpha1","kind":"ControllerSession","#
+      + #""changed":false,"controller":"c","session":"\#(session)"}"#
+    #expect(
+      try !CLIOutputSchema.issues(in: document, path: ["controller", "suspend"]).isEmpty
+    )
+  }
+
   @Test
   func eachLineOfAStreamIsChecked() throws {
     let good =
-      #"{"apiVersion":"openjoystickdriver/v1alpha1","kind":"USBPacket","#
+      #"{"apiVersion":"openjoystickdriver/v1alpha1","kind":"RawReport","#
       + #""direction":"rx","hex":"01 02","length":2,"captureTime":"1970-01-01T00:00:01.500Z"}"#
     #expect(
       try CLIOutputSchema.issues(in: good + "\n" + good, path: ["controller", "capture"]).isEmpty

@@ -360,7 +360,7 @@ struct ControllerCaptureCommand: AsyncParsableCommand {
     }
   }
 
-  /// One `USBPacket` line of `--json`: the log entry with its time as an RFC 3339 `captureTime`.
+  /// One `RawReport` line of `--json`: the log entry with its time as an RFC 3339 `captureTime`.
   private struct JSONPacket: Encodable {
     let direction: PacketLogDirection
     let hex: String

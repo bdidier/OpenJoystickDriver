@@ -10,6 +10,8 @@ from Tests.RepositoryScripts.test_controller_schema import (
     GP100_RUMBLE,
     THIRD_PARTY,
     XUSB,
+)
+from Tests.RepositoryScripts.test_controller_schema import (
     record as base_record,
 )
 

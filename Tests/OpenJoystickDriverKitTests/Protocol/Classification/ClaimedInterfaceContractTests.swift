@@ -50,7 +50,7 @@ struct ClaimedInterfaceContractTests {
 
   @Test
   func driverKitObservationWithoutInterfaceFactsIsNotRejected() {
-    let limited = PhysicalInterfaceSignature(accessBackend: .usbDriverKit, usbRoute: .usbDriverKit)
+    let limited = PhysicalInterfaceSignature(accessBackend: .usbExtension, usbRoute: .usbExtension)
     #expect(violation(.xboxGIP, .usb, [limited]) == nil)
   }
 
@@ -126,7 +126,7 @@ struct ClaimedInterfaceContractTests {
     ProtocolBinding(
       protocolID: protocolID,
       variant: variant,
-      accessBackend: .ioUSBHost,
+      accessBackend: .rawUSB,
       interfaceNumber: nil,
       rule: .catalogRecord,
       matchedPredicates: [],

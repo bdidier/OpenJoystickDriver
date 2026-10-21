@@ -7,8 +7,8 @@ import Foundation
 /// and variant and the applied parameters are reported beside it by the controller description.
 public struct ProtocolBindingResult: Codable, Equatable, Sendable {
   public enum Outcome: String, Codable, Sendable {
-    case bound
-    case unsupported
+    case bound = "Bound"
+    case unsupported = "Unsupported"
   }
 
   /// Class and HID facts of one observed interface. The descriptor is named by its fingerprint

@@ -131,9 +131,9 @@ public struct USBControlTransferRequest: Equatable, Sendable {
 /// The Apple transport boundary that owns one raw USB service.
 public enum USBTransportRoute: String, Hashable, Sendable {
   /// Direct app-side access through the IOUSBHost framework.
-  case ioUSBHost
+  case rawUSB
   /// Access through an entitled USBDriverKit system extension.
-  case usbDriverKit
+  case usbExtension
 }
 
 /// Options that must be applied before a transport session is exposed to protocol code.
@@ -277,7 +277,7 @@ extension USBTransportProvider {
   ) async throws -> any USBTransportSession {
     guard case .ioKit(let locationID, _) = address else { throw USBTransportError.notFound }
     let device = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 0,
       vendorID: model.vendorID,
       productID: model.productID,

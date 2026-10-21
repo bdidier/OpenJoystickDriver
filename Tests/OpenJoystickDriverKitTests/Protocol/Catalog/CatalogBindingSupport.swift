@@ -5,7 +5,7 @@ import Testing
 
 /// A HID interface observed over `host`, as IOHID reports it, without descriptor facts.
 func hostHIDInterface(_ host: PhysicalTransport?) -> PhysicalInterfaceSignature {
-  PhysicalInterfaceSignature(hostTransport: host, accessBackend: .ioHID)
+  PhysicalInterfaceSignature(hostTransport: host, accessBackend: .hid)
 }
 
 /// A HID interface observed over `host` whose descriptor satisfies the `HIDDescriptor`
@@ -13,7 +13,7 @@ func hostHIDInterface(_ host: PhysicalTransport?) -> PhysicalInterfaceSignature 
 func gamepadHIDInterface(host: PhysicalTransport?) -> PhysicalInterfaceSignature {
   PhysicalInterfaceSignature(
     hostTransport: host,
-    accessBackend: .ioHID,
+    accessBackend: .hid,
     hidLayout: HIDLayoutSummary(reportDescriptor: Data(GamepadHIDDescriptor.descriptor))
   )
 }
@@ -36,7 +36,7 @@ func steamHIDInterface(number: UInt8, gamepad: Bool = true) -> PhysicalInterface
   return PhysicalInterfaceSignature(
     interfaceNumber: number,
     hostTransport: .usb,
-    accessBackend: .ioHID,
+    accessBackend: .hid,
     hidLayout: HIDLayoutSummary(reportDescriptor: Data(descriptor))
   )
 }
@@ -73,7 +73,7 @@ func catalogParser(
     productID: model.productID,
     interfaces: isRawUSB ? nil : [gamepadHIDInterface(host: host ?? defaultHost(of: record))]
   )
-  let classification = registry.classify(device, backend: isRawUSB ? .ioUSBHost : .ioHID)
+  let classification = registry.classify(device, backend: isRawUSB ? .rawUSB : .hid)
   guard case .bound(let binding) = classification else {
     Issue.record("\(model) did not bind: \(classification)")
     throw CatalogBindingFailure()

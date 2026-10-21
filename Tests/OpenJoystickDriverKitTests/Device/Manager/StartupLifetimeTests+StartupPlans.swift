@@ -158,7 +158,7 @@ extension StartupLifetimeTests {
       binding: ProtocolBinding(
         protocolID: .nintendoSwitch1,
         variant: .bluetoothClassic,
-        accessBackend: .ioHID,
+        accessBackend: .hid,
         interfaceNumber: nil,
         rule: .catalogRecord,
         matchedPredicates: [],

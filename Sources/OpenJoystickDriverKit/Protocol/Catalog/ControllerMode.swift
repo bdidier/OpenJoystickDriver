@@ -200,7 +200,7 @@ public enum ControllerModeSelector {
     for mode in profile.modes where mode.match.holds(for: device, receiverRecord: receiverRecord) {
       var held = true
       for probe in mode.probes {
-        guard backend == .ioHID else {
+        guard backend == .hid else {
           log(
             "[DeviceManager] Mode probes of \(name) read HID feature reports; the"
               + " \(backend.rawValue) route has none, so the default mode is used"

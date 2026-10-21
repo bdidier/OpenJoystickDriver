@@ -19,7 +19,8 @@ struct DiagnoseReport: Encodable, Equatable {
         controller.frames.flatMap { frame in
           frame.stages.map {
             [
-              "timing", controller.controller, String(frame.sequence), $0.stage.rawValue,
+              "timing", controller.controller, String(frame.sequence),
+              CommandLineName.kebab($0.stage.rawValue),
               String($0.nanoseconds),
             ]
           }

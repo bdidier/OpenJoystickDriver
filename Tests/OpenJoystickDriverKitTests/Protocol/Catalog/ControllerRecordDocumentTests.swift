@@ -220,7 +220,7 @@ struct ControllerRecordDocumentTests {
       let binding = ProtocolBinding(
         protocolID: record?.physicalProtocolID ?? .hidDescriptor,
         variant: record?.physicalProtocolVariant,
-        accessBackend: .ioHID,
+        accessBackend: .hid,
         interfaceNumber: nil,
         rule: .catalogRecord,
         matchedPredicates: [.catalogIdentity],

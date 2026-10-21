@@ -25,7 +25,7 @@ extension USBTransportProvider {
       profile: configured,
       physicalDevice: passive.physicalDevice
     )
-    guard device.route == .ioUSBHost,
+    guard device.route == .rawUSB,
       USBDescriptorTransportResolver.discover(
         configured: configured,
         observed: passive.physicalDevice

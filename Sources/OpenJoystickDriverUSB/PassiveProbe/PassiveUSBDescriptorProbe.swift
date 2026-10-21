@@ -151,7 +151,7 @@ public enum PassiveUSBDescriptorProbe {
           configurationValue: result.observedUSBFacts.activeConfiguration,
           hostTransport: .usb,
           physicalTransport: nil,
-          accessBackend: device.route == .usbDriverKit ? .usbDriverKit : nil,
+          accessBackend: device.route == .usbExtension ? .usbExtension : nil,
           usbRoute: device.route,
           endpoints: interface.endpoints.map { endpoint in
             PhysicalEndpointSignature(
@@ -211,7 +211,7 @@ public enum PassiveUSBDescriptorProbe {
         interfaceProtocol: uint8(child, "bInterfaceProtocol"),
         configurationValue: configurationValue,
         hostTransport: .usb,
-        accessBackend: route == .usbDriverKit ? .usbDriverKit : nil,
+        accessBackend: route == .usbExtension ? .usbExtension : nil,
         usbRoute: route
       )
     }

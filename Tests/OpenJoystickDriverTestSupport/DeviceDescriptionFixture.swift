@@ -36,6 +36,7 @@ extension ApplicationServiceDeviceDescription {
     outputs: PhysicalControllerOutputCapabilities = .none,
     unit: String? = nil,
     power: ControllerConnectionState.Power? = nil,
+    inputHealth: ControllerInputHealth = ControllerInputHealth(state: .healthy),
     physicalOutputOwner: ControllerServer = .ojd,
     tuning: ControllerTuning = .none
   ) -> ApplicationServiceDeviceDescription {
@@ -52,8 +53,9 @@ extension ApplicationServiceDeviceDescription {
       physicalOutputOwner: physicalOutputOwner,
       tuning: tuning,
       connectionState: power.map {
-        ControllerConnectionState(transport: .usb, backend: .ioHID, isConnected: true, power: $0)
+        ControllerConnectionState(transport: .usb, backend: .hid, isConnected: true, power: $0)
       },
+      inputHealth: inputHealth,
       sessionToken: .fixture(id),
       portKey: unit.map(ControllerPortKey.fixture)
     )

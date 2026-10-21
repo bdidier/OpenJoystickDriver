@@ -36,7 +36,7 @@ body:
         The whole line from **About OpenJoystickDriver**. From Terminal, run
         `plutil -p /Applications/OpenJoystickDriver.app/Contents/Info.plist` and write
         `<CFBundleShortVersionString>+build.<CFBundleVersion>.sha.<first 12 characters of OJDSourceCommit>`,
-        then `.dirty` if `OJDSourceState` is `dirty`, then ` (<CFBundleVersion>)`.
+        then `.dirty` if `OJDSourceState` is `Dirty`, then ` (<CFBundleVersion>)`.
       placeholder: 0.6.0-alpha.1+build.1.8.74.sha.08bc747d93f6.dirty (1.8.74)
     validations:
       required: true

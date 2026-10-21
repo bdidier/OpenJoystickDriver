@@ -25,7 +25,7 @@ struct ControllerRecordProbePlanTests {
   func probeBuildsItsDriverOnlyForAClaimThatSatisfiesTheContract() throws {
     let plan = try ControllerRecordProbePlan(data: try recordData())
     let device = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 1,
       vendorID: plan.vendorID,
       productID: plan.productID,

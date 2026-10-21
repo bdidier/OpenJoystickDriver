@@ -56,8 +56,8 @@ struct GATTPeripheralLinkTests {
     }
     #expect(ownership == .exclusive)
     #expect(connection.routingAddress == .gattPeripheral(peripheral.identifier))
-    #expect(connection.accessBackend == .coreBluetoothGATT)
-    #expect(connection.physicalDevice.interfaces?.first?.accessBackend == .coreBluetoothGATT)
+    #expect(connection.accessBackend == .gatt)
+    #expect(connection.physicalDevice.interfaces?.first?.accessBackend == .gatt)
 
     let fills: [UInt8] = [0x11, 0x22]
     for fill in fills {
@@ -161,9 +161,9 @@ struct GATTPeripheralLinkTests {
 
   @Test
   func onlyTheUSBAccessBackendsUseRawUSB() {
-    #expect(DeviceAccessBackend.coreBluetoothGATT.rawValue == "coreBluetoothGATT")
-    #expect(!DeviceAccessBackend.coreBluetoothGATT.usesRawUSB)
-    #expect(!DeviceAccessBackend.ioHID.usesRawUSB)
-    #expect(DeviceAccessBackend.ioUSBHost.usesRawUSB && DeviceAccessBackend.usbDriverKit.usesRawUSB)
+    #expect(DeviceAccessBackend.gatt.rawValue == "GATT")
+    #expect(!DeviceAccessBackend.gatt.usesRawUSB)
+    #expect(!DeviceAccessBackend.hid.usesRawUSB)
+    #expect(DeviceAccessBackend.rawUSB.usesRawUSB && DeviceAccessBackend.usbExtension.usesRawUSB)
   }
 }

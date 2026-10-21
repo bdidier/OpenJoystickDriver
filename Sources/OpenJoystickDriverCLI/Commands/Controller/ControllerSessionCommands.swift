@@ -4,11 +4,11 @@ import OpenJoystickDriverKit
 
 /// The `--json` result of `ojd controller suspend`, `resume`, and `disconnect`.
 struct ControllerSessionReport: Encodable, Equatable {
-  /// The session after the command. Only `disconnect` reports `disconnected`.
+  /// The session after the command. Only `disconnect` reports `Disconnected`.
   enum Session: String, Encodable {
-    case active
-    case suspended
-    case disconnected
+    case active = "Active"
+    case suspended = "Suspended"
+    case disconnected = "Disconnected"
   }
 
   let controller: String
@@ -20,7 +20,9 @@ private func printSession(_ report: ControllerSessionReport, message: String) th
   switch CLIContext.current.format {
   case .json: try CLIOutput.json(report)
   case .plain:
-    CLIOutput.plain([[report.controller, report.session.rawValue, String(report.changed)]])
+    CLIOutput.plain([
+      [report.controller, CommandLineName.kebab(report.session.rawValue), String(report.changed)]
+    ])
   case .human: CLIOutput.success(message)
   }
 }

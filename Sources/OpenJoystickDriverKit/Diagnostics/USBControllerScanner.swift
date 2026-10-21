@@ -60,7 +60,7 @@ public enum USBControllerScanner {
       // Endpoints are resolved from the device's configuration descriptor, as runtime binding
       // resolves them; the registry never carries endpoint descriptors.
       let configuration =
-        device.route == .ioUSBHost
+        device.route == .rawUSB
         ? try? await provider.configurationObservation(for: device, configurationValue: 1) : nil
       descriptions.append(
         description(

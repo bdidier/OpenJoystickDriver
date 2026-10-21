@@ -45,14 +45,14 @@ struct EquivalenceSnapshotCatalogTests {
         locationID: 1
       )
       return !OpenJoystickDriverUSBTransportProvider.selectDevices(
-        direct: route == .ioUSBHost ? [device] : [],
-        driverKit: route == .usbDriverKit ? [device] : [],
+        direct: route == .rawUSB ? [device] : [],
+        driverKit: route == .usbExtension ? [device] : [],
         supportedRawUSBModels: models,
         requiredDriverKitModels: OpenJoystickDriverUSBTransportProvider.driverKitRequiredModels
       ).isEmpty
     }
-    if selects(.ioUSBHost) { return "raw-access" }
-    if selects(.usbDriverKit) { return "transport-extension" }
+    if selects(.rawUSB) { return "raw-access" }
+    if selects(.usbExtension) { return "transport-extension" }
     return "system ownership=\(label(record.profile.server))"
   }
 

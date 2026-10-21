@@ -211,14 +211,14 @@ def main() -> int:
                         "CFBundleShortVersionString": "0.5.0-beta.3",
                         "CFBundleVersion": build,
                         "OJDSourceCommit": "a" * 40,
-                        "OJDSourceState": "clean",
+                        "OJDSourceState": "Clean",
                     }
                 )
             )
-        verify_bundle_versions(app, dext, "1.2.3", "0.5.0-beta.3", "a" * 40, "clean")
+        verify_bundle_versions(app, dext, "1.2.3", "0.5.0-beta.3", "a" * 40, "Clean")
         for build, short in (("wrong", "0.5.0-beta.3"), ("1.2.3", "0.5.0-beta.4")):
             expect_failure(
-                verify_bundle_versions, app, dext, build, short, "a" * 40, "clean"
+                verify_bundle_versions, app, dext, build, short, "a" * 40, "Clean"
             )
         version = "0.5.0-beta.3+build.1.2.3.sha.aaaaaaaaaaaa"
         metadata = package_tester.tester_metadata("tester.dmg", version, "1.2.3")
@@ -250,9 +250,9 @@ def main() -> int:
             check=True,
         )
         commit = require_clean_source(repository, "Tester")
-        assert source_identity(repository) == (commit, "clean")
+        assert source_identity(repository) == (commit, "Clean")
         tracked.write_text("dirty\n")
-        assert source_identity(repository) == (commit, "dirty")
+        assert source_identity(repository) == (commit, "Dirty")
         expect_failure(require_clean_source, repository, "Tester")
     validate_tester_packaging_flow(fail_after_dmg=False)
     validate_tester_packaging_flow(fail_after_dmg=True)

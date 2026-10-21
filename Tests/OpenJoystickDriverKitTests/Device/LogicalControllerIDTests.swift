@@ -53,7 +53,7 @@ struct LogicalControllerIDTests {
   func oneControllerOnUSBAndBluetoothHasOneHardwareIdentityAndTwoAddresses() async throws {
     let usb = DeviceManager.usbIdentifier(
       for: USBTransportDevice(
-        route: .ioUSBHost,
+        route: .rawUSB,
         serviceID: 11,
         vendorID: 0x054C,
         productID: 0x09CC,

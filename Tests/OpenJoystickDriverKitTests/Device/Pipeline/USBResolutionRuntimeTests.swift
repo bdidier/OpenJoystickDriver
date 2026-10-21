@@ -16,7 +16,7 @@ struct USBResolutionRuntimeTests {
       needsSetConfiguration: true
     )
     let device = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 7,
       vendorID: identifier.model.vendorID,
       productID: identifier.model.productID,
@@ -66,7 +66,7 @@ struct USBResolutionRuntimeTests {
   @Test
   func usbDiscoveryRetainsObservationUntilTheExactServiceDetaches() async throws {
     let device = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 27,
       vendorID: 0x045E,
       productID: 0x028E,
@@ -114,7 +114,7 @@ struct USBResolutionRuntimeTests {
   @Test
   func usbDetectionReResolvesChangedFactsForTheSameServiceIdentity() async {
     let original = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 37,
       vendorID: 0x045E,
       productID: 0x02D1,
@@ -122,7 +122,7 @@ struct USBResolutionRuntimeTests {
       productName: "Original service facts"
     )
     let replacement = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 37,
       vendorID: 0x045E,
       productID: 0x02D1,
@@ -158,7 +158,7 @@ struct USBResolutionRuntimeTests {
   @Test
   func usbDetectionKeepsAcknowledgedServiceAcrossEnumerationFailureAndRecovery() async {
     let device = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 39,
       vendorID: 0x045E,
       productID: 0x02D1,
@@ -195,7 +195,7 @@ struct USBResolutionRuntimeTests {
   @Test
   func stopInvalidatesUSBAdmissionHeldInNoncooperativeResolution() async {
     let device = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 41,
       vendorID: 0x045E,
       productID: 0x02D1,
@@ -234,7 +234,7 @@ struct USBResolutionRuntimeTests {
       needsSetConfiguration: true
     )
     let device = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 7,
       vendorID: identifier.model.vendorID,
       productID: identifier.model.productID,

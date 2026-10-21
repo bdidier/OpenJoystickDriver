@@ -32,7 +32,7 @@ private actor OpenRefusingProvider: USBTransportProvider {
 /// A HID route that yielded to raw USB comes back when the raw-USB pipeline never starts.
 struct USBHIDYieldRecoveryTests {
   private let device = USBTransportDevice(
-    route: .ioUSBHost,
+    route: .rawUSB,
     serviceID: 92,
     vendorID: 0x1234,
     productID: 0x5678,

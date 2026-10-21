@@ -2,9 +2,9 @@ import Foundation
 
 /// Location class for Apple's private, read-only GameController mapping database.
 public enum SystemGamepadCatalogSource: String, Codable, Sendable {
-  case downloadedMobileAsset
-  case preinstalledMobileAsset
-  case unavailable
+  case downloadedMobileAsset = "DownloadedMobileAsset"
+  case preinstalledMobileAsset = "PreinstalledMobileAsset"
+  case unavailable = "Unavailable"
 }
 
 /// One exact VID/PID match observed in Apple's current-system GameController database.

@@ -147,11 +147,11 @@
                   "properties": {
                     "stage": {
                       "enum": [
-                        "read",
-                        "parse",
-                        "dispatch",
-                        "delivery-virtual-device",
-                        "delivery-endpoint"
+                        "Read",
+                        "Parse",
+                        "Dispatch",
+                        "DeliveryVirtualDevice",
+                        "DeliveryEndpoint"
                       ]
                     },
                     "nanoseconds": {
@@ -233,7 +233,7 @@
           "type": "string"
         },
         "sourceState": {
-          "enum": ["clean", "dirty", "unknown"]
+          "enum": ["Clean", "Dirty", "Unknown"]
         }
       }
     },
@@ -332,7 +332,7 @@
         "binding": {
           "allOf": [
             { "$ref": "#/$defs/bindingResult" },
-            { "properties": { "outcome": { "const": "bound" } } }
+            { "properties": { "outcome": { "const": "Bound" } } }
           ]
         },
         "inputEndpoint": {
@@ -362,7 +362,7 @@
           "$ref": "#/$defs/physicalOutputCapabilities"
         },
         "sessionState": {
-          "enum": ["active", "suspended"]
+          "enum": ["Active", "Suspended"]
         },
         "startupCommandStatus": {
           "type": "string"
@@ -381,10 +381,10 @@
       "additionalProperties": false,
       "properties": {
         "state": {
-          "enum": ["healthy", "stale", "waitingForNeutral"]
+          "enum": ["Healthy", "Stale", "WaitingForNeutral"]
         },
         "failureReason": {
-          "enum": ["missingReports", "freshnessNotAdvancing"]
+          "enum": ["MissingReports", "FreshnessNotAdvancing"]
         },
         "reportFormat": {
           "type": "string"
@@ -406,14 +406,14 @@
       "properties": {
         "transport": {
           "enum": [
-            "usb",
-            "bluetoothClassic",
-            "bluetoothLE",
-            "proprietaryRadioReceiver"
+            "USB",
+            "BluetoothClassic",
+            "BluetoothLE",
+            "ProprietaryRadioReceiver"
           ]
         },
         "backend": {
-          "enum": ["ioHID", "ioUSBHost", "usbDriverKit", "coreBluetoothGATT"]
+          "enum": ["HID", "RawUSB", "USBExtension", "GATT"]
         },
         "isConnected": {
           "type": "boolean"
@@ -425,11 +425,11 @@
           "properties": {
             "charging": {
               "enum": [
-                "unknown",
-                "discharging",
-                "charging",
-                "full",
-                "notChargeable"
+                "Unknown",
+                "Discharging",
+                "Charging",
+                "Full",
+                "NotChargeable"
               ]
             },
             "battery": {
@@ -523,7 +523,7 @@
         "binding": {
           "allOf": [
             { "$ref": "#/$defs/bindingResult" },
-            { "properties": { "outcome": { "const": "unsupported" } } }
+            { "properties": { "outcome": { "const": "Unsupported" } } }
           ]
         }
       }
@@ -539,29 +539,29 @@
       ],
       "additionalProperties": false,
       "properties": {
-        "outcome": { "enum": ["bound", "unsupported"] },
+        "outcome": { "enum": ["Bound", "Unsupported"] },
         "reason": { "$ref": "#/$defs/bindingReason" },
         "accessBackend": {
-          "enum": ["ioHID", "ioUSBHost", "usbDriverKit", "coreBluetoothGATT"]
+          "enum": ["HID", "RawUSB", "USBExtension", "GATT"]
         },
         "interfaces": {
           "type": "array",
           "items": { "$ref": "#/$defs/bindingInterface" }
         },
         "rule": {
-          "enum": ["catalogRecord", "interfaceSignature", "hidDescriptor"]
+          "enum": ["CatalogRecord", "InterfaceSignature", "HIDDescriptor"]
         },
         "matchedPredicates": {
           "type": "array",
           "items": {
             "enum": [
-              "catalogIdentity",
-              "catalogAccessPath",
-              "hostTransport",
-              "interfaceSignature",
-              "deviceClassSignature",
-              "interruptEndpointPair",
-              "hidDescriptorContract"
+              "CatalogIdentity",
+              "CatalogAccessPath",
+              "HostTransport",
+              "InterfaceSignature",
+              "DeviceClassSignature",
+              "InterruptEndpointPair",
+              "HIDDescriptorContract"
             ]
           }
         },
@@ -571,7 +571,7 @@
           "items": { "$ref": "#/$defs/rejectedCandidate" }
         }
       },
-      "if": { "properties": { "outcome": { "const": "bound" } } },
+      "if": { "properties": { "outcome": { "const": "Bound" } } },
       "then": {
         "required": ["rule"],
         "properties": { "rejectedCandidates": { "maxItems": 0 } },
@@ -607,10 +607,10 @@
         },
         "hostTransport": {
           "enum": [
-            "usb",
-            "bluetoothClassic",
-            "bluetoothLE",
-            "proprietaryRadioReceiver"
+            "USB",
+            "BluetoothClassic",
+            "BluetoothLE",
+            "ProprietaryRadioReceiver"
           ]
         },
         "primaryUsage": {
@@ -669,16 +669,16 @@
     },
     "bindingReason": {
       "enum": [
-        "noProtocolMatch",
-        "ambiguousProtocolMatch",
-        "interfaceContractMismatch",
-        "descriptorContractMismatch",
-        "packetContractMismatch",
-        "unsupportedProtocolVariant",
-        "unsupportedTransportVariant",
-        "requiredInitializationFailed",
-        "catalogConflict",
-        "virtualProfileUnavailable"
+        "NoProtocolMatch",
+        "AmbiguousProtocolMatch",
+        "InterfaceContractMismatch",
+        "DescriptorContractMismatch",
+        "PacketContractMismatch",
+        "UnsupportedProtocolVariant",
+        "UnsupportedTransportVariant",
+        "RequiredInitializationFailed",
+        "CatalogConflict",
+        "VirtualProfileUnavailable"
       ]
     },
     "hidGamepad": {
@@ -703,7 +703,7 @@
           "type": "string"
         },
         "serialKind": {
-          "enum": ["none", "ojdUserSpace", "present"]
+          "enum": ["None", "OJDUserSpace", "Present"]
         },
         "ioUserClass": {
           "type": "string"
@@ -733,9 +733,9 @@
       "properties": {
         "source": {
           "enum": [
-            "downloadedMobileAsset",
-            "preinstalledMobileAsset",
-            "unavailable"
+            "DownloadedMobileAsset",
+            "PreinstalledMobileAsset",
+            "Unavailable"
           ]
         },
         "bundleVersions": {

@@ -81,7 +81,7 @@ struct HIDLocationRoutingTests {
           PhysicalInterfaceSignature(
             interfaceNumber: interfaceNumber,
             hostTransport: .usb,
-            accessBackend: .ioHID,
+            accessBackend: .hid,
             hidLayout: HIDLayoutSummary(reportDescriptor: Data(GamepadHIDDescriptor.descriptor))
           )
         ]

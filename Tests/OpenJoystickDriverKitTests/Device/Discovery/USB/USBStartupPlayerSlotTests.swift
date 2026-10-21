@@ -42,7 +42,7 @@ struct USBStartupPlayerSlotTests {
 
   private static func wiredPad(serviceID: UInt64) -> WiredPad {
     let device = USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: serviceID,
       vendorID: vendorID,
       productID: productID,

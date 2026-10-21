@@ -91,17 +91,17 @@ build_app_bundle() {
   local source_state="${OJD_SOURCE_STATE:-}"
   if [[ -z "$source_state" ]]; then
     if [[ -n "$(git -C "$PROJECT_DIR" status --porcelain --untracked-files=all)" ]]; then
-      source_state="dirty"
+      source_state="Dirty"
     else
-      source_state="clean"
+      source_state="Clean"
     fi
   fi
   if [[ ! "$source_commit" =~ ^[0-9a-f]{40}$ ]]; then
     echo "ERROR: OJD source commit must be a full 40-character lowercase Git SHA."
     exit 1
   fi
-  if [[ "$source_state" != "clean" && "$source_state" != "dirty" ]]; then
-    echo "ERROR: OJD source state must be clean or dirty."
+  if [[ "$source_state" != "Clean" && "$source_state" != "Dirty" ]]; then
+    echo "ERROR: OJD source state must be Clean or Dirty."
     exit 1
   fi
 

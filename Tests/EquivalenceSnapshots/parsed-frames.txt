@@ -205,7 +205,7 @@ short [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
 ## 054C:09CC host=bluetoothClassic steps=dualShock4BluetoothSteps
 neutral [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
   motion n=1 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
-  battery 0-9% discharging wired-power=no
+  battery 0-9% Discharging wired-power=no
 b5.4 [West] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
   motion n=2 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
 b5.5 [South] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
@@ -323,7 +323,7 @@ touch [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1 fresh
   touch Primary [0:0:18032,47010 1:1:27320,23679]
 battery [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
   motion n=59 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
-  battery 100% full wired-power=yes
+  battery 100% Full wired-power=yes
 repeat [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 stale
   motion n=59 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
 bad-crc [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 stale threw=invalidBluetoothCRC
@@ -333,7 +333,7 @@ short [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 stale threw=invalidReportFraming
 cap0 [] hat=Neutral ls=-1279,-1023 rs=767,0 lt=0 rt=0 motion=1 touch=1 fresh
   motion n=12705 w=-0.0076,0.0164,0.0076 a=-0.0204,-2.1452,9.3182
   touch Primary [0:0:53002,6755 1:0:0,0]
-  battery 100% full wired-power=yes
+  battery 100% Full wired-power=yes
 cap1 [] hat=Neutral ls=-255,-1023 rs=511,0 lt=0 rt=0 motion=1 touch=1 fresh
   motion n=13448 w=-0.0087,0.0175,0.0076 a=-0.0287,-2.1632,9.3075
   touch Primary [0:0:53002,6755 1:0:0,0]
@@ -344,7 +344,7 @@ cap2 [] hat=Neutral ls=-1279,-1023 rs=511,0 lt=0 rt=0 motion=1 touch=1 fresh
 ## 054C:09CC host=usb steps=dualShock4USBSteps
 neutral [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
   motion n=1 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
-  battery 0-9% discharging wired-power=no
+  battery 0-9% Discharging wired-power=no
 b5.4 [West] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
   motion n=2 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
 b5.5 [South] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
@@ -462,7 +462,7 @@ touch [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1 fresh
   touch Primary [0:0:18032,47010 1:1:27320,23679]
 battery [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
   motion n=59 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
-  battery 100% full wired-power=yes
+  battery 100% Full wired-power=yes
 repeat [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 stale
   motion n=59 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
 short [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 stale threw=invalidReportFraming
@@ -1206,7 +1206,7 @@ s12=7fff [] hat=Neutral ls=0,0 rs=0,-32767 lt=0 rt=0
 s12=0 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
 xusb-up [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
 telemetry [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-  battery 73% discharging wired-power=unknown
+  battery 73% Discharging wired-power=unknown
 b60.0 [Guide] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
 b60.1 [Capture] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
 b60.2 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
@@ -1216,7 +1216,7 @@ b60.5 [Auxiliary1] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
 b60.6 [LeftPaddle2] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
 b60.7 [RightPaddle2] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
 charging [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-  battery 100% charging wired-power=yes
+  battery 100% Charging wired-power=yes
 short [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
 
 ## 3537:100A host=usb steps=hidDescriptorSteps
@@ -1286,7 +1286,7 @@ page7 [] hat=Neutral ls=0,32767 rs=32767,32767 lt=65535 rt=65535
 
 ## 3537:100B host=usb steps=gameSirEnhancedSteps
 neutral [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-  battery 84% discharging wired-power=unknown
+  battery 84% Discharging wired-power=unknown
 b5.4 [West] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
 b5.5 [South] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
 b5.6 [East] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
@@ -1344,7 +1344,7 @@ t9=80 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=32896
 t9=ff [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=65535
 t9=0 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
 charge=1 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-  battery 84% charging wired-power=yes
+  battery 84% Charging wired-power=yes
 repeat [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
 short [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
 

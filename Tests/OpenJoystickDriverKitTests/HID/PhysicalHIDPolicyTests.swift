@@ -246,10 +246,10 @@ struct PhysicalHIDPolicyTests {
 
   @Test
   func productionBackendAdapterRejectsSyntheticSharedLocationAndCleansPhysicalState() {
-    var ioHID = PhysicalHIDBackendEventAdapter()
+    var hid = PhysicalHIDBackendEventAdapter()
 
     do {
-      var adapter = ioHID
+      var adapter = hid
       let syntheticAdded = adapter.add(
         deviceID: 2,
         locationID: 77,
@@ -261,25 +261,25 @@ struct PhysicalHIDPolicyTests {
       #expect(!adapter.remove(deviceID: 2).wasTracked)
     }
 
-    let physicalAdded = ioHID.add(deviceID: 1, locationID: 77, syntheticProperty: kCFBooleanFalse)
-    let syntheticAdded = ioHID.add(deviceID: 2, locationID: 77, syntheticProperty: kCFBooleanTrue)
+    let physicalAdded = hid.add(deviceID: 1, locationID: 77, syntheticProperty: kCFBooleanFalse)
+    let syntheticAdded = hid.add(deviceID: 2, locationID: 77, syntheticProperty: kCFBooleanTrue)
     #expect(physicalAdded)
     #expect(!syntheticAdded)
-    #expect(ioHID.acceptsInput(deviceID: 1))
-    #expect(!ioHID.acceptsInput(deviceID: 2))
-    #expect(ioHID.acceptsFeedback(locationID: 77))
-    let rejectedRemoval = ioHID.remove(deviceID: 2)
+    #expect(hid.acceptsInput(deviceID: 1))
+    #expect(!hid.acceptsInput(deviceID: 2))
+    #expect(hid.acceptsFeedback(locationID: 77))
+    let rejectedRemoval = hid.remove(deviceID: 2)
     #expect(!rejectedRemoval.wasTracked)
-    let physicalRemoval = ioHID.remove(deviceID: 1)
+    let physicalRemoval = hid.remove(deviceID: 1)
     #expect(physicalRemoval.wasTracked)
     #expect(physicalRemoval.shouldCancelNotification)
     #expect(physicalRemoval.shouldEmitDisconnect)
-    #expect(!ioHID.acceptsFeedback(locationID: 77))
-    #expect(!ioHID.remove(deviceID: 1).shouldEmitDisconnect)
+    #expect(!hid.acceptsFeedback(locationID: 77))
+    #expect(!hid.remove(deviceID: 1).shouldEmitDisconnect)
 
-    let readded = ioHID.add(deviceID: 1, locationID: 77, syntheticProperty: kCFBooleanFalse)
+    let readded = hid.add(deviceID: 1, locationID: 77, syntheticProperty: kCFBooleanFalse)
     #expect(readded)
-    let readdedRemoval = ioHID.remove(deviceID: 1)
+    let readdedRemoval = hid.remove(deviceID: 1)
     #expect(readdedRemoval.wasTracked)
     #expect(readdedRemoval.shouldCancelNotification)
     #expect(readdedRemoval.shouldEmitDisconnect)

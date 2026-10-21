@@ -485,7 +485,7 @@
           "$ref": "#/$defs/sharedAPIVersion"
         },
         "kind": {
-          "const": "USBPacket"
+          "const": "RawReport"
         },
         "direction": {
           "enum": ["rx", "tx"]
@@ -593,7 +593,7 @@
                 "$ref": "report.schema.json#/$defs/controller/properties/protocolBinding"
               },
               "session": {
-                "enum": ["active", "suspended"]
+                "enum": ["Active", "Suspended"]
               },
               "unit": {
                 "type": "string",
@@ -614,10 +614,10 @@
       "required": ["apiVersion", "kind"],
       "properties": {
         "kind": {
-          "const": "JoyConPair"
+          "const": "ControllerPair"
         }
       },
-      "$ref": "#/$defs/sharedJoyConPair"
+      "$ref": "#/$defs/sharedControllerPair"
     },
     "controllerPlayer": {
       "$ref": "#/$defs/sharedStatus",
@@ -945,7 +945,7 @@
           }
         },
         "session": {
-          "enum": ["active", "suspended"]
+          "enum": ["Active", "Suspended"]
         },
         "startupCommandStatus": {
           "type": "string"
@@ -1002,10 +1002,10 @@
       "required": ["apiVersion", "kind"],
       "properties": {
         "kind": {
-          "const": "JoyConPair"
+          "const": "ControllerPair"
         }
       },
-      "$ref": "#/$defs/sharedJoyConPair"
+      "$ref": "#/$defs/sharedControllerPair"
     },
     "controllerWatch": {
       "description": "With --first-press, the first control pressed; with --all, one event per line for every controller; with --output, one controller state and the virtual gamepad's values per line; otherwise one controller state per line.",
@@ -1085,7 +1085,7 @@
           "const": "Diagnosis"
         },
         "timings": {
-          "description": "The newest frames of each connected controller, oldest first; empty while the service is stopped. Nanoseconds are on the service's monotonic uptime clock. Each controller keeps its last 8 frames. The endpoint polls, so delivery-endpoint goes on the newest frame at the poll and a frame replaced by a newer one before the poll gets none.",
+          "description": "The newest frames of each connected controller, oldest first; empty while the service is stopped. Nanoseconds are on the service's monotonic uptime clock. Each controller keeps its last 8 frames. The endpoint polls, so DeliveryEndpoint goes on the newest frame at the poll and a frame replaced by a newer one before the poll gets none.",
           "type": "array",
           "items": {
             "type": "object",
@@ -1118,11 +1118,11 @@
                         "properties": {
                           "stage": {
                             "enum": [
-                              "read",
-                              "parse",
-                              "dispatch",
-                              "delivery-virtual-device",
-                              "delivery-endpoint"
+                              "Read",
+                              "Parse",
+                              "Dispatch",
+                              "DeliveryVirtualDevice",
+                              "DeliveryEndpoint"
                             ]
                           },
                           "nanoseconds": {
@@ -2462,7 +2462,7 @@
           "type": "string"
         },
         "session": {
-          "enum": ["active", "suspended", "disconnected"]
+          "enum": ["Active", "Suspended", "Disconnected"]
         }
       }
     },
@@ -2700,7 +2700,7 @@
         }
       }
     },
-    "sharedJoyConPair": {
+    "sharedControllerPair": {
       "type": "object",
       "required": ["gyro", "left", "profile", "right", "session"],
       "additionalProperties": false,

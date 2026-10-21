@@ -4,16 +4,16 @@ import Foundation
 /// identifiers that `ojd diagnose` prints and `cli-output.schema.json` lists.
 public enum FrameStage: String, Codable, CaseIterable, Sendable {
   /// The report arrived from the controller.
-  case read
+  case read = "Read"
   /// The protocol driver finished parsing the report into a controller event.
-  case parse
+  case parse = "Parse"
   /// The pipeline handed the event to the output dispatcher.
-  case dispatch
+  case dispatch = "Dispatch"
   /// The output dispatcher finished with the event, so the virtual device has the report.
-  case deliveryVirtualDevice = "delivery-virtual-device"
+  case deliveryVirtualDevice = "DeliveryVirtualDevice"
   /// The endpoint sent a stream line carrying the controller's state, which may be newer than the
   /// frame it is recorded on: the endpoint reads the latest state on its own poll.
-  case deliveryEndpoint = "delivery-endpoint"
+  case deliveryEndpoint = "DeliveryEndpoint"
 }
 
 /// The time a frame reached `stage`, in nanoseconds of the monotonic uptime clock.

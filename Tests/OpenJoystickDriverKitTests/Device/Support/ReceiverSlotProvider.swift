@@ -14,7 +14,7 @@ import IOKit
 /// interface.
 actor ReceiverSlotProvider: USBTransportProvider {
   static let device = USBTransportDevice(
-    route: .ioUSBHost,
+    route: .rawUSB,
     serviceID: 70,
     vendorID: 0x045E,
     productID: 0x0719,

@@ -124,7 +124,7 @@ extension DriverParseCharacterizationTests {
         "s12=0 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
         "xusb-up [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
         "telemetry [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "  battery 73% discharging wired-power=unknown",
+        "  battery 73% Discharging wired-power=unknown",
         "b60.0 [Guide] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
         "b60.1 [Capture] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
         "b60.2 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
@@ -134,7 +134,7 @@ extension DriverParseCharacterizationTests {
         "b60.6 [LeftPaddle2] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
         "b60.7 [RightPaddle2] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
         "charging [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "  battery 100% charging wired-power=yes", "short [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "  battery 100% Charging wired-power=yes", "short [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
       ]
     )
   }
@@ -146,7 +146,7 @@ extension DriverParseCharacterizationTests {
     #expect(
       lines == [
         "neutral [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "  battery 84% discharging wired-power=unknown",
+        "  battery 84% Discharging wired-power=unknown",
         "b5.4 [West] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
         "b5.5 [South] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
         "b5.6 [East] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
@@ -198,7 +198,7 @@ extension DriverParseCharacterizationTests {
         "t9=80 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=32896",
         "t9=ff [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=65535",
         "t9=0 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "charge=1 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0", "  battery 84% charging wired-power=yes",
+        "charge=1 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0", "  battery 84% Charging wired-power=yes",
         "repeat [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
         "short [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
       ]
@@ -215,7 +215,7 @@ extension DriverParseCharacterizationTests {
     #expect(
       lines == [
         "neutral [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "  battery 84% discharging wired-power=unknown",
+        "  battery 84% Discharging wired-power=unknown",
         "b60.0 [Guide] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
         "b60.1 [Capture] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
         "b60.2 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",

@@ -18,7 +18,7 @@ struct GatedControlTransferTests {
 
   private static func device(manufacturer: String?) -> USBTransportDevice {
     USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 1,
       vendorID: 0x1234,
       productID: 0xABCD,
@@ -50,7 +50,7 @@ struct GatedControlTransferTests {
       binding: ProtocolBinding(
         protocolID: .xboxXUSB,
         variant: nil,
-        accessBackend: .ioUSBHost,
+        accessBackend: .rawUSB,
         interfaceNumber: nil,
         rule: .catalogRecord,
         matchedPredicates: [],

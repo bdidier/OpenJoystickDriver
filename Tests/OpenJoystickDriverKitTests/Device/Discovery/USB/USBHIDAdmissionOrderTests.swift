@@ -7,7 +7,7 @@ import Testing
 /// first.
 struct USBHIDAdmissionOrderTests {
   private let device = USBTransportDevice(
-    route: .ioUSBHost,
+    route: .rawUSB,
     serviceID: 90,
     vendorID: 0x1234,
     productID: 0x5678,

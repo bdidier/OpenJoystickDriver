@@ -162,7 +162,7 @@ struct USBLifecycleWriteTests {
   }
 
   private static let device = USBTransportDevice(
-    route: .ioUSBHost,
+    route: .rawUSB,
     serviceID: 1,
     vendorID: 0x1532,
     productID: 0x0A15,

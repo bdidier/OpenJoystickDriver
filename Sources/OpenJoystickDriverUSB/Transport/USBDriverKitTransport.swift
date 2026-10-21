@@ -66,7 +66,7 @@ public actor USBDriverKitTransportProvider: USBPhysicalDeviceObservationProvider
     _ device: USBTransportDevice,
     options: USBTransportOpenOptions
   ) async throws -> any USBTransportSession {
-    guard device.route == .usbDriverKit else { throw USBTransportError.notSupported }
+    guard device.route == .usbExtension else { throw USBTransportError.notSupported }
     let service: DriverService
     if let cached = servicesByID[device.serviceID] {
       service = cached
@@ -126,7 +126,7 @@ public actor USBDriverKitTransportProvider: USBPhysicalDeviceObservationProvider
       ?? uint32Property(service.properties["LocationID"])
     let locationID = observedPhysicalLocationIdentifier ?? UInt32(truncatingIfNeeded: service.id)
     return USBTransportDevice(
-      route: .usbDriverKit,
+      route: .usbExtension,
       serviceID: service.id,
       vendorID: vendorID,
       productID: productID,
@@ -161,8 +161,8 @@ public actor USBDriverKitTransportProvider: USBPhysicalDeviceObservationProvider
       interfaces: [
         PhysicalInterfaceSignature(
           hostTransport: .usb,
-          accessBackend: .usbDriverKit,
-          usbRoute: .usbDriverKit
+          accessBackend: .usbExtension,
+          usbRoute: .usbExtension
         )
       ]
     )

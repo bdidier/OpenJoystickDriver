@@ -16,14 +16,16 @@ final class FakeService: @unchecked Sendable {
 
   convenience init(
     devices: [ApplicationServiceDeviceDescription],
+    unboundDevices: [ApplicationServiceUnboundDevice] = [],
     respond: @escaping Respond = { _, _ in nil }
   ) throws {
-    try self.init(devices: { devices }, respond: respond)
+    try self.init(devices: { devices }, unboundDevices: unboundDevices, respond: respond)
   }
 
   /// `devices` runs for each `getStatus` request, so the connected controllers can change.
   init(
     devices: @escaping @Sendable () -> [ApplicationServiceDeviceDescription],
+    unboundDevices: [ApplicationServiceUnboundDevice] = [],
     respond: @escaping Respond = { _, _ in nil }
   ) throws {
     let status: @Sendable () -> Data? = {
@@ -32,6 +34,7 @@ final class FakeService: @unchecked Sendable {
           inputRead: "granted",
           inputInject: "granted",
           connectedDevices: devices(),
+          unboundDevices: unboundDevices,
           userSpaceVirtualDeviceEnabled: true
         )
       )

@@ -1,0 +1,82 @@
+import Foundation
+import OpenJoystickDriverKit
+import OpenJoystickDriverTestSupport
+import Testing
+
+@testable import OpenJoystickDriverCLI
+
+/// `--plain` and human output spell a state in kebab-case, while `--json` keeps the
+/// UpperCamelCase value.
+@Suite(.serialized)
+struct KebabStateOutputTests {
+  private func runStatus(_ service: FakeService, _ arguments: [String]) async -> CLIRun {
+    let records = URL(fileURLWithPath: "/nonexistent-\(UUID().uuidString)")
+    return await RecordStore.$directory.withValue(records) {
+      await StatusCommand.$extensionProbe.withValue(
+        { ExtensionStatus(bundle: .present, registration: .absent) },
+        operation: {
+          await StatusCommand.$linkProbe.withValue(
+            {
+              CommandLineToolLinkStatus.probe(
+                path: "/nonexistent",
+                executable: URL(fileURLWithPath: "/nonexistent")
+              )
+            },
+            operation: { await service.run(["status"] + arguments) }
+          )
+        }
+      )
+    }
+  }
+
+  @Test
+  func theUnboundReasonIsKebabCaseInPlainAndHumanOutput() async throws {
+    let unbound = ApplicationServiceUnboundDevice(
+      vendorID: 0x1234,
+      productID: 0x5678,
+      connection: "USB",
+      accessBackend: .hid,
+      reason: .noProtocolMatch,
+      rejectedCandidates: [],
+      interfaces: []
+    )
+    let service = try FakeService(devices: [], unboundDevices: [unbound])
+    let json = await runStatus(service, ["--json"])
+    let plain = await runStatus(service, ["--plain"])
+    let human = await runStatus(service, [])
+
+    #expect(json.code == 0, "\(json.standardError)")
+    let devices = try #require(try json.json()["unboundDevices"] as? [[String: Any]])
+    #expect(devices.first?["reason"] as? String == "NoProtocolMatch")
+    #expect(plain.standardOutput.contains("\tUSB\tno-protocol-match\n"))
+    #expect(human.standardOutput.contains("USB  no-protocol-match"))
+    #expect(!plain.standardOutput.contains("NoProtocolMatch"))
+    #expect(!human.standardOutput.contains("NoProtocolMatch"))
+  }
+
+  @Test
+  func theInputHealthIsKebabCaseInPlainAndHumanOutput() async throws {
+    let service = try FakeService(devices: [
+      .fixture(id: "pad-1"),
+      .fixture(
+        id: "pad-2",
+        inputHealth: ControllerInputHealth(
+          state: .waitingForNeutral,
+          failureReason: .missingReports
+        )
+      ),
+    ])
+    let json = await service.run(["controller", "show", token("pad-2"), "--json"])
+    let healthyPlain = await service.run(["controller", "show", token("pad-1"), "--plain"])
+    let plain = await service.run(["controller", "show", token("pad-2"), "--plain"])
+    let human = await service.run(["controller", "show", token("pad-2")])
+
+    #expect(json.code == 0, "\(json.standardError)")
+    let health = try #require(try json.json()["inputHealth"] as? [String: Any])
+    #expect(health["state"] as? String == "WaitingForNeutral")
+    #expect(health["failureReason"] as? String == "MissingReports")
+    #expect(healthyPlain.standardOutput.contains("\ninput-health\thealthy\n"))
+    #expect(plain.standardOutput.contains("\ninput-health\twaiting-for-neutral\n"))
+    #expect(human.standardOutput.contains("waiting-for-neutral (missing-reports)"))
+  }
+}

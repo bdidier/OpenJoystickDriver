@@ -82,7 +82,7 @@ struct InputCapabilitiesTests {
   func devicePayloadRoundTripsConnectionState() throws {
     let state = ControllerConnectionState(
       transport: .bluetoothClassic,
-      backend: .ioHID,
+      backend: .hid,
       isConnected: true,
       power: ControllerConnectionState.Power(
         charging: .charging,
@@ -109,8 +109,8 @@ struct InputCapabilitiesTests {
     #expect(decoded.connectionState?.power.battery.percentageText == "90-99%")
     let object = try #require(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
     let encodedState = try #require(object["connectionState"] as? [String: Any])
-    #expect(encodedState["transport"] as? String == "bluetoothClassic")
-    #expect(encodedState["backend"] as? String == "ioHID")
+    #expect(encodedState["transport"] as? String == "BluetoothClassic")
+    #expect(encodedState["backend"] as? String == "HID")
     let encodedPower = try #require(encodedState["power"] as? [String: Any])
     let encodedBattery = try #require(encodedPower["battery"] as? [String: Any])
     #expect(encodedBattery["percentage"] as? [Int] == [90, 99])

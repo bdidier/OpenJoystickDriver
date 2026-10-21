@@ -145,7 +145,7 @@ struct USBPinnedRowDiscoveryTests {
 
   private func usbDevice(_ row: PinnedRow) -> USBTransportDevice {
     USBTransportDevice(
-      route: .ioUSBHost,
+      route: .rawUSB,
       serviceID: 90,
       vendorID: row.vendorID,
       productID: row.productID,

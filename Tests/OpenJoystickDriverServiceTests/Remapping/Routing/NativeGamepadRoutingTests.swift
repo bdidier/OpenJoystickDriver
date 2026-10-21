@@ -132,7 +132,7 @@ struct NativeGamepadRoutingTests {
         interfaces: [
           PhysicalInterfaceSignature(
             hostTransport: .usb,
-            accessBackend: .ioHID,
+            accessBackend: .hid,
             hidLayout: HIDLayoutSummary(reportDescriptor: Data(GamepadHIDDescriptor.descriptor))
           )
         ],

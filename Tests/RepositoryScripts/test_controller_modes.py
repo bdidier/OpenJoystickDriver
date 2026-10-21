@@ -422,9 +422,7 @@ class ControllerModeSchemaTests(unittest.TestCase):
         rejected = {
             "report-layout without a layout": single("HIDReportLayout"),
             "layout under another family": single("SonySixaxis", input=layout),
-            "template under HIDDescriptor": single(
-                "HIDDescriptor", {"rumble": rumble}
-            ),
+            "template under HIDDescriptor": single("HIDDescriptor", {"rumble": rumble}),
             "template under a raw-USB family": single("XboxGIP", {"rumble": rumble}),
         }
         for name, document in rejected.items():

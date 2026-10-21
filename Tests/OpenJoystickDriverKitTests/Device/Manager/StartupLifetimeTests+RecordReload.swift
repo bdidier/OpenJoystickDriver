@@ -70,7 +70,7 @@ extension StartupLifetimeTests {
           PhysicalInterfaceSignature(
             interfaceNumber: 0,
             hostTransport: .usb,
-            accessBackend: .ioHID,
+            accessBackend: .hid,
             hidLayout: HIDLayoutSummary(reportDescriptor: Data(GamepadHIDDescriptor.descriptor))
           )
         ]

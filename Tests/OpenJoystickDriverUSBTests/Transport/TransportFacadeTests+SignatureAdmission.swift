@@ -7,8 +7,8 @@ import Testing
 extension TransportFacadeTests {
   @Test
   func uncataloguedDirectDevicesAreAdmittedOnlyWithAKnownSignature() async throws {
-    let razer = device(route: .ioUSBHost, serviceID: 1, vendorID: 0x1532, productID: 0x0A15)
-    let plain = device(route: .ioUSBHost, serviceID: 2, vendorID: 0x1234, productID: 0x5678)
+    let razer = device(route: .rawUSB, serviceID: 1, vendorID: 0x1532, productID: 0x0A15)
+    let plain = device(route: .rawUSB, serviceID: 2, vendorID: 0x1234, productID: 0x5678)
     let provider = OpenJoystickDriverUSBTransportProvider(
       ioUSBHostProvider: FakeUSBTransportProvider(devicesResult: .success([razer, plain])),
       usbDriverKitProvider: FakeUSBTransportProvider(),
@@ -31,7 +31,7 @@ extension TransportFacadeTests {
 
   @Test
   func configurationObservationIsReadOnlyThroughIOUSBHostForTheSameService() async throws {
-    let direct = device(route: .ioUSBHost, serviceID: 3)
+    let direct = device(route: .rawUSB, serviceID: 3)
     let calls = ConfigurationCallRecorder()
     let provider = OpenJoystickDriverUSBTransportProvider(
       ioUSBHostProvider: FakeUSBTransportProvider(),
@@ -51,7 +51,7 @@ extension TransportFacadeTests {
     )
     await #expect(throws: USBTransportError.notSupported) {
       try await provider.configurationObservation(
-        for: self.device(route: .usbDriverKit, serviceID: 4),
+        for: self.device(route: .usbExtension, serviceID: 4),
         configurationValue: 1
       )
     }
@@ -71,9 +71,9 @@ private final class ConfigurationCallRecorder: @unchecked Sendable {
 extension TransportFacadeTests {
   @Test
   func signatureAdmissionIsCachedWhileTheServiceStaysEnumerated() async throws {
-    let razer = device(route: .ioUSBHost, serviceID: 5, vendorID: 0x1532, productID: 0x0A15)
-    let plain = device(route: .ioUSBHost, serviceID: 6, vendorID: 0x1234, productID: 0x5678)
-    let pending = device(route: .ioUSBHost, serviceID: 7, vendorID: 0x1234, productID: 0x9999)
+    let razer = device(route: .rawUSB, serviceID: 5, vendorID: 0x1532, productID: 0x0A15)
+    let plain = device(route: .rawUSB, serviceID: 6, vendorID: 0x1234, productID: 0x5678)
+    let pending = device(route: .rawUSB, serviceID: 7, vendorID: 0x1234, productID: 0x9999)
     let reads = ObservationReadRecorder()
     let provider = OpenJoystickDriverUSBTransportProvider(
       ioUSBHostProvider: FakeUSBTransportProvider(

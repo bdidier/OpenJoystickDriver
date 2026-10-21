@@ -186,7 +186,8 @@ struct RecordValueSpellingTests {
   private static func endpointModes(_ endpoint: String) -> String {
     #""modes": [{"id": "default", "protocol": {"family": "XboxGIP"}}, "#
       + #"{"id": "alternative", "protocol": {"family": "XboxGIP"}, "match": "#
-      + #"{"interfaceSignature": {"interfaceClass": 255, "interfaceSubclass": 71, "interfaceProtocol": 208, "endpoints": [{\#(endpoint)}]}}}]"#
+      + #"{"interfaceSignature": {"interfaceClass": 255, "interfaceSubclass": 71, "#
+      + #""interfaceProtocol": 208, "endpoints": [{\#(endpoint)}]}}}]"#
   }
 
   private static func problem(_ fields: String) -> String? {
