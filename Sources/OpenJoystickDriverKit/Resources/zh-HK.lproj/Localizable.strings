@@ -1850,3 +1850,4 @@
 "controllers.captureDuration" = "時長（秒）";
 "controllers.captureDurationInvalid" = "請輸入大於 0 的秒數。";
 "controllers.fileSaved" = "已儲存 %@。";
+"controllers.virtual.currentScope" = "目前覆寫的範圍：%@";

@@ -1851,3 +1851,4 @@
 "controllers.captureDuration" = "Durée (secondes)";
 "controllers.captureDurationInvalid" = "Saisissez un nombre de secondes supérieur à 0.";
 "controllers.fileSaved" = "%@ a été enregistré.";
+"controllers.virtual.currentScope" = "Portée du remplacement actuel : %@";

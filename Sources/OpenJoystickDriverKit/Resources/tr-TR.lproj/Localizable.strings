@@ -1850,3 +1850,4 @@
 "controllers.captureDuration" = "Süre (saniye)";
 "controllers.captureDurationInvalid" = "0’dan büyük bir saniye sayısı girin.";
 "controllers.fileSaved" = "%@ kaydedildi.";
+"controllers.virtual.currentScope" = "Geçerli geçersiz kılmanın kapsamı: %@";

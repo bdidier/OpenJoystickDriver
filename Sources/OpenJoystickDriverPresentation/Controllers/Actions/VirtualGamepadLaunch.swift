@@ -78,14 +78,22 @@ enum VirtualGamepadLaunch {
   }
 
   /// The profiles among `devices` that SDL does not recognize with its default hints, which the
-  /// user can fix by choosing the GameController backend.
+  /// user can fix by choosing the GameController backend. Throws when a mapping cannot be built.
   static func profilesNeedingBackend(
     in devices: [ApplicationServiceDeviceDescription]
-  ) -> [VirtualHIDProfileID] {
+  ) throws -> [VirtualHIDProfileID] {
     let profiles = devices.compactMap { $0.servingDecision.selection?.profileID }
-    return VirtualHIDProfileID.allCases.filter { profile in
-      profiles.contains(profile)
-        && ((try? profile.gamepadMapping().worksWithDefaultSDLHints) == false)
+    return try VirtualHIDProfileID.allCases.filter { profile in
+      try profiles.contains(profile) && !profile.gamepadMapping().worksWithDefaultSDLHints
+    }
+  }
+
+  /// `environment` without the variables launchd gives an app and a terminal does not, so the
+  /// game starts from the environment `ojd virtual launch` passes it.
+  static func gameEnvironment(from environment: [String: String]) -> [String: String] {
+    let exact: Set<String> = ["LaunchInstanceID", "OS_ACTIVITY_DT_MODE"]
+    return environment.filter { name, _ in
+      !(name.hasPrefix("__CF") || name.hasPrefix("XPC_") || exact.contains(name))
     }
   }
 }

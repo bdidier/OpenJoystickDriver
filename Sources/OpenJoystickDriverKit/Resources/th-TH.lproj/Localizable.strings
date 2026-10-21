@@ -1850,3 +1850,4 @@
 "controllers.captureDuration" = "ระยะเวลา (วินาที)";
 "controllers.captureDurationInvalid" = "ป้อนจำนวนวินาทีที่มากกว่า 0";
 "controllers.fileSaved" = "บันทึก %@ แล้ว";
+"controllers.virtual.currentScope" = "ขอบเขตของการแทนที่ปัจจุบัน: %@";

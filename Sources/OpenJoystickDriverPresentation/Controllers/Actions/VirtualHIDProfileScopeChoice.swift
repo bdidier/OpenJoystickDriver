@@ -38,3 +38,37 @@ enum VirtualHIDProfileScopeChoice: Hashable, CaseIterable {
     return Self(scope)
   }
 }
+
+/// What choosing a profile in a scope does, given the override the controller reports. The
+/// report names only the override in effect, which is its unit's when one exists, else its
+/// model's.
+enum VirtualHIDProfileOverrideDecision: Equatable {
+  /// The scope already holds this choice.
+  case unchanged
+  /// Store the profile in the scope, or clear the scope's override for Automatic.
+  case send
+  /// Automatic in a scope that holds no override: the override in effect belongs to the other
+  /// scope, and clearing this scope would change nothing.
+  case otherScopeHolds(VirtualHIDProfileScopeChoice)
+
+  static func decide(
+    profile: VirtualHIDProfileID?,
+    scope: VirtualHIDProfileScopeChoice,
+    for device: ApplicationServiceDeviceDescription
+  ) -> Self {
+    guard let effective = device.virtualHIDProfile?.override else {
+      return profile == nil ? .unchanged : .send
+    }
+    let holder = currentScope(for: device) ?? .model
+    guard let profile else { return holder == scope ? .send : .otherScopeHolds(holder) }
+    return profile == effective && holder == scope ? .unchanged : .send
+  }
+
+  /// The scope of the override in effect; nil when the controller selects automatically.
+  static func currentScope(
+    for device: ApplicationServiceDeviceDescription
+  ) -> VirtualHIDProfileScopeChoice? {
+    guard let status = device.virtualHIDProfile, status.override != nil else { return nil }
+    return VirtualHIDProfileScopeChoice(status.overrideScope ?? .model)
+  }
+}

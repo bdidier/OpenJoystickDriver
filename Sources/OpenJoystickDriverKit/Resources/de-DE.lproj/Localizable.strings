@@ -1851,3 +1851,4 @@
 "controllers.captureDuration" = "Dauer (Sekunden)";
 "controllers.captureDurationInvalid" = "Gib eine Anzahl Sekunden über 0 ein.";
 "controllers.fileSaved" = "%@ wurde gesichert.";
+"controllers.virtual.currentScope" = "Bereich der aktuellen Überschreibung: %@";

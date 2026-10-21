@@ -41,6 +41,16 @@
               Text(OJDLocalized.string(choice.titleKey)).tag(choice)
             }
           }.disabled(overrideState.inFlight)
+          if let holder = VirtualHIDProfileOverrideDecision.currentScope(for: device),
+            holder != scope
+          {
+            Text(
+              OJDLocalized.formatted(
+                "controllers.virtual.currentScope",
+                OJDLocalized.string(holder.titleKey)
+              )
+            ).font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor))
+          }
         } else {
           Text(OJDLocalized.string("virtualProfile.modelScope")).font(.caption)
             .foregroundColor(Color(NSColor.secondaryLabelColor)).fixedSize(
@@ -85,7 +95,10 @@
           return device.virtualHIDProfile?.override
         },
         set: { profile in
-          guard profile != device.virtualHIDProfile?.override else { return }
+          guard
+            VirtualHIDProfileOverrideDecision.decide(profile: profile, scope: scope, for: device)
+              == .send
+          else { return }
           let device = device
           let scope = scope.scope
           Task { @MainActor in

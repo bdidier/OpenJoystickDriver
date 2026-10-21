@@ -66,7 +66,7 @@
       let gateway = DelayedMotionCalibrationGateway()
       let model = MotionCalibrationViewModel(gateway: gateway)
       model.select(ControllerReference.session(.fixture("first")))
-      let request = Task { await model.refresh() }
+      let request = Task { await model.perform(.start) }
       await gateway.waitForRequest()
       #expect(model.isBusy)
       model.select(nil)
@@ -157,6 +157,87 @@
       await model.refreshWhileCalibrating { _ in Issue.record("no retry after a failure") }
       #expect(await gateway.reads == 1)
       #expect(model.errorMessage == OJDLocalized.string("motion.calibration.motionUnavailable"))
+    }
+  }
+
+  extension MotionCalibrationStateTests {
+    @Test
+    func aStatusReadDoesNotMarkTheModelBusy() async throws {
+      let gateway = QueuedMotionCalibrationGateway()
+      let model = MotionCalibrationViewModel(gateway: gateway)
+      model.select(ControllerReference.session(.fixture("first")))
+      let poll = Task { await model.refresh() }
+      await gateway.waitForRequests(1)
+      #expect(!model.isBusy)
+      await gateway.answer(0, with: .success(try Self.status(baseline: true, collecting: false)))
+      await poll.value
+      #expect(model.status?.hasMotionBaseline == true)
+    }
+
+    @Test
+    func aCommandDuringAReadIsPerformedAndTheStaleReadIsIgnored() async throws {
+      let gateway = QueuedMotionCalibrationGateway()
+      let model = MotionCalibrationViewModel(gateway: gateway)
+      model.select(ControllerReference.session(.fixture("first")))
+      let poll = Task { await model.refresh() }
+      await gateway.waitForRequests(1)
+      let command = Task { await model.perform(.start) }
+      await gateway.waitForRequests(2)
+      #expect(await gateway.commands == [nil, .start])
+      #expect(model.isBusy)
+      await gateway.answer(1, with: .success(try Self.status(baseline: true, collecting: true)))
+      await command.value
+      await gateway.answer(0, with: .success(try Self.status(baseline: false, collecting: false)))
+      await poll.value
+      #expect(model.status?.isCollecting == true)
+      #expect(model.status?.hasMotionBaseline == true)
+      #expect(!model.isBusy)
+    }
+
+    @Test
+    func aReadThatStartedDuringACommandCannotOverwriteItsResult() async throws {
+      let gateway = QueuedMotionCalibrationGateway()
+      let model = MotionCalibrationViewModel(gateway: gateway)
+      model.select(ControllerReference.session(.fixture("first")))
+      let command = Task { await model.perform(.start) }
+      await gateway.waitForRequests(1)
+      let poll = Task { await model.refresh() }
+      await gateway.waitForRequests(2)
+      await gateway.answer(0, with: .success(try Self.status(baseline: true, collecting: true)))
+      await command.value
+      await gateway.answer(1, with: .success(try Self.status(baseline: false, collecting: false)))
+      await poll.value
+      #expect(model.status?.isCollecting == true)
+    }
+  }
+
+  private actor QueuedMotionCalibrationGateway: MotionCalibrationGateway {
+    private var continuations: [CheckedContinuation<RemappingMotionCalibrationStatus, any Error>] =
+      []
+    private(set) var commands: [RemappingMotionCalibrationCommand?] = []
+    private var waiter: (count: Int, continuation: CheckedContinuation<Void, Never>)?
+
+    func motionCalibration(
+      for selector: ControllerReference,
+      command: RemappingMotionCalibrationCommand?
+    ) async throws -> RemappingMotionCalibrationStatus {
+      commands.append(command)
+      return try await withCheckedThrowingContinuation { continuation in
+        continuations.append(continuation)
+        if let waiter, commands.count >= waiter.count {
+          self.waiter = nil
+          waiter.continuation.resume()
+        }
+      }
+    }
+
+    func waitForRequests(_ count: Int) async {
+      guard commands.count < count else { return }
+      await withCheckedContinuation { waiter = (count, $0) }
+    }
+
+    func answer(_ index: Int, with result: Result<RemappingMotionCalibrationStatus, any Error>) {
+      continuations[index].resume(with: result)
     }
   }
 

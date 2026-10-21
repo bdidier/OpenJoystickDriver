@@ -30,6 +30,15 @@ public struct ControllerTuningValue: Equatable, Sendable {
 }
 
 extension ControllerRecord {
+  /// The source `ojd controller show` names for `server` when no record matches the model.
+  public static let defaultServerSource = "Default"
+
+  /// The record layer that sets `server`: `Bundled`, `Package`, `Global` or `User`; `Default`
+  /// when no layer sets it.
+  public var serverSource: String {
+    fieldLayers["server"]?.rawValue ?? Self.defaultServerSource
+  }
+
   /// Every tuning key with its effective value and the layer it comes from.
   public var tuningValues: [ControllerTuningValue] {
     ControllerTuningValue.values(of: tuning, layers: tuningLayers)

@@ -1851,3 +1851,4 @@
 "controllers.captureDuration" = "Duur (seconden)";
 "controllers.captureDurationInvalid" = "Voer een aantal seconden boven 0 in.";
 "controllers.fileSaved" = "%@ is bewaard.";
+"controllers.virtual.currentScope" = "Bereik van de huidige overschrijving: %@";

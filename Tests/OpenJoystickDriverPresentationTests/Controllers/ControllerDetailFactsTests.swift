@@ -169,9 +169,15 @@ extension ControllerDetailFactsTests {
   func tuningRowsListOnlyValuesALayerSets() throws {
     let model = ControllerModelID(vendorID: 0x045E, productID: 0x02FD)
     let record = try #require(ControllerRecordSet.bundled.records[model])
-    let rows = ControllerTuningRows.rows(for: record)
-    let expected = record.tuningValues.filter { $0.value != nil }.map(\.key.rawValue)
-    #expect(rows.map(\.name) == expected)
-    for row in rows { #expect(row.text == "\(row.value) (\(row.layer))") }
+    let rows = ControllerTuningRows.rows(for: record, activeProfile: nil)
+    #expect(rows.map(\.name) == ControllerTuning.Key.allCases.map(\.rawValue))
+    for (row, entry) in zip(rows, record.tuningValues) {
+      if entry.value == nil {
+        #expect(row.text == OJDLocalized.string("cli.config.show.unset"))
+      } else {
+        #expect(row.layer == CommandLineName.kebab(entry.layer.rawValue))
+        #expect(row.text == "\(row.value) (\(row.layer ?? ""))")
+      }
+    }
   }
 }

@@ -1851,3 +1851,4 @@
 "controllers.captureDuration" = "Duration (seconds)";
 "controllers.captureDurationInvalid" = "Enter a number of seconds above 0.";
 "controllers.fileSaved" = "Saved %@.";
+"controllers.virtual.currentScope" = "Current override scope: %@";

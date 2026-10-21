@@ -1850,3 +1850,4 @@
 "controllers.captureDuration" = "Длительность (секунды)";
 "controllers.captureDurationInvalid" = "Введите число секунд больше 0.";
 "controllers.fileSaved" = "%@ сохранён.";
+"controllers.virtual.currentScope" = "Область текущего переопределения: %@";

@@ -113,7 +113,7 @@ struct ControllerActionsTests {
   func exportDocumentIsTheMappingTheCommandPrints() throws {
     let mapping = try VirtualHIDProfileID.generic.gamepadMapping()
     let sdl = try VirtualGamepadExport.document(format: .sdl, profile: .generic)
-    #expect(sdl.hasSuffix(mapping.sdlMapping))
+    #expect(sdl.hasSuffix(mapping.sdlMapping + "\n"))
     let w3c = try VirtualGamepadExport.document(format: .w3c, profile: .generic)
     let decoded = try JSONSerialization.jsonObject(with: Data(w3c.utf8)) as? [[String: Any]]
     #expect(decoded?.count == 1)
@@ -136,6 +136,56 @@ struct ControllerActionsTests {
       bindingResult: .hidDescriptorFixture
     )
     #expect(VirtualGamepadExport.profile(for: system) == nil)
+  }
+
+  @Test
+  func overrideDecisionSkipsOnlyWhenProfileAndScopeAlreadyMatch() {
+    let port = ControllerPortKey.fixture("port-1")
+    let model = Self.device(portKey: port, override: .generic, scope: .model)
+    let unit = Self.device(portKey: port, override: .generic, scope: .unit)
+    let none = Self.device(portKey: port)
+    typealias Decision = VirtualHIDProfileOverrideDecision
+    #expect(Decision.decide(profile: .generic, scope: .model, for: model) == .unchanged)
+    #expect(Decision.decide(profile: .generic, scope: .unit, for: model) == .send)
+    #expect(Decision.decide(profile: .sdlCompatible, scope: .model, for: model) == .send)
+    #expect(Decision.decide(profile: .generic, scope: .unit, for: unit) == .unchanged)
+    #expect(Decision.decide(profile: .generic, scope: .model, for: unit) == .send)
+    #expect(Decision.decide(profile: .generic, scope: .model, for: none) == .send)
+  }
+
+  @Test
+  func automaticInAScopeWithoutAnOverrideNamesTheScopeThatHoldsIt() {
+    let port = ControllerPortKey.fixture("port-1")
+    let model = Self.device(portKey: port, override: .generic, scope: .model)
+    let unit = Self.device(portKey: port, override: .generic, scope: .unit)
+    typealias Decision = VirtualHIDProfileOverrideDecision
+    #expect(Decision.decide(profile: nil, scope: .model, for: model) == .send)
+    #expect(Decision.decide(profile: nil, scope: .unit, for: model) == .otherScopeHolds(.model))
+    #expect(Decision.decide(profile: nil, scope: .unit, for: unit) == .send)
+    #expect(Decision.decide(profile: nil, scope: .model, for: unit) == .otherScopeHolds(.unit))
+    #expect(
+      Decision.decide(profile: nil, scope: .model, for: Self.device(portKey: port)) == .unchanged
+    )
+    #expect(Decision.currentScope(for: model) == .model)
+    #expect(Decision.currentScope(for: Self.device(portKey: port)) == nil)
+  }
+
+  @Test
+  func gameEnvironmentDropsTheVariablesOnlyLaunchdSets() {
+    let environment = VirtualGamepadLaunch.gameEnvironment(from: [
+      "__CFBundleIdentifier": "app", "XPC_SERVICE_NAME": "x", "XPC_FLAGS": "0x0",
+      "LaunchInstanceID": "1", "OS_ACTIVITY_DT_MODE": "YES", "PATH": "/usr/bin", "HOME": "/h",
+    ])
+    #expect(environment == ["PATH": "/usr/bin", "HOME": "/h"])
+  }
+
+  @Test
+  func profilesNeedingTheBackendAreThoseSDLDoesNotRecognize() throws {
+    let devices = VirtualHIDProfileID.allCases.map { Self.device(override: $0) }
+    let expected = try VirtualHIDProfileID.allCases.filter {
+      try !$0.gamepadMapping().worksWithDefaultSDLHints
+    }
+    #expect(try VirtualGamepadLaunch.profilesNeedingBackend(in: devices) == expected)
   }
 
   // MARK: Launch

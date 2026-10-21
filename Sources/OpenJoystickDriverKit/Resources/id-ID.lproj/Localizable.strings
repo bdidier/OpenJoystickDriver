@@ -1850,3 +1850,4 @@
 "controllers.captureDuration" = "Durasi (detik)";
 "controllers.captureDurationInvalid" = "Masukkan jumlah detik di atas 0.";
 "controllers.fileSaved" = "%@ disimpan.";
+"controllers.virtual.currentScope" = "Cakupan penimpaan saat ini: %@";

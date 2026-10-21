@@ -214,7 +214,7 @@ struct ControllerShowReport: Encodable, Equatable {
         hidInput: device.hidInputOwnership.rawValue,
         duplicateExposureRisk: device.duplicateExposureRisk.rawValue,
         server: record?.server ?? .system,
-        serverSource: record?.fieldLayers["server"]?.rawValue ?? "Default"
+        serverSource: record?.serverSource ?? ControllerRecord.defaultServerSource
       ),
       serving: Serving(device.servingDecision),
       parameters: device.parameters,

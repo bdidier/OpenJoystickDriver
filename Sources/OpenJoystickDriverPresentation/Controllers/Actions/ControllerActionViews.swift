@@ -8,7 +8,8 @@
   /// and return every override to automatic.
   struct VirtualGamepadActionsView: View {
     let device: ApplicationServiceDeviceDescription
-    let connectedDevices: [ApplicationServiceDeviceDescription]
+    /// Every connected controller; nil while the service status is not available.
+    let connectedDevices: [ApplicationServiceDeviceDescription]?
     @ObservedObject
     var viewModel: RuntimeViewModel
     @ObservedObject
@@ -24,18 +25,8 @@
           OJDLabeledRow(OJDLocalized.string("controllers.exportMapping")) {
             Button(OJDLocalized.string("common.export")) { export(profile) }
           }
-          let needingBackend = VirtualGamepadLaunch.profilesNeedingBackend(in: connectedDevices)
-          OJDLabeledRow(OJDLocalized.string("controllers.launch")) {
-            Button(OJDLocalized.string("controllers.launch.prompt")) { launch() }
-          }
-          ForEach(needingBackend, id: \.self) { profile in
-            Text(
-              OJDLocalized.formatted(
-                "cli.virtual.sdl_hints_note",
-                CommandLineName.kebab(profile.rawValue)
-              )
-            ).font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor))
-          }
+          launchRows
+
           if let outcome = actions.launchOutcome {
             ControllerNoticeText(text: outcome.message, isError: isFailure(outcome))
           }
@@ -60,6 +51,33 @@
       }
     }
 
+    @ViewBuilder
+    private var launchRows: some View {
+      OJDLabeledRow(OJDLocalized.string("controllers.launch")) {
+        if connectedDevices == nil {
+          Text(OJDLocalized.string("common.unavailable"))
+        } else {
+          Button(OJDLocalized.string("controllers.launch.prompt")) { launch() }
+        }
+      }
+      if let devices = connectedDevices {
+        let needed = Result { try VirtualGamepadLaunch.profilesNeedingBackend(in: devices) }
+        switch needed {
+        case .success(let profiles):
+          ForEach(profiles, id: \.self) { profile in
+            Text(
+              OJDLocalized.formatted(
+                "cli.virtual.sdl_hints_note",
+                CommandLineName.kebab(profile.rawValue)
+              )
+            ).font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor))
+          }
+        case .failure(let error):
+          ControllerNoticeText(text: RuntimePresentation.userFacingError(error), isError: true)
+        }
+      }
+    }
+
     private func isFailure(_ outcome: VirtualGamepadLaunch.Outcome) -> Bool {
       if case .failed = outcome { return true }
       return false
@@ -74,6 +92,7 @@
     }
 
     private func launch() {
+      guard let connectedDevices else { return }
       ControllerFilePanels.chooseProgram { choice in
         guard let choice else { return }
         actions.launch(

@@ -54,7 +54,11 @@ final class ControllerDetailActions: ObservableObject {
   private(set) var launchOutcome: VirtualGamepadLaunch.Outcome?
 
   private var timedTask: Task<Void, Never>?
+  /// Names the latest capture; an older one that ends later changes nothing.
+  private var timedGeneration: UInt64 = 0
   private var launched: Process?
+  /// Names the latest launch; the end of an earlier program does not replace its outcome.
+  private var launchGeneration: UInt64 = 0
 
   // MARK: - Timed captures
 
@@ -68,8 +72,9 @@ final class ControllerDetailActions: ObservableObject {
     descriptor: @escaping @Sendable () -> [UInt8]?
   ) {
     timedTask?.cancel()
+    timedGeneration &+= 1
+    let generation = timedGeneration
     timedState = .capturing
-    let descriptor = descriptor
     timedTask = Task { [weak self] in
       do {
         let packets = try await ControllerPacketCapture.collect(
@@ -78,12 +83,20 @@ final class ControllerDetailActions: ObservableObject {
           seconds: seconds
         )
         try Task.checkCancellation()
-        self?.finishCapture(kind, device: device, packets: packets, descriptor: descriptor())
+        // The system call that reads the descriptor runs off the main actor.
+        let report = await Task.detached { descriptor() }.value
+        guard let self, self.timedGeneration == generation else { return }
+        self.finishCapture(kind, device: device, packets: packets, descriptor: report)
       } catch is CancellationError {
-        self?.timedState = .idle
+        guard let self, self.timedGeneration == generation else { return }
+        self.timedState = .idle
       } catch let error as ControllerRecordDrafting.NoLayout {
-        self?.timedState = .failed(error.message)
-      } catch { self?.timedState = .failed(RuntimePresentation.userFacingError(error)) }
+        guard let self, self.timedGeneration == generation else { return }
+        self.timedState = .failed(error.message)
+      } catch {
+        guard let self, self.timedGeneration == generation else { return }
+        self.timedState = .failed(RuntimePresentation.userFacingError(error))
+      }
     }
   }
 
@@ -131,6 +144,7 @@ final class ControllerDetailActions: ObservableObject {
   func cancelTimed() {
     timedTask?.cancel()
     timedTask = nil
+    timedGeneration &+= 1
     timedState = .idle
     timedKind = nil
   }
@@ -190,7 +204,9 @@ final class ControllerDetailActions: ObservableObject {
     program: URL,
     devices: [ApplicationServiceDeviceDescription],
     gameControllerBackend: Bool,
-    baseEnvironment: [String: String] = ProcessInfo.processInfo.environment
+    baseEnvironment: [String: String] = VirtualGamepadLaunch.gameEnvironment(
+      from: ProcessInfo.processInfo.environment
+    )
   ) {
     let name = program.deletingPathExtension().lastPathComponent
     do {
@@ -207,12 +223,15 @@ final class ControllerDetailActions: ObservableObject {
         standardOutput: FileHandle.nullDevice
       )
       process.standardInput = FileHandle.nullDevice
+      launchGeneration &+= 1
+      let generation = launchGeneration
       process.terminationHandler = { [weak self] finished in
         let status =
           finished.terminationReason == .uncaughtSignal
           ? 128 + finished.terminationStatus : finished.terminationStatus
         Task { @MainActor in
-          self?.launchOutcome = .exited(program: name, status: status)
+          guard let self, self.launchGeneration == generation else { return }
+          self.launchOutcome = .exited(program: name, status: status)
         }
       }
       try process.run()

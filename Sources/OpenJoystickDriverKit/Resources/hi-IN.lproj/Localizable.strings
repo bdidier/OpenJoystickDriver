@@ -1850,3 +1850,4 @@
 "controllers.captureDuration" = "अवधि (सेकंड)";
 "controllers.captureDurationInvalid" = "0 से अधिक सेकंड की संख्या दर्ज करें।";
 "controllers.fileSaved" = "%@ सहेजा गया।";
+"controllers.virtual.currentScope" = "मौजूदा ओवरराइड का दायरा: %@";

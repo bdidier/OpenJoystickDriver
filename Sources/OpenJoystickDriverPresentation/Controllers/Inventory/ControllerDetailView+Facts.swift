@@ -31,10 +31,12 @@
         if ControllerServerPicker.isShown(for: device) {
           Section {
             ControllerServerPicker(viewModel: viewModel, device: device)
-            OJDLabeledValue(
-              OJDLocalized.string("controllers.server.source"),
-              CommandLineName.kebab(record?.fieldLayers["server"]?.rawValue ?? "Default")
-            )
+            if let record {
+              OJDLabeledValue(
+                OJDLocalized.string("controllers.server.source"),
+                CommandLineName.kebab(record.serverSource)
+              )
+            }
           }
         }
         if device.physicalOwnership != .systemGamepad {
@@ -104,19 +106,26 @@
       "\(device.sessionToken.rawValue) \(device.recordServer.rawValue)"
     }
 
-    private var connectedDevices: [ApplicationServiceDeviceDescription] {
+    private var connectedDevices: [ApplicationServiceDeviceDescription]? {
       if case .available(let status) = viewModel.statusState { return status.devices }
-      return [device]
+      return nil
+    }
+
+    /// The remapping profile active for the controller's model, if there is one.
+    private var activeRemappingProfile: RemappingProfile? {
+      guard case .available(let snapshot) = viewModel.remappingState,
+        let active = snapshot.activeProfiles.routingActiveProfile(
+          vendorID: device.vendorID,
+          productID: device.productID
+        )
+      else { return nil }
+      return snapshot.profiles.first { $0.id == active.profileID }
     }
 
     @ViewBuilder
     private func tuningRows(for record: ControllerRecord) -> some View {
-      let rows = ControllerTuningRows.rows(for: record)
-      if rows.isEmpty {
-        Text(OJDLocalized.string("cli.config.show.unset"))
-          .foregroundColor(Color(NSColor.secondaryLabelColor))
-      } else {
-        ForEach(rows) { OJDLabeledValue($0.name, $0.text) }
+      ForEach(ControllerTuningRows.rows(for: record, activeProfile: activeRemappingProfile)) {
+        OJDLabeledValue($0.name, $0.text)
       }
     }
 

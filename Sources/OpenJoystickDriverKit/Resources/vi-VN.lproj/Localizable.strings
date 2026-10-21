@@ -1850,3 +1850,4 @@
 "controllers.captureDuration" = "Thời lượng (giây)";
 "controllers.captureDurationInvalid" = "Nhập số giây lớn hơn 0.";
 "controllers.fileSaved" = "Đã lưu %@.";
+"controllers.virtual.currentScope" = "Phạm vi của ghi đè hiện tại: %@";

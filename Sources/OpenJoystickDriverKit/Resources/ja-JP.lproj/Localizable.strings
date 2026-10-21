@@ -1850,3 +1850,4 @@
 "controllers.captureDuration" = "時間（秒）";
 "controllers.captureDurationInvalid" = "0より大きい秒数を入力してください。";
 "controllers.fileSaved" = "%@を保存しました。";
+"controllers.virtual.currentScope" = "現在の上書きの適用範囲：%@";

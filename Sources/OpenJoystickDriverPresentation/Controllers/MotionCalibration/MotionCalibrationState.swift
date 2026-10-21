@@ -22,6 +22,8 @@
     private(set) var selector: ControllerReference?
     private let gateway: any MotionCalibrationGateway
     private var generation: UInt64 = 0
+    /// Counts commands. A read that started before a command ended its answer is stale.
+    private var commandSequence: UInt64 = 0
 
     init(gateway: any MotionCalibrationGateway) { self.gateway = gateway }
 
@@ -34,7 +36,26 @@
       isBusy = false
     }
 
-    func refresh() async { await perform(nil) }
+    /// Reads the status without marking the model busy, so controls stay usable. A command
+    /// that starts or ends while the read runs makes its answer stale, and it is dropped.
+    func refresh() async {
+      guard let selector else { return }
+      let requestGeneration = generation
+      let requestSequence = commandSequence
+      func isCurrent() -> Bool {
+        generation == requestGeneration && commandSequence == requestSequence && !isBusy
+      }
+      do {
+        let result = try await gateway.motionCalibration(for: selector, command: nil)
+        guard isCurrent() else { return }
+        status = result
+        errorMessage = nil
+      } catch {
+        guard isCurrent() else { return }
+        status = nil
+        errorMessage = Self.calibrationError(error)
+      }
+    }
 
     /// How long the status waits between reads while calibration is not settled.
     static let refreshIntervalNanoseconds: UInt64 = 1_000_000_000
@@ -63,9 +84,12 @@
       }
     }
 
-    func perform(_ command: RemappingMotionCalibrationCommand?) async {
+    /// Sends `command` and shows the status it returns. One command runs at a time; a read in
+    /// flight does not block it and its answer is dropped.
+    func perform(_ command: RemappingMotionCalibrationCommand) async {
       guard let selector, !isBusy else { return }
       let requestGeneration = generation
+      commandSequence &+= 1
       isBusy = true
       errorMessage = nil
       do {
@@ -77,6 +101,8 @@
         status = nil
         errorMessage = Self.calibrationError(error)
       }
+      // A read that started while the command ran may predate its effect.
+      commandSequence &+= 1
       isBusy = false
     }
 

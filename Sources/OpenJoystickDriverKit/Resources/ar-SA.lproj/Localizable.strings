@@ -1850,3 +1850,4 @@
 "controllers.captureDuration" = "المدة (بالثواني)";
 "controllers.captureDurationInvalid" = "أدخل عدد ثوانٍ أكبر من 0.";
 "controllers.fileSaved" = "تم حفظ %@.";
+"controllers.virtual.currentScope" = "نطاق التجاوز الحالي: %@";
