@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
 import tempfile
 import unittest
@@ -326,6 +327,31 @@ class GuiCaptureTests(unittest.TestCase):
                 capture.parse_args(["--area", "Controllers", "--ready-timeout", "4"])
             )
         wait.assert_called_once_with(7, 4.0)
+
+    @unittest.skipUnless(
+        shutil.which("osascript"), "osascript is not installed: ax.js needs JXA"
+    )
+    def test_ax_error_codes_are_classified(self) -> None:
+        harness = (
+            "ObjC.import('Foundation');"
+            f"const path = {json.dumps(str(capture.GUI_DIR / 'ax.js'))};"
+            "const source = $.NSString.stringWithContentsOfFileEncodingError("
+            "path, $.NSUTF8StringEncoding, null).js;"
+            "const classify = new Function(source + '; return classifyAxCode;')();"
+            "JSON.stringify([0, -25205, -25212, -25204, -25202, -25211, -25201]"
+            ".map(classify))"
+        )
+        result = subprocess.run(
+            ["osascript", "-l", "JavaScript", "-e", harness],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(
+            json.loads(result.stdout),
+            ["ok", "absent", "absent", "transient", "transient", "error", "error"],
+        )
 
     def test_capture_probes_after_finding_the_app_and_before_any_gui_call(
         self,
