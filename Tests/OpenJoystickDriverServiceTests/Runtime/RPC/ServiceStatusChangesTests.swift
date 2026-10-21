@@ -206,6 +206,22 @@ struct ServiceStatusChangesTests {
   }
 
   @Test
+  func aHeldWaitCancelledAsItTakesTheAnnouncementGivesItBackForTheNextWait() async throws {
+    let changes = ServiceStatusChanges(center: NotificationCenter())
+    let baseline = await Self.revision(changes)
+    let held = Task { await changes.wait(after: baseline, holdSeconds: 30) }
+    await Self.waitForHeldWaits(1, in: changes)
+    changes.announcementWillReachWait = { held.cancel() }
+
+    async let outcome = changes.announceTestNotification()
+
+    #expect(await held.value.event == .holdElapsed)
+    let id = try #require(Self.announcementID(await changes.wait(after: nil, holdSeconds: 30)))
+    #expect(changes.reportTestNotification(id, outcome: .shown))
+    #expect(await outcome == .shown)
+  }
+
+  @Test
   func aRequestWhileOneIsPendingJoinsIt() async throws {
     let changes = ServiceStatusChanges(center: NotificationCenter())
     async let first = changes.announceTestNotification()

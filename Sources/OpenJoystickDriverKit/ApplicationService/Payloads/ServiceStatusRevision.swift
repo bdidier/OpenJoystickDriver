@@ -130,7 +130,7 @@ public enum TestNotificationOutcome: Codable, Equatable, Sendable {
 
 /// How long the service waits on a test notification.
 ///
-/// A request that has no answer by then ends with `TestNotificationOutcome.Kind.noAnswer`. With
+/// A request that has no answer by then ends with `TestNotificationOutcome.noAnswer`. With
 /// several apps connected, the first wait to reach the service takes the announcement and that
 /// app alone answers; the others see nothing.
 public enum TestNotificationDeadlines {

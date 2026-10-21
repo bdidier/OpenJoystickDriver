@@ -177,6 +177,9 @@ struct LocalRPCBridgeTests {
       let app = ApplicationServiceClient(socketPath: socketPath)
       await app.connect()
       let baseline = try await app.waitForServiceStatusChange(after: nil).revision
+      let (registered, registeredGate) = AsyncStream.makeStream(of: Void.self)
+      defer { registeredGate.finish() }
+      server.statusChanges.heldWaitDidRegister = { registeredGate.yield() }
 
       let descriptor = try LocalServiceRPCTransport.openConnectedSocket(
         timeoutSeconds: 5,
@@ -187,7 +190,7 @@ struct LocalRPCBridgeTests {
         arguments: try JSONEncoder().encode(LocalServiceRPCStatusChangeArguments(after: baseline))
       )
       try LocalServiceRPCTransport.sendFrame(try JSONEncoder().encode(request), to: descriptor)
-      while server.statusChanges.heldWaitCount < 1 { try await Task.sleep(nanoseconds: 1_000_000) }
+      for await _ in registered { break }
 
       Darwin.close(descriptor)
       let deadline = ContinuousClock.now + .seconds(5)
@@ -203,6 +206,63 @@ struct LocalRPCBridgeTests {
         try await app.reportTestNotificationResult(announcement: id, outcome: .shown)
       )
       #expect(try await outcome == .shown)
+    }
+  }
+
+  @Test
+  func aClientThatClosesASendTestNotificationRequestWithdrawsIt() async throws {
+    try await withServer { server in
+      let socketPath = "/tmp/com.openjoystickdriver.bridge.\(UUID().uuidString).rpc"
+      let rpcServer = LocalServiceRPCServer(
+        socketPath: socketPath,
+        authentication: { _ in true },
+        handler: { await server.handleLocalRPC($0) }
+      )
+      try rpcServer.start()
+      defer { rpcServer.stop() }
+      let app = ApplicationServiceClient(socketPath: socketPath)
+      await app.connect()
+      let baseline = try await app.waitForServiceStatusChange(after: nil).revision
+      let (withdrawn, withdrawnGate) = AsyncStream.makeStream(of: Void.self)
+      defer { withdrawnGate.finish() }
+      server.statusChanges.testNotificationRequestDidWithdraw = { withdrawnGate.yield() }
+
+      let descriptor = try LocalServiceRPCTransport.openConnectedSocket(
+        timeoutSeconds: 5,
+        socketPath: socketPath
+      )
+      let request = LocalServiceRPCRequest(
+        method: ApplicationServiceRPCMethod.sendTestNotification.rawValue,
+        arguments: try JSONEncoder().encode(LocalServiceRPCEmptyArguments())
+      )
+      try LocalServiceRPCTransport.sendFrame(try JSONEncoder().encode(request), to: descriptor)
+      let reply = try await app.waitForServiceStatusChange(after: baseline)
+      let id = try #require(reply.announcement)
+
+      Darwin.close(descriptor)
+      for await _ in withdrawn { break }
+
+      #expect(
+        try await !app.reportTestNotificationResult(announcement: id, outcome: .shown)
+      )
+    }
+  }
+
+  @Test
+  func aReportOfNoAnswerIsRefusedWithItsOwnText() async throws {
+    try await withServer { server in
+      let arguments = try JSONEncoder().encode(
+        TestNotificationReport(announcement: UUID(), outcome: .noAnswer)
+      )
+      let response = await handle(
+        server,
+        method: ApplicationServiceRPCMethod.reportTestNotificationResult.rawValue,
+        arguments: arguments
+      )
+
+      #expect(response.result == nil)
+      #expect(response.error == TestNotificationReportError.noAnswerReported.errorDescription)
+      #expect(response.error != ApplicationServiceClientError.invalidResponse.errorDescription)
     }
   }
 

@@ -1,6 +1,20 @@
 import Foundation
 import OpenJoystickDriverKit
 
+/// Why the service refuses a `reportTestNotificationResult` request.
+enum TestNotificationReportError: Error, LocalizedError, Equatable {
+  /// The report's outcome is `noAnswer`, which only the service decides when no app answers.
+  case noAnswerReported
+
+  var errorDescription: String? {
+    switch self {
+    case .noAnswerReported:
+      "A test notification report must be shown, denied or failed; "
+        + "only the service decides noAnswer."
+    }
+  }
+}
+
 extension ApplicationServiceServer {
   /// Decodes `request`, awaits its handler, and encodes the value or error as the response.
   func handleLocalRPC(_ request: LocalServiceRPCRequest) async -> LocalServiceRPCResponse {
@@ -150,7 +164,7 @@ extension ApplicationServiceServer {
       return try send(outcome)
     case .reportTestNotificationResult:
       let value = try decode(TestNotificationReport.self)
-      if case .noAnswer = value.outcome { throw ApplicationServiceClientError.invalidResponse }
+      if case .noAnswer = value.outcome { throw TestNotificationReportError.noAnswerReported }
       return try send(
         statusChanges.reportTestNotification(value.announcement, outcome: value.outcome)
       )
