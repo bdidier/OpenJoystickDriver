@@ -13,7 +13,9 @@
   ],
   "input": {
     "report": {
-      "length": { "atLeast": 8 }
+      "length": {
+        "atLeast": 8
+      }
     },
     "buttons": [
       {
