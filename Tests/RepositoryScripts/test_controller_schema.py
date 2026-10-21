@@ -846,6 +846,10 @@ class InputLayoutTests(unittest.TestCase):
                     "rightTrigger": {"button": {"byte": 1, "mask": 2}},
                 },
             ),
+            "exact length": record(
+                REPORT_LAYOUT,
+                input={**LAYOUT, "report": {"length": {"exactly": 2}}},
+            ),
             "layout with rumble": record(
                 REPORT_LAYOUT, input=LAYOUT, session={"rumble": GP100_RUMBLE}
             ),
@@ -870,6 +874,20 @@ class InputLayoutTests(unittest.TestCase):
             ),
             "report only": record(
                 REPORT_LAYOUT, input={"report": {"length": {"atLeast": 2}}}
+            ),
+            "integer length": record(
+                REPORT_LAYOUT, input={**LAYOUT, "report": {"length": 2}}
+            ),
+            "length with both bounds": record(
+                REPORT_LAYOUT,
+                input={**LAYOUT, "report": {"length": {"atLeast": 2, "exactly": 2}}},
+            ),
+            "empty length": record(
+                REPORT_LAYOUT, input={**LAYOUT, "report": {"length": {}}}
+            ),
+            "zero exact length": record(
+                REPORT_LAYOUT,
+                input={**LAYOUT, "report": {"length": {"exactly": 0}}},
             ),
             "empty buttons": record(REPORT_LAYOUT, input={**LAYOUT, "buttons": []}),
             "zero mask": record(

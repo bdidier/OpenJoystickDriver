@@ -17901,6 +17901,135 @@
       }
     },
     {
+      "name": "rejects malformed input lengths: integer",
+      "code": "E5002",
+      "python": "E5002: hid-report-layout.json at defaults.input: {'report': {'length': 4}, 'buttons': [{'control': 'South', 'byte': 0, 'mask': 1}]} is not valid under any of the given schemas",
+      "swift": "E5002: hid-report-layout.json: description.defaults.input.report.length: Expected to decode Dictionary<String, Any> but found number instead.",
+      "fileName": "hid-report-layout.json",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "HIDReportLayout",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "recordSections": ["input", "rumble"],
+        "defaults": {
+          "input": {
+            "report": {
+              "length": 4
+            },
+            "buttons": [
+              {
+                "control": "South",
+                "byte": 0,
+                "mask": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects malformed input lengths: both bounds",
+      "code": "E5002",
+      "python": "E5002: hid-report-layout.json at defaults.input: {'report': {'length': {'atLeast': 4, 'exactly': 4}}, 'buttons': [{'control': 'South', 'byte': 0, 'mask': 1}]} is not valid under any of the given schemas",
+      "swift": "E5002: hid-report-layout.json: description.defaults.input.report.length: length names exactly one of atLeast and exactly",
+      "fileName": "hid-report-layout.json",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "HIDReportLayout",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "recordSections": ["input", "rumble"],
+        "defaults": {
+          "input": {
+            "report": {
+              "length": {
+                "atLeast": 4,
+                "exactly": 4
+              }
+            },
+            "buttons": [
+              {
+                "control": "South",
+                "byte": 0,
+                "mask": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects malformed input lengths: empty object",
+      "code": "E5002",
+      "python": "E5002: hid-report-layout.json at defaults.input: {'report': {'length': {}}, 'buttons': [{'control': 'South', 'byte': 0, 'mask': 1}]} is not valid under any of the given schemas",
+      "swift": "E5002: hid-report-layout.json: description.defaults.input.report.length: length names exactly one of atLeast and exactly",
+      "fileName": "hid-report-layout.json",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "HIDReportLayout",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "recordSections": ["input", "rumble"],
+        "defaults": {
+          "input": {
+            "report": {
+              "length": {}
+            },
+            "buttons": [
+              {
+                "control": "South",
+                "byte": 0,
+                "mask": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects malformed input lengths: zero exact",
+      "code": "E5002",
+      "python": "E5002: hid-report-layout.json at defaults.input: {'report': {'length': {'exactly': 0}}, 'buttons': [{'control': 'South', 'byte': 0, 'mask': 1}]} is not valid under any of the given schemas",
+      "swift": "E5002: hid-report-layout.json: description.defaults.input: an input report is 1...64 bytes long, with its ID byte",
+      "fileName": "hid-report-layout.json",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "HIDReportLayout",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "recordSections": ["input", "rumble"],
+        "defaults": {
+          "input": {
+            "report": {
+              "length": {
+                "exactly": 0
+              }
+            },
+            "buttons": [
+              {
+                "control": "South",
+                "byte": 0,
+                "mask": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
       "name": "rejects malformed keep alives: keep_alive={}",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.keepAlive: 'intervalMilliseconds' is a required property",

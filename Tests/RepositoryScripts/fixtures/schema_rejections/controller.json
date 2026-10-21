@@ -3977,6 +3977,139 @@
       }
     },
     {
+      "name": "rejects invalid report layouts: integer length",
+      "code": "E5007",
+      "python": "E5007: record.json at input.report.length: 2 is not valid under any of the given schemas",
+      "swift": "record.input.report.length: Expected to decode Dictionary<String, Any> but found number instead.",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDReportLayout"
+            }
+          }
+        ],
+        "input": {
+          "report": {
+            "length": 2
+          },
+          "buttons": [
+            {
+              "control": "South",
+              "byte": 1,
+              "mask": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "rejects invalid report layouts: length with both bounds",
+      "code": "E5007",
+      "python": "E5007: record.json at input.report.length: {'atLeast': 2, 'exactly': 2} is not valid under any of the given schemas",
+      "swift": "record.input.report.length: length names exactly one of atLeast and exactly",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDReportLayout"
+            }
+          }
+        ],
+        "input": {
+          "report": {
+            "length": {
+              "atLeast": 2,
+              "exactly": 2
+            }
+          },
+          "buttons": [
+            {
+              "control": "South",
+              "byte": 1,
+              "mask": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "rejects invalid report layouts: empty length",
+      "code": "E5007",
+      "python": "E5007: record.json at input.report.length: {} is not valid under any of the given schemas",
+      "swift": "record.input.report.length: length names exactly one of atLeast and exactly",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDReportLayout"
+            }
+          }
+        ],
+        "input": {
+          "report": {
+            "length": {}
+          },
+          "buttons": [
+            {
+              "control": "South",
+              "byte": 1,
+              "mask": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "rejects invalid report layouts: zero exact length",
+      "code": "E5007",
+      "python": "E5007: record.json at input.report.length.exactly: 0 is less than the minimum of 1",
+      "swift": "record.input: an input report is 1...64 bytes long, with its ID byte",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDReportLayout"
+            }
+          }
+        ],
+        "input": {
+          "report": {
+            "length": {
+              "exactly": 0
+            }
+          },
+          "buttons": [
+            {
+              "control": "South",
+              "byte": 1,
+              "mask": 1
+            }
+          ]
+        }
+      }
+    },
+    {
       "name": "rejects invalid report layouts: empty buttons",
       "code": "E5007",
       "python": "E5007: record.json at input.buttons: [] should be non-empty",

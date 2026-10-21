@@ -606,6 +606,30 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                     document["defaults"]["session"][key] = value
                     self.assert_rejected(document)
 
+    def layout_defaults(self, length: Any) -> dict[str, Any]:
+        return self.with_body(
+            "HIDReportLayout",
+            defaults={
+                "input": {
+                    "report": {"length": length},
+                    "buttons": [{"control": "South", "byte": 0, "mask": 1}],
+                }
+            },
+        )
+
+    def test_accepts_an_exact_input_length(self) -> None:
+        self.check(self.layout_defaults({"exactly": 4}))
+
+    def test_rejects_malformed_input_lengths(self) -> None:
+        for name, length in (
+            ("integer", 4),
+            ("both bounds", {"atLeast": 4, "exactly": 4}),
+            ("empty object", {}),
+            ("zero exact", {"exactly": 0}),
+        ):
+            with self.subTest(name):
+                self.assert_rejected(self.layout_defaults(length))
+
     def test_rejects_defaults_a_driver_does_not_read(self) -> None:
         input_layout = {
             "report": {"length": {"atLeast": 1}},
