@@ -29,6 +29,9 @@ public final class ApplicationServiceClient: @unchecked Sendable {
   /// The probes of the local server that found no answer, across all `connect` calls.
   var unansweredProbes = 0
 
+  /// How many probes of the local server found no answer, across all `connect` calls.
+  package var unansweredProbeCount: Int { stateLock.withLock { unansweredProbes } }
+
   public init() { socketPath = LocalServiceRPCTransport.defaultSocketPath }
 
   package init(socketPath: String) { self.socketPath = socketPath }

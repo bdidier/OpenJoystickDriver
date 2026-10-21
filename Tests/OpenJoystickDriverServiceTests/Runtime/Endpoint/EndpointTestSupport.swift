@@ -222,6 +222,8 @@ final class EndpointWebTestClient: @unchecked Sendable {
 
   /// The nonce of the challenge, once `readChallenge` read it.
   private(set) var nonce = ""
+  /// True once the service ended the connection, as opposed to a read that timed out.
+  private(set) var peerClosed = false
   static let key = "dGhlIHNhbXBsZSBub25jZQ=="
 
   private let descriptor: Int32
@@ -417,11 +419,15 @@ final class EndpointWebTestClient: @unchecked Sendable {
 
   private func receive() async -> Bool {
     let descriptor = descriptor
-    let chunk = await offPool { () -> [UInt8] in
+    let (chunk, ended) = await offPool { () -> ([UInt8], Bool) in
       var chunk = [UInt8](repeating: 0, count: 65_536)
       let count = recv(descriptor, &chunk, chunk.count, 0)
-      return count > 0 ? Array(chunk[0..<count]) : []
+      // A hang-up ends the read with 0 bytes or a reset; only the 5-second read timeout leaves the
+      // connection open.
+      let timedOut = count < 0 && (errno == EAGAIN || errno == EWOULDBLOCK)
+      return (count > 0 ? Array(chunk[0..<count]) : [], count <= 0 && !timedOut)
     }
+    if ended { peerClosed = true }
     guard !chunk.isEmpty else { return false }
     buffer.append(contentsOf: chunk)
     return true

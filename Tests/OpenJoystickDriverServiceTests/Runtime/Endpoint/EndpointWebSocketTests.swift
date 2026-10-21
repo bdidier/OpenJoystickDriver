@@ -101,21 +101,20 @@ struct EndpointWebSocketTests {
 
   /// A client that sends its hello one byte at a time is closed when the handshake time ends,
   /// so slow clients cannot hold the connection slots.
-  @Test
+  @Test(.timeLimit(.minutes(1)))
   func aHelloMustArriveWithinTheHandshakeTime() async throws {
     try await withWeb { _, _, port, _ in
       let client = try await upgraded(port: port)
       // A masked text frame header that announces 100 bytes; its payload never completes.
       let bytes: [UInt8] =
         [0x81, 0x80 | 100, 0x12, 0x34, 0x56, 0x78] + [UInt8](repeating: 0, count: 6)
-      let start = Date()
       for byte in bytes.prefix(EndpointServer.handshakeSeconds + 2) {
         await client.sendBytes(Data([byte]))
         try await Task.sleep(nanoseconds: 1_000_000_000)
       }
       while await client.readFrame() != nil {}
 
-      #expect(Date().timeIntervalSince(start) < Double(EndpointServer.handshakeSeconds + 3))
+      #expect(client.peerClosed)
     }
   }
 

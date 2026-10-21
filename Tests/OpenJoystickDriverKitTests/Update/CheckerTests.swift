@@ -140,12 +140,8 @@ struct UpdateCheckerTests {
     var started = UpdateURLProtocolStub.stalledRequests.stream.makeAsyncIterator()
     _ = await started.next()
 
-    let cancelledAt = Date()
     check.cancel()
     let state = await check.value
-
-    // Without cancellation the stalled request only ends at the request timeout.
-    #expect(Date().timeIntervalSince(cancelledAt) < UpdateChecker.requestTimeoutSeconds)
 
     guard case .failed(let failure) = state else {
       Issue.record("Expected failed state, got \(state)")

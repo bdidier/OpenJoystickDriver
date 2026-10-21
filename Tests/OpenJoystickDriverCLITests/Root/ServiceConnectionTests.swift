@@ -1,4 +1,5 @@
 import Foundation
+import OpenJoystickDriverKit
 import OpenJoystickDriverTestSupport
 import Testing
 
@@ -6,16 +7,16 @@ import Testing
 
 @Suite(.removingTemporarySockets)
 struct ServiceConnectionTests {
-  /// With nothing listening on the socket, `open()` reports the service as stopped after its one
-  /// probe, whose socket timeout is 0.2 s; the rest of the bound is scheduling margin.
+  /// With nothing listening on the socket, `open()` reports the service as stopped after one
+  /// probe: it adds no wait and no retry.
   @Test
   func aStoppedServiceIsUnavailableAfterOneProbe() async {
-    let start = Date()
+    let client = ApplicationServiceClient(socketPath: temporarySocketPath())
+
     await #expect(throws: CLIFailure.serviceUnavailable) {
-      try await ServiceConnection.$socketPath.withValue(temporarySocketPath()) {
-        _ = try await ServiceConnection.open()
-      }
+      _ = try await ServiceConnection.open(client: client)
     }
-    #expect(Date().timeIntervalSince(start) < 0.2 + 2)
+
+    #expect(client.unansweredProbeCount == 1)
   }
 }
