@@ -1,7 +1,7 @@
--- Opens the main window of the installed app and waits until it exists.
--- Usage: osascript open-main-window.applescript
-on run
-	do shell script "open -b com.openjoystickdriver"
+-- Opens the main window of the app bundle at the given path and waits until it exists.
+-- Usage: osascript open-main-window.applescript /Applications/OpenJoystickDriver.app
+on run argv
+	do shell script "open " & quoted form of item 1 of argv
 	tell application "System Events" to tell process "OpenJoystickDriver"
 		repeat 50 times
 			repeat with w in windows

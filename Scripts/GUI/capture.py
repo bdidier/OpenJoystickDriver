@@ -71,7 +71,11 @@ def process_id() -> int:
 
 
 def window_id(pid: int, kind: str) -> int:
-    bounds = [float(value) for value in gui("window-bounds.applescript", kind).split()]
+    reported = gui("window-bounds.applescript", kind)
+    try:
+        bounds = [float(value) for value in reported.split()]
+    except ValueError as error:
+        raise CaptureError(f"window-bounds reported {reported!r}") from error
     listing = run(
         ["osascript", "-l", "JavaScript", str(GUI_DIR / "window-list.js"), str(pid)]
     )
@@ -83,12 +87,28 @@ def window_id(pid: int, kind: str) -> int:
 
 
 def shoot(pid: int, kind: str, destination: Path) -> None:
-    run(["screencapture", "-l", str(window_id(pid, kind)), "-o", str(destination)])
+    run(
+        ["screencapture", "-x", "-l", str(window_id(pid, kind)), "-o", str(destination)]
+    )
     if not destination.is_file() or destination.stat().st_size == 0:
         raise CaptureError(
             f"screencapture wrote no image to {destination}: grant Screen Recording"
         )
     print(destination)
+
+
+def make_folder() -> Path:
+    root = PROJECT_DIR / ".ojd-shots"
+    stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    root.mkdir(exist_ok=True)
+    for counter in range(1000):
+        folder = root / (stamp if counter == 0 else f"{stamp}-{counter}")
+        try:
+            folder.mkdir()
+        except FileExistsError:
+            continue
+        return folder
+    raise CaptureError(f"no free capture folder for {stamp} in {root}")
 
 
 def capture(args: argparse.Namespace) -> int:
@@ -101,16 +121,20 @@ def capture(args: argparse.Namespace) -> int:
         if args.settings_pane
         else ()
     )
-    folder = PROJECT_DIR / ".ojd-shots" / datetime.now().strftime("%Y%m%d-%H%M%S")
-    folder.mkdir(parents=True)
-    if areas:
-        gui("open-main-window.applescript")
+    folder = make_folder()
+    gui("open-main-window.applescript", str(APP))
+    start_area = gui("current-sidebar.applescript")
+    try:
         for area in areas:
             gui("select-sidebar.applescript", area)
             shoot(pid, "main", folder / f"main-{area.lower()}.png")
-    for pane in panes:
-        gui("open-settings.applescript", pane)
-        shoot(pid, "settings", folder / f"settings-{pane.lower()}.png")
+        for pane in panes:
+            gui("open-settings.applescript", pane)
+            shoot(pid, "settings", folder / f"settings-{pane.lower()}.png")
+    finally:
+        if panes:
+            gui("close-settings.applescript")
+        gui("select-sidebar.applescript", start_area)
     return 0
 
 
