@@ -584,7 +584,8 @@ def family_problem(
     """Return why `key` is not in a key family whose reader blocks the namespace shape, or None.
 
     A family is the keys one pattern of `key_readers` reads. It blocks the shape when every other
-    key of the family is gated for `namespace`: the reader builds the key from a code or prefix, so
+    key of the family is gated for `namespace` and at least one such key already exists outside the
+    keys being added, so a family cannot be invented and gated in one change: the reader builds the key from a code or prefix, so
     the key cannot take the shape before the re-key without breaking the reader.
     """
     _, patterns = key_readers(root)
@@ -607,6 +608,14 @@ def family_problem(
                 f"{key!r}: the family read by {text!r} has the ungated member "
                 f"{ungated[0]!r}, so the family can take the namespace shape"
             )
+        if not any(
+            pattern.fullmatch(member) and member not in adding and member in namespace
+            for member in keys
+        ):
+            return (
+                f"{key!r}: the family read by {text!r} has no gated key besides the ones "
+                "added, so it is not an existing family"
+            )
     return None
 
 
@@ -624,6 +633,7 @@ def update_gated_keys(
     violating = {rule: {p.key for p in found[rule]} for rule in GATED_RULES}
     current = gated_keys(root)
     refused: list[str] = []
+    accepted: set[tuple[str, str]] = set()
     adding = {key for key, rule in additions if rule == "namespace"}
     for key, rule in additions:
         if rule not in GATED_RULES:
@@ -638,12 +648,11 @@ def update_gated_keys(
             reason = family_problem(key, root, current, adding)
             if reason:
                 refused.append(f"--gate {key} {rule}: {reason}")
+            else:
+                accepted.add((key, rule))
     kept = {rule: current[rule] & violating[rule] for rule in GATED_RULES}
-    for key, rule in additions:
-        if rule == "namespace" and not any(
-            r.startswith(f"--gate {key} {rule}") for r in refused
-        ):
-            kept[rule].add(key)
+    for key, rule in accepted:
+        kept[rule].add(key)
     for rule in GATED_RULES:
         refused.extend(
             f"{key!r} would need gating for the {rule} rule; fix the key instead"

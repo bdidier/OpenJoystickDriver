@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import contextlib
 import io
+import json
 import plistlib
 import re
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -533,18 +535,37 @@ class WriteGatedKeysTests(unittest.TestCase):
 
     def test_gate_adds_several_keys_of_one_family(self) -> None:
         _, refused = self.update(
-            {"namespace": {"error.E0001", "error.E0002"}},
-            {},
-            {"error.E0001", "error.E0002"},
-            [("error.E0001", "namespace"), ("error.E0002", "namespace")],
+            {"namespace": {"error.E0001", "error.E0002", "error.E0003"}},
+            {"namespace": {"error.E0001"}},
+            {"error.E0001", "error.E0002", "error.E0003"},
+            [("error.E0002", "namespace"), ("error.E0003", "namespace")],
         )
         self.assertEqual(refused, [])
+
+    def test_gate_refuses_a_family_whose_only_member_is_the_added_key(self) -> None:
+        _, refused = self.update(
+            {"namespace": {"error.E0002"}},
+            {},
+            {"error.E0002"},
+            [("error.E0002", "namespace")],
+        )
+        self.assertIn("not an existing family", refused[0])
+
+    def test_gate_refuses_several_new_keys_of_an_invented_family(self) -> None:
+        _, refused = self.update(
+            {"namespace": {"error.E0002", "error.E0003"}},
+            {},
+            {"error.E0002", "error.E0003"},
+            [("error.E0002", "namespace"), ("error.E0003", "namespace")],
+        )
+        family = [r for r in refused if "not an existing family" in r]
+        self.assertEqual(len(family), 2)
 
     def test_gate_names_only_the_pairs_it_is_given(self) -> None:
         _, refused = self.update(
             {"namespace": {"error.E0002"}, "comment": {"error.E0002"}},
-            {},
-            {"error.E0002"},
+            {"namespace": {"error.E0001"}},
+            {"error.E0001", "error.E0002"},
             [("error.E0002", "namespace")],
         )
         self.assertEqual(len(refused), 1)
@@ -592,6 +613,59 @@ class WriteGatedKeysTests(unittest.TestCase):
         )
         self.assertIsNone(parse(["--gate", "a", "namespace"]))
         self.assertIsNone(parse(["--write-gated-keys", "--gate", "a"]))
+
+
+class WriteGatedKeysCommandTests(unittest.TestCase):
+    def repository(self, keys: list[str], gated: list[str]) -> Path:
+        scratch = tempfile.TemporaryDirectory()
+        self.addCleanup(scratch.cleanup)
+        root = Path(scratch.name)
+        subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+        directory = root / guard.CATALOG_DIRECTORY
+        directory.mkdir(parents=True)
+        (directory / "Localizable.strings").write_text(
+            "".join(f'/* Comment. */\n"{key}" = "Text";\n' for key in keys)
+        )
+        (directory / "Localizable.stringsdict").write_bytes(plistlib.dumps({}))
+        c_directory = root / guard.RESOURCES_DIRECTORY / "C.lproj"
+        c_directory.mkdir(parents=True)
+        (c_directory / "Localizable.strings").write_text("")
+        source = root / "Sources" / "Reader.swift"
+        source.parent.mkdir(exist_ok=True)
+        source.write_text('let text = OJDLocalized.string("error.\\(rawValue)")\n')
+        path = root / guard.GATED_KEYS_PATH
+        path.parent.mkdir(parents=True)
+        path.write_text(json.dumps({"namespace": gated}))
+        return root
+
+    def run_main(self, root: Path, *arguments: str) -> tuple[int, str]:
+        errors = io.StringIO()
+        with mock.patch.object(guard, "ROOT", root), contextlib.redirect_stderr(errors):
+            code = guard.main(["--write-gated-keys", *arguments])
+        return code, errors.getvalue()
+
+    def gated(self, root: Path) -> list[str]:
+        data = json.loads((root / guard.GATED_KEYS_PATH).read_text())
+        return data["namespace"]
+
+    def test_gate_accepts_a_key_of_a_gated_family(self) -> None:
+        root = self.repository(["error.E0001", "error.E0002"], ["error.E0001"])
+        code, _ = self.run_main(root, "--gate", "error.E0002", "namespace")
+        self.assertEqual(code, 0)
+        self.assertEqual(self.gated(root), ["error.E0001", "error.E0002"])
+
+    def test_gate_refuses_a_family_without_a_gated_key(self) -> None:
+        root = self.repository(["error.E0002"], [])
+        code, errors = self.run_main(root, "--gate", "error.E0002", "namespace")
+        self.assertEqual(code, 1)
+        self.assertIn("not an existing family", errors)
+        self.assertEqual(self.gated(root), [])
+
+    def test_an_unlisted_violation_is_refused_without_gate(self) -> None:
+        root = self.repository(["error.E0001", "error.E0002"], ["error.E0001"])
+        code, errors = self.run_main(root)
+        self.assertEqual(code, 1)
+        self.assertIn("'error.E0002'", errors)
 
 
 class RepositoryTests(unittest.TestCase):
