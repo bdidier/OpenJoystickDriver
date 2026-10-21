@@ -214,6 +214,10 @@ struct ControllerDetailFactsTests {
     keys += OutputDisabledReason.allCases.map(ControllerDetailLabels.servingReasonKey)
     keys += [ControllerInputHealthFailureReason.missingReports, .freshnessNotAdvancing]
       .map(ControllerDetailLabels.inputHealthReasonKey)
+    keys += [
+      "controllers.publication.withReason", "controllers.serving.withReason",
+      "controllers.inputHealth.withReason",
+    ]
     for key in keys { #expect(OJDLocalized.string(key) != key, "\(key)") }
     for reason in ApplicationServicePublicationStatus.NotPublishedReason.allCases {
       let key = ControllerDetailLabels.notPublishedReasonKey(reason)
@@ -228,6 +232,15 @@ struct ControllerDetailFactsTests {
     #expect(confirmation.message.contains("Pad A"))
     #expect(confirmation.confirmTitle != "controllers.disconnectWirelessConfirm")
     #expect(!confirmation.confirmTitle.isEmpty)
+  }
+
+  @Test
+  func aWirelessDisconnectRequestKeepsTheControllerItWasMadeFor() {
+    let target = device()
+    let request = WirelessDisconnectRequest(device: target)
+    #expect(request.device.sessionToken == target.sessionToken)
+    #expect(request.id == target.sessionToken.rawValue)
+    #expect(request.confirmation == WirelessDisconnectConfirmation(controllerName: target.name))
   }
 
   @Test

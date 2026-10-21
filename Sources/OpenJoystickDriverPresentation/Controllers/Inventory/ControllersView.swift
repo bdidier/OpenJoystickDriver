@@ -13,7 +13,7 @@
     let column: MainWindowColumn
     let openInputTest: @MainActor (ApplicationServiceDeviceDescription) -> Void
     @State
-    private var wirelessDisconnectCandidate: ApplicationServiceDeviceDescription?
+    private var wirelessDisconnectRequest: WirelessDisconnectRequest?
 
     init(
       screen: ControllersViewModel,
@@ -109,12 +109,9 @@
           .ojdAccessibilityValue(device.protocolBinding.displayLabel)
           .contextMenu { sessionCommands(for: device) }
         }
-      }.listStyle(InsetListStyle()).alert(
-        isPresented: Binding(
-          get: { wirelessDisconnectCandidate != nil },
-          set: { if !$0 { wirelessDisconnectCandidate = nil } }
-        )
-      ) { wirelessDisconnectAlert }
+      }.listStyle(InsetListStyle()).alert(item: $wirelessDisconnectRequest) { request in
+        wirelessDisconnectAlert(for: request)
+      }
     }
 
     /// The Controller menu's session commands for one controller.
@@ -131,20 +128,18 @@
       }
       if device.supportsWirelessDisconnect {
         Button(OJDLocalized.string("mainMenu.controller.disconnectWirelessLink")) {
-          wirelessDisconnectCandidate = device
+          wirelessDisconnectRequest = WirelessDisconnectRequest(device: device)
         }
       }
     }
 
-    private var wirelessDisconnectAlert: Alert {
-      let confirmation = WirelessDisconnectConfirmation(
-        controllerName: wirelessDisconnectCandidate?.name ?? ""
-      )
+    private func wirelessDisconnectAlert(for request: WirelessDisconnectRequest) -> Alert {
+      let confirmation = request.confirmation
+      let device = request.device
       return Alert(
         title: Text(confirmation.title),
         message: Text(confirmation.message),
         primaryButton: .destructive(Text(confirmation.confirmTitle)) {
-          guard let device = wirelessDisconnectCandidate else { return }
           Task { @MainActor in await viewModel.disconnectWirelessController(device) }
         },
         secondaryButton: .cancel()
