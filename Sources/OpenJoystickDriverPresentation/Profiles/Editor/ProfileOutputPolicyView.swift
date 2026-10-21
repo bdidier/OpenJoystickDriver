@@ -47,9 +47,10 @@
     }
 
     /// The policy after the virtual output changes. The exclusive toggle applies only while the
-    /// virtual output is disabled, because a virtual output always takes exclusive input; any other
+    /// virtual output is disabled; with any other virtual output it is disabled and shows
+    /// exclusive input as on, because a virtual output always takes exclusive input. Any other
     /// virtual output therefore returns the physical input to `ojd profile create`'s default,
-    /// shared, instead of keeping an earlier choice that the toggle no longer shows.
+    /// shared, so an earlier choice that the toggle does not show is not kept.
     static func policy(
       selecting virtualGamepad: RemappingVirtualGamepadPolicy,
       from policy: RemappingOutputPolicy

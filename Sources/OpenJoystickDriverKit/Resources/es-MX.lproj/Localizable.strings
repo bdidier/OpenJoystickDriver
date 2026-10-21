@@ -769,7 +769,7 @@
 "profiles.clearInputs" = "Eliminar todas las entradas…";
 "profiles.clearInputsConfirm" = "Eliminar todo";
 "profiles.clearInputsMessage" = "Esto elimina todas las asignaciones y el procesamiento de entradas de este perfil.";
-"profiles.clearInputsTitle" = "¿Borrar todas las entradas?";
+"profiles.clearInputsTitle" = "¿Eliminar todas las entradas?";
 "profiles.removeAllAssignments" = "Quitar todas las asignaciones…";
 "profiles.removeAllAssignmentsTitle" = "¿Quitar todas las asignaciones?";
 "profiles.removeAllAssignmentsMessage" = "Esto quita de este perfil todas las asignaciones, acordes, secuencias y capas. Los ajustes de palancas, gatillos, táctil y movimiento se conservan.";

@@ -41,11 +41,10 @@
           Spacer()
           buttons
         }
-      }.padding(20).frame(width: 440).onExitCommand { dismissFinishedResult() }
+      }.padding(20).frame(width: 440)
     }
 
-    /// Escape closes the sheet after a result, as Done does; Cancel and Stop answer it in the
-    /// other states.
+    /// Closes the sheet after a result; Done and Escape both end here.
     private func dismissFinishedResult() {
       guard case .finished = model.state else { return }
       model.reset()
@@ -120,6 +119,11 @@
         }
         Button(OJDLocalized.string("common.done")) { dismissFinishedResult() }
           .keyboardShortcut(.defaultAction)
+        // Escape works without a focused control; the button is for the shortcut only.
+        Button("") { dismissFinishedResult() }.keyboardShortcut(.cancelAction).frame(
+          width: 0,
+          height: 0
+        ).opacity(0).accessibilityHidden(true)
       }
     }
   }

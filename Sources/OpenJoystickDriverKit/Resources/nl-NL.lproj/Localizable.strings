@@ -766,10 +766,10 @@
 "profiles.physical.startPosition" = "Start van weerstand";
 "profiles.physical.strength" = "Weerstandssterkte";
 
-"profiles.clearInputs" = "Verwijder alle ingangen…";
+"profiles.clearInputs" = "Verwijder alle invoer…";
 "profiles.clearInputsConfirm" = "Verwijder alles";
 "profiles.clearInputsMessage" = "Hierdoor worden alle opdrachten en invoerverwerking van dit profiel verwijderd.";
-"profiles.clearInputsTitle" = "Alle ingangen verwijderen?";
+"profiles.clearInputsTitle" = "Alle invoer verwijderen?";
 "profiles.removeAllAssignments" = "Verwijder alle toewijzingen…";
 "profiles.removeAllAssignmentsTitle" = "Alle toewijzingen verwijderen?";
 "profiles.removeAllAssignmentsMessage" = "Hierdoor worden alle toewijzingen, akkoorden, sequenties en lagen van dit profiel verwijderd. De instellingen voor sticks, triggers, aanraking en beweging blijven behouden.";

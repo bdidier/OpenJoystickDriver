@@ -928,7 +928,7 @@
 "cli.diagnose.output_parent" = "--output के लिए मौजूदा डायरेक्टरी ज़रूरी है; %@ मौजूद नहीं है।";
 "cli.diagnose.output_progress" = "सपोर्ट बंडल लिखा जा रहा है…";
 "cli.diagnose.output_written" = "सपोर्ट बंडल %@ में लिखा गया। इसमें डिवाइस के नाम शामिल हैं, इसलिए साझा करने से पहले इसे देख लें।";
-"cli.diagnose.discussion" = "हर जाँच pass, warn, fail या skip बताती है। जिन जाँचों के लिए सेवा चाहिए, वे सेवा बंद होने पर छोड़ दी जाती हैं। कोई भी जाँच fail होने पर कोड 1 के साथ बाहर निकलता है। --soak एक रनटाइम-हेल्थ जाँच जोड़ता है, जो दिए गए समय तक सेवा का सैंपल लेती है; इसके बिना वह जाँच छोड़ दी जाती है। --output एक सपोर्ट रिपोर्ट भी लिखता है; साझा करने से पहले उसे देख लें।";
+"cli.diagnose.discussion" = "हर जाँच pass, warn, fail या skip बताती है। जिन जाँचों के लिए सेवा चाहिए, वे सेवा बंद होने पर छोड़ दी जाती हैं। कोई भी जाँच fail होने पर कोड 1 के साथ बाहर निकलता है। --soak एक रनटाइम-हेल्थ जाँच जोड़ता है, जो दिए गए समय तक सेवा का नमूना लेती है; इसके बिना वह जाँच छोड़ दी जाती है। --output एक सपोर्ट रिपोर्ट भी लिखता है; साझा करने से पहले उसे देख लें।";
 "cli.diagnose.transport_extension.absent" = "macOS में पंजीकृत नहीं है; “ojd transport-extension activate” चलाएँ";
 "cli.diagnose.transport_extension.active" = "macOS में सक्रिय है";
 "cli.diagnose.transport_extension.bundle_invalid" = "अप्रत्याशित बंडल आइडेंटिफ़ायर %@; OpenJoystickDriver दोबारा इंस्टॉल करें";

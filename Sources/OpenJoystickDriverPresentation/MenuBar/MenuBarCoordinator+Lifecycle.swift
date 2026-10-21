@@ -79,10 +79,9 @@
           settingsError: preferences.settingsFileError
         )
       else { return }
-      NSApplication.shared.activate(ignoringOtherApps: true)
       let reason = preferences.errorMessage ?? error.localizedDescription
       switch SettingsUnreadableChoice(
-        response: SettingsUnreadableAlert.make(reason: reason).runModal()
+        response: SettingsUnreadableAlert.make(reason: reason).runActivatingApp()
       )
       {
       case .showInFinder: preferences.showSettingsFileInFinder()
