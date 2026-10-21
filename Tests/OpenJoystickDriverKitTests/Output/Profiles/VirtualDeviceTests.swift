@@ -29,11 +29,17 @@ struct VirtualDeviceTests {
     var document = try #require(
       try JSONSerialization.jsonObject(with: Data(contentsOf: url)) as? [String: Any]
     )
-    _ = try VirtualDevice.decode(JSONSerialization.data(withJSONObject: document), requiresMatch: false)
+    _ = try VirtualDevice.decode(
+      JSONSerialization.data(withJSONObject: document),
+      requiresMatch: false
+    )
     for value: Any? in [nil, "yes", 1] {
       document["worksWithDefaultSDLHints"] = value
       #expect(throws: ControllerRecordProblem.self, "\(String(describing: value))") {
-        try VirtualDevice.decode(JSONSerialization.data(withJSONObject: document), requiresMatch: false)
+        try VirtualDevice.decode(
+          JSONSerialization.data(withJSONObject: document),
+          requiresMatch: false
+        )
       }
     }
   }

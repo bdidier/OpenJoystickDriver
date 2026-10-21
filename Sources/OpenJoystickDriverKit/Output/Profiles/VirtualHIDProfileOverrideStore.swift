@@ -243,7 +243,10 @@ public struct VirtualHIDProfileOverrideStore: Sendable {
           loaded.files.append(VirtualPersonaFile(url: url, problem: nil))
         } catch {
           loaded.files.append(
-            VirtualPersonaFile(url: url, problem: ControllerRecordSet.problemDescription(error, document: "persona"))
+            VirtualPersonaFile(
+              url: url,
+              problem: ControllerRecordSet.problemDescription(error, document: "persona")
+            )
           )
         }
       }
@@ -272,7 +275,10 @@ public struct VirtualHIDProfileOverrideStore: Sendable {
         loaded.files.append(VirtualPersonaFile(url: url, problem: nil))
       } catch {
         loaded.files.append(
-          VirtualPersonaFile(url: url, problem: ControllerRecordSet.problemDescription(error, document: "persona"))
+          VirtualPersonaFile(
+            url: url,
+            problem: ControllerRecordSet.problemDescription(error, document: "persona")
+          )
         )
       }
     }

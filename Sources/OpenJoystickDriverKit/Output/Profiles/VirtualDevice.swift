@@ -51,7 +51,11 @@ struct VirtualDevice: Equatable, Sendable {
     for persona in VirtualHIDProfileID.allCases {
       guard let url = Bundle.module.url(forResource: persona.bundledFileName, withExtension: "json")
       else { throw ControllerRecordProblem(code: nil, "no record for \(persona.rawValue)") }
-      let device = try decode(Data(contentsOf: url), fileName: url.lastPathComponent)
+      let device = try decode(
+        Data(contentsOf: url),
+        fileName: url.lastPathComponent,
+        requiresMatch: false
+      )
       guard device.match == nil, device.persona == persona else {
         throw ControllerRecordProblem(
           code: nil,

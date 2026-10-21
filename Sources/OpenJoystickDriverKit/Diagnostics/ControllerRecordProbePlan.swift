@@ -26,7 +26,12 @@ public struct ControllerRecordProbePlan: Equatable, Sendable {
       // A coded reason leads with its code, like every other `E5001: ...` message.
       let reason =
         ControllerRecordSet.problemCode(error).map {
-          "\($0.rawValue): " + ControllerRecordSet.problemDescription(error, includingCode: false, document: "record")
+          "\($0.rawValue): "
+            + ControllerRecordSet.problemDescription(
+              error,
+              includingCode: false,
+              document: "record"
+            )
         } ?? "Invalid controller record: \(error)"
       throw ControllerRecordProbeError.invalidProfile(reason)
     }
