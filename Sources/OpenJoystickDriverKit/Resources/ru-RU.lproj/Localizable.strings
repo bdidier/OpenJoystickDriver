@@ -766,7 +766,8 @@
 "profiles.physical.startPosition" = "Начало сопротивления";
 "profiles.physical.strength" = "Сила сопротивления";
 
-"profiles.clearInputs" = "Очистить весь ввод";
+"profiles.clearInputs" = "Очистить весь ввод…";
+"profiles.clearInputsConfirm" = "Очистить всё";
 "profiles.clearInputsMessage" = "Это удалит все назначения и обработку ввода из этого профиля.";
 "profiles.clearInputsTitle" = "Очистить весь ввод?";
 "profiles.removeAllAssignments" = "Удалить все назначения…";
@@ -949,8 +950,18 @@
 "cli.diagnose.skip.service_failed" = "служба не ответила";
 "cli.diagnose.skip.service_stopped" = "служба не запущена";
 "cli.diagnose.soak" = "Также замерять память, файловые дескрипторы и CPU службы в течение этого времени (1-86400).";
+"cli.diagnose.soak.error.invalid_configuration" = "Для измерения нужно %1$lld...%2$lld с и интервал измерений %3$lld...%4$lld мс.";
+"cli.diagnose.soak.error.no_samples" = "Служба не предоставила данных измерений.";
+"cli.diagnose.soak.error.process_unavailable" = "Не удалось прочитать данные о работе процесса службы %d.";
+"cli.diagnose.soak.error.too_many_samples" = "Для измерения понадобилось бы %lld измерений. Увеличьте интервал измерений.";
 "cli.diagnose.soak.not_requested" = "не запрошено; используйте --soak SECONDS";
 "cli.diagnose.soak.progress" = "Замеры службы в течение %@…";
+"cli.diagnose.soak.verdict.footprint_limit" = "Превышен предел занимаемой памяти: резидентная память %1$.1f MiB, занимаемая память %2$.1f MiB, файловые дескрипторы %3$lld, загрузка процессора %4$.1f%% за %5$.0f с";
+"cli.diagnose.soak.verdict.insufficient_data" = "Недостаточно данных: резидентная память %1$.1f MiB, занимаемая память %2$.1f MiB, файловые дескрипторы %3$lld, загрузка процессора %4$.1f%% за %5$.0f с";
+"cli.diagnose.soak.verdict.memory_growth" = "Обнаружен рост памяти: резидентная память %1$.1f MiB, занимаемая память %2$.1f MiB, файловые дескрипторы %3$lld, загрузка процессора %4$.1f%% за %5$.0f с";
+"cli.diagnose.soak.verdict.resident_limit" = "Превышен предел резидентной памяти: резидентная память %1$.1f MiB, занимаемая память %2$.1f MiB, файловые дескрипторы %3$lld, загрузка процессора %4$.1f%% за %5$.0f с";
+"cli.diagnose.soak.verdict.resource_growth" = "Обнаружен рост ресурсов: резидентная память %1$.1f MiB, занимаемая память %2$.1f MiB, файловые дескрипторы %3$lld, загрузка процессора %4$.1f%% за %5$.0f с";
+"cli.diagnose.soak.verdict.stable" = "Стабильно: резидентная память %1$.1f MiB, занимаемая память %2$.1f MiB, файловые дескрипторы %3$lld, загрузка процессора %4$.1f%% за %5$.0f с";
 "cli.diagnose.soak_range" = "--soak должен быть от 1 до 86400 секунд.";
 "cli.diagnose.usb.failed" = "Не удалось просканировать USB: %@. Предоставьте OpenJoystickDriver доступ к мониторингу ввода.";
 "cli.diagnose.usb.ok" = "Видимых USB-контроллеров с особым протоколом: %lld";

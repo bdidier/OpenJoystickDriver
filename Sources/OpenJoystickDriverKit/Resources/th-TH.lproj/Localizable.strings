@@ -425,7 +425,7 @@
 "developer.soakDuration" = "ระยะเวลา (วินาที)";
 "developer.soakInterval" = "ช่วงห่างการสุ่มตัวอย่าง (ms)";
 "developer.soakResidentLimit" = "ขีดจำกัดขนาดที่อยู่ในหน่วยความจำ (MiB)";
-"developer.soakFootprintLimit" = "ขีดจำกัดการใช้หน่วยความจำจริง (MiB)";
+"developer.soakFootprintLimit" = "ขีดจำกัดฟุตพริ้นต์ (MiB)";
 "developer.soakLimitHint" = "ขีดจำกัด 0 หมายถึงปิด";
 "developer.soakStart" = "เรียกใช้การทดสอบ";
 "developer.soakRunning" = "กำลังสุ่มตัวอย่างบริการ…";
@@ -766,7 +766,8 @@
 "profiles.physical.startPosition" = "จุดเริ่มแรงต้าน";
 "profiles.physical.strength" = "ความแรงของแรงต้าน";
 
-"profiles.clearInputs" = "ล้างอินพุตทั้งหมด";
+"profiles.clearInputs" = "ล้างอินพุตทั้งหมด…";
+"profiles.clearInputsConfirm" = "ล้างทั้งหมด";
 "profiles.clearInputsMessage" = "การดำเนินการนี้จะเอาการกำหนดและการประมวลผลอินพุตทั้งหมดออกจากโปรไฟล์นี้";
 "profiles.clearInputsTitle" = "ล้างอินพุตทั้งหมดหรือไม่";
 "profiles.removeAllAssignments" = "เอาการกำหนดทั้งหมดออก…";
@@ -948,9 +949,19 @@
 "cli.diagnose.service.stopped" = "ไม่ได้ทำงานอยู่ เริ่มด้วย “ojd service start”";
 "cli.diagnose.skip.service_failed" = "บริการไม่ตอบสนอง";
 "cli.diagnose.skip.service_stopped" = "บริการไม่ได้ทำงานอยู่";
-"cli.diagnose.soak" = "สุ่มตัวอย่างหน่วยความจำ ตัวอธิบายไฟล์ และ CPU ของบริการตามระยะเวลานี้ด้วย (1-86400)";
+"cli.diagnose.soak" = "สุ่มตัวอย่างหน่วยความจำ ตัวบอกไฟล์ และ CPU ของบริการตามระยะเวลานี้ด้วย (1-86400)";
+"cli.diagnose.soak.error.invalid_configuration" = "การสุ่มตัวอย่างต้องใช้เวลา %1$lld...%2$lld วินาที และช่วงห่างการสุ่มตัวอย่าง %3$lld...%4$lld ms";
+"cli.diagnose.soak.error.no_samples" = "บริการไม่ได้สร้างตัวอย่างรันไทม์ใดเลย";
+"cli.diagnose.soak.error.process_unavailable" = "อ่านข้อมูลรันไทม์ของกระบวนการบริการ %d ไม่ได้";
+"cli.diagnose.soak.error.too_many_samples" = "การสุ่มตัวอย่างจะต้องใช้ %lld ตัวอย่าง เพิ่มช่วงห่างการสุ่มตัวอย่าง";
 "cli.diagnose.soak.not_requested" = "ไม่ได้ขอ ใช้ --soak SECONDS";
 "cli.diagnose.soak.progress" = "กำลังสุ่มตัวอย่างบริการเป็นเวลา %@…";
+"cli.diagnose.soak.verdict.footprint_limit" = "เกินขีดจำกัดฟุตพริ้นต์: ขนาดที่อยู่ในหน่วยความจำ %1$.1f MiB, ฟุตพริ้นต์ %2$.1f MiB, ตัวบอกไฟล์ %3$lld, CPU %4$.1f%% ใน %5$.0f วินาที";
+"cli.diagnose.soak.verdict.insufficient_data" = "ข้อมูลไม่เพียงพอ: ขนาดที่อยู่ในหน่วยความจำ %1$.1f MiB, ฟุตพริ้นต์ %2$.1f MiB, ตัวบอกไฟล์ %3$lld, CPU %4$.1f%% ใน %5$.0f วินาที";
+"cli.diagnose.soak.verdict.memory_growth" = "ตรวจพบการใช้หน่วยความจำเพิ่มขึ้น: ขนาดที่อยู่ในหน่วยความจำ %1$.1f MiB, ฟุตพริ้นต์ %2$.1f MiB, ตัวบอกไฟล์ %3$lld, CPU %4$.1f%% ใน %5$.0f วินาที";
+"cli.diagnose.soak.verdict.resident_limit" = "เกินขีดจำกัดขนาดที่อยู่ในหน่วยความจำ: ขนาดที่อยู่ในหน่วยความจำ %1$.1f MiB, ฟุตพริ้นต์ %2$.1f MiB, ตัวบอกไฟล์ %3$lld, CPU %4$.1f%% ใน %5$.0f วินาที";
+"cli.diagnose.soak.verdict.resource_growth" = "ตรวจพบการใช้ทรัพยากรเพิ่มขึ้น: ขนาดที่อยู่ในหน่วยความจำ %1$.1f MiB, ฟุตพริ้นต์ %2$.1f MiB, ตัวบอกไฟล์ %3$lld, CPU %4$.1f%% ใน %5$.0f วินาที";
+"cli.diagnose.soak.verdict.stable" = "เสถียร: ขนาดที่อยู่ในหน่วยความจำ %1$.1f MiB, ฟุตพริ้นต์ %2$.1f MiB, ตัวบอกไฟล์ %3$lld, CPU %4$.1f%% ใน %5$.0f วินาที";
 "cli.diagnose.soak_range" = "--soak ต้องอยู่ระหว่าง 1 ถึง 86400 วินาที";
 "cli.diagnose.usb.failed" = "การสแกน USB ล้มเหลว: %@ ให้สิทธิ์การตรวจสอบสัญญาณเข้าแก่ OpenJoystickDriver";
 "cli.diagnose.usb.ok" = "คอนโทรลเลอร์ USB เฉพาะผู้จำหน่ายที่มองเห็น: %lld";

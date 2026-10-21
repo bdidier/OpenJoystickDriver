@@ -315,14 +315,15 @@ public enum DiagnosticsService {
 
   public static func soakCheck(_ summary: RuntimeHealthSummary) -> DiagnoseCheck {
     let mebibyte = 1_048_576.0
-    let detail = String(
-      format: "%@: RSS %.1f MiB, footprint %.1f MiB, %d file descriptors, %.1f%% CPU over %.0fs",
-      summary.soakVerdict.rawValue,
-      Double(summary.lastResidentBytes) / mebibyte,
-      Double(summary.lastPhysicalFootprintBytes) / mebibyte,
-      summary.lastFileDescriptorCount,
-      summary.averageCPUPercent,
-      summary.durationSeconds
+    let detail = localization.formatted(
+      verdictKey(summary.soakVerdict),
+      arguments: [
+        Double(summary.lastResidentBytes) / mebibyte,
+        Double(summary.lastPhysicalFootprintBytes) / mebibyte,
+        summary.lastFileDescriptorCount,
+        summary.averageCPUPercent,
+        summary.durationSeconds,
+      ]
     )
     let status: DiagnoseStatus =
       switch summary.soakVerdict {
@@ -331,5 +332,17 @@ public enum DiagnosticsService {
       case .residentLimitExceeded, .physicalFootprintLimitExceeded: .fail
       }
     return DiagnoseCheck("runtime-health", status, detail)
+  }
+
+  /// The catalog entry that words the verdict and the measurements of one soak run.
+  static func verdictKey(_ verdict: RuntimeSoakVerdict) -> String {
+    switch verdict {
+    case .insufficientData: "cli.diagnose.soak.verdict.insufficient_data"
+    case .stable: "cli.diagnose.soak.verdict.stable"
+    case .memoryGrowthObserved: "cli.diagnose.soak.verdict.memory_growth"
+    case .resourceGrowthObserved: "cli.diagnose.soak.verdict.resource_growth"
+    case .residentLimitExceeded: "cli.diagnose.soak.verdict.resident_limit"
+    case .physicalFootprintLimitExceeded: "cli.diagnose.soak.verdict.footprint_limit"
+    }
   }
 }

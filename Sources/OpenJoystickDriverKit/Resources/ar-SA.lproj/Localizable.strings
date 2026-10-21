@@ -423,7 +423,7 @@
 "developer.soakTestDescription" = "يقيس ذاكرة الخدمة وواصفات الملفات ووحدة المعالجة المركزية خلال المدة المحددة، ثم يعرض النتيجة.";
 "developer.soakTestOpen" = "تشغيل اختبار التحمل…";
 "developer.soakDuration" = "المدة (بالثواني)";
-"developer.soakInterval" = "الفاصل بين القياسات (ms)";
+"developer.soakInterval" = "الفاصل بين القياسات (مللي ثانية)";
 "developer.soakResidentLimit" = "حد الحجم المقيم (MiB)";
 "developer.soakFootprintLimit" = "حد البصمة (MiB)";
 "developer.soakLimitHint" = "القيمة 0 تعطّل الحد.";
@@ -766,7 +766,8 @@
 "profiles.physical.startPosition" = "بداية المقاومة";
 "profiles.physical.strength" = "قوة المقاومة";
 
-"profiles.clearInputs" = "مسح كل الإدخالات";
+"profiles.clearInputs" = "مسح كل الإدخالات…";
+"profiles.clearInputsConfirm" = "مسح الكل";
 "profiles.clearInputsMessage" = "يزيل هذا كل التعيينات ومعالجة الإدخال من ملف التعريف هذا.";
 "profiles.clearInputsTitle" = "هل تريد مسح كل الإدخالات؟";
 "profiles.removeAllAssignments" = "إزالة كل التعيينات…";
@@ -949,8 +950,18 @@
 "cli.diagnose.skip.service_failed" = "لم تستجب الخدمة";
 "cli.diagnose.skip.service_stopped" = "الخدمة غير قيد التشغيل";
 "cli.diagnose.soak" = "خذ أيضًا عينات من ذاكرة الخدمة وواصفات الملفات ووحدة CPU لهذه المدة (1-86400).";
+"cli.diagnose.soak.error.invalid_configuration" = "يتطلب أخذ العينات %1$lld...%2$lld ثانية وفاصلًا بين القياسات %3$lld...%4$lld مللي ثانية.";
+"cli.diagnose.soak.error.no_samples" = "لم تُنتج الخدمة أي عينات لوقت التشغيل.";
+"cli.diagnose.soak.error.process_unavailable" = "تعذرت قراءة معلومات وقت التشغيل لعملية الخدمة %d.";
+"cli.diagnose.soak.error.too_many_samples" = "سيتطلب أخذ العينات %lld قياسًا. زد الفاصل بين القياسات.";
 "cli.diagnose.soak.not_requested" = "لم يُطلب؛ استخدم --soak SECONDS";
 "cli.diagnose.soak.progress" = "جارٍ أخذ عينات من الخدمة لمدة %@…";
+"cli.diagnose.soak.verdict.footprint_limit" = "تجاوز حد البصمة: الحجم المقيم %1$.1f MiB، البصمة %2$.1f MiB، واصفات الملفات %3$lld، وحدة المعالجة المركزية %4$.1f%% خلال %5$.0f ثانية";
+"cli.diagnose.soak.verdict.insufficient_data" = "بيانات غير كافية: الحجم المقيم %1$.1f MiB، البصمة %2$.1f MiB، واصفات الملفات %3$lld، وحدة المعالجة المركزية %4$.1f%% خلال %5$.0f ثانية";
+"cli.diagnose.soak.verdict.memory_growth" = "رُصدت زيادة في الذاكرة: الحجم المقيم %1$.1f MiB، البصمة %2$.1f MiB، واصفات الملفات %3$lld، وحدة المعالجة المركزية %4$.1f%% خلال %5$.0f ثانية";
+"cli.diagnose.soak.verdict.resident_limit" = "تجاوز حد الحجم المقيم: الحجم المقيم %1$.1f MiB، البصمة %2$.1f MiB، واصفات الملفات %3$lld، وحدة المعالجة المركزية %4$.1f%% خلال %5$.0f ثانية";
+"cli.diagnose.soak.verdict.resource_growth" = "رُصدت زيادة في الموارد: الحجم المقيم %1$.1f MiB، البصمة %2$.1f MiB، واصفات الملفات %3$lld، وحدة المعالجة المركزية %4$.1f%% خلال %5$.0f ثانية";
+"cli.diagnose.soak.verdict.stable" = "مستقر: الحجم المقيم %1$.1f MiB، البصمة %2$.1f MiB، واصفات الملفات %3$lld، وحدة المعالجة المركزية %4$.1f%% خلال %5$.0f ثانية";
 "cli.diagnose.soak_range" = "يجب أن تكون قيمة --soak بين 1 و86400 ثانية.";
 "cli.diagnose.usb.failed" = "فشل فحص USB: %@. امنح OpenJoystickDriver إذن مراقبة الإدخال.";
 "cli.diagnose.usb.ok" = "وحدات تحكم USB الخاصة بالمورّد الظاهرة: %lld";

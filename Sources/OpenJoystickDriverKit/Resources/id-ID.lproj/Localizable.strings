@@ -424,7 +424,7 @@
 "developer.soakTestOpen" = "Jalankan Uji Ketahanan…";
 "developer.soakDuration" = "Durasi (detik)";
 "developer.soakInterval" = "Interval sampel (ms)";
-"developer.soakResidentLimit" = "Batas ukuran resident (MiB)";
+"developer.soakResidentLimit" = "Batas ukuran residen (MiB)";
 "developer.soakFootprintLimit" = "Batas jejak memori (MiB)";
 "developer.soakLimitHint" = "Batas 0 menonaktifkannya.";
 "developer.soakStart" = "Jalankan Uji";
@@ -766,7 +766,8 @@
 "profiles.physical.startPosition" = "Awal resistansi";
 "profiles.physical.strength" = "Kekuatan resistansi";
 
-"profiles.clearInputs" = "Hapus semua input";
+"profiles.clearInputs" = "Hapus semua input…";
+"profiles.clearInputsConfirm" = "Hapus semua";
 "profiles.clearInputsMessage" = "Tindakan ini menghapus semua penetapan dan pemrosesan input dari profil ini.";
 "profiles.clearInputsTitle" = "Hapus semua input?";
 "profiles.removeAllAssignments" = "Hapus semua penetapan…";
@@ -949,8 +950,18 @@
 "cli.diagnose.skip.service_failed" = "layanan tidak menjawab";
 "cli.diagnose.skip.service_stopped" = "layanan tidak berjalan";
 "cli.diagnose.soak" = "Ambil juga sampel memori, file descriptor, dan CPU layanan selama waktu ini (1-86400).";
+"cli.diagnose.soak.error.invalid_configuration" = "Pengambilan sampel memerlukan %1$lld...%2$lld detik dan interval sampel %3$lld...%4$lld ms.";
+"cli.diagnose.soak.error.no_samples" = "Layanan tidak menghasilkan sampel runtime.";
+"cli.diagnose.soak.error.process_unavailable" = "Tidak dapat membaca informasi runtime proses layanan %d.";
+"cli.diagnose.soak.error.too_many_samples" = "Pengambilan sampel akan membutuhkan %lld sampel. Perbesar interval sampel.";
 "cli.diagnose.soak.not_requested" = "tidak diminta; gunakan --soak SECONDS";
 "cli.diagnose.soak.progress" = "Mengambil sampel layanan selama %@…";
+"cli.diagnose.soak.verdict.footprint_limit" = "Batas jejak memori terlampaui: ukuran residen %1$.1f MiB, jejak memori %2$.1f MiB, deskriptor berkas %3$lld, CPU %4$.1f%% selama %5$.0f detik";
+"cli.diagnose.soak.verdict.insufficient_data" = "Data tidak cukup: ukuran residen %1$.1f MiB, jejak memori %2$.1f MiB, deskriptor berkas %3$lld, CPU %4$.1f%% selama %5$.0f detik";
+"cli.diagnose.soak.verdict.memory_growth" = "Pertumbuhan memori terdeteksi: ukuran residen %1$.1f MiB, jejak memori %2$.1f MiB, deskriptor berkas %3$lld, CPU %4$.1f%% selama %5$.0f detik";
+"cli.diagnose.soak.verdict.resident_limit" = "Batas ukuran residen terlampaui: ukuran residen %1$.1f MiB, jejak memori %2$.1f MiB, deskriptor berkas %3$lld, CPU %4$.1f%% selama %5$.0f detik";
+"cli.diagnose.soak.verdict.resource_growth" = "Pertumbuhan sumber daya terdeteksi: ukuran residen %1$.1f MiB, jejak memori %2$.1f MiB, deskriptor berkas %3$lld, CPU %4$.1f%% selama %5$.0f detik";
+"cli.diagnose.soak.verdict.stable" = "Stabil: ukuran residen %1$.1f MiB, jejak memori %2$.1f MiB, deskriptor berkas %3$lld, CPU %4$.1f%% selama %5$.0f detik";
 "cli.diagnose.soak_range" = "--soak harus antara 1 dan 86400 detik.";
 "cli.diagnose.usb.failed" = "Pemindaian USB gagal: %@. Beri OpenJoystickDriver akses Pengawasan Input.";
 "cli.diagnose.usb.ok" = "Pengontrol USB khusus vendor yang terlihat: %lld";

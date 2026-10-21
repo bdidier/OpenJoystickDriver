@@ -766,7 +766,8 @@
 "profiles.physical.startPosition" = "Widerstandsstart";
 "profiles.physical.strength" = "Widerstandsstärke";
 
-"profiles.clearInputs" = "Alle Eingaben löschen";
+"profiles.clearInputs" = "Alle Eingaben löschen…";
+"profiles.clearInputsConfirm" = "Alle löschen";
 "profiles.clearInputsMessage" = "Damit werden alle Zuweisungen und die Eingabeverarbeitung aus diesem Profil entfernt.";
 "profiles.clearInputsTitle" = "Alle Eingaben löschen?";
 "profiles.removeAllAssignments" = "Alle Zuweisungen entfernen…";
@@ -949,8 +950,18 @@
 "cli.diagnose.skip.service_failed" = "Dienst hat nicht geantwortet";
 "cli.diagnose.skip.service_stopped" = "Dienst läuft nicht";
 "cli.diagnose.soak" = "Misst zusätzlich so lange Speicher, Dateideskriptoren und CPU des Dienstes (1-86400).";
+"cli.diagnose.soak.error.invalid_configuration" = "Die Laufzeitmessung erfordert %1$lld...%2$lld Sekunden und ein Messintervall von %3$lld...%4$lld ms.";
+"cli.diagnose.soak.error.no_samples" = "Der Dienst hat keine Laufzeitmessungen geliefert.";
+"cli.diagnose.soak.error.process_unavailable" = "Die Laufzeitinformationen des Dienstprozesses %d konnten nicht gelesen werden.";
+"cli.diagnose.soak.error.too_many_samples" = "Die Laufzeitmessung würde %lld Messungen erfordern. Erhöhe das Messintervall.";
 "cli.diagnose.soak.not_requested" = "nicht angefordert; verwende --soak SECONDS";
 "cli.diagnose.soak.progress" = "Dienst wird %@ lang gemessen...";
+"cli.diagnose.soak.verdict.footprint_limit" = "Grenzwert für Speicherfußabdruck überschritten: residenter Speicher %1$.1f MiB, Speicherfußabdruck %2$.1f MiB, Dateideskriptoren %3$lld, CPU-Last %4$.1f %% in %5$.0f s";
+"cli.diagnose.soak.verdict.insufficient_data" = "Zu wenige Daten: residenter Speicher %1$.1f MiB, Speicherfußabdruck %2$.1f MiB, Dateideskriptoren %3$lld, CPU-Last %4$.1f %% in %5$.0f s";
+"cli.diagnose.soak.verdict.memory_growth" = "Speicherzuwachs beobachtet: residenter Speicher %1$.1f MiB, Speicherfußabdruck %2$.1f MiB, Dateideskriptoren %3$lld, CPU-Last %4$.1f %% in %5$.0f s";
+"cli.diagnose.soak.verdict.resident_limit" = "Grenzwert für residenten Speicher überschritten: residenter Speicher %1$.1f MiB, Speicherfußabdruck %2$.1f MiB, Dateideskriptoren %3$lld, CPU-Last %4$.1f %% in %5$.0f s";
+"cli.diagnose.soak.verdict.resource_growth" = "Ressourcenzuwachs beobachtet: residenter Speicher %1$.1f MiB, Speicherfußabdruck %2$.1f MiB, Dateideskriptoren %3$lld, CPU-Last %4$.1f %% in %5$.0f s";
+"cli.diagnose.soak.verdict.stable" = "Stabil: residenter Speicher %1$.1f MiB, Speicherfußabdruck %2$.1f MiB, Dateideskriptoren %3$lld, CPU-Last %4$.1f %% in %5$.0f s";
 "cli.diagnose.soak_range" = "--soak muss zwischen 1 und 86400 Sekunden liegen.";
 "cli.diagnose.usb.failed" = "USB-Suche fehlgeschlagen: %@. Erteile OpenJoystickDriver die Berechtigung „Eingabeüberwachung“.";
 "cli.diagnose.usb.ok" = "Sichtbare herstellerspezifische USB-Controller: %lld";

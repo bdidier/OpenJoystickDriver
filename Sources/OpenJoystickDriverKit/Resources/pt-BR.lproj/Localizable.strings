@@ -766,7 +766,8 @@
 "profiles.physical.startPosition" = "Início da Resistência";
 "profiles.physical.strength" = "Força de Resistência";
 
-"profiles.clearInputs" = "Limpar Todas as Entradas";
+"profiles.clearInputs" = "Limpar Todas as Entradas…";
+"profiles.clearInputsConfirm" = "Limpar Tudo";
 "profiles.clearInputsMessage" = "Isso remove todas as atribuições e o processamento de entrada deste perfil.";
 "profiles.clearInputsTitle" = "Limpar todas as entradas?";
 "profiles.removeAllAssignments" = "Remover Todas as Atribuições…";
@@ -949,8 +950,18 @@
 "cli.diagnose.skip.service_failed" = "o serviço não respondeu";
 "cli.diagnose.skip.service_stopped" = "serviço não está em execução";
 "cli.diagnose.soak" = "Amostra também a memória, os descritores de arquivo e a CPU do serviço por este tempo (1-86400).";
+"cli.diagnose.soak.error.invalid_configuration" = "A amostragem exige %1$lld...%2$lld segundos e um intervalo de amostragem de %3$lld...%4$lld ms.";
+"cli.diagnose.soak.error.no_samples" = "O serviço não produziu amostras de execução.";
+"cli.diagnose.soak.error.process_unavailable" = "Não foi possível ler as informações de execução do processo do serviço %d.";
+"cli.diagnose.soak.error.too_many_samples" = "A amostragem coletaria %lld amostras. Aumente o intervalo de amostragem.";
 "cli.diagnose.soak.not_requested" = "não solicitado; use --soak SEGUNDOS";
 "cli.diagnose.soak.progress" = "Amostrando o serviço por %@…";
+"cli.diagnose.soak.verdict.footprint_limit" = "Limite de pegada de memória excedido: tamanho residente %1$.1f MiB, pegada de memória %2$.1f MiB, descritores de arquivo %3$lld, CPU %4$.1f%% em %5$.0f s";
+"cli.diagnose.soak.verdict.insufficient_data" = "Dados insuficientes: tamanho residente %1$.1f MiB, pegada de memória %2$.1f MiB, descritores de arquivo %3$lld, CPU %4$.1f%% em %5$.0f s";
+"cli.diagnose.soak.verdict.memory_growth" = "Crescimento de memória observado: tamanho residente %1$.1f MiB, pegada de memória %2$.1f MiB, descritores de arquivo %3$lld, CPU %4$.1f%% em %5$.0f s";
+"cli.diagnose.soak.verdict.resident_limit" = "Limite de tamanho residente excedido: tamanho residente %1$.1f MiB, pegada de memória %2$.1f MiB, descritores de arquivo %3$lld, CPU %4$.1f%% em %5$.0f s";
+"cli.diagnose.soak.verdict.resource_growth" = "Crescimento de recursos observado: tamanho residente %1$.1f MiB, pegada de memória %2$.1f MiB, descritores de arquivo %3$lld, CPU %4$.1f%% em %5$.0f s";
+"cli.diagnose.soak.verdict.stable" = "Estável: tamanho residente %1$.1f MiB, pegada de memória %2$.1f MiB, descritores de arquivo %3$lld, CPU %4$.1f%% em %5$.0f s";
 "cli.diagnose.soak_range" = "--soak deve estar entre 1 e 86400 segundos.";
 "cli.diagnose.usb.failed" = "A busca USB falhou: %@. Conceda Monitoramento de entrada ao OpenJoystickDriver.";
 "cli.diagnose.usb.ok" = "Controladores USB específicos de fabricante visíveis: %lld";

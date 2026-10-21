@@ -766,7 +766,8 @@
 "profiles.physical.startPosition" = "阻力開始";
 "profiles.physical.strength" = "抗力強度";
 
-"profiles.clearInputs" = "清除所有輸入";
+"profiles.clearInputs" = "清除所有輸入…";
+"profiles.clearInputsConfirm" = "全部清除";
 "profiles.clearInputsMessage" = "這會移除此設定檔中的所有對應和輸入處理。";
 "profiles.clearInputsTitle" = "清除所有輸入？";
 "profiles.removeAllAssignments" = "移除所有對應…";
@@ -949,8 +950,18 @@
 "cli.diagnose.skip.service_failed" = "服務沒有回應";
 "cli.diagnose.skip.service_stopped" = "服務未執行";
 "cli.diagnose.soak" = "同時在這段時間內對服務的記憶體、檔案描述符和 CPU 取樣（1-86400）。";
+"cli.diagnose.soak.error.invalid_configuration" = "取樣需要 %1$lld...%2$lld 秒的時長和 %3$lld...%4$lld 毫秒的取樣間隔。";
+"cli.diagnose.soak.error.no_samples" = "服務未產生任何執行階段樣本。";
+"cli.diagnose.soak.error.process_unavailable" = "無法讀取服務程序 %d 的執行階段資訊。";
+"cli.diagnose.soak.error.too_many_samples" = "取樣將需要 %lld 個樣本。請增加取樣間隔。";
 "cli.diagnose.soak.not_requested" = "未要求；請使用 --soak SECONDS";
 "cli.diagnose.soak.progress" = "正在對服務取樣 %@…";
+"cli.diagnose.soak.verdict.footprint_limit" = "超出記憶體占用上限：常駐大小 %1$.1f MiB，記憶體占用 %2$.1f MiB，檔案描述符 %3$lld，CPU %4$.1f%%，歷時 %5$.0f 秒";
+"cli.diagnose.soak.verdict.insufficient_data" = "資料不足：常駐大小 %1$.1f MiB，記憶體占用 %2$.1f MiB，檔案描述符 %3$lld，CPU %4$.1f%%，歷時 %5$.0f 秒";
+"cli.diagnose.soak.verdict.memory_growth" = "偵測到記憶體增長：常駐大小 %1$.1f MiB，記憶體占用 %2$.1f MiB，檔案描述符 %3$lld，CPU %4$.1f%%，歷時 %5$.0f 秒";
+"cli.diagnose.soak.verdict.resident_limit" = "超出常駐大小上限：常駐大小 %1$.1f MiB，記憶體占用 %2$.1f MiB，檔案描述符 %3$lld，CPU %4$.1f%%，歷時 %5$.0f 秒";
+"cli.diagnose.soak.verdict.resource_growth" = "偵測到資源增長：常駐大小 %1$.1f MiB，記憶體占用 %2$.1f MiB，檔案描述符 %3$lld，CPU %4$.1f%%，歷時 %5$.0f 秒";
+"cli.diagnose.soak.verdict.stable" = "穩定：常駐大小 %1$.1f MiB，記憶體占用 %2$.1f MiB，檔案描述符 %3$lld，CPU %4$.1f%%，歷時 %5$.0f 秒";
 "cli.diagnose.soak_range" = "--soak 必須介於 1 和 86400 秒之間。";
 "cli.diagnose.usb.failed" = "USB 掃描失敗：%@。請為 OpenJoystickDriver 授予輸入監控權限。";
 "cli.diagnose.usb.ok" = "可見的供應商自訂 USB 控制器：%lld";

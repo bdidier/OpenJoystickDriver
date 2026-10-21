@@ -766,7 +766,8 @@
 "profiles.physical.startPosition" = "抵抗の開始位置";
 "profiles.physical.strength" = "抵抗の強さ";
 
-"profiles.clearInputs" = "すべての入力を消去";
+"profiles.clearInputs" = "すべての入力を消去…";
+"profiles.clearInputsConfirm" = "すべて消去";
 "profiles.clearInputsMessage" = "このプロファイルからすべての割り当てと入力処理を削除します。";
 "profiles.clearInputsTitle" = "すべての入力を消去しますか？";
 "profiles.removeAllAssignments" = "すべての割り当てを削除…";
@@ -949,8 +950,18 @@
 "cli.diagnose.skip.service_failed" = "サービスが応答しませんでした";
 "cli.diagnose.skip.service_stopped" = "サービスが実行されていません";
 "cli.diagnose.soak" = "この時間だけ、サービスのメモリ、ファイル記述子、CPU もサンプリングします (1-86400)。";
+"cli.diagnose.soak.error.invalid_configuration" = "サンプリングには%1$lld...%2$lld秒の時間と、%3$lld...%4$lldミリ秒のサンプリング間隔が必要です。";
+"cli.diagnose.soak.error.no_samples" = "サービスから実行時サンプルが得られませんでした。";
+"cli.diagnose.soak.error.process_unavailable" = "サービスのプロセス %d の実行時情報を読み取れませんでした。";
+"cli.diagnose.soak.error.too_many_samples" = "サンプリングでは%lld個のサンプルが必要になります。サンプリング間隔を大きくしてください。";
 "cli.diagnose.soak.not_requested" = "指定されていません。--soak SECONDS を使用してください";
 "cli.diagnose.soak.progress" = "サービスを %@間サンプリングしています...";
+"cli.diagnose.soak.verdict.footprint_limit" = "フットプリントの上限を超過：常駐サイズ %1$.1f MiB、フットプリント %2$.1f MiB、ファイル記述子 %3$lld、CPU %4$.1f%%（%5$.0f秒間）";
+"cli.diagnose.soak.verdict.insufficient_data" = "データ不足：常駐サイズ %1$.1f MiB、フットプリント %2$.1f MiB、ファイル記述子 %3$lld、CPU %4$.1f%%（%5$.0f秒間）";
+"cli.diagnose.soak.verdict.memory_growth" = "メモリの増加を検出：常駐サイズ %1$.1f MiB、フットプリント %2$.1f MiB、ファイル記述子 %3$lld、CPU %4$.1f%%（%5$.0f秒間）";
+"cli.diagnose.soak.verdict.resident_limit" = "常駐サイズの上限を超過：常駐サイズ %1$.1f MiB、フットプリント %2$.1f MiB、ファイル記述子 %3$lld、CPU %4$.1f%%（%5$.0f秒間）";
+"cli.diagnose.soak.verdict.resource_growth" = "リソースの増加を検出：常駐サイズ %1$.1f MiB、フットプリント %2$.1f MiB、ファイル記述子 %3$lld、CPU %4$.1f%%（%5$.0f秒間）";
+"cli.diagnose.soak.verdict.stable" = "安定：常駐サイズ %1$.1f MiB、フットプリント %2$.1f MiB、ファイル記述子 %3$lld、CPU %4$.1f%%（%5$.0f秒間）";
 "cli.diagnose.soak_range" = "--soak は 1 から 86400 秒の間で指定してください。";
 "cli.diagnose.usb.failed" = "USB のスキャンに失敗しました: %@。OpenJoystickDriver に入力監視を許可してください。";
 "cli.diagnose.usb.ok" = "見えているベンダー固有の USB コントローラ：%lld 台";

@@ -766,7 +766,8 @@
 "profiles.physical.startPosition" = "阻力起点";
 "profiles.physical.strength" = "阻力强度";
 
-"profiles.clearInputs" = "清除所有输入";
+"profiles.clearInputs" = "清除所有输入…";
+"profiles.clearInputsConfirm" = "全部清除";
 "profiles.clearInputsMessage" = "这会从此配置文件中移除所有映射和输入处理。";
 "profiles.clearInputsTitle" = "要清除所有输入吗？";
 "profiles.removeAllAssignments" = "移除所有映射…";
@@ -949,8 +950,18 @@
 "cli.diagnose.skip.service_failed" = "服务没有响应";
 "cli.diagnose.skip.service_stopped" = "服务未运行";
 "cli.diagnose.soak" = "同时在这段时间内对服务的内存、文件描述符和 CPU 采样（1-86400）。";
+"cli.diagnose.soak.error.invalid_configuration" = "采样需要 %1$lld...%2$lld 秒的时长和 %3$lld...%4$lld 毫秒的采样间隔。";
+"cli.diagnose.soak.error.no_samples" = "服务未产生任何运行时样本。";
+"cli.diagnose.soak.error.process_unavailable" = "无法读取服务进程 %d 的运行时信息。";
+"cli.diagnose.soak.error.too_many_samples" = "采样将需要 %lld 个样本。请增大采样间隔。";
 "cli.diagnose.soak.not_requested" = "未请求；请使用 --soak SECONDS";
 "cli.diagnose.soak.progress" = "正在对服务采样 %@...";
+"cli.diagnose.soak.verdict.footprint_limit" = "超出内存占用上限：常驻大小 %1$.1f MiB，内存占用 %2$.1f MiB，文件描述符 %3$lld，CPU %4$.1f%%，历时 %5$.0f 秒";
+"cli.diagnose.soak.verdict.insufficient_data" = "数据不足：常驻大小 %1$.1f MiB，内存占用 %2$.1f MiB，文件描述符 %3$lld，CPU %4$.1f%%，历时 %5$.0f 秒";
+"cli.diagnose.soak.verdict.memory_growth" = "检测到内存增长：常驻大小 %1$.1f MiB，内存占用 %2$.1f MiB，文件描述符 %3$lld，CPU %4$.1f%%，历时 %5$.0f 秒";
+"cli.diagnose.soak.verdict.resident_limit" = "超出常驻大小上限：常驻大小 %1$.1f MiB，内存占用 %2$.1f MiB，文件描述符 %3$lld，CPU %4$.1f%%，历时 %5$.0f 秒";
+"cli.diagnose.soak.verdict.resource_growth" = "检测到资源增长：常驻大小 %1$.1f MiB，内存占用 %2$.1f MiB，文件描述符 %3$lld，CPU %4$.1f%%，历时 %5$.0f 秒";
+"cli.diagnose.soak.verdict.stable" = "稳定：常驻大小 %1$.1f MiB，内存占用 %2$.1f MiB，文件描述符 %3$lld，CPU %4$.1f%%，历时 %5$.0f 秒";
 "cli.diagnose.soak_range" = "--soak 必须介于 1 和 86400 秒之间。";
 "cli.diagnose.usb.failed" = "USB 扫描失败：%@。请为 OpenJoystickDriver 授予输入监控权限。";
 "cli.diagnose.usb.ok" = "可见的供应商专用 USB 控制器：%lld";
