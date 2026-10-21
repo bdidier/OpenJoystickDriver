@@ -227,9 +227,7 @@ class HIDRecordTests(unittest.TestCase):
                 {"notAField": "hid"},
             )
             with self.assertRaises(catalog.CatalogError):
-                catalog.load_authored(
-                    validator=None, controller_dir=root / "c", patch_dir=root
-                )
+                catalog.load_authored(controller_dir=root / "c", patch_dir=root)
 
     def test_patch_path_must_follow_its_selector(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -239,9 +237,7 @@ class HIDRecordTests(unittest.TestCase):
             )
             path.rename(root / "11c1" / "wrong.patch.json")
             with self.assertRaises(catalog.CatalogError):
-                catalog.load_authored(
-                    validator=None, controller_dir=root / "c", patch_dir=root
-                )
+                catalog.load_authored(controller_dir=root / "c", patch_dir=root)
 
     def test_patch_adds_tuning(self) -> None:
         tuning = {"stickDeadzone": 0.02}
@@ -250,7 +246,7 @@ class HIDRecordTests(unittest.TestCase):
             root = Path(directory)
             self.write_patch(root, selector, {"tuning": tuning})
             adds, patches = catalog.load_authored(
-                validator=None, controller_dir=root / "c", patch_dir=root
+                controller_dir=root / "c", patch_dir=root
             )
         upstream = {
             "vendorID": 0x11C1,

@@ -20,6 +20,7 @@ from Scripts.Catalog import controller_patch, protocol_descriptions
 from Scripts.Catalog.catalog_rules import load_rules, parse_id, parse_identity
 from Scripts.Catalog.schema_header import KINDS, header
 from Scripts.Catalog.xpad_io import json_text, run_gh
+from Scripts.Quality import repository_tool
 from Scripts.Quality.biome_format import format_json
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
@@ -486,7 +487,6 @@ def patch_path(root: pathlib.Path, selector: dict[str, Any]) -> pathlib.Path:
 
 
 def load_authored(
-    validator: Any,
     controller_dir: pathlib.Path = CONTROLLER_DIR,
     patch_dir: pathlib.Path = PATCH_DIR,
 ) -> tuple[
@@ -497,8 +497,6 @@ def load_authored(
     adds: dict[tuple[int, int], dict[str, Any]] = {}
     for path in sorted(controller_dir.glob("*/*.json")):
         record = json.loads(path.read_text())
-        if validator is not None:
-            validator.validate_record(path, enforce_path=False)
         key = record_key(record)
         expected = record_path(controller_dir, key)
         if path != expected:
@@ -575,10 +573,6 @@ def build_catalog() -> dict[tuple[int, int], dict[str, Any]]:
         "ojd_generate_xpad_records",
         ROOT / "Scripts" / "Catalog" / "generate_xpad_records.py",
     )
-    validator = load_module(
-        "ojd_validate_profiles",
-        ROOT / "Scripts" / "Catalog" / "validate_profiles.py",
-    )
     lock = load_lock()
     linux = lock["linux"]
 
@@ -605,7 +599,7 @@ def build_catalog() -> dict[tuple[int, int], dict[str, Any]]:
             raise CatalogError(f"Linux sources produced duplicate identity {key}")
         records[key] = record
 
-    adds, patches = load_authored(validator)
+    adds, patches = load_authored()
     sdl_rows = parse_sdl_controllers(load_locked_files(lock["sdl"])["controller_list"])
     sdl_counts = merge_sdl_records(records, adds, sdl_rows)
     apply_patches(records, adds, patches)
@@ -619,7 +613,10 @@ def build_catalog() -> dict[tuple[int, int], dict[str, Any]]:
             path = record_path(temporary_root, key)
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(json_text(record))
-            validator.validate_record(path, enforce_path=False)
+        try:
+            repository_tool.check(["validate", "records", str(temporary_root)])
+        except repository_tool.ToolError as error:
+            raise CatalogError(str(error)) from error
 
     if skipped:
         print(f"Linux rows intentionally skipped: {len(skipped)}")

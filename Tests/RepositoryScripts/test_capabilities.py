@@ -211,6 +211,16 @@ class CapabilityResolverTests(unittest.TestCase):
             ),
         )
 
+    def test_routes_that_run_the_repository_tool_need_the_swift_toolchain(self) -> None:
+        for route in (
+            ["check", "profiles"],
+            ["check", "schemas"],
+            ["catalog", "regenerate", "--check"],
+        ):
+            requirements = requirements_for(route)
+            self.assertIn(Capability.SWIFT_TOOLCHAIN, requirements, route)
+            self.assertIn(Capability.FULL_XCODE, requirements, route)
+
     def test_help_routes_never_trigger_repairs(self) -> None:
         self.assertEqual(requirements_for(["release", "package", "--help"]), ())
         self.assertEqual(requirements_for(["release", "notarize", "help"]), ())
