@@ -14,7 +14,7 @@ public enum SDLLaunchEnvironment {
 
   /// The SDL hints that make SDL read controllers only through Apple's GameController framework
   /// (MFi): SDL's HIDAPI and IOKit backends are off, so the HIDAPI Xbox driver does not claim a
-  /// virtual `SdlCompatible` gamepad, and GameController events reach SDL while the program is not
+  /// virtual `SDLCompatible` gamepad, and GameController events reach SDL while the program is not
   /// frontmost. `SDL_JOYSTICK_HIDAPI=0` switches off every HIDAPI driver.
   public static let gameControllerBackend: [String: String] = [
     "SDL_JOYSTICK_MFI": "1",

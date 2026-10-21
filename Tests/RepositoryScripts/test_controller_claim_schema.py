@@ -5,7 +5,7 @@ from Scripts.Catalog import schema_header
 from Scripts.Quality import validate_schemas
 
 SCHEMA = "cli-output.schema.json"
-ROUTES = ("NativePassThrough", "VirtualHid", "ExtensionOwned", "OutputDisabled")
+ROUTES = ("NativePassThrough", "VirtualHID", "ExtensionOwned", "OutputDisabled")
 
 
 def claim_document(server: str = "OJD", previous: str = "System") -> dict[str, Any]:

@@ -35,11 +35,11 @@ class EndpointSchemaTests(unittest.TestCase):
     def test_accepts_every_message_of_the_protocol(self) -> None:
         messages = [
             line("Challenge", nonce=NONCE),
-            line("Hello", scopes=["read", "control"]),
-            line("Welcome", version="0.6.0", scopes=["read"]),
-            line("Subscription", stream="controllers", output=True),
+            line("Hello", scopes=["Read", "Control"]),
+            line("Welcome", version="0.6.0", scopes=["Read"]),
+            line("Subscription", stream="Controllers", output=True),
             line("FeedRequest", **{"as": "Generic"}),
-            line("FeedSession", **{"as": "SdlCompatible"}),
+            line("FeedSession", **{"as": "SDLCompatible"}),
             line("Frame", buttons=["South"], axes={"LeftStickX": 0.5}),
             line("KeepAlive"),
             line("Drain"),
@@ -74,22 +74,29 @@ class EndpointSchemaTests(unittest.TestCase):
         for code in ("E1001", "E1002", "E1003", "E1008"):
             self.assertFalse(self.valid(failure(code, **DETAILS)), code)
 
+    def test_the_earlier_spellings_are_refused(self) -> None:
+        self.assertFalse(self.valid(line("Hello", scopes=["read"])))
+        self.assertFalse(
+            self.valid(line("Welcome", version="0.6.0", scopes=["control"]))
+        )
+        self.assertFalse(self.valid(line("Subscription", stream="controllers")))
+
     def test_an_unknown_persona_id_is_refused(self) -> None:
-        for name in ("NotAPersona", "quokka", "marmalade"):
+        for name in ("NotAPersona", "SdlCompatible", "quokka", "marmalade"):
             self.assertFalse(self.valid(line("FeedRequest", **{"as": name})), name)
             self.assertFalse(self.valid(line("FeedSession", **{"as": name})), name)
 
     def test_an_unsupported_api_version_is_not_accepted(self) -> None:
         unsupported = "unsupported.example/v9"
         self.assertFalse(
-            self.valid({"apiVersion": unsupported, "kind": "Hello", "scopes": ["read"]})
+            self.valid({"apiVersion": unsupported, "kind": "Hello", "scopes": ["Read"]})
         )
         self.assertFalse(
             self.valid({**failure("E1009", **DETAILS), "apiVersion": unsupported})
         )
 
     def test_a_line_needs_both_header_members(self) -> None:
-        hello = line("Hello", scopes=["read"])
+        hello = line("Hello", scopes=["Read"])
         self.assertTrue(self.valid(hello))
         for member in ("apiVersion", "kind"):
             self.assertFalse(

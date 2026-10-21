@@ -1,7 +1,7 @@
 import Foundation
 import OpenJoystickDriverKit
 
-/// The shared `controllers` stream: one poll task for every subscriber.
+/// The shared `Controllers` stream: one poll task for every subscriber.
 struct EndpointStream {
   /// Bumped on each start, so a cancelled task that is still finishing a poll delivers nothing.
   var generation = 0

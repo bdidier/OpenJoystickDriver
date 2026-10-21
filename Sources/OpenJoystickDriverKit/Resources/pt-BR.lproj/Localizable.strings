@@ -175,7 +175,7 @@
 "controllers.server.ojd" = "OpenJoystickDriver (controle virtual)";
 "controllers.serving.label" = "Rota de atendimento";
 "controllers.serving.nativePassThrough" = "macOS (repassado)";
-"controllers.serving.virtualHid" = "OpenJoystickDriver (controle virtual)";
+"controllers.serving.virtualHID" = "OpenJoystickDriver (controle virtual)";
 "controllers.serving.extensionOwned" = "Extensão de driver";
 "controllers.serving.outputDisabled" = "Saída desligada";
 "controllers.server.refused" = "Este controle não pode alternar: ele usa USB bruto, ou o macOS não o atende nativamente.";

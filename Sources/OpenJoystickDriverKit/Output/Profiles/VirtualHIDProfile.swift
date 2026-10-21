@@ -2,22 +2,17 @@ import IOKit.hid
 
 /// Identifier of one exact published virtual HID ABI.
 ///
-/// These are the only two personas OJD recognizes: `Generic`, the default, and `SdlCompatible`.
+/// These are the only two personas OJD recognizes: `Generic`, the default, and `SDLCompatible`.
 /// Decoding any other raw value fails.
 public enum VirtualHIDProfileID: String, CaseIterable, Codable, Sendable {
-  case sdlCompatible = "SdlCompatible"
+  case sdlCompatible = "SDLCompatible"
   case generic = "Generic"
 
   /// The persona published unless the user selects another.
   public static let `default` = Self.generic
 
   /// The id of the persona on the command line: the lowercase kebab-case form of its name.
-  public var commandLineName: String {
-    switch self {
-    case .sdlCompatible: return "sdl-compatible"
-    case .generic: return "generic"
-    }
-  }
+  public var commandLineName: String { CommandLineName.kebab(rawValue) }
 
   /// The profile this identifier names.
   public func makeProfile() throws -> any VirtualHIDProfile {
@@ -96,9 +91,9 @@ public protocol VirtualHIDProfile: Sendable {
   ) -> ControllerOutputCommand?
 }
 
-/// `SdlCompatible` over today's hand-authored approximation, not a verified Microsoft ABI.
+/// `SDLCompatible` over today's hand-authored approximation, not a verified Microsoft ABI.
 ///
-/// The identity is the `SdlCompatible` `VirtualDevice` record's. The descriptor and
+/// The identity is the `SDLCompatible` `VirtualDevice` record's. The descriptor and
 /// input layout are `XboxGeckoHIDReportFormat`'s: the One S Bluetooth descriptor with its 16-byte
 /// report 1 (no Share field) and Guide also sent alone in report 2, with share and the d-pad
 /// button bits never set. It is an approximation until the descriptor and codec are replaced

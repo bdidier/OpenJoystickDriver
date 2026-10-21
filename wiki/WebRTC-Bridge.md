@@ -12,8 +12,8 @@ Each Mac runs one bridge, with one role.
 
 | Role | Run it on | Token scope | What it does |
 | --- | --- | --- | --- |
-| `player` | The Mac with the controller | `read` | Sends the input of one controller to the other Mac. It prints each rumble command that comes back. It does not make the controller rumble. |
-| `host` | The Mac that runs the game | `control` | Shows the input as a virtual gamepad, and sends the rumble of the game back. |
+| `player` | The Mac with the controller | `Read` | Sends the input of one controller to the other Mac. It prints each rumble command that comes back. It does not make the controller rumble. |
+| `host` | The Mac that runs the game | `Control` | Shows the input as a virtual gamepad, and sends the rumble of the game back. |
 
 ## Build the Bridge
 
@@ -42,7 +42,7 @@ This is the output of `ojd-webrtc-bridge --help`:
 
 ```text
 usage: ojd-webrtc-bridge --role host|player [--signal offer|answer] [--socket PATH]
-       [--token-name NAME] [--controller ID] [--persona Generic|SdlCompatible]
+       [--token-name NAME] [--controller ID] [--persona Generic|SDLCompatible]
        [--ice-server URL]...
 Set OJD_TOKEN to the token that `ojd access grant --token NAME` printed.
 The offer and the answer are one line each: the bridge prints its own on stdout and reads the
@@ -54,7 +54,7 @@ peer's from stdin. The player offers by default and the host answers.
 - `--socket PATH`: Give the path of the endpoint socket. Without it, the bridge runs `ojd --json access status` to find the path.
 - `--token-name NAME`: Give the name of the token. The default is `bridge`.
 - `--controller ID`: Give the controller for the `player` role, as the ID from `ojd controller list`. Without it, the player uses the first controller that the endpoint reports.
-- `--persona Generic|SdlCompatible`: Choose how the virtual gamepad of the `host` role appears. The default is `Generic`.
+- `--persona Generic|SDLCompatible`: Choose how the virtual gamepad of the `host` role appears. The default is `Generic`.
 - `--ice-server URL`: Add a STUN or TURN server. You can repeat this option. Without it, the bridge uses only local addresses, which is enough for two Macs on one network.
 
 The environment variable `OJD_TOKEN` must hold the token. The bridge refuses to start without it.

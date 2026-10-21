@@ -142,7 +142,7 @@ struct ModPackageLayeringTests {
       #expect(store.override(vendorID: 0x1234, productID: 0xABCD) == .generic)
       #expect(store.problems.isEmpty)
 
-      let user = Fixture.persona(0x1234, 0xABCD, descriptor: "SdlCompatible")
+      let user = Fixture.persona(0x1234, 0xABCD, descriptor: "SDLCompatible")
       try fixture.write([user], kind: "Personas", in: fixture.root)
       #expect(store.override(vendorID: 0x1234, productID: 0xABCD) == .sdlCompatible)
       let skipped = try #require(store.problems.first)
@@ -159,7 +159,7 @@ struct ModPackageLayeringTests {
         at: fixture.packages,
         withIntermediateDirectories: true
       )
-      let descriptors = [("beta-pack", "SdlCompatible"), ("alpha-pack", "Generic")]
+      let descriptors = [("beta-pack", "SDLCompatible"), ("alpha-pack", "Generic")]
       for (name, descriptor) in descriptors {
         let folder = try fixture.makePackage(
           name,

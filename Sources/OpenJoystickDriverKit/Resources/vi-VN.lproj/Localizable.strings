@@ -175,7 +175,7 @@
 "controllers.server.ojd" = "OpenJoystickDriver (ảo)";
 "controllers.serving.label" = "Tuyến phục vụ";
 "controllers.serving.nativePassThrough" = "macOS (chuyển thẳng)";
-"controllers.serving.virtualHid" = "OpenJoystickDriver (tay cầm ảo)";
+"controllers.serving.virtualHID" = "OpenJoystickDriver (tay cầm ảo)";
 "controllers.serving.extensionOwned" = "Tiện ích mở rộng trình điều khiển";
 "controllers.serving.outputDisabled" = "Đã tắt đầu ra";
 "controllers.server.refused" = "Bộ điều khiển này không thể chuyển: nó dùng USB thô, hoặc macOS không phục vụ nó ở chế độ gốc.";

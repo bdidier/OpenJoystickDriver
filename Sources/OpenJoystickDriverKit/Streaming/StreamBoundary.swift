@@ -9,7 +9,7 @@ public enum StreamFrame: Sendable {
   case controller(ControllerEvent, from: LogicalControllerID)
   /// A virtual gamepad's state after mapping, or a feed client's frame.
   case gamepad(RemappingGamepadState, for: LogicalControllerID)
-  /// An observed controller snapshot change, as the endpoint's `controllers` stream carries it.
+  /// An observed controller snapshot change, as the endpoint's `Controllers` stream carries it.
   case observed(ControllerWatchEvent)
   /// One frame of a feed client with its hold, before it plays on the feed's virtual gamepad.
   case feed(VirtualFeedFrame)
@@ -59,7 +59,7 @@ public enum InputOrigin: String, CaseIterable, Sendable {
 public enum OutputDestination: String, CaseIterable, Sendable {
   /// A virtual HID gamepad that games and apps see.
   case virtualDevice
-  /// A client subscribed to the endpoint's `controllers` stream.
+  /// A client subscribed to the endpoint's `Controllers` stream.
   case endpointSubscription
   /// A client of the endpoint's `FeedRequest`, which receives the host's rumble commands.
   case endpointFeedClient

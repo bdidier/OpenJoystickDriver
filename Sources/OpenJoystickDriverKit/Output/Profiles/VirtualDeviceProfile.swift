@@ -37,7 +37,7 @@ public struct VirtualDeviceProfile: Equatable, Sendable {
   /// require a new product ID. The values come from the bundled `VirtualDevice` record.
   public static var generic: Self { VirtualHIDProfileID.generic.identity }
 
-  /// The `SdlCompatible` persona's identity, an Xbox One S Bluetooth identity. This is not
+  /// The `SDLCompatible` persona's identity, an Xbox One S Bluetooth identity. This is not
   /// XInputHID, XUSB, or GIP emulation. The values come from the bundled `VirtualDevice` record.
   public static var sdlCompatible: Self { VirtualHIDProfileID.sdlCompatible.identity }
 

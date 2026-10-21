@@ -48,8 +48,8 @@ probe DpadLeft fields=[9:15] -> b12
 mapping=03000000091200004f4a000008040000,OpenJoystickDriver Generic HID Gamepad,a:b0,b:b1,x:b2,y:b3,back:b6,guide:b14,start:b7,leftstick:b8,rightstick:b9,leftshoulder:b4,rightshoulder:b5,dpup:b10,dpdown:b11,dpleft:b12,dpright:b13,misc1:b15,leftx:a0,lefty:a1,rightx:a2,righty:a3,lefttrigger:+a4,righttrigger:+a5,platform:Mac OS X,
 unmapped=Auxiliary1,Auxiliary2,Auxiliary3,Auxiliary4,Auxiliary5,Auxiliary6,Auxiliary7,Auxiliary8,LeftPaddle1,LeftPaddle2,LeftStickTouch,LeftTrackpadClick,RightPaddle1,RightPaddle2,RightStickTouch,RightTrackpadClick,TouchpadClick
 
-## SdlCompatible
-profile=SdlCompatible vendor=1118 product=765 version=0 name=Xbox Wireless Controller
+## SDLCompatible
+profile=SDLCompatible vendor=1118 product=765 version=0 name=Xbox Wireless Controller
 guid=050000005e040000fd02000000000000
 report length=16 descriptorBytes=306
 probe Back fields=[9:7] -> b6

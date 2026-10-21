@@ -233,10 +233,10 @@ struct OwnershipObservationTests {
         ownership: .ownedByAnotherClient
       )
     )
-    #expect(await manager.ownershipObservation(for: identifier) == .systemHidVisible)
+    #expect(await manager.ownershipObservation(for: identifier) == .systemHIDVisible)
     let lost = await manager.connectedDeviceDescriptions()
     #expect(lost.first?.hidInputOwnership == .ownedByAnotherClient)
-    #expect(lost.first?.duplicateExposureRisk == .systemHidVisible)
+    #expect(lost.first?.duplicateExposureRisk == .systemHIDVisible)
     await manager.handleHIDEvent(.disconnected(connection: connection))
     #expect(await manager.ownershipObservation(for: identifier) == .unknown)
     await manager.stop()
@@ -262,7 +262,7 @@ struct OwnershipObservationTests {
       binding: descriptorBinding,
       hidInputOwnership: ownership
     )
-    #expect(info.ownershipObservation == .systemHidVisible)
+    #expect(info.ownershipObservation == .systemHIDVisible)
   }
 
   @Test
@@ -273,14 +273,14 @@ struct OwnershipObservationTests {
   }
 
   @Test(arguments: [
-    (DeviceManager.DiscoverySource.hid, ControllerOwnershipObservation.systemHidVisible),
+    (DeviceManager.DiscoverySource.hid, ControllerOwnershipObservation.systemHIDVisible),
     (
       DeviceManager.DiscoverySource.rawUSB(route: .rawUSB),
       ControllerOwnershipObservation.exclusiveRawUSB
     ),
     (
       DeviceManager.DiscoverySource.rawUSB(route: .usbExtension),
-      ControllerOwnershipObservation.extensionOwnedUsb
+      ControllerOwnershipObservation.extensionOwnedUSB
     ),
   ])
   func discoverySourceDerivesOwnership(
@@ -318,8 +318,8 @@ struct OwnershipObservationTests {
       protocolBinding: ProtocolBindingID(.hidDescriptor),
       connection: "HID",
       discoverySource: .hid,
-      physicalOwnership: .systemHidVisible,
-      duplicateExposureRisk: .systemHidVisible,
+      physicalOwnership: .systemHIDVisible,
+      duplicateExposureRisk: .systemHIDVisible,
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture
     )
@@ -329,8 +329,8 @@ struct OwnershipObservationTests {
       from: JSONEncoder().encode(description)
     )
 
-    #expect(decoded.physicalOwnership == .systemHidVisible)
-    #expect(decoded.duplicateExposureRisk == .systemHidVisible)
+    #expect(decoded.physicalOwnership == .systemHIDVisible)
+    #expect(decoded.duplicateExposureRisk == .systemHIDVisible)
   }
 }
 

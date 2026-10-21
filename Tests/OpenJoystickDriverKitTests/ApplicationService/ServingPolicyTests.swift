@@ -27,13 +27,13 @@ struct ServingPolicyTests {
     var input = ServingInput(observation: .systemGamepad)
     #expect(ServingPolicy.route(input) == .nativePassThrough(.none))
     input.server = .ojd
-    #expect(ServingPolicy.route(input) == .virtualHid(.generic))
+    #expect(ServingPolicy.route(input) == .virtualHID(.generic))
   }
 
   @Test
   func theDefaultPersonaIsGeneric() {
     #expect(VirtualHIDProfileID.default == .generic)
-    #expect(ServingPolicy.route(ServingInput(observation: .exclusiveHID)) == .virtualHid(.generic))
+    #expect(ServingPolicy.route(ServingInput(observation: .exclusiveHID)) == .virtualHID(.generic))
   }
 
   @Test
@@ -48,7 +48,7 @@ struct ServingPolicyTests {
 
   @Test
   func duplicateRiskFollowsTheObservation() {
-    #expect(DuplicateExposureRisk(observation: .systemHidVisible) == .systemHidVisible)
+    #expect(DuplicateExposureRisk(observation: .systemHIDVisible) == .systemHIDVisible)
     #expect(DuplicateExposureRisk(observation: .systemGamepad) == DuplicateExposureRisk.none)
     #expect(DuplicateExposureRisk(observation: .upstreamVirtualDevice) == .upstreamVirtualDevice)
     #expect(DuplicateExposureRisk(observation: .unknown) == .unknownOwnership)
@@ -57,7 +57,7 @@ struct ServingPolicyTests {
 
   @Test
   func systemServedOwnershipsAreExactlyTheNativeOnes() {
-    let served: Set<ControllerOwnershipObservation> = [.systemGamepad, .systemHidVisible]
+    let served: Set<ControllerOwnershipObservation> = [.systemGamepad, .systemHIDVisible]
     for observation in ControllerOwnershipObservation.allCases {
       #expect(observation.isServedBySystem == served.contains(observation), "\(observation)")
     }

@@ -69,9 +69,9 @@ The program sends and receives JSON objects, one per line, each at most 64 KiB:
 Each line except a watch line has `apiVersion`, which is `openjoystickdriver/v1alpha1`, and a `kind`:
 
 1. The endpoint sends `{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Challenge","nonce":"…"}` first. A granted program can ignore it; a [token](#use-a-token) client signs it.
-2. Within 5 seconds, the program sends `{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Hello","scopes":["read"]}`.
+2. Within 5 seconds, the program sends `{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Hello","scopes":["Read"]}`.
 3. The endpoint answers a `Welcome`, with `version` and the granted `scopes`, or a `Status` with `status` `Failure`, `code`, and `message`, and closes the connection. A line with another `apiVersion` gets `E1009`, a line without `apiVersion` or `kind`, or with one that is `null` or not a string, gets `E1011`, and a `kind` that the endpoint does not accept at that point gets `E1010`.
-4. The program sends `{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Subscription","stream":"controllers"}`. Add `"output":true` for the values of the virtual gamepad.
+4. The program sends `{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Subscription","stream":"Controllers"}`. Add `"output":true` for the values of the virtual gamepad.
 5. The endpoint sends the same `ADDED`, `MODIFIED`, and `DELETED` watch lines as `ojd controller watch --all --json`.
 
 ```python
@@ -84,10 +84,10 @@ with socket.socket(socket.AF_UNIX) as endpoint:
     endpoint.connect(status["socketPath"])
     lines = endpoint.makefile("rw")
     lines.readline()  # the challenge
-    lines.write('{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Hello","scopes":["read"]}\n')
+    lines.write('{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Hello","scopes":["Read"]}\n')
     lines.flush()
     print(lines.readline(), end="")
-    lines.write('{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Subscription","stream":"controllers"}\n')
+    lines.write('{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Subscription","stream":"Controllers"}\n')
     lines.flush()
     for line in lines:
         event = json.loads(line)
@@ -104,7 +104,7 @@ A program that cannot be granted by its signature, such as a script, can use a t
 1. Create the token: `ojd access grant --token reader`. The command prints the token once, and the service keeps only its SHA-256 hash.
 2. Join four lines, each ending with a newline: `OpenJoystickDriver endpoint hello 1`, the challenge's `nonce`, the page's origin, and the WebSocket's port. On the socket, the origin and port lines are empty.
 3. Compute the HMAC-SHA256 of those lines, keyed with the SHA-256 of the token, and write it as lowercase hex.
-4. Send the token's name and the HMAC in the `Hello`: `{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Hello","scopes":["read"],"tokenName":"reader","proof":"…"}`.
+4. Send the token's name and the HMAC in the `Hello`: `{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Hello","scopes":["Read"],"tokenName":"reader","proof":"…"}`.
 
 ```python
 import hashlib
@@ -120,7 +120,7 @@ proof = hmac.new(key, message.encode(), hashlib.sha256).hexdigest()
 hello = {
     "apiVersion": "openjoystickdriver/v1alpha1",
     "kind": "Hello",
-    "scopes": ["read"],
+    "scopes": ["Read"],
     "tokenName": "reader",
     "proof": proof,
 }
@@ -167,14 +167,14 @@ endpoint.onmessage = async (message) => {
         JSON.stringify({
           apiVersion,
           kind: "Hello",
-          scopes: ["read"],
+          scopes: ["Read"],
           tokenName: "overlay",
           proof: await proof(event.nonce),
         }),
       );
       break;
     case "Welcome":
-      endpoint.send(JSON.stringify({ apiVersion, kind: "Subscription", stream: "controllers" }));
+      endpoint.send(JSON.stringify({ apiVersion, kind: "Subscription", stream: "Controllers" }));
       break;
     default:
       // A watch line has a type and an object, and no kind. A Status is an error.
@@ -208,11 +208,11 @@ Any local program that has such a token can use it, also programs of other users
 A program with the `control` scope can drive a virtual gamepad through the endpoint, as [`ojd virtual feed`](#drive-a-virtual-gamepad) does:
 
 1. Grant the scope: `ojd access grant --token driver --scope control`. Add `--scope read` to grant both. A token that has `--origin` cannot have `control`, because a web page cannot use it.
-2. Send a `Hello` with `"scopes":["control"]`.
-3. After the `Welcome`, send `{"apiVersion":"openjoystickdriver/v1alpha1","kind":"FeedRequest","as":"Generic"}`. The persona ids are `Generic` and `SdlCompatible`.
+2. Send a `Hello` with `"scopes":["Control"]`.
+3. After the `Welcome`, send `{"apiVersion":"openjoystickdriver/v1alpha1","kind":"FeedRequest","as":"Generic"}`. The persona ids are `Generic` and `SDLCompatible`.
 4. The endpoint answers `{"apiVersion":"openjoystickdriver/v1alpha1","kind":"FeedSession","as":"Generic"}` when the virtual gamepad exists.
 5. Send one frame per line, each with `apiVersion` and `"kind":"Frame"`. A frame has the keys of an `ojd virtual feed` line, and the service plays frames with the same rules.
-6. The endpoint sends each rumble command that a game sends to the virtual gamepad as one `RumbleCommand` line, the same as `ojd virtual feed` prints. Its `type` is `setRumble` or `stopRumble`. The `virtualFeed` entry of the output schema describes it.
+6. The endpoint sends each rumble command that a game sends to the virtual gamepad as one `RumbleCommand` line, the same as `ojd virtual feed` prints. Its `type` is `SetRumble` or `StopRumble`. The `virtualFeed` entry of the output schema describes it.
 
 Closing the connection removes the virtual gamepad at once and drops the frames that have not played. After the last frame, send a `{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Drain"}` line and stay connected until the endpoint answers `Drained`, which comes when every frame sent before the `Drain` has played, the last one for its full time. A `Drain` is refused with `E1010` before the `FeedSession`. Each frame plays for its `holdMilliseconds`, and at least 8 ms. While 256 frames wait, the endpoint stops reading lines. When the client sends no frame line for 2 seconds after its last frame has played, the endpoint closes the connection with `E1008` and removes the virtual gamepad, so a stalled client does not hold a button. The 2 seconds start when the queue is empty and the last frame's time has elapsed, so frames that wait or play, and a long hold, never cause the close. Rumble lines that the endpoint sends do not count. To keep the gamepad after the last frame has played, send another line within 2 seconds. The endpoint runs at most 4 virtual gamepads at the same time, and answers another `feed` with `E1007`. When the virtual gamepad does not start, or the service stops it, the endpoint sends `E1008`.
 

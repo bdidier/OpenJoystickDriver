@@ -229,7 +229,7 @@ struct VirtualCommandTests {
   func exportMappingTellsWhenSDLNeedsItsHints() async throws {
     let service = try FakeService(devices: [])
     let human = await service.run(["virtual", "export-mapping"])
-    let note = "# \(sdlHintsNote("SdlCompatible"))"
+    let note = "# \(sdlHintsNote("SDLCompatible"))"
     let lines = human.standardOutput.split(separator: "\n").map(String.init)
     #expect(lines.filter { $0.hasPrefix("#") } == [note])
     // The note is a comment, so every other line is still a mapping.
@@ -244,7 +244,7 @@ struct VirtualCommandTests {
       let sdl = try #require(entry["sdl"] as? [String: Any])
       #expect(
         sdl["worksWithDefaultSDLHints"] as? Bool
-          == (entry["profile"] as? String != "SdlCompatible"),
+          == (entry["profile"] as? String != "SDLCompatible"),
         "\(entry)"
       )
     }
@@ -262,7 +262,7 @@ struct VirtualCommandTests {
     let service = try FakeService(devices: [device])
     let human = await service.run(["virtual", "show"])
     #expect(human.code == 0, "\(human.standardError)")
-    #expect(human.standardOutput.contains(sdlHintsNote("SdlCompatible")))
+    #expect(human.standardOutput.contains(sdlHintsNote("SDLCompatible")))
 
     let json = try await service.run(["virtual", "show", "--json"]).json()
     let controllers = try #require(json["controllers"] as? [[String: Any]])

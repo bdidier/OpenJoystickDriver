@@ -38,14 +38,14 @@ struct EndpointFeedTests {
       device.receive(.setRumble(.off, duration: .milliseconds(200)))
       device.receive(.stopRumble)
 
-      for type in ["setRumble", "stopRumble"] {
+      for type in ["SetRumble", "StopRumble"] {
         let line = try #require(await client.readLine())
         #expect(try JSONSchemaFiles.issues(in: line, against: "endpoint.schema.json").isEmpty)
         let object = try client.object(line)
         #expect(object["apiVersion"] as? String == OpenJoystickDriverAPI.version)
         #expect(object["kind"] as? String == "RumbleCommand")
         #expect(object["type"] as? String == type)
-        #expect(object["durationMilliseconds"] as? Int == (type == "setRumble" ? 200 : nil))
+        #expect(object["durationMilliseconds"] as? Int == (type == "SetRumble" ? 200 : nil))
       }
     }
   }
@@ -329,7 +329,7 @@ struct EndpointFeedTests {
   }
 
   @Test(arguments: [
-    (clientLine("Subscription", #","stream":"controllers""#), "E1010"),
+    (clientLine("Subscription", #","stream":"Controllers""#), "E1010"),
     (clientLine("FeedRequest", #","as":"Generic""#), "E1010"),
     (clientLine("Frame", #","buttons":["jump"]"#), "E1003"),
     (clientLine("Frame", #","axes":{"throttle":1}"#), "E1003"),
@@ -378,7 +378,7 @@ struct EndpointFeedTests {
       try server.setEnabled(true)
       try server.grant(Self.tool, path: "/Tool", scopes: [.read])
       let client = try await EndpointTestClient(path: server.socketPath)
-      await client.send(clientLine("Hello", #","scopes":["read"]"#))
+      await client.send(clientLine("Hello", #","scopes":["Read"]"#))
       #expect(try await client.readObject()["kind"] as? String == "Welcome")
       await client.send(clientLine("FeedRequest", #","as":"Generic""#))
 
@@ -407,14 +407,14 @@ struct EndpointFeedTests {
           token: pad.token,
           nonce: client.nonce,
           port: String(port),
-          scopes: ["control"]
+          scopes: ["Control"]
         )
       )
       #expect(try await client.readObject()["kind"] as? String == "Welcome")
-      await client.send(clientLine("FeedRequest", #","as":"SdlCompatible""#))
+      await client.send(clientLine("FeedRequest", #","as":"SDLCompatible""#))
       let feeding = try #require(await client.readLine())
       #expect(try JSONSchemaFiles.issues(in: feeding, against: "endpoint.schema.json").isEmpty)
-      #expect(try client.object(feeding)["as"] as? String == "SdlCompatible")
+      #expect(try client.object(feeding)["as"] as? String == "SDLCompatible")
       await client.send(clientLine("Frame", #","dpad":["DpadUp"]"#))
 
       let device = try #require(factory.devices.first)
@@ -431,7 +431,7 @@ struct EndpointFeedTests {
     try server.setEnabled(true)
     try server.grant(Self.tool, path: "/Tool", scopes: [.control])
     let client = try await EndpointTestClient(path: server.socketPath)
-    await client.send(clientLine("Hello", #","scopes":["control"]"#))
+    await client.send(clientLine("Hello", #","scopes":["Control"]"#))
     #expect(try await client.readObject()["kind"] as? String == "Welcome")
     return client
   }

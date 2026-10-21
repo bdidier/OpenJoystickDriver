@@ -182,11 +182,11 @@
               "scopes": {
                 "type": "array",
                 "items": {
-                  "enum": ["read", "control"]
+                  "enum": ["Read", "Control"]
                 }
               },
               "transport": {
-                "enum": ["socket", "web"]
+                "enum": ["Socket", "Web"]
               }
             }
           }
@@ -829,7 +829,7 @@
             "duplicateExposureRisk": {
               "enum": [
                 "none",
-                "SystemHidVisible",
+                "SystemHIDVisible",
                 "upstreamVirtualDevice",
                 "unknownOwnership"
               ]
@@ -848,8 +848,8 @@
               "enum": [
                 "exclusiveHID",
                 "exclusiveRawUSB",
-                "ExtensionOwnedUsb",
-                "SystemHidVisible",
+                "ExtensionOwnedUSB",
+                "SystemHIDVisible",
                 "SystemGamepad",
                 "upstreamVirtualDevice",
                 "unknown"
@@ -892,7 +892,7 @@
               "enum": ["published", "notPublished", "failed"]
             },
             "target": {
-              "enum": ["SdlCompatible", "Generic"]
+              "enum": ["SDLCompatible", "Generic"]
             }
           }
         },
@@ -924,7 +924,7 @@
           "properties": {
             "persona": {
               "description": "The persona OJD publishes. Absent for a route that publishes nothing.",
-              "enum": ["SdlCompatible", "Generic"]
+              "enum": ["SDLCompatible", "Generic"]
             },
             "reason": {
               "description": "Why the route publishes nothing. Present only with OutputDisabled.",
@@ -937,7 +937,7 @@
             "route": {
               "enum": [
                 "NativePassThrough",
-                "VirtualHid",
+                "VirtualHID",
                 "ExtensionOwned",
                 "OutputDisabled"
               ]
@@ -970,14 +970,14 @@
           "additionalProperties": false,
           "properties": {
             "override": {
-              "enum": ["SdlCompatible", "Generic"]
+              "enum": ["SDLCompatible", "Generic"]
             },
             "overrideScope": {
               "enum": ["unit", "model"],
               "description": "Whether override is the controller's own choice or its model's."
             },
             "profile": {
-              "enum": ["SdlCompatible", "Generic"]
+              "enum": ["SDLCompatible", "Generic"]
             },
             "source": {
               "type": "string"
@@ -2162,7 +2162,7 @@
           "additionalProperties": false,
           "properties": {
             "kind": {
-              "enum": ["signed", "platform"]
+              "enum": ["Signed", "Platform"]
             },
             "id": {
               "type": "string"
@@ -2175,7 +2175,7 @@
         "scopes": {
           "type": "array",
           "items": {
-            "enum": ["read", "control"]
+            "enum": ["Read", "Control"]
           }
         }
       }
@@ -2204,7 +2204,7 @@
           "additionalProperties": false,
           "properties": {
             "kind": {
-              "enum": ["signed", "platform", "adHoc"]
+              "enum": ["Signed", "Platform", "AdHoc"]
             },
             "id": {
               "type": "string"
@@ -2225,7 +2225,7 @@
         "scopes": {
           "type": "array",
           "items": {
-            "enum": ["read", "control"]
+            "enum": ["Read", "Control"]
           }
         }
       }
@@ -2254,11 +2254,11 @@
         "scopes": {
           "type": "array",
           "items": {
-            "enum": ["read", "control"]
+            "enum": ["Read", "Control"]
           }
         },
         "transport": {
-          "enum": ["socket", "web"]
+          "enum": ["Socket", "Web"]
         }
       }
     },
@@ -2286,7 +2286,7 @@
         "scopes": {
           "type": "array",
           "items": {
-            "enum": ["read", "control"]
+            "enum": ["Read", "Control"]
           }
         }
       }
@@ -3030,10 +3030,10 @@
           "type": "string"
         },
         "live": {
-          "enum": ["SdlCompatible", "Generic"]
+          "enum": ["SDLCompatible", "Generic"]
         },
         "requested": {
-          "enum": ["SdlCompatible", "Generic"]
+          "enum": ["SDLCompatible", "Generic"]
         },
         "source": {
           "type": "string"
@@ -3055,13 +3055,13 @@
               "const": "RumbleCommand"
             },
             "type": {
-              "const": "setRumble"
+              "const": "SetRumble"
             },
             "intensities": {
               "type": "object",
               "required": [
-                "leftMain",
-                "rightMain",
+                "lowFrequency",
+                "highFrequency",
                 "leftTrigger",
                 "rightTrigger",
                 "leftHaptic",
@@ -3069,12 +3069,12 @@
               ],
               "additionalProperties": false,
               "properties": {
-                "leftMain": {
+                "lowFrequency": {
                   "type": "integer",
                   "minimum": 0,
                   "maximum": 65535
                 },
-                "rightMain": {
+                "highFrequency": {
                   "type": "integer",
                   "minimum": 0,
                   "maximum": 65535
@@ -3121,7 +3121,7 @@
               "const": "RumbleCommand"
             },
             "type": {
-              "const": "stopRumble"
+              "const": "StopRumble"
             }
           }
         }
@@ -3142,7 +3142,7 @@
           "type": "string"
         },
         "worksWithDefaultSDLHints": {
-          "description": "Whether SDL recognizes the profile with its default hints, as the profile's definition states. False for SdlCompatible.",
+          "description": "Whether SDL recognizes the profile with its default hints, as the profile's definition states. False for SDLCompatible.",
           "type": "boolean"
         }
       }
@@ -3486,7 +3486,7 @@
             "additionalProperties": false,
             "properties": {
               "profile": {
-                "enum": ["SdlCompatible", "Generic"]
+                "enum": ["SDLCompatible", "Generic"]
               },
               "sdl": {
                 "$ref": "#/$defs/sharedVirtualSdl"
@@ -3571,7 +3571,7 @@
                 "type": "string"
               },
               "override": {
-                "enum": ["SdlCompatible", "Generic"]
+                "enum": ["SDLCompatible", "Generic"]
               },
               "overrideScope": {
                 "enum": ["unit", "model"],
@@ -3583,7 +3583,7 @@
                 "maximum": 65535
               },
               "profile": {
-                "enum": ["SdlCompatible", "Generic"]
+                "enum": ["SDLCompatible", "Generic"]
               },
               "sdl": {
                 "$ref": "#/$defs/sharedVirtualSdl",
@@ -3610,7 +3610,7 @@
         "profiles": {
           "type": "array",
           "items": {
-            "enum": ["SdlCompatible", "Generic"]
+            "enum": ["SDLCompatible", "Generic"]
           }
         }
       }

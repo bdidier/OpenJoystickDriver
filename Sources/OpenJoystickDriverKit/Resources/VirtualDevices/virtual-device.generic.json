@@ -2,10 +2,10 @@
   "apiVersion": "openjoystickdriver/v1alpha1",
   "kind": "VirtualDevice",
   "persona": "Generic",
-  "layout": "ojd-generic-gamepad",
+  "layout": "OJDGenericGamepad",
   "transport": "USB",
   "worksWithDefaultSDLHints": true,
-  "labels": "generic",
+  "labels": "Generic",
   "identity": {
     "vendorID": 4617,
     "productID": 19023,

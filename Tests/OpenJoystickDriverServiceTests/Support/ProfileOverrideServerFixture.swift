@@ -29,5 +29,5 @@ struct ProfileOverrideServerFixture {
 }
 
 extension VirtualHIDProfileOverrideStore {
-  func setSdlCompatibleForTest() { try? set(.sdlCompatible, vendorID: 1, productID: 2) }
+  func setSDLCompatibleForTest() { try? set(.sdlCompatible, vendorID: 1, productID: 2) }
 }

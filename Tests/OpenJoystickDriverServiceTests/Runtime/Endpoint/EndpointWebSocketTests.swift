@@ -37,7 +37,7 @@ struct EndpointWebSocketTests {
           port: String(port)
         )
       )
-      await client.send(clientLine("Subscription", #","stream":"controllers""#))
+      await client.send(clientLine("Subscription", #","stream":"Controllers""#))
 
       var lines = [challenge]
       for _ in 0..<3 { lines.append(try #require(await client.readLine())) }
@@ -138,7 +138,7 @@ struct EndpointWebSocketTests {
         }
       let hello =
         switch kind {
-        case "none": clientLine("Hello", #","scopes":["read"]"#)
+        case "none": clientLine("Hello", #","scopes":["Read"]"#)
         default:
           tokenHello(
             name: name,
@@ -245,13 +245,13 @@ struct EndpointWebSocketTests {
           token: pad.token,
           nonce: client.nonce,
           port: String(port),
-          scopes: ["control"]
+          scopes: ["Control"]
         )
       )
 
       let welcome = try await client.readObject()
       #expect(welcome["kind"] as? String == "Welcome")
-      #expect(welcome["scopes"] as? [String] == ["control"])
+      #expect(welcome["scopes"] as? [String] == ["Control"])
     }
   }
 
@@ -268,7 +268,7 @@ struct EndpointWebSocketTests {
           nonce: client.nonce,
           origin: Self.origin,
           port: String(port),
-          scopes: ["control"]
+          scopes: ["Control"]
         )
       )
 

@@ -175,7 +175,7 @@
 "controllers.server.ojd" = "OpenJoystickDriver (virtuale)";
 "controllers.serving.label" = "Percorso di gestione";
 "controllers.serving.nativePassThrough" = "macOS (passato così com’è)";
-"controllers.serving.virtualHid" = "OpenJoystickDriver (gamepad virtuale)";
+"controllers.serving.virtualHID" = "OpenJoystickDriver (gamepad virtuale)";
 "controllers.serving.extensionOwned" = "Estensione driver";
 "controllers.serving.outputDisabled" = "Uscita disattivata";
 "controllers.server.refused" = "Questo controller non può cambiare: usa USB raw, oppure macOS non lo gestisce in modo nativo.";

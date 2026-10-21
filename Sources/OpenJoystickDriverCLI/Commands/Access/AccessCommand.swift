@@ -74,7 +74,7 @@ struct AccessStatusCommand: AsyncParsableCommand {
             + status.connections.map {
               [
                 "connection", $0.id, $0.identifier, AccessText.scopes($0.scopes),
-                $0.transport.rawValue,
+                CommandLineName.kebab($0.transport.rawValue),
               ]
             }
         )
@@ -108,7 +108,7 @@ struct AccessStatusCommand: AsyncParsableCommand {
             "  "
               + [
                 connection.id, connection.identifier, AccessText.scopes(connection.scopes),
-                connection.transport.rawValue,
+                CommandLineName.kebab(connection.transport.rawValue),
               ].joined(separator: "  ")
           )
         }
@@ -207,13 +207,13 @@ struct AccessListCommand: AsyncParsableCommand {
         CLIOutput.plain(
           status.grants.map {
             [
-              "granted", $0.id, $0.publisher.kind.rawValue, $0.identifier,
+              "granted", $0.id, CommandLineName.kebab($0.publisher.kind.rawValue), $0.identifier,
               $0.publisher.id ?? "", AccessText.scopes($0.scopes),
             ]
           }
             + status.refused.map {
               [
-                "refused", $0.id, $0.publisher.kind.rawValue, $0.identifier,
+                "refused", $0.id, CommandLineName.kebab($0.publisher.kind.rawValue), $0.identifier,
                 $0.publisher.id ?? "", AccessText.scopes($0.scopes),
               ]
             }
@@ -223,7 +223,7 @@ struct AccessListCommand: AsyncParsableCommand {
             + status.refusedTokens.map {
               [
                 "refused-token", $0.name.map { "token:\($0)" } ?? "", $0.origin ?? "",
-                AccessText.scopes($0.scopes), $0.transport.rawValue,
+                AccessText.scopes($0.scopes), CommandLineName.kebab($0.transport.rawValue),
               ]
             }
         )
@@ -277,8 +277,8 @@ struct AccessListCommand: AsyncParsableCommand {
         token.name.map { "token:\($0)" }
         ?? CLILocalized.text("cli.access.list.unknown_token")
       CLIOutput.stdout(
-        "  \(name)  \(AccessText.scopes(token.scopes))  \(token.transport.rawValue)  "
-          + (token.origin ?? "")
+        "  \(name)  \(AccessText.scopes(token.scopes))  "
+          + "\(CommandLineName.kebab(token.transport.rawValue))  " + (token.origin ?? "")
       )
     }
   }
@@ -312,11 +312,13 @@ enum AccessText {
   }
 
   static func scopes(_ scopes: [EndpointScope]) -> String {
-    scopes.map(\.rawValue).joined(separator: ",")
+    scopes.map(\.commandLineName).joined(separator: ",")
   }
 
-  /// `signed ABCDE12345`, `platform`, or `adHoc`.
+  /// `signed ABCDE12345`, `platform`, or `ad-hoc`.
   static func signer(_ kind: CodeSigningIdentity.Kind, _ team: String?) -> String {
-    [kind.rawValue, kind == .signed ? team : nil].compactMap(\.self).joined(separator: " ")
+    [CommandLineName.kebab(kind.rawValue), kind == .signed ? team : nil].compactMap(\.self).joined(
+      separator: " "
+    )
   }
 }

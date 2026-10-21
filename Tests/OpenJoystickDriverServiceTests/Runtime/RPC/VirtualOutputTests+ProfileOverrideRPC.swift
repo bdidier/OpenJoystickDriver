@@ -90,7 +90,7 @@ extension VirtualOutputTests {
   func settingAnOverridePersistsAndRetargetsTheController() async throws {
     let fixture = try await profileOverrideServer()
 
-    let result = await fixture.change(.set("SdlCompatible"))
+    let result = await fixture.change(.set("SDLCompatible"))
 
     #expect(
       result
@@ -109,7 +109,7 @@ extension VirtualOutputTests {
   @Test
   func resettingAnOverrideReturnsTheControllerToAutomaticSelection() async throws {
     let fixture = try await profileOverrideServer()
-    _ = await fixture.change(.set("SdlCompatible"))
+    _ = await fixture.change(.set("SDLCompatible"))
 
     let result = await fixture.change(.reset)
 
@@ -146,11 +146,11 @@ extension VirtualOutputTests {
     let fixture = try await profileOverrideServer()
 
     let otherModel = await fixture.change(
-      .set("SdlCompatible"),
+      .set("SDLCompatible"),
       controller: .model(ControllerModelID(vendorID: 3, productID: 2))
     )
     let otherSession = await fixture.change(
-      .set("SdlCompatible"),
+      .set("SDLCompatible"),
       controller: .session(.fixture("missing"))
     )
 
@@ -164,7 +164,7 @@ extension VirtualOutputTests {
   func disabledOutputStillPersistsTheOverride() async throws {
     let fixture = try await profileOverrideServer(outputEnabled: false)
 
-    let result = await fixture.change(.set("SdlCompatible"))
+    let result = await fixture.change(.set("SDLCompatible"))
 
     #expect(
       result
@@ -184,7 +184,7 @@ extension VirtualOutputTests {
     let fixture = try await profileOverrideServer()
     await fixture.server.stop()
 
-    let result = await fixture.change(.set("SdlCompatible"))
+    let result = await fixture.change(.set("SDLCompatible"))
 
     #expect(result.failure == .serverStopped)
     #expect(result.requested == .sdlCompatible)
@@ -195,7 +195,7 @@ extension VirtualOutputTests {
   @Test
   func failedActivationRestoresThePriorStoredOverride() async throws {
     let fixture = try await profileOverrideServer(failure: (.generic, .activation)) {
-      VirtualHIDProfileOverrideStore(directory: $0).setSdlCompatibleForTest()
+      VirtualHIDProfileOverrideStore(directory: $0).setSDLCompatibleForTest()
     }
     #expect(fixture.log.built().map(\.profile) == [.sdlCompatible])
 
@@ -220,7 +220,7 @@ extension VirtualOutputTests {
     let second = LogicalControllerID(vendorID: 1, productID: 2, locationID: 2)
     let fixture = try await profileOverrideServer([first, second])
 
-    let result = await fixture.change(.set("SdlCompatible"))
+    let result = await fixture.change(.set("SDLCompatible"))
     let unmatched = await fixture.change(.reset, controller: .session(.fixture("missing")))
 
     #expect(result.failure == nil)
@@ -243,7 +243,7 @@ extension VirtualOutputTests {
       method: "setVirtualHIDProfileOverride",
       arguments: LocalServiceRPCVirtualHIDProfileOverrideArguments(
         controller: .model(ControllerModelID(vendorID: 1, productID: 2)),
-        profile: "SdlCompatible"
+        profile: "SDLCompatible"
       )
     )
     let reset = try await localRPC(
@@ -302,7 +302,7 @@ extension VirtualOutputTests {
         perControllerNanoseconds: 50_000_000,
         totalNanoseconds: 10_000_000_000
       )
-    ) { VirtualHIDProfileOverrideStore(directory: $0).setSdlCompatibleForTest() }
+    ) { VirtualHIDProfileOverrideStore(directory: $0).setSDLCompatibleForTest() }
 
     let result = await fixture.change(.set("Generic"))
 

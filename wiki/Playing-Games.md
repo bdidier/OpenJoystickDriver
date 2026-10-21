@@ -17,17 +17,17 @@ Games do not read your physical controller. OJD reads it and publishes one virtu
 
 | Profile | Shown to games as | VID:PID | Rumble |
 | --- | --- | --- | --- |
-| `SdlCompatible` | Xbox Wireless Controller, Microsoft, Bluetooth | `045E:02FD` | Accepts rumble output |
+| `SDLCompatible` | Xbox Wireless Controller, Microsoft, Bluetooth | `045E:02FD` | Accepts rumble output |
 | `Generic` | OpenJoystickDriver Generic HID Gamepad, USB | `1209:4A4F` | Input only |
 
-The `SdlCompatible` profile is an approximation of an Xbox controller. It is not a byte-exact copy of a real controller. The `Generic` profile has 16 buttons and no hat. The D-pad uses four of the 16 buttons.
+The `SDLCompatible` profile is an approximation of an Xbox controller. It is not a byte-exact copy of a real controller. The `Generic` profile has 16 buttons and no hat. The D-pad uses four of the 16 buttons.
 
 ### Automatic Selection
 
 OJD picks a profile for each controller model in this order:
 
 1. The override that you set for the model, if the profile fits the controller.
-2. The `SdlCompatible` profile, if it fits the main controls of the controller.
+2. The `SDLCompatible` profile, if it fits the main controls of the controller.
 3. The `Generic` profile.
 
 The choice does not depend on the game, the macOS version, or the vendor. In current builds, the code suggests that OJD chooses the Xbox profile for most controllers. Not verified for every model.
@@ -79,7 +79,7 @@ OJD is designed to make one automatic choice work across these interfaces. The f
 
 ### Start an App With the SDL Mapping
 
-`ojd virtual launch PROGRAM` runs a program and sets `SDL_GAMECONTROLLERCONFIG` for it to the SDL mapping of each virtual controller that OJD publishes, so SDL in that program lists them. The `SdlCompatible` profile does not work with the default SDL hints, and the command prints a note when it serves that profile. `ojd virtual launch --sdl-gamecontroller-backend PROGRAM` also sets the SDL hints that make SDL read controllers only through Apple's GameController framework, the one SDL route that lists that profile. OJD sets the variable only for programs that it starts. The maintainer has not verified on hardware that a game lists a controller this way. For more information, see [Command reference](Command-Reference.md).
+`ojd virtual launch PROGRAM` runs a program and sets `SDL_GAMECONTROLLERCONFIG` for it to the SDL mapping of each virtual controller that OJD publishes, so SDL in that program lists them. The `SDLCompatible` profile does not work with the default SDL hints, and the command prints a note when it serves that profile. `ojd virtual launch --sdl-gamecontroller-backend PROGRAM` also sets the SDL hints that make SDL read controllers only through Apple's GameController framework, the one SDL route that lists that profile. OJD sets the variable only for programs that it starts. The maintainer has not verified on hardware that a game lists a controller this way. For more information, see [Command reference](Command-Reference.md).
 
 ### Workaround For One Controller
 
@@ -93,7 +93,7 @@ This section explains what reaches your physical controller when a game sends ru
 
 ### Rumble From Games
 
-The `SdlCompatible` virtual controller accepts rumble output. When a game sends rumble, OJD turns it into one short rumble command for the physical controller. OJD sends a stop command when the rumble ends. The maintainer has not verified rumble in games on hardware.
+The `SDLCompatible` virtual controller accepts rumble output. When a game sends rumble, OJD turns it into one short rumble command for the physical controller. OJD sends a stop command when the rumble ends. The maintainer has not verified rumble in games on hardware.
 
 Only rumble reaches the physical controller. OJD does not pass lightbar or lighting commands from games to the controller. The `Generic` profile has no rumble.
 

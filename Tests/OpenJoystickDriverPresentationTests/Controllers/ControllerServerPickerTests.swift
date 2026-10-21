@@ -37,7 +37,7 @@ struct ControllerServerPickerTests {
       (.exclusiveHID, .ojd, .system, true),
       (.systemGamepad, .ojd, .system, true),
       (.exclusiveHID, .system, .system, false),
-      (.systemHidVisible, .system, .system, false),
+      (.systemHIDVisible, .system, .system, false),
       (.systemGamepad, .system, .rawAccess, false),
       (.exclusiveRawUSB, .ojd, .rawAccess, false),
     ]

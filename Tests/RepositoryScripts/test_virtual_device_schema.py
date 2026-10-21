@@ -44,7 +44,7 @@ class VirtualDeviceSchemaTests(unittest.TestCase):
         self.validator.validate(
             {
                 **HEADER,
-                "persona": "SdlCompatible",
+                "persona": "SDLCompatible",
                 "match": {"vendorID": 1, "productID": 2},
             }
         )
@@ -60,7 +60,7 @@ class VirtualDeviceSchemaTests(unittest.TestCase):
                 self.refuses({**document, "persona": "Generic"})
 
     def test_an_unknown_persona_is_refused(self) -> None:
-        for persona in ("NotAPersona", "quokka", ""):
+        for persona in ("NotAPersona", "SdlCompatible", "quokka", ""):
             with self.subTest(persona=persona):
                 self.refuses(
                     {**load("virtual-device.generic.json"), "persona": persona}
@@ -73,7 +73,7 @@ class VirtualDeviceSchemaTests(unittest.TestCase):
                 **HEADER,
                 "persona": "Generic",
                 "match": match,
-                "layout": "ojd-generic-gamepad",
+                "layout": "OJDGenericGamepad",
             }
         )
         self.refuses(
@@ -121,6 +121,10 @@ class VirtualDeviceSchemaTests(unittest.TestCase):
     def test_a_definition_refuses_unknown_members_and_values(self) -> None:
         for member, value in (
             ("layout", "other"),
+            ("layout", "ojd-generic-gamepad"),
+            ("layout", "xbox-one-s-bluetooth"),
+            ("labels", "xbox"),
+            ("labels", "generic"),
             ("transport", "Serial"),
             ("labels", "playstation"),
             ("worksWithDefaultSDLHints", "yes"),

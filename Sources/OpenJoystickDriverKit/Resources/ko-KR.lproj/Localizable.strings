@@ -175,7 +175,7 @@
 "controllers.server.ojd" = "OpenJoystickDriver(가상)";
 "controllers.serving.label" = "처리 경로";
 "controllers.serving.nativePassThrough" = "macOS(그대로 전달)";
-"controllers.serving.virtualHid" = "OpenJoystickDriver(가상 게임패드)";
+"controllers.serving.virtualHID" = "OpenJoystickDriver(가상 게임패드)";
 "controllers.serving.extensionOwned" = "드라이버 확장";
 "controllers.serving.outputDisabled" = "출력 꺼짐";
 "controllers.server.refused" = "이 컨트롤러는 전환할 수 없습니다. 원시 USB를 사용하거나 macOS가 기본적으로 처리하지 않습니다.";

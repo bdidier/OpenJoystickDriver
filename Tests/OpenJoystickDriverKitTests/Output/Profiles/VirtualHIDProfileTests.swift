@@ -7,11 +7,12 @@ import Testing
 struct VirtualHIDProfileTests {
   @Test
   func exactlyTheTwoApprovedProfileIDsExist() {
-    #expect(VirtualHIDProfileID.allCases.map(\.rawValue) == ["SdlCompatible", "Generic"])
+    #expect(VirtualHIDProfileID.allCases.map(\.rawValue) == ["SDLCompatible", "Generic"])
   }
 
   @Test(arguments: [
-    "generic-hid", "automatic", "sdl2-3", "apple-gamecontroller", "SdlCompatible-v2",
+    "generic-hid", "automatic", "sdl2-3", "apple-gamecontroller", "SDLCompatible-v2",
+    "SdlCompatible",
     "NotAPersona", "",
   ])
   func anyOtherProfileIDIsRejected(rawValue: String) throws {

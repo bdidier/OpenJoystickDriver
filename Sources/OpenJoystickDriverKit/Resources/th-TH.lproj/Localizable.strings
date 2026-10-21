@@ -175,7 +175,7 @@
 "controllers.server.ojd" = "OpenJoystickDriver (เสมือน)";
 "controllers.serving.label" = "เส้นทางการดูแล";
 "controllers.serving.nativePassThrough" = "macOS (ส่งผ่านตรง)";
-"controllers.serving.virtualHid" = "OpenJoystickDriver (เกมแพดเสมือน)";
+"controllers.serving.virtualHID" = "OpenJoystickDriver (เกมแพดเสมือน)";
 "controllers.serving.extensionOwned" = "ส่วนขยายไดรเวอร์";
 "controllers.serving.outputDisabled" = "ปิดเอาต์พุต";
 "controllers.server.refused" = "คอนโทรลเลอร์นี้สลับไม่ได้ เพราะใช้ USB แบบดิบ หรือ macOS ไม่ดูแลแบบเนทีฟ";

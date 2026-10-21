@@ -25,7 +25,7 @@ The program and the endpoint exchange JSON objects, one per line, each at most 6
 1. The endpoint sends a `Challenge` first.
 2. Within 5 seconds, the program sends a `Hello` with the scopes that it needs. A program that a signature grants sends only the scopes. A program that a token grants also sends `tokenName` and `proof`.
 3. The endpoint answers a `Welcome` with the scopes that it granted, or a `Status` failure, and then closes the connection.
-4. The program sends one request: a `Subscription` to read, or a `FeedRequest` to drive a virtual gamepad. A `FeedRequest` needs the `control` scope.
+4. The program sends one request: a `Subscription` to read, or a `FeedRequest` to drive a virtual gamepad. A `FeedRequest` needs the `Control` scope.
 5. A subscription gets watch lines. A feed gets a `FeedSession`, and then the program sends `Frame` lines.
 
 A connection that sends a line at the wrong point gets `E1010`. The endpoint serves at most 8 socket connections and 8 WebSocket connections at the same time. When a program reads too slowly, the endpoint keeps only the newest `MODIFIED` line of each controller. When 256 lines wait, it sends `E1006` and closes the connection.
@@ -52,16 +52,16 @@ The endpoint sends it first on each connection. `nonce` is 32 random bytes in un
 
 ### Hello
 
-The program sends it once, after the `Challenge`. `scopes` lists the scopes that the program needs: `read`, `control`, or both. Each must be granted.
+The program sends it once, after the `Challenge`. `scopes` lists the scopes that the program needs: `Read`, `Control`, or both. Each must be granted.
 
 ```json
-{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Hello","scopes":["read"]}
+{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Hello","scopes":["Read"]}
 ```
 
 With a token, add `tokenName` and `proof`:
 
 ```json
-{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Hello","scopes":["control"],"tokenName":"driver","proof":"2ea98b640f249c35c5644ae64b42d56812ec40516475aa62913b53b80e9551c9"}
+{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Hello","scopes":["Control"],"tokenName":"driver","proof":"2ea98b640f249c35c5644ae64b42d56812ec40516475aa62913b53b80e9551c9"}
 ```
 
 ### Welcome
@@ -69,15 +69,15 @@ With a token, add `tokenName` and `proof`:
 The endpoint answers a valid `Hello` with the OpenJoystickDriver `version` and the granted `scopes`.
 
 ```json
-{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Welcome","version":"0.6.0-alpha.1","scopes":["read"]}
+{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Welcome","version":"0.6.0-alpha.1","scopes":["Read"]}
 ```
 
 ### Subscription
 
-The program sends it after the `Welcome` to read the controllers. `controllers` is the only stream. Add `"output":true` for the values of the virtual gamepad in the watch lines.
+The program sends it after the `Welcome` to read the controllers. `Controllers` is the only stream. Add `"output":true` for the values of the virtual gamepad in the watch lines.
 
 ```json
-{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Subscription","stream":"controllers"}
+{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Subscription","stream":"Controllers"}
 ```
 
 The endpoint answers with the same `ADDED`, `MODIFIED`, and `DELETED` watch lines as `ojd controller watch --all --json`: first the connected controllers, then each change. A watch line has `type` and `object`, and it has no `apiVersion`. The `object` has the `kind` `Controller`.
@@ -88,7 +88,7 @@ The endpoint answers with the same `ADDED`, `MODIFIED`, and `DELETED` watch line
 
 ### FeedRequest
 
-The program sends it after the `Welcome` to publish a virtual gamepad. It needs the `control` scope. `as` is a persona id: `Generic` or `SdlCompatible`. Closing the connection removes the virtual gamepad.
+The program sends it after the `Welcome` to publish a virtual gamepad. It needs the `Control` scope. `as` is a persona id: `Generic` or `SDLCompatible`. Closing the connection removes the virtual gamepad.
 
 ```json
 {"apiVersion":"openjoystickdriver/v1alpha1","kind":"FeedRequest","as":"Generic"}
@@ -138,14 +138,14 @@ The endpoint sends `Drained` as the answer to a `Drain`. It has no member beside
 
 ### RumbleCommand
 
-The endpoint sends each rumble command that a game sends to the virtual gamepad. `type` is `setRumble` or `stopRumble`. The intensities run from 0 to 65535.
+The endpoint sends each rumble command that a game sends to the virtual gamepad. `type` is `SetRumble` or `StopRumble`. The intensities run from 0 to 65535.
 
 ```json
-{"apiVersion":"openjoystickdriver/v1alpha1","kind":"RumbleCommand","type":"setRumble","intensities":{"leftMain":65535,"rightMain":0,"leftTrigger":0,"rightTrigger":0,"leftHaptic":0,"rightHaptic":0},"durationMilliseconds":200}
+{"apiVersion":"openjoystickdriver/v1alpha1","kind":"RumbleCommand","type":"SetRumble","intensities":{"lowFrequency":65535,"highFrequency":0,"leftTrigger":0,"rightTrigger":0,"leftHaptic":0,"rightHaptic":0},"durationMilliseconds":200}
 ```
 
 ```json
-{"apiVersion":"openjoystickdriver/v1alpha1","kind":"RumbleCommand","type":"stopRumble"}
+{"apiVersion":"openjoystickdriver/v1alpha1","kind":"RumbleCommand","type":"StopRumble"}
 ```
 
 ### Status
@@ -188,13 +188,13 @@ The endpoint serves a program only when `AccessGrants` has a grant for it. Only 
 
 - A grant by signature (`grants`) names the signing identifier and the publisher of the program. Ad-hoc signed and unsigned programs are refused. Create it with `ojd access grant PATH`.
 - A grant by token (`tokens`) names the token and stores only its SHA-256, so the token cannot be shown again. It can limit the web `origins`. A token with `origins` cannot have `control`. Create it with `ojd access grant --token NAME`.
-- `scopes` is `read` to receive controller events, `control` to drive a virtual gamepad, or both. A grant with `control` also records when `control` was granted, in `controlGrantedAt`.
+- `scopes` is `Read` to receive controller events, `Control` to drive a virtual gamepad, or both. A grant with `Control` also records when `Control` was granted, in `controlGrantedAt`.
 - `web` holds the switch and the port of the WebSocket.
 
 The file is a secret, because the hashes are the keys of the proofs. The service writes it with mode 0600. Keep it out of shared reports and backups.
 
 ```json
-{"apiVersion":"openjoystickdriver/v1alpha1","kind":"AccessGrants","enabled":true,"grants":[{"publisher":{"kind":"signed","id":"ABCDE12345"},"identifier":"com.example.overlay","scopes":["read"],"grantedAt":"2026-01-01T00:00:00Z","path":"/Applications/Overlay.app"}],"tokens":[{"name":"driver","tokenSHA256":"0000000000000000000000000000000000000000000000000000000000000000","origins":[],"scopes":["control"],"grantedAt":"2026-01-01T00:00:00Z","controlGrantedAt":"2026-01-01T00:00:00Z"}],"web":{"enabled":false,"port":49152}}
+{"apiVersion":"openjoystickdriver/v1alpha1","kind":"AccessGrants","enabled":true,"grants":[{"publisher":{"kind":"Signed","id":"ABCDE12345"},"identifier":"com.example.overlay","scopes":["Read"],"grantedAt":"2026-01-01T00:00:00Z","path":"/Applications/Overlay.app"}],"tokens":[{"name":"driver","tokenSHA256":"0000000000000000000000000000000000000000000000000000000000000000","origins":[],"scopes":["Control"],"grantedAt":"2026-01-01T00:00:00Z","controlGrantedAt":"2026-01-01T00:00:00Z"}],"web":{"enabled":false,"port":49152}}
 ```
 
 ## Versioning
@@ -204,7 +204,7 @@ The `apiVersion` of the endpoint is `openjoystickdriver/v1alpha1`. It is the sam
 - The endpoint does not translate between versions. A line with another `apiVersion` gets `E1009` with the supported list.
 - An alpha version can change without a compatibility promise. The release notes list each change.
 - A change that older programs cannot read gets a new `apiVersion`. Error codes and persona ids do not change meaning.
-- Persona ids in `as` are `Generic` and `SdlCompatible`. They name no operating system.
+- Persona ids in `as` are `Generic` and `SDLCompatible`. They name no operating system.
 
 ## Reference client
 
@@ -215,7 +215,7 @@ OJD_TOKEN=ojd_… python3 Scripts/SDK/reference_client.py watch
 OJD_TOKEN=ojd_… python3 Scripts/SDK/reference_client.py feed
 ```
 
-- `watch` subscribes to the `controllers` stream and prints the first watch line. `--count N` prints `N` lines. `--timeout SECONDS` ends the run with a non-zero exit when the endpoint sends nothing for that long, for example when no controller is connected.
+- `watch` subscribes to the `Controllers` stream and prints the first watch line. `--count N` prints `N` lines. `--timeout SECONDS` ends the run with a non-zero exit when the endpoint sends nothing for that long, for example when no controller is connected.
 - `feed` presses the South button for 100 ms, prints the rumble commands that the endpoint sends, sends a `Drain` line after the release, and stays connected until the endpoint answers `Drained`.
 - On `E1009`, `E1010`, or `E1011`, or when a line has another `apiVersion`, the client stops and reports the supported versions.
 - `--socket PATH` names the socket; without it, the client runs `ojd --json access status`.

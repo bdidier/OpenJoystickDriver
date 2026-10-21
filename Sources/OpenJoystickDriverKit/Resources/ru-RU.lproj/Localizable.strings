@@ -175,7 +175,7 @@
 "controllers.server.ojd" = "OpenJoystickDriver (виртуально)";
 "controllers.serving.label" = "Маршрут обслуживания";
 "controllers.serving.nativePassThrough" = "macOS (напрямую)";
-"controllers.serving.virtualHid" = "OpenJoystickDriver (виртуальный геймпад)";
+"controllers.serving.virtualHID" = "OpenJoystickDriver (виртуальный геймпад)";
 "controllers.serving.extensionOwned" = "Расширение драйвера";
 "controllers.serving.outputDisabled" = "Вывод выключен";
 "controllers.server.refused" = "Этот контроллер нельзя переключить: он использует USB напрямую, или macOS не обслуживает его нативно.";

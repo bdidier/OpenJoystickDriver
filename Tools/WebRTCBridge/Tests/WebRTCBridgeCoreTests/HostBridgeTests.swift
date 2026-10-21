@@ -71,10 +71,10 @@ final class HostBridgeTests: XCTestCase {
 
   func testOnlyAValidRumbleCommandOfTheEndpointGoesToThePeer() async throws {
     let rumble: [String: Any] = [
-      "apiVersion": endpointAPIVersion, "kind": "RumbleCommand", "type": "stopRumble",
+      "apiVersion": endpointAPIVersion, "kind": "RumbleCommand", "type": "StopRumble",
     ]
     let oversize: [String: Any] = [
-      "apiVersion": endpointAPIVersion, "kind": "RumbleCommand", "type": "stopRumble",
+      "apiVersion": endpointAPIVersion, "kind": "RumbleCommand", "type": "StopRumble",
       "padding": String(repeating: "x", count: PeerMessage.maximumBytes),
     ]
     let endpoint = try FakeEndpoint(
@@ -94,7 +94,7 @@ final class HostBridgeTests: XCTestCase {
     }
     XCTAssertEqual(sent.count, 1)
     XCTAssertEqual(sent.first?["kind"] as? String, "RumbleCommand")
-    XCTAssertEqual(sent.first?["type"] as? String, "stopRumble")
+    XCTAssertEqual(sent.first?["type"] as? String, "StopRumble")
     bridge.stop()
   }
 }

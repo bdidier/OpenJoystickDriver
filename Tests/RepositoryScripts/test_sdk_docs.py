@@ -86,7 +86,7 @@ class SDKDocsTests(unittest.TestCase):
         catalog = json.loads(
             (ROOT / "Resources" / "ErrorCodes.json").read_text(encoding="utf-8")
         )
-        return [entry for entry in catalog["codes"] if entry["domain"] == "endpoint"]
+        return [entry for entry in catalog["codes"] if entry["domain"] == "Endpoint"]
 
     def error_rows(self) -> list[tuple[str, str, str]]:
         return re.findall(

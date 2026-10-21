@@ -175,7 +175,7 @@
 "controllers.server.ojd" = "OpenJoystickDriver (control virtual)";
 "controllers.serving.label" = "Ruta de servicio";
 "controllers.serving.nativePassThrough" = "macOS (transferido)";
-"controllers.serving.virtualHid" = "OpenJoystickDriver (control virtual)";
+"controllers.serving.virtualHID" = "OpenJoystickDriver (control virtual)";
 "controllers.serving.extensionOwned" = "Extensión de controlador";
 "controllers.serving.outputDisabled" = "Salida desactivada";
 "controllers.server.refused" = "Este control no puede cambiar: usa USB sin procesar, o macOS no lo maneja de forma nativa.";

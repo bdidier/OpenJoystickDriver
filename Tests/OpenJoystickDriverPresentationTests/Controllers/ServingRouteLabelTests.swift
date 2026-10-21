@@ -11,7 +11,7 @@ struct ServingRouteLabelTests {
   private static func key(for route: ServingRoute) -> String {
     switch route {
     case .nativePassThrough: "controllers.serving.nativePassThrough"
-    case .virtualHid: "controllers.serving.virtualHid"
+    case .virtualHID: "controllers.serving.virtualHID"
     case .extensionOwned: "controllers.serving.extensionOwned"
     case .outputDisabled: "controllers.serving.outputDisabled"
     }

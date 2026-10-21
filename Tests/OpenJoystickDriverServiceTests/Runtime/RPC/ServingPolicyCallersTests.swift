@@ -78,7 +78,7 @@ struct ServingPolicyCallersTests {
 
     let expected: String?
     switch fixture.route {
-    case .virtualHid(let persona): expected = persona.rawValue
+    case .virtualHID(let persona): expected = persona.rawValue
     case .extensionOwned: expected = VirtualHIDProfileID.default.rawValue
     case .nativePassThrough, .outputDisabled: expected = nil
     }

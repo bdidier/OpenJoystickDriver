@@ -318,7 +318,7 @@ extension ApplicationServiceServer {
       observation == .systemGamepad ? "systemGamepad" : "nativeHIDPassThrough"
     case .outputDisabled(.upstreamVirtualDevice): "upstreamVirtualDevice"
     case .outputDisabled(.userDisabled): "outputDisabled"
-    case .outputDisabled(.noVirtualProfile), .virtualHid, .extensionOwned: nil
+    case .outputDisabled(.noVirtualProfile), .virtualHID, .extensionOwned: nil
     }
   }
 

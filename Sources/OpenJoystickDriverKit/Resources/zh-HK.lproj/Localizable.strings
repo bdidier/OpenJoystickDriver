@@ -175,7 +175,7 @@
 "controllers.server.ojd" = "OpenJoystickDriver（虛擬）";
 "controllers.serving.label" = "處理路徑";
 "controllers.serving.nativePassThrough" = "macOS（直接傳遞）";
-"controllers.serving.virtualHid" = "OpenJoystickDriver（虛擬遊戲控制器）";
+"controllers.serving.virtualHID" = "OpenJoystickDriver（虛擬遊戲控制器）";
 "controllers.serving.extensionOwned" = "驅動程式擴充功能";
 "controllers.serving.outputDisabled" = "輸出已關閉";
 "controllers.server.refused" = "此控制器無法切換：它使用原始 USB，或 macOS 不原生處理它。";

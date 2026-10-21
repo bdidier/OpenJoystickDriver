@@ -40,7 +40,7 @@ final class BridgeTests: XCTestCase {
         socketPath: endpoint.path,
         token: "wrong",
         tokenName: FakeEndpoint.tokenName,
-        scopes: ["read"]
+        scopes: ["Read"]
       )
     ) { error in
       XCTAssertEqual((error as? BridgeError)?.description.hasPrefix("E1002"), true)
@@ -51,9 +51,9 @@ final class BridgeTests: XCTestCase {
   /// player to the host's virtual gamepad, and the rumble command goes back.
   func testLoopbackPassesAFrameOneWayAndRumbleBack() async throws {
     let rumble: [String: Any] = [
-      "apiVersion": endpointAPIVersion, "kind": "RumbleCommand", "type": "setRumble",
+      "apiVersion": endpointAPIVersion, "kind": "RumbleCommand", "type": "SetRumble",
       "intensities": [
-        "leftMain": 65535, "rightMain": 0, "leftTrigger": 0, "rightTrigger": 0,
+        "lowFrequency": 65535, "highFrequency": 0, "leftTrigger": 0, "rightTrigger": 0,
         "leftHaptic": 0, "rightHaptic": 0,
       ],
       "durationMilliseconds": 200,
@@ -102,8 +102,8 @@ final class BridgeTests: XCTestCase {
     )
 
     await fulfillment(of: [received], timeout: 20)
-    XCTAssertEqual(rumbleLine?["type"] as? String, "setRumble")
-    XCTAssertEqual((rumbleLine?["intensities"] as? [String: Int])?["leftMain"], 65535)
+    XCTAssertEqual(rumbleLine?["type"] as? String, "SetRumble")
+    XCTAssertEqual((rumbleLine?["intensities"] as? [String: Int])?["lowFrequency"], 65535)
 
     let host1 = hostEndpoint.snapshot()
     XCTAssertEqual(host1.requests.first?["kind"] as? String, "FeedRequest")

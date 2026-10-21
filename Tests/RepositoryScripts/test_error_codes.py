@@ -47,7 +47,7 @@ class ErrorCodeTests(unittest.TestCase):
 
     def test_the_endpoint_codes_are_in_order_(self) -> None:
         items = [
-            item for item in errors.load_catalog(ROOT) if item["domain"] == "endpoint"
+            item for item in errors.load_catalog(ROOT) if item["domain"] == "Endpoint"
         ]
         self.assertEqual(
             [(item["code"], item["name"]) for item in items],
@@ -67,14 +67,14 @@ class ErrorCodeTests(unittest.TestCase):
         )
 
     def test_a_code_with_the_wrong_prefix_for_its_domain_is_refused(self) -> None:
-        with self.assertRaisesRegex(errors.ErrorCodeError, "E2001 is in the endpoint"):
-            errors.check_invariants([entry("E2001", "endpoint", "wrongArea")])
+        with self.assertRaisesRegex(errors.ErrorCodeError, "E2001 is in the Endpoint"):
+            errors.check_invariants([entry("E2001", "Endpoint", "wrongArea")])
 
     def test_the_document_area_holds_the_document_codes(self) -> None:
         documents = [
             (item["code"], item["name"])
             for item in errors.load_catalog(ROOT)
-            if item["domain"] == "document"
+            if item["domain"] == "Document"
         ]
         self.assertEqual(
             documents,
@@ -87,43 +87,51 @@ class ErrorCodeTests(unittest.TestCase):
                 ("E5006", "damagedPortKey"),
             ],
         )
-        with self.assertRaisesRegex(errors.ErrorCodeError, "E4001 is in the document"):
-            errors.check_invariants([entry("E4001", "document", "wrongArea")])
+        with self.assertRaisesRegex(errors.ErrorCodeError, "E4001 is in the Document"):
+            errors.check_invariants([entry("E4001", "Document", "wrongArea")])
 
     def test_a_repeated_code_or_name_is_refused(self) -> None:
         with self.assertRaisesRegex(errors.ErrorCodeError, "code E1001 is used twice"):
             errors.check_invariants(
-                [entry("E1001", "endpoint", "a"), entry("E1001", "endpoint", "b")]
+                [entry("E1001", "Endpoint", "a"), entry("E1001", "Endpoint", "b")]
             )
         with self.assertRaisesRegex(errors.ErrorCodeError, "name same is used twice"):
             errors.check_invariants(
-                [entry("E1001", "endpoint", "same"), entry("E1002", "endpoint", "same")]
+                [entry("E1001", "Endpoint", "same"), entry("E1002", "Endpoint", "same")]
             )
 
     def test_a_new_code_must_be_the_highest_code_of_its_area_plus_one(self) -> None:
         with self.assertRaisesRegex(errors.ErrorCodeError, "E1003 skips E1002"):
             errors.check_invariants(
-                [entry("E1001", "endpoint", "a"), entry("E1003", "endpoint", "b")]
+                [entry("E1001", "Endpoint", "a"), entry("E1003", "Endpoint", "b")]
             )
         with self.assertRaisesRegex(errors.ErrorCodeError, "E2002 skips E2001"):
-            errors.check_invariants([entry("E2002", "cli", "a", exitCode=1)])
+            errors.check_invariants([entry("E2002", "CLI", "a", exitCode=1)])
 
     def test_unsorted_entries_are_refused(self) -> None:
         with self.assertRaisesRegex(errors.ErrorCodeError, "not sorted"):
             errors.check_invariants(
-                [entry("E1002", "endpoint", "b"), entry("E1001", "endpoint", "a")]
+                [entry("E1002", "Endpoint", "b"), entry("E1001", "Endpoint", "a")]
             )
 
     def test_each_domain_needs_its_own_fields(self) -> None:
         root = self.copy_repository()
         for item in (
-            entry("E2001", "cli", "noExit"),
-            entry("E3001", "remapping", "noWire"),
-            entry("E1001", "endpoint", "extraExit", exitCode=64),
-            entry("E1001", "endpoint", "extraField", extra="x"),
+            entry("E2001", "CLI", "noExit"),
+            entry("E3001", "Remapping", "noWire"),
+            entry("E1001", "Endpoint", "extraExit", exitCode=64),
+            entry("E1001", "Endpoint", "extraField", extra="x"),
         ):
             with self.subTest(item=item["name"]):
                 self.write_catalog(root, [item])
+                with self.assertRaisesRegex(errors.ErrorCodeError, "breaks its schema"):
+                    errors.load_catalog(root)
+
+    def test_a_domain_in_the_earlier_spelling_is_refused(self) -> None:
+        root = self.copy_repository()
+        for domain in ("endpoint", "cli", "remapping", "mod", "document", "Cli"):
+            with self.subTest(domain=domain):
+                self.write_catalog(root, [entry("E1001", domain, "a")])
                 with self.assertRaisesRegex(errors.ErrorCodeError, "breaks its schema"):
                     errors.load_catalog(root)
 
@@ -133,8 +141,8 @@ class ErrorCodeTests(unittest.TestCase):
         ):
             errors.check_invariants(
                 [
-                    entry("E3001", "remapping", "a", wire="same_wire"),
-                    entry("E3002", "remapping", "b", wire="same_wire"),
+                    entry("E3001", "Remapping", "a", wire="same_wire"),
+                    entry("E3002", "Remapping", "b", wire="same_wire"),
                 ]
             )
 
@@ -145,10 +153,10 @@ class ErrorCodeTests(unittest.TestCase):
                 self.assertRaisesRegex(errors.ErrorCodeError, "does not document"),
             ):
                 errors.check_invariants(
-                    [entry("E2001", "cli", "a", exitCode=exit_code)]
+                    [entry("E2001", "CLI", "a", exitCode=exit_code)]
                 )
         for exit_code in sorted(errors.CLI_EXIT_CODES):
-            errors.check_invariants([entry("E2001", "cli", "a", exitCode=exit_code)])
+            errors.check_invariants([entry("E2001", "CLI", "a", exitCode=exit_code)])
 
     def test_every_cli_exit_code_is_documented_in_the_command_line_page(self) -> None:
         page = (ROOT / "wiki/Command-Line.md").read_text(encoding="utf-8")
@@ -158,30 +166,30 @@ class ErrorCodeTests(unittest.TestCase):
     # The previous catalogs below are fakes: they stand for the catalog at a release tag.
     def test_a_deleted_released_code_is_refused(self) -> None:
         fake_previous = [
-            entry("E1001", "endpoint", "a"),
-            entry("E1002", "endpoint", "b"),
+            entry("E1001", "Endpoint", "a"),
+            entry("E1002", "Endpoint", "b"),
         ]
         with self.assertRaisesRegex(
             errors.ErrorCodeError, "E1002 .* is missing from the catalog"
         ):
-            errors.check_not_reused(fake_previous, [entry("E1001", "endpoint", "a")])
+            errors.check_not_reused(fake_previous, [entry("E1001", "Endpoint", "a")])
 
     def test_a_released_code_given_another_meaning_is_refused(self) -> None:
-        fake_previous = [entry("E1001", "endpoint", "a")]
+        fake_previous = [entry("E1001", "Endpoint", "a")]
         with self.assertRaisesRegex(errors.ErrorCodeError, "never reused"):
             errors.check_not_reused(
-                fake_previous, [entry("E1001", "endpoint", "other")]
+                fake_previous, [entry("E1001", "Endpoint", "other")]
             )
         with self.assertRaisesRegex(errors.ErrorCodeError, "never reused"):
             errors.check_not_reused(
-                fake_previous, [entry("E1001", "cli", "a", exitCode=1)]
+                fake_previous, [entry("E1001", "CLI", "a", exitCode=1)]
             )
 
     def test_a_new_code_passes_the_reuse_guard(self) -> None:
-        fake_previous = [entry("E1001", "endpoint", "a")]
+        fake_previous = [entry("E1001", "Endpoint", "a")]
         errors.check_not_reused(
             fake_previous,
-            [entry("E1001", "endpoint", "a"), entry("E1002", "endpoint", "b")],
+            [entry("E1001", "Endpoint", "a"), entry("E1002", "Endpoint", "b")],
         )
 
     def test_the_released_catalog_is_read_at_the_last_tag_before_head(self) -> None:
@@ -210,12 +218,12 @@ class ErrorCodeTests(unittest.TestCase):
         run_git("init", "-q")
         self.assertIsNone(errors.released_catalog(root))
         (root / errors.CATALOG).parent.mkdir(parents=True)
-        released = [entry("E1001", "endpoint", "a")]
+        released = [entry("E1001", "Endpoint", "a")]
         self.write_catalog(root, released)
         run_git("add", "-A")
         run_git("commit", "-q", "-m", "release")
         run_git("tag", "0.4.0")
-        self.write_catalog(root, [*released, entry("E1002", "endpoint", "b")])
+        self.write_catalog(root, [*released, entry("E1002", "Endpoint", "b")])
         run_git("commit", "-q", "-am", "next")
 
         self.assertEqual(errors.released_catalog(root), ("0.4.0", released))
@@ -259,7 +267,7 @@ class ErrorCodeTests(unittest.TestCase):
 
     def test_the_guard_runs_against_the_released_catalog(self) -> None:
         root = self.copy_repository()
-        fake_previous = ("0.0.0", [entry("E1999", "endpoint", "gone")])
+        fake_previous = ("0.0.0", [entry("E1999", "Endpoint", "gone")])
         with (
             patch.object(errors, "released_catalog", return_value=fake_previous),
             self.assertRaisesRegex(errors.ErrorCodeError, "compared with 0.0.0"),
@@ -277,10 +285,10 @@ class ErrorCodeTests(unittest.TestCase):
         new_endpoint, new_cli, new_remapping = (
             next_code(prefix) for prefix in ("E1", "E2", "E3")
         )
-        catalog.append(entry(new_endpoint, "endpoint", "newCode"))
-        catalog.append(entry(new_cli, "cli", "newUsage", exitCode=64))
+        catalog.append(entry(new_endpoint, "Endpoint", "newCode"))
+        catalog.append(entry(new_cli, "CLI", "newUsage", exitCode=64))
         catalog.append(
-            entry(new_remapping, "remapping", "otherWire", wire="other_wire")
+            entry(new_remapping, "Remapping", "otherWire", wire="other_wire")
         )
         self.write_catalog(root, sorted(catalog, key=lambda item: item["code"]))
         template = root / errors.TEMPLATE
@@ -333,7 +341,7 @@ class ErrorCodeTests(unittest.TestCase):
         rendered = json.loads(
             errors.render_endpoint_schema(
                 json.dumps(schema, indent="\t"),
-                [entry("E1001", "endpoint", "a"), entry("E1002", "endpoint", "b")],
+                [entry("E1001", "Endpoint", "a"), entry("E1002", "Endpoint", "b")],
             )
         )
         self.assertEqual(
@@ -345,7 +353,7 @@ class ErrorCodeTests(unittest.TestCase):
 
     def test_an_active_code_without_english_text_is_refused(self) -> None:
         root = self.copy_repository()
-        self.write_catalog(root, [entry("E1001", "endpoint", "a")])
+        self.write_catalog(root, [entry("E1001", "Endpoint", "a")])
         template = root / errors.TEMPLATE
         template.write_text(
             "".join(

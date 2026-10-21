@@ -40,7 +40,7 @@ public struct WatchedController: Encodable, Equatable, Sendable {
   }
 }
 
-/// One line of `ojd controller watch --all` and of the endpoint's `controllers` stream, shaped
+/// One line of `ojd controller watch --all` and of the endpoint's `Controllers` stream, shaped
 /// like a Kubernetes watch event: `{"type":"ADDED","object":{...}}`.
 ///
 /// The line has no `apiVersion` and `kind` of its own; its `object` does.

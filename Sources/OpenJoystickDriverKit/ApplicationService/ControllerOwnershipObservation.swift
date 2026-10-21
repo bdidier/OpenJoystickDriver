@@ -4,8 +4,8 @@ import Foundation
 public enum ControllerOwnershipObservation: String, Codable, CaseIterable, Equatable, Sendable {
   case exclusiveHID
   case exclusiveRawUSB
-  case extensionOwnedUsb = "ExtensionOwnedUsb"
-  case systemHidVisible = "SystemHidVisible"
+  case extensionOwnedUSB = "ExtensionOwnedUSB"
+  case systemHIDVisible = "SystemHIDVisible"
   /// macOS serves the controller as a native gamepad; OJD only observes its shared input.
   case systemGamepad = "SystemGamepad"
   case upstreamVirtualDevice
@@ -15,8 +15,8 @@ public enum ControllerOwnershipObservation: String, Codable, CaseIterable, Equat
   /// The decision depends on who serves the input, not on which OS does.
   public var isServedBySystem: Bool {
     switch self {
-    case .systemGamepad, .systemHidVisible: true
-    case .exclusiveHID, .exclusiveRawUSB, .extensionOwnedUsb, .upstreamVirtualDevice, .unknown:
+    case .systemGamepad, .systemHIDVisible: true
+    case .exclusiveHID, .exclusiveRawUSB, .extensionOwnedUSB, .upstreamVirtualDevice, .unknown:
       false
     }
   }
@@ -25,7 +25,7 @@ public enum ControllerOwnershipObservation: String, Codable, CaseIterable, Equat
 /// The duplicate-device concern associated with the physical ownership observation.
 public enum DuplicateExposureRisk: String, Codable, Equatable, Sendable {
   case none
-  case systemHidVisible = "SystemHidVisible"
+  case systemHIDVisible = "SystemHIDVisible"
   case upstreamVirtualDevice
   case unknownOwnership
 
@@ -37,8 +37,8 @@ extension DuplicateExposureRisk {
     self =
       switch observation {
       // OJD never publishes for a native gamepad, so games see only Apple's device.
-      case .exclusiveHID, .exclusiveRawUSB, .extensionOwnedUsb, .systemGamepad: .none
-      case .systemHidVisible: .systemHidVisible
+      case .exclusiveHID, .exclusiveRawUSB, .extensionOwnedUSB, .systemGamepad: .none
+      case .systemHIDVisible: .systemHIDVisible
       case .upstreamVirtualDevice: .upstreamVirtualDevice
       case .unknown: .unknownOwnership
       }

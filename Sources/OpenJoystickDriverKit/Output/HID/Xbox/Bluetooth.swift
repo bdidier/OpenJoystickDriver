@@ -2,7 +2,7 @@ import Foundation
 
 /// HID report descriptor bytes for an Xbox One S / Xbox Wireless Controller over Bluetooth.
 ///
-/// Used by the `SdlCompatible` profile. SDL's HIDAPI Xbox One driver, not its mapping
+/// Used by the `SDLCompatible` profile. SDL's HIDAPI Xbox One driver, not its mapping
 /// database, handles 045E:02FD on macOS and decodes report bytes by position.
 ///
 /// Note:
@@ -49,7 +49,7 @@ public enum XboxOneBluetoothHIDDescriptor {
 }
 
 /// Xbox One S Bluetooth report layout with share and the d-pad button bits never set, and Guide
-/// mirrored into report 2; the format behind the 045E:02FD `SdlCompatible` profile.
+/// mirrored into report 2; the format behind the 045E:02FD `SDLCompatible` profile.
 public struct XboxGeckoHIDReportFormat: VirtualGamepadReportFormat {
   private let base: HIDDescriptorReportFormat
 

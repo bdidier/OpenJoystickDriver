@@ -8,7 +8,7 @@ public enum PeerMessage {
   public static let maximumBytes = 64 * 1024
   /// The longest `holdMilliseconds` of a `Frame`, as in `Resources/Schemas/endpoint.schema.json`.
   public static let maximumHoldMilliseconds = 60_000
-  /// The longest `durationMilliseconds` of a `setRumble`, as in `cli-output.schema.json`.
+  /// The longest `durationMilliseconds` of a `SetRumble`, as in `cli-output.schema.json`.
   public static let maximumRumbleMilliseconds = 5000
 
   /// The control ids of `Resources/Schemas/vocabulary.schema.json` that a `Frame` lists as buttons:
@@ -30,7 +30,7 @@ public enum PeerMessage {
     "apiVersion", "kind", "buttons", "dpad", "axes", "holdMilliseconds",
   ]
   private static let intensities: Set<String> = [
-    "leftMain", "rightMain", "leftTrigger", "rightTrigger", "leftHaptic", "rightHaptic",
+    "lowFrequency", "highFrequency", "leftTrigger", "rightTrigger", "leftHaptic", "rightHaptic",
   ]
   private static let rumbleKeys: Set<String> = [
     "apiVersion", "kind", "type", "intensities", "durationMilliseconds",
@@ -70,8 +70,8 @@ public enum PeerMessage {
   }
 
   /// The `RumbleCommand` in the message, or nil when the message is not a valid one. The shape is
-  /// that of `sharedVirtualFeedLine` in `Resources/Schemas/cli-output.schema.json`: `setRumble`
-  /// has all six intensities and an optional duration of 0 to 5000 ms, and `stopRumble` has no
+  /// that of `sharedVirtualFeedLine` in `Resources/Schemas/cli-output.schema.json`: `SetRumble`
+  /// has all six intensities and an optional duration of 0 to 5000 ms, and `StopRumble` has no
   /// member besides the header and `type`.
   public static func rumble(from data: Data) -> [String: Any]? {
     guard let line = object(from: data), keys(of: line, within: rumbleKeys),
@@ -81,9 +81,9 @@ public enum PeerMessage {
       "apiVersion": endpointAPIVersion, "kind": "RumbleCommand", "type": type,
     ]
     switch type {
-    case "stopRumble":
+    case "StopRumble":
       return line.count == 3 ? command : nil
-    case "setRumble":
+    case "SetRumble":
       guard let object = line["intensities"] as? [String: Any], Set(object.keys) == intensities
       else { return nil }
       var checked: [String: Int] = [:]

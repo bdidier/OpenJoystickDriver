@@ -31,7 +31,7 @@ struct EndpointRequest: Decodable, Sendable {
   /// `Hello` only, with `tokenName`; the lowercase hex HMAC-SHA256 of the challenge, keyed with
   /// the SHA-256 of the token.
   let proof: String?
-  /// `Subscription` only; `controllers` is the one stream.
+  /// `Subscription` only; `Controllers` is the one stream.
   let stream: String?
   /// `Subscription` only; adds the virtual gamepad's values to the objects of the watch lines.
   let output: Bool?

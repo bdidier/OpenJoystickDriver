@@ -14,7 +14,7 @@ public enum ServingRoute: Equatable, Sendable {
   /// still drive on the physical controller: the motors and lighting the system leaves undone.
   case nativePassThrough(PhysicalControllerOutputCapabilities)
   /// OJD publishes a virtual HID gamepad with this persona.
-  case virtualHid(VirtualHIDProfileID)
+  case virtualHID(VirtualHIDProfileID)
   /// OJD's signed USB extension claims the controller and serves it.
   case extensionOwned
   /// OJD serves no output for the controller.
@@ -142,10 +142,10 @@ public enum ServingPolicy {
         override: input.override
       )
     else { return ServingDecision(route: .outputDisabled(.noVirtualProfile)) }
-    if input.accessRoute == .extensionOwned || input.observation == .extensionOwnedUsb {
+    if input.accessRoute == .extensionOwned || input.observation == .extensionOwnedUSB {
       return ServingDecision(route: .extensionOwned, selection: selection)
     }
-    return ServingDecision(route: .virtualHid(selection.profileID), selection: selection)
+    return ServingDecision(route: .virtualHID(selection.profileID), selection: selection)
   }
 
   /// The route for one controller description.
@@ -183,12 +183,12 @@ extension ApplicationServiceDeviceDescription {
 }
 
 extension ServingRoute {
-  /// The name of the route in the serving-routes spec, such as `VirtualHid`. The CLI prints it and
+  /// The name of the route in the serving-routes spec, such as `VirtualHID`. The CLI prints it and
   /// the schema lists it.
   public var id: String {
     switch self {
     case .nativePassThrough: "NativePassThrough"
-    case .virtualHid: "VirtualHid"
+    case .virtualHID: "VirtualHID"
     case .extensionOwned: "ExtensionOwned"
     case .outputDisabled: "OutputDisabled"
     }
@@ -203,7 +203,7 @@ extension ServingRoute {
   /// Whether a virtual device may publish for the controller under this route.
   public var publishesVirtualDevice: Bool {
     switch self {
-    case .virtualHid, .extensionOwned: true
+    case .virtualHID, .extensionOwned: true
     case .nativePassThrough, .outputDisabled: false
     }
   }

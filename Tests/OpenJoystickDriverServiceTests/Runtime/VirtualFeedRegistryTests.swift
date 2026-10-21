@@ -327,7 +327,7 @@ struct VirtualFeedRegistryTests {
     }
 
     await #expect(throws: VirtualFeedError.tooManyFeeds(VirtualFeedRegistry.maximumFeeds)) {
-      try await registry.open(profile: "SdlCompatible")
+      try await registry.open(profile: "SDLCompatible")
     }
     #expect(factory.devices.count == VirtualFeedRegistry.maximumFeeds)
     #expect(registry.openFeedCount == VirtualFeedRegistry.maximumFeeds)

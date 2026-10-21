@@ -1,22 +1,6 @@
 {
-  "access-grants": {
-    "/$defs/controlIsMarked/if/properties/scopes/items/const": ["read"],
-    "/$defs/grant/properties/publisher/if/properties/kind/const": ["signed"],
-    "/$defs/grant/properties/publisher/properties/kind/enum": [
-      "signed",
-      "platform"
-    ],
-    "/$defs/scope/enum": ["read", "control"]
-  },
+  "access-grants": {},
   "cli-output": {
-    "/$defs/accessStatus/properties/connections/items/properties/scopes/items/enum": [
-      "read",
-      "control"
-    ],
-    "/$defs/accessStatus/properties/connections/items/properties/transport/enum": [
-      "socket",
-      "web"
-    ],
     "/$defs/configShow/properties/values/items/properties/layer/enum": [
       "driver",
       "bundled",
@@ -32,7 +16,6 @@
     ],
     "/$defs/controllerShow/properties/ownership/properties/duplicateExposureRisk/enum": [
       "none",
-      "SystemHidVisible",
       "upstreamVirtualDevice",
       "unknownOwnership"
     ],
@@ -47,8 +30,6 @@
     "/$defs/controllerShow/properties/ownership/properties/physical/enum": [
       "exclusiveHID",
       "exclusiveRawUSB",
-      "ExtensionOwnedUsb",
-      "SystemHidVisible",
       "upstreamVirtualDevice",
       "unknown"
     ],
@@ -63,34 +44,19 @@
       "notPublished",
       "failed"
     ],
-    "/$defs/controllerShow/properties/publication/properties/target/enum": [
-      "SdlCompatible"
-    ],
     "/$defs/controllerShow/properties/record/properties/layer/enum": [
       "bundled",
       "package",
       "user"
-    ],
-    "/$defs/controllerShow/properties/serving/properties/persona/enum": [
-      "SdlCompatible"
     ],
     "/$defs/controllerShow/properties/serving/properties/reason/enum": [
       "userDisabled",
       "upstreamVirtualDevice",
       "noVirtualProfile"
     ],
-    "/$defs/controllerShow/properties/serving/properties/route/enum": [
-      "VirtualHid"
-    ],
-    "/$defs/controllerShow/properties/virtual/properties/override/enum": [
-      "SdlCompatible"
-    ],
     "/$defs/controllerShow/properties/virtual/properties/overrideScope/enum": [
       "unit",
       "model"
-    ],
-    "/$defs/controllerShow/properties/virtual/properties/profile/enum": [
-      "SdlCompatible"
     ],
     "/$defs/diagnose/properties/checks/items/properties/status/enum": [
       "pass",
@@ -122,35 +88,6 @@
     "/$defs/recordShow/properties/transportClaim/enum": [
       "claimed",
       "unclaimed"
-    ],
-    "/$defs/sharedAccessGrant/properties/publisher/properties/kind/enum": [
-      "signed",
-      "platform"
-    ],
-    "/$defs/sharedAccessGrant/properties/scopes/items/enum": [
-      "read",
-      "control"
-    ],
-    "/$defs/sharedAccessRefusedClient/properties/publisher/properties/kind/enum": [
-      "signed",
-      "platform",
-      "adHoc"
-    ],
-    "/$defs/sharedAccessRefusedClient/properties/scopes/items/enum": [
-      "read",
-      "control"
-    ],
-    "/$defs/sharedAccessRefusedToken/properties/scopes/items/enum": [
-      "read",
-      "control"
-    ],
-    "/$defs/sharedAccessRefusedToken/properties/transport/enum": [
-      "socket",
-      "web"
-    ],
-    "/$defs/sharedAccessToken/properties/scopes/items/enum": [
-      "read",
-      "control"
     ],
     "/$defs/sharedControllerOutput/properties/results/items/properties/outcome/enum": [
       "delivered",
@@ -186,12 +123,6 @@
       "active",
       "inactive",
       "awaitingApproval"
-    ],
-    "/$defs/sharedVirtualChange/properties/live/enum": ["SdlCompatible"],
-    "/$defs/sharedVirtualChange/properties/requested/enum": ["SdlCompatible"],
-    "/$defs/sharedVirtualFeedLine/oneOf/0/properties/type/const": ["setRumble"],
-    "/$defs/sharedVirtualFeedLine/oneOf/1/properties/type/const": [
-      "stopRumble"
     ],
     "/$defs/status/properties/commandLineTool/properties/state/enum": [
       "installed",
@@ -238,50 +169,18 @@
     ],
     "/$defs/updateCheck/properties/status/enum": ["upToDate", "available"],
     "/$defs/virtualExportMapping/properties/format/enum": ["sdl", "w3c"],
-    "/$defs/virtualExportMapping/properties/mappings/items/properties/profile/enum": [
-      "SdlCompatible"
-    ],
     "/$defs/virtualReset/oneOf/0/properties/details/properties/reset/const": [
       "all"
-    ],
-    "/$defs/virtualShow/properties/controllers/items/properties/override/enum": [
-      "SdlCompatible"
     ],
     "/$defs/virtualShow/properties/controllers/items/properties/overrideScope/enum": [
       "unit",
       "model"
-    ],
-    "/$defs/virtualShow/properties/controllers/items/properties/profile/enum": [
-      "SdlCompatible"
-    ],
-    "/$defs/virtualShow/properties/profiles/items/enum": ["SdlCompatible"]
-  },
-  "controller": {},
-  "endpoint": {
-    "/$defs/persona/enum": ["SdlCompatible"],
-    "/$defs/subscription/properties/stream/const": ["controllers"]
-  },
-  "error-codes": {
-    "/$defs/entry/allOf/0/if/properties/domain/const": ["cli"],
-    "/$defs/entry/allOf/1/if/properties/domain/const": ["remapping"],
-    "/$defs/entry/allOf/2/if/properties/domain/enum": [
-      "cli",
-      "endpoint",
-      "mod"
-    ],
-    "/$defs/entry/properties/domain/enum": [
-      "endpoint",
-      "cli",
-      "remapping",
-      "mod",
-      "document"
     ]
   },
+  "controller": {},
+  "endpoint": {},
+  "error-codes": {},
   "protocol-description": {},
   "report": {},
-  "virtual-device": {
-    "/properties/labels/enum": ["xbox", "generic"],
-    "/properties/layout/enum": ["ojd-generic-gamepad", "xbox-one-s-bluetooth"],
-    "/properties/persona/enum": ["SdlCompatible"]
-  }
+  "virtual-device": {}
 }

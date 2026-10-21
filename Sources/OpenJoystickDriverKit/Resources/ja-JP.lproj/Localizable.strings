@@ -175,7 +175,7 @@
 "controllers.server.ojd" = "OpenJoystickDriver（仮想）";
 "controllers.serving.label" = "処理経路";
 "controllers.serving.nativePassThrough" = "macOS（そのまま受け渡し）";
-"controllers.serving.virtualHid" = "OpenJoystickDriver（仮想ゲームパッド）";
+"controllers.serving.virtualHID" = "OpenJoystickDriver（仮想ゲームパッド）";
 "controllers.serving.extensionOwned" = "ドライバ拡張機能";
 "controllers.serving.outputDisabled" = "出力オフ";
 "controllers.server.refused" = "このコントローラは切り替えられません。Raw USB を使っているか、macOS がネイティブに扱わないためです。";

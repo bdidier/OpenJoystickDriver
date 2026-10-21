@@ -1,6 +1,6 @@
 """Reference client for the OpenJoystickDriver endpoint.
 
-`watch` subscribes to the controllers stream and prints the first watch lines. `feed` drives a
+`watch` subscribes to the Controllers stream and prints the first watch lines. `feed` drives a
 virtual gamepad: it presses the South button for 100 ms, prints the rumble commands that the
 endpoint sends, and asks the endpoint to report when both frames have played before it closes. The
 client uses only the Python standard library. Set OJD_TOKEN to the token that `ojd access grant --token NAME` printed.
@@ -110,11 +110,11 @@ def watch(arguments: argparse.Namespace) -> None:
         endpoint.settimeout(arguments.timeout)
         endpoint.connect(socket_path(arguments))
         reader = endpoint.makefile("r")
-        receive = connect(endpoint, reader, arguments, "read")
+        receive = connect(endpoint, reader, arguments, "Read")
         subscription = {
             "apiVersion": API_VERSION,
             "kind": "Subscription",
-            "stream": "controllers",
+            "stream": "Controllers",
         }
         send(endpoint, subscription)
         try:
@@ -128,7 +128,7 @@ def feed(arguments: argparse.Namespace) -> None:
     with socket.socket(socket.AF_UNIX) as endpoint:
         endpoint.connect(socket_path(arguments))
         reader = endpoint.makefile("r")
-        receive = connect(endpoint, reader, arguments, "control")
+        receive = connect(endpoint, reader, arguments, "Control")
         finished = threading.Event()
         reasons: list[str] = []
 
@@ -179,7 +179,7 @@ def main(argv: list[str] | None = None) -> None:
         "--token-name", default="driver", help="the name given to `--token`"
     )
     commands = parser.add_subparsers(dest="command", required=True)
-    watcher = commands.add_parser("watch", help="subscribe to the controllers stream")
+    watcher = commands.add_parser("watch", help="subscribe to the Controllers stream")
     watcher.add_argument("--count", type=int, default=1, help="watch lines to print")
     watcher.add_argument(
         "--timeout",

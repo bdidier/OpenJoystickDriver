@@ -50,7 +50,7 @@ public final class HostBridge: @unchecked Sendable {
       socketPath: credentials.socketPath,
       token: credentials.token,
       tokenName: credentials.tokenName,
-      scopes: ["control"]
+      scopes: ["Control"]
     )
     try session.send(["apiVersion": endpointAPIVersion, "kind": "FeedRequest", "as": persona])
     guard let reply = try session.readLine(), reply["kind"] as? String == "FeedSession" else {
@@ -145,10 +145,10 @@ public final class PlayerBridge: @unchecked Sendable {
       socketPath: credentials.socketPath,
       token: credentials.token,
       tokenName: credentials.tokenName,
-      scopes: ["read"]
+      scopes: ["Read"]
     )
     try session.send([
-      "apiVersion": endpointAPIVersion, "kind": "Subscription", "stream": "controllers",
+      "apiVersion": endpointAPIVersion, "kind": "Subscription", "stream": "Controllers",
     ])
     lock.lock()
     endpoint = session

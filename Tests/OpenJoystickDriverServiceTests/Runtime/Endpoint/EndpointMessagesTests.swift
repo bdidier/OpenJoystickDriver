@@ -62,8 +62,8 @@ struct EndpointMessagesTests {
         with: Data(Self.encoded(EndpointFeedSession(as: .sdlCompatible)).utf8)
       ) as? [String: String]
     )
-    #expect(object["as"] == "SdlCompatible")
-    #expect(VirtualHIDProfileID.allCases.map(\.rawValue).sorted() == ["Generic", "SdlCompatible"])
+    #expect(object["as"] == "SDLCompatible")
+    #expect(VirtualHIDProfileID.allCases.map(\.rawValue).sorted() == ["Generic", "SDLCompatible"])
   }
 
   @Test
@@ -96,10 +96,10 @@ struct EndpointMessagesTests {
   }
 
   @Test(arguments: [
-    clientLine("Hello", #","scopes":["read","control"]"#),
-    clientLine("Subscription", #","stream":"controllers","output":true"#),
+    clientLine("Hello", #","scopes":["Read","Control"]"#),
+    clientLine("Subscription", #","stream":"Controllers","output":true"#),
     clientLine("FeedRequest", #","as":"Generic""#),
-    clientLine("FeedRequest", #","as":"SdlCompatible""#),
+    clientLine("FeedRequest", #","as":"SDLCompatible""#),
   ])
   func aClientLineTheSchemaAcceptsDecodesInSwift(line: String) throws {
     #expect(try Self.issues(line).isEmpty)
@@ -126,7 +126,7 @@ struct EndpointMessagesTests {
     clientLine("FeedRequest", #","as":"NotAPersona""#),
     clientLine("FeedSession", #","as":"NotAPersona""#),
     clientLine("Hello", #","scopes":[]"#),
-    #"{"apiVersion":"unsupported.example/v9","kind":"Hello","scopes":["read"]}"#,
+    #"{"apiVersion":"unsupported.example/v9","kind":"Hello","scopes":["Read"]}"#,
     clientLine("Status", #","status":"Failure","code":"E1009","message":"m""#),
     clientLine(
       "Status",

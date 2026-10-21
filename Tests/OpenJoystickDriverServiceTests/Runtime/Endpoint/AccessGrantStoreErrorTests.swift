@@ -33,7 +33,7 @@ struct AccessGrantStoreErrorTests {
     ),
     Case(error: .unsupported(kindProblem), code: .damagedAccessGrants, detail: kindProblem.message),
     Case(error: .unknownClient("a1b2c3d4"), code: .unknownAccessClient, detail: "a1b2c3d4"),
-    Case(error: .notGrantable(.adHoc), code: .ungrantableClient, detail: "adHoc"),
+    Case(error: .notGrantable(.adHoc), code: .ungrantableClient, detail: "ad-hoc"),
     Case(error: .noScope, code: .noAccessScope, detail: nil),
     Case(error: .serviceStopped, code: .serviceStopping, detail: nil),
     Case(error: .duplicateToken("overlay"), code: .duplicateTokenName, detail: "overlay"),

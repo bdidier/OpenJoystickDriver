@@ -40,7 +40,7 @@ The service sends a challenge first, on every connection, and the client answers
 
 ```json
 {"apiVersion":"openjoystickdriver/v1alpha1","kind":"Challenge","nonce":"..."}
-{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Hello","scopes":["read"]}
+{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Hello","scopes":["Read"]}
 ```
 
 The nonce is 32 random bytes from `SecRandomCopyBytes` in unpadded base64url, new for each connection. A signed client ignores it; a token client signs it (see Token Grants).
@@ -48,7 +48,7 @@ The nonce is 32 random bytes from `SecRandomCopyBytes` in unpadded base64url, ne
 The service answers with one line and then either streams or closes the connection:
 
 ```json
-{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Welcome","version":"0.6.0-alpha.1","scopes":["read"]}
+{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Welcome","version":"0.6.0-alpha.1","scopes":["Read"]}
 {"apiVersion":"openjoystickdriver/v1alpha1","kind":"Status","status":"Failure","code":"E1002","message":"..."}
 ```
 
@@ -58,7 +58,7 @@ The service answers with one line and then either streams or closes the connecti
 
 ## Read Stream (Slice 3.3)
 
-After the `Welcome`, the client sends `{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Subscription","stream":"controllers","output":false}`. The service then sends the same lines as `ojd controller watch --all --json`: watch lines with `type` (`ADDED`, `MODIFIED`, or `DELETED`) and `object`, a `Controller` with its own `apiVersion` and `kind`, and no `apiVersion` or `kind` on the line. `output: true` adds `output` to the object, as `--output` does.
+After the `Welcome`, the client sends `{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Subscription","stream":"Controllers","output":false}`. The service then sends the same lines as `ojd controller watch --all --json`: watch lines with `type` (`ADDED`, `MODIFIED`, or `DELETED`) and `object`, a `Controller` with its own `apiVersion` and `kind`, and no `apiVersion` or `kind` on the line. `output: true` adds `output` to the object, as `--output` does.
 
 - One poller in the service serves every subscriber. It starts with the first subscriber and stops with the last, so an idle endpoint costs nothing. The polling logic of `watchAll()` moves into `OpenJoystickDriverKit`, so the CLI and the endpoint use the same code.
 - A client that reads too slowly gets the latest `input` line for each controller, and earlier ones are dropped. `connected` and `disconnected` lines are never dropped. When 256 lines are waiting, the service closes the connection with the error `E1006`.
@@ -96,7 +96,7 @@ A grant is keyed by the client's code signature:
 | Apple platform binary, such as `/usr/bin/python3` | signing identifier, with the `anchor apple` requirement | The identity is real, but a grant covers every script the interpreter runs. `ojd access grant` warns about this. |
 | Ad-hoc signed or unsigned | refused | Anyone can ad-hoc sign a binary with any identifier, so the key proves nothing. |
 
-Each grant has `scopes` (`read`, `control`), the time it was granted, and the path where the client was first seen, for display only.
+Each grant has `scopes` (`Read`, `Control`), the time it was granted, and the path where the client was first seen, for display only.
 
 ### Commands
 
@@ -132,7 +132,7 @@ The signature checks need a client signed with a team ID, which a unit test cann
 
 - The token is `ojd_` and 32 random bytes from `SecRandomCopyBytes` in base64url. `AccessGrants.json` stores only its SHA-256, in a `tokens` array next to `grants`. The token cannot be shown again; a lost token is revoked and granted again.
 - A token grant's ID is `token:NAME`. Names are unique and match `[A-Za-z0-9._-]{1,64}`.
-- The client never sends the token. It sends the token's name and a proof in `hello`: `{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Hello","scopes":["read"],"tokenName":"NAME","proof":"..."}`. The proof is the lowercase hex HMAC-SHA256, keyed with the SHA-256 of the token, of four lines that each end with `\n`: `OpenJoystickDriver endpoint hello 1`, the nonce, the normalized `Origin`, and the WebSocket's port. On the Unix socket, the origin and port lines are empty. The service compares the HMAC in constant time.
+- The client never sends the token. It sends the token's name and a proof in `hello`: `{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Hello","scopes":["Read"],"tokenName":"NAME","proof":"..."}`. The proof is the lowercase hex HMAC-SHA256, keyed with the SHA-256 of the token, of four lines that each end with `\n`: `OpenJoystickDriver endpoint hello 1`, the nonce, the normalized `Origin`, and the WebSocket's port. On the Unix socket, the origin and port lines are empty. The service compares the HMAC in constant time.
 - Because the proof covers the nonce, origin, and port, a listener that impersonates the service learns no token and can replay no proof to the real service: each connection has its own nonce, and a proof made for one origin or port fails on another.
 - With a token, the service skips the signature lookup, so ad-hoc signed tools and scripts work. Any process of the user that reads the token can use it.
 - `AccessGrants.json` is a secret. Its SHA-256 hashes are the HMAC keys, so whoever reads the file can sign challenges as any token in it. The service writes it with mode 0600 in a 0700 folder, and the support report does not include it. Keep it out of shared reports, exports, and backups; when it leaks, revoke every token.

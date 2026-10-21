@@ -2,8 +2,8 @@ import Foundation
 
 /// Control-glyph and system-symbol family for a published virtual identity.
 public enum VirtualIdentityGlyphFamily: String, Codable, CaseIterable, Sendable {
-  case xbox
-  case generic
+  case xbox = "Xbox"
+  case generic = "Generic"
 }
 
 /// SF Symbol and glyph family owned by the published USB product, not the physical pad.

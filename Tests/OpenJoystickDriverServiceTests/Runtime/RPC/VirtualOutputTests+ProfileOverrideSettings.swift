@@ -15,7 +15,7 @@ extension VirtualOutputTests {
     let server = fixture.server
     let set = Task {
       await server.changeVirtualHIDProfileOverride(
-        .set("SdlCompatible"),
+        .set("SDLCompatible"),
         for: .model(ControllerModelID(vendorID: 1, productID: 2))
       )
     }
@@ -50,7 +50,7 @@ extension VirtualOutputTests {
         perControllerNanoseconds: 50_000_000,
         totalNanoseconds: 10_000_000_000
       )
-    ) { VirtualHIDProfileOverrideStore(directory: $0).setSdlCompatibleForTest() }
+    ) { VirtualHIDProfileOverrideStore(directory: $0).setSDLCompatibleForTest() }
     let resetFinished = CompletionFlag()
     let server = fixture.server
 
@@ -83,7 +83,7 @@ extension VirtualOutputTests {
         totalNanoseconds: 10_000_000_000
       ),
       clock: trigger.clock
-    ) { VirtualHIDProfileOverrideStore(directory: $0).setSdlCompatibleForTest() }
+    ) { VirtualHIDProfileOverrideStore(directory: $0).setSDLCompatibleForTest() }
     let server = fixture.server
     let change = Task {
       await server.changeVirtualHIDProfileOverride(
@@ -123,7 +123,7 @@ extension VirtualOutputTests {
   func statusReportsEachControllersProfileAndTheStoredOverride() async throws {
     let id = LogicalControllerID(vendorID: 1, productID: 2)
     let fixture = try await profileOverrideServer([id])
-    _ = await fixture.change(.set("SdlCompatible"))
+    _ = await fixture.change(.set("SDLCompatible"))
 
     let other = LogicalControllerID(vendorID: 5, productID: 6)
     let devices = fixture.server.describingVirtualHIDProfiles([
@@ -156,7 +156,7 @@ extension VirtualOutputTests {
   ) async throws {
     let id = LogicalControllerID(vendorID: 1, productID: 2)
     let fixture = try await profileOverrideServer([id])
-    _ = await fixture.change(.set("SdlCompatible"))
+    _ = await fixture.change(.set("SDLCompatible"))
     let native = ApplicationServiceDeviceDescription(
       name: "probe",
       vendorID: id.model.vendorID,
@@ -193,7 +193,7 @@ extension VirtualOutputTests {
     let status = try JSONDecoder().decode(ApplicationServiceStatusPayload.self, from: data)
 
     #expect(status.virtualHIDProfileOverrideError?.hasPrefix("unreadable-directory:") == true)
-    let result = await fixture.change(.set("SdlCompatible"))
+    let result = await fixture.change(.set("SDLCompatible"))
     #expect(result.failure == .persistenceFailed)
     #expect(result.live == .generic)
     await fixture.tearDown()
@@ -202,7 +202,7 @@ extension VirtualOutputTests {
   @Test
   func resetSettingsClearsOverrides() async throws {
     let fixture = try await profileOverrideServer()
-    _ = await fixture.change(.set("SdlCompatible"))
+    _ = await fixture.change(.set("SDLCompatible"))
 
     let reset = await fixture.server.resetSettings()
 
@@ -259,7 +259,7 @@ extension VirtualOutputTests {
     )
     let requested = try JSONEncoder().encode(results[0])
     let object = try JSONSerialization.jsonObject(with: requested) as? [String: Any]
-    #expect(object?["requested"] as? String == "SdlCompatible")
+    #expect(object?["requested"] as? String == "SDLCompatible")
 
     let status = ApplicationServiceVirtualHIDProfileStatus(
       profile: .sdlCompatible,

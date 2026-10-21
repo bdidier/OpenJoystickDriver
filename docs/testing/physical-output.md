@@ -27,7 +27,7 @@ The CLI and the GUI send each output through the app's `sendControllerOutput` ap
   "command": {
     "type": "set-rumble",
     "intensities": {
-      "leftMain": 46260, "rightMain": 46260, "leftTrigger": 0,
+      "lowFrequency": 46260, "highFrequency": 46260, "leftTrigger": 0,
       "rightTrigger": 0, "leftHaptic": 46260, "rightHaptic": 46260
     },
     "duration": {"milliseconds": 450}

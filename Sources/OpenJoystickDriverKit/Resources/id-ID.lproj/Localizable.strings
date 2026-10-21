@@ -175,7 +175,7 @@
 "controllers.server.ojd" = "OpenJoystickDriver (pengontrol virtual)";
 "controllers.serving.label" = "Rute layanan";
 "controllers.serving.nativePassThrough" = "macOS (diteruskan langsung)";
-"controllers.serving.virtualHid" = "OpenJoystickDriver (gamepad virtual)";
+"controllers.serving.virtualHID" = "OpenJoystickDriver (gamepad virtual)";
 "controllers.serving.extensionOwned" = "Ekstensi driver";
 "controllers.serving.outputDisabled" = "Keluaran mati";
 "controllers.server.refused" = "Pengontrol ini tidak dapat beralih: pengontrol memakai USB mentah, atau macOS tidak melayaninya secara native.";

@@ -144,7 +144,8 @@ struct AccessCommandTests {
       (try list.json()["grants"] as? [[String: Any]])?.first?["id"] as? String == Self.grant.id
     )
     let refused = try list.json()["refused"] as? [[String: Any]]
-    #expect((refused?.first?["publisher"] as? [String: Any])?["kind"] as? String == "adHoc")
+    #expect((refused?.first?["publisher"] as? [String: Any])?["kind"] as? String == "AdHoc")
+    #expect(plain.standardOutput.contains("refused\t\(Self.refused.id)\tad-hoc\t"))
     #expect(plain.standardOutput.contains("granted\t\(Self.grant.id)\tsigned\tcom.example.reader"))
     #expect(plain.standardOutput.contains("token\ttoken:overlay\thttp://localhost:8080\tread"))
     #expect(plain.standardOutput.contains("refused-token\t\thttp://evil.example\tread\tweb"))
@@ -270,6 +271,18 @@ struct AccessCommandTests {
     #expect(service.arguments(of: .setAccessEnabled).count == 2)
   }
 
+  @Test(arguments: ["Read", "Control", "READ"])
+  func aScopeOnlyParsesInItsKebabCaseSpelling(spelling: String) async throws {
+    let service = try service()
+
+    let run = await service.run([
+      "access", "grant", Self.grant.id, "--scope", spelling, "--force", "--json",
+    ])
+
+    #expect(run.code == 64)
+    #expect(service.arguments(of: .grantAccess).isEmpty)
+  }
+
   @Test
   func grantNeedsForceAndSendsTheSignatureOfTheClientID() async throws {
     let service = try service()
@@ -283,7 +296,7 @@ struct AccessCommandTests {
     #expect(refused.code == 64)
     #expect(service.arguments(of: .grantAccess).count == 1)
     #expect(granted.code == 0, "\(granted.standardError)")
-    #expect(try granted.json()["scopes"] as? [String] == ["read", "control"])
+    #expect(try granted.json()["scopes"] as? [String] == ["Read", "Control"])
     let sent = try JSONDecoder().decode(
       AccessGrantArguments.self,
       from: try #require(service.arguments(of: .grantAccess).first)
@@ -336,7 +349,7 @@ struct AccessCommandTests {
     #expect(whole.code == 0, "\(whole.standardError)")
     #expect(try whole.details()["grant"] == nil)
     #expect(try whole.details()["closedConnections"] as? Int == 1)
-    #expect((try partial.details()["grant"] as? [String: Any])?["scopes"] as? [String] == ["read"])
+    #expect((try partial.details()["grant"] as? [String: Any])?["scopes"] as? [String] == ["Read"])
     let sent = try service.arguments(of: .revokeAccess).map {
       try JSONDecoder().decode(AccessRevokeArguments.self, from: $0)
     }

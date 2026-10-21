@@ -4,9 +4,9 @@
   "enabled": true,
   "grants": [
     {
-      "publisher": { "kind": "signed", "id": "ABCDE12345" },
+      "publisher": { "kind": "Signed", "id": "ABCDE12345" },
       "identifier": "com.example.overlay",
-      "scopes": ["read"],
+      "scopes": ["Read"],
       "grantedAt": "2026-01-01T00:00:00Z",
       "path": "/Applications/Overlay.app"
     }
@@ -16,7 +16,7 @@
       "name": "stream-overlay",
       "tokenSHA256": "0000000000000000000000000000000000000000000000000000000000000000",
       "origins": ["http://127.0.0.1:8080"],
-      "scopes": ["read"],
+      "scopes": ["Read"],
       "grantedAt": "2026-01-01T00:00:00Z"
     }
   ],

@@ -175,7 +175,7 @@
 "controllers.server.ojd" = "OpenJoystickDriver (virtuel)";
 "controllers.serving.label" = "Voie de prise en charge";
 "controllers.serving.nativePassThrough" = "macOS (transmise telle quelle)";
-"controllers.serving.virtualHid" = "OpenJoystickDriver (manette virtuelle)";
+"controllers.serving.virtualHID" = "OpenJoystickDriver (manette virtuelle)";
 "controllers.serving.extensionOwned" = "Extension de pilote";
 "controllers.serving.outputDisabled" = "Sortie désactivée";
 "controllers.server.refused" = "Cette manette ne peut pas basculer : elle utilise l’USB brut, ou macOS ne la prend pas en charge nativement.";

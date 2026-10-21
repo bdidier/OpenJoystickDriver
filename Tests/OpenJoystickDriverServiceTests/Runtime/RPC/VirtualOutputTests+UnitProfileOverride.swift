@@ -16,7 +16,7 @@ extension VirtualOutputTests {
     }
 
     let set = await fixture.change(
-      .set("SdlCompatible"),
+      .set("SDLCompatible"),
       controller: .port(try #require(first.testPortKey)),
       unit: true
     )
@@ -46,7 +46,7 @@ extension VirtualOutputTests {
   func aUnitOverrideForAControllerWithoutAUnitIDIsNotFound() async throws {
     let fixture = try await profileOverrideServer()
 
-    let result = await fixture.change(.set("SdlCompatible"), unit: true)
+    let result = await fixture.change(.set("SDLCompatible"), unit: true)
 
     #expect(result.failure == .controllerNotFound)
     #expect(fixture.store.files.isEmpty)

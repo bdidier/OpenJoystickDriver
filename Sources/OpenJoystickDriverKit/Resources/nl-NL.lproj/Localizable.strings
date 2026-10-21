@@ -175,7 +175,7 @@
 "controllers.server.ojd" = "OpenJoystickDriver (virtueel)";
 "controllers.serving.label" = "Bedieningsroute";
 "controllers.serving.nativePassThrough" = "macOS (doorgegeven)";
-"controllers.serving.virtualHid" = "OpenJoystickDriver (virtuele gamepad)";
+"controllers.serving.virtualHID" = "OpenJoystickDriver (virtuele gamepad)";
 "controllers.serving.extensionOwned" = "Stuurprogrammaextensie";
 "controllers.serving.outputDisabled" = "Uitvoer uit";
 "controllers.server.refused" = "Deze controller kan niet wisselen: hij gebruikt ruwe USB, of macOS bedient hem niet native.";

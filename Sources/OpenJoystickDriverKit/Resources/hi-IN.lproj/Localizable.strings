@@ -175,7 +175,7 @@
 "controllers.server.ojd" = "OpenJoystickDriver (वर्चुअल)";
 "controllers.serving.label" = "सेवा मार्ग";
 "controllers.serving.nativePassThrough" = "macOS (सीधे पास किया गया)";
-"controllers.serving.virtualHid" = "OpenJoystickDriver (वर्चुअल गेमपैड)";
+"controllers.serving.virtualHID" = "OpenJoystickDriver (वर्चुअल गेमपैड)";
 "controllers.serving.extensionOwned" = "ड्राइवर एक्सटेंशन";
 "controllers.serving.outputDisabled" = "आउटपुट बंद";
 "controllers.server.refused" = "यह कंट्रोलर स्विच नहीं कर सकता: यह रॉ USB का उपयोग करता है, या macOS इसे नेटिव रूप से नहीं चलाता।";

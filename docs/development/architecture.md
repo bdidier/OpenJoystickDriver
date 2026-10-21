@@ -74,7 +74,7 @@ Input flows through two protocols in `Streaming/`, which import nothing from a p
 | Virtual feed | `VirtualFeedRegistry` session (`virtualFeed`, or `endpointFeed` for the endpoint pool) | `VirtualFeedDeviceSink` (`virtualDevice`) |
 | Endpoint feed client to feed queue | `EndpointFeedSource` (`endpointFeed`) | `VirtualFeedIntakeSink` (`virtualDevice`), through `StreamFrame.feed` |
 | Host feedback to an endpoint feed client | the feed's virtual device, through the registry | `EndpointFeedReturnSink` (`endpointFeedClient`), through `consume(_:for:)` |
-| Endpoint `controllers` stream | `EndpointStreamSource` (`endpointStream`) | `EndpointSubscribers` (`endpointSubscription`) |
+| Endpoint `Controllers` stream | `EndpointStreamSource` (`endpointStream`) | `EndpointSubscribers` (`endpointSubscription`) |
 | Physical output commands | the service's output requests | `DeviceManager` (`physicalOutput`) |
 | Mapped physical output | `RemappingPhysicalOutputBridge` | `DeviceManager` (`physicalOutput`), through `MappingOutputClaim`, `MappingOutputRelease` and `ProfileColorClaim` |
 
@@ -112,7 +112,7 @@ Native gamepads are observed and remapped. A device for which `GCController.supp
 
 Devices that do not bind are recorded in the application-service payload's `unboundDevices` with their backend, reason, interface summaries, and rejected candidates. Each bound controller carries the matching binding result: its rule, matched predicates, and catalog record ID. Support reports include both. `status` prints them under `Unbound devices` and pass-through devices under `Left to macOS`; `status --json` carries both arrays. OJD holds its input claim on a rejected HID connection only while a bound pipeline shares the same physical controller or routing location, which prevents duplicate input, and otherwise releases it so the device stays with macOS.
 
-Under the Automatic intent, `AutomaticUserSpaceOutputDispatcher` publishes one virtual profile per eligible controller. `VirtualHIDProfileSelector` chooses it from the controller's declared controls alone: `SdlCompatible` (`045E:02FD`) when it can carry every primary control, otherwise `Generic`. Protocol binding, foreground app and browser engine play no part. Both profiles carry every primary control today, so Automatic always selects `SdlCompatible`.
+Under the Automatic intent, `AutomaticUserSpaceOutputDispatcher` publishes one virtual profile per eligible controller. `VirtualHIDProfileSelector` chooses it from the controller's declared controls alone: `SDLCompatible` (`045E:02FD`) when it can carry every primary control, otherwise `Generic`. Protocol binding, foreground app and browser engine play no part. Both profiles carry every primary control today, so Automatic always selects `SDLCompatible`.
 
 The catalog is generated from Linux `xpad.c` and SDL `controller_list.h`, pinned in `ControllerSources.lock.json`, plus authored overrides; see [xpad import](xpad-import.md).
 

@@ -291,7 +291,7 @@
     var servingRouteLabel: String {
       switch servingDecision.route {
       case .nativePassThrough: OJDLocalized.string("controllers.serving.nativePassThrough")
-      case .virtualHid: OJDLocalized.string("controllers.serving.virtualHid")
+      case .virtualHID: OJDLocalized.string("controllers.serving.virtualHID")
       case .extensionOwned: OJDLocalized.string("controllers.serving.extensionOwned")
       case .outputDisabled: OJDLocalized.string("controllers.serving.outputDisabled")
       }

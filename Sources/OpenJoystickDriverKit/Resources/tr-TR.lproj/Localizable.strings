@@ -175,7 +175,7 @@
 "controllers.server.ojd" = "OpenJoystickDriver (sanal)";
 "controllers.serving.label" = "Hizmet yolu";
 "controllers.serving.nativePassThrough" = "macOS (doğrudan aktarılır)";
-"controllers.serving.virtualHid" = "OpenJoystickDriver (sanal oyun kontrolcüsü)";
+"controllers.serving.virtualHID" = "OpenJoystickDriver (sanal oyun kontrolcüsü)";
 "controllers.serving.extensionOwned" = "Sürücü uzantısı";
 "controllers.serving.outputDisabled" = "Çıkış kapalı";
 "controllers.server.refused" = "Bu kontrolcü geçiş yapamaz: ham USB kullanıyor ya da macOS ona yerel olarak hizmet vermiyor.";

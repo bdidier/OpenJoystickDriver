@@ -104,7 +104,7 @@ struct ControllerShowReport: Encodable, Equatable {
 
   /// How OJD serves the controller, as `ServingPolicy` decides it.
   struct Serving: Encodable, Equatable {
-    /// The route: `NativePassThrough`, `VirtualHid`, `ExtensionOwned` or `OutputDisabled`.
+    /// The route: `NativePassThrough`, `VirtualHID`, `ExtensionOwned` or `OutputDisabled`.
     let route: String
     /// The persona OJD publishes; absent for a route that publishes nothing.
     let persona: String?

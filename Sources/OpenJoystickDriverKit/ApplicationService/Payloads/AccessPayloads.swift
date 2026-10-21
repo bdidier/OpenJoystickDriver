@@ -1,10 +1,13 @@
 import CryptoKit
 import Foundation
 
-/// What an endpoint client may do: `read` controller events, or `control` a virtual gamepad.
+/// What an endpoint client may do: `Read` controller events, or `Control` a virtual gamepad.
 public enum EndpointScope: String, Codable, CaseIterable, Comparable, Sendable {
-  case read
-  case control
+  case read = "Read"
+  case control = "Control"
+
+  /// The scope on the command line: the lowercase kebab-case form of its name, such as `read`.
+  public var commandLineName: String { CommandLineName.kebab(rawValue) }
 
   public static func < (lhs: Self, rhs: Self) -> Bool {
     allCases.firstIndex(of: lhs)! < allCases.firstIndex(of: rhs)!
@@ -181,8 +184,8 @@ public struct AccessRefusedClient: Codable, Equatable, Sendable {
 
 /// How a client reaches the endpoint: the Unix socket, or the WebSocket on `127.0.0.1`.
 public enum AccessTransport: String, Codable, Sendable {
-  case socket
-  case web
+  case socket = "Socket"
+  case web = "Web"
 }
 
 /// A client connected to the endpoint.

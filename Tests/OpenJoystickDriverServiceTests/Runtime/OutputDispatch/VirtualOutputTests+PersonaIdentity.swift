@@ -11,7 +11,7 @@ extension VirtualOutputTests {
     let document: [String: Any] = [
       "apiVersion": OpenJoystickDriverAPI.version, "kind": VirtualHIDProfileOverrideStore.kind,
       "match": ["vendorID": 1, "productID": 2],
-      "persona": "Generic", "labels": "xbox",
+      "persona": "Generic", "labels": "Xbox",
       "identity": [
         "vendorID": 0x1234, "productID": 0x5678, "productName": "Custom Pad",
         "manufacturer": "Custom Maker",
@@ -91,7 +91,7 @@ extension VirtualOutputTests {
     let document: [String: Any] = [
       "apiVersion": OpenJoystickDriverAPI.version, "kind": VirtualHIDProfileOverrideStore.kind,
       "match": ["vendorID": 1, "productID": 2],
-      "persona": "Generic", "labels": "xbox",
+      "persona": "Generic", "labels": "Xbox",
       "identity": [
         "vendorID": 0x1234, "productID": 0x5678, "productName": productName,
         "manufacturer": "Custom Maker",

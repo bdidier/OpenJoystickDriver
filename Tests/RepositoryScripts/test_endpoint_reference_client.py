@@ -29,7 +29,7 @@ class EndpointReferenceClientTests(unittest.TestCase):
             "FRAMES": reference_client.FRAMES,
             "proof": reference_client.proof,
             "hello": lambda nonce: reference_client.hello(
-                nonce, vector["token"], "driver", "control"
+                nonce, vector["token"], "driver", "Control"
             ),
         }
         documents = validate_schemas.validate_schema_documents()
@@ -93,10 +93,10 @@ class EndpointReferenceClientTests(unittest.TestCase):
             {
                 "apiVersion": self.client["API_VERSION"],
                 "kind": "RumbleCommand",
-                "type": "setRumble",
+                "type": "SetRumble",
                 "intensities": {
-                    "leftMain": 65535,
-                    "rightMain": 0,
+                    "lowFrequency": 65535,
+                    "highFrequency": 0,
                     "leftTrigger": 0,
                     "rightTrigger": 0,
                     "leftHaptic": 0,
@@ -104,7 +104,7 @@ class EndpointReferenceClientTests(unittest.TestCase):
                 },
                 "durationMilliseconds": 200,
             },
-            self.envelope("RumbleCommand", type="stopRumble"),
+            self.envelope("RumbleCommand", type="StopRumble"),
             self.envelope("Status", status="Failure", code="E1007", message="Full."),
             self.envelope(
                 "Status",
@@ -135,7 +135,7 @@ class EndpointReferenceClientTests(unittest.TestCase):
     def test_client_runs_against_a_fake_endpoint(self) -> None:
         """A fake endpoint, not the service: it checks the client's order of lines."""
         nonce = json.loads(VECTOR.read_text(encoding="utf-8"))["nonce"]
-        rumble = self.envelope("RumbleCommand", type="stopRumble")
+        rumble = self.envelope("RumbleCommand", type="StopRumble")
         received: list[dict[str, Any]] = []
         with tempfile.TemporaryDirectory(dir="/tmp") as directory:
             path = str(Path(directory) / "endpoint.sock")
@@ -155,7 +155,7 @@ class EndpointReferenceClientTests(unittest.TestCase):
                         send(self.envelope("Challenge", nonce=nonce))
                         received.append(json.loads(lines.readline()))
                         send(
-                            self.envelope("Welcome", version="test", scopes=["control"])
+                            self.envelope("Welcome", version="test", scopes=["Control"])
                         )
                         received.append(json.loads(lines.readline()))
                         send(self.envelope("FeedSession", **{"as": "Generic"}))

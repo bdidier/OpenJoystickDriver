@@ -60,16 +60,16 @@ extension EndpointServer {
       }
       guard let persona = request.as.flatMap(VirtualHIDProfileID.init(rawValue:)) else {
         connection.close(
-          Self.invalid("Send FeedRequest with a persona: Generic or SdlCompatible.")
+          Self.invalid("Send FeedRequest with a persona: Generic or SDLCompatible.")
         )
         return
       }
       feed(connection, persona: persona)
       return
     }
-    guard request.kind == .subscription, request.stream == "controllers" else {
+    guard request.kind == .subscription, request.stream == "Controllers" else {
       connection.close(
-        Self.invalid("Send Subscription with the controllers stream, or FeedRequest.")
+        Self.invalid("Send Subscription with the Controllers stream, or FeedRequest.")
       )
       return
     }

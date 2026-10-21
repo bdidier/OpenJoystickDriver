@@ -90,15 +90,15 @@ struct AccessGrantStoreTests {
       for text in [
         "{",
         #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(AccessGrantFile.kind)","#
-          + #""enabled":true,"grants":[{"publisher":{"kind":"adHoc"},"identifier":"a.out","#
-          + #""scopes":["read"],"#
+          + #""enabled":true,"grants":[{"publisher":{"kind":"AdHoc"},"identifier":"a.out","#
+          + #""scopes":["Read"],"#
           + #""grantedAt":"x","path":"/a.out"}],"tokens":[],"web":{"enabled":false,"port":47614}}"#,
         #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(AccessGrantFile.kind)","#
-          + #""enabled":true,"grants":[{"publisher":{"kind":"signed"},"identifier":"x","#
-          + #""scopes":["read"],"#
+          + #""enabled":true,"grants":[{"publisher":{"kind":"Signed"},"identifier":"x","#
+          + #""scopes":["Read"],"#
           + #""grantedAt":"x","path":"/x"}],"tokens":[],"web":{"enabled":false,"port":47614}}"#,
         #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(AccessGrantFile.kind)","#
-          + #""enabled":true,"grants":[{"publisher":{"kind":"platform"},"identifier":"x","#
+          + #""enabled":true,"grants":[{"publisher":{"kind":"Platform"},"identifier":"x","#
           + #""scopes":[],"#
           + #""grantedAt":"x","path":"/x"}],"tokens":[],"web":{"enabled":false,"port":47614}}"#,
       ] {
@@ -118,10 +118,10 @@ struct AccessGrantStoreTests {
 
   @Test(arguments: [
     #""publisher":{"kind":"x"},"identifier":"a.out""#,
-    #""publisher":{"kind":"signed","id":"ABCDE12345"},"identifier":"a.out","unexpected":1"#,
-    #""publisher":{"kind":"signed","id":"ABCDE12345","unexpected":1},"identifier":"a.out""#,
-    #""publisher":{"kind":"signed","id":"ABCDE12345"},"identifier":7"#,
-    #""kind":"signed","identifier":"a.out""#,
+    #""publisher":{"kind":"Signed","id":"ABCDE12345"},"identifier":"a.out","unexpected":1"#,
+    #""publisher":{"kind":"Signed","id":"ABCDE12345","unexpected":1},"identifier":"a.out""#,
+    #""publisher":{"kind":"Signed","id":"ABCDE12345"},"identifier":7"#,
+    #""kind":"Signed","identifier":"a.out""#,
   ])
   func aFileThatIsNotTheCurrentShapeIsDamagedAndLeftAsItWas(grant: String) throws {
     try withStore { store, directory in
@@ -129,7 +129,7 @@ struct AccessGrantStoreTests {
       let text =
         #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(AccessGrantFile.kind)","#
         + #""enabled":true,"grants":[{\#(grant),"#
-        + #""scopes":["read"],"grantedAt":"x","path":"/a.out"}],"tokens":[],"#
+        + #""scopes":["Read"],"grantedAt":"x","path":"/a.out"}],"tokens":[],"#
         + #""web":{"enabled":false,"port":47614}}"#
       try Data(text.utf8).write(to: store.url)
 
@@ -142,7 +142,7 @@ struct AccessGrantStoreTests {
     #""tokens":[],"web":{"enabled":false,"port":47614},"unexpected":1"#,
     #""tokens":[],"web":{"enabled":false,"port":47614,"unexpected":1}"#,
     #""tokens":[{"name":"overlay","tokenSHA256":"\#(String(repeating: "a", count: 64))","#
-      + #""origins":[],"scopes":["read"],"grantedAt":"x","unexpected":1}],"#
+      + #""origins":[],"scopes":["Read"],"grantedAt":"x","unexpected":1}],"#
       + #""web":{"enabled":false,"port":47614}"#,
   ])
   func anUnknownKeyInTheFileTokensOrWebSettingsIsDamagedAndLeftAsItWas(rest: String) throws {
@@ -352,14 +352,14 @@ struct AccessGrantStoreTests {
       try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
       let hash = String(repeating: "a", count: 64)
       func grant(_ scopes: String) -> String {
-        #"{"publisher":{"kind":"platform"},"identifier":"x","scopes":\#(scopes),"#
+        #"{"publisher":{"kind":"Platform"},"identifier":"x","scopes":\#(scopes),"#
           + #""grantedAt":"1970-01-01T00:00:00Z","path":"/x"}"#
       }
       func token(_ scopes: String) -> String {
         #"{"name":"pad","tokenSHA256":"\#(hash)","origins":[],"scopes":\#(scopes),"#
           + #""grantedAt":"1970-01-01T00:00:00Z"}"#
       }
-      for scopes in [#"["control"]"#, #"["read","control"]"#] {
+      for scopes in [#"["Control"]"#, #"["Read","Control"]"#] {
         for (grants, tokens) in [(grant(scopes), ""), ("", token(scopes))] {
           let text =
             #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","#
@@ -379,8 +379,8 @@ struct AccessGrantStoreTests {
       let text =
         #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(AccessGrantFile.kind)","#
         + #""enabled":true,"grants":["#
-        + grant(#"["read"]"#) + #"],"tokens":["#
-        + token(#"["read"]"#) + #"],"web":{"enabled":false}}"#
+        + grant(#"["Read"]"#) + #"],"tokens":["#
+        + token(#"["Read"]"#) + #"],"web":{"enabled":false}}"#
       try Data(text.utf8).write(to: store.url)
       let file = try store.load()
       #expect(file.grants.first?.scopes == [.read])

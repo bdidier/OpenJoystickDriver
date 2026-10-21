@@ -122,20 +122,20 @@ public struct VirtualFeedFrame: Codable, Equatable, Sendable {
 /// One rumble command that the host sent to a virtual gamepad, as a line of `ojd virtual feed` and
 /// of the endpoint's feed: the `RumbleCommand` object without its `apiVersion` and `kind`.
 ///
-/// JSON: `{"type":"setRumble","intensities":{...},"durationMilliseconds":450}` or
-/// `{"type":"stopRumble"}`. A `setRumble` that lasts until the next rumble command has no
+/// JSON: `{"type":"SetRumble","intensities":{...},"durationMilliseconds":450}` or
+/// `{"type":"StopRumble"}`. A `SetRumble` that lasts until the next rumble command has no
 /// `durationMilliseconds`. Virtual gamepads receive only rumble commands.
 public struct RumbleCommandLine: Encodable, Equatable, Sendable {
   public static let kind = "RumbleCommand"
 
   public enum Kind: String, Encodable, Sendable {
-    case setRumble
-    case stopRumble
+    case setRumble = "SetRumble"
+    case stopRumble = "StopRumble"
   }
 
   public let type: Kind
   public let intensities: RumbleIntensities?
-  /// Nil for a `setRumble` that is held until the next rumble command, and for `stopRumble`.
+  /// Nil for a `SetRumble` that is held until the next rumble command, and for `StopRumble`.
   public let durationMilliseconds: Int?
 
   /// Nil for a command that is not a rumble command.

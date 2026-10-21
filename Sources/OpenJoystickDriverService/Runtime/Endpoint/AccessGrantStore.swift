@@ -47,7 +47,7 @@ enum AccessGrantStoreError: Error, Equatable, LocalizedError, Sendable {
     case .unsupported(let problem):
       Self.coded(code, detail: problem.message)
     case .unknownClient(let id): Self.coded(code, detail: id)
-    case .notGrantable(let kind): Self.coded(code, detail: kind.rawValue)
+    case .notGrantable(let kind): Self.coded(code, detail: CommandLineName.kebab(kind.rawValue))
     case .duplicateToken(let name), .invalidTokenName(let name): Self.coded(code, detail: name)
     case .invalidOrigin(let origin): Self.coded(code, detail: origin)
     case .portUnavailable(let port): Self.coded(code, detail: String(port))

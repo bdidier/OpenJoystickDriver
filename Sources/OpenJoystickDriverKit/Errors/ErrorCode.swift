@@ -96,11 +96,11 @@ public enum ErrorCode: String, Codable, Sendable, CaseIterable {
 
   /// The part of the product that raises a code; the first digit of the number.
   public enum Domain: String, Sendable {
-    case endpoint
-    case commandLine = "cli"
-    case remapping
-    case mod
-    case document
+    case endpoint = "Endpoint"
+    case commandLine = "CLI"
+    case remapping = "Remapping"
+    case mod = "Mod"
+    case document = "Document"
   }
 
   public var domain: Domain {

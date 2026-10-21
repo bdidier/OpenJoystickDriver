@@ -29,10 +29,10 @@
         "code": {
           "type": "string",
           "pattern": "^E[1-5][0-9]{3}$",
-          "description": "E1xxx is endpoint, E2xxx is cli, E3xxx is remapping, E4xxx is mod, and E5xxx is document."
+          "description": "E1xxx is Endpoint, E2xxx is CLI, E3xxx is Remapping, E4xxx is Mod, and E5xxx is Document."
         },
         "domain": {
-          "enum": ["endpoint", "cli", "remapping", "mod", "document"]
+          "enum": ["Endpoint", "CLI", "Remapping", "Mod", "Document"]
         },
         "name": {
           "type": "string",
@@ -56,7 +56,7 @@
           "if": {
             "properties": {
               "domain": {
-                "const": "cli"
+                "const": "CLI"
               }
             }
           },
@@ -73,7 +73,7 @@
           "if": {
             "properties": {
               "domain": {
-                "const": "remapping"
+                "const": "Remapping"
               }
             }
           },
@@ -85,7 +85,7 @@
           "if": {
             "properties": {
               "domain": {
-                "enum": ["cli", "endpoint", "mod"]
+                "enum": ["CLI", "Endpoint", "Mod"]
               }
             }
           },

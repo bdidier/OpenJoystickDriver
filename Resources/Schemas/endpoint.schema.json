@@ -156,7 +156,7 @@
           "const": "Subscription"
         },
         "stream": {
-          "const": "controllers"
+          "const": "Controllers"
         },
         "output": {
           "type": "boolean",
@@ -199,7 +199,7 @@
       }
     },
     "persona": {
-      "enum": ["Generic", "SdlCompatible"],
+      "enum": ["Generic", "SDLCompatible"],
       "description": "The persona id of the virtual gamepad."
     },
     "frame": {

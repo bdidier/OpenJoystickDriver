@@ -35,7 +35,7 @@ extension VirtualDevice {
     let match = try document["match"].map(Self.match)
     let layout = try document["layout"].map { value in
       guard let layout = (value as? String).flatMap(VirtualDeviceLayout.init) else {
-        throw ControllerRecordProblem("layout must be ojd-generic-gamepad or xbox-one-s-bluetooth")
+        throw ControllerRecordProblem("layout must be OJDGenericGamepad or XboxOneSBluetooth")
       }
       return layout
     }
@@ -47,7 +47,7 @@ extension VirtualDevice {
     }
     let labels = try document["labels"].map { value in
       guard let labels = (value as? String).flatMap(VirtualIdentityGlyphFamily.init) else {
-        throw ControllerRecordProblem("labels must be xbox or generic")
+        throw ControllerRecordProblem("labels must be Xbox or Generic")
       }
       return labels
     }

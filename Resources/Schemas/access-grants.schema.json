@@ -60,8 +60,8 @@
   },
   "$defs": {
     "scope": {
-      "description": "'read' receives controller events; 'control' drives a virtual gamepad.",
-      "enum": ["read", "control"]
+      "description": "'Read' receives controller events; 'Control' drives a virtual gamepad.",
+      "enum": ["Read", "Control"]
     },
     "token": {
       "description": "A named token that lets a client use the endpoint without a signature check. The token itself is not stored.",
@@ -75,7 +75,7 @@
           "pattern": "^[A-Za-z0-9._-]{1,64}$"
         },
         "controlGrantedAt": {
-          "description": "When 'control' was granted; required with that scope.",
+          "description": "When 'Control' was granted; required with that scope.",
           "type": "string",
           "format": "date-time"
         },
@@ -115,16 +115,16 @@
       "additionalProperties": false,
       "properties": {
         "publisher": {
-          "description": "Who published the client. 'signed' matches the identifier signed by a certificate of the publisher 'id'; 'platform' matches the identifier signed by the platform vendor.",
+          "description": "Who published the client. 'Signed' matches the identifier signed by a certificate of the publisher 'id'; 'Platform' matches the identifier signed by the platform vendor.",
           "type": "object",
           "required": ["kind"],
           "additionalProperties": false,
           "properties": {
             "kind": {
-              "enum": ["signed", "platform"]
+              "enum": ["Signed", "Platform"]
             },
             "id": {
-              "description": "The publisher's ID; required for 'signed' grants.",
+              "description": "The publisher's ID; required for 'Signed' grants.",
               "type": "string",
               "minLength": 1
             }
@@ -132,7 +132,7 @@
           "if": {
             "properties": {
               "kind": {
-                "const": "signed"
+                "const": "Signed"
               }
             }
           },
@@ -159,7 +159,7 @@
           "format": "date-time"
         },
         "controlGrantedAt": {
-          "description": "When 'control' was granted; required with that scope.",
+          "description": "When 'Control' was granted; required with that scope.",
           "type": "string",
           "format": "date-time"
         },
@@ -179,7 +179,7 @@
         "properties": {
           "scopes": {
             "items": {
-              "const": "read"
+              "const": "Read"
             }
           }
         },

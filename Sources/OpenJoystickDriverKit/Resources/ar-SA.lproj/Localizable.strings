@@ -175,7 +175,7 @@
 "controllers.server.ojd" = "OpenJoystickDriver (افتراضي)";
 "controllers.serving.label" = "مسار الخدمة";
 "controllers.serving.nativePassThrough" = "macOS (تمرير مباشر)";
-"controllers.serving.virtualHid" = "OpenJoystickDriver (وحدة تحكم افتراضية)";
+"controllers.serving.virtualHID" = "OpenJoystickDriver (وحدة تحكم افتراضية)";
 "controllers.serving.extensionOwned" = "امتداد برنامج التشغيل";
 "controllers.serving.outputDisabled" = "الإخراج متوقف";
 "controllers.server.refused" = "لا يمكن لوحدة التحكم هذه التبديل: فهي تستخدم USB الخام، أو أن macOS لا يخدمها أصليًا.";

@@ -40,21 +40,21 @@ TEMPLATE = Path(
 BEGIN = "<!-- BEGIN GENERATED: error-codes -->"
 END = "<!-- END GENERATED: error-codes -->"
 DOMAIN_PREFIX = {
-    "endpoint": "E1",
-    "cli": "E2",
-    "remapping": "E3",
-    "mod": "E4",
-    "document": "E5",
+    "Endpoint": "E1",
+    "CLI": "E2",
+    "Remapping": "E3",
+    "Mod": "E4",
+    "Document": "E5",
 }
 # The failure exit codes of ojd, as the wiki page Command-Line documents them. 0 is success and
 # 130 is an interrupt, which prints nothing and has no code.
 CLI_EXIT_CODES = frozenset({1, 64, 69, 77, 127})
 DOMAIN_AREA = {
-    "endpoint": "Endpoint",
-    "cli": "Command line",
-    "remapping": "Remapping",
-    "mod": "Mod",
-    "document": "Document",
+    "Endpoint": "Endpoint",
+    "CLI": "Command line",
+    "Remapping": "Remapping",
+    "Mod": "Mod",
+    "Document": "Document",
 }
 STRING_LINE = re.compile(r'^"([^"]+)" = "(.*)";$')
 STRING_ESCAPE = re.compile(r"\\(.)")
@@ -205,7 +205,7 @@ def render_wiki(page: str, block: str) -> str:
 
 
 def render_endpoint_schema(text: str, entries: list[Entry]) -> str:
-    codes = [entry["code"] for entry in entries if entry["domain"] == "endpoint"]
+    codes = [entry["code"] for entry in entries if entry["domain"] == "Endpoint"]
     enum = ", ".join(json.dumps(code) for code in codes)
     expected = json.loads(text)
     try:

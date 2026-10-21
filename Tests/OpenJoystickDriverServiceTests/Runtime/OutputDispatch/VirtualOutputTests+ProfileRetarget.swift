@@ -51,7 +51,7 @@ extension VirtualOutputTests {
 
     #expect(log.built().map(\.profile) == [.sdlCompatible])
     #expect(dispatcher.selectionSource(for: id) == .override)
-    #expect(dispatcher.status.wireValue.contains("targets: SdlCompatible"))
+    #expect(dispatcher.status.wireValue.contains("targets: SDLCompatible"))
     await dispatcher.close()
   }
 
@@ -73,7 +73,7 @@ extension VirtualOutputTests {
     #expect(built.map(\.closed) == [true, false, false])
     #expect(dispatcher.selectionSource(for: first) == .override)
     #expect(dispatcher.selectionSource(for: second) == .automatic)
-    #expect(dispatcher.status.wireValue.contains("targets: Generic; SdlCompatible"))
+    #expect(dispatcher.status.wireValue.contains("targets: Generic; SDLCompatible"))
     await dispatcher.close()
   }
 
@@ -90,7 +90,7 @@ extension VirtualOutputTests {
 
     #expect(
       log.snapshot() == [
-        "Generic activate [1]", "SdlCompatible activate [1]", "Generic neutral",
+        "Generic activate [1]", "SDLCompatible activate [1]", "Generic neutral",
         "Generic close",
       ]
     )
@@ -190,7 +190,7 @@ extension VirtualOutputTests {
     #expect(log.built().last?.suppressOutput == false)
     await dispatcher.activateOutput(for: id)
     #expect(log.built().count == 2)
-    #expect(dispatcher.status.wireValue.contains("targets: SdlCompatible"))
+    #expect(dispatcher.status.wireValue.contains("targets: SDLCompatible"))
     await dispatcher.close()
   }
 
@@ -259,10 +259,10 @@ extension VirtualOutputTests {
     await dispatcher.close()
   }
 
-  /// The default persona is `Generic`; opting in to `SdlCompatible` switches the live backend
+  /// The default persona is `Generic`; opting in to `SDLCompatible` switches the live backend
   /// without the controller being unplugged or replugged.
   @Test
-  func theDefaultPersonaIsGenericAndOptInSwitchesToSdlCompatibleWithoutReplug() async throws {
+  func theDefaultPersonaIsGenericAndOptInSwitchesToSDLCompatibleWithoutReplug() async throws {
     let id = LogicalControllerID(vendorID: 1, productID: 2)
     let overrides = ProfileOverrideBox()
     let log = RetargetEventLog()

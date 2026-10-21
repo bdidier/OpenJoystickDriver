@@ -40,12 +40,12 @@ public struct ControllerOutputResult: Codable, Equatable, Hashable, Sendable {
 }
 
 /// JSON: every channel as a `UnipolarValue` number, keyed by its `PhysicalRumbleMotor` name, for
-/// example `{"leftMain":65535,"rightMain":0,...}`. A missing channel decodes as off; a key that
-/// names no motor fails decoding.
+/// example `{"lowFrequency":65535,"highFrequency":0,...}`. A missing channel decodes as off; a key
+/// that names no motor fails decoding.
 extension RumbleIntensities: Codable {
   public init(from decoder: any Decoder) throws {
     let container = try decoder.container(keyedBy: PhysicalRumbleMotorKey.self)
-    let names = Set(PhysicalRumbleMotor.allCases.map(\.fieldName))
+    let names = Set(PhysicalRumbleMotor.allCases.map(\.recordKey))
     if let unknown = container.allKeys.first(where: { !names.contains($0.stringValue) }) {
       throw DecodingError.dataCorrupted(
         .init(
@@ -72,7 +72,7 @@ extension RumbleIntensities: Codable {
   private struct PhysicalRumbleMotorKey: CodingKey {
     let stringValue: String
     var intValue: Int? { nil }
-    init(_ motor: PhysicalRumbleMotor) { stringValue = motor.fieldName }
+    init(_ motor: PhysicalRumbleMotor) { stringValue = motor.recordKey }
     init?(stringValue: String) { self.stringValue = stringValue }
     init?(intValue: Int) { nil }
   }

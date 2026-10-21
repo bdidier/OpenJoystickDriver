@@ -150,7 +150,7 @@ struct VirtualHIDProfileOverrideStoreTests {
     try withDirectory { directory in
       try write(persona(vendorID: 1, productID: 2), named: "a.json", in: directory)
       try write(
-        persona(vendorID: 1, productID: 2, descriptor: "SdlCompatible"),
+        persona(vendorID: 1, productID: 2, descriptor: "SDLCompatible"),
         named: "b.json",
         in: directory
       )

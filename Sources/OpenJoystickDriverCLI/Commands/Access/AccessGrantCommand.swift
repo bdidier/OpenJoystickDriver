@@ -324,4 +324,12 @@ struct AccessRevokeCommand: AsyncParsableCommand {
   }
 }
 
-extension EndpointScope: ExpressibleByArgument {}
+extension EndpointScope: ExpressibleByArgument {
+  /// A scope on the command line is its lowercase kebab-case name: `read` or `control`.
+  public init?(argument: String) {
+    guard let scope = CommandLineName.value(of: argument, in: Self.self) else { return nil }
+    self = scope
+  }
+
+  public static var allValueStrings: [String] { allCases.map(\.commandLineName) }
+}

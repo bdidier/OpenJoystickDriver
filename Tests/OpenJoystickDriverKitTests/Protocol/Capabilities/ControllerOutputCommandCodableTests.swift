@@ -17,14 +17,15 @@ struct ControllerOutputCommandCodableTests {
     let cases: [(ControllerOutputCommand, String)] = [
       (
         .setRumble(rumble, duration: .milliseconds(450)),
-        #"{"duration":{"milliseconds":450},"intensities":{"leftHaptic":0,"leftMain":65535,"#
-          + #""leftTrigger":0,"rightHaptic":0,"rightMain":0,"rightTrigger":257},"#
+        #"{"duration":{"milliseconds":450},"intensities":{"highFrequency":0,"leftHaptic":0,"#
+          + #""leftTrigger":0,"lowFrequency":65535,"rightHaptic":0,"rightTrigger":257},"#
           + #""type":"set-rumble"}"#
       ),
       (
         .setRumble(.off, duration: .held),
-        #"{"duration":"held","intensities":{"leftHaptic":0,"leftMain":0,"leftTrigger":0,"#
-          + #""rightHaptic":0,"rightMain":0,"rightTrigger":0},"type":"set-rumble"}"#
+        #"{"duration":"held","intensities":{"highFrequency":0,"leftHaptic":0,"#
+          + #""leftTrigger":0,"lowFrequency":0,"rightHaptic":0,"rightTrigger":0},"#
+          + #""type":"set-rumble"}"#
       ), (.stopRumble, #"{"type":"stop-rumble"}"#),
       (.setPlayerIndicator(.player2), #"{"player":2,"type":"set-player-indicator"}"#),
       (
@@ -56,13 +57,14 @@ struct ControllerOutputCommandCodableTests {
 
   @Test
   func omittedRumbleChannelsDecodeAsOffAndUnknownFormsAreRejected() throws {
-    let partial = #"{"type":"set-rumble","intensities":{"leftMain":65535},"duration":"held"}"#
+    let partial = #"{"type":"set-rumble","intensities":{"lowFrequency":65535},"duration":"held"}"#
     #expect(
       try JSONDecoder().decode(ControllerOutputCommand.self, from: Data(partial.utf8))
         == .setRumble(RumbleIntensities(lowFrequency: .max), duration: .held)
     )
     for invalid in [
       #"{"type":"set-rumble","intensities":{},"duration":"forever"}"#, #"{"type":"blink"}"#,
+      #"{"type":"set-rumble","intensities":{"leftMain":1},"duration":"held"}"#,
       #"{"type":"set-rgb","red":256,"green":0,"blue":0}"#,
     ] {
       #expect(throws: DecodingError.self) {

@@ -55,6 +55,6 @@ struct ControllerShowServingTests {
   @Test
   func everyRouteAppearsAcrossTheFixtures() {
     let ids = Set(ServingFixture.all.map(\.route.id))
-    #expect(ids == ["NativePassThrough", "VirtualHid", "ExtensionOwned", "OutputDisabled"])
+    #expect(ids == ["NativePassThrough", "VirtualHID", "ExtensionOwned", "OutputDisabled"])
   }
 }

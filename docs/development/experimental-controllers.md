@@ -92,7 +92,7 @@ Current Linux `xpad.c` supports the Nacon vendor and Xbox One fallback, but does
 
 ## ZD Ultimate Legend
 
-The Linux xpad XUSB record for `413D:2104` stays. A local-hardware patch pins interrupt endpoints `0x81`/`0x02` because rumble and player-indicator writes to the Xbox 360 default OUT `0x01` fail with `notFound`. Input on IN `0x81` works without the patch. The published virtual profile is separate; the automatic selector publishes `SdlCompatible`. See [issue #22](https://github.com/xsyetopz/OpenJoystickDriver/issues/22).
+The Linux xpad XUSB record for `413D:2104` stays. A local-hardware patch pins interrupt endpoints `0x81`/`0x02` because rumble and player-indicator writes to the Xbox 360 default OUT `0x01` fail with `notFound`. Input on IN `0x81` works without the patch. The published virtual profile is separate; the automatic selector publishes `SDLCompatible`. See [issue #22](https://github.com/xsyetopz/OpenJoystickDriver/issues/22).
 
 ## Xbox Adaptive Joystick
 

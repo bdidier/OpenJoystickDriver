@@ -1,11 +1,11 @@
 {
   "apiVersion": "openjoystickdriver/v1alpha1",
   "kind": "VirtualDevice",
-  "persona": "SdlCompatible",
-  "layout": "xbox-one-s-bluetooth",
+  "persona": "SDLCompatible",
+  "layout": "XboxOneSBluetooth",
   "transport": "Bluetooth",
   "worksWithDefaultSDLHints": false,
-  "labels": "xbox",
+  "labels": "Xbox",
   "identity": {
     "vendorID": 1118,
     "productID": 765,

@@ -17,7 +17,7 @@ struct VirtualInputEventTests {
     )
   }
 
-  /// The `SdlCompatible` input report for `state`.
+  /// The `SDLCompatible` input report for `state`.
   private func xboxOneSReport(_ state: VirtualGamepadState) throws -> [UInt8] {
     try XboxGeckoHIDReportFormat().buildInputReport(from: state)
   }

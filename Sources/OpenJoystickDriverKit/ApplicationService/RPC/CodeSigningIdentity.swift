@@ -6,11 +6,11 @@ public struct CodeSigningIdentity: Codable, Equatable, Hashable, Sendable {
   /// Who signed the code.
   public enum Kind: String, Codable, Sendable {
     /// Signed with a developer certificate of the publisher `publisherID`.
-    case signed
+    case signed = "Signed"
     /// Signed by the platform vendor, such as a system tool.
-    case platform
+    case platform = "Platform"
     /// Ad-hoc signed or not signed; any local process can claim this identity.
-    case adHoc
+    case adHoc = "AdHoc"
   }
 
   private enum CodingKeys: String, CodingKey {

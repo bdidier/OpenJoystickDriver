@@ -26,10 +26,10 @@ The first build downloads the XCFramework, about 70 MB. The program is `.build/r
 
 | Role | Runs on | Scope | Endpoint request | Does |
 | --- | --- | --- | --- | --- |
-| `host` | The Mac that runs the game | `control` | `FeedRequest` | Sends each `Frame` from the data channel to the virtual gamepad, and each `RumbleCommand` of the endpoint back over the data channel. |
-| `player` | The Mac with the controller | `read` | `Subscription` | Sends the input of one controller over the data channel as `Frame` lines, and prints each `RumbleCommand` that comes back. |
+| `host` | The Mac that runs the game | `Control` | `FeedRequest` | Sends each `Frame` from the data channel to the virtual gamepad, and each `RumbleCommand` of the endpoint back over the data channel. |
+| `player` | The Mac with the controller | `Read` | `Subscription` | Sends the input of one controller over the data channel as `Frame` lines, and prints each `RumbleCommand` that comes back. |
 
-The endpoint has no message that drives the rumble of a physical controller, so the player only prints the rumble commands. The endpoint closes a feed that sends no frame for 2 seconds, so the host sends a `KeepAlive` line every 0.5 seconds while no new frame arrives from the player. The host drops a message from the peer that is longer than 64 KiB or is not a valid `Frame` (unknown members, an unknown control name, a `holdMilliseconds` above 60000, a repeated name), and forwards only the newest frame for each 8 ms. The player prints only a `RumbleCommand` that has the shape of the schema (a `setRumble` with all six intensities and at most 5000 ms, or a bare `stopRumble`), and a signaling blob longer than 64 KiB is refused.
+The endpoint has no message that drives the rumble of a physical controller, so the player only prints the rumble commands. The endpoint closes a feed that sends no frame for 2 seconds, so the host sends a `KeepAlive` line every 0.5 seconds while no new frame arrives from the player. The host drops a message from the peer that is longer than 64 KiB or is not a valid `Frame` (unknown members, an unknown control name, a `holdMilliseconds` above 60000, a repeated name), and forwards only the newest frame for each 8 ms. The player prints only a `RumbleCommand` that has the shape of the schema (a `SetRumble` with all six intensities and at most 5000 ms, or a bare `StopRumble`), and a signaling blob longer than 64 KiB is refused.
 
 ## Connect two Macs
 
@@ -45,7 +45,7 @@ Options:
 - `--socket PATH` names the endpoint socket; without it, the bridge runs `ojd --json access status`.
 - `--token-name NAME` is the name of the token. The default is `bridge`.
 - `--controller ID` (player) is the `id` from the watch lines. Without it, the player uses the first controller that the endpoint reports.
-- `--persona Generic|SdlCompatible` (host) is the `as` of the `FeedRequest`.
+- `--persona Generic|SDLCompatible` (host) is the `as` of the `FeedRequest`.
 - `--ice-server URL` adds a STUN or TURN server. Without it, the bridge uses only local candidates, which suffices on one network.
 - `--signal offer|answer` swaps who offers. The player offers and the host answers by default.
 

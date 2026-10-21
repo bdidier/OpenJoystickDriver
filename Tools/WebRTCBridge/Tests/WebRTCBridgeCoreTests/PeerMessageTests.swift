@@ -10,7 +10,7 @@ final class PeerMessageTests: XCTestCase {
     Data(#"{\#(Self.header),"kind":"Frame"\#(members)}"#.utf8)
   }
 
-  private func rumble(_ members: String = #","type":"setRumble""#) -> Data {
+  private func rumble(_ members: String = #","type":"SetRumble""#) -> Data {
     Data(#"{\#(Self.header),"kind":"RumbleCommand"\#(members)}"#.utf8)
   }
 
@@ -81,22 +81,22 @@ final class PeerMessageTests: XCTestCase {
   }
 
   private static let allIntensities =
-    #""intensities":{"leftMain":65535,"rightMain":0,"leftTrigger":1,"rightTrigger":2,"#
+    #""intensities":{"lowFrequency":65535,"highFrequency":0,"leftTrigger":1,"rightTrigger":2,"#
     + #""leftHaptic":3,"rightHaptic":4}"#
 
   func testAValidRumbleCommandIsAccepted() throws {
     let line = try XCTUnwrap(
       PeerMessage.rumble(
-        from: rumble(#","type":"setRumble",\#(Self.allIntensities),"durationMilliseconds":5000"#)
+        from: rumble(#","type":"SetRumble",\#(Self.allIntensities),"durationMilliseconds":5000"#)
       )
     )
-    XCTAssertEqual(line["type"] as? String, "setRumble")
-    XCTAssertEqual((line["intensities"] as? [String: Int])?["leftMain"], 65535)
+    XCTAssertEqual(line["type"] as? String, "SetRumble")
+    XCTAssertEqual((line["intensities"] as? [String: Int])?["lowFrequency"], 65535)
     XCTAssertEqual(line["durationMilliseconds"] as? Int, 5000)
     XCTAssertNotNil(
-      PeerMessage.rumble(from: rumble(#","type":"setRumble",\#(Self.allIntensities)"#))
+      PeerMessage.rumble(from: rumble(#","type":"SetRumble",\#(Self.allIntensities)"#))
     )
-    XCTAssertNotNil(PeerMessage.rumble(from: rumble(#","type":"stopRumble""#)))
+    XCTAssertNotNil(PeerMessage.rumble(from: rumble(#","type":"StopRumble""#)))
   }
 
   func testARumbleCommandThatIsNotShapedLikeOneIsRejected() {
@@ -104,33 +104,35 @@ final class PeerMessageTests: XCTestCase {
     let rejected = [
       Data("not json".utf8),
       Data(#"{\#(Self.header),"kind":"Frame"}"#.utf8),
-      Data(#"{"apiVersion":"other","kind":"RumbleCommand","type":"stopRumble"}"#.utf8),
+      Data(#"{"apiVersion":"other","kind":"RumbleCommand","type":"StopRumble"}"#.utf8),
       rumble(""),
       rumble(#","type":"explode""#),
-      rumble(#","type":"setRumble",\#(all),"extra":1"#),
-      rumble(#","type":"setRumble",\#(all),"durationMilliseconds":5001"#),
-      rumble(#","type":"setRumble",\#(all),"durationMilliseconds":-5"#),
-      rumble(#","type":"setRumble""#),
-      rumble(#","type":"setRumble","intensities":{"leftMain":1}"#),
-      rumble(#","type":"setRumble","intensities":{"middle":1}"#),
-      rumble(#","type":"stopRumble","durationMilliseconds":0"#),
-      rumble(#","type":"stopRumble","intensities":{}"#),
-      rumble(#","type":"stopRumble","extra":1"#),
+      rumble(#","type":"SetRumble",\#(all),"extra":1"#),
+      rumble(#","type":"SetRumble",\#(all),"durationMilliseconds":5001"#),
+      rumble(#","type":"SetRumble",\#(all),"durationMilliseconds":-5"#),
+      rumble(#","type":"SetRumble""#),
+      rumble(#","type":"SetRumble","intensities":{"lowFrequency":1}"#),
+      rumble(#","type":"SetRumble","intensities":{"middle":1}"#),
+      rumble(#","type":"StopRumble","durationMilliseconds":0"#),
+      rumble(#","type":"StopRumble","intensities":{}"#),
+      rumble(#","type":"StopRumble","extra":1"#),
+      rumble(#","type":"setRumble",\#(all)"#),
+      rumble(#","type":"stopRumble""#),
     ]
     for data in rejected {
       XCTAssertNil(PeerMessage.rumble(from: data), data.utf8String)
     }
     let outOfRange = [
       all.replacingOccurrences(of: "65535", with: "65536"),
-      all.replacingOccurrences(of: "\"rightMain\":0", with: "\"rightMain\":-1"),
-      all.replacingOccurrences(of: "\"rightMain\":0", with: "\"rightMain\":0.5"),
+      all.replacingOccurrences(of: "\"highFrequency\":0", with: "\"highFrequency\":-1"),
+      all.replacingOccurrences(of: "\"highFrequency\":0", with: "\"highFrequency\":0.5"),
     ]
     for intensities in outOfRange {
-      XCTAssertNil(PeerMessage.rumble(from: rumble(#","type":"setRumble",\#(intensities)"#)))
+      XCTAssertNil(PeerMessage.rumble(from: rumble(#","type":"SetRumble",\#(intensities)"#)))
     }
     let padding = String(repeating: " ", count: PeerMessage.maximumBytes)
     XCTAssertNil(
-      PeerMessage.rumble(from: Data((rumble(#","type":"stopRumble""#).utf8String + padding).utf8))
+      PeerMessage.rumble(from: Data((rumble(#","type":"StopRumble""#).utf8String + padding).utf8))
     )
   }
 

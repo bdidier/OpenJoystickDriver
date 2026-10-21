@@ -37,7 +37,7 @@ struct EndpointServerTests {
       try server.setEnabled(true)
       try server.grant(Self.tool, path: "/Tool", scopes: [.read])
       let client = try await EndpointTestClient(path: server.socketPath)
-      await client.send(clientLine("Hello", #","scopes":["read"]"#))
+      await client.send(clientLine("Hello", #","scopes":["Read"]"#))
       #expect(try await client.readObject()["kind"] as? String == "Welcome")
 
       try server.setEnabled(false)
@@ -49,12 +49,41 @@ struct EndpointServerTests {
     }
   }
 
+  @Test(arguments: [#"["read"]"#, #"["control"]"#])
+  func aScopeInTheEarlierSpellingIsRefused(scopes: String) async throws {
+    try await withEndpointServer { server, _ in
+      try server.setEnabled(true)
+      try server.grant(Self.tool, path: "/Tool", scopes: [.read, .control])
+      let client = try await EndpointTestClient(path: server.socketPath)
+      await client.send(clientLine("Hello", #","scopes":\#(scopes)"#))
+
+      let line = try #require(await client.readLine())
+      #expect(try client.object(line)["kind"] as? String == "Status")
+      #expect(try client.object(line)["code"] is String)
+      #expect(await client.readLine() == nil)
+    }
+  }
+
+  @Test
+  func theStreamInTheEarlierSpellingIsRefused() async throws {
+    try await withEndpointServer { server, _ in
+      try server.setEnabled(true)
+      try server.grant(Self.tool, path: "/Tool", scopes: [.read])
+      let client = try await EndpointTestClient(path: server.socketPath)
+      await client.send(clientLine("Hello", #","scopes":["Read"]"#))
+      #expect(try await client.readObject()["kind"] as? String == "Welcome")
+      await client.send(clientLine("Subscription", #","stream":"controllers""#))
+
+      #expect(try await client.readObject()["code"] as? String == "E1003")
+    }
+  }
+
   @Test
   func anUngrantedClientIsRefusedAndListedUntilGranted() async throws {
     try await withEndpointServer { server, _ in
       try server.setEnabled(true)
       let client = try await EndpointTestClient(path: server.socketPath)
-      await client.send(clientLine("Hello", #","scopes":["read"]"#))
+      await client.send(clientLine("Hello", #","scopes":["Read"]"#))
 
       let line = try #require(await client.readLine())
       #expect(try JSONSchemaFiles.issues(in: line, against: "endpoint.schema.json").isEmpty)
@@ -74,7 +103,7 @@ struct EndpointServerTests {
     try await withEndpointServer(identity: Self.adHoc) { server, _ in
       try server.setEnabled(true)
       let client = try await EndpointTestClient(path: server.socketPath)
-      await client.send(clientLine("Hello", #","scopes":["read"]"#))
+      await client.send(clientLine("Hello", #","scopes":["Read"]"#))
 
       #expect(try await client.readObject()["code"] as? String == "E1002")
       #expect(try server.status().refused.map(\.publisher.kind) == [.adHoc])
@@ -91,8 +120,8 @@ struct EndpointServerTests {
       try server.setEnabled(true)
       try server.grant(Self.tool, path: "/Tool", scopes: [.read])
       let client = try await EndpointTestClient(path: server.socketPath)
-      await client.send(clientLine("Hello", #","scopes":["read"]"#))
-      await client.send(clientLine("Subscription", #","stream":"controllers""#))
+      await client.send(clientLine("Hello", #","scopes":["Read"]"#))
+      await client.send(clientLine("Subscription", #","stream":"Controllers""#))
 
       var lines: [String] = []
       for _ in 0..<3 { lines.append(try #require(await client.readLine())) }
@@ -107,7 +136,7 @@ struct EndpointServerTests {
         objects.map { $0["type"] as? String ?? $0["kind"] as? String }
           == ["Welcome", "ADDED", "MODIFIED", "DELETED"]
       )
-      #expect(objects[0]["scopes"] as? [String] == ["read"])
+      #expect(objects[0]["scopes"] as? [String] == ["Read"])
       #expect(objects[0]["version"] as? String == "1.2.3")
       #expect(objects[0]["protocol"] == nil)
       let added = try #require(objects[1]["object"] as? [String: Any])
@@ -275,22 +304,22 @@ struct EndpointServerTests {
   }
 
   @Test(arguments: [
-    (#"{"apiVersion":"openjoystickdriver.io/v2","kind":"Hello","scopes":["read"]}"#, "E1009"),
-    (#"{"apiVersion":"unsupported.example/v9","kind":"Hello","scopes":["read"]}"#, "E1009"),
+    (#"{"apiVersion":"openjoystickdriver.io/v2","kind":"Hello","scopes":["Read"]}"#, "E1009"),
+    (#"{"apiVersion":"unsupported.example/v9","kind":"Hello","scopes":["Read"]}"#, "E1009"),
     (#"nonsense"#, "E1003"),
     (clientLine("Hello", #","scopes":[]"#), "E1003"),
-    (clientLine("Subscription", #","stream":"controllers""#), "E1010"),
-    (#"{"kind":"Hello","scopes":["read"]}"#, "E1011"),
-    (#"{"apiVersion":"openjoystickdriver/v1alpha1","scopes":["read"]}"#, "E1011"),
+    (clientLine("Subscription", #","stream":"Controllers""#), "E1010"),
+    (#"{"kind":"Hello","scopes":["Read"]}"#, "E1011"),
+    (#"{"apiVersion":"openjoystickdriver/v1alpha1","scopes":["Read"]}"#, "E1011"),
     (#"{}"#, "E1011"),
-    (#"{"apiVersion":null,"kind":"Hello","scopes":["read"]}"#, "E1011"),
-    (#"{"apiVersion":"openjoystickdriver/v1alpha1","kind":null,"scopes":["read"]}"#, "E1011"),
-    (#"{"apiVersion":1,"kind":"Hello","scopes":["read"]}"#, "E1011"),
-    (#"{"apiVersion":"openjoystickdriver/v1alpha1","kind":["Hello"],"scopes":["read"]}"#, "E1011"),
+    (#"{"apiVersion":null,"kind":"Hello","scopes":["Read"]}"#, "E1011"),
+    (#"{"apiVersion":"openjoystickdriver/v1alpha1","kind":null,"scopes":["Read"]}"#, "E1011"),
+    (#"{"apiVersion":1,"kind":"Hello","scopes":["Read"]}"#, "E1011"),
+    (#"{"apiVersion":"openjoystickdriver/v1alpha1","kind":["Hello"],"scopes":["Read"]}"#, "E1011"),
     (#"[1]"#, "E1003"),
-    (clientLine("Welcome", #","scopes":["read"]"#), "E1010"),
-    (clientLine("Greeting", #","scopes":["read"]"#), "E1010"),
-    (clientLine("Hello", #","scopes":["read","control"]"#), "E1002"),
+    (clientLine("Welcome", #","scopes":["Read"]"#), "E1010"),
+    (clientLine("Greeting", #","scopes":["Read"]"#), "E1010"),
+    (clientLine("Hello", #","scopes":["Read","Control"]"#), "E1002"),
   ])
   func aBadHelloGetsAnError(hello: String, code: String) async throws {
     try await withEndpointServer { server, _ in
@@ -321,12 +350,12 @@ struct EndpointServerTests {
       try server.setEnabled(true)
       try server.grant(Self.tool, path: "/Tool", scopes: [.control])
       let client = try await EndpointTestClient(path: server.socketPath)
-      await client.send(clientLine("Hello", #","scopes":["control"]"#))
+      await client.send(clientLine("Hello", #","scopes":["Control"]"#))
 
       let welcome = try await client.readObject()
       #expect(welcome["kind"] as? String == "Welcome")
       #expect(welcome["apiVersion"] as? String == OpenJoystickDriverAPI.version)
-      #expect(welcome["scopes"] as? [String] == ["control"])
+      #expect(welcome["scopes"] as? [String] == ["Control"])
       #expect(
         try server.status().connections == [
           AccessConnection(identity: Self.tool, scopes: [.control])
@@ -341,7 +370,7 @@ struct EndpointServerTests {
       try server.setEnabled(true)
       try server.grant(Self.tool, path: "/Tool", scopes: [.read])
       let client = try await EndpointTestClient(path: server.socketPath)
-      await client.send(clientLine("Hello", #","scopes":["control"]"#))
+      await client.send(clientLine("Hello", #","scopes":["Control"]"#))
 
       #expect(try await client.readObject()["code"] as? String == "E1002")
       #expect(await client.readLine() == nil)
@@ -355,9 +384,9 @@ struct EndpointServerTests {
       try server.setEnabled(true)
       try server.grant(Self.tool, path: "/Tool", scopes: [.read, .control])
       let client = try await EndpointTestClient(path: server.socketPath)
-      await client.send(clientLine("Hello", #","scopes":["control"]"#))
+      await client.send(clientLine("Hello", #","scopes":["Control"]"#))
       #expect(try await client.readObject()["kind"] as? String == "Welcome")
-      await client.send(clientLine("Subscription", #","stream":"controllers""#))
+      await client.send(clientLine("Subscription", #","stream":"Controllers""#))
 
       let line = try #require(await client.readLine())
       #expect(try JSONSchemaFiles.issues(in: line, against: "endpoint.schema.json").isEmpty)
@@ -385,7 +414,7 @@ struct EndpointServerTests {
       try server.setEnabled(true)
       try server.grant(Self.tool, path: "/Tool", scopes: [.read])
       let client = try await EndpointTestClient.subscribed(to: server.socketPath)
-      await client.send(clientLine("Subscription", #","stream":"controllers""#))
+      await client.send(clientLine("Subscription", #","stream":"Controllers""#))
 
       #expect(try await client.readObject()["code"] as? String == "E1010")
       #expect(await client.readLine() == nil)
@@ -485,7 +514,7 @@ struct EndpointServerTests {
       server.start()
 
       let client = try await EndpointTestClient(path: server.socketPath)
-      await client.send(clientLine("Hello", #","scopes":["read"]"#))
+      await client.send(clientLine("Hello", #","scopes":["Read"]"#))
       #expect(try await client.readObject()["code"] as? String == "E1002")
     }
   }

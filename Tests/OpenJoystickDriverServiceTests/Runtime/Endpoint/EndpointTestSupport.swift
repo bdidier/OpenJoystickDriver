@@ -99,7 +99,7 @@ func tokenHello(
   nonce: String,
   origin: String = "",
   port: String = "",
-  scopes: [String] = ["read"]
+  scopes: [String] = ["Read"]
 ) -> String {
   let key = SymmetricKey(data: SHA256.hash(data: Data(token.utf8)))
   let message = ["OpenJoystickDriver endpoint hello 1", nonce, origin, port]
@@ -157,11 +157,11 @@ final class EndpointTestClient: @unchecked Sendable {
   /// A client that said Hello, read its Welcome, and subscribed to controllers.
   static func subscribed(to path: String) async throws -> EndpointTestClient {
     let client = try await EndpointTestClient(path: path)
-    await client.send(clientLine("Hello", #","scopes":["read"]"#))
+    await client.send(clientLine("Hello", #","scopes":["Read"]"#))
     guard try await client.readObject()["kind"] as? String == "Welcome" else {
       throw POSIXError(.EPROTO)
     }
-    await client.send(clientLine("Subscription", #","stream":"controllers""#))
+    await client.send(clientLine("Subscription", #","stream":"Controllers""#))
     return client
   }
 

@@ -175,7 +175,7 @@
 "controllers.server.ojd" = "OpenJoystickDriver (mando virtual)";
 "controllers.serving.label" = "Ruta de servicio";
 "controllers.serving.nativePassThrough" = "macOS (transferido)";
-"controllers.serving.virtualHid" = "OpenJoystickDriver (mando virtual)";
+"controllers.serving.virtualHID" = "OpenJoystickDriver (mando virtual)";
 "controllers.serving.extensionOwned" = "Extensión de controlador";
 "controllers.serving.outputDisabled" = "Salida desactivada";
 "controllers.server.refused" = "Este mando no puede cambiar: usa USB sin procesar, o macOS no lo gestiona de forma nativa.";

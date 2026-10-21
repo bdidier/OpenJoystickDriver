@@ -4,495 +4,495 @@
   "codes": [
     {
       "code": "E1001",
-      "domain": "endpoint",
+      "domain": "Endpoint",
       "name": "endpointDisabled"
     },
     {
       "code": "E1002",
-      "domain": "endpoint",
+      "domain": "Endpoint",
       "name": "notGranted"
     },
     {
       "code": "E1003",
-      "domain": "endpoint",
+      "domain": "Endpoint",
       "name": "invalidMessage"
     },
     {
       "code": "E1004",
-      "domain": "endpoint",
+      "domain": "Endpoint",
       "name": "tooManyConnections"
     },
     {
       "code": "E1005",
-      "domain": "endpoint",
+      "domain": "Endpoint",
       "name": "revoked"
     },
     {
       "code": "E1006",
-      "domain": "endpoint",
+      "domain": "Endpoint",
       "name": "tooSlow"
     },
     {
       "code": "E1007",
-      "domain": "endpoint",
+      "domain": "Endpoint",
       "name": "tooManyFeeds"
     },
     {
       "code": "E1008",
-      "domain": "endpoint",
+      "domain": "Endpoint",
       "name": "feedClosed"
     },
     {
       "code": "E1009",
-      "domain": "endpoint",
+      "domain": "Endpoint",
       "name": "unsupportedEndpointVersion"
     },
     {
       "code": "E1010",
-      "domain": "endpoint",
+      "domain": "Endpoint",
       "name": "unexpectedKind"
     },
     {
       "code": "E1011",
-      "domain": "endpoint",
+      "domain": "Endpoint",
       "name": "missingHeader"
     },
     {
       "code": "E2001",
-      "domain": "cli",
+      "domain": "CLI",
       "name": "unexpected",
       "exitCode": 1
     },
     {
       "code": "E2002",
-      "domain": "cli",
+      "domain": "CLI",
       "name": "unknownCommand",
       "exitCode": 64
     },
     {
       "code": "E2003",
-      "domain": "cli",
+      "domain": "CLI",
       "name": "usage",
       "exitCode": 64
     },
     {
       "code": "E2004",
-      "domain": "cli",
+      "domain": "CLI",
       "name": "serviceUnavailable",
       "exitCode": 69
     },
     {
       "code": "E2005",
-      "domain": "cli",
+      "domain": "CLI",
       "name": "serviceTimeout",
       "exitCode": 1
     },
     {
       "code": "E2006",
-      "domain": "cli",
+      "domain": "CLI",
       "name": "serviceRequestFailed",
       "exitCode": 1
     },
     {
       "code": "E2007",
-      "domain": "cli",
+      "domain": "CLI",
       "name": "peerRejected",
       "exitCode": 1
     },
     {
       "code": "E2008",
-      "domain": "cli",
+      "domain": "CLI",
       "name": "permissionMissing",
       "exitCode": 77
     },
     {
       "code": "E2009",
-      "domain": "cli",
+      "domain": "CLI",
       "name": "confirmationRequired",
       "exitCode": 64
     },
     {
       "code": "E2010",
-      "domain": "cli",
+      "domain": "CLI",
       "name": "aborted",
       "exitCode": 1
     },
     {
       "code": "E2011",
-      "domain": "cli",
+      "domain": "CLI",
       "name": "invalidInputFile",
       "exitCode": 1
     },
     {
       "code": "E2012",
-      "domain": "cli",
+      "domain": "CLI",
       "name": "notFound",
       "exitCode": 1
     },
     {
       "code": "E2013",
-      "domain": "cli",
+      "domain": "CLI",
       "name": "controllerRequestFailed",
       "exitCode": 1
     },
     {
       "code": "E2014",
-      "domain": "cli",
+      "domain": "CLI",
       "name": "installationProblem",
       "exitCode": 1
     },
     {
       "code": "E2015",
-      "domain": "cli",
+      "domain": "CLI",
       "name": "systemRequestFailed",
       "exitCode": 1
     },
     {
       "code": "E2016",
-      "domain": "cli",
+      "domain": "CLI",
       "name": "fileAccessFailed",
       "exitCode": 1
     },
     {
       "code": "E2017",
-      "domain": "cli",
+      "domain": "CLI",
       "name": "unsignedClient",
       "exitCode": 1
     },
     {
       "code": "E2018",
-      "domain": "cli",
+      "domain": "CLI",
       "name": "diagnoseFailed",
       "exitCode": 1
     },
     {
       "code": "E2019",
-      "domain": "cli",
+      "domain": "CLI",
       "name": "updateCheckFailed",
       "exitCode": 1
     },
     {
       "code": "E2020",
-      "domain": "cli",
+      "domain": "CLI",
       "name": "staleInstallation",
       "exitCode": 1
     },
     {
       "code": "E2021",
-      "domain": "cli",
+      "domain": "CLI",
       "name": "installedCLIFailed",
       "exitCode": 127
     },
     {
       "code": "E2022",
-      "domain": "cli",
+      "domain": "CLI",
       "name": "recordTestMismatch",
       "exitCode": 1
     },
     {
       "code": "E2023",
-      "domain": "cli",
+      "domain": "CLI",
       "name": "claimUnsupported",
       "exitCode": 1
     },
     {
       "code": "E2024",
-      "domain": "cli",
+      "domain": "CLI",
       "name": "unknownAccessClient",
       "exitCode": 1
     },
     {
       "code": "E2025",
-      "domain": "cli",
+      "domain": "CLI",
       "name": "ungrantableClient",
       "exitCode": 1
     },
     {
       "code": "E2026",
-      "domain": "cli",
+      "domain": "CLI",
       "name": "noAccessScope",
       "exitCode": 64
     },
     {
       "code": "E2027",
-      "domain": "cli",
+      "domain": "CLI",
       "name": "serviceStopping",
       "exitCode": 1
     },
     {
       "code": "E2028",
-      "domain": "cli",
+      "domain": "CLI",
       "name": "duplicateTokenName",
       "exitCode": 64
     },
     {
       "code": "E2029",
-      "domain": "cli",
+      "domain": "CLI",
       "name": "invalidTokenName",
       "exitCode": 64
     },
     {
       "code": "E2030",
-      "domain": "cli",
+      "domain": "CLI",
       "name": "invalidWebOrigin",
       "exitCode": 64
     },
     {
       "code": "E2031",
-      "domain": "cli",
+      "domain": "CLI",
       "name": "webPortUnavailable",
       "exitCode": 64
     },
     {
       "code": "E2032",
-      "domain": "cli",
+      "domain": "CLI",
       "name": "controlScopeWithOrigins",
       "exitCode": 64
     },
     {
       "code": "E2033",
-      "domain": "cli",
+      "domain": "CLI",
       "name": "launchFailed",
       "exitCode": 1
     },
     {
       "code": "E3001",
-      "domain": "remapping",
+      "domain": "Remapping",
       "name": "controllerUnavailable",
       "wire": "controller_unavailable"
     },
     {
       "code": "E3002",
-      "domain": "remapping",
+      "domain": "Remapping",
       "name": "joyConPairUnavailable",
       "wire": "joy_con_pair_unavailable"
     },
     {
       "code": "E3003",
-      "domain": "remapping",
+      "domain": "Remapping",
       "name": "motionUnavailable",
       "wire": "motion_unavailable"
     },
     {
       "code": "E3004",
-      "domain": "remapping",
+      "domain": "Remapping",
       "name": "argumentTooLarge",
       "wire": "argument_too_large"
     },
     {
       "code": "E3005",
-      "domain": "remapping",
+      "domain": "Remapping",
       "name": "corruptLibrary",
       "wire": "library_corrupt"
     },
     {
       "code": "E3006",
-      "domain": "remapping",
+      "domain": "Remapping",
       "name": "duplicateName",
       "wire": "duplicate_name"
     },
     {
       "code": "E3007",
-      "domain": "remapping",
+      "domain": "Remapping",
       "name": "invalidArguments",
       "wire": "invalid_arguments"
     },
     {
       "code": "E3008",
-      "domain": "remapping",
+      "domain": "Remapping",
       "name": "invalidProfile",
       "wire": "invalid_profile"
     },
     {
       "code": "E3009",
-      "domain": "remapping",
+      "domain": "Remapping",
       "name": "librarySizeExceeded",
       "wire": "library_size_exceeded"
     },
     {
       "code": "E3010",
-      "domain": "remapping",
+      "domain": "Remapping",
       "name": "profileAlreadyExists",
       "wire": "profile_already_exists"
     },
     {
       "code": "E3011",
-      "domain": "remapping",
+      "domain": "Remapping",
       "name": "profileUpdateConflict",
       "wire": "profile_update_conflict"
     },
     {
       "code": "E3012",
-      "domain": "remapping",
+      "domain": "Remapping",
       "name": "profileCountExceeded",
       "wire": "profile_count_exceeded"
     },
     {
       "code": "E3013",
-      "domain": "remapping",
+      "domain": "Remapping",
       "name": "profileNotFound",
       "wire": "profile_not_found"
     },
     {
       "code": "E3014",
-      "domain": "remapping",
+      "domain": "Remapping",
       "name": "responseEncodingFailed",
       "wire": "response_encoding_failed"
     },
     {
       "code": "E3015",
-      "domain": "remapping",
+      "domain": "Remapping",
       "name": "responseTooLarge",
       "wire": "response_too_large"
     },
     {
       "code": "E3016",
-      "domain": "remapping",
+      "domain": "Remapping",
       "name": "routerEngineUnavailable",
       "wire": "router_engine_unavailable"
     },
     {
       "code": "E3017",
-      "domain": "remapping",
+      "domain": "Remapping",
       "name": "routerLibraryAndEngineUnavailable",
       "wire": "router_library_and_engine_unavailable"
     },
     {
       "code": "E3018",
-      "domain": "remapping",
+      "domain": "Remapping",
       "name": "routerLibraryUnavailable",
       "wire": "router_library_unavailable"
     },
     {
       "code": "E3019",
-      "domain": "remapping",
+      "domain": "Remapping",
       "name": "routerShutDown",
       "wire": "router_shut_down"
     },
     {
       "code": "E3020",
-      "domain": "remapping",
+      "domain": "Remapping",
       "name": "transactionUnreconciled",
       "wire": "transaction_unreconciled"
     },
     {
       "code": "E3021",
-      "domain": "remapping",
+      "domain": "Remapping",
       "name": "unreadableLibrary",
       "wire": "library_unreadable"
     },
     {
       "code": "E3022",
-      "domain": "remapping",
+      "domain": "Remapping",
       "name": "profileRecoveryRequired",
       "wire": "profile_recovery_required"
     },
     {
       "code": "E3023",
-      "domain": "remapping",
+      "domain": "Remapping",
       "name": "unwritableLibrary",
       "wire": "library_unwritable"
     },
     {
       "code": "E3024",
-      "domain": "remapping",
+      "domain": "Remapping",
       "name": "remappingUnexpected",
       "wire": "unexpected"
     },
     {
       "code": "E3025",
-      "domain": "remapping",
+      "domain": "Remapping",
       "name": "profileProducesNoOutput",
       "wire": "profile_produces_no_output"
     },
     {
       "code": "E3026",
-      "domain": "remapping",
+      "domain": "Remapping",
       "name": "motionGyroNotSelected",
       "wire": "motion_gyro_not_selected"
     },
     {
       "code": "E3027",
-      "domain": "remapping",
+      "domain": "Remapping",
       "name": "motionProfileInactive",
       "wire": "motion_profile_inactive"
     },
     {
       "code": "E3028",
-      "domain": "remapping",
+      "domain": "Remapping",
       "name": "motionSessionChanged",
       "wire": "motion_session_changed"
     },
     {
       "code": "E3029",
-      "domain": "remapping",
+      "domain": "Remapping",
       "name": "packageProfileReadOnly",
       "wire": "package_profile_read_only"
     },
     {
       "code": "E4001",
-      "domain": "mod",
+      "domain": "Mod",
       "name": "invalidManifest"
     },
     {
       "code": "E4002",
-      "domain": "mod",
+      "domain": "Mod",
       "name": "requiresExcludesVersion"
     },
     {
       "code": "E4003",
-      "domain": "mod",
+      "domain": "Mod",
       "name": "invalidPackageContent"
     },
     {
       "code": "E4004",
-      "domain": "mod",
+      "domain": "Mod",
       "name": "packageClash"
     },
     {
       "code": "E4005",
-      "domain": "mod",
+      "domain": "Mod",
       "name": "packageAlreadyInstalled"
     },
     {
       "code": "E4006",
-      "domain": "mod",
+      "domain": "Mod",
       "name": "packageNotInstalled"
     },
     {
       "code": "E4007",
-      "domain": "mod",
+      "domain": "Mod",
       "name": "packageStoreUnwritable"
     },
     {
       "code": "E5001",
-      "domain": "document",
+      "domain": "Document",
       "name": "unsupportedAPIVersion",
       "wire": "unsupported_api_version"
     },
     {
       "code": "E5002",
-      "domain": "document",
+      "domain": "Document",
       "name": "invalidProtocolDescription"
     },
     {
       "code": "E5003",
-      "domain": "document",
+      "domain": "Document",
       "name": "protocolDescriptionFamilyMismatch"
     },
     {
       "code": "E5004",
-      "domain": "document",
+      "domain": "Document",
       "name": "unknownProtocolVariant"
     },
     {
       "code": "E5005",
-      "domain": "document",
+      "domain": "Document",
       "name": "damagedAccessGrants"
     },
     {
       "code": "E5006",
-      "domain": "document",
+      "domain": "Document",
       "name": "damagedPortKey"
     }
   ]

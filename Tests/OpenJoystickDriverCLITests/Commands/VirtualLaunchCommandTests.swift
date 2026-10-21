@@ -94,7 +94,7 @@ struct VirtualLaunchCommandTests {
     for (name, value) in expected { #expect(variables[name] == value, "\(name)") }
     let hints = variables.keys.filter { $0.hasPrefix("SDL_JOYSTICK_") }
     #expect(Set(hints) == Set(SDLLaunchEnvironment.gameControllerBackend.keys))
-    #expect(!run.standardError.contains(sdlHintsNote("SdlCompatible")))
+    #expect(!run.standardError.contains(sdlHintsNote("SDLCompatible")))
   }
 
   @Test
@@ -150,7 +150,7 @@ struct VirtualLaunchCommandTests {
       Self.variables(printed)[SDLLaunchEnvironment.variable]
         == (["abc,Mine,a:b0"] + mappings).joined(separator: "\n")
     )
-    #expect(run.standardError.contains(sdlHintsNote("SdlCompatible")))
+    #expect(run.standardError.contains(sdlHintsNote("SDLCompatible")))
   }
 
   @Test
@@ -162,7 +162,7 @@ struct VirtualLaunchCommandTests {
     )
 
     #expect(run.code == 0, "\(run.standardError)")
-    #expect(!run.standardError.contains(sdlHintsNote("SdlCompatible")))
+    #expect(!run.standardError.contains(sdlHintsNote("SDLCompatible")))
   }
 
   @Test

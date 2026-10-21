@@ -2,7 +2,7 @@
 public enum BridgeCommandLine {
   public static let usage = """
     usage: ojd-webrtc-bridge --role host|player [--signal offer|answer] [--socket PATH]
-           [--token-name NAME] [--controller ID] [--persona Generic|SdlCompatible]
+           [--token-name NAME] [--controller ID] [--persona Generic|SDLCompatible]
            [--ice-server URL]...
     Set OJD_TOKEN to the token that `ojd access grant --token NAME` printed.
     The offer and the answer are one line each: the bridge prints its own on stdout and reads the
