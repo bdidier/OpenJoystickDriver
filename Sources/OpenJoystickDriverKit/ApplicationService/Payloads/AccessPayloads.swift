@@ -348,7 +348,7 @@ package struct AccessTokenGrantArguments: Codable, Sendable {
 
 package struct AccessWebArguments: Codable, Sendable {
   package let enabled: Bool
-  /// Nil keeps the saved port.
+  /// Nil keeps the saved port; 0 lets the system pick a free port.
   package let port: Int?
 }
 

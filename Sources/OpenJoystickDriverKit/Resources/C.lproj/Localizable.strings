@@ -921,6 +921,8 @@
 "cli.access.web.enable.confirm" = "Turn on the WebSocket, so that pages from the origins you grant tokens for can use the endpoint?";
 "cli.access.web.enable.discussion" = "Asks for confirmation first. Without --port, uses the saved port; the first time, the system picks a free port, and the service saves it.";
 "cli.access.web.port" = "The port on 127.0.0.1, from 1024 to 65535.";
+"cli.access.web.automatic" = "Let the system pick a free port instead of the saved one.";
+"cli.access.web.automatic_conflict" = "--automatic cannot be used with --port.";
 "cli.access.web.port_range" = "--port must be between 1024 and 65535.";
 "cli.diagnose.abstract" = "Run every check and report what is wrong.";
 "cli.diagnose.output" = "Also write a support bundle to this file.";
@@ -1672,10 +1674,12 @@
 "access.web.pages" = "Pages folder: %@";
 "access.web.port" = "Port";
 "access.web.port.automatic" = "Automatic";
+"access.web.port.choose" = "Choose Automatically";
 "access.web.portRange" = "The port must be between %lld and %lld.";
 "access.web.enable.title" = "Turn on the WebSocket?";
 "access.web.enable.message" = "Web pages from the origins of a token can then connect to the endpoint on this Mac.";
 "access.web.enable.port" = "Port: %lld";
+"access.web.enable.automatic" = "The system picks a free port.";
 "access.grants" = "Programs with access";
 "access.grantProgram" = "Grant a Program...";
 "access.grant" = "Grant";
@@ -1727,7 +1731,7 @@
 "a11y.access.dismissError" = "Dismiss the error";
 "a11y.access.tryAgain" = "Read the access settings again";
 "a11y.access.restart" = "Restart the app so the new permissions apply";
-"a11y.access.webPort" = "WebSocket port; leave empty for the saved port";
+"a11y.access.webPort" = "WebSocket port; leave empty to keep the saved port. The system picks a port only when none is saved or Automatic is chosen";
 "a11y.access.grantProgram" = "Grant access to a program that you choose";
 "a11y.access.grantRefused" = "Grant access to %@";
 "a11y.access.revokeGrant" = "Revoke the access of %@";
@@ -1741,7 +1745,6 @@
 "a11y.access.done" = "Close the token";
 "a11y.access.scope" = "%@ scope";
 "a11y.access.cancel" = "Cancel and keep the access as it is";
-"a11y.value.none" = "No value";
 "mainMenu.app.about" = "About %@";
 "mainMenu.app.settings" = "Settings...";
 "mainMenu.app.services" = "Services";

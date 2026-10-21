@@ -110,7 +110,7 @@ struct MainWindowProblemTests {
   func anEmptyOrMissingValueShowsAHyphen() {
     #expect(OJDValue(nil).displayText == OJDLocalized.string("common.none"))
     #expect(OJDValue("").displayText == OJDLocalized.string("common.none"))
-    #expect(OJDValue(nil).accessibilityKey == "a11y.value.none")
+    #expect(OJDValue(nil).accessibilityKey == "common.none")
     #expect(OJDValue("Xbox One").displayText == "Xbox One")
     #expect(OJDValue("Xbox One").accessibilityKey == nil)
   }
@@ -129,7 +129,7 @@ struct MainWindowProblemTests {
 
   @Test
   func sentencesReadAMissingValueAsAWordAndNotAHyphen() {
-    #expect(OJDValue.none.spokenText == OJDLocalized.string("a11y.value.none"))
+    #expect(OJDValue.none.spokenText == OJDLocalized.string("common.none"))
     #expect(OJDValue.none.spokenText != "-")
     #expect(OJDValue.text("x").spokenText == "x")
   }

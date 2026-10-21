@@ -50,9 +50,7 @@
           )
         }
         Section { deliveryRow }
-      }.ojdGroupedForm().onAppear { preferences.refreshNotificationAuthorization() }.onReceive(
-        NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)
-      ) { _ in preferences.refreshNotificationAuthorization() }
+      }.ojdGroupedForm()
     }
 
     private var deliveryRow: some View {

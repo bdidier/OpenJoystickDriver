@@ -100,11 +100,22 @@ final class AccessViewModel: ObservableObject {
   var grantScopes: Set<EndpointScope> = [.read]
   @Published
   var tokenDraft = AccessTokenDraft()
-  /// The port field of the WebSocket form, which shows the saved port; empty keeps the saved
-  /// port.
+  /// The port field of the WebSocket form. It shows the saved port until the person edits it;
+  /// empty keeps the saved port.
   @Published
-  var portText = ""
+  var portText = "" {
+    didSet {
+      guard !isFillingPort else { return }
+      portEdited = true
+      choosesAutomaticPort = false
+    }
+  }
+  /// Whether enabling asks the system for a free port, whatever port is saved.
+  @Published
+  private(set) var choosesAutomaticPort = false
 
+  private var portEdited = false
+  private var isFillingPort = false
   private let service: any AccessService
   private let identityAtPath: (URL) -> CodeSigningIdentity?
 
@@ -121,9 +132,29 @@ final class AccessViewModel: ObservableObject {
     return nil
   }
 
-  /// The port the field names: nil keeps the saved port. A failure names a port outside the
-  /// range a user may bind.
+  /// The text the empty port field shows: the saved port that an empty field keeps, or
+  /// "Automatic" when no port is saved or the person chose automatic.
+  var portPlaceholder: String {
+    if !choosesAutomaticPort, let port = status?.web.port { return String(port) }
+    return OJDLocalized.string("access.web.port.automatic")
+  }
+
+  /// Whether a port is saved that the person can replace with an automatic one.
+  var canChooseAutomaticPort: Bool { status?.web.port != nil && !choosesAutomaticPort }
+
+  /// Empties the field and makes enabling pick a free port instead of the saved one.
+  func chooseAutomaticPort() {
+    isFillingPort = true
+    portText = ""
+    isFillingPort = false
+    portEdited = true
+    choosesAutomaticPort = true
+  }
+
+  /// The port the field names: nil keeps the saved port, 0 asks for a free one. A failure names
+  /// a port outside the range a user may bind.
   func webPort() throws -> Int? {
+    if choosesAutomaticPort { return 0 }
     let text = portText.trimmingCharacters(in: .whitespaces)
     guard !text.isEmpty else { return nil }
     guard let port = Int(text), AccessWebPorts.allowed.contains(port) else {
@@ -250,7 +281,13 @@ final class AccessViewModel: ObservableObject {
     sheet = nil
     switch pending {
     case .enableEndpoint: await apply { try await service.setEnabled(true) }
-    case .enableWeb(let port): await apply { try await service.setWeb(enabled: true, port: port) }
+    case .enableWeb(let port):
+      await apply { try await service.setWeb(enabled: true, port: port) }
+      if failure == nil, let status {
+        portEdited = false
+        choosesAutomaticPort = false
+        show(status)
+      }
     case .grantClient(let candidate):
       let scopes = grantScopes.sorted()
       await apply {
@@ -288,8 +325,11 @@ final class AccessViewModel: ObservableObject {
         title: OJDLocalized.string("access.web.enable.title"),
         lines: [
           OJDLocalized.string("access.web.enable.message"),
-          port.map { OJDLocalized.formatted("access.web.enable.port", $0) }
-            ?? OJDLocalized.string("access.web.enable.savedPort"),
+          port.map {
+            $0 == 0
+              ? OJDLocalized.string("access.web.enable.automatic")
+              : OJDLocalized.formatted("access.web.enable.port", $0)
+          } ?? OJDLocalized.string("access.web.enable.savedPort"),
         ],
         confirmTitle: OJDLocalized.string("access.enable"),
         isDestructive: false
@@ -391,9 +431,12 @@ final class AccessViewModel: ObservableObject {
     do { show(try await request()) } catch { failure = AccessFailure(error) }
   }
 
-  /// Loads `status` and, while the port field is empty, fills it with the saved port.
+  /// Loads `status` and, until the person edits the port field, fills it with the saved port.
   private func show(_ status: AccessStatusPayload) {
     load = .loaded(status)
-    if portText.isEmpty, let port = status.web.port { portText = String(port) }
+    guard !portEdited else { return }
+    isFillingPort = true
+    portText = status.web.port.map(String.init) ?? ""
+    isFillingPort = false
   }
 }

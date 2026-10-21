@@ -337,7 +337,7 @@ ojd access list
 ojd access grant CLIENT [--scope read|control]... [--force]
 ojd access grant --token NAME [--origin URL]... [--scope read|control]... [--force]
 ojd access revoke CLIENT|token:NAME [--scope read|control]...
-ojd access web enable [--port PORT] [--force]
+ojd access web enable [--port PORT] [--automatic] [--force]
 ojd access web disable
 ```
 
@@ -348,7 +348,7 @@ ojd access web disable
 - `access grant`: Allow a program to use the endpoint. `CLIENT` is the path of the program's app bundle or executable, or an ID from `access list`. `--scope` is `read` by default. The grant names the program's signature, so it stays valid when the program is updated or moved. It asks first, and in a script it needs `--force`.
 - `access grant --token`: Create a token named `NAME` instead of granting a program. The command prints the token once; the service keeps only its hash. A client signs the service's challenge with the token in its `hello` and does not send the token. Each `--origin`, such as `http://127.0.0.1:8080`, lets web pages from that origin use the token on the WebSocket. A token without `--origin` works on the socket, and on the WebSocket from a program that sends no `Origin` header, such as a sandboxed app. With `--json`, it prints an `AccessToken` with `token` and `grant`. `access grant` without `--token` prints an `AccessGrant`.
 - `access revoke`: Remove a client's or a token's grant. With `--scope`, it removes only those scopes. The endpoint closes each connection that loses a scope. With `--json`, it prints a `Status`.
-- `access web enable`: Turn on the WebSocket on `127.0.0.1`. Without `--port`, it uses the saved port; the first time, the system picks a free port. `--port` names another from 1024 to 65535. The port is saved, and `access status` shows it. It asks first, and in a script it needs `--force`. It is independent of `access enable`.
+- `access web enable`: Turn on the WebSocket on `127.0.0.1`. Without `--port`, it uses the saved port; the first time, the system picks a free port. `--port` names another from 1024 to 65535; `--automatic` lets the system pick a free port even when one is saved, and cannot be combined with `--port`. The port is saved, and `access status` shows it. It asks first, and in a script it needs `--force`. It is independent of `access enable`.
 - `access web disable`: Turn off the WebSocket and close its connections. The tokens stay.
 
 `access grant` accepts only a program signed with a Developer ID or Apple Development certificate, or signed by Apple. It refuses an ad-hoc signed or unsigned program, because any program can claim that signature. For a program that Apple signed, such as `python3`, every script that the program runs gets the access.

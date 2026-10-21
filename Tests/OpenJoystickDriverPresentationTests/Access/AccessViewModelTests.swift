@@ -169,6 +169,119 @@ struct AccessViewModelTests {
     #expect(service.calls == ["web:true:-"])
   }
 
+  private static func status(webPort: Int?) -> AccessStatusPayload {
+    AccessStatusPayload(
+      enabled: false,
+      socketPath: "/tmp/ojd.sock",
+      connections: [],
+      grants: [],
+      refused: [],
+      web: AccessWebStatus(enabled: false, listening: false, port: webPort, pagesPath: "/tmp/p"),
+      tokens: [],
+      refusedTokens: []
+    )
+  }
+
+  @Test
+  func theEmptyPortFieldNamesTheSavedPort() async {
+    let service = FakeAccessService()
+    service.payload = Self.status(webPort: 43_210)
+    let model = AccessViewModel(service: service)
+    await model.refresh()
+
+    model.portText = ""
+
+    #expect(model.portPlaceholder == "43210")
+    #expect(model.portPlaceholder != OJDLocalized.string("access.web.port.automatic"))
+  }
+
+  @Test
+  func choosingAutomaticAsksForAFreePortAndKeepsTheFieldEmpty() async throws {
+    let service = FakeAccessService()
+    service.payload = Self.status(webPort: 43_210)
+    let model = AccessViewModel(service: service)
+    await model.refresh()
+    #expect(model.canChooseAutomaticPort)
+
+    model.chooseAutomaticPort()
+    await model.refresh()
+
+    #expect(model.portText.isEmpty)
+    #expect(model.portPlaceholder == OJDLocalized.string("access.web.port.automatic"))
+    #expect(!model.canChooseAutomaticPort)
+    #expect(try model.webPort() == 0)
+    model.requestEnableWeb()
+    guard case .confirm(let pending)? = model.sheet else {
+      Issue.record("no sheet")
+      return
+    }
+    await model.confirm(pending)
+    #expect(service.calls.last == "web:true:0")
+  }
+
+  @Test
+  func typingAPortAfterChoosingAutomaticUsesThePort() throws {
+    let model = AccessViewModel(service: FakeAccessService())
+    model.chooseAutomaticPort()
+
+    model.portText = "50000"
+
+    #expect(try model.webPort() == 50_000)
+  }
+
+  @Test
+  func noAutomaticChoiceIsOfferedWithoutASavedPort() async {
+    let model = AccessViewModel(service: FakeAccessService())
+    await model.refresh()
+
+    #expect(!model.canChooseAutomaticPort)
+  }
+
+  @Test
+  func theFieldFollowsTheSavedPortUntilTheUserEditsIt() async {
+    let service = FakeAccessService()
+    service.payload = Self.status(webPort: 43_210)
+    let model = AccessViewModel(service: service)
+    await model.refresh()
+    service.payload = Self.status(webPort: 44_000)
+    await model.refresh()
+    #expect(model.portText == "44000")
+
+    model.portText = "50000"
+    service.payload = Self.status(webPort: 45_000)
+    await model.refresh()
+
+    #expect(model.portText == "50000")
+  }
+
+  @Test
+  func anEditedEmptyFieldStaysEmptyOnRefresh() async {
+    let service = FakeAccessService()
+    service.payload = Self.status(webPort: 43_210)
+    let model = AccessViewModel(service: service)
+    await model.refresh()
+
+    model.portText = ""
+    await model.refresh()
+
+    #expect(model.portText.isEmpty)
+  }
+
+  @Test
+  func enablingWithAPortFollowsTheSavedPortAgain() async {
+    let service = FakeAccessService()
+    let model = AccessViewModel(service: service)
+    await model.refresh()
+    model.portText = "50000"
+    service.payload = Self.status(webPort: 50_000)
+
+    await model.confirm(.enableWeb(port: 50_000))
+    service.payload = Self.status(webPort: 51_000)
+    await model.refresh()
+
+    #expect(model.portText == "51000")
+  }
+
   @Test
   func grantingUsesTheChosenScopes() async {
     let service = FakeAccessService()
@@ -373,5 +486,14 @@ struct AccessViewModelTests {
 
     #expect(lines.count == 2)
     #expect(lines.allSatisfy { !$0.isEmpty })
+  }
+
+  @Test
+  func enablingTheWebEndpointWithAnAutomaticPortSaysTheSystemPicksOne() {
+    let model = AccessViewModel(service: FakeAccessService())
+
+    let lines = model.confirmation(for: .enableWeb(port: 0)).lines
+
+    #expect(lines.last == OJDLocalized.string("access.web.enable.automatic"))
   }
 }

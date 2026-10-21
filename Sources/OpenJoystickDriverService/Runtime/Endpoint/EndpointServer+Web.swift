@@ -6,9 +6,9 @@ import OpenJoystickDriverKit
 /// The WebSocket on `127.0.0.1`, and the overlay pages on the same port.
 extension EndpointServer {
   /// Saves the switch and the port and opens or closes the WebSocket; disabling closes every web
-  /// connection with `E1001`. Nil keeps the saved port, and without one, or with 0,
-  /// the system picks a free port, which is saved, so no fixed port is there for another program
-  /// to take first.
+  /// connection with `E1001`. Nil keeps the saved port, and without one the system picks a free
+  /// port; 0 picks a free port even when one is saved. The picked port is saved, so no fixed port
+  /// is there for another program to take first.
   func setWebEnabled(_ enabled: Bool, port: Int?) throws {
     try lock.withLock {
       var file = try store.load()
@@ -26,7 +26,8 @@ extension EndpointServer {
       guard requested == 0 || AccessWebSettings.ports.contains(requested) else {
         throw AccessGrantStoreError.portUnavailable(requested)
       }
-      let keepsListener = webListener.map { requested == 0 || requested == $0.port } ?? false
+      let keepsListener =
+        port != 0 && (webListener.map { requested == 0 || requested == $0.port } ?? false)
       let listener = keepsListener ? nil : try openWebListener(port: requested)
       file.web = AccessWebSettings(enabled: true, port: listener?.port ?? webListener?.port ?? 0)
       do { try store.save(file) } catch {

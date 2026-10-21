@@ -35,6 +35,15 @@ extension SettingsWindowPane {
   /// The shortest content area a pane gets.
   static let minimumContentHeight = 100.0
 
+  /// The space left between a tall Settings window and the edges of the screen's visible area.
+  static let screenMargin = 40.0
+
+  /// The tallest content area a window on a screen whose visible area is `visibleHeight` tall
+  /// can have when its title bar and toolbar take `chromeHeight`.
+  static func availableContentHeight(visibleHeight: Double, chromeHeight: Double) -> Double {
+    visibleHeight - chromeHeight - screenMargin
+  }
+
   /// The content size of a pane whose content is `fittingHeight` tall: every pane has the same
   /// width, and a pane taller than `availableHeight` gets that height and scrolls.
   static func contentSize(fittingHeight: Double, availableHeight: Double) -> SettingsPaneSize {

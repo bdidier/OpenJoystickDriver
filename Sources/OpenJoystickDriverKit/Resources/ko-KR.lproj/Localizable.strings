@@ -921,6 +921,8 @@
 "cli.access.web.enable.confirm" = "토큰을 허용한 출처의 페이지가 엔드포인트를 사용할 수 있도록 WebSocket을 켤까요?";
 "cli.access.web.enable.discussion" = "먼저 확인을 요청합니다. --port가 없으면 저장된 포트를 사용하며, 처음에는 시스템이 빈 포트를 고르고 서비스가 그 포트를 저장합니다.";
 "cli.access.web.port" = "127.0.0.1의 포트이며 1024부터 65535까지입니다.";
+"cli.access.web.automatic" = "저장된 포트 대신 시스템이 사용 가능한 포트를 선택합니다.";
+"cli.access.web.automatic_conflict" = "--automatic과 --port는 함께 사용할 수 없습니다.";
 "cli.access.web.port_range" = "--port는 1024에서 65535 사이여야 합니다.";
 "cli.diagnose.abstract" = "모든 검사를 실행하고 문제를 보고합니다.";
 "cli.diagnose.output" = "지원용 번들도 이 파일에 기록합니다.";
@@ -1561,10 +1563,12 @@
 "access.web.pages" = "페이지 폴더: %@";
 "access.web.port" = "포트";
 "access.web.port.automatic" = "자동";
+"access.web.port.choose" = "자동으로 선택";
 "access.web.portRange" = "포트는 %lld에서 %lld 사이여야 합니다.";
 "access.web.enable.title" = "WebSocket을 켜시겠습니까?";
 "access.web.enable.message" = "토큰의 출처에 해당하는 웹 페이지가 이 Mac의 엔드포인트에 연결할 수 있게 됩니다.";
 "access.web.enable.port" = "포트: %lld";
+"access.web.enable.automatic" = "시스템이 사용 가능한 포트를 선택합니다.";
 "access.grants" = "접근이 허용된 프로그램";
 "access.grantProgram" = "프로그램 허용…";
 "access.grant" = "허용";
@@ -1616,7 +1620,7 @@
 "a11y.access.dismissError" = "오류 닫기";
 "a11y.access.tryAgain" = "접근 설정 다시 읽기";
 "a11y.access.restart" = "새 권한이 적용되도록 앱 재시작";
-"a11y.access.webPort" = "WebSocket 포트. 저장된 포트를 사용하려면 비워 두세요";
+"a11y.access.webPort" = "WebSocket 포트. 저장된 포트를 유지하려면 비워 두세요. 시스템은 저장된 포트가 없거나 자동을 선택한 경우에만 포트를 선택합니다";
 "a11y.access.grantProgram" = "선택한 프로그램에 접근 허용";
 "a11y.access.grantRefused" = "%@에 접근 허용";
 "a11y.access.revokeGrant" = "%@의 접근 권한 철회";
@@ -1630,7 +1634,6 @@
 "a11y.access.done" = "토큰 닫기";
 "a11y.access.scope" = "%@ 범위";
 "a11y.access.cancel" = "취소하고 접근을 그대로 유지";
-"a11y.value.none" = "값 없음";
 "mainMenu.app.about" = "%@ 정보";
 "mainMenu.app.settings" = "설정…";
 "mainMenu.app.services" = "서비스";
@@ -1922,7 +1925,7 @@
 "controllers.publication.notPublished" = "게시되지 않음";
 "controllers.publication.failed" = "실패";
 "controllers.inputHealth.healthy" = "정상";
-"controllers.inputHealth.stale" = "오래됨";
+"controllers.inputHealth.stale" = "업데이트 없음";
 "controllers.inputHealth.waitingForNeutral" = "중립 위치 대기 중";
 "settings.error.damaged" = "설정 파일 %@이(가) 손상되었습니다. 수정하거나 `ojd setting reset`을 실행해 휴지통으로 이동하세요.";
 "settings.error.unsupported" = "설정 파일 %@은(는) 지원되지 않습니다. 지원되는 apiVersion에 맞게 파일을 다시 작성하거나 `ojd setting reset`을 실행해 휴지통으로 이동하세요.";

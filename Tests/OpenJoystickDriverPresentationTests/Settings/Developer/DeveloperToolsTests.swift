@@ -62,11 +62,13 @@ struct DeveloperToolsTests {
       launchAtLogin: LaunchAtLoginStub(isEnabled: false),
       notificationAuthorization: NotificationAuthorizationStub(state: .denied)
     )
+    let sandbox = try CommandLineToolSandbox()
+    defer { sandbox.remove() }
     let controller = SettingsWindowController(
       gateway: gateway,
       runtime: RuntimeViewModel(gateway: gateway),
       preferences: preferences,
-      commandLineTool: CommandLineToolModel()
+      commandLineTool: sandbox.model()
     ) { _ in }
 
     controller.showSettings(pane: .advanced)
@@ -74,6 +76,20 @@ struct DeveloperToolsTests {
     controller.close()
 
     #expect(controller.developerTools.loadState == .ready)
+  }
+
+  @Test
+  @MainActor
+  func aRefreshShowsLoadingAtOnceEvenFromAReadyState() async {
+    let gateway = GatewayStub(statusPayload: statusPayload(device: device()))
+    let model = DeveloperToolsViewModel(gateway: gateway)
+    await model.refresh()
+    #expect(model.loadState == .ready)
+
+    model.requestRefresh()
+
+    #expect(model.loadState == .loading)
+    await waitUntil("the read ends") { !model.hasActiveOperation }
   }
 
   @Test

@@ -34,8 +34,7 @@
           Text(message).foregroundColor(Color(NSColor.systemOrange))
             .fixedSize(horizontal: false, vertical: true)
         }
-      }.onAppear { commandLineTool.refresh() }
-        .alert(isPresented: $confirmingUninstall, content: uninstallAlert)
+      }.alert(isPresented: $confirmingUninstall, content: uninstallAlert)
     }
 
     private func uninstallAlert() -> Alert {

@@ -30,7 +30,7 @@ extension ApplicationServiceServer {
 
   /// Turns the WebSocket on or off and returns the endpoint's state afterward.
   func setWebAccess(_ arguments: AccessWebArguments) throws -> AccessStatusPayload {
-    if let port = arguments.port, !AccessWebSettings.ports.contains(port) {
+    if let port = arguments.port, port != 0, !AccessWebSettings.ports.contains(port) {
       throw AccessGrantStoreError.portUnavailable(port)
     }
     let endpoint = try runningEndpoint()

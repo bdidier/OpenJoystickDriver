@@ -2,8 +2,8 @@ import Foundation
 import OpenJoystickDriverKit
 
 /// How a value field shows a value. A field that applies to the controller but has no value
-/// (unknown, missing or not applicable) shows the localized word "None"; VoiceOver reads a
-/// localized "No value" for it. A field that can never apply to the controller is hidden by its
+/// (unknown, missing or not applicable) shows the localized word "None", which VoiceOver reads
+/// as written. A field that can never apply to the controller is hidden by its
 /// screen instead.
 enum OJDValue: Equatable, Sendable {
   case text(String)
@@ -30,7 +30,7 @@ enum OJDValue: Equatable, Sendable {
   var accessibilityKey: String? {
     switch self {
     case .text: return nil
-    case .none: return "a11y.value.none"
+    case .none: return "common.none"
     }
   }
 }
@@ -57,7 +57,7 @@ extension OJDValue {
   var spokenText: String {
     switch self {
     case .text(let value): return value
-    case .none: return OJDLocalized.string("a11y.value.none")
+    case .none: return OJDLocalized.string("common.none")
     }
   }
 }

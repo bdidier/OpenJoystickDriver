@@ -56,6 +56,22 @@ struct SettingsWindowPaneModelTests {
   }
 
   @Test
+  func aSmallerScreenCapsAPaneThatFitsALargerOne() {
+    let chrome = 52.0
+    let large = SettingsWindowPane.availableContentHeight(
+      visibleHeight: 1_000,
+      chromeHeight: chrome
+    )
+    let small = SettingsWindowPane.availableContentHeight(visibleHeight: 600, chromeHeight: chrome)
+
+    let onLarge = SettingsWindowPane.contentSize(fittingHeight: 700, availableHeight: large)
+    let onSmall = SettingsWindowPane.contentSize(fittingHeight: 700, availableHeight: small)
+
+    #expect(onLarge.height == 700)
+    #expect(onSmall.height == 600 - chrome - SettingsWindowPane.screenMargin)
+  }
+
+  @Test
   func aPaneKeepsAMinimumHeight() {
     let size = SettingsWindowPane.contentSize(fittingHeight: 0, availableHeight: 700)
     #expect(size.height == SettingsWindowPane.minimumContentHeight)

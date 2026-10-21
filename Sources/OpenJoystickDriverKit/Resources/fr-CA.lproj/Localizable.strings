@@ -921,6 +921,8 @@
 "cli.access.web.enable.confirm" = "Activer le WebSocket, afin que les pages des origines pour lesquelles vous autorisez des jetons puissent utiliser le point d’accès?";
 "cli.access.web.enable.discussion" = "Demande d’abord une confirmation. Sans --port, utilise le port enregistré; la première fois, le système choisit un port libre et le service l’enregistre.";
 "cli.access.web.port" = "Le port sur 127.0.0.1, de 1024 à 65535.";
+"cli.access.web.automatic" = "Laisser le système choisir un port libre au lieu du port enregistré.";
+"cli.access.web.automatic_conflict" = "--automatic ne peut pas être utilisé avec --port.";
 "cli.access.web.port_range" = "--port doit être compris entre 1024 et 65535.";
 "cli.diagnose.abstract" = "Lance toutes les vérifications et signale ce qui ne va pas.";
 "cli.diagnose.output" = "Écrit aussi un lot d’assistance dans ce fichier.";
@@ -1672,10 +1674,12 @@
 "access.web.pages" = "Dossier des pages : %@";
 "access.web.port" = "Port";
 "access.web.port.automatic" = "Automatique";
+"access.web.port.choose" = "Choisir automatiquement";
 "access.web.portRange" = "Le port doit être compris entre %lld et %lld.";
 "access.web.enable.title" = "Activer le WebSocket?";
 "access.web.enable.message" = "Les pages web issues des origines d’un jeton peuvent alors se connecter au point d’accès sur ce Mac.";
 "access.web.enable.port" = "Port : %lld";
+"access.web.enable.automatic" = "Le système choisit un port libre.";
 "access.grants" = "Programmes avec accès";
 "access.grantProgram" = "Autoriser un programme…";
 "access.grant" = "Autoriser";
@@ -1727,7 +1731,7 @@
 "a11y.access.dismissError" = "Fermer l’erreur";
 "a11y.access.tryAgain" = "Relire les réglages d’accès";
 "a11y.access.restart" = "Redémarrer l’app pour appliquer les nouvelles autorisations";
-"a11y.access.webPort" = "Port du WebSocket; laissez vide pour utiliser le port enregistré";
+"a11y.access.webPort" = "Port du WebSocket; laissez vide pour conserver le port enregistré. Le système ne choisit un port que si aucun n’est enregistré ou si Automatique est choisi";
 "a11y.access.grantProgram" = "Accorder l’accès à un programme que vous choisissez";
 "a11y.access.grantRefused" = "Accorder l’accès à %@";
 "a11y.access.revokeGrant" = "Révoquer l’accès de %@";
@@ -1741,7 +1745,6 @@
 "a11y.access.done" = "Fermer le jeton";
 "a11y.access.scope" = "Portée %@";
 "a11y.access.cancel" = "Annuler et laisser l’accès tel quel";
-"a11y.value.none" = "Aucune valeur";
 "mainMenu.app.about" = "À propos de %@";
 "mainMenu.app.settings" = "Réglages…";
 "mainMenu.app.services" = "Services";
@@ -1923,7 +1926,7 @@
 "controllers.publication.notPublished" = "Non publié";
 "controllers.publication.failed" = "Échec";
 "controllers.inputHealth.healthy" = "Normal";
-"controllers.inputHealth.stale" = "Périmé";
+"controllers.inputHealth.stale" = "Sans mise à jour";
 "controllers.inputHealth.waitingForNeutral" = "En attente de la position neutre";
 "settings.error.damaged" = "Le fichier de réglages %@ est endommagé. Corrigez-le ou placez-le dans la corbeille avec `ojd setting reset`.";
 "settings.error.unsupported" = "Le fichier de réglages %@ n’est pas pris en charge. Réécrivez le fichier pour l’apiVersion prise en charge ou placez-le dans la corbeille avec `ojd setting reset`.";

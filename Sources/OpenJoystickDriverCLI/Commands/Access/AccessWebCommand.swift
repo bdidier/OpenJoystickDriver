@@ -37,6 +37,12 @@ struct AccessWebEnableCommand: AsyncParsableCommand {
   var port: Int?
 
   @Flag(
+    name: .long,
+    help: ArgumentHelp(CLILocalized.text("cli.access.web.automatic"))
+  )
+  var automatic = false
+
+  @Flag(
     name: [.short, .long],
     help: ArgumentHelp(CLILocalized.text("cli.option.force"))
   )
@@ -46,6 +52,9 @@ struct AccessWebEnableCommand: AsyncParsableCommand {
   var global: GlobalOptions
 
   func validate() throws {
+    if automatic, port != nil {
+      throw ValidationError(CLILocalized.text("cli.access.web.automatic_conflict"))
+    }
     if let port, !AccessWebPorts.allowed.contains(port) {
       throw ValidationError(
         CLILocalized.text("cli.access.web.port_range")
@@ -62,7 +71,7 @@ struct AccessWebEnableCommand: AsyncParsableCommand {
         force: force,
         needsForce: AccessText.needsForce
       )
-      let port = port
+      let port = automatic ? 0 : port
       let status = try await ServiceConnection.request {
         try await $0.setWebAccess(enabled: true, port: port)
       }

@@ -921,6 +921,8 @@
 "cli.access.web.enable.confirm" = "Ativar o WebSocket, para que páginas das origens para as quais você autoriza tokens possam usar o ponto de acesso?";
 "cli.access.web.enable.discussion" = "Pede confirmação primeiro. Sem --port, usa a porta salva; na primeira vez, o sistema escolhe uma porta livre e o serviço a salva.";
 "cli.access.web.port" = "A porta em 127.0.0.1, de 1024 a 65535.";
+"cli.access.web.automatic" = "Deixar o sistema escolher uma porta livre em vez da salva.";
+"cli.access.web.automatic_conflict" = "--automatic não pode ser usado com --port.";
 "cli.access.web.port_range" = "--port deve estar entre 1024 e 65535.";
 "cli.diagnose.abstract" = "Executa todas as verificações e informa o que está errado.";
 "cli.diagnose.output" = "Grava também um pacote de suporte neste arquivo.";
@@ -1672,10 +1674,12 @@
 "access.web.pages" = "Pasta de páginas: %@";
 "access.web.port" = "Porta";
 "access.web.port.automatic" = "Automático";
+"access.web.port.choose" = "Escolher automaticamente";
 "access.web.portRange" = "A porta deve estar entre %lld e %lld.";
 "access.web.enable.title" = "Ativar o WebSocket?";
 "access.web.enable.message" = "As páginas web das origens de um token poderão se conectar ao endpoint neste Mac.";
 "access.web.enable.port" = "Porta: %lld";
+"access.web.enable.automatic" = "O sistema escolhe uma porta livre.";
 "access.grants" = "Programas com acesso";
 "access.grantProgram" = "Conceder Acesso a um Programa…";
 "access.grant" = "Conceder";
@@ -1727,7 +1731,7 @@
 "a11y.access.dismissError" = "Dispensar o erro";
 "a11y.access.tryAgain" = "Ler os ajustes de acesso de novo";
 "a11y.access.restart" = "Reiniciar o app para que as novas permissões sejam aplicadas";
-"a11y.access.webPort" = "Porta do WebSocket; deixe em branco para usar a porta salva";
+"a11y.access.webPort" = "Porta do WebSocket; deixe em branco para manter a porta salva. O sistema só escolhe uma porta se nenhuma estiver salva ou se Automático for escolhido";
 "a11y.access.grantProgram" = "Conceder acesso a um programa que você escolher";
 "a11y.access.grantRefused" = "Conceder acesso a %@";
 "a11y.access.revokeGrant" = "Revogar o acesso de %@";
@@ -1741,7 +1745,6 @@
 "a11y.access.done" = "Fechar o token";
 "a11y.access.scope" = "Escopo %@";
 "a11y.access.cancel" = "Cancelar e manter o acesso como está";
-"a11y.value.none" = "Sem valor";
 "mainMenu.app.about" = "Sobre o %@";
 "mainMenu.app.settings" = "Ajustes…";
 "mainMenu.app.services" = "Serviços";
@@ -1923,7 +1926,7 @@
 "controllers.publication.notPublished" = "Não publicado";
 "controllers.publication.failed" = "Falhou";
 "controllers.inputHealth.healthy" = "Normal";
-"controllers.inputHealth.stale" = "Desatualizado";
+"controllers.inputHealth.stale" = "Sem atualizações";
 "controllers.inputHealth.waitingForNeutral" = "Aguardando posição neutra";
 "settings.error.damaged" = "O arquivo de ajustes %@ está danificado. Corrija-o ou mova-o para a Lixeira com `ojd setting reset`.";
 "settings.error.unsupported" = "O arquivo de ajustes %@ não é compatível. Reescreva o arquivo para a apiVersion compatível ou mova-o para a Lixeira com `ojd setting reset`.";

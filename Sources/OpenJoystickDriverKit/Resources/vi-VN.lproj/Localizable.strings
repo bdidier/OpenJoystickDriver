@@ -921,6 +921,8 @@
 "cli.access.web.enable.confirm" = "Bật WebSocket để các trang từ những origin bạn cấp token có thể dùng điểm cuối?";
 "cli.access.web.enable.discussion" = "Hỏi xác nhận trước. Không có --port, dùng cổng đã lưu; lần đầu, hệ thống chọn một cổng trống và dịch vụ lưu lại.";
 "cli.access.web.port" = "Cổng trên 127.0.0.1, từ 1024 đến 65535.";
+"cli.access.web.automatic" = "Để hệ thống chọn cổng trống thay vì cổng đã lưu.";
+"cli.access.web.automatic_conflict" = "Không thể dùng --automatic cùng với --port.";
 "cli.access.web.port_range" = "--port phải nằm trong khoảng 1024 đến 65535.";
 "cli.diagnose.abstract" = "Chạy mọi kiểm tra và báo cáo điều gì không ổn.";
 "cli.diagnose.output" = "Đồng thời ghi một gói hỗ trợ vào tệp này.";
@@ -1561,10 +1563,12 @@
 "access.web.pages" = "Thư mục trang: %@";
 "access.web.port" = "Cổng";
 "access.web.port.automatic" = "Tự động";
+"access.web.port.choose" = "Chọn tự động";
 "access.web.portRange" = "Cổng phải nằm trong khoảng từ %lld đến %lld.";
 "access.web.enable.title" = "Bật WebSocket?";
 "access.web.enable.message" = "Các trang web từ nguồn gốc của một token sau đó có thể kết nối với điểm cuối trên máy Mac này.";
 "access.web.enable.port" = "Cổng: %lld";
+"access.web.enable.automatic" = "Hệ thống chọn một cổng trống.";
 "access.grants" = "Chương trình có quyền truy cập";
 "access.grantProgram" = "Cấp quyền cho chương trình…";
 "access.grant" = "Cấp quyền";
@@ -1616,7 +1620,7 @@
 "a11y.access.dismissError" = "Bỏ qua lỗi";
 "a11y.access.tryAgain" = "Đọc lại cài đặt quyền truy cập";
 "a11y.access.restart" = "Khởi động lại ứng dụng để áp dụng quyền mới";
-"a11y.access.webPort" = "Cổng WebSocket; để trống để dùng cổng đã lưu";
+"a11y.access.webPort" = "Cổng WebSocket; để trống để giữ cổng đã lưu. Hệ thống chỉ chọn cổng khi chưa lưu cổng nào hoặc khi chọn Tự động";
 "a11y.access.grantProgram" = "Cấp quyền truy cập cho chương trình bạn chọn";
 "a11y.access.grantRefused" = "Cấp quyền truy cập cho %@";
 "a11y.access.revokeGrant" = "Thu hồi quyền truy cập của %@";
@@ -1630,7 +1634,6 @@
 "a11y.access.done" = "Đóng token";
 "a11y.access.scope" = "Phạm vi %@";
 "a11y.access.cancel" = "Hủy và giữ nguyên quyền truy cập";
-"a11y.value.none" = "Không có giá trị";
 "mainMenu.app.about" = "Giới thiệu về %@";
 "mainMenu.app.settings" = "Cài đặt…";
 "mainMenu.app.services" = "Dịch vụ";
@@ -1922,7 +1925,7 @@
 "controllers.publication.notPublished" = "Chưa xuất bản";
 "controllers.publication.failed" = "Không thành công";
 "controllers.inputHealth.healthy" = "Bình thường";
-"controllers.inputHealth.stale" = "Lỗi thời";
+"controllers.inputHealth.stale" = "Không cập nhật";
 "controllers.inputHealth.waitingForNeutral" = "Đang chờ vị trí trung tính";
 "settings.error.damaged" = "Tệp cài đặt %@ bị hỏng. Hãy sửa tệp, hoặc chuyển tệp vào Thùng rác bằng `ojd setting reset`.";
 "settings.error.unsupported" = "Tệp cài đặt %@ không được hỗ trợ. Hãy viết lại tệp theo apiVersion được hỗ trợ, hoặc chuyển tệp vào Thùng rác bằng `ojd setting reset`.";

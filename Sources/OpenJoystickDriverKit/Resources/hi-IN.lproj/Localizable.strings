@@ -921,6 +921,8 @@
 "cli.access.web.enable.confirm" = "क्या WebSocket चालू करना है, ताकि जिन ओरिजिन के लिए आप टोकन को अनुमति देते हैं उनके पेज एंडपॉइंट का उपयोग कर सकें?";
 "cli.access.web.enable.discussion" = "पहले पुष्टि माँगता है। --port के बिना सहेजा गया पोर्ट उपयोग करता है; पहली बार सिस्टम एक खाली पोर्ट चुनता है और सेवा उसे सहेज लेती है।";
 "cli.access.web.port" = "127.0.0.1 पर पोर्ट, 1024 से 65535 तक।";
+"cli.access.web.automatic" = "सहेजे गए पोर्ट के बजाय सिस्टम को खाली पोर्ट चुनने दें।";
+"cli.access.web.automatic_conflict" = "--automatic के साथ --port का उपयोग नहीं किया जा सकता।";
 "cli.access.web.port_range" = "--port 1024 और 65535 के बीच होना चाहिए।";
 "cli.diagnose.abstract" = "सभी जाँचें चलाएँ और बताएँ कि क्या गड़बड़ है।";
 "cli.diagnose.output" = "सपोर्ट बंडल भी इस फ़ाइल में लिखें।";
@@ -1561,10 +1563,12 @@
 "access.web.pages" = "पेज फ़ोल्डर: %@";
 "access.web.port" = "पोर्ट";
 "access.web.port.automatic" = "स्वचालित";
+"access.web.port.choose" = "स्वचालित रूप से चुनें";
 "access.web.portRange" = "पोर्ट %lld और %lld के बीच होना चाहिए।";
 "access.web.enable.title" = "WebSocket चालू करें?";
 "access.web.enable.message" = "किसी टोकन के ऑरिजिन के वेब पेज फिर इस Mac के एंडपॉइंट से कनेक्ट हो सकते हैं।";
 "access.web.enable.port" = "पोर्ट: %lld";
+"access.web.enable.automatic" = "सिस्टम एक खाली पोर्ट चुनता है।";
 "access.grants" = "ऐक्सेस वाले प्रोग्राम";
 "access.grantProgram" = "प्रोग्राम को ऐक्सेस दें…";
 "access.grant" = "ऐक्सेस दें";
@@ -1616,7 +1620,7 @@
 "a11y.access.dismissError" = "त्रुटि ख़ारिज करें";
 "a11y.access.tryAgain" = "ऐक्सेस सेटिंग्स फिर से पढ़ें";
 "a11y.access.restart" = "नई अनुमतियाँ लागू करने के लिए ऐप फिर से शुरू करें";
-"a11y.access.webPort" = "WebSocket पोर्ट; सहेजे गए पोर्ट के लिए खाली छोड़ें";
+"a11y.access.webPort" = "WebSocket पोर्ट; सहेजा गया पोर्ट रखने के लिए खाली छोड़ें। सिस्टम पोर्ट तभी चुनता है जब कोई पोर्ट सहेजा न गया हो या स्वचालित चुना गया हो";
 "a11y.access.grantProgram" = "आपके चुने प्रोग्राम को ऐक्सेस दें";
 "a11y.access.grantRefused" = "%@ को ऐक्सेस दें";
 "a11y.access.revokeGrant" = "%@ का ऐक्सेस वापस लें";
@@ -1630,7 +1634,6 @@
 "a11y.access.done" = "टोकन बंद करें";
 "a11y.access.scope" = "%@ स्कोप";
 "a11y.access.cancel" = "रद्द करें और ऐक्सेस जैसा है वैसा रखें";
-"a11y.value.none" = "कोई मान नहीं";
 "mainMenu.app.about" = "%@ के बारे में";
 "mainMenu.app.settings" = "सेटिंग्स…";
 "mainMenu.app.services" = "सेवाएँ";
@@ -1922,7 +1925,7 @@
 "controllers.publication.notPublished" = "प्रकाशित नहीं";
 "controllers.publication.failed" = "विफल";
 "controllers.inputHealth.healthy" = "सामान्य";
-"controllers.inputHealth.stale" = "पुराना";
+"controllers.inputHealth.stale" = "अपडेट नहीं हो रहा";
 "controllers.inputHealth.waitingForNeutral" = "न्यूट्रल की प्रतीक्षा";
 "settings.error.damaged" = "सेटिंग्स फ़ाइल %@ क्षतिग्रस्त है। इसे ठीक करें, या `ojd setting reset` से इसे ट्रैश में भेजें।";
 "settings.error.unsupported" = "सेटिंग्स फ़ाइल %@ समर्थित नहीं है। फ़ाइल को समर्थित apiVersion के लिए दोबारा लिखें, या `ojd setting reset` से इसे ट्रैश में भेजें।";

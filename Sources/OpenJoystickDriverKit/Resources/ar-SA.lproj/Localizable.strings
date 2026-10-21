@@ -921,6 +921,8 @@
 "cli.access.web.enable.confirm" = "هل تريد تفعيل WebSocket لتتمكن الصفحات من الأصول التي تمنحها رموزًا مميزة من استخدام نقطة النهاية؟";
 "cli.access.web.enable.discussion" = "تطلب التأكيد أولًا. بدون --port يُستخدم المنفذ المحفوظ؛ وفي المرة الأولى يختار النظام منفذًا حرًا وتحفظه الخدمة.";
 "cli.access.web.port" = "المنفذ على 127.0.0.1، من 1024 إلى 65535.";
+"cli.access.web.automatic" = "اجعل النظام يختار منفذًا متاحًا بدلًا من المنفذ المحفوظ.";
+"cli.access.web.automatic_conflict" = "لا يمكن استخدام --automatic مع --port.";
 "cli.access.web.port_range" = "يجب أن يكون --port بين 1024 و65535.";
 "cli.diagnose.abstract" = "شغّل جميع الفحوصات وأبلغ عن المشكلات.";
 "cli.diagnose.output" = "اكتب أيضًا حزمة دعم في هذا الملف.";
@@ -1561,10 +1563,12 @@
 "access.web.pages" = "مجلد الصفحات: %@";
 "access.web.port" = "المنفذ";
 "access.web.port.automatic" = "تلقائي";
+"access.web.port.choose" = "اختيار تلقائي";
 "access.web.portRange" = "يجب أن يكون المنفذ بين %lld و%lld.";
 "access.web.enable.title" = "هل تريد تشغيل WebSocket؟";
 "access.web.enable.message" = "يمكن لصفحات الويب من أصول الرمز المميز بعد ذلك الاتصال بنقطة النهاية على هذا الـ Mac.";
 "access.web.enable.port" = "المنفذ: %lld";
+"access.web.enable.automatic" = "يختار النظام منفذًا متاحًا.";
 "access.grants" = "البرامج التي لديها وصول";
 "access.grantProgram" = "منح برنامج وصولًا…";
 "access.grant" = "منح الوصول";
@@ -1616,7 +1620,7 @@
 "a11y.access.dismissError" = "تجاهل الخطأ";
 "a11y.access.tryAgain" = "قراءة إعدادات الوصول مرة أخرى";
 "a11y.access.restart" = "أعد تشغيل التطبيق لتسري الأذونات الجديدة";
-"a11y.access.webPort" = "منفذ WebSocket؛ اتركه فارغًا لاستخدام المنفذ المحفوظ";
+"a11y.access.webPort" = "منفذ WebSocket؛ اتركه فارغًا للاحتفاظ بالمنفذ المحفوظ. يختار النظام منفذًا فقط عندما لا يوجد منفذ محفوظ أو عند اختيار تلقائي";
 "a11y.access.grantProgram" = "منح الوصول لبرنامج تختاره";
 "a11y.access.grantRefused" = "منح الوصول لـ %@";
 "a11y.access.revokeGrant" = "سحب وصول %@";
@@ -1630,7 +1634,6 @@
 "a11y.access.done" = "إغلاق الرمز المميز";
 "a11y.access.scope" = "نطاق %@";
 "a11y.access.cancel" = "إلغاء وإبقاء الوصول كما هو";
-"a11y.value.none" = "لا توجد قيمة";
 "mainMenu.app.about" = "حول %@";
 "mainMenu.app.settings" = "الإعدادات…";
 "mainMenu.app.services" = "الخدمات";
@@ -1922,7 +1925,7 @@
 "controllers.publication.notPublished" = "غير منشور";
 "controllers.publication.failed" = "فشل";
 "controllers.inputHealth.healthy" = "سليم";
-"controllers.inputHealth.stale" = "قديم";
+"controllers.inputHealth.stale" = "غير محدَّث";
 "controllers.inputHealth.waitingForNeutral" = "في انتظار الوضع المحايد";
 "settings.error.damaged" = "ملف الإعدادات %@ تالف. أصلحه أو انقله إلى سلة المهملات باستخدام `ojd setting reset`.";
 "settings.error.unsupported" = "ملف الإعدادات %@ غير مدعوم. أعد كتابة الملف وفق apiVersion المدعوم، أو انقله إلى سلة المهملات باستخدام `ojd setting reset`.";
