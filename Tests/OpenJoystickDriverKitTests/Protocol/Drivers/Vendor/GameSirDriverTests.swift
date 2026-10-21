@@ -3,6 +3,8 @@ import OpenJoystickDriverKit
 import Testing
 
 struct GameSirDriverTests {
+  static let family = PhysicalProtocolID.vendorGameSir
+
   @Test
   func enhancedReportMapsGameplayExtrasAndBatteryWithoutMotion() throws {
     let parser = GameSirDriver(protocol: .enhancedHID, hasInnerGrips: true)

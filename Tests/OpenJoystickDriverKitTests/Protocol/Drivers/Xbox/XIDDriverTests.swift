@@ -38,6 +38,8 @@ private func makeXIDReport(
 }
 
 struct XIDDriverTests {
+  static let family = PhysicalProtocolID.xboxXID
+
   @Test
   func rumbleUsesXIDBigEndianFullRangeMotorsAndCatalogEndpoint() throws {
     let parser = xidDriver(outEndpoint: 0x07)

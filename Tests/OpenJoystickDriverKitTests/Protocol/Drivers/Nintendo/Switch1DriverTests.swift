@@ -5,6 +5,8 @@ import Testing
 @testable import OpenJoystickDriverKit
 
 struct Switch1DriverTests {
+  static let family = PhysicalProtocolID.nintendoSwitch1
+
   @Test
   func testSwitchProProfileIsExperimentalAndUnverified() throws {
     let model = ControllerModelID(vendorID: 1406, productID: 8201)

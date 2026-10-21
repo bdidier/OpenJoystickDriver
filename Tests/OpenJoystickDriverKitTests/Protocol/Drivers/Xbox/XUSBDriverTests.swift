@@ -40,6 +40,8 @@ private func makeXbox360ReportLE(
 }
 
 struct XUSBDriverTests {
+  static let family = PhysicalProtocolID.xboxXUSB
+
   @Test
   func testIgnoresNonInputReportType() throws {
     let parser = XUSBDriver()

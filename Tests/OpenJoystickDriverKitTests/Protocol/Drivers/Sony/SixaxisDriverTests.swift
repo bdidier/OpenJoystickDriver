@@ -5,6 +5,8 @@ import Testing
 @testable import OpenJoystickDriverKit
 
 struct SixaxisDriverTests {
+  static let family = PhysicalProtocolID.sonySixaxis
+
   @Test
   func testDS3ProfileIsExperimentalAndUnverified() throws {
     let model = ControllerModelID(vendorID: 1356, productID: 616)

@@ -3,4 +3,6 @@ import Testing
 
 @testable import OpenJoystickDriverKit
 
-struct GIPDriverTests {}
+struct GIPDriverTests {
+  static let family = PhysicalProtocolID.xboxGIP
+}

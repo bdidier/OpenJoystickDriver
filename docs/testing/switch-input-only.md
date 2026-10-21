@@ -1,6 +1,6 @@
 # Wired Switch Input-Only Pads
 
-Many licensed wired Switch pads send one fixed HID input report and do not accept the Switch Pro Controller subcommands. SDL lists them as `SwitchInputOnlyController`. The catalog imports them from SDL's `controller_list.h` as `NintendoSwitchInputOnly` records, which select `SwitchInputOnlyDriver`:
+Many licensed wired Switch pads send one fixed HID input report and do not accept the Switch Pro Controller subcommands. SDL lists them as `SwitchInputOnlyController`. The catalog imports them from SDL's `controller_list.h` as `NintendoSwitchInputOnly` records, which the report-layout driver decodes with the description's input layout:
 
 | Controller | VID:PID |
 | --- | --- |

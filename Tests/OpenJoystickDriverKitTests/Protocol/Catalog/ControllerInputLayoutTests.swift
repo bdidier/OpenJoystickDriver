@@ -47,6 +47,29 @@ struct ControllerInputLayoutTests {
   }
 
   @Test
+  func exactLengthIgnoresLongerReportsAndAbsentAcceptsThem() throws {
+    let exact = ReportLayoutDriver(
+      layout: try inputLayout(
+        """
+        {"report": {"length": 2, "exactLength": true},
+         "buttons": [{"control": "South", "byte": 1, "mask": 1}]}
+        """
+      )
+    )
+    #expect(try exact.parseReport(Data([0, 1]))?.state.pressed == [.south])
+    #expect(try exact.parseReport(Data([0, 1, 0])) == nil)
+    #expect(try exact.parseReport(Data([0])) == nil)
+    let atLeast = ReportLayoutDriver(
+      layout: try inputLayout(
+        """
+        {"report": {"length": 2}, "buttons": [{"control": "South", "byte": 1, "mask": 1}]}
+        """
+      )
+    )
+    #expect(try atLeast.parseReport(Data([0, 1, 0]))?.state.pressed == [.south])
+  }
+
+  @Test
   func opposingDirectionsCancel() throws {
     let layout = try inputLayout(
       """

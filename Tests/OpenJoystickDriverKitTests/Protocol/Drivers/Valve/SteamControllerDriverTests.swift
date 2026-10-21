@@ -5,6 +5,8 @@ import Testing
 @testable import OpenJoystickDriverKit
 
 struct SteamControllerDriverTests {
+  static let family = PhysicalProtocolID.valveSteamController
+
   @Test
   func testSteamControllerProfilesExposeOperationalFlags() throws {
     let registry = ProtocolDriverRegistry()

@@ -4,6 +4,8 @@ import Testing
 @testable import OpenJoystickDriverKit
 
 struct HIDDescriptorDriverTests {
+  static let family = PhysicalProtocolID.hidDescriptor
+
   private let model = ControllerModelID(vendorID: 65_534, productID: 1)
 
   private func parse(_ parser: HIDDescriptorDriver, _ element: HIDElementValue) -> ControllerEvent?

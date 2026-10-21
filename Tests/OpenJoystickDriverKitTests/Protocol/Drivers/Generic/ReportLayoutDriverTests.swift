@@ -37,6 +37,8 @@ func inputLayout(_ json: String) throws -> ControllerInputLayout {
 
 @Suite
 struct ReportLayoutDriverTests {
+  static let family = PhysicalProtocolID.hidReportLayout
+
 
   // MARK: - Catalog rows
 

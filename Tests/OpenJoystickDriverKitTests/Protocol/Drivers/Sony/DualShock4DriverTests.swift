@@ -80,4 +80,6 @@ func makeDS4BluetoothReport(
   return Data(report)
 }
 
-struct DualShock4DriverTests {}
+struct DualShock4DriverTests {
+  static let family = PhysicalProtocolID.sonyDualShock4
+}
