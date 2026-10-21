@@ -37,6 +37,7 @@ enum MainMenuAction: Hashable, Sendable {
   case selectAll
 
   case showArea(MainWindowArea)
+  case toggleToolbar
   case toggleSidebar
   case toggleFullScreen
 
@@ -163,6 +164,7 @@ struct MainMenuState: Equatable, Sendable {
   var hasMainWindow = false
   var hasSettingsWindow = false
   var isFullScreen = false
+  var isToolbarVisible = true
   var isSidebarVisible = true
 
   /// The controller the Controller and Profile menus act on: the one selected in the Controllers

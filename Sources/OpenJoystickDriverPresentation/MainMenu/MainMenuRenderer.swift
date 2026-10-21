@@ -136,6 +136,7 @@
       case .hide: return #selector(NSApplication.hide(_:))
       case .hideOthers: return #selector(NSApplication.hideOtherApplications(_:))
       case .showAll: return #selector(NSApplication.unhideAllApplications(_:))
+      case .toggleToolbar: return #selector(NSWindow.toggleToolbarShown(_:))
       case .toggleSidebar: return #selector(NSSplitViewController.toggleSidebar(_:))
       case .toggleFullScreen: return #selector(NSWindow.toggleFullScreen(_:))
       case .minimize: return #selector(NSWindow.performMiniaturize(_:))

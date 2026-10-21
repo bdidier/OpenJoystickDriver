@@ -1630,6 +1630,8 @@
 "mainMenu.view.exitFullScreen" = "結束全螢幕";
 "mainMenu.view.showSidebar" = "顯示側邊欄";
 "mainMenu.view.hideSidebar" = "隱藏側邊欄";
+"mainMenu.view.showToolbar" = "顯示工具列";
+"mainMenu.view.hideToolbar" = "隱藏工具列";
 "mainMenu.controller" = "控制器";
 "mainMenu.controller.suspend" = "暫停";
 "mainMenu.controller.resume" = "繼續";
@@ -1690,7 +1692,7 @@
 "menuBar.profiles" = "設定檔";
 "menuBar.activate" = "啟用";
 "menuBar.deactivate" = "停用";
-"menuBar.grantAccess" = "授予取用權限…";
+"menuBar.grantAccess" = "授予取用權限";
 "menuBar.openWindow" = "開啟視窗";
 "menuBar.help" = "輔助說明";
 "menuBar.activityLog" = "活動記錄檔";

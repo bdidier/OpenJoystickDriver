@@ -1630,6 +1630,8 @@
 "mainMenu.view.exitFullScreen" = "退出全屏幕";
 "mainMenu.view.showSidebar" = "显示边栏";
 "mainMenu.view.hideSidebar" = "隐藏边栏";
+"mainMenu.view.showToolbar" = "显示工具栏";
+"mainMenu.view.hideToolbar" = "隐藏工具栏";
 "mainMenu.controller" = "控制器";
 "mainMenu.controller.suspend" = "暂停";
 "mainMenu.controller.resume" = "恢复";
@@ -1690,7 +1692,7 @@
 "menuBar.profiles" = "配置文件";
 "menuBar.activate" = "启用";
 "menuBar.deactivate" = "停用";
-"menuBar.grantAccess" = "授予访问权限…";
+"menuBar.grantAccess" = "授予访问权限";
 "menuBar.openWindow" = "打开窗口";
 "menuBar.help" = "帮助";
 "menuBar.activityLog" = "活动日志";

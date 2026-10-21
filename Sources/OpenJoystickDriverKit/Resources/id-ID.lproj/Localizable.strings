@@ -1630,6 +1630,8 @@
 "mainMenu.view.exitFullScreen" = "Keluar dari Layar Penuh";
 "mainMenu.view.showSidebar" = "Tampilkan Bar Samping";
 "mainMenu.view.hideSidebar" = "Sembunyikan Bar Samping";
+"mainMenu.view.showToolbar" = "Tampilkan Bar Alat";
+"mainMenu.view.hideToolbar" = "Sembunyikan Bar Alat";
 "mainMenu.controller" = "Pengontrol";
 "mainMenu.controller.suspend" = "Jeda";
 "mainMenu.controller.resume" = "Lanjutkan";
@@ -1690,7 +1692,7 @@
 "menuBar.profiles" = "Profil";
 "menuBar.activate" = "Aktifkan";
 "menuBar.deactivate" = "Nonaktifkan";
-"menuBar.grantAccess" = "Beri Akses…";
+"menuBar.grantAccess" = "Beri Akses";
 "menuBar.openWindow" = "Buka Jendela";
 "menuBar.help" = "Bantuan";
 "menuBar.activityLog" = "Log Aktivitas";

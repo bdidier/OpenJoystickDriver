@@ -1741,6 +1741,8 @@
 "mainMenu.view.exitFullScreen" = "Vollbildmodus beenden";
 "mainMenu.view.showSidebar" = "Seitenleiste einblenden";
 "mainMenu.view.hideSidebar" = "Seitenleiste ausblenden";
+"mainMenu.view.showToolbar" = "Tool-Leiste einblenden";
+"mainMenu.view.hideToolbar" = "Tool-Leiste ausblenden";
 "mainMenu.controller" = "Controller";
 "mainMenu.controller.suspend" = "Pausieren";
 "mainMenu.controller.resume" = "Fortsetzen";
@@ -1801,7 +1803,7 @@
 "menuBar.profiles" = "Profile";
 "menuBar.activate" = "Aktivieren";
 "menuBar.deactivate" = "Deaktivieren";
-"menuBar.grantAccess" = "Zugriff erteilen…";
+"menuBar.grantAccess" = "Zugriff erteilen";
 "menuBar.openWindow" = "Fenster öffnen";
 "menuBar.help" = "Hilfe";
 "menuBar.activityLog" = "Aktivitätsprotokoll";

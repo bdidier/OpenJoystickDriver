@@ -1630,6 +1630,8 @@
 "mainMenu.view.exitFullScreen" = "전체 화면 종료";
 "mainMenu.view.showSidebar" = "사이드바 보기";
 "mainMenu.view.hideSidebar" = "사이드바 가리기";
+"mainMenu.view.showToolbar" = "도구 막대 보기";
+"mainMenu.view.hideToolbar" = "도구 막대 가리기";
 "mainMenu.controller" = "컨트롤러";
 "mainMenu.controller.suspend" = "일시 정지";
 "mainMenu.controller.resume" = "재개";
@@ -1690,7 +1692,7 @@
 "menuBar.profiles" = "프로파일";
 "menuBar.activate" = "활성화";
 "menuBar.deactivate" = "비활성화";
-"menuBar.grantAccess" = "접근 허용…";
+"menuBar.grantAccess" = "접근 허용";
 "menuBar.openWindow" = "윈도우 열기";
 "menuBar.help" = "도움말";
 "menuBar.activityLog" = "활동 로그";

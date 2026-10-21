@@ -1630,6 +1630,8 @@
 "mainMenu.view.exitFullScreen" = "الخروج من وضع ملء الشاشة";
 "mainMenu.view.showSidebar" = "إظهار الشريط الجانبي";
 "mainMenu.view.hideSidebar" = "إخفاء الشريط الجانبي";
+"mainMenu.view.showToolbar" = "إظهار شريط الأدوات";
+"mainMenu.view.hideToolbar" = "إخفاء شريط الأدوات";
 "mainMenu.controller" = "وحدة التحكم";
 "mainMenu.controller.suspend" = "إيقاف مؤقت";
 "mainMenu.controller.resume" = "استئناف";
@@ -1690,7 +1692,7 @@
 "menuBar.profiles" = "ملفات التعريف";
 "menuBar.activate" = "تفعيل";
 "menuBar.deactivate" = "إلغاء التفعيل";
-"menuBar.grantAccess" = "منح الوصول…";
+"menuBar.grantAccess" = "منح الوصول";
 "menuBar.openWindow" = "فتح النافذة";
 "menuBar.help" = "مساعدة";
 "menuBar.activityLog" = "سجل النشاط";

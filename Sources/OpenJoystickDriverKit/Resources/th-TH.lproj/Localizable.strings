@@ -1630,6 +1630,8 @@
 "mainMenu.view.exitFullScreen" = "ออกจากโหมดเต็มหน้าจอ";
 "mainMenu.view.showSidebar" = "แสดงแถบด้านข้าง";
 "mainMenu.view.hideSidebar" = "ซ่อนแถบด้านข้าง";
+"mainMenu.view.showToolbar" = "แสดงแถบเครื่องมือ";
+"mainMenu.view.hideToolbar" = "ซ่อนแถบเครื่องมือ";
 "mainMenu.controller" = "คอนโทรลเลอร์";
 "mainMenu.controller.suspend" = "หยุดชั่วคราว";
 "mainMenu.controller.resume" = "ทำต่อ";
@@ -1690,7 +1692,7 @@
 "menuBar.profiles" = "โปรไฟล์";
 "menuBar.activate" = "เปิดใช้งาน";
 "menuBar.deactivate" = "ปิดใช้งาน";
-"menuBar.grantAccess" = "ให้สิทธิ์การเข้าถึง…";
+"menuBar.grantAccess" = "ให้สิทธิ์การเข้าถึง";
 "menuBar.openWindow" = "เปิดหน้าต่าง";
 "menuBar.help" = "วิธีใช้";
 "menuBar.activityLog" = "บันทึกกิจกรรม";

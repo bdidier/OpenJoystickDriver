@@ -1630,6 +1630,8 @@
 "mainMenu.view.exitFullScreen" = "フルスクリーンを解除";
 "mainMenu.view.showSidebar" = "サイドバーを表示";
 "mainMenu.view.hideSidebar" = "サイドバーを非表示";
+"mainMenu.view.showToolbar" = "ツールバーを表示";
+"mainMenu.view.hideToolbar" = "ツールバーを非表示";
 "mainMenu.controller" = "コントローラ";
 "mainMenu.controller.suspend" = "一時停止";
 "mainMenu.controller.resume" = "再開";
@@ -1690,7 +1692,7 @@
 "menuBar.profiles" = "プロファイル";
 "menuBar.activate" = "有効にする";
 "menuBar.deactivate" = "無効にする";
-"menuBar.grantAccess" = "アクセスを許可…";
+"menuBar.grantAccess" = "アクセスを許可";
 "menuBar.openWindow" = "ウインドウを開く";
 "menuBar.help" = "ヘルプ";
 "menuBar.activityLog" = "アクティビティログ";

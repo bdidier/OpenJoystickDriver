@@ -63,6 +63,20 @@ struct MainMenuModelTests {
   }
 
   @Test
+  func toolbarItemUsesOptionCommandTAndNamesWhatItWillDo() throws {
+    let item = try #require(MainMenuModel.item(for: .toggleToolbar))
+    #expect(item.keyEquivalent == "t")
+    #expect(item.modifiers == [.command, .option])
+    var state = MainMenuState()
+    state.isToolbarVisible = true
+    #expect(MainMenuModel.titleKey(of: item, state: state) == "mainMenu.view.hideToolbar")
+    state.isToolbarVisible = false
+    #expect(MainMenuModel.titleKey(of: item, state: state) == "mainMenu.view.showToolbar")
+    let actions = try section("view").items.map(\.action)
+    #expect(actions.suffix(3) == [.toggleToolbar, .toggleSidebar, .toggleFullScreen])
+  }
+
+  @Test
   func sidebarItemUsesControlCommandSAndNamesWhatItWillDo() throws {
     let item = try #require(MainMenuModel.item(for: .toggleSidebar))
     #expect(item.keyEquivalent == "s")

@@ -34,6 +34,7 @@ enum MainMenuModel {
   static func titleKey(of item: MainMenuItem, state: MainMenuState) -> String {
     guard let alternate = item.alternateTitleKey else { return item.titleKey }
     switch item.action {
+    case .toggleToolbar: return state.isToolbarVisible ? alternate : item.titleKey
     case .toggleSidebar: return state.isSidebarVisible ? alternate : item.titleKey
     case .toggleFullScreen: return state.isFullScreen ? alternate : item.titleKey
     case .suspendOrResumeController:
@@ -252,6 +253,16 @@ enum MainMenuModel {
       )
     } + [
       .separator,
+      entry(
+        "toggleToolbar",
+        "mainMenu.view.showToolbar",
+        alternate: "mainMenu.view.hideToolbar",
+        key: "t",
+        modifiers: [.command, .option],
+        action: .toggleToolbar,
+        enabled: .responderChain,
+        gui: .standardCommand
+      ),
       entry(
         "toggleSidebar",
         "mainMenu.view.showSidebar",

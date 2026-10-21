@@ -20,20 +20,69 @@ struct MainWindowProblemTests {
     )
   }
 
+  private func permissions(_ read: RuntimePermissionState) -> RuntimePermissionLoadState {
+    .available(RuntimePermissionSummary(inputRead: read, inputInject: .granted))
+  }
+
   @Test
   func aHealthyAppHasNoProblemAndNoBanner() {
-    #expect(MainWindowProblem.current(status: status(inputRead: .granted), driver: .active).isEmpty)
-    #expect(MainWindowProblem.current(status: .loading, driver: .checking).isEmpty)
+    #expect(
+      MainWindowProblem.current(
+        permissions: permissions(.granted),
+        status: status(inputRead: .granted),
+        driver: .active
+      ).isEmpty
+    )
+    #expect(
+      MainWindowProblem.current(permissions: .loading, status: .loading, driver: .checking)
+        .isEmpty
+    )
+  }
+
+  @Test
+  func theAccessProblemFollowsTheSameRuleAsTheStatusItemAndTheAccessArea() {
+    for (reading, payload) in [
+      (permissions(.granted), status(inputRead: .denied)),
+      (permissions(.denied), status(inputRead: .granted)),
+      (permissions(.unknown), .loading),
+      (.unavailable, .unavailable("down")),
+    ] as [(RuntimePermissionLoadState, RuntimeStatusState)] {
+      let expected = AccessReadiness.hasMissingPermission(
+        permissionState: reading,
+        statusState: payload
+      )
+      let problems = MainWindowProblem.current(
+        permissions: reading,
+        status: payload,
+        driver: .active
+      )
+      #expect(problems.contains(.accessMissing) == expected)
+    }
+    #expect(
+      !MainWindowProblem.current(
+        permissions: permissions(.granted),
+        status: status(inputRead: .denied),
+        driver: .active
+      ).contains(.accessMissing)
+    )
   }
 
   @Test
   func problemsRunFromServiceToDriverToAccess() {
     #expect(
-      MainWindowProblem.current(status: .unavailable("down"), driver: .awaitingApproval)
+      MainWindowProblem.current(
+        permissions: .unavailable,
+        status: .unavailable("down"),
+        driver: .awaitingApproval
+      )
         == [.serviceUnavailable("down"), .driver(.awaitingApproval)]
     )
     #expect(
-      MainWindowProblem.current(status: status(inputRead: .denied), driver: .failed)
+      MainWindowProblem.current(
+        permissions: permissions(.denied),
+        status: status(inputRead: .denied),
+        driver: .failed
+      )
         == [.driver(.failed), .accessMissing]
     )
   }

@@ -1630,6 +1630,8 @@
 "mainMenu.view.exitFullScreen" = "Выйти из полноэкранного режима";
 "mainMenu.view.showSidebar" = "Показать боковое меню";
 "mainMenu.view.hideSidebar" = "Скрыть боковое меню";
+"mainMenu.view.showToolbar" = "Показать панель инструментов";
+"mainMenu.view.hideToolbar" = "Скрыть панель инструментов";
 "mainMenu.controller" = "Контроллер";
 "mainMenu.controller.suspend" = "Приостановить";
 "mainMenu.controller.resume" = "Возобновить";
@@ -1690,7 +1692,7 @@
 "menuBar.profiles" = "Профили";
 "menuBar.activate" = "Активировать";
 "menuBar.deactivate" = "Деактивировать";
-"menuBar.grantAccess" = "Предоставить доступ…";
+"menuBar.grantAccess" = "Предоставить доступ";
 "menuBar.openWindow" = "Открыть окно";
 "menuBar.help" = "Справка";
 "menuBar.activityLog" = "Журнал активности";

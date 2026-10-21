@@ -1741,6 +1741,8 @@
 "mainMenu.view.exitFullScreen" = "Esci da schermo intero";
 "mainMenu.view.showSidebar" = "Mostra barra laterale";
 "mainMenu.view.hideSidebar" = "Nascondi barra laterale";
+"mainMenu.view.showToolbar" = "Mostra barra degli strumenti";
+"mainMenu.view.hideToolbar" = "Nascondi barra degli strumenti";
 "mainMenu.controller" = "Controller";
 "mainMenu.controller.suspend" = "Sospendi";
 "mainMenu.controller.resume" = "Riprendi";
@@ -1801,7 +1803,7 @@
 "menuBar.profiles" = "Profili";
 "menuBar.activate" = "Attiva";
 "menuBar.deactivate" = "Disattiva";
-"menuBar.grantAccess" = "Concedi accesso…";
+"menuBar.grantAccess" = "Concedi accesso";
 "menuBar.openWindow" = "Apri finestra";
 "menuBar.help" = "Aiuto";
 "menuBar.activityLog" = "Registro attività";

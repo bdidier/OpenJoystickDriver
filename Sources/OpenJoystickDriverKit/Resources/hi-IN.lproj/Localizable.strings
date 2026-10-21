@@ -1630,6 +1630,8 @@
 "mainMenu.view.exitFullScreen" = "पूर्ण स्क्रीन से बाहर निकलें";
 "mainMenu.view.showSidebar" = "साइडबार दिखाएँ";
 "mainMenu.view.hideSidebar" = "साइडबार छिपाएँ";
+"mainMenu.view.showToolbar" = "टूलबार दिखाएँ";
+"mainMenu.view.hideToolbar" = "टूलबार छिपाएँ";
 "mainMenu.controller" = "कंट्रोलर";
 "mainMenu.controller.suspend" = "स्थगित करें";
 "mainMenu.controller.resume" = "फिर शुरू करें";
@@ -1690,7 +1692,7 @@
 "menuBar.profiles" = "प्रोफ़ाइल";
 "menuBar.activate" = "सक्रिय करें";
 "menuBar.deactivate" = "निष्क्रिय करें";
-"menuBar.grantAccess" = "ऐक्सेस दें…";
+"menuBar.grantAccess" = "ऐक्सेस दें";
 "menuBar.openWindow" = "विंडो खोलें";
 "menuBar.help" = "सहायता";
 "menuBar.activityLog" = "गतिविधि लॉग";

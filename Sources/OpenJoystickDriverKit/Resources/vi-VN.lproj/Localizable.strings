@@ -1630,6 +1630,8 @@
 "mainMenu.view.exitFullScreen" = "Thoát chế độ toàn màn hình";
 "mainMenu.view.showSidebar" = "Hiện thanh bên";
 "mainMenu.view.hideSidebar" = "Ẩn thanh bên";
+"mainMenu.view.showToolbar" = "Hiện thanh công cụ";
+"mainMenu.view.hideToolbar" = "Ẩn thanh công cụ";
 "mainMenu.controller" = "Bộ điều khiển";
 "mainMenu.controller.suspend" = "Tạm dừng";
 "mainMenu.controller.resume" = "Tiếp tục";
@@ -1690,7 +1692,7 @@
 "menuBar.profiles" = "Cấu hình";
 "menuBar.activate" = "Kích hoạt";
 "menuBar.deactivate" = "Hủy kích hoạt";
-"menuBar.grantAccess" = "Cấp quyền truy cập…";
+"menuBar.grantAccess" = "Cấp quyền truy cập";
 "menuBar.openWindow" = "Mở cửa sổ";
 "menuBar.help" = "Trợ giúp";
 "menuBar.activityLog" = "Nhật ký hoạt động";

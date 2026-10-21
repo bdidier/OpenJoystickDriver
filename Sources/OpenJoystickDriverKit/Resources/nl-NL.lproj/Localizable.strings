@@ -1741,6 +1741,8 @@
 "mainMenu.view.exitFullScreen" = "Verlaat volledig scherm";
 "mainMenu.view.showSidebar" = "Toon navigatiekolom";
 "mainMenu.view.hideSidebar" = "Verberg navigatiekolom";
+"mainMenu.view.showToolbar" = "Toon gereedschapsbalk";
+"mainMenu.view.hideToolbar" = "Verberg gereedschapsbalk";
 "mainMenu.controller" = "Controller";
 "mainMenu.controller.suspend" = "Onderbreek";
 "mainMenu.controller.resume" = "Hervat";
@@ -1801,7 +1803,7 @@
 "menuBar.profiles" = "Profielen";
 "menuBar.activate" = "Activeer";
 "menuBar.deactivate" = "Deactiveer";
-"menuBar.grantAccess" = "Verleen toegang…";
+"menuBar.grantAccess" = "Verleen toegang";
 "menuBar.openWindow" = "Open venster";
 "menuBar.help" = "Help";
 "menuBar.activityLog" = "Activiteitenlogboek";

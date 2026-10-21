@@ -1630,6 +1630,8 @@
 "mainMenu.view.exitFullScreen" = "Tam Ekrandan Çık";
 "mainMenu.view.showSidebar" = "Kenar Çubuğunu Göster";
 "mainMenu.view.hideSidebar" = "Kenar Çubuğunu Gizle";
+"mainMenu.view.showToolbar" = "Araç Çubuğunu Göster";
+"mainMenu.view.hideToolbar" = "Araç Çubuğunu Gizle";
 "mainMenu.controller" = "Kontrolcü";
 "mainMenu.controller.suspend" = "Askıya Al";
 "mainMenu.controller.resume" = "Sürdür";
@@ -1690,7 +1692,7 @@
 "menuBar.profiles" = "Profiller";
 "menuBar.activate" = "Etkinleştir";
 "menuBar.deactivate" = "Devre Dışı Bırak";
-"menuBar.grantAccess" = "Erişim Ver…";
+"menuBar.grantAccess" = "Erişim Ver";
 "menuBar.openWindow" = "Pencereyi Aç";
 "menuBar.help" = "Yardım";
 "menuBar.activityLog" = "Etkinlik Günlüğü";
