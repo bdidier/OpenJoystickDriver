@@ -45,6 +45,35 @@ struct CLIOutputValueSpellingTests {
   }
 
   @Test
+  func notPublishedReasonsAreUpperCamelCaseAndRefuseEarlierSpellingsAndFailureText() throws {
+    #expect(
+      ApplicationServicePublicationStatus.NotPublishedReason.allCases.map(\.rawValue) == [
+        "OutputDisabled", "SystemGamepad", "NativeHIDPassThrough", "UpstreamVirtualDevice",
+        "SessionSuspended", "NoVirtualProfile", "Suppressed", "NoInputYet",
+      ]
+    )
+    for raw in [
+      "outputDisabled", "systemGamepad", "nativeHIDPassThrough", "native-hid-pass-through",
+      "NativeHidPassThrough", "noInputYet", "send failed", "",
+    ] {
+      #expect(!Self.decodes(ApplicationServicePublicationStatus.NotPublishedReason.self, raw))
+      let json = #"{"state":"NotPublished","reason":"\#(raw)"}"#
+      #expect(
+        (try? JSONDecoder().decode(ApplicationServicePublicationStatus.self, from: Data(json.utf8)))
+          == nil,
+        "\(raw)"
+      )
+    }
+    let failed = ApplicationServicePublicationStatus(state: .failed, failure: "send failed")
+    let decoded = try JSONDecoder().decode(
+      ApplicationServicePublicationStatus.self,
+      from: JSONEncoder().encode(failed)
+    )
+    #expect(decoded == failed)
+    #expect(decoded.reason == nil)
+  }
+
+  @Test
   func stateValuesAreUpperCamelCase() {
     #expect(ApplicationServicePublicationStatus.State.notPublished.rawValue == "NotPublished")
     #expect(OutputDisabledReason.noVirtualProfile.rawValue == "NoVirtualProfile")

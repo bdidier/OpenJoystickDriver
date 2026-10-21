@@ -874,7 +874,45 @@
           "type": "object",
           "required": ["state"],
           "additionalProperties": false,
+          "allOf": [
+            {
+              "if": {
+                "properties": { "state": { "const": "NotPublished" } }
+              },
+              "then": {
+                "required": ["reason"],
+                "not": { "required": ["failure"] }
+              }
+            },
+            {
+              "if": {
+                "properties": { "state": { "const": "Failed" } }
+              },
+              "then": {
+                "required": ["failure"],
+                "not": { "required": ["reason"] }
+              }
+            },
+            {
+              "if": {
+                "properties": { "state": { "const": "Published" } }
+              },
+              "then": {
+                "not": {
+                  "anyOf": [
+                    { "required": ["reason"] },
+                    { "required": ["failure"] }
+                  ]
+                }
+              }
+            }
+          ],
           "properties": {
+            "failure": {
+              "description": "The text of the failed send. Present exactly when the state is Failed.",
+              "type": "string",
+              "minLength": 1
+            },
             "lastAttemptedNanoseconds": {
               "description": "System uptime of the last send to the virtual device.",
               "type": "integer",
@@ -886,7 +924,17 @@
               "minimum": 0
             },
             "reason": {
-              "type": "string"
+              "description": "Why no virtual device publishes the controller. Present exactly when the state is NotPublished.",
+              "enum": [
+                "OutputDisabled",
+                "SystemGamepad",
+                "NativeHIDPassThrough",
+                "UpstreamVirtualDevice",
+                "SessionSuspended",
+                "NoVirtualProfile",
+                "Suppressed",
+                "NoInputYet"
+              ]
             },
             "state": {
               "enum": ["Published", "NotPublished", "Failed"]

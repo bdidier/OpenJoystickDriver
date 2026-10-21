@@ -193,7 +193,8 @@ struct ControllerShowCommand: AsyncParsableCommand {
     }
     if let publication = detail.publication {
       rows.append([
-        "publication", CommandLineName.kebab(publication.state), publication.reason ?? "",
+        "publication", CommandLineName.kebab(publication.state),
+        publication.reason.map(CommandLineName.kebab) ?? publication.failure ?? "",
       ])
     }
     rows += detail.outputChecks.map { ["output-check", $0.id, $0.command] }
@@ -321,7 +322,8 @@ struct ControllerShowCommand: AsyncParsableCommand {
         (
           CLILocalized.text("cli.controller.show.label.publication"),
           CommandLineName.kebab(publication.state)
-            + (publication.reason.map { " (\($0))" } ?? "")
+            + (publication.reason.map { " (\(CommandLineName.kebab($0)))" }
+              ?? publication.failure.map { " (\($0))" } ?? "")
         )
       )
     }

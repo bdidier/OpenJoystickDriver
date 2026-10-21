@@ -51,7 +51,7 @@ struct SubcommandDescriptionTests {
   ) -> String {
     let list = requests.joined(separator: ",")
     return
-      #"{"reportId": 1, "counterModulus": \#(modulus), "requests": [\#(list)], "#
+      #"{"reportID": 1, "counterModulus": \#(modulus), "requests": [\#(list)], "#
       + #""playerIndicator": \#(Self.indicator)}"#
   }
 
@@ -115,11 +115,11 @@ struct SubcommandDescriptionTests {
       plan([]),
       plan(Array(repeating: Self.plain, count: 17)),
       plan([Self.factoryRead, Self.factoryRead]),
-      #"{"reportId": 1, "counterModulus": 16, "playerIndicator": \#(Self.indicator)}"#,
-      #"{"reportId": 1, "counterModulus": 16, "requests": [\#(Self.plain)]}"#,
+      #"{"reportID": 1, "counterModulus": 16, "playerIndicator": \#(Self.indicator)}"#,
+      #"{"reportID": 1, "counterModulus": 16, "requests": [\#(Self.plain)]}"#,
       #"{"counterModulus": 16, "requests": [\#(Self.plain)], "#
         + #""playerIndicator": \#(Self.indicator)}"#,
-      #"{"reportId": 1, "counterModulus": 16, "requests": [\#(Self.plain)], "#
+      #"{"reportID": 1, "counterModulus": 16, "requests": [\#(Self.plain)], "#
         + #""playerIndicator": \#(Self.indicator), "extra": 1}"#,
     ]
     for subcommands in bad {
@@ -148,7 +148,7 @@ struct SubcommandDescriptionTests {
     ]
     for indicator in bad {
       let subcommands =
-        #"{"reportId": 1, "counterModulus": 16, "requests": [\#(Self.plain)], "#
+        #"{"reportID": 1, "counterModulus": 16, "requests": [\#(Self.plain)], "#
         + #""playerIndicator": \#(indicator)}"#
       #expect(
         rejection(family: .nintendoSwitch1, switch1(subcommands))?.code

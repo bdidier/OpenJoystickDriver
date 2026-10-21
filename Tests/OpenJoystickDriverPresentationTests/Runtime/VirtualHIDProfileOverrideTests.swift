@@ -326,7 +326,7 @@ struct VirtualHIDProfileOverrideTests {
     )
     sixaxis.publication = ApplicationServicePublicationStatus(
       state: .notPublished,
-      reason: "systemGamepad"
+      reason: .systemGamepad
     )
 
     #expect(sixaxis.publishedIdentityPresentation == .playstation)
@@ -343,8 +343,8 @@ struct VirtualHIDProfileOverrideTests {
     )
     let cases: [(ApplicationServicePublicationStatus?, published: Bool)] = [
       (nil, false),
-      (ApplicationServicePublicationStatus(state: .notPublished, reason: "noInputYet"), false),
-      (ApplicationServicePublicationStatus(state: .failed, reason: "send failed"), false),
+      (ApplicationServicePublicationStatus(state: .notPublished, reason: .noInputYet), false),
+      (ApplicationServicePublicationStatus(state: .failed, failure: "send failed"), false),
       (ApplicationServicePublicationStatus(state: .published, target: .sdlCompatible), true),
     ]
     for (publication, published) in cases {

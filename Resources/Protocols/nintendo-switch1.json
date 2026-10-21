@@ -104,7 +104,7 @@
         }
       ],
       "subcommands": {
-        "reportId": 1,
+        "reportID": 1,
         "counterModulus": 16,
         "playerIndicator": {
           "subcommand": 48,

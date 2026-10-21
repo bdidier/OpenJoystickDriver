@@ -121,7 +121,10 @@ struct ControllerShowReport: Encodable, Equatable {
   /// Whether a virtual device publishes the controller, and why not.
   struct Publication: Encodable, Equatable {
     let state: String
+    /// Set exactly when `state` is `NotPublished`.
     let reason: String?
+    /// Set exactly when `state` is `Failed`.
+    let failure: String?
     let target: String?
     /// System uptime in nanoseconds of the last send to the virtual device.
     let lastAttemptedNanoseconds: UInt64?
@@ -242,7 +245,8 @@ struct ControllerShowReport: Encodable, Equatable {
       publication: device.publication.map {
         Publication(
           state: $0.state.rawValue,
-          reason: $0.reason,
+          reason: $0.reason?.rawValue,
+          failure: $0.failure,
           target: $0.target?.rawValue,
           lastAttemptedNanoseconds: $0.lastAttemptedNanoseconds,
           lastCompletedNanoseconds: $0.lastCompletedNanoseconds

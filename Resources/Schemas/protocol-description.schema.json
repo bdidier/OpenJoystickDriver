@@ -1600,9 +1600,9 @@
       "description": "The Switch 1 subcommand report: its id, the modulus of the rolling packet counter that every output report of the family shares (the counter starts at 0 and wraps to 0 after modulus - 1), the requests sent in order at startup and the player-indicator subcommand. A startup recovery round re-sends the SPI reads whose reply has not arrived.",
       "type": "object",
       "additionalProperties": false,
-      "required": ["reportId", "counterModulus", "requests", "playerIndicator"],
+      "required": ["reportID", "counterModulus", "requests", "playerIndicator"],
       "properties": {
-        "reportId": {
+        "reportID": {
           "$ref": "#/$defs/byte"
         },
         "counterModulus": {

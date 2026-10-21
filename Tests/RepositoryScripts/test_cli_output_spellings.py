@@ -77,6 +77,16 @@ VALUES: dict[str, tuple[str, ...]] = {
         "NotPublished",
         "Failed",
     ),
+    f"{D}/controllerShow/properties/publication/properties/reason": (
+        "OutputDisabled",
+        "SystemGamepad",
+        "NativeHIDPassThrough",
+        "UpstreamVirtualDevice",
+        "SessionSuspended",
+        "NoVirtualProfile",
+        "Suppressed",
+        "NoInputYet",
+    ),
     f"{D}/controllerShow/properties/record/properties/layer": LAYERS,
     f"{D}/controllerShow/properties/serving/properties/reason": (
         "UserDisabled",
@@ -212,6 +222,25 @@ class CliOutputSpellingTests(unittest.TestCase):
                 },
             )
         )
+
+    def test_a_publication_carries_a_reason_or_a_failure_text_by_state(self) -> None:
+        publication = "/$defs/controllerShow/properties/publication"
+        cases = (
+            ({"state": "Published"}, True),
+            ({"state": "NotPublished", "reason": "NoInputYet"}, True),
+            ({"state": "Failed", "failure": "send failed"}, True),
+            ({"state": "NotPublished"}, False),
+            ({"state": "NotPublished", "reason": "send failed"}, False),
+            ({"state": "NotPublished", "reason": "NoInputYet", "failure": "x"}, False),
+            ({"state": "Failed"}, False),
+            ({"state": "Failed", "failure": ""}, False),
+            ({"state": "Failed", "reason": "NoInputYet", "failure": "x"}, False),
+            ({"state": "Published", "reason": "NoInputYet"}, False),
+            ({"state": "Published", "failure": "x"}, False),
+        )
+        for value, valid in cases:
+            with self.subTest(value=value):
+                self.assertEqual(self.accepts(publication, value), valid)
 
     def test_acronym_values_take_the_acronym_in_upper_case(self) -> None:
         ownership = "/$defs/controllerShow/properties/ownership/properties"

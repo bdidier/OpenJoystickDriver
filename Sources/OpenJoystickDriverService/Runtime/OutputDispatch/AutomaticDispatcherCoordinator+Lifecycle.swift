@@ -134,17 +134,18 @@ extension AutomaticDispatcherCoordinator {
       let entry = element.value
       guard let target = entry.target ?? entry.context?.target else { return }
       let state: ApplicationServicePublicationStatus.State
-      let reason: String?
-      if let failure = entry.lastFailure {
-        (state, reason) = (.failed, failure)
+      let reason: ApplicationServicePublicationStatus.NotPublishedReason?
+      if entry.lastFailure != nil {
+        (state, reason) = (.failed, nil)
       } else if entry.installed != nil {
         (state, reason) = (.published, nil)
       } else {
-        (state, reason) = (.notPublished, suppressed ? "suppressed" : "noInputYet")
+        (state, reason) = (.notPublished, suppressed ? .suppressed : .noInputYet)
       }
       statuses[element.key] = ApplicationServicePublicationStatus(
         state: state,
         reason: reason,
+        failure: entry.lastFailure,
         target: target,
         lastAttemptedNanoseconds: entry.lastAttemptedSend,
         lastCompletedNanoseconds: entry.lastCompletedSend

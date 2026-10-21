@@ -299,7 +299,7 @@ struct ControllerCommandTests {
     var device = ApplicationServiceDeviceDescription.fixture(id: "pad-1")
     device.publication = ApplicationServicePublicationStatus(
       state: .notPublished,
-      reason: "systemGamepad",
+      reason: .systemGamepad,
       target: .sdlCompatible
     )
     let service = try FakeService(devices: [device])
@@ -312,10 +312,10 @@ struct ControllerCommandTests {
     let controller = try json.json()
     let publication = try #require(controller["publication"] as? [String: Any])
     #expect(publication["state"] as? String == "NotPublished")
-    #expect(publication["reason"] as? String == "systemGamepad")
+    #expect(publication["reason"] as? String == "SystemGamepad")
     #expect(publication["target"] as? String == VirtualHIDProfileID.sdlCompatible.rawValue)
-    #expect(plain.standardOutput.contains("\npublication\tnot-published\tsystemGamepad\n"))
-    #expect(Self.rows(human, endingIn: "not-published (systemGamepad)").count == 1)
+    #expect(plain.standardOutput.contains("\npublication\tnot-published\tsystem-gamepad\n"))
+    #expect(Self.rows(human, endingIn: "not-published (system-gamepad)").count == 1)
   }
 
   @Test

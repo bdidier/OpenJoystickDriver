@@ -199,8 +199,11 @@ enum ControllerDetailFacts {
 
   static func publicationText(_ publication: ApplicationServicePublicationStatus) -> String {
     let state = OJDLocalized.string(publicationKey(publication.state))
-    guard let reason = publication.reason else { return state }
-    return "\(state) (\(reason))"
+    guard
+      let detail = publication.reason.map({ CommandLineName.kebab($0.rawValue) })
+        ?? publication.failure
+    else { return state }
+    return "\(state) (\(detail))"
   }
 
   static func serialNumber(_ device: ApplicationServiceDeviceDescription) -> OJDValue {

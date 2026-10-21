@@ -81,7 +81,7 @@ public struct ServingInput: Equatable, Sendable {
       observation: device.physicalOwnership,
       server: device.recordServer,
       accessRoute: device.recordAccessRoute,
-      outputEnabled: outputEnabled ?? (device.publication?.reason != "outputDisabled"),
+      outputEnabled: outputEnabled ?? (device.publication?.reason != .outputDisabled),
       controls: device.capabilities.controls,
       override: override,
       allowance: device.physicalOutputCapabilities

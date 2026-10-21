@@ -104,16 +104,16 @@ struct ControllerDetailFactsTests {
     let published = ApplicationServicePublicationStatus(state: .published, target: .sdlCompatible)
     let notPublished = ApplicationServicePublicationStatus(
       state: .notPublished,
-      reason: "noInputYet",
+      reason: .noInputYet,
       target: .sdlCompatible
     )
     let failed = ApplicationServicePublicationStatus(
       state: .failed,
-      reason: "send failed",
+      failure: "send failed",
       target: .sdlCompatible
     )
     for (publication, text) in [
-      (published, "Published"), (notPublished, "Not published (noInputYet)"),
+      (published, "Published"), (notPublished, "Not published (no-input-yet)"),
       (failed, "Failed (send failed)"),
     ] {
       let facts = ControllerDetailFacts.general(
@@ -189,8 +189,8 @@ extension ControllerDetailFactsTests {
     )
     #expect(
       ControllerDetailFacts.publicationText(
-        ApplicationServicePublicationStatus(state: .notPublished, reason: "noInputYet")
-      ) == "\(OJDLocalized.string("controllers.publication.notPublished")) (noInputYet)"
+        ApplicationServicePublicationStatus(state: .notPublished, reason: .noInputYet)
+      ) == "\(OJDLocalized.string("controllers.publication.notPublished")) (no-input-yet)"
     )
     #expect(
       ControllerDetailFacts.inputHealthText(device())
