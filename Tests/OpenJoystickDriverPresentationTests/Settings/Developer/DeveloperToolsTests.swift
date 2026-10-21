@@ -50,6 +50,20 @@ struct DeveloperToolsTests {
 
   @Test
   @MainActor
+  func aRefreshShowsLoadingAtOnceEvenFromAReadyState() async {
+    let gateway = GatewayStub(statusPayload: statusPayload(device: device()))
+    let model = DeveloperToolsViewModel(gateway: gateway)
+    await model.refresh()
+    #expect(model.loadState == .ready)
+
+    model.requestRefresh()
+
+    #expect(model.loadState == .loading)
+    await waitUntil("the read ends") { !model.hasActiveOperation }
+  }
+
+  @Test
+  @MainActor
   func reportsTheNoControllerStateExplicitly() async {
     let model = DeveloperToolsViewModel(gateway: GatewayStub())
 

@@ -93,11 +93,15 @@
       return "OpenJoystickDriver-packets-\(identity).json"
     }
 
+    /// Starts a read and shows it as loading at once, so the view never shows the previous state
+    /// for the turn before the read begins.
     func requestRefresh() {
+      loadState = .loading
       replaceOperation { model, generation in await model.performRefresh(generation: generation) }
     }
 
     func refresh() async {
+      loadState = .loading
       await replaceOperation { model, generation in
         await model.performRefresh(generation: generation)
       }.value

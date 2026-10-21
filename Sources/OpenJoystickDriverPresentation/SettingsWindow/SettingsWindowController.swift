@@ -45,11 +45,10 @@
     private static let toolbarIdentifier = NSToolbar.Identifier(
       "OpenJoystickDriver.SettingsToolbar"
     )
-    /// The space left between a tall Settings window and the edges of the screen's visible area.
-    private static let screenMargin = 40.0
     private let panes: SettingsWindowPaneModel
     let developerTools: DeveloperToolsViewModel
     private let preferences: SettingsPreferencesModel
+    private let commandLineTool: CommandLineToolModel
     private var isShown = false
     private var developerToolsAreRunning = false
     private weak var toolbar: NSToolbar?
@@ -73,6 +72,7 @@
     ) {
       self.visibilityChanged = visibilityChanged
       self.preferences = preferences
+      self.commandLineTool = commandLineTool
       panes = SettingsWindowPaneModel()
       developerTools = DeveloperToolsViewModel(gateway: gateway)
       let developerTools = developerTools
@@ -102,15 +102,24 @@
       let hostingView = NSHostingView(
         rootView: SettingsWindowContent(panes: panes, content: makeContent)
       )
-      // The window height follows the pane through `paneChanged`, capped to the screen; the
-      // hosting view must not impose the content's ideal height as the window's minimum.
+      // The window height follows the pane through `paneChanged`, capped to the screen. The
+      // hosting view sits in a container that positions it by autoresizing and has no
+      // constraints, so on every macOS version the content's ideal height cannot become the
+      // window's minimum size; macOS 13 and later also stop the hosting view from sizing itself.
       if #available(macOS 13, *) { hostingView.sizingOptions = [] }
-      window.contentView = hostingView
+      let container = NSView(
+        frame: NSRect(x: 0, y: 0, width: SettingsWindowPane.contentWidth, height: 0)
+      )
+      hostingView.translatesAutoresizingMaskIntoConstraints = true
+      hostingView.frame = container.bounds
+      hostingView.autoresizingMask = [.width, .height]
+      container.addSubview(hostingView)
+      window.contentView = container
       super.init(window: window)
       window.delegate = self
       configureToolbar(on: window)
-      window.center()
       paneChanged(animated: false)
+      window.center()
       fitting = RunLoopCoalescer { [weak self] in
         self?.syncDeveloperTools()
         guard self?.window?.isVisible == true else { return }
@@ -123,6 +132,11 @@
         developerTools.objectWillChange.sink { [weak self] _ in self?.fitting?.schedule() },
         commandLineTool.objectWillChange.sink { [weak self] _ in self?.fitting?.schedule() },
         runtime.objectWillChange.sink { [weak self] _ in self?.fitting?.schedule() },
+        NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)
+          .sink { [weak self] _ in self?.refreshPaneState() },
+        NotificationCenter.default.publisher(
+          for: NSApplication.didChangeScreenParametersNotification
+        ).sink { [weak self] _ in self?.paneChanged(animated: false) },
       ]
     }
 
@@ -136,15 +150,31 @@
       }
       isShown = true
       syncDeveloperTools()
+      refreshPaneState()
       visibilityChanged(true)
       window?.makeKeyAndOrderFront(nil)
       NSApplication.shared.activate(ignoringOtherApps: true)
     }
 
+    /// Fits the window to the screen it moved to, whose visible area may be smaller.
+    func windowDidChangeScreen(_ notification: Notification) { paneChanged(animated: false) }
+
     func windowWillClose(_ notification: Notification) {
       isShown = false
       syncDeveloperTools()
       visibilityChanged(false)
+    }
+
+    /// Reads the state the selected pane shows from the system: the notification permission for
+    /// Notifications, the command-line tool link for Advanced. The window drives these reads, so
+    /// the offscreen view that measures a pane never starts them.
+    func refreshPaneState() {
+      guard isShown else { return }
+      switch panes.selected {
+      case .general: break
+      case .notifications: preferences.refreshNotificationAuthorization()
+      case .advanced: commandLineTool.refresh()
+      }
     }
 
     /// Reads the controller diagnostics while the window shows Advanced with developer tools on,
@@ -177,11 +207,14 @@
       )
       let fitting = fittingHeight(of: panes.selected)
       let chrome = window.frame.height - window.contentRect(forFrameRect: window.frame).height
-      let available =
+      let visibleHeight =
         (window.screen ?? NSScreen.main)?.visibleFrame.height ?? .greatestFiniteMagnitude
       let size = SettingsWindowPane.contentSize(
         fittingHeight: fitting,
-        availableHeight: available - chrome - Self.screenMargin
+        availableHeight: SettingsWindowPane.availableContentHeight(
+          visibleHeight: visibleHeight,
+          chromeHeight: chrome
+        )
       )
       guard
         window.contentRect(forFrameRect: window.frame).size
@@ -215,6 +248,7 @@
       else { return }
       panes.select(pane)
       syncDeveloperTools()
+      refreshPaneState()
       paneChanged(animated: true)
     }
   }
