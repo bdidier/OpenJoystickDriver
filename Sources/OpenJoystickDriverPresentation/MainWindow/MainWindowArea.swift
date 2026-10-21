@@ -1,9 +1,8 @@
 import Foundation
 
-/// The six areas of the main window, in toolbar and sidebar order.
-/// `Command-1` to `Command-6` select them in this order.
+/// The five areas of the main window, in sidebar order. `Command-1` to `Command-5` select them
+/// in this order. The window opens on Controllers until another area was chosen.
 public enum MainWindowArea: String, CaseIterable, Identifiable, Hashable, Sendable {
-  case status
   case controllers
   case profiles
   case library
@@ -15,24 +14,17 @@ public enum MainWindowArea: String, CaseIterable, Identifiable, Hashable, Sendab
   /// The key equivalent digit that selects this area with `Command`.
   public var keyEquivalent: String {
     switch self {
-    case .status: return "1"
-    case .controllers: return "2"
-    case .profiles: return "3"
-    case .library: return "4"
-    case .access: return "5"
-    case .activity: return "6"
+    case .controllers: return "1"
+    case .profiles: return "2"
+    case .library: return "3"
+    case .access: return "4"
+    case .activity: return "5"
     }
   }
 
-  /// Localization key of the area's title, also the window title while it is selected.
-  public var titleKey: String { "area.\(rawValue).title" }
-
-  /// Localization key of the area's accessibility label.
-  public var accessibilityKey: String { "a11y.area.\(rawValue)" }
-
+  /// SF Symbol of the area's sidebar row, shown before its title.
   public var symbolName: String {
     switch self {
-    case .status: return "gauge"
     case .controllers: return "gamecontroller"
     case .profiles: return "slider.horizontal.3"
     case .library: return "books.vertical"
@@ -40,6 +32,25 @@ public enum MainWindowArea: String, CaseIterable, Identifiable, Hashable, Sendab
     case .activity: return "list.bullet.rectangle"
     }
   }
+
+  /// Localization key of the area's title: its sidebar row, its View menu item and the window
+  /// title while it is selected.
+  public var titleKey: String { "area.\(rawValue).title" }
+
+  /// Whether the area shows a content list column between the sidebar and its detail.
+  public var hasListColumn: Bool {
+    switch self {
+    case .controllers, .profiles, .library: return true
+    case .access, .activity: return false
+    }
+  }
+}
+
+/// The half of a list and detail area that a view renders: the content list column or the
+/// detail column.
+enum MainWindowColumn {
+  case list
+  case detail
 }
 
 /// Opens the main window on an area. The status item, the main menu and other windows reach

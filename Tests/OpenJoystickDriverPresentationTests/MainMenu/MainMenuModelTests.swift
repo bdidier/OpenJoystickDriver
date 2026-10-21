@@ -63,6 +63,18 @@ struct MainMenuModelTests {
   }
 
   @Test
+  func sidebarItemUsesControlCommandSAndNamesWhatItWillDo() throws {
+    let item = try #require(MainMenuModel.item(for: .toggleSidebar))
+    #expect(item.keyEquivalent == "s")
+    #expect(item.modifiers == [.command, .control])
+    var state = MainMenuState()
+    state.isSidebarVisible = true
+    #expect(MainMenuModel.titleKey(of: item, state: state) == "mainMenu.view.hideSidebar")
+    state.isSidebarVisible = false
+    #expect(MainMenuModel.titleKey(of: item, state: state) == "mainMenu.view.showSidebar")
+  }
+
+  @Test
   func profileAndInstallItemsPerformFlows() throws {
     for action in [
       MainMenuAction.importProfile, .exportProfile, .activateProfile, .installRecordOrMod,
@@ -107,23 +119,10 @@ struct MainMenuModelTests {
       return false
     }
     #expect(areaItems.map(\.action) == MainWindowArea.allCases.map { .showArea($0) })
-    #expect(areaItems.map(\.keyEquivalent) == ["1", "2", "3", "4", "5", "6"])
+    #expect(areaItems.map(\.keyEquivalent) == ["1", "2", "3", "4", "5"])
     #expect(areaItems.allSatisfy { $0.modifiers == [.command] })
     #expect(areaItems.map(\.titleKey) == MainWindowArea.allCases.map(\.titleKey))
-    let sidebar = try #require(MainMenuModel.item(for: .toggleSidebar))
-    #expect(sidebar.keyEquivalent == "s")
-    #expect(sidebar.modifiers == [.command, .control])
     #expect(MainMenuModel.item(for: .toggleFullScreen) != nil)
-  }
-
-  @Test
-  func sidebarTitleTogglesWithState() throws {
-    let item = try #require(MainMenuModel.item(for: .toggleSidebar))
-    var state = MainMenuState()
-    state.isSidebarVisible = true
-    #expect(MainMenuModel.titleKey(of: item, state: state) == "mainMenu.view.hideSidebar")
-    state.isSidebarVisible = false
-    #expect(MainMenuModel.titleKey(of: item, state: state) == "mainMenu.view.showSidebar")
   }
 
   @Test

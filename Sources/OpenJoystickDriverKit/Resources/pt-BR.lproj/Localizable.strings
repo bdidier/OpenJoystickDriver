@@ -26,7 +26,6 @@
 "status.notNeeded" = "Não Necessário";
 "status.connectController" = "Conecte um Controle";
 "status.noActiveProfile" = "Nenhum Perfil Ativo";
-"status.checkingControllerAccess" = "Verificando o acesso ao controle…";
 "status.checkingControllers" = "Verificando os controles conectados…";
 "settings.controllers" = "Controles";
 "settings.profiles" = "Perfis";
@@ -35,7 +34,6 @@
 "settings.checkUpdates" = "Verificar Agora";
 "settings.contactingGitHub" = "Contatando o GitHub…";
 "settings.controllerConnectedShort" = "Conectado";
-"settings.controllerStatus" = "Status do Controle";
 "settings.requestAccess" = "Solicitar Acesso a %@";
 "settings.controllerDisconnectedNotifications" = "Controle Desconectado";
 "settings.controllerDisconnectedShort" = "Desconectado";
@@ -82,8 +80,10 @@
 "controllers.loadError" = "Não foi possível carregar os controles";
 "controllers.emptyTitle" = "Nenhum Controle Conectado";
 "controllers.emptyMessage" = "Conecte um controle e depois escolha Atualizar.";
-"controllers.notReported" = "Não Informado";
 "controllers.battery" = "Bateria";
+"controllers.serial.show" = "Mostrar número de série";
+"controllers.serial.hide" = "Ocultar número de série";
+"controllers.serial.hidden" = "Oculto";
 "controllers.chargingState" = "Estado de Carregamento";
 "controllers.cableState" = "Estado do Cabo";
 "controllers.discharging" = "Descarregando";
@@ -335,8 +335,6 @@
 "common.unavailable" = "Indisponível";
 "common.needsAttention" = "Precisa de Atenção";
 "common.status" = "Status";
-"common.controllers" = "Controles";
-"common.profiles" = "Perfis";
 "common.protocol" = "Protocolo";
 "common.serialNumber" = "Número de Série";
 "common.inputEndpoint" = "Endpoint de Entrada";
@@ -372,7 +370,6 @@
 "cli.transport_extension.completed" = "Solicitação de extensão do sistema concluída com o resultado %@.";
 "cli.transport_extension.failed" = "A solicitação de extensão do sistema falhou: %@ code=%d %@";
 "cli.transport_extension.replacing" = "Substituindo %@ v%@ por v%@.";
-"common.unknown" = "Desconhecido";
 "controller.dualSense" = "DualSense";
 "controller.dualShock3" = "DualShock 3";
 "controller.dualShock4" = "DualShock 4";
@@ -515,21 +512,20 @@
 "keyboard.alt" = "Opção";
 "keyboard.shift" = "Maiúsculas";
 "mapping.automatic" = "Automático";
-"setup.activating" = "Ativando…";
 "setup.activeDetail" = "O driver USB Xbox restrito está instalado e pronto.";
 "setup.approvalDetail" = "Aprove o driver em Ajustes do Sistema para usar os controles USB Microsoft compatíveis.";
-"setup.approvalNeeded" = "Aprovação Necessária";
-"setup.checking" = "Verificando…";
 "setup.checkingDetail" = "Verificando o driver USB Xbox instalado.";
-"setup.controllerTest" = "Teste de Controle";
-"setup.copySupportReport" = "Copiar Relatório de Suporte";
-"setup.driverAccessibility" = "Configuração do Driver USB Xbox";
 "setup.driverTitle" = "Driver USB Xbox";
 "setup.invalidDetail" = "O driver USB Xbox incorporado é inválido. Reinstale este aplicativo para repará-lo.";
 "setup.missingDetail" = "Este aplicativo não contém o driver USB Xbox. Reinstale o aplicativo assinado.";
 "setup.openSystemSettings" = "Abrir Ajustes do Sistema";
+"setup.openSystemSettingsFailed" = "Não foi possível abrir Ajustes do Sistema.";
 "setup.repairDetail" = "O OpenJoystickDriver reparará o driver USB Xbox sem ferramentas de desenvolvimento.";
+"setup.uninstallDetail" = "Os controles USB Xbox param de funcionar até que o driver seja instalado novamente.";
 "setup.repairDriver" = "Reparar Driver USB Xbox";
+"banner.service.title" = "O OpenJoystickDriver não consegue acessar o serviço";
+"banner.access.title" = "Permissão necessária";
+"banner.access.detail" = "O macOS não permitiu tudo o que o OpenJoystickDriver precisa para ler os controles e publicá-los nos jogos.";
 "cli.login.uninstall_action" = "Desinstalar";
 "console.all" = "Todos";
 "console.copyAll" = "Copiar tudo";
@@ -541,7 +537,6 @@
 "console.loadError" = "Não foi possível ler os registros";
 "console.output" = "Saída";
 "console.stream" = "Fluxo";
-"console.title" = "Console";
 "notifications.controllerConnected" = "Controle Conectado";
 "notifications.controllerConnectedBody" = "%@ está pronto para usar.";
 "notifications.controllerDisconnected" = "Controle Desconectado";
@@ -1573,8 +1568,6 @@
 "error.withCode" ="%@ (%@)";
 
 /* Main window, status item, main menu, settings window, library and access. */
-"library.title" = "Biblioteca";
-"library.subtitle" = "Registros de controles e mods que você instalou.";
 "library.details" = "Detalhes";
 "library.dismiss" = "Dispensar";
 "library.choose" = "Escolher";
@@ -1624,14 +1617,10 @@
 "a11y.library.dismissError" = "Dispensar o erro";
 "a11y.library.dismissNotice" = "Dispensar a mensagem";
 "a11y.library.validateRecord" = "Validar um arquivo de registro sem instalá-lo";
-"a11y.library.installRecord" = "Instalar um arquivo de registro";
 "a11y.library.removeRecord" = "Remover o registro de %@";
 "a11y.library.validateMod" = "Validar uma pasta de mod sem instalá-la";
-"a11y.library.installMod" = "Instalar uma pasta de mod";
 "a11y.library.removeMod" = "Remover o mod %@";
 "a11y.library.cancel" = "Cancelar e manter a biblioteca como está";
-"access.title" = "Acesso";
-"access.subtitle" = "O que o macOS permite que o OpenJoystickDriver faça e quais programas e páginas web podem usar os dados dos controles.";
 "access.details" = "Detalhes";
 "access.dismiss" = "Dispensar";
 "access.tryAgain" = "Tentar Novamente";
@@ -1724,6 +1713,7 @@
 "a11y.access.done" = "Fechar o token";
 "a11y.access.scope" = "Escopo %@";
 "a11y.access.cancel" = "Cancelar e manter o acesso como está";
+"a11y.value.none" = "Sem valor";
 "mainMenu.app.about" = "Sobre o %@";
 "mainMenu.app.settings" = "Ajustes…";
 "mainMenu.app.services" = "Serviços";
@@ -1746,10 +1736,10 @@
 "mainMenu.edit.paste" = "Colar";
 "mainMenu.edit.selectAll" = "Selecionar Tudo";
 "mainMenu.view" = "Visualizar";
-"mainMenu.view.showSidebar" = "Mostrar Barra Lateral";
-"mainMenu.view.hideSidebar" = "Ocultar Barra Lateral";
 "mainMenu.view.enterFullScreen" = "Entrar em Tela Cheia";
 "mainMenu.view.exitFullScreen" = "Sair da Tela Cheia";
+"mainMenu.view.showSidebar" = "Mostrar Barra Lateral";
+"mainMenu.view.hideSidebar" = "Ocultar Barra Lateral";
 "mainMenu.controller" = "Controle";
 "mainMenu.controller.suspend" = "Suspender";
 "mainMenu.controller.resume" = "Retomar";
@@ -1776,22 +1766,11 @@
 "mainMenu.copySupportReport.doneDetail" = "O relatório de suporte está na área de transferência.";
 "mainMenu.copySupportReport.failed" = "Não foi possível copiar o relatório de suporte";
 "mainMenu.copySupportReport.failedDetail" = "Não foi possível coletar o relatório. Salve-o em um arquivo.";
-"area.status.title" = "Status";
 "area.controllers.title" = "Controles";
 "area.profiles.title" = "Perfis";
 "area.library.title" = "Biblioteca";
 "area.access.title" = "Acesso";
 "area.activity.title" = "Atividade";
-"a11y.area.status" = "Status";
-"a11y.area.controllers" = "Controles";
-"a11y.area.profiles" = "Perfis";
-"a11y.area.library" = "Biblioteca";
-"a11y.area.access" = "Acesso";
-"a11y.area.activity" = "Atividade";
-"a11y.mainWindow.sidebar" = "Áreas";
-"mainWindow.areas" = "Áreas";
-"mainWindow.showSidebar" = "Mostrar Barra Lateral";
-"mainWindow.hideSidebar" = "Ocultar Barra Lateral";
 "cli.setting.show_in_menu_bar" = "Mostrar o item do OpenJoystickDriver na barra de menus.";
 "cli.setting.check_updates_automatically" = "Buscar atualizações quando o app iniciar.";
 "settingsPane.general.title" = "Geral";
@@ -1833,6 +1812,7 @@
 "menuBar.actionFailedTitle" = "A ação não foi concluída";
 "menuBar.profileConflict" = "O perfil mudou antes de esta ação ser executada. Tente novamente.";
 "a11y.menuBar.statusItem" = "Status do OpenJoystickDriver";
+"a11y.mainWindow.sidebar" = "Áreas";
 "access.detail.pair" = "%1$@ · %2$@";
 "access.detail.triple" = "%1$@ · %2$@ · %3$@";
 "access.grant.noPath" = "O OpenJoystickDriver não conseguiu ler o executável de %@, então não pode conceder acesso a ele.";

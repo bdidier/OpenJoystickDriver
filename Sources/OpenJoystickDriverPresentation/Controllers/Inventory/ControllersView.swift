@@ -10,40 +10,30 @@
   struct ControllersView: View {
     @ObservedObject
     private var screen: ControllersViewModel
-    @State
-    private var isRefreshing = false
+    let column: MainWindowColumn
     let openInputTest: @MainActor (ApplicationServiceDeviceDescription) -> Void
 
     init(
       screen: ControllersViewModel,
+      column: MainWindowColumn,
       openInputTest: @escaping @MainActor (ApplicationServiceDeviceDescription) -> Void
     ) {
       self.screen = screen
+      self.column = column
       self.openInputTest = openInputTest
     }
 
     private var viewModel: RuntimeViewModel { screen.runtime }
 
     var body: some View {
-      GeometryReader { proxy in
-        if WorkspaceListDetailPolicy.layout(for: proxy.size.width) == .stacked {
-          VStack(spacing: 0) {
-            controllerList.frame(height: min(200, proxy.size.height * 0.34))
-            Divider()
-            controllerDetail.frame(maxWidth: .infinity, maxHeight: .infinity)
-          }
-        } else {
-          HStack(spacing: 0) {
-            controllerList.frame(width: WorkspaceListDetailPolicy.listWidth(for: proxy.size.width))
-              .frame(maxHeight: .infinity, alignment: .topLeading)
-            Divider()
-            controllerDetail.frame(maxWidth: .infinity, maxHeight: .infinity)
-          }
+      switch column {
+      case .list: controllerList
+      case .detail:
+        controllerDetail.frame(maxWidth: .infinity, maxHeight: .infinity).onAppear {
+          screen.refresh()
+        }.onReceive(viewModel.$controllerInventoryGeneration) { _ in
+          screen.synchronizeSelection()
         }
-      }.onAppear { screen.refresh() }.onReceive(viewModel.$controllerInventoryGeneration) { _ in
-        screen.synchronizeSelection()
-      }.onReceive(viewModel.scopedRefreshInFlightPublisher.removeDuplicates()) { isRefreshing in
-        self.isRefreshing = isRefreshing
       }
     }
 
@@ -51,27 +41,8 @@
 
     private var selectedDevice: ApplicationServiceDeviceDescription? { screen.selectedDevice }
 
-    private func reportedValue(_ value: String) -> String {
-      let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
-      return trimmed.isEmpty
-        ? OJDLocalized.string("controllers.notReported") : trimmed
-    }
-
     private var controllerList: some View {
       VStack(alignment: .leading, spacing: 8) {
-        HStack {
-          Text(OJDLocalized.string("common.controllers")).font(.headline)
-            .lineLimit(1).layoutPriority(1)
-          Spacer()
-          OJDCompactSymbolButton(
-            symbolName: "arrow.clockwise",
-            label: OJDLocalized.string(
-              "controllers.refreshAccessibility"
-            ),
-            action: refresh
-          ).disabled(isRefreshing)
-        }.padding(.horizontal, 14).padding(.top, 18)
-
         switch viewModel.statusState {
         case .loading:
           LoadingStateView(
@@ -108,7 +79,7 @@
           if devices.isEmpty { EmptyView() } else { controllerListRows }
         }
         Spacer(minLength: 0)
-      }.background(Color(NSColor.controlBackgroundColor))
+      }
     }
 
     private var controllerListRows: some View {
@@ -137,7 +108,7 @@
             "\(device.publishedIdentityLabel). \(device.protocolBinding.displayLabel)"
           )
         }
-      }.listStyle(SidebarListStyle())
+      }.listStyle(InsetListStyle())
     }
 
     private var selectedDeviceIdentifier: Binding<String?> {
@@ -161,7 +132,7 @@
           retry: refresh,
           viewModel: viewModel,
           openInputTest: openInputTest
-        )
+        ).id(selectedDevice.sessionToken.rawValue)
       } else {
         switch viewModel.statusState {
         case .loading:

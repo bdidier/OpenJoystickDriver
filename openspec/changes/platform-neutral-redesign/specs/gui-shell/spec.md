@@ -37,23 +37,32 @@ A value field whose value is unknown, missing or not applicable SHALL show a sin
 - **WHEN** the selected controller has no lighting
 - **THEN** the detail shows no Lighting row or section
 
-### Requirement: Cards
+### Requirement: Native sections
 
-Each section of a screen SHALL be one card built from one shared card component. The card header row SHALL hold the section title and the section's actions. An empty section SHALL show one compact line of text inside its card, with no illustration and no extra spacing. Cards SHALL share one corner radius, padding and spacing and SHALL NOT nest.
-
-#### Scenario: Section with an action
-
-- **WHEN** a section has an action such as Validate
-- **THEN** the action sits in the card header row beside the title
+Each section of a screen SHALL be a SwiftUI `Form` `Section` or a `List` section with default styling. On macOS 13 and later forms SHALL use the grouped form style; on macOS 12 they SHALL use the plain form style with the same sections and rows. Screens SHALL NOT use custom cards, tiles, tinted boxes or in-content area headings. An empty section SHALL show one line of secondary text.
 
 #### Scenario: Empty section
 
 - **WHEN** a section has no content
-- **THEN** its card shows one line of text and keeps no reserved empty space
+- **THEN** it shows one line of secondary text and keeps no reserved empty space
+
+#### Scenario: macOS 12
+
+- **WHEN** the app runs on macOS 12
+- **THEN** each form shows the same sections and rows as on macOS 13, in the plain form style
+
+### Requirement: Columns at every window size
+
+Controllers, Profiles and Library SHALL show a list column and a detail column beside the sidebar. Each column SHALL have a minimum width, and the window's minimum size SHALL fit the sidebar and both columns. No area SHALL switch to a vertically stacked layout. The area's actions SHALL be toolbar items.
+
+#### Scenario: Minimum window size
+
+- **WHEN** the window is at its minimum size on Controllers
+- **THEN** the sidebar, the controller list and the detail are side by side, and no text in the list or the detail's labels is cut off
 
 ### Requirement: Main window navigation
 
-The main window SHALL switch areas from one segmented control in the toolbar. The window SHALL have no sidebar and no sidebar toggle. The control SHALL hold five areas in this order: Controllers, Profiles, Library, Access and Activity. `Command-1` to `Command-5` SHALL select the areas in that order. The window title SHALL name the selected area, and the content SHALL NOT repeat that name.
+The main window SHALL switch areas from a full-height sidebar that lists five areas in this order, each with a symbol: Controllers, Profiles, Library, Access and Activity. `Command-1` to `Command-5` SHALL select the areas in that order. The sidebar SHALL be shown by default; a toolbar button and View > Hide Sidebar hide it. Controllers and Profiles SHALL show a list column between the sidebar and the detail; Library, Access and Activity SHALL be one pane.
 
 #### Scenario: Area switch
 
@@ -63,7 +72,21 @@ The main window SHALL switch areas from one segmented control in the toolbar. Th
 #### Scenario: Window opens
 
 - **WHEN** the main window opens
-- **THEN** the toolbar holds the five areas and no sidebar toggle, and no sidebar is shown
+- **THEN** the sidebar lists the five areas and the toolbar holds the sidebar toggle, the area title and subtitle, and no area switcher
+
+#### Scenario: Sidebar hidden
+
+- **WHEN** the user chooses View > Hide Sidebar
+- **THEN** the sidebar hides, `Command-1` to `Command-5` still select areas, and the menu item reads Show Sidebar
+
+### Requirement: Main window toolbar
+
+The toolbar SHALL show the selected area's title and a subtitle that summarizes it, and SHALL hold only that area's actions. The toolbar SHALL NOT switch areas. The content SHALL NOT repeat the area title.
+
+#### Scenario: Controllers selected
+
+- **WHEN** Controllers is selected with one controller connected
+- **THEN** the toolbar reads Controllers with the subtitle 1 controller connected, and the content has no Controllers heading
 
 ### Requirement: Problem banner
 
@@ -128,7 +151,7 @@ The Profiles area SHALL have one control that creates a profile. The creation sh
 
 ### Requirement: Library area
 
-The Library area SHALL have one Validate control, in its card header, and one empty state. The number of built-in records SHALL appear as a labelled count, not as a sentence.
+The Library area SHALL have one Validate action, in the toolbar, and one empty line per section. The number of built-in records SHALL appear as a labelled count, not as a sentence.
 
 #### Scenario: Built-in records
 

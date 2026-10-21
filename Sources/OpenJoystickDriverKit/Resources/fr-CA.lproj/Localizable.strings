@@ -26,7 +26,6 @@
 "status.notNeeded" = "Non nécessaire";
 "status.connectController" = "Connectez une manette";
 "status.noActiveProfile" = "Aucun profil actif";
-"status.checkingControllerAccess" = "Vérification de l’accès à la manette…";
 "status.checkingControllers" = "Vérification des manettes connectées…";
 "settings.controllers" = "Manettes";
 "settings.profiles" = "Profils";
@@ -35,7 +34,6 @@
 "settings.checkUpdates" = "Vérifier maintenant";
 "settings.contactingGitHub" = "Contact de GitHub…";
 "settings.controllerConnectedShort" = "Connectée";
-"settings.controllerStatus" = "État de la manette";
 "settings.requestAccess" = "Demander l’accès « %@ »";
 "settings.controllerDisconnectedNotifications" = "Manette déconnectée";
 "settings.controllerDisconnectedShort" = "Déconnectée";
@@ -82,8 +80,10 @@
 "controllers.loadError" = "Impossible de charger les manettes";
 "controllers.emptyTitle" = "Aucune manette connectée";
 "controllers.emptyMessage" = "Connectez une manette, puis choisissez « Actualiser ».";
-"controllers.notReported" = "Non communiqué";
 "controllers.battery" = "Batterie";
+"controllers.serial.show" = "Afficher le numéro de série";
+"controllers.serial.hide" = "Masquer le numéro de série";
+"controllers.serial.hidden" = "Masqué";
 "controllers.chargingState" = "État de charge";
 "controllers.cableState" = "État du câble";
 "controllers.discharging" = "Décharge en cours";
@@ -335,8 +335,6 @@
 "common.unavailable" = "Indisponible";
 "common.needsAttention" = "Attention requise";
 "common.status" = "État";
-"common.controllers" = "Manettes";
-"common.profiles" = "Profils";
 "common.protocol" = "Protocole";
 "common.serialNumber" = "Numéro de série";
 "common.inputEndpoint" = "Point de terminaison d’entrée";
@@ -372,7 +370,6 @@
 "cli.transport_extension.completed" = "Demande d’extension système terminée avec le résultat %@.";
 "cli.transport_extension.failed" = "La demande d’extension système a échoué : %@ code=%d %@";
 "cli.transport_extension.replacing" = "Remplacement de %@ v%@ par v%@.";
-"common.unknown" = "Inconnu";
 "controller.dualSense" = "DualSense";
 "controller.dualShock3" = "DualShock 3";
 "controller.dualShock4" = "DualShock 4";
@@ -515,21 +512,20 @@
 "keyboard.alt" = "Option";
 "keyboard.shift" = "Maj";
 "mapping.automatic" = "Automatique";
-"setup.activating" = "Activation…";
 "setup.activeDetail" = "Le pilote USB Xbox restreint est installé et prêt.";
 "setup.approvalDetail" = "Approuvez le pilote dans Réglages Système pour utiliser les manettes USB Microsoft prises en charge.";
-"setup.approvalNeeded" = "Approbation requise";
-"setup.checking" = "Vérification…";
 "setup.checkingDetail" = "Vérification du pilote USB Xbox installé.";
-"setup.controllerTest" = "Test de manette";
-"setup.copySupportReport" = "Copier le rapport d’assistance";
-"setup.driverAccessibility" = "Configuration du pilote USB Xbox";
 "setup.driverTitle" = "Pilote USB Xbox";
 "setup.invalidDetail" = "Le pilote USB Xbox intégré n’est pas valide. Réinstallez cette app pour le réparer.";
 "setup.missingDetail" = "Cette app ne contient pas le pilote USB Xbox. Réinstallez l’app signée.";
 "setup.openSystemSettings" = "Ouvrir Réglages Système";
+"setup.openSystemSettingsFailed" = "Impossible d’ouvrir Réglages Système.";
 "setup.repairDetail" = "OpenJoystickDriver réparera le pilote USB Xbox sans outils de développement.";
+"setup.uninstallDetail" = "Les manettes USB Xbox cessent de fonctionner tant que le pilote n’est pas réinstallé.";
 "setup.repairDriver" = "Réparer le pilote USB Xbox";
+"banner.service.title" = "OpenJoystickDriver ne peut pas joindre son service";
+"banner.access.title" = "Autorisation requise";
+"banner.access.detail" = "macOS n’a pas autorisé tout ce dont OpenJoystickDriver a besoin pour lire les manettes et les publier dans les jeux.";
 "cli.login.uninstall_action" = "Désinstaller";
 "console.all" = "Tout";
 "console.copyAll" = "Tout copier";
@@ -541,7 +537,6 @@
 "console.loadError" = "Impossible de lire les journaux";
 "console.output" = "Sortie";
 "console.stream" = "Flux";
-"console.title" = "Console";
 "notifications.controllerConnected" = "Manette connectée";
 "notifications.controllerConnectedBody" = "%@ est prêt à l’emploi.";
 "notifications.controllerDisconnected" = "Manette déconnectée";
@@ -1573,8 +1568,6 @@
 "error.withCode" ="%@ (%@)";
 
 /* Main window, status item, main menu, settings window, library and access. */
-"library.title" = "Bibliothèque";
-"library.subtitle" = "Fiches de manettes et mods que vous avez installés.";
 "library.details" = "Détails";
 "library.dismiss" = "Fermer";
 "library.choose" = "Choisir";
@@ -1624,14 +1617,10 @@
 "a11y.library.dismissError" = "Fermer l’erreur";
 "a11y.library.dismissNotice" = "Fermer le message";
 "a11y.library.validateRecord" = "Valider un fichier de fiche sans l’installer";
-"a11y.library.installRecord" = "Installer un fichier de fiche";
 "a11y.library.removeRecord" = "Supprimer la fiche de %@";
 "a11y.library.validateMod" = "Valider un dossier de mod sans l’installer";
-"a11y.library.installMod" = "Installer un dossier de mod";
 "a11y.library.removeMod" = "Supprimer le mod %@";
 "a11y.library.cancel" = "Annuler et laisser la bibliothèque telle quelle";
-"access.title" = "Accès";
-"access.subtitle" = "Ce que macOS autorise OpenJoystickDriver à faire, et quels programmes et pages web peuvent utiliser les données des manettes.";
 "access.details" = "Détails";
 "access.dismiss" = "Fermer";
 "access.tryAgain" = "Réessayer";
@@ -1724,6 +1713,7 @@
 "a11y.access.done" = "Fermer le jeton";
 "a11y.access.scope" = "Portée %@";
 "a11y.access.cancel" = "Annuler et laisser l’accès tel quel";
+"a11y.value.none" = "Aucune valeur";
 "mainMenu.app.about" = "À propos de %@";
 "mainMenu.app.settings" = "Réglages…";
 "mainMenu.app.services" = "Services";
@@ -1746,10 +1736,10 @@
 "mainMenu.edit.paste" = "Coller";
 "mainMenu.edit.selectAll" = "Tout sélectionner";
 "mainMenu.view" = "Présentation";
-"mainMenu.view.showSidebar" = "Afficher la barre latérale";
-"mainMenu.view.hideSidebar" = "Masquer la barre latérale";
 "mainMenu.view.enterFullScreen" = "Passer en plein écran";
 "mainMenu.view.exitFullScreen" = "Quitter le mode plein écran";
+"mainMenu.view.showSidebar" = "Afficher la barre latérale";
+"mainMenu.view.hideSidebar" = "Masquer la barre latérale";
 "mainMenu.controller" = "Manette";
 "mainMenu.controller.suspend" = "Suspendre";
 "mainMenu.controller.resume" = "Reprendre";
@@ -1776,22 +1766,11 @@
 "mainMenu.copySupportReport.doneDetail" = "Le rapport d’assistance se trouve dans le presse-papiers.";
 "mainMenu.copySupportReport.failed" = "Le rapport d’assistance n’a pas pu être copié";
 "mainMenu.copySupportReport.failedDetail" = "Le rapport n’a pas pu être créé. Enregistrez-le plutôt dans un fichier.";
-"area.status.title" = "État";
 "area.controllers.title" = "Manettes";
 "area.profiles.title" = "Profils";
 "area.library.title" = "Bibliothèque";
 "area.access.title" = "Accès";
 "area.activity.title" = "Activité";
-"a11y.area.status" = "État";
-"a11y.area.controllers" = "Manettes";
-"a11y.area.profiles" = "Profils";
-"a11y.area.library" = "Bibliothèque";
-"a11y.area.access" = "Accès";
-"a11y.area.activity" = "Activité";
-"a11y.mainWindow.sidebar" = "Rubriques";
-"mainWindow.areas" = "Rubriques";
-"mainWindow.showSidebar" = "Afficher la barre latérale";
-"mainWindow.hideSidebar" = "Masquer la barre latérale";
 "cli.setting.show_in_menu_bar" = "Afficher l’élément OpenJoystickDriver dans la barre des menus.";
 "cli.setting.check_updates_automatically" = "Rechercher des mises à jour au démarrage de l’app.";
 "settingsPane.general.title" = "Général";
@@ -1833,6 +1812,7 @@
 "menuBar.actionFailedTitle" = "L’action n’a pas abouti";
 "menuBar.profileConflict" = "Le profil a changé avant l’exécution de cette action. Réessayez.";
 "a11y.menuBar.statusItem" = "État d’OpenJoystickDriver";
+"a11y.mainWindow.sidebar" = "Rubriques";
 "access.detail.pair" = "%1$@ · %2$@";
 "access.detail.triple" = "%1$@ · %2$@ · %3$@";
 "access.grant.noPath" = "OpenJoystickDriver ne peut pas lire l’exécutable de %@ et ne peut donc pas lui accorder l’accès.";

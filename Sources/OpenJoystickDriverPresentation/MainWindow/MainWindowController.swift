@@ -6,29 +6,15 @@
   import SwiftUI
 
   enum MainWindowSizingPolicy {
+    static let sidebarWidth = (minimum: CGFloat(170), maximum: CGFloat(260))
+    static let listWidth = (minimum: CGFloat(200), maximum: CGFloat(320))
+    static let minimumDetailWidth: CGFloat = 420
     static let defaultContentSize = NSSize(width: 1_040, height: 700)
-    static let minimumContentSize = NSSize(width: 800, height: 560)
+    static let minimumContentSize = NSSize(width: 960, height: 560)
 
     @MainActor
     static func minimumFrameSize(for window: NSWindow) -> NSSize {
       window.frameRect(forContentRect: NSRect(origin: .zero, size: minimumContentSize)).size
-    }
-  }
-
-  /// Toolbar layout of the main window: sidebar toggle, the sidebar's tracking separator, then
-  /// one selectable group with an item per area.
-  enum MainWindowToolbarLayout {
-    static let toolbar = NSToolbar.Identifier("OpenJoystickDriver.MainWindowToolbar")
-    static let sidebarToggle = NSToolbarItem.Identifier("OpenJoystickDriver.MainWindow.Sidebar")
-    static let areas = NSToolbarItem.Identifier("OpenJoystickDriver.MainWindow.Areas")
-
-    static var items: [NSToolbarItem.Identifier] {
-      [sidebarToggle, .sidebarTrackingSeparator, .flexibleSpace, areas, .flexibleSpace]
-    }
-
-    /// Title key of the sidebar toggle for the sidebar's state.
-    static func sidebarToggleTitleKey(sidebarCollapsed: Bool) -> String {
-      sidebarCollapsed ? "mainWindow.showSidebar" : "mainWindow.hideSidebar"
     }
   }
 
@@ -38,13 +24,12 @@
   {
     let navigation: MainWindowNavigationModel
     private let screens: MainWindowScreens
-    private let splitViewController = NSSplitViewController()
-    private let sidebarItem: NSSplitViewItem
     private let visibilityChanged: @MainActor (Bool) -> Void
-    private weak var areaGroup: NSToolbarItemGroup?
-    private weak var sidebarToggleItem: NSToolbarItem?
+    private let splitViewController = NSSplitViewController()
+    private let listItem: NSSplitViewItem
     private var areaObservation: AnyCancellable?
-    private var sidebarObservation: NSKeyValueObservation?
+    private var toolbarEnablementObservation: AnyCancellable?
+    private var summaryObservation: AnyCancellable?
     private var isEnforcingMinimumSize = false
 
     init(
@@ -70,15 +55,17 @@
         openInputTest: openInputTest
       )
 
-      sidebarItem = NSSplitViewItem(
+      let sidebarItem = NSSplitViewItem(
         sidebarWithViewController: NSHostingController(
           rootView: MainWindowSidebar(navigation: navigation)
         )
       )
       sidebarItem.canCollapse = true
-      let detailItem = NSSplitViewItem(
-        viewController: NSHostingController(
-          rootView: MainWindowDetail(
+      sidebarItem.minimumThickness = MainWindowSizingPolicy.sidebarWidth.minimum
+      sidebarItem.maximumThickness = MainWindowSizingPolicy.sidebarWidth.maximum
+      let listItem = NSSplitViewItem(
+        contentListWithViewController: NSHostingController(
+          rootView: MainWindowListRoot(
             navigation: navigation,
             runtime: runtime,
             profiles: screens.profiles,
@@ -86,7 +73,23 @@
           )
         )
       )
+      listItem.minimumThickness = MainWindowSizingPolicy.listWidth.minimum
+      listItem.maximumThickness = MainWindowSizingPolicy.listWidth.maximum
+      listItem.isCollapsed = !navigation.selectedArea.hasListColumn
+      self.listItem = listItem
+      let detailItem = NSSplitViewItem(
+        viewController: NSHostingController(
+          rootView: MainWindowRoot(
+            navigation: navigation,
+            runtime: runtime,
+            profiles: screens.profiles,
+            screens: screens
+          )
+        )
+      )
+      detailItem.minimumThickness = MainWindowSizingPolicy.minimumDetailWidth
       splitViewController.addSplitViewItem(sidebarItem)
+      splitViewController.addSplitViewItem(listItem)
       splitViewController.addSplitViewItem(detailItem)
 
       let window = NSWindow(
@@ -106,10 +109,18 @@
       areaObservation = navigation.$selectedArea.sink { [weak self] area in
         self?.reflect(area: area)
       }
-      sidebarObservation = sidebarItem.observe(\.isCollapsed, options: [.initial, .new]) {
-        [weak self] item, _ in
-        let collapsed = item.isCollapsed
-        Task { @MainActor in self?.reflectSidebar(collapsed: collapsed) }
+      toolbarEnablementObservation = Publishers.MergeMany(
+        runtime.scopedRefreshInFlightPublisher.map { _ in () }.eraseToAnyPublisher(),
+        runtime.$remappingState.map { _ in () }.eraseToAnyPublisher(),
+        screens.library.objectWillChange.map { _ in () }.eraseToAnyPublisher(),
+        screens.profiles.objectWillChange.map { _ in () }.eraseToAnyPublisher(),
+        navigation.objectWillChange.map { _ in () }.eraseToAnyPublisher()
+      ).receive(on: DispatchQueue.main).sink { [weak self] in
+        self?.window?.toolbar?.validateVisibleItems()
+      }
+      summaryObservation = runtime.$statusState.sink { [weak self] status in
+        guard let self else { return }
+        window.subtitle = MainWindowSummary.text(for: navigation.selectedArea, status: status)
       }
     }
 
@@ -257,53 +268,66 @@
       toolbar.delegate = self
       toolbar.allowsUserCustomization = false
       toolbar.autosavesConfiguration = false
-      toolbar.displayMode = .iconAndLabel
+      toolbar.displayMode = .iconOnly
       window.toolbar = toolbar
       if #available(macOS 11.0, *) { window.toolbarStyle = .unified }
     }
 
     private func reflect(area: MainWindowArea) {
+      listItem.isCollapsed = !area.hasListColumn
+      showToolbarActions(of: area)
       window?.title = area.title
-      if let index = MainWindowArea.allCases.firstIndex(of: area) {
-        areaGroup?.selectedIndex = index
+      window?.subtitle = MainWindowSummary.text(for: area, status: screens.runtime.statusState)
+    }
+  }
+
+  extension MainWindowController {
+    /// Replaces the toolbar's area actions with those of `area`.
+    func showToolbarActions(of area: MainWindowArea) {
+      guard let toolbar = window?.toolbar else { return }
+      let fixedCount = MainWindowToolbarLayout.fixedItems.count
+      while toolbar.items.count > fixedCount { toolbar.removeItem(at: toolbar.items.count - 1) }
+      for (offset, action) in area.toolbarActions.enumerated() {
+        toolbar.insertItem(withItemIdentifier: action.identifier, at: fixedCount + offset)
       }
     }
 
-    private func reflectSidebar(collapsed: Bool) {
-      guard let item = sidebarToggleItem else { return }
-      let title = OJDLocalized.string(
-        MainWindowToolbarLayout.sidebarToggleTitleKey(sidebarCollapsed: collapsed)
-      )
-      item.label = title
-      item.paletteLabel = title
-      item.toolTip = title
-      item.image?.accessibilityDescription = title
-    }
-
     @objc
-    private func toggleSidebarFromToolbar(_ sender: Any?) {
-      splitViewController.toggleSidebar(sender)
-    }
-
-    @objc
-    private func selectAreaFromToolbar(_ sender: NSToolbarItemGroup) {
-      let areas = MainWindowArea.allCases
-      guard areas.indices.contains(sender.selectedIndex) else { return }
-      if !navigation.requestArea(areas[sender.selectedIndex]) {
-        // The switch waits on the discard question or a running mutation; keep the
-        // toolbar on the area that is still shown.
-        reflect(area: navigation.selectedArea)
+    func performToolbarAction(_ sender: NSToolbarItem) {
+      guard let action = MainWindowToolbarAction(identifier: sender.itemIdentifier),
+        isEnabled(action)
+      else { return }
+      switch action {
+      case .refreshControllers: screens.controllers.refresh()
+      case .newProfile: screens.profiles.isCreatingProfile = true
+      case .importProfile: screens.profiles.chooseProfileToImport()
+      case .installLibraryItem: installRecordOrMod()
       }
+    }
+
+    func isEnabled(_ action: MainWindowToolbarAction) -> Bool {
+      switch action {
+      case .refreshControllers: return !screens.runtime.isScopedRefreshInFlight
+      case .newProfile, .importProfile:
+        return !screens.profiles.isActionBlocked(library: screens.library, runtime: screens.runtime)
+      case .installLibraryItem: return true
+      }
+    }
+  }
+
+  extension MainWindowController: NSToolbarItemValidation {
+    func validateToolbarItem(_ item: NSToolbarItem) -> Bool {
+      MainWindowToolbarAction(identifier: item.itemIdentifier).map(isEnabled) ?? true
     }
   }
 
   extension MainWindowController: NSToolbarDelegate {
     func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-      MainWindowToolbarLayout.items
+      MainWindowToolbarLayout.allowedItems
     }
 
     func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-      MainWindowToolbarLayout.items
+      MainWindowToolbarLayout.items(for: navigation.selectedArea)
     }
 
     func toolbarSelectableItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
@@ -315,46 +339,18 @@
       itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier,
       willBeInsertedIntoToolbar flag: Bool
     ) -> NSToolbarItem? {
-      switch itemIdentifier {
-      case MainWindowToolbarLayout.sidebarToggle:
-        let item = NSToolbarItem(itemIdentifier: itemIdentifier)
-        item.target = self
-        item.action = #selector(toggleSidebarFromToolbar(_:))
-        item.isBordered = true
-        item.image = NSImage(systemSymbolName: "sidebar.left", accessibilityDescription: nil)
-        sidebarToggleItem = item
-        reflectSidebar(collapsed: sidebarItem.isCollapsed)
-        return item
-      case MainWindowToolbarLayout.areas:
-        let areas = MainWindowArea.allCases
-        let images = areas.map { area -> NSImage in
-          let image = NSImage(
-            systemSymbolName: area.symbolName,
-            accessibilityDescription: area.accessibilityLabel
-          )
-          // Every area symbol exists on macOS 12; a missing one is a build error to fix.
-          precondition(image != nil, "Missing SF Symbol \(area.symbolName)")
-          return image!
-        }
-        let group = NSToolbarItemGroup(
-          itemIdentifier: itemIdentifier,
-          images: images,
-          selectionMode: .selectOne,
-          labels: areas.map(\.title),
-          target: self,
-          action: #selector(selectAreaFromToolbar(_:))
+      if itemIdentifier == .sidebarTrackingSeparator {
+        return NSTrackingSeparatorToolbarItem(
+          identifier: itemIdentifier,
+          splitView: splitViewController.splitView,
+          dividerIndex: 0
         )
-        group.controlRepresentation = .expanded
-        group.label = OJDLocalized.string("mainWindow.areas")
-        group.paletteLabel = group.label
-        for (subitem, area) in zip(group.subitems, areas) {
-          subitem.toolTip = area.title
-        }
-        areaGroup = group
-        reflect(area: navigation.selectedArea)
-        return group
-      default: return nil
       }
+      guard let action = MainWindowToolbarAction(identifier: itemIdentifier) else { return nil }
+      let item = MainWindowToolbarLayout.makeItem(for: action)
+      item.target = self
+      item.action = #selector(performToolbarAction(_:))
+      return item
     }
   }
 

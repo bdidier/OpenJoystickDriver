@@ -11,6 +11,7 @@
     let preferences: SettingsPreferencesModel
     let commandLineTool: CommandLineToolModel
     let developerTools: DeveloperToolsViewModel
+    let runtime: RuntimeViewModel
 
     var body: some View {
       switch panes.selected {
@@ -18,7 +19,11 @@
       case .notifications: NotificationsPaneView(preferences: preferences)
       case .commandLine: CommandLinePaneView(commandLineTool: commandLineTool)
       case .advanced:
-        AdvancedPaneView(preferences: preferences, developerTools: developerTools)
+        AdvancedPaneView(
+          preferences: preferences,
+          developerTools: developerTools,
+          runtime: runtime
+        )
       }
     }
   }
@@ -42,11 +47,13 @@
 
     /// - Parameters:
     ///   - gateway: the service connection the developer tools in Advanced read.
+    ///   - runtime: the driver extension state and actions of Advanced.
     ///   - preferences: the switches of General, Notifications and Advanced.
     ///   - commandLineTool: the command-line tool link of the Command Line pane.
     ///   - visibilityChanged: called with true when the window is shown and false when it closes.
     init(
       gateway: any ApplicationServiceGateway,
+      runtime: RuntimeViewModel,
       preferences: SettingsPreferencesModel,
       commandLineTool: CommandLineToolModel,
       visibilityChanged: @escaping @MainActor (Bool) -> Void
@@ -58,7 +65,8 @@
         panes: panes,
         preferences: preferences,
         commandLineTool: commandLineTool,
-        developerTools: developerTools
+        developerTools: developerTools,
+        runtime: runtime
       )
       let minimum = panes.minimumContentSize
       let window = NSWindow(

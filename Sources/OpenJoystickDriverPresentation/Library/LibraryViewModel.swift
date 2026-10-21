@@ -77,8 +77,20 @@ extension LibraryPending {
   }
 }
 
+/// The Library list's rows; the detail column shows the selected one.
+enum LibrarySection: String, CaseIterable, Identifiable {
+  case records
+  case mods
+
+  var id: String { rawValue }
+  var titleKey: String { "library.\(rawValue)" }
+  var symbolName: String { self == .records ? "doc.text" : "shippingbox" }
+}
+
 @MainActor
 final class LibraryViewModel: ObservableObject {
+  @Published
+  var selectedSection: LibrarySection = .records
   @Published
   private(set) var records = LibraryRecordListing()
   @Published

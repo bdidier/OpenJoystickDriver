@@ -14,16 +14,40 @@
     @ObservedObject
     var model: LibraryViewModel
 
+    let column: MainWindowColumn
+
+    @ViewBuilder
     var body: some View {
+      switch column {
+      case .list: sectionList
+      case .detail: detail
+      }
+    }
+
+    private var sectionList: some View {
+      List(selection: sectionSelection) {
+        ForEach(LibrarySection.allCases) { section in
+          Label(OJDLocalized.string(section.titleKey), systemImage: section.symbolName)
+            .tag(section)
+        }
+      }.listStyle(InsetListStyle())
+    }
+
+    private var sectionSelection: Binding<LibrarySection?> {
+      Binding(
+        get: { model.selectedSection },
+        set: { section in if let section { model.selectedSection = section } }
+      )
+    }
+
+    private var detail: some View {
       ScrollView {
         VStack(alignment: .leading, spacing: 20) {
-          PageHeader(
-            title: OJDLocalized.string("library.title"),
-            subtitle: OJDLocalized.string("library.subtitle")
-          )
           feedback
-          recordsSection
-          modsSection
+          switch model.selectedSection {
+          case .records: recordsSection
+          case .mods: modsSection
+          }
         }.padding(28).frame(maxWidth: .infinity, alignment: .leading)
       }.onAppear { model.reload() }.sheet(item: $model.pending) { pending in
         LibraryConfirmationSheet(
@@ -72,11 +96,6 @@
           Button(OJDLocalized.string("library.validate")) {
             if let url = LibraryFilePicker.chooseRecordFile() { model.validateRecord(at: url) }
           }.ojdAccessibilityLabel(OJDLocalized.string("a11y.library.validateRecord"))
-          Button(OJDLocalized.string("library.installRecord")) {
-            if let url = LibraryFilePicker.chooseRecordFile() {
-              model.beginInstallRecord(from: url)
-            }
-          }.ojdAccessibilityLabel(OJDLocalized.string("a11y.library.installRecord"))
         }
         Text(OJDLocalized.plural("library.records.bundled", count: model.records.bundledCount))
           .font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor))
@@ -136,9 +155,6 @@
           Button(OJDLocalized.string("library.validate")) {
             if let url = LibraryFilePicker.chooseModFolder() { model.validateMod(at: url) }
           }.ojdAccessibilityLabel(OJDLocalized.string("a11y.library.validateMod"))
-          Button(OJDLocalized.string("library.installMod")) {
-            if let url = LibraryFilePicker.chooseModFolder() { model.beginInstallMod(from: url) }
-          }.ojdAccessibilityLabel(OJDLocalized.string("a11y.library.installMod"))
         }
         if model.mods.isEmpty {
           EmptyStateView(

@@ -25,9 +25,10 @@
   }
 
   enum ProductSurface: Hashable, Sendable {
-    case overview
+    case problemBanner
     case controllers
     case profiles
+    case access
     case console
     case developerTools
     case inputTest
@@ -38,13 +39,14 @@
   enum ProductCapabilityMatrix {
     static func destinations(for workflow: RuntimeWorkflow) -> Set<ProductSurface> {
       switch workflow {
-      case .status: return [.overview]
+      case .status: return [.problemBanner, .controllers]
       case .runtimeDiagnostics: return [.developerTools]
       case .controllerList: return [.controllers]
       case .controllerState, .controllerWatch, .controllerOutput: return [.inputTest]
       case .controllerPackets: return [.developerTools]
       case .profileMapping: return [.profiles]
-      case .permissions, .extensionLifecycle: return [.overview]
+      case .permissions: return [.problemBanner, .access]
+      case .extensionLifecycle: return [.problemBanner, .settings]
       case .virtualHIDProfileOverride: return [.controllers]
       case .logs: return [.console]
       case .supportReport: return [.developerTools]

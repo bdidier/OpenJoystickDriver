@@ -125,11 +125,6 @@
       }
     }
 
-    func importProfile() {
-      guard !isProfileActionBlocked else { return }
-      screen.chooseProfileToImport()
-    }
-
     func exportProfile(_ profile: RemappingProfile) { screen.exportProfile(profile) }
 
     /// Imports a profile chosen through the screen model, from the Profiles screen or the File
@@ -263,8 +258,7 @@
     }
 
     var isProfileActionBlocked: Bool {
-      isMutationActive || profileEditorTransition.isEditingBlocked
-        || library.profileRecoveryInFlight || profileLibraryNeedsRecovery
+      screen.isActionBlocked(library: library, runtime: viewModel)
     }
 
     var profileLibraryNeedsRecovery: Bool { !(currentSnapshot?.profileIssues.isEmpty ?? true) }

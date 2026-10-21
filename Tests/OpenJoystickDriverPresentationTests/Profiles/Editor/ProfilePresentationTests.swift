@@ -38,26 +38,6 @@ struct ProfilePresentationTests {
   }
 
   @Test
-  func listAndDetailLayoutPreservesBothMinimumWidths() {
-    #expect(WorkspaceListDetailPolicy.layout(for: 800) == .stacked)
-    #expect(WorkspaceListDetailPolicy.layout(for: 801) == .sideBySide)
-    #expect(WorkspaceListDetailPolicy.listWidth(for: 801) == 200)
-    #expect(WorkspaceListDetailPolicy.listWidth(for: 821) == 220)
-    #expect(WorkspaceListDetailPolicy.listWidth(for: 1_000) == 240)
-    #expect(WorkspaceListDetailPolicy.compactListHeight(itemCount: 1, availableHeight: 560) == 96)
-    #expect(
-      WorkspaceListDetailPolicy.compactListHeight(itemCount: 20, availableHeight: 560) == 190.4
-    )
-    #expect(WorkspaceListDetailPolicy.compactListHeight(itemCount: 20, availableHeight: 800) == 200)
-  }
-
-  @Test
-  func controllerDetailsChangeColumnsOnlyAtDocumentedBoundaries() {
-    #expect(ControllerDetailLayoutPolicy.factColumnCount(for: 559) == 1)
-    #expect(ControllerDetailLayoutPolicy.factColumnCount(for: 560) == 2)
-  }
-
-  @Test
   @MainActor
   func librarySelectionRemainsStableUntilItsSelectedItemDisappears() {
     let profile = makeProfile(name: "Healthy")

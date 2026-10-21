@@ -45,7 +45,7 @@
       if let window = NSApplication.shared.keyWindow {
         state.isFullScreen = window.styleMask.contains(.fullScreen)
         if let split = window.contentViewController as? NSSplitViewController,
-          let sidebar = split.splitViewItems.first
+          let sidebar = split.splitViewItems.first(where: { $0.behavior == .sidebar })
         {
           state.isSidebarVisible = !sidebar.isCollapsed
         }

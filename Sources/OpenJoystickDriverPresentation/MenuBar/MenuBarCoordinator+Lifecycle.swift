@@ -124,6 +124,7 @@
       )
       settingsWindow = SettingsWindowController(
         gateway: gateway,
+        runtime: viewModel,
         preferences: preferences,
         commandLineTool: commandLineTool
       ) { [weak self] isOpen in

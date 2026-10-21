@@ -8,36 +8,44 @@
   extension ControllerDetailView {
 
     var body: some View {
-      GeometryReader { proxy in
-        ScrollView {
-          VStack(alignment: .leading, spacing: 18) {
-            controllerHeader
-            controllerSessionAction
-            if device.supportsWirelessDisconnect { wirelessDisconnectAction }
-            if let failure = viewModel.controllerActionFailures[device.sessionToken.rawValue] {
-              controllerActionFailure(failure)
-            }
-            activeProfileRow
-            Divider()
-            controllerDetails(
-              compact: ControllerDetailLayoutPolicy.factColumnCount(for: proxy.size.width) == 1
-            )
-            Divider()
-            inputTestAction
-            if ControllerServerPicker.isShown(for: device) {
-              Divider()
-              ControllerServerPicker(viewModel: viewModel, device: device)
-            }
-            if device.physicalOwnership != .systemGamepad {
-              Divider()
-              // A per-controller identity collapses Advanced again on a new selection.
-              VirtualHIDProfileOverrideView(viewModel: viewModel, device: device).id(
-                device.sessionToken.rawValue
-              )
-            }
-          }.padding(28).frame(maxWidth: .infinity, alignment: .leading)
+      Form {
+        Section { controllerHeader }
+        Section {
+          controllerSessionAction
+          if device.supportsWirelessDisconnect { wirelessDisconnectAction }
+          if let failure = viewModel.controllerActionFailures[device.sessionToken.rawValue] {
+            controllerActionFailure(failure)
+          }
         }
-      }.ojdAccessibilityLabel(device.name).ojdAccessibilityValue(accessibilityValue).alert(
+        Section { activeProfileRow }
+        Section {
+          ForEach(controllerFacts, id: \.label) { fact in
+            if fact.isSerialNumber {
+              SerialNumberRow(
+                label: fact.label,
+                serial: fact.value,
+                visibility: $serialVisibility
+              )
+            } else {
+              OJDLabeledValue(fact.label, fact.value)
+            }
+          }
+        }
+        Section { inputTestAction }
+        if ControllerServerPicker.isShown(for: device) {
+          Section { ControllerServerPicker(viewModel: viewModel, device: device) }
+        }
+        if device.physicalOwnership != .systemGamepad {
+          // A per-controller identity collapses Advanced again on a new selection.
+          Section {
+            VirtualHIDProfileOverrideView(viewModel: viewModel, device: device).id(
+              device.sessionToken.rawValue
+            )
+          }
+        }
+      }.ojdGroupedForm().ojdAccessibilityLabel(device.name).ojdAccessibilityValue(
+        accessibilityValue
+      ).alert(
         isPresented: $confirmsWirelessDisconnect
       ) {
         Alert(
@@ -164,7 +172,7 @@
           .accessibilityHidden(true)
         VStack(alignment: .leading, spacing: 3) {
           Text(device.name).font(.headline.weight(.semibold)).lineLimit(1)
-          Text("\(reportedValue(device.connection)) · " + device.publishedIdentityLabel)
+          Text(headerSubtitle)
             .foregroundColor(Color(NSColor.secondaryLabelColor))
         }
         Spacer(minLength: 0)
@@ -175,20 +183,14 @@
     private var activeProfileRow: some View {
       switch activeProfile {
       case .loading:
-        KeyValueRow(
-          label: OJDLocalized.string("controllers.activeProfile"),
-          value: OJDLocalized.string("status.checking")
+        OJDLabeledValue(
+          OJDLocalized.string("controllers.activeProfile"),
+          OJDLocalized.string("status.checking")
         )
       case .noProfile:
-        KeyValueRow(
-          label: OJDLocalized.string("controllers.activeProfile"),
-          value: OJDLocalized.string("common.none")
-        )
+        OJDLabeledValue(OJDLocalized.string("controllers.activeProfile"), OJDValue.none)
       case .profile(let name):
-        KeyValueRow(
-          label: OJDLocalized.string("controllers.activeProfile"),
-          value: name
-        )
+        OJDLabeledValue(OJDLocalized.string("controllers.activeProfile"), name)
       case .unavailable(let message):
         profileFailureRow(
           label: OJDLocalized.string(
@@ -226,120 +228,63 @@
       }
     }
 
-    @ViewBuilder
-    private func controllerDetails(compact: Bool) -> some View {
-      if compact {
-        VStack(alignment: .leading, spacing: 12) {
-          ForEach(Array(controllerFacts.enumerated()), id: \.offset) { _, fact in
-            ControllerFactView(label: fact.label, value: fact.value)
-          }
-        }.frame(maxWidth: .infinity, alignment: .leading)
-      } else {
-        VStack(alignment: .leading, spacing: 8) {
-          // Rows carry their facts by value: index-based rows crashed when a
-          // later render had fewer facts than the ForEach identities it reused.
-          let facts = controllerFacts
-          let rows = stride(from: 0, to: facts.count, by: 2).map {
-            Array(facts[$0..<min($0 + 2, facts.count)])
-          }
-          ForEach(Array(rows.enumerated()), id: \.offset) { _, row in
-            HStack(alignment: .top, spacing: 24) {
-              ForEach(Array(row.enumerated()), id: \.offset) { _, fact in
-                ControllerFactView(label: fact.label, value: fact.value).frame(
-                  maxWidth: .infinity,
-                  alignment: .leading
-                )
-              }
-              if row.count == 1 { Spacer().frame(maxWidth: .infinity) }
-            }
-          }
-        }
-      }
-    }
-
-    private var controllerFacts: [(label: String, value: String)] {
+    private var controllerFacts: [(label: String, value: OJDValue, isSerialNumber: Bool)] {
       [
         (
-          OJDLocalized.string("controllers.publishedAs"),
-          device.publishedIdentityLabel
+          OJDLocalized.string("controllers.publishedAs"), .text(device.publishedIdentityLabel),
+          false
         ),
-        (OJDLocalized.string("controllers.serving.label"), device.servingRouteLabel),
+        (OJDLocalized.string("controllers.serving.label"), .text(device.servingRouteLabel), false),
+        (OJDLocalized.string("common.protocol"), .text(device.protocolBinding.displayLabel), false),
+        (OJDLocalized.string("common.serialNumber"), serialNumberValue, true),
+        (OJDLocalized.string("controllers.battery"), batteryValue, false),
+        (OJDLocalized.string("controllers.chargingState"), chargingStateValue, false),
+        (OJDLocalized.string("controllers.cableState"), cableStateValue, false),
+        (OJDLocalized.string("controllers.usbIdentifier"), usbIdentifierValue, false),
         (
-          OJDLocalized.string("common.protocol"),
-          device.protocolBinding.displayLabel
-        ),
-        (OJDLocalized.string("common.serialNumber"), serialNumberLabel),
-        (OJDLocalized.string("controllers.battery"), batteryPercentageLabel),
-        (
-          OJDLocalized.string("controllers.chargingState"),
-          chargingStateLabel
-        ),
-        (OJDLocalized.string("controllers.cableState"), cableStateLabel),
-        (OJDLocalized.string("controllers.usbIdentifier"), usbIdentifier),
-        (
-          OJDLocalized.string("common.inputEndpoint"),
-          endpointLabel(device.inputEndpoint)
+          OJDLocalized.string("common.inputEndpoint"), OJDValue.endpoint(device.inputEndpoint),
+          false
         ),
         (
-          OJDLocalized.string("common.outputEndpoint"),
-          endpointLabel(device.outputEndpoint)
+          OJDLocalized.string("common.outputEndpoint"), OJDValue.endpoint(device.outputEndpoint),
+          false
         ),
       ]
     }
 
-    var serialNumberLabel: String {
-      guard let serialNumber = device.serialNumber else {
-        return OJDLocalized.string("controllers.notReported")
-      }
-      return reportedValue(serialNumber)
+    /// The connection, when the controller reports one, then the published identity.
+    private var headerSubtitle: String {
+      [connectionValue.textOrNil, device.publishedIdentityLabel].compactMap { $0 }.joined(
+        separator: " · "
+      )
     }
 
-    var usbIdentifier: String {
-      guard device.vendorID != 0 || device.productID != 0 else {
-        return OJDLocalized.string("controllers.notReported")
-      }
-      return String(format: "%04X:%04X", device.vendorID, device.productID)
+    var connectionValue: OJDValue { .reported(device.connection) }
+
+    var serialNumberValue: OJDValue { .reported(device.serialNumber) }
+
+    var usbIdentifierValue: OJDValue {
+      .usbIdentifier(vendorID: device.vendorID, productID: device.productID)
     }
 
-    var batteryPercentageLabel: String {
-      guard let percentage = device.connectionState?.power.battery.percentageText else {
-        return OJDLocalized.string("common.unknown")
-      }
-      return percentage
-    }
+    var batteryValue: OJDValue { OJDValue(device.connectionState?.power.battery.percentageText) }
 
-    var chargingStateLabel: String {
+    var chargingStateValue: OJDValue {
       switch device.connectionState?.power.charging ?? .unknown {
-      case .discharging:
-        return OJDLocalized.string("controllers.discharging")
-      case .charging: return OJDLocalized.string("controllers.charging")
-      case .full: return OJDLocalized.string("controllers.batteryFull")
-      case .notChargeable:
-        return OJDLocalized.string("controllers.notChargeable")
-      case .unknown: return OJDLocalized.string("common.unknown")
+      case .discharging: return .text(OJDLocalized.string("controllers.discharging"))
+      case .charging: return .text(OJDLocalized.string("controllers.charging"))
+      case .full: return .text(OJDLocalized.string("controllers.batteryFull"))
+      case .notChargeable: return .text(OJDLocalized.string("controllers.notChargeable"))
+      case .unknown: return .none
       }
     }
 
-    var cableStateLabel: String {
+    var cableStateValue: OJDValue {
       switch device.connectionState?.power.wiredPower {
-      case true?:
-        return OJDLocalized.string("settings.controllerConnectedShort")
-      case false?:
-        return OJDLocalized.string("settings.controllerDisconnectedShort")
-      case nil: return OJDLocalized.string("common.unknown")
+      case true?: return .text(OJDLocalized.string("settings.controllerConnectedShort"))
+      case false?: return .text(OJDLocalized.string("settings.controllerDisconnectedShort"))
+      case nil: return .none
       }
-    }
-
-    func reportedValue(_ value: String) -> String {
-      let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
-      return trimmed.isEmpty
-        ? OJDLocalized.string("controllers.notReported") : trimmed
-    }
-
-    func endpointLabel(_ endpoint: UInt8) -> String {
-      endpoint == 0
-        ? OJDLocalized.string("controllers.notReported")
-        : String(format: "0x%02X", endpoint)
     }
   }
 

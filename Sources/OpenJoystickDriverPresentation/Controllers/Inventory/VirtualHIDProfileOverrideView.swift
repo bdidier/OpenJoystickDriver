@@ -43,10 +43,7 @@
           horizontal: false,
           vertical: true
         )
-        KeyValueRow(
-          label: OJDLocalized.string("virtualProfile.live"),
-          value: liveProfileLabel
-        )
+        OJDLabeledValue(OJDLocalized.string("virtualProfile.live"), liveProfileLabel)
         if overrideState.inFlight {
           HStack(spacing: 8) {
             ProgressView()

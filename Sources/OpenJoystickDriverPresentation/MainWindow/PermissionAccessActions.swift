@@ -52,6 +52,23 @@
       }
     }
 
+    /// The Privacy & Security pane URLs for `pane`, the System Settings one first on macOS 13 and
+    /// later.
+    static func privacySettingsURLs(pane: String) -> [URL] {
+      var urls: [URL] = []
+      if #available(macOS 13.0, *) {
+        if let url = URL(
+          string: "x-apple.systempreferences:com.apple.settings.PrivacySecurity.extension?\(pane)"
+        ) {
+          urls.append(url)
+        }
+      }
+      if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?\(pane)") {
+        urls.append(url)
+      }
+      return urls
+    }
+
     @MainActor
     private static func openPrivacySettings(for permissions: RuntimePermissionSummary) {
       let pane: String
@@ -65,17 +82,7 @@
 
     @MainActor
     private static func openPrivacySettings(pane: String) {
-      var urls: [URL] = []
-      if #available(macOS 13.0, *) {
-        if let url = URL(
-          string: "x-apple.systempreferences:com.apple.settings.PrivacySecurity.extension?\(pane)"
-        ) {
-          urls.append(url)
-        }
-      }
-      if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?\(pane)") {
-        urls.append(url)
-      }
+      let urls = privacySettingsURLs(pane: pane)
       for url in urls where NSWorkspace.shared.open(url) { return }
       let fallbackPath: String
       if #available(macOS 13.0, *) {

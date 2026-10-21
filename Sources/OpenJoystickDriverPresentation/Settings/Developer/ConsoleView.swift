@@ -112,7 +112,6 @@
     var body: some View {
       VStack(alignment: .leading, spacing: 12) {
         HStack {
-          PageHeader(title: OJDLocalized.string("console.title"))
           Spacer()
           Picker(
             OJDLocalized.string("console.stream"),

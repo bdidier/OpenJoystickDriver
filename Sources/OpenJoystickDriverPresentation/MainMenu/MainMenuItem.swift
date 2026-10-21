@@ -160,8 +160,8 @@ struct MainMenuState: Equatable, Sendable {
   var hasSelectedProfile = false
   var hasMainWindow = false
   var hasSettingsWindow = false
-  var isSidebarVisible = true
   var isFullScreen = false
+  var isSidebarVisible = true
 
   /// The controller the Controller and Profile menus act on: the one selected in the Controllers
   /// area. Without a target those items stay disabled and the Controller menu's first row says

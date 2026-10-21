@@ -15,6 +15,7 @@
     var navigation: MainWindowNavigationModel
     @ObservedObject
     var screen: ProfilesViewModel
+    let column: MainWindowColumn
   }
 
 #endif

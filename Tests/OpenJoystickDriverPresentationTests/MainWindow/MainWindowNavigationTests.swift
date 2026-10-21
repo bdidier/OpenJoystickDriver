@@ -130,7 +130,7 @@ struct MainWindowNavigationTests {
   @Test
   func mainWindowUsesStableContentSizingAcrossAreas() {
     #expect(MainWindowSizingPolicy.defaultContentSize == NSSize(width: 1_040, height: 700))
-    #expect(MainWindowSizingPolicy.minimumContentSize == NSSize(width: 800, height: 560))
+    #expect(MainWindowSizingPolicy.minimumContentSize == NSSize(width: 960, height: 560))
   }
 
   @Test
@@ -197,7 +197,7 @@ struct MainWindowNavigationTests {
     let persistence = UserDefaultsMainWindowAreaPersistence(defaults: defaults)
 
     let initial = MainWindowNavigationModel(persistence: persistence)
-    #expect(initial.selectedArea == .status)
+    #expect(initial.selectedArea == .controllers)
     initial.requestArea(.profiles)
     #expect(initial.selectedArea == .profiles)
 
@@ -314,12 +314,12 @@ struct MainWindowNavigationTests {
     #expect(!navigation.beginProfilesEditorMutation(first))
     #expect(!navigation.beginProfilesEditorMutation(second))
     navigation.requestArea(.library)
-    #expect(navigation.selectedArea == .status)
+    #expect(navigation.selectedArea == .controllers)
     #expect(navigation.pendingArea == nil)
 
     #expect(!navigation.finishProfilesEditorMutation(second))
     navigation.requestArea(.library)
-    #expect(navigation.selectedArea == .status)
+    #expect(navigation.selectedArea == .controllers)
     #expect(navigation.pendingArea == nil)
 
     #expect(navigation.finishProfilesEditorMutation(first))
@@ -343,7 +343,7 @@ struct MainWindowNavigationTests {
 
     #expect(navigation.beginProfilesEditorMutation(request))
     navigation.requestArea(.library)
-    #expect(navigation.selectedArea == .status)
+    #expect(navigation.selectedArea == .controllers)
     #expect(navigation.pendingArea == nil)
 
     #expect(
@@ -392,7 +392,7 @@ struct MainWindowNavigationTests {
     navigation.setProfilesEditorDirty(transition.isDirty)
 
     navigation.requestArea(.library)
-    #expect(navigation.selectedArea == .status)
+    #expect(navigation.selectedArea == .controllers)
     #expect(navigation.pendingArea == .library)
     #expect(navigation.isDiscardConfirmationPresented)
     #expect(transition.isDirty)

@@ -57,32 +57,20 @@
       nonmutating set { screen.selectedEditorSection = newValue }
     }
 
+    @ViewBuilder
     var body: some View {
+      switch column {
+      case .list: profileList
+      case .detail: detailColumn
+      }
+    }
+
+    private var detailColumn: some View {
       VStack(alignment: .leading, spacing: 0) {
         if let profileActionError {
           ProfileActionErrorBanner(message: profileActionError) { self.profileActionError = nil }
         }
-        GeometryReader { proxy in
-          if WorkspaceListDetailPolicy.layout(for: proxy.size.width) == .stacked {
-            VStack(spacing: 0) {
-              profileList.frame(
-                height: WorkspaceListDetailPolicy.compactListHeight(
-                  itemCount: profiles.count + (currentSnapshot?.profileIssues.count ?? 0),
-                  availableHeight: proxy.size.height
-                )
-              )
-              Divider()
-              profileDetail.frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
-          } else {
-            HStack(spacing: 0) {
-              profileList.frame(width: WorkspaceListDetailPolicy.listWidth(for: proxy.size.width))
-                .frame(maxHeight: .infinity, alignment: .topLeading)
-              Divider()
-              profileDetail.frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
-          }
-        }
+        profileDetail.frame(maxWidth: .infinity, maxHeight: .infinity)
       }
       // Older macOS presents only the last of several sheets attached to one view (unverified on
       // macOS 12), so each sheet hangs off its own sibling background view.
@@ -240,21 +228,6 @@
 
     var profileList: some View {
       VStack(alignment: .leading, spacing: 8) {
-        HStack {
-          Text(OJDLocalized.string("common.profiles")).font(.headline)
-            .lineLimit(1).layoutPriority(1)
-          Spacer()
-          OJDCompactSymbolButton(
-            symbolName: "plus",
-            label: OJDLocalized.string("profiles.new")
-          ) { isCreatingProfile = true }.disabled(isProfileActionBlocked)
-          OJDCompactSymbolButton(
-            symbolName: "square.and.arrow.down",
-            label: OJDLocalized.string("profiles.import"),
-            action: importProfile
-          ).disabled(isProfileActionBlocked)
-        }.padding(.horizontal, 14).padding(.top, 18)
-
         switch viewModel.remappingState {
         case .loading:
           LoadingStateView(
@@ -278,7 +251,7 @@
           }
         }
         Spacer(minLength: 0)
-      }.background(Color(NSColor.controlBackgroundColor))
+      }
     }
 
     var profileListRows: some View {
@@ -336,7 +309,7 @@
             profileIssueMessage(issue)
           )
         }
-      }.listStyle(SidebarListStyle()).disabled(isMutationActive || library.profileRecoveryInFlight)
+      }.listStyle(InsetListStyle()).disabled(isMutationActive || library.profileRecoveryInFlight)
     }
   }
 

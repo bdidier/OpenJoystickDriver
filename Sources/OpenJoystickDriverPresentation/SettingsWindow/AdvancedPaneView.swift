@@ -4,16 +4,20 @@
   import OpenJoystickDriverKit
   import SwiftUI
 
-  /// The developer tools switch and, while it is on, the developer tools.
+  /// The Xbox USB driver extension, the developer tools switch and, while it is on, the
+  /// developer tools.
   struct AdvancedPaneView: View {
     @ObservedObject
     var preferences: SettingsPreferencesModel
     let developerTools: DeveloperToolsViewModel
+    let runtime: RuntimeViewModel
 
     var body: some View {
-      VStack(alignment: .leading, spacing: 0) {
-        VStack(alignment: .leading, spacing: 12) {
-          GroupBox {
+      VStack(spacing: 0) {
+        SettingsErrorBanner(preferences: preferences).padding(.horizontal, 24).padding(.top, 12)
+        Form {
+          DriverExtensionSection(runtime: runtime)
+          Section(OJDLocalized.string("settings.developerTools")) {
             SettingsSwitchRow(
               title: OJDLocalized.string("settings.enableDeveloperTools"),
               description: OJDLocalized.string("settings.developerToolsDescription"),
@@ -21,20 +25,17 @@
                 get: { preferences.developerToolsEnabled },
                 set: { preferences.setDeveloperToolsEnabled($0) }
               )
-            ).padding(4)
-          } label: {
-            Text(OJDLocalized.string("settings.developerTools")).font(.headline)
+            )
           }
-          SettingsErrorBanner(preferences: preferences)
-        }.padding(24)
-        if preferences.developerToolsEnabled {
-          DeveloperToolsView(model: developerTools)
-        } else {
-          Text(OJDLocalized.string("settingsPane.advanced.developerToolsOff")).foregroundColor(
-            Color(NSColor.secondaryLabelColor)
-          ).padding(.horizontal, 24)
-          Spacer(minLength: 0)
-        }
+          if preferences.developerToolsEnabled {
+            Section { DeveloperToolsView(model: developerTools) }
+          } else {
+            Section {
+              Text(OJDLocalized.string("settingsPane.advanced.developerToolsOff"))
+                .foregroundColor(Color(NSColor.secondaryLabelColor))
+            }
+          }
+        }.ojdGroupedForm()
       }
     }
   }

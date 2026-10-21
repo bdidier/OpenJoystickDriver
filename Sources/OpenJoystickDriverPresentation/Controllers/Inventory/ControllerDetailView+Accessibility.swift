@@ -10,20 +10,20 @@
     var accessibilityValue: String {
       let details = OJDLocalized.formatted(
         "controllers.accessibilityDetails",
-        reportedValue(device.connection),
+        connectionValue.spokenText,
         profileAccessibilityValue,
         device.protocolBinding.displayLabel,
-        reportedValue(device.protocolBinding.rawValue),
-        serialNumberLabel,
-        usbIdentifier,
-        endpointLabel(device.inputEndpoint),
-        endpointLabel(device.outputEndpoint)
+        OJDValue.reported(device.protocolBinding.rawValue).spokenText,
+        serialVisibility.presentation(of: serialNumberValue).spokenText,
+        usbIdentifierValue.spokenText,
+        OJDValue.endpoint(device.inputEndpoint).spokenText,
+        OJDValue.endpoint(device.outputEndpoint).spokenText
       )
       let battery = OJDLocalized.formatted(
         "controllers.batteryAccessibilityDetails",
-        batteryPercentageLabel,
-        chargingStateLabel,
-        cableStateLabel
+        batteryValue.spokenText,
+        chargingStateValue.spokenText,
+        cableStateValue.spokenText
       )
       return "\(details) \(battery)"
     }

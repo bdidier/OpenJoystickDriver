@@ -38,6 +38,7 @@
     @Published
     var selectedEditorSection = ProfilePresentationPolicy.defaultSection
 
+    @Published
     var editorTransition = ProfileEditorTransitionState()
     var observedDiscardGeneration = 0
     var lastKnownSnapshot: ApplicationServiceRemappingSnapshotPayload?
@@ -48,6 +49,19 @@
 
     init(documents: ProfileDocumentService = ProfileDocumentService()) {
       self.documents = documents
+    }
+
+    /// Whether profile creation, import, delete and the like must wait: a mutation or recovery is
+    /// running, or the library has damaged entries. The Profiles screen and the toolbar share this.
+    func isActionBlocked(library: ProfileLibraryModel, runtime: RuntimeViewModel) -> Bool {
+      let snapshot: ApplicationServiceRemappingSnapshotPayload?
+      if case .available(let current) = runtime.remappingState {
+        snapshot = current
+      } else {
+        snapshot = lastKnownSnapshot
+      }
+      return library.activeMutationOperation != nil || editorTransition.isEditingBlocked
+        || library.profileRecoveryInFlight || !(snapshot?.profileIssues.isEmpty ?? true)
     }
 
     /// Asks for a profile file and reads it into ``chosenImportProfile``.

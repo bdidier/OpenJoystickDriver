@@ -210,8 +210,8 @@
 
     private func colorSlider(_ title: String, value: Binding<Double>) -> some View {
       VStack(alignment: .leading, spacing: 4) {
-        Text("\(title): \(Int(value.wrappedValue))").font(.caption)
-        Slider(value: value, in: 0...255, step: 1).ojdAccessibilityLabel(title)
+        Text("\(title): \(Int(value.wrappedValue.rounded()))").font(.caption)
+        Slider(value: value, in: 0...255).ojdAccessibilityLabel(title)
       }
     }
   }

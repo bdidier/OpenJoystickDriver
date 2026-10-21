@@ -10,20 +10,17 @@
 
     init(model: DeveloperToolsViewModel) { self.model = model }
 
+    /// The pane's Settings window has a fixed width, so the content always uses the wide layout.
+    /// The view does not scroll; the pane's form does.
     var body: some View {
-      GeometryReader { proxy in
-        ScrollView {
-          VStack(alignment: .leading, spacing: 20) {
-            PageHeader(
-              title: OJDLocalized.string("developer.title"),
-              subtitle: OJDLocalized.string(
-                "developer.subtitle"
-              )
-            )
-            content(compact: proxy.size.width < 760)
-          }.padding(24).frame(maxWidth: .infinity, alignment: .leading)
-        }
-      }.onAppear { model.requestRefresh() }.onDisappear { model.close() }
+      VStack(alignment: .leading, spacing: 20) {
+        PageHeader(
+          title: OJDLocalized.string("developer.title"),
+          subtitle: OJDLocalized.string("developer.subtitle")
+        )
+        content(compact: false)
+      }.frame(maxWidth: .infinity, alignment: .leading).onAppear { model.requestRefresh() }
+        .onDisappear { model.close() }
     }
 
     @ViewBuilder

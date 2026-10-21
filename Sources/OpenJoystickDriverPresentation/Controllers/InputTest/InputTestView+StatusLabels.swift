@@ -50,17 +50,8 @@
       }
     }
 
-    func reported(_ value: String) -> String {
-      let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
-      return trimmed.isEmpty
-        ? OJDLocalized.string("controllers.notReported") : trimmed
-    }
-
-    func usbIdentifier(_ device: ApplicationServiceDeviceDescription) -> String {
-      guard device.vendorID != 0 || device.productID != 0 else {
-        return OJDLocalized.string("controllers.notReported")
-      }
-      return String(format: "%04X:%04X", device.vendorID, device.productID)
+    func usbIdentifier(_ device: ApplicationServiceDeviceDescription) -> OJDValue {
+      .usbIdentifier(vendorID: device.vendorID, productID: device.productID)
     }
   }
 

@@ -26,7 +26,6 @@
 "status.notNeeded" = "Niet nodig";
 "status.connectController" = "Sluit een controller aan";
 "status.noActiveProfile" = "Geen actief profiel";
-"status.checkingControllerAccess" = "Controllertoegang controleren…";
 "status.checkingControllers" = "Aangesloten controllers controleren…";
 "settings.controllers" = "Controllers";
 "settings.profiles" = "Profielen";
@@ -35,7 +34,6 @@
 "settings.checkUpdates" = "Controleer nu";
 "settings.contactingGitHub" = "GitHub wordt benaderd…";
 "settings.controllerConnectedShort" = "Verbonden";
-"settings.controllerStatus" = "Controllerstatus";
 "settings.requestAccess" = "Vraag toegang tot “%@” aan";
 "settings.controllerDisconnectedNotifications" = "Controller verbroken";
 "settings.controllerDisconnectedShort" = "Verbroken";
@@ -82,8 +80,10 @@
 "controllers.loadError" = "Controllers konden niet worden geladen";
 "controllers.emptyTitle" = "Geen controller aangesloten";
 "controllers.emptyMessage" = "Sluit een controller aan en kies daarna “Vernieuwen”.";
-"controllers.notReported" = "Niet gemeld";
 "controllers.battery" = "Batterij";
+"controllers.serial.show" = "Toon serienummer";
+"controllers.serial.hide" = "Verberg serienummer";
+"controllers.serial.hidden" = "Verborgen";
 "controllers.chargingState" = "Oplaadstatus";
 "controllers.cableState" = "Kabelstatus";
 "controllers.discharging" = "Wordt ontladen";
@@ -335,8 +335,6 @@
 "common.unavailable" = "Niet beschikbaar";
 "common.needsAttention" = "Aandacht vereist";
 "common.status" = "Status";
-"common.controllers" = "Controllers";
-"common.profiles" = "Profielen";
 "common.protocol" = "Protocol";
 "common.serialNumber" = "Serienummer";
 "common.inputEndpoint" = "Invoereindpunt";
@@ -372,7 +370,6 @@
 "cli.transport_extension.completed" = "Verzoek om systeemextensie voltooid met resultaat %@.";
 "cli.transport_extension.failed" = "Verzoek om systeemextensie mislukt: %@ code=%d %@";
 "cli.transport_extension.replacing" = "%@ v%@ vervangen door v%@.";
-"common.unknown" = "Onbekend";
 "controller.dualSense" = "DualSense";
 "controller.dualShock3" = "DualShock 3";
 "controller.dualShock4" = "DualShock 4";
@@ -515,21 +512,20 @@
 "keyboard.alt" = "Option";
 "keyboard.shift" = "Shift";
 "mapping.automatic" = "Automatisch";
-"setup.activating" = "Activeren…";
 "setup.activeDetail" = "Het beperkte Xbox-USB-stuurprogramma is geïnstalleerd en gereed.";
 "setup.approvalDetail" = "Keur het stuurprogramma goed in Systeeminstellingen om ondersteunde Microsoft-USB-controllers te gebruiken.";
-"setup.approvalNeeded" = "Goedkeuring nodig";
-"setup.checking" = "Controleren…";
 "setup.checkingDetail" = "Het geïnstalleerde Xbox-USB-stuurprogramma controleren.";
-"setup.controllerTest" = "Controllertest";
-"setup.copySupportReport" = "Kopieer supportrapport";
-"setup.driverAccessibility" = "Installatie van Xbox-USB-stuurprogramma";
 "setup.driverTitle" = "Xbox-USB-stuurprogramma";
 "setup.invalidDetail" = "Het ingesloten Xbox-USB-stuurprogramma is ongeldig. Herstel dit door deze app opnieuw te installeren.";
 "setup.missingDetail" = "Deze app bevat het Xbox-USB-stuurprogramma niet. Installeer de ondertekende app opnieuw.";
 "setup.openSystemSettings" = "Open Systeeminstellingen";
+"setup.openSystemSettingsFailed" = "Systeeminstellingen kon niet worden geopend.";
 "setup.repairDetail" = "OpenJoystickDriver herstelt het Xbox-USB-stuurprogramma zonder ontwikkelaarshulpmiddelen.";
+"setup.uninstallDetail" = "Xbox-USB-controllers werken niet meer totdat het stuurprogramma opnieuw is geïnstalleerd.";
 "setup.repairDriver" = "Herstel Xbox-USB-stuurprogramma";
+"banner.service.title" = "OpenJoystickDriver kan zijn service niet bereiken";
+"banner.access.title" = "Toestemming vereist";
+"banner.access.detail" = "macOS heeft niet alles toegestaan wat OpenJoystickDriver nodig heeft om controllers uit te lezen en voor games beschikbaar te maken.";
 "cli.login.uninstall_action" = "Verwijder installatie";
 "console.all" = "Alles";
 "console.copyAll" = "Kopieer alles";
@@ -541,7 +537,6 @@
 "console.loadError" = "Logboeken konden niet worden gelezen";
 "console.output" = "Uitvoer";
 "console.stream" = "Stream";
-"console.title" = "Console";
 "notifications.controllerConnected" = "Controller verbonden";
 "notifications.controllerConnectedBody" = "%@ is klaar voor gebruik.";
 "notifications.controllerDisconnected" = "Controller verbroken";
@@ -1573,8 +1568,6 @@
 "error.withCode" ="%@ (%@)";
 
 /* Main window, status item, main menu, settings window, library and access. */
-"library.title" = "Bibliotheek";
-"library.subtitle" = "Controllerrecords en mods die je hebt geïnstalleerd.";
 "library.details" = "Details";
 "library.dismiss" = "Sluit";
 "library.choose" = "Kies";
@@ -1624,14 +1617,10 @@
 "a11y.library.dismissError" = "Sluit de fout";
 "a11y.library.dismissNotice" = "Sluit het bericht";
 "a11y.library.validateRecord" = "Valideer een recordbestand zonder het te installeren";
-"a11y.library.installRecord" = "Installeer een recordbestand";
 "a11y.library.removeRecord" = "Verwijder het record voor %@";
 "a11y.library.validateMod" = "Valideer een modmap zonder die te installeren";
-"a11y.library.installMod" = "Installeer een modmap";
 "a11y.library.removeMod" = "Verwijder de mod %@";
 "a11y.library.cancel" = "Annuleer en laat de bibliotheek ongewijzigd";
-"access.title" = "Toegang";
-"access.subtitle" = "Wat macOS OpenJoystickDriver toestaat te doen en welke programma’s en webpagina’s controllergegevens mogen gebruiken.";
 "access.details" = "Details";
 "access.dismiss" = "Sluit";
 "access.tryAgain" = "Probeer opnieuw";
@@ -1724,6 +1713,7 @@
 "a11y.access.done" = "Sluit het token";
 "a11y.access.scope" = "Bereik %@";
 "a11y.access.cancel" = "Annuleer en laat de toegang ongewijzigd";
+"a11y.value.none" = "Geen waarde";
 "mainMenu.app.about" = "Over %@";
 "mainMenu.app.settings" = "Instellingen…";
 "mainMenu.app.services" = "Voorzieningen";
@@ -1746,10 +1736,10 @@
 "mainMenu.edit.paste" = "Plak";
 "mainMenu.edit.selectAll" = "Selecteer alles";
 "mainMenu.view" = "Weergave";
-"mainMenu.view.showSidebar" = "Toon navigatiekolom";
-"mainMenu.view.hideSidebar" = "Verberg navigatiekolom";
 "mainMenu.view.enterFullScreen" = "Ga naar volledig scherm";
 "mainMenu.view.exitFullScreen" = "Verlaat volledig scherm";
+"mainMenu.view.showSidebar" = "Toon navigatiekolom";
+"mainMenu.view.hideSidebar" = "Verberg navigatiekolom";
 "mainMenu.controller" = "Controller";
 "mainMenu.controller.suspend" = "Onderbreek";
 "mainMenu.controller.resume" = "Hervat";
@@ -1776,22 +1766,11 @@
 "mainMenu.copySupportReport.doneDetail" = "Het supportrapport staat op het klembord.";
 "mainMenu.copySupportReport.failed" = "Het supportrapport kan niet worden gekopieerd";
 "mainMenu.copySupportReport.failedDetail" = "Het rapport kan niet worden verzameld. Bewaar het in plaats daarvan in een bestand.";
-"area.status.title" = "Status";
 "area.controllers.title" = "Controllers";
 "area.profiles.title" = "Profielen";
 "area.library.title" = "Bibliotheek";
 "area.access.title" = "Toegang";
 "area.activity.title" = "Activiteit";
-"a11y.area.status" = "Status";
-"a11y.area.controllers" = "Controllers";
-"a11y.area.profiles" = "Profielen";
-"a11y.area.library" = "Bibliotheek";
-"a11y.area.access" = "Toegang";
-"a11y.area.activity" = "Activiteit";
-"a11y.mainWindow.sidebar" = "Onderdelen";
-"mainWindow.areas" = "Onderdelen";
-"mainWindow.showSidebar" = "Toon navigatiekolom";
-"mainWindow.hideSidebar" = "Verberg navigatiekolom";
 "cli.setting.show_in_menu_bar" = "Toon het onderdeel van OpenJoystickDriver in de menubalk.";
 "cli.setting.check_updates_automatically" = "Zoek naar updates wanneer de app start.";
 "settingsPane.general.title" = "Algemeen";
@@ -1833,6 +1812,7 @@
 "menuBar.actionFailedTitle" = "De actie is niet voltooid";
 "menuBar.profileConflict" = "Het profiel is gewijzigd voordat deze actie werd uitgevoerd. Probeer opnieuw.";
 "a11y.menuBar.statusItem" = "Status van OpenJoystickDriver";
+"a11y.mainWindow.sidebar" = "Onderdelen";
 "access.detail.pair" = "%1$@ · %2$@";
 "access.detail.triple" = "%1$@ · %2$@ · %3$@";
 "access.grant.noPath" = "OpenJoystickDriver kan het uitvoerbare bestand van %@ niet lezen en kan er dus geen toegang aan geven.";

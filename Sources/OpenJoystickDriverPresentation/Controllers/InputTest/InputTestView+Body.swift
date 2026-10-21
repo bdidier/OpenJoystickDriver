@@ -4,6 +4,41 @@
   import OpenJoystickDriverKit
   import SwiftUI
 
+  /// One rumble motor's control. It observes the output settings itself, so its slider and
+  /// value follow each change; rows built inside `ForEach` are not re-rendered by a parent
+  /// that observes the settings.
+  struct InputTestRumbleMotorControl: View {
+    @ObservedObject
+    var settings: InputTestOutputSettings
+    let motor: PhysicalRumbleMotor
+    let title: String
+    let isBinary: Bool
+
+    var body: some View {
+      let value = Binding<Double>(
+        get: { settings.rumbleIntensities[motor] ?? 0 },
+        set: { settings.rumbleIntensities[motor] = $0 }
+      )
+      if isBinary {
+        Toggle(
+          title,
+          isOn: Binding(get: { value.wrappedValue > 0 }, set: { value.wrappedValue = $0 ? 255 : 0 })
+        )
+      } else {
+        VStack(alignment: .leading, spacing: 3) {
+          HStack {
+            Text(title)
+            Spacer()
+            Text("\(Int(value.wrappedValue.rounded()))").font(
+              .system(.caption, design: .monospaced)
+            )
+          }
+          Slider(value: value, in: 0...255)
+        }
+      }
+    }
+  }
+
   extension InputTestView {
     var body: some View {
       GeometryReader { proxy in
@@ -28,8 +63,10 @@
         Text(statusLabel).font(.subheadline.weight(.semibold))
         if let device = model.device {
           Text(
-            "\(reported(device.connection)) · \(device.protocolBinding.displayLabel) · "
-              + "\(reported(device.protocolBinding.rawValue)) · \(usbIdentifier(device)) · "
+            "\(OJDValue.reported(device.connection).displayText) · "
+              + "\(device.protocolBinding.displayLabel) · "
+              + "\(OJDValue.reported(device.protocolBinding.rawValue).displayText) · "
+              + "\(usbIdentifier(device).displayText) · "
               + device.publishedIdentityLabel
           ).font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor))
         }
@@ -213,10 +250,12 @@
               HStack {
                 Text(OJDLocalized.string("inputTest.brightness"))
                 Spacer()
-                Text("\(Int(model.brightness))").font(.system(.caption, design: .monospaced))
+                Text("\(Int(model.brightness.rounded()))").font(
+                  .system(.caption, design: .monospaced)
+                )
               }
               HStack {
-                Slider(value: brightnessBinding, in: 0...255, step: 1)
+                Slider(value: brightnessBinding, in: 0...255)
                 Button(OJDLocalized.string("common.apply")) {
                   model.applyBrightness()
                 }
@@ -258,27 +297,13 @@
       }
     }
 
-    @ViewBuilder
     private func rumbleControl(for motor: PhysicalRumbleMotor) -> some View {
-      let value = Binding<Double>(
-        get: { model.rumbleIntensities[motor] ?? 0 },
-        set: { model.rumbleIntensities[motor] = $0 }
+      InputTestRumbleMotorControl(
+        settings: model.outputSettings,
+        motor: motor,
+        title: motorLabel(motor),
+        isBinary: model.capabilities.binaryRumbleMotors.contains(motor)
       )
-      if model.capabilities.binaryRumbleMotors.contains(motor) {
-        Toggle(
-          motorLabel(motor),
-          isOn: Binding(get: { value.wrappedValue > 0 }, set: { value.wrappedValue = $0 ? 255 : 0 })
-        )
-      } else {
-        VStack(alignment: .leading, spacing: 3) {
-          HStack {
-            Text(motorLabel(motor))
-            Spacer()
-            Text("\(Int(value.wrappedValue))").font(.system(.caption, design: .monospaced))
-          }
-          Slider(value: value, in: 0...255, step: 1)
-        }
-      }
     }
 
     private func unavailableOutputLabel(_ message: String) -> some View {

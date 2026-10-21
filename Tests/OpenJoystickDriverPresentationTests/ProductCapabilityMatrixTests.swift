@@ -13,12 +13,13 @@ struct ProductCapabilityMatrixTests {
   @Test
   func consumerWorkflowsHaveWorkbenchDestinations() {
     let expected: [RuntimeWorkflow: Set<ProductSurface>] = [
-      .status: [.overview], .runtimeDiagnostics: [.developerTools], .controllerList: [.controllers],
+      .status: [.problemBanner, .controllers], .runtimeDiagnostics: [.developerTools],
+      .controllerList: [.controllers],
       .controllerState: [.inputTest], .controllerWatch: [.inputTest],
       .controllerOutput: [.inputTest], .controllerPackets: [.developerTools],
-      .profileMapping: [.profiles], .permissions: [.overview],
+      .profileMapping: [.profiles], .permissions: [.problemBanner, .access],
       .virtualHIDProfileOverride: [.controllers], .logs: [.console],
-      .supportReport: [.developerTools], .extensionLifecycle: [.overview],
+      .supportReport: [.developerTools], .extensionLifecycle: [.problemBanner, .settings],
       .updateCheck: [.settings],
     ]
 

@@ -49,7 +49,7 @@
 
     init(persistence: any MainWindowAreaPersistence = UserDefaultsMainWindowAreaPersistence()) {
       self.persistence = persistence
-      selectedArea = persistence.loadArea() ?? .status
+      selectedArea = persistence.loadArea() ?? .controllers
     }
 
     /// Asks to show `area`. Returns true when the area is selected on return.

@@ -41,10 +41,6 @@
       GeometryReader { proxy in
         ScrollView {
           VStack(alignment: .leading, spacing: 20) {
-            PageHeader(
-              title: OJDLocalized.string("access.title"),
-              subtitle: OJDLocalized.string("access.subtitle")
-            )
             if let failure = model.failure {
               errorView(failure, actionTitle: "access.dismiss", action: model.dismissFailure)
             }

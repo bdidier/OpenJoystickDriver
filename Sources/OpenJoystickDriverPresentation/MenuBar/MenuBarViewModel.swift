@@ -20,9 +20,7 @@
 
     var needsPermissionAttention: Bool {
       guard case .available(let status) = runtime.statusState else { return false }
-      let needsPostEventAccess =
-        status.requiresPostEventAccess == true && status.postEventAccess != .granted
-      return !status.permissions.isReady || needsPostEventAccess
+      return status.needsAccess
     }
 
     var summaryTitle: String {
