@@ -23,8 +23,9 @@ the rules below produce. The rules:
   `ui.menu.<menu>.<item>`. A key already in `term.` or `ui.` keeps its name.
 - A `cli` key becomes `cli.<group>.<command>.<leaf>` when `<command>` is a command of the group in
   the command tree under `Sources/OpenJoystickDriverCLI` (`commandName:` values, grouped by the
-  directory under `Commands`). Every other key of the group becomes `cli.<group>.group.<leaf>`,
+  directory under `Commands`), spelled as the command name or already in lowerCamelCase. Every other key of the group becomes `cli.<group>.group.<leaf>`,
   and the cross-command groups `error`, `option`, `document` and `help` use the group `shared`.
+- A key already in the `ui.settings.<pane>.<leaf>` shape keeps it.
 - A value that names an operating system (`OS_WORDS`) moves under `platform.macos.`, with the
   namespaced key as the path, except when Swift builds the key from a prefix (a key in
   `error.`, `area.`, `profiles.stick.` and the other patterns `check_localization_keys` lists as
@@ -231,7 +232,7 @@ def cli_key(parts: list[str], tree: dict[str, frozenset[str]]) -> list[str]:
         raise ValueError("cli key without a leaf")
     head = rest[0]
     commands = tree.get(group, frozenset())
-    # A key spelled in the new lowerCamelCase names its command the same way.
+    # A key whose command segment is already lowerCamelCase names its command the same way.
     if len(rest) > 1 and (
         head in commands or head in {camel(name) for name in commands}
     ):
@@ -266,6 +267,8 @@ def new_segments(old: str, tree: dict[str, frozenset[str]]) -> list[str]:
         return cli_key(rest, tree)
     if top in ("settings", "settingsPane"):
         return settings_key(parts)
+    if top == "ui" and rest[0] == "settings":
+        return parts
     if top == "a11y" and rest[0] == "settingsPane":
         return ["a11y", "settingsPane", join_leaf(rest[1:])]
     if top == "mainMenu":

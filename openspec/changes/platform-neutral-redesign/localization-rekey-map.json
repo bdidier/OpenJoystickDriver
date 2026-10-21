@@ -1948,6 +1948,8 @@
     "term.protocolVariant.usb": "term.protocolVariant.usb",
     "term.protocolVariant.wired": "term.protocolVariant.wired",
     "ui.library.recordUnreadable": "ui.library.recordUnreadable",
+    "ui.settings.notifications.noNotificationCenter": "ui.settings.notifications.noNotificationCenter",
+    "ui.settings.notifications.testReportLost": "ui.settings.notifications.testReportLost",
     "virtualProfile.advanced": "ui.virtualProfile.advanced",
     "virtualProfile.automaticSelected": "ui.virtualProfile.automaticSelected",
     "virtualProfile.failure.activationFailed": "ui.virtualProfile.failure.activationFailed",

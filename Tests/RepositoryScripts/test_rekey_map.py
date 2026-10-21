@@ -156,6 +156,7 @@ class RekeyMapTests(unittest.TestCase):
             "keyboard.escape": "term.key.escape",
             "settings.startAtLogin": "ui.settings.general.startAtLogin",
             "settingsPane.advanced.title": "ui.settings.advanced.title",
+            "ui.settings.notifications.testReportLost": "ui.settings.notifications.testReportLost",
             "cli.controller.list.abstract": "cli.controller.list.abstract",
             "cli.setting.testNotification.abstract": "cli.setting.testNotification.abstract",
             "cli.controller.abstract": "cli.controller.group.abstract",
