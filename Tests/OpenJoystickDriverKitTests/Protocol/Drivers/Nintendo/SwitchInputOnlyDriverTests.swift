@@ -17,7 +17,6 @@ private enum InputOnlyReport {
 struct SwitchInputOnlyDriverTests {
   static let family = PhysicalProtocolID.nintendoSwitchInputOnly
 
-
   @Test
   func inputOnlyRowsBindNintendoSwitchInputOnlyAndBuildItsDriver() throws {
     let models = [(0x0E6F, 0x0180), (0x0F0D, 0x0092)].map {

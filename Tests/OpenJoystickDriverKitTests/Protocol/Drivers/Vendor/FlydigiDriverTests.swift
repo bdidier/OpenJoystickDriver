@@ -45,7 +45,6 @@ private func settled(_ parser: ReportLayoutDriver) {
 struct FlydigiDriverTests {
   static let family = PhysicalProtocolID.vendorFlydigi
 
-
   @Test(arguments: [0, 1, 2])
   func malformedReportsPreserveState(kind: Int) throws {
     let parser = flydigiDriver()

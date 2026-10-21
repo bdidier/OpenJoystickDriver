@@ -39,7 +39,6 @@ func inputLayout(_ json: String) throws -> ControllerInputLayout {
 struct ReportLayoutDriverTests {
   static let family = PhysicalProtocolID.hidReportLayout
 
-
   // MARK: - Catalog rows
 
   @Test(arguments: [gp100Model, chillStreamModel])

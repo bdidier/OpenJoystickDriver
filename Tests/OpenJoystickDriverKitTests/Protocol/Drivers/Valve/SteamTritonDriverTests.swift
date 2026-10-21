@@ -36,7 +36,6 @@ private enum TritonReport {
 struct SteamTritonDriverTests {
   static let family = PhysicalProtocolID.valveSteamTriton
 
-
   @Test
   func tritonRowsBindValveSteamTritonAndStoreTheirTransportVariant() throws {
     let registry = ProtocolDriverRegistry()

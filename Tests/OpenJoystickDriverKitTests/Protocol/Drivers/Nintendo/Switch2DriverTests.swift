@@ -49,7 +49,6 @@ private enum Switch2Report {
 struct Switch2DriverTests {
   static let family = PhysicalProtocolID.nintendoSwitch2
 
-
   @Test
   func switch2RowsBindNintendoSwitch2AndBuildTheSwitch2Driver() throws {
     let models = [0x2066, 0x2067, 0x2069, 0x2073].map {

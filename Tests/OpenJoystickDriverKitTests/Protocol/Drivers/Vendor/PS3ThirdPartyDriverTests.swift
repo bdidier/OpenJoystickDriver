@@ -46,7 +46,6 @@ private func acceptedDriver() -> PS3ThirdPartyDriver {
 struct PS3ThirdPartyDriverTests {
   static let family = PhysicalProtocolID.vendorPS3ThirdParty
 
-
   // MARK: - Probe
 
   @Test

@@ -33,7 +33,6 @@ private var v104: NVIDIAShieldDriver { NVIDIAShieldDriver(isShield2015: false) }
 struct NVIDIAShieldDriverTests {
   static let family = PhysicalProtocolID.vendorNVIDIAShield
 
-
   @Test
   func restingReportsAreNeutral() throws {
     #expect(try v103.parseReport(ShieldReport.v103())?.state == .neutral)

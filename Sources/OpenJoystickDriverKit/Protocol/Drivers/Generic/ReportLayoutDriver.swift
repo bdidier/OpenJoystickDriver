@@ -19,6 +19,8 @@ public final class ReportLayoutDriver: PhysicalProtocolDriver {
   private let layout: ControllerInputLayout
   private let rumbleTemplate: RumbleOutputTemplate?
   private let usbOutput: USBOutput?
+  /// What the family description advertises; a record layout advertises what it decodes.
+  private let describedCapabilities: ControllerCapabilities?
   /// Per hat source, whether its 8-way field has been nonzero in this session.
   private var hatSourceIsLive: [Bool]
   private var state = ControllerState.neutral
@@ -29,11 +31,13 @@ public final class ReportLayoutDriver: PhysicalProtocolDriver {
   public init(
     layout: ControllerInputLayout,
     rumbleTemplate: RumbleOutputTemplate? = nil,
-    usbOutput: USBOutput? = nil
+    usbOutput: USBOutput? = nil,
+    describedCapabilities: ControllerCapabilities? = nil
   ) {
     self.layout = layout
     self.rumbleTemplate = rumbleTemplate
     self.usbOutput = usbOutput
+    self.describedCapabilities = describedCapabilities
     hatSourceIsLive = Array(repeating: false, count: layout.hat.count)
   }
 
@@ -79,7 +83,7 @@ public final class ReportLayoutDriver: PhysicalProtocolDriver {
   public func consumeInputConnectionStateChange() -> ControllerInputConnectionState? { nil }
 
   public var capabilities: ControllerCapabilities {
-    ControllerCapabilities(controls: layout.controls)
+    describedCapabilities ?? ControllerCapabilities(controls: layout.controls)
   }
 
   public func encode(
@@ -176,6 +180,11 @@ extension ReportLayoutDriver {
         timeoutMilliseconds: family.described(\.usbTransferTimeoutMilliseconds, in: tuning)
       )
     }
-    self.init(layout: layout, rumbleTemplate: template, usbOutput: usbOutput)
+    self.init(
+      layout: layout,
+      rumbleTemplate: template,
+      usbOutput: usbOutput,
+      describedCapabilities: family.describedControls
+    )
   }
 }

@@ -20,9 +20,17 @@ struct XboxXIDDescriptionTests {
   }
 
   @Test(arguments: described)
-  func advertisedControlsAreTheControlsTheLayoutDecodes(family: PhysicalProtocolID) throws {
+  func advertisedControlsContainEveryControlTheLayoutDecodes(family: PhysicalProtocolID) throws {
     let layout = try #require(family.protocolDescription.inputLayout)
-    #expect(family.describedControls == ControllerCapabilities(controls: layout.controls))
+    #expect(layout.controls.isSubset(of: family.describedControls.controls))
+    let driver = ReportLayoutDriver(
+      describedBy: family,
+      variant: nil,
+      rumbleTemplate: nil,
+      outEndpoint: 0x02,
+      tuning: nil
+    )
+    #expect(driver.capabilities == family.describedControls)
   }
 
   @Test
