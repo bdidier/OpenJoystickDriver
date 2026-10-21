@@ -42,18 +42,15 @@ final class FakeService: @unchecked Sendable {
     let server = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in true },
-      handler: completionHandler { [weak self] request, completion in
+      handler: { [weak self] request in
         guard let method = ApplicationServiceRPCMethod(rawValue: request.method) else {
-          completion(LocalServiceRPCResponse(result: nil, error: "unknown \(request.method)"))
-          return
+          return LocalServiceRPCResponse(result: nil, error: "unknown \(request.method)")
         }
         self?.record(method, request.arguments)
         let result = method == .getStatus ? status() : respond(method, request.arguments)
-        completion(
-          LocalServiceRPCResponse(
-            result: result,
-            error: result == nil ? "unexpected \(request.method)" : nil
-          )
+        return LocalServiceRPCResponse(
+          result: result,
+          error: result == nil ? "unexpected \(request.method)" : nil
         )
       }
     )

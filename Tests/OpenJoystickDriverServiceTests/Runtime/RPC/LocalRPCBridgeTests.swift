@@ -291,8 +291,8 @@ struct LocalRPCBridgeTests {
       let listener = LocalServiceRPCServer(
         socketPath: socketPath,
         authentication: { _ in true },
-        handler: completionHandler { _, completion in
-          completion(LocalServiceRPCResponse(result: nil, error: nil))
+        handler: { _ in
+          return LocalServiceRPCResponse(result: nil, error: nil)
         }
       )
       server.rpcServerLock.withLock { server.rpcServer = listener }

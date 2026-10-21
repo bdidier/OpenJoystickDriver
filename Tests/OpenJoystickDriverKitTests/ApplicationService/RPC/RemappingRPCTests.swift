@@ -150,7 +150,7 @@ struct RemappingRPCTests {
     let server = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in true },
-      handler: completionHandler { request, completion in
+      handler: { request in
         methods.append(request.method)
         do {
           let result: Data
@@ -243,9 +243,9 @@ struct RemappingRPCTests {
           case .getRemappingSnapshot: result = try JSONEncoder().encode(snapshot)
           default: throw ApplicationServiceClientError.invalidResponse
           }
-          completion(LocalServiceRPCResponse(result: result, error: nil))
+          return LocalServiceRPCResponse(result: result, error: nil)
         } catch {
-          completion(LocalServiceRPCResponse(result: nil, error: error.localizedDescription))
+          return LocalServiceRPCResponse(result: nil, error: error.localizedDescription)
         }
       }
     )
@@ -298,8 +298,8 @@ struct RemappingRPCTests {
     let server = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in true },
-      handler: completionHandler { _, completion in
-        completion(LocalServiceRPCResponse(remappingError: expected))
+      handler: { _ in
+        return LocalServiceRPCResponse(remappingError: expected)
       }
     )
     try server.start()

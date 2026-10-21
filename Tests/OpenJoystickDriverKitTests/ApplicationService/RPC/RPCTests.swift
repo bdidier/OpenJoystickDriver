@@ -18,10 +18,10 @@ struct LocalServiceRPCTests {
     let server = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in true },
-      handler: completionHandler { request, completion in
+      handler: { request in
         let value = try? JSONDecoder().decode(String.self, from: request.arguments)
         let result = value.flatMap { try? JSONEncoder().encode($0.uppercased()) }
-        completion(LocalServiceRPCResponse(result: result, error: result == nil ? "decode" : nil))
+        return LocalServiceRPCResponse(result: result, error: result == nil ? "decode" : nil)
       }
     )
     try server.start()
@@ -46,9 +46,9 @@ struct LocalServiceRPCTests {
     let server = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in false },
-      handler: completionHandler { _, completion in
+      handler: { _ in
         handlerCalled.signal()
-        completion(LocalServiceRPCResponse(result: Data(), error: nil))
+        return LocalServiceRPCResponse(result: Data(), error: nil)
       }
     )
     try server.start()
@@ -75,8 +75,8 @@ struct LocalServiceRPCTests {
         peers.record(peer)
         return true
       },
-      handler: completionHandler { _, completion in
-        completion(LocalServiceRPCResponse(result: Data("1".utf8), error: nil))
+      handler: { _ in
+        return LocalServiceRPCResponse(result: Data("1".utf8), error: nil)
       }
     )
     try server.start()
@@ -101,15 +101,15 @@ struct LocalServiceRPCTests {
     let first = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in true },
-      handler: completionHandler { _, completion in
-        completion(LocalServiceRPCResponse(result: Data(), error: nil))
+      handler: { _ in
+        return LocalServiceRPCResponse(result: Data(), error: nil)
       }
     )
     let second = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in true },
-      handler: completionHandler { _, completion in
-        completion(LocalServiceRPCResponse(result: Data(), error: nil))
+      handler: { _ in
+        return LocalServiceRPCResponse(result: Data(), error: nil)
       }
     )
     try first.start()
@@ -132,10 +132,8 @@ struct LocalServiceRPCTests {
       let server = LocalServiceRPCServer(
         socketPath: socketPath,
         authentication: { _ in true },
-        handler: completionHandler { _, completion in
-          completion(
-            LocalServiceRPCResponse(result: try? JSONEncoder().encode(generation), error: nil)
-          )
+        handler: { _ in
+          return LocalServiceRPCResponse(result: try? JSONEncoder().encode(generation), error: nil)
         }
       )
       try server.start()
@@ -215,7 +213,7 @@ struct LocalServiceRPCTests {
     let server = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in true },
-      handler: completionHandler { request, completion in
+      handler: { request in
         #expect(request.method == "requestAccess")
         do {
           let arguments = try JSONDecoder().decode(
@@ -227,11 +225,9 @@ struct LocalServiceRPCTests {
             inputRead: .denied,
             inputInject: .granted
           )
-          completion(
-            LocalServiceRPCResponse(result: try JSONEncoder().encode(snapshot), error: nil)
-          )
+          return LocalServiceRPCResponse(result: try JSONEncoder().encode(snapshot), error: nil)
         } catch {
-          completion(LocalServiceRPCResponse(result: nil, error: error.localizedDescription))
+          return LocalServiceRPCResponse(result: nil, error: error.localizedDescription)
         }
       }
     )
@@ -254,7 +250,7 @@ struct LocalServiceRPCTests {
     let server = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in true },
-      handler: completionHandler { request, completion in
+      handler: { request in
         do {
           if request.method == "previewPhysicalColor" {
             let arguments = try JSONDecoder().decode(
@@ -274,9 +270,9 @@ struct LocalServiceRPCTests {
             #expect(request.method == "releasePhysicalColorPreview")
             #expect(arguments.token == token)
           }
-          completion(LocalServiceRPCResponse(result: try JSONEncoder().encode(true), error: nil))
+          return LocalServiceRPCResponse(result: try JSONEncoder().encode(true), error: nil)
         } catch {
-          completion(LocalServiceRPCResponse(result: nil, error: error.localizedDescription))
+          return LocalServiceRPCResponse(result: nil, error: error.localizedDescription)
         }
       }
     )
@@ -302,25 +298,25 @@ struct LocalServiceRPCTests {
     )
   }
 
-  @Test
+  @Test(.timeLimit(.minutes(1)))
   func cancellingHeldRequestClosesConnectionBeforeTimeoutAndNextCallWorks() async throws {
     let socketPath = temporarySocketPath()
-    let requestReceived = DispatchSemaphore(value: 0)
-    let releaseHeldRequest = DispatchSemaphore(value: 0)
+    let (requestReceived, requestReceivedSignal) = AsyncStream.makeStream(of: Void.self)
+    let (releaseHeldRequest, releaseGate) = AsyncStream.makeStream(of: Void.self)
     let server = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in true },
-      handler: completionHandler { request, completion in
+      handler: { request in
         if request.method == "held" {
-          requestReceived.signal()
-          releaseHeldRequest.wait()
+          requestReceivedSignal.yield()
+          for await _ in releaseHeldRequest { break }
         }
-        completion(LocalServiceRPCResponse(result: try? JSONEncoder().encode("ok"), error: nil))
+        return LocalServiceRPCResponse(result: try? JSONEncoder().encode("ok"), error: nil)
       }
     )
     try server.start()
     defer {
-      releaseHeldRequest.signal()
+      releaseGate.finish()
       server.stop()
     }
 
@@ -332,9 +328,7 @@ struct LocalServiceRPCTests {
         socketPath: socketPath
       )
     }
-    let received = await Task.detached { waitForSemaphore(requestReceived, timeout: .now() + 1) }
-      .value
-    #expect(received == .success)
+    for await _ in requestReceived { break }
 
     let cancellationStart = ContinuousClock.now
     task.cancel()
@@ -348,7 +342,7 @@ struct LocalServiceRPCTests {
       socketPath: socketPath
     )
     #expect(result == "ok")
-    releaseHeldRequest.signal()
+    releaseGate.finish()
   }
 
   @Test
@@ -375,8 +369,8 @@ struct LocalServiceRPCTests {
     let server = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in false },
-      handler: completionHandler { _, completion in
-        completion(LocalServiceRPCResponse(result: Data(), error: nil))
+      handler: { _ in
+        return LocalServiceRPCResponse(result: Data(), error: nil)
       }
     )
     try server.start()
