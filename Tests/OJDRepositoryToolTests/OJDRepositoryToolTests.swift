@@ -5,6 +5,14 @@ import Testing
 
 private final class BundleAnchor {}
 
+/// The built tool is not next to the test bundle; run `swift build --build-tests` first.
+private struct MissingTool: Error, CustomStringConvertible {
+  let path: String
+  var description: String {
+    "OJDRepositoryTool is not built at \(path); run swift build --build-tests"
+  }
+}
+
 /// Runs the built `OJDRepositoryTool` on files in a scratch directory and compares each problem
 /// with the code and reason that the Kit check reports for the same file.
 @Suite(.serialized)
@@ -33,9 +41,13 @@ struct OJDRepositoryToolTests {
     get throws {
       // The tool is built into the folder that holds this test bundle.
       let bundle = Bundle(for: BundleAnchor.self)
-      return bundle.bundleURL.deletingLastPathComponent().appendingPathComponent(
+      let tool = bundle.bundleURL.deletingLastPathComponent().appendingPathComponent(
         "OJDRepositoryTool"
       )
+      guard FileManager.default.fileExists(atPath: tool.path) else {
+        throw MissingTool(path: tool.path)
+      }
+      return tool
     }
   }
 
@@ -43,14 +55,30 @@ struct OJDRepositoryToolTests {
     let process = Process()
     process.executableURL = try tool
     process.arguments = arguments
-    let output = Pipe()
-    let errors = Pipe()
+    // The tool writes into files, not pipes, so neither stream can fill and block it while the
+    // test waits on the other.
+    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(
+      "OJDRepositoryToolTests-run-\(UUID().uuidString)",
+      isDirectory: true
+    )
+    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+    defer { try? FileManager.default.removeItem(at: directory) }
+    let outputFile = directory.appendingPathComponent("out")
+    let errorFile = directory.appendingPathComponent("err")
+    FileManager.default.createFile(atPath: outputFile.path, contents: nil)
+    FileManager.default.createFile(atPath: errorFile.path, contents: nil)
+    let output = try FileHandle(forWritingTo: outputFile)
+    let errors = try FileHandle(forWritingTo: errorFile)
+    defer {
+      try? output.close()
+      try? errors.close()
+    }
     process.standardOutput = output
     process.standardError = errors
     try process.run()
-    let standardOutput = output.fileHandleForReading.readDataToEndOfFile()
-    let standardError = errors.fileHandleForReading.readDataToEndOfFile()
     process.waitUntilExit()
+    let standardOutput = try Data(contentsOf: outputFile)
+    let standardError = try Data(contentsOf: errorFile)
     return Result(
       status: process.terminationStatus,
       standardOutput: try #require(String(data: standardOutput, encoding: .utf8)),
@@ -292,8 +320,8 @@ struct OJDRepositoryToolTests {
       #expect(result.status == 1)
       #expect(try result.problems().count == 1)
       #expect((problem["file"] as? String)?.hasSuffix("/bad.json") == true)
-      #expect(problem["code"] is NSNull)
-      #expect(ControllerRecordSet.problemCode(expected) == nil)
+      #expect(problem["code"] as? String == ErrorCode.invalidControllerRecord.rawValue)
+      #expect(ControllerRecordSet.problemCode(expected) == .invalidControllerRecord)
       #expect(
         problem["message"] as? String
           == ControllerRecordSet.problemDescription(

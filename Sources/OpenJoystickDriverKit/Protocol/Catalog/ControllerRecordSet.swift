@@ -116,14 +116,13 @@ extension ControllerRecord {
   public var document: Data { Data(text.utf8) }
 }
 
-/// Why a controller record, patch or related document is invalid. A problem about a controller
-/// record or patch carries ``ErrorCode/invalidControllerRecord``; one about another document,
-/// such as a virtual device, carries no code. ``description`` leaves the code out.
+/// Why a controller record, patch or related document, such as a virtual device, is invalid. It
+/// carries ``ErrorCode/invalidControllerRecord``. ``description`` leaves the code out.
 public struct ControllerRecordProblem: Error, Equatable, Sendable, CustomStringConvertible {
   public let description: String
-  public let code: ErrorCode?
+  public let code: ErrorCode
 
-  init(code: ErrorCode?, _ description: String) {
+  init(code: ErrorCode, _ description: String) {
     self.code = code
     self.description = description
   }
@@ -195,13 +194,17 @@ public struct ControllerRecordSet: Sendable {
       throw ControllerRecordProblem(code: .invalidControllerRecord, "controller catalog is empty")
     }
     let catalog = loadCatalog(urls)
-    if let problem = catalog.problems.first {
-      throw ControllerRecordProblem(
-        code: .invalidControllerRecord,
-        "\(problem.file): \(problem.message)"
-      )
-    }
+    if let problem = catalog.problems.first { throw bundledFailure(problem) }
     return Self(records: catalog.records, userFiles: [])
+  }
+
+  /// The failure that a bundled record with `problem` raises: the file, then the problem's code
+  /// and reason.
+  static func bundledFailure(_ problem: RepositoryProblem) -> ControllerRecordProblem {
+    ControllerRecordProblem(
+      code: .invalidControllerRecord,
+      "\(problem.file): \(problem.code.rawValue): \(problem.message)"
+    )
   }
 
   /// The records of the Controller files `urls` in file-name order, and a problem for each file
@@ -215,10 +218,9 @@ public struct ControllerRecordSet: Sendable {
     var problems: [RepositoryProblem] = []
     for url in urls.sorted(by: { $0.lastPathComponent < $1.lastPathComponent }) {
       do {
-        let data = try Data(contentsOf: url)
+        let data = try RepositoryProblem.read(url)
         try requireUTF8(data)
-        guard let document = try JSONSerialization.jsonObject(with: data) as? [String: Any]
-        else { throw ControllerRecordProblem(code: .invalidControllerRecord, "not a JSON object") }
+        let document = try jsonObject(data)
         let layers = Dictionary(
           uniqueKeysWithValues: fieldNames(of: document).map { ($0, ControllerRecordLayer.bundled) }
         )
@@ -273,6 +275,19 @@ public struct ControllerRecordSet: Sendable {
     do { return try OrderedJSON.parse(data) } catch {
       throw ControllerRecordProblem(code: .invalidControllerRecord, "\(error)")
     }
+  }
+
+  /// The JSON object in `data`, which is plain UTF-8. Text that is not JSON, and JSON that is not
+  /// an object, are `invalidControllerRecord`.
+  static func jsonObject(_ data: Data) throws -> [String: Any] {
+    let value: Any
+    do { value = try JSONSerialization.jsonObject(with: data) } catch {
+      throw ControllerRecordProblem(code: .invalidControllerRecord, error.localizedDescription)
+    }
+    guard let document = value as? [String: Any] else {
+      throw ControllerRecordProblem(code: .invalidControllerRecord, "not a JSON object")
+    }
+    return document
   }
 
   /// Refuses `data` unless it is plain UTF-8, with the problem ``ordered(_:)`` gives, before a

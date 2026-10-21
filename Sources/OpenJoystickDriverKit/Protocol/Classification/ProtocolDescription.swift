@@ -233,17 +233,16 @@ struct ProtocolDescription: Sendable {
     }
     let catalog = loadCatalog(urls, missing: "the bundle")
     if let problem = catalog.problems.first {
-      throw ProtocolDescriptionProblem(
-        problem.code ?? .invalidProtocolDescription,
-        problem.message
-      )
+      throw ProtocolDescriptionProblem(problem.code, problem.message)
     }
     return catalog.descriptions
   }
 
   /// The descriptions of the files `urls`, and a problem for each file that is not a valid
   /// description and for each family that has no file; `source` names where the files are, in
-  /// the problem of a missing one. The bundled descriptions and
+  /// the problem of a missing one. The problems come in family order, a missing file at its
+  /// family's place, then those of the files that name no family in file-name order. A file that
+  /// cannot be read is ``ErrorCode/fileAccessFailed``. The bundled descriptions and
   /// ``RepositoryValidation/descriptions(in:)`` load through this check.
   static func loadCatalog(
     _ urls: [URL],
@@ -251,23 +250,24 @@ struct ProtocolDescription: Sendable {
   ) -> (descriptions: [PhysicalProtocolID: Self], problems: [RepositoryProblem]) {
     var descriptions: [PhysicalProtocolID: Self] = [:]
     var problems: [RepositoryProblem] = []
-    for url in urls.sorted(by: { $0.lastPathComponent < $1.lastPathComponent }) {
+    func load(_ url: URL) {
+      let data: Data
+      do { data = try RepositoryProblem.read(url) } catch {
+        problems.append(error)
+        return
+      }
       do {
-        let description = try decode(Data(contentsOf: url), fileName: url.lastPathComponent)
+        let description = try decode(data, fileName: url.lastPathComponent)
         descriptions[description.family] = description
-      } catch let problem as ProtocolDescriptionProblem {
-        problems.append(
-          RepositoryProblem(file: url.path, code: problem.code, message: problem.detail)
-        )
       } catch {
-        problems.append(
-          RepositoryProblem(file: url.path, code: nil, message: error.localizedDescription)
-        )
+        problems.append(RepositoryProblem(file: url.path, code: error.code, message: error.detail))
       }
     }
-    for protocolID in PhysicalProtocolID.allCases where descriptions[protocolID] == nil {
+    let byName = urls.sorted { $0.lastPathComponent < $1.lastPathComponent }
+    for protocolID in PhysicalProtocolID.allCases {
       let name = "\(protocolID.descriptionFileStem).json"
-      if !urls.contains(where: { $0.lastPathComponent == name }) {
+      let files = byName.filter { $0.lastPathComponent == name }
+      if files.isEmpty {
         problems.append(
           RepositoryProblem(
             file: name,
@@ -276,7 +276,10 @@ struct ProtocolDescription: Sendable {
           )
         )
       }
+      files.forEach(load)
     }
+    let names = Set(PhysicalProtocolID.allCases.map { "\($0.descriptionFileStem).json" })
+    byName.filter { !names.contains($0.lastPathComponent) }.forEach(load)
     return (descriptions, problems)
   }
 

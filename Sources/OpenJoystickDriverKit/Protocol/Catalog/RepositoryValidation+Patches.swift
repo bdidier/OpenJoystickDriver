@@ -9,7 +9,7 @@ extension RepositoryValidation {
   /// vendor directory for a `vendorID` with `productID`, the top of `patches` for the others.
   /// A patch that selects no record, and one that changes nothing in a record other than the
   /// `all` patch, are problems.
-  public static func applyPatches(
+  package static func applyPatches(
     records: URL,
     patches: URL,
     output: URL
@@ -62,10 +62,15 @@ extension RepositoryValidation {
       }
     } catch {
       return [
-        RepositoryProblem(file: output.path, code: nil, message: error.localizedDescription)
+        RepositoryProblem.fileAccess(output.path, error)
       ]
     }
     return []
+  }
+
+  private struct PatchFile {
+    let url: URL
+    let patch: ControllerPatch
   }
 
   private struct RecordFile {
@@ -89,10 +94,9 @@ extension RepositoryValidation {
     var files: [RecordFile] = []
     for url in urls {
       do {
-        let data = try Data(contentsOf: url)
+        let data = try RepositoryProblem.read(url)
         try ControllerRecordSet.requireUTF8(data)
-        guard let document = try JSONSerialization.jsonObject(with: data) as? [String: Any]
-        else { throw ControllerRecordProblem(code: .invalidControllerRecord, "not a JSON object") }
+        let document = try ControllerRecordSet.jsonObject(data)
         guard
           let vendorID = ControllerPatch.strictInteger(document["vendorID"]).flatMap(
             UInt16.init(exactly:)
@@ -124,7 +128,7 @@ extension RepositoryValidation {
   private static func readPatches(
     under directory: URL,
     problems: inout [RepositoryProblem]
-  ) -> [(url: URL, patch: ControllerPatch)] {
+  ) -> [PatchFile] {
     let urls: [URL]
     switch jsonFiles(under: directory) {
     case .failure(let problem):
@@ -132,14 +136,13 @@ extension RepositoryValidation {
       return []
     case .success(let found): urls = found
     }
-    var patches: [(url: URL, patch: ControllerPatch)] = []
+    var patches: [PatchFile] = []
     for url in urls {
       do {
-        let data = try Data(contentsOf: url)
+        let data = try RepositoryProblem.read(url)
         try ControllerRecordSet.requireUTF8(data)
         _ = try ControllerRecordSet.ordered(data)
-        guard let document = try JSONSerialization.jsonObject(with: data) as? [String: Any]
-        else { throw ControllerRecordProblem(code: .invalidControllerRecord, "not a JSON object") }
+        let document = try ControllerRecordSet.jsonObject(data)
         let patch = try ControllerPatch.parse(document, file: url.lastPathComponent)
         let expected = patchPath(of: patch.selector)
         guard relativePath(of: url, under: directory) == expected else {
@@ -148,7 +151,7 @@ extension RepositoryValidation {
             "the patch path must be \(expected)"
           )
         }
-        patches.append((url, patch))
+        patches.append(PatchFile(url: url, patch: patch))
       } catch {
         problems.append(RepositoryProblem(file: url.path, error: error, document: "patch"))
       }

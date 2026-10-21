@@ -16,6 +16,10 @@ private let usage = """
     OJDRepositoryTool validate personas <path>...
     OJDRepositoryTool apply-patches --records <directory> --patches <directory> --out <directory>
   A path is a file, or a directory whose .json files are checked.
+  validate records and descriptions read a directory at any depth. apply-patches reads records at
+  any depth and writes each to its relative path, and refuses a patch file that is not at the
+  path its selector gives: a vendor directory for a vendorID with productID, the top of the
+  directory for the others, so a deeper file is refused.
   Each problem is one JSON line {"code", "file", "message"} on standard output. The exit status is
   0 without a problem, 1 with one, and 64 for a call that the tool refuses.
   """
@@ -95,7 +99,7 @@ private func run(_ arguments: [String]) throws -> [RepositoryProblem] {
 
 private func line(_ problem: RepositoryProblem) throws -> Data {
   let object: [String: Any] = [
-    "file": problem.file, "code": problem.code?.rawValue ?? NSNull(), "message": problem.message,
+    "file": problem.file, "code": problem.code.rawValue, "message": problem.message,
   ]
   return try JSONSerialization.data(
     withJSONObject: object,
