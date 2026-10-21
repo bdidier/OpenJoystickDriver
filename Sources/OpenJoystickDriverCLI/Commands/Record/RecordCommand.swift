@@ -95,7 +95,7 @@ struct RecordShowCommand: AsyncParsableCommand {
     let transport: RecordTransport
     let transportClaim: RecordTransportClaim?
     let fields: [String: String]
-    let record: RecordJSON
+    let record: OrderedJSON
   }
 
   @Argument(
@@ -134,7 +134,7 @@ struct RecordShowCommand: AsyncParsableCommand {
             transport: RecordTransport(record),
             transportClaim: RecordTransportClaim(record),
             fields: fields,
-            record: try RecordJSON(data: record.document)
+            record: try OrderedJSON.parse(record.document)
           )
         )
       case .plain:
@@ -156,7 +156,7 @@ struct RecordShowCommand: AsyncParsableCommand {
           )
         }
         CLIOutput.stdout("")
-        CLIOutput.stdout(String(bytes: record.document, encoding: .utf8) ?? "", terminator: "")
+        CLIOutput.stdout(record.text, terminator: "")
       }
     }
   }

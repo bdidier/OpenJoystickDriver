@@ -110,6 +110,7 @@ struct RecordCommandTests {
     let list = await run(["list", "--plain"], in: directory)
     let show = await run(["show", "366c:0005", "--json"], in: directory)
     let plainShow = await run(["show", "366C:0005", "--plain"], in: directory)
+    let humanShow = await run(["show", "366C:0005"], in: directory)
 
     #expect(install.code == 0, "\(install.standardError)")
     #expect(try install.json()["replaced"] as? Bool == false)
@@ -130,6 +131,13 @@ struct RecordCommandTests {
     let record = try #require(shown["record"] as? [String: Any])
     #expect((record["tuning"] as? [String: Double])?["stickDeadzone"] == 0.08)
     #expect(plainShow.standardOutput == "modes\tbundled\ntuning\tuser\n")
+    let document = try #require(
+      ControllerRecordSet.load(userDirectory: directory.url).records[
+        ControllerModelID(vendorID: 0x366C, productID: 0x0005)
+      ]?.text
+    )
+    #expect(humanShow.standardOutput.hasSuffix("\n\n" + document))
+    #expect(humanShow.standardOutput.hasSuffix("  }\n}\n"))
   }
 
   @Test
