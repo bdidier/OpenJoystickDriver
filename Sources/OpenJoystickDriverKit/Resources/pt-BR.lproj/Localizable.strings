@@ -396,6 +396,7 @@
 "developer.keepAliveNote" = "O tráfego rotineiro de inatividade está oculto para que a atividade do controle continue visível.";
 "developer.leftStick" = "Analógico Esquerdo";
 "developer.loadingControllers" = "Carregando diagnósticos do controle…";
+"developer.notLoaded" = "Os diagnósticos do controle não foram carregados.";
 "developer.noControllers" = "Nenhum Controle Conectado";
 "developer.noControllersDetail" = "Conecte um controle e pressione “Atualizar”.";
 "developer.noExtraInputs" = "Nenhum botão extra detectado.";

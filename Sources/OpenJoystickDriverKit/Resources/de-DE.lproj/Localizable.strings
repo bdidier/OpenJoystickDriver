@@ -396,6 +396,7 @@
 "developer.keepAliveNote" = "Routinemäßiger Leerlauf-Datenverkehr wird ausgeblendet, damit die Controller-Aktivität sichtbar bleibt.";
 "developer.leftStick" = "Linker Stick";
 "developer.loadingControllers" = "Controllerdiagnose wird geladen…";
+"developer.notLoaded" = "Die Controllerdiagnose ist nicht geladen.";
 "developer.noControllers" = "Keine Controller verbunden";
 "developer.noControllersDetail" = "Verbinde einen Controller und klicke dann auf „Aktualisieren“.";
 "developer.noExtraInputs" = "Keine Zusatztasten erkannt.";

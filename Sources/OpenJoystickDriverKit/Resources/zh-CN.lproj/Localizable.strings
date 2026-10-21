@@ -396,6 +396,7 @@
 "developer.keepAliveNote" = "已隐藏常规的空闲数据包，以便清楚看到控制器的活动。";
 "developer.leftStick" = "左摇杆";
 "developer.loadingControllers" = "正在加载控制器诊断信息…";
+"developer.notLoaded" = "尚未加载控制器诊断信息。";
 "developer.noControllers" = "没有连接的控制器";
 "developer.noControllersDetail" = "连接控制器，然后点按“刷新”。";
 "developer.noExtraInputs" = "未检测到额外按钮。";

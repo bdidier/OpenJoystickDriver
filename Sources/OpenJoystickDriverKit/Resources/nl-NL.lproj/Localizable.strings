@@ -396,6 +396,7 @@
 "developer.keepAliveNote" = "Routinematig inactief dataverkeer wordt verborgen, zodat de activiteit van de controller zichtbaar blijft.";
 "developer.leftStick" = "Linker stick";
 "developer.loadingControllers" = "Controllerdiagnose laden…";
+"developer.notLoaded" = "Controllerdiagnose is niet geladen.";
 "developer.noControllers" = "Geen aangesloten controllers";
 "developer.noControllersDetail" = "Verbind een controller en kies daarna “Vernieuwen”.";
 "developer.noExtraInputs" = "Geen extra knoppen gevonden.";

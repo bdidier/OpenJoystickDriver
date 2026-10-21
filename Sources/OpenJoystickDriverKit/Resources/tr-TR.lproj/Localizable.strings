@@ -396,6 +396,7 @@
 "developer.keepAliveNote" = "Rutin boşta veri paketleri gizlenir, böylece kontrolcü etkinliği görünür kalır.";
 "developer.leftStick" = "Sol Çubuk";
 "developer.loadingControllers" = "Kontrolcü Tanılamaları Yükleniyor…";
+"developer.notLoaded" = "Kontrolcü tanılamaları yüklenmedi.";
 "developer.noControllers" = "Bağlı Kontrolcü Yok";
 "developer.noControllersDetail" = "Bir kontrolcü bağlayın, ardından Yenile’ye basın.";
 "developer.noExtraInputs" = "Ekstra düğme algılanmadı.";

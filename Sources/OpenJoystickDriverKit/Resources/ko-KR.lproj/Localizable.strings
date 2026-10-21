@@ -396,6 +396,7 @@
 "developer.keepAliveNote" = "컨트롤러 활동이 잘 보이도록 일반적인 유휴 패킷은 숨겨집니다.";
 "developer.leftStick" = "왼쪽 스틱";
 "developer.loadingControllers" = "컨트롤러 진단 정보를 불러오는 중…";
+"developer.notLoaded" = "컨트롤러 진단 정보를 불러오지 않았습니다.";
 "developer.noControllers" = "연결된 컨트롤러가 없습니다";
 "developer.noControllersDetail" = "컨트롤러를 연결한 다음 “새로 고침”을 누르세요.";
 "developer.noExtraInputs" = "추가 버튼은 발견되지 않았습니다.";

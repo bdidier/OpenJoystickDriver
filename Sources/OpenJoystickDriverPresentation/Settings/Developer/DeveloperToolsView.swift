@@ -5,7 +5,8 @@
   import SwiftUI
 
   /// The form sections of the developer tools: Controller, Raw Packet Capture and Extra Buttons.
-  /// They sit in the Advanced pane's form, which scrolls.
+  /// They sit in the Advanced pane's form, which scrolls. The Settings window controller starts and
+  /// stops the reads.
   struct DeveloperToolsView: View {
     @ObservedObject
     private var model: DeveloperToolsViewModel
@@ -13,13 +14,20 @@
     init(model: DeveloperToolsViewModel) { self.model = model }
 
     var body: some View {
-      Group { content }.onAppear { model.requestRefresh() }.onDisappear { model.close() }
+      content
     }
 
     @ViewBuilder
     private var content: some View {
       switch model.loadState {
-      case .idle, .loading:
+      case .idle:
+        Section(OJDLocalized.string("developer.controllerDetails")) {
+          Text(OJDLocalized.string("developer.notLoaded")).foregroundColor(
+            Color(NSColor.secondaryLabelColor)
+          )
+          refreshButton
+        }
+      case .loading:
         Section {
           Text(OJDLocalized.string("developer.loadingControllers")).foregroundColor(
             Color(NSColor.secondaryLabelColor)

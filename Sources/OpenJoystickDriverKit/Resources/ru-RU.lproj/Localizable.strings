@@ -396,6 +396,7 @@
 "developer.keepAliveNote" = "Обычный служебный трафик в режиме простоя скрыт, чтобы активность контроллера оставалась видимой.";
 "developer.leftStick" = "Левый стик";
 "developer.loadingControllers" = "Загрузка диагностики контроллеров…";
+"developer.notLoaded" = "Диагностика контроллеров не загружена.";
 "developer.noControllers" = "Нет подключённых контроллеров";
 "developer.noControllersDetail" = "Подключите контроллер и нажмите «Обновить».";
 "developer.noExtraInputs" = "Не обнаружено дополнительных кнопок.";

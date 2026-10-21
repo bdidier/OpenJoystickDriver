@@ -396,6 +396,7 @@
 "developer.keepAliveNote" = "ซ่อนการรับส่งข้อมูลว่างตามปกติเพื่อให้เห็นกิจกรรมของคอนโทรลเลอร์";
 "developer.leftStick" = "สติ๊กซ้าย";
 "developer.loadingControllers" = "กำลังโหลดการวินิจฉัยคอนโทรลเลอร์…";
+"developer.notLoaded" = "ยังไม่ได้โหลดการวินิจฉัยคอนโทรลเลอร์";
 "developer.noControllers" = "ไม่มีคอนโทรลเลอร์ที่เชื่อมต่อ";
 "developer.noControllersDetail" = "เชื่อมต่อคอนโทรลเลอร์ แล้วกดดึงข้อมูลใหม่";
 "developer.noExtraInputs" = "ไม่พบปุ่มเพิ่มเติม";

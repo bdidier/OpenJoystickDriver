@@ -396,6 +396,7 @@
 "developer.keepAliveNote" = "सामान्य निष्क्रिय पैकेट छिपाए गए हैं ताकि कंट्रोलर की गतिविधि दिखाई देती रहे।";
 "developer.leftStick" = "बाएँ स्टिक";
 "developer.loadingControllers" = "कंट्रोलर डायग्नोस्टिक लोड हो रहे हैं…";
+"developer.notLoaded" = "कंट्रोलर डायग्नोस्टिक लोड नहीं हैं।";
 "developer.noControllers" = "कोई कंट्रोलर कनेक्ट नहीं है";
 "developer.noControllersDetail" = "कोई कंट्रोलर कनेक्ट करें, फिर “रीफ़्रेश करें” दबाएँ।";
 "developer.noExtraInputs" = "कोई अतिरिक्त बटन नहीं मिला।";

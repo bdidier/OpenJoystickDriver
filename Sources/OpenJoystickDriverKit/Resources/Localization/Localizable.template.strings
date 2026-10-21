@@ -398,6 +398,7 @@
 "developer.keepAliveNote" = "Routine idle traffic is hidden so controller activity stays visible.";
 "developer.leftStick" = "Left stick";
 "developer.loadingControllers" = "Loading controller diagnostics...";
+"developer.notLoaded" = "Controller diagnostics are not loaded.";
 "developer.noControllers" = "No controllers connected";
 "developer.noControllersDetail" = "Connect a controller, then press Refresh.";
 "developer.noExtraInputs" = "No extra buttons detected.";

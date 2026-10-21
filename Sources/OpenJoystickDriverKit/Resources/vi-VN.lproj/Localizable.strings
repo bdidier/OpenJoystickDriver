@@ -396,6 +396,7 @@
 "developer.keepAliveNote" = "Lưu lượng nhàn rỗi thông thường bị ẩn để hoạt động của bộ điều khiển luôn dễ thấy.";
 "developer.leftStick" = "Cần trái";
 "developer.loadingControllers" = "Đang tải chẩn đoán bộ điều khiển…";
+"developer.notLoaded" = "Chưa tải chẩn đoán bộ điều khiển.";
 "developer.noControllers" = "Chưa kết nối bộ điều khiển";
 "developer.noControllersDetail" = "Kết nối bộ điều khiển, sau đó nhấn Làm mới.";
 "developer.noExtraInputs" = "Không phát hiện nút bổ sung nào.";

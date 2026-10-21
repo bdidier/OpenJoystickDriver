@@ -396,6 +396,7 @@
 "developer.keepAliveNote" = "Le trafic de routine en veille est masqué afin que l’activité de la manette reste visible.";
 "developer.leftStick" = "Stick gauche";
 "developer.loadingControllers" = "Chargement des diagnostics de manette…";
+"developer.notLoaded" = "Les diagnostics de manette ne sont pas chargés.";
 "developer.noControllers" = "Aucune manette connectée";
 "developer.noControllersDetail" = "Connectez une manette, puis appuyez sur Actualiser.";
 "developer.noExtraInputs" = "Aucun bouton supplémentaire détecté.";

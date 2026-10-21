@@ -48,7 +48,10 @@
     /// The space left between a tall Settings window and the edges of the screen's visible area.
     private static let screenMargin = 40.0
     private let panes: SettingsWindowPaneModel
-    private let developerTools: DeveloperToolsViewModel
+    let developerTools: DeveloperToolsViewModel
+    private let preferences: SettingsPreferencesModel
+    private var isShown = false
+    private var developerToolsAreRunning = false
     private weak var toolbar: NSToolbar?
     private let visibilityChanged: @MainActor (Bool) -> Void
     private let makeContent: (SettingsWindowPane) -> SettingsPaneContent
@@ -69,6 +72,7 @@
       visibilityChanged: @escaping @MainActor (Bool) -> Void
     ) {
       self.visibilityChanged = visibilityChanged
+      self.preferences = preferences
       panes = SettingsWindowPaneModel()
       developerTools = DeveloperToolsViewModel(gateway: gateway)
       let developerTools = developerTools
@@ -108,6 +112,7 @@
       window.center()
       paneChanged(animated: false)
       fitting = RunLoopCoalescer { [weak self] in
+        self?.syncDeveloperTools()
         guard self?.window?.isVisible == true else { return }
         self?.paneChanged(animated: true)
       }
@@ -129,12 +134,27 @@
         panes.select(pane)
         paneChanged(animated: window?.isVisible == true)
       }
+      isShown = true
+      syncDeveloperTools()
       visibilityChanged(true)
       window?.makeKeyAndOrderFront(nil)
       NSApplication.shared.activate(ignoringOtherApps: true)
     }
 
-    func windowWillClose(_ notification: Notification) { visibilityChanged(false) }
+    func windowWillClose(_ notification: Notification) {
+      isShown = false
+      syncDeveloperTools()
+      visibilityChanged(false)
+    }
+
+    /// Reads the controller diagnostics while the window shows Advanced with developer tools on,
+    /// and stops them otherwise. This is the only place that starts or stops the reads.
+    func syncDeveloperTools() {
+      let wanted = isShown && panes.selected == .advanced && preferences.developerToolsEnabled
+      guard wanted != developerToolsAreRunning else { return }
+      developerToolsAreRunning = wanted
+      if wanted { developerTools.requestRefresh() } else { developerTools.close() }
+    }
 
     private func configureToolbar(on window: NSWindow) {
       let toolbar = NSToolbar(identifier: Self.toolbarIdentifier)
@@ -194,6 +214,7 @@
       guard let pane = SettingsWindowPane(toolbarItemIdentifier: sender.itemIdentifier.rawValue)
       else { return }
       panes.select(pane)
+      syncDeveloperTools()
       paneChanged(animated: true)
     }
   }

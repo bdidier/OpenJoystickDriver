@@ -396,6 +396,7 @@
 "developer.keepAliveNote" = "Lalu lintas idle rutin disembunyikan agar aktivitas pengontrol tetap terlihat.";
 "developer.leftStick" = "Stik kiri";
 "developer.loadingControllers" = "Memuat diagnostik pengontrol…";
+"developer.notLoaded" = "Diagnostik pengontrol belum dimuat.";
 "developer.noControllers" = "Tidak ada pengontrol yang terhubung";
 "developer.noControllersDetail" = "Hubungkan pengontrol, lalu tekan Segarkan.";
 "developer.noExtraInputs" = "Tidak ada tombol tambahan yang terdeteksi.";

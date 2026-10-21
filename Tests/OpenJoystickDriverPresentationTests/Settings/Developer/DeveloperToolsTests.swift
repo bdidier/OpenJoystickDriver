@@ -9,6 +9,47 @@ import Testing
 struct DeveloperToolsTests {
   @Test
   @MainActor
+  func closingDuringARefreshLeavesTheDiagnosticsNotLoaded() async {
+    let gateway = GatewayStub()
+    await gateway.setStatusReadsAreGated(true)
+    let model = DeveloperToolsViewModel(gateway: gateway)
+
+    model.requestRefresh()
+    await gateway.waitForStatusCall(count: 1)
+    model.close()
+    await gateway.resumeNextStatusRead()
+    await waitUntil("the cancelled refresh ends") { !model.hasActiveOperation }
+
+    #expect(model.loadState == .idle)
+  }
+
+  @Test
+  @MainActor
+  func showingAdvancedWithDeveloperToolsOnLoadsTheDiagnostics() async throws {
+    let gateway = GatewayStub(statusPayload: statusPayload(device: device()))
+    let settings = SettingsStore(directory: RootedDataDirectory.temporary())
+    try settings.set(.developerTools, to: true)
+    let preferences = SettingsPreferencesModel(
+      settings: settings,
+      launchAtLogin: LaunchAtLoginStub(isEnabled: false),
+      notificationAuthorization: NotificationAuthorizationStub(state: .denied)
+    )
+    let controller = SettingsWindowController(
+      gateway: gateway,
+      runtime: RuntimeViewModel(gateway: gateway),
+      preferences: preferences,
+      commandLineTool: CommandLineToolModel()
+    ) { _ in }
+
+    controller.showSettings(pane: .advanced)
+    await waitUntil("the diagnostics load") { controller.developerTools.loadState == .ready }
+    controller.close()
+
+    #expect(controller.developerTools.loadState == .ready)
+  }
+
+  @Test
+  @MainActor
   func reportsTheNoControllerStateExplicitly() async {
     let model = DeveloperToolsViewModel(gateway: GatewayStub())
 

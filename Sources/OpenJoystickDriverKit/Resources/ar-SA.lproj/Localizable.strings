@@ -396,6 +396,7 @@
 "developer.keepAliveNote" = "تُخفى حزم البيانات الروتينية الخاملة بحيث يظل نشاط وحدة التحكم مرئيًا.";
 "developer.leftStick" = "العصا اليسرى";
 "developer.loadingControllers" = "جارٍ تحميل تشخيصات وحدات التحكم…";
+"developer.notLoaded" = "لم يتم تحميل تشخيصات وحدات التحكم.";
 "developer.noControllers" = "لا توجد وحدات تحكم متصلة";
 "developer.noControllersDetail" = "وصّل وحدة تحكم ثم اضغط على «تحديث».";
 "developer.noExtraInputs" = "لم يتم اكتشاف أزرار إضافية.";

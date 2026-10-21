@@ -164,8 +164,11 @@
       if !isCapturing { captureState = .idle }
     }
 
+    /// Stops capture and any running read. A read cancelled before it finished leaves `.idle`,
+    /// which means the diagnostics are not loaded.
     func close() {
       captureState = .idle
+      if loadState == .loading { loadState = .idle }
       replaceOperation { model, generation in
         guard model.operationIsCurrent(generation) else { return }
         model.captureState = .idle

@@ -396,6 +396,7 @@
 "developer.keepAliveNote" = "已隱藏例行的閒置封包，讓控制器的活動清楚可見。";
 "developer.leftStick" = "左搖桿";
 "developer.loadingControllers" = "正在載入控制器診斷資訊…";
+"developer.notLoaded" = "尚未載入控制器診斷資訊。";
 "developer.noControllers" = "沒有連接控制器";
 "developer.noControllersDetail" = "連接控制器，然後按「重新整理」。";
 "developer.noExtraInputs" = "未偵測到額外按鈕。";

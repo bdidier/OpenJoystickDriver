@@ -278,7 +278,7 @@ struct PreferencesTests {
   }
 }
 
-private final class LaunchAtLoginStub: LaunchAtLoginControlling {
+final class LaunchAtLoginStub: LaunchAtLoginControlling {
   let isAvailable = true
   var isEnabled: Bool
   private(set) var setValues: [Bool] = []
@@ -295,7 +295,7 @@ private final class LaunchAtLoginStub: LaunchAtLoginControlling {
   }
 }
 
-private final class NotificationAuthorizationStub: NotificationAuthorizationControlling,
+final class NotificationAuthorizationStub: NotificationAuthorizationControlling,
   @unchecked Sendable
 {
   var currentState: RuntimeNotificationAuthorizationState

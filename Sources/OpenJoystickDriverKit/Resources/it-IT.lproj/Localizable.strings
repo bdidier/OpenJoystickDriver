@@ -396,6 +396,7 @@
 "developer.keepAliveNote" = "Il traffico di inattività di routine è nascosto affinché l’attività del controller resti visibile.";
 "developer.leftStick" = "Levetta sinistra";
 "developer.loadingControllers" = "Caricamento della diagnostica del controller…";
+"developer.notLoaded" = "La diagnostica del controller non è caricata.";
 "developer.noControllers" = "Nessun controller collegato";
 "developer.noControllersDetail" = "Collega un controller, poi premi «Aggiorna».";
 "developer.noExtraInputs" = "Nessun pulsante extra rilevato.";

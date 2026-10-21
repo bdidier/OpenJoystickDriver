@@ -396,6 +396,7 @@
 "developer.keepAliveNote" = "El tráfico rutinario de inactividad está oculto para que la actividad del mando siga siendo visible.";
 "developer.leftStick" = "Palanca izquierda";
 "developer.loadingControllers" = "Cargando diagnósticos del mando…";
+"developer.notLoaded" = "Los diagnósticos del mando no están cargados.";
 "developer.noControllers" = "No hay mandos conectados";
 "developer.noControllersDetail" = "Conecte un mando y pulse «Actualizar».";
 "developer.noExtraInputs" = "No se detectaron botones adicionales.";
