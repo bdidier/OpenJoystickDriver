@@ -2061,6 +2061,6 @@
 /* Abstract of the ojd setting test-notification command, in the command help. */
 "cli.setting.testNotification.abstract" = "Показывает тестовое уведомление в приложении.";
 /* Discussion of the ojd setting test-notification command, in the command help. */
-"cli.setting.testNotification.discussion" = "Просит службу передать тестовое уведомление открытому приложению OpenJoystickDriver и ждёт, пока приложение его покажет. Завершается именованной ошибкой, если уведомления запрещены, доставка не удалась или ни одно приложение не ответило вовремя.";
+"cli.setting.testNotification.discussion" = "Просит службу передать тестовое уведомление открытому приложению OpenJoystickDriver и ждёт, пока приложение его покажет. Завершается именованной ошибкой, если уведомления запрещены, доставка не удалась или ни одно приложение не ответило вовремя. Здесь --timeout по умолчанию равен 38 секундам.";
 /* Printed by ojd setting test-notification after the app reported that it showed the test notification. */
 "cli.setting.testNotification.success" = "Приложение показало тестовое уведомление.";

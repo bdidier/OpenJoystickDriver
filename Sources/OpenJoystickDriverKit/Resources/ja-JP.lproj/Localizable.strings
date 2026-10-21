@@ -2061,6 +2061,6 @@
 /* Abstract of the ojd setting test-notification command, in the command help. */
 "cli.setting.testNotification.abstract" = "アプリにテスト通知を表示します。";
 /* Discussion of the ojd setting test-notification command, in the command help. */
-"cli.setting.testNotification.discussion" = "開いているOpenJoystickDriverアプリにテスト通知を伝えるようサービスに依頼し、アプリが表示するまで待ちます。通知が拒否されている場合、配信に失敗した場合、または時間内にどのアプリも応答しない場合は、名前付きのエラーで失敗します。";
+"cli.setting.testNotification.discussion" = "開いているOpenJoystickDriverアプリにテスト通知を伝えるようサービスに依頼し、アプリが表示するまで待ちます。通知が拒否されている場合、配信に失敗した場合、または時間内にどのアプリも応答しない場合は、名前付きのエラーで失敗します。ここでは --timeout のデフォルトは 38 秒です。";
 /* Printed by ojd setting test-notification after the app reported that it showed the test notification. */
 "cli.setting.testNotification.success" = "アプリがテスト通知を表示しました。";

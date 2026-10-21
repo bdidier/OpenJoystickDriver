@@ -294,7 +294,8 @@ struct SettingResetCommand: AsyncParsableCommand {
 /// The app answers with `shown`, `denied` or `failed`; the service answers `noAnswer` when no app
 /// took the announcement or reported in time (`TestNotificationDeadlines`). Each other outcome
 /// is a named failure: E2038 for denied notifications, E2006 with the system's reason for a
-/// failed delivery, and E2037 for no answer.
+/// failed delivery, and E2037 for no answer. The service holds the request until then, so
+/// without `--timeout` the command waits `ServiceTimeouts.testNotification`.
 struct SettingTestNotificationCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "test-notification",
@@ -312,7 +313,9 @@ struct SettingTestNotificationCommand: AsyncParsableCommand {
 
   func run() async throws {
     try await global.run {
-      let outcome = try await ServiceConnection.request { client in
+      let outcome = try await ServiceConnection.request(
+        timeout: CLIContext.current.timeout ?? ServiceTimeouts.testNotification
+      ) { client in
         try await client.sendTestNotification()
       }
       switch outcome {

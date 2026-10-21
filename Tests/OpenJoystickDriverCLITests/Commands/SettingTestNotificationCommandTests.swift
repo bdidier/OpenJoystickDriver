@@ -7,11 +7,13 @@ import Testing
 
 @Suite(.serialized)
 struct SettingTestNotificationCommandTests {
-  /// A service that answers `sendTestNotification` with `outcome` and records its methods.
+  /// A service that answers `sendTestNotification` with `outcome` after `answerDelay` and records
+  /// its methods.
   private func serve(
     outcome: TestNotificationOutcome,
     socketPath: String,
-    received: Locked<[String]> = Locked([])
+    received: Locked<[String]> = Locked([]),
+    answerDelay: Duration = .zero
   ) throws -> LocalServiceRPCServer {
     let server = LocalServiceRPCServer(
       socketPath: socketPath,
@@ -21,6 +23,7 @@ struct SettingTestNotificationCommandTests {
         guard request.method == ApplicationServiceRPCMethod.sendTestNotification.rawValue else {
           return LocalServiceRPCResponse(result: nil, error: "unexpected \(request.method)")
         }
+        try? await Task.sleep(for: answerDelay)
         return LocalServiceRPCResponse(result: try? JSONEncoder().encode(outcome), error: nil)
       }
     )
@@ -28,10 +31,41 @@ struct SettingTestNotificationCommandTests {
     return server
   }
 
-  private func run(_ arguments: [String], socketPath: String) async -> CLIRun {
+  /// Runs the command with `--timeout 5` unless `timeout` is nil, which leaves the default.
+  private func run(
+    _ arguments: [String],
+    socketPath: String,
+    timeout: String? = "5"
+  ) async -> CLIRun {
     await ServiceConnection.$socketPath.withValue(socketPath) {
-      await CLIRun.run(["setting", "test-notification"] + arguments + ["--timeout", "5"])
+      await CLIRun.run(
+        ["setting", "test-notification"] + arguments + (timeout.map { ["--timeout", $0] } ?? [])
+      )
     }
+  }
+
+  @Test
+  func withoutTimeoutTheCommandWaitsForAnAnswerSlowerThanTheRequestDeadline() async throws {
+    let socketPath = temporarySocketPath()
+    let delay = Duration.milliseconds(800)
+    #expect(delay > .seconds(ServiceTimeouts.request))
+    let server = try serve(outcome: .shown, socketPath: socketPath, answerDelay: delay)
+    defer { server.stop() }
+
+    let result = await run([], socketPath: socketPath, timeout: nil)
+
+    #expect(result.code == 0, "\(result.standardError)")
+    #expect(
+      result.standardError.contains(CLILocalized.text("cli.setting.testNotification.success"))
+    )
+  }
+
+  @Test
+  func theDefaultDeadlineCoversThePickupAndAnswerDeadlines() {
+    #expect(
+      ServiceTimeouts.testNotification
+        > TestNotificationDeadlines.pickupSeconds + TestNotificationDeadlines.answerSeconds
+    )
   }
 
   @Test

@@ -148,8 +148,7 @@ extension ApplicationServiceClient {
     try await call(
       .sendTestNotification,
       LocalServiceRPCEmptyArguments(),
-      timeoutSeconds: TestNotificationDeadlines.pickupSeconds
-        + TestNotificationDeadlines.answerSeconds + applicationServiceDefaultReplyTimeoutSeconds
+      timeoutSeconds: ServiceTimeouts.testNotification
     )
   }
 
