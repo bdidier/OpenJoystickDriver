@@ -181,7 +181,7 @@ Live evidence (2026-10-14): two `054C:0268` DS3 (locations `01130000`, `01140000
 
 Which location is the genuine Sony CECHZC2E is open (question 1); `0xEF` is the candidate discriminator. The genuine one is the user's unit with rumble; the clone is the "other clone mentioned in wiki" (not GP100). Because decision 5 says clone behavior is hit-or-miss until someone tests, the first task builds the mechanism and the hardware check validates it.
 
-DEXT matching is generated from records whose route is `ExtensionOwned`, limited to the seven granted IDs (`045E:02D1`, `02DD`, `02E3`, `02EA`, `0B00`, `0B0A`, `0B12`). `Scripts/Signing/doctor.py`, `configure.py` and `Scripts/Build/driverkit.sh` enforce the set today and keep enforcing it. A record asking for the extension outside the set fails `./Scripts/ojd check driverkit`. More IDs need a new Apple request (user's call).
+DEXT matching is generated from records whose route is `ExtensionOwned`, limited to the seven granted IDs (`045E:02D1`, `02DD`, `02E3`, `02EA`, `0B00`, `0B0A`, `0B12`). The DriverKit generator (`Sources/DriverKitGenerator/main.swift`, `OutsideGrantError`) rejects an `ExtensionOwned` record outside the set; `Scripts/Signing/configure.py` and `Scripts/Build/driverkit.sh` check the profiles and entitlements. A record asking for the extension outside the set fails `./Scripts/ojd check driverkit`. More IDs need a new Apple request (user's call).
 
 DS3 over Bluetooth: macOS 27 asks for a PIN the DS3 lacks; macOS 12 pairs. The host-address write (`ojd controller pair --host-address auto`) is added and verified on the A1398.
 

@@ -69,8 +69,6 @@ The command searches supported local profile locations, installs discovered prof
 
 A profile embeds every certificate it was generated for. `configure` chooses a Keychain identity (with its private key) whose SHA1 is embedded in both the host and the DriverKit profile of the same kind. When several qualify, `configure` prints the choice: the lowest SHA1. When none qualifies, it fails and lists each profile's embedded SHA1s next to the Keychain SHA1s; it never writes an identity that the Keychain cannot sign with. `signing profile-info` lists every embedded certificate, and `signing import-embedded` imports all of them.
 
-The doctor fails closed if the DEXT profile is missing while the host can use it, a required entitlement is absent, the USB entitlement has the wrong shape, or forbidden entitlements are present.
-
 ## Developer ID / Distribution
 
 The Developer ID profiles are installed separately as `OpenJoystickDriver_DevID.provisionprofile` and `OpenJoystickDriver_XboxUSBDevice_DevID.provisionprofile`. GitHub Actions consumes the latter from `OPENJOYSTICKDRIVER_DEXT_DEVID_PROFILE_BASE64`; development profiles and Apple Development identities never enter the release job.

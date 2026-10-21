@@ -1,7 +1,7 @@
 """Check or rebuild everything that derives from the error code catalog.
 
 `Resources/ErrorCodes.json` is the only authored list of E#### codes.
-This script validates it
+This script validates it,
 and rewrites the two files that copy it:
 the `code` enum of `Resources/Schemas/endpoint.schema.json`
 and the generated block of `wiki/Error-Codes.md`.

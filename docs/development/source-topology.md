@@ -107,7 +107,7 @@ Each test target mirrors its source target and directory names: `Tests/OpenJoyst
 
 Extension files are `Type+Concern.swift`, where `Concern` is a noun phrase naming the content, such as `+Queries`, `+Parsing`, or `+Lifecycle`. Delete empty extension stubs.
 
-SwiftLint `file_length` fails a Swift file with more than 500 lines under `Sources` and `Tools`, or more than 1000 under `Tests` (`Tests/.swiftlint.yml`). Comment-only lines do not count.
+SwiftLint `file_length` fails a Swift file with more than 500 lines under `Sources` and `Tools`, or more than 1000 under `Tests` (`Tests/.swiftlint.yml`). Comment-only and blank lines do not count.
 
 ## Rules
 
