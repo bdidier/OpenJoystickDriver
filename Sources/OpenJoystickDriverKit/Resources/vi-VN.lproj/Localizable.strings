@@ -1496,6 +1496,10 @@
 "library.mod.remove.title" = "Xóa mod %@?";
 "library.mod.remove.message" = "OpenJoystickDriver xóa mod cùng các bản ghi, cấu hình và persona mà mod đã thêm.";
 "library.mod.removed" = "Đã xóa mod %@.";
+"library.record.patchedBy" = "Được sửa bởi %@";
+"library.field.usbClaim" = "Tiện ích mở rộng USB";
+"library.claim.claimed" = "Đảm nhận bộ điều khiển này";
+"library.claim.unclaimed" = "Không đảm nhận bộ điều khiển này";
 "library.search" = "Tìm kiếm";
 "library.search.noMatches" = "Không có kết quả khớp";
 "library.testRecord" = "Kiểm thử bản ghi…";

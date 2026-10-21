@@ -78,6 +78,12 @@
         )
         OJDLabeledValue(OJDLocalized.string("library.field.file"), detail.item.file?.path)
         OJDLabeledValue(OJDLocalized.string("library.field.transport"), detail.transport)
+        if let claimed = detail.claimedByUSBExtension {
+          OJDLabeledValue(
+            OJDLocalized.string("library.field.usbClaim"),
+            OJDLocalized.string(claimed ? "library.claim.claimed" : "library.claim.unclaimed")
+          )
+        }
         ForEach(detail.notes, id: \.self) { note in
           Text(note).foregroundColor(.secondary).fixedSize(horizontal: false, vertical: true)
         }

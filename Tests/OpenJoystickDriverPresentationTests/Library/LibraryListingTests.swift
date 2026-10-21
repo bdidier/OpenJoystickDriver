@@ -17,14 +17,21 @@ struct LibraryListingTests {
   { LibraryRecordItem(model: model, family: "xbox-gip", layer: layer, file: nil) }
 
   private func detail(_ item: LibraryRecordItem) -> LibraryRecordDetail {
-    LibraryRecordDetail(item: item, transport: "HID", notes: [], fields: [], document: "{}")
+    LibraryRecordDetail(
+      item: item,
+      transport: "HID",
+      notes: [],
+      claimedByUSBExtension: nil,
+      fields: [],
+      document: "{}"
+    )
   }
 
   private func loadedModel() -> (LibraryViewModel, FakeLibraryStore) {
     let store = FakeLibraryStore()
     let user = item(userModel, .user)
     let builtIn = item(builtInModel, .bundled)
-    store.listing = LibraryRecordListing(items: [user, builtIn])
+    store.listing = LibraryRecordListing(installed: [user], builtIn: [builtIn])
     store.details = [userModel: detail(user), builtInModel: detail(builtIn)]
     store.mods = [
       LibraryModItem(name: "arcade", version: "1.0.0", author: "Ada", files: [], problem: nil)
@@ -167,6 +174,64 @@ struct LibraryListingTests {
   }
 
   @Test
+  func removingAPatchClearsTheSelectionOfAModelNoLongerInstalled() {
+    let (model, store) = loadedModel()
+    model.select(.record(userModel))
+    store.listing = LibraryRecordListing(builtIn: store.listing.builtIn)
+
+    model.reload()
+
+    #expect(model.selection == nil)
+    #expect(model.recordDetail == nil)
+  }
+
+  @Test
+  func aRecordTheListDoesNotShowCannotBeSelected() {
+    let (model, _) = loadedModel()
+
+    model.select(.record(builtInModel))
+
+    #expect(model.selection == nil)
+  }
+
+  @Test
+  func aSearchThatHidesTheSelectionClearsIt() {
+    let (model, _) = loadedModel()
+    model.select(.record(userModel))
+
+    model.searchText = "zzz"
+
+    #expect(model.selection == nil)
+    model.searchText = ""
+    #expect(model.selection == nil)
+  }
+
+  @Test
+  func aSearchThatKeepsTheSelectionVisibleKeepsIt() {
+    let (model, _) = loadedModel()
+    model.select(.record(userModel))
+
+    model.searchText = "1234"
+
+    #expect(model.selection == .record(userModel))
+  }
+
+  @Test
+  func theBuiltInListIsTheWholeBundledCatalog() throws {
+    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(
+      UUID().uuidString,
+      isDirectory: true
+    ).appendingPathComponent("Controllers", isDirectory: true)
+    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+    defer { try? FileManager.default.removeItem(at: directory.deletingLastPathComponent()) }
+
+    let listing = DirectoryLibraryStore(recordsDirectory: directory).records()
+
+    #expect(listing.builtIn.count == ControllerRecordSet.bundled.records.count)
+    #expect(listing.builtIn.allSatisfy { $0.patchedBy == nil })
+  }
+
+  @Test
   func searchAppliesInTheBuiltInScope() {
     let (model, _) = loadedModel()
     model.scope = .builtIn
@@ -202,6 +267,5 @@ struct LibraryListingTests {
 
     #expect(listing.installed.isEmpty)
     #expect(!listing.builtIn.isEmpty)
-    #expect(listing.builtIn.allSatisfy { $0.layer == .bundled })
   }
 }

@@ -1607,6 +1607,10 @@
 "library.mod.remove.title" = "Supprimer le mod %@?";
 "library.mod.remove.message" = "OpenJoystickDriver supprime le mod ainsi que les fiches, les profils et les personas qu’il a ajoutés.";
 "library.mod.removed" = "Le mod %@ est supprimé.";
+"library.record.patchedBy" = "Modifiée par %@";
+"library.field.usbClaim" = "Extension USB";
+"library.claim.claimed" = "Prend en charge cette manette";
+"library.claim.unclaimed" = "Ne prend pas en charge cette manette";
 "library.search" = "Rechercher";
 "library.search.noMatches" = "Aucun résultat";
 "library.testRecord" = "Tester la fiche…";

@@ -1496,6 +1496,10 @@
 "library.mod.remove.title" = "هل تريد إزالة المود %@؟";
 "library.mod.remove.message" = "يحذف OpenJoystickDriver المود والسجلات وملفات التعريف والهويات التي أضافها.";
 "library.mod.removed" = "تمت إزالة المود %@.";
+"library.record.patchedBy" = "مُعدَّل بواسطة %@";
+"library.field.usbClaim" = "امتداد USB";
+"library.claim.claimed" = "يطالب بوحدة التحكم هذه";
+"library.claim.unclaimed" = "لا يطالب بوحدة التحكم هذه";
 "library.search" = "بحث";
 "library.search.noMatches" = "لا توجد نتائج مطابقة";
 "library.testRecord" = "اختبار السجل…";

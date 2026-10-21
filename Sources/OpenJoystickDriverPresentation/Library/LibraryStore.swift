@@ -14,6 +14,8 @@ struct LibraryRecordItem: Equatable, Identifiable {
   let family: String
   let layer: ControllerRecordLayer
   let file: URL?
+  /// The file name of the user file or mod file that patches a built-in record.
+  var patchedBy: String?
 
   var id: ControllerModelID { model }
   var identity: String { model.description }
@@ -43,14 +45,11 @@ struct LibrarySkippedFile: Equatable, Identifiable {
 }
 
 struct LibraryRecordListing: Equatable {
-  /// Every effective record, by model.
-  var items: [LibraryRecordItem] = []
+  /// The effective records that a user file or a package adds or patches, by model.
+  var installed: [LibraryRecordItem] = []
+  /// The whole bundled catalog, as `ojd record list --bundled` lists it, by model.
+  var builtIn: [LibraryRecordItem] = []
   var skipped: [LibrarySkippedFile] = []
-
-  /// The records that a user file or a package adds or patches.
-  var installed: [LibraryRecordItem] { items.filter { $0.layer != .bundled } }
-  /// The records the app comes with, no file of which changes them.
-  var builtIn: [LibraryRecordItem] { items.filter { $0.layer == .bundled } }
 }
 
 /// A top-level field of a record and the layer that sets it.
@@ -68,6 +67,8 @@ struct LibraryRecordDetail: Equatable {
   let transport: String
   /// Why OJD reaches the controller only in a limited way, in words.
   let notes: [String]
+  /// Whether the signed USB extension claims the controller; nil for a family without raw USB.
+  let claimedByUSBExtension: Bool?
   let fields: [LibraryRecordField]
   /// The effective record as JSON text; nil when it is not UTF-8.
   let document: String?
@@ -139,10 +140,12 @@ protocol LibraryStore: Sendable {
 }
 
 /// The store on disk: user records in `recordsDirectory`, packages beside it.
-struct DirectoryLibraryStore: LibraryStore {
+final class DirectoryLibraryStore: LibraryStore {
   let recordsDirectory: URL
   let packagesDirectory: URL
   let runningVersion: String?
+  /// The records loaded by the latest ``records()``; details and tests read this set.
+  private let loaded = Locked<ControllerRecordSet?>(nil)
 
   init(
     recordsDirectory: URL = ControllerRecordSet.userDirectory,
@@ -159,8 +162,17 @@ struct DirectoryLibraryStore: LibraryStore {
 
   func records() -> LibraryRecordListing {
     let set = ControllerRecordSet.load(userDirectory: recordsDirectory)
+    loaded.withLock { $0 = set }
     return LibraryRecordListing(
-      items: set.records.values.sorted { $0.model < $1.model }.map(Self.item),
+      installed: set.records.values.filter { $0.layer != .bundled }.sorted { $0.model < $1.model }
+        .map(Self.item),
+      builtIn: ControllerRecordSet.bundled.records.values.sorted { $0.model < $1.model }.map {
+        var item = Self.item($0)
+        if let patch = set.records[$0.model], patch.layer != .bundled {
+          item.patchedBy = patch.file?.lastPathComponent
+        }
+        return item
+      },
       skipped: set.userFiles.compactMap { file in
         file.problem.map { LibrarySkippedFile(path: file.url.path, problem: $0) }
       }
@@ -177,19 +189,12 @@ struct DirectoryLibraryStore: LibraryStore {
   }
 
   func recordDetail(_ model: ControllerModelID) -> LibraryRecordDetail? {
-    guard let record = ControllerRecordSet.load(userDirectory: recordsDirectory).records[model]
-    else { return nil }
-    var notes: [String] = []
-    if record.isClaimedByUSBExtension == false {
-      notes.append(OJDLocalized.string("cli.record.usb_not_claimed"))
-    }
-    if record.isSwitch2WithoutBluetoothLE {
-      notes.append(OJDLocalized.string("cli.record.usb_only_switch2"))
-    }
+    guard let record = loaded.withLock({ $0 })?.records[model] else { return nil }
     return LibraryRecordDetail(
       item: Self.item(record),
       transport: record.usesRawUSB ? "USB" : "HID",
-      notes: notes,
+      notes: record.notes,
+      claimedByUSBExtension: record.isClaimedByUSBExtension,
       fields: record.fieldLayers.sorted { $0.key < $1.key }.map {
         LibraryRecordField(name: $0.key, layer: $0.value)
       },
@@ -204,10 +209,9 @@ struct DirectoryLibraryStore: LibraryStore {
     expectation: Data,
     expectationName: String
   ) throws -> ControllerRecordTestResult {
-    guard let record = ControllerRecordSet.load(userDirectory: recordsDirectory).records[model]
-    else {
+    guard let record = loaded.withLock({ $0 })?.records[model] else {
       throw LibraryFailure(
-        message: OJDLocalized.formatted("library.record.notFound", model.description),
+        message: OJDLocalized.formatted("cli.record.show.not_found", model.description),
         code: .notFound
       )
     }

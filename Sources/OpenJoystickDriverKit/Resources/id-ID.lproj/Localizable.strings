@@ -1496,6 +1496,10 @@
 "library.mod.remove.title" = "Hapus mod %@?";
 "library.mod.remove.message" = "OpenJoystickDriver menghapus mod beserta catatan, profil, dan persona yang ditambahkannya.";
 "library.mod.removed" = "Mod %@ telah dihapus.";
+"library.record.patchedBy" = "Dimodifikasi oleh %@";
+"library.field.usbClaim" = "Ekstensi USB";
+"library.claim.claimed" = "Mengklaim pengontrol ini";
+"library.claim.unclaimed" = "Tidak mengklaim pengontrol ini";
 "library.search" = "Cari";
 "library.search.noMatches" = "Tidak ada yang cocok";
 "library.testRecord" = "Uji Catatan…";

@@ -1496,6 +1496,10 @@
 "library.mod.remove.title" = "เอาม็อด %@ ออกหรือไม่";
 "library.mod.remove.message" = "OpenJoystickDriver จะลบม็อดและระเบียน โปรไฟล์ และเพอร์โซนาที่ม็อดนั้นเพิ่มไว้";
 "library.mod.removed" = "เอาม็อด %@ ออกแล้ว";
+"library.record.patchedBy" = "แก้ไขโดย %@";
+"library.field.usbClaim" = "ส่วนขยาย USB";
+"library.claim.claimed" = "รับช่วงคอนโทรลเลอร์นี้";
+"library.claim.unclaimed" = "ไม่รับช่วงคอนโทรลเลอร์นี้";
 "library.search" = "ค้นหา";
 "library.search.noMatches" = "ไม่พบรายการที่ตรงกัน";
 "library.testRecord" = "ทดสอบระเบียน…";

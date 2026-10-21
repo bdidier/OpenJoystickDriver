@@ -1496,6 +1496,10 @@
 "library.mod.remove.title" = "Şu mod kaldırılsın mı: %@?";
 "library.mod.remove.message" = "OpenJoystickDriver modu ve eklediği kayıtları, profilleri ve personaları siler.";
 "library.mod.removed" = "Şu mod kaldırıldı: %@.";
+"library.record.patchedBy" = "%@ tarafından değiştirildi";
+"library.field.usbClaim" = "USB uzantısı";
+"library.claim.claimed" = "Bu kontrolcüyü üstlenir";
+"library.claim.unclaimed" = "Bu kontrolcüyü üstlenmez";
 "library.search" = "Ara";
 "library.search.noMatches" = "Eşleşme yok";
 "library.testRecord" = "Kaydı Test Et…";

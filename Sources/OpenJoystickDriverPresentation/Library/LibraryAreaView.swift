@@ -76,8 +76,8 @@
         HStack {
           Text(OJDLocalized.string("library.builtIn"))
           Spacer()
-          Text(model.visibleRecords.count.formatted())
-        }.ojdAccessibilityValue(model.visibleRecords.count.formatted())
+          Text(model.records.builtIn.count.formatted())
+        }.ojdAccessibilityValue(model.records.builtIn.count.formatted())
       }
     }
 
@@ -94,6 +94,10 @@
       return VStack(alignment: .leading, spacing: 2) {
         Text(item.identity)
         Text(summary).font(.caption).foregroundColor(.secondary)
+        if let patch = item.patchedBy {
+          Text(OJDLocalized.formatted("library.record.patchedBy", patch)).font(.caption)
+            .foregroundColor(.secondary)
+        }
       }.tag(LibrarySelection.record(item.model)).ojdAccessibilityLabel(item.identity)
         .ojdAccessibilityValue(summary)
     }

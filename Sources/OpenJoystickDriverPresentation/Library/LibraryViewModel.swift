@@ -105,7 +105,9 @@ final class LibraryViewModel: ObservableObject {
   }
   /// What the toolbar's search field holds; the list shows only records and mods that match.
   @Published
-  var searchText = ""
+  var searchText = "" {
+    didSet { if searchText != oldValue { select(selection) } }
+  }
   @Published
   private(set) var selection: LibrarySelection?
   @Published
@@ -168,15 +170,16 @@ final class LibraryViewModel: ObservableObject {
     select(selection)
   }
 
-  /// Shows `selection`; a record or mod that is not in the library selects nothing.
+  /// Shows `selection`; a record or mod that the list does not show selects nothing.
   func select(_ selection: LibrarySelection?) {
     switch selection {
     case .record(let model)?:
-      recordDetail = store.recordDetail(model)
+      recordDetail =
+        visibleRecords.contains { $0.model == model } ? store.recordDetail(model) : nil
       self.selection = recordDetail == nil ? nil : selection
     case .mod(let name)?:
       recordDetail = nil
-      self.selection = mods.contains { $0.name == name } ? selection : nil
+      self.selection = visibleMods.contains { $0.name == name } ? selection : nil
     case nil:
       recordDetail = nil
       self.selection = nil

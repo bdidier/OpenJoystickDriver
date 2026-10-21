@@ -1496,6 +1496,10 @@
 "library.mod.remove.title" = "Удалить мод «%@»?";
 "library.mod.remove.message" = "OpenJoystickDriver удалит мод, а также записи, профили и персоны, которые он добавил.";
 "library.mod.removed" = "Мод «%@» удалён.";
+"library.record.patchedBy" = "Изменено: %@";
+"library.field.usbClaim" = "Расширение USB";
+"library.claim.claimed" = "Берёт этот контроллер";
+"library.claim.unclaimed" = "Не берёт этот контроллер";
 "library.search" = "Поиск";
 "library.search.noMatches" = "Нет совпадений";
 "library.testRecord" = "Протестировать запись…";

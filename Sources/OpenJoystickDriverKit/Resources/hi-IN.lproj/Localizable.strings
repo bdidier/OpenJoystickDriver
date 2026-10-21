@@ -1496,6 +1496,10 @@
 "library.mod.remove.title" = "मॉड %@ हटाएँ?";
 "library.mod.remove.message" = "OpenJoystickDriver मॉड और उसके जोड़े रिकॉर्ड, प्रोफ़ाइल और पर्सोना मिटा देता है।";
 "library.mod.removed" = "मॉड %@ हटा दिया गया।";
+"library.record.patchedBy" = "%@ द्वारा संशोधित";
+"library.field.usbClaim" = "USB एक्सटेंशन";
+"library.claim.claimed" = "इस कंट्रोलर को अपने अधीन लेता है";
+"library.claim.unclaimed" = "इस कंट्रोलर को अपने अधीन नहीं लेता";
 "library.search" = "खोजें";
 "library.search.noMatches" = "कोई मिलान नहीं";
 "library.testRecord" = "रिकॉर्ड का परीक्षण करें…";

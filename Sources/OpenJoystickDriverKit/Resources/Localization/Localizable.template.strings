@@ -1610,6 +1610,10 @@
 "library.mod.remove.title" = "Remove the mod %@?";
 "library.mod.remove.message" = "OpenJoystickDriver deletes the mod and the records, profiles and personas it added.";
 "library.mod.removed" = "Removed the mod %@.";
+"library.record.patchedBy" = "Patched by %@";
+"library.field.usbClaim" = "USB extension";
+"library.claim.claimed" = "Claims this controller";
+"library.claim.unclaimed" = "Does not claim this controller";
 "library.search" = "Search";
 "library.search.noMatches" = "No matches";
 "library.testRecord" = "Test Record...";

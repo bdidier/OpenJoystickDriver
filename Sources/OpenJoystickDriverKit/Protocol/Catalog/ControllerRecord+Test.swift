@@ -68,7 +68,7 @@ extension ControllerRecord {
     let hex: String
     let length: Int
 
-    var bytes: [UInt8] { hex.split(separator: " ").compactMap { UInt8($0, radix: 16) } }
+    var bytes: [UInt8] { PacketLogEntry.bytes(hex: hex) }
   }
 
   private static func receivedReports(in data: Data) throws -> [[UInt8]] {

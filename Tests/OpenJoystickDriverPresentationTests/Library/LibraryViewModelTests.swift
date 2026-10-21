@@ -204,7 +204,10 @@ struct LibraryViewModelTests {
     struct Unreadable: Error {}
     let model = makeModel(FakeLibraryStore()) { _ in throw Unreadable() }
 
-    model.validate(at: temporaryFile())
+    let url = temporaryFile()
+    defer { try? FileManager.default.removeItem(at: url) }
+
+    model.validate(at: url)
 
     #expect(model.failure?.code == .fileAccessFailed)
     #expect(model.notice == nil)
@@ -215,7 +218,10 @@ struct LibraryViewModelTests {
     let store = FakeLibraryStore()
     let model = makeModel(store)
 
-    model.validate(at: temporaryFolder())
+    let url = temporaryFolder()
+    defer { try? FileManager.default.removeItem(at: url) }
+
+    model.validate(at: url)
 
     #expect(model.notice != nil)
     #expect(model.pending == nil)
@@ -231,11 +237,12 @@ struct LibraryViewModelTests {
       layer: .user,
       file: nil
     )
-    store.listing = LibraryRecordListing(items: [item])
+    store.listing = LibraryRecordListing(installed: [item])
     store.details[item.model] = LibraryRecordDetail(
       item: item,
       transport: "HID",
       notes: [],
+      claimedByUSBExtension: nil,
       fields: [],
       document: nil
     )

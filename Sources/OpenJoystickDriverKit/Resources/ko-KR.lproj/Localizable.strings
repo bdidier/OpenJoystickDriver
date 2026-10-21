@@ -1496,6 +1496,10 @@
 "library.mod.remove.title" = "모드 %@을(를) 제거하시겠습니까?";
 "library.mod.remove.message" = "OpenJoystickDriver가 모드와, 모드가 추가한 레코드, 프로파일, 페르소나를 삭제합니다.";
 "library.mod.removed" = "모드 %@을(를) 제거했습니다.";
+"library.record.patchedBy" = "%@에서 수정함";
+"library.field.usbClaim" = "USB 확장";
+"library.claim.claimed" = "이 컨트롤러를 담당함";
+"library.claim.unclaimed" = "이 컨트롤러를 담당하지 않음";
 "library.search" = "검색";
 "library.search.noMatches" = "일치하는 항목 없음";
 "library.testRecord" = "레코드 테스트…";
