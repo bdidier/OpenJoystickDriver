@@ -105,8 +105,8 @@
       super.init(window: window)
       window.delegate = self
       configureToolbar(on: window)
-      paneChanged(animated: false)
       window.center()
+      paneChanged(animated: false)
       fitting = RunLoopCoalescer { [weak self] in
         guard self?.window?.isVisible == true else { return }
         self?.paneChanged(animated: true)
