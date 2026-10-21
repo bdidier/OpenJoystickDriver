@@ -86,8 +86,6 @@ struct LibraryTestRun: Equatable {
 /// What validation found in a record file.
 struct LibraryRecordCheck: Equatable {
   let identity: String
-  let family: PhysicalProtocolID?
-  let operation: ControllerRecordOperation
   let fileName: String
   /// Whether the record directory already holds a file of this name.
   let replaces: Bool
@@ -244,8 +242,6 @@ final class DirectoryLibraryStore: LibraryStore {
     let destination = recordsDirectory.appendingPathComponent(validated.fileName)
     return LibraryRecordCheck(
       identity: Self.identity(of: validated),
-      family: validated.record?.protocolID,
-      operation: validated.operation,
       fileName: validated.fileName,
       replaces: FileManager.default.fileExists(atPath: destination.path)
     )

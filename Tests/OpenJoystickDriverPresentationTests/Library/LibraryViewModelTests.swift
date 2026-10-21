@@ -9,8 +9,6 @@ final class FakeLibraryStore: LibraryStore, @unchecked Sendable {
   var mods: [LibraryModItem] = []
   var recordCheck = LibraryRecordCheck(
     identity: "045E:028E",
-    family: .xboxGIP,
-    operation: .add,
     fileName: "045e-028e.json",
     replaces: false
   )
@@ -125,8 +123,6 @@ struct LibraryViewModelTests {
     let store = FakeLibraryStore()
     store.recordCheck = LibraryRecordCheck(
       identity: "045E:028E",
-      family: nil,
-      operation: .patch,
       fileName: "045e-028e.patch.json",
       replaces: true
     )
