@@ -67,6 +67,35 @@
     }
   }
 
+  /// What decides whether the Profiles toolbar actions are enabled.
+  struct ProfileToolbarState: Equatable {
+    /// A profile of the library is selected.
+    let hasSelection: Bool
+    /// A mutation or recovery is running, or the library has damaged entries.
+    let isBlocked: Bool
+    /// The editor holds changes that are not saved.
+    let hasUnsavedChanges: Bool
+  }
+
+  extension MainWindowToolbarAction {
+    /// Duplicate and Export act on the saved profile, so they wait for the editor's changes to
+    /// be saved.
+    var needsSavedProfile: Bool { self == .duplicateProfile || self == .exportProfile }
+
+    /// Whether a Profiles action is enabled; other actions are always enabled here.
+    func isEnabled(profile state: ProfileToolbarState) -> Bool {
+      switch self {
+      case .newProfile, .importProfile: return !state.isBlocked
+      case .validateProfileFile: return true
+      case .exportProfile: return state.hasSelection && !state.hasUnsavedChanges
+      case .duplicateProfile:
+        return state.hasSelection && !state.isBlocked && !state.hasUnsavedChanges
+      case .deleteProfile: return state.hasSelection && !state.isBlocked
+      case .refreshControllers, .installLibraryItem: return true
+      }
+    }
+  }
+
   extension MainWindowArea {
     /// The toolbar actions of the area, in order. Access and Activity keep theirs in content.
     var toolbarActions: [MainWindowToolbarAction] {

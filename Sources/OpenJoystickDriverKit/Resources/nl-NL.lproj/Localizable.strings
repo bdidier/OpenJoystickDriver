@@ -227,6 +227,10 @@
 "profiles.controlNumber" = "Besturing %d";
 "profiles.creationValidation" = "Controleer de profielnaam en het doel van de toepassing.";
 "profiles.controllersOfProfiles" = "Gebruikt door je profielen";
+"profiles.chooseController" = "Kies een controller";
+"profiles.saveFirst" = "Bewaar eerst het profiel.";
+"profiles.unreadableRecords" = "Sommige controllerrecordbestanden konden niet worden gelezen. Details: %@.";
+"profiles.scopedCaption" = "%1$@ · %2$@";
 "profiles.deactivateController" = "Deactiveer alles";
 "profiles.details" = "Profielgegevens";
 "profiles.notSupportedByController" = "Niet ondersteund door deze controller of dit protocol.";

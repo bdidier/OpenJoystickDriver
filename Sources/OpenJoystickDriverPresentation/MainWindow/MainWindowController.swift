@@ -315,21 +315,36 @@
     func isEnabled(_ action: MainWindowToolbarAction) -> Bool {
       switch action {
       case .refreshControllers: return !screens.runtime.isScopedRefreshInFlight
-      case .newProfile, .importProfile:
-        return !screens.profiles.isActionBlocked(library: screens.library, runtime: screens.runtime)
-      case .validateProfileFile: return true
-      case .exportProfile: return selectedProfile != nil
-      case .duplicateProfile, .deleteProfile:
-        return selectedProfile != nil
-          && !screens.profiles.isActionBlocked(library: screens.library, runtime: screens.runtime)
+      case .newProfile, .importProfile, .validateProfileFile, .duplicateProfile, .exportProfile,
+        .deleteProfile:
+        return action.isEnabled(profile: profileToolbarState)
       case .installLibraryItem: return true
       }
+    }
+
+    private var profileToolbarState: ProfileToolbarState {
+      ProfileToolbarState(
+        hasSelection: selectedProfile != nil,
+        isBlocked: screens.profiles.isActionBlocked(
+          library: screens.library,
+          runtime: screens.runtime
+        ),
+        hasUnsavedChanges: screens.profiles.editorTransition.isDirty
+      )
     }
   }
 
   extension MainWindowController: NSToolbarItemValidation {
     func validateToolbarItem(_ item: NSToolbarItem) -> Bool {
-      MainWindowToolbarAction(identifier: item.itemIdentifier).map(isEnabled) ?? true
+      guard let action = MainWindowToolbarAction(identifier: item.itemIdentifier) else {
+        return true
+      }
+      if action.needsSavedProfile {
+        item.toolTip =
+          profileToolbarState.hasUnsavedChanges
+          ? OJDLocalized.string("profiles.saveFirst") : OJDLocalized.string(action.descriptionKey)
+      }
+      return isEnabled(action)
     }
   }
 

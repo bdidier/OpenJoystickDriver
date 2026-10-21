@@ -227,6 +227,10 @@
 "profiles.controlNumber" = "Kontrol %d";
 "profiles.creationValidation" = "Periksa nama profil dan target aplikasi.";
 "profiles.controllersOfProfiles" = "Dipakai profil Anda";
+"profiles.chooseController" = "Pilih pengontrol";
+"profiles.saveFirst" = "Simpan profil terlebih dahulu.";
+"profiles.unreadableRecords" = "Beberapa file catatan pengontrol tidak dapat dibaca. Detail: %@.";
+"profiles.scopedCaption" = "%1$@ · %2$@";
 "profiles.deactivateController" = "Nonaktifkan semua";
 "profiles.details" = "Detail profil";
 "profiles.notSupportedByController" = "Tidak didukung oleh pengontrol atau protokol ini.";

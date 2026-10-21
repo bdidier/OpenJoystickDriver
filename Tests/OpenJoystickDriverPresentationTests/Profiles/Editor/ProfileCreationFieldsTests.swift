@@ -43,10 +43,14 @@ struct ProfileCreationFieldsTests {
     )
   }
 
-  private static func profile(named name: String, vendorID: UInt16 = 9) -> RemappingProfile {
+  private static func profile(
+    named name: String,
+    vendorID: UInt16 = 9,
+    productID: UInt16 = 7
+  ) -> RemappingProfile {
     RemappingProfile(
       name: name,
-      device: RemappingDeviceScope(vendorID: vendorID, productID: 7),
+      device: RemappingDeviceScope(vendorID: vendorID, productID: productID),
       applicationScope: .global,
       bindings: []
     )
@@ -74,7 +78,7 @@ struct ProfileCreationFieldsTests {
   func anUntouchedNameFollowsTheChosenController() {
     let context = Self.context(devices: [Self.padA, Self.padB])
     var fields = ProfileCreationFields()
-    fields.selectedControllerID = Self.padB.sessionToken.rawValue
+    fields.picked = context.choices[1]
     #expect(fields.name(in: context) == "Pad B")
     #expect(
       fields.proposedProfile(in: context)?.device
@@ -87,18 +91,49 @@ struct ProfileCreationFieldsTests {
     let context = Self.context(devices: [Self.padA, Self.padB])
     var fields = ProfileCreationFields()
     fields.editedName = "Racing"
-    fields.selectedControllerID = Self.padB.sessionToken.rawValue
+    fields.picked = context.choices[1]
     #expect(fields.name(in: context) == "Racing")
   }
 
   @Test
-  func aChosenControllerThatWentAwayIsReplacedByTheFirstAndTheNameFollows() {
+  func aPickedControllerThatDisconnectsStaysOnItsModelWithItsName() {
+    let both = Self.context(devices: [Self.padA, Self.padB])
     var fields = ProfileCreationFields()
-    fields.selectedControllerID = Self.padB.sessionToken.rawValue
+    fields.picked = both.choices[1]
+    let gone = Self.context(
+      devices: [Self.padA],
+      profiles: [Self.profile(named: "Old", vendorID: 0x0003, productID: 0x0004)]
+    )
+    let resolved = fields.controller(in: gone)
+    #expect(resolved?.model == ControllerModelID(vendorID: 0x0003, productID: 0x0004))
+    #expect(resolved?.id != Self.padA.sessionToken.rawValue)
+    #expect(fields.name(in: gone) == "Pad B")
+    #expect(
+      fields.proposedProfile(in: gone)?.device
+        == RemappingDeviceScope(vendorID: 0x0003, productID: 0x0004)
+    )
+  }
+
+  @Test
+  func aPickedControllerWhoseModelIsNoLongerOfferedLeavesNoControllerAndNoProfile() {
+    let both = Self.context(devices: [Self.padA, Self.padB])
+    var fields = ProfileCreationFields()
+    fields.picked = both.choices[1]
     let gone = Self.context(devices: [Self.padA])
-    #expect(fields.controller(in: gone)?.id == Self.padA.sessionToken.rawValue)
-    #expect(fields.name(in: gone) == "Pad A")
-    #expect(fields.proposedProfile(in: gone) != nil)
+    #expect(fields.controller(in: gone) == nil)
+    #expect(fields.proposedProfile(in: gone) == nil)
+  }
+
+  @Test
+  func withNothingConnectedAndNothingPickedNoModelIsPreselected() {
+    let context = Self.context(
+      devices: [],
+      catalog: [ControllerModelID(vendorID: 0x054C, productID: 0x0CE6): "DualSense"]
+    )
+    let fields = ProfileCreationFields()
+    #expect(!context.choices.isEmpty)
+    #expect(fields.controller(in: context) == nil)
+    #expect(fields.proposedProfile(in: context) == nil)
   }
 
   @Test
@@ -132,8 +167,7 @@ struct ProfileCreationFieldsTests {
     )
     #expect(
       choices.map(\.label) == [
-        "Pad A", "0001:0007", "Xbox One · 0009:0007", "DualSense · 054C:0CE6",
-        "Xbox One · 000A:0001", "Xbox One · 045E:02EA",
+        "Pad A", "0001:0007", "Xbox One · 0009:0007", "054C:0CE6", "000A:0001", "045E:02EA",
       ]
     )
     #expect(
@@ -153,6 +187,7 @@ struct ProfileCreationFieldsTests {
       catalog: [ControllerModelID(vendorID: 0x054C, productID: 0x0CE6): "DualSense"]
     )
     var fields = ProfileCreationFields()
+    fields.picked = context.choices[0]
     fields.editedName = "Offline"
     let profile = fields.proposedProfile(in: context)
     #expect(profile?.device == RemappingDeviceScope(vendorID: 0x054C, productID: 0x0CE6))

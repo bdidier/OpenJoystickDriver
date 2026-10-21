@@ -227,6 +227,10 @@
 "profiles.controlNumber" = "Элемент управления %d";
 "profiles.creationValidation" = "Проверьте имя профиля и целевое приложение.";
 "profiles.controllersOfProfiles" = "Используются в ваших профилях";
+"profiles.chooseController" = "Выберите контроллер";
+"profiles.saveFirst" = "Сначала сохраните профиль.";
+"profiles.unreadableRecords" = "Некоторые файлы записей контроллеров не удалось прочитать. Подробности: %@.";
+"profiles.scopedCaption" = "%1$@ · %2$@";
 "profiles.deactivateController" = "Деактивировать все";
 "profiles.details" = "Сведения о профиле";
 "profiles.notSupportedByController" = "Не поддерживается этим контроллером или протоколом.";

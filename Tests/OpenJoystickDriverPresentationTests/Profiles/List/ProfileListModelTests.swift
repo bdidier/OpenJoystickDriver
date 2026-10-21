@@ -45,15 +45,28 @@ struct ProfileListModelTests {
 
   @Test
   func theScopeCaptionNamesTheApplicationOrShowsItsIdentifier() {
-    #expect(ProfileScopeCaption.text(for: .global) { _ in "x" } == nil)
-    #expect(
-      ProfileScopeCaption.text(for: .application(appID: "com.apple.Safari")) { _ in "Safari" }
-        == "Safari"
-    )
-    #expect(
-      ProfileScopeCaption.text(for: .application(appID: "com.example.Gone")) { _ in nil }
-        == "com.example.Gone"
-    )
+    let count = "12 assignments"
+    #expect(ProfileScopeCaption.text(for: .global, assignments: count) { _ in "x" } == count)
+    let safari = ProfileScopeCaption.text(
+      for: .application(appID: "com.apple.Safari"),
+      assignments: count
+    ) { _ in "Safari" }
+    #expect(safari == OJDLocalized.formatted("profiles.scopedCaption", "Safari", count))
+    #expect(safari.contains("Safari") && safari.contains(count))
+    let gone = ProfileScopeCaption.text(
+      for: .application(appID: "com.example.Gone"),
+      assignments: count
+    ) { _ in nil }
+    #expect(gone.contains("com.example.Gone") && gone.contains(count))
+  }
+
+  @MainActor
+  @Test
+  func anApplicationNameIsLookedUpOncePerIdentifier() {
+    let names = ProfileApplicationNames()
+    let first = names.name(for: "com.example.NotInstalled.t209")
+    #expect(first == nil)
+    #expect(names.name(for: "com.example.NotInstalled.t209") == nil)
   }
 
   private static let validDocument = """

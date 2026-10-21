@@ -227,6 +227,10 @@
 "profiles.controlNumber" = "操作 %d";
 "profiles.creationValidation" = "プロファイル名とアプリケーションの対象を確認してください。";
 "profiles.controllersOfProfiles" = "プロファイルで使用中";
+"profiles.chooseController" = "コントローラを選択";
+"profiles.saveFirst" = "先にプロファイルを保存してください。";
+"profiles.unreadableRecords" = "一部のコントローラのレコードファイルを読み込めませんでした。詳細: %@";
+"profiles.scopedCaption" = "%1$@ · %2$@";
 "profiles.deactivateController" = "すべてを無効にする";
 "profiles.details" = "プロファイルの詳細";
 "profiles.notSupportedByController" = "このコントローラまたはプロトコルではサポートされていません。";

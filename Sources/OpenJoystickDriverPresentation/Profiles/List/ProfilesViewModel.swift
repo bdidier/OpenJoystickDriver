@@ -21,6 +21,7 @@
   final class ProfilesViewModel: ObservableObject {
     let documents: ProfileDocumentService
     let capabilityRegistry = ProtocolDriverRegistry()
+    let applicationNames = ProfileApplicationNames()
     @Published
     var selectedProfileID: UUID?
     @Published
@@ -91,16 +92,30 @@
 
     /// The family label of every catalog model, read when the New Profile sheet opens. The sheet
     /// offers these models beyond the connected controllers and those of existing profiles.
+    @Published
     private(set) var catalogModels: [ControllerModelID: String] = [:]
+    /// Whether the catalog read of the New Profile sheet is still running.
+    @Published
+    private(set) var isLoadingCatalog = false
+    /// How many user controller record files the last catalog read could not use.
+    @Published
+    private(set) var unreadableRecordFiles = 0
 
-    /// Opens the New Profile sheet.
+    /// Opens the New Profile sheet and reads the catalog off the main actor.
     func beginCreatingProfile() {
-      let records = ControllerRecordSet.load(userDirectory: ControllerRecordSet.userDirectory)
-        .records
-      catalogModels = records.mapValues { record in
-        ProtocolBindingID(rawValue: record.family)?.displayLabel ?? record.family
-      }
+      catalogModels = [:]
+      unreadableRecordFiles = 0
+      isLoadingCatalog = true
       isCreatingProfile = true
+      Task { @MainActor in
+        let (labels, unreadable) = await Task.detached {
+          let set = ControllerRecordSet.load(userDirectory: ControllerRecordSet.userDirectory)
+          return (set.records.mapValues { $0.protocolID.familyLabel }, set.problems.count)
+        }.value
+        catalogModels = labels
+        unreadableRecordFiles = unreadable
+        isLoadingCatalog = false
+      }
     }
 
     /// Asks for a profile file and checks it without adding it to the library.

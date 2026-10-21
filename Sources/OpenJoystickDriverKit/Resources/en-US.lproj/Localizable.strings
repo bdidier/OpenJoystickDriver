@@ -227,6 +227,10 @@
 "profiles.controlNumber" = "Control %d";
 "profiles.creationValidation" = "Review the profile name and application target.";
 "profiles.controllersOfProfiles" = "Used by your profiles";
+"profiles.chooseController" = "Choose a controller";
+"profiles.saveFirst" = "Save the profile first.";
+"profiles.unreadableRecords" = "Some controller record files could not be read. Details: %@.";
+"profiles.scopedCaption" = "%1$@ · %2$@";
 "profiles.deactivateController" = "Deactivate all";
 "profiles.details" = "Profile details";
 "profiles.notSupportedByController" = "Not supported by this controller or protocol.";

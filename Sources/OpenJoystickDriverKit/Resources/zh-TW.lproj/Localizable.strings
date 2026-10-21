@@ -226,7 +226,11 @@
 "profiles.chords" = "組合鍵";
 "profiles.controlNumber" = "控制項 %d";
 "profiles.creationValidation" = "請檢查設定檔名稱和 App 目標。";
-"profiles.controllersOfProfiles" = "您的設定檔使用的";
+"profiles.controllersOfProfiles" = "您的設定檔使用的控制器";
+"profiles.chooseController" = "選擇控制器";
+"profiles.saveFirst" = "請先儲存設定檔。";
+"profiles.unreadableRecords" = "無法讀取部分控制器記錄檔案。詳細資訊：%@";
+"profiles.scopedCaption" = "%1$@ · %2$@";
 "profiles.deactivateController" = "全部停用";
 "profiles.details" = "設定檔詳細資料";
 "profiles.notSupportedByController" = "此控制器或協定不支援。";

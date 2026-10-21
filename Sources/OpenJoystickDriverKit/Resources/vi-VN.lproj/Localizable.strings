@@ -227,6 +227,10 @@
 "profiles.controlNumber" = "Thành phần %d";
 "profiles.creationValidation" = "Xem lại tên cấu hình và ứng dụng đích.";
 "profiles.controllersOfProfiles" = "Được cấu hình của bạn sử dụng";
+"profiles.chooseController" = "Chọn bộ điều khiển";
+"profiles.saveFirst" = "Hãy lưu cấu hình trước.";
+"profiles.unreadableRecords" = "Không đọc được một số tệp bản ghi bộ điều khiển. Chi tiết: %@.";
+"profiles.scopedCaption" = "%1$@ · %2$@";
 "profiles.deactivateController" = "Hủy kích hoạt tất cả";
 "profiles.details" = "Chi tiết cấu hình";
 "profiles.notSupportedByController" = "Không được bộ điều khiển hoặc giao thức này hỗ trợ.";

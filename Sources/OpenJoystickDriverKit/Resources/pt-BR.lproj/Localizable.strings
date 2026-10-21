@@ -227,6 +227,10 @@
 "profiles.controlNumber" = "Comando %d";
 "profiles.creationValidation" = "Revise o nome do perfil e o aplicativo de destino.";
 "profiles.controllersOfProfiles" = "Usados nos Seus Perfis";
+"profiles.chooseController" = "Escolha um controle";
+"profiles.saveFirst" = "Salve o perfil primeiro.";
+"profiles.unreadableRecords" = "Alguns arquivos de registros de controles não puderam ser lidos. Detalhes: %@.";
+"profiles.scopedCaption" = "%1$@ · %2$@";
 "profiles.deactivateController" = "Desativar Todos";
 "profiles.details" = "Detalhes do Perfil";
 "profiles.notSupportedByController" = "Sem suporte neste controle ou protocolo.";

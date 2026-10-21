@@ -227,6 +227,10 @@
 "profiles.controlNumber" = "ตัวควบคุม %d";
 "profiles.creationValidation" = "ตรวจสอบชื่อโปรไฟล์และเป้าหมายแอพพลิเคชัน";
 "profiles.controllersOfProfiles" = "ใช้ในโปรไฟล์ของคุณ";
+"profiles.chooseController" = "เลือกคอนโทรลเลอร์";
+"profiles.saveFirst" = "บันทึกโปรไฟล์ก่อน";
+"profiles.unreadableRecords" = "อ่านไฟล์ระเบียนคอนโทรลเลอร์บางไฟล์ไม่ได้ รายละเอียด: %@";
+"profiles.scopedCaption" = "%1$@ · %2$@";
 "profiles.deactivateController" = "ปิดใช้งานทั้งหมด";
 "profiles.details" = "รายละเอียดโปรไฟล์";
 "profiles.notSupportedByController" = "คอนโทรลเลอร์หรือโปรโตคอลนี้ไม่รองรับ";

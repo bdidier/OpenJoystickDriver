@@ -75,6 +75,38 @@ struct MainWindowAreaTests {
   }
 
   @Test
+  func profileActionsFollowTheSelectionTheBlockAndUnsavedChanges() {
+    func enabled(_ action: MainWindowToolbarAction, _ state: ProfileToolbarState) -> Bool {
+      action.isEnabled(profile: state)
+    }
+    let none = ProfileToolbarState(hasSelection: false, isBlocked: false, hasUnsavedChanges: false)
+    let selected = ProfileToolbarState(
+      hasSelection: true,
+      isBlocked: false,
+      hasUnsavedChanges: false
+    )
+    let unsaved = ProfileToolbarState(hasSelection: true, isBlocked: false, hasUnsavedChanges: true)
+    let blocked = ProfileToolbarState(hasSelection: true, isBlocked: true, hasUnsavedChanges: false)
+    let selectionActions: [MainWindowToolbarAction] = [
+      .duplicateProfile, .exportProfile, .deleteProfile,
+    ]
+    for action in selectionActions { #expect(!enabled(action, none)) }
+    for action in selectionActions { #expect(enabled(action, selected)) }
+    #expect(!enabled(.duplicateProfile, unsaved))
+    #expect(!enabled(.exportProfile, unsaved))
+    #expect(enabled(.deleteProfile, unsaved))
+    #expect(!enabled(.duplicateProfile, blocked))
+    #expect(enabled(.exportProfile, blocked))
+    #expect(!enabled(.deleteProfile, blocked))
+    #expect(!enabled(.newProfile, blocked) && !enabled(.importProfile, blocked))
+    #expect(enabled(.validateProfileFile, blocked))
+    #expect(enabled(.newProfile, none))
+    #expect(MainWindowToolbarAction.duplicateProfile.needsSavedProfile)
+    #expect(MainWindowToolbarAction.exportProfile.needsSavedProfile)
+    #expect(!MainWindowToolbarAction.deleteProfile.needsSavedProfile)
+  }
+
+  @Test
   func everyActionIsAllowedHasDistinctIdentifierAndLocalizedText() {
     let actions = MainWindowToolbarAction.allCases
     #expect(Set(actions.map(\.identifier)).count == actions.count)

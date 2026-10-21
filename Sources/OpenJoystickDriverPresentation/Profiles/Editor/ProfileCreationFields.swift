@@ -1,6 +1,29 @@
 import Foundation
 import OpenJoystickDriverKit
 
+extension PhysicalProtocolID {
+  /// The label of the protocol family, shared by every variant of it.
+  var familyLabel: String {
+    switch self {
+    case .xboxXID: OJDLocalized.string("controller.xboxOriginal")
+    case .xboxXUSB: OJDLocalized.string("controller.xbox360")
+    case .xboxGIP: OJDLocalized.string("controller.xboxOne")
+    case .sonySixaxis: OJDLocalized.string("controller.dualShock3")
+    case .sonyDualShock4: OJDLocalized.string("controller.dualShock4")
+    case .sonyDualSense: OJDLocalized.string("controller.dualSense")
+    case .valveSteamController, .valveSteamTriton, .valveSteamDeck:
+      OJDLocalized.string("controller.steamController")
+    case .nintendoSwitch1, .nintendoSwitch2, .nintendoSwitchInputOnly:
+      OJDLocalized.string("controller.switchPro")
+    case .vendorFlydigi: OJDLocalized.string("controller.flydigi")
+    case .vendorPS3ThirdParty: "Third-party PS3"
+    case .vendorNVIDIAShield: "NVIDIA SHIELD"
+    case .vendorGameSir: "GameSir"
+    case .hidDescriptor, .hidReportLayout: OJDLocalized.string("controller.genericHID")
+    }
+  }
+}
+
 /// A controller a new profile can target: a connected controller, or a controller model that is
 /// not connected. `ojd profile create --controller` accepts both.
 struct ProfileControllerChoice: Equatable, Identifiable {
@@ -21,11 +44,14 @@ struct ProfileControllerChoice: Equatable, Identifiable {
   let familyLabel: String?
   let group: Group
 
-  /// The name in the picker: the controller's name, else the family and the vendor and product
-  /// identifiers of the model. The catalog has no product names.
+  var model: ControllerModelID { ControllerModelID(vendorID: vendorID, productID: productID) }
+
+  /// The name in the picker: the controller's name, else the identifiers of the model, with the
+  /// family unless the picker section names it. The catalog has no product names.
   var label: String {
     if let name = OJDValue.reported(name).textOrNil { return name }
     let identifiers = OJDValue.usbIdentifier(vendorID: vendorID, productID: productID).displayText
+    if case .family = group { return identifiers }
     return familyLabel.map { "\($0) · \(identifiers)" } ?? identifiers
   }
 
@@ -47,9 +73,7 @@ struct ProfileControllerChoice: Equatable, Identifiable {
         group: .connected
       )
     }
-    var seen = Set(
-      connected.map { ControllerModelID(vendorID: $0.vendorID, productID: $0.productID) }
-    )
+    var seen = Set(connected.map(\.model))
     func models(_ ids: [ControllerModelID], group: (String?) -> Group) -> [Self] {
       ids.sorted().compactMap { model in
         guard seen.insert(model).inserted else { return nil }
@@ -70,7 +94,11 @@ struct ProfileControllerChoice: Equatable, Identifiable {
     ) { _ in .profiles }
     let families = models(Array(catalog.keys)) { .family($0 ?? "") }
     let ordered = families.sorted { left, right in
-      if left.group != right.group { return left.familyLabel ?? "" < right.familyLabel ?? "" }
+      let leftFamily = left.familyLabel ?? ""
+      let rightFamily = right.familyLabel ?? ""
+      if leftFamily != rightFamily {
+        return leftFamily.localizedStandardCompare(rightFamily) == .orderedAscending
+      }
       return (left.vendorID, left.productID) < (right.vendorID, right.productID)
     }
     return connected + known + ordered
@@ -104,11 +132,15 @@ struct ProfileControllerGroup: Equatable, Identifiable {
   }
 }
 
-/// What the New Profile sheet knows besides the fields: the controllers it offers and the
-/// profiles that already exist.
+/// What the New Profile sheet knows besides the fields: the controllers it offers, the profiles
+/// that already exist, and the state of the catalog read.
 struct ProfileCreationContext: Equatable {
   let choices: [ProfileControllerChoice]
   let profiles: [RemappingProfile]
+  /// Whether the catalog is still being read; its models are not offered yet.
+  var isLoadingCatalog = false
+  /// How many user controller record files could not be read.
+  var unreadableRecordFiles = 0
 
   var sections: [ProfileControllerGroup] { ProfileControllerGroup.sections(of: choices) }
 }
@@ -131,28 +163,33 @@ enum ProfileNaming {
   }
 }
 
-/// The edits made in the New Profile sheet. Nothing is stored that the controller list decides:
-/// the chosen controller is the one the person picked while it is offered, else the first, and the
-/// name is the one the person typed, else the chosen controller's name.
+/// The edits made in the New Profile sheet. The controller is the first connected one until the
+/// person picks; a pick stays on its model when the controller disconnects, and there is no
+/// controller when no choice has that model. The name is the typed one, else the controller's
+/// name as it was shown.
 struct ProfileCreationFields: Equatable {
   var editedName: String?
-  var selectedControllerID: String?
+  /// The choice the person picked, as the picker showed it.
+  var picked: ProfileControllerChoice?
   var scopeKind = ProfileScopeKind.global
   var appID = ""
   /// The output policy `ojd profile create` starts with.
   var outputPolicy = RemappingOutputPolicy(virtualGamepad: .passthrough, physicalInput: .shared)
 
-  /// The controller the profile will belong to.
+  /// The controller the profile will belong to; nil while none is picked and none is connected,
+  /// or when the picked model is no longer offered.
   func controller(in context: ProfileCreationContext) -> ProfileControllerChoice? {
-    context.choices.first { $0.id == selectedControllerID } ?? context.choices.first
+    guard let picked else { return context.choices.first { $0.group == .connected } }
+    return context.choices.first { $0.id == picked.id }
+      ?? context.choices.first { $0.model == picked.model }
   }
 
-  /// The name field: the typed name, else the chosen controller's name made free of existing
-  /// names; empty when the controller has no name.
+  /// The name field: the typed name, else the controller's name made free of existing names;
+  /// empty when the controller has no name.
   func name(in context: ProfileCreationContext) -> String {
     editedName
       ?? ProfileNaming.availableName(
-        Self.controllerName(controller(in: context)),
+        Self.controllerName(picked ?? controller(in: context)),
         in: context.profiles
       )
   }

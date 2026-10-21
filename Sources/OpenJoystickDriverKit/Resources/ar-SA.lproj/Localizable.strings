@@ -227,6 +227,10 @@
 "profiles.controlNumber" = "عنصر التحكم %d";
 "profiles.creationValidation" = "راجع اسم ملف التعريف وهدف التطبيق.";
 "profiles.controllersOfProfiles" = "مستخدمة في ملفات التعريف لديك";
+"profiles.chooseController" = "اختر وحدة تحكم";
+"profiles.saveFirst" = "احفظ ملف التعريف أولًا.";
+"profiles.unreadableRecords" = "تعذرت قراءة بعض ملفات سجلات وحدات التحكم. التفاصيل: %@.";
+"profiles.scopedCaption" = "%1$@ · %2$@";
 "profiles.deactivateController" = "إلغاء تنشيط الكل";
 "profiles.details" = "تفاصيل ملف التعريف";
 "profiles.notSupportedByController" = "غير مدعوم من وحدة التحكم هذه أو بروتوكولها.";

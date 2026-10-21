@@ -59,20 +59,40 @@ enum ProfileFileValidation: Equatable, Identifiable {
 
 /// How the Profiles list names the application a profile is limited to.
 enum ProfileScopeCaption {
-  /// The application's name when `resolveName` finds the bundle identifier, else the identifier;
-  /// nil for a profile that applies to every application.
+  /// The caption under a profile's name: the assignment count for a profile that applies to every
+  /// application, else the application's name (the identifier when `resolveName` does not find
+  /// it) and the count.
   static func text(
     for scope: RemappingApplicationScope,
-    resolveName: (String) -> String? = applicationName
-  ) -> String? {
+    assignments: String,
+    resolveName: (String) -> String?
+  ) -> String {
     switch scope {
-    case .global: return nil
-    case .application(let appID): return resolveName(appID) ?? appID
+    case .global: return assignments
+    case .application(let appID):
+      return OJDLocalized.formatted(
+        "profiles.scopedCaption",
+        resolveName(appID) ?? appID,
+        assignments
+      )
     }
   }
+}
 
-  /// The installed application's display name for a bundle identifier.
-  static func applicationName(_ bundleIdentifier: String) -> String? {
+/// The installed applications' names by bundle identifier. Each identifier is looked up once per
+/// session, so the list does not ask LaunchServices again on every redraw.
+@MainActor
+final class ProfileApplicationNames {
+  private var names: [String: String?] = [:]
+
+  func name(for bundleIdentifier: String) -> String? {
+    if let known = names[bundleIdentifier] { return known }
+    let name = Self.lookUp(bundleIdentifier)
+    names[bundleIdentifier] = .some(name)
+    return name
+  }
+
+  private static func lookUp(_ bundleIdentifier: String) -> String? {
     guard let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleIdentifier)
     else { return nil }
     return FileManager.default.displayName(atPath: url.path)

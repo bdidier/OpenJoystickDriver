@@ -84,7 +84,9 @@
                 profiles: profiles,
                 catalog: screen.catalogModels
               ),
-              profiles: profiles
+              profiles: profiles,
+              isLoadingCatalog: screen.isLoadingCatalog,
+              unreadableRecordFiles: screen.unreadableRecordFiles
             )
           ) { createProfile($0) }
         }
@@ -288,8 +290,11 @@
             VStack(alignment: .leading, spacing: 2) {
               Text(profile.name).lineLimit(1)
               Text(
-                ProfileScopeCaption.text(for: profile.applicationScope)
-                  ?? assignmentCountLabel(profile.bindings.count)
+                ProfileScopeCaption.text(
+                  for: profile.applicationScope,
+                  assignments: assignmentCountLabel(profile.bindings.count),
+                  resolveName: screen.applicationNames.name(for:)
+                )
               ).font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor))
             }
             Spacer(minLength: 0)

@@ -43,8 +43,10 @@ public struct ControllerRecord: Sendable {
   /// The file of an installed package that adds or patches this record, or nil when no package
   /// does. A user file over it wins, and ``layer`` names the user.
   public let packageFile: URL?
-  /// The protocol family, such as `XboxGIP`.
-  public let family: String
+  /// The protocol family.
+  public let protocolID: PhysicalProtocolID
+  /// The protocol family's name, such as `XboxGIP`.
+  public var family: String { protocolID.rawValue }
   /// The tuning keys this record's family reads.
   let tuningScope: Set<ControllerTuning.Key>
   let profile: DeviceRuntimeProfile
@@ -243,7 +245,7 @@ public struct ControllerRecordSet: Sendable {
         ),
       userFile: userFile,
       packageFile: packageFile,
-      family: decoded.document.protocolInfo.protocolID.rawValue,
+      protocolID: decoded.document.protocolInfo.protocolID,
       tuningScope: Set(
         ControllerTuning.Key.allCases.filter { decoded.document.tuningScopeViolation($0) == nil }
       ),

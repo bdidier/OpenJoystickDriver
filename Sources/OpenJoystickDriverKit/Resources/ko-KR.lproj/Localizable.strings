@@ -227,6 +227,10 @@
 "profiles.controlNumber" = "조작 %d";
 "profiles.creationValidation" = "프로파일 이름과 대상 앱을 검토하십시오.";
 "profiles.controllersOfProfiles" = "프로파일에서 사용 중";
+"profiles.chooseController" = "컨트롤러를 선택하십시오";
+"profiles.saveFirst" = "먼저 프로파일을 저장하십시오.";
+"profiles.unreadableRecords" = "일부 컨트롤러 레코드 파일을 읽을 수 없습니다. 자세한 내용: %@.";
+"profiles.scopedCaption" = "%1$@ · %2$@";
 "profiles.deactivateController" = "모두 비활성화";
 "profiles.details" = "프로파일 세부 사항";
 "profiles.notSupportedByController" = "이 컨트롤러 또는 프로토콜에서 지원하지 않습니다.";

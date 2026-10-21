@@ -227,6 +227,10 @@
 "profiles.controlNumber" = "Commande %d";
 "profiles.creationValidation" = "Vérifiez le nom du profil et la cible d’application.";
 "profiles.controllersOfProfiles" = "Utilisées par vos profils";
+"profiles.chooseController" = "Choisissez une manette";
+"profiles.saveFirst" = "Enregistrez d’abord le profil.";
+"profiles.unreadableRecords" = "Certains fichiers de fiches de manettes n’ont pas pu être lus. Détails : %@.";
+"profiles.scopedCaption" = "%1$@ · %2$@";
 "profiles.deactivateController" = "Tout désactiver";
 "profiles.details" = "Détails du profil";
 "profiles.notSupportedByController" = "Non pris en charge par cette manette ou ce protocole.";

@@ -226,7 +226,11 @@
 "profiles.chords" = "组合键";
 "profiles.controlNumber" = "控件 %d";
 "profiles.creationValidation" = "请检查配置文件名称和 App 目标。";
-"profiles.controllersOfProfiles" = "您的配置文件使用的";
+"profiles.controllersOfProfiles" = "您的配置文件使用的控制器";
+"profiles.chooseController" = "选择控制器";
+"profiles.saveFirst" = "请先存储配置文件。";
+"profiles.unreadableRecords" = "无法读取部分控制器记录文件。详情：%@";
+"profiles.scopedCaption" = "%1$@ · %2$@";
 "profiles.deactivateController" = "全部停用";
 "profiles.details" = "配置文件详情";
 "profiles.notSupportedByController" = "此控制器或协议不支持。";

@@ -227,6 +227,10 @@
 "profiles.controlNumber" = "नियंत्रण %d";
 "profiles.creationValidation" = "प्रोफ़ाइल नाम और लक्ष्य ऐप की समीक्षा करें।";
 "profiles.controllersOfProfiles" = "आपके प्रोफ़ाइल में उपयोग किए गए";
+"profiles.chooseController" = "कोई कंट्रोलर चुनें";
+"profiles.saveFirst" = "पहले प्रोफ़ाइल सहेजें।";
+"profiles.unreadableRecords" = "कुछ कंट्रोलर रिकॉर्ड फ़ाइलें पढ़ी नहीं जा सकीं। विवरण: %@।";
+"profiles.scopedCaption" = "%1$@ · %2$@";
 "profiles.deactivateController" = "सभी को निष्क्रिय करें";
 "profiles.details" = "प्रोफ़ाइल विवरण";
 "profiles.notSupportedByController" = "यह कंट्रोलर या प्रोटोकॉल इसका समर्थन नहीं करता है।";

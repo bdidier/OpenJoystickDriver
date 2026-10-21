@@ -19,8 +19,12 @@
         Text(title).font(.headline)
         Form {
           if context.choices.isEmpty {
-            Text(OJDLocalized.string("status.connectController"))
-              .foregroundColor(Color(NSColor.secondaryLabelColor))
+            if context.isLoadingCatalog {
+              ProgressView().controlSize(.small)
+            } else {
+              Text(OJDLocalized.string("status.connectController"))
+                .foregroundColor(Color(NSColor.secondaryLabelColor))
+            }
           } else {
             TextField(OJDLocalized.string("common.profileName"), text: nameBinding)
             if let message = nameProblem {
@@ -35,6 +39,22 @@
                   ForEach(section.choices) { choice in Text(choice.label).tag(choice.id) }
                 }
               }
+            }
+            if context.isLoadingCatalog {
+              ProgressView().controlSize(.small)
+            }
+            if fields.controller(in: context) == nil {
+              Text(OJDLocalized.string("profiles.chooseController"))
+                .foregroundColor(Color(NSColor.secondaryLabelColor))
+            }
+            if context.unreadableRecordFiles > 0 {
+              Text(
+                OJDLocalized.formatted(
+                  "profiles.unreadableRecords",
+                  OJDLocalized.string("area.library.title")
+                )
+              )
+              .foregroundColor(Color(NSColor.secondaryLabelColor))
             }
             Picker(OJDLocalized.string("profiles.target"), selection: $fields.scopeKind) {
               Text(OJDLocalized.string("profiles.targetGlobal")).tag(ProfileScopeKind.global)
@@ -90,7 +110,7 @@
     private var controllerBinding: Binding<String> {
       Binding(
         get: { fields.controller(in: context)?.id ?? "" },
-        set: { fields.selectedControllerID = $0 }
+        set: { id in fields.picked = context.choices.first { $0.id == id } }
       )
     }
   }
