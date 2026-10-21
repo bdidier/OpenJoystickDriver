@@ -2187,12 +2187,11 @@
       "properties": {
         "details": {
           "type": "object",
-          "required": ["announcedApps"],
+          "required": ["outcome"],
           "additionalProperties": false,
           "properties": {
-            "announcedApps": {
-              "type": "integer",
-              "minimum": 1
+            "outcome": {
+              "const": "Shown"
             }
           }
         }

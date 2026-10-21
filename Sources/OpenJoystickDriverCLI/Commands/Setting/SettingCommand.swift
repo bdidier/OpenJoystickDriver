@@ -289,12 +289,12 @@ struct SettingResetCommand: AsyncParsableCommand {
   }
 }
 
-/// Asks the service to announce a test notification to the open app, which shows it.
+/// Asks the service to announce a test notification to the app and reports how it ended.
 ///
-/// The service answers with how many waiting apps it announced the test notification to. None
-/// means the service runs without an app, or the app is not waiting yet, and the command fails
-/// with E2037. Whether macOS lets the app show the notification is the app's own report: it
-/// shows the denial in its Notifications settings and this command cannot see it.
+/// The app answers with `shown`, `denied` or `failed`; the service answers `noAnswer` when no app
+/// took the announcement or reported in time (`TestNotificationDeadlines`). Each other outcome
+/// is a named failure: E2038 for denied notifications, E2006 with the system's reason for a
+/// failed delivery, and E2037 for no answer.
 struct SettingTestNotificationCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "test-notification",
@@ -302,9 +302,9 @@ struct SettingTestNotificationCommand: AsyncParsableCommand {
     discussion: CLILocalized.text("cli.setting.testNotification.discussion")
   )
 
-  /// The `--json` result: how many waiting apps the service announced the notification to.
+  /// The `--json` result.
   struct Result: Encodable, Equatable {
-    let announcedApps: Int
+    let outcome: String
   }
 
   @OptionGroup(visibility: GlobalOptions.subcommandVisibility)
@@ -312,15 +312,22 @@ struct SettingTestNotificationCommand: AsyncParsableCommand {
 
   func run() async throws {
     try await global.run {
-      let announced = try await ServiceConnection.request { client in
+      let outcome = try await ServiceConnection.request { client in
         try await client.sendTestNotification()
-      }.announcedApps
-      guard announced > 0 else {
-        throw CLIFailure(.noApplicationListening, CLILocalized.text("error.E2037"))
+      }
+      switch outcome.kind {
+      case .shown: break
+      case .denied:
+        throw CLIFailure(.notificationsDenied, CLILocalized.text("error.E2038"))
+      case .failed:
+        throw CLIFailure.serviceRequestFailed(outcome.reason ?? "")
+      case .noAnswer:
+        throw CLIFailure(.noApplicationAnswered, CLILocalized.text("error.E2037"))
       }
       switch CLIContext.current.format {
-      case .json: try CLIOutput.json(CLIStatus(details: Result(announcedApps: announced)))
-      case .plain: CLIOutput.plain([[String(announced)]])
+      case .json:
+        try CLIOutput.json(CLIStatus(details: Result(outcome: "Shown")))
+      case .plain: CLIOutput.plain([[outcome.kind.rawValue]])
       case .human: CLIOutput.success(CLILocalized.text("cli.setting.testNotification.success"))
       }
     }

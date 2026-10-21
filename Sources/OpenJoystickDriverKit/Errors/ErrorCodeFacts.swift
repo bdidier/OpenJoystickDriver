@@ -22,8 +22,8 @@ extension ErrorCode {
     case .unknownCommand, .usage, .confirmationRequired, .noAccessScope, .duplicateTokenName,
       .invalidTokenName, .invalidWebOrigin, .webPortUnavailable, .controlScopeWithOrigins:
       64
-    case .serviceUnavailable, .requestListenerStopped, .noApplicationListening: 69
-    case .permissionMissing: 77
+    case .serviceUnavailable, .requestListenerStopped, .noApplicationAnswered: 69
+    case .permissionMissing, .notificationsDenied: 77
     case .installedCLIFailed: 127
     default: 1
     }

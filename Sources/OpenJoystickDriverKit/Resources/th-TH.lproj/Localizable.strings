@@ -1366,7 +1366,10 @@
 "error.E2035" = "ไม่สามารถใช้ไฟล์ที่บันทึกสาเหตุที่ตัวรับคำขอหยุดทำงานได้ ลบไฟล์นั้น แล้วเปิด OpenJoystickDriver ใหม่";
 "error.E2036" = "เอาต์พุตของ --json เขียนตัวเลขในระเบียนโดยไม่เปลี่ยนค่าไม่ได้ เรียกใช้คำสั่งโดยไม่ใส่ --json เพื่อดูข้อความของระเบียน";
 /* Error E2037, shown by ojd and the app when no OpenJoystickDriver app is waiting for service events, so a test notification would reach nobody. */
-"error.E2037" = "ไม่มีแอป OpenJoystickDriver ที่รอการแจ้งเตือนทดสอบอยู่ เปิด OpenJoystickDriver แล้วลองอีกครั้ง";
+/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
+"error.E2037" = "ไม่มีแอป OpenJoystickDriver ตอบกลับการแจ้งเตือนทดสอบทันเวลา ตรวจสอบว่าแอปกำลังทำงานอยู่ แล้วลองอีกครั้ง";
+/* Error E2038, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */
+"error.E2038" = "ไม่อนุญาตการแจ้งเตือนสำหรับ OpenJoystickDriver อนุญาตในการตั้งค่าการแจ้งเตือนของระบบ แล้วลองอีกครั้ง";
 "cli.record.usb_not_claimed" = "กลุ่มนี้ใช้ USB ดิบ และส่วนขยาย USB ครอบครองคอนโทรลเลอร์นี้ไม่ได้ เพราะรายการผลิตภัณฑ์ลงนามโดย Apple OJD เข้าถึงได้ผ่านการเข้าถึง USB โดยตรงเท่านั้น เมื่อ macOS อนุญาต";
 "cli.record.usb_only_switch2" = "USB เท่านั้น: เพิ่ม bluetoothLE.vibrationCharacteristic ในระเบียน Switch 2 นี้เพื่อเชื่อมต่อคอนโทรลเลอร์ผ่าน Bluetooth LE";
 "cli.record.validate.abstract" = "ตรวจสอบระเบียนคอนโทรลเลอร์โดยไม่ติดตั้ง";
@@ -2058,6 +2061,6 @@
 /* Abstract of the ojd setting test-notification command, in the command help. */
 "cli.setting.testNotification.abstract" = "แสดงการแจ้งเตือนทดสอบในแอป";
 /* Discussion of the ojd setting test-notification command, in the command help. */
-"cli.setting.testNotification.discussion" = "ขอให้บริการประกาศการแจ้งเตือนทดสอบไปยังแอป OpenJoystickDriver ที่เปิดอยู่ ซึ่งจะแสดงการแจ้งเตือนนั้น หากการแจ้งเตือนถูกปฏิเสธ แอปจะแจ้งให้ทราบและไม่แสดงสิ่งใด";
+"cli.setting.testNotification.discussion" = "ขอให้บริการประกาศการแจ้งเตือนทดสอบไปยังแอป OpenJoystickDriver ที่เปิดอยู่ และรอให้แอปแสดงการแจ้งเตือนนั้น จะล้มเหลวพร้อมข้อผิดพลาดที่มีชื่อเมื่อการแจ้งเตือนถูกปฏิเสธ การส่งล้มเหลว หรือไม่มีแอปตอบกลับทันเวลา";
 /* Printed by ojd setting test-notification after the service announced the test notification to a waiting app. */
 "cli.setting.testNotification.success" = "ขอให้แอปแสดงการแจ้งเตือนทดสอบแล้ว";

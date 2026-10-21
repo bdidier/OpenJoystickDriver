@@ -1366,7 +1366,10 @@
 "error.E2035" = "File yang mencatat alasan pendengar permintaan berhenti tidak dapat digunakan. Hapus file itu, lalu buka OpenJoystickDriver lagi.";
 "error.E2036" = "Keluaran --json tidak dapat menulis sebuah angka dari catatan tanpa mengubah nilainya. Jalankan perintah tanpa --json untuk melihat teks catatan.";
 /* Error E2037, shown by ojd and the app when no OpenJoystickDriver app is waiting for service events, so a test notification would reach nobody. */
-"error.E2037" = "Tidak ada app OpenJoystickDriver yang menunggu pemberitahuan tes. Buka OpenJoystickDriver, lalu coba lagi.";
+/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
+"error.E2037" = "Tidak ada app OpenJoystickDriver yang menjawab pemberitahuan tes tepat waktu. Pastikan app berjalan, lalu coba lagi.";
+/* Error E2038, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */
+"error.E2038" = "Pemberitahuan tidak diizinkan untuk OpenJoystickDriver. Izinkan di pengaturan pemberitahuan sistem, lalu coba lagi.";
 "cli.record.usb_not_claimed" = "Famili ini menggunakan USB mentah, dan ekstensi USB tidak dapat mengklaim pengontrol ini, karena daftar produknya ditandatangani Apple. OJD hanya menjangkaunya melalui akses USB langsung, jika macOS mengizinkan.";
 "cli.record.usb_only_switch2" = "Hanya USB: tambahkan bluetoothLE.vibrationCharacteristic ke catatan Switch 2 ini untuk menghubungkan pengontrol melalui Bluetooth LE.";
 "cli.record.validate.abstract" = "Periksa catatan pengontrol tanpa menginstalnya.";
@@ -2058,6 +2061,6 @@
 /* Abstract of the ojd setting test-notification command, in the command help. */
 "cli.setting.testNotification.abstract" = "Tampilkan pemberitahuan tes di app.";
 /* Discussion of the ojd setting test-notification command, in the command help. */
-"cli.setting.testNotification.discussion" = "Meminta layanan mengumumkan pemberitahuan tes ke app OpenJoystickDriver yang terbuka, yang menampilkannya. Jika pemberitahuan ditolak, app menyatakannya dan tidak menampilkan apa pun.";
+"cli.setting.testNotification.discussion" = "Meminta layanan mengumumkan pemberitahuan tes ke app OpenJoystickDriver yang terbuka dan menunggu app menampilkannya. Gagal dengan galat bernama jika pemberitahuan ditolak, pengiriman gagal, atau tidak ada app yang menjawab tepat waktu.";
 /* Printed by ojd setting test-notification after the service announced the test notification to a waiting app. */
 "cli.setting.testNotification.success" = "App diminta menampilkan pemberitahuan tes.";

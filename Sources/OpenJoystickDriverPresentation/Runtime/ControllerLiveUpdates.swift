@@ -57,8 +57,8 @@ enum ControllerLiveUpdateMode: Equatable {
 /// failures, so a service restart does not flash a banner, reports again only when the failure
 /// kind changes, and reports the restored wait.
 ///
-/// A reply that carries the test-notification event calls `showTestNotification` and refreshes
-/// nothing, because the status did not change.
+/// A reply that carries a test-notification announcement calls `answerTestNotification` and
+/// refreshes nothing, because the status did not change.
 @MainActor
 final class ControllerLiveUpdates {
   static let fallbackPollSeconds: Double = 1
@@ -68,7 +68,7 @@ final class ControllerLiveUpdates {
   private let source: any ControllerChangeSource
   private let refresh: @MainActor () async -> Void
   private let log: @MainActor (String) -> Void
-  private let showTestNotification: @MainActor () -> Void
+  private let answerTestNotification: @MainActor (UUID) -> Void
   private let modeChanged: @MainActor (ControllerLiveUpdateMode) -> Void
   private let fallbackPollSeconds: Double
   private var task: Task<Void, Never>?
@@ -79,14 +79,14 @@ final class ControllerLiveUpdates {
     source: any ControllerChangeSource,
     fallbackPollSeconds: Double = ControllerLiveUpdates.fallbackPollSeconds,
     log: @escaping @MainActor (String) -> Void = { print($0) },
-    showTestNotification: @escaping @MainActor () -> Void,
+    answerTestNotification: @escaping @MainActor (UUID) -> Void,
     modeChanged: @escaping @MainActor (ControllerLiveUpdateMode) -> Void,
     refresh: @escaping @MainActor () async -> Void
   ) {
     self.source = source
     self.refresh = refresh
     self.log = log
-    self.showTestNotification = showTestNotification
+    self.answerTestNotification = answerTestNotification
     self.modeChanged = modeChanged
     self.fallbackPollSeconds = fallbackPollSeconds
   }
@@ -110,7 +110,7 @@ final class ControllerLiveUpdates {
         recordSuccess()
         let changed = reply.revision != revision
         revision = reply.revision
-        if reply.event == .testNotification { showTestNotification() }
+        if let announcement = reply.announcement { answerTestNotification(announcement) }
         if changed { await refresh() }
       } catch {
         if Task.isCancelled { return }

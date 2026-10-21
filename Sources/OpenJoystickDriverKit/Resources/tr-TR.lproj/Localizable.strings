@@ -1366,7 +1366,10 @@
 "error.E2035" = "İstek dinleyicisinin neden durduğunu kaydeden dosya kullanılamıyor. Dosyayı silin, sonra OpenJoystickDriver’ı yeniden açın.";
 "error.E2036" = "--json çıktısı, kayıttaki bir sayıyı değerini değiştirmeden yazamaz. Kaydın metnini görmek için komutu --json olmadan çalıştırın.";
 /* Error E2037, shown by ojd and the app when no OpenJoystickDriver app is waiting for service events, so a test notification would reach nobody. */
-"error.E2037" = "Test bildirimini bekleyen bir OpenJoystickDriver uygulaması yok. OpenJoystickDriver’ı açın, sonra yeniden deneyin.";
+/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
+"error.E2037" = "Hiçbir OpenJoystickDriver uygulaması test bildirimine zamanında yanıt vermedi. Uygulamanın çalıştığından emin olun, sonra yeniden deneyin.";
+/* Error E2038, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */
+"error.E2038" = "OpenJoystickDriver için bildirimlere izin verilmiyor. Sistemin bildirim ayarlarında izin verin, sonra yeniden deneyin.";
 "cli.record.usb_not_claimed" = "Bu aile ham USB kullanır ve ürün listesi Apple tarafından imzalandığı için USB uzantısı bu kontrolcüyü sahiplenemez. OJD ona yalnızca macOS izin verdiğinde doğrudan USB erişimiyle ulaşır.";
 "cli.record.usb_only_switch2" = "Yalnızca USB: Kontrolcüyü Bluetooth LE üzerinden bağlamak için bu Switch 2 kaydına bluetoothLE.vibrationCharacteristic ekleyin.";
 "cli.record.validate.abstract" = "Bir kontrolcü kaydını yüklemeden denetler.";
@@ -2058,6 +2061,6 @@
 /* Abstract of the ojd setting test-notification command, in the command help. */
 "cli.setting.testNotification.abstract" = "Uygulamada bir test bildirimi gösterir.";
 /* Discussion of the ojd setting test-notification command, in the command help. */
-"cli.setting.testNotification.discussion" = "Servisten, açık OpenJoystickDriver uygulamasına bir test bildirimi duyurmasını ister; uygulama bildirimi gösterir. Bildirimler reddedilmişse uygulama bunu belirtir ve hiçbir şey göstermez.";
+"cli.setting.testNotification.discussion" = "Servisten, açık OpenJoystickDriver uygulamasına bir test bildirimi duyurmasını ister ve uygulamanın bildirimi göstermesini bekler. Bildirimler reddedilmişse, teslim başarısız olursa veya hiçbir uygulama zamanında yanıt vermezse adlandırılmış bir hatayla başarısız olur.";
 /* Printed by ojd setting test-notification after the service announced the test notification to a waiting app. */
 "cli.setting.testNotification.success" = "Uygulamadan bir test bildirimi göstermesi istendi.";

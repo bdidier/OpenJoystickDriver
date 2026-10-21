@@ -5,6 +5,12 @@ import OpenJoystickDriverKit
 /// Counts service status changes and holds waiters until the count moves or a test notification
 /// is announced.
 ///
+/// A test notification is one pending announcement at a time. The first wait to reach the service,
+/// a held one at once or the next to arrive, takes it and the app that sent that wait answers
+/// with `reportTestNotification`; the requests for it end with that outcome. Requests made while
+/// one is pending join it. If no wait takes it within `pickupSeconds`, or the taker does not
+/// report within `answerSeconds`, they end with `noAnswer`.
+///
 /// The count follows `.ojdServiceStatusDidChange`, which the device manager, the permission
 /// manager, the virtual output backends, the device pipelines (including an overdue input report)
 /// and the remapping handlers post when what `getStatus` or the remapping snapshot reports
@@ -12,6 +18,15 @@ import OpenJoystickDriverKit
 /// through the workspace.
 /// - Note: `@unchecked Sendable` because `generation` and `waiters` are guarded by `lock`.
 final class ServiceStatusChanges: @unchecked Sendable {
+  private final class Announcement {
+    let id = UUID()
+    var requests: [CheckedContinuation<TestNotificationOutcome, Never>]
+    var taken = false
+    var deadline: Task<Void, Never>?
+
+    init(_ request: CheckedContinuation<TestNotificationOutcome, Never>) { requests = [request] }
+  }
+
   private final class Waiter {
     let continuation: CheckedContinuation<ServiceStatusReply, Never>
     var hold: Task<Void, Never>?
@@ -25,6 +40,9 @@ final class ServiceStatusChanges: @unchecked Sendable {
   private let instance: UUID
   private var generation: UInt64 = 0
   private var waiters: [UUID: Waiter] = [:]
+  private var pending: Announcement?
+  private let pickupSeconds: TimeInterval
+  private let answerSeconds: TimeInterval
   private let center: NotificationCenter
   private let workspaceCenter: NotificationCenter
   private var observers: [NSObjectProtocol] = []
@@ -32,8 +50,12 @@ final class ServiceStatusChanges: @unchecked Sendable {
   init(
     center: NotificationCenter = .default,
     workspaceCenter: NotificationCenter = NSWorkspace.shared.notificationCenter,
-    instance: UUID = UUID()
+    instance: UUID = UUID(),
+    pickupSeconds: TimeInterval = TestNotificationDeadlines.pickupSeconds,
+    answerSeconds: TimeInterval = TestNotificationDeadlines.answerSeconds
   ) {
+    self.pickupSeconds = pickupSeconds
+    self.answerSeconds = answerSeconds
     self.center = center
     self.workspaceCenter = workspaceCenter
     self.instance = instance
@@ -61,10 +83,11 @@ final class ServiceStatusChanges: @unchecked Sendable {
   /// The number of waits held for the next change.
   var heldWaitCount: Int { lock.withLock { waiters.count } }
 
-  /// Returns the current revision at once when `after` is nil or differs from it, including by
-  /// service instance; otherwise waits for the next change, or for a test notification, and
+  /// Returns at once when `after` is nil (`firstRead`), differs from the current revision,
+  /// including by service instance (`statusChange`), or a test notification waits for a taker
+  /// (`testNotification`); otherwise waits for the next change, or for a test notification, and
   /// returns the current revision as `holdElapsed` after `holdSeconds` with none. A cancelled
-  /// wait returns at once.
+  /// wait returns at once as `holdElapsed`.
   func wait(after: ServiceStatusRevision?, holdSeconds: TimeInterval) async -> ServiceStatusReply {
     let id = UUID()
     return await withTaskCancellationHandler {
@@ -72,7 +95,18 @@ final class ServiceStatusChanges: @unchecked Sendable {
         let waiter = Waiter(continuation)
         let current = lock.withLock { () -> ServiceStatusReply? in
           let revision = ServiceStatusRevision(instance: instance, generation: generation)
-          guard let after, after == revision, !Task.isCancelled else {
+          if Task.isCancelled { return ServiceStatusReply(revision: revision, event: .holdElapsed) }
+          if let announcement = takePending() {
+            return ServiceStatusReply(
+              revision: revision,
+              event: .testNotification,
+              announcement: announcement
+            )
+          }
+          guard let after else {
+            return ServiceStatusReply(revision: revision, event: .firstRead)
+          }
+          guard after == revision else {
             return ServiceStatusReply(revision: revision, event: .statusChange)
           }
           waiters[id] = waiter
@@ -114,22 +148,79 @@ final class ServiceStatusChanges: @unchecked Sendable {
     }
   }
 
-  /// Answers every held wait with a test notification at the current revision, which a test
-  /// notification does not move, and returns how many it answered. Zero means no app is waiting.
-  func announceTestNotification() -> Int {
-    let (released, revision) = lock.withLock { () -> ([Waiter], ServiceStatusRevision) in
-      defer { waiters = [:] }
-      return (
-        Array(waiters.values), ServiceStatusRevision(instance: instance, generation: generation)
-      )
+  /// Announces a test notification and returns how it ended. A held wait takes it at once;
+  /// otherwise it stays pending until the next wait arrives or `pickupSeconds` pass.
+  func announceTestNotification() async -> TestNotificationOutcome {
+    await withCheckedContinuation { continuation in
+      let handoff = lock.withLock { () -> (Waiter, ServiceStatusReply)? in
+        if let pending {
+          pending.requests.append(continuation)
+          return nil
+        }
+        let announcement = Announcement(continuation)
+        pending = announcement
+        schedule(announcement, after: pickupSeconds)
+        guard let key = waiters.keys.first, let waiter = waiters.removeValue(forKey: key) else {
+          return nil
+        }
+        announcement.taken = true
+        schedule(announcement, after: answerSeconds)
+        return (
+          waiter,
+          ServiceStatusReply(
+            revision: ServiceStatusRevision(instance: instance, generation: generation),
+            event: .testNotification,
+            announcement: announcement.id
+          )
+        )
+      }
+      if let (waiter, reply) = handoff {
+        waiter.hold?.cancel()
+        waiter.continuation.resume(returning: reply)
+      }
     }
-    for waiter in released {
-      waiter.hold?.cancel()
-      waiter.continuation.resume(
-        returning: ServiceStatusReply(revision: revision, event: .testNotification)
-      )
+  }
+
+  /// Ends the pending announcement `id` with `outcome`, which is `shown`, `denied` or `failed`.
+  /// Returns false when `id` is not pending and taken, because it ended already or never existed.
+  func reportTestNotification(_ id: UUID, outcome: TestNotificationOutcome) -> Bool {
+    let requests = lock.withLock { () -> [CheckedContinuation<TestNotificationOutcome, Never>]? in
+      guard let pending, pending.id == id, pending.taken else { return nil }
+      pending.deadline?.cancel()
+      self.pending = nil
+      return pending.requests
     }
-    return released.count
+    guard let requests else { return false }
+    for request in requests { request.resume(returning: outcome) }
+    return true
+  }
+
+  /// Marks the pending announcement taken and starts its answer deadline. Call with `lock` held.
+  private func takePending() -> UUID? {
+    guard let pending, !pending.taken else { return nil }
+    pending.taken = true
+    schedule(pending, after: answerSeconds)
+    return pending.id
+  }
+
+  /// Replaces the deadline of `announcement`. Call with `lock` held.
+  private func schedule(_ announcement: Announcement, after seconds: TimeInterval) {
+    announcement.deadline?.cancel()
+    let id = announcement.id
+    announcement.deadline = Task { [weak self] in
+      try? await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000))
+      guard !Task.isCancelled else { return }
+      self?.expire(id)
+    }
+  }
+
+  private func expire(_ id: UUID) {
+    let requests = lock.withLock { () -> [CheckedContinuation<TestNotificationOutcome, Never>]? in
+      guard let pending, pending.id == id else { return nil }
+      self.pending = nil
+      return pending.requests
+    }
+    for request in requests ?? [] { request.resume(returning: .noAnswer) }
   }
 
   private func release(_ id: UUID) {

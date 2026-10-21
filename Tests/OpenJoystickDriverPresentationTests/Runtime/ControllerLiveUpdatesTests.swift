@@ -12,13 +12,13 @@ struct ControllerLiveUpdatesTests {
     refreshed: Counter,
     logged: LogLines = LogLines(),
     modes: Modes = Modes(),
-    shownTestNotifications: Counter = Counter()
+    answeredTestNotifications: Answers = Answers()
   ) -> ControllerLiveUpdates {
     ControllerLiveUpdates(
       source: source,
       fallbackPollSeconds: 0.01,
       log: { logged.lines.append($0) },
-      showTestNotification: { shownTestNotifications.increment() },
+      answerTestNotification: { answeredTestNotifications.ids.append($0) },
       modeChanged: { modes.values.append($0) },
       refresh: { refreshed.increment() }
     )
@@ -43,22 +43,22 @@ struct ControllerLiveUpdatesTests {
   }
 
   @Test
-  func aTestNotificationEventShowsTheNotificationAndRefreshesNothing() async {
+  func aTestNotificationAnnouncementIsAnsweredAndRefreshesNothing() async {
     let source = ScriptedChangeSource()
     let refreshed = Counter()
-    let shown = Counter()
-    let updates = makeUpdates(source, refreshed: refreshed, shownTestNotifications: shown)
+    let answers = Answers()
+    let updates = makeUpdates(source, refreshed: refreshed, answeredTestNotifications: answers)
     updates.start()
     defer { updates.stop() }
     source.answer(.revision(1))
     await refreshed.waitUntil(1, timeout: 30)
+    let id = UUID()
 
-    source.answer(.revision(1), event: .testNotification)
-    await shown.waitUntil(1, timeout: 30)
+    source.answer(.revision(1), event: .testNotification, announcement: id)
     source.answer(.revision(2))
     await refreshed.waitUntil(2, timeout: 30)
 
-    #expect(shown.value == 1)
+    #expect(answers.ids == [id])
     #expect(refreshed.value == 2)
   }
 
@@ -226,6 +226,9 @@ private final class Counter {
 }
 
 @MainActor
+private final class Answers { var ids: [UUID] = [] }
+
+@MainActor
 private final class LogLines { var lines: [String] = [] }
 
 @MainActor
@@ -259,8 +262,14 @@ private final class ScriptedChangeSource: ControllerChangeSource, @unchecked Sen
     }
   }
 
-  func answer(_ revision: ServiceStatusRevision, event: ServiceStatusEventKind = .statusChange) {
-    deliver(.success(ServiceStatusReply(revision: revision, event: event)))
+  func answer(
+    _ revision: ServiceStatusRevision,
+    event: ServiceStatusEventKind = .statusChange,
+    announcement: UUID? = nil
+  ) {
+    deliver(
+      .success(ServiceStatusReply(revision: revision, event: event, announcement: announcement))
+    )
   }
   func fail(_ error: Error) { deliver(.failure(error)) }
 

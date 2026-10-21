@@ -10,10 +10,16 @@
 
   extension UpdateChecker: ApplicationUpdateChecking {}
 
-  /// Asks the service to announce the test notification to the waiting apps.
+  /// The app's side of the test notification: the request to the service and the report back.
   protocol TestNotificationRequesting: Sendable {
-    /// Returns how many apps the service announced it to; zero means none was waiting.
-    func requestTestNotification() async throws -> Int
+    /// Asks the service to announce a test notification and returns how it ended.
+    func requestTestNotification() async throws -> TestNotificationOutcome
+    /// Answers an announcement this app took from the service.
+    func reportTestNotification(
+      _ announcement: UUID,
+      outcome: TestNotificationOutcome
+    )
+      async throws -> Bool
   }
 
   extension ApplicationServiceClientGateway: TestNotificationRequesting {}
@@ -179,22 +185,62 @@
       notificationSounds = enabled
     }
 
-    /// Asks the service to announce a test notification to the waiting apps; the announcement
-    /// reaches this app's own wait, which calls `showTestNotification`. A failed request, or one
-    /// that no app was waiting for, shows in `errorMessage`.
+    /// Asks the service to announce a test notification to the app and shows how it ended in
+    /// `errorMessage`: nothing for `shown`, the named text for every other outcome. The
+    /// announcement reaches this app's own wait, which calls `answerTestNotification`.
     func sendTestNotification() {
       Task { @MainActor [weak self, testNotifications] in
         do {
-          guard try await testNotifications.requestTestNotification() > 0 else {
-            self?.errorMessage = OJDLocalized.string("error.E2037")
-            return
-          }
+          let outcome = try await testNotifications.requestTestNotification()
+          self?.errorMessage = Self.message(for: outcome)
         } catch { self?.report(error) }
       }
     }
 
-    /// Shows the test notification, asking macOS for permission first when it is not decided.
-    func showTestNotification() { setNotificationPreference(true, preference: .test) }
+    /// The text of an outcome that is not `shown`.
+    static func message(for outcome: TestNotificationOutcome) -> String? {
+      switch outcome.kind {
+      case .shown: return nil
+      case .denied: return OJDLocalized.string("error.E2038")
+      case .failed: return outcome.reason
+      case .noAnswer: return OJDLocalized.string("error.E2037")
+      }
+    }
+
+    /// Shows the test notification the service announced and reports how it ended. A report the
+    /// service cannot take shows in `errorMessage`.
+    func answerTestNotification(_ announcement: UUID) {
+      Task { @MainActor [weak self, testNotifications] in
+        guard let self else { return }
+        let outcome = await self.showTestNotification()
+        do {
+          _ = try await testNotifications.reportTestNotification(announcement, outcome: outcome)
+        } catch { self.report(error) }
+      }
+    }
+
+    /// Delivers the test notification, asking the system for permission first when it is not
+    /// decided.
+    func showTestNotification() async -> TestNotificationOutcome {
+      notificationAuthorizationReads += 1
+      var state = await notificationAuthorizationController.state()
+      notificationAuthorization = state
+      if state == .notDetermined || state == .checking {
+        notificationAuthorizationReads += 1
+        let (requested, errorDescription) = await notificationAuthorizationController.request()
+        state = requested
+        notificationAuthorization = requested
+        if let errorDescription { return .failed(errorDescription) }
+      }
+      guard state == .allowed else { return .denied }
+      notificationDelivery.deliver(
+        title: OJDLocalized.string("notifications.testTitle"),
+        body: OJDLocalized.string("notifications.testBody"),
+        sound: notificationSounds
+      )
+      refreshNotificationAuthorization()
+      return .shown
+    }
 
     func setShowInMenuBar(_ enabled: Bool) {
       guard persist(.showInMenuBar, enabled) else { return }
@@ -368,20 +414,8 @@
     }
 
     private func acceptNotificationPreference(_ preference: NotificationPreference) {
-      if preference == .test {
-        notificationDelivery.deliver(
-          title: OJDLocalized.string(
-            "notifications.testTitle"
-          ),
-          body: OJDLocalized.string(
-            "notifications.testBody"
-          ),
-          sound: notificationSounds
-        )
-      } else {
-        guard persist(preference, true) else { return }
-        update(preference, enabled: true)
-      }
+      guard persist(preference, true) else { return }
+      update(preference, enabled: true)
       errorMessage = nil
     }
 
@@ -389,7 +423,7 @@
       _ preference: NotificationPreference,
       errorDescription: String?
     ) {
-      if preference != .test, persist(preference, false) {
+      if persist(preference, false) {
         update(preference, enabled: false)
       }
       errorMessage =
@@ -405,13 +439,11 @@
       case .controllerDisconnections: controllerDisconnectedNotifications = enabled
       case .profiles: profileNotifications = enabled
       case .profileDeactivations: profileDeactivatedNotifications = enabled
-      case .test: break
       }
     }
 
     private func persist(_ preference: NotificationPreference, _ value: Bool) -> Bool {
-      guard let key = preference.settingKey else { return true }
-      return persist(key, value)
+      persist(preference.settingKey, value)
     }
   }
 
@@ -420,16 +452,14 @@
     case controllerDisconnections
     case profiles
     case profileDeactivations
-    case test
 
-    /// The setting that stores the preference; the test notification has none.
-    var settingKey: ApplicationSettingKey? {
+    /// The setting that stores the preference.
+    var settingKey: ApplicationSettingKey {
       switch self {
       case .controllers: return .notifyControllerConnected
       case .controllerDisconnections: return .notifyControllerDisconnected
       case .profiles: return .notifyProfileActivated
       case .profileDeactivations: return .notifyProfileDeactivated
-      case .test: return nil
       }
     }
   }

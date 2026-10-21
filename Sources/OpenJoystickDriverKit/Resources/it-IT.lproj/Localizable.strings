@@ -1366,7 +1366,10 @@
 "error.E2035" = "Il file che registra perché l’ascolto delle richieste si è fermato non è utilizzabile. Elimina il file, poi riapri OpenJoystickDriver.";
 "error.E2036" = "L’output di --json non può scrivere un numero del record senza cambiarne il valore. Esegui il comando senza --json per vedere il testo del record.";
 /* Error E2037, shown by ojd and the app when no OpenJoystickDriver app is waiting for service events, so a test notification would reach nobody. */
-"error.E2037" = "Nessuna app OpenJoystickDriver è in attesa della notifica di prova. Apri OpenJoystickDriver e riprova.";
+/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
+"error.E2037" = "Nessuna app OpenJoystickDriver ha risposto in tempo alla notifica di prova. Verifica che l’app sia in esecuzione e riprova.";
+/* Error E2038, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */
+"error.E2038" = "Le notifiche non sono consentite per OpenJoystickDriver. Consentile nelle impostazioni delle notifiche del sistema e riprova.";
 "cli.record.usb_not_claimed" = "La famiglia usa USB grezzo e l’estensione USB non può acquisire questo controller, perché il suo elenco di prodotti è firmato da Apple. OJD lo raggiunge solo tramite accesso USB diretto, quando macOS lo consente.";
 "cli.record.usb_only_switch2" = "Solo USB: aggiungi bluetoothLE.vibrationCharacteristic a questo record Switch 2 per collegare il controller tramite Bluetooth LE.";
 "cli.record.validate.abstract" = "Controlla un record del controller senza installarlo.";
@@ -2059,6 +2062,6 @@
 /* Abstract of the ojd setting test-notification command, in the command help. */
 "cli.setting.testNotification.abstract" = "Mostra una notifica di prova nell’app.";
 /* Discussion of the ojd setting test-notification command, in the command help. */
-"cli.setting.testNotification.discussion" = "Chiede al servizio di annunciare una notifica di prova all’app OpenJoystickDriver aperta, che la mostra. Se le notifiche sono negate, l’app lo segnala e non mostra nulla.";
+"cli.setting.testNotification.discussion" = "Chiede al servizio di annunciare una notifica di prova all’app OpenJoystickDriver aperta e attende che l’app la mostri. Termina con un errore con nome se le notifiche sono negate, la consegna non riesce o nessuna app risponde in tempo.";
 /* Printed by ojd setting test-notification after the service announced the test notification to a waiting app. */
 "cli.setting.testNotification.success" = "All’app è stato chiesto di mostrare una notifica di prova.";

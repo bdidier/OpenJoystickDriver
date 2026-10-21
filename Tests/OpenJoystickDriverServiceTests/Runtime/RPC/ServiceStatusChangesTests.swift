@@ -38,7 +38,7 @@ struct ServiceStatusChangesTests {
       await changes.wait(after: nil, holdSeconds: 30)
         == ServiceStatusReply(
           revision: ServiceStatusRevision(instance: instance, generation: 0),
-          event: .statusChange
+          event: .firstRead
         )
     )
   }
@@ -127,26 +127,103 @@ struct ServiceStatusChangesTests {
     )
   }
 
-  @Test
-  func aTestNotificationAnswersEveryHeldWaitWithoutMovingTheRevision() async {
-    let changes = ServiceStatusChanges(center: NotificationCenter())
-    let baseline = await Self.revision(changes)
-    async let first = changes.wait(after: baseline, holdSeconds: 30)
-    async let second = changes.wait(after: baseline, holdSeconds: 30)
-    await Self.waitForHeldWaits(2, in: changes)
-
-    #expect(changes.announceTestNotification() == 2)
-
-    let expected = ServiceStatusReply(revision: baseline, event: .testNotification)
-    #expect(await first == expected)
-    #expect(await second == expected)
-    #expect(changes.heldWaitCount == 0)
+  private static func announcementID(_ reply: ServiceStatusReply) -> UUID? {
+    guard reply.event == .testNotification else { return nil }
+    return reply.announcement
   }
 
   @Test
-  func aTestNotificationWithNoHeldWaitAnnouncesToNobody() {
+  func aHeldWaitTakesTheAnnouncementAndTheReportEndsTheRequest() async throws {
     let changes = ServiceStatusChanges(center: NotificationCenter())
+    let baseline = await Self.revision(changes)
+    async let held = changes.wait(after: baseline, holdSeconds: 30)
+    await Self.waitForHeldWaits(1, in: changes)
 
-    #expect(changes.announceTestNotification() == 0)
+    async let outcome = changes.announceTestNotification()
+    let reply = await held
+    let id = try #require(Self.announcementID(reply))
+    #expect(reply.revision == baseline)
+
+    #expect(changes.reportTestNotification(id, outcome: .shown))
+    #expect(await outcome == .shown)
+    #expect(!changes.reportTestNotification(id, outcome: .denied))
+  }
+
+  @Test
+  func anAnnouncementBetweenWaitsIsTakenByTheNextWait() async throws {
+    let changes = ServiceStatusChanges(center: NotificationCenter())
+    let baseline = await Self.revision(changes)
+    async let outcome = changes.announceTestNotification()
+    try await Task.sleep(nanoseconds: 20_000_000)
+
+    let reply = await changes.wait(after: baseline, holdSeconds: 30)
+    let id = try #require(Self.announcementID(reply))
+
+    #expect(changes.reportTestNotification(id, outcome: .denied))
+    #expect(await outcome == .denied)
+  }
+
+  @Test
+  func aFailedReportCarriesTheReason() async throws {
+    let changes = ServiceStatusChanges(center: NotificationCenter())
+    async let outcome = changes.announceTestNotification()
+    try await Task.sleep(nanoseconds: 20_000_000)
+    let id = try #require(Self.announcementID(await changes.wait(after: nil, holdSeconds: 30)))
+
+    #expect(changes.reportTestNotification(id, outcome: .failed("no delivery")))
+    #expect(await outcome == .failed("no delivery"))
+  }
+
+  @Test
+  func noWaitBeforeThePickupDeadlineEndsWithNoAnswer() async {
+    let changes = ServiceStatusChanges(center: NotificationCenter(), pickupSeconds: 0.05)
+
+    #expect(await changes.announceTestNotification() == .noAnswer)
+    let reply = await changes.wait(after: nil, holdSeconds: 30)
+    #expect(reply.event == .firstRead)
+  }
+
+  @Test
+  func aTakenAnnouncementWithNoReportEndsWithNoAnswer() async throws {
+    let changes = ServiceStatusChanges(center: NotificationCenter(), answerSeconds: 0.05)
+    async let outcome = changes.announceTestNotification()
+    try await Task.sleep(nanoseconds: 20_000_000)
+    _ = try #require(Self.announcementID(await changes.wait(after: nil, holdSeconds: 30)))
+
+    #expect(await outcome == .noAnswer)
+  }
+
+  @Test
+  func aCancelledWaitEndsAsHoldElapsedAndDoesNotTakeTheAnnouncement() async {
+    let changes = ServiceStatusChanges(center: NotificationCenter(), pickupSeconds: 0.05)
+    let baseline = await Self.revision(changes)
+    let cancelled = Task { await changes.wait(after: baseline, holdSeconds: 30) }
+    cancelled.cancel()
+
+    #expect(await cancelled.value.event == .holdElapsed)
+    #expect(changes.heldWaitCount == 0)
+    #expect(await changes.announceTestNotification() == .noAnswer)
+  }
+
+  @Test
+  func aRequestWhileOneIsPendingJoinsIt() async throws {
+    let changes = ServiceStatusChanges(center: NotificationCenter())
+    async let first = changes.announceTestNotification()
+    try await Task.sleep(nanoseconds: 20_000_000)
+    async let second = changes.announceTestNotification()
+    try await Task.sleep(nanoseconds: 20_000_000)
+    let id = try #require(Self.announcementID(await changes.wait(after: nil, holdSeconds: 30)))
+
+    #expect(changes.reportTestNotification(id, outcome: .shown))
+    #expect(await first == .shown)
+    #expect(await second == .shown)
+  }
+
+  @Test
+  func aReportForAnAnnouncementNobodyTookIsRefused() async throws {
+    let changes = ServiceStatusChanges(center: NotificationCenter(), pickupSeconds: 0.2)
+
+    #expect(!changes.reportTestNotification(UUID(), outcome: .shown))
+    #expect(await changes.announceTestNotification() == .noAnswer)
   }
 }

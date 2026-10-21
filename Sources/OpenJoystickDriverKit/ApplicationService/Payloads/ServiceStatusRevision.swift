@@ -32,31 +32,119 @@ public struct LocalServiceRPCStatusChangeArguments: Codable, Sendable {
 
 /// Why the service answered a `waitForServiceStatusChange`.
 public enum ServiceStatusEventKind: String, Codable, Equatable, Sendable {
+  /// The caller sent no revision, so this is the current one read at once.
+  case firstRead
   /// The revision differs from the one the caller sent, or a status change moved it.
   case statusChange
-  /// The hold time passed with no change, or the caller's wait ended early; the revision is the
-  /// current one.
+  /// The hold time passed with no change, or the caller's wait was cancelled; the revision is
+  /// the current one.
   case holdElapsed
-  /// A client asked every waiting app to show its test notification. The status did not change.
+  /// A client asked the app to show its test notification, and this wait took the announcement.
+  /// The status did not change. The reply carries the announcement's identifier.
   case testNotification
 }
 
-/// The service's reply to `waitForServiceStatusChange`: the current revision and why the service
-/// answered now.
+/// The service's reply to `waitForServiceStatusChange`: the current revision, why the service
+/// answered now, and for a test notification the announcement the caller answers with
+/// `reportTestNotificationResult`.
 public struct ServiceStatusReply: Codable, Equatable, Sendable {
   public let revision: ServiceStatusRevision
   public let event: ServiceStatusEventKind
+  /// Present exactly when `event` is `testNotification`.
+  public let announcement: UUID?
 
-  public init(revision: ServiceStatusRevision, event: ServiceStatusEventKind) {
+  public init(
+    revision: ServiceStatusRevision,
+    event: ServiceStatusEventKind,
+    announcement: UUID? = nil
+  ) {
     self.revision = revision
     self.event = event
+    self.announcement = announcement
+  }
+
+  public init(from decoder: any Decoder) throws {
+    let container = try decoder.container(keyedBy: CodingKeys.self)
+    revision = try container.decode(ServiceStatusRevision.self, forKey: .revision)
+    event = try container.decode(ServiceStatusEventKind.self, forKey: .event)
+    announcement = try container.decodeIfPresent(UUID.self, forKey: .announcement)
+    guard (event == .testNotification) == (announcement != nil) else {
+      throw DecodingError.dataCorruptedError(
+        forKey: .announcement,
+        in: container,
+        debugDescription: "An announcement belongs to the testNotification event alone."
+      )
+    }
   }
 }
 
-/// The service's reply to `sendTestNotification`: how many waiting apps it announced the test
-/// notification to. Zero means no app was waiting, so nothing will be shown.
-public struct TestNotificationAnnouncement: Codable, Equatable, Sendable {
-  public let announcedApps: Int
+/// How a test notification ended.
+///
+/// The app reports `shown`, `denied` or `failed`; the service itself decides `noAnswer`.
+public struct TestNotificationOutcome: Codable, Equatable, Sendable {
+  public enum Kind: String, Codable, Equatable, Sendable {
+    /// The app delivered the notification.
+    case shown
+    /// Notifications are not allowed for the app.
+    case denied
+    /// The app tried and the system reported an error, in `reason`.
+    case failed
+    /// No app took the announcement before `TestNotificationDeadlines.pickupSeconds`, or the app
+    /// that took it did not report within `TestNotificationDeadlines.answerSeconds`.
+    case noAnswer
+  }
 
-  public init(announcedApps: Int) { self.announcedApps = announcedApps }
+  public let kind: Kind
+  /// The system's own text; present exactly when `kind` is `failed`.
+  public let reason: String?
+
+  public init(_ kind: Kind, reason: String? = nil) {
+    precondition((kind == .failed) == (reason != nil), "A reason belongs to a failed outcome.")
+    self.kind = kind
+    self.reason = reason
+  }
+
+  public init(from decoder: any Decoder) throws {
+    let container = try decoder.container(keyedBy: CodingKeys.self)
+    kind = try container.decode(Kind.self, forKey: .kind)
+    reason = try container.decodeIfPresent(String.self, forKey: .reason)
+    guard (kind == .failed) == (reason != nil) else {
+      throw DecodingError.dataCorruptedError(
+        forKey: .reason,
+        in: container,
+        debugDescription: "A reason belongs to a failed outcome alone."
+      )
+    }
+  }
+
+  public static let shown = Self(.shown)
+  public static let denied = Self(.denied)
+  public static let noAnswer = Self(.noAnswer)
+  public static func failed(_ reason: String) -> Self { Self(.failed, reason: reason) }
+}
+
+/// How long the service waits on a test notification.
+///
+/// A request that has no answer by then ends with `TestNotificationOutcome.Kind.noAnswer`. With
+/// several apps connected, the first wait to reach the service takes the announcement and that
+/// app alone answers; the others see nothing.
+public enum TestNotificationDeadlines {
+  /// From the request until a wait takes the announcement. An app re-arms its wait within a
+  /// second, so a longer gap means no app is connected.
+  public static let pickupSeconds: TimeInterval = 3
+  /// From the pickup until the app reports. It covers the system prompt that asks permission,
+  /// which the user may leave open for a while.
+  public static let answerSeconds: TimeInterval = 30
+}
+
+/// Arguments of `reportTestNotificationResult`: the announcement being answered and how it
+/// ended. The outcome is `shown`, `denied` or `failed`.
+public struct TestNotificationReport: Codable, Equatable, Sendable {
+  public let announcement: UUID
+  public let outcome: TestNotificationOutcome
+
+  public init(announcement: UUID, outcome: TestNotificationOutcome) {
+    self.announcement = announcement
+    self.outcome = outcome
+  }
 }

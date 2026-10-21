@@ -13,6 +13,7 @@ package enum ApplicationServiceRPCMethod: String, CaseIterable, Sendable {
   case getFrameTimings
   case waitForServiceStatusChange
   case sendTestNotification
+  case reportTestNotificationResult
   case setVirtualHIDProfileOverride
   case resetVirtualHIDProfileOverride
   case setControllerServer

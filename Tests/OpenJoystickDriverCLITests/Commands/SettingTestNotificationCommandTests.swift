@@ -7,9 +7,9 @@ import Testing
 
 @Suite(.serialized)
 struct SettingTestNotificationCommandTests {
-  /// A service that answers `sendTestNotification` with `announcedApps` and records its methods.
+  /// A service that answers `sendTestNotification` with `outcome` and records its methods.
   private func serve(
-    announcedApps: Int,
+    outcome: TestNotificationOutcome,
     socketPath: String,
     received: Locked<[String]> = Locked([])
   ) throws -> LocalServiceRPCServer {
@@ -23,12 +23,7 @@ struct SettingTestNotificationCommandTests {
           return
         }
         completion(
-          LocalServiceRPCResponse(
-            result: try? JSONEncoder().encode(
-              TestNotificationAnnouncement(announcedApps: announcedApps)
-            ),
-            error: nil
-          )
+          LocalServiceRPCResponse(result: try? JSONEncoder().encode(outcome), error: nil)
         )
       }
     )
@@ -43,10 +38,10 @@ struct SettingTestNotificationCommandTests {
   }
 
   @Test
-  func anAnnouncementToAWaitingAppSucceedsInEachFormat() async throws {
+  func aShownNotificationSucceedsInEachFormat() async throws {
     let socketPath = temporarySocketPath()
     let received = Locked<[String]>([])
-    let server = try serve(announcedApps: 1, socketPath: socketPath, received: received)
+    let server = try serve(outcome: .shown, socketPath: socketPath, received: received)
     defer { server.stop() }
 
     let human = await run([], socketPath: socketPath)
@@ -56,8 +51,8 @@ struct SettingTestNotificationCommandTests {
     #expect(human.code == 0, "\(human.standardError)")
     #expect(human.standardOutput.isEmpty)
     #expect(human.standardError.contains(CLILocalized.text("cli.setting.testNotification.success")))
-    #expect(plain.standardOutput == "1\n")
-    #expect(try json.details()["announcedApps"] as? Int == 1)
+    #expect(plain.standardOutput == "shown\n")
+    #expect(try json.details()["outcome"] as? String == "Shown")
     #expect(
       received.withLock {
         $0 == Array(repeating: ApplicationServiceRPCMethod.sendTestNotification.rawValue, count: 3)
@@ -66,9 +61,9 @@ struct SettingTestNotificationCommandTests {
   }
 
   @Test
-  func noWaitingAppFailsWithE2037() async throws {
+  func noAnswerFailsWithE2037() async throws {
     let socketPath = temporarySocketPath()
-    let server = try serve(announcedApps: 0, socketPath: socketPath)
+    let server = try serve(outcome: .noAnswer, socketPath: socketPath)
     defer { server.stop() }
 
     let human = await run([], socketPath: socketPath)
@@ -77,12 +72,40 @@ struct SettingTestNotificationCommandTests {
     #expect(human.code == 69)
     #expect(
       human.standardError
-        == CLIFailure(.noApplicationListening, CLILocalized.text("error.E2037")).line + "\n"
+        == CLIFailure(.noApplicationAnswered, CLILocalized.text("error.E2037")).line + "\n"
     )
-    #expect(human.standardError.hasPrefix("error[E2037]: "))
     #expect(human.standardOutput.isEmpty)
     #expect(json.code == 69)
     #expect(json.standardOutput.isEmpty)
+  }
+
+  @Test
+  func deniedNotificationsFailWithE2038AndExit77() async throws {
+    let socketPath = temporarySocketPath()
+    let server = try serve(outcome: .denied, socketPath: socketPath)
+    defer { server.stop() }
+
+    let result = await run(["--json"], socketPath: socketPath)
+
+    #expect(result.code == 77)
+    #expect(
+      result.standardError
+        == CLIFailure(.notificationsDenied, CLILocalized.text("error.E2038")).line + "\n"
+    )
+    #expect(result.standardOutput.isEmpty)
+  }
+
+  @Test
+  func aFailedDeliveryNamesTheSystemsReason() async throws {
+    let socketPath = temporarySocketPath()
+    let server = try serve(outcome: .failed("the system refused"), socketPath: socketPath)
+    defer { server.stop() }
+
+    let result = await run([], socketPath: socketPath)
+
+    #expect(result.code == 1)
+    #expect(result.standardError.hasPrefix("error[E2006]: "))
+    #expect(result.standardError.contains("the system refused"))
   }
 
   @Test

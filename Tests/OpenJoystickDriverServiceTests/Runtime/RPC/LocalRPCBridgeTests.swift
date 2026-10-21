@@ -12,7 +12,7 @@ struct LocalRPCBridgeTests {
     "getVirtualOutputState",
     "sendControllerOutput", "previewPhysicalColor", "releasePhysicalColorPreview",
     "getVirtualDeviceDiagnostics", "getFrameTimings", "waitForServiceStatusChange",
-    "sendTestNotification", "setVirtualHIDProfileOverride",
+    "sendTestNotification", "reportTestNotificationResult", "setVirtualHIDProfileOverride",
     "resetVirtualHIDProfileOverride", "setControllerServer", "openVirtualFeed",
     "exchangeVirtualFeed",
     "closeVirtualFeed", "suspendController", "resumeController",
@@ -134,7 +134,7 @@ struct LocalRPCBridgeTests {
   }
 
   @Test
-  func sendTestNotificationAnnouncesTheEventToTheHeldWait() async throws {
+  func sendTestNotificationEndsWithTheAppsReport() async throws {
     try await withServer { server in
       let socketPath = "/tmp/com.openjoystickdriver.bridge.\(UUID().uuidString).rpc"
       let rpcServer = LocalServiceRPCServer(
@@ -145,17 +145,23 @@ struct LocalRPCBridgeTests {
       )
       try rpcServer.start()
       defer { rpcServer.stop() }
-      let client = ApplicationServiceClient(socketPath: socketPath)
-      await client.connect()
-      let baseline = try await client.waitForServiceStatusChange(after: nil).revision
-      #expect(try await client.sendTestNotification().announcedApps == 0)
+      let app = ApplicationServiceClient(socketPath: socketPath)
+      await app.connect()
+      let cli = ApplicationServiceClient(socketPath: socketPath)
+      await cli.connect()
+      let baseline = try await app.waitForServiceStatusChange(after: nil).revision
 
-      async let next = client.waitForServiceStatusChange(after: baseline)
-      while server.statusChanges.heldWaitCount < 1 { try await Task.sleep(nanoseconds: 1_000_000) }
-      #expect(try await client.sendTestNotification().announcedApps == 1)
-
+      async let outcome = cli.sendTestNotification()
+      let reply = try await app.waitForServiceStatusChange(after: baseline)
+      let id = try #require(reply.announcement)
+      #expect(reply.event == .testNotification)
       #expect(
-        try await next == ServiceStatusReply(revision: baseline, event: .testNotification)
+        try await app.reportTestNotificationResult(announcement: id, outcome: .denied)
+      )
+
+      #expect(try await outcome == .denied)
+      #expect(
+        try await !app.reportTestNotificationResult(announcement: id, outcome: .shown)
       )
     }
   }

@@ -52,7 +52,7 @@
       Task { @MainActor in self.offerSettingsRecovery() }
       let updates = ControllerLiveUpdates(
         source: gatewayChangeSource,
-        showTestNotification: { [preferences] in preferences.showTestNotification() },
+        answerTestNotification: { [preferences] in preferences.answerTestNotification($0) },
         modeChanged: { [weak self] mode in
           if case .polling(let failure, _) = mode {
             self?.viewModel.liveUpdatesFallbackReason = failure

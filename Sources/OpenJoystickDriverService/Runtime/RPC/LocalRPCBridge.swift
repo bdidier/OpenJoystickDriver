@@ -144,8 +144,14 @@ extension ApplicationServiceServer {
       )
     case .sendTestNotification:
       _ = try decode(LocalServiceRPCEmptyArguments.self)
+      return try send(await statusChanges.announceTestNotification())
+    case .reportTestNotificationResult:
+      let value = try decode(TestNotificationReport.self)
+      guard value.outcome.kind != .noAnswer else {
+        throw ApplicationServiceClientError.invalidResponse
+      }
       return try send(
-        TestNotificationAnnouncement(announcedApps: statusChanges.announceTestNotification())
+        statusChanges.reportTestNotification(value.announcement, outcome: value.outcome)
       )
     case .setVirtualHIDProfileOverride:
       let value = try decode(LocalServiceRPCVirtualHIDProfileOverrideArguments.self)

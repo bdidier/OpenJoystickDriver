@@ -1582,7 +1582,10 @@
 "error.E2035" = "The file that records why the request listener stopped cannot be used. Delete the file, then open OpenJoystickDriver again.";
 "error.E2036" = "The --json output cannot write a number of the record without changing its value. Run the command without --json to see the record text.";
 /* Error E2037, shown by ojd and the app when no OpenJoystickDriver app is waiting for service events, so a test notification would reach nobody. */
-"error.E2037" = "No OpenJoystickDriver app is waiting for the test notification. Open OpenJoystickDriver, then try again.";
+/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
+"error.E2037" = "No OpenJoystickDriver app answered the test notification in time. Check that the app is running, then try again.";
+/* Error E2038, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */
+"error.E2038" = "Notifications are not allowed for OpenJoystickDriver. Allow them in the system notification settings, then try again.";
 "error.E3001" = "The controller is not connected or not ready for remapping. Reconnect it and try again.";
 "error.E3002" = "The selected Joy-Cons could not be paired. Refresh the connected controllers and try again.";
 "error.E3003" = "The controller does not report motion data. Choose a controller with motion sensors, or leave motion options off.";
@@ -2059,6 +2062,6 @@
 /* Abstract of the ojd setting test-notification command, in the command help. */
 "cli.setting.testNotification.abstract" = "Show a test notification in the app.";
 /* Discussion of the ojd setting test-notification command, in the command help. */
-"cli.setting.testNotification.discussion" = "Asks the service to announce a test notification to the open OpenJoystickDriver app, which shows it. If notifications are denied, the app says so and shows nothing.";
+"cli.setting.testNotification.discussion" = "Asks the service to announce a test notification to the open OpenJoystickDriver app and waits for the app to show it. Fails with a named error when notifications are denied, the delivery fails or no app answers in time.";
 /* Printed by ojd setting test-notification after the service announced the test notification to a waiting app. */
 "cli.setting.testNotification.success" = "Asked the app to show a test notification.";

@@ -125,9 +125,9 @@ struct PreferencesTests {
       notificationDelivery: delivery
     )
 
-    model.showTestNotification()
-    await waitUntil("delivery.deliveryCount == 1") { delivery.deliveryCount == 1 }
+    let outcome = await model.showTestNotification()
 
+    #expect(outcome == .shown)
     #expect(authorization.requestCount == 1)
     #expect(delivery.deliveryCount == 1)
     #expect(delivery.lastSound == false)
@@ -135,7 +135,23 @@ struct PreferencesTests {
 
   @Test
   @MainActor
-  func sendTestNotificationAsksTheServiceAndShowsNothingItself() async throws {
+  func aDeniedPermissionIsADeniedOutcomeAndDeliversNothing() async {
+    let delivery = PreferencesNotificationDeliverySpy()
+    let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
+      settings: SettingsStore(directory: RootedDataDirectory.temporary()),
+      launchAtLogin: LaunchAtLoginStub(isEnabled: false),
+      notificationAuthorization: NotificationAuthorizationStub(state: .denied),
+      notificationDelivery: delivery
+    )
+
+    #expect(await model.showTestNotification() == .denied)
+    #expect(delivery.deliveryCount == 0)
+  }
+
+  @Test
+  @MainActor
+  func answeringAnAnnouncementShowsTheNotificationAndReportsTheOutcome() async {
     let requester = TestNotificationRequestStub()
     let delivery = PreferencesNotificationDeliverySpy()
     let model = SettingsPreferencesModel(
@@ -145,29 +161,72 @@ struct PreferencesTests {
       notificationAuthorization: NotificationAuthorizationStub(state: .allowed),
       notificationDelivery: delivery
     )
+    let id = UUID()
 
-    model.sendTestNotification()
-    await waitUntil("requester.requestCount == 1") { requester.requestCount == 1 }
-    try await Task.sleep(nanoseconds: 50_000_000)
+    model.answerTestNotification(id)
+    await waitUntil("requester.reported.count == 1") { requester.reported.count == 1 }
 
-    #expect(delivery.deliveryCount == 0)
-    #expect(model.errorMessage == nil)
+    #expect(delivery.deliveryCount == 1)
+    #expect(requester.reported[0].0 == id)
+    #expect(requester.reported[0].1 == .shown)
   }
 
   @Test
   @MainActor
-  func sendTestNotificationNamesTheCaseWhereNoAppWasWaiting() async {
+  func answeringWithDeniedPermissionReportsDenied() async {
+    let requester = TestNotificationRequestStub()
     let model = SettingsPreferencesModel(
-      testNotifications: TestNotificationRequestStub(announced: 0),
+      testNotifications: requester,
+      settings: SettingsStore(directory: RootedDataDirectory.temporary()),
+      launchAtLogin: LaunchAtLoginStub(isEnabled: false),
+      notificationAuthorization: NotificationAuthorizationStub(state: .denied)
+    )
+
+    model.answerTestNotification(UUID())
+    await waitUntil("requester.reported.count == 1") { requester.reported.count == 1 }
+
+    #expect(requester.reported[0].1 == .denied)
+  }
+
+  @Test
+  @MainActor
+  func sendTestNotificationShowsEachNamedOutcome() async {
+    let outcomes: [(TestNotificationOutcome, String?)] = [
+      (.denied, OJDLocalized.string("error.E2038")),
+      (.noAnswer, OJDLocalized.string("error.E2037")),
+      (.failed("the system said no"), "the system said no"),
+    ]
+    for (outcome, message) in outcomes {
+      let model = SettingsPreferencesModel(
+        testNotifications: TestNotificationRequestStub(outcome: outcome),
+        settings: SettingsStore(directory: RootedDataDirectory.temporary()),
+        launchAtLogin: LaunchAtLoginStub(isEnabled: false),
+        notificationAuthorization: NotificationAuthorizationStub(state: .allowed)
+      )
+      model.sendTestNotification()
+      await waitUntil("outcome shown") { model.errorMessage == message }
+      #expect(model.errorMessage == message)
+    }
+  }
+
+  @Test
+  @MainActor
+  func aShownOutcomeClearsAnEarlierMessage() async {
+    let requester = TestNotificationRequestStub(outcome: .noAnswer)
+    let model = SettingsPreferencesModel(
+      testNotifications: requester,
       settings: SettingsStore(directory: RootedDataDirectory.temporary()),
       launchAtLogin: LaunchAtLoginStub(isEnabled: false),
       notificationAuthorization: NotificationAuthorizationStub(state: .allowed)
     )
-
     model.sendTestNotification()
-    await waitUntil("model.errorMessage != nil") { model.errorMessage != nil }
+    await waitUntil("message") { model.errorMessage != nil }
 
-    #expect(model.errorMessage == OJDLocalized.string("error.E2037"))
+    requester.setOutcome(.shown)
+    model.sendTestNotification()
+    await waitUntil("cleared") { model.errorMessage == nil }
+
+    #expect(model.errorMessage == nil)
   }
 
   @Test
@@ -331,21 +390,35 @@ struct PreferencesTests {
 final class TestNotificationRequestStub: TestNotificationRequesting, @unchecked Sendable {
   private let lock = NSLock()
   private var requests = 0
-  private let announced: Int
+  private var reports: [(UUID, TestNotificationOutcome)] = []
+  private var outcome: TestNotificationOutcome
   private let failure: (any Error)?
 
-  init(announced: Int = 1, failure: (any Error)? = nil) {
-    self.announced = announced
+  init(outcome: TestNotificationOutcome = .shown, failure: (any Error)? = nil) {
+    self.outcome = outcome
     self.failure = failure
   }
 
-  var requestCount: Int { lock.withLock { requests } }
+  func setOutcome(_ next: TestNotificationOutcome) { lock.withLock { outcome = next } }
 
-  func requestTestNotification() async throws -> Int {
+  var requestCount: Int { lock.withLock { requests } }
+  var reported: [(UUID, TestNotificationOutcome)] { lock.withLock { reports } }
+
+  func requestTestNotification() async throws -> TestNotificationOutcome {
     await Task.yield()
     lock.withLock { requests += 1 }
     if let failure { throw failure }
-    return announced
+    return lock.withLock { outcome }
+  }
+
+  func reportTestNotification(
+    _ announcement: UUID,
+    outcome: TestNotificationOutcome
+  ) async throws -> Bool {
+    await Task.yield()
+    lock.withLock { reports.append((announcement, outcome)) }
+    if let failure { throw failure }
+    return true
   }
 }
 

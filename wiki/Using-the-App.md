@@ -166,7 +166,7 @@ Turn notifications on for these events:
 - **Profiles**: **Activated or switched** and **Deactivated**.
 - **Play a sound**.
 
-Click **Send Test Notification** to test delivery. The app asks the service, which announces the test notification back to the app; `ojd setting test-notification` does the same from a terminal. If macOS denies notifications, OJD turns the toggles off. Click **Open Notification Settings** to fix this.
+Click **Send Test Notification** to test delivery. The app asks the service, which announces the test notification back to the app, and shows the result in the window: a denied permission, a failed delivery or no answer. `ojd setting test-notification` does the same from a terminal. If macOS denies notifications, OJD turns the toggles off. Click **Open Notification Settings** to fix this.
 
 #### Updates
 

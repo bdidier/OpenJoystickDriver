@@ -1366,7 +1366,10 @@
 "error.E2035" = "لا يمكن استخدام الملف الذي يسجّل سبب توقف مستمع الطلبات. احذف الملف ثم افتح OpenJoystickDriver من جديد.";
 "error.E2036" = "لا يمكن لمخرجات --json كتابة رقم من السجل دون تغيير قيمته. شغّل الأمر دون --json لعرض نص السجل.";
 /* Error E2037, shown by ojd and the app when no OpenJoystickDriver app is waiting for service events, so a test notification would reach nobody. */
-"error.E2037" = "لا يوجد تطبيق OpenJoystickDriver ينتظر الإشعار التجريبي. افتح OpenJoystickDriver ثم حاول مرة أخرى.";
+/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
+"error.E2037" = "لم يرد أي تطبيق OpenJoystickDriver على الإشعار التجريبي في الوقت المناسب. تأكد من أن التطبيق قيد التشغيل ثم حاول مرة أخرى.";
+/* Error E2038, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */
+"error.E2038" = "الإشعارات غير مسموح بها لـ OpenJoystickDriver. اسمح بها في إعدادات الإشعارات في النظام ثم حاول مرة أخرى.";
 "cli.record.usb_not_claimed" = "تستخدم العائلة USB الخام، ولا يمكن لامتداد USB الاستحواذ على وحدة التحكم هذه لأن قائمة منتجاته موقّعة من Apple. لا يصل OJD إليها إلا عبر الوصول المباشر إلى USB، عندما يسمح macOS بذلك.";
 "cli.record.usb_only_switch2" = "USB فقط: أضف bluetoothLE.vibrationCharacteristic إلى سجل Switch 2 هذا لتوصيل وحدة التحكم عبر Bluetooth LE.";
 "cli.record.validate.abstract" = "افحص سجل وحدة تحكم دون تثبيته.";
@@ -2058,6 +2061,6 @@
 /* Abstract of the ojd setting test-notification command, in the command help. */
 "cli.setting.testNotification.abstract" = "اعرض إشعارًا تجريبيًا في التطبيق.";
 /* Discussion of the ojd setting test-notification command, in the command help. */
-"cli.setting.testNotification.discussion" = "تطلب من الخدمة إعلان إشعار تجريبي إلى تطبيق OpenJoystickDriver المفتوح ليعرضه. إذا كانت الإشعارات مرفوضة، يذكر التطبيق ذلك ولا يعرض شيئًا.";
+"cli.setting.testNotification.discussion" = "تطلب من الخدمة إعلان إشعار تجريبي إلى تطبيق OpenJoystickDriver المفتوح وتنتظر أن يعرضه التطبيق. تفشل بخطأ مسمى عند رفض الإشعارات أو فشل التسليم أو عدم رد أي تطبيق في الوقت المناسب.";
 /* Printed by ojd setting test-notification after the service announced the test notification to a waiting app. */
 "cli.setting.testNotification.success" = "تم طلب عرض إشعار تجريبي من التطبيق.";

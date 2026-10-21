@@ -1366,7 +1366,10 @@
 "error.E2035" = "वह फ़ाइल उपयोग नहीं की जा सकती जिसमें दर्ज है कि अनुरोध श्रोता क्यों रुका। फ़ाइल हटाएँ, फिर OpenJoystickDriver को दोबारा खोलें।";
 "error.E2036" = "--json आउटपुट रिकॉर्ड की किसी संख्या को उसका मान बदले बिना नहीं लिख सकता। रिकॉर्ड का टेक्स्ट देखने के लिए कमांड को --json के बिना चलाएँ।";
 /* Error E2037, shown by ojd and the app when no OpenJoystickDriver app is waiting for service events, so a test notification would reach nobody. */
-"error.E2037" = "कोई OpenJoystickDriver ऐप परीक्षण सूचना की प्रतीक्षा नहीं कर रहा है। OpenJoystickDriver खोलें, फिर दोबारा कोशिश करें।";
+/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
+"error.E2037" = "किसी भी OpenJoystickDriver ऐप ने परीक्षण सूचना का समय पर उत्तर नहीं दिया। जाँचें कि ऐप चल रहा है, फिर दोबारा कोशिश करें।";
+/* Error E2038, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */
+"error.E2038" = "OpenJoystickDriver के लिए सूचनाएँ अनुमत नहीं हैं। सिस्टम की सूचना सेटिंग्स में उन्हें अनुमति दें, फिर दोबारा कोशिश करें।";
 "cli.record.usb_not_claimed" = "यह परिवार रॉ USB इस्तेमाल करता है, और USB एक्सटेंशन इस कंट्रोलर को क्लेम नहीं कर सकता, क्योंकि उसकी प्रोडक्ट सूची पर Apple के हस्ताक्षर हैं। OJD उस तक केवल सीधे USB एक्सेस से पहुँचता है, जब macOS अनुमति देता है।";
 "cli.record.usb_only_switch2" = "केवल USB: कंट्रोलर को Bluetooth LE से कनेक्ट करने के लिए इस Switch 2 रिकॉर्ड में bluetoothLE.vibrationCharacteristic जोड़ें।";
 "cli.record.validate.abstract" = "इंस्टॉल किए बिना कंट्रोलर रिकॉर्ड जाँचें।";
@@ -2058,6 +2061,6 @@
 /* Abstract of the ojd setting test-notification command, in the command help. */
 "cli.setting.testNotification.abstract" = "ऐप में एक परीक्षण सूचना दिखाएँ।";
 /* Discussion of the ojd setting test-notification command, in the command help. */
-"cli.setting.testNotification.discussion" = "सेवा से कहता है कि वह खुले OpenJoystickDriver ऐप को परीक्षण सूचना की घोषणा करे, जो उसे दिखाता है। यदि सूचनाएँ अस्वीकृत हैं, तो ऐप यह बताता है और कुछ नहीं दिखाता।";
+"cli.setting.testNotification.discussion" = "सेवा से कहता है कि वह खुले OpenJoystickDriver ऐप को परीक्षण सूचना की घोषणा करे और ऐप के उसे दिखाने की प्रतीक्षा करता है। सूचनाएँ अस्वीकृत होने, डिलीवरी विफल होने या किसी ऐप के समय पर उत्तर न देने पर नामित त्रुटि के साथ विफल होता है।";
 /* Printed by ojd setting test-notification after the service announced the test notification to a waiting app. */
 "cli.setting.testNotification.success" = "ऐप से परीक्षण सूचना दिखाने के लिए कहा गया।";
