@@ -4,17 +4,25 @@ import Foundation
 enum LibraryRecordDocument: Equatable {
   case text(LibraryRecordText)
   /// The tokenizer cannot read the document the catalog produced, with the reason. The section
-  /// says the record text cannot be shown.
+  /// says the record text cannot be shown, and the reason goes to the log through `log`.
   case unreadable(JSONSyntaxError)
 
-  init(document: String) {
-    do { self = .text(try LibraryRecordText(document: document)) } catch let error
-      as JSONSyntaxError
-    {
-      self = .unreadable(error)
+  init(document: String, log: (String) -> Void = Self.writeToStandardError) {
+    do throws(JSONSyntaxError) {
+      self = .text(try LibraryRecordText(document: document))
     } catch {
-      preconditionFailure("JSONSyntax throws only JSONSyntaxError: \(error)")
+      log(Self.logLine(error))
+      self = .unreadable(error)
     }
+  }
+
+  /// The log line for a record text the tokenizer cannot read.
+  static func logLine(_ error: JSONSyntaxError) -> String {
+    "[Library] The record text cannot be shown: \(error.description)\n"
+  }
+
+  static func writeToStandardError(_ line: String) {
+    FileHandle.standardError.write(Data(line.utf8))
   }
 }
 
@@ -44,7 +52,7 @@ struct LibraryRecordText: Equatable {
   let identifierReadings: [Int: Reading]
 
   /// Reads `document`, which the catalog produced. Throws when it is not JSON the tokenizer reads.
-  init(document: String) throws {
+  init(document: String) throws(JSONSyntaxError) {
     copyText = document
     tokens = try JSONSyntax.tokens(in: document)
     var lines = document.split(separator: "\n", omittingEmptySubsequences: false).map(String.init)

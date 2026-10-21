@@ -40,7 +40,7 @@ struct JSONSyntaxError: Error, Equatable, CustomStringConvertible {
 /// follows the JSON grammar, so a token where JSON does not allow it (`[1 2]`, `{,}`, `{"a" 1}`,
 /// a trailing comma, a second top-level value) or a container left open or closed twice throws.
 enum JSONSyntax {
-  static func tokens(in text: String) throws -> [JSONSyntaxToken] {
+  static func tokens(in text: String) throws(JSONSyntaxError) -> [JSONSyntaxToken] {
     var scanner = Scanner(scalars: Array(text.unicodeScalars))
     return try scanner.run()
   }
@@ -79,7 +79,7 @@ enum JSONSyntax {
 
     var expectsValue: Bool { expectation == .value || expectation == .valueOrClose }
 
-    mutating func run() throws -> [JSONSyntaxToken] {
+    mutating func run() throws(JSONSyntaxError) -> [JSONSyntaxToken] {
       while position < scalars.count {
         let scalar = scalars[position]
         switch scalar {
@@ -171,7 +171,7 @@ enum JSONSyntax {
       tokens.append(JSONSyntaxToken(kind: kind, text: String(text), depth: containers.count))
     }
 
-    mutating func string() throws {
+    mutating func string() throws(JSONSyntaxError) {
       position += 1
       while position < scalars.count {
         let scalar = scalars[position]
@@ -204,7 +204,7 @@ enum JSONSyntax {
       throw failure("a string is not closed")
     }
 
-    mutating func literal() throws {
+    mutating func literal() throws(JSONSyntaxError) {
       for word in ["true", "false", "null"] {
         let expected = Array(word.unicodeScalars)
         if position + expected.count <= scalars.count,
@@ -223,7 +223,7 @@ enum JSONSyntax {
       return position - begin
     }
 
-    mutating func number() throws {
+    mutating func number() throws(JSONSyntaxError) {
       if scalars[position] == "-" { position += 1 }
       if position < scalars.count, scalars[position] == "0" {
         position += 1

@@ -189,11 +189,18 @@ struct LibraryRecordTextTests {
 
   @Test
   func theStoreSaysWhenTheTokenizerCannotReadTheDocument() {
+    var logged: [String] = []
     #expect(
-      LibraryRecordDocument(document: "[1 2]")
+      LibraryRecordDocument(document: "[1 2]") { logged.append($0) }
         == .unreadable(
           JSONSyntaxError(offset: 3, reason: "unexpected \"2\" where JSON expects , or ]")
         )
+    )
+    #expect(
+      logged == [
+        "[Library] The record text cannot be shown: JSON text, scalar 3: unexpected \"2\" "
+          + "where JSON expects , or ]\n"
+      ]
     )
     guard case .text(let text) = LibraryRecordDocument(document: Self.document) else {
       Issue.record("the document is not read")
