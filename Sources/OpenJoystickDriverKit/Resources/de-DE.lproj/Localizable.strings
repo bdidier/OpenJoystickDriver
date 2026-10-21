@@ -794,15 +794,10 @@
 
 /* Controller session lifecycle */
 "controllers.suspended" = "Angehalten";
-"controllers.sessionActive" = "Von OpenJoystickDriver verwaltet";
 "controllers.suspendedSummary" = "Eingabe und Ausgabe von OpenJoystickDriver sind pausiert, bis du fortsetzt.";
 "controllers.disconnectSummary" = "Eingabe, physische Effekte und die virtuelle Ausgabe von OpenJoystickDriver pausieren.";
-"controllers.resume" = "Fortsetzen";
-"controllers.disconnectFromOJD" = "Von OpenJoystickDriver trennen";
 "error.controllerSessionChangeRejected" = "Die Controller-Sitzung konnte nicht geändert werden.";
 
-"controllers.disconnectWireless" = "Drahtlosen Controller trennen…";
-"controllers.disconnectWirelessButton" = "Trennen…";
 "controllers.disconnectWirelessSummary" = "Diese Bluetooth-Verbindung beenden, ohne andere Controller zu beeinträchtigen.";
 "controllers.disconnectWirelessConfirmTitle" = "Drahtlosen Controller trennen?";
 "controllers.disconnectWirelessConfirmMessage" = "%@ bleibt getrennt, bis du ihn manuell wieder verbindest.";

@@ -11,7 +11,7 @@ public extension Notification.Name {
 public extension NotificationCenter {
   /// Announces that the service's reported status changed.
   static func postServiceStatusChanged() {
-    NotificationCenter.default.post(name: .ojdServiceStatusDidChange, object: nil)
+    Self.default.post(name: .ojdServiceStatusDidChange, object: nil)
   }
 }
 

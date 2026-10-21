@@ -4,7 +4,7 @@ import OpenJoystickDriverKit
 /// One labelled fact of the Controllers detail.
 struct ControllerFact: Equatable, Identifiable {
   enum Kind: Hashable {
-    case persona, publication, serving, controllerProtocol, serialNumber, inputHealth
+    case publication, serving, controllerProtocol, serialNumber, inputHealth
     case battery, chargingState, cableState
     case rumble, lighting, adaptiveTriggers, motion, touchContacts
     case unitID, ownership, duplicateExposureRisk, outputOwner, record, controls
@@ -31,7 +31,6 @@ enum ControllerDetailFacts {
   ) -> [ControllerFact] {
     let output = device.physicalOutputCapabilities
     let always = [
-      fact(.persona, "cli.controller.show.label.persona", persona(device)),
       fact(.publication, "cli.controller.show.label.publication", publication(device)),
       fact(.serving, "controllers.serving.label", .text(servingText(device))),
       fact(.controllerProtocol, "common.protocol", .text(device.protocolBinding.displayLabel)),
@@ -134,12 +133,15 @@ enum ControllerDetailFacts {
     ]
   }
 
-  /// The virtual HID profile the service selected for the controller, as `ojd controller show`
-  /// prints `serving.persona`; "None" when none is selected. Whether it is published is the
-  /// separate ``publication(_:)``.
-  static func persona(_ device: ApplicationServiceDeviceDescription) -> OJDValue {
-    guard let selection = device.servingDecision.selection else { return .none }
-    return .text(selection.profileID.identity.publishedUSBIdentityLabel)
+  /// The Automatic choice of the Virtual HID profile picker. It names the profile the service
+  /// selected on its own, so the picker is the one place the published profile is shown; it is
+  /// plain "Automatic" while an override is the selection or when no profile is selected.
+  static func automaticProfileLabel(_ device: ApplicationServiceDeviceDescription) -> String {
+    let automatic = OJDLocalized.string("mapping.automatic")
+    guard let status = device.virtualHIDProfile, let profile = status.profile,
+      status.source != .override
+    else { return automatic }
+    return OJDLocalized.formatted("virtualProfile.automaticSelected", profile.identity.productName)
   }
 
   /// Whether a virtual device publishes the controller and why not, as `publication.state` and

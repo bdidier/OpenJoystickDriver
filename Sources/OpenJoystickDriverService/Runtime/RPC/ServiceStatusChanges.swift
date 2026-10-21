@@ -76,7 +76,9 @@ final class ServiceStatusChanges: @unchecked Sendable {
     let (released, revision) = lock.withLock { () -> ([Waiter], ServiceStatusRevision) in
       generation &+= 1
       defer { waiters = [:] }
-      return (Array(waiters.values), ServiceStatusRevision(instance: instance, generation: generation))
+      return (
+        Array(waiters.values), ServiceStatusRevision(instance: instance, generation: generation)
+      )
     }
     for waiter in released {
       waiter.hold?.cancel()
@@ -86,7 +88,10 @@ final class ServiceStatusChanges: @unchecked Sendable {
 
   private func release(_ id: UUID) {
     let (waiter, revision) = lock.withLock {
-      (waiters.removeValue(forKey: id), ServiceStatusRevision(instance: instance, generation: generation))
+      (
+        waiters.removeValue(forKey: id),
+        ServiceStatusRevision(instance: instance, generation: generation)
+      )
     }
     waiter?.hold?.cancel()
     waiter?.continuation.resume(returning: revision)

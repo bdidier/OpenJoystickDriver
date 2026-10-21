@@ -794,15 +794,10 @@
 
 /* Controller session lifecycle */
 "controllers.suspended" = "Приостановлено";
-"controllers.sessionActive" = "Управляется OpenJoystickDriver";
 "controllers.suspendedSummary" = "Ввод и вывод OpenJoystickDriver приостановлены до возобновления.";
 "controllers.disconnectSummary" = "Приостановить ввод, физические эффекты и виртуальный вывод OpenJoystickDriver.";
-"controllers.resume" = "Возобновить";
-"controllers.disconnectFromOJD" = "Отключить от OpenJoystickDriver";
 "error.controllerSessionChangeRejected" = "Не удалось изменить сеанс контроллера.";
 
-"controllers.disconnectWireless" = "Отключить беспроводной контроллер…";
-"controllers.disconnectWirelessButton" = "Отключить…";
 "controllers.disconnectWirelessSummary" = "Разорвать это соединение Bluetooth, не затрагивая другие контроллеры.";
 "controllers.disconnectWirelessConfirmTitle" = "Отключить беспроводной контроллер?";
 "controllers.disconnectWirelessConfirmMessage" = "%@ останется отключённым, пока вы не подключите его снова вручную.";

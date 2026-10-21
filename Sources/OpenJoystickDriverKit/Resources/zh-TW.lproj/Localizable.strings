@@ -794,15 +794,10 @@
 
 /* Controller session lifecycle */
 "controllers.suspended" = "已暫停";
-"controllers.sessionActive" = "由 OpenJoystickDriver 管理";
 "controllers.suspendedSummary" = "輸入和 OpenJoystickDriver 輸出已暫停，直到您繼續為止。";
 "controllers.disconnectSummary" = "暫停輸入、實體效果和 OpenJoystickDriver 虛擬輸出。";
-"controllers.resume" = "繼續";
-"controllers.disconnectFromOJD" = "與 OpenJoystickDriver 中斷連線";
 "error.controllerSessionChangeRejected" = "無法變更控制器工作階段。";
 
-"controllers.disconnectWireless" = "中斷無線控制器連線…";
-"controllers.disconnectWirelessButton" = "中斷連線…";
 "controllers.disconnectWirelessSummary" = "停止此藍牙連線，不影響其他控制器。";
 "controllers.disconnectWirelessConfirmTitle" = "要中斷無線控制器連線嗎？";
 "controllers.disconnectWirelessConfirmMessage" = "%@ 會保持中斷連線，直到您手動重新連線。";

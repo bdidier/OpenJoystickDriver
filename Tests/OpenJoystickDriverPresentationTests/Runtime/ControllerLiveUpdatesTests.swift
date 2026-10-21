@@ -130,8 +130,11 @@ private final class LogLines { var lines: [String] = [] }
 private final class Modes { var values: [ControllerLiveUpdateMode] = [] }
 
 extension ServiceStatusRevision {
-  fileprivate static func revision(_ generation: UInt64) -> Self {
-    Self(instance: UUID(uuidString: "00000000-0000-0000-0000-000000000001")!, generation: generation)
+  static func revision(_ generation: UInt64) -> Self {
+    Self(
+      instance: UUID(uuidString: "00000000-0000-0000-0000-000000000001")!,
+      generation: generation
+    )
   }
 }
 

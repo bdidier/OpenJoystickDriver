@@ -130,11 +130,15 @@ actor DevicePipeline {
   var lastObservedInputReportNanoseconds: UInt64?
   var awaitingNeutralAfterLivenessLoss = false {
     didSet {
-      if oldValue != awaitingNeutralAfterLivenessLoss { NotificationCenter.postServiceStatusChanged() }
+      if oldValue != awaitingNeutralAfterLivenessLoss {
+        NotificationCenter.postServiceStatusChanged()
+      }
     }
   }
   var inputHealthRecoveryCount = 0 {
-    didSet { if oldValue != inputHealthRecoveryCount { NotificationCenter.postServiceStatusChanged() } }
+    didSet {
+      if oldValue != inputHealthRecoveryCount { NotificationCenter.postServiceStatusChanged() }
+    }
   }
   var startupOutputStatus: String?
   /// Whether the native startup player indicator still waits for the first input report.

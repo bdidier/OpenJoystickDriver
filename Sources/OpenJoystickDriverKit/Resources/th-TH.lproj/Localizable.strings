@@ -794,15 +794,10 @@
 
 /* Controller session lifecycle */
 "controllers.suspended" = "ถูกระงับ";
-"controllers.sessionActive" = "จัดการโดย OpenJoystickDriver";
 "controllers.suspendedSummary" = "อินพุตและเอาต์พุตของ OpenJoystickDriver หยุดชั่วคราวจนกว่าคุณจะทำต่อ";
 "controllers.disconnectSummary" = "หยุดอินพุต เอฟเฟ็กต์ทางกายภาพ และเอาต์พุตเสมือนของ OpenJoystickDriver ชั่วคราว";
-"controllers.resume" = "ทำต่อ";
-"controllers.disconnectFromOJD" = "เลิกเชื่อมต่อจาก OpenJoystickDriver";
 "error.controllerSessionChangeRejected" = "ไม่สามารถเปลี่ยนเซสชั่นของคอนโทรลเลอร์ได้";
 
-"controllers.disconnectWireless" = "เลิกเชื่อมต่อคอนโทรลเลอร์ไร้สาย…";
-"controllers.disconnectWirelessButton" = "เลิกเชื่อมต่อ…";
 "controllers.disconnectWirelessSummary" = "หยุดการเชื่อมต่อบลูทูธนี้โดยไม่กระทบกับคอนโทรลเลอร์อื่น";
 "controllers.disconnectWirelessConfirmTitle" = "เลิกเชื่อมต่อคอนโทรลเลอร์ไร้สายหรือไม่";
 "controllers.disconnectWirelessConfirmMessage" = "%@ จะยังคงเลิกเชื่อมต่อจนกว่าคุณจะเชื่อมต่ออีกครั้งด้วยตนเอง";

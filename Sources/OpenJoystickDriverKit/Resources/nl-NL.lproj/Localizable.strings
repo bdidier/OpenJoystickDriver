@@ -794,15 +794,10 @@
 
 /* Controller session lifecycle */
 "controllers.suspended" = "Onderbroken";
-"controllers.sessionActive" = "Beheerd door OpenJoystickDriver";
 "controllers.suspendedSummary" = "Invoer en uitvoer van OpenJoystickDriver zijn gepauzeerd totdat je hervat.";
 "controllers.disconnectSummary" = "Onderbreek invoer, fysieke effecten en virtuele uitvoer van OpenJoystickDriver.";
-"controllers.resume" = "Hervat";
-"controllers.disconnectFromOJD" = "Verbreek verbinding met OpenJoystickDriver";
 "error.controllerSessionChangeRejected" = "De controllersessie kon niet worden gewijzigd.";
 
-"controllers.disconnectWireless" = "Verbreek verbinding met draadloze controller…";
-"controllers.disconnectWirelessButton" = "Verbreek verbinding…";
 "controllers.disconnectWirelessSummary" = "Beëindig deze Bluetooth-verbinding zonder andere controllers te beïnvloeden.";
 "controllers.disconnectWirelessConfirmTitle" = "Draadloze controller loskoppelen?";
 "controllers.disconnectWirelessConfirmMessage" = "%@ blijft losgekoppeld totdat je de controller handmatig opnieuw verbindt.";

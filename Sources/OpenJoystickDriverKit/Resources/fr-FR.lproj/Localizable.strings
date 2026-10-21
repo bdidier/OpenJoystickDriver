@@ -794,15 +794,10 @@
 
 /* Controller session lifecycle */
 "controllers.suspended" = "Suspendue";
-"controllers.sessionActive" = "Géré par OpenJoystickDriver";
 "controllers.suspendedSummary" = "L’entrée et la sortie d’OpenJoystickDriver sont suspendues jusqu’à la reprise.";
 "controllers.disconnectSummary" = "Suspend l’entrée, les effets physiques et la sortie virtuelle d’OpenJoystickDriver.";
-"controllers.resume" = "Reprendre";
-"controllers.disconnectFromOJD" = "Déconnecter d’OpenJoystickDriver";
 "error.controllerSessionChangeRejected" = "Impossible de modifier la session de la manette.";
 
-"controllers.disconnectWireless" = "Déconnecter la manette sans fil…";
-"controllers.disconnectWirelessButton" = "Déconnecter…";
 "controllers.disconnectWirelessSummary" = "Interrompt cette connexion Bluetooth sans affecter les autres manettes.";
 "controllers.disconnectWirelessConfirmTitle" = "Déconnecter la manette sans fil ?";
 "controllers.disconnectWirelessConfirmMessage" = "%@ restera déconnectée jusqu’à ce que vous la reconnectiez manuellement.";

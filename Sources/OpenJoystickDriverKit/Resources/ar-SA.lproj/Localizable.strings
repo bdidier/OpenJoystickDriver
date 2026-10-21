@@ -794,15 +794,10 @@
 
 /* Controller session lifecycle */
 "controllers.suspended" = "معلّقة";
-"controllers.sessionActive" = "تديرها OpenJoystickDriver";
 "controllers.suspendedSummary" = "يتوقف الإدخال وإخراج OpenJoystickDriver مؤقتًا حتى تستأنف.";
 "controllers.disconnectSummary" = "أوقف الإدخال والتأثيرات الفعلية والإخراج الافتراضي لـ OpenJoystickDriver مؤقتًا.";
-"controllers.resume" = "استئناف";
-"controllers.disconnectFromOJD" = "فصل عن OpenJoystickDriver";
 "error.controllerSessionChangeRejected" = "تعذّر تغيير جلسة وحدة التحكم.";
 
-"controllers.disconnectWireless" = "فصل وحدة التحكم اللاسلكية…";
-"controllers.disconnectWirelessButton" = "فصل…";
 "controllers.disconnectWirelessSummary" = "أوقف اتصال Bluetooth هذا دون التأثير في وحدات التحكم الأخرى.";
 "controllers.disconnectWirelessConfirmTitle" = "هل تريد فصل وحدة التحكم اللاسلكية؟";
 "controllers.disconnectWirelessConfirmMessage" = "ستبقى %@ مفصولة حتى توصلها مرة أخرى يدويًا.";

@@ -794,15 +794,10 @@
 
 /* Controller session lifecycle */
 "controllers.suspended" = "Đã tạm ngưng";
-"controllers.sessionActive" = "Do OpenJoystickDriver quản lý";
 "controllers.suspendedSummary" = "Đầu vào và đầu ra của OpenJoystickDriver bị tạm dừng cho đến khi bạn tiếp tục.";
 "controllers.disconnectSummary" = "Tạm dừng đầu vào, hiệu ứng vật lý và đầu ra ảo của OpenJoystickDriver.";
-"controllers.resume" = "Tiếp tục";
-"controllers.disconnectFromOJD" = "Ngắt kết nối khỏi OpenJoystickDriver";
 "error.controllerSessionChangeRejected" = "Không thể thay đổi phiên của bộ điều khiển.";
 
-"controllers.disconnectWireless" = "Ngắt kết nối bộ điều khiển không dây…";
-"controllers.disconnectWirelessButton" = "Ngắt kết nối…";
 "controllers.disconnectWirelessSummary" = "Dừng kết nối Bluetooth này mà không ảnh hưởng đến các bộ điều khiển khác.";
 "controllers.disconnectWirelessConfirmTitle" = "Ngắt kết nối bộ điều khiển không dây?";
 "controllers.disconnectWirelessConfirmMessage" = "%@ sẽ vẫn bị ngắt kết nối cho đến khi bạn tự kết nối lại.";

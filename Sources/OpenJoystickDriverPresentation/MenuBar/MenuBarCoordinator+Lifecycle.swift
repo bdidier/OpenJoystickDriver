@@ -58,8 +58,9 @@
           } else {
             self?.viewModel.liveUpdatesFallbackReason = nil
           }
-        }
-      ) { [weak self] in await self?.refreshLiveStatusNow() }
+        },
+        refresh: { [weak self] in await self?.refreshLiveStatusNow() }
+      )
       controllerLiveUpdates = updates
       updates.start()
     }

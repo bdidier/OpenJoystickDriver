@@ -794,15 +794,10 @@
 
 /* Controller session lifecycle */
 "controllers.suspended" = "已暂停";
-"controllers.sessionActive" = "由 OpenJoystickDriver 管理";
 "controllers.suspendedSummary" = "输入和 OpenJoystickDriver 输出会暂停，直到你恢复。";
 "controllers.disconnectSummary" = "暂停输入、实体效果和 OpenJoystickDriver 虚拟输出。";
-"controllers.resume" = "继续";
-"controllers.disconnectFromOJD" = "与 OpenJoystickDriver 断开";
 "error.controllerSessionChangeRejected" = "无法更改控制器会话。";
 
-"controllers.disconnectWireless" = "断开无线控制器…";
-"controllers.disconnectWirelessButton" = "断开…";
 "controllers.disconnectWirelessSummary" = "停止此蓝牙连接，不影响其他控制器。";
 "controllers.disconnectWirelessConfirmTitle" = "要断开无线控制器吗？";
 "controllers.disconnectWirelessConfirmMessage" = "%@ 将保持断开，直到你再次手动连接。";

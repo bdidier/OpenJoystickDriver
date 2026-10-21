@@ -794,15 +794,10 @@
 
 /* Controller session lifecycle */
 "controllers.suspended" = "一時停止中";
-"controllers.sessionActive" = "OpenJoystickDriverで管理中";
 "controllers.suspendedSummary" = "再開するまで、入力とOpenJoystickDriverの出力は一時停止されます。";
 "controllers.disconnectSummary" = "入力、物理エフェクト、OpenJoystickDriverの仮想出力を一時停止します。";
-"controllers.resume" = "再開";
-"controllers.disconnectFromOJD" = "OpenJoystickDriverから切り離す";
 "error.controllerSessionChangeRejected" = "コントローラのセッションを変更できませんでした。";
 
-"controllers.disconnectWireless" = "ワイヤレスコントローラを切断…";
-"controllers.disconnectWirelessButton" = "切断…";
 "controllers.disconnectWirelessSummary" = "他のコントローラに影響を与えずに、このBluetooth接続を終了します。";
 "controllers.disconnectWirelessConfirmTitle" = "ワイヤレスコントローラを切断しますか？";
 "controllers.disconnectWirelessConfirmMessage" = "%@は、手動で再接続するまで切断されたままになります。";

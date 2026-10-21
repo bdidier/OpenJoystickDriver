@@ -794,15 +794,10 @@
 
 /* Controller session lifecycle */
 "controllers.suspended" = "निलंबित";
-"controllers.sessionActive" = "OpenJoystickDriver द्वारा प्रबंधित";
 "controllers.suspendedSummary" = "फिर से शुरू करने तक इनपुट और OpenJoystickDriver आउटपुट रुके रहेंगे।";
 "controllers.disconnectSummary" = "इनपुट, फ़िज़िकल इफ़ेक्ट और OpenJoystickDriver का वर्चुअल आउटपुट रोकें।";
-"controllers.resume" = "जारी रखें";
-"controllers.disconnectFromOJD" = "OpenJoystickDriver से डिस्कनेक्ट करें";
 "error.controllerSessionChangeRejected" = "कंट्रोलर सत्र बदला नहीं जा सका।";
 
-"controllers.disconnectWireless" = "वायरलेस कंट्रोलर डिस्कनेक्ट करें…";
-"controllers.disconnectWirelessButton" = "डिस्कनेक्ट करें…";
 "controllers.disconnectWirelessSummary" = "अन्य कंट्रोलर को प्रभावित किए बिना इस Bluetooth कनेक्शन को बंद करें।";
 "controllers.disconnectWirelessConfirmTitle" = "वायरलेस कंट्रोलर डिस्कनेक्ट करें?";
 "controllers.disconnectWirelessConfirmMessage" = "जब तक आप इसे मैन्युअल रूप से दोबारा कनेक्ट नहीं करते, %@ डिस्कनेक्ट रहेगा।";

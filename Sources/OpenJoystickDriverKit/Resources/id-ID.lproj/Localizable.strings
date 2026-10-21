@@ -794,15 +794,10 @@
 
 /* Controller session lifecycle */
 "controllers.suspended" = "Ditangguhkan";
-"controllers.sessionActive" = "Dikelola oleh OpenJoystickDriver";
 "controllers.suspendedSummary" = "Input dan output OpenJoystickDriver dijeda hingga Anda melanjutkan.";
 "controllers.disconnectSummary" = "Jeda input, efek fisik, dan output virtual OpenJoystickDriver.";
-"controllers.resume" = "Lanjutkan";
-"controllers.disconnectFromOJD" = "Putuskan Hubungan dari OpenJoystickDriver";
 "error.controllerSessionChangeRejected" = "Sesi pengontrol tidak dapat diubah.";
 
-"controllers.disconnectWireless" = "Putuskan Hubungan Pengontrol Nirkabel…";
-"controllers.disconnectWirelessButton" = "Putuskan Hubungan…";
 "controllers.disconnectWirelessSummary" = "Hentikan koneksi Bluetooth ini tanpa memengaruhi pengontrol lain.";
 "controllers.disconnectWirelessConfirmTitle" = "Putuskan Hubungan Pengontrol Nirkabel?";
 "controllers.disconnectWirelessConfirmMessage" = "%@ akan tetap terputus hingga Anda menghubungkannya lagi secara manual.";

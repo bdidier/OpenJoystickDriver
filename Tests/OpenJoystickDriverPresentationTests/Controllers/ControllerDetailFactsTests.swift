@@ -55,7 +55,7 @@ struct ControllerDetailFactsTests {
   func unknownBatteryChargingAndCableAreHidden() {
     let kinds = ControllerDetailFacts.general(for: device(power: .unknown)).map(\.kind)
     #expect(
-      kinds == [.persona, .publication, .serving, .controllerProtocol, .serialNumber, .inputHealth]
+      kinds == [.publication, .serving, .controllerProtocol, .serialNumber, .inputHealth]
     )
     #expect(ControllerDetailFacts.general(for: device()).map(\.kind) == kinds)
   }
@@ -95,14 +95,13 @@ struct ControllerDetailFactsTests {
   }
 
   @Test
-  func missingSerialNumberShowsTheHyphen() {
+  func missingSerialNumberShowsNone() {
     let facts = ControllerDetailFacts.general(for: device())
     #expect(Self.value(.serialNumber, in: facts) == OJDValue.none)
   }
 
   @Test
   func theSelectedProfileShowsWhetherOrNotItIsPublished() {
-    let label = "Xbox Wireless Controller (045E:02FD)"
     let published = ApplicationServicePublicationStatus.published(target: .sdlCompatible)
     let notPublished = ApplicationServicePublicationStatus.notPublished(
       .noInputYet,
@@ -116,19 +115,39 @@ struct ControllerDetailFactsTests {
       let facts = ControllerDetailFacts.general(
         for: device(override: .sdlCompatible, publication: publication)
       )
-      #expect(Self.value(.persona, in: facts) == .text(label))
       #expect(Self.value(.publication, in: facts) == .text(text))
     }
     let unreported = ControllerDetailFacts.general(for: device(override: .sdlCompatible))
-    #expect(Self.value(.persona, in: unreported) == .text(label))
     #expect(Self.value(.publication, in: unreported) == OJDValue.none)
   }
 
   @Test
-  func personaIsTheHyphenWithoutASelection() {
-    let system = device(ownership: .systemGamepad)
-    #expect(system.servingDecision.selection == nil)
-    #expect(Self.value(.persona, in: ControllerDetailFacts.general(for: system)) == OJDValue.none)
+  func theProfileIsPublishedOnlyInThePicker() {
+    let facts = ControllerDetailFacts.general(for: device(override: .sdlCompatible))
+    #expect(!facts.map(\.label).contains(OJDLocalized.string("cli.controller.show.label.persona")))
+  }
+
+  @Test
+  func theAutomaticChoiceNamesTheProfileTheServiceSelected() {
+    var pad = device()
+    pad.virtualHIDProfile = ApplicationServiceVirtualHIDProfileStatus(
+      profile: .generic,
+      source: .automatic,
+      override: nil,
+      unavailable: false
+    )
+    #expect(
+      ControllerDetailFacts.automaticProfileLabel(pad)
+        == "Automatic (\(VirtualHIDProfileID.generic.identity.productName))"
+    )
+  }
+
+  @Test
+  func theAutomaticChoiceIsPlainWithAnOverrideOrWithoutASelection() {
+    #expect(ControllerDetailFacts.automaticProfileLabel(device(override: .generic)) == "Automatic")
+    #expect(
+      ControllerDetailFacts.automaticProfileLabel(device(ownership: .systemGamepad)) == "Automatic"
+    )
   }
 
   @Test

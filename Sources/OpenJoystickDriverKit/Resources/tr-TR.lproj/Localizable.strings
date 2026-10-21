@@ -794,15 +794,10 @@
 
 /* Controller session lifecycle */
 "controllers.suspended" = "Askıya Alındı";
-"controllers.sessionActive" = "OpenJoystickDriver Tarafından Yönetiliyor";
 "controllers.suspendedSummary" = "Devam ettirene kadar giriş ve OpenJoystickDriver çıkışı duraklatılır.";
 "controllers.disconnectSummary" = "Girişi, fiziksel efektleri ve OpenJoystickDriver sanal çıkışını duraklat.";
-"controllers.resume" = "Sürdür";
-"controllers.disconnectFromOJD" = "OpenJoystickDriver’dan Bağlantıyı Kes";
 "error.controllerSessionChangeRejected" = "Seçilen kontrolcü çıkışı etkinleştirilemedi.";
 
-"controllers.disconnectWireless" = "Kablosuz Kontrolcünün Bağlantısını Kes…";
-"controllers.disconnectWirelessButton" = "Bağlantıyı Kes…";
 "controllers.disconnectWirelessSummary" = "Diğer kontrolcüleri etkilemeden bu Bluetooth bağlantısını durdurur.";
 "controllers.disconnectWirelessConfirmTitle" = "Kablosuz kontrolcünün bağlantısı kesilsin mi?";
 "controllers.disconnectWirelessConfirmMessage" = "%@, siz elle yeniden bağlayana kadar bağlantısız kalacak.";

@@ -794,15 +794,10 @@
 
 /* Controller session lifecycle */
 "controllers.suspended" = "일시 중지됨";
-"controllers.sessionActive" = "OpenJoystickDriver에서 관리 중";
 "controllers.suspendedSummary" = "다시 시작할 때까지 입력과 OpenJoystickDriver 출력이 일시 중지됩니다.";
 "controllers.disconnectSummary" = "입력, 물리적 효과, OpenJoystickDriver 가상 출력을 일시 중지합니다.";
-"controllers.resume" = "재개";
-"controllers.disconnectFromOJD" = "OpenJoystickDriver에서 연결 해제";
 "error.controllerSessionChangeRejected" = "컨트롤러 세션을 변경할 수 없습니다.";
 
-"controllers.disconnectWireless" = "무선 컨트롤러 연결 해제…";
-"controllers.disconnectWirelessButton" = "연결 해제…";
 "controllers.disconnectWirelessSummary" = "다른 컨트롤러에 영향을 주지 않고 이 Bluetooth 연결을 끊습니다.";
 "controllers.disconnectWirelessConfirmTitle" = "무선 컨트롤러 연결을 해제할까요?";
 "controllers.disconnectWirelessConfirmMessage" = "%@은(는) 직접 다시 연결할 때까지 연결이 해제된 상태로 유지됩니다.";

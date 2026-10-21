@@ -299,7 +299,11 @@ struct VirtualHIDProfileOverrideTests {
     let label = VirtualHIDProfileID.generic.identity.publishedUSBIdentityLabel
     #expect(pad.publishedIdentityLabel == label)
     #expect(pad.publishedIdentityLabel != RuntimePresentation.noVirtualHIDProfileLabel)
-    #expect(ControllerDetailFacts.persona(pad) == .text(label))
+    #expect(
+      ControllerDetailFacts.automaticProfileLabel(pad).contains(
+        pad.publishedVirtualProfile?.productName ?? ""
+      )
+    )
     #expect(pad.publishedIdentityPresentation == VirtualHIDProfileID.generic.identity.presentation)
   }
 

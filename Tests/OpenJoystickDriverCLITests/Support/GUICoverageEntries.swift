@@ -26,6 +26,15 @@ struct CLIOnlyItem: Equatable {
   let reason: String
 }
 
+/// A GUI action with no CLI command (D10).
+struct GUIOnlyItem: Equatable {
+  /// The action as the GUI labels it.
+  let name: String
+  /// The declaration in the GUI sources that performs it.
+  let symbol: String
+  let reason: String
+}
+
 /// The per-leaf and per-option coverage of the real command tree. D10 says what a window cannot
 /// naturally do; everything else names the GUI symbol that does it.
 enum GUICoverageEntries {
@@ -90,6 +99,17 @@ enum GUICoverageEntries {
     + ["--help", "--version"].map {
       CLIOnlyItem(command: nil, option: $0, reason: "terminal help and version")
     }
+
+  /// GUI actions a terminal cannot naturally perform. The D10 text names each of them, and
+  /// `GUICoverageTests` checks that and that the GUI declares the symbol.
+  static let guiOnly: [GUIOnlyItem] = [
+    GUIOnlyItem(
+      name: "Send Test Notification",
+      symbol: "sendTestNotification",
+      reason:
+        "the app posts notifications under its own permission, so a terminal has nothing to test"
+    )
+  ]
 
   // MARK: Entries
 

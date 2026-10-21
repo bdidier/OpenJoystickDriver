@@ -26,7 +26,7 @@
           OJDLocalized.string("virtualProfile.title"),
           selection: overrideBinding
         ) {
-          Text(OJDLocalized.string("mapping.automatic")).tag(
+          Text(ControllerDetailFacts.automaticProfileLabel(device)).tag(
             VirtualHIDProfileID?.none
           )
           ForEach(VirtualHIDProfileID.allCases, id: \.self) { profile in

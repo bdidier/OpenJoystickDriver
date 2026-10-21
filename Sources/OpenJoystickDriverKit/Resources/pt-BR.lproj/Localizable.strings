@@ -794,15 +794,10 @@
 
 /* Controller session lifecycle */
 "controllers.suspended" = "Suspenso";
-"controllers.sessionActive" = "Gerenciado pelo OpenJoystickDriver";
 "controllers.suspendedSummary" = "A entrada e a saída do OpenJoystickDriver ficam pausadas até você retomar.";
 "controllers.disconnectSummary" = "Pausa a entrada, os efeitos físicos e a saída virtual do OpenJoystickDriver.";
-"controllers.resume" = "Retomar";
-"controllers.disconnectFromOJD" = "Desconectar do OpenJoystickDriver";
 "error.controllerSessionChangeRejected" = "Não foi possível alterar a sessão do controle.";
 
-"controllers.disconnectWireless" = "Desconectar Controle sem Fio…";
-"controllers.disconnectWirelessButton" = "Desconectar…";
 "controllers.disconnectWirelessSummary" = "Interrompe esta conexão Bluetooth sem afetar outros controles.";
 "controllers.disconnectWirelessConfirmTitle" = "Desconectar controle sem fio?";
 "controllers.disconnectWirelessConfirmMessage" = "%@ permanecerá desconectado até você conectá-lo novamente de forma manual.";
