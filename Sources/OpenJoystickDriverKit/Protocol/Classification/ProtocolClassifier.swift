@@ -95,7 +95,12 @@ public enum PhysicalProtocolID: String, CaseIterable, Codable, Sendable {
   private var keySegment: String { CommandLineName.keySegment(rawValue) }
 
   /// The family's name as the app shows it to a person, in the preferred language.
-  public var displayName: String { protocolNameLocalization.string(displayNameKey) }
+  public var displayName: String { displayName(in: protocolNameLocalization) }
+
+  /// The family's name as `localization` resolves it.
+  public func displayName(in localization: Localization) -> String {
+    localization.string(displayNameKey)
+  }
 
   /// Whether a binding's name adds its variant: the family stores its variant in its records,
   /// because the transport does not tell every variant apart, and has more than one.
@@ -181,12 +186,16 @@ extension ProtocolBindingID {
   /// (``PhysicalProtocolID/namesVariant``), as in "Xbox 360 (XUSB), Receiver": the family
   /// stores its variant in its records, because the transport does not tell every variant apart,
   /// and has more than one. For any other family the name is the family's alone.
-  public var displayName: String {
-    guard let variant, protocolID.namesVariant else { return protocolID.displayName }
-    return protocolNameLocalization.string(
+  public var displayName: String { displayName(in: protocolNameLocalization) }
+
+  /// The binding's name as `localization` resolves it.
+  public func displayName(in localization: Localization) -> String {
+    let family = protocolID.displayName(in: localization)
+    guard let variant, protocolID.namesVariant else { return family }
+    return localization.string(
       "term.protocolBinding.familyWithVariant",
-      protocolID.displayName,
-      protocolNameLocalization.string(variant.displayNameKey)
+      family,
+      localization.string(variant.displayNameKey)
     )
   }
 }

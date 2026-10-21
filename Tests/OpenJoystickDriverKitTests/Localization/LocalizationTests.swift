@@ -295,10 +295,12 @@ struct LocalizationTests {
     }
   }
 
-  @Test(.enabled(if: Localization().resolvedLanguage == "en-US", "the literal is the en-US name"))
+  @Test
   func aReceiverBindingReadsAsTheFamilyThenTheVariantInEnglish() {
+    let english = Localization(preferredLanguages: ["en-US"])
     #expect(
-      ProtocolBindingID(.xboxXUSB, variant: .receiver).displayName == "Xbox 360 (XUSB), Receiver"
+      ProtocolBindingID(.xboxXUSB, variant: .receiver).displayName(in: english)
+        == "Xbox 360 (XUSB), Receiver"
     )
   }
 
