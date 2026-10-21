@@ -436,6 +436,111 @@ struct LocalServiceRPCTests {
     #expect(ended.withLock { $0[mutation] } == false)
   }
 
+  @Test
+  func aHeldRequestWhoseWakePipeCannotBeMadeIsAnsweredWithTheConnectionFailureAndNeverRuns()
+    async throws
+  {
+    let socketPath = temporarySocketPath()
+    let handlerRan = Locked(false)
+    let server = LocalServiceRPCServer(
+      socketPath: socketPath,
+      authentication: { _ in true },
+      handler: { _ in
+        handlerRan.withLock { $0 = true }
+        return LocalServiceRPCResponse(result: Data(), error: nil)
+      }
+    )
+    server.wakePipe = { _ in
+      errno = EMFILE
+      return -1
+    }
+    try server.start()
+    defer { server.stop() }
+
+    await #expect(throws: LocalServiceRPCError.remote(Self.connectionFailure(EMFILE))) {
+      let _: Data = try await LocalServiceRPCClient.call(
+        method: ApplicationServiceRPCMethod.waitForServiceStatusChange.rawValue,
+        arguments: LocalServiceRPCEmptyArguments(),
+        timeoutSeconds: 10,
+        socketPath: socketPath
+      )
+    }
+    #expect(!handlerRan.withLock { $0 })
+  }
+
+  @Test
+  func theWakePipeOfAHeldRequestIsClosedOnExec() async throws {
+    let socketPath = temporarySocketPath()
+    let ends = Locked<[Int32]>([])
+    let flags = Locked<[Int32]>([])
+    let server = LocalServiceRPCServer(
+      socketPath: socketPath,
+      authentication: { _ in true },
+      handler: { _ in
+        flags.withLock { $0 = ends.withLock { $0 }.map { fcntl($0, F_GETFD) } }
+        return LocalServiceRPCResponse(result: try? JSONEncoder().encode(true), error: nil)
+      }
+    )
+    server.wakePipe = { descriptors in
+      let status = Darwin.pipe(descriptors)
+      ends.withLock { $0 = [descriptors[0], descriptors[1]] }
+      return status
+    }
+    try server.start()
+    defer { server.stop() }
+
+    let _: Bool = try await LocalServiceRPCClient.call(
+      method: ApplicationServiceRPCMethod.waitForServiceStatusChange.rawValue,
+      arguments: LocalServiceRPCEmptyArguments(),
+      timeoutSeconds: 10,
+      socketPath: socketPath
+    )
+
+    let observed = flags.withLock { $0 }
+    #expect(observed.count == 2)
+    #expect(observed.allSatisfy { $0 >= 0 && $0 & FD_CLOEXEC != 0 })
+  }
+
+  @Test
+  func aFailedPollIsReportedAndCancelsTheHeldRequest() async throws {
+    let socketPath = temporarySocketPath()
+    let reports = Locked<[String]>([])
+    let (never, neverGate) = AsyncStream.makeStream(of: Void.self)
+    defer { neverGate.finish() }
+    let server = LocalServiceRPCServer(
+      socketPath: socketPath,
+      authentication: { _ in true },
+      handler: { _ in
+        for await _ in never {}
+        return LocalServiceRPCResponse(
+          result: try? JSONEncoder().encode(Task.isCancelled),
+          error: nil
+        )
+      }
+    )
+    server.report = { message in reports.withLock { $0.append(message) } }
+    server.pollConnection = { _, _, _ in
+      errno = EINVAL
+      return -1
+    }
+    try server.start()
+    defer { server.stop() }
+
+    let cancelled: Bool = try await LocalServiceRPCClient.call(
+      method: ApplicationServiceRPCMethod.waitForServiceStatusChange.rawValue,
+      arguments: LocalServiceRPCEmptyArguments(),
+      timeoutSeconds: 10,
+      socketPath: socketPath
+    )
+
+    #expect(cancelled)
+    #expect(reports.withLock { $0.contains { $0.contains("errno \(EINVAL)") } })
+  }
+
+  private static func connectionFailure(_ code: Int32) -> String {
+    LocalServiceRPCError.connectionFailed(code).localizedDescription
+  }
+
   private func temporarySocketPath() -> String {
     "/tmp/com.openjoystickdriver.test.\(UUID().uuidString).rpc"
   }
