@@ -255,7 +255,10 @@ public struct ControllerRecordSet: Sendable {
   static func decode(
     _ record: [String: Any]
   ) throws -> (model: ControllerModelID, document: ControllerRecordDocument) {
-    let data = try JSONSerialization.data(withJSONObject: record)
+    let data: Data
+    do { data = try JSONSerialization.data(withJSONObject: record) } catch {
+      throw ControllerRecordProblem(code: .invalidControllerRecord, error.localizedDescription)
+    }
     let document = try JSONDecoder().decode(ControllerRecordDocument.self, from: data)
     guard let vendorID = UInt16(exactly: document.vendorID),
       let productID = UInt16(exactly: document.productID)
@@ -342,13 +345,14 @@ public struct ControllerRecordSet: Sendable {
   }
 
   /// The error code of a record that is refused: ``ErrorCode/unsupportedAPIVersion`` for its
-  /// `apiVersion`, and ``ErrorCode/invalidControllerRecord`` for any other failed rule. Nil when
+  /// `apiVersion`, and ``ErrorCode/invalidControllerRecord`` for any other failed rule, including
+  /// a record whose values ``OrderedJSON`` cannot write. Nil when
   /// `error` is not about the record's content, such as a file that cannot be read.
   public static func problemCode(_ error: any Error) -> ErrorCode? {
     switch error {
     case let problem as DocumentHeaderProblem: problem.code ?? .invalidControllerRecord
     case let problem as ControllerRecordProblem: problem.code
-    case is DecodingError: .invalidControllerRecord
+    case is DecodingError, is OrderedJSON.Problem: .invalidControllerRecord
     default: nil
     }
   }

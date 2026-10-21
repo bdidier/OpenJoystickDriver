@@ -19,16 +19,20 @@ package struct RepositoryProblem: Error, Equatable, Sendable {
   /// The problem that `error` reports for `file`, with the code that
   /// ``ControllerRecordSet/problemCode(_:)`` gives and the reason that
   /// ``ControllerRecordSet/problemDescription(_:includingCode:document:)`` gives for a `document`
-  /// of that kind. A ``RepositoryProblem`` is reported as it is. An error that no record rule
-  /// names is ``ErrorCode/unexpected``.
+  /// of that kind. A ``RepositoryProblem`` is reported as it is. The record, patch and persona
+  /// checks throw only errors that ``ControllerRecordSet/problemCode(_:)`` names, so any other
+  /// error stops the tool.
   init(file: String, error: any Error, document: String) {
     if let problem = error as? Self {
       self = problem
       return
     }
+    guard let code = ControllerRecordSet.problemCode(error) else {
+      preconditionFailure("a record check threw an error with no code: \(type(of: error))")
+    }
     self.init(
       file: file,
-      code: ControllerRecordSet.problemCode(error) ?? .unexpected,
+      code: code,
       message: ControllerRecordSet.problemDescription(
         error,
         includingCode: false,
