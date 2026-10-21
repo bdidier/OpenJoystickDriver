@@ -528,7 +528,6 @@
 "banner.access.detail" = "O macOS não permitiu tudo o que o OpenJoystickDriver precisa para ler os controles e publicá-los nos jogos.";
 "cli.login.uninstall_action" = "Desinstalar";
 "console.all" = "Todos";
-"console.copyAll" = "Copiar tudo";
 "console.empty" = "Não há entradas de registro.";
 "console.errors" = "Erros";
 "console.explain.title" = "Explicar Código de Erro";
@@ -1829,3 +1828,17 @@
 "access.web.noPort" = "Endpoint web ativado, mas nenhuma porta foi escolhida ainda";
 "access.signer.signedUnknownPublisher" = "Assinado por um editor desconhecido";
 "settings.commandLineTool.linkTargetUnreadable" = "%@ é um link cujo destino não pode ser lido. Instalar o vincula a este app.";
+"activity.mode.log" = "Log";
+"activity.mode.diagnostics" = "Diagnóstico";
+"activity.lines" = "Linhas";
+"activity.search" = "Buscar";
+"activity.showInFinder" = "Mostrar no Finder";
+"activity.showInFinder.failed" = "Não foi possível abrir a pasta de logs.";
+"activity.runChecks" = "Executar Verificações";
+"activity.column.message" = "Mensagem";
+"activity.column.check" = "Verificação";
+"activity.column.details" = "Detalhes";
+"activity.status.pass" = "Aprovada";
+"activity.status.warn" = "Aviso";
+"activity.status.skip" = "Ignorada";
+"cli.log.sharing_warning" = "Os logs do serviço podem conter nomes de dispositivos, identificadores ou caminhos de diagnóstico. Revise antes de compartilhar.";

@@ -528,7 +528,6 @@
 "banner.access.detail" = "macOS hat nicht alles erlaubt, was OpenJoystickDriver benötigt, um Controller auszulesen und für Spiele bereitzustellen.";
 "cli.login.uninstall_action" = "Deinstallieren";
 "console.all" = "Alle";
-"console.copyAll" = "Alles kopieren";
 "console.empty" = "Keine Protokolleinträge.";
 "console.errors" = "Fehler";
 "console.explain.title" = "Fehlercode erklären";
@@ -1829,3 +1828,17 @@
 "access.web.noPort" = "Web-Endpunkt an, aber noch kein Port gewählt";
 "access.signer.signedUnknownPublisher" = "Von einem unbekannten Herausgeber signiert";
 "settings.commandLineTool.linkTargetUnreadable" = "%@ ist ein Link, dessen Ziel nicht gelesen werden kann. Beim Installieren wird es stattdessen mit dieser App verknüpft.";
+"activity.mode.log" = "Protokoll";
+"activity.mode.diagnostics" = "Diagnose";
+"activity.lines" = "Zeilen";
+"activity.search" = "Suchen";
+"activity.showInFinder" = "Im Finder zeigen";
+"activity.showInFinder.failed" = "Der Protokollordner konnte nicht geöffnet werden.";
+"activity.runChecks" = "Prüfungen ausführen";
+"activity.column.message" = "Meldung";
+"activity.column.check" = "Prüfung";
+"activity.column.details" = "Details";
+"activity.status.pass" = "Bestanden";
+"activity.status.warn" = "Warnung";
+"activity.status.skip" = "Übersprungen";
+"cli.log.sharing_warning" = "Dienstprotokolle können Gerätenamen, Kennungen oder Diagnosepfade enthalten. Vor dem Teilen prüfen.";

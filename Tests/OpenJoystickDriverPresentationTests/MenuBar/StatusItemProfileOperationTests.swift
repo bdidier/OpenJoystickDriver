@@ -12,6 +12,7 @@ struct StatusItemProfileOperationTests {
     var selectedControllerID: String? { nil }
 
     func showMainWindow(area: MainWindowArea?) {}
+    func showErrorCodeExplainer() {}
     func showController(id: String) {}
     func showInputTest(controllerID: String) {}
     func importProfile() {}

@@ -40,6 +40,7 @@ enum LocalizationCatalogAudit {
       "keyboard.return", "keyboard.shift", "keyboard.tab",
     ],
     "de-DE": [
+      "activity.column.details",
       "mainMenu.controller",
       "access.details", "library.details",
       "access.token.name", "access.web.port", "access.web.enable.port", "access.socket",
@@ -58,13 +59,16 @@ enum LocalizationCatalogAudit {
     "es-ES": spanishTerms.union(["mainMenu.window.zoom"]),
     "es-MX": spanishTerms.union(["mainMenu.window.zoom"]),
     "fr-CA": frenchTerms.union(["developer.packetColumnDirection"]).union([
+      "activity.column.message",
       "mainMenu.app.services", "mainMenu.window.zoom", "settingsPane.notifications.title",
     ]),
     "fr-FR": frenchTerms.union([
+      "activity.column.message",
       "mainMenu.app.services", "mainMenu.window.zoom", "settingsPane.notifications.title",
     ]),
     "hi-IN": ["keyboard.escape", "keyboard.return"],
     "id-ID": [
+      "activity.mode.log",
       "access.token.issued.title", "access.token.named",
       "access.web.port", "access.web.enable.port", "mainMenu.window.zoom",
       "cli.controller.show.label.input", "cli.explain.area", "cli.explain.area.endpoint",
@@ -97,6 +101,7 @@ enum LocalizationCatalogAudit {
       "keyboard.alt", "keyboard.return", "keyboard.shift",
     ],
     "nl-NL": [
+      "activity.column.details",
       "access.details", "library.details",
       "access.token.issued.title", "access.token.named", "access.tokens", "library.mods",
       "mainMenu.window.zoom",
@@ -119,6 +124,7 @@ enum LocalizationCatalogAudit {
       "shortcuts.controller.type", "shortcuts.parameter.controller",
     ],
     "pt-BR": [
+      "activity.mode.log",
       "access.token.issued.title", "access.token.named",
       "access.tokens", "library.mods",
       "mainMenu.window.zoom",

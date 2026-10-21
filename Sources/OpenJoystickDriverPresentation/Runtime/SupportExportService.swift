@@ -28,22 +28,17 @@ nonisolated struct SupportExportService: Sendable {
     }
   }
 
-  func writeLogs(to outputURL: URL) async throws {
+  /// Writes the end of the service logs as `ojd log export` does: `lines` lines of each log, with
+  /// the home folder shown as `~`.
+  func writeLogs(to outputURL: URL, lines: Int) async throws {
     try await BlockingWork.run(label: "com.openjoystickdriver.support.logs") {
       let snapshots = try ApplicationServiceLogStream.allCases.map {
-        try ApplicationServiceLogService.tail(stream: $0)
+        try ApplicationServiceLogService.tail(stream: $0, maximumLines: lines)
       }
-      let text = snapshots.map { snapshot in
-        var section = "== \(snapshot.stream.rawValue) ==\n"
-        if snapshot.exists {
-          section += snapshot.lines.joined(separator: "\n")
-          if !snapshot.lines.isEmpty { section += "\n" }
-          if snapshot.truncated { section += "[tail truncated]\n" }
-        } else {
-          section += "[no log available]\n"
-        }
-        return section
-      }.joined(separator: "\n")
+      let text = ApplicationServiceLogService.exportText(
+        snapshots,
+        home: MacOSDataDirectory().url(for: .home).path
+      )
       try Data(text.utf8).write(to: outputURL, options: .atomic)
     }
   }

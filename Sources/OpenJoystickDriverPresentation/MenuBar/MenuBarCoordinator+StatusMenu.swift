@@ -88,6 +88,7 @@
       case .showArea(let area): mainWindow?.showMainWindow(area: area)
       case .openWindow: mainWindow?.showMainWindow(area: nil)
       case .showSettings: settingsWindow?.showSettings(pane: nil)
+      case .explainErrorCode: mainWindow?.showErrorCodeExplainer()
       case .openProjectWebsite: open(urlString: StatusItemModel.projectWebsite)
       case .openProblemReport: open(urlString: StatusItemModel.problemReport)
       case .quit: NSApplication.shared.terminate(sender)

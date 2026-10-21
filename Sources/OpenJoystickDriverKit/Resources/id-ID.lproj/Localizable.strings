@@ -528,7 +528,6 @@
 "banner.access.detail" = "macOS belum mengizinkan semua yang dibutuhkan OpenJoystickDriver untuk membaca pengontrol dan memublikasikannya ke game.";
 "cli.login.uninstall_action" = "Copot";
 "console.all" = "Semua";
-"console.copyAll" = "Salin Semua";
 "console.empty" = "Tidak ada entri log.";
 "console.errors" = "Kesalahan";
 "console.explain.title" = "Jelaskan Kode Kesalahan";
@@ -1828,3 +1827,17 @@
 "error.E5005" = "File akses AccessGrants.json rusak. Perbaiki atau hapus file itu, lalu berikan akses lagi.";
 "error.E5006" = "Berkas kunci ID perangkat, PortKeyInstallation.key, tidak dapat dibaca atau ukurannya bukan 32 byte. Pulihkan berkas dari cadangan. Jika Anda menghapusnya, OpenJoystickDriver membuat kunci baru dan setiap ID perangkat berubah.";
 "error.withCode" ="%@ (%@)";
+"activity.mode.log" = "Log";
+"activity.mode.diagnostics" = "Diagnostik";
+"activity.lines" = "Baris";
+"activity.search" = "Cari";
+"activity.showInFinder" = "Tampilkan di Finder";
+"activity.showInFinder.failed" = "Folder log tidak dapat dibuka.";
+"activity.runChecks" = "Jalankan Pemeriksaan";
+"activity.column.message" = "Pesan";
+"activity.column.check" = "Pemeriksaan";
+"activity.column.details" = "Detail";
+"activity.status.pass" = "Lulus";
+"activity.status.warn" = "Peringatan";
+"activity.status.skip" = "Dilewati";
+"cli.log.sharing_warning" = "Log layanan dapat berisi nama perangkat, pengenal, atau jalur diagnostik. Tinjau sebelum membagikannya.";

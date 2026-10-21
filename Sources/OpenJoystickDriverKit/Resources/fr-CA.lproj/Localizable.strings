@@ -528,7 +528,6 @@
 "banner.access.detail" = "macOS n’a pas autorisé tout ce dont OpenJoystickDriver a besoin pour lire les manettes et les publier dans les jeux.";
 "cli.login.uninstall_action" = "Désinstaller";
 "console.all" = "Tout";
-"console.copyAll" = "Tout copier";
 "console.empty" = "Aucune entrée de journal.";
 "console.errors" = "Erreurs";
 "console.explain.title" = "Expliquer un code d’erreur";
@@ -1829,3 +1828,17 @@
 "access.web.noPort" = "Point d’accès web activé, mais aucun port n’est encore choisi";
 "access.signer.signedUnknownPublisher" = "Signé par un éditeur inconnu";
 "settings.commandLineTool.linkTargetUnreadable" = "%@ est un lien dont la cible est illisible. L’installation le relie à cette app à la place.";
+"activity.mode.log" = "Journal";
+"activity.mode.diagnostics" = "Diagnostic";
+"activity.lines" = "Lignes";
+"activity.search" = "Rechercher";
+"activity.showInFinder" = "Afficher dans le Finder";
+"activity.showInFinder.failed" = "Le dossier des journaux n’a pas pu être ouvert.";
+"activity.runChecks" = "Lancer les vérifications";
+"activity.column.message" = "Message";
+"activity.column.check" = "Vérification";
+"activity.column.details" = "Détails";
+"activity.status.pass" = "Réussie";
+"activity.status.warn" = "Avertissement";
+"activity.status.skip" = "Ignorée";
+"cli.log.sharing_warning" = "Les journaux du service peuvent contenir des noms d’appareils, des identifiants ou des chemins de diagnostic. Relisez-les avant de les partager.";

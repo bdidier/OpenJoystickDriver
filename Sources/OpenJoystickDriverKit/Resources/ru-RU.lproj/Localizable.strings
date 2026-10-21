@@ -528,7 +528,6 @@
 "banner.access.detail" = "macOS разрешила не всё, что нужно OpenJoystickDriver, чтобы считывать контроллеры и публиковать их для игр.";
 "cli.login.uninstall_action" = "Удалить";
 "console.all" = "Все";
-"console.copyAll" = "Скопировать все";
 "console.empty" = "Нет записей журнала.";
 "console.errors" = "Ошибки";
 "console.explain.title" = "Объяснить код ошибки";
@@ -1828,3 +1827,17 @@
 "error.E5005" = "Файл доступа AccessGrants.json повреждён. Исправьте файл или удалите его, затем снова предоставьте доступ.";
 "error.E5006" = "Не удаётся прочитать файл ключа ID устройств PortKeyInstallation.key, или его размер не 32 байта. Восстановите файл из резервной копии. Если удалить его, OpenJoystickDriver создаст новый ключ и все ID устройств изменятся.";
 "error.withCode" ="%@ (%@)";
+"activity.mode.log" = "Журнал";
+"activity.mode.diagnostics" = "Диагностика";
+"activity.lines" = "Строки";
+"activity.search" = "Поиск";
+"activity.showInFinder" = "Показать в Finder";
+"activity.showInFinder.failed" = "Не удалось открыть папку журналов.";
+"activity.runChecks" = "Выполнить проверки";
+"activity.column.message" = "Сообщение";
+"activity.column.check" = "Проверка";
+"activity.column.details" = "Подробности";
+"activity.status.pass" = "Пройдена";
+"activity.status.warn" = "Предупреждение";
+"activity.status.skip" = "Пропущена";
+"cli.log.sharing_warning" = "Журналы службы могут содержать имена устройств, идентификаторы или пути диагностики. Проверьте их, прежде чем делиться.";

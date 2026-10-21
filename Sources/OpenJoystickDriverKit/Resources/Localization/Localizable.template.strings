@@ -531,7 +531,6 @@
 
 "cli.login.uninstall_action" = "Uninstall";
 "console.all" = "All";
-"console.copyAll" = "Copy All";
 "console.empty" = "No log entries.";
 "console.errors" = "Errors";
 "console.explain.title" = "Explain Error Code";
@@ -1832,3 +1831,17 @@
 "access.web.noPort" = "Web endpoint on, but no port is chosen yet";
 "access.signer.signedUnknownPublisher" = "Signed by an unknown publisher";
 "settings.commandLineTool.linkTargetUnreadable" = "%@ is a link whose target cannot be read. Installing links it to this app instead.";
+"activity.mode.log" = "Log";
+"activity.mode.diagnostics" = "Diagnostics";
+"activity.lines" = "Lines";
+"activity.search" = "Search";
+"activity.showInFinder" = "Show in Finder";
+"activity.showInFinder.failed" = "The log folder couldn't be opened.";
+"activity.runChecks" = "Run Checks";
+"activity.column.message" = "Message";
+"activity.column.check" = "Check";
+"activity.column.details" = "Details";
+"activity.status.pass" = "Passed";
+"activity.status.warn" = "Warning";
+"activity.status.skip" = "Skipped";
+"cli.log.sharing_warning" = "Application service logs may contain device names, identifiers, or diagnostic paths. Review before sharing.";

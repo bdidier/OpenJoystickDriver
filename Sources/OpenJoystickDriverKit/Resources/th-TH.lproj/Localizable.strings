@@ -528,7 +528,6 @@
 "banner.access.detail" = "macOS ยังไม่ได้อนุญาตทั้งหมดที่ OpenJoystickDriver ต้องใช้ในการอ่านคอนโทรลเลอร์และเผยแพร่ไปยังเกม";
 "cli.login.uninstall_action" = "ถอนการติดตั้ง";
 "console.all" = "ทั้งหมด";
-"console.copyAll" = "คัดลอกทั้งหมด";
 "console.empty" = "ไม่มีรายการบันทึกการใช้งาน";
 "console.errors" = "ข้อผิดพลาด";
 "console.explain.title" = "อธิบายรหัสข้อผิดพลาด";
@@ -1828,3 +1827,17 @@
 "error.E5005" = "ไฟล์การเข้าถึง AccessGrants.json เสียหาย แก้ไขหรือลบไฟล์นั้น แล้วให้สิทธิ์การเข้าถึงอีกครั้ง";
 "error.E5006" = "อ่านไฟล์คีย์ของ ID ยูนิต PortKeyInstallation.key ไม่ได้ หรือไฟล์ไม่ได้มีขนาด 32 ไบต์ กู้คืนไฟล์จากข้อมูลสำรอง หากคุณลบไฟล์แทน OpenJoystickDriver จะสร้างคีย์ใหม่ และ ID ยูนิตทุกรายการจะเปลี่ยน";
 "error.withCode" ="%@ (%@)";
+"activity.mode.log" = "บันทึก";
+"activity.mode.diagnostics" = "การวินิจฉัย";
+"activity.lines" = "บรรทัด";
+"activity.search" = "ค้นหา";
+"activity.showInFinder" = "แสดงใน Finder";
+"activity.showInFinder.failed" = "ไม่สามารถเปิดโฟลเดอร์บันทึกได้";
+"activity.runChecks" = "เรียกใช้การตรวจสอบ";
+"activity.column.message" = "ข้อความ";
+"activity.column.check" = "การตรวจสอบ";
+"activity.column.details" = "รายละเอียด";
+"activity.status.pass" = "ผ่าน";
+"activity.status.warn" = "คำเตือน";
+"activity.status.skip" = "ข้ามแล้ว";
+"cli.log.sharing_warning" = "บันทึกของบริการอาจมีชื่ออุปกรณ์ ตัวระบุ หรือพาธการวินิจฉัย โปรดตรวจสอบก่อนแชร์";

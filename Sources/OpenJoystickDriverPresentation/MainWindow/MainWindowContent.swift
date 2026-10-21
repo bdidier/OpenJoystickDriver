@@ -43,7 +43,8 @@
     let controllers: ControllersViewModel
     let library: ProfileLibraryModel
     let profiles: ProfilesViewModel
-    let console: ConsoleViewModel
+    let activity: ActivityModel
+    let errorCodeExplainer: ErrorCodeExplainerModel
     let libraryArea: LibraryViewModel
     let access: AccessViewModel
     let restartApplication: @MainActor () -> Void
@@ -129,7 +130,7 @@
             dismissButton: .default(Text(OJDLocalized.string("common.ok")))
           )
         }
-      ).alert(
+      ).background(ErrorCodeExplainerSheetHost(model: screens.errorCodeExplainer)).alert(
         isPresented: $navigation.isDiscardConfirmationPresented
       ) {
         Alert(
@@ -167,7 +168,7 @@
           model: screens.access,
           restartApplication: screens.restartApplication
         )
-      case .activity: ConsoleView(model: screens.console)
+      case .activity: ActivityView(model: screens.activity)
       }
     }
 

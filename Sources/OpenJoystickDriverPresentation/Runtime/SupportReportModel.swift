@@ -127,7 +127,10 @@ final class SupportReportModel: ObservableObject {
     let generation = supportLogsGeneration
     supportLogsState = .saving
     do {
-      try await SupportExportService().writeLogs(to: outputURL)
+      try await SupportExportService().writeLogs(
+        to: outputURL,
+        lines: ApplicationServiceLogService.defaultExportLines
+      )
       guard generation == supportLogsGeneration else { return }
       supportLogsState = .saved
     } catch {

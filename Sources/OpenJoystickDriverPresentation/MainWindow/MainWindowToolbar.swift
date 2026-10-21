@@ -9,6 +9,14 @@
     case newProfile
     case importProfile
     case installLibraryItem
+    case activityMode
+    case activityFilter
+    case activityLines
+    case activitySearch
+    case copyActivityLog
+    case saveActivityLog
+    case showActivityLogInFinder
+    case runDiagnostics
 
     var identifier: NSToolbarItem.Identifier {
       NSToolbarItem.Identifier("OpenJoystickDriver.MainWindowToolbar.\(rawValue)")
@@ -27,6 +35,14 @@
       case .newProfile: return "plus"
       case .importProfile: return "square.and.arrow.down"
       case .installLibraryItem: return "square.and.arrow.down.on.square"
+      case .activityMode: return "list.bullet.rectangle"
+      case .activityFilter: return "line.3.horizontal.decrease.circle"
+      case .activityLines: return "list.number"
+      case .activitySearch: return "magnifyingglass"
+      case .copyActivityLog: return "doc.on.doc"
+      case .saveActivityLog: return "square.and.arrow.down"
+      case .showActivityLogInFinder: return "folder"
+      case .runDiagnostics: return "stethoscope"
       }
     }
 
@@ -37,6 +53,14 @@
       case .newProfile: return "profiles.new"
       case .importProfile: return "profiles.import"
       case .installLibraryItem: return "library.install"
+      case .activityMode: return "area.activity.title"
+      case .activityFilter: return "console.stream"
+      case .activityLines: return "activity.lines"
+      case .activitySearch: return "activity.search"
+      case .copyActivityLog: return "common.copyAll"
+      case .saveActivityLog: return "mainMenu.file.saveActivityLog"
+      case .showActivityLogInFinder: return "activity.showInFinder"
+      case .runDiagnostics: return "activity.runChecks"
       }
     }
 
@@ -47,18 +71,36 @@
       case .newProfile: return "profiles.new"
       case .importProfile: return "profiles.import"
       case .installLibraryItem: return "mainMenu.file.installRecordOrMod"
+      case .activityMode: return "area.activity.title"
+      case .activityFilter: return "console.stream"
+      case .activityLines: return "activity.lines"
+      case .activitySearch: return "activity.search"
+      case .copyActivityLog: return "common.copyAll"
+      case .saveActivityLog: return "mainMenu.file.saveActivityLog"
+      case .showActivityLogInFinder: return "activity.showInFinder"
+      case .runDiagnostics: return "activity.runChecks"
       }
     }
   }
 
   extension MainWindowArea {
-    /// The toolbar actions of the area, in order. Access and Activity keep theirs in content.
-    var toolbarActions: [MainWindowToolbarAction] {
+    /// The toolbar actions of the area, in order. Access keeps its actions in content; Activity's
+    /// depend on which of its views is shown.
+    func toolbarActions(activityMode: ActivityMode) -> [MainWindowToolbarAction] {
       switch self {
       case .controllers: return [.refreshControllers]
       case .profiles: return [.newProfile, .importProfile]
       case .library: return [.installLibraryItem]
-      case .access, .activity: return []
+      case .access: return []
+      case .activity:
+        switch activityMode {
+        case .log:
+          return [
+            .activityMode, .activityFilter, .activityLines, .activitySearch, .copyActivityLog,
+            .saveActivityLog, .showActivityLogInFinder,
+          ]
+        case .diagnostics: return [.activityMode, .runDiagnostics]
+        }
       }
     }
   }
@@ -73,8 +115,11 @@
       .toggleSidebar, .sidebarTrackingSeparator, .flexibleSpace,
     ]
 
-    static func items(for area: MainWindowArea) -> [NSToolbarItem.Identifier] {
-      fixedItems + area.toolbarActions.map(\.identifier)
+    static func items(
+      for area: MainWindowArea,
+      activityMode: ActivityMode
+    ) -> [NSToolbarItem.Identifier] {
+      fixedItems + area.toolbarActions(activityMode: activityMode).map(\.identifier)
     }
 
     static var allowedItems: [NSToolbarItem.Identifier] {

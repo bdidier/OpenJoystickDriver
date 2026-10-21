@@ -528,7 +528,6 @@
 "banner.access.detail" = "macOS 尚未授予 OpenJoystickDriver 读取控制器并将其发布给游戏所需的全部权限。";
 "cli.login.uninstall_action" = "卸载";
 "console.all" = "全部";
-"console.copyAll" = "拷贝全部";
 "console.empty" = "没有日志条目。";
 "console.errors" = "错误";
 "console.explain.title" = "解释错误代码";
@@ -1828,3 +1827,17 @@
 "error.E5005" = "访问文件 AccessGrants.json 已损坏。请修复或删除该文件，然后重新授予访问权限。";
 "error.E5006" = "无法读取单元 ID 的密钥文件 PortKeyInstallation.key，或其大小不是 32 字节。请从备份恢复该文件。如果改为删除它，OpenJoystickDriver 会创建新密钥，所有单元 ID 都会改变。";
 "error.withCode" ="%@ (%@)";
+"activity.mode.log" = "日志";
+"activity.mode.diagnostics" = "诊断";
+"activity.lines" = "行数";
+"activity.search" = "搜索";
+"activity.showInFinder" = "在访达中显示";
+"activity.showInFinder.failed" = "无法打开日志文件夹。";
+"activity.runChecks" = "运行检查";
+"activity.column.message" = "消息";
+"activity.column.check" = "检查";
+"activity.column.details" = "详细信息";
+"activity.status.pass" = "通过";
+"activity.status.warn" = "警告";
+"activity.status.skip" = "已跳过";
+"cli.log.sharing_warning" = "服务日志可能包含设备名称、标识符或诊断路径。分享前请先检查。";

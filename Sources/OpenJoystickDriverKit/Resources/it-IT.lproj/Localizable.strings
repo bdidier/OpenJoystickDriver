@@ -528,7 +528,6 @@
 "banner.access.detail" = "macOS non ha consentito tutto ciò che OpenJoystickDriver richiede per leggere i controller e pubblicarli nei giochi.";
 "cli.login.uninstall_action" = "Disinstalla";
 "console.all" = "Tutti";
-"console.copyAll" = "Copia tutto";
 "console.empty" = "Nessuna voce di registro.";
 "console.errors" = "Errori";
 "console.explain.title" = "Spiega codice di errore";
@@ -1829,3 +1828,17 @@
 "access.web.noPort" = "Endpoint web attivo, ma non è ancora stata scelta una porta";
 "access.signer.signedUnknownPublisher" = "Firmato da un editore sconosciuto";
 "settings.commandLineTool.linkTargetUnreadable" = "%@ è un link la cui destinazione non può essere letta. L’installazione lo collega invece a questa app.";
+"activity.mode.log" = "Registro";
+"activity.mode.diagnostics" = "Diagnostica";
+"activity.lines" = "Righe";
+"activity.search" = "Cerca";
+"activity.showInFinder" = "Mostra nel Finder";
+"activity.showInFinder.failed" = "Non è stato possibile aprire la cartella dei registri.";
+"activity.runChecks" = "Esegui controlli";
+"activity.column.message" = "Messaggio";
+"activity.column.check" = "Controllo";
+"activity.column.details" = "Dettagli";
+"activity.status.pass" = "Superato";
+"activity.status.warn" = "Avviso";
+"activity.status.skip" = "Saltato";
+"cli.log.sharing_warning" = "I registri del servizio possono contenere nomi di dispositivi, identificatori o percorsi diagnostici. Controllali prima di condividerli.";

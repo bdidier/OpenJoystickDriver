@@ -47,29 +47,17 @@ enum DiagnoseChecks {
     extensionStatus: ExtensionStatus,
     soak: DiagnoseSoak?
   ) async -> [DiagnoseCheck] {
-    var checks = DiagnosticsService.extensionChecks(extensionStatus)
-    checks.append(DiagnosticsService.serviceCheck(snapshot))
-    checks.append(contentsOf: DiagnosticsService.permissionChecks(snapshot))
-    checks.append(DiagnosticsService.virtualDeviceCheck(snapshot))
-    let records = RecordStore.load()
-    checks.append(DiagnosticsService.recordCheck(records))
-    checks.append(
-      DiagnosticsService.configFilesCheck(
-        defaults: records.defaults,
-        personas: RecordStore.personaFiles()
-      )
+    let usb: Result<Int, any Error>
+    do { usb = .success(try await DiagnoseCommand.usbProbe()) } catch { usb = .failure(error) }
+    var checks = DiagnosticsService.checks(
+      snapshot: snapshot,
+      extensionStatus: extensionStatus,
+      records: RecordStore.load(),
+      personas: RecordStore.personaFiles(),
+      usb: usb
     )
-    checks.append(await usbCheck())
     checks.append(await soakCheck(snapshot: snapshot, soak: soak))
     return checks
-  }
-
-  private static func usbCheck() async -> DiagnoseCheck {
-    do {
-      return DiagnosticsService.usbCheck(.success(try await DiagnoseCommand.usbProbe()))
-    } catch {
-      return DiagnosticsService.usbCheck(.failure(error))
-    }
   }
 
   private static func soakCheck(

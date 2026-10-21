@@ -528,7 +528,6 @@
 "banner.access.detail" = "macOS heeft niet alles toegestaan wat OpenJoystickDriver nodig heeft om controllers uit te lezen en voor games beschikbaar te maken.";
 "cli.login.uninstall_action" = "Verwijder installatie";
 "console.all" = "Alles";
-"console.copyAll" = "Kopieer alles";
 "console.empty" = "Geen logboekitems.";
 "console.errors" = "Fouten";
 "console.explain.title" = "Leg foutcode uit";
@@ -1829,3 +1828,17 @@
 "access.web.noPort" = "Webeindpunt aan, maar er is nog geen poort gekozen";
 "access.signer.signedUnknownPublisher" = "Ondertekend door een onbekende uitgever";
 "settings.commandLineTool.linkTargetUnreadable" = "%@ is een link waarvan het doel niet kan worden gelezen. Bij het installeren wordt het in plaats daarvan aan deze app gekoppeld.";
+"activity.mode.log" = "Logboek";
+"activity.mode.diagnostics" = "Diagnose";
+"activity.lines" = "Regels";
+"activity.search" = "Zoek";
+"activity.showInFinder" = "Toon in Finder";
+"activity.showInFinder.failed" = "De logboekmap kon niet worden geopend.";
+"activity.runChecks" = "Voer controles uit";
+"activity.column.message" = "Bericht";
+"activity.column.check" = "Controle";
+"activity.column.details" = "Details";
+"activity.status.pass" = "Geslaagd";
+"activity.status.warn" = "Waarschuwing";
+"activity.status.skip" = "Overgeslagen";
+"cli.log.sharing_warning" = "Servicelogboeken kunnen apparaatnamen, identificaties of diagnosepaden bevatten. Controleer ze voordat je ze deelt.";

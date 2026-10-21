@@ -23,12 +23,13 @@
     MenuProfileMutating
   {
     let navigation: MainWindowNavigationModel
-    private let screens: MainWindowScreens
+    let screens: MainWindowScreens
     private let visibilityChanged: @MainActor (Bool) -> Void
     private let splitViewController = NSSplitViewController()
     private let listItem: NSSplitViewItem
     private var areaObservation: AnyCancellable?
     private var toolbarEnablementObservation: AnyCancellable?
+    private var activityModeObservation: AnyCancellable?
     private var summaryObservation: AnyCancellable?
     private var isEnforcingMinimumSize = false
 
@@ -48,7 +49,13 @@
         controllers: ControllersViewModel(runtime: runtime),
         library: ProfileLibraryModel(runtime: runtime),
         profiles: ProfilesViewModel(),
-        console: ConsoleViewModel(),
+        activity: ActivityModel(
+          log: ActivityLogModel(),
+          diagnostics: ActivityDiagnosticsModel {
+            await ActivityDiagnosticsChecks.run(gateway: supportReport.gateway)
+          }
+        ),
+        errorCodeExplainer: ErrorCodeExplainerModel(),
         libraryArea: LibraryViewModel(),
         access: AccessViewModel(),
         restartApplication: restartApplication,
@@ -114,9 +121,16 @@
         runtime.$remappingState.map { _ in () }.eraseToAnyPublisher(),
         screens.library.objectWillChange.map { _ in () }.eraseToAnyPublisher(),
         screens.profiles.objectWillChange.map { _ in () }.eraseToAnyPublisher(),
+        screens.activity.log.objectWillChange.map { _ in () }.eraseToAnyPublisher(),
+        screens.activity.diagnostics.objectWillChange.map { _ in () }.eraseToAnyPublisher(),
         navigation.objectWillChange.map { _ in () }.eraseToAnyPublisher()
       ).receive(on: DispatchQueue.main).sink { [weak self] in
         self?.window?.toolbar?.validateVisibleItems()
+      }
+      activityModeObservation = screens.activity.$mode.receive(on: DispatchQueue.main).sink {
+        [weak self] _ in
+        guard let self else { return }
+        showToolbarActions(of: navigation.selectedArea)
       }
       summaryObservation = runtime.$statusState.sink { [weak self] status in
         guard let self else { return }
@@ -141,6 +155,11 @@
       }
       screens.controllers.select(sessionToken: id)
       present()
+    }
+
+    func showErrorCodeExplainer() {
+      present()
+      screens.errorCodeExplainer.isPresented = true
     }
 
     var selectedControllerID: String? {
@@ -287,7 +306,8 @@
       guard let toolbar = window?.toolbar else { return }
       let fixedCount = MainWindowToolbarLayout.fixedItems.count
       while toolbar.items.count > fixedCount { toolbar.removeItem(at: toolbar.items.count - 1) }
-      for (offset, action) in area.toolbarActions.enumerated() {
+      let actions = area.toolbarActions(activityMode: screens.activity.mode)
+      for (offset, action) in actions.enumerated() {
         toolbar.insertItem(withItemIdentifier: action.identifier, at: fixedCount + offset)
       }
     }
@@ -302,6 +322,12 @@
       case .newProfile: screens.profiles.isCreatingProfile = true
       case .importProfile: screens.profiles.chooseProfileToImport()
       case .installLibraryItem: installRecordOrMod()
+      case .copyActivityLog: screens.activity.log.copyVisible()
+      case .saveActivityLog: saveActivityLog()
+      case .showActivityLogInFinder: screens.activity.log.showInFinder()
+      case .runDiagnostics: Task { await screens.activity.diagnostics.run() }
+      case .activityMode, .activityFilter, .activityLines, .activitySearch:
+        preconditionFailure("\(action) has its own control action")
       }
     }
 
@@ -310,7 +336,10 @@
       case .refreshControllers: return !screens.runtime.isScopedRefreshInFlight
       case .newProfile, .importProfile:
         return !screens.profiles.isActionBlocked(library: screens.library, runtime: screens.runtime)
-      case .installLibraryItem: return true
+      case .installLibraryItem, .saveActivityLog, .showActivityLogInFinder: return true
+      case .activityMode, .activityFilter, .activityLines, .activitySearch: return true
+      case .copyActivityLog: return !screens.activity.log.rows.isEmpty
+      case .runDiagnostics: return !screens.activity.diagnostics.isRunning
       }
     }
   }
@@ -327,7 +356,10 @@
     }
 
     func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-      MainWindowToolbarLayout.items(for: navigation.selectedArea)
+      MainWindowToolbarLayout.items(
+        for: navigation.selectedArea,
+        activityMode: screens.activity.mode
+      )
     }
 
     func toolbarSelectableItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
@@ -347,6 +379,7 @@
         )
       }
       guard let action = MainWindowToolbarAction(identifier: itemIdentifier) else { return nil }
+      if let item = makeActivityControlItem(for: action) { return item }
       let item = MainWindowToolbarLayout.makeItem(for: action)
       item.target = self
       item.action = #selector(performToolbarAction(_:))

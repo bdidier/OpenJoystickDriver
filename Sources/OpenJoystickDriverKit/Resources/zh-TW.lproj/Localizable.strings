@@ -528,7 +528,6 @@
 "banner.access.detail" = "macOS 尚未授予 OpenJoystickDriver 讀取控制器並將其發佈給遊戲所需的全部權限。";
 "cli.login.uninstall_action" = "解除安裝";
 "console.all" = "全部";
-"console.copyAll" = "拷貝全部";
 "console.empty" = "沒有日誌項目。";
 "console.errors" = "錯誤";
 "console.explain.title" = "說明錯誤代碼";
@@ -1828,3 +1827,17 @@
 "error.E5005" = "存取檔案 AccessGrants.json 已損毀。請修復或刪除該檔案，然後重新授予存取權限。";
 "error.E5006" = "無法讀取單元 ID 的金鑰檔案 PortKeyInstallation.key，或其大小不是 32 位元組。請從備份回復該檔案。如果改為刪除它，OpenJoystickDriver 會建立新金鑰，所有單元 ID 都會改變。";
 "error.withCode" ="%@ (%@)";
+"activity.mode.log" = "記錄檔";
+"activity.mode.diagnostics" = "診斷";
+"activity.lines" = "行數";
+"activity.search" = "搜尋";
+"activity.showInFinder" = "在 Finder 中顯示";
+"activity.showInFinder.failed" = "無法開啟記錄檔資料夾。";
+"activity.runChecks" = "執行檢查";
+"activity.column.message" = "訊息";
+"activity.column.check" = "檢查";
+"activity.column.details" = "詳細資訊";
+"activity.status.pass" = "通過";
+"activity.status.warn" = "警告";
+"activity.status.skip" = "已略過";
+"cli.log.sharing_warning" = "服務記錄檔可能包含裝置名稱、識別碼或診斷路徑。分享前請先檢視。";

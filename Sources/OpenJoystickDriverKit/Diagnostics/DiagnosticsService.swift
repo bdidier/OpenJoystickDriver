@@ -51,6 +51,25 @@ public struct DiagnoseServiceSnapshot: Sendable {
 public enum DiagnosticsService {
   private static let localization = Localization()
 
+  /// Every check of `ojd diagnose` except runtime health, in report order, from facts that the
+  /// caller gathered.
+  package static func checks(
+    snapshot: DiagnoseServiceSnapshot,
+    extensionStatus: ExtensionStatus,
+    records: ControllerRecordSet,
+    personas: [VirtualPersonaFile],
+    usb: Result<Int, any Error>
+  ) -> [DiagnoseCheck] {
+    var checks = extensionChecks(extensionStatus)
+    checks.append(serviceCheck(snapshot))
+    checks.append(contentsOf: permissionChecks(snapshot))
+    checks.append(virtualDeviceCheck(snapshot))
+    checks.append(recordCheck(records))
+    checks.append(configFilesCheck(defaults: records.defaults, personas: personas))
+    checks.append(usbCheck(usb))
+    return checks
+  }
+
   /// Check `id` skipped because the service is stopped or failed.
   public static func skipped(_ id: String, _ snapshot: DiagnoseServiceSnapshot) -> DiagnoseCheck {
     let reason =

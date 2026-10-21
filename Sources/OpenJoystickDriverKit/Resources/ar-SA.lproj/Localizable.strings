@@ -528,7 +528,6 @@
 "banner.access.detail" = "لم يسمح macOS بكل ما يحتاجه OpenJoystickDriver لقراءة وحدات التحكم ونشرها للألعاب.";
 "cli.login.uninstall_action" = "إلغاء التثبيت";
 "console.all" = "الكل";
-"console.copyAll" = "نسخ الكل";
 "console.empty" = "لا توجد إدخالات في السجل.";
 "console.errors" = "الأخطاء";
 "console.explain.title" = "شرح رمز الخطأ";
@@ -1828,3 +1827,17 @@
 "error.E5005" = "ملف الوصول AccessGrants.json تالف. أصلح الملف أو احذفه، ثم امنح الوصول مرة أخرى.";
 "error.E5006" = "تعذرت قراءة ملف مفتاح معرّفات الأجهزة PortKeyInstallation.key، أو أن حجمه ليس 32 بايت. استعد الملف من نسخة احتياطية. إذا حذفته بدلاً من ذلك، فسينشئ OpenJoystickDriver مفتاحاً جديداً وسيتغير كل معرّف جهاز.";
 "error.withCode" ="%@ (%@)";
+"activity.mode.log" = "السجل";
+"activity.mode.diagnostics" = "التشخيص";
+"activity.lines" = "الأسطر";
+"activity.search" = "بحث";
+"activity.showInFinder" = "إظهار في Finder";
+"activity.showInFinder.failed" = "تعذّر فتح مجلد السجل.";
+"activity.runChecks" = "تشغيل الفحوصات";
+"activity.column.message" = "الرسالة";
+"activity.column.check" = "الفحص";
+"activity.column.details" = "التفاصيل";
+"activity.status.pass" = "ناجح";
+"activity.status.warn" = "تحذير";
+"activity.status.skip" = "تم التخطي";
+"cli.log.sharing_warning" = "قد تحتوي سجلات الخدمة على أسماء أجهزة أو معرّفات أو مسارات تشخيص. راجعها قبل المشاركة.";

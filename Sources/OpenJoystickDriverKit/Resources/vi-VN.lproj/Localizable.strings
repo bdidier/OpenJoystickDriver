@@ -528,7 +528,6 @@
 "banner.access.detail" = "macOS chưa cho phép mọi thứ OpenJoystickDriver cần để đọc các bộ điều khiển và cung cấp chúng cho trò chơi.";
 "cli.login.uninstall_action" = "Gỡ cài đặt";
 "console.all" = "Tất cả";
-"console.copyAll" = "Sao chép tất cả";
 "console.empty" = "Không có mục nhật ký.";
 "console.errors" = "Lỗi";
 "console.explain.title" = "Giải thích mã lỗi";
@@ -1828,3 +1827,17 @@
 "error.E5005" = "Tệp truy cập AccessGrants.json bị hỏng. Hãy sửa hoặc xóa tệp, rồi cấp quyền truy cập lại.";
 "error.E5006" = "Không thể đọc tệp khóa của ID thiết bị, PortKeyInstallation.key, hoặc tệp không có kích thước 32 byte. Hãy khôi phục tệp từ bản sao lưu. Nếu bạn xóa tệp, OpenJoystickDriver sẽ tạo khóa mới và mọi ID thiết bị đều thay đổi.";
 "error.withCode" ="%@ (%@)";
+"activity.mode.log" = "Nhật ký";
+"activity.mode.diagnostics" = "Chẩn đoán";
+"activity.lines" = "Số dòng";
+"activity.search" = "Tìm kiếm";
+"activity.showInFinder" = "Hiển thị trong Finder";
+"activity.showInFinder.failed" = "Không thể mở thư mục nhật ký.";
+"activity.runChecks" = "Chạy kiểm tra";
+"activity.column.message" = "Nội dung";
+"activity.column.check" = "Kiểm tra";
+"activity.column.details" = "Chi tiết";
+"activity.status.pass" = "Đạt";
+"activity.status.warn" = "Cảnh báo";
+"activity.status.skip" = "Đã bỏ qua";
+"cli.log.sharing_warning" = "Nhật ký dịch vụ có thể chứa tên thiết bị, mã định danh hoặc đường dẫn chẩn đoán. Hãy xem lại trước khi chia sẻ.";

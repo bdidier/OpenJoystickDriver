@@ -36,9 +36,15 @@ public enum ApplicationServiceLogService {
   public static let defaultMaximumBytes = 262_144
   /// The accepted range of a requested line count.
   public static let linesRange = 1...10_000
-  public static let sharingWarning =
-    "Application service logs may contain device names, identifiers, or diagnostic paths. "
-    + "Review before sharing."
+  /// The line count of `ojd log export` and of the Save Activity Log menu item.
+  public static let defaultExportLines = 2_000
+  /// The note to read before sharing a log.
+  public static var sharingWarning: String { Localization().string("cli.log.sharing_warning") }
+
+  /// The folder that holds the log files, which `ojd log path` prints.
+  public static var directory: URL {
+    url(for: .standardOutput).deletingLastPathComponent()
+  }
 
   public static func url(
     for stream: ApplicationServiceLogStream,
@@ -53,7 +59,6 @@ public enum ApplicationServiceLogService {
   /// Headless commands deliberately do not call this function so their output remains
   /// attached to the invoking terminal.
   public static func beginCurrentSessionCapture() throws {
-    let directory = url(for: .standardOutput).deletingLastPathComponent()
     try FileManager.default.createDirectory(
       at: directory,
       withIntermediateDirectories: true,
@@ -142,6 +147,34 @@ public enum ApplicationServiceLogService {
       lines: selectedLines,
       truncated: offset > 0 || selectedLines.count < allLines.count
     )
+  }
+
+  /// The text `ojd log show` prints on a terminal and `ojd log export` writes: one heading per
+  /// stream, a note for a missing, empty or shortened log, then its lines.
+  public static func humanText(_ snapshots: [ApplicationServiceLogSnapshot]) -> String {
+    let localization = Localization()
+    var text = ""
+    for snapshot in snapshots {
+      text += "== \(CommandLineName.kebab(snapshot.stream.rawValue)): \(snapshot.path) ==\n"
+      if !snapshot.exists {
+        text += localization.string("cli.log.show.missing") + "\n"
+      } else if snapshot.lines.isEmpty {
+        text += localization.string("cli.log.show.empty") + "\n"
+      }
+      if snapshot.truncated {
+        text += localization.string("cli.log.show.truncated") + "\n"
+      }
+      for line in snapshot.lines { text += line + "\n" }
+    }
+    return text
+  }
+
+  /// The file content of `ojd log export`: ``humanText(_:)`` with `home` written as `~`.
+  public static func exportText(
+    _ snapshots: [ApplicationServiceLogSnapshot],
+    home: String
+  ) -> String {
+    redactingHome(humanText(snapshots), home: home)
   }
 
   /// `text` with each path under `home` written as `~`, as the support report leaves out

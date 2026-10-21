@@ -52,23 +52,48 @@ struct MainWindowAreaTests {
     )
     for area in MainWindowArea.allCases {
       #expect(
-        MainWindowToolbarLayout.items(for: area).starts(with: MainWindowToolbarLayout.fixedItems)
+        MainWindowToolbarLayout.items(for: area, activityMode: .log).starts(
+          with: MainWindowToolbarLayout.fixedItems
+        )
       )
     }
   }
 
   @Test
   func eachAreaShowsItsOwnActionsAfterTheFixedItems() {
-    #expect(MainWindowArea.controllers.toolbarActions == [.refreshControllers])
-    #expect(MainWindowArea.profiles.toolbarActions == [.newProfile, .importProfile])
-    #expect(MainWindowArea.library.toolbarActions == [.installLibraryItem])
-    #expect(MainWindowArea.access.toolbarActions.isEmpty)
-    #expect(MainWindowArea.activity.toolbarActions.isEmpty)
+    #expect(MainWindowArea.controllers.toolbarActions(activityMode: .log) == [.refreshControllers])
     #expect(
-      MainWindowToolbarLayout.items(for: .profiles)
+      MainWindowArea.profiles.toolbarActions(activityMode: .log) == [.newProfile, .importProfile]
+    )
+    #expect(MainWindowArea.library.toolbarActions(activityMode: .log) == [.installLibraryItem])
+    #expect(MainWindowArea.access.toolbarActions(activityMode: .log).isEmpty)
+    #expect(
+      MainWindowToolbarLayout.items(for: .profiles, activityMode: .log)
         == MainWindowToolbarLayout.fixedItems + [
           MainWindowToolbarAction.newProfile.identifier,
           MainWindowToolbarAction.importProfile.identifier,
+        ]
+    )
+  }
+
+  @Test
+  func activityActionsFollowTheViewItShows() {
+    #expect(
+      MainWindowArea.activity.toolbarActions(activityMode: .log) == [
+        .activityMode, .activityFilter, .activityLines, .activitySearch, .copyActivityLog,
+        .saveActivityLog, .showActivityLogInFinder,
+      ]
+    )
+    #expect(
+      MainWindowArea.activity.toolbarActions(activityMode: .diagnostics) == [
+        .activityMode, .runDiagnostics,
+      ]
+    )
+    #expect(
+      MainWindowToolbarLayout.items(for: .activity, activityMode: .diagnostics)
+        == MainWindowToolbarLayout.fixedItems + [
+          MainWindowToolbarAction.activityMode.identifier,
+          MainWindowToolbarAction.runDiagnostics.identifier,
         ]
     )
   }

@@ -528,7 +528,6 @@
 "banner.access.detail" = "macOSは、OpenJoystickDriverがコントローラを読み取り、ゲームに公開するために必要な権限をすべては許可していません。";
 "cli.login.uninstall_action" = "アンインストール";
 "console.all" = "すべて";
-"console.copyAll" = "すべてコピー";
 "console.empty" = "ログエントリはありません。";
 "console.errors" = "エラー";
 "console.explain.title" = "エラーコードを説明";
@@ -1828,3 +1827,17 @@
 "error.E5005" = "アクセスファイル AccessGrants.json が破損しています。ファイルを修正するか削除してから、もう一度アクセスを許可してください。";
 "error.E5006" = "ユニット ID の鍵ファイル PortKeyInstallation.key を読み取れないか、サイズが 32 バイトではありません。バックアップからファイルを復元してください。削除すると、OpenJoystickDriver が新しい鍵を作成し、すべてのユニット ID が変わります。";
 "error.withCode" ="%@（%@）";
+"activity.mode.log" = "ログ";
+"activity.mode.diagnostics" = "診断";
+"activity.lines" = "行数";
+"activity.search" = "検索";
+"activity.showInFinder" = "Finderで表示";
+"activity.showInFinder.failed" = "ログフォルダを開けませんでした。";
+"activity.runChecks" = "チェックを実行";
+"activity.column.message" = "メッセージ";
+"activity.column.check" = "チェック";
+"activity.column.details" = "詳細";
+"activity.status.pass" = "合格";
+"activity.status.warn" = "警告";
+"activity.status.skip" = "スキップ";
+"cli.log.sharing_warning" = "サービスのログには、デバイス名、識別子、診断用のパスが含まれることがあります。共有する前に内容を確認してください。";

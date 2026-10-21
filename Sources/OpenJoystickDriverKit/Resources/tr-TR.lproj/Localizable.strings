@@ -528,7 +528,6 @@
 "banner.access.detail" = "macOS, OpenJoystickDriver’ın kontrolcüleri okumak ve oyunlara sunmak için ihtiyaç duyduğu her şeye izin vermedi.";
 "cli.login.uninstall_action" = "Kaldır";
 "console.all" = "Tümü";
-"console.copyAll" = "Tümünü Kopyala";
 "console.empty" = "Günlük kayıtları yok.";
 "console.errors" = "Hatalar";
 "console.explain.title" = "Hata Kodunu Açıkla";
@@ -1828,3 +1827,17 @@
 "error.E5005" = "AccessGrants.json erişim dosyası hasarlı. Dosyayı düzeltin veya silin, sonra erişimi yeniden verin.";
 "error.E5006" = "Cihaz Kimliklerinin anahtar dosyası PortKeyInstallation.key okunamıyor veya boyutu 32 bayt değil. Dosyayı bir yedekten geri yükleyin. Bunun yerine silerseniz OpenJoystickDriver yeni bir anahtar oluşturur ve tüm Cihaz Kimlikleri değişir.";
 "error.withCode" ="%@ (%@)";
+"activity.mode.log" = "Günlük";
+"activity.mode.diagnostics" = "Tanılama";
+"activity.lines" = "Satırlar";
+"activity.search" = "Ara";
+"activity.showInFinder" = "Finder’da Göster";
+"activity.showInFinder.failed" = "Günlük klasörü açılamadı.";
+"activity.runChecks" = "Denetimleri Çalıştır";
+"activity.column.message" = "İleti";
+"activity.column.check" = "Denetim";
+"activity.column.details" = "Ayrıntılar";
+"activity.status.pass" = "Geçti";
+"activity.status.warn" = "Uyarı";
+"activity.status.skip" = "Atlandı";
+"cli.log.sharing_warning" = "Hizmet günlükleri aygıt adları, tanımlayıcılar veya tanılama yolları içerebilir. Paylaşmadan önce gözden geçirin.";
