@@ -188,4 +188,39 @@ struct RepositoryPatchTests {
       #expect(problems.map(\.message) == ["the patch changes nothing in \(model)"])
     }
   }
+
+  @Test
+  func aPatchNumberIsWrittenAsThePatchFileSpellsIt() throws {
+    try Self.scratch { directory in
+      try Self.write(
+        Self.record,
+        to: directory.appendingPathComponent("records/04d2/04d2-162e.json")
+      )
+      let patch = """
+        {
+          "apiVersion": "openjoystickdriver/v1alpha1",
+          "kind": "ControllerPatch",
+          "selector": {"vendorID": 1234, "productID": 5678},
+          "patch": {"usb": {"scale": 1.29e2, "ratio": 0.50}}
+        }
+        """
+      try Self.write(
+        patch,
+        to: directory.appendingPathComponent("patches/04d2/04d2-162e.patch.json")
+      )
+      let output = directory.appendingPathComponent("out")
+      let problems = RepositoryValidation.applyPatches(
+        records: directory.appendingPathComponent("records"),
+        patches: directory.appendingPathComponent("patches"),
+        output: output
+      )
+      #expect(problems.isEmpty, "\(problems)")
+      let written = try String(
+        contentsOf: output.appendingPathComponent("04d2/04d2-162e.json"),
+        encoding: .utf8
+      )
+      #expect(written.contains("\"scale\": 1.29e2"))
+      #expect(written.contains("\"ratio\": 0.50"))
+    }
+  }
 }
