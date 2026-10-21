@@ -180,12 +180,11 @@ public struct ApplicationServiceDeviceDescription: Codable, Sendable {
       ControllerServer.self,
       forKey: .physicalOutputOwner
     )
-    // A service older than this field sends none; the record then serves the model to macOS.
-    self.recordServer =
-      try container.decodeIfPresent(ControllerServer.self, forKey: .recordServer) ?? .system
-    self.recordAccessRoute =
-      try container.decodeIfPresent(ControllerAccessRoute.self, forKey: .recordAccessRoute)
-      ?? .system
+    self.recordServer = try container.decode(ControllerServer.self, forKey: .recordServer)
+    self.recordAccessRoute = try container.decode(
+      ControllerAccessRoute.self,
+      forKey: .recordAccessRoute
+    )
     self.tuning = try container.decode(ControllerTuning.self, forKey: .tuning)
     self.capabilities = try container.decode(ControllerCapabilities.self, forKey: .capabilities)
     self.connectionState = try container.decodeIfPresent(

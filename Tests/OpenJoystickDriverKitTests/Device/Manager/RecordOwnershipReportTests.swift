@@ -46,13 +46,12 @@ struct RecordOwnershipReportTests {
     #expect(try Self.decoded(owned).recordServer == .ojd)
   }
 
-  /// A service that predates the field sends none, and the app then treats the record as native.
-  @Test
-  func aPayloadWithoutTheFieldDecodesAsMacOS() throws {
+  @Test(arguments: ["recordServer", "recordAccessRoute"])
+  func aPayloadWithoutARecordOwnershipFieldFailsToDecode(field: String) throws {
     var object = try Self.object(of: .fixture(id: "A"))
-    object["recordServer"] = nil
+    object[field] = nil
 
-    #expect(try Self.decoded(object).recordServer == .system)
+    #expect(throws: DecodingError.self) { try Self.decoded(object) }
   }
 
   private static func object(of device: ApplicationServiceDeviceDescription) throws -> [String: Any]

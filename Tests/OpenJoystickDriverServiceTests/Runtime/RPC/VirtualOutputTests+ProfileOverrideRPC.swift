@@ -249,7 +249,7 @@ extension VirtualOutputTests {
     let reset = try await localRPC(
       fixture.server,
       method: "resetVirtualHIDProfileOverride",
-      arguments: LocalServiceRPCDeviceArguments(
+      arguments: LocalServiceRPCVirtualHIDProfileOverrideResetArguments(
         controller: .model(ControllerModelID(vendorID: 1, productID: 2))
       )
     )
