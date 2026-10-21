@@ -122,7 +122,9 @@ struct ServiceStatusChangesTests {
 
     NotificationCenter.postServiceStatusChanged(from: changes)
 
-    #expect(await changes.wait(after: baseline, holdSeconds: 30).revision.generation > baseline.generation)
+    #expect(
+      await changes.wait(after: baseline, holdSeconds: 30).revision.generation > baseline.generation
+    )
   }
 
   @Test
@@ -142,7 +144,7 @@ struct ServiceStatusChangesTests {
   }
 
   @Test
-  func aTestNotificationWithNoHeldWaitAnnouncesToNobody() async {
+  func aTestNotificationWithNoHeldWaitAnnouncesToNobody() {
     let changes = ServiceStatusChanges(center: NotificationCenter())
 
     #expect(changes.announceTestNotification() == 0)

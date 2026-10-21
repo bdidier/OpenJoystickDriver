@@ -342,6 +342,7 @@ final class TestNotificationRequestStub: TestNotificationRequesting, @unchecked 
   var requestCount: Int { lock.withLock { requests } }
 
   func requestTestNotification() async throws -> Int {
+    await Task.yield()
     lock.withLock { requests += 1 }
     if let failure { throw failure }
     return announced

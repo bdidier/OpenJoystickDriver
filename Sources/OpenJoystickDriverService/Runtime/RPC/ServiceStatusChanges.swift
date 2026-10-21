@@ -119,7 +119,9 @@ final class ServiceStatusChanges: @unchecked Sendable {
   func announceTestNotification() -> Int {
     let (released, revision) = lock.withLock { () -> ([Waiter], ServiceStatusRevision) in
       defer { waiters = [:] }
-      return (Array(waiters.values), ServiceStatusRevision(instance: instance, generation: generation))
+      return (
+        Array(waiters.values), ServiceStatusRevision(instance: instance, generation: generation)
+      )
     }
     for waiter in released {
       waiter.hold?.cancel()
@@ -138,6 +140,8 @@ final class ServiceStatusChanges: @unchecked Sendable {
       )
     }
     waiter?.hold?.cancel()
-    waiter?.continuation.resume(returning: ServiceStatusReply(revision: revision, event: .holdElapsed))
+    waiter?.continuation.resume(
+      returning: ServiceStatusReply(revision: revision, event: .holdElapsed)
+    )
   }
 }
