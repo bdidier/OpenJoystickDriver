@@ -16,7 +16,8 @@ public final class ReportLayoutDriver: PhysicalProtocolDriver {
     }
   }
 
-  private let layout: ControllerInputLayout
+  /// The layout every input report is decoded by.
+  let layout: ControllerInputLayout
   private let rumbleTemplate: RumbleOutputTemplate?
   private let usbOutput: USBOutput?
   /// What the family description advertises; a record layout advertises what it decodes.

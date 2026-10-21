@@ -7,7 +7,7 @@ import Testing
 extension DriverParseCharacterizationTests {
   /// The 7-byte SDL `SwitchInputOnlyControllerStatePacket_t` report of a wired Switch pad: two
   /// button bytes, a hat byte (0 north clockwise to 7, 8 neutral), then four stick bytes centered
-  /// on 128 with up and left low. The resting report is the one `SwitchInputOnlyDriverTests`
+  /// on 128 with up and left low. The resting report is the one `SwitchInputOnlyParserTests`
   /// feeds the driver.
   @Test
   func switchInputOnly() throws {

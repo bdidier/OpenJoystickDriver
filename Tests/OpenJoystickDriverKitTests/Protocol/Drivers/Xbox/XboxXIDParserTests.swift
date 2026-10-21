@@ -37,7 +37,7 @@ private func makeXIDReport(
   return Data(r)
 }
 
-struct XIDDriverTests {
+struct XboxXIDParserTests {
   static let family = PhysicalProtocolID.xboxXID
   static let model = ControllerModelID(vendorID: 0x045E, productID: 0x0202)
 

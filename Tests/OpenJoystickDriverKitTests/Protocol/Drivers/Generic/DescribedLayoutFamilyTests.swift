@@ -3,10 +3,10 @@ import Testing
 
 @testable import OpenJoystickDriverKit
 
-/// The families whose descriptions hold the input layout: `ReportLayoutDriver` decodes them, and
-/// the recorded samples of their former drivers pass through it unchanged
-/// (`DriverParseCharacterizationTests`, the per-family driver tests).
-struct XboxXIDDescriptionTests {
+/// The families whose descriptions hold the input layout, which `ReportLayoutDriver` decodes:
+/// `XboxXID`, `NintendoSwitchInputOnly` and `VendorFlydigi`. Their decoded frames are pinned by
+/// `DriverParseCharacterizationTests`, `XboxXIDFieldSweepTests` and each family's parser suite.
+struct DescribedLayoutFamilyTests {
   private static let described: [PhysicalProtocolID] = [
     .xboxXID, .nintendoSwitchInputOnly, .vendorFlydigi,
   ]

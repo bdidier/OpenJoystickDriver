@@ -42,7 +42,7 @@ private func settled(_ parser: ReportLayoutDriver) {
 }
 
 @Suite
-struct FlydigiDriverTests {
+struct FlydigiParserTests {
   static let family = PhysicalProtocolID.vendorFlydigi
   static let model = ControllerModelID(vendorID: 0xD7D7, productID: 0x0041)
 

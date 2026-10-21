@@ -12,7 +12,7 @@ protocol ParserSuite {
 
 extension HIDDescriptorDriverTests: ParserSuite {}
 extension ReportLayoutDriverTests: ParserSuite {}
-extension XIDDriverTests: ParserSuite {}
+extension XboxXIDParserTests: ParserSuite {}
 extension XUSBDriverTests: ParserSuite {}
 extension GIPDriverTests: ParserSuite {}
 extension SixaxisDriverTests: ParserSuite {}
@@ -20,11 +20,11 @@ extension DualShock4DriverTests: ParserSuite {}
 extension DualSenseDriverTests: ParserSuite {}
 extension Switch1DriverTests: ParserSuite {}
 extension Switch2DriverTests: ParserSuite {}
-extension SwitchInputOnlyDriverTests: ParserSuite {}
+extension SwitchInputOnlyParserTests: ParserSuite {}
 extension SteamControllerDriverTests: ParserSuite {}
 extension SteamTritonDriverTests: ParserSuite {}
 extension SteamDeckDriverTests: ParserSuite {}
-extension FlydigiDriverTests: ParserSuite {}
+extension FlydigiParserTests: ParserSuite {}
 extension PS3ThirdPartyDriverTests: ParserSuite {}
 extension GameSirDriverTests: ParserSuite {}
 extension NVIDIAShieldDriverTests: ParserSuite {}
@@ -33,11 +33,11 @@ extension NVIDIAShieldDriverTests: ParserSuite {}
 /// two suites claim the same family, so a new family cannot ship without a parser test.
 struct ProtocolParserCoverageTests {
   static let parserSuites: [any ParserSuite.Type] = [
-    HIDDescriptorDriverTests.self, ReportLayoutDriverTests.self, XIDDriverTests.self,
+    HIDDescriptorDriverTests.self, ReportLayoutDriverTests.self, XboxXIDParserTests.self,
     XUSBDriverTests.self, GIPDriverTests.self, SixaxisDriverTests.self,
     DualShock4DriverTests.self, DualSenseDriverTests.self, Switch1DriverTests.self,
-    Switch2DriverTests.self, SwitchInputOnlyDriverTests.self, SteamControllerDriverTests.self,
-    SteamTritonDriverTests.self, SteamDeckDriverTests.self, FlydigiDriverTests.self,
+    Switch2DriverTests.self, SwitchInputOnlyParserTests.self, SteamControllerDriverTests.self,
+    SteamTritonDriverTests.self, SteamDeckDriverTests.self, FlydigiParserTests.self,
     PS3ThirdPartyDriverTests.self, GameSirDriverTests.self, NVIDIAShieldDriverTests.self,
   ]
 
