@@ -920,6 +920,8 @@
 "cli.access.web.enable.confirm" = "Attivare il WebSocket, così che le pagine delle origini per cui autorizzi token possano usare l’endpoint?";
 "cli.access.web.enable.discussion" = "Chiede prima conferma. Senza --port, usa la porta salvata; la prima volta, il sistema sceglie una porta libera e il servizio la salva.";
 "cli.access.web.port" = "La porta su 127.0.0.1, da 1024 a 65535.";
+"cli.access.web.automatic" = "Lascia che il sistema scelga una porta libera invece di quella salvata.";
+"cli.access.web.automatic_conflict" = "--automatic non può essere usato con --port.";
 "cli.access.web.port_range" = "--port deve essere compreso tra 1024 e 65535.";
 "cli.diagnose.abstract" = "Esegue tutti i controlli e segnala cosa non va.";
 "cli.diagnose.output" = "Scrive anche un pacchetto di supporto in questo file.";
@@ -1661,10 +1663,12 @@
 "access.web.pages" = "Cartella delle pagine: %@";
 "access.web.port" = "Porta";
 "access.web.port.automatic" = "Automatico";
+"access.web.port.choose" = "Scegli automaticamente";
 "access.web.portRange" = "La porta deve essere compresa tra %lld e %lld.";
 "access.web.enable.title" = "Attivare il WebSocket?";
 "access.web.enable.message" = "Le pagine web provenienti dalle origini di un token possono quindi connettersi all’endpoint su questo Mac.";
 "access.web.enable.port" = "Porta: %lld";
+"access.web.enable.automatic" = "Il sistema sceglie una porta libera.";
 "access.grants" = "Programmi con accesso";
 "access.grantProgram" = "Concedi a un programma…";
 "access.grant" = "Concedi";
@@ -1716,7 +1720,7 @@
 "a11y.access.dismissError" = "Ignora l’errore";
 "a11y.access.tryAgain" = "Leggi di nuovo le impostazioni di accesso";
 "a11y.access.restart" = "Riavvia l’app per applicare i nuovi permessi";
-"a11y.access.webPort" = "Porta del WebSocket; lascia vuoto per usare la porta salvata";
+"a11y.access.webPort" = "Porta del WebSocket; lascia vuoto per mantenere la porta salvata o far scegliere una porta al sistema";
 "a11y.access.grantProgram" = "Concedi l’accesso a un programma che scegli";
 "a11y.access.grantRefused" = "Concedi l’accesso a %@";
 "a11y.access.revokeGrant" = "Revoca l’accesso di %@";
@@ -1730,7 +1734,7 @@
 "a11y.access.done" = "Chiudi il token";
 "a11y.access.scope" = "Ambito %@";
 "a11y.access.cancel" = "Annulla e lascia l’accesso com’è";
-"a11y.value.none" = "Nessun valore";
+"a11y.value.none" = "Nessuno";
 "mainMenu.app.about" = "Informazioni su %@";
 "mainMenu.app.settings" = "Impostazioni…";
 "mainMenu.app.services" = "Servizi";
@@ -1910,7 +1914,7 @@
 "controllers.publication.published" = "Pubblicato";
 "controllers.publication.notPublished" = "Non pubblicato";
 "controllers.publication.failed" = "Non riuscito";
-"controllers.inputHealth.healthy" = "Integro";
+"controllers.inputHealth.healthy" = "Funzionante";
 "controllers.inputHealth.stale" = "Non aggiornato";
 "controllers.inputHealth.waitingForNeutral" = "In attesa della posizione neutra";
 "settings.error.damaged" = "Il file delle impostazioni %@ è danneggiato. Correggilo oppure spostalo nel Cestino con `ojd setting reset`.";

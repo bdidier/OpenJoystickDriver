@@ -920,6 +920,8 @@
 "cli.access.web.enable.confirm" = "要开启 WebSocket，让你为其授权令牌的来源所属页面可以使用端点吗？";
 "cli.access.web.enable.discussion" = "会先请求确认。未指定 --port 时，会使用已存储的端口；首次由系统选择一个空闲端口，并由服务存储。";
 "cli.access.web.port" = "127.0.0.1 上的端口，范围为 1024 至 65535。";
+"cli.access.web.automatic" = "由系统选择空闲端口，而不是已保存的端口。";
+"cli.access.web.automatic_conflict" = "--automatic 不能与 --port 同时使用。";
 "cli.access.web.port_range" = "--port 必须介于 1024 和 65535 之间。";
 "cli.diagnose.abstract" = "运行所有检查并报告问题。";
 "cli.diagnose.output" = "同时将支持包写入此文件。";
@@ -1550,10 +1552,12 @@
 "access.web.pages" = "页面文件夹：%@";
 "access.web.port" = "端口";
 "access.web.port.automatic" = "自动";
+"access.web.port.choose" = "自动选择";
 "access.web.portRange" = "端口必须介于 %lld 和 %lld 之间。";
 "access.web.enable.title" = "要打开 WebSocket 吗？";
 "access.web.enable.message" = "来自令牌所列来源的网页随后可以连接到这台 Mac 上的端点。";
 "access.web.enable.port" = "端口：%lld";
+"access.web.enable.automatic" = "系统会选择一个空闲端口。";
 "access.grants" = "有访问权限的程序";
 "access.grantProgram" = "授权程序…";
 "access.grant" = "授权";
@@ -1605,7 +1609,7 @@
 "a11y.access.dismissError" = "关闭错误";
 "a11y.access.tryAgain" = "重新读取访问设置";
 "a11y.access.restart" = "重新启动 App 以应用新权限";
-"a11y.access.webPort" = "WebSocket 端口；留空则使用已存储的端口";
+"a11y.access.webPort" = "WebSocket 端口；留空则保留已存储的端口，或由系统选择端口";
 "a11y.access.grantProgram" = "向你选取的程序授予访问权限";
 "a11y.access.grantRefused" = "向 %@ 授予访问权限";
 "a11y.access.revokeGrant" = "撤销 %@ 的访问权限";
@@ -1619,7 +1623,7 @@
 "a11y.access.done" = "关闭令牌";
 "a11y.access.scope" = "%@范围";
 "a11y.access.cancel" = "取消并保持访问权限不变";
-"a11y.value.none" = "无值";
+"a11y.value.none" = "无";
 "mainMenu.app.about" = "关于%@";
 "mainMenu.app.settings" = "设置…";
 "mainMenu.app.services" = "服务";
@@ -1910,7 +1914,7 @@
 "controllers.publication.notPublished" = "未发布";
 "controllers.publication.failed" = "失败";
 "controllers.inputHealth.healthy" = "正常";
-"controllers.inputHealth.stale" = "已过时";
+"controllers.inputHealth.stale" = "无更新";
 "controllers.inputHealth.waitingForNeutral" = "等待回中";
 "settings.error.damaged" = "设置文件 %@ 已损坏。请修复它，或用 `ojd setting reset` 将其移到废纸篓。";
 "settings.error.unsupported" = "设置文件 %@ 不受支持。请按受支持的 apiVersion 重写该文件，或用 `ojd setting reset` 将其移到废纸篓。";

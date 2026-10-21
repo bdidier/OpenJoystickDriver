@@ -920,6 +920,8 @@
 "cli.access.web.enable.confirm" = "Включить WebSocket, чтобы страницы из источников, для которых вы разрешаете токены, могли использовать конечную точку?";
 "cli.access.web.enable.discussion" = "Сначала запрашивает подтверждение. Без --port использует сохранённый порт; в первый раз система выбирает свободный порт, а служба сохраняет его.";
 "cli.access.web.port" = "Порт на 127.0.0.1, от 1024 до 65535.";
+"cli.access.web.automatic" = "Позволить системе выбрать свободный порт вместо сохранённого.";
+"cli.access.web.automatic_conflict" = "--automatic нельзя использовать вместе с --port.";
 "cli.access.web.port_range" = "--port должен быть в диапазоне от 1024 до 65535.";
 "cli.diagnose.abstract" = "Выполняет все проверки и показывает, что не так.";
 "cli.diagnose.output" = "Также записать пакет для поддержки в этот файл.";
@@ -1550,10 +1552,12 @@
 "access.web.pages" = "Папка страниц: %@";
 "access.web.port" = "Порт";
 "access.web.port.automatic" = "Автоматически";
+"access.web.port.choose" = "Выбрать автоматически";
 "access.web.portRange" = "Порт должен быть в диапазоне от %lld до %lld.";
 "access.web.enable.title" = "Включить WebSocket?";
 "access.web.enable.message" = "Веб-страницы из источников токена смогут подключаться к конечной точке на этом Mac.";
 "access.web.enable.port" = "Порт: %lld";
+"access.web.enable.automatic" = "Система выберет свободный порт.";
 "access.grants" = "Программы с доступом";
 "access.grantProgram" = "Предоставить доступ программе…";
 "access.grant" = "Предоставить";
@@ -1605,7 +1609,7 @@
 "a11y.access.dismissError" = "Закрыть ошибку";
 "a11y.access.tryAgain" = "Прочитать настройки доступа снова";
 "a11y.access.restart" = "Перезапустить приложение, чтобы применить новые разрешения";
-"a11y.access.webPort" = "Порт WebSocket; оставьте пустым, чтобы использовать сохранённый порт";
+"a11y.access.webPort" = "Порт WebSocket; оставьте пустым, чтобы оставить сохранённый порт или поручить выбор системе";
 "a11y.access.grantProgram" = "Предоставить доступ выбранной программе";
 "a11y.access.grantRefused" = "Предоставить доступ «%@»";
 "a11y.access.revokeGrant" = "Отозвать доступ «%@»";
@@ -1619,7 +1623,7 @@
 "a11y.access.done" = "Закрыть токен";
 "a11y.access.scope" = "Область: %@";
 "a11y.access.cancel" = "Отменить и оставить доступ без изменений";
-"a11y.value.none" = "Нет значения";
+"a11y.value.none" = "Нет";
 "mainMenu.app.about" = "О программе %@";
 "mainMenu.app.settings" = "Настройки…";
 "mainMenu.app.services" = "Службы";
@@ -1910,7 +1914,7 @@
 "controllers.publication.notPublished" = "Не опубликован";
 "controllers.publication.failed" = "Ошибка";
 "controllers.inputHealth.healthy" = "Исправен";
-"controllers.inputHealth.stale" = "Устарел";
+"controllers.inputHealth.stale" = "Нет обновлений";
 "controllers.inputHealth.waitingForNeutral" = "Ожидание нейтрального положения";
 "settings.error.damaged" = "Файл настроек %@ повреждён. Исправьте его или переместите в Корзину командой `ojd setting reset`.";
 "settings.error.unsupported" = "Файл настроек %@ не поддерживается. Перепишите файл для поддерживаемой версии apiVersion или переместите его в Корзину командой `ojd setting reset`.";

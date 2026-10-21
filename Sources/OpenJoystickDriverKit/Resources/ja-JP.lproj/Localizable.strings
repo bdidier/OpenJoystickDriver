@@ -920,6 +920,8 @@
 "cli.access.web.enable.confirm" = "WebSocket をオンにして、トークンを許可したオリジンのページがエンドポイントを使用できるようにしますか？";
 "cli.access.web.enable.discussion" = "先に確認を求めます。--port を指定しない場合は保存済みのポートを使用します。初回は、システムが空きポートを選び、サービスがそれを保存します。";
 "cli.access.web.port" = "127.0.0.1 のポート。1024 から 65535 まで。";
+"cli.access.web.automatic" = "保存済みのポートではなく、システムが空いているポートを選びます。";
+"cli.access.web.automatic_conflict" = "--automatic と --port は同時に指定できません。";
 "cli.access.web.port_range" = "--port は 1024 から 65535 の間で指定してください。";
 "cli.diagnose.abstract" = "すべてのチェックを実行し、問題点を報告します。";
 "cli.diagnose.output" = "サポート用バンドルもこのファイルに書き出します。";
@@ -1550,10 +1552,12 @@
 "access.web.pages" = "ページフォルダ: %@";
 "access.web.port" = "ポート";
 "access.web.port.automatic" = "自動";
+"access.web.port.choose" = "自動で選択";
 "access.web.portRange" = "ポートは%lld〜%lldの範囲で指定してください。";
 "access.web.enable.title" = "WebSocketをオンにしますか？";
 "access.web.enable.message" = "トークンのオリジンのWebページは、このMac上のエンドポイントに接続できるようになります。";
 "access.web.enable.port" = "ポート: %lld";
+"access.web.enable.automatic" = "システムが空いているポートを選びます。";
 "access.grants" = "アクセスを許可されたプログラム";
 "access.grantProgram" = "プログラムを許可…";
 "access.grant" = "許可";
@@ -1605,7 +1609,7 @@
 "a11y.access.dismissError" = "エラーを閉じる";
 "a11y.access.tryAgain" = "アクセス設定をもう一度読み込む";
 "a11y.access.restart" = "新しい権限を反映するためにAppを再起動";
-"a11y.access.webPort" = "WebSocketのポート。空のままにすると保存済みのポートを使います";
+"a11y.access.webPort" = "WebSocketのポート。空のままにすると、保存済みのポートを保持するか、システムが選んだポートを使います";
 "a11y.access.grantProgram" = "選択したプログラムにアクセスを許可";
 "a11y.access.grantRefused" = "%@にアクセスを許可";
 "a11y.access.revokeGrant" = "%@のアクセスを取り消す";
@@ -1619,7 +1623,7 @@
 "a11y.access.done" = "トークンを閉じる";
 "a11y.access.scope" = "%@スコープ";
 "a11y.access.cancel" = "キャンセルして、アクセスをそのままにする";
-"a11y.value.none" = "値なし";
+"a11y.value.none" = "なし";
 "mainMenu.app.about" = "%@について";
 "mainMenu.app.settings" = "設定…";
 "mainMenu.app.services" = "サービス";
@@ -1910,7 +1914,7 @@
 "controllers.publication.notPublished" = "未公開";
 "controllers.publication.failed" = "失敗";
 "controllers.inputHealth.healthy" = "正常";
-"controllers.inputHealth.stale" = "古い";
+"controllers.inputHealth.stale" = "更新なし";
 "controllers.inputHealth.waitingForNeutral" = "ニュートラル待ち";
 "settings.error.damaged" = "設定ファイル %@ が破損しています。修正するか、`ojd setting reset` でゴミ箱に移動してください。";
 "settings.error.unsupported" = "設定ファイル %@ はサポートされていません。サポートされている apiVersion に合わせてファイルを書き直すか、`ojd setting reset` でゴミ箱に移動してください。";

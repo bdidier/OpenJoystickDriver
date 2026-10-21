@@ -920,6 +920,8 @@
 "cli.access.web.enable.confirm" = "WebSocket einschalten, damit Seiten von den Ursprüngen, für die du Tokens freigibst, den Endpunkt nutzen können?";
 "cli.access.web.enable.discussion" = "Fragt zuerst nach einer Bestätigung. Ohne --port wird der gespeicherte Port verwendet; beim ersten Mal wählt das System einen freien Port, und der Dienst speichert ihn.";
 "cli.access.web.port" = "Der Port auf 127.0.0.1, von 1024 bis 65535.";
+"cli.access.web.automatic" = "Das System einen freien Port wählen lassen statt des gespeicherten.";
+"cli.access.web.automatic_conflict" = "--automatic und --port lassen sich nicht kombinieren.";
 "cli.access.web.port_range" = "--port muss zwischen 1024 und 65535 liegen.";
 "cli.diagnose.abstract" = "Führt alle Prüfungen aus und meldet, was nicht stimmt.";
 "cli.diagnose.output" = "Schreibt zusätzlich ein Support-Paket in diese Datei.";
@@ -1661,10 +1663,12 @@
 "access.web.pages" = "Seitenordner: %@";
 "access.web.port" = "Port";
 "access.web.port.automatic" = "Automatisch";
+"access.web.port.choose" = "Automatisch wählen";
 "access.web.portRange" = "Der Port muss zwischen %lld und %lld liegen.";
 "access.web.enable.title" = "WebSocket einschalten?";
 "access.web.enable.message" = "Webseiten, die von den Ursprüngen eines Tokens stammen, können sich dann mit dem Endpunkt auf diesem Mac verbinden.";
 "access.web.enable.port" = "Port: %lld";
+"access.web.enable.automatic" = "Das System wählt einen freien Port.";
 "access.grants" = "Programme mit Zugriff";
 "access.grantProgram" = "Zugriff für Programm erteilen…";
 "access.grant" = "Erteilen";
@@ -1716,7 +1720,7 @@
 "a11y.access.dismissError" = "Fehler schließen";
 "a11y.access.tryAgain" = "Die Zugriffseinstellungen erneut lesen";
 "a11y.access.restart" = "Die App neu starten, damit die neuen Berechtigungen gelten";
-"a11y.access.webPort" = "WebSocket-Port; leer lassen für den gespeicherten Port";
+"a11y.access.webPort" = "WebSocket-Port; leer lassen, um den gespeicherten Port zu behalten oder das System einen wählen zu lassen";
 "a11y.access.grantProgram" = "Einem Programm, das du auswählst, Zugriff erteilen";
 "a11y.access.grantRefused" = "%@ Zugriff erteilen";
 "a11y.access.revokeGrant" = "Zugriff von %@ widerrufen";
@@ -1730,7 +1734,7 @@
 "a11y.access.done" = "Das Token schließen";
 "a11y.access.scope" = "Bereich %@";
 "a11y.access.cancel" = "Abbrechen und den Zugriff unverändert lassen";
-"a11y.value.none" = "Kein Wert";
+"a11y.value.none" = "Keine";
 "mainMenu.app.about" = "Über %@";
 "mainMenu.app.settings" = "Einstellungen…";
 "mainMenu.app.services" = "Dienste";

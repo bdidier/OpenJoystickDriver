@@ -255,6 +255,24 @@ struct AccessCommandTests {
   }
 
   @Test
+  func webEnableAutomaticAsksForAFreePortAndRefusesAPortBesideIt() async throws {
+    let service = try service()
+
+    let both = await service.run([
+      "access", "web", "enable", "--automatic", "--port", "48000", "--force",
+    ])
+    let automatic = await service.run(["access", "web", "enable", "--automatic", "--force"])
+
+    #expect(both.code == 64)
+    #expect(both.standardError.contains("--automatic"))
+    #expect(automatic.code == 0, "\(automatic.standardError)")
+    let sent = try service.arguments(of: .setWebAccess).map {
+      try JSONDecoder().decode(AccessWebArguments.self, from: $0)
+    }
+    #expect(sent.map(\.port) == [0])
+  }
+
+  @Test
   func enableNeedsForceWithoutAPrompt() async throws {
     let service = try service()
 

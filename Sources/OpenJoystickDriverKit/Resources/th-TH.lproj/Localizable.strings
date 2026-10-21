@@ -920,6 +920,8 @@
 "cli.access.web.enable.confirm" = "เปิด WebSocket เพื่อให้หน้าเว็บจากต้นทางที่คุณให้สิทธิ์โทเค็นใช้เอนด์พอยต์ได้หรือไม่";
 "cli.access.web.enable.discussion" = "ขอการยืนยันก่อน หากไม่ใช้ --port จะใช้พอร์ตที่บันทึกไว้ ครั้งแรกระบบจะเลือกพอร์ตว่าง และบริการจะบันทึกไว้";
 "cli.access.web.port" = "พอร์ตบน 127.0.0.1 ตั้งแต่ 1024 ถึง 65535";
+"cli.access.web.automatic" = "ให้ระบบเลือกพอร์ตที่ว่างแทนพอร์ตที่บันทึกไว้";
+"cli.access.web.automatic_conflict" = "ไม่สามารถใช้ --automatic ร่วมกับ --port ได้";
 "cli.access.web.port_range" = "--port ต้องอยู่ระหว่าง 1024 ถึง 65535";
 "cli.diagnose.abstract" = "เรียกใช้การตรวจสอบทุกรายการและรายงานสิ่งที่ผิดปกติ";
 "cli.diagnose.output" = "เขียนบันเดิลการสนับสนุนลงในไฟล์นี้ด้วย";
@@ -1550,10 +1552,12 @@
 "access.web.pages" = "โฟลเดอร์หน้าเว็บ: %@";
 "access.web.port" = "พอร์ต";
 "access.web.port.automatic" = "อัตโนมัติ";
+"access.web.port.choose" = "เลือกอัตโนมัติ";
 "access.web.portRange" = "พอร์ตต้องอยู่ระหว่าง %lld ถึง %lld";
 "access.web.enable.title" = "เปิด WebSocket หรือไม่";
 "access.web.enable.message" = "หน้าเว็บจากต้นทางของโทเค็นจะเชื่อมต่อกับปลายทางบน Mac เครื่องนี้ได้";
 "access.web.enable.port" = "พอร์ต: %lld";
+"access.web.enable.automatic" = "ระบบจะเลือกพอร์ตที่ว่าง";
 "access.grants" = "โปรแกรมที่มีสิทธิ์การเข้าถึง";
 "access.grantProgram" = "ให้สิทธิ์โปรแกรม…";
 "access.grant" = "ให้สิทธิ์";
@@ -1605,7 +1609,7 @@
 "a11y.access.dismissError" = "ปิดข้อผิดพลาดทิ้ง";
 "a11y.access.tryAgain" = "อ่านการตั้งค่าการเข้าถึงอีกครั้ง";
 "a11y.access.restart" = "รีสตาร์ตแอปเพื่อให้สิทธิ์ใหม่มีผล";
-"a11y.access.webPort" = "พอร์ต WebSocket เว้นว่างไว้เพื่อใช้พอร์ตที่บันทึกไว้";
+"a11y.access.webPort" = "พอร์ต WebSocket เว้นว่างไว้เพื่อคงพอร์ตที่บันทึกไว้ หรือให้ระบบเลือกให้";
 "a11y.access.grantProgram" = "ให้สิทธิ์การเข้าถึงแก่โปรแกรมที่คุณเลือก";
 "a11y.access.grantRefused" = "ให้สิทธิ์การเข้าถึงแก่ %@";
 "a11y.access.revokeGrant" = "เพิกถอนสิทธิ์การเข้าถึงของ %@";
@@ -1619,7 +1623,7 @@
 "a11y.access.done" = "ปิดโทเค็น";
 "a11y.access.scope" = "ขอบเขต %@";
 "a11y.access.cancel" = "ยกเลิกและคงสิทธิ์การเข้าถึงไว้ตามเดิม";
-"a11y.value.none" = "ไม่มีค่า";
+"a11y.value.none" = "ไม่มี";
 "mainMenu.app.about" = "เกี่ยวกับ %@";
 "mainMenu.app.settings" = "การตั้งค่า…";
 "mainMenu.app.services" = "บริการ";
@@ -1910,7 +1914,7 @@
 "controllers.publication.notPublished" = "ยังไม่เผยแพร่";
 "controllers.publication.failed" = "ล้มเหลว";
 "controllers.inputHealth.healthy" = "ปกติ";
-"controllers.inputHealth.stale" = "ล้าสมัย";
+"controllers.inputHealth.stale" = "ไม่มีการอัปเดต";
 "controllers.inputHealth.waitingForNeutral" = "กำลังรอตำแหน่งกลาง";
 "settings.error.damaged" = "ไฟล์การตั้งค่า %@ เสียหาย แก้ไขไฟล์ หรือย้ายไปที่ถังขยะด้วย `ojd setting reset`";
 "settings.error.unsupported" = "ไฟล์การตั้งค่า %@ ไม่รองรับ เขียนไฟล์ใหม่ให้ตรงกับ apiVersion ที่รองรับ หรือย้ายไปที่ถังขยะด้วย `ojd setting reset`";

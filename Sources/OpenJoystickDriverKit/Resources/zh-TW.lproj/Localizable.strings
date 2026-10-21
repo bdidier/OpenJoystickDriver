@@ -920,6 +920,8 @@
 "cli.access.web.enable.confirm" = "要開啟 WebSocket，讓您為其授權權杖的來源所屬頁面可以使用端點嗎？";
 "cli.access.web.enable.discussion" = "會先要求確認。未指定 --port 時，會使用已儲存的連接埠；首次由系統選擇一個空閒連接埠，並由服務儲存。";
 "cli.access.web.port" = "127.0.0.1 上的連接埠，範圍為 1024 至 65535。";
+"cli.access.web.automatic" = "由系統選擇閒置的連接埠，而不是已儲存的連接埠。";
+"cli.access.web.automatic_conflict" = "--automatic 不能與 --port 同時使用。";
 "cli.access.web.port_range" = "--port 必須介於 1024 和 65535 之間。";
 "cli.diagnose.abstract" = "執行所有檢查並回報問題。";
 "cli.diagnose.output" = "同時將支援套件寫入此檔案。";
@@ -1550,10 +1552,12 @@
 "access.web.pages" = "頁面資料夾：%@";
 "access.web.port" = "連接埠";
 "access.web.port.automatic" = "自動";
+"access.web.port.choose" = "自動選擇";
 "access.web.portRange" = "連接埠必須介於 %lld 和 %lld 之間。";
 "access.web.enable.title" = "要開啟 WebSocket 嗎？";
 "access.web.enable.message" = "來自權杖所列來源的網頁隨後可以連接到這部 Mac 上的端點。";
 "access.web.enable.port" = "連接埠：%lld";
+"access.web.enable.automatic" = "系統會選擇一個閒置的連接埠。";
 "access.grants" = "具有取用權限的程式";
 "access.grantProgram" = "授權程式…";
 "access.grant" = "授權";
@@ -1605,7 +1609,7 @@
 "a11y.access.dismissError" = "關閉錯誤";
 "a11y.access.tryAgain" = "重新讀取取用權限設定";
 "a11y.access.restart" = "重新啟動 App 以套用新權限";
-"a11y.access.webPort" = "WebSocket 連接埠；留空則使用已儲存的連接埠";
+"a11y.access.webPort" = "WebSocket 連接埠；留空則保留已儲存的連接埠，或由系統選擇連接埠";
 "a11y.access.grantProgram" = "向您選擇的程式授予取用權限";
 "a11y.access.grantRefused" = "向 %@ 授予取用權限";
 "a11y.access.revokeGrant" = "撤銷 %@ 的取用權限";
@@ -1619,7 +1623,7 @@
 "a11y.access.done" = "關閉權杖";
 "a11y.access.scope" = "%@範圍";
 "a11y.access.cancel" = "取消並維持取用權限不變";
-"a11y.value.none" = "無值";
+"a11y.value.none" = "無";
 "mainMenu.app.about" = "關於 %@";
 "mainMenu.app.settings" = "設定…";
 "mainMenu.app.services" = "服務";
@@ -1910,7 +1914,7 @@
 "controllers.publication.notPublished" = "未發布";
 "controllers.publication.failed" = "失敗";
 "controllers.inputHealth.healthy" = "正常";
-"controllers.inputHealth.stale" = "已過時";
+"controllers.inputHealth.stale" = "無更新";
 "controllers.inputHealth.waitingForNeutral" = "等待回中";
 "settings.error.damaged" = "設定值檔案 %@ 已損毀。請修復它，或用 `ojd setting reset` 將其移到垃圾桶。";
 "settings.error.unsupported" = "設定值檔案 %@ 不受支援。請依支援的 apiVersion 重寫該檔案，或用 `ojd setting reset` 將其移到垃圾桶。";

@@ -478,6 +478,25 @@ struct EndpointWebSocketTests {
     }
   }
 
+  /// Port 0 replaces the saved port with a free one the system picks.
+  @Test
+  func port0PicksAFreePortEvenWhenOneIsSaved() async throws {
+    try await withEndpointServer { server, fixture in
+      try server.setWebEnabled(true, port: nil)
+      let saved = try #require(server.status().web.port)
+      try server.setWebEnabled(false, port: nil)
+      let holder = try server.openWebListener(port: saved)
+      defer { holder.discard() }
+
+      try server.setWebEnabled(true, port: 0)
+
+      let port = try #require(server.status().web.port)
+      #expect(port != saved)
+      #expect(try server.status().web.listening)
+      #expect(try fixture.store.load().web.port == port)
+    }
+  }
+
   /// A listener swapped for one with the same descriptor number must not be served by the old
   /// accept loop, which would check requests against the old port.
   @Test

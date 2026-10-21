@@ -2,8 +2,8 @@ import Foundation
 import OpenJoystickDriverKit
 
 /// How a value field shows a value. A field that applies to the controller but has no value
-/// (unknown, missing or not applicable) shows the localized word "None"; VoiceOver reads a
-/// localized "No value" for it. A field that can never apply to the controller is hidden by its
+/// (unknown, missing or not applicable) shows the localized word "None", which VoiceOver reads
+/// as written. A field that can never apply to the controller is hidden by its
 /// screen instead.
 enum OJDValue: Equatable, Sendable {
   case text(String)

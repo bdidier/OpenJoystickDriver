@@ -920,6 +920,8 @@
 "cli.access.web.enable.confirm" = "Token verdiğiniz kaynaklardaki sayfaların uç noktayı kullanabilmesi için WebSocket açılsın mı?";
 "cli.access.web.enable.discussion" = "Önce onay ister. --port olmadan kayıtlı bağlantı noktasını kullanır; ilk seferde sistem boş bir bağlantı noktası seçer ve servis onu kaydeder.";
 "cli.access.web.port" = "127.0.0.1 üzerindeki bağlantı noktası, 1024 ile 65535 arasında.";
+"cli.access.web.automatic" = "Kayıtlı bağlantı noktası yerine sistemin boş bir bağlantı noktası seçmesini sağlar.";
+"cli.access.web.automatic_conflict" = "--automatic, --port ile birlikte kullanılamaz.";
 "cli.access.web.port_range" = "--port, 1024 ile 65535 arasında olmalıdır.";
 "cli.diagnose.abstract" = "Tüm denetimleri çalıştırır ve neyin yanlış olduğunu bildirir.";
 "cli.diagnose.output" = "Ayrıca bu dosyaya bir destek paketi yazar.";
@@ -1550,10 +1552,12 @@
 "access.web.pages" = "Sayfalar klasörü: %@";
 "access.web.port" = "Bağlantı noktası";
 "access.web.port.automatic" = "Otomatik";
+"access.web.port.choose" = "Otomatik Seç";
 "access.web.portRange" = "Bağlantı noktası %lld ile %lld arasında olmalıdır.";
 "access.web.enable.title" = "WebSocket açılsın mı?";
 "access.web.enable.message" = "Bir token’ın kaynaklarındaki web sayfaları bundan sonra bu Mac’teki uç noktaya bağlanabilir.";
 "access.web.enable.port" = "Bağlantı noktası: %lld";
+"access.web.enable.automatic" = "Sistem boş bir bağlantı noktası seçer.";
 "access.grants" = "Erişimi olan programlar";
 "access.grantProgram" = "Programa Erişim Ver…";
 "access.grant" = "Erişim Ver";
@@ -1605,7 +1609,7 @@
 "a11y.access.dismissError" = "Hatayı kapat";
 "a11y.access.tryAgain" = "Erişim ayarlarını yeniden oku";
 "a11y.access.restart" = "Yeni izinlerin geçerli olması için uygulamayı yeniden başlat";
-"a11y.access.webPort" = "WebSocket bağlantı noktası; kayıtlı bağlantı noktası için boş bırakın";
+"a11y.access.webPort" = "WebSocket bağlantı noktası; kayıtlı bağlantı noktasını korumak veya sistemin seçmesi için boş bırakın";
 "a11y.access.grantProgram" = "Seçtiğiniz programa erişim ver";
 "a11y.access.grantRefused" = "Şuna erişim ver: %@";
 "a11y.access.revokeGrant" = "Şunun erişimini geri çek: %@";
@@ -1619,7 +1623,7 @@
 "a11y.access.done" = "Token’ı kapat";
 "a11y.access.scope" = "%@ kapsamı";
 "a11y.access.cancel" = "Vazgeç ve erişimi olduğu gibi bırak";
-"a11y.value.none" = "Değer yok";
+"a11y.value.none" = "Yok";
 "mainMenu.app.about" = "%@ Hakkında";
 "mainMenu.app.settings" = "Ayarlar…";
 "mainMenu.app.services" = "Hizmetler";
@@ -1909,8 +1913,8 @@
 "controllers.publication.published" = "Yayımlandı";
 "controllers.publication.notPublished" = "Yayımlanmadı";
 "controllers.publication.failed" = "Başarısız";
-"controllers.inputHealth.healthy" = "Sağlıklı";
-"controllers.inputHealth.stale" = "Eski";
+"controllers.inputHealth.healthy" = "Normal";
+"controllers.inputHealth.stale" = "Güncellenmiyor";
 "controllers.inputHealth.waitingForNeutral" = "Nötr konum bekleniyor";
 "settings.error.damaged" = "%@ ayar dosyası hasarlı. Dosyayı düzeltin ya da `ojd setting reset` ile Çöp Sepeti’ne taşıyın.";
 "settings.error.unsupported" = "%@ ayar dosyası desteklenmiyor. Dosyayı desteklenen apiVersion için yeniden yazın ya da `ojd setting reset` ile Çöp Sepeti’ne taşıyın.";
