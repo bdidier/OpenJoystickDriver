@@ -156,13 +156,16 @@ extension ControllerRecordSet {
   }
 
   /// Reads one Controller or ControllerPatch file. A document of any other kind is refused by
-  /// the ControllerPatch header check.
+  /// the ControllerPatch header check. Both kinds refuse, by ``ordered(_:)``, text that is not
+  /// plain UTF-8 and an object that names a member twice.
   static func parse(_ data: Data, file: URL?, layer: ControllerRecordLayer) throws -> ParsedFile {
+    try requireUTF8(data)
     guard let object = try? JSONSerialization.jsonObject(with: data),
       let document = object as? [String: Any]
     else {
       throw ControllerRecordProblem(code: .invalidControllerRecord, "the file is not a JSON object")
     }
+    let order = try ordered(data)
     if document["kind"] as? String == ControllerRecordDocument.kind {
       try OpenJoystickDriverAPI.requireHeader(
         document,
@@ -182,7 +185,7 @@ extension ControllerRecordSet {
       return .record(
         try makeRecord(
           document,
-          order: ordered(data),
+          order: order,
           layers: layers,
           userFile: layer == .user ? file : nil,
           packageFile: layer == .package ? file : nil

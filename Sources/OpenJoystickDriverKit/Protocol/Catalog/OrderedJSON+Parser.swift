@@ -1,0 +1,217 @@
+import Foundation
+
+extension OrderedJSON {
+  /// A recursive-descent parser over bytes that ``OrderedJSON/parse(_:)`` checked are UTF-8.
+  struct Parser {
+    let bytes: [UInt8]
+    var position = 0
+
+    init(bytes: [UInt8]) { self.bytes = bytes }
+
+    var atEnd: Bool { position >= bytes.count }
+
+    /// The text of `bytes`, which are UTF-8 because ``OrderedJSON/parse(_:)`` checked the whole
+    /// text before parsing.
+    static func text(_ bytes: some Collection<UInt8>) -> String {
+      // swiftlint:disable:next optional_data_string_conversion
+      String(decoding: bytes, as: UTF8.self)
+    }
+
+    func problem(_ message: String) -> Problem {
+      Problem(reason: .syntax(message), offset: position)
+    }
+
+    func peek(_ character: Character) -> Bool {
+      position < bytes.count && bytes[position] == character.asciiValue
+    }
+
+    mutating func skipSpace() {
+      while position < bytes.count, [0x20, 0x0A, 0x0D, 0x09].contains(bytes[position]) {
+        position += 1
+      }
+    }
+
+    mutating func value() throws -> OrderedJSON {
+      guard position < bytes.count else { throw problem("the text ends early") }
+      switch bytes[position] {
+      case UInt8(ascii: "{"): return try object()
+      case UInt8(ascii: "["): return try array()
+      case UInt8(ascii: "\""): return .string(try string())
+      case UInt8(ascii: "t"):
+        try literal("true")
+        return .bool(true)
+      case UInt8(ascii: "f"):
+        try literal("false")
+        return .bool(false)
+      case UInt8(ascii: "n"):
+        try literal("null")
+        return .null
+      default: return try number()
+      }
+    }
+
+    mutating func literal(_ word: String) throws {
+      let expected = Array(word.utf8)
+      guard bytes.count - position >= expected.count,
+        Array(bytes[position..<position + expected.count]) == expected
+      else { throw problem("expected \(word)") }
+      position += expected.count
+    }
+
+    mutating func object() throws -> OrderedJSON {
+      position += 1
+      var members: [Member] = []
+      var names: Set<String> = []
+      skipSpace()
+      if peek("}") {
+        position += 1
+        return .object([])
+      }
+      while true {
+        skipSpace()
+        guard peek("\"") else { throw problem("expected a member name") }
+        let start = position
+        let key = try string()
+        guard names.insert(key).inserted else {
+          throw Problem(reason: .duplicateMember(key), offset: start)
+        }
+        skipSpace()
+        guard peek(":") else { throw problem("expected :") }
+        position += 1
+        skipSpace()
+        members.append(Member(key: key, value: try value()))
+        skipSpace()
+        if peek(",") {
+          position += 1
+        } else if peek("}") {
+          position += 1
+          return .object(members)
+        } else {
+          throw problem("expected , or }")
+        }
+      }
+    }
+
+    mutating func array() throws -> OrderedJSON {
+      position += 1
+      var items: [OrderedJSON] = []
+      skipSpace()
+      if peek("]") {
+        position += 1
+        return .array([])
+      }
+      while true {
+        skipSpace()
+        items.append(try value())
+        skipSpace()
+        if peek(",") {
+          position += 1
+        } else if peek("]") {
+          position += 1
+          return .array(items)
+        } else {
+          throw problem("expected , or ]")
+        }
+      }
+    }
+
+    mutating func string() throws -> String {
+      position += 1
+      var text = ""
+      var run: [UInt8] = []
+      // ``OrderedJSON/parse(_:)`` checked that the bytes are UTF-8.
+      func flush() {
+        text += Self.text(run)
+        run.removeAll()
+      }
+      while position < bytes.count {
+        let byte = bytes[position]
+        if byte == UInt8(ascii: "\"") {
+          position += 1
+          flush()
+          return text
+        }
+        if byte < 0x20 { throw problem("a control character in a string") }
+        guard byte == UInt8(ascii: "\\") else {
+          run.append(byte)
+          position += 1
+          continue
+        }
+        flush()
+        position += 1
+        guard position < bytes.count else { break }
+        let escape = bytes[position]
+        position += 1
+        switch escape {
+        case UInt8(ascii: "\""): text += "\""
+        case UInt8(ascii: "\\"): text += "\\"
+        case UInt8(ascii: "/"): text += "/"
+        case UInt8(ascii: "b"): text += "\u{08}"
+        case UInt8(ascii: "f"): text += "\u{0C}"
+        case UInt8(ascii: "n"): text += "\n"
+        case UInt8(ascii: "r"): text += "\r"
+        case UInt8(ascii: "t"): text += "\t"
+        case UInt8(ascii: "u"): text.unicodeScalars.append(try unicodeEscape())
+        default: throw problem("an unknown escape")
+        }
+      }
+      throw problem("the text ends inside a string")
+    }
+
+    mutating func hexUnit() throws -> UInt32 {
+      guard bytes.count - position >= 4,
+        bytes[position..<position + 4].allSatisfy({ Character(Unicode.Scalar($0)).isHexDigit }),
+        let unit = UInt32(
+          Self.text(bytes[position..<position + 4]),
+          radix: 16
+        )
+      else { throw problem("expected four hexadecimal digits") }
+      position += 4
+      return unit
+    }
+
+    mutating func unicodeEscape() throws -> Unicode.Scalar {
+      let first = try hexUnit()
+      if (0xD800...0xDBFF).contains(first) {
+        guard peek("\\"), position + 1 < bytes.count, bytes[position + 1] == UInt8(ascii: "u")
+        else {
+          throw problem("a high surrogate without a low surrogate")
+        }
+        position += 2
+        let second = try hexUnit()
+        guard (0xDC00...0xDFFF).contains(second),
+          let scalar = Unicode.Scalar(0x10000 + ((first - 0xD800) << 10) + (second - 0xDC00))
+        else { throw problem("a high surrogate without a low surrogate") }
+        return scalar
+      }
+      guard let scalar = Unicode.Scalar(first) else { throw problem("a lone low surrogate") }
+      return scalar
+    }
+
+    mutating func digits() -> Int {
+      let begin = position
+      while position < bytes.count, (0x30...0x39).contains(bytes[position]) { position += 1 }
+      return position - begin
+    }
+
+    mutating func number() throws -> OrderedJSON {
+      let start = position
+      if peek("-") { position += 1 }
+      if peek("0") {
+        position += 1
+      } else if digits() == 0 {
+        throw problem("expected a value")
+      }
+      if peek(".") {
+        position += 1
+        guard digits() > 0 else { throw problem("expected digits after the decimal point") }
+      }
+      if peek("e") || peek("E") {
+        position += 1
+        if peek("+") || peek("-") { position += 1 }
+        guard digits() > 0 else { throw problem("expected digits in the exponent") }
+      }
+      return .number(Self.text(bytes[start..<position]))
+    }
+  }
+}

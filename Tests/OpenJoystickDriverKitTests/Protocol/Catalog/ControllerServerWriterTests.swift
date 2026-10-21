@@ -153,4 +153,57 @@ struct ControllerServerWriterTests {
       #expect(try FileManager.default.contentsOfDirectory(atPath: directory.path).isEmpty)
     }
   }
+
+  /// The written file keeps the user's member order and number text; only `server` changes.
+  @Test
+  func existingFileKeepsItsOrderAndStyle() throws {
+    try Self.withDirectory { directory, _ in
+      let file = directory.appendingPathComponent("2c22-2000.patch.json")
+      func text(_ server: String) -> String {
+        """
+        {
+          "kind": "ControllerPatch",
+          "apiVersion": "\(OpenJoystickDriverAPI.version)",
+          "selector": {
+            "productID": 8192,
+            "vendorID": 11298
+          },
+          "patch": {
+            "tuning": {
+              "stickDeadzone": 0.10
+            },
+            "server": "\(server)"
+          }
+        }
+
+        """
+      }
+      try Data(text("OJD").utf8).write(to: file)
+      let change = try Self.change(Self.bundledHID, to: .system, in: directory)
+      #expect(String(bytes: change.data, encoding: .utf8) == text("System"))
+    }
+  }
+
+  @Test
+  func aFileWithAByteOrderMarkIsRefusedByName() throws {
+    try Self.withDirectory { directory, _ in
+      let file = directory.appendingPathComponent("2c22-2000.patch.json")
+      let data =
+        Data([0xEF, 0xBB, 0xBF])
+        + (try JSONSerialization.data(
+          withJSONObject: ControllerPatch.document(
+            selector: .identity(Self.bundledHID),
+            body: ["server": "OJD"]
+          )
+        ))
+      try data.write(to: file)
+      #expect(
+        throws: ControllerServerWriter.Failure.invalidFile(
+          "JSON text, byte 0: the text starts with a byte order mark; save the file as UTF-8 "
+            + "without one"
+        )
+      ) { try Self.change(Self.bundledHID, to: .ojd, in: directory) }
+      #expect(try Data(contentsOf: file) == data)
+    }
+  }
 }

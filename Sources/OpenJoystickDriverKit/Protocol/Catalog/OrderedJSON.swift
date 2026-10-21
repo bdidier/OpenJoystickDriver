@@ -5,7 +5,10 @@ import Foundation
 /// array on one line when the line stays within 80 columns.
 ///
 /// Every record text the app shows or writes comes from ``formatted()``, so it reads like the
-/// bundled `Resources/Controllers` files, which `biome` formats the same way.
+/// bundled `Resources/Controllers` files, which `biome` formats the same way. An array that does
+/// not fit on its line puts one item per line, except an array of numbers only, which fills each
+/// line with as many numbers as fit, as `biome` does. A line's width is counted in columns: an
+/// East Asian wide or fullwidth character and an emoji take two, a combining mark none.
 public indirect enum OrderedJSON: Equatable, Sendable {
   case object([Member])
   case array([Self])
@@ -27,7 +30,40 @@ public indirect enum OrderedJSON: Equatable, Sendable {
 
   /// A JSON text that does not parse, or a value JSON cannot hold.
   public struct Problem: Error, Equatable, CustomStringConvertible, Sendable {
-    public let description: String
+    public enum Reason: Equatable, Sendable {
+      /// The text starts with the UTF-8 byte order mark `EF BB BF`, which record files do not
+      /// carry.
+      case byteOrderMark
+      /// The text starts with a UTF-16 byte order mark or holds a zero byte, as UTF-16 and UTF-32
+      /// text does.
+      case wideEncoding
+      /// The bytes from ``Problem/offset`` are not UTF-8.
+      case notUTF8
+      /// An object names this member twice, so one of the values would be lost.
+      case duplicateMember(String)
+      /// The text breaks the JSON grammar, in words.
+      case syntax(String)
+      /// A Foundation value JSON cannot hold, in words.
+      case notAJSONValue(String)
+    }
+
+    public let reason: Reason
+    /// The byte of the text where the problem is; nil for a Foundation value.
+    public let offset: Int?
+
+    public var description: String {
+      let message =
+        switch reason {
+        case .byteOrderMark:
+          "the text starts with a byte order mark; save the file as UTF-8 without one"
+        case .wideEncoding: "the text is UTF-16 or UTF-32; save the file as UTF-8"
+        case .notUTF8: "the text is not UTF-8; save the file as UTF-8"
+        case .duplicateMember(let key):
+          "the member \(OrderedJSON.quoted(key)) appears twice in one object"
+        case .syntax(let words), .notAJSONValue(let words): words
+        }
+      return offset.map { "JSON text, byte \($0): \(message)" } ?? message
+    }
   }
 
   /// The widest line the array layout keeps on one line.
@@ -36,22 +72,32 @@ public indirect enum OrderedJSON: Equatable, Sendable {
 
   // MARK: Foundation values
 
-  /// `value`, a `JSONSerialization` object, with each object's members in the order of `order`
-  /// and the members `order` lacks after them in sorted order. Array items take the order of the
-  /// item at the same position.
+  /// `value`, a `JSONSerialization` object, laid out after `order`.
+  ///
+  /// At every depth, an object's members follow the members of the object at the same place in
+  /// `order`, and the members `order` lacks come after them in sorted order; a key `order` names
+  /// twice counts once. Array items take the order of the item at the same position. A number
+  /// keeps the text of the number at the same place in `order` when that text reads as the same
+  /// value, so `1e3` and `100.50` stay as written.
+  ///
+  /// The controller schema's property order is not a guide: Kit does not bundle the schemas. So a
+  /// ``ControllerRecordDraft``, guided by ``recordKeys`` at the top level only, sorts every nested
+  /// object, and a patch merge, guided by the upstream record at every depth, sorts only the
+  /// members the patch adds.
   public init(foundation value: Any, order: Self? = nil) throws {
     switch value {
     case let dictionary as [String: Any]:
       var guide: [String: Self] = [:]
       var guided: [String] = []
       if case .object(let members)? = order {
-        guided = members.map(\.key)
-        for member in members { guide[member.key] = member.value }
+        for member in members where guide[member.key] == nil {
+          guided.append(member.key)
+          guide[member.key] = member.value
+        }
       }
-      let guidedKeys = Set(guided)
       let keys =
         guided.filter { dictionary[$0] != nil }
-        + dictionary.keys.filter { !guidedKeys.contains($0) }.sorted()
+        + dictionary.keys.filter { guide[$0] == nil }.sorted()
       var members: [Member] = []
       for key in keys {
         guard let child = dictionary[key] else { preconditionFailure("key from the dictionary") }
@@ -76,29 +122,90 @@ public indirect enum OrderedJSON: Equatable, Sendable {
     case let number as NSNumber:
       if CFGetTypeID(number) == CFBooleanGetTypeID() {
         self = .bool(number.boolValue)
-      } else if CFNumberIsFloatType(number) {
-        guard number.doubleValue.isFinite else {
-          throw Problem(description: "JSON cannot hold a number that is not finite")
-        }
-        self = .number("\(number.doubleValue)")
+      } else if case .number(let text)? = order, Self.reads(text, as: number) {
+        self = .number(text)
       } else {
-        self = .number(number.stringValue)
+        self = .number(try Self.text(of: number))
       }
     default:
-      throw Problem(description: "\(type(of: value)) is not a JSON value")
+      throw Problem(reason: .notAJSONValue("\(type(of: value)) is not a JSON value"), offset: nil)
     }
+  }
+
+  /// Whether the JSON number `text` has the value of `number`.
+  private static func reads(
+    _ text: String,
+    as number: NSNumber  // swiftlint:disable:this legacy_objc_type
+  ) -> Bool {
+    // swiftlint:disable:next legacy_objc_type
+    if number is NSDecimalNumber { return Decimal(string: text) == number.decimalValue }
+    if CFNumberIsFloatType(number) { return Double(text) == number.doubleValue }
+    if let integer = Int64(text) { return integer == number.int64Value }
+    return UInt64(text).map { $0 == number.uint64Value } ?? false
+  }
+
+  /// The JSON text of `number`: the digits of an integer or a decimal number, and the shortest
+  /// text that reads back as the same `Double` for a floating-point one, with the exponent
+  /// written `e-7` rather than `e-07`.
+  private static func text(
+    of number: NSNumber  // swiftlint:disable:this legacy_objc_type
+  ) throws -> String {
+    // swiftlint:disable:next legacy_objc_type
+    guard CFNumberIsFloatType(number), !(number is NSDecimalNumber) else {
+      return number.stringValue
+    }
+    guard number.doubleValue.isFinite else {
+      throw Problem(
+        reason: .notAJSONValue("JSON cannot hold a number that is not finite"),
+        offset: nil
+      )
+    }
+    let text = "\(number.doubleValue)"
+    guard let mark = text.firstIndex(of: "e") else { return text }
+    var exponent = text[text.index(after: mark)...]
+    let negative = exponent.first == "-"
+    exponent = exponent.drop { $0 == "+" || $0 == "-" }.drop { $0 == "0" }
+    return String(text[...mark]) + (negative ? "-" : "")
+      + (exponent.isEmpty ? "0" : String(exponent))
   }
 
   // MARK: Parsing
 
-  /// The value in `data`, a UTF-8 JSON document.
+  /// The value in `data`, a UTF-8 JSON document without a byte order mark. A member name that
+  /// appears twice in one object is refused, because a reader keeps only one of its values.
   public static func parse(_ data: Data) throws -> Self {
-    var parser = Parser(bytes: [UInt8](data))
+    let bytes = [UInt8](data)
+    try requireUTF8(bytes)
+    var parser = Parser(bytes: bytes)
     parser.skipSpace()
     let value = try parser.value()
     parser.skipSpace()
     guard parser.atEnd else { throw parser.problem("unexpected text after the value") }
     return value
+  }
+
+  /// Refuses text that is not plain UTF-8: a byte order mark, UTF-16 or UTF-32 text, or bytes
+  /// that do not decode as UTF-8.
+  public static func requireUTF8(_ data: Data) throws { try requireUTF8([UInt8](data)) }
+
+  private static func requireUTF8(_ bytes: [UInt8]) throws {
+    if bytes.starts(with: [0xEF, 0xBB, 0xBF]) {
+      throw Problem(reason: .byteOrderMark, offset: 0)
+    }
+    if bytes.starts(with: [0xFE, 0xFF]) || bytes.starts(with: [0xFF, 0xFE]) {
+      throw Problem(reason: .wideEncoding, offset: 0)
+    }
+    if let zero = bytes.firstIndex(of: 0) { throw Problem(reason: .wideEncoding, offset: zero) }
+    var iterator = bytes.makeIterator()
+    var decoder = UTF8()
+    var offset = 0
+    while true {
+      switch decoder.decode(&iterator) {
+      case .scalarValue(let scalar): offset += UTF8.width(scalar)
+      case .emptyInput: return
+      case .error: throw Problem(reason: .notUTF8, offset: offset)
+      }
+    }
   }
 
   // MARK: Formatting
@@ -132,7 +239,7 @@ public indirect enum OrderedJSON: Equatable, Sendable {
         member.value.write(
           into: &output,
           indent: inner,
-          prefix: inner + key.count,
+          prefix: inner + Self.columns(key),
           suffix: last ? 0 : 1
         )
         output += last ? "\n" : ",\n"
@@ -143,22 +250,53 @@ public indirect enum OrderedJSON: Equatable, Sendable {
         output += "[]"
         return
       }
-      if let flat = flatText, prefix + flat.count + suffix <= Self.lineWidth {
+      if let flat = flatText, prefix + Self.columns(flat) + suffix <= Self.lineWidth {
         output += flat
         return
       }
       output += "[\n"
       let inner = indent + Self.indentWidth
-      for (index, item) in items.enumerated() {
-        let last = index == items.count - 1
-        output += String(repeating: " ", count: inner)
-        item.write(into: &output, indent: inner, prefix: inner, suffix: last ? 0 : 1)
-        output += last ? "\n" : ",\n"
+      let numbers = items.compactMap { item -> String? in
+        if case .number(let text) = item { return text }
+        return nil
+      }
+      if numbers.count == items.count {
+        Self.fill(numbers, into: &output, indent: inner)
+      } else {
+        for (index, item) in items.enumerated() {
+          let last = index == items.count - 1
+          output += String(repeating: " ", count: inner)
+          item.write(into: &output, indent: inner, prefix: inner, suffix: last ? 0 : 1)
+          output += last ? "\n" : ",\n"
+        }
       }
       output += String(repeating: " ", count: indent) + "]"
     default:
       output += flatText ?? ""
     }
+  }
+
+  /// Writes `numbers` as `biome` fills an array of numbers: each number, with its comma, goes on
+  /// the current line when the line stays within 80 columns, and starts a line otherwise.
+  private static func fill(_ numbers: [String], into output: inout String, indent: Int) {
+    output += String(repeating: " ", count: indent)
+    var column = indent
+    for (index, number) in numbers.enumerated() {
+      let text = index == numbers.count - 1 ? number : number + ","
+      let width = columns(text)
+      if index > 0 {
+        if column + 1 + width <= lineWidth {
+          output += " "
+          column += 1
+        } else {
+          output += "\n" + String(repeating: " ", count: indent)
+          column = indent
+        }
+      }
+      output += text
+      column += width
+    }
+    output += "\n"
   }
 
   /// The one-line text of a value with no filled object in it; nil otherwise.
@@ -180,6 +318,37 @@ public indirect enum OrderedJSON: Equatable, Sendable {
     }
   }
 
+  /// The columns `text` takes in a monospaced line, as `biome` counts them: two for an East
+  /// Asian wide or fullwidth character and for an emoji shown as an emoji, none for a combining
+  /// mark, a format character other than the soft hyphen, and a Hangul medial vowel or final
+  /// consonant, and one for any other character.
+  static func columns(_ text: String) -> Int {
+    text.unicodeScalars.reduce(0) { $0 + columns(of: $1) }
+  }
+
+  private static func columns(of scalar: Unicode.Scalar) -> Int {
+    let value = scalar.value
+    switch scalar.properties.generalCategory {
+    case .nonspacingMark, .enclosingMark: return 0
+    case .format where value != 0xAD: return 0
+    default: break
+    }
+    if (0x1160...0x11FF).contains(value) { return 0 }
+    if scalar.properties.isEmojiPresentation { return 2 }
+    return wideRanges.contains { $0.contains(value) } ? 2 : 1
+  }
+
+  /// The East Asian Wide and Fullwidth blocks of Unicode outside the emoji: Hangul initial
+  /// consonants, CJK punctuation, kana, ideographs, Yi, Hangul syllables, fullwidth forms, and
+  /// the supplementary ideographic planes.
+  private static let wideRanges: [ClosedRange<UInt32>] = [
+    0x1100...0x115F, 0x2329...0x232A, 0x2E80...0x303E, 0x3041...0x33FF, 0x3400...0x4DBF,
+    0x4E00...0x9FFF, 0xA000...0xA4CF, 0xA960...0xA97F, 0xAC00...0xD7A3, 0xF900...0xFAFF,
+    0xFE10...0xFE19, 0xFE30...0xFE6F, 0xFF00...0xFF60, 0xFFE0...0xFFE6, 0x16FE0...0x16FE4,
+    0x17000...0x18CFF, 0x1B000...0x1B2FF, 0x1F200...0x1F2FF, 0x20000...0x2FFFD,
+    0x30000...0x3FFFD,
+  ]
+
   static func quoted(_ text: String) -> String {
     var output = "\""
     for scalar in text.unicodeScalars {
@@ -196,213 +365,6 @@ public indirect enum OrderedJSON: Equatable, Sendable {
       }
     }
     return output + "\""
-  }
-}
-
-extension OrderedJSON {
-  /// A recursive-descent parser over UTF-8 bytes.
-  private struct Parser {
-    let bytes: [UInt8]
-    var position = 0
-
-    init(bytes: [UInt8]) { self.bytes = bytes }
-
-    var atEnd: Bool { position >= bytes.count }
-
-    func problem(_ message: String) -> Problem {
-      Problem(description: "JSON text, byte \(position): \(message)")
-    }
-
-    func peek(_ character: Character) -> Bool {
-      position < bytes.count && bytes[position] == character.asciiValue
-    }
-
-    mutating func skipSpace() {
-      while position < bytes.count, [0x20, 0x0A, 0x0D, 0x09].contains(bytes[position]) {
-        position += 1
-      }
-    }
-
-    mutating func value() throws -> OrderedJSON {
-      guard position < bytes.count else { throw problem("the text ends early") }
-      switch bytes[position] {
-      case UInt8(ascii: "{"): return try object()
-      case UInt8(ascii: "["): return try array()
-      case UInt8(ascii: "\""): return .string(try string())
-      case UInt8(ascii: "t"):
-        try literal("true")
-        return .bool(true)
-      case UInt8(ascii: "f"):
-        try literal("false")
-        return .bool(false)
-      case UInt8(ascii: "n"):
-        try literal("null")
-        return .null
-      default: return try number()
-      }
-    }
-
-    mutating func literal(_ word: String) throws {
-      let expected = Array(word.utf8)
-      guard bytes.count - position >= expected.count,
-        Array(bytes[position..<position + expected.count]) == expected
-      else { throw problem("expected \(word)") }
-      position += expected.count
-    }
-
-    mutating func object() throws -> OrderedJSON {
-      position += 1
-      var members: [Member] = []
-      skipSpace()
-      if peek("}") {
-        position += 1
-        return .object([])
-      }
-      while true {
-        skipSpace()
-        guard peek("\"") else { throw problem("expected a member name") }
-        let key = try string()
-        skipSpace()
-        guard peek(":") else { throw problem("expected :") }
-        position += 1
-        skipSpace()
-        members.append(Member(key: key, value: try value()))
-        skipSpace()
-        if peek(",") {
-          position += 1
-        } else if peek("}") {
-          position += 1
-          return .object(members)
-        } else {
-          throw problem("expected , or }")
-        }
-      }
-    }
-
-    mutating func array() throws -> OrderedJSON {
-      position += 1
-      var items: [OrderedJSON] = []
-      skipSpace()
-      if peek("]") {
-        position += 1
-        return .array([])
-      }
-      while true {
-        skipSpace()
-        items.append(try value())
-        skipSpace()
-        if peek(",") {
-          position += 1
-        } else if peek("]") {
-          position += 1
-          return .array(items)
-        } else {
-          throw problem("expected , or ]")
-        }
-      }
-    }
-
-    mutating func string() throws -> String {
-      position += 1
-      var text = ""
-      var run: [UInt8] = []
-      func flush() throws {
-        guard !run.isEmpty else { return }
-        guard let chunk = String(bytes: run, encoding: .utf8) else {
-          throw problem("a string is not UTF-8")
-        }
-        text += chunk
-        run.removeAll()
-      }
-      while position < bytes.count {
-        let byte = bytes[position]
-        if byte == UInt8(ascii: "\"") {
-          position += 1
-          try flush()
-          return text
-        }
-        if byte < 0x20 { throw problem("a control character in a string") }
-        guard byte == UInt8(ascii: "\\") else {
-          run.append(byte)
-          position += 1
-          continue
-        }
-        try flush()
-        position += 1
-        guard position < bytes.count else { break }
-        let escape = bytes[position]
-        position += 1
-        switch escape {
-        case UInt8(ascii: "\""): text += "\""
-        case UInt8(ascii: "\\"): text += "\\"
-        case UInt8(ascii: "/"): text += "/"
-        case UInt8(ascii: "b"): text += "\u{08}"
-        case UInt8(ascii: "f"): text += "\u{0C}"
-        case UInt8(ascii: "n"): text += "\n"
-        case UInt8(ascii: "r"): text += "\r"
-        case UInt8(ascii: "t"): text += "\t"
-        case UInt8(ascii: "u"): text.unicodeScalars.append(try unicodeEscape())
-        default: throw problem("an unknown escape")
-        }
-      }
-      throw problem("the text ends inside a string")
-    }
-
-    mutating func hexUnit() throws -> UInt32 {
-      guard bytes.count - position >= 4,
-        let digits = String(bytes: bytes[position..<position + 4], encoding: .utf8),
-        let unit = UInt32(digits, radix: 16)
-      else { throw problem("expected four hexadecimal digits") }
-      position += 4
-      return unit
-    }
-
-    mutating func unicodeEscape() throws -> Unicode.Scalar {
-      let first = try hexUnit()
-      if (0xD800...0xDBFF).contains(first) {
-        guard peek("\\"), position + 1 < bytes.count, bytes[position + 1] == UInt8(ascii: "u")
-        else {
-          throw problem("a high surrogate without a low surrogate")
-        }
-        position += 2
-        let second = try hexUnit()
-        guard (0xDC00...0xDFFF).contains(second),
-          let scalar = Unicode.Scalar(0x10000 + ((first - 0xD800) << 10) + (second - 0xDC00))
-        else { throw problem("a high surrogate without a low surrogate") }
-        return scalar
-      }
-      guard let scalar = Unicode.Scalar(first) else { throw problem("a lone low surrogate") }
-      return scalar
-    }
-
-    mutating func digits() -> Int {
-      let begin = position
-      while position < bytes.count, (0x30...0x39).contains(bytes[position]) { position += 1 }
-      return position - begin
-    }
-
-    mutating func number() throws -> OrderedJSON {
-      let start = position
-      if peek("-") { position += 1 }
-      if peek("0") {
-        position += 1
-      } else if digits() == 0 {
-        throw problem("expected a value")
-      }
-      if peek(".") {
-        position += 1
-        guard digits() > 0 else { throw problem("expected digits after the decimal point") }
-      }
-      if peek("e") || peek("E") {
-        position += 1
-        if peek("+") || peek("-") { position += 1 }
-        guard digits() > 0 else { throw problem("expected digits in the exponent") }
-      }
-      guard let text = String(bytes: bytes[start..<position], encoding: .utf8) else {
-        throw problem("a number is not UTF-8")
-      }
-      return .number(text)
-    }
   }
 }
 

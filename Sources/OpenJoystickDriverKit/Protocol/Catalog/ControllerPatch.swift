@@ -64,7 +64,9 @@ public struct ControllerPatch: Equatable, Sendable {
   ]
 
   public let selector: Selector
-  /// The merge patch as sorted-key JSON.
+  /// The merge patch as JSON with every object's members sorted, in ``OrderedJSON`` text, whose
+  /// numbers read back as the values they were written from (`JSONSerialization` writes `0.08`
+  /// as `0.080000000000000002`).
   let bodyData: Data
 
   /// The merge patch.
@@ -74,7 +76,7 @@ public struct ControllerPatch: Equatable, Sendable {
 
   init(selector: Selector, body: [String: Any]) throws {
     self.selector = selector
-    bodyData = try JSONSerialization.data(withJSONObject: body, options: .sortedKeys)
+    bodyData = try OrderedJSON(foundation: body).formattedData()
   }
 
   /// The model id of `model`: `vvvv-pppp` in lowercase hex.

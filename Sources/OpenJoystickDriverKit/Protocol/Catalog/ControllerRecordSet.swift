@@ -29,9 +29,10 @@ public enum ControllerRecordOperation: String, Codable, Sendable {
 /// record with package and user patches applied.
 public struct ControllerRecord: Sendable {
   public let model: ControllerModelID
-  /// The merged record as a `controller.schema.json` document, with sorted keys.
-  public let document: Data
-  /// The layer of each top-level field of `document`, except `apiVersion`, `kind`, `vendorID`, and
+  /// The merged record as a `controller.schema.json` document, in the record file text of
+  /// ``OrderedJSON/formatted()``.
+  public let text: String
+  /// The layer of each top-level field of `text`, except `apiVersion`, `kind`, `vendorID`, and
   /// `productID`.
   public let fieldLayers: [String: ControllerRecordLayer]
   /// The layer of each effective `tuning` key, by its JSON name: `Bundled`, `User`, or `Global`.
@@ -108,6 +109,11 @@ public struct ValidatedControllerRecord: Sendable {
   public var fileName: String {
     selector?.fileName ?? record.map { ControllerRecordSet.fileName(for: $0.model) } ?? ""
   }
+}
+
+extension ControllerRecord {
+  /// ``text`` as UTF-8, the bytes of a record file.
+  public var document: Data { Data(text.utf8) }
 }
 
 /// Why a controller record, patch or related document is invalid. A problem about a controller
@@ -194,6 +200,7 @@ public struct ControllerRecordSet: Sendable {
     for url in urls {
       do {
         let data = try Data(contentsOf: url)
+        try requireUTF8(data)
         guard let document = try JSONSerialization.jsonObject(with: data) as? [String: Any]
         else { throw ControllerRecordProblem(code: .invalidControllerRecord, "not a JSON object") }
         let layers = Dictionary(
@@ -246,14 +253,24 @@ public struct ControllerRecordSet: Sendable {
     return (ControllerModelID(vendorID: vendorID, productID: productID), document)
   }
 
-  /// The members of `data` in file order.
+  /// The members of `data` in file order. Text that is not plain UTF-8, such as a file with a
+  /// byte order mark or a UTF-16 file, and an object that names a member twice are
+  /// `invalidControllerRecord`.
   static func ordered(_ data: Data) throws -> OrderedJSON {
     do { return try OrderedJSON.parse(data) } catch {
       throw ControllerRecordProblem(code: .invalidControllerRecord, "\(error)")
     }
   }
 
-  /// The record for `record`, whose ``ControllerRecord/document`` lists the members in the order
+  /// Refuses `data` unless it is plain UTF-8, with the problem ``ordered(_:)`` gives, before a
+  /// reader that accepts a byte order mark or UTF-16 reads it.
+  static func requireUTF8(_ data: Data) throws {
+    do { try OrderedJSON.requireUTF8(data) } catch {
+      throw ControllerRecordProblem(code: .invalidControllerRecord, "\(error)")
+    }
+  }
+
+  /// The record for `record`, whose ``ControllerRecord/text`` lists the members in the order
   /// of `order` and sorts the members `order` lacks.
   static func makeRecord(
     _ record: [String: Any],
@@ -267,7 +284,7 @@ public struct ControllerRecordSet: Sendable {
     let set = decoded.document.tuning.setKeys
     return ControllerRecord(
       model: decoded.model,
-      document: try OrderedJSON(foundation: record, order: order).formattedData(),
+      text: try OrderedJSON(foundation: record, order: order).formatted(),
       fieldLayers: layers,
       tuningLayers: tuningLayers
         ?? Dictionary(
