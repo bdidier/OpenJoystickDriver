@@ -1,8 +1,8 @@
 import Foundation
 
 extension DeviceManager {
-  func notifyControllerInventoryChanged() {
-    NotificationCenter.default.post(name: .ojdControllerInventoryDidChange, object: nil)
+  func notifyServiceStatusChanged() {
+    NotificationCenter.postServiceStatusChanged()
   }
 
   /// Stop all detection and pipelines.
@@ -78,7 +78,7 @@ extension DeviceManager {
     for identifier in Array(hidOutputQueues.keys) { retireOutputQueue(for: identifier) }
     physicalOutputOwnership.removeAll()
     lastPhysicalHIDOutputNanoseconds = [:]
-    if hadDeviceInfo { notifyControllerInventoryChanged() }
+    if hadDeviceInfo { notifyServiceStatusChanged() }
     // A drained retired queue has nothing left for a new queue to wait behind.
     for (identifier, queue) in retiredHIDOutputQueues {
       await queue.drain()

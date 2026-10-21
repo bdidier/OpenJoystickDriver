@@ -512,6 +512,7 @@
 "keyboard.alt" = "Option";
 "keyboard.shift" = "Shift";
 "mapping.automatic" = "自動";
+"virtualProfile.automaticSelected" = "自動（%@）";
 "setup.activeDetail" = "制限付きXbox USBドライバがインストールされ、準備ができています。";
 "setup.approvalDetail" = "対応するMicrosoft USBコントローラを使うには、システム設定でドライバを承認してください。";
 "setup.checkingDetail" = "インストール済みのXbox USBドライバを確認しています。";
@@ -526,6 +527,8 @@
 "banner.service.title" = "OpenJoystickDriverがサービスに接続できません";
 "banner.access.title" = "権限が必要です";
 "banner.access.detail" = "macOSは、OpenJoystickDriverがコントローラを読み取り、ゲームに公開するために必要な権限をすべては許可していません。";
+"banner.liveUpdates.title" = "ライブ更新を利用できません";
+"banner.liveUpdates.detail" = "ライブ更新を利用できないため（%@）、OpenJoystickDriverはサービスを繰り返し確認します。";
 "cli.login.uninstall_action" = "アンインストール";
 "console.all" = "すべて";
 "console.empty" = "ログエントリはありません。";

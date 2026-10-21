@@ -26,7 +26,7 @@ extension RemappingRequestCoordinator {
   func pairJoyCons(
     _ arguments: ApplicationServiceJoyConPairArguments
   ) async -> RemappingRequestResult<ApplicationServiceRemappingSnapshotPayload> {
-    await exclusively {
+    await changing {
       let connected = await connectedControllers()
       guard let left = try? arguments.left.resolve(in: connected),
         let right = try? arguments.right.resolve(in: connected)
@@ -46,7 +46,7 @@ extension RemappingRequestCoordinator {
   func unpairJoyCons(
     _ arguments: ApplicationServiceJoyConUnpairArguments
   ) async -> RemappingRequestResult<ApplicationServiceRemappingSnapshotPayload> {
-    await exclusively {
+    await changing {
       try await router.unpairJoyCons(arguments.sessionID)
       return try await makeSnapshot()
     }
@@ -90,7 +90,7 @@ extension RemappingRequestCoordinator {
   func deleteDamagedProfile(
     issueID: UUID
   ) async -> RemappingRequestResult<ApplicationServiceRemappingSnapshotPayload> {
-    await exclusively {
+    await changing {
       _ = try await library.deleteDamagedProfile(issueID: issueID)
       return try await makeSnapshot()
     }
@@ -99,7 +99,7 @@ extension RemappingRequestCoordinator {
   func resetDamagedLibrary(
     issueID: UUID
   ) async -> RemappingRequestResult<ApplicationServiceRemappingSnapshotPayload> {
-    await exclusively {
+    await changing {
       _ = try await library.resetDamagedLibrary(issueID: issueID)
       return try await makeSnapshot()
     }
@@ -107,7 +107,7 @@ extension RemappingRequestCoordinator {
 
   /// Reloads the profile files and refreshes each model whose active profiles changed.
   func reloadProfiles() async -> RemappingRequestResult<Void> {
-    await exclusively {
+    await changing {
       for model in Self.sorted(try await library.reload()) {
         do {
           try await router.refreshModel(vendorID: model.vendorID, productID: model.productID)
@@ -147,7 +147,7 @@ extension RemappingRequestCoordinator {
   }
 
   func requestPostEventAccess() async -> RemappingRequestResult<RemappingPostEventAccessState> {
-    await exclusively {
+    await changing {
       let state = postEventAccess.requestAccess()
       try await router.refreshEligibility()
       return state
@@ -158,7 +158,7 @@ extension RemappingRequestCoordinator {
     preflight: @Sendable () async throws -> Void = {},
     operation: () async throws -> RemappingProfileMutationImpact
   ) async -> RemappingRequestResult<ApplicationServiceRemappingSnapshotPayload> {
-    await exclusively {
+    await changing {
       try await preflight()
       let checkpoint = try await library.checkpoint()
       let transaction = try await router.beginProfileTransaction()
@@ -283,6 +283,15 @@ extension RemappingRequestCoordinator {
         message: "The remapping RPC response exceeds the transport frame limit."
       )
     }
+  }
+
+  /// Runs `operation` like ``exclusively(_:)`` and announces a status change when it succeeds.
+  private func changing<Value: Sendable>(
+    _ operation: () async throws -> Value
+  ) async -> RemappingRequestResult<Value> {
+    let result = await exclusively(operation)
+    if case .success = result { NotificationCenter.postServiceStatusChanged() }
+    return result
   }
 
   private func exclusively<Value: Sendable>(

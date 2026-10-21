@@ -512,6 +512,7 @@
 "keyboard.alt" = "ऑप्शन";
 "keyboard.shift" = "शिफ़्ट";
 "mapping.automatic" = "स्वचालित";
+"virtualProfile.automaticSelected" = "स्वचालित (%@)";
 "setup.activeDetail" = "प्रतिबंधित Xbox USB ड्राइवर इंस्टॉल है और तैयार है।";
 "setup.approvalDetail" = "समर्थित Microsoft USB कंट्रोलर इस्तेमाल करने के लिए सिस्टम सेटिंग्स में ड्राइवर को स्वीकृति दें।";
 "setup.checkingDetail" = "इंस्टॉल किए गए Xbox USB ड्राइवर की जाँच हो रही है।";
@@ -526,6 +527,8 @@
 "banner.service.title" = "OpenJoystickDriver अपनी सेवा तक नहीं पहुँच पा रहा है";
 "banner.access.title" = "अनुमति आवश्यक है";
 "banner.access.detail" = "OpenJoystickDriver को कंट्रोलर पढ़ने और उन्हें गेम में प्रकाशित करने के लिए जो कुछ चाहिए, macOS ने उसकी पूरी अनुमति नहीं दी है।";
+"banner.liveUpdates.title" = "लाइव अपडेट उपलब्ध नहीं हैं";
+"banner.liveUpdates.detail" = "लाइव अपडेट उपलब्ध नहीं हैं (%@), इसलिए OpenJoystickDriver सेवा को बार-बार जाँचता है।";
 "cli.login.uninstall_action" = "अनइंस्टॉल करें";
 "console.all" = "सभी";
 "console.empty" = "कोई लॉग प्रविष्टि नहीं।";

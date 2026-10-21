@@ -107,7 +107,21 @@ struct MainWindowProblemTests {
   }
 
   @Test
-  func anEmptyOrMissingValueShowsAHyphen() {
+  func pollingInsteadOfLiveUpdatesIsAQuietProblemWithItsReason() {
+    let problems = MainWindowProblem.current(
+      permissions: permissions(.granted),
+      status: status(inputRead: .granted),
+      driver: .active,
+      liveUpdatesFallbackReason: "The service is unreachable."
+    )
+    #expect(problems == [.liveUpdatesPolling("The service is unreachable.")])
+    #expect(problems.first?.isFailure == false)
+    #expect(problems.first?.action == nil)
+    #expect(problems.first?.titleKey == "banner.liveUpdates.title")
+  }
+
+  @Test
+  func anEmptyOrMissingValueShowsNone() {
     #expect(OJDValue(nil).displayText == OJDLocalized.string("common.none"))
     #expect(OJDValue("").displayText == OJDLocalized.string("common.none"))
     #expect(OJDValue(nil).accessibilityKey == "common.none")
@@ -116,7 +130,7 @@ struct MainWindowProblemTests {
   }
 
   @Test
-  func reportedValuesWithoutContentShowAHyphen() {
+  func reportedValuesWithoutContentShowNone() {
     #expect(OJDValue.reported("  \n") == .none)
     #expect(OJDValue.reported(nil) == .none)
     #expect(OJDValue.reported(" USB ") == .text("USB"))
@@ -154,7 +168,7 @@ struct MainWindowProblemTests {
   }
 
   @Test
-  func aMissingSerialNumberShowsTheHyphenWithoutAnEye() {
+  func aMissingSerialNumberShowsNoneWithoutAnEye() {
     let presentation = SerialNumberVisibility().presentation(of: .none)
     #expect(!presentation.canToggle)
     #expect(!presentation.isObscured)

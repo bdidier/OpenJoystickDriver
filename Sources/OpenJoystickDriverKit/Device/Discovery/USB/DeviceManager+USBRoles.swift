@@ -76,7 +76,7 @@ extension DeviceManager {
       )
       pipelines[role.identifier] = pipeline
       started.append((role.identifier, pipeline))
-      notifyControllerInventoryChanged()
+      notifyServiceStatusChanged()
       await pipeline.start()
       guard isCurrentUSBDetection(generation),
         started.allSatisfy({
@@ -111,7 +111,7 @@ extension DeviceManager {
       pipelines[$0.identifier] === $0.pipeline && isRunningUSBRole($0.identifier, of: device)
     }
     for role in owned { _ = removeUSBRole(role.identifier) }
-    if !owned.isEmpty { notifyControllerInventoryChanged() }
+    if !owned.isEmpty { notifyServiceStatusChanged() }
     for (_, pipeline) in started { await pipeline.stop() }
     await reconcileUnboundHIDClaims()
     return .retry

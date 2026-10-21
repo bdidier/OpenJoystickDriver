@@ -222,7 +222,7 @@ extension DeviceManager {
       deviceInfos[identifier]?.physicalDevice == physicalDevice, pipelines[identifier] == nil
     else { return }
     pipelines[identifier] = pipeline
-    notifyControllerInventoryChanged()
+    notifyServiceStatusChanged()
     guard ownership != .ownedByAnotherClient else { return }
     await pipeline.start()
     guard await isCurrentHIDStartupPipeline(pipeline, connection: connection) else { return }

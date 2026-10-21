@@ -192,7 +192,7 @@ extension DeviceManager {
       !Self.isSamePhysicalController($0.value.identifier, identifier)
     }
     let removed = raw.keys.compactMap(removeUSBRole)
-    notifyControllerInventoryChanged()
+    notifyServiceStatusChanged()
     for pipeline in removed { await pipeline.stop() }
   }
 
@@ -228,7 +228,7 @@ extension DeviceManager {
         "[DeviceManager] Raw USB session never started; restoring HID for \(yielded.identifier)"
       )
       let removed = raw.keys.compactMap { key in removeUSBRole(key).map { (key, $0) } }
-      notifyControllerInventoryChanged()
+      notifyServiceStatusChanged()
       for (_, pipeline) in removed { await pipeline.stop() }
       guard !isStopping, yieldedHIDConnections[connectionID] != nil else { continue }
       yieldedHIDConnections.removeValue(forKey: connectionID)

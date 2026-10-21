@@ -46,6 +46,9 @@
 
     private func detailText(_ problem: MainWindowProblem) -> String {
       if case .serviceUnavailable(let message) = problem { return message }
+      if case .liveUpdatesPolling(let reason) = problem {
+        return OJDLocalized.formatted("banner.liveUpdates.detail", reason)
+      }
       guard let key = problem.detailKey else { return "" }
       return OJDLocalized.string(key)
     }

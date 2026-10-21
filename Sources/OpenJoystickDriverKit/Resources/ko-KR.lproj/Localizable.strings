@@ -512,6 +512,7 @@
 "keyboard.alt" = "Option";
 "keyboard.shift" = "Shift";
 "mapping.automatic" = "자동";
+"virtualProfile.automaticSelected" = "자동(%@)";
 "setup.activeDetail" = "제한된 Xbox USB 드라이버가 설치되어 준비되었습니다.";
 "setup.approvalDetail" = "지원되는 Microsoft USB 컨트롤러를 사용하려면 시스템 설정에서 드라이버를 승인하십시오.";
 "setup.checkingDetail" = "설치된 Xbox USB 드라이버를 확인하는 중입니다.";
@@ -526,6 +527,8 @@
 "banner.service.title" = "OpenJoystickDriver가 서비스에 연결할 수 없습니다";
 "banner.access.title" = "권한 필요";
 "banner.access.detail" = "macOS에서 OpenJoystickDriver가 컨트롤러를 읽고 게임에 게시하는 데 필요한 권한 중 일부를 허용하지 않았습니다.";
+"banner.liveUpdates.title" = "실시간 업데이트를 사용할 수 없음";
+"banner.liveUpdates.detail" = "실시간 업데이트를 사용할 수 없어(%@) OpenJoystickDriver가 서비스를 반복해서 확인합니다.";
 "cli.login.uninstall_action" = "제거";
 "console.all" = "모두";
 "console.empty" = "로그 항목이 없습니다.";

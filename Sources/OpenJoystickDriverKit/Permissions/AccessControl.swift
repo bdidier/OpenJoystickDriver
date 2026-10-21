@@ -49,6 +49,7 @@ public actor PermissionManager {
 
   public private(set) var inputReadState: AccessState = .unknown
   public private(set) var inputInjectState: AccessState = .unknown
+  private var postEventState = PermissionManager.currentPostEventAccessState()
   private(set) var pollingTask: Task<Void, Never>?
 
   public init() {}
@@ -98,6 +99,11 @@ public actor PermissionManager {
     )
     inputReadState = snapshot.inputRead
     inputInjectState = snapshot.inputInject
+    let postEvent = Self.currentPostEventAccessState()
+    if postEvent != postEventState {
+      postEventState = postEvent
+      NotificationCenter.postServiceStatusChanged()
+    }
     return snapshot
   }
 
@@ -166,6 +172,7 @@ public actor PermissionManager {
   private func updateState(name: String, previous: AccessState, current: AccessState) {
     guard previous != current else { return }
     print("[PermissionManager] \(name) state changed: \(previous) -> \(current)")
+    NotificationCenter.postServiceStatusChanged()
   }
 }
 

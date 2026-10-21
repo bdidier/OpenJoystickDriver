@@ -2,10 +2,17 @@ import Foundation
 import IOKit.hid
 
 public extension Notification.Name {
-  /// Posted in-process after the physical controller inventory or session state changes.
-  static let ojdControllerInventoryDidChange = Notification.Name(
-    "OpenJoystickDriver.controllerInventoryDidChange"
+  /// Posted in-process after anything `getStatus` or the remapping snapshot reports changes.
+  static let ojdServiceStatusDidChange = Notification.Name(
+    "OpenJoystickDriver.serviceStatusDidChange"
   )
+}
+
+public extension NotificationCenter {
+  /// Announces that the service's reported status changed.
+  static func postServiceStatusChanged() {
+    NotificationCenter.default.post(name: .ojdServiceStatusDidChange, object: nil)
+  }
 }
 
 /// Observed result of acquiring one physical HID interface, independent of virtual output.

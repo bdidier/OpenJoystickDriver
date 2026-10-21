@@ -30,14 +30,18 @@ public final class ApplicationServiceServer: @unchecked Sendable {
   let virtualHIDProfileOverrides: VirtualHIDProfileOverrideStore
   let userSpaceDispatcherFactory: UserSpaceDispatcherFactory
   let virtualFeeds: VirtualFeedRegistry
-  /// Counts controller attach, detach and state changes for `waitForControllerInventoryChange`.
-  let inventoryChanges = ControllerInventoryChanges()
+  /// Counts status changes for `waitForServiceStatusChange`.
+  let statusChanges = ServiceStatusChanges()
   /// Guards `userSpaceDispatcher`, `userSpaceEnabled`, `userSpaceStatus`, `userSpaceCloseSlot`,
   /// and `virtualOutputServerStopped`.
   let userSpaceLock = NSLock()
   var userSpaceDispatcher: (any VirtualOutputDispatching)?
-  var userSpaceEnabled: Bool
-  var userSpaceStatus: VirtualOutputBackendStatus = .off
+  var userSpaceEnabled: Bool {
+    didSet { if oldValue != userSpaceEnabled { NotificationCenter.postServiceStatusChanged() } }
+  }
+  var userSpaceStatus: VirtualOutputBackendStatus = .off {
+    didSet { if oldValue != userSpaceStatus { NotificationCenter.postServiceStatusChanged() } }
+  }
   var userSpaceCloseSlot: VirtualOutputBackendCloseSlot?
   /// Guards `rpcServer` and `endpointServer`.
   let rpcServerLock = NSLock()

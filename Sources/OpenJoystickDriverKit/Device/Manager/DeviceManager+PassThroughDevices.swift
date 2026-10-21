@@ -75,7 +75,7 @@ extension DeviceManager {
         connection: connection.physicalDevice.transportProperty ?? "HID"
       )
     )
-    notifyControllerInventoryChanged()
+    notifyServiceStatusChanged()
     print(
       "[DeviceManager] HID device left to macOS (native controller):"
         + String(format: " %04x:%04x", vendorID, productID)
@@ -84,12 +84,12 @@ extension DeviceManager {
 
   func clearPassThroughDevice(_ connectionID: UUID) {
     guard passThroughDevices.removeValue(forKey: connectionID) != nil else { return }
-    notifyControllerInventoryChanged()
+    notifyServiceStatusChanged()
   }
 
   func clearPassThroughDevices() {
     guard !passThroughDevices.isEmpty else { return }
     passThroughDevices.removeAll()
-    notifyControllerInventoryChanged()
+    notifyServiceStatusChanged()
   }
 }

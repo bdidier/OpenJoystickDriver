@@ -512,6 +512,7 @@
 "keyboard.alt" = "Option";
 "keyboard.shift" = "Shift";
 "mapping.automatic" = "อัตโนมัติ";
+"virtualProfile.automaticSelected" = "อัตโนมัติ (%@)";
 "setup.activeDetail" = "ติดตั้งไดรเวอร์ Xbox USB แบบจำกัดและพร้อมใช้งานแล้ว";
 "setup.approvalDetail" = "อนุญาตไดรเวอร์ในการตั้งค่าระบบเพื่อใช้คอนโทรลเลอร์ USB ของ Microsoft ที่รองรับ";
 "setup.checkingDetail" = "กำลังตรวจสอบไดรเวอร์ Xbox USB ที่ติดตั้งอยู่";
@@ -526,6 +527,8 @@
 "banner.service.title" = "OpenJoystickDriver ไม่สามารถเชื่อมต่อกับบริการของตนได้";
 "banner.access.title" = "ต้องมีสิทธิ์";
 "banner.access.detail" = "macOS ยังไม่ได้อนุญาตทั้งหมดที่ OpenJoystickDriver ต้องใช้ในการอ่านคอนโทรลเลอร์และเผยแพร่ไปยังเกม";
+"banner.liveUpdates.title" = "ไม่มีการอัปเดตแบบเรียลไทม์";
+"banner.liveUpdates.detail" = "ไม่สามารถใช้การอัปเดตแบบเรียลไทม์ได้ (%@) OpenJoystickDriver จึงตรวจสอบบริการซ้ำ ๆ";
 "cli.login.uninstall_action" = "ถอนการติดตั้ง";
 "console.all" = "ทั้งหมด";
 "console.empty" = "ไม่มีรายการบันทึกการใช้งาน";

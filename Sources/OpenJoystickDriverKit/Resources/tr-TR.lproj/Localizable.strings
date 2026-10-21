@@ -512,6 +512,7 @@
 "keyboard.alt" = "Option";
 "keyboard.shift" = "Shift";
 "mapping.automatic" = "Otomatik";
+"virtualProfile.automaticSelected" = "Otomatik (%@)";
 "setup.activeDetail" = "Kısıtlı Xbox USB sürücüsü yüklendi ve hazır.";
 "setup.approvalDetail" = "Desteklenen Microsoft USB kontrolcülerini kullanmak için sürücüyü Sistem Ayarları’nda onayla.";
 "setup.checkingDetail" = "Yüklü Xbox USB sürücüsü denetleniyor.";
@@ -526,6 +527,8 @@
 "banner.service.title" = "OpenJoystickDriver servisine ulaşamıyor";
 "banner.access.title" = "İzin gerekli";
 "banner.access.detail" = "macOS, OpenJoystickDriver’ın kontrolcüleri okumak ve oyunlara sunmak için ihtiyaç duyduğu her şeye izin vermedi.";
+"banner.liveUpdates.title" = "Canlı güncellemeler kullanılamıyor";
+"banner.liveUpdates.detail" = "Canlı güncellemeler kullanılamıyor (%@), bu yüzden OpenJoystickDriver hizmeti tekrar tekrar denetliyor.";
 "cli.login.uninstall_action" = "Kaldır";
 "console.all" = "Tümü";
 "console.empty" = "Günlük kayıtları yok.";

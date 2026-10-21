@@ -112,6 +112,7 @@ package enum LocalServiceRPCError: Error, Equatable, LocalizedError, Sendable {
   case invalidFrame
   case peerRejected
   case remote(String)
+  case serviceClosedConnection
   case timeout
 
   package var errorDescription: String? {
@@ -124,6 +125,7 @@ package enum LocalServiceRPCError: Error, Equatable, LocalizedError, Sendable {
       return "The running main application rejected this CLI executable. Use the CLI inside "
         + "/Applications/OpenJoystickDriver.app, or install and relaunch a matching signed build."
     case .remote(let message): return message
+    case .serviceClosedConnection: return "The main application closed the connection."
     case .timeout: return "Main application RPC timed out."
     }
   }

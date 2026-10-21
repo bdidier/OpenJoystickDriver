@@ -53,7 +53,7 @@ extension DeviceManager {
       rejectedCandidates: rejectedCandidates,
       interfaces: interfaces.map(ProtocolBindingResult.InterfaceSummary.init)
     )
-    notifyControllerInventoryChanged()
+    notifyServiceStatusChanged()
     print(
       "[DeviceManager] \(backend.rawValue) device left unbound:"
         + String(format: " %04x:%04x", vendorID, productID) + " reason=\(reason.rawValue)"
@@ -63,7 +63,7 @@ extension DeviceManager {
   func clearUnboundDevice(_ key: UnboundDeviceKey) {
     if case .hid(let connectionID) = key { unboundHIDClaims.removeValue(forKey: connectionID) }
     guard unboundDevices.removeValue(forKey: key) != nil else { return }
-    notifyControllerInventoryChanged()
+    notifyServiceStatusChanged()
   }
 
   func clearUnboundHIDDevices() {
@@ -74,7 +74,7 @@ extension DeviceManager {
     for key in keys { unboundDevices.removeValue(forKey: key) }
     unboundHIDClaims.removeAll()
     yieldedHIDConnections.removeAll()
-    if !keys.isEmpty { notifyControllerInventoryChanged() }
+    if !keys.isEmpty { notifyServiceStatusChanged() }
   }
 
   /// Records a rejected HID connection and reconciles OJD's claim on it. A native controller no

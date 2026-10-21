@@ -512,6 +512,7 @@
 "keyboard.alt" = "Option";
 "keyboard.shift" = "Shift";
 "mapping.automatic" = "Automatisch";
+"virtualProfile.automaticSelected" = "Automatisch (%@)";
 "setup.activeDetail" = "Het beperkte Xbox-USB-stuurprogramma is geïnstalleerd en gereed.";
 "setup.approvalDetail" = "Keur het stuurprogramma goed in Systeeminstellingen om ondersteunde Microsoft-USB-controllers te gebruiken.";
 "setup.checkingDetail" = "Het geïnstalleerde Xbox-USB-stuurprogramma controleren.";
@@ -526,6 +527,8 @@
 "banner.service.title" = "OpenJoystickDriver kan zijn service niet bereiken";
 "banner.access.title" = "Toestemming vereist";
 "banner.access.detail" = "macOS heeft niet alles toegestaan wat OpenJoystickDriver nodig heeft om controllers uit te lezen en voor games beschikbaar te maken.";
+"banner.liveUpdates.title" = "Live-updates niet beschikbaar";
+"banner.liveUpdates.detail" = "Live-updates zijn niet beschikbaar (%@), dus OpenJoystickDriver controleert de service herhaaldelijk.";
 "cli.login.uninstall_action" = "Verwijder installatie";
 "console.all" = "Alles";
 "console.empty" = "Geen logboekitems.";

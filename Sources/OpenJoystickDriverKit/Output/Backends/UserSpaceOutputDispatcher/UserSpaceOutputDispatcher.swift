@@ -29,7 +29,9 @@ public final class UserSpaceOutputDispatcher: VirtualOutputDispatching,
   internal var shutdownTask: Task<Void, Never>?
   internal var _suppressOutput = false
   internal var remappingOutputSuppressed = false
-  internal var _status: VirtualOutputBackendStatus = .off
+  internal var _status: VirtualOutputBackendStatus = .off {
+    didSet { if oldValue != _status { NotificationCenter.postServiceStatusChanged() } }
+  }
   internal var _lastRumbleStatus: String?
 
   static let requiredVirtualDeviceEntitlement = "com.apple.developer.hid.virtual.device"

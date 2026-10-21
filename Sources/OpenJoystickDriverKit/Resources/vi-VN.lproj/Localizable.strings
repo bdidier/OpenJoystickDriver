@@ -512,6 +512,7 @@
 "keyboard.alt" = "Option";
 "keyboard.shift" = "Shift";
 "mapping.automatic" = "Tự động";
+"virtualProfile.automaticSelected" = "Tự động (%@)";
 "setup.activeDetail" = "Trình điều khiển Xbox USB bị hạn chế đã được cài đặt và sẵn sàng.";
 "setup.approvalDetail" = "Phê duyệt trình điều khiển trong Cài đặt hệ thống để dùng các bộ điều khiển USB Microsoft được hỗ trợ.";
 "setup.checkingDetail" = "Đang kiểm tra trình điều khiển Xbox USB đã cài đặt.";
@@ -526,6 +527,8 @@
 "banner.service.title" = "OpenJoystickDriver không thể kết nối với dịch vụ của nó";
 "banner.access.title" = "Cần cấp quyền";
 "banner.access.detail" = "macOS chưa cho phép mọi thứ OpenJoystickDriver cần để đọc các bộ điều khiển và cung cấp chúng cho trò chơi.";
+"banner.liveUpdates.title" = "Không có cập nhật trực tiếp";
+"banner.liveUpdates.detail" = "Không có cập nhật trực tiếp (%@), nên OpenJoystickDriver kiểm tra dịch vụ nhiều lần.";
 "cli.login.uninstall_action" = "Gỡ cài đặt";
 "console.all" = "Tất cả";
 "console.empty" = "Không có mục nhật ký.";

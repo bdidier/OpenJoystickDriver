@@ -49,7 +49,7 @@ enum ReceiverSlotAdmissionCanceller {
 
   static func observe() -> NSObjectProtocol {
     NotificationCenter.default.addObserver(
-      forName: .ojdControllerInventoryDidChange,
+      forName: .ojdServiceStatusDidChange,
       object: nil,
       queue: nil
     ) { _ in

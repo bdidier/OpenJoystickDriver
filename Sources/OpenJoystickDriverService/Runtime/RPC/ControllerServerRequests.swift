@@ -13,12 +13,14 @@ extension ApplicationServiceServer {
       $0.vendorID == vendorID && $0.productID == productID
         && $0.physicalOwnership == .systemGamepad
     }
-    return Self.setControllerServer(
+    let result = Self.setControllerServer(
       vendorID: vendorID,
       productID: productID,
       server: server,
       systemGamepadConnected: systemGamepadConnected
     )
+    NotificationCenter.postServiceStatusChanged()
+    return result
   }
 
   /// Writes `server` to the model's user record in `directory`. A raw-USB family, or a model

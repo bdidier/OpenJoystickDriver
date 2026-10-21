@@ -512,6 +512,7 @@
 "keyboard.alt" = "Wahltaste";
 "keyboard.shift" = "Umschalttaste";
 "mapping.automatic" = "Automatisch";
+"virtualProfile.automaticSelected" = "Automatisch (%@)";
 "setup.activeDetail" = "Der eingeschränkte Xbox-USB-Treiber ist installiert und bereit.";
 "setup.approvalDetail" = "Bestätige den Treiber in den Systemeinstellungen, um unterstützte Microsoft-USB-Controller zu nutzen.";
 "setup.checkingDetail" = "Der installierte Xbox-USB-Treiber wird geprüft.";
@@ -526,6 +527,8 @@
 "banner.service.title" = "OpenJoystickDriver kann seinen Dienst nicht erreichen";
 "banner.access.title" = "Berechtigung erforderlich";
 "banner.access.detail" = "macOS hat nicht alles erlaubt, was OpenJoystickDriver benötigt, um Controller auszulesen und für Spiele bereitzustellen.";
+"banner.liveUpdates.title" = "Live-Updates nicht verfügbar";
+"banner.liveUpdates.detail" = "Live-Updates sind nicht verfügbar (%@). OpenJoystickDriver fragt den Dienst deshalb wiederholt ab.";
 "cli.login.uninstall_action" = "Deinstallieren";
 "console.all" = "Alle";
 "console.empty" = "Keine Protokolleinträge.";

@@ -16,7 +16,7 @@ extension DeviceManager {
       return ControllerSuspendResult(state: .active, failure: .notFound)
     }
     suspendedControllerIdentities.insert(identifier)
-    notifyControllerInventoryChanged()
+    notifyServiceStatusChanged()
     return ControllerSuspendResult(state: .suspended)
   }
 
@@ -72,7 +72,7 @@ extension DeviceManager {
       hidConnection.map({ isCurrentHIDStartupConnection(pipeline, connection: $0) }) ?? true
     else { return ControllerResumeResult(state: .suspended, failure: .notFound) }
     suspendedControllerIdentities.remove(identifier)
-    notifyControllerInventoryChanged()
+    notifyServiceStatusChanged()
     return ControllerResumeResult(state: .active)
   }
 
@@ -120,7 +120,7 @@ extension DeviceManager {
     let claimResult = await hidManager.releaseInputClaim(address: routingAddress)
     if case .failed = claimResult {
       if priorState == .active { _ = await pipeline.resumeControllerSession() }
-      notifyControllerInventoryChanged()
+      notifyServiceStatusChanged()
       return WirelessControllerDisconnectResult(
         state: await pipeline.controllerSessionState(),
         failure: .disconnectFailed,
@@ -212,7 +212,7 @@ extension DeviceManager {
         recovery: "Reconnect the controller to restore OpenJoystickDriver output."
       )
     }
-    notifyControllerInventoryChanged()
+    notifyServiceStatusChanged()
     return WirelessControllerDisconnectResult(
       state: priorState,
       failure: failure,

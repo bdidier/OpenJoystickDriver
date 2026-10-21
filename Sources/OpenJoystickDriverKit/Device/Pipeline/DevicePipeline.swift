@@ -116,7 +116,10 @@ actor DevicePipeline {
   var lastUSBIOErrorLogNs: UInt64 = 0
   /// Ending the connection or the session drops the held input, so it is never replayed later.
   var inputConnectionActive: Bool {
-    didSet { if !inputConnectionActive { coalescedInput = nil } }
+    didSet {
+      if !inputConnectionActive { coalescedInput = nil }
+      if oldValue != inputConnectionActive { NotificationCenter.postServiceStatusChanged() }
+    }
   }
   var sessionState: ControllerSessionState {
     didSet { if sessionState != .active { coalescedInput = nil } }
@@ -125,8 +128,14 @@ actor DevicePipeline {
   var lastLiveInputReportNanoseconds: UInt64?
   var inputHealthMonitoringStartedNanoseconds: UInt64?
   var lastObservedInputReportNanoseconds: UInt64?
-  var awaitingNeutralAfterLivenessLoss = false
-  var inputHealthRecoveryCount = 0
+  var awaitingNeutralAfterLivenessLoss = false {
+    didSet {
+      if oldValue != awaitingNeutralAfterLivenessLoss { NotificationCenter.postServiceStatusChanged() }
+    }
+  }
+  var inputHealthRecoveryCount = 0 {
+    didSet { if oldValue != inputHealthRecoveryCount { NotificationCenter.postServiceStatusChanged() } }
+  }
   var startupOutputStatus: String?
   /// Whether the native startup player indicator still waits for the first input report.
   var startupPlayerIndicatorPending: Bool

@@ -512,6 +512,7 @@
 "keyboard.alt" = "Option";
 "keyboard.shift" = "Shift";
 "mapping.automatic" = "تلقائي";
+"virtualProfile.automaticSelected" = "تلقائي (%@)";
 "setup.activeDetail" = "مُثبَّت برنامج تشغيل Xbox USB المقيَّد وجاهز.";
 "setup.approvalDetail" = "وافق على برنامج التشغيل في إعدادات النظام لاستخدام وحدات تحكم Microsoft USB المدعومة.";
 "setup.checkingDetail" = "جارٍ التحقق من برنامج تشغيل Xbox USB المثبَّت.";
@@ -526,6 +527,8 @@
 "banner.service.title" = "لا يستطيع OpenJoystickDriver الوصول إلى خدمته";
 "banner.access.title" = "الإذن مطلوب";
 "banner.access.detail" = "لم يسمح macOS بكل ما يحتاجه OpenJoystickDriver لقراءة وحدات التحكم ونشرها للألعاب.";
+"banner.liveUpdates.title" = "التحديثات الفورية غير متاحة";
+"banner.liveUpdates.detail" = "التحديثات الفورية غير متاحة (%@)، لذا يفحص OpenJoystickDriver الخدمة بشكل متكرر.";
 "cli.login.uninstall_action" = "إلغاء التثبيت";
 "console.all" = "الكل";
 "console.empty" = "لا توجد إدخالات في السجل.";
