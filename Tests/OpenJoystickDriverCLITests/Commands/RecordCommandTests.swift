@@ -290,6 +290,36 @@ struct RecordCommandTests {
     #expect(result.standardError.contains("ojd record show 045E:028E"))
   }
 
+  /// An installed patch can carry `0.08000000000000000001`, which the schema bounds allow and
+  /// no `Double` holds, so `record show --json` fails with E2036 while the plain and human
+  /// output show the record text as written. A record draft is built from integers and the
+  /// bundled record, so no input reaches E2036 through `record draft`; the test below covers its
+  /// message directly.
+  @Test
+  func showJSONOfARecordWithAnUnwritableNumberFailsWithItsPlace() async throws {
+    let directory = Directory()
+    let number = "0.08000000000000000001"
+    let patch = Data(
+      String(decoding: Self.patch, as: UTF8.self).replacingOccurrences(of: "0.08", with: number)
+        .utf8
+    )
+    let install = await run(["install", "-", "--json"], in: directory, stdin: patch)
+    let json = await run(["show", "366c:0005", "--json"], in: directory)
+    let human = await run(["show", "366c:0005"], in: directory)
+
+    #expect(install.code == 0, "\(install.standardError)")
+    #expect(json.code == CLIExitCode(for: .unwritableJSONNumber).rawValue)
+    #expect(json.standardOutput.isEmpty)
+    #expect(
+      json.standardError.contains(
+        "error[E2036]: --json cannot write the number \(number) at record.tuning.stickDeadzone "
+          + "without changing its value. Run 'ojd record show' without --json"
+      )
+    )
+    #expect(human.code == 0, "\(human.standardError)")
+    #expect(human.standardOutput.contains(number))
+  }
+
   /// A record number that `--json` cannot write without changing its value fails the command
   /// with E2036 and names the number and its place in the document, for `record show` and
   /// `record draft`.
