@@ -54,9 +54,17 @@
       return Self.state(for: await center.notificationSettings().authorizationStatus)
     }
 
+    /// The request result outside an app bundle: denied, with the named text for the missing
+    /// notification center.
+    static var requestResultWithoutNotificationCenter:
+      (RuntimeNotificationAuthorizationState, String?)
+    {
+      (.denied, RuntimeNotificationDeliveryError.noNotificationCenter.localizedDescription)
+    }
+
     func request() async -> (RuntimeNotificationAuthorizationState, String?) {
       guard let center = bundledNotificationCenter else {
-        return (.denied, "Notifications require the OpenJoystickDriver app bundle.")
+        return Self.requestResultWithoutNotificationCenter
       }
       do {
         let authorized = try await center.requestAuthorization(options: [.alert, .sound])
@@ -266,23 +274,61 @@
     }
   }
 
-  protocol RuntimeNotificationDelivering { func deliver(title: String, body: String, sound: Bool) }
+  protocol RuntimeNotificationDelivering {
+    /// Posts a notification and prints a failure; nothing waits for the system's answer.
+    func deliver(title: String, body: String, sound: Bool)
+    /// Posts a notification and returns when the system has accepted it. Throws the system's error,
+    /// or `RuntimeNotificationDeliveryError.noNotificationCenter` outside an app bundle.
+    nonisolated(nonsending) func deliverAwaitingSystem(
+      title: String,
+      body: String,
+      sound: Bool
+    ) async throws
+  }
+
+  /// Why a notification could not be posted before the system was asked.
+  enum RuntimeNotificationDeliveryError: Error, LocalizedError, Equatable {
+    /// The process has no app bundle, so there is no notification center to post to.
+    case noNotificationCenter
+
+    var errorDescription: String? {
+      switch self {
+      case .noNotificationCenter:
+        OJDLocalized.string("ui.settings.notifications.noNotificationCenter")
+      }
+    }
+  }
 
   struct SystemRuntimeNotificationDelivery: RuntimeNotificationDelivering {
     func deliver(title: String, body: String, sound: Bool) {
+      bundledNotificationCenter?.add(Self.request(title: title, body: body, sound: sound)) {
+        error in
+        if let error { print("[Notifications] Delivery failed: \(error.localizedDescription)") }
+      }
+    }
+
+    nonisolated(nonsending) func deliverAwaitingSystem(
+      title: String,
+      body: String,
+      sound: Bool
+    ) async throws {
+      guard let center = bundledNotificationCenter else {
+        throw RuntimeNotificationDeliveryError.noNotificationCenter
+      }
+      try await center.add(Self.request(title: title, body: body, sound: sound))
+    }
+
+    private static func request(title: String, body: String, sound: Bool) -> UNNotificationRequest {
       let content = UNMutableNotificationContent()
       content.title = title
       content.body = body
       content.sound = sound ? .default : nil
       content.threadIdentifier = "OpenJoystickDriver.runtime"
-      let request = UNNotificationRequest(
+      return UNNotificationRequest(
         identifier: "OpenJoystickDriver.\(UUID().uuidString)",
         content: content,
         trigger: nil
       )
-      bundledNotificationCenter?.add(request) { error in
-        if let error { print("[Notifications] Delivery failed: \(error.localizedDescription)") }
-      }
     }
   }
 

@@ -10,6 +10,20 @@
 
   extension UpdateChecker: ApplicationUpdateChecking {}
 
+  /// The app's side of the test notification: the request to the service and the report back.
+  protocol TestNotificationRequesting: Sendable {
+    /// Asks the service to announce a test notification and returns how it ended.
+    func requestTestNotification() async throws -> TestNotificationOutcome
+    /// Answers an announcement this app took from the service.
+    func reportTestNotification(
+      _ announcement: UUID,
+      outcome: TestNotificationOutcome
+    )
+      async throws -> Bool
+  }
+
+  extension ApplicationServiceClientGateway: TestNotificationRequesting {}
+
   @MainActor
   final class SettingsPreferencesModel: ObservableObject {
     @Published
@@ -63,7 +77,10 @@
     private let updateChecker: any ApplicationUpdateChecking
     private let notificationDelivery: any RuntimeNotificationDelivering
 
+    private let testNotifications: any TestNotificationRequesting
+
     init(
+      testNotifications: any TestNotificationRequesting,
       settings: SettingsStore = SettingsStore(),
       launchAtLogin: (any LaunchAtLoginControlling)? = nil,
       notificationAuthorization: any NotificationAuthorizationControlling =
@@ -72,6 +89,7 @@
       notificationDelivery: any RuntimeNotificationDelivering = SystemRuntimeNotificationDelivery()
     ) {
       let launchAtLogin = launchAtLogin ?? SystemLaunchAtLoginController(settings: settings)
+      self.testNotifications = testNotifications
       self.settings = settings
       self.launchAtLogin = launchAtLogin
       self.notificationAuthorizationController = notificationAuthorization
@@ -167,7 +185,71 @@
       notificationSounds = enabled
     }
 
-    func sendTestNotification() { setNotificationPreference(true, preference: .test) }
+    /// Asks the service to announce a test notification to the app and shows how it ended in
+    /// `errorMessage`: nothing for `shown`, the named text for every other outcome. The
+    /// announcement reaches this app's own wait, which calls `answerTestNotification`.
+    func sendTestNotification() {
+      Task { @MainActor [weak self, testNotifications] in
+        do {
+          let outcome = try await testNotifications.requestTestNotification()
+          self?.errorMessage = Self.message(for: outcome)
+        } catch { self?.report(error) }
+      }
+    }
+
+    /// The text of an outcome that is not `shown`.
+    static func message(for outcome: TestNotificationOutcome) -> String? {
+      switch outcome {
+      case .shown: return nil
+      case .denied: return OJDLocalized.string("error.E2038")
+      case .failed(let reason): return reason
+      case .noAnswer: return OJDLocalized.string("error.E2037")
+      }
+    }
+
+    /// Shows the test notification the service announced and reports how it ended. A report that
+    /// fails shows its error in `errorMessage`; a report the service no longer waits for, because
+    /// the `ojd` request ended first, shows `ui.settings.notifications.testReportLost`.
+    func answerTestNotification(_ announcement: UUID) {
+      Task { @MainActor [weak self, testNotifications] in
+        guard let self else { return }
+        let outcome = await self.showTestNotification()
+        do {
+          let accepted = try await testNotifications.reportTestNotification(
+            announcement,
+            outcome: outcome
+          )
+          if !accepted {
+            self.errorMessage = OJDLocalized.string("ui.settings.notifications.testReportLost")
+          }
+        } catch { self.report(error) }
+      }
+    }
+
+    /// Delivers the test notification, asking the system for permission first when it is not
+    /// decided. A delivery the system rejects, or one with no notification center, is `failed`.
+    func showTestNotification() async -> TestNotificationOutcome {
+      notificationAuthorizationReads += 1
+      var state = await notificationAuthorizationController.state()
+      notificationAuthorization = state
+      if state == .notDetermined || state == .checking {
+        notificationAuthorizationReads += 1
+        let (requested, errorDescription) = await notificationAuthorizationController.request()
+        state = requested
+        notificationAuthorization = requested
+        if let errorDescription { return .failed(errorDescription) }
+      }
+      guard state == .allowed else { return .denied }
+      do {
+        try await notificationDelivery.deliverAwaitingSystem(
+          title: OJDLocalized.string("notifications.testTitle"),
+          body: OJDLocalized.string("notifications.testBody"),
+          sound: notificationSounds
+        )
+      } catch { return .failed(error.localizedDescription) }
+      refreshNotificationAuthorization()
+      return .shown
+    }
 
     func setShowInMenuBar(_ enabled: Bool) {
       guard persist(.showInMenuBar, enabled) else { return }
@@ -341,20 +423,8 @@
     }
 
     private func acceptNotificationPreference(_ preference: NotificationPreference) {
-      if preference == .test {
-        notificationDelivery.deliver(
-          title: OJDLocalized.string(
-            "notifications.testTitle"
-          ),
-          body: OJDLocalized.string(
-            "notifications.testBody"
-          ),
-          sound: notificationSounds
-        )
-      } else {
-        guard persist(preference, true) else { return }
-        update(preference, enabled: true)
-      }
+      guard persist(preference, true) else { return }
+      update(preference, enabled: true)
       errorMessage = nil
     }
 
@@ -362,7 +432,7 @@
       _ preference: NotificationPreference,
       errorDescription: String?
     ) {
-      if preference != .test, persist(preference, false) {
+      if persist(preference, false) {
         update(preference, enabled: false)
       }
       errorMessage =
@@ -378,13 +448,11 @@
       case .controllerDisconnections: controllerDisconnectedNotifications = enabled
       case .profiles: profileNotifications = enabled
       case .profileDeactivations: profileDeactivatedNotifications = enabled
-      case .test: break
       }
     }
 
     private func persist(_ preference: NotificationPreference, _ value: Bool) -> Bool {
-      guard let key = preference.settingKey else { return true }
-      return persist(key, value)
+      persist(preference.settingKey, value)
     }
   }
 
@@ -393,16 +461,14 @@
     case controllerDisconnections
     case profiles
     case profileDeactivations
-    case test
 
-    /// The setting that stores the preference; the test notification has none.
-    var settingKey: ApplicationSettingKey? {
+    /// The setting that stores the preference.
+    var settingKey: ApplicationSettingKey {
       switch self {
       case .controllers: return .notifyControllerConnected
       case .controllerDisconnections: return .notifyControllerDisconnected
       case .profiles: return .notifyProfileActivated
       case .profileDeactivations: return .notifyProfileDeactivated
-      case .test: return nil
       }
     }
   }

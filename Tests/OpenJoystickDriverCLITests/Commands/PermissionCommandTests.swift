@@ -55,18 +55,18 @@ struct PermissionCommandTests {
     let server = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in true },
-      handler: { request, completion in
+      handler: { request in
         received.withLock { $0.append(request.method) }
         switch request.method {
         case ApplicationServiceRPCMethod.getStatus.rawValue:
-          completion(LocalServiceRPCResponse(result: statusResult, error: nil))
+          return LocalServiceRPCResponse(result: statusResult, error: nil)
         case ApplicationServiceRPCMethod.getRemappingSnapshot.rawValue:
-          completion(LocalServiceRPCResponse(result: remappingResult, error: nil))
+          return LocalServiceRPCResponse(result: remappingResult, error: nil)
         case ApplicationServiceRPCMethod.requestRequiredAccess.rawValue,
           ApplicationServiceRPCMethod.requestAccess.rawValue:
-          completion(LocalServiceRPCResponse(result: snapshotResult, error: nil))
+          return LocalServiceRPCResponse(result: snapshotResult, error: nil)
         default:
-          completion(LocalServiceRPCResponse(result: nil, error: "unexpected \(request.method)"))
+          return LocalServiceRPCResponse(result: nil, error: "unexpected \(request.method)")
         }
       }
     )

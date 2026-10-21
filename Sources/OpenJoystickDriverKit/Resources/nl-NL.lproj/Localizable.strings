@@ -586,6 +586,12 @@
 "notifications.profileSwitchedBody" = "%@ → %@";
 "notifications.testBody" = "OpenJoystickDriver kan je informeren over controller- en profielactiviteit.";
 "notifications.testTitle" = "Meldingen zijn gereed";
+/* Failed outcome of the test notification when the app runs outside an app bundle and has no notification center. The inline error of the Settings window shows it for Send Test Notification and for a notification permission request, and `ojd setting test-notification` prints it as the reason of E2006. */
+"ui.settings.notifications.noNotificationCenter" = "Meldingen zijn niet beschikbaar omdat OpenJoystickDriver niet vanuit zijn app-bundel draait. Open de OpenJoystickDriver-app en probeer het opnieuw.";
+/* Error message in the inline error of the Settings window when the service no longer waits for the app's report on a test notification: the ojd request that asked for it ended, or its answer time ran out. */
+"ui.settings.notifications.testReportLost" = "Het ojd-verzoek eindigde of de antwoordtijd ervan liep af voordat het rapport over de testmelding binnenkwam.";
+/* Error text the service returns to an app that reports the outcome noAnswer for a test notification, which only the service decides. The inline error of the Settings window shows it. shown, denied, failed and noAnswer are outcome names and stay as written. */
+"ui.settings.notifications.testReportNoAnswer" = "Een rapport over de testmelding moet shown, denied of failed zijn; alleen de service bepaalt noAnswer.";
 "profiles.virtualOutput" = "Virtuele gamepad";
 "profiles.virtualDisabled" = "Uitgeschakeld";
 "profiles.virtualMapped" = "Alleen toegewezen besturingen";
@@ -1365,6 +1371,10 @@
 "error.E2034" = "De service accepteert geen verzoeken meer. Sluit OpenJoystickDriver af, open het opnieuw en probeer het opnieuw.";
 "error.E2035" = "Het bestand dat vastlegt waarom de verzoeklistener is gestopt, kan niet worden gebruikt. Verwijder het bestand en open OpenJoystickDriver daarna opnieuw.";
 "error.E2036" = "De uitvoer van --json kan een getal van het record niet schrijven zonder de waarde te veranderen. Voer de opdracht uit zonder --json om de tekst van het record te zien.";
+/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
+"error.E2037" = "Geen enkele OpenJoystickDriver-app heeft op tijd op de testmelding geantwoord. Controleer of de app draait en probeer het opnieuw.";
+/* Error E2038, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */
+"error.E2038" = "Meldingen zijn niet toegestaan voor OpenJoystickDriver. Sta ze toe in de meldingsinstellingen van het systeem en probeer het opnieuw.";
 "cli.record.usb_not_claimed" = "De familie gebruikt onbewerkte USB en de USB-extensie kan deze controller niet claimen, omdat de productlijst door Apple is ondertekend. OJD bereikt hem alleen via directe USB-toegang, wanneer macOS dat toestaat.";
 "cli.record.usb_only_switch2" = "Alleen USB: voeg bluetoothLE.vibrationCharacteristic toe aan dit Switch 2-record om de controller via Bluetooth LE te verbinden.";
 "cli.record.validate.abstract" = "Controleert een controllerrecord zonder het te installeren.";
@@ -2054,3 +2064,9 @@
 "status.listenerFailure.otherUser" = "het record is van een andere gebruiker; voer ojd uit als die gebruiker";
 /* Reason the listener failure file cannot be used: the system would not say whether the process that wrote it runs. %1$@ is the system's reason, %2$@ the error number. Fills the reason in the error E2035 message. */
 "status.listenerFailure.processCheckFailed" = "kon niet controleren of het serviceproces draait: %1$@ (foutnummer %2$@)";
+/* Abstract of the ojd setting test-notification command, in the command help. */
+"cli.setting.testNotification.abstract" = "Toont een testmelding in de app.";
+/* Discussion of the ojd setting test-notification command, in the command help. */
+"cli.setting.testNotification.discussion" = "Vraagt de service om een testmelding door te geven aan de geopende OpenJoystickDriver-app en wacht tot de app de melding toont. Mislukt met een benoemde fout als meldingen zijn geweigerd, de aflevering mislukt of geen enkele app op tijd antwoordt. Standaardwaarde van --timeout hier, in seconden: %@.";
+/* Printed by ojd setting test-notification after the app reported that it showed the test notification. */
+"cli.setting.testNotification.success" = "De app heeft de testmelding getoond.";

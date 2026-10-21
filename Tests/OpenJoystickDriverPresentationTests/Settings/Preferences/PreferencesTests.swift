@@ -12,6 +12,7 @@ struct PreferencesTests {
   func startAtLoginReflectsTheNativeControllerResult() {
     let launch = LaunchAtLoginStub(isEnabled: false)
     let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
       settings: SettingsStore(directory: RootedDataDirectory.temporary()),
       launchAtLogin: launch,
       notificationAuthorization: NotificationAuthorizationStub(state: .denied)
@@ -29,6 +30,7 @@ struct PreferencesTests {
     let settings = SettingsStore(directory: RootedDataDirectory.temporary())
     let authorization = NotificationAuthorizationStub(state: .notDetermined)
     let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
       settings: settings,
       launchAtLogin: LaunchAtLoginStub(isEnabled: false),
       notificationAuthorization: authorization
@@ -48,6 +50,7 @@ struct PreferencesTests {
     let settings = SettingsStore(directory: RootedDataDirectory.temporary())
     let authorization = HeldSettingsAuthorizationStub()
     let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
       settings: settings,
       launchAtLogin: LaunchAtLoginStub(isEnabled: false),
       notificationAuthorization: authorization
@@ -72,6 +75,7 @@ struct PreferencesTests {
     let settings = SettingsStore(directory: RootedDataDirectory.temporary())
     try settings.set(.notifyControllerConnected, to: true)
     let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
       settings: settings,
       launchAtLogin: LaunchAtLoginStub(isEnabled: false),
       notificationAuthorization: NotificationAuthorizationStub(state: .denied)
@@ -88,6 +92,7 @@ struct PreferencesTests {
   func notificationEventsAndSoundPersistIndependently() async throws {
     let settings = SettingsStore(directory: RootedDataDirectory.temporary())
     let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
       settings: settings,
       launchAtLogin: LaunchAtLoginStub(isEnabled: false),
       notificationAuthorization: NotificationAuthorizationStub(state: .allowed)
@@ -113,15 +118,16 @@ struct PreferencesTests {
     let authorization = NotificationAuthorizationStub(state: .notDetermined)
     let delivery = PreferencesNotificationDeliverySpy()
     let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
       settings: settings,
       launchAtLogin: LaunchAtLoginStub(isEnabled: false),
       notificationAuthorization: authorization,
       notificationDelivery: delivery
     )
 
-    model.sendTestNotification()
-    await waitUntil("delivery.deliveryCount == 1") { delivery.deliveryCount == 1 }
+    let outcome = await model.showTestNotification()
 
+    #expect(outcome == .shown)
     #expect(authorization.requestCount == 1)
     #expect(delivery.deliveryCount == 1)
     #expect(delivery.lastSound == false)
@@ -129,9 +135,191 @@ struct PreferencesTests {
 
   @Test
   @MainActor
+  func aDeniedPermissionIsADeniedOutcomeAndDeliversNothing() async {
+    let delivery = PreferencesNotificationDeliverySpy()
+    let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
+      settings: SettingsStore(directory: RootedDataDirectory.temporary()),
+      launchAtLogin: LaunchAtLoginStub(isEnabled: false),
+      notificationAuthorization: NotificationAuthorizationStub(state: .denied),
+      notificationDelivery: delivery
+    )
+
+    #expect(await model.showTestNotification() == .denied)
+    #expect(delivery.deliveryCount == 0)
+  }
+
+  @Test
+  @MainActor
+  func answeringAnAnnouncementShowsTheNotificationAndReportsTheOutcome() async {
+    let requester = TestNotificationRequestStub()
+    let delivery = PreferencesNotificationDeliverySpy()
+    let model = SettingsPreferencesModel(
+      testNotifications: requester,
+      settings: SettingsStore(directory: RootedDataDirectory.temporary()),
+      launchAtLogin: LaunchAtLoginStub(isEnabled: false),
+      notificationAuthorization: NotificationAuthorizationStub(state: .allowed),
+      notificationDelivery: delivery
+    )
+    let id = UUID()
+
+    model.answerTestNotification(id)
+    await waitUntil("requester.reported.count == 1") { requester.reported.count == 1 }
+
+    #expect(delivery.deliveryCount == 1)
+    #expect(requester.reported[0].0 == id)
+    #expect(requester.reported[0].1 == .shown)
+  }
+
+  @Test
+  @MainActor
+  func aDeliveryTheSystemRejectsIsAFailedOutcomeWithTheSystemsReason() async {
+    struct Rejected: LocalizedError { var errorDescription: String? { "the system rejected it" } }
+    let delivery = PreferencesNotificationDeliverySpy()
+    delivery.failure = Rejected()
+    let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
+      settings: SettingsStore(directory: RootedDataDirectory.temporary()),
+      launchAtLogin: LaunchAtLoginStub(isEnabled: false),
+      notificationAuthorization: NotificationAuthorizationStub(state: .allowed),
+      notificationDelivery: delivery
+    )
+
+    #expect(await model.showTestNotification() == .failed("the system rejected it"))
+  }
+
+  @Test
+  @MainActor
+  func aMissingNotificationCenterIsAFailedOutcomeWithItsNamedText() async {
+    let delivery = PreferencesNotificationDeliverySpy()
+    delivery.failure = RuntimeNotificationDeliveryError.noNotificationCenter
+    let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
+      settings: SettingsStore(directory: RootedDataDirectory.temporary()),
+      launchAtLogin: LaunchAtLoginStub(isEnabled: false),
+      notificationAuthorization: NotificationAuthorizationStub(state: .allowed),
+      notificationDelivery: delivery
+    )
+
+    #expect(
+      await model.showTestNotification()
+        == .failed(OJDLocalized.string("ui.settings.notifications.noNotificationCenter"))
+    )
+  }
+
+  @Test
+  func anAuthorizationRequestWithoutANotificationCenterCarriesTheNamedText() {
+    let (state, description) =
+      SystemNotificationAuthorizationController.requestResultWithoutNotificationCenter
+
+    #expect(state == .denied)
+    #expect(description == OJDLocalized.string("ui.settings.notifications.noNotificationCenter"))
+  }
+
+  @Test
+  @MainActor
+  func aFailedDeliveryIsReportedAsFailedNotShown() async {
+    let requester = TestNotificationRequestStub()
+    let delivery = PreferencesNotificationDeliverySpy()
+    delivery.failure = RuntimeNotificationDeliveryError.noNotificationCenter
+    let model = SettingsPreferencesModel(
+      testNotifications: requester,
+      settings: SettingsStore(directory: RootedDataDirectory.temporary()),
+      launchAtLogin: LaunchAtLoginStub(isEnabled: false),
+      notificationAuthorization: NotificationAuthorizationStub(state: .allowed),
+      notificationDelivery: delivery
+    )
+
+    model.answerTestNotification(UUID())
+    await waitUntil("requester.reported.count == 1") { requester.reported.count == 1 }
+
+    #expect(
+      requester.reported[0].1
+        == .failed(OJDLocalized.string("ui.settings.notifications.noNotificationCenter"))
+    )
+  }
+
+  @Test
+  @MainActor
+  func aReportTheServiceNoLongerWaitsForShowsTheLostReportMessage() async {
+    let requester = TestNotificationRequestStub(reportAccepted: false)
+    let model = SettingsPreferencesModel(
+      testNotifications: requester,
+      settings: SettingsStore(directory: RootedDataDirectory.temporary()),
+      launchAtLogin: LaunchAtLoginStub(isEnabled: false),
+      notificationAuthorization: NotificationAuthorizationStub(state: .allowed)
+    )
+
+    model.answerTestNotification(UUID())
+    await waitUntil("the lost report message") { model.errorMessage != nil }
+
+    #expect(model.errorMessage == OJDLocalized.string("ui.settings.notifications.testReportLost"))
+  }
+
+  @Test
+  @MainActor
+  func answeringWithDeniedPermissionReportsDenied() async {
+    let requester = TestNotificationRequestStub()
+    let model = SettingsPreferencesModel(
+      testNotifications: requester,
+      settings: SettingsStore(directory: RootedDataDirectory.temporary()),
+      launchAtLogin: LaunchAtLoginStub(isEnabled: false),
+      notificationAuthorization: NotificationAuthorizationStub(state: .denied)
+    )
+
+    model.answerTestNotification(UUID())
+    await waitUntil("requester.reported.count == 1") { requester.reported.count == 1 }
+
+    #expect(requester.reported[0].1 == .denied)
+  }
+
+  @Test
+  @MainActor
+  func sendTestNotificationShowsEachNamedOutcome() async {
+    let outcomes: [(TestNotificationOutcome, String?)] = [
+      (.denied, OJDLocalized.string("error.E2038")),
+      (.noAnswer, OJDLocalized.string("error.E2037")),
+      (.failed("the system said no"), "the system said no"),
+    ]
+    for (outcome, message) in outcomes {
+      let model = SettingsPreferencesModel(
+        testNotifications: TestNotificationRequestStub(outcome: outcome),
+        settings: SettingsStore(directory: RootedDataDirectory.temporary()),
+        launchAtLogin: LaunchAtLoginStub(isEnabled: false),
+        notificationAuthorization: NotificationAuthorizationStub(state: .allowed)
+      )
+      model.sendTestNotification()
+      await waitUntil("outcome shown") { model.errorMessage == message }
+      #expect(model.errorMessage == message)
+    }
+  }
+
+  @Test
+  @MainActor
+  func aShownOutcomeClearsAnEarlierMessage() async {
+    let requester = TestNotificationRequestStub(outcome: .noAnswer)
+    let model = SettingsPreferencesModel(
+      testNotifications: requester,
+      settings: SettingsStore(directory: RootedDataDirectory.temporary()),
+      launchAtLogin: LaunchAtLoginStub(isEnabled: false),
+      notificationAuthorization: NotificationAuthorizationStub(state: .allowed)
+    )
+    model.sendTestNotification()
+    await waitUntil("message") { model.errorMessage != nil }
+
+    requester.setOutcome(.shown)
+    model.sendTestNotification()
+    await waitUntil("cleared") { model.errorMessage == nil }
+
+    #expect(model.errorMessage == nil)
+  }
+
+  @Test
+  @MainActor
   func refreshPublishesAuthorizationGrantedOutsideTheApp() async {
     let authorization = NotificationAuthorizationStub(state: .denied)
     let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
       settings: SettingsStore(directory: RootedDataDirectory.temporary()),
       launchAtLogin: LaunchAtLoginStub(isEnabled: false),
       notificationAuthorization: authorization
@@ -151,6 +339,7 @@ struct PreferencesTests {
   func startAtLoginReportsWhenNativeApprovalIsStillRequired() {
     let launch = LaunchAtLoginStub(isEnabled: false, acceptsChanges: false)
     let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
       settings: SettingsStore(directory: RootedDataDirectory.temporary()),
       launchAtLogin: launch,
       notificationAuthorization: NotificationAuthorizationStub(state: .denied)
@@ -168,6 +357,7 @@ struct PreferencesTests {
     let settings = SettingsStore(directory: RootedDataDirectory.temporary())
     let checker = UpdateCheckerStub(result: .upToDate(current: "1.2.3", latest: "v1.2.3"))
     let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
       settings: settings,
       launchAtLogin: LaunchAtLoginStub(isEnabled: false),
       notificationAuthorization: NotificationAuthorizationStub(state: .denied),
@@ -189,6 +379,7 @@ struct PreferencesTests {
   func theMenuBarAndDockChoicesAreNeverBothOff() throws {
     let settings = SettingsStore(directory: RootedDataDirectory.temporary())
     let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
       settings: settings,
       launchAtLogin: LaunchAtLoginStub(isEnabled: false),
       notificationAuthorization: NotificationAuthorizationStub(state: .denied)
@@ -217,6 +408,7 @@ struct PreferencesTests {
   func developerToolsChoicePersists() throws {
     let settings = SettingsStore(directory: RootedDataDirectory.temporary())
     let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
       settings: settings,
       launchAtLogin: LaunchAtLoginStub(isEnabled: false),
       notificationAuthorization: NotificationAuthorizationStub(state: .denied)
@@ -234,6 +426,7 @@ struct PreferencesTests {
     let directory = RootedDataDirectory.temporary()
     let loginItem = LaunchAtLoginStub(isEnabled: false)
     let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
       settings: SettingsStore(directory: directory),
       launchAtLogin: loginItem,
       notificationAuthorization: NotificationAuthorizationStub(state: .allowed)
@@ -259,6 +452,7 @@ struct PreferencesTests {
   func aGoodReloadClearsTheErrorOfAFailedSettingsRead() throws {
     let settings = SettingsStore(directory: RootedDataDirectory.temporary())
     let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
       settings: settings,
       launchAtLogin: LaunchAtLoginStub(isEnabled: false),
       notificationAuthorization: NotificationAuthorizationStub(state: .allowed)
@@ -275,6 +469,48 @@ struct PreferencesTests {
     try FileManager.default.removeItem(at: settings.userFileURL)
     model.reloadSettings()
     #expect(model.errorMessage == nil)
+  }
+}
+
+final class TestNotificationRequestStub: TestNotificationRequesting, @unchecked Sendable {
+  private let lock = NSLock()
+  private var requests = 0
+  private var reports: [(UUID, TestNotificationOutcome)] = []
+  private var outcome: TestNotificationOutcome
+  private let failure: (any Error)?
+  /// What `reportTestNotification` returns: false when the service no longer waits for the report.
+  private let reportAccepted: Bool
+
+  init(
+    outcome: TestNotificationOutcome = .shown,
+    failure: (any Error)? = nil,
+    reportAccepted: Bool = true
+  ) {
+    self.outcome = outcome
+    self.failure = failure
+    self.reportAccepted = reportAccepted
+  }
+
+  func setOutcome(_ next: TestNotificationOutcome) { lock.withLock { outcome = next } }
+
+  var requestCount: Int { lock.withLock { requests } }
+  var reported: [(UUID, TestNotificationOutcome)] { lock.withLock { reports } }
+
+  func requestTestNotification() async throws -> TestNotificationOutcome {
+    await Task.yield()
+    lock.withLock { requests += 1 }
+    if let failure { throw failure }
+    return lock.withLock { outcome }
+  }
+
+  func reportTestNotification(
+    _ announcement: UUID,
+    outcome: TestNotificationOutcome
+  ) async throws -> Bool {
+    await Task.yield()
+    lock.withLock { reports.append((announcement, outcome)) }
+    if let failure { throw failure }
+    return reportAccepted
   }
 }
 
@@ -331,10 +567,22 @@ private actor UpdateCheckerStub: ApplicationUpdateChecking {
 private final class PreferencesNotificationDeliverySpy: RuntimeNotificationDelivering {
   private(set) var deliveryCount = 0
   private(set) var lastSound: Bool?
+  /// What `deliverAwaitingSystem` throws, or nil to accept the notification.
+  var failure: (any Error)?
 
   func deliver(title: String, body: String, sound: Bool) {
     deliveryCount += 1
     lastSound = sound
+  }
+
+  nonisolated(nonsending) func deliverAwaitingSystem(
+    title: String,
+    body: String,
+    sound: Bool
+  ) async throws {
+    await Task.yield()
+    if let failure { throw failure }
+    deliver(title: title, body: body, sound: sound)
   }
 }
 

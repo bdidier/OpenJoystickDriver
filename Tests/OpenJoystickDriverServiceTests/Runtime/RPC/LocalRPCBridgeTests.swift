@@ -12,7 +12,7 @@ struct LocalRPCBridgeTests {
     "getVirtualOutputState",
     "sendControllerOutput", "previewPhysicalColor", "releasePhysicalColorPreview",
     "getVirtualDeviceDiagnostics", "getFrameTimings", "waitForServiceStatusChange",
-    "setVirtualHIDProfileOverride",
+    "sendTestNotification", "reportTestNotificationResult", "setVirtualHIDProfileOverride",
     "resetVirtualHIDProfileOverride", "setControllerServer", "openVirtualFeed",
     "exchangeVirtualFeed",
     "closeVirtualFeed", "suspendController", "resumeController",
@@ -91,8 +91,7 @@ struct LocalRPCBridgeTests {
       let rpcServer = LocalServiceRPCServer(
         socketPath: socketPath,
         authentication: { _ in true },
-        handler: { request, completion in Task { completion(await server.handleLocalRPC(request)) }
-        }
+        handler: { await server.handleLocalRPC($0) }
       )
       try rpcServer.start()
       defer { rpcServer.stop() }
@@ -113,14 +112,13 @@ struct LocalRPCBridgeTests {
       let rpcServer = LocalServiceRPCServer(
         socketPath: socketPath,
         authentication: { _ in true },
-        handler: { request, completion in Task { completion(await server.handleLocalRPC(request)) }
-        }
+        handler: { await server.handleLocalRPC($0) }
       )
       try rpcServer.start()
       defer { rpcServer.stop() }
       let client = ApplicationServiceClient(socketPath: socketPath)
       await client.connect()
-      let baseline = try await client.waitForServiceStatusChange(after: nil)
+      let baseline = try await client.waitForServiceStatusChange(after: nil).revision
 
       let clock = ContinuousClock()
       let start = clock.now
@@ -128,8 +126,148 @@ struct LocalRPCBridgeTests {
       try await Task.sleep(nanoseconds: 100_000_000)
       NotificationCenter.default.post(name: .ojdServiceStatusDidChange, object: nil)
 
-      #expect(try await next != baseline)
+      #expect(try await next.revision != baseline)
       #expect(clock.now - start < .seconds(10))
+    }
+  }
+
+  @Test
+  func sendTestNotificationEndsWithTheAppsReport() async throws {
+    try await withServer { server in
+      let socketPath = "/tmp/com.openjoystickdriver.bridge.\(UUID().uuidString).rpc"
+      let rpcServer = LocalServiceRPCServer(
+        socketPath: socketPath,
+        authentication: { _ in true },
+        handler: { await server.handleLocalRPC($0) }
+      )
+      try rpcServer.start()
+      defer { rpcServer.stop() }
+      let app = ApplicationServiceClient(socketPath: socketPath)
+      await app.connect()
+      let cli = ApplicationServiceClient(socketPath: socketPath)
+      await cli.connect()
+      let baseline = try await app.waitForServiceStatusChange(after: nil).revision
+
+      async let outcome = cli.sendTestNotification()
+      let reply = try await app.waitForServiceStatusChange(after: baseline)
+      let id = try #require(reply.announcement)
+      #expect(reply.event == .testNotification)
+      #expect(
+        try await app.reportTestNotificationResult(announcement: id, outcome: .denied)
+      )
+
+      #expect(try await outcome == .denied)
+      #expect(
+        try await !app.reportTestNotificationResult(announcement: id, outcome: .shown)
+      )
+    }
+  }
+
+  @Test
+  func aClientThatClosesDuringAHeldWaitLeavesTheHeldCountAndMissesTheAnnouncement() async throws {
+    try await withServer { server in
+      let socketPath = "/tmp/com.openjoystickdriver.bridge.\(UUID().uuidString).rpc"
+      let rpcServer = LocalServiceRPCServer(
+        socketPath: socketPath,
+        authentication: { _ in true },
+        handler: { await server.handleLocalRPC($0) }
+      )
+      try rpcServer.start()
+      defer { rpcServer.stop() }
+      let app = ApplicationServiceClient(socketPath: socketPath)
+      await app.connect()
+      let baseline = try await app.waitForServiceStatusChange(after: nil).revision
+      let (registered, registeredGate) = AsyncStream.makeStream(of: Void.self)
+      let (released, releasedGate) = AsyncStream.makeStream(of: Void.self)
+      defer {
+        registeredGate.finish()
+        releasedGate.finish()
+      }
+      server.statusChanges.heldWaitDidRegister = { registeredGate.yield() }
+      server.statusChanges.heldWaitDidRelease = { releasedGate.yield() }
+
+      let descriptor = try LocalServiceRPCTransport.openConnectedSocket(
+        timeoutSeconds: 5,
+        socketPath: socketPath
+      )
+      let request = LocalServiceRPCRequest(
+        method: ApplicationServiceRPCMethod.waitForServiceStatusChange.rawValue,
+        arguments: try JSONEncoder().encode(LocalServiceRPCStatusChangeArguments(after: baseline))
+      )
+      try LocalServiceRPCTransport.sendFrame(try JSONEncoder().encode(request), to: descriptor)
+      for await _ in registered { break }
+
+      Darwin.close(descriptor)
+      for await _ in released { break }
+      #expect(server.statusChanges.heldWaitCount == 0)
+
+      async let outcome = app.sendTestNotification()
+      let reply = try await app.waitForServiceStatusChange(after: baseline)
+      let id = try #require(reply.announcement)
+      #expect(
+        try await app.reportTestNotificationResult(announcement: id, outcome: .shown)
+      )
+      #expect(try await outcome == .shown)
+    }
+  }
+
+  @Test
+  func aClientThatClosesASendTestNotificationRequestWithdrawsIt() async throws {
+    try await withServer { server in
+      let socketPath = "/tmp/com.openjoystickdriver.bridge.\(UUID().uuidString).rpc"
+      let rpcServer = LocalServiceRPCServer(
+        socketPath: socketPath,
+        authentication: { _ in true },
+        handler: { await server.handleLocalRPC($0) }
+      )
+      try rpcServer.start()
+      defer { rpcServer.stop() }
+      let app = ApplicationServiceClient(socketPath: socketPath)
+      await app.connect()
+      let baseline = try await app.waitForServiceStatusChange(after: nil).revision
+      let (withdrawn, withdrawnGate) = AsyncStream.makeStream(of: Void.self)
+      defer { withdrawnGate.finish() }
+      server.statusChanges.testNotificationRequestDidWithdraw = { withdrawnGate.yield() }
+
+      let descriptor = try LocalServiceRPCTransport.openConnectedSocket(
+        timeoutSeconds: 5,
+        socketPath: socketPath
+      )
+      let request = LocalServiceRPCRequest(
+        method: ApplicationServiceRPCMethod.sendTestNotification.rawValue,
+        arguments: try JSONEncoder().encode(LocalServiceRPCEmptyArguments())
+      )
+      try LocalServiceRPCTransport.sendFrame(try JSONEncoder().encode(request), to: descriptor)
+      let reply = try await app.waitForServiceStatusChange(after: baseline)
+      let id = try #require(reply.announcement)
+
+      Darwin.close(descriptor)
+      for await _ in withdrawn { break }
+
+      #expect(
+        try await !app.reportTestNotificationResult(announcement: id, outcome: .shown)
+      )
+    }
+  }
+
+  @Test
+  func aReportOfNoAnswerIsRefusedWithItsOwnText() async throws {
+    try await withServer { server in
+      let arguments = try JSONEncoder().encode(
+        TestNotificationReport(announcement: UUID(), outcome: .noAnswer)
+      )
+      let response = await handle(
+        server,
+        method: ApplicationServiceRPCMethod.reportTestNotificationResult.rawValue,
+        arguments: arguments
+      )
+
+      #expect(response.result == nil)
+      #expect(response.error == TestNotificationReportError.noAnswerReported.errorDescription)
+      #expect(
+        response.error == Localization().string("ui.settings.notifications.testReportNoAnswer")
+      )
+      #expect(response.error != ApplicationServiceClientError.invalidResponse.errorDescription)
     }
   }
 
@@ -218,8 +356,8 @@ struct LocalRPCBridgeTests {
       let listener = LocalServiceRPCServer(
         socketPath: socketPath,
         authentication: { _ in true },
-        handler: { _, completion in
-          completion(LocalServiceRPCResponse(result: nil, error: nil))
+        handler: { _ in
+          return LocalServiceRPCResponse(result: nil, error: nil)
         }
       )
       server.rpcServerLock.withLock { server.rpcServer = listener }

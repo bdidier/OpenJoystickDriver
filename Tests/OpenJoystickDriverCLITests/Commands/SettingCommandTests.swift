@@ -27,11 +27,11 @@ struct SettingCommandTests {
     let server = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in true },
-      handler: { request, completion in
+      handler: { request in
         received.withLock { $0.append(request.method) }
         switch request.method {
         case ApplicationServiceRPCMethod.getSettings.rawValue:
-          completion(LocalServiceRPCResponse(result: try? payload(), error: nil))
+          return LocalServiceRPCResponse(result: try? payload(), error: nil)
         case ApplicationServiceRPCMethod.setSetting.rawValue:
           if let arguments = try? JSONDecoder().decode(
             ApplicationServiceSettingArguments.self,
@@ -39,9 +39,9 @@ struct SettingCommandTests {
           ), !refused.contains(arguments.key) {
             state.withLock { $0[arguments.key] = arguments.value }
           }
-          completion(LocalServiceRPCResponse(result: try? payload(), error: nil))
+          return LocalServiceRPCResponse(result: try? payload(), error: nil)
         default:
-          completion(LocalServiceRPCResponse(result: nil, error: "unexpected \(request.method)"))
+          return LocalServiceRPCResponse(result: nil, error: "unexpected \(request.method)")
         }
       }
     )

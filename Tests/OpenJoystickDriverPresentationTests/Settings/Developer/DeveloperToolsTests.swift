@@ -59,6 +59,7 @@ struct DeveloperToolsTests {
     let settings = SettingsStore(directory: RootedDataDirectory.temporary())
     try settings.set(.developerTools, to: true)
     let preferences = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
       settings: settings,
       launchAtLogin: LaunchAtLoginStub(isEnabled: false),
       notificationAuthorization: NotificationAuthorizationStub(state: .denied)

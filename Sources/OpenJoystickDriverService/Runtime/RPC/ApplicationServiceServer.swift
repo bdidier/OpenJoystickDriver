@@ -107,12 +107,11 @@ public final class ApplicationServiceServer: @unchecked Sendable {
   /// Starts the authenticated local RPC server used by the headless host and CLI.
   public func start() throws {
     let server = LocalServiceRPCServer(authentication: Self.isTrustedClient(peer:)) {
-      [weak self] request, completion in
+      [weak self] request in
       guard let self else {
-        completion(LocalServiceRPCResponse(result: nil, error: "Service stopped."))
-        return
+        return LocalServiceRPCResponse(result: nil, error: "Service stopped.")
       }
-      Task { completion(await self.handleLocalRPC(request)) }
+      return await self.handleLocalRPC(request)
     }
     let state = listenerState
     server.listenerFailureChanged = { state.set($0) }

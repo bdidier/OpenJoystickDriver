@@ -128,13 +128,11 @@ struct ServiceCommandTests {
     let server = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in true },
-      handler: { request, completion in
+      handler: { request in
         let isStatus = request.method == ApplicationServiceRPCMethod.getStatus.rawValue
-        completion(
-          LocalServiceRPCResponse(
-            result: isStatus ? result : nil,
-            error: isStatus ? nil : "unexpected \(request.method)"
-          )
+        return LocalServiceRPCResponse(
+          result: isStatus ? result : nil,
+          error: isStatus ? nil : "unexpected \(request.method)"
         )
       }
     )

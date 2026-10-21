@@ -3,8 +3,10 @@ import Foundation
 
 public final class LocalServiceRPCServer: @unchecked Sendable {
   public typealias Authentication = @Sendable (LocalSocketPeer) -> Bool
-  public typealias Completion = @Sendable (LocalServiceRPCResponse) -> Void
-  public typealias Handler = @Sendable (LocalServiceRPCRequest, @escaping Completion) -> Void
+  /// Answers a request. For a method that holds its reply open
+  /// (``ApplicationServiceRPCMethod/holdsReplyOpen``) the task is cancelled when the client
+  /// closes its end first; every other request runs to completion.
+  public typealias Handler = @Sendable (LocalServiceRPCRequest) async -> LocalServiceRPCResponse
 
   private let authentication: Authentication
   private let handler: Handler
@@ -20,7 +22,7 @@ public final class LocalServiceRPCServer: @unchecked Sendable {
   /// on a fatal error, nil when a start clears it. The service sets it before `start()`.
   package var listenerFailureChanged: (@Sendable (ServiceListenerFailure?) -> Void)?
 
-  // The five hooks below belong to tests; set them before `start()`.
+  // The hooks below belong to tests; set them before `start()`.
   /// Runs inside `start()` after the sockets are listening and before the server publishes them.
   package var beforeListenerPublished: (@Sendable () -> Void)?
   /// Runs once the accept loop has stopped and closed its descriptors; tests await it.
@@ -28,6 +30,14 @@ public final class LocalServiceRPCServer: @unchecked Sendable {
   /// Takes one connection from the listening descriptor, as `accept` does; tests replace it to
   /// fail the call.
   package var acceptConnection: @Sendable (Int32) -> Int32 = { Darwin.accept($0, nil, nil) }
+  /// Makes the pipe that wakes a held request's `poll`, as `pipe` does; tests replace it to fail
+  /// the call.
+  package var wakePipe: @Sendable (UnsafeMutablePointer<Int32>) -> Int32 = { Darwin.pipe($0) }
+  /// Waits for an event on a held request's connection or its wake pipe, as `poll` does; tests
+  /// replace it to fail the call.
+  package var pollConnection: @Sendable (UnsafeMutablePointer<pollfd>, nfds_t, Int32) -> Int32 = {
+    Darwin.poll($0, $1, $2)
+  }
   /// Milliseconds the accept loop waits after running out of descriptors or memory.
   package var resourceWaitMilliseconds = AcceptFailure.resourceWaitMilliseconds
   /// Receives the accept loop's reports; they go to standard output.
@@ -271,11 +281,7 @@ public final class LocalServiceRPCServer: @unchecked Sendable {
       }
       let data = try LocalServiceRPCTransport.receiveFrame(from: descriptor)
       let request = try JSONDecoder().decode(LocalServiceRPCRequest.self, from: data)
-      handler(request) { response in
-        defer { Darwin.close(descriptor) }
-        guard let encoded = try? JSONEncoder().encode(response) else { return }
-        try? LocalServiceRPCTransport.sendFrame(encoded, to: descriptor)
-      }
+      answer(request, on: descriptor)
     } catch {
       let response = LocalServiceRPCResponse(result: nil, error: error.localizedDescription)
       if let encoded = try? JSONEncoder().encode(response) {
@@ -283,6 +289,85 @@ public final class LocalServiceRPCServer: @unchecked Sendable {
       }
       Darwin.close(descriptor)
     }
+  }
+
+  /// Runs the handler for `request`, sends its response and closes the connection.
+  ///
+  /// A client sends one request and then only reads. For a method that holds its reply open, any
+  /// event on the connection before the response, a hang-up, an error or stray bytes, cancels the
+  /// handler's task, so a request does not outlive its client. The wait is event-driven: the
+  /// thread sleeps in `poll` on the connection and on a pipe that the finished task writes to.
+  /// When that pipe cannot be made, the request is answered with the connection-failure error
+  /// and the handler does not run; when `poll` fails, the failure is reported and the task is
+  /// cancelled. Any other request runs to completion even when the client has left.
+  ///
+  /// Each connection holds one GCD thread for its request: for a held request until the response
+  /// is sent or the client leaves, which is up to `TestNotificationDeadlines.pickupSeconds` plus
+  /// `TestNotificationDeadlines.answerSeconds` seconds for a test notification request.
+  private func answer(_ request: LocalServiceRPCRequest, on descriptor: Int32) {
+    let watches = ApplicationServiceRPCMethod(rawValue: request.method)?.holdsReplyOpen == true
+    var wake: (read: Int32, write: Int32) = (-1, -1)
+    if watches {
+      do { wake = try openWakePipe() } catch {
+        let response = LocalServiceRPCResponse(result: nil, error: error.localizedDescription)
+        if let encoded = try? JSONEncoder().encode(response) {
+          try? LocalServiceRPCTransport.sendFrame(encoded, to: descriptor)
+        }
+        Darwin.close(descriptor)
+        return
+      }
+    }
+    let finished = DispatchSemaphore(value: 0)
+    let wakeWrite = wake.write
+    let handler = handler
+    let task = Task {
+      let response = await handler(request)
+      if let encoded = try? JSONEncoder().encode(response) {
+        try? LocalServiceRPCTransport.sendFrame(encoded, to: descriptor)
+      }
+      if watches { _ = Darwin.write(wakeWrite, "x", 1) }
+      finished.signal()
+    }
+    if watches {
+      var events = [
+        pollfd(fd: descriptor, events: Int16(POLLIN), revents: 0),
+        pollfd(fd: wake.read, events: Int16(POLLIN), revents: 0),
+      ]
+      var ready: Int32
+      var code: Int32
+      repeat {
+        ready = pollConnection(&events, 2, -1)
+        code = errno
+      } while ready < 0 && code == EINTR
+      if ready < 0 {
+        report(
+          "[\(Self.name)] Waiting on a held request's connection failed (errno \(code)); "
+            + "the request is cancelled."
+        )
+        task.cancel()
+      } else if events[1].revents == 0 {
+        task.cancel()
+      }
+    }
+    finished.wait()
+    if watches {
+      Darwin.close(wake.read)
+      Darwin.close(wake.write)
+    }
+    Darwin.close(descriptor)
+  }
+
+  /// Makes the pipe that wakes a held request's `poll`, with both ends closed on `exec`.
+  private func openWakePipe() throws -> (read: Int32, write: Int32) {
+    var ends: [Int32] = [-1, -1]
+    guard wakePipe(&ends) == 0 else { throw LocalServiceRPCError.connectionFailed(errno) }
+    for end in ends where fcntl(end, F_SETFD, FD_CLOEXEC) != 0 {
+      let code = errno
+      Darwin.close(ends[0])
+      Darwin.close(ends[1])
+      throw LocalServiceRPCError.connectionFailed(code)
+    }
+    return (ends[0], ends[1])
   }
 
   private func removeStaleSocket(at path: String) throws {

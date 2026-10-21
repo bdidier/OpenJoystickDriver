@@ -230,6 +230,7 @@ enum GUICoverageEntries {
     leaf("setting get", "SettingsPreferencesModel"),
     leaf("setting set", "SettingsPreferencesModel"),
     leaf("setting reset", "resetSettings"),
+    leaf("setting test-notification", "sendTestNotification"),
     leaf("log show", "ActivityLogView"),
     option("log show", "--follow", "setFollowing"),
     option("log show", "--lines", "setLineCount"),

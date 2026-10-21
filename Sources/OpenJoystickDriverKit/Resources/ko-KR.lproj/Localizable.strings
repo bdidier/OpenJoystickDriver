@@ -586,6 +586,12 @@
 "notifications.profileSwitchedBody" = "%@ → %@";
 "notifications.testBody" = "OpenJoystickDriver는 컨트롤러 및 프로파일 활동에 대해 알려줄 수 있습니다.";
 "notifications.testTitle" = "알림이 준비되었습니다";
+/* Failed outcome of the test notification when the app runs outside an app bundle and has no notification center. The inline error of the Settings window shows it for Send Test Notification and for a notification permission request, and `ojd setting test-notification` prints it as the reason of E2006. */
+"ui.settings.notifications.noNotificationCenter" = "OpenJoystickDriver가 앱 번들에서 실행되고 있지 않아 알림을 사용할 수 없습니다. OpenJoystickDriver 앱을 연 다음 다시 시도하세요.";
+/* Error message in the inline error of the Settings window when the service no longer waits for the app's report on a test notification: the ojd request that asked for it ended, or its answer time ran out. */
+"ui.settings.notifications.testReportLost" = "테스트 알림에 대한 보고가 도착하기 전에 ojd 요청이 종료되었거나 응답 제한 시간이 지났습니다.";
+/* Error text the service returns to an app that reports the outcome noAnswer for a test notification, which only the service decides. The inline error of the Settings window shows it. shown, denied, failed and noAnswer are outcome names and stay as written. */
+"ui.settings.notifications.testReportNoAnswer" = "테스트 알림 보고는 shown, denied, failed 중 하나여야 합니다. noAnswer는 서비스만 결정합니다.";
 "profiles.virtualOutput" = "가상 게임패드";
 "profiles.virtualDisabled" = "비활성화됨";
 "profiles.virtualMapped" = "매핑된 컨트롤만";
@@ -1365,6 +1371,10 @@
 "error.E2034" = "서비스가 더 이상 요청을 받지 않습니다. OpenJoystickDriver를 종료했다가 다시 열고 다시 시도하세요.";
 "error.E2035" = "요청 수신기가 중지된 이유를 기록한 파일을 사용할 수 없습니다. 파일을 삭제한 다음 OpenJoystickDriver를 다시 여세요.";
 "error.E2036" = "--json 출력에서는 레코드의 숫자를 값 그대로 쓸 수 없습니다. 레코드 텍스트를 보려면 --json 없이 명령을 실행하세요.";
+/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
+"error.E2037" = "제때 테스트 알림에 응답한 OpenJoystickDriver 앱이 없습니다. 앱이 실행 중인지 확인하고 다시 시도하세요.";
+/* Error E2038, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */
+"error.E2038" = "OpenJoystickDriver의 알림이 허용되지 않았습니다. 시스템 알림 설정에서 허용한 다음 다시 시도하세요.";
 "cli.record.usb_not_claimed" = "이 제품군은 원시 USB를 사용하며, 제품 목록이 Apple에서 서명되어 있으므로 USB 확장 프로그램이 이 컨트롤러를 점유할 수 없습니다. OJD는 macOS가 허용하는 경우에만 직접 USB 접근으로 이 컨트롤러에 도달합니다.";
 "cli.record.usb_only_switch2" = "USB 전용: 컨트롤러를 Bluetooth LE로 연결하려면 이 Switch 2 레코드에 bluetoothLE.vibrationCharacteristic을 추가하십시오.";
 "cli.record.validate.abstract" = "컨트롤러 레코드를 설치하지 않고 확인합니다.";
@@ -2053,3 +2063,9 @@
 "status.listenerFailure.otherUser" = "기록이 다른 사용자의 것입니다. 해당 사용자로 ojd를 실행하세요";
 /* Reason the listener failure file cannot be used: the system would not say whether the process that wrote it runs. %1$@ is the system's reason, %2$@ the error number. Fills the reason in the error E2035 message. */
 "status.listenerFailure.processCheckFailed" = "서비스 프로세스가 실행 중인지 확인하지 못했습니다: %1$@ (오류 번호 %2$@)";
+/* Abstract of the ojd setting test-notification command, in the command help. */
+"cli.setting.testNotification.abstract" = "앱에 테스트 알림을 표시합니다.";
+/* Discussion of the ojd setting test-notification command, in the command help. */
+"cli.setting.testNotification.discussion" = "서비스에 열려 있는 OpenJoystickDriver 앱으로 테스트 알림을 알리도록 요청하고 앱이 알림을 표시할 때까지 기다립니다. 알림이 거부되었거나 전달에 실패했거나 제때 응답하는 앱이 없으면 이름이 있는 오류로 실패합니다. 여기서 --timeout의 기본값은 %@초입니다.";
+/* Printed by ojd setting test-notification after the app reported that it showed the test notification. */
+"cli.setting.testNotification.success" = "앱이 테스트 알림을 표시했습니다.";

@@ -39,6 +39,7 @@ struct SettingsFileRecoveryTests {
   @MainActor
   private func makeModel() -> SettingsPreferencesModel {
     SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
       settings: store,
       launchAtLogin: RecoveryLaunchAtLoginStub(),
       notificationAuthorization: RecoveryAuthorizationStub()
@@ -99,6 +100,7 @@ struct SettingsFileRecoveryTests {
     try writeRejectedFile()
     let failing = SettingsStore(directory: root) { _ in throw CocoaError(.fileWriteNoPermission) }
     let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
       settings: failing,
       launchAtLogin: RecoveryLaunchAtLoginStub(),
       notificationAuthorization: RecoveryAuthorizationStub()
@@ -269,6 +271,7 @@ struct SettingsFileRecoveryTests {
     try writeRejectedFile()
     let failing = SettingsStore(directory: root) { _ in throw CocoaError(.fileWriteNoPermission) }
     let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
       settings: failing,
       launchAtLogin: RecoveryLaunchAtLoginStub(),
       notificationAuthorization: RecoveryAuthorizationStub()
@@ -307,6 +310,14 @@ private final class RecoveryDeliverySpy: RuntimeNotificationDelivering {
   private(set) var total = 0
 
   func deliver(title: String, body: String, sound: Bool) { total += 1 }
+  nonisolated(nonsending) func deliverAwaitingSystem(
+    title: String,
+    body: String,
+    sound: Bool
+  ) async throws {
+    await Task.yield()
+    total += 1
+  }
 }
 
 private final class RecoveryLaunchAtLoginStub: LaunchAtLoginControlling {

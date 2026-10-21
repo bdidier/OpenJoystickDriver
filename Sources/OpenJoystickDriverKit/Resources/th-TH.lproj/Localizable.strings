@@ -586,6 +586,12 @@
 "notifications.profileSwitchedBody" = "%@ → %@";
 "notifications.testBody" = "OpenJoystickDriver สามารถแจ้งเตือนคุณเกี่ยวกับกิจกรรมของคอนโทรลเลอร์และโปรไฟล์ได้";
 "notifications.testTitle" = "การแจ้งเตือนพร้อมใช้งาน";
+/* Failed outcome of the test notification when the app runs outside an app bundle and has no notification center. The inline error of the Settings window shows it for Send Test Notification and for a notification permission request, and `ojd setting test-notification` prints it as the reason of E2006. */
+"ui.settings.notifications.noNotificationCenter" = "ไม่สามารถใช้การแจ้งเตือนได้ เพราะ OpenJoystickDriver ไม่ได้ทำงานจากบันเดิลแอป เปิดแอป OpenJoystickDriver แล้วลองอีกครั้ง";
+/* Error message in the inline error of the Settings window when the service no longer waits for the app's report on a test notification: the ojd request that asked for it ended, or its answer time ran out. */
+"ui.settings.notifications.testReportLost" = "คำขอ ojd สิ้นสุดลงหรือหมดเวลาตอบกลับก่อนที่รายงานเกี่ยวกับการแจ้งเตือนทดสอบจะมาถึง";
+/* Error text the service returns to an app that reports the outcome noAnswer for a test notification, which only the service decides. The inline error of the Settings window shows it. shown, denied, failed and noAnswer are outcome names and stay as written. */
+"ui.settings.notifications.testReportNoAnswer" = "รายงานการแจ้งเตือนทดสอบต้องเป็น shown, denied หรือ failed เท่านั้น ส่วน noAnswer บริการเป็นผู้กำหนดเพียงผู้เดียว";
 "profiles.virtualOutput" = "เกมแพดเสมือน";
 "profiles.virtualDisabled" = "ปิดใช้งาน";
 "profiles.virtualMapped" = "เฉพาะตัวควบคุมที่แมปแล้ว";
@@ -1365,6 +1371,10 @@
 "error.E2034" = "บริการหยุดรับคำขอแล้ว ปิด OpenJoystickDriver แล้วเปิดใหม่ จากนั้นลองอีกครั้ง";
 "error.E2035" = "ไม่สามารถใช้ไฟล์ที่บันทึกสาเหตุที่ตัวรับคำขอหยุดทำงานได้ ลบไฟล์นั้น แล้วเปิด OpenJoystickDriver ใหม่";
 "error.E2036" = "เอาต์พุตของ --json เขียนตัวเลขในระเบียนโดยไม่เปลี่ยนค่าไม่ได้ เรียกใช้คำสั่งโดยไม่ใส่ --json เพื่อดูข้อความของระเบียน";
+/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
+"error.E2037" = "ไม่มีแอป OpenJoystickDriver ตอบกลับการแจ้งเตือนทดสอบทันเวลา ตรวจสอบว่าแอปกำลังทำงานอยู่ แล้วลองอีกครั้ง";
+/* Error E2038, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */
+"error.E2038" = "ไม่อนุญาตการแจ้งเตือนสำหรับ OpenJoystickDriver อนุญาตในการตั้งค่าการแจ้งเตือนของระบบ แล้วลองอีกครั้ง";
 "cli.record.usb_not_claimed" = "กลุ่มนี้ใช้ USB ดิบ และส่วนขยาย USB ครอบครองคอนโทรลเลอร์นี้ไม่ได้ เพราะรายการผลิตภัณฑ์ลงนามโดย Apple OJD เข้าถึงได้ผ่านการเข้าถึง USB โดยตรงเท่านั้น เมื่อ macOS อนุญาต";
 "cli.record.usb_only_switch2" = "USB เท่านั้น: เพิ่ม bluetoothLE.vibrationCharacteristic ในระเบียน Switch 2 นี้เพื่อเชื่อมต่อคอนโทรลเลอร์ผ่าน Bluetooth LE";
 "cli.record.validate.abstract" = "ตรวจสอบระเบียนคอนโทรลเลอร์โดยไม่ติดตั้ง";
@@ -2053,3 +2063,9 @@
 "status.listenerFailure.otherUser" = "บันทึกนี้เป็นของผู้ใช้อื่น ให้เรียกใช้ ojd ในฐานะผู้ใช้นั้น";
 /* Reason the listener failure file cannot be used: the system would not say whether the process that wrote it runs. %1$@ is the system's reason, %2$@ the error number. Fills the reason in the error E2035 message. */
 "status.listenerFailure.processCheckFailed" = "ตรวจสอบไม่ได้ว่ากระบวนการของบริการกำลังทำงานอยู่หรือไม่: %1$@ (หมายเลขข้อผิดพลาด %2$@)";
+/* Abstract of the ojd setting test-notification command, in the command help. */
+"cli.setting.testNotification.abstract" = "แสดงการแจ้งเตือนทดสอบในแอป";
+/* Discussion of the ojd setting test-notification command, in the command help. */
+"cli.setting.testNotification.discussion" = "ขอให้บริการประกาศการแจ้งเตือนทดสอบไปยังแอป OpenJoystickDriver ที่เปิดอยู่ และรอให้แอปแสดงการแจ้งเตือนนั้น จะล้มเหลวพร้อมข้อผิดพลาดที่มีชื่อเมื่อการแจ้งเตือนถูกปฏิเสธ การส่งล้มเหลว หรือไม่มีแอปตอบกลับทันเวลา ค่าเริ่มต้นของ --timeout ในคำสั่งนี้คือ %@ วินาที";
+/* Printed by ojd setting test-notification after the app reported that it showed the test notification. */
+"cli.setting.testNotification.success" = "แอปแสดงการแจ้งเตือนทดสอบแล้ว";

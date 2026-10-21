@@ -18,10 +18,10 @@ struct LocalServiceRPCTests {
     let server = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in true },
-      handler: { request, completion in
+      handler: { request in
         let value = try? JSONDecoder().decode(String.self, from: request.arguments)
         let result = value.flatMap { try? JSONEncoder().encode($0.uppercased()) }
-        completion(LocalServiceRPCResponse(result: result, error: result == nil ? "decode" : nil))
+        return LocalServiceRPCResponse(result: result, error: result == nil ? "decode" : nil)
       }
     )
     try server.start()
@@ -46,9 +46,9 @@ struct LocalServiceRPCTests {
     let server = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in false },
-      handler: { _, completion in
+      handler: { _ in
         handlerCalled.signal()
-        completion(LocalServiceRPCResponse(result: Data(), error: nil))
+        return LocalServiceRPCResponse(result: Data(), error: nil)
       }
     )
     try server.start()
@@ -75,8 +75,8 @@ struct LocalServiceRPCTests {
         peers.record(peer)
         return true
       },
-      handler: { _, completion in
-        completion(LocalServiceRPCResponse(result: Data("1".utf8), error: nil))
+      handler: { _ in
+        return LocalServiceRPCResponse(result: Data("1".utf8), error: nil)
       }
     )
     try server.start()
@@ -101,12 +101,16 @@ struct LocalServiceRPCTests {
     let first = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in true },
-      handler: { _, completion in completion(LocalServiceRPCResponse(result: Data(), error: nil)) }
+      handler: { _ in
+        return LocalServiceRPCResponse(result: Data(), error: nil)
+      }
     )
     let second = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in true },
-      handler: { _, completion in completion(LocalServiceRPCResponse(result: Data(), error: nil)) }
+      handler: { _ in
+        return LocalServiceRPCResponse(result: Data(), error: nil)
+      }
     )
     try first.start()
     defer { first.stop() }
@@ -128,10 +132,8 @@ struct LocalServiceRPCTests {
       let server = LocalServiceRPCServer(
         socketPath: socketPath,
         authentication: { _ in true },
-        handler: { _, completion in
-          completion(
-            LocalServiceRPCResponse(result: try? JSONEncoder().encode(generation), error: nil)
-          )
+        handler: { _ in
+          return LocalServiceRPCResponse(result: try? JSONEncoder().encode(generation), error: nil)
         }
       )
       try server.start()
@@ -211,7 +213,7 @@ struct LocalServiceRPCTests {
     let server = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in true },
-      handler: { request, completion in
+      handler: { request in
         #expect(request.method == "requestAccess")
         do {
           let arguments = try JSONDecoder().decode(
@@ -223,11 +225,9 @@ struct LocalServiceRPCTests {
             inputRead: .denied,
             inputInject: .granted
           )
-          completion(
-            LocalServiceRPCResponse(result: try JSONEncoder().encode(snapshot), error: nil)
-          )
+          return LocalServiceRPCResponse(result: try JSONEncoder().encode(snapshot), error: nil)
         } catch {
-          completion(LocalServiceRPCResponse(result: nil, error: error.localizedDescription))
+          return LocalServiceRPCResponse(result: nil, error: error.localizedDescription)
         }
       }
     )
@@ -250,7 +250,7 @@ struct LocalServiceRPCTests {
     let server = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in true },
-      handler: { request, completion in
+      handler: { request in
         do {
           if request.method == "previewPhysicalColor" {
             let arguments = try JSONDecoder().decode(
@@ -270,9 +270,9 @@ struct LocalServiceRPCTests {
             #expect(request.method == "releasePhysicalColorPreview")
             #expect(arguments.token == token)
           }
-          completion(LocalServiceRPCResponse(result: try JSONEncoder().encode(true), error: nil))
+          return LocalServiceRPCResponse(result: try JSONEncoder().encode(true), error: nil)
         } catch {
-          completion(LocalServiceRPCResponse(result: nil, error: error.localizedDescription))
+          return LocalServiceRPCResponse(result: nil, error: error.localizedDescription)
         }
       }
     )
@@ -298,25 +298,25 @@ struct LocalServiceRPCTests {
     )
   }
 
-  @Test
+  @Test(.timeLimit(.minutes(1)))
   func cancellingHeldRequestClosesConnectionBeforeTimeoutAndNextCallWorks() async throws {
     let socketPath = temporarySocketPath()
-    let requestReceived = DispatchSemaphore(value: 0)
-    let releaseHeldRequest = DispatchSemaphore(value: 0)
+    let (requestReceived, requestReceivedSignal) = AsyncStream.makeStream(of: Void.self)
+    let (releaseHeldRequest, releaseGate) = AsyncStream.makeStream(of: Void.self)
     let server = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in true },
-      handler: { request, completion in
+      handler: { request in
         if request.method == "held" {
-          requestReceived.signal()
-          releaseHeldRequest.wait()
+          requestReceivedSignal.yield()
+          for await _ in releaseHeldRequest { break }
         }
-        completion(LocalServiceRPCResponse(result: try? JSONEncoder().encode("ok"), error: nil))
+        return LocalServiceRPCResponse(result: try? JSONEncoder().encode("ok"), error: nil)
       }
     )
     try server.start()
     defer {
-      releaseHeldRequest.signal()
+      releaseGate.finish()
       server.stop()
     }
 
@@ -328,9 +328,7 @@ struct LocalServiceRPCTests {
         socketPath: socketPath
       )
     }
-    let received = await Task.detached { waitForSemaphore(requestReceived, timeout: .now() + 1) }
-      .value
-    #expect(received == .success)
+    for await _ in requestReceived { break }
 
     let cancellationStart = ContinuousClock.now
     task.cancel()
@@ -344,7 +342,7 @@ struct LocalServiceRPCTests {
       socketPath: socketPath
     )
     #expect(result == "ok")
-    releaseHeldRequest.signal()
+    releaseGate.finish()
   }
 
   @Test
@@ -371,7 +369,9 @@ struct LocalServiceRPCTests {
     let server = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in false },
-      handler: { _, completion in completion(LocalServiceRPCResponse(result: Data(), error: nil)) }
+      handler: { _ in
+        return LocalServiceRPCResponse(result: Data(), error: nil)
+      }
     )
     try server.start()
     defer { server.stop() }
@@ -383,6 +383,162 @@ struct LocalServiceRPCTests {
         after: ServiceStatusRevision(instance: UUID(), generation: 1)
       )
     }
+  }
+
+  /// Sends `method` on a raw connection and returns it open; the caller closes it.
+  private func send(method: String, socketPath: String) throws -> Int32 {
+    let descriptor = try LocalServiceRPCTransport.openConnectedSocket(
+      timeoutSeconds: 5,
+      socketPath: socketPath
+    )
+    let request = LocalServiceRPCRequest(
+      method: method,
+      arguments: try JSONEncoder().encode(LocalServiceRPCEmptyArguments())
+    )
+    try LocalServiceRPCTransport.sendFrame(try JSONEncoder().encode(request), to: descriptor)
+    return descriptor
+  }
+
+  @Test
+  func aClientThatLeavesCancelsOnlyTheRequestsThatHoldTheirReplyOpen() async throws {
+    let socketPath = temporarySocketPath()
+    let started = Locked<Set<String>>([])
+    let ended = Locked<[String: Bool]>([:])
+    let server = LocalServiceRPCServer(
+      socketPath: socketPath,
+      authentication: { _ in true },
+      handler: { request in
+        started.withLock { _ = $0.insert(request.method) }
+        try? await Task.sleep(nanoseconds: 300_000_000)
+        ended.withLock { $0[request.method] = Task.isCancelled }
+        return LocalServiceRPCResponse(result: Data(), error: nil)
+      }
+    )
+    try server.start()
+    defer { server.stop() }
+    let held = ApplicationServiceRPCMethod.waitForServiceStatusChange.rawValue
+    let mutation = ApplicationServiceRPCMethod.setSetting.rawValue
+
+    let clients = [
+      try send(method: held, socketPath: socketPath),
+      try send(method: mutation, socketPath: socketPath),
+    ]
+    let deadline = ContinuousClock.now + .seconds(5)
+    while started.withLock({ $0.count }) < 2, ContinuousClock.now < deadline {
+      try await Task.sleep(nanoseconds: 5_000_000)
+    }
+    for client in clients { Darwin.close(client) }
+    while ended.withLock({ $0.count }) < 2, ContinuousClock.now < deadline {
+      try await Task.sleep(nanoseconds: 5_000_000)
+    }
+
+    #expect(ended.withLock { $0[held] } == true)
+    #expect(ended.withLock { $0[mutation] } == false)
+  }
+
+  @Test
+  func aHeldRequestWhoseWakePipeCannotBeMadeIsAnsweredWithTheConnectionFailureAndNeverRuns()
+    async throws
+  {
+    let socketPath = temporarySocketPath()
+    let handlerRan = Locked(false)
+    let server = LocalServiceRPCServer(
+      socketPath: socketPath,
+      authentication: { _ in true },
+      handler: { _ in
+        handlerRan.withLock { $0 = true }
+        return LocalServiceRPCResponse(result: Data(), error: nil)
+      }
+    )
+    server.wakePipe = { _ in
+      errno = EMFILE
+      return -1
+    }
+    try server.start()
+    defer { server.stop() }
+
+    await #expect(throws: LocalServiceRPCError.remote(Self.connectionFailure(EMFILE))) {
+      let _: Data = try await LocalServiceRPCClient.call(
+        method: ApplicationServiceRPCMethod.waitForServiceStatusChange.rawValue,
+        arguments: LocalServiceRPCEmptyArguments(),
+        timeoutSeconds: 10,
+        socketPath: socketPath
+      )
+    }
+    #expect(!handlerRan.withLock { $0 })
+  }
+
+  @Test
+  func theWakePipeOfAHeldRequestIsClosedOnExec() async throws {
+    let socketPath = temporarySocketPath()
+    let ends = Locked<[Int32]>([])
+    let flags = Locked<[Int32]>([])
+    let server = LocalServiceRPCServer(
+      socketPath: socketPath,
+      authentication: { _ in true },
+      handler: { _ in
+        flags.withLock { $0 = ends.withLock { $0 }.map { fcntl($0, F_GETFD) } }
+        return LocalServiceRPCResponse(result: try? JSONEncoder().encode(true), error: nil)
+      }
+    )
+    server.wakePipe = { descriptors in
+      let status = Darwin.pipe(descriptors)
+      ends.withLock { $0 = [descriptors[0], descriptors[1]] }
+      return status
+    }
+    try server.start()
+    defer { server.stop() }
+
+    let _: Bool = try await LocalServiceRPCClient.call(
+      method: ApplicationServiceRPCMethod.waitForServiceStatusChange.rawValue,
+      arguments: LocalServiceRPCEmptyArguments(),
+      timeoutSeconds: 10,
+      socketPath: socketPath
+    )
+
+    let observed = flags.withLock { $0 }
+    #expect(observed.count == 2)
+    #expect(observed.allSatisfy { $0 >= 0 && $0 & FD_CLOEXEC != 0 })
+  }
+
+  @Test
+  func aFailedPollIsReportedAndCancelsTheHeldRequest() async throws {
+    let socketPath = temporarySocketPath()
+    let reports = Locked<[String]>([])
+    let (never, neverGate) = AsyncStream.makeStream(of: Void.self)
+    defer { neverGate.finish() }
+    let server = LocalServiceRPCServer(
+      socketPath: socketPath,
+      authentication: { _ in true },
+      handler: { _ in
+        for await _ in never {}
+        return LocalServiceRPCResponse(
+          result: try? JSONEncoder().encode(Task.isCancelled),
+          error: nil
+        )
+      }
+    )
+    server.report = { message in reports.withLock { $0.append(message) } }
+    server.pollConnection = { _, _, _ in
+      errno = EINVAL
+      return -1
+    }
+    try server.start()
+    defer { server.stop() }
+
+    let cancelled: Bool = try await LocalServiceRPCClient.call(
+      method: ApplicationServiceRPCMethod.waitForServiceStatusChange.rawValue,
+      arguments: LocalServiceRPCEmptyArguments(),
+      timeoutSeconds: 10,
+      socketPath: socketPath
+    )
+
+    #expect(cancelled)
+    #expect(reports.withLock { $0.contains { $0.contains("errno \(EINVAL)") } })
+  }
+
+  private static func connectionFailure(_ code: Int32) -> String {
+    LocalServiceRPCError.connectionFailed(code).localizedDescription
   }
 
   private func temporarySocketPath() -> String {

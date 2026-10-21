@@ -11,12 +11,14 @@ struct ControllerLiveUpdatesTests {
     _ source: ScriptedChangeSource,
     refreshed: Counter,
     logged: LogLines = LogLines(),
-    modes: Modes = Modes()
+    modes: Modes = Modes(),
+    answeredTestNotifications: Answers = Answers()
   ) -> ControllerLiveUpdates {
     ControllerLiveUpdates(
       source: source,
       fallbackPollSeconds: 0.01,
       log: { logged.lines.append($0) },
+      answerTestNotification: { answeredTestNotifications.ids.append($0) },
       modeChanged: { modes.values.append($0) },
       refresh: { refreshed.increment() }
     )
@@ -37,6 +39,26 @@ struct ControllerLiveUpdatesTests {
     source.answer(.revision(2))
     await refreshed.waitUntil(2, timeout: 30)
 
+    #expect(refreshed.value == 2)
+  }
+
+  @Test
+  func aTestNotificationAnnouncementIsAnsweredAndRefreshesNothing() async {
+    let source = ScriptedChangeSource()
+    let refreshed = Counter()
+    let answers = Answers()
+    let updates = makeUpdates(source, refreshed: refreshed, answeredTestNotifications: answers)
+    updates.start()
+    defer { updates.stop() }
+    source.answer(.revision(1))
+    await refreshed.waitUntil(1, timeout: 30)
+    let id = UUID()
+
+    source.answer(.revision(1), event: .testNotification, announcement: id)
+    source.answer(.revision(2))
+    await refreshed.waitUntil(2, timeout: 30)
+
+    #expect(answers.ids == [id])
     #expect(refreshed.value == 2)
   }
 
@@ -204,6 +226,9 @@ private final class Counter {
 }
 
 @MainActor
+private final class Answers { var ids: [UUID] = [] }
+
+@MainActor
 private final class LogLines { var lines: [String] = [] }
 
 @MainActor
@@ -221,12 +246,12 @@ extension ServiceStatusRevision {
 /// A change source whose waits finish only when the test answers or fails them.
 private final class ScriptedChangeSource: ControllerChangeSource, @unchecked Sendable {
   private let lock = NSLock()
-  private var pending: [CheckedContinuation<ServiceStatusRevision, Error>] = []
-  private var queued: [Result<ServiceStatusRevision, Error>] = []
+  private var pending: [CheckedContinuation<ServiceStatusReply, Error>] = []
+  private var queued: [Result<ServiceStatusReply, Error>] = []
 
-  func waitForChange(after revision: ServiceStatusRevision?) async throws -> ServiceStatusRevision {
+  func waitForChange(after revision: ServiceStatusRevision?) async throws -> ServiceStatusReply {
     try await withCheckedThrowingContinuation { continuation in
-      let ready = lock.withLock { () -> Result<ServiceStatusRevision, Error>? in
+      let ready = lock.withLock { () -> Result<ServiceStatusReply, Error>? in
         if queued.isEmpty {
           pending.append(continuation)
           return nil
@@ -237,11 +262,19 @@ private final class ScriptedChangeSource: ControllerChangeSource, @unchecked Sen
     }
   }
 
-  func answer(_ revision: ServiceStatusRevision) { deliver(.success(revision)) }
+  func answer(
+    _ revision: ServiceStatusRevision,
+    event: ServiceStatusEventKind = .statusChange,
+    announcement: UUID? = nil
+  ) {
+    deliver(
+      .success(ServiceStatusReply(revision: revision, event: event, announcement: announcement))
+    )
+  }
   func fail(_ error: Error) { deliver(.failure(error)) }
 
-  private func deliver(_ result: Result<ServiceStatusRevision, Error>) {
-    let waiting = lock.withLock { () -> CheckedContinuation<ServiceStatusRevision, Error>? in
+  private func deliver(_ result: Result<ServiceStatusReply, Error>) {
+    let waiting = lock.withLock { () -> CheckedContinuation<ServiceStatusReply, Error>? in
       if pending.isEmpty {
         queued.append(result)
         return nil

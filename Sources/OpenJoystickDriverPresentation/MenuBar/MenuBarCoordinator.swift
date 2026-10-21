@@ -36,7 +36,7 @@
     var settingsWindow: (any SettingsWindowPresenting)?
     /// App preferences, shared with the Settings window; `showInMenuBar` adds or removes the
     /// status item and `showInDock` the Dock icon.
-    let preferences = SettingsPreferencesModel()
+    let preferences: SettingsPreferencesModel
     /// The command-line tool link, shown by the Settings window.
     let commandLineTool = CommandLineToolModel()
     var showInMenuBarObservation: AnyCancellable?
@@ -58,6 +58,7 @@
       self.stopRuntime = stopRuntime
       self.gateway = gateway
       self.gatewayChangeSource = gateway
+      self.preferences = SettingsPreferencesModel(testNotifications: gateway)
       self.viewModel = RuntimeViewModel(
         gateway: gateway,
         systemExtensionSetup: SystemExtensionSetupCoordinator(client: systemExtensionSetup),

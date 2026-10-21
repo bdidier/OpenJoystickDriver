@@ -586,6 +586,12 @@
 "notifications.profileSwitchedBody" = "%@ → %@";
 "notifications.testBody" = "OpenJoystickDriver может уведомлять о действиях контроллера и профиля.";
 "notifications.testTitle" = "Уведомления готовы";
+/* Failed outcome of the test notification when the app runs outside an app bundle and has no notification center. The inline error of the Settings window shows it for Send Test Notification and for a notification permission request, and `ojd setting test-notification` prints it as the reason of E2006. */
+"ui.settings.notifications.noNotificationCenter" = "Уведомления недоступны, потому что OpenJoystickDriver запущен не из пакета приложения. Откройте приложение OpenJoystickDriver и повторите попытку.";
+/* Error message in the inline error of the Settings window when the service no longer waits for the app's report on a test notification: the ojd request that asked for it ended, or its answer time ran out. */
+"ui.settings.notifications.testReportLost" = "Запрос ojd завершился или время ответа на него истекло раньше, чем пришёл отчёт о тестовом уведомлении.";
+/* Error text the service returns to an app that reports the outcome noAnswer for a test notification, which only the service decides. The inline error of the Settings window shows it. shown, denied, failed and noAnswer are outcome names and stay as written. */
+"ui.settings.notifications.testReportNoAnswer" = "Отчёт о тестовом уведомлении должен быть shown, denied или failed; noAnswer определяет только служба.";
 "profiles.virtualOutput" = "Виртуальный геймпад";
 "profiles.virtualDisabled" = "Выключено";
 "profiles.virtualMapped" = "Только назначенные элементы управления";
@@ -1365,6 +1371,10 @@
 "error.E2034" = "Служба перестала принимать запросы. Закройте OpenJoystickDriver, откройте его снова и повторите попытку.";
 "error.E2035" = "Файл, в котором записано, почему остановился приём запросов, использовать нельзя. Удалите файл и снова откройте OpenJoystickDriver.";
 "error.E2036" = "Вывод --json не может записать число из записи, не изменив его значение. Выполните команду без --json, чтобы увидеть текст записи.";
+/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
+"error.E2037" = "Ни одно приложение OpenJoystickDriver не ответило на тестовое уведомление вовремя. Убедитесь, что приложение запущено, и повторите попытку.";
+/* Error E2038, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */
+"error.E2038" = "Уведомления для OpenJoystickDriver не разрешены. Разрешите их в настройках уведомлений системы и повторите попытку.";
 "cli.record.usb_not_claimed" = "Семейство использует необработанный USB, а расширение USB не может захватить этот контроллер, потому что его список продуктов подписан Apple. OJD получает к нему доступ только напрямую через USB, если macOS это разрешает.";
 "cli.record.usb_only_switch2" = "Только USB: добавьте bluetoothLE.vibrationCharacteristic в эту запись Switch 2, чтобы подключать контроллер по Bluetooth LE.";
 "cli.record.validate.abstract" = "Проверяет запись контроллера без установки.";
@@ -2053,3 +2063,9 @@
 "status.listenerFailure.otherUser" = "запись принадлежит другому пользователю; запустите ojd от имени этого пользователя";
 /* Reason the listener failure file cannot be used: the system would not say whether the process that wrote it runs. %1$@ is the system's reason, %2$@ the error number. Fills the reason in the error E2035 message. */
 "status.listenerFailure.processCheckFailed" = "не удалось проверить, запущен ли процесс службы: %1$@ (номер ошибки %2$@)";
+/* Abstract of the ojd setting test-notification command, in the command help. */
+"cli.setting.testNotification.abstract" = "Показывает тестовое уведомление в приложении.";
+/* Discussion of the ojd setting test-notification command, in the command help. */
+"cli.setting.testNotification.discussion" = "Просит службу передать тестовое уведомление открытому приложению OpenJoystickDriver и ждёт, пока приложение его покажет. Завершается именованной ошибкой, если уведомления запрещены, доставка не удалась или ни одно приложение не ответило вовремя. Значение --timeout по умолчанию здесь, в секундах: %@.";
+/* Printed by ojd setting test-notification after the app reported that it showed the test notification. */
+"cli.setting.testNotification.success" = "Приложение показало тестовое уведомление.";

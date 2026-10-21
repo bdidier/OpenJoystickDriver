@@ -60,6 +60,7 @@ extension CLI {
       (ProfileDeleteCommand.self, "Status"),
       (ProfileRecoverCommand.self, "Status"),
       (SettingResetCommand.self, "Status"),
+      (SettingTestNotificationCommand.self, "Status"),
       (RecordShowCommand.self, "ControllerRecord"),
       (RecordInstallCommand.self, "ControllerRecord"),
       (RecordListCommand.self, "ControllerRecordList"),

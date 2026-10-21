@@ -122,21 +122,46 @@ extension ApplicationServiceClient {
     )
   }
 
-  /// Waits until the service's status differs from revision `after`, or the service's hold time
-  /// passes with no change, and returns the service's current revision. A nil `after` returns
-  /// the current revision at once. When the service closes the connection without a reply during
-  /// a wait, the wait throws ``LocalServiceRPCError/serviceClosedConnection``: the first reply
-  /// proved the service accepts this process. A reply that rejects this process throws
+  /// Waits until the service's status differs from revision `after`, the service's hold time
+  /// passes with no change, or the service announces a test notification, and returns the
+  /// service's current revision with the reason it answered. A nil `after` returns the current
+  /// revision at once. When the service closes the connection without a reply during a wait,
+  /// the wait throws ``LocalServiceRPCError/serviceClosedConnection``: the first reply proved the
+  /// service accepts this process. A reply that rejects this process throws
   /// ``LocalServiceRPCError/peerRejected``.
   public func waitForServiceStatusChange(
     after: ServiceStatusRevision?
-  ) async throws -> ServiceStatusRevision {
+  ) async throws -> ServiceStatusReply {
     try await call(
       .waitForServiceStatusChange,
       LocalServiceRPCStatusChangeArguments(after: after),
       timeoutSeconds: ServiceStatusRevision.holdSeconds
         + applicationServiceDefaultReplyTimeoutSeconds,
       closedWithoutReply: after == nil ? .peerRejected : .serviceClosedConnection
+    )
+  }
+
+  /// Asks the service to announce a test notification to the app and returns how it ended: the
+  /// app's own report, or `noAnswer` when no app answered within
+  /// ``TestNotificationDeadlines``.
+  public func sendTestNotification() async throws -> TestNotificationOutcome {
+    try await call(
+      .sendTestNotification,
+      LocalServiceRPCEmptyArguments(),
+      timeoutSeconds: ServiceTimeouts.testNotification
+    )
+  }
+
+  /// Answers a test notification the app took from `waitForServiceStatusChange`. Returns false
+  /// when the service no longer waits for that announcement because it ended or another answer
+  /// came first.
+  public func reportTestNotificationResult(
+    announcement: UUID,
+    outcome: TestNotificationOutcome
+  ) async throws -> Bool {
+    try await call(
+      .reportTestNotificationResult,
+      TestNotificationReport(announcement: announcement, outcome: outcome)
     )
   }
 

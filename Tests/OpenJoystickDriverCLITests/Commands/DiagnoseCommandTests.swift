@@ -53,14 +53,14 @@ struct DiagnoseCommandTests {
     let server = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in true },
-      handler: { request, completion in
+      handler: { request in
         if request.method == ApplicationServiceRPCMethod.getStatus.rawValue {
-          completion(LocalServiceRPCResponse(result: statusResult, error: nil))
-        } else if request.method == ApplicationServiceRPCMethod.getFrameTimings.rawValue {
-          completion(LocalServiceRPCResponse(result: timingsResult, error: nil))
-        } else {
-          completion(LocalServiceRPCResponse(result: nil, error: "unexpected \(request.method)"))
+          return LocalServiceRPCResponse(result: statusResult, error: nil)
         }
+        if request.method == ApplicationServiceRPCMethod.getFrameTimings.rawValue {
+          return LocalServiceRPCResponse(result: timingsResult, error: nil)
+        }
+        return LocalServiceRPCResponse(result: nil, error: "unexpected \(request.method)")
       }
     )
     try server.start()

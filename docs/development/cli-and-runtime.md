@@ -31,7 +31,7 @@ ojd controller list|show|watch|capture|rumble|light|player|suspend|resume|discon
 ojd virtual show|set|reset|feed|export-mapping|launch
 ojd permission list|request
 ojd transport-extension status|activate|deactivate
-ojd setting list|get|set
+ojd setting list|get|set|reset|test-notification
 ojd log show|path
 ojd diagnose [--output PATH] [--soak SECONDS]
 ojd update check

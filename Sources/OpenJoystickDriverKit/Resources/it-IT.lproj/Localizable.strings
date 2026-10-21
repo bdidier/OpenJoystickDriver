@@ -586,6 +586,12 @@
 "notifications.profileSwitchedBody" = "%@ → %@";
 "notifications.testBody" = "OpenJoystickDriver può avvisarti dell’attività di controller e profili.";
 "notifications.testTitle" = "Le notifiche sono pronte";
+/* Failed outcome of the test notification when the app runs outside an app bundle and has no notification center. The inline error of the Settings window shows it for Send Test Notification and for a notification permission request, and `ojd setting test-notification` prints it as the reason of E2006. */
+"ui.settings.notifications.noNotificationCenter" = "Le notifiche non sono disponibili perché OpenJoystickDriver non è in esecuzione dal suo bundle dell’app. Apri l’app OpenJoystickDriver e riprova.";
+/* Error message in the inline error of the Settings window when the service no longer waits for the app's report on a test notification: the ojd request that asked for it ended, or its answer time ran out. */
+"ui.settings.notifications.testReportLost" = "La richiesta di ojd è terminata o il suo tempo di risposta è scaduto prima che arrivasse il rapporto sulla notifica di prova.";
+/* Error text the service returns to an app that reports the outcome noAnswer for a test notification, which only the service decides. The inline error of the Settings window shows it. shown, denied, failed and noAnswer are outcome names and stay as written. */
+"ui.settings.notifications.testReportNoAnswer" = "Un rapporto sulla notifica di prova deve essere shown, denied o failed; solo il servizio decide noAnswer.";
 "profiles.virtualOutput" = "Gamepad virtuale";
 "profiles.virtualDisabled" = "Disabilitato";
 "profiles.virtualMapped" = "Solo controlli riassegnati";
@@ -1365,6 +1371,10 @@
 "error.E2034" = "Il servizio non accetta più richieste. Chiudi OpenJoystickDriver, riaprilo e riprova.";
 "error.E2035" = "Il file che registra perché l’ascolto delle richieste si è fermato non è utilizzabile. Elimina il file, poi riapri OpenJoystickDriver.";
 "error.E2036" = "L’output di --json non può scrivere un numero del record senza cambiarne il valore. Esegui il comando senza --json per vedere il testo del record.";
+/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
+"error.E2037" = "Nessuna app OpenJoystickDriver ha risposto in tempo alla notifica di prova. Verifica che l’app sia in esecuzione e riprova.";
+/* Error E2038, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */
+"error.E2038" = "Le notifiche non sono consentite per OpenJoystickDriver. Consentile nelle impostazioni delle notifiche del sistema e riprova.";
 "cli.record.usb_not_claimed" = "La famiglia usa USB grezzo e l’estensione USB non può acquisire questo controller, perché il suo elenco di prodotti è firmato da Apple. OJD lo raggiunge solo tramite accesso USB diretto, quando macOS lo consente.";
 "cli.record.usb_only_switch2" = "Solo USB: aggiungi bluetoothLE.vibrationCharacteristic a questo record Switch 2 per collegare il controller tramite Bluetooth LE.";
 "cli.record.validate.abstract" = "Controlla un record del controller senza installarlo.";
@@ -2054,3 +2064,9 @@
 "status.listenerFailure.otherUser" = "il record appartiene a un altro utente; esegui ojd come quell’utente";
 /* Reason the listener failure file cannot be used: the system would not say whether the process that wrote it runs. %1$@ is the system's reason, %2$@ the error number. Fills the reason in the error E2035 message. */
 "status.listenerFailure.processCheckFailed" = "impossibile verificare se il processo del servizio è in esecuzione: %1$@ (numero di errore %2$@)";
+/* Abstract of the ojd setting test-notification command, in the command help. */
+"cli.setting.testNotification.abstract" = "Mostra una notifica di prova nell’app.";
+/* Discussion of the ojd setting test-notification command, in the command help. */
+"cli.setting.testNotification.discussion" = "Chiede al servizio di annunciare una notifica di prova all’app OpenJoystickDriver aperta e attende che l’app la mostri. Termina con un errore con nome se le notifiche sono negate, la consegna non riesce o nessuna app risponde in tempo. Valore predefinito di --timeout qui, in secondi: %@.";
+/* Printed by ojd setting test-notification after the app reported that it showed the test notification. */
+"cli.setting.testNotification.success" = "L’app ha mostrato la notifica di prova.";

@@ -586,6 +586,12 @@
 "notifications.profileSwitchedBody" = "%@ → %@";
 "notifications.testBody" = "OpenJoystickDriver 可以就控制器和設定檔活動向您傳送通知。";
 "notifications.testTitle" = "通知已就緒";
+/* Failed outcome of the test notification when the app runs outside an app bundle and has no notification center. The inline error of the Settings window shows it for Send Test Notification and for a notification permission request, and `ojd setting test-notification` prints it as the reason of E2006. */
+"ui.settings.notifications.noNotificationCenter" = "通知無法使用，因為 OpenJoystickDriver 不是從其 App 套件執行的。請開啟 OpenJoystickDriver App，然後重試。";
+/* Error message in the inline error of the Settings window when the service no longer waits for the app's report on a test notification: the ojd request that asked for it ended, or its answer time ran out. */
+"ui.settings.notifications.testReportLost" = "在測試通知的報告送達之前，ojd 要求已結束，或其回應時限已到。";
+/* Error text the service returns to an app that reports the outcome noAnswer for a test notification, which only the service decides. The inline error of the Settings window shows it. shown, denied, failed and noAnswer are outcome names and stay as written. */
+"ui.settings.notifications.testReportNoAnswer" = "測試通知的報告必須是 shown、denied 或 failed；noAnswer 只由服務決定。";
 "profiles.virtualOutput" = "虛擬遊戲控制器";
 "profiles.virtualDisabled" = "已停用";
 "profiles.virtualMapped" = "僅重新對應的控制項";
@@ -1365,6 +1371,10 @@
 "error.E2034" = "服務已停止接受要求。請結束並重新打開 OpenJoystickDriver，然後重試。";
 "error.E2035" = "無法使用記錄要求監聽停止原因的檔案。請刪除該檔案，然後重新打開 OpenJoystickDriver。";
 "error.E2036" = "--json 輸出無法在不改變數值的情況下寫出記錄中的某個數字。請不加 --json 執行指令，以查看記錄文字。";
+/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
+"error.E2037" = "沒有 OpenJoystickDriver App 及時回應測試通知。請確認 App 正在執行，然後重試。";
+/* Error E2038, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */
+"error.E2038" = "未允許 OpenJoystickDriver 傳送通知。請在系統的通知設定中允許，然後重試。";
 "cli.record.usb_not_claimed" = "此系列使用原始 USB，USB 延伸功能無法接管此控制器，因為其產品清單由 Apple 簽署。只有在 macOS 允許時，OJD 才能透過直接 USB 存取使用它。";
 "cli.record.usb_only_switch2" = "僅限 USB：如要透過低功耗藍牙連接控制器，請將 bluetoothLE.vibrationCharacteristic 加入此 Switch 2 記錄。";
 "cli.record.validate.abstract" = "檢查控制器記錄，但不安裝。";
@@ -2053,3 +2063,9 @@
 "status.listenerFailure.otherUser" = "該記錄屬於其他使用者；請以該使用者身份執行 ojd";
 /* Reason the listener failure file cannot be used: the system would not say whether the process that wrote it runs. %1$@ is the system's reason, %2$@ the error number. Fills the reason in the error E2035 message. */
 "status.listenerFailure.processCheckFailed" = "無法檢查服務處理程序是否正在執行：%1$@（錯誤編號 %2$@）";
+/* Abstract of the ojd setting test-notification command, in the command help. */
+"cli.setting.testNotification.abstract" = "在 App 中顯示一則測試通知。";
+/* Discussion of the ojd setting test-notification command, in the command help. */
+"cli.setting.testNotification.discussion" = "要求服務向已打開的 OpenJoystickDriver App 發出測試通知，並等待 App 顯示。如果通知被拒絕、傳送失敗或沒有 App 及時回應，將以具名錯誤失敗。此處 --timeout 預設為 %@ 秒。";
+/* Printed by ojd setting test-notification after the app reported that it showed the test notification. */
+"cli.setting.testNotification.success" = "App 已顯示測試通知。";

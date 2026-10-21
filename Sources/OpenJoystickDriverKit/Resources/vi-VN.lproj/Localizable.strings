@@ -586,6 +586,12 @@
 "notifications.profileSwitchedBody" = "%@ → %@";
 "notifications.testBody" = "OpenJoystickDriver có thể thông báo cho bạn về hoạt động của bộ điều khiển và cấu hình.";
 "notifications.testTitle" = "Thông báo đã sẵn sàng";
+/* Failed outcome of the test notification when the app runs outside an app bundle and has no notification center. The inline error of the Settings window shows it for Send Test Notification and for a notification permission request, and `ojd setting test-notification` prints it as the reason of E2006. */
+"ui.settings.notifications.noNotificationCenter" = "Thông báo không khả dụng vì OpenJoystickDriver không chạy từ gói ứng dụng của nó. Hãy mở ứng dụng OpenJoystickDriver, rồi thử lại.";
+/* Error message in the inline error of the Settings window when the service no longer waits for the app's report on a test notification: the ojd request that asked for it ended, or its answer time ran out. */
+"ui.settings.notifications.testReportLost" = "Yêu cầu ojd đã kết thúc hoặc hết thời gian trả lời trước khi báo cáo về thông báo thử đến nơi.";
+/* Error text the service returns to an app that reports the outcome noAnswer for a test notification, which only the service decides. The inline error of the Settings window shows it. shown, denied, failed and noAnswer are outcome names and stay as written. */
+"ui.settings.notifications.testReportNoAnswer" = "Báo cáo về thông báo thử phải là shown, denied hoặc failed; chỉ dịch vụ mới quyết định noAnswer.";
 "profiles.virtualOutput" = "Tay cầm ảo";
 "profiles.virtualDisabled" = "Bị vô hiệu";
 "profiles.virtualMapped" = "Chỉ các thành phần đã ánh xạ";
@@ -1365,6 +1371,10 @@
 "error.E2034" = "Dịch vụ đã ngừng nhận yêu cầu. Hãy thoát OpenJoystickDriver, mở lại, rồi thử lại.";
 "error.E2035" = "Không dùng được tệp ghi lại lý do trình lắng nghe yêu cầu dừng. Hãy xóa tệp, rồi mở lại OpenJoystickDriver.";
 "error.E2036" = "Đầu ra --json không thể ghi một số trong bản ghi mà không thay đổi giá trị của nó. Hãy chạy lệnh mà không có --json để xem văn bản của bản ghi.";
+/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
+"error.E2037" = "Không có ứng dụng OpenJoystickDriver nào trả lời thông báo thử kịp lúc. Hãy kiểm tra ứng dụng đang chạy, rồi thử lại.";
+/* Error E2038, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */
+"error.E2038" = "Thông báo không được phép cho OpenJoystickDriver. Hãy cho phép trong cài đặt thông báo của hệ thống, rồi thử lại.";
 "cli.record.usb_not_claimed" = "Họ thiết bị này dùng USB thô, và phần mở rộng USB không thể chiếm bộ điều khiển này, vì danh sách sản phẩm của nó do Apple ký. OJD chỉ truy cập được nó qua truy cập USB trực tiếp, khi macOS cho phép.";
 "cli.record.usb_only_switch2" = "Chỉ USB: thêm bluetoothLE.vibrationCharacteristic vào bản ghi Switch 2 này để kết nối bộ điều khiển qua Bluetooth LE.";
 "cli.record.validate.abstract" = "Kiểm tra một bản ghi bộ điều khiển mà không cài đặt.";
@@ -2053,3 +2063,9 @@
 "status.listenerFailure.otherUser" = "bản ghi thuộc về người dùng khác; hãy chạy ojd bằng người dùng đó";
 /* Reason the listener failure file cannot be used: the system would not say whether the process that wrote it runs. %1$@ is the system's reason, %2$@ the error number. Fills the reason in the error E2035 message. */
 "status.listenerFailure.processCheckFailed" = "không thể kiểm tra tiến trình của dịch vụ có đang chạy không: %1$@ (mã lỗi %2$@)";
+/* Abstract of the ojd setting test-notification command, in the command help. */
+"cli.setting.testNotification.abstract" = "Hiển thị một thông báo thử trong ứng dụng.";
+/* Discussion of the ojd setting test-notification command, in the command help. */
+"cli.setting.testNotification.discussion" = "Yêu cầu dịch vụ báo một thông báo thử tới ứng dụng OpenJoystickDriver đang mở và chờ ứng dụng hiển thị. Lệnh thất bại với một lỗi có tên khi thông báo bị từ chối, việc gửi thất bại hoặc không có ứng dụng nào trả lời kịp lúc. Ở đây --timeout mặc định là %@ giây.";
+/* Printed by ojd setting test-notification after the app reported that it showed the test notification. */
+"cli.setting.testNotification.success" = "Ứng dụng đã hiển thị thông báo thử.";
