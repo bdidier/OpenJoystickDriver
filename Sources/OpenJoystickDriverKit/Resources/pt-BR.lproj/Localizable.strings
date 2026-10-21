@@ -1229,7 +1229,7 @@
 "cli.virtual.feed.abstract" = "Publicar um gamepad virtual controlado pelo stdin.";
 "cli.virtual.feed.discussion" = "Lê um objeto JSON por linha: “buttons” e “dpad” listam os controles pressionados, como South e up, e “axes” associa valores aos nomes dos eixos, como LeftStickX. Controles ausentes ficam neutros. Os analógicos vão de -1 a 1, com Y para baixo; os gatilhos vão de 0 a 1. Os quadros são reproduzidos em ordem, cada um por pelo menos 8 ms; “holdMilliseconds” mantém um quadro por mais tempo, até 60000. Imprime cada comando de saída que os jogos enviam ao gamepad, como vibração, como um objeto JSON por linha. Termina quando todos os quadros são reproduzidos após o fim da entrada.";
 "cli.virtual.feed.error.closed" = "O serviço fechou o gamepad virtual. Verifique com “ojd status”.";
-"cli.virtual.feed.error.close_interrupted" = "O fechamento do gamepad virtual foi interrompido. Verifique com “ojd status”.";
+"cli.virtual.feed.error.closeInterrupted" = "O fechamento do gamepad virtual foi interrompido. Verifique com “ojd status”.";
 "cli.virtual.feed.error.frame" = "A linha %@ não é um quadro válido. “ojd virtual feed --help” mostra o formato.";
 "cli.virtual.feed.profile" = "O perfil do gamepad virtual a publicar.";
 "cli.virtual.feed.started" = "Publicando um gamepad virtual %@. Escreva quadros no stdin; encerre a entrada ou pressione Control-C para parar.";

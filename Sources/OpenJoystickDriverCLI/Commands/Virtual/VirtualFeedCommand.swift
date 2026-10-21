@@ -90,7 +90,7 @@ struct VirtualFeedCommand: AsyncParsableCommand {
     default:
       CLIFailure(
         .serviceRequestFailed,
-        CLILocalized.text("cli.virtual.feed.error.close_interrupted")
+        CLILocalized.text("cli.virtual.feed.error.closeInterrupted")
       )
     }
   }

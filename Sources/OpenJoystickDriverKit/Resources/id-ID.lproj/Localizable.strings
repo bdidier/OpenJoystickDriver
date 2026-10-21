@@ -1229,7 +1229,7 @@
 "cli.virtual.feed.abstract" = "Publikasikan gamepad virtual yang digerakkan oleh input standar.";
 "cli.virtual.feed.discussion" = "Membaca satu objek JSON per baris: “buttons” dan “dpad” mencantumkan kontrol yang ditekan, seperti South dan up, dan “axes” memetakan nama sumbu, seperti LeftStickX, ke nilai. Kontrol yang tidak ada dianggap netral. Stik berkisar dari -1 sampai 1 dengan Y ke bawah; pemicu berkisar dari 0 sampai 1. Frame diputar berurutan, masing-masing minimal 8 ms; “holdMilliseconds” menahan frame lebih lama, hingga 60000. Mencetak setiap perintah output yang dikirim game ke gamepad, seperti getaran, sebagai satu objek JSON per baris. Berhenti setelah semua frame diputar dan input berakhir.";
 "cli.virtual.feed.error.closed" = "Layanan menutup gamepad virtual. Periksa dengan “ojd status”.";
-"cli.virtual.feed.error.close_interrupted" = "Penutupan gamepad virtual terhenti. Periksa dengan “ojd status”.";
+"cli.virtual.feed.error.closeInterrupted" = "Penutupan gamepad virtual terhenti. Periksa dengan “ojd status”.";
 "cli.virtual.feed.error.frame" = "Baris %@ bukan frame yang valid. “ojd virtual feed --help” menampilkan formatnya.";
 "cli.virtual.feed.profile" = "Profil gamepad virtual yang dipublikasikan.";
 "cli.virtual.feed.started" = "Mempublikasikan gamepad virtual %@. Tulis frame di input standar; akhiri input atau tekan Control-C untuk berhenti.";
