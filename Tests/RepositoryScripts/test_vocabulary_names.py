@@ -243,19 +243,12 @@ class VocabularyNameTests(unittest.TestCase):
         errors = list(self.validator("profile.schema.json").iter_errors(profile()))
         self.assertEqual(errors, [])
 
-    def test_every_profile_kind_refuses_an_unknown_name_with_the_invalid_profile_code(
-        self,
-    ) -> None:
+    def test_every_profile_kind_refuses_an_unknown_name(self) -> None:
         validator = self.validator("profile.schema.json")
         for kind, path in PROFILE_KINDS.items():
             document = copy.deepcopy(profile())
             replace(document, path, UNKNOWN)
-            errors = list(validator.iter_errors(document))
-            self.assertTrue(errors, kind)
-            for error in errors:
-                self.assertEqual(
-                    validate_schemas.profile_problem_code(error), "E3008", kind
-                )
+            self.assertFalse(validator.is_valid(document), kind)
 
     def test_a_profile_refuses_the_spelling_of_every_renamed_kind(self) -> None:
         validator = self.validator("profile.schema.json")
@@ -264,12 +257,7 @@ class VocabularyNameTests(unittest.TestCase):
         for kind, (path, replaced) in RENAMED_PROFILE_KINDS.items():
             broken = copy.deepcopy(document)
             replace(broken, path, replaced)
-            errors = list(validator.iter_errors(broken))
-            self.assertTrue(errors, kind)
-            for error in errors:
-                self.assertEqual(
-                    validate_schemas.profile_problem_code(error), "E3008", kind
-                )
+            self.assertFalse(validator.is_valid(broken), kind)
 
     def test_a_report_refuses_the_spelling_of_a_renamed_motor_and_trigger(self) -> None:
         for pointer, accepted, replaced in (
@@ -316,7 +304,7 @@ class VocabularyNameTests(unittest.TestCase):
             self.assertTrue(checker.is_valid(accepted), accepted)
             self.assertFalse(checker.is_valid(replaced), replaced)
 
-    def test_a_profile_with_a_missing_or_unsupported_api_version_has_its_own_code(
+    def test_a_profile_with_a_missing_or_unsupported_api_version_is_refused(
         self,
     ) -> None:
         validator = self.validator("profile.schema.json")
@@ -324,18 +312,11 @@ class VocabularyNameTests(unittest.TestCase):
         del missing["apiVersion"]
         unsupported = {**profile(), "apiVersion": "unsupported.example/v9"}
         for document in (missing, unsupported):
-            errors = list(validator.iter_errors(document))
-            self.assertTrue(errors)
-            self.assertIn(
-                "E5001", {validate_schemas.profile_problem_code(e) for e in errors}
-            )
+            self.assertFalse(validator.is_valid(document))
 
-    def test_a_profile_of_another_kind_has_the_invalid_profile_code(self) -> None:
+    def test_a_profile_of_another_kind_is_refused(self) -> None:
         document = {**profile(), "kind": "Controller"}
-        errors = list(self.validator("profile.schema.json").iter_errors(document))
-        self.assertTrue(errors)
-        for error in errors:
-            self.assertEqual(validate_schemas.profile_problem_code(error), "E3008")
+        self.assertFalse(self.validator("profile.schema.json").is_valid(document))
 
     def test_a_gyro_activation_that_is_not_always_needs_a_source(self) -> None:
         document = profile()
@@ -344,12 +325,11 @@ class VocabularyNameTests(unittest.TestCase):
         document["gyroOutput"]["activationMode"] = "Always"
         self.assertTrue(self.validator("profile.schema.json").is_valid(document))
 
-    def test_a_frame_refuses_an_unknown_d_pad_name_with_the_endpoint_code(self) -> None:
+    def test_a_frame_refuses_an_unknown_d_pad_name(self) -> None:
         validator = self.validator("endpoint.schema.json")
         frame = {"apiVersion": VERSION, "kind": "Frame", "dpad": ["DpadUp"]}
         self.assertTrue(validator.is_valid(frame))
         self.assertFalse(validator.is_valid({**frame, "dpad": [UNKNOWN]}))
-        self.assertEqual(validate_schemas.FRAME_PROBLEM_CODE, "E1003")
 
 
 if __name__ == "__main__":

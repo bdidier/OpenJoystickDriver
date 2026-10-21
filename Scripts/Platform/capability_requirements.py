@@ -10,13 +10,22 @@ def requirements_for(argv: list[str]) -> tuple[Capability, ...]:
     if any(argument in {"-h", "--help", "help"} for argument in route[1:]):
         return ()
     if route[:2] == ("catalog", "regenerate") and len(route) >= 3:
-        return (Capability.SCHEMA_PYTHON, Capability.BIOME)
+        return (
+            Capability.SCHEMA_PYTHON,
+            Capability.BIOME,
+            Capability.SWIFT_TOOLCHAIN,
+            Capability.FULL_XCODE,
+        )
     if route[:2] == ("errors", "regenerate") and len(route) >= 3:
         return (Capability.SCHEMA_PYTHON, Capability.BIOME)
     if route[:2] == ("catalog", "xpad"):
         return (Capability.BIOME,)
     if route == ("check", "profiles"):
-        return (Capability.SCHEMA_PYTHON,)
+        return (
+            Capability.SCHEMA_PYTHON,
+            Capability.SWIFT_TOOLCHAIN,
+            Capability.FULL_XCODE,
+        )
     if route == ("check", "schemas"):
         return (
             Capability.SCHEMA_PYTHON,

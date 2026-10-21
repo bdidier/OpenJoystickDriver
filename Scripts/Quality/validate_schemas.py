@@ -5,18 +5,16 @@ import os
 import subprocess
 import sys
 import tempfile
-from collections.abc import Callable
 from pathlib import Path
 
-from ..Catalog import protocol_descriptions
 from ..Catalog.schema_header import (
     API_VERSION,
     KINDS,
     SCHEMA_SUFFIX,
     schema_id,
 )
-from ..Catalog.validate_profiles import usage_map_problem
 from ..Command.execution import swift_command
+from . import repository_tool
 
 try:
     from jsonschema import Draft202012Validator, FormatChecker
@@ -167,83 +165,8 @@ def validate_documents(
     schema: dict[str, object],
     registry: Registry,
     paths: list[Path],
-    code_of: Callable[[ValidationError], str] | None = None,
 ) -> None:
-    """Validates documents; a failure names its error catalog code when `code_of` gives one."""
-    validator = Draft202012Validator(schema, registry=registry)
-    for path in paths:
-        document = load_json(path)
-        try:
-            validator.validate(document)
-        except ValidationError as error:
-            location = ".".join(str(component) for component in error.absolute_path)
-            suffix = f" at {location}" if location else ""
-            lead = f"{code_of(error)}: " if code_of else ""
-            raise ValidationError(
-                f"{lead}{path.relative_to(ROOT)}{suffix}: {error.message}"
-            ) from error
-
-
-# The catalog codes of an invalid protocol description, as ProtocolDescription.decode throws them.
-UNSUPPORTED_API_VERSION = "E5001"
-INVALID_PROTOCOL_DESCRIPTION = "E5002"
-UNKNOWN_PROTOCOL_VARIANT = "E5004"
-
-
-def protocol_description_code(error: ValidationError) -> str:
-    """The catalog code for a schema failure.
-
-    E5001 when apiVersion is missing or not the supported one, E5004 when a signature, `rawUSB`
-    or `defaults.variants` variant name is not one any family has, and E5002 for every other invalid
-    field, including a bad name in the top-level `variants` list. A known variant the family lacks
-    is E5004 too, which `semantic_violations` reports.
-    """
-    path = list(error.absolute_path)
-    missing_version = (
-        error.validator == "required" and not path and "'apiVersion'" in error.message
-    )
-    if path == ["apiVersion"] or missing_version:
-        return UNSUPPORTED_API_VERSION
-    # jsonschema reports a bad name in `rawUSB` on the list and in `defaults.variants` on the map.
-    names_variant = (
-        (path[:1] == ["interfaceSignatures"] and path[-1:] == ["variant"])
-        or path == ["rawUSB"]
-        or (
-            path == ["defaults", "variants"]
-            and error.validator in ("propertyNames", "enum", None)
-        )
-    )
-    return UNKNOWN_PROTOCOL_VARIANT if names_variant else INVALID_PROTOCOL_DESCRIPTION
-
-
-# The error code of a profile document that is not valid, as
-# `RemappingProfileFileStore.problemCode` reports it in Swift.
-INVALID_PROFILE = "E3008"
-# The error code of a `Frame` line that does not match the endpoint schema.
-FRAME_PROBLEM_CODE = "E1003"
-
-
-def profile_problem_code(error: ValidationError) -> str:
-    """The catalog code for a profile schema failure.
-
-    E5001 when apiVersion is missing or not the supported one, and E3008 for every other
-    invalid field.
-    """
-    path = list(error.absolute_path)
-    missing_version = (
-        error.validator == "required" and not path and "'apiVersion'" in error.message
-    )
-    if path == ["apiVersion"] or missing_version:
-        return UNSUPPORTED_API_VERSION
-    return INVALID_PROFILE
-
-
-def validate_protocol_descriptions(
-    schema: dict[str, object],
-    registry: Registry,
-    paths: list[Path],
-) -> None:
-    """Validates protocol descriptions; every failure names its error catalog code."""
+    """Validates documents against a schema; the rules a schema cannot state are Swift's."""
     validator = Draft202012Validator(schema, registry=registry)
     for path in paths:
         document = load_json(path)
@@ -253,33 +176,22 @@ def validate_protocol_descriptions(
             location = ".".join(str(component) for component in error.absolute_path)
             suffix = f" at {location}" if location else ""
             raise ValidationError(
-                f"{protocol_description_code(error)}: {path.relative_to(ROOT)}{suffix}: "
-                f"{error.message}"
+                f"{path.relative_to(ROOT)}{suffix}: {error.message}"
             ) from error
-        # JSON Schema cannot express unique usages or ordered axis ranges; the Swift decoder
-        # rejects both too.
-        defaults_input = (
-            document.get("defaults", {}).get("input", {})
-            if isinstance(document, dict)
-            else {}
-        )
-        usage_maps = {"defaults.input.hidUsageMap": defaults_input.get("hidUsageMap")}
-        for index, shape in enumerate(defaults_input.get("descriptorShapes", [])):
-            usage_maps[f"defaults.input.descriptorShapes.{index}.hidUsageMap"] = shape[
-                "hidUsageMap"
-            ]
-        for label, usage_map in usage_maps.items():
-            problem = None if usage_map is None else usage_map_problem(usage_map)
-            if problem is not None:
-                raise ValidationError(
-                    f"{INVALID_PROTOCOL_DESCRIPTION}: {path.relative_to(ROOT)} at "
-                    f"{label}: {problem}"
-                )
-        # The schema cannot say that a default tuning key is one the family reads, or that a
-        # raw-USB variant is the family's.
-        assert isinstance(document, dict)
-        for code, message in protocol_descriptions.semantic_violations(document):
-            raise ValidationError(f"{code}: {path.relative_to(ROOT)}: {message}")
+
+
+def validate_swift_rules(samples: list[tuple[str, Path]]) -> None:
+    """Every rule a schema cannot state is Swift's: `OJDRepositoryTool` checks the authored
+    controller records, the protocol descriptions and the sample profiles and personas."""
+    repository_tool.check(["validate", "records", str(AUTHORED_CONTROLLERS)])
+    repository_tool.check(["validate", "descriptions", str(PROTOCOL_DESCRIPTIONS)])
+    for stem, check in (
+        ("profile", "profiles"),
+        ("virtual-device", "personas"),
+    ):
+        paths = [str(path) for kind, path in samples if kind == stem]
+        if paths:
+            repository_tool.check(["validate", check, *paths])
 
 
 def swift_binary_path() -> Path:
@@ -347,7 +259,7 @@ def main() -> int:
             documents["error-codes.schema.json"], registry, [ERROR_CODES]
         )
         validate_documents(documents["crosswalk.schema.json"], registry, [CROSSWALK])
-        validate_protocol_descriptions(
+        validate_documents(
             documents["protocol-description.schema.json"], registry, protocols
         )
         validate_documents(
@@ -355,12 +267,7 @@ def main() -> int:
         )
         samples = sample_documents()
         for stem, path in samples:
-            validate_documents(
-                documents[f"{stem}{SCHEMA_SUFFIX}"],
-                registry,
-                [path],
-                profile_problem_code if stem == "profile" else None,
-            )
+            validate_documents(documents[f"{stem}{SCHEMA_SUFFIX}"], registry, [path])
         validate_documents(
             documents["access-grants.schema.json"],
             registry,
@@ -374,12 +281,14 @@ def main() -> int:
             registry,
             list(SERVICE_LISTENER_FAILURE_FIXTURES),
         )
+        validate_swift_rules(samples)
         validate_live_support_report(documents["report.schema.json"], registry)
     except (
         OSError,
         json.JSONDecodeError,
         SchemaError,
         ValidationError,
+        repository_tool.ToolError,
     ) as error:
         print(f"error: {error}", file=sys.stderr)
         return 1
