@@ -364,10 +364,10 @@
 "cli.transport_extension.completed" = "系统扩展请求已完成，结果为 %@。";
 "cli.transport_extension.failed" = "系统扩展请求失败：%@ code=%d %@";
 "cli.transport_extension.replacing" = "正在将 %@ v%@ 替换为 v%@。";
-/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker: a HID controller that OJD reads through its HID report descriptor. Keep HID as written. */
-"term.protocolFamily.hidDescriptor" = "HID 描述符";
-/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker: a HID controller whose input report bytes its record lays out. Keep HID as written. */
-"term.protocolFamily.hidReportLayout" = "HID 报告布局";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker: a generic HID controller, which OJD reads by the layout its HID report descriptor declares. Keep HID as written. */
+"term.protocolFamily.hidDescriptor" = "通用 HID";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker: a generic HID controller whose input report layout comes from its controller record, the file OJD keeps for each controller model. Keep HID as written. */
+"term.protocolFamily.hidReportLayout" = "通用 HID（记录布局）";
 /* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
 "term.protocolFamily.nintendoSwitch1" = "Nintendo Switch";
 /* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
@@ -393,7 +393,7 @@
 /* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
 "term.protocolFamily.vendorNvidiaShield" = "NVIDIA SHIELD";
 /* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker: controllers from other makers that use the PS3 controller protocol. Keep PS3 as written. */
-"term.protocolFamily.vendorPs3ThirdParty" = "第三方 PS3";
+"term.protocolFamily.vendorPs3ThirdParty" = "第三方 PS3 控制器";
 /* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
 "term.protocolFamily.xboxGip" = "Xbox One (GIP)";
 /* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
