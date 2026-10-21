@@ -67,6 +67,8 @@ final class ServiceStatusChanges: @unchecked Sendable {
   // The hooks below belong to tests; set them before the first wait.
   /// Runs after a wait is registered as held.
   var heldWaitDidRegister: (@Sendable () -> Void)?
+  /// Runs after a held wait ends because its task is cancelled or its hold time passes.
+  var heldWaitDidRelease: (@Sendable () -> Void)?
   /// Runs after a held wait is chosen for an announcement and before its reply is delivered.
   var announcementWillReachWait: (@Sendable () -> Void)?
   /// Runs after a test notification request is withdrawn because its caller left.
@@ -319,5 +321,6 @@ final class ServiceStatusChanges: @unchecked Sendable {
     waiter?.continuation.resume(
       returning: ServiceStatusReply(revision: revision, event: .holdElapsed)
     )
+    if waiter != nil { heldWaitDidRelease?() }
   }
 }

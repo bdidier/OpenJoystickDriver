@@ -178,8 +178,13 @@ struct LocalRPCBridgeTests {
       await app.connect()
       let baseline = try await app.waitForServiceStatusChange(after: nil).revision
       let (registered, registeredGate) = AsyncStream.makeStream(of: Void.self)
-      defer { registeredGate.finish() }
+      let (released, releasedGate) = AsyncStream.makeStream(of: Void.self)
+      defer {
+        registeredGate.finish()
+        releasedGate.finish()
+      }
       server.statusChanges.heldWaitDidRegister = { registeredGate.yield() }
+      server.statusChanges.heldWaitDidRelease = { releasedGate.yield() }
 
       let descriptor = try LocalServiceRPCTransport.openConnectedSocket(
         timeoutSeconds: 5,
@@ -193,10 +198,7 @@ struct LocalRPCBridgeTests {
       for await _ in registered { break }
 
       Darwin.close(descriptor)
-      let deadline = ContinuousClock.now + .seconds(5)
-      while server.statusChanges.heldWaitCount > 0, ContinuousClock.now < deadline {
-        try await Task.sleep(nanoseconds: 5_000_000)
-      }
+      for await _ in released { break }
       #expect(server.statusChanges.heldWaitCount == 0)
 
       async let outcome = app.sendTestNotification()
