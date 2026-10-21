@@ -94,6 +94,22 @@ class ReaderTests(unittest.TestCase):
             set(patterns), {"error.\\(rawValue)", "area.\\(rawValue).title"}
         )
 
+    def test_key_call_literals_are_checked_against_the_catalog(self) -> None:
+        self.assertEqual(
+            guard.key_arguments(
+                'let a = StatusItemEntry(title: .key("menuBar.typo"))\n'
+            ),
+            [(1, '"menuBar.typo"')],
+        )
+
+    def test_plural_categories_come_from_the_shared_data_file(self) -> None:
+        categories = guard.plural_categories()
+        self.assertEqual(categories["ru"], {"one", "few", "many", "other"})
+        self.assertEqual(categories["ja"], {"other"})
+        self.assertEqual(
+            set(categories), {guard.language(d) for d in guard.locale_directories()}
+        )
+
     def test_kept_entry_must_be_unread_and_in_the_catalog(self) -> None:
         guard.KEPT_WITHOUT_READER["gone.key"] = "test"
         guard.KEPT_WITHOUT_READER["read.key"] = "test"
@@ -308,12 +324,25 @@ class StringsdictCommentTests(unittest.TestCase):
             directory = root / guard.CATALOG_DIRECTORY
             directory.mkdir(parents=True)
             (directory / "Localizable.stringsdict").write_text(
-                "<dict>\n\t<!-- Count. -->\n\t<key>a.b</key>\n\t<dict>\n"
-                "\t\t<key>NSStringLocalizedFormatKey</key>\n\t</dict>\n"
-                "\t<key>c.d</key>\n\t<dict>\n\t\t<key>inner</key>\n\t</dict>\n</dict>\n",
+                '<plist version="1.0">\n<dict>\n\t<!-- Count. -->\n\t<key>a.b</key>\n\t<dict>\n'
+                "\t\t<key>NSStringLocalizedFormatKey</key>\n\t\t<string>x</string>\n\t</dict>\n"
+                "\t<key>c.d</key>\n\t<dict>\n\t\t<key>inner</key>\n\t\t<string>y</string>\n"
+                "\t</dict>\n</dict>\n</plist>\n",
                 encoding="utf-8",
             )
             self.assertEqual(guard.stringsdict_uncommented_keys(root), {"c.d"})
+
+    def test_unmatched_top_level_key_fails_loudly(self) -> None:
+        with tempfile.TemporaryDirectory() as name:
+            root = Path(name)
+            directory = root / guard.CATALOG_DIRECTORY
+            directory.mkdir(parents=True)
+            (directory / "Localizable.stringsdict").write_text(
+                '<plist version="1.0">\n<dict>\n    <key>a.b</key>\n    <dict/>\n</dict>\n</plist>\n',
+                encoding="utf-8",
+            )
+            with self.assertRaises(ValueError):
+                guard.stringsdict_uncommented_keys(root)
 
 
 class RuleTests(unittest.TestCase):
@@ -365,19 +394,33 @@ class GateTests(unittest.TestCase):
         return found
 
     def test_gated_rule_holds_back_a_listed_key_only(self) -> None:
-        failing, held, stale = guard.rule_report(self.found("comment"), {"old.key"})
+        failing, held, stale = guard.rule_report(
+            self.found("comment"), {"comment": {"old.key"}}
+        )
         self.assertEqual((failing, stale), ([], []))
         self.assertIn("comment: 1 violation(s) held back until task 22.3", held[0])
-        failing, _, _ = guard.rule_report(self.found("comment"), set())
+        failing, _, _ = guard.rule_report(self.found("comment"), {})
         self.assertEqual(failing, ["old.key: violation"])
+
+    def test_key_gated_for_another_rule_fails(self) -> None:
+        failing, held, stale = guard.rule_report(
+            self.found("osWord"), {"comment": {"old.key"}}
+        )
+        self.assertEqual(failing, ["old.key: violation"])
+        self.assertEqual(held, [])
+        self.assertIn("violates no comment rule", stale[0])
 
     def test_lifted_rule_fails_a_listed_key(self) -> None:
         with mock.patch.dict(guard.GATED_RULES, clear=True):
-            failing, held, _ = guard.rule_report(self.found("comment"), {"old.key"})
+            failing, held, _ = guard.rule_report(
+                self.found("comment"), {"comment": {"old.key"}}
+            )
         self.assertEqual((failing, held), (["old.key: violation"], []))
 
     def test_listed_key_without_a_gated_violation_is_stale(self) -> None:
-        _, _, stale = guard.rule_report(self.found("comment"), {"old.key", "gone.key"})
+        _, _, stale = guard.rule_report(
+            self.found("comment"), {"comment": {"old.key", "gone.key"}}
+        )
         self.assertIn("gone.key", stale[0])
 
     def test_main_fails_when_a_gate_is_off_and_a_violation_exists(self) -> None:
@@ -389,7 +432,9 @@ class GateTests(unittest.TestCase):
                     "rule_problems",
                     return_value={name: [] for name in guard.GATED_RULES} | violation,
                 ),
-                mock.patch.object(guard, "gated_keys", return_value={"old.key"}),
+                mock.patch.object(
+                    guard, "gated_keys", return_value={"osWord": {"old.key"}}
+                ),
                 mock.patch.dict(
                     guard.GATED_RULES,
                     {"osWord": "22.2"} if gate else {},

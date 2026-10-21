@@ -1,7 +1,7 @@
 """Fail when a localization key and the en-US catalog disagree.
 
 A key read by `OJDLocalized.*`, `CLILocalized.*`, `LocalizedStringResource(` or
-`Localization().*` must exist in `Sources/OpenJoystickDriverKit/Resources/en-US.lproj`; a key built
+`Localization().*` or passed to `.key(` must exist in `Sources/OpenJoystickDriverKit/Resources/en-US.lproj`; a key built
 from a literal prefix needs at least one catalog key with that prefix. A catalog key that no Swift
 source under `Sources` reads also fails, unless `KEPT_WITHOUT_READER` names it and says why.
 
@@ -14,18 +14,17 @@ The catalog itself follows these rules:
 - specifiers: a value with more than one format specifier numbers every one (`%1$@`);
 - comments: every en-US key has a translator comment directly above it;
 - plurals: every `%#@name@` value has a `.stringsdict` entry in the same bundle, each entry has the
-  plural categories its locale needs (`PLURAL_CATEGORIES`), and an en-US value with an integer
+  plural categories its language needs (`PLURAL_CATEGORIES_PATH`), and an en-US value with an integer
   count specifier (`%d`, `%lld`, `%1$lld`) has a `.stringsdict` entry unless `NOT_A_COUNT` names
   its key and says why the number is not a count.
 
-`GATED_RULES` names each rule that does not fail yet and the task that lifts it. The catalog keys
-that violate a gated rule are listed in `localization-gated-keys.json`; a gated rule does not fail
-on those keys and fails on every other key, so a new key cannot add a violation. The check prints
-how many violations each gated rule holds back. Task 22.2 (the key and Swift call site re-key)
-lifts `namespace` and `osWord` and rewrites the list with `--write-gated-keys`. Task 22.3 (positional
-specifiers, plurals, comments) lifts `specifier`, `comment` and `pluralCount` and deletes the
-list. The listed keys must still violate a gated rule, otherwise the check fails and asks to remove
-them.
+`GATED_RULES` names each rule that does not fail yet and the task id that lifts it. The keys that
+violate a gated rule are listed per rule in `localization-gated-keys.json`
+(`{"rule": ["key", ...]}`). A gated rule does not fail on the keys listed under it and fails on
+every other key, so a key cannot pick up a violation of a rule it is not listed under. The
+check prints how many violations each gated rule holds back. A key listed under a rule it no longer
+violates fails the check; `--write-gated-keys` rewrites the file from the current violations.
+Removing a rule from `GATED_RULES` enforces it everywhere.
 """
 
 from __future__ import annotations
@@ -42,14 +41,15 @@ ROOT = Path(__file__).resolve().parents[2]
 RESOURCES_DIRECTORY = Path("Sources/OpenJoystickDriverKit/Resources")
 CATALOG_DIRECTORY = Path("Sources/OpenJoystickDriverKit/Resources/en-US.lproj")
 CALL = re.compile(
-    r"\b(?:OJDLocalized\.(?:string|formatted|plural)|CLILocalized\.(?:text|format)"
-    r"|LocalizedStringResource|(?:Localization\(\)|localization)\.(?:string|formatted|plural))\("
+    r"(?:\b(?:OJDLocalized\.(?:string|formatted|plural)|CLILocalized\.(?:text|format)"
+    r"|LocalizedStringResource|(?:Localization\(\)|localization)\.(?:string|formatted|plural))"
+    r"|\.key)\("
 )
 # An interpolated literal is a key lookup only where Swift passes it as a key: the first argument of
 # a localization call or the value of a property named `...Key`. Other interpolated literals build
 # identifiers, paths and messages.
 KEY_POSITION = re.compile(
-    CALL.pattern + r"\s*$|Key\s*:\s*String\s*\{\s*$|\.key\(\s*$",
+    CALL.pattern + r"\s*$|Key\s*:\s*String\s*\{\s*$",
 )
 # Interpolations whose values are a closed set, so the pattern names that set instead of any text.
 EXACT_INTERPOLATIONS = {"error.\\(rawValue)": r"error\.E\d{4}"}
@@ -98,17 +98,9 @@ PLURAL_REFERENCE = re.compile(r"%#@[A-Za-z0-9_]+@")
 COUNT_SPECIFIER = re.compile(r"%(?:\d+\$)?[-+ 0#]*\d*(?:hh|h|ll|l|q|z|t|j)?[dDiuU]")
 # En-US keys whose integer specifier is not a count, each with the reason.
 NOT_A_COUNT: dict[str, str] = {}
-# CLDR plural categories each shipped locale needs, by language.
-PLURAL_CATEGORIES: dict[str, frozenset[str]] = {
-    "ar": frozenset({"zero", "one", "two", "few", "many", "other"}),
-    "ru": frozenset({"one", "few", "many", "other"}),
-    "es": frozenset({"one", "many", "other"}),
-    "fr": frozenset({"one", "many", "other"}),
-    "it": frozenset({"one", "many", "other"}),
-    "pt": frozenset({"one", "many", "other"}),
-    **dict.fromkeys(("id", "ja", "ko", "th", "vi", "zh"), frozenset({"other"})),
-    **dict.fromkeys(("C", "en", "de", "hi", "nl", "tr"), frozenset({"one", "other"})),
-}
+# Plural categories each language needs: one statement, read by the Swift LocalizationTests too. A
+# bundle may carry more categories than its language needs.
+PLURAL_CATEGORIES_PATH = Path("Resources/Localization/PluralCategories.json")
 STRINGS_ENTRY = re.compile(
     r"(?:/\*(?P<comment>(?:(?!\*/).)*)\*/[ \t]*\n?)?"
     r'"(?P<key>(?:[^"\\]|\\.)*)"\s*=\s*"(?P<value>(?:[^"\\]|\\.)*)"\s*;',
@@ -427,6 +419,12 @@ def comment_problem(entry: StringsEntry) -> str | None:
     return None if entry.comment else f"{entry.key!r}: no translator comment"
 
 
+def plural_categories(root: Path = ROOT) -> dict[str, frozenset[str]]:
+    """Return the plural categories each language needs, from `PLURAL_CATEGORIES_PATH`."""
+    data = json.loads((root / PLURAL_CATEGORIES_PATH).read_text(encoding="utf-8"))
+    return {name: frozenset(categories) for name, categories in data.items()}
+
+
 def plural_problems(directory: Path) -> list[str]:
     """Return the plural coverage problems of one bundle."""
     strings = strings_entries(
@@ -434,7 +432,7 @@ def plural_problems(directory: Path) -> list[str]:
     )
     path = directory / "Localizable.stringsdict"
     plurals = plistlib.loads(path.read_bytes()) if path.exists() else {}
-    needed = PLURAL_CATEGORIES[language(directory)]
+    needed = plural_categories()[language(directory)]
     problems = [
         f"{directory.name}: {entry.key!r} takes a count but has no stringsdict entry"
         for entry in strings
@@ -461,11 +459,14 @@ def stringsdict_uncommented_keys(root: Path = ROOT) -> set[str]:
     text = (root / CATALOG_DIRECTORY / "Localizable.stringsdict").read_text(
         encoding="utf-8"
     )
-    return {
-        match["key"]
-        for match in STRINGSDICT_COMMENTED_KEY.finditer(text)
-        if not match["comment"]
-    }
+    matches = list(STRINGSDICT_COMMENTED_KEY.finditer(text))
+    top_level = set(plistlib.loads(text.encode("utf-8")))
+    if {match["key"] for match in matches} != top_level:
+        raise ValueError(
+            "the en-US stringsdict has top-level keys the comment scan does not match: "
+            f"{sorted(top_level ^ {match['key'] for match in matches})}"
+        )
+    return {match["key"] for match in matches if not match["comment"]}
 
 
 def stringsdict_values(root: Path = ROOT) -> dict[str, list[str]]:
@@ -560,42 +561,46 @@ def rule_problems(root: Path = ROOT) -> dict[str, list[RuleProblem]]:
     return found
 
 
-def gated_keys(root: Path = ROOT) -> set[str]:
-    """Return the catalog keys that a gated rule does not fail on."""
+def gated_keys(root: Path = ROOT) -> dict[str, set[str]]:
+    """Return, per gated rule, the catalog keys the rule does not fail on."""
     if not GATED_RULES:
-        return set()
-    return set(json.loads((root / GATED_KEYS_PATH).read_text(encoding="utf-8")))
+        return {}
+    data = json.loads((root / GATED_KEYS_PATH).read_text(encoding="utf-8"))
+    return {rule: set(data.get(rule, [])) for rule in GATED_RULES}
 
 
 def write_gated_keys(root: Path = ROOT) -> None:
-    """Write the keys that violate a gated rule to `GATED_KEYS_PATH`."""
+    """Write, per gated rule, the keys that violate it to `GATED_KEYS_PATH`."""
     found = rule_problems(root)
-    violating = sorted({problem.key for rule in GATED_RULES for problem in found[rule]})
-    text = json.dumps(violating, indent=2, ensure_ascii=False) + "\n"
+    data = {
+        rule: sorted({problem.key for problem in found[rule]}) for rule in GATED_RULES
+    }
+    text = json.dumps(data, indent=2, ensure_ascii=False) + "\n"
     (root / GATED_KEYS_PATH).write_text(text, encoding="utf-8")
 
 
 def rule_report(
-    found: dict[str, list[RuleProblem]], gated: set[str]
+    found: dict[str, list[RuleProblem]], gated: dict[str, set[str]]
 ) -> tuple[list[str], list[str], list[str]]:
-    """Return (failing messages, held-back notes, listed keys with no gated violation)."""
+    """Return (failing messages, held-back notes, keys listed under a rule they do not violate)."""
     failing: list[str] = []
     held: list[str] = []
-    used: set[str] = set()
+    stale: list[str] = []
     for rule, problems in found.items():
         task = GATED_RULES.get(rule)
-        held_back = [p for p in problems if task and p.key in gated]
-        used.update(p.key for p in held_back)
+        listed = gated.get(rule, set()) if task else set()
+        held_back = [p for p in problems if p.key in listed]
         failing.extend(p.message for p in problems if p not in held_back)
         if held_back:
             held.append(
                 f"gated rule {rule}: {len(held_back)} violation(s) held back until "
                 f"task {task}"
             )
-    stale = [
-        f"gated key {key!r} violates no gated rule; remove it with --write-gated-keys"
-        for key in sorted(gated - used)
-    ]
+        used = {p.key for p in held_back}
+        stale.extend(
+            f"gated key {key!r} violates no {rule} rule; remove it with --write-gated-keys"
+            for key in sorted(listed - used)
+        )
     return failing, held, stale
 
 
