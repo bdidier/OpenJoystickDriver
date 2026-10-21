@@ -48,6 +48,11 @@ public struct PacketLogEntry: Codable, Sendable {
   }
 }
 
+extension PacketLogEntry {
+  /// The packet's bytes, from its `hex` string.
+  public var reportBytes: [UInt8] { hex.split(separator: " ").compactMap { UInt8($0, radix: 16) } }
+}
+
 /// Tracks newly appended entries across snapshots of a bounded packet ring.
 public struct PacketLogSnapshotCursor: Sendable {
   private var previous: [PacketLogEntry]

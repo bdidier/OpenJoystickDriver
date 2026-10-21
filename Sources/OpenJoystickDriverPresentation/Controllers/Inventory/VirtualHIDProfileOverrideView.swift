@@ -11,6 +11,14 @@
     @ObservedObject
     var viewModel: RuntimeViewModel
     let device: ApplicationServiceDeviceDescription
+    @State
+    private var scope: VirtualHIDProfileScopeChoice
+
+    init(viewModel: RuntimeViewModel, device: ApplicationServiceDeviceDescription) {
+      self.viewModel = viewModel
+      self.device = device
+      _scope = State(initialValue: VirtualHIDProfileScopeChoice.initial(for: device))
+    }
 
     var body: some View {
       VStack(alignment: .leading, spacing: 10) {
@@ -27,14 +35,19 @@
             )
           }
         }.disabled(overrideState.inFlight)
-        Text(
-          OJDLocalized.string(
-            "virtualProfile.modelScope"
-          )
-        ).font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor)).fixedSize(
-          horizontal: false,
-          vertical: true
-        )
+        if VirtualHIDProfileScopeChoice.offered(for: device).count > 1 {
+          Picker(OJDLocalized.string("controllers.virtual.scope"), selection: $scope) {
+            ForEach(VirtualHIDProfileScopeChoice.offered(for: device), id: \.self) { choice in
+              Text(OJDLocalized.string(choice.titleKey)).tag(choice)
+            }
+          }.disabled(overrideState.inFlight)
+        } else {
+          Text(OJDLocalized.string("virtualProfile.modelScope")).font(.caption)
+            .foregroundColor(Color(NSColor.secondaryLabelColor)).fixedSize(
+              horizontal: false,
+              vertical: true
+            )
+        }
         if overrideState.inFlight {
           HStack(spacing: 8) {
             ProgressView()
@@ -74,7 +87,10 @@
         set: { profile in
           guard profile != device.virtualHIDProfile?.override else { return }
           let device = device
-          Task { @MainActor in await viewModel.setVirtualHIDProfileOverride(profile, for: device) }
+          let scope = scope.scope
+          Task { @MainActor in
+            await viewModel.setVirtualHIDProfileOverride(profile, for: device, scope: scope)
+          }
         }
       )
     }

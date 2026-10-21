@@ -2,11 +2,6 @@ import ArgumentParser
 import Foundation
 import OpenJoystickDriverKit
 
-extension PacketLogEntry {
-  /// The packet's bytes, from its `hex` string.
-  var reportBytes: [UInt8] { hex.split(separator: " ").compactMap { UInt8($0, radix: 16) } }
-}
-
 struct RecordTestCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "test",

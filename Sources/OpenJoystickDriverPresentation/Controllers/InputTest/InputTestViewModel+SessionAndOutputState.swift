@@ -83,6 +83,17 @@
       }
     }
 
+    /// The rumble test lengths in milliseconds, up to the longest the service accepts, which
+    /// `ojd controller rumble --duration` also allows.
+    static let rumbleDurationRange = 100...maxRumbleDurationMs
+
+    static func clampedRumbleDuration(_ milliseconds: Double) -> Int {
+      max(
+        rumbleDurationRange.lowerBound,
+        min(rumbleDurationRange.upperBound, Int(milliseconds.rounded()))
+      )
+    }
+
     var latestInput: ControllerState { liveState.snapshot }
 
     var isSampling: Bool { samplingTask != nil }
@@ -180,7 +191,7 @@
       guard let device, canSendOutput, capabilities.supportsRumble else { return }
       let command = rumbleCommand()
       let selector = ControllerReference.session(device.sessionToken)
-      let duration = max(100, min(2_000, Int(rumbleDurationMilliseconds.rounded())))
+      let duration = Self.clampedRumbleDuration(rumbleDurationMilliseconds)
       beginOutputOperation(.rumble, selector: selector) { [gateway, rumbleSleep] in
         let intensities = RumbleIntensities(
           lowFrequency: UnipolarValue(byte: command.left),

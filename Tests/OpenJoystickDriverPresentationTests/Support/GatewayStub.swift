@@ -61,7 +61,14 @@ actor GatewayStub: ApplicationServiceGateway {
   var statusReadContinuations: [CheckedContinuation<Void, Never>] = []
   var statusCallWaiters: [(count: Int, continuation: CheckedContinuation<Void, Never>)] = []
   var remappingSnapshotCallCount = 0
-  var overrideRequests: [(profile: VirtualHIDProfileID?, selector: ControllerReference)] = []
+  var overrideRequests:
+    [(
+      profile: VirtualHIDProfileID?, selector: ControllerReference,
+      scope: VirtualHIDProfileOverrideScope
+    )] =
+      []
+  var resetAllRequestCount = 0
+  var resetAllResult = true
   var serverRequests: [(model: ControllerModelID, server: ControllerServer)] = []
   var serverFailure: (failure: ControllerServerFailure, detail: String?)?
   var overrideRequestsAreGated = false
@@ -132,6 +139,8 @@ actor GatewayStub: ApplicationServiceGateway {
   func setStatusPayload(_ payload: ApplicationServiceStatusPayload) { statusPayload = payload }
 
   func setStatusShouldFail(_ shouldFail: Bool) { statusShouldFail = shouldFail }
+
+  func setResetAllResult(_ result: Bool) { resetAllResult = result }
 
   func setStatusReadsAreGated(_ areGated: Bool) { statusReadsAreGated = areGated }
 
@@ -316,9 +325,10 @@ actor GatewayStub: ApplicationServiceGateway {
 
   func setVirtualHIDProfileOverride(
     _ profile: VirtualHIDProfileID,
-    for selector: ControllerReference
+    for selector: ControllerReference,
+    scope: VirtualHIDProfileOverrideScope
   ) async throws -> VirtualHIDProfileOverrideResult {
-    try await recordOverrideRequest(profile, selector: selector)
+    try await recordOverrideRequest(profile, selector: selector, scope: scope)
     return VirtualHIDProfileOverrideResult(
       requested: profile,
       live: overrideFailure == nil ? profile : .generic,
@@ -327,10 +337,18 @@ actor GatewayStub: ApplicationServiceGateway {
     )
   }
 
+  // swiftlint:disable async_without_await
+  func resetAllVirtualHIDProfileOverrides() async throws -> Bool {
+    resetAllRequestCount += 1
+    return resetAllResult
+  }
+  // swiftlint:enable async_without_await
+
   func resetVirtualHIDProfileOverride(
-    for selector: ControllerReference
+    for selector: ControllerReference,
+    scope: VirtualHIDProfileOverrideScope
   ) async throws -> VirtualHIDProfileOverrideResult {
-    try await recordOverrideRequest(nil, selector: selector)
+    try await recordOverrideRequest(nil, selector: selector, scope: scope)
     return VirtualHIDProfileOverrideResult(
       requested: nil,
       live: .generic,
@@ -375,9 +393,10 @@ actor GatewayStub: ApplicationServiceGateway {
 
   private func recordOverrideRequest(
     _ profile: VirtualHIDProfileID?,
-    selector: ControllerReference
+    selector: ControllerReference,
+    scope: VirtualHIDProfileOverrideScope
   ) async throws {
-    overrideRequests.append((profile, selector))
+    overrideRequests.append((profile, selector, scope))
     if overrideRequestsAreGated {
       await withCheckedContinuation { overrideContinuations.append($0) }
     }

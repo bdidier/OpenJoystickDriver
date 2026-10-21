@@ -175,9 +175,7 @@ struct ConfigShowCommand: AsyncParsableCommand {
     activeProfile: RemappingProfile? = nil
   ) throws -> Result {
     let defaults = set.defaults
-    var tuning = defaults?.tuning ?? .none
-    var layers: [String: ControllerRecordLayer] = [:]
-    for key in tuning.setKeys { layers[key.rawValue] = .global }
+    let effective: [ControllerTuningValue]
     if let model {
       guard let record = set.records[model] else {
         throw CLIFailure(
@@ -185,15 +183,16 @@ struct ConfigShowCommand: AsyncParsableCommand {
           CLILocalized.format("cli.record.show.not_found", model.description)
         )
       }
-      tuning = record.tuning
-      layers = record.tuningLayers
+      effective = record.tuningValues
+    } else {
+      effective = set.defaultTuningValues
     }
-    let values = ControllerTuning.Key.allCases.map { key in
+    let values = effective.map { entry in
       Value(
-        key: key.rawValue,
-        value: tuning.text(of: key).flatMap(Double.init),
-        layer: (layers[key.rawValue] ?? .driver).rawValue,
-        families: model == nil ? Self.families(reading: key, in: set) : nil
+        key: entry.key.rawValue,
+        value: entry.value,
+        layer: entry.layer.rawValue,
+        families: model == nil ? Self.families(reading: entry.key, in: set) : nil
       )
     }
     let profileValues = (activeProfile?.stickMappings ?? []).enumerated().map { index, mapping in

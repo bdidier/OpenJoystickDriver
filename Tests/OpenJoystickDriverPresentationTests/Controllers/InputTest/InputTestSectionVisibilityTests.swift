@@ -28,3 +28,14 @@ extension InputTestTests {
     #expect(model.visibleSections == [.liveInput, .motion, .rumble, .lighting])
   }
 }
+
+extension InputTestTests {
+  @Test
+  @MainActor
+  func rumbleDurationReachesTheServiceMaximumAndNoFurther() {
+    #expect(InputTestViewModel.rumbleDurationRange == 100...5_000)
+    #expect(InputTestViewModel.clampedRumbleDuration(5_000) == 5_000)
+    #expect(InputTestViewModel.clampedRumbleDuration(9_000) == 5_000)
+    #expect(InputTestViewModel.clampedRumbleDuration(10) == 100)
+  }
+}

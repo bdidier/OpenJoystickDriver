@@ -7,9 +7,13 @@ import Testing
 struct ControllerDetailFactsTests {
   private func device(
     power: ControllerConnectionState.Power? = nil,
-    ownership: ControllerOwnershipObservation = .unknown
+    ownership: ControllerOwnershipObservation = .unknown,
+    override: VirtualHIDProfileID? = nil,
+    publication: ApplicationServicePublicationStatus? = nil,
+    output: PhysicalControllerOutputCapabilities = .none,
+    motion: Bool = false
   ) -> ApplicationServiceDeviceDescription {
-    ApplicationServiceDeviceDescription(
+    var device = ApplicationServiceDeviceDescription(
       name: "Test Pad",
       vendorID: 0x1234,
       productID: 0x5678,
@@ -19,17 +23,38 @@ struct ControllerDetailFactsTests {
       physicalOwnership: ownership,
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
+      physicalOutputCapabilities: output,
+      capabilities: ControllerCapabilities(controls: [], motion: motion),
       connectionState: power.map {
         ControllerConnectionState(transport: nil, backend: .hid, isConnected: true, power: $0)
       },
       sessionToken: .fixture("facts-device")
     )
+    device.virtualHIDProfile = override.map {
+      ApplicationServiceVirtualHIDProfileStatus(
+        profile: $0,
+        source: .override,
+        override: $0,
+        unavailable: false
+      )
+    }
+    device.publication = publication
+    return device
+  }
+
+  private static func value(
+    _ kind: ControllerFact.Kind,
+    in facts: [ControllerFact]
+  ) -> OJDValue? {
+    facts.first { $0.kind == kind }?.value
   }
 
   @Test
   func unknownBatteryChargingAndCableAreHidden() {
     let kinds = ControllerDetailFacts.general(for: device(power: .unknown)).map(\.kind)
-    #expect(kinds == [.publishedAs, .serving, .controllerProtocol, .serialNumber])
+    #expect(
+      kinds == [.persona, .publication, .serving, .controllerProtocol, .serialNumber, .inputHealth]
+    )
     #expect(ControllerDetailFacts.general(for: device()).map(\.kind) == kinds)
   }
 
@@ -40,41 +65,113 @@ struct ControllerDetailFactsTests {
       battery: BatteryLevel(percentage: 80...80),
       wiredPower: true
     )
-    let kinds = ControllerDetailFacts.general(for: device(power: power)).map(\.kind)
-    #expect(kinds.suffix(3) == [.battery, .chargingState, .cableState])
+    let facts = ControllerDetailFacts.general(for: device(power: power))
+    #expect(facts.map(\.kind).suffix(3) == [.battery, .chargingState, .cableState])
+    #expect(Self.value(.battery, in: facts) == .text("80%"))
+  }
+
+  @Test
+  func capabilitiesTheControllerLacksAreHidden() {
+    let none = ControllerDetailFacts.general(for: device()).map(\.kind)
+    #expect(!none.contains(.rumble) && !none.contains(.lighting) && !none.contains(.motion))
+    #expect(!none.contains(.adaptiveTriggers) && !none.contains(.touchContacts))
+
+    let facts = ControllerDetailFacts.general(
+      for: device(
+        output: PhysicalControllerOutputCapabilities(
+          rumbleMotors: [.lowFrequency, .highFrequency],
+          lightingFeatures: [.programmableColor],
+          adaptiveTriggers: [.left]
+        ),
+        motion: true
+      )
+    )
+    #expect(Self.value(.rumble, in: facts) == .text("Left main, Right main"))
+    #expect(Self.value(.lighting, in: facts) == .text("Color"))
+    #expect(Self.value(.adaptiveTriggers, in: facts) == .text("Left trigger"))
+    #expect(Self.value(.motion, in: facts) == .text("Available"))
   }
 
   @Test
   func missingSerialNumberShowsTheHyphen() {
-    let serial = ControllerDetailFacts.general(for: device()).first { $0.kind == .serialNumber }
-    #expect(serial?.value == OJDValue.none)
+    let facts = ControllerDetailFacts.general(for: device())
+    #expect(Self.value(.serialNumber, in: facts) == OJDValue.none)
   }
 
   @Test
-  func identifiersAndEndpointsAreAdvanced() {
-    let facts = ControllerDetailFacts.advanced(for: device())
-    #expect(facts.map(\.kind) == [.usbIdentifier, .inputEndpoint, .outputEndpoint])
-    #expect(facts.map(\.value) == [.text("1234:5678"), .none, .none])
-  }
-
-  @Test
-  func publishedAsShowsThePublishedProfileOnce() {
-    var published = device()
-    published.publication = ApplicationServicePublicationStatus(
-      state: .published,
+  func theSelectedProfileShowsWhetherOrNotItIsPublished() {
+    let label = "Xbox Wireless Controller (045E:02FD)"
+    let published = ApplicationServicePublicationStatus(state: .published, target: .sdlCompatible)
+    let notPublished = ApplicationServicePublicationStatus(
+      state: .notPublished,
+      reason: "noInputYet",
       target: .sdlCompatible
     )
-    #expect(ControllerDetailFacts.publishedAs(published) == .text(published.publishedIdentityLabel))
-    let count = ControllerDetailFacts.general(for: published).filter {
-      $0.value == .text(published.publishedIdentityLabel)
-    }.count
-    #expect(count == 1)
+    let failed = ApplicationServicePublicationStatus(
+      state: .failed,
+      reason: "send failed",
+      target: .sdlCompatible
+    )
+    for (publication, text) in [
+      (published, "published"), (notPublished, "not-published (noInputYet)"),
+      (failed, "failed (send failed)"),
+    ] {
+      let facts = ControllerDetailFacts.general(
+        for: device(override: .sdlCompatible, publication: publication)
+      )
+      #expect(Self.value(.persona, in: facts) == .text(label))
+      #expect(Self.value(.publication, in: facts) == .text(text))
+    }
+    let unreported = ControllerDetailFacts.general(for: device(override: .sdlCompatible))
+    #expect(Self.value(.persona, in: unreported) == .text(label))
+    #expect(Self.value(.publication, in: unreported) == OJDValue.none)
   }
 
   @Test
-  func publishedAsShowsTheHyphenWhenNothingIsPublishedOrSelected() {
+  func personaIsTheHyphenWithoutASelection() {
     let system = device(ownership: .systemGamepad)
     #expect(system.servingDecision.selection == nil)
-    #expect(ControllerDetailFacts.publishedAs(system) == .none)
+    #expect(Self.value(.persona, in: ControllerDetailFacts.general(for: system)) == OJDValue.none)
+  }
+
+  @Test
+  func identifiersEndpointsAndOwnershipAreAdvanced() {
+    let facts = ControllerDetailFacts.advanced(for: device(), record: nil)
+    #expect(Self.value(.usbIdentifier, in: facts) == .text("1234:5678"))
+    #expect(Self.value(.inputEndpoint, in: facts) == OJDValue.none)
+    #expect(Self.value(.unitID, in: facts) == OJDValue.none)
+    #expect(
+      Self.value(.ownership, in: facts)
+        == .text("route raw-usb, physical unknown, HID input unknown")
+    )
+    #expect(Self.value(.duplicateExposureRisk, in: facts) == .text("unknown-ownership"))
+    #expect(Self.value(.record, in: facts) == .text("none (no record matches)"))
+  }
+
+  @Test
+  func advancedFactsThatDoNotApplyAreHidden() {
+    let kinds = ControllerDetailFacts.advanced(for: device(), record: nil).map(\.kind)
+    #expect(!kinds.contains(.outputOwner))
+    #expect(!kinds.contains(.startupStatus))
+    #expect(!kinds.contains(.inputRecoveries))
+    #expect(!kinds.contains(.publicationAttempted))
+  }
+
+  @Test
+  func inputHealthNamesTheStateAndItsFailure() {
+    let facts = ControllerDetailFacts.general(for: device())
+    #expect(Self.value(.inputHealth, in: facts) == .text("healthy"))
+  }
+}
+
+extension ControllerDetailFactsTests {
+  @Test
+  func tuningRowsListOnlyValuesALayerSets() throws {
+    let model = ControllerModelID(vendorID: 0x045E, productID: 0x02FD)
+    let record = try #require(ControllerRecordSet.bundled.records[model])
+    let rows = ControllerTuningRows.rows(for: record)
+    let expected = record.tuningValues.filter { $0.value != nil }.map(\.key.rawValue)
+    #expect(rows.map(\.name) == expected)
+    for row in rows { #expect(row.text == "\(row.value) (\(row.layer))") }
   }
 }

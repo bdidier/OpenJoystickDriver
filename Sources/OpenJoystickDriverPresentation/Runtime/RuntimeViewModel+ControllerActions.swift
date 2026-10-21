@@ -83,11 +83,13 @@ extension RuntimeViewModel {
     } catch { return RuntimePresentation.userFacingError(error) }
   }
 
-  /// Stores `profile` as the virtual HID profile override of `device`'s model, or clears the
-  /// override when `profile` is nil so the controller selects automatically.
+  /// Stores `profile` as the virtual HID profile override of `device`'s model, or of `device`
+  /// alone for the `.unit` scope, or clears that override when `profile` is nil so the controller
+  /// selects automatically.
   func setVirtualHIDProfileOverride(
     _ profile: VirtualHIDProfileID?,
-    for device: ApplicationServiceDeviceDescription
+    for device: ApplicationServiceDeviceDescription,
+    scope: VirtualHIDProfileOverrideScope = .model
   ) async {
     // The service retargets every controller of the model, so the request and its failure
     // belong to the model rather than to one controller.
@@ -101,9 +103,13 @@ extension RuntimeViewModel {
     do {
       let result: VirtualHIDProfileOverrideResult
       if let profile {
-        result = try await gateway.setVirtualHIDProfileOverride(profile, for: selector)
+        result = try await gateway.setVirtualHIDProfileOverride(
+          profile,
+          for: selector,
+          scope: scope
+        )
       } else {
-        result = try await gateway.resetVirtualHIDProfileOverride(for: selector)
+        result = try await gateway.resetVirtualHIDProfileOverride(for: selector, scope: scope)
       }
       failure = result.failure.map(RuntimePresentation.virtualHIDProfileOverrideFailure)
     } catch { failure = RuntimePresentation.userFacingError(error) }
@@ -112,6 +118,19 @@ extension RuntimeViewModel {
     virtualHIDProfileOverrideStates[model] = failure.map {
       RuntimeVirtualHIDProfileOverrideState(failure: $0)
     }
+  }
+
+  /// Returns every controller model, also those not connected, to automatic virtual HID profile
+  /// selection and refreshes the inventory. Returns why the service could not apply it, or nil.
+  func resetAllVirtualHIDProfileOverrides() async -> String? {
+    var failure: String?
+    do {
+      if try await !gateway.resetAllVirtualHIDProfileOverrides() {
+        failure = OJDLocalized.string("controllers.virtual.resetAllFailed")
+      }
+    } catch { failure = RuntimePresentation.userFacingError(error) }
+    await refreshControllerInventory()
+    return failure
   }
 
   /// Sets who serves `device`'s model, `server`: macOS natively, or OpenJoystickDriver as a virtual

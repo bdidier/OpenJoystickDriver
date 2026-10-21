@@ -118,7 +118,15 @@
                 )
               ).font(.system(.caption, design: .monospaced))
             }
-            Slider(value: rumbleDurationBinding, in: 100...2_000, step: 50)
+            Slider(
+              value: rumbleDurationBinding,
+              in: Double(
+                InputTestViewModel.rumbleDurationRange.lowerBound
+              )...Double(
+                InputTestViewModel.rumbleDurationRange.upperBound
+              ),
+              step: 50
+            )
           }
         }.disabled(!model.canSendOutput || model.isOutputBusy)
         HStack(spacing: 8) {

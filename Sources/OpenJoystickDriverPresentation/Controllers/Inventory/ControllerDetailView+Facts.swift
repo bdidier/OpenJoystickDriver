@@ -29,7 +29,13 @@
         }
         Section { inputTestAction }
         if ControllerServerPicker.isShown(for: device) {
-          Section { ControllerServerPicker(viewModel: viewModel, device: device) }
+          Section {
+            ControllerServerPicker(viewModel: viewModel, device: device)
+            OJDLabeledValue(
+              OJDLocalized.string("controllers.server.source"),
+              CommandLineName.kebab(record?.fieldLayers["server"]?.rawValue ?? "Default")
+            )
+          }
         }
         if device.physicalOwnership != .systemGamepad {
           // A per-controller identity resets the picker state on a new selection.
@@ -38,8 +44,34 @@
               device.sessionToken.rawValue
             )
           }
+          Section {
+            VirtualGamepadActionsView(
+              device: device,
+              connectedDevices: connectedDevices,
+              viewModel: viewModel,
+              actions: actions
+            )
+          }
+        }
+        if let record {
+          Section(header: Text(OJDLocalized.string("cli.controller.show.label.tuning"))) {
+            tuningRows(for: record)
+          }
         }
         Section { advancedDisclosure }
+      }.task(id: recordLoadID) {
+        let model = ControllerModelID(vendorID: device.vendorID, productID: device.productID)
+        record = await Task.detached { ControllerRecordSet.load().records[model] }.value
+      }.sheet(item: $actions.timedKind) { kind in
+        ControllerTimedActionSheet(
+          kind: kind,
+          device: device,
+          gateway: viewModel.gateway,
+          actions: actions
+        )
+      }.onReceive(actions.$pendingSave) { request in
+        guard let request else { return }
+        ControllerFilePanels.save(request) { actions.finishSave(to: $0) }
       }.ojdGroupedForm().ojdAccessibilityLabel(device.name).ojdAccessibilityValue(
         accessibilityValue
       ).alert(
@@ -67,6 +99,27 @@
       }
     }
 
+    /// Reloads the record when the controller or who serves its model changes.
+    private var recordLoadID: String {
+      "\(device.sessionToken.rawValue) \(device.recordServer.rawValue)"
+    }
+
+    private var connectedDevices: [ApplicationServiceDeviceDescription] {
+      if case .available(let status) = viewModel.statusState { return status.devices }
+      return [device]
+    }
+
+    @ViewBuilder
+    private func tuningRows(for record: ControllerRecord) -> some View {
+      let rows = ControllerTuningRows.rows(for: record)
+      if rows.isEmpty {
+        Text(OJDLocalized.string("cli.config.show.unset"))
+          .foregroundColor(Color(NSColor.secondaryLabelColor))
+      } else {
+        ForEach(rows) { OJDLabeledValue($0.name, $0.text) }
+      }
+    }
+
     private var wirelessDisconnectAction: some View {
       OJDLabeledRow(OJDLocalized.string("controllers.disconnectWireless")) {
         Button(OJDLocalized.string("controllers.disconnectWirelessButton")) {
@@ -78,9 +131,10 @@
     /// The identifiers and endpoints. The whole label row toggles, not only the chevron.
     private var advancedDisclosure: some View {
       DisclosureGroup(isExpanded: $showsAdvanced) {
-        ForEach(ControllerDetailFacts.advanced(for: device)) { fact in
+        ForEach(ControllerDetailFacts.advanced(for: device, record: record)) { fact in
           OJDLabeledValue(fact.label, fact.value)
         }
+        ControllerTimedActionRows(actions: actions)
       } label: {
         Button(OJDLocalized.string("virtualProfile.advanced")) { showsAdvanced.toggle() }
           .buttonStyle(.plain).frame(maxWidth: .infinity, alignment: .leading)

@@ -142,20 +142,28 @@ extension ApplicationServiceClientGateway {
 
   func setVirtualHIDProfileOverride(
     _ profile: VirtualHIDProfileID,
-    for selector: ControllerReference
+    for selector: ControllerReference,
+    scope: VirtualHIDProfileOverrideScope
   ) async throws -> VirtualHIDProfileOverrideResult {
     await ensureConnection()
     return try await client.setVirtualHIDProfileOverride(
       profile.rawValue,
-      for: selector
+      for: selector,
+      unit: scope == .unit
     )
   }
 
   func resetVirtualHIDProfileOverride(
-    for selector: ControllerReference
+    for selector: ControllerReference,
+    scope: VirtualHIDProfileOverrideScope
   ) async throws -> VirtualHIDProfileOverrideResult {
     await ensureConnection()
-    return try await client.resetVirtualHIDProfileOverride(for: selector)
+    return try await client.resetVirtualHIDProfileOverride(for: selector, unit: scope == .unit)
+  }
+
+  func resetAllVirtualHIDProfileOverrides() async throws -> Bool {
+    await ensureConnection()
+    return try await client.resetSettings()
   }
 
   func setControllerServer(
