@@ -1938,8 +1938,8 @@
 "cli.setting.reset.none" = "%@ 处没有设置文件。";
 /* Why a controller is not published as a virtual device, and a failed send. */
 "controllers.publication.reason.outputDisabled" = "虚拟输出已关闭";
-"controllers.publication.reason.systemGamepad" = "macOS 将其作为游戏手柄处理";
-"controllers.publication.reason.nativeHIDPassThrough" = "macOS 直接处理其输入";
+"controllers.publication.reason.systemGamepad" = "系统将其作为游戏手柄处理";
+"controllers.publication.reason.nativeHIDPassThrough" = "系统直接处理其输入";
 "controllers.publication.reason.upstreamVirtualDevice" = "已有其他虚拟设备代表它";
 "controllers.publication.reason.sessionSuspended" = "会话已暂停";
 "controllers.publication.reason.noVirtualProfile" = "没有适合的虚拟配置文件";

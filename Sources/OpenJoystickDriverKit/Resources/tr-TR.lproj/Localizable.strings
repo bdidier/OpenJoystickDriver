@@ -1938,8 +1938,8 @@
 "cli.setting.reset.none" = "%@ konumunda ayar dosyası yok.";
 /* Why a controller is not published as a virtual device, and a failed send. */
 "controllers.publication.reason.outputDisabled" = "Sanal çıkış kapalı";
-"controllers.publication.reason.systemGamepad" = "macOS bunu oyun kumandası olarak yönetiyor";
-"controllers.publication.reason.nativeHIDPassThrough" = "macOS girdisini doğrudan işliyor";
+"controllers.publication.reason.systemGamepad" = "Sistem bunu oyun kumandası olarak yönetiyor";
+"controllers.publication.reason.nativeHIDPassThrough" = "Sistem girdisini doğrudan işliyor";
 "controllers.publication.reason.upstreamVirtualDevice" = "Başka bir sanal aygıt onu zaten temsil ediyor";
 "controllers.publication.reason.sessionSuspended" = "Oturum askıya alındı";
 "controllers.publication.reason.noVirtualProfile" = "Uygun sanal profil yok";

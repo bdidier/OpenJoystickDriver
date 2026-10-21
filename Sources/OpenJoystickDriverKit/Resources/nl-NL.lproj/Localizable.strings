@@ -1939,8 +1939,8 @@
 "cli.setting.reset.none" = "Er is geen instellingenbestand op %@.";
 /* Why a controller is not published as a virtual device, and a failed send. */
 "controllers.publication.reason.outputDisabled" = "Virtuele uitvoer staat uit";
-"controllers.publication.reason.systemGamepad" = "macOS verwerkt hem als gamepad";
-"controllers.publication.reason.nativeHIDPassThrough" = "macOS verwerkt de invoer rechtstreeks";
+"controllers.publication.reason.systemGamepad" = "Het systeem verwerkt hem als gamepad";
+"controllers.publication.reason.nativeHIDPassThrough" = "Het systeem verwerkt de invoer rechtstreeks";
 "controllers.publication.reason.upstreamVirtualDevice" = "Een ander virtueel apparaat vertegenwoordigt hem al";
 "controllers.publication.reason.sessionSuspended" = "Sessie onderbroken";
 "controllers.publication.reason.noVirtualProfile" = "Geen virtueel profiel past erbij";

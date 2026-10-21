@@ -1939,8 +1939,8 @@
 "cli.setting.reset.none" = "Unter %@ gibt es keine Einstellungsdatei.";
 /* Why a controller is not published as a virtual device, and a failed send. */
 "controllers.publication.reason.outputDisabled" = "Virtuelle Ausgabe ist aus";
-"controllers.publication.reason.systemGamepad" = "macOS stellt ihn als Gamepad bereit";
-"controllers.publication.reason.nativeHIDPassThrough" = "macOS verarbeitet die Eingaben direkt";
+"controllers.publication.reason.systemGamepad" = "Das System stellt ihn als Gamepad bereit";
+"controllers.publication.reason.nativeHIDPassThrough" = "Das System verarbeitet die Eingaben direkt";
 "controllers.publication.reason.upstreamVirtualDevice" = "Ein anderes virtuelles Gerät vertritt ihn bereits";
 "controllers.publication.reason.sessionSuspended" = "Sitzung angehalten";
 "controllers.publication.reason.noVirtualProfile" = "Kein virtuelles Profil passt zu ihm";

@@ -1938,8 +1938,8 @@
 "cli.setting.reset.none" = "Файла настроек по пути %@ нет.";
 /* Why a controller is not published as a virtual device, and a failed send. */
 "controllers.publication.reason.outputDisabled" = "Виртуальный вывод выключен";
-"controllers.publication.reason.systemGamepad" = "macOS обрабатывает его как геймпад";
-"controllers.publication.reason.nativeHIDPassThrough" = "macOS обрабатывает его ввод напрямую";
+"controllers.publication.reason.systemGamepad" = "Система обрабатывает его как геймпад";
+"controllers.publication.reason.nativeHIDPassThrough" = "Система обрабатывает его ввод напрямую";
 "controllers.publication.reason.upstreamVirtualDevice" = "Его уже представляет другое виртуальное устройство";
 "controllers.publication.reason.sessionSuspended" = "Сеанс приостановлен";
 "controllers.publication.reason.noVirtualProfile" = "Подходящего виртуального профиля нет";

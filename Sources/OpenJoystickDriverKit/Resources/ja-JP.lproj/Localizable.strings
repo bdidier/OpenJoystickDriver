@@ -1938,8 +1938,8 @@
 "cli.setting.reset.none" = "%@ に設定ファイルはありません。";
 /* Why a controller is not published as a virtual device, and a failed send. */
 "controllers.publication.reason.outputDisabled" = "仮想出力はオフです";
-"controllers.publication.reason.systemGamepad" = "macOSがゲームパッドとして扱っています";
-"controllers.publication.reason.nativeHIDPassThrough" = "macOSが入力を直接処理しています";
+"controllers.publication.reason.systemGamepad" = "システムがゲームパッドとして扱っています";
+"controllers.publication.reason.nativeHIDPassThrough" = "システムが入力を直接処理しています";
 "controllers.publication.reason.upstreamVirtualDevice" = "別の仮想デバイスがすでに代わりを務めています";
 "controllers.publication.reason.sessionSuspended" = "セッションは一時停止中です";
 "controllers.publication.reason.noVirtualProfile" = "適合する仮想プロファイルがありません";

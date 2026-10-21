@@ -1938,8 +1938,8 @@
 "cli.setting.reset.none" = "%@에 설정 파일이 없습니다.";
 /* Why a controller is not published as a virtual device, and a failed send. */
 "controllers.publication.reason.outputDisabled" = "가상 출력이 꺼져 있음";
-"controllers.publication.reason.systemGamepad" = "macOS가 게임패드로 처리함";
-"controllers.publication.reason.nativeHIDPassThrough" = "macOS가 입력을 직접 처리함";
+"controllers.publication.reason.systemGamepad" = "시스템이 게임패드로 처리함";
+"controllers.publication.reason.nativeHIDPassThrough" = "시스템이 입력을 직접 처리함";
 "controllers.publication.reason.upstreamVirtualDevice" = "다른 가상 기기가 이미 대신하고 있음";
 "controllers.publication.reason.sessionSuspended" = "세션 일시 중단됨";
 "controllers.publication.reason.noVirtualProfile" = "맞는 가상 프로필이 없음";

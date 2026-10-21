@@ -1938,8 +1938,8 @@
 "cli.setting.reset.none" = "لا يوجد ملف إعدادات في %@.";
 /* Why a controller is not published as a virtual device, and a failed send. */
 "controllers.publication.reason.outputDisabled" = "الإخراج الافتراضي متوقف";
-"controllers.publication.reason.systemGamepad" = "يتعامل macOS معها كذراع ألعاب";
-"controllers.publication.reason.nativeHIDPassThrough" = "يتعامل macOS مع إدخالها مباشرة";
+"controllers.publication.reason.systemGamepad" = "يتعامل النظام معها كذراع ألعاب";
+"controllers.publication.reason.nativeHIDPassThrough" = "يتعامل النظام مع إدخالها مباشرة";
 "controllers.publication.reason.upstreamVirtualDevice" = "جهاز افتراضي آخر يمثلها بالفعل";
 "controllers.publication.reason.sessionSuspended" = "الجلسة معلّقة";
 "controllers.publication.reason.noVirtualProfile" = "لا يوجد ملف افتراضي مناسب لها";

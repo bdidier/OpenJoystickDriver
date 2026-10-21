@@ -1938,8 +1938,8 @@
 "cli.setting.reset.none" = "Không có tệp cài đặt tại %@.";
 /* Why a controller is not published as a virtual device, and a failed send. */
 "controllers.publication.reason.outputDisabled" = "Đầu ra ảo đang tắt";
-"controllers.publication.reason.systemGamepad" = "macOS xử lý nó như tay cầm chơi game";
-"controllers.publication.reason.nativeHIDPassThrough" = "macOS xử lý trực tiếp đầu vào của nó";
+"controllers.publication.reason.systemGamepad" = "Hệ thống xử lý nó như tay cầm chơi game";
+"controllers.publication.reason.nativeHIDPassThrough" = "Hệ thống xử lý trực tiếp đầu vào của nó";
 "controllers.publication.reason.upstreamVirtualDevice" = "Một thiết bị ảo khác đã đại diện cho nó";
 "controllers.publication.reason.sessionSuspended" = "Phiên đã tạm dừng";
 "controllers.publication.reason.noVirtualProfile" = "Không có hồ sơ ảo phù hợp";

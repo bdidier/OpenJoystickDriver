@@ -1938,8 +1938,8 @@
 "cli.setting.reset.none" = "%@ पर कोई सेटिंग्स फ़ाइल नहीं है।";
 /* Why a controller is not published as a virtual device, and a failed send. */
 "controllers.publication.reason.outputDisabled" = "वर्चुअल आउटपुट बंद है";
-"controllers.publication.reason.systemGamepad" = "macOS इसे गेमपैड के रूप में संभालता है";
-"controllers.publication.reason.nativeHIDPassThrough" = "macOS इसके इनपुट को सीधे संभालता है";
+"controllers.publication.reason.systemGamepad" = "सिस्टम इसे गेमपैड के रूप में संभालता है";
+"controllers.publication.reason.nativeHIDPassThrough" = "सिस्टम इसके इनपुट को सीधे संभालता है";
 "controllers.publication.reason.upstreamVirtualDevice" = "कोई दूसरा वर्चुअल डिवाइस पहले से इसका प्रतिनिधित्व करता है";
 "controllers.publication.reason.sessionSuspended" = "सत्र निलंबित है";
 "controllers.publication.reason.noVirtualProfile" = "कोई वर्चुअल प्रोफ़ाइल इसके अनुरूप नहीं है";

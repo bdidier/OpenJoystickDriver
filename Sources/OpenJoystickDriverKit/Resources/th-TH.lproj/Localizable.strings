@@ -1938,8 +1938,8 @@
 "cli.setting.reset.none" = "ไม่มีไฟล์การตั้งค่าที่ %@";
 /* Why a controller is not published as a virtual device, and a failed send. */
 "controllers.publication.reason.outputDisabled" = "เอาต์พุตเสมือนปิดอยู่";
-"controllers.publication.reason.systemGamepad" = "macOS จัดการเป็นเกมแพด";
-"controllers.publication.reason.nativeHIDPassThrough" = "macOS จัดการอินพุตโดยตรง";
+"controllers.publication.reason.systemGamepad" = "ระบบจัดการเป็นเกมแพด";
+"controllers.publication.reason.nativeHIDPassThrough" = "ระบบจัดการอินพุตโดยตรง";
 "controllers.publication.reason.upstreamVirtualDevice" = "มีอุปกรณ์เสมือนอื่นแทนอยู่แล้ว";
 "controllers.publication.reason.sessionSuspended" = "เซสชันถูกระงับ";
 "controllers.publication.reason.noVirtualProfile" = "ไม่มีโปรไฟล์เสมือนที่เหมาะสม";

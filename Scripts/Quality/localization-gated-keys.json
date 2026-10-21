@@ -1575,8 +1575,6 @@
     "cli.virtual.launch.sdl_gamecontroller_backend",
     "common.inputInject",
     "common.inputRead",
-    "controllers.publication.reason.nativeHIDPassThrough",
-    "controllers.publication.reason.systemGamepad",
     "controllers.server.system",
     "controllers.serving.nativePassThrough",
     "controllers.systemGamepadNotPublished",
