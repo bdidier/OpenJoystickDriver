@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import re
 import subprocess
 import sys
@@ -23,9 +24,9 @@ BOUNDS_TOLERANCE = 2.0
 ACCESSIBILITY_GRANTED = "0"
 ACCESSIBILITY_NOT_TRUSTED = "-25211"
 ACCESSIBILITY_CANNOT_COMPLETE = "-25204"
-# AXError -25204 is the app not answering Accessibility requests yet. The app posts
-# no notification before it answers (an AXObserver needs a working AX element to
-# observe), so readiness is polled; the wait is bounded by this deadline.
+# AXError -25204 is the app not answering Accessibility requests yet. No signal reports
+# that the app answers: finished launching does not imply it, and an AXObserver needs an
+# element that answers. Readiness is therefore polled, bounded by this deadline.
 APP_READY_TIMEOUT_SECONDS = 15.0
 APP_READY_POLL_SECONDS = 0.25
 
@@ -58,8 +59,10 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         ),
     )
     args = parser.parse_args(argv)
-    if args.ready_timeout <= 0:
-        parser.error("--ready-timeout must be greater than zero")
+    if not math.isfinite(args.ready_timeout) or args.ready_timeout <= 0:
+        parser.error(
+            "--ready-timeout must be a finite number of seconds greater than zero"
+        )
     return args
 
 
@@ -157,11 +160,11 @@ def require_accessibility(
         if clock() >= deadline:
             raise CaptureError(
                 f"{PROCESS} did not answer Accessibility requests within "
-                f"{timeout:g} seconds (last AXError {code}): wait for the app to "
+                f"{timeout:g} s (last AXError {code}): wait for the app to "
                 "finish launching and run the capture again, or raise "
                 "--ready-timeout"
             )
-        sleep(APP_READY_POLL_SECONDS)
+        sleep(min(APP_READY_POLL_SECONDS, max(0.0, deadline - clock())))
 
 
 def window_id(pid: int, kind: str) -> int:

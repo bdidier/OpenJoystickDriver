@@ -19,6 +19,7 @@ ObjC.import("CoreGraphics");
 ObjC.bindFunction("AXUIElementCreateApplication", ["id", ["int"]]);
 ObjC.bindFunction("AXUIElementCopyAttributeValue", ["int", ["id", "id", "id *"]]);
 ObjC.bindFunction("AXUIElementSetAttributeValue", ["int", ["id", "id", "id"]]);
+ObjC.bindFunction("AXUIElementSetMessagingTimeout", ["int", ["id", "float"]]);
 ObjC.bindFunction("AXUIElementPerformAction", ["int", ["id", "id"]]);
 
 const AX_NOT_TRUSTED = -25211;
@@ -28,11 +29,24 @@ const SETTINGS_TABS = ["General", "Notifications", "Advanced"];
 const POLL_STEPS = 50;
 const POLL_SECONDS = 0.1;
 const SETTLE_SECONDS = 0.5;
+// AXError codes that mean the element holds no such attribute; any other non-zero code is a failure.
+const AX_ATTRIBUTE_ABSENT = [-25205, -25212];
+// An app that does not answer blocks an AX call for the default timeout of about 6 s,
+// which would overrun the readiness deadline of capture.py; the probe gives up sooner.
+const PROBE_MESSAGING_TIMEOUT_SECONDS = 1;
 
-function read(element, name) {
+function readCode(element, name) {
 	const out = Ref();
 	const code = $.AXUIElementCopyAttributeValue(element, name, out);
 	return { code, value: code === 0 ? out[0] : null };
+}
+
+function read(element, name) {
+	const result = readCode(element, name);
+	if (result.code !== 0 && !AX_ATTRIBUTE_ABSENT.includes(result.code)) {
+		throw new Error("reading " + name + " failed with AXError " + result.code);
+	}
+	return result;
 }
 
 function attribute(element, name) {
@@ -134,7 +148,10 @@ function run(argv) {
 	const pid = Number(pidText);
 	if (command === "probe") {
 		if (!$.AXIsProcessTrusted()) return String(AX_NOT_TRUSTED);
-		return String(read($.AXUIElementCreateApplication(pid), "AXRole").code);
+		const probed = $.AXUIElementCreateApplication(pid);
+		const timeout = $.AXUIElementSetMessagingTimeout(probed, PROBE_MESSAGING_TIMEOUT_SECONDS);
+		if (timeout !== 0) throw new Error("setting the probe timeout failed with AXError " + timeout);
+		return String(readCode(probed, "AXRole").code);
 	}
 	const app = $.AXUIElementCreateApplication(pid);
 	switch (command) {

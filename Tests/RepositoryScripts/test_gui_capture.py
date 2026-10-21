@@ -280,7 +280,7 @@ class GuiCaptureTests(unittest.TestCase):
         message, probes, _ = self.wait_for_app(["-25204"] * 100, timeout=1.0)
         assert message is not None
         self.assertIn("OpenJoystickDriver did not answer Accessibility", message)
-        self.assertIn("within 1 seconds", message)
+        self.assertIn("within 1 s", message)
         self.assertIn("last AXError -25204", message)
         self.assertIn("--ready-timeout", message)
         self.assertEqual(probes, 5)
@@ -298,8 +298,34 @@ class GuiCaptureTests(unittest.TestCase):
             capture.parse_args(["--all"]).ready_timeout,
             capture.APP_READY_TIMEOUT_SECONDS,
         )
-        with self.assertRaises(SystemExit):
-            capture.parse_args(["--all", "--ready-timeout", "0"])
+        for value in ("0", "-1", "nan", "inf"):
+            with self.subTest(value=value), self.assertRaises(SystemExit):
+                capture.parse_args(["--all", "--ready-timeout", value])
+
+    def test_untrusted_after_cannot_complete_stops_the_wait(self) -> None:
+        message, probes, sleeps = self.wait_for_app(["-25204", "-25211"])
+        assert message is not None
+        self.assertIn("Accessibility is not granted to the host app", message)
+        self.assertEqual((probes, len(sleeps)), (2, 1))
+
+    def test_last_sleep_does_not_pass_the_deadline(self) -> None:
+        _, _, sleeps = self.wait_for_app(["-25204"] * 100, timeout=0.6)
+        self.assertEqual(len(sleeps), 3)
+        self.assertAlmostEqual(sum(sleeps), 0.6)
+
+    def test_capture_passes_the_ready_timeout_to_the_wait(self) -> None:
+        with (
+            patch.object(capture, "process_id", return_value=7),
+            patch.object(capture, "session_state", return_value=UNLOCKED),
+            patch.object(
+                capture, "require_accessibility", side_effect=TargetInvoked
+            ) as wait,
+            self.assertRaises(TargetInvoked),
+        ):
+            capture.capture(
+                capture.parse_args(["--area", "Controllers", "--ready-timeout", "4"])
+            )
+        wait.assert_called_once_with(7, 4.0)
 
     def test_capture_probes_after_finding_the_app_and_before_any_gui_call(
         self,
