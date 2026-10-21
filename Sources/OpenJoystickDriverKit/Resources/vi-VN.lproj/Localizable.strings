@@ -1579,6 +1579,8 @@
 "a11y.library.dismissError" = "Bỏ qua lỗi";
 "a11y.library.dismissNotice" = "Bỏ qua thông báo";
 "a11y.library.cancel" = "Hủy và giữ nguyên thư viện";
+/* VoiceOver label for the hexadecimal reading shown after the vendorID and productID lines of a record in the Library. %@ is the value, such as 0x353D. */
+"a11y.library.recordHexadecimal" = "Thập lục phân %@";
 "access.details" = "Chi tiết";
 "access.dismiss" = "Bỏ qua";
 "access.tryAgain" = "Thử lại";

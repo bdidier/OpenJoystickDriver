@@ -23,6 +23,7 @@
     "a11y.library.details": "a11y.library.details",
     "a11y.library.dismissError": "a11y.library.dismissError",
     "a11y.library.dismissNotice": "a11y.library.dismissNotice",
+    "a11y.library.recordHexadecimal": "a11y.library.recordHexadecimal",
     "a11y.mainWindow.sidebar": "a11y.mainWindow.sidebar",
     "a11y.menuBar.statusItem": "a11y.menuBar.statusItem",
     "a11y.settingsPane.advanced": "a11y.settingsPane.advanced",

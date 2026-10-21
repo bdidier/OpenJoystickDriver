@@ -156,7 +156,7 @@ struct RecordShowCommand: AsyncParsableCommand {
           )
         }
         CLIOutput.stdout("")
-        CLIOutput.stdout(String(bytes: record.document, encoding: .utf8) ?? "")
+        CLIOutput.stdout(String(bytes: record.document, encoding: .utf8) ?? "", terminator: "")
       }
     }
   }

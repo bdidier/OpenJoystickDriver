@@ -1691,6 +1691,8 @@
 "a11y.library.dismissError" = "Dispensar o erro";
 "a11y.library.dismissNotice" = "Dispensar a mensagem";
 "a11y.library.cancel" = "Cancelar e manter a biblioteca como está";
+/* VoiceOver label for the hexadecimal reading shown after the vendorID and productID lines of a record in the Library. %@ is the value, such as 0x353D. */
+"a11y.library.recordHexadecimal" = "Valor hexadecimal %@";
 "access.details" = "Detalhes";
 "access.dismiss" = "Dispensar";
 "access.tryAgain" = "Tentar Novamente";

@@ -193,14 +193,13 @@ public struct ControllerRecordSet: Sendable {
     var records: [ControllerModelID: ControllerRecord] = [:]
     for url in urls {
       do {
-        guard
-          let document = try JSONSerialization.jsonObject(with: Data(contentsOf: url))
-            as? [String: Any]
+        let data = try Data(contentsOf: url)
+        guard let document = try JSONSerialization.jsonObject(with: data) as? [String: Any]
         else { throw ControllerRecordProblem(code: .invalidControllerRecord, "not a JSON object") }
         let layers = Dictionary(
           uniqueKeysWithValues: fieldNames(of: document).map { ($0, ControllerRecordLayer.bundled) }
         )
-        let record = try makeRecord(document, layers: layers)
+        let record = try makeRecord(document, order: ordered(data), layers: layers)
         guard url.lastPathComponent == fileName(for: record.model) else {
           throw ControllerRecordProblem(
             code: .invalidControllerRecord,
@@ -247,8 +246,18 @@ public struct ControllerRecordSet: Sendable {
     return (ControllerModelID(vendorID: vendorID, productID: productID), document)
   }
 
+  /// The members of `data` in file order.
+  static func ordered(_ data: Data) throws -> OrderedJSON {
+    do { return try OrderedJSON.parse(data) } catch {
+      throw ControllerRecordProblem(code: .invalidControllerRecord, "\(error)")
+    }
+  }
+
+  /// The record for `record`, whose ``ControllerRecord/document`` lists the members in the order
+  /// of `order` and sorts the members `order` lacks.
   static func makeRecord(
     _ record: [String: Any],
+    order: OrderedJSON?,
     layers: [String: ControllerRecordLayer],
     tuningLayers: [String: ControllerRecordLayer]? = nil,
     userFile: URL? = nil,
@@ -258,10 +267,7 @@ public struct ControllerRecordSet: Sendable {
     let set = decoded.document.tuning.setKeys
     return ControllerRecord(
       model: decoded.model,
-      document: try JSONSerialization.data(
-        withJSONObject: record,
-        options: [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
-      ),
+      document: try OrderedJSON(foundation: record, order: order).formattedData(),
       fieldLayers: layers,
       tuningLayers: tuningLayers
         ?? Dictionary(

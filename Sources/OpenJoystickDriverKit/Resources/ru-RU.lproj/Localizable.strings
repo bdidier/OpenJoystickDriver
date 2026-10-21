@@ -1579,6 +1579,8 @@
 "a11y.library.dismissError" = "Закрыть ошибку";
 "a11y.library.dismissNotice" = "Закрыть сообщение";
 "a11y.library.cancel" = "Отменить и оставить библиотеку без изменений";
+/* VoiceOver label for the hexadecimal reading shown after the vendorID and productID lines of a record in the Library. %@ is the value, such as 0x353D. */
+"a11y.library.recordHexadecimal" = "Шестнадцатеричное значение %@";
 "access.details" = "Подробнее";
 "access.dismiss" = "Закрыть";
 "access.tryAgain" = "Повторить попытку";

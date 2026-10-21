@@ -1579,6 +1579,8 @@
 "a11y.library.dismissError" = "關閉錯誤";
 "a11y.library.dismissNotice" = "關閉訊息";
 "a11y.library.cancel" = "取消並維持資源庫不變";
+/* VoiceOver label for the hexadecimal reading shown after the vendorID and productID lines of a record in the Library. %@ is the value, such as 0x353D. */
+"a11y.library.recordHexadecimal" = "十六進位 %@";
 "access.details" = "詳細資料";
 "access.dismiss" = "忽略";
 "access.tryAgain" = "重試";

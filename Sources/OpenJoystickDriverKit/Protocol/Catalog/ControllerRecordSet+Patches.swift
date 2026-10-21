@@ -182,6 +182,7 @@ extension ControllerRecordSet {
       return .record(
         try makeRecord(
           document,
+          order: ordered(data),
           layers: layers,
           userFile: layer == .user ? file : nil,
           packageFile: layer == .package ? file : nil
@@ -275,6 +276,7 @@ extension ControllerRecordSet {
     }
     return try makeRecord(
       merged,
+      order: ordered(upstream.document),
       layers: layers,
       tuningLayers: tuningLayers,
       userFile: layer == .user && !isAll ? file : upstream.userFile,

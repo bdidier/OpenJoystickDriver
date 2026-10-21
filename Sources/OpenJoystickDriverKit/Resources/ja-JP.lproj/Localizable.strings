@@ -1579,6 +1579,8 @@
 "a11y.library.dismissError" = "エラーを閉じる";
 "a11y.library.dismissNotice" = "メッセージを閉じる";
 "a11y.library.cancel" = "キャンセルして、ライブラリをそのままにする";
+/* VoiceOver label for the hexadecimal reading shown after the vendorID and productID lines of a record in the Library. %@ is the value, such as 0x353D. */
+"a11y.library.recordHexadecimal" = "16進数 %@";
 "access.details" = "詳細";
 "access.dismiss" = "閉じる";
 "access.tryAgain" = "再試行";

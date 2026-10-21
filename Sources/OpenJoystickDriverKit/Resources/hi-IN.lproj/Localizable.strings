@@ -1579,6 +1579,8 @@
 "a11y.library.dismissError" = "त्रुटि ख़ारिज करें";
 "a11y.library.dismissNotice" = "संदेश ख़ारिज करें";
 "a11y.library.cancel" = "रद्द करें और लाइब्रेरी जैसी है वैसी रखें";
+/* VoiceOver label for the hexadecimal reading shown after the vendorID and productID lines of a record in the Library. %@ is the value, such as 0x353D. */
+"a11y.library.recordHexadecimal" = "हेक्साडेसिमल %@";
 "access.details" = "ब्योरा";
 "access.dismiss" = "ख़ारिज करें";
 "access.tryAgain" = "फिर कोशिश करें";

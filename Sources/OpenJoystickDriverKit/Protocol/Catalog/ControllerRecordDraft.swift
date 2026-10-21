@@ -92,10 +92,7 @@ public struct ControllerRecordDraft: Sendable {
       body = fields
     }
     guard
-      let document = try? JSONSerialization.data(
-        withJSONObject: body,
-        options: [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
-      )
+      let document = try? OrderedJSON(foundation: body, order: .recordKeys).formattedData()
     else { return nil }
     self.document = document
   }
