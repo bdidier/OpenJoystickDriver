@@ -20,6 +20,17 @@
       "values": ["ProfileSlots"]
     }
   },
+  "parameterRules": [
+    {
+      "rule": "None",
+      "variants": ["USB"]
+    },
+    {
+      "rule": "ExactlyOne",
+      "parameters": ["innerGrips", "lightingMemory"],
+      "variants": ["EnhancedHID"]
+    }
+  ],
   "controls": {
     "base": "Xbox",
     "add": ["Guide", "LeftPaddle1", "RightPaddle1", "Auxiliary1"]

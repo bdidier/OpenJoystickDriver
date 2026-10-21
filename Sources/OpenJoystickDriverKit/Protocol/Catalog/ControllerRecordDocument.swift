@@ -277,10 +277,12 @@ struct ControllerRecordDocument: Decodable {
       let violation: String? =
         if let problem = parameters.violation(family: protocolID, variant: protocolVariant) {
           problem
-        } else if initialization != nil && protocolID != .xboxGIP {
+        } else if initialization != nil && protocolID.protocolDescription.namedPackets == nil {
           "initialization actions must be declared by the selected driver"
-        } else if keepAliveEnabled != nil && protocolID != .xboxGIP {
-          "keep-alive policy requires the GIP driver"
+        } else if keepAliveEnabled != nil
+          && !protocolID.protocolDescription.recordSections.contains(.keepAlive)
+        {
+          "keep-alive policy requires a driver that reads it"
         } else { nil }
       if let violation {
         throw DecodingError.dataCorrupted(

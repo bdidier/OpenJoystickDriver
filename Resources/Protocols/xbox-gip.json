@@ -8,6 +8,7 @@
     "out": 2
   },
   "rawUSB": true,
+  "recordSections": ["keepAlive"],
   "interfaceSignatures": [
     {
       "variant": "USB",

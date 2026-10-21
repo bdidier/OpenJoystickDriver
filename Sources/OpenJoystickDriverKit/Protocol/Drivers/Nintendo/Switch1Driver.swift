@@ -59,6 +59,8 @@ public final class Switch1Driver: PhysicalProtocolDriver {
       variant: isBluetooth ? .bluetoothClassic : .usb,
       record: rumbleTemplate
     )
+    // Loading refuses a NintendoSwitch1 description without subcommands, so the guard cannot
+    // fail.
     guard let subcommands = PhysicalProtocolID.nintendoSwitch1.protocolDescription.subcommands
     else { fatalError("[ProtocolDescription] NintendoSwitch1 has no subcommands") }
     self.subcommands = subcommands

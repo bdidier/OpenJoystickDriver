@@ -80,6 +80,11 @@ def reads_record_rumble_template(protocol: dict[str, Any]) -> bool:
     return True
 
 
+def reads_section(protocol: dict[str, Any], section: str) -> bool:
+    """Whether the protocol's family reads the record section, as `recordSections` lists it."""
+    return section in description_of(protocol["family"]).get("recordSections", ())
+
+
 def requires_record_input_layout(family: str) -> bool:
     """Whether records of the family need an input layout of their own: the driver reads one
     and the description supplies none."""
@@ -227,8 +232,8 @@ def validate_transport_sections(path: pathlib.Path, record: dict[str, Any]) -> N
     )
     require(
         "bluetoothLE" not in record
-        or all(protocol["family"] == "NintendoSwitch2" for protocol in protocols),
-        f"{path}: bluetoothLE requires a Switch 2 controller",
+        or all(reads_section(protocol, "bluetoothLE") for protocol in protocols),
+        f"{path}: bluetoothLE requires a driver that reads it",
     )
     endpoints = record.get("usb", {}).get("endpoints")
     if endpoints is not None:
@@ -253,6 +258,28 @@ def validate_protocol_variants(path: pathlib.Path, record: dict[str, Any]) -> No
             protocol["family"], protocol.get("variant")
         )
         require(problem is None, f"{path}: {problem}")
+
+
+def validate_protocol_fields(path: pathlib.Path, record: dict[str, Any]) -> None:
+    """Each mode's protocol sets only what its family's driver reads, as `ProtocolInfo` in
+    Swift: parameters its description declares and its rules allow, keepAlive only where the
+    description lists keepAlive, and initialization only where it has named packets."""
+    for mode in record["modes"]:
+        protocol = mode["protocol"]
+        description = description_of(protocol["family"])
+        problem = protocol_descriptions.parameters_problem(
+            description, protocol.get("variant"), protocol.get("parameters", {})
+        )
+        require(problem is None, f"{path}: {problem}")
+        require(
+            "keepAlive" not in protocol or reads_section(protocol, "keepAlive"),
+            f"{path}: keep-alive policy requires a driver that reads it",
+        )
+        require(
+            "initialization" not in protocol
+            or "namedPackets" in description.get("defaults", {}).get("session", {}),
+            f"{path}: initialization actions must be declared by the selected driver",
+        )
 
 
 def validate_tuning_scope(path: pathlib.Path, record: dict[str, Any]) -> None:
@@ -283,14 +310,16 @@ def validate_modes(path: pathlib.Path, record: dict[str, Any]) -> None:
     )
     has_layout = "report" in record.get("input", {})
     validate_protocol_variants(path, record)
+    validate_protocol_fields(path, record)
     validate_transport_sections(path, record)
     validate_tuning_scope(path, record)
     for mode in modes:
         family = mode["protocol"]["family"]
         validate_mode_session(path, mode)
         require(
-            "hidUsageMap" not in record.get("input", {}) or family == "HIDDescriptor",
-            f"{path}: a HID usage map applies only to HIDDescriptor in every mode",
+            "hidUsageMap" not in record.get("input", {})
+            or reads_section(mode["protocol"], "hidUsageMap"),
+            f"{path}: a HID usage map applies only to a driver that reads one, in every mode",
         )
         require(
             has_layout == requires_record_input_layout(family),

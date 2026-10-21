@@ -33,6 +33,38 @@ public enum PhysicalProtocolID: String, CaseIterable, Codable, Sendable {
   case vendorGameSir = "VendorGameSir"
   case vendorNVIDIAShield = "VendorNVIDIAShield"
 
+  /// The family-specific `defaults.session` fields this family's driver reads. Its description
+  /// sets exactly these and no other family-specific field.
+  var sessionFields: Set<String> {
+    switch self {
+    case .nintendoSwitch1: ["subcommands"]
+    case .nintendoSwitch2: ["commandChannel", "trailingStopPackets"]
+    case .xboxGIP: ["namedPackets", "handshakeAttempts", "announceResendLimit"]
+    case .xboxXUSB: ["receiverInquiryResendLimit"]
+    case .valveSteamController: ["activation", "deactivation"]
+    case .valveSteamTriton: ["activation", "deactivation"]
+    case .valveSteamDeck: ["activation", "deactivation"]
+    default: []
+    }
+  }
+
+  /// The parameter names this family's driver reads. Loading refuses a description that declares
+  /// others, and the bundled descriptions declare exactly these, as a test checks.
+  var readParameters: Set<String> {
+    switch self {
+    case .xboxGIP: ["shareButton"]
+    case .sonyDualShock4: ["motionCalibration", "role", "motionScale"]
+    case .sonyDualSense:
+      ["maker", "unprobedSensors", "unprobedTouchpad", "forcedVibration", "role"]
+    case .nintendoSwitch1: ["layout", "usbProtocol"]
+    case .nintendoSwitch2: ["layout"]
+    case .vendorPS3ThirdParty: ["hatSource"]
+    case .vendorGameSir: ["innerGrips", "lightingMemory"]
+    case .vendorNVIDIAShield: ["reportRevision"]
+    default: []
+    }
+  }
+
   /// The stem of this family's description file in `Resources/Protocols`: lowercase kebab-case
   /// with each brand or product name kept as one word.
   public var descriptionFileStem: String {

@@ -31,6 +31,12 @@
       "values": ["StrikePad"]
     }
   },
+  "parameterRules": [
+    {
+      "rule": "AtMostOne",
+      "parameters": ["role", "motionScale"]
+    }
+  ],
   "controls": {
     "base": "Xbox",
     "add": ["Guide", "TouchpadClick"],

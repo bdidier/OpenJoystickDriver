@@ -356,8 +356,10 @@ extension ControllerRecordDocument {
           "every mode needs the record's input layout exactly when it is HIDReportLayout"
         )
       }
-      if hidUsageMap != nil, info.protocolID != .hidDescriptor {
-        throw fail("a HID usage map applies only to HIDDescriptor in every mode")
+      if hidUsageMap != nil,
+        !info.protocolID.protocolDescription.recordSections.contains(.hidUsageMap)
+      {
+        throw fail("a HID usage map applies only to a driver that reads one, in every mode")
       }
       guard capabilitiesAreDeclared(by: info.protocolID) else {
         throw fail("capabilities must be deltas the driver of every mode declares")

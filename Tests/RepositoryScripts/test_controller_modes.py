@@ -53,8 +53,7 @@ def record(**fields: Any) -> dict[str, Any]:
 
 class ControllerModeSchemaTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.validator = validate_profiles.validator()
-        self.records = RecordValidator()
+        self.validator = RecordValidator()
 
     def test_accepts_modes_selected_by_each_probe_expectation(self) -> None:
         document = record(
@@ -306,7 +305,7 @@ class ControllerModeSchemaTests(unittest.TestCase):
         }
         for name, document in rejected.items():
             with self.subTest(name):
-                self.assertFalse(self.records.is_valid(document))
+                self.assertFalse(self.validator.is_valid(document))
 
     def test_validator_rejects_duplicate_ids_and_overflowing_bytes(self) -> None:
         overflowing = {
@@ -426,7 +425,7 @@ class ControllerModeSchemaTests(unittest.TestCase):
                 default["session"] = session
             return record(modes=[default], **fields)
 
-        schema = validate_profiles.validator()
+        schema = RecordValidator()
         rejected = {
             "report-layout without a layout": single("HIDReportLayout"),
             "layout under another family": single("SonySixaxis", input=layout),
@@ -451,7 +450,7 @@ class ControllerModeSchemaTests(unittest.TestCase):
 
 class RawUSBModeTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.schema = validate_profiles.validator()
+        self.schema = RecordValidator()
 
     @staticmethod
     def gip(identifier: str = "default", **fields: Any) -> dict[str, Any]:
@@ -545,8 +544,8 @@ class SessionTests(unittest.TestCase):
     SHANWAN: ClassVar[dict[str, Any]] = {"manufacturer": "SHANWAN"}
 
     def setUp(self) -> None:
-        self.schema = validate_profiles.validator()
-        self.records = RecordValidator()
+        self.schema = RecordValidator()
+        self.schema_only = validate_profiles.validator()
 
     @staticmethod
     def read(request: int, **fields: Any) -> dict[str, Any]:
@@ -581,7 +580,7 @@ class SessionTests(unittest.TestCase):
         for text in ("0x1a 2b", "1a 2b", "1A  2B", "1A2B", " 1A", "1A ", "1A\n", ""):
             with self.subTest(text):
                 document = self.document("XboxXUSB", {"startup": [{"bytes": text}]})
-                self.assertFalse(self.records.is_valid(document))
+                self.assertFalse(self.schema.is_valid(document))
         accepted = self.document("XboxXUSB", {"startup": [{"bytes": "1A 2B"}]})
         self.assertTrue(self.schema.is_valid(accepted))
 
@@ -602,7 +601,7 @@ class SessionTests(unittest.TestCase):
         }
         for name, (family, session) in rejected.items():
             with self.subTest(name):
-                self.assertFalse(self.records.is_valid(self.document(family, session)))
+                self.assertFalse(self.schema.is_valid(self.document(family, session)))
 
     def test_validator_rejects_control_transfers_that_disagree_with_themselves(
         self,
@@ -629,7 +628,7 @@ class SessionTests(unittest.TestCase):
         for name, (transfer, message) in rejected.items():
             with self.subTest(name):
                 document = self.document("XboxXUSB", {"control": [transfer]})
-                self.assertTrue(self.schema.is_valid(document))
+                self.assertTrue(self.schema_only.is_valid(document))
                 with self.assertRaises(validate_profiles.ValidationError) as caught:
                     validate_profiles.validate_modes(Path("record.json"), document)
                 self.assertIn(message, str(caught.exception))
@@ -737,7 +736,7 @@ class EveryModeConditionalTests(unittest.TestCase):
                     "vibrationCharacteristic": "00000000-0000-0000-0000-000000000000"
                 },
             ),
-            "bluetoothLE requires a Switch 2 controller",
+            "bluetoothLE requires a driver that reads it",
         )
 
     def test_usb_endpoints_differ_from_every_mode_default(self) -> None:
@@ -770,7 +769,7 @@ class EveryModeConditionalTests(unittest.TestCase):
                     }
                 },
             ),
-            "a HID usage map applies only to HIDDescriptor in every mode",
+            "a HID usage map applies only to a driver that reads one, in every mode",
         )
 
 

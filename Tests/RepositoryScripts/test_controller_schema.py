@@ -53,7 +53,6 @@ def schema_clauses(node: Any) -> Any:
 class ControllerSchemaTests(unittest.TestCase):
     def setUp(self) -> None:
         self.validator = RecordValidator()
-        self.records = self.validator
 
     def test_accepts_current_vocabulary(self) -> None:
         current = {
@@ -143,7 +142,7 @@ class ControllerSchemaTests(unittest.TestCase):
                     del document[member]
                 else:
                     document[member] = value
-                self.assertFalse(self.records.is_valid(document))
+                self.assertFalse(self.validator.is_valid(document))
                 with self.assertRaises(validate_profiles.ValidationError) as raised:
                     validate_profiles.check_record(
                         Path("record.json"), document, self.validator.schema
@@ -332,7 +331,7 @@ class ControllerSchemaTests(unittest.TestCase):
         )
         for name, document in refused.items():
             with self.subTest(name):
-                self.assertFalse(self.records.is_valid(document))
+                self.assertFalse(self.validator.is_valid(document))
 
     def test_rejects_protocol_default_endpoints(self) -> None:
         defaults = (
@@ -344,7 +343,7 @@ class ControllerSchemaTests(unittest.TestCase):
         for protocol, endpoint_in, endpoint_out in defaults:
             with self.subTest(protocol["family"]):
                 self.assertFalse(
-                    self.records.is_valid(
+                    self.validator.is_valid(
                         record(
                             protocol,
                             usb={"endpoints": {"in": endpoint_in, "out": endpoint_out}},
@@ -368,8 +367,8 @@ GP100_RUMBLE = {
 
 class OwnershipAndSessionTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.validator = validate_profiles.validator()
-        self.records = RecordValidator()
+        self.validator = RecordValidator()
+        self.schema_only = validate_profiles.validator()
 
     def test_accepts_ownership_and_rumble_template(self) -> None:
         accepted = {
@@ -407,7 +406,7 @@ class OwnershipAndSessionTests(unittest.TestCase):
             "lowFrequency": {"byte": 3, "encoding": "SwitchHDRumble"},
         }
         self.assertTrue(
-            self.validator.is_valid(record(THIRD_PARTY, session={"rumble": usb}))
+            self.schema_only.is_valid(record(THIRD_PARTY, session={"rumble": usb}))
         )
 
     def test_rejects_a_resend_interval_that_a_keep_alive_would_retime(self) -> None:
@@ -424,7 +423,11 @@ class OwnershipAndSessionTests(unittest.TestCase):
                 "cannot be combined with a session keepAlive",
             ),
             "family keepAlive": (
-                {"family": "VendorGameSir", "variant": "EnhancedHID"},
+                {
+                    "family": "VendorGameSir",
+                    "variant": "EnhancedHID",
+                    "parameters": {"innerGrips": True},
+                },
                 {"rumble": {**GP100_RUMBLE, "resendIntervalMilliseconds": 100}},
                 "needs a family whose description declares no keepAlive",
             ),
@@ -433,30 +436,9 @@ class OwnershipAndSessionTests(unittest.TestCase):
         for name, (protocol, session, message) in refused.items():
             with self.subTest(name):
                 document = record(protocol, session=session)
-                self.assertFalse(self.records.is_valid(document))
+                self.assertFalse(self.validator.is_valid(document))
                 with self.assertRaisesRegex(validate_profiles.ValidationError, message):
                     validate_profiles.validate_modes(Path("record.json"), document)
-
-    def test_schema_lists_the_families_whose_keep_alive_a_resend_would_retime(
-        self,
-    ) -> None:
-        schema = validate_profiles.load_object(validate_profiles.SCHEMA_PATH)
-        refusals = [
-            clause
-            for clause in schema_clauses(schema)
-            if clause.get("$comment", "").endswith("declares no keepAlive")
-        ]
-        self.assertEqual(len(refusals), 1)
-        listed = refusals[0]["not"]["properties"]["protocol"]["properties"]["family"][
-            "enum"
-        ]
-        declared = [
-            family
-            for family in validate_profiles.protocol_descriptions.bundled()
-            if validate_profiles.declares_keep_alive(family)
-            and validate_profiles.encodes_rumble_template(family)
-        ]
-        self.assertEqual(sorted(listed), sorted(declared))
 
     def test_rejects_malformed_template_bytes_encodings_counter_and_resend(
         self,
@@ -506,11 +488,11 @@ class OwnershipAndSessionTests(unittest.TestCase):
         for name, template in schema_rejected.items():
             with self.subTest(name):
                 document = record(THIRD_PARTY, session={"rumble": template})
-                self.assertFalse(self.records.is_valid(document))
+                self.assertFalse(self.validator.is_valid(document))
         for name, template in semantic_rejected.items():
             with self.subTest(name):
                 document = record(THIRD_PARTY, session={"rumble": template})
-                self.assertTrue(self.validator.is_valid(document))
+                self.assertTrue(self.schema_only.is_valid(document))
                 with self.assertRaises(validate_profiles.ValidationError):
                     validate_profiles.validate_modes(Path("record.json"), document)
 
@@ -602,7 +584,7 @@ class OwnershipAndSessionTests(unittest.TestCase):
         }
         for name, document in rejected.items():
             with self.subTest(name):
-                self.assertFalse(self.records.is_valid(document))
+                self.assertFalse(self.validator.is_valid(document))
 
     def test_route_extension_owned_applies_only_to_raw_usb_families(self) -> None:
         self.assertTrue(self.validator.is_valid(record(GIP, route="ExtensionOwned")))
@@ -613,7 +595,7 @@ class OwnershipAndSessionTests(unittest.TestCase):
         }
         for name, document in rejected.items():
             with self.subTest(name):
-                self.assertFalse(self.records.is_valid(document))
+                self.assertFalse(self.validator.is_valid(document))
 
 
 SIXAXIS = {"family": "SonySixaxis"}
@@ -626,8 +608,7 @@ ENABLE = {
 
 class StartupWriteTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.validator = validate_profiles.validator()
-        self.records = RecordValidator()
+        self.validator = RecordValidator()
 
     def test_accepts_startup_writes(self) -> None:
         accepted = {
@@ -791,7 +772,7 @@ class StartupWriteTests(unittest.TestCase):
         }
         for name, document in rejected.items():
             with self.subTest(name):
-                self.assertFalse(self.records.is_valid(document))
+                self.assertFalse(self.validator.is_valid(document))
 
 
 USB_WRITE = {"bytes": "05 20 00 01 00"}
@@ -803,8 +784,7 @@ LAYOUT = {"report": {"length": 2}, "buttons": [BUTTON]}
 
 class InputLayoutTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.validator = validate_profiles.validator()
-        self.records = RecordValidator()
+        self.validator = RecordValidator()
 
     def test_accepts_report_layouts_and_dpad_pressure(self) -> None:
         accepted = {
@@ -943,7 +923,7 @@ class InputLayoutTests(unittest.TestCase):
         }
         for name, document in rejected.items():
             with self.subTest(name):
-                self.assertFalse(self.records.is_valid(document))
+                self.assertFalse(self.validator.is_valid(document))
 
 
 STEAM = {"family": "ValveSteamController"}
@@ -962,7 +942,6 @@ class SwiftParityTests(unittest.TestCase):
 
     def setUp(self) -> None:
         self.validator = RecordValidator()
-        self.records = self.validator
 
     def check(self, accepted: dict[str, Any], rejected: dict[str, Any]) -> None:
         for name, document in accepted.items():
@@ -970,7 +949,7 @@ class SwiftParityTests(unittest.TestCase):
                 self.assertTrue(self.validator.is_valid(document))
         for name, document in rejected.items():
             with self.subTest(f"rejects {name}"):
-                self.assertFalse(self.records.is_valid(document))
+                self.assertFalse(self.validator.is_valid(document))
 
     def test_dualsense_third_party_maker(self) -> None:
         self.check(

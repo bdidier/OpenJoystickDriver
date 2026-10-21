@@ -42,8 +42,7 @@ def usage_map(*usages: dict[str, Any], **members: Any) -> dict[str, Any]:
 
 class HIDUsageMapRecordSchemaTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.validator = validate_profiles.validator()
-        self.records = RecordValidator()
+        self.validator = RecordValidator()
 
     def test_accepts_each_usage_kind(self) -> None:
         accepted = {
@@ -106,11 +105,11 @@ class HIDUsageMapRecordSchemaTests(unittest.TestCase):
         }
         for name, input_section in rejected.items():
             with self.subTest(name):
-                self.assertFalse(self.records.is_valid(record(input_section)))
+                self.assertFalse(self.validator.is_valid(record(input_section)))
 
     def test_a_usage_map_belongs_to_hid_descriptor_only(self) -> None:
         self.assertFalse(
-            self.records.is_valid(record(usage_map(BUTTON), "SonyDualShock4"))
+            self.validator.is_valid(record(usage_map(BUTTON), "SonyDualShock4"))
         )
 
     def test_a_byte_layout_belongs_to_report_layout_only(self) -> None:
@@ -119,9 +118,9 @@ class HIDUsageMapRecordSchemaTests(unittest.TestCase):
             "buttons": [{"control": "South", "byte": 0, "mask": 1}],
         }
         self.assertTrue(self.validator.is_valid(record(layout, "HIDReportLayout")))
-        self.assertFalse(self.records.is_valid(record(layout)))
+        self.assertFalse(self.validator.is_valid(record(layout)))
         self.assertFalse(
-            self.records.is_valid(record(usage_map(BUTTON), "HIDReportLayout"))
+            self.validator.is_valid(record(usage_map(BUTTON), "HIDReportLayout"))
         )
 
     def validate_file(self, input_section: Any) -> None:
@@ -129,7 +128,7 @@ class HIDUsageMapRecordSchemaTests(unittest.TestCase):
             path = Path(directory) / "record.json"
             path.write_text(json.dumps(record(input_section)), encoding="utf-8")
             validate_profiles.validate_record(
-                path, enforce_path=False, schema_validator=self.validator
+                path, enforce_path=False, schema_validator=validate_profiles.validator()
             )
 
     def test_validator_rejects_what_the_schema_cannot_express(self) -> None:
@@ -142,7 +141,9 @@ class HIDUsageMapRecordSchemaTests(unittest.TestCase):
             "reversed axis range": backwards,
         }.items():
             with self.subTest(name):
-                self.assertTrue(self.validator.is_valid(record(input_section)))
+                self.assertTrue(
+                    validate_profiles.validator().is_valid(record(input_section))
+                )
                 with self.assertRaises(validate_profiles.ValidationError):
                     self.validate_file(input_section)
         self.validate_file(usage_map(AXIS, BUTTON))
@@ -150,7 +151,7 @@ class HIDUsageMapRecordSchemaTests(unittest.TestCase):
     def test_hid_descriptor_declares_no_parameters(self) -> None:
         document = record(None)
         document["modes"][0]["protocol"]["parameters"] = {"usageLayout": "Wr007"}
-        self.assertFalse(self.records.is_valid(document))
+        self.assertFalse(self.validator.is_valid(document))
 
 
 class HIDUsageMapDescriptionSchemaTests(unittest.TestCase):
@@ -170,6 +171,7 @@ class HIDUsageMapDescriptionSchemaTests(unittest.TestCase):
             **header("ProtocolDescription"),
             "family": "HIDDescriptor",
             "endpoints": {"in": 130, "out": 2},
+            "recordSections": ["hidUsageMap"],
             "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
             "defaults": defaults,
             **members,

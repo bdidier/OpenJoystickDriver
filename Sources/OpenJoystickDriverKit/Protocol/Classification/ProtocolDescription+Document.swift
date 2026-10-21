@@ -75,6 +75,11 @@ extension ProtocolDescription {
       let receiverInquiryResendLimit: Int?
       let commandChannel: ProtocolDescription.CommandChannel?
       let trailingStopPackets: Int?
+      /// The keys every family may set. The description schema lists the same keys as
+      /// `$defs/generalSessionKeys`, which a test pins this to.
+      static let generalKeys: Set<String> = ["startup", "rumble", "keepAlive"]
+      /// The keys of the session that only some families have: every key but the general ones.
+      let familyFields: Set<String>
 
       init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: DocumentKey.self)
@@ -84,6 +89,7 @@ extension ProtocolDescription {
           "announceResendLimit", "receiverInquiryResendLimit", "commandChannel",
           "trailingStopPackets",
         ])
+        familyFields = Set(container.allKeys.map(\.stringValue)).subtracting(Self.generalKeys)
         guard !container.allKeys.isEmpty else {
           throw DecodingError.dataCorrupted(
             .init(codingPath: decoder.codingPath, debugDescription: "session must not be empty")
@@ -205,7 +211,39 @@ extension ProtocolDescription {
     let macOSOwnedOutput: MacOSOwnedOutput
     let interfaceSignatures: [Signature]
     let parameters: [String: ParameterType]
+    let parameterRules: [ParameterRule]
+    let writeTransports: Set<PhysicalTransport>
     let defaults: Defaults?
+
+    /// `parameterRules[]`: a kind, the parameters it lists and the variants it limits itself to.
+    struct RuleDocument: Decodable {
+      let rule: ParameterRule
+
+      init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: DocumentKey.self)
+        try container.rejectUnknown(allowed: ["rule", "parameters", "variants"])
+        let kindName = try container.decode(String.self, for: "rule")
+        let names = try container.decodeOptional([String].self, for: "parameters")
+        let variantNames = try container.decodeOptional([String].self, for: "variants")
+        let variants = (variantNames ?? []).compactMap(PhysicalProtocolVariantID.init(rawValue:))
+        guard let kind = ParameterRule.Kind(rawValue: kindName),
+          (kind == .none) == (names == nil), names?.isEmpty != true,
+          Set(names ?? []).count == names?.count ?? 0,
+          variantNames?.isEmpty != true, variants.count == variantNames?.count ?? 0,
+          Set(variants).count == variants.count
+        else {
+          throw DecodingError.dataCorrupted(
+            .init(
+              codingPath: decoder.codingPath,
+              debugDescription:
+                "a parameter rule has a known kind, unique parameters (none for None) and "
+                + "unique variants"
+            )
+          )
+        }
+        rule = ParameterRule(kind: kind, parameters: Set(names ?? []), variants: Set(variants))
+      }
+    }
 
     /// A unique, nonempty list of `Element` names as a set; empty when absent.
     static func decodeSet<Element: RawRepresentable & Hashable>(
@@ -232,7 +270,7 @@ extension ProtocolDescription {
         "apiVersion", "kind", "family", "variants", "storesVariant", "endpoints", "rawUSB",
         "recordSections", "tuningKeys", "rawUSBTuningKeys", "controls", "recordCapabilities",
         "macOSOwnedOutput",
-        "interfaceSignatures", "parameters", "defaults",
+        "interfaceSignatures", "parameters", "parameterRules", "writeTransports", "defaults",
       ])
       apiVersion = try container.decodeOptional(String.self, for: "apiVersion")
       kind = try container.decodeOptional(String.self, for: "kind")
@@ -317,6 +355,17 @@ extension ProtocolDescription {
         )
       }
       parameters = declarations?.mapValues(\.type) ?? [:]
+      let rules = try container.decodeOptional([RuleDocument].self, for: "parameterRules")
+      guard rules?.isEmpty != true else {
+        throw DecodingError.dataCorrupted(
+          .init(
+            codingPath: decoder.codingPath + [DocumentKey("parameterRules")],
+            debugDescription: "parameterRules must not be empty"
+          )
+        )
+      }
+      parameterRules = rules?.map(\.rule) ?? []
+      writeTransports = try Self.decodeSet(PhysicalTransport.self, "writeTransports", container)
       defaults = try container.decodeOptional(Defaults.self, for: "defaults")
     }
   }

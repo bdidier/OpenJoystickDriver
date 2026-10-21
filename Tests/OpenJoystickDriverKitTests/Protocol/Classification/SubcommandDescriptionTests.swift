@@ -165,12 +165,4 @@ struct SubcommandDescriptionTests {
     #expect(indicator.subcommand == 0x30)
     #expect(PhysicalPlayerIndicator.allCases.map(indicator.pattern(for:)) == [0, 1, 3, 7, 15])
   }
-
-  @Test
-  func onlySwitch1HasSubcommandsAndItMustHaveThem() {
-    let body = switch1(plan([Self.plain]))
-    #expect(rejection(family: .nintendoSwitch1, "")?.code == .invalidProtocolDescription)
-    #expect(rejection(family: .xboxXID, body)?.code == .invalidProtocolDescription)
-    #expect(rejection(family: .hidDescriptor, body)?.code == .invalidProtocolDescription)
-  }
 }

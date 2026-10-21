@@ -87,32 +87,4 @@ struct SchemaRejectionTests {
     }
     #expect(failures.isEmpty, "\(failures.count):\n\(failures.joined(separator: "\n"))")
   }
-
-  /// `ProtocolParameters.readable(by:)` repeats the parameter names that the description schema
-  /// allows each family, until the descriptions carry them.
-  @Test
-  func readableParametersAreTheNamesTheDescriptionSchemaAllowsEachFamily() throws {
-    let schema = try JSONSchemaFiles.document(named: "protocol-description.schema.json")
-    let rules = try #require(schema["allOf"] as? [[String: Any]])
-    var checked: Set<PhysicalProtocolID> = []
-    for rule in rules {
-      let condition = rule["if"] as? [String: Any]
-      let properties = condition?["properties"] as? [String: Any]
-      let family = (properties?["family"] as? [String: Any])?["const"] as? String
-      guard let family, let id = PhysicalProtocolID(rawValue: family) else { continue }
-      let then = try #require(rule["then"] as? [String: Any])
-      let declared = (then["properties"] as? [String: Any])?["parameters"]
-      let names: Set<String>
-      if let declared = declared as? [String: Any] {
-        let allowed = (declared["propertyNames"] as? [String: Any])?["enum"] as? [String]
-        names = Set(try #require(allowed))
-      } else {
-        #expect(declared as? Bool == false, "\(family) allows no parameter or names them")
-        names = []
-      }
-      #expect(ProtocolParameters.readable(by: id) == names, "\(family)")
-      checked.insert(id)
-    }
-    #expect(checked == Set(PhysicalProtocolID.allCases))
-  }
 }

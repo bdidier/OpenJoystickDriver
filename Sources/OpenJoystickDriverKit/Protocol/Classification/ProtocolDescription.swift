@@ -51,10 +51,58 @@ struct ProtocolDescription: Sendable {
     }
   }
 
-  /// A record section whose layout the family's driver reads.
+  /// A record section the family's driver reads.
   enum RecordSection: String, Sendable {
+    /// The record's `input` byte layout.
     case input
+    /// A rumble template.
     case rumble
+    /// The record's `input.hidUsageMap`.
+    case hidUsageMap
+    /// The record's `bluetoothLE` section.
+    case bluetoothLE
+    /// The mode's `protocol.keepAlive`.
+    case keepAlive
+  }
+
+  /// A rule on the parameters a record sets beyond each parameter's own type.
+  struct ParameterRule: Equatable, Sendable {
+    enum Kind: String, Sendable {
+      /// No parameter is set.
+      case none = "None"
+      /// At most one of `parameters` is set.
+      case atMostOne = "AtMostOne"
+      /// Exactly one of `parameters` is set.
+      case exactlyOne = "ExactlyOne"
+      /// Every one of `parameters` is set whenever any parameter is.
+      case requires = "Requires"
+    }
+
+    let kind: Kind
+    let parameters: Set<String>
+    /// The variants the rule applies to; every variant when empty.
+    let variants: Set<PhysicalProtocolVariantID>
+
+    func applies(to variant: PhysicalProtocolVariantID?) -> Bool {
+      variants.isEmpty || variant.map(variants.contains) ?? false
+    }
+
+    /// Why a record that sets `names` breaks the rule, or nil.
+    func violation(setting names: Set<String>) -> String? {
+      let listed = parameters.sorted().joined(separator: ", ")
+      let setCount = names.intersection(parameters).count
+      switch kind {
+      case .none:
+        return names.isEmpty ? nil : "the variant takes no parameters"
+      case .atMostOne:
+        return setCount <= 1 ? nil : "at most one of \(listed) may be set"
+      case .exactlyOne:
+        return setCount == 1 ? nil : "exactly one of \(listed) must be set"
+      case .requires:
+        return names.isEmpty || parameters.isSubset(of: names)
+          ? nil : "parameters require \(listed)"
+      }
+    }
   }
 
   /// The `kind` of a protocol description.
@@ -79,6 +127,10 @@ struct ProtocolDescription: Sendable {
   let interfaceSignatures: [ProtocolInterfaceSignature]
   /// The parameters records of this family may set, by name.
   let parameters: [String: ParameterType]
+  /// The rules a record's parameters obey beyond each parameter's own type.
+  let parameterRules: [ParameterRule]
+  /// The transports an activation or deactivation write may name.
+  let writeTransports: Set<PhysicalTransport>
   /// The controls every controller of the family has; a driver adds only what its record or
   /// layout makes true. Nil for a family whose controls follow its layout.
   let controls: ControllerCapabilities?
@@ -100,6 +152,8 @@ struct ProtocolDescription: Sendable {
   /// The HID reports sent in order when a Valve controller is deactivated, each limited by its
   /// transport. Only the Valve families have them.
   let deactivation: [RecordStartupWrite]
+  /// The family-specific `defaults.session` keys the document sets, as written.
+  let presentSessionFields: Set<String>
   /// The family's subcommand reports: the report id, the rolling counter rule and the startup
   /// requests. Only `NintendoSwitch1` has them.
   let subcommands: SubcommandPlan?
@@ -252,9 +306,7 @@ struct ProtocolDescription: Sendable {
         )
       }
     }
-    let unreadParameters = Set(document.parameters.keys).subtracting(
-      ProtocolParameters.readable(by: family)
-    )
+    let unreadParameters = Set(document.parameters.keys).subtracting(family.readParameters)
     guard unreadParameters.isEmpty else {
       throw ProtocolDescriptionProblem(
         .invalidProtocolDescription,
@@ -347,6 +399,8 @@ struct ProtocolDescription: Sendable {
       macOSOwnedOutput: document.macOSOwnedOutput,
       interfaceSignatures: signatures,
       parameters: document.parameters,
+      parameterRules: document.parameterRules,
+      writeTransports: document.writeTransports,
       controls: document.controls,
       recordCapabilities: document.recordCapabilities,
       rumbleTemplate: document.defaults?.session?.rumble,
@@ -355,6 +409,7 @@ struct ProtocolDescription: Sendable {
       keepAlive: document.defaults?.session?.keepAlive,
       activation: document.defaults?.session?.activation ?? [],
       deactivation: document.defaults?.session?.deactivation ?? [],
+      presentSessionFields: document.defaults?.session?.familyFields ?? [],
       subcommands: document.defaults?.session?.subcommands,
       namedPackets: document.defaults?.session?.namedPackets,
       handshakeAttempts: document.defaults?.session?.handshakeAttempts,
@@ -377,6 +432,7 @@ struct ProtocolDescription: Sendable {
         throw problem
       }
     }
+    if let problem = description.ruleProblem(fileName: fileName) { throw problem }
     if let violation = description.scopeViolation {
       throw ProtocolDescriptionProblem(.invalidProtocolDescription, "\(fileName): \(violation)")
     }
@@ -420,35 +476,6 @@ struct ProtocolDescription: Sendable {
     }
   }
 
-  /// Why a startup write's condition names a variant the family lacks (E5004) or a parameter or
-  /// value the description does not declare (E5002), or nil.
-  private func conditionProblem(
-    _ condition: StartupWriteCondition,
-    fileName: String
-  ) -> ProtocolDescriptionProblem? {
-    for variant in condition.variants ?? [] where !variants.contains(variant) {
-      return ProtocolDescriptionProblem(
-        .unknownProtocolVariant,
-        "\(fileName): \(family.rawValue) has no variant \(variant.rawValue)"
-      )
-    }
-    guard let rule = condition.rule else { return nil }
-    guard case .enumeration(let declared)? = parameters[rule.parameter] else {
-      return ProtocolDescriptionProblem(
-        .invalidProtocolDescription,
-        "\(fileName): when names \(rule.parameter), which is not an enumeration parameter of "
-          + family.rawValue
-      )
-    }
-    for value in rule.values where !declared.contains(value) {
-      return ProtocolDescriptionProblem(
-        .invalidProtocolDescription,
-        "\(fileName): when names \(value), which \(rule.parameter) does not declare"
-      )
-    }
-    return nil
-  }
-
   /// The HID startup writes of `phase` that a controller on `variant` whose record sets
   /// `parameters` receives from this description.
   func startupWrites(
@@ -478,131 +505,6 @@ struct ProtocolDescription: Sendable {
     parameters: ProtocolParameters
   ) -> [USBStartupWrite] {
     usbStartupWrites.filter { $0.condition.matches(variant: variant, parameters: parameters) }
-  }
-
-  /// Why the defaults name something the family's driver does not read, or nil. The rule reads
-  /// only this description, so it holds while the bundle is still loading.
-  private var scopeViolation: String? {
-    if inputLayout != nil, !recordSections.contains(.input) {
-      return "an input layout applies only to a family that reads one"
-    }
-    if hidUsageMap != nil || !hidUsageShapes.isEmpty, family != .hidDescriptor {
-      return "a HID usage map applies only to HIDDescriptor"
-    }
-    if rumbleTemplate != nil || !variantRumble.isEmpty, !recordSections.contains(.rumble) {
-      return "rumble templates require a driver that encodes them"
-    }
-    if let violation = rumbleTargetViolation { return violation }
-    if keepAlive != nil,
-      ([rumbleTemplate].compactMap { $0 } + Array(variantRumble.values)).contains(where: {
-        $0.resendIntervalMilliseconds != nil
-      })
-    {
-      return RumbleOutputTemplate.resendWithFamilyKeepAliveProblem
-    }
-    if !startupWrites.isEmpty, rawUSB == .always {
-      return "HID startup writes apply only to HID controllers"
-    }
-    if family == .xboxXID, !startupWrites.isEmpty || !usbStartupWrites.isEmpty || keepAlive != nil {
-      return "XboxXID's session holds only a rumble template"
-    }
-    if let violation = keepAliveViolation { return violation }
-    if (subcommands != nil) != (family == .nintendoSwitch1) {
-      return "only NintendoSwitch1 has subcommands, and it must have them"
-    }
-    let isValve = [.valveSteamController, .valveSteamDeck, .valveSteamTriton].contains(family)
-    if activation.isEmpty == isValve || deactivation.isEmpty == isValve {
-      return "only the Valve families have activation and deactivation, and they must have them"
-    }
-    let sessionTransports: [PhysicalTransport] =
-      family == .valveSteamController ? [.usb, .bluetoothLE] : []
-    if (activation + deactivation).contains(where: {
-      $0.transport.map { !sessionTransports.contains($0) } ?? false
-    }) {
-      return "activation and deactivation name a transport only for ValveSteamController, "
-        + "and then USB or BluetoothLE"
-    }
-    if namedPackets != nil, family != .xboxGIP {
-      return "only XboxGIP has named packets"
-    }
-    if let namedPackets, !namedPackets.allIDs(startWith: "\(family.rawValue)/") {
-      return "each named packet id starts with \(family.rawValue)/"
-    }
-    if (handshakeAttempts != nil) != (family == .xboxGIP)
-      || (announceResendLimit != nil) != (family == .xboxGIP)
-    {
-      return "only XboxGIP has handshakeAttempts and announceResendLimit, and it must have them"
-    }
-    if (receiverInquiryResendLimit != nil) != (family == .xboxXUSB) {
-      return "only XboxXUSB has receiverInquiryResendLimit, and it must have it"
-    }
-    if (commandChannel != nil) != (family == .nintendoSwitch2)
-      || (trailingStopPackets != nil) != (family == .nintendoSwitch2)
-    {
-      return
-        "only NintendoSwitch2 has commandChannel and trailingStopPackets, and it must have them"
-    }
-    if rawUSB == .always, !tuningKeys.isEmpty {
-      return "a family that is always raw USB reads its tuning through rawUSBTuningKeys"
-    }
-    if rawUSB == .never, !rawUSBTuningKeys.isEmpty {
-      return "rawUSBTuningKeys apply only to a family with a raw-USB variant"
-    }
-    if let tuning {
-      let scope = tuningKeys.union(rawUSBTuningKeys).union(ControllerTuning.Key.alwaysRead)
-      for key in ControllerTuning.Key.allCases
-      where tuning.setKeys.contains(key) && !scope.contains(key) {
-        return "\(key) is not read by the \(family.rawValue) driver"
-      }
-    }
-    for (variant, tuning) in variantTuning.sorted(by: { $0.key.rawValue < $1.key.rawValue }) {
-      let scope = tuningScope(variant: variant)
-      for key in ControllerTuning.Key.allCases
-      where tuning.setKeys.contains(key) && !scope.contains(key) {
-        return "\(key) is not read by the \(family.rawValue):\(variant.rawValue) driver"
-      }
-    }
-    return nil
-  }
-
-  /// Why a rumble template targets a packet kind that its variants do not use, or nil: a raw-USB
-  /// variant's template is a usb packet and a HID variant's is a HID report. The flat template
-  /// is checked against each variant of the family that has no template of its own; a family
-  /// with no variants has the one unnamed variant.
-  private var rumbleTargetViolation: String? {
-    let mismatch =
-      "a raw-USB variant's rumble template is a usb packet, and a HID variant's is a HID report"
-    if let rumbleTemplate {
-      let flatVariants: [PhysicalProtocolVariantID?] =
-        variants.isEmpty ? [nil] : variants.map(Optional.some)
-      for variant in flatVariants where variant.map({ variantRumble[$0] == nil }) ?? true {
-        if (rumbleTemplate.report == nil) != rawUSB.applies(to: variant) { return mismatch }
-      }
-    }
-    for (variant, template) in variantRumble.sorted(by: { $0.key.rawValue < $1.key.rawValue })
-    where (template.report == nil) != rawUSB.applies(to: variant) {
-      return mismatch
-    }
-    return nil
-  }
-
-  /// Why the keep-alive names something the family's driver does not read, or nil.
-  private var keepAliveViolation: String? {
-    guard let keepAlive else { return nil }
-    let reads = tuningKeys.union(rawUSBTuningKeys)
-    for write in keepAlive.writes {
-      switch write.payload {
-      case .hid where rawUSB == .always:
-        return "a HID keep-alive write applies only to HID controllers"
-      case .usb where rawUSB == .never:
-        return "a raw-USB keep-alive write applies only to a family with a raw-USB variant"
-      default: break
-      }
-      if let key = write.resendTuning, !reads.contains(key) || tuning?.text(of: key) == nil {
-        return "resendTuning names \(key.rawValue), which the family must read and default"
-      }
-    }
-    return nil
   }
 
   /// The tuning keys a controller of this family and stored variant reads: the

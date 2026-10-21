@@ -14,6 +14,7 @@
           "in": 130,
           "out": 2
         },
+        "recordSections": ["hidUsageMap"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "defaults": {
           "input": {
@@ -51,6 +52,7 @@
           "in": 130,
           "out": 2
         },
+        "recordSections": ["hidUsageMap"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "defaults": {
           "input": {
@@ -86,6 +88,7 @@
           "in": 130,
           "out": 2
         },
+        "recordSections": ["hidUsageMap"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "defaults": {
           "input": {
@@ -133,6 +136,7 @@
           "in": 130,
           "out": 2
         },
+        "recordSections": ["hidUsageMap"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "defaults": {
           "input": {
@@ -178,6 +182,7 @@
           "in": 130,
           "out": 2
         },
+        "recordSections": ["hidUsageMap"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "defaults": {
           "input": {
@@ -200,6 +205,7 @@
           "in": 130,
           "out": 2
         },
+        "recordSections": ["hidUsageMap"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "defaults": {
           "input": {
@@ -226,6 +232,7 @@
           "in": 130,
           "out": 2
         },
+        "recordSections": ["hidUsageMap"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "defaults": {
           "input": {
@@ -262,6 +269,7 @@
           "in": 130,
           "out": 2
         },
+        "recordSections": ["hidUsageMap"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "defaults": {
           "input": {
@@ -304,6 +312,7 @@
           "in": 130,
           "out": 2
         },
+        "recordSections": ["hidUsageMap"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "defaults": {
           "input": {
@@ -335,6 +344,7 @@
           "in": 130,
           "out": 2
         },
+        "recordSections": ["hidUsageMap"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "defaults": {
           "input": {
@@ -372,7 +382,7 @@
       }
     },
     {
-      "name": "a document rule is reported before the file name: a duplicate signature",
+      "name": "a document rule is reported before the file name",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at interfaceSignatures: [{'variant': 'Wired', 'interfaceClass': 255, 'interfaceSubclass': 93, 'interfaceProtocol': 1}, {'variant': 'Wired', 'interfaceClass': 255, 'interfaceSubclass': 93, 'interfaceProtocol': 1}] has non-unique elements",
       "swift": "E5002: xbox-gip.json: interfaceSignatures names Wired/255/93/1/ twice",
@@ -410,11 +420,55 @@
       }
     },
     {
-      "name": "a document rule is reported before the file name: a parameter the family does not read",
+      "name": "a family specific session field of another family is refused: family=XboxXID, key=subcommands",
       "code": "E5002",
-      "python": "E5002: xbox-gip.json at parameters: 'layout' is not one of ['maker', 'unprobedSensors', 'unprobedTouchpad', 'forcedVibration', 'role']",
-      "swift": "E5002: xbox-gip.json: SonyDualSense reads no parameter(s) layout",
-      "fileName": "xbox-gip.json",
+      "python": "E5002: xbox-xid.json at defaults.session: 'rumble' was expected",
+      "swift": "E5002: xbox-xid.json: XboxXID does not read subcommands",
+      "fileName": "xbox-xid.json",
+      "document": {
+        "variants": ["Gamepad"],
+        "storesVariant": true,
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "XboxXID",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "rawUSB": true,
+        "recordSections": ["input", "rumble"],
+        "defaults": {
+          "session": {
+            "subcommands": {
+              "reportID": 1,
+              "counterModulus": 16,
+              "requests": [
+                {
+                  "subcommand": 3,
+                  "data": "30"
+                }
+              ],
+              "playerIndicator": {
+                "subcommand": 48,
+                "patterns": {
+                  "off": 0,
+                  "player1": 1,
+                  "player2": 3,
+                  "player3": 7,
+                  "player4": 15
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "a family specific session field of another family is refused: family=SonyDualSense, key=subcommands",
+      "code": "E5002",
+      "python": "E5002: sony-dualsense.json: defaults.session.subcommands: SonyDualSense does not read it",
+      "swift": "E5002: sony-dualsense.json: SonyDualSense does not read subcommands",
+      "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -424,18 +478,1365 @@
           "in": 130,
           "out": 2
         },
-        "parameters": {
-          "layout": {
-            "type": "Flag"
+        "defaults": {
+          "session": {
+            "subcommands": {
+              "reportID": 1,
+              "counterModulus": 16,
+              "requests": [
+                {
+                  "subcommand": 3,
+                  "data": "30"
+                }
+              ],
+              "playerIndicator": {
+                "subcommand": 48,
+                "patterns": {
+                  "off": 0,
+                  "player1": 1,
+                  "player2": 3,
+                  "player3": 7,
+                  "player4": 15
+                }
+              }
+            }
           }
         }
       }
     },
     {
-      "name": "activation transport is only one the driver reads: family=ValveSteamController, key=activation, transport=BluetoothClassic",
+      "name": "a family specific session field of another family is refused: family=NintendoSwitchInputOnly, key=subcommands",
       "code": "E5002",
-      "python": "E5002: valve-steam-controller.json at defaults.session.activation.0.transport: 'BluetoothClassic' is not one of ['USB', 'BluetoothLE']",
-      "swift": "E5002: valve-steam-controller.json: activation and deactivation name a transport only for ValveSteamController, and then USB or BluetoothLE",
+      "python": "E5002: nintendo-switch-input-only.json: defaults.session.subcommands: NintendoSwitchInputOnly does not read it",
+      "swift": "E5002: nintendo-switch-input-only.json: NintendoSwitchInputOnly does not read subcommands",
+      "fileName": "nintendo-switch-input-only.json",
+      "document": {
+        "variants": ["USB", "BluetoothClassic"],
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "NintendoSwitchInputOnly",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "defaults": {
+          "session": {
+            "subcommands": {
+              "reportID": 1,
+              "counterModulus": 16,
+              "requests": [
+                {
+                  "subcommand": 3,
+                  "data": "30"
+                }
+              ],
+              "playerIndicator": {
+                "subcommand": 48,
+                "patterns": {
+                  "off": 0,
+                  "player1": 1,
+                  "player2": 3,
+                  "player3": 7,
+                  "player4": 15
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "a family specific session field of another family is refused: family=another owner, key=subcommands",
+      "code": "E5002",
+      "python": "E5002: xbox-xusb.json: defaults.session.subcommands: XboxXUSB does not read it",
+      "swift": "E5002: xbox-xusb.json: XboxXUSB does not read subcommands",
+      "fileName": "xbox-xusb.json",
+      "document": {
+        "variants": ["Wired", "Receiver"],
+        "storesVariant": true,
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "XboxXUSB",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "rawUSB": true,
+        "defaults": {
+          "session": {
+            "receiverInquiryResendLimit": 8,
+            "subcommands": {
+              "reportID": 1,
+              "counterModulus": 16,
+              "requests": [
+                {
+                  "subcommand": 3,
+                  "data": "30"
+                }
+              ],
+              "playerIndicator": {
+                "subcommand": 48,
+                "patterns": {
+                  "off": 0,
+                  "player1": 1,
+                  "player2": 3,
+                  "player3": 7,
+                  "player4": 15
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "a family specific session field of another family is refused: family=XboxXID, key=namedPackets",
+      "code": "E5002",
+      "python": "E5002: xbox-xid.json at defaults.session: 'rumble' was expected",
+      "swift": "E5002: xbox-xid.json: XboxXID does not read namedPackets",
+      "fileName": "xbox-xid.json",
+      "document": {
+        "variants": ["Gamepad"],
+        "storesVariant": true,
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "XboxXID",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "rawUSB": true,
+        "recordSections": ["input", "rumble"],
+        "defaults": {
+          "session": {
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "a family specific session field of another family is refused: family=SonyDualSense, key=namedPackets",
+      "code": "E5002",
+      "python": "E5002: sony-dualsense.json: defaults.session.namedPackets: XboxGIP/power-on must start with SonyDualSense/",
+      "swift": "E5002: sony-dualsense.json: SonyDualSense does not read namedPackets",
+      "fileName": "sony-dualsense.json",
+      "document": {
+        "variants": ["USB", "BluetoothClassic"],
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "SonyDualSense",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "defaults": {
+          "session": {
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "a family specific session field of another family is refused: family=NintendoSwitchInputOnly, key=namedPackets",
+      "code": "E5002",
+      "python": "E5002: nintendo-switch-input-only.json: defaults.session.namedPackets: XboxGIP/power-on must start with NintendoSwitchInputOnly/",
+      "swift": "E5002: nintendo-switch-input-only.json: NintendoSwitchInputOnly does not read namedPackets",
+      "fileName": "nintendo-switch-input-only.json",
+      "document": {
+        "variants": ["USB", "BluetoothClassic"],
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "NintendoSwitchInputOnly",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "defaults": {
+          "session": {
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "a family specific session field of another family is refused: family=another owner, key=namedPackets",
+      "code": "E5002",
+      "python": "E5002: xbox-xusb.json: defaults.session.namedPackets: XboxGIP/power-on must start with XboxXUSB/",
+      "swift": "E5002: xbox-xusb.json: XboxXUSB does not read namedPackets",
+      "fileName": "xbox-xusb.json",
+      "document": {
+        "variants": ["Wired", "Receiver"],
+        "storesVariant": true,
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "XboxXUSB",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "rawUSB": true,
+        "defaults": {
+          "session": {
+            "receiverInquiryResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "a family specific session field of another family is refused: family=XboxXID, key=handshakeAttempts",
+      "code": "E5002",
+      "python": "E5002: xbox-xid.json at defaults.session: 'rumble' was expected",
+      "swift": "E5002: xbox-xid.json: XboxXID does not read handshakeAttempts",
+      "fileName": "xbox-xid.json",
+      "document": {
+        "variants": ["Gamepad"],
+        "storesVariant": true,
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "XboxXID",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "rawUSB": true,
+        "recordSections": ["input", "rumble"],
+        "defaults": {
+          "session": {
+            "handshakeAttempts": 3
+          }
+        }
+      }
+    },
+    {
+      "name": "a family specific session field of another family is refused: family=SonyDualSense, key=handshakeAttempts",
+      "code": "E5002",
+      "python": "E5002: sony-dualsense.json: defaults.session.handshakeAttempts: SonyDualSense does not read it",
+      "swift": "E5002: sony-dualsense.json: SonyDualSense does not read handshakeAttempts",
+      "fileName": "sony-dualsense.json",
+      "document": {
+        "variants": ["USB", "BluetoothClassic"],
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "SonyDualSense",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "defaults": {
+          "session": {
+            "handshakeAttempts": 3
+          }
+        }
+      }
+    },
+    {
+      "name": "a family specific session field of another family is refused: family=NintendoSwitchInputOnly, key=handshakeAttempts",
+      "code": "E5002",
+      "python": "E5002: nintendo-switch-input-only.json: defaults.session.handshakeAttempts: NintendoSwitchInputOnly does not read it",
+      "swift": "E5002: nintendo-switch-input-only.json: NintendoSwitchInputOnly does not read handshakeAttempts",
+      "fileName": "nintendo-switch-input-only.json",
+      "document": {
+        "variants": ["USB", "BluetoothClassic"],
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "NintendoSwitchInputOnly",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "defaults": {
+          "session": {
+            "handshakeAttempts": 3
+          }
+        }
+      }
+    },
+    {
+      "name": "a family specific session field of another family is refused: family=another owner, key=handshakeAttempts",
+      "code": "E5002",
+      "python": "E5002: xbox-xusb.json: defaults.session.handshakeAttempts: XboxXUSB does not read it",
+      "swift": "E5002: xbox-xusb.json: XboxXUSB does not read handshakeAttempts",
+      "fileName": "xbox-xusb.json",
+      "document": {
+        "variants": ["Wired", "Receiver"],
+        "storesVariant": true,
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "XboxXUSB",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "rawUSB": true,
+        "defaults": {
+          "session": {
+            "receiverInquiryResendLimit": 8,
+            "handshakeAttempts": 3
+          }
+        }
+      }
+    },
+    {
+      "name": "a family specific session field of another family is refused: family=XboxXID, key=announceResendLimit",
+      "code": "E5002",
+      "python": "E5002: xbox-xid.json at defaults.session: 'rumble' was expected",
+      "swift": "E5002: xbox-xid.json: XboxXID does not read announceResendLimit",
+      "fileName": "xbox-xid.json",
+      "document": {
+        "variants": ["Gamepad"],
+        "storesVariant": true,
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "XboxXID",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "rawUSB": true,
+        "recordSections": ["input", "rumble"],
+        "defaults": {
+          "session": {
+            "announceResendLimit": 8
+          }
+        }
+      }
+    },
+    {
+      "name": "a family specific session field of another family is refused: family=SonyDualSense, key=announceResendLimit",
+      "code": "E5002",
+      "python": "E5002: sony-dualsense.json: defaults.session.announceResendLimit: SonyDualSense does not read it",
+      "swift": "E5002: sony-dualsense.json: SonyDualSense does not read announceResendLimit",
+      "fileName": "sony-dualsense.json",
+      "document": {
+        "variants": ["USB", "BluetoothClassic"],
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "SonyDualSense",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "defaults": {
+          "session": {
+            "announceResendLimit": 8
+          }
+        }
+      }
+    },
+    {
+      "name": "a family specific session field of another family is refused: family=NintendoSwitchInputOnly, key=announceResendLimit",
+      "code": "E5002",
+      "python": "E5002: nintendo-switch-input-only.json: defaults.session.announceResendLimit: NintendoSwitchInputOnly does not read it",
+      "swift": "E5002: nintendo-switch-input-only.json: NintendoSwitchInputOnly does not read announceResendLimit",
+      "fileName": "nintendo-switch-input-only.json",
+      "document": {
+        "variants": ["USB", "BluetoothClassic"],
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "NintendoSwitchInputOnly",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "defaults": {
+          "session": {
+            "announceResendLimit": 8
+          }
+        }
+      }
+    },
+    {
+      "name": "a family specific session field of another family is refused: family=another owner, key=announceResendLimit",
+      "code": "E5002",
+      "python": "E5002: xbox-xusb.json: defaults.session.announceResendLimit: XboxXUSB does not read it",
+      "swift": "E5002: xbox-xusb.json: XboxXUSB does not read announceResendLimit",
+      "fileName": "xbox-xusb.json",
+      "document": {
+        "variants": ["Wired", "Receiver"],
+        "storesVariant": true,
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "XboxXUSB",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "rawUSB": true,
+        "defaults": {
+          "session": {
+            "receiverInquiryResendLimit": 8,
+            "announceResendLimit": 8
+          }
+        }
+      }
+    },
+    {
+      "name": "a family specific session field of another family is refused: family=XboxXID, key=receiverInquiryResendLimit",
+      "code": "E5002",
+      "python": "E5002: xbox-xid.json at defaults.session: 'rumble' was expected",
+      "swift": "E5002: xbox-xid.json: XboxXID does not read receiverInquiryResendLimit",
+      "fileName": "xbox-xid.json",
+      "document": {
+        "variants": ["Gamepad"],
+        "storesVariant": true,
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "XboxXID",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "rawUSB": true,
+        "recordSections": ["input", "rumble"],
+        "defaults": {
+          "session": {
+            "receiverInquiryResendLimit": 8
+          }
+        }
+      }
+    },
+    {
+      "name": "a family specific session field of another family is refused: family=SonyDualSense, key=receiverInquiryResendLimit",
+      "code": "E5002",
+      "python": "E5002: sony-dualsense.json: defaults.session.receiverInquiryResendLimit: SonyDualSense does not read it",
+      "swift": "E5002: sony-dualsense.json: SonyDualSense does not read receiverInquiryResendLimit",
+      "fileName": "sony-dualsense.json",
+      "document": {
+        "variants": ["USB", "BluetoothClassic"],
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "SonyDualSense",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "defaults": {
+          "session": {
+            "receiverInquiryResendLimit": 8
+          }
+        }
+      }
+    },
+    {
+      "name": "a family specific session field of another family is refused: family=NintendoSwitchInputOnly, key=receiverInquiryResendLimit",
+      "code": "E5002",
+      "python": "E5002: nintendo-switch-input-only.json: defaults.session.receiverInquiryResendLimit: NintendoSwitchInputOnly does not read it",
+      "swift": "E5002: nintendo-switch-input-only.json: NintendoSwitchInputOnly does not read receiverInquiryResendLimit",
+      "fileName": "nintendo-switch-input-only.json",
+      "document": {
+        "variants": ["USB", "BluetoothClassic"],
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "NintendoSwitchInputOnly",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "defaults": {
+          "session": {
+            "receiverInquiryResendLimit": 8
+          }
+        }
+      }
+    },
+    {
+      "name": "a family specific session field of another family is refused: family=another owner, key=receiverInquiryResendLimit",
+      "code": "E5002",
+      "python": "E5002: xbox-gip.json: defaults.session.receiverInquiryResendLimit: XboxGIP does not read it",
+      "swift": "E5002: xbox-gip.json: XboxGIP does not read receiverInquiryResendLimit",
+      "fileName": "xbox-gip.json",
+      "document": {
+        "variants": ["USB"],
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "XboxGIP",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "rawUSB": true,
+        "defaults": {
+          "session": {
+            "handshakeAttempts": 3,
+            "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ],
+            "receiverInquiryResendLimit": 8
+          }
+        }
+      }
+    },
+    {
+      "name": "a family specific session field of another family is refused: family=XboxXID, key=commandChannel",
+      "code": "E5002",
+      "python": "E5002: xbox-xid.json at defaults.session: 'rumble' was expected",
+      "swift": "E5002: xbox-xid.json: XboxXID does not read commandChannel",
+      "fileName": "xbox-xid.json",
+      "document": {
+        "variants": ["Gamepad"],
+        "storesVariant": true,
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "XboxXID",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "rawUSB": true,
+        "recordSections": ["input", "rumble"],
+        "defaults": {
+          "session": {
+            "commandChannel": {
+              "interface": 1,
+              "inEndpoint": 130,
+              "replyLength": 80,
+              "usbReplyTimeoutMilliseconds": 100,
+              "bluetoothLEReplyTimeoutMilliseconds": 500
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "a family specific session field of another family is refused: family=SonyDualSense, key=commandChannel",
+      "code": "E5002",
+      "python": "E5002: sony-dualsense.json: defaults.session.commandChannel: SonyDualSense does not read it",
+      "swift": "E5002: sony-dualsense.json: SonyDualSense does not read commandChannel",
+      "fileName": "sony-dualsense.json",
+      "document": {
+        "variants": ["USB", "BluetoothClassic"],
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "SonyDualSense",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "defaults": {
+          "session": {
+            "commandChannel": {
+              "interface": 1,
+              "inEndpoint": 130,
+              "replyLength": 80,
+              "usbReplyTimeoutMilliseconds": 100,
+              "bluetoothLEReplyTimeoutMilliseconds": 500
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "a family specific session field of another family is refused: family=NintendoSwitchInputOnly, key=commandChannel",
+      "code": "E5002",
+      "python": "E5002: nintendo-switch-input-only.json: defaults.session.commandChannel: NintendoSwitchInputOnly does not read it",
+      "swift": "E5002: nintendo-switch-input-only.json: NintendoSwitchInputOnly does not read commandChannel",
+      "fileName": "nintendo-switch-input-only.json",
+      "document": {
+        "variants": ["USB", "BluetoothClassic"],
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "NintendoSwitchInputOnly",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "defaults": {
+          "session": {
+            "commandChannel": {
+              "interface": 1,
+              "inEndpoint": 130,
+              "replyLength": 80,
+              "usbReplyTimeoutMilliseconds": 100,
+              "bluetoothLEReplyTimeoutMilliseconds": 500
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "a family specific session field of another family is refused: family=another owner, key=commandChannel",
+      "code": "E5002",
+      "python": "E5002: xbox-xusb.json: defaults.session.commandChannel: XboxXUSB does not read it",
+      "swift": "E5002: xbox-xusb.json: XboxXUSB does not read commandChannel",
+      "fileName": "xbox-xusb.json",
+      "document": {
+        "variants": ["Wired", "Receiver"],
+        "storesVariant": true,
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "XboxXUSB",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "rawUSB": true,
+        "defaults": {
+          "session": {
+            "receiverInquiryResendLimit": 8,
+            "commandChannel": {
+              "interface": 1,
+              "inEndpoint": 130,
+              "replyLength": 80,
+              "usbReplyTimeoutMilliseconds": 100,
+              "bluetoothLEReplyTimeoutMilliseconds": 500
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "a family specific session field of another family is refused: family=XboxXID, key=trailingStopPackets",
+      "code": "E5002",
+      "python": "E5002: xbox-xid.json at defaults.session: 'rumble' was expected",
+      "swift": "E5002: xbox-xid.json: XboxXID does not read trailingStopPackets",
+      "fileName": "xbox-xid.json",
+      "document": {
+        "variants": ["Gamepad"],
+        "storesVariant": true,
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "XboxXID",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "rawUSB": true,
+        "recordSections": ["input", "rumble"],
+        "defaults": {
+          "session": {
+            "trailingStopPackets": 2
+          }
+        }
+      }
+    },
+    {
+      "name": "a family specific session field of another family is refused: family=SonyDualSense, key=trailingStopPackets",
+      "code": "E5002",
+      "python": "E5002: sony-dualsense.json: defaults.session.trailingStopPackets: SonyDualSense does not read it",
+      "swift": "E5002: sony-dualsense.json: SonyDualSense does not read trailingStopPackets",
+      "fileName": "sony-dualsense.json",
+      "document": {
+        "variants": ["USB", "BluetoothClassic"],
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "SonyDualSense",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "defaults": {
+          "session": {
+            "trailingStopPackets": 2
+          }
+        }
+      }
+    },
+    {
+      "name": "a family specific session field of another family is refused: family=NintendoSwitchInputOnly, key=trailingStopPackets",
+      "code": "E5002",
+      "python": "E5002: nintendo-switch-input-only.json: defaults.session.trailingStopPackets: NintendoSwitchInputOnly does not read it",
+      "swift": "E5002: nintendo-switch-input-only.json: NintendoSwitchInputOnly does not read trailingStopPackets",
+      "fileName": "nintendo-switch-input-only.json",
+      "document": {
+        "variants": ["USB", "BluetoothClassic"],
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "NintendoSwitchInputOnly",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "defaults": {
+          "session": {
+            "trailingStopPackets": 2
+          }
+        }
+      }
+    },
+    {
+      "name": "a family specific session field of another family is refused: family=another owner, key=trailingStopPackets",
+      "code": "E5002",
+      "python": "E5002: xbox-xusb.json: defaults.session.trailingStopPackets: XboxXUSB does not read it",
+      "swift": "E5002: xbox-xusb.json: XboxXUSB does not read trailingStopPackets",
+      "fileName": "xbox-xusb.json",
+      "document": {
+        "variants": ["Wired", "Receiver"],
+        "storesVariant": true,
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "XboxXUSB",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "rawUSB": true,
+        "defaults": {
+          "session": {
+            "receiverInquiryResendLimit": 8,
+            "trailingStopPackets": 2
+          }
+        }
+      }
+    },
+    {
+      "name": "a family specific session field of another family is refused: family=XboxXID, key=activation",
+      "code": "E5002",
+      "python": "E5002: xbox-xid.json at defaults.session: 'rumble' was expected",
+      "swift": "E5002: xbox-xid.json: XboxXID does not read activation",
+      "fileName": "xbox-xid.json",
+      "document": {
+        "variants": ["Gamepad"],
+        "storesVariant": true,
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "XboxXID",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "rawUSB": true,
+        "recordSections": ["input", "rumble"],
+        "defaults": {
+          "session": {
+            "activation": [
+              {
+                "report": {
+                  "kind": "Feature",
+                  "id": 0,
+                  "length": 2
+                },
+                "bytes": "81 00"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "a family specific session field of another family is refused: family=SonyDualSense, key=activation",
+      "code": "E5002",
+      "python": "E5002: sony-dualsense.json: defaults.session.activation: SonyDualSense does not read it",
+      "swift": "E5002: sony-dualsense.json: SonyDualSense does not read activation",
+      "fileName": "sony-dualsense.json",
+      "document": {
+        "variants": ["USB", "BluetoothClassic"],
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "SonyDualSense",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "defaults": {
+          "session": {
+            "activation": [
+              {
+                "report": {
+                  "kind": "Feature",
+                  "id": 0,
+                  "length": 2
+                },
+                "bytes": "81 00"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "a family specific session field of another family is refused: family=NintendoSwitchInputOnly, key=activation",
+      "code": "E5002",
+      "python": "E5002: nintendo-switch-input-only.json: defaults.session.activation: NintendoSwitchInputOnly does not read it",
+      "swift": "E5002: nintendo-switch-input-only.json: NintendoSwitchInputOnly does not read activation",
+      "fileName": "nintendo-switch-input-only.json",
+      "document": {
+        "variants": ["USB", "BluetoothClassic"],
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "NintendoSwitchInputOnly",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "defaults": {
+          "session": {
+            "activation": [
+              {
+                "report": {
+                  "kind": "Feature",
+                  "id": 0,
+                  "length": 2
+                },
+                "bytes": "81 00"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "a family specific session field of another family is refused: family=another owner, key=activation",
+      "code": "E5002",
+      "python": "E5002: xbox-xusb.json: defaults.session.activation: XboxXUSB does not read it",
+      "swift": "E5002: xbox-xusb.json: XboxXUSB does not read activation",
+      "fileName": "xbox-xusb.json",
+      "document": {
+        "variants": ["Wired", "Receiver"],
+        "storesVariant": true,
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "XboxXUSB",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "rawUSB": true,
+        "defaults": {
+          "session": {
+            "receiverInquiryResendLimit": 8,
+            "activation": [
+              {
+                "report": {
+                  "kind": "Feature",
+                  "id": 0,
+                  "length": 2
+                },
+                "bytes": "81 00"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "a family specific session field of another family is refused: family=XboxXID, key=deactivation",
+      "code": "E5002",
+      "python": "E5002: xbox-xid.json at defaults.session: 'rumble' was expected",
+      "swift": "E5002: xbox-xid.json: XboxXID does not read deactivation",
+      "fileName": "xbox-xid.json",
+      "document": {
+        "variants": ["Gamepad"],
+        "storesVariant": true,
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "XboxXID",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "rawUSB": true,
+        "recordSections": ["input", "rumble"],
+        "defaults": {
+          "session": {
+            "deactivation": [
+              {
+                "report": {
+                  "kind": "Feature",
+                  "id": 0,
+                  "length": 2
+                },
+                "bytes": "85 00"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "a family specific session field of another family is refused: family=SonyDualSense, key=deactivation",
+      "code": "E5002",
+      "python": "E5002: sony-dualsense.json: defaults.session.deactivation: SonyDualSense does not read it",
+      "swift": "E5002: sony-dualsense.json: SonyDualSense does not read deactivation",
+      "fileName": "sony-dualsense.json",
+      "document": {
+        "variants": ["USB", "BluetoothClassic"],
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "SonyDualSense",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "defaults": {
+          "session": {
+            "deactivation": [
+              {
+                "report": {
+                  "kind": "Feature",
+                  "id": 0,
+                  "length": 2
+                },
+                "bytes": "85 00"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "a family specific session field of another family is refused: family=NintendoSwitchInputOnly, key=deactivation",
+      "code": "E5002",
+      "python": "E5002: nintendo-switch-input-only.json: defaults.session.deactivation: NintendoSwitchInputOnly does not read it",
+      "swift": "E5002: nintendo-switch-input-only.json: NintendoSwitchInputOnly does not read deactivation",
+      "fileName": "nintendo-switch-input-only.json",
+      "document": {
+        "variants": ["USB", "BluetoothClassic"],
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "NintendoSwitchInputOnly",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "defaults": {
+          "session": {
+            "deactivation": [
+              {
+                "report": {
+                  "kind": "Feature",
+                  "id": 0,
+                  "length": 2
+                },
+                "bytes": "85 00"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "a family specific session field of another family is refused: family=another owner, key=deactivation",
+      "code": "E5002",
+      "python": "E5002: xbox-xusb.json: defaults.session.deactivation: XboxXUSB does not read it",
+      "swift": "E5002: xbox-xusb.json: XboxXUSB does not read deactivation",
+      "fileName": "xbox-xusb.json",
+      "document": {
+        "variants": ["Wired", "Receiver"],
+        "storesVariant": true,
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "XboxXUSB",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "rawUSB": true,
+        "defaults": {
+          "session": {
+            "receiverInquiryResendLimit": 8,
+            "deactivation": [
+              {
+                "report": {
+                  "kind": "Feature",
+                  "id": 0,
+                  "length": 2
+                },
+                "bytes": "85 00"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "a session field the driver reads must be set: family=XboxGIP, key=announceResendLimit",
+      "code": "E5002",
+      "python": "E5002: xbox-gip.json: defaults.session.announceResendLimit: XboxGIP must set it",
+      "swift": "E5002: xbox-gip.json: XboxGIP must set announceResendLimit",
+      "fileName": "xbox-gip.json",
+      "document": {
+        "variants": ["USB"],
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "XboxGIP",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "rawUSB": true,
+        "defaults": {
+          "session": {
+            "handshakeAttempts": 3,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "a session field the driver reads must be set: family=XboxGIP, key=handshakeAttempts",
+      "code": "E5002",
+      "python": "E5002: xbox-gip.json: defaults.session.handshakeAttempts: XboxGIP must set it",
+      "swift": "E5002: xbox-gip.json: XboxGIP must set handshakeAttempts",
+      "fileName": "xbox-gip.json",
+      "document": {
+        "variants": ["USB"],
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "XboxGIP",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "rawUSB": true,
+        "defaults": {
+          "session": {
+            "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "a session field the driver reads must be set: family=XboxGIP, key=namedPackets",
+      "code": "E5002",
+      "python": "E5002: xbox-gip.json: defaults.session.namedPackets: XboxGIP must set it",
+      "swift": "E5002: xbox-gip.json: XboxGIP must set namedPackets",
+      "fileName": "xbox-gip.json",
+      "document": {
+        "variants": ["USB"],
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "XboxGIP",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "rawUSB": true,
+        "defaults": {
+          "session": {
+            "handshakeAttempts": 3,
+            "announceResendLimit": 8
+          }
+        }
+      }
+    },
+    {
+      "name": "a session field the driver reads must be set: family=XboxXUSB, key=receiverInquiryResendLimit",
+      "code": "E5002",
+      "python": "E5002: xbox-xusb.json at defaults.session: {} should be non-empty",
+      "swift": "E5002: xbox-xusb.json: description.defaults.session: session must not be empty",
+      "fileName": "xbox-xusb.json",
+      "document": {
+        "variants": ["Wired", "Receiver"],
+        "storesVariant": true,
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "XboxXUSB",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "rawUSB": true,
+        "defaults": {
+          "session": {}
+        }
+      }
+    },
+    {
+      "name": "a session field the driver reads must be set: family=NintendoSwitch2, key=commandChannel",
+      "code": "E5002",
+      "python": "E5002: nintendo-switch2.json: defaults.session.commandChannel: NintendoSwitch2 must set it",
+      "swift": "E5002: nintendo-switch2.json: NintendoSwitch2 must set commandChannel",
+      "fileName": "nintendo-switch2.json",
+      "document": {
+        "variants": ["USB", "BluetoothLE"],
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "NintendoSwitch2",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "defaults": {
+          "session": {
+            "trailingStopPackets": 2
+          }
+        }
+      }
+    },
+    {
+      "name": "a session field the driver reads must be set: family=NintendoSwitch2, key=trailingStopPackets",
+      "code": "E5002",
+      "python": "E5002: nintendo-switch2.json: defaults.session.trailingStopPackets: NintendoSwitch2 must set it",
+      "swift": "E5002: nintendo-switch2.json: NintendoSwitch2 must set trailingStopPackets",
+      "fileName": "nintendo-switch2.json",
+      "document": {
+        "variants": ["USB", "BluetoothLE"],
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "NintendoSwitch2",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "defaults": {
+          "session": {
+            "commandChannel": {
+              "interface": 1,
+              "inEndpoint": 130,
+              "replyLength": 80,
+              "usbReplyTimeoutMilliseconds": 100,
+              "bluetoothLEReplyTimeoutMilliseconds": 500
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "a session field the driver reads must be set: family=NintendoSwitch1, key=subcommands",
+      "code": "E5002",
+      "python": "E5002: nintendo-switch1.json at defaults.session: {} should be non-empty",
+      "swift": "E5002: nintendo-switch1.json: description.defaults.session: session must not be empty",
+      "fileName": "nintendo-switch1.json",
+      "document": {
+        "variants": ["USB", "BluetoothClassic"],
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "NintendoSwitch1",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "defaults": {
+          "session": {}
+        }
+      }
+    },
+    {
+      "name": "a session field the driver reads must be set: family=ValveSteamController, key=activation",
+      "code": "E5002",
+      "python": "E5002: valve-steam-controller.json: defaults.session.activation: ValveSteamController must set it",
+      "swift": "E5002: valve-steam-controller.json: ValveSteamController must set activation",
+      "fileName": "valve-steam-controller.json",
+      "document": {
+        "variants": ["Wired", "Dongle", "BluetoothLE"],
+        "storesVariant": true,
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "ValveSteamController",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "defaults": {
+          "session": {
+            "deactivation": [
+              {
+                "report": {
+                  "kind": "Feature",
+                  "id": 0,
+                  "length": 2
+                },
+                "bytes": "85 00"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "a session field the driver reads must be set: family=ValveSteamController, key=deactivation",
+      "code": "E5002",
+      "python": "E5002: valve-steam-controller.json: defaults.session.deactivation: ValveSteamController must set it",
+      "swift": "E5002: valve-steam-controller.json: ValveSteamController must set deactivation",
+      "fileName": "valve-steam-controller.json",
+      "document": {
+        "variants": ["Wired", "Dongle", "BluetoothLE"],
+        "storesVariant": true,
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "ValveSteamController",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "defaults": {
+          "session": {
+            "activation": [
+              {
+                "report": {
+                  "kind": "Feature",
+                  "id": 0,
+                  "length": 2
+                },
+                "bytes": "81 00"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "a session field the driver reads must be set: family=ValveSteamDeck, key=activation",
+      "code": "E5002",
+      "python": "E5002: valve-steam-deck.json: defaults.session.activation: ValveSteamDeck must set it",
+      "swift": "E5002: valve-steam-deck.json: ValveSteamDeck must set activation",
+      "fileName": "valve-steam-deck.json",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "ValveSteamDeck",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "defaults": {
+          "session": {
+            "deactivation": [
+              {
+                "report": {
+                  "kind": "Feature",
+                  "id": 0,
+                  "length": 2
+                },
+                "bytes": "85 00"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "a session field the driver reads must be set: family=ValveSteamDeck, key=deactivation",
+      "code": "E5002",
+      "python": "E5002: valve-steam-deck.json: defaults.session.deactivation: ValveSteamDeck must set it",
+      "swift": "E5002: valve-steam-deck.json: ValveSteamDeck must set deactivation",
+      "fileName": "valve-steam-deck.json",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "ValveSteamDeck",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "defaults": {
+          "session": {
+            "activation": [
+              {
+                "report": {
+                  "kind": "Feature",
+                  "id": 0,
+                  "length": 2
+                },
+                "bytes": "81 00"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "a session field the driver reads must be set: family=ValveSteamTriton, key=activation",
+      "code": "E5002",
+      "python": "E5002: valve-steam-triton.json: defaults.session.activation: ValveSteamTriton must set it",
+      "swift": "E5002: valve-steam-triton.json: ValveSteamTriton must set activation",
+      "fileName": "valve-steam-triton.json",
+      "document": {
+        "variants": ["Wired", "Dongle", "BluetoothLE"],
+        "storesVariant": true,
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "ValveSteamTriton",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "defaults": {
+          "session": {
+            "deactivation": [
+              {
+                "report": {
+                  "kind": "Feature",
+                  "id": 0,
+                  "length": 2
+                },
+                "bytes": "85 00"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "a session field the driver reads must be set: family=ValveSteamTriton, key=deactivation",
+      "code": "E5002",
+      "python": "E5002: valve-steam-triton.json: defaults.session.deactivation: ValveSteamTriton must set it",
+      "swift": "E5002: valve-steam-triton.json: ValveSteamTriton must set deactivation",
+      "fileName": "valve-steam-triton.json",
+      "document": {
+        "variants": ["Wired", "Dongle", "BluetoothLE"],
+        "storesVariant": true,
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "ValveSteamTriton",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "defaults": {
+          "session": {
+            "activation": [
+              {
+                "report": {
+                  "kind": "Feature",
+                  "id": 0,
+                  "length": 2
+                },
+                "bytes": "81 00"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "activation transport is only one writeTransports lists: family=ValveSteamController, key=activation, transport=BluetoothClassic",
+      "code": "E5002",
+      "python": "E5002: valve-steam-controller.json: defaults.session.activation[0]: transport BluetoothClassic is not one this family's driver reads",
+      "swift": "E5002: valve-steam-controller.json: activation and deactivation name only a transport writeTransports lists",
       "fileName": "valve-steam-controller.json",
       "document": {
         "variants": ["Wired", "Dongle", "BluetoothLE"],
@@ -471,14 +1872,15 @@
               }
             ]
           }
-        }
+        },
+        "writeTransports": ["USB", "BluetoothLE"]
       }
     },
     {
-      "name": "activation transport is only one the driver reads: family=ValveSteamController, key=deactivation, transport=BluetoothClassic",
+      "name": "activation transport is only one writeTransports lists: family=ValveSteamController, key=deactivation, transport=BluetoothClassic",
       "code": "E5002",
-      "python": "E5002: valve-steam-controller.json at defaults.session.deactivation.0.transport: 'BluetoothClassic' is not one of ['USB', 'BluetoothLE']",
-      "swift": "E5002: valve-steam-controller.json: activation and deactivation name a transport only for ValveSteamController, and then USB or BluetoothLE",
+      "python": "E5002: valve-steam-controller.json: defaults.session.deactivation[0]: transport BluetoothClassic is not one this family's driver reads",
+      "swift": "E5002: valve-steam-controller.json: activation and deactivation name only a transport writeTransports lists",
       "fileName": "valve-steam-controller.json",
       "document": {
         "variants": ["Wired", "Dongle", "BluetoothLE"],
@@ -514,14 +1916,15 @@
               }
             ]
           }
-        }
+        },
+        "writeTransports": ["USB", "BluetoothLE"]
       }
     },
     {
-      "name": "activation transport is only one the driver reads: family=ValveSteamDeck, key=activation, transport=USB",
+      "name": "activation transport is only one writeTransports lists: family=ValveSteamDeck, key=activation, transport=USB",
       "code": "E5002",
-      "python": "E5002: valve-steam-deck.json at defaults.session.activation.0: {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00', 'transport': 'USB'} should not be valid under {'required': ['transport']}",
-      "swift": "E5002: valve-steam-deck.json: activation and deactivation name a transport only for ValveSteamController, and then USB or BluetoothLE",
+      "python": "E5002: valve-steam-deck.json: defaults.session.activation[0]: transport USB is not one this family's driver reads",
+      "swift": "E5002: valve-steam-deck.json: activation and deactivation name only a transport writeTransports lists",
       "fileName": "valve-steam-deck.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -559,10 +1962,10 @@
       }
     },
     {
-      "name": "activation transport is only one the driver reads: family=ValveSteamDeck, key=deactivation, transport=USB",
+      "name": "activation transport is only one writeTransports lists: family=ValveSteamDeck, key=deactivation, transport=USB",
       "code": "E5002",
-      "python": "E5002: valve-steam-deck.json at defaults.session.deactivation.0: {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00', 'transport': 'USB'} should not be valid under {'required': ['transport']}",
-      "swift": "E5002: valve-steam-deck.json: activation and deactivation name a transport only for ValveSteamController, and then USB or BluetoothLE",
+      "python": "E5002: valve-steam-deck.json: defaults.session.deactivation[0]: transport USB is not one this family's driver reads",
+      "swift": "E5002: valve-steam-deck.json: activation and deactivation name only a transport writeTransports lists",
       "fileName": "valve-steam-deck.json",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
@@ -600,10 +2003,10 @@
       }
     },
     {
-      "name": "activation transport is only one the driver reads: family=ValveSteamTriton, key=activation, transport=BluetoothLE",
+      "name": "activation transport is only one writeTransports lists: family=ValveSteamTriton, key=activation, transport=BluetoothLE",
       "code": "E5002",
-      "python": "E5002: valve-steam-triton.json at defaults.session.activation.0: {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00', 'transport': 'BluetoothLE'} should not be valid under {'required': ['transport']}",
-      "swift": "E5002: valve-steam-triton.json: activation and deactivation name a transport only for ValveSteamController, and then USB or BluetoothLE",
+      "python": "E5002: valve-steam-triton.json: defaults.session.activation[0]: transport BluetoothLE is not one this family's driver reads",
+      "swift": "E5002: valve-steam-triton.json: activation and deactivation name only a transport writeTransports lists",
       "fileName": "valve-steam-triton.json",
       "document": {
         "variants": ["Wired", "Dongle", "BluetoothLE"],
@@ -643,10 +2046,10 @@
       }
     },
     {
-      "name": "activation transport is only one the driver reads: family=ValveSteamTriton, key=deactivation, transport=BluetoothLE",
+      "name": "activation transport is only one writeTransports lists: family=ValveSteamTriton, key=deactivation, transport=BluetoothLE",
       "code": "E5002",
-      "python": "E5002: valve-steam-triton.json at defaults.session.deactivation.0: {'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00', 'transport': 'BluetoothLE'} should not be valid under {'required': ['transport']}",
-      "swift": "E5002: valve-steam-triton.json: activation and deactivation name a transport only for ValveSteamController, and then USB or BluetoothLE",
+      "python": "E5002: valve-steam-triton.json: defaults.session.deactivation[0]: transport BluetoothLE is not one this family's driver reads",
+      "swift": "E5002: valve-steam-triton.json: activation and deactivation name only a transport writeTransports lists",
       "fileName": "valve-steam-triton.json",
       "document": {
         "variants": ["Wired", "Dongle", "BluetoothLE"],
@@ -4550,7 +5953,14 @@
         "defaults": {
           "session": {
             "handshakeAttempts": 3,
-            "announceResendLimit": 8
+            "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ]
           }
         }
       }
@@ -4582,7 +5992,14 @@
         "defaults": {
           "session": {
             "handshakeAttempts": 3,
-            "announceResendLimit": 8
+            "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ]
           }
         }
       }
@@ -4614,7 +6031,14 @@
         "defaults": {
           "session": {
             "handshakeAttempts": 3,
-            "announceResendLimit": 8
+            "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ]
           }
         }
       }
@@ -4646,7 +6070,14 @@
         "defaults": {
           "session": {
             "handshakeAttempts": 3,
-            "announceResendLimit": 8
+            "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ]
           }
         }
       }
@@ -4678,7 +6109,14 @@
         "defaults": {
           "session": {
             "handshakeAttempts": 3,
-            "announceResendLimit": 8
+            "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ]
           }
         }
       }
@@ -4710,7 +6148,14 @@
         "defaults": {
           "session": {
             "handshakeAttempts": 3,
-            "announceResendLimit": 8
+            "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ]
           }
         }
       }
@@ -4742,7 +6187,14 @@
         "defaults": {
           "session": {
             "handshakeAttempts": 3,
-            "announceResendLimit": 8
+            "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ]
           }
         }
       }
@@ -5142,6 +6594,7 @@
           "in": 130,
           "out": 2
         },
+        "recordSections": ["hidUsageMap"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "defaults": {
           "input": {
@@ -5482,6 +6935,7 @@
           "in": 130,
           "out": 2
         },
+        "recordSections": ["hidUsageMap"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "defaults": {
           "input": {
@@ -5822,6 +7276,7 @@
           "in": 130,
           "out": 2
         },
+        "recordSections": ["hidUsageMap"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "defaults": {
           "input": {
@@ -6162,6 +7617,7 @@
           "in": 130,
           "out": 2
         },
+        "recordSections": ["hidUsageMap"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "defaults": {
           "input": {
@@ -6724,6 +8180,12 @@
             "values": ["ChargingOnly"]
           }
         },
+        "parameterRules": [
+          {
+            "rule": "AtMostOne",
+            "parameters": ["layout", "usbProtocol"]
+          }
+        ],
         "defaults": {
           "session": {
             "rumble": {
@@ -6901,6 +8363,12 @@
             "values": ["ChargingOnly"]
           }
         },
+        "parameterRules": [
+          {
+            "rule": "AtMostOne",
+            "parameters": ["layout", "usbProtocol"]
+          }
+        ],
         "defaults": {
           "session": {
             "rumble": {
@@ -7078,6 +8546,12 @@
             "values": ["ChargingOnly"]
           }
         },
+        "parameterRules": [
+          {
+            "rule": "AtMostOne",
+            "parameters": ["layout", "usbProtocol"]
+          }
+        ],
         "defaults": {
           "session": {
             "rumble": {
@@ -7255,6 +8729,12 @@
             "values": ["ChargingOnly"]
           }
         },
+        "parameterRules": [
+          {
+            "rule": "AtMostOne",
+            "parameters": ["layout", "usbProtocol"]
+          }
+        ],
         "defaults": {
           "session": {
             "rumble": {
@@ -7415,6 +8895,7 @@
           "in": 130,
           "out": 2
         },
+        "recordSections": ["bluetoothLE"],
         "tuningKeys": [
           "hidStartupIntervalMs",
           "minimumHIDOutputIntervalMs",
@@ -7543,6 +9024,7 @@
           "in": 130,
           "out": 2
         },
+        "recordSections": ["bluetoothLE"],
         "tuningKeys": [
           "hidStartupIntervalMs",
           "minimumHIDOutputIntervalMs",
@@ -7671,6 +9153,7 @@
           "in": 130,
           "out": 2
         },
+        "recordSections": ["bluetoothLE"],
         "tuningKeys": [
           "hidStartupIntervalMs",
           "minimumHIDOutputIntervalMs",
@@ -7799,6 +9282,7 @@
           "in": 130,
           "out": 2
         },
+        "recordSections": ["bluetoothLE"],
         "tuningKeys": [
           "hidStartupIntervalMs",
           "minimumHIDOutputIntervalMs",
@@ -7951,6 +9435,12 @@
             "values": ["Receiver"]
           }
         },
+        "parameterRules": [
+          {
+            "rule": "Requires",
+            "parameters": ["maker"]
+          }
+        ],
         "controls": {
           "base": "Xbox",
           "add": ["Guide", "TouchpadClick", "Microphone"],
@@ -8008,6 +9498,12 @@
             "values": ["Receiver"]
           }
         },
+        "parameterRules": [
+          {
+            "rule": "Requires",
+            "parameters": ["maker"]
+          }
+        ],
         "controls": {
           "base": "Xbox",
           "add": ["Guide", "TouchpadClick", "Microphone"],
@@ -8065,6 +9561,12 @@
             "values": ["Receiver"]
           }
         },
+        "parameterRules": [
+          {
+            "rule": "Requires",
+            "parameters": ["maker"]
+          }
+        ],
         "controls": {
           "base": "Xbox",
           "add": ["Guide", "TouchpadClick", "Microphone"],
@@ -8122,6 +9624,12 @@
             "values": ["Receiver"]
           }
         },
+        "parameterRules": [
+          {
+            "rule": "Requires",
+            "parameters": ["maker"]
+          }
+        ],
         "controls": {
           "base": "Xbox",
           "add": ["Guide", "TouchpadClick", "Microphone"],
@@ -8179,6 +9687,12 @@
             "values": ["StrikePad"]
           }
         },
+        "parameterRules": [
+          {
+            "rule": "AtMostOne",
+            "parameters": ["role", "motionScale"]
+          }
+        ],
         "controls": {
           "base": "Xbox",
           "add": ["Guide", "TouchpadClick"],
@@ -8249,6 +9763,12 @@
             "values": ["StrikePad"]
           }
         },
+        "parameterRules": [
+          {
+            "rule": "AtMostOne",
+            "parameters": ["role", "motionScale"]
+          }
+        ],
         "controls": {
           "base": "Xbox",
           "add": ["Guide", "TouchpadClick"],
@@ -8319,6 +9839,12 @@
             "values": ["StrikePad"]
           }
         },
+        "parameterRules": [
+          {
+            "rule": "AtMostOne",
+            "parameters": ["role", "motionScale"]
+          }
+        ],
         "controls": {
           "base": "Xbox",
           "add": ["Guide", "TouchpadClick"],
@@ -8389,6 +9915,12 @@
             "values": ["StrikePad"]
           }
         },
+        "parameterRules": [
+          {
+            "rule": "AtMostOne",
+            "parameters": ["role", "motionScale"]
+          }
+        ],
         "controls": {
           "base": "Xbox",
           "add": ["Guide", "TouchpadClick"],
@@ -8604,6 +10136,7 @@
           "in": 130,
           "out": 2
         },
+        "writeTransports": ["USB", "BluetoothLE"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "controls": {
           "base": "Xbox",
@@ -8722,6 +10255,7 @@
           "in": 130,
           "out": 2
         },
+        "writeTransports": ["USB", "BluetoothLE"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "controls": {
           "base": "Xbox",
@@ -8840,6 +10374,7 @@
           "in": 130,
           "out": 2
         },
+        "writeTransports": ["USB", "BluetoothLE"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "controls": {
           "base": "Xbox",
@@ -8958,6 +10493,7 @@
           "in": 130,
           "out": 2
         },
+        "writeTransports": ["USB", "BluetoothLE"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "controls": {
           "base": "Xbox",
@@ -9972,6 +11508,17 @@
             "values": ["ProfileSlots"]
           }
         },
+        "parameterRules": [
+          {
+            "rule": "None",
+            "variants": ["USB"]
+          },
+          {
+            "rule": "ExactlyOne",
+            "parameters": ["innerGrips", "lightingMemory"],
+            "variants": ["EnhancedHID"]
+          }
+        ],
         "controls": {
           "base": "Xbox",
           "add": ["Guide", "LeftPaddle1", "RightPaddle1", "Auxiliary1"]
@@ -10082,6 +11629,17 @@
             "values": ["ProfileSlots"]
           }
         },
+        "parameterRules": [
+          {
+            "rule": "None",
+            "variants": ["USB"]
+          },
+          {
+            "rule": "ExactlyOne",
+            "parameters": ["innerGrips", "lightingMemory"],
+            "variants": ["EnhancedHID"]
+          }
+        ],
         "controls": {
           "base": "Xbox",
           "add": ["Guide", "LeftPaddle1", "RightPaddle1", "Auxiliary1"]
@@ -10192,6 +11750,17 @@
             "values": ["ProfileSlots"]
           }
         },
+        "parameterRules": [
+          {
+            "rule": "None",
+            "variants": ["USB"]
+          },
+          {
+            "rule": "ExactlyOne",
+            "parameters": ["innerGrips", "lightingMemory"],
+            "variants": ["EnhancedHID"]
+          }
+        ],
         "controls": {
           "base": "Xbox",
           "add": ["Guide", "LeftPaddle1", "RightPaddle1", "Auxiliary1"]
@@ -10302,6 +11871,17 @@
             "values": ["ProfileSlots"]
           }
         },
+        "parameterRules": [
+          {
+            "rule": "None",
+            "variants": ["USB"]
+          },
+          {
+            "rule": "ExactlyOne",
+            "parameters": ["innerGrips", "lightingMemory"],
+            "variants": ["EnhancedHID"]
+          }
+        ],
         "controls": {
           "base": "Xbox",
           "add": ["Guide", "LeftPaddle1", "RightPaddle1", "Auxiliary1"]
@@ -10728,6 +12308,7 @@
           "out": 2
         },
         "rawUSB": true,
+        "recordSections": ["keepAlive"],
         "interfaceSignatures": [
           {
             "variant": "USB",
@@ -10855,6 +12436,7 @@
           "out": 2
         },
         "rawUSB": true,
+        "recordSections": ["keepAlive"],
         "interfaceSignatures": [
           {
             "variant": "USB",
@@ -10982,6 +12564,7 @@
           "out": 2
         },
         "rawUSB": true,
+        "recordSections": ["keepAlive"],
         "interfaceSignatures": [
           {
             "variant": "USB",
@@ -11109,6 +12692,7 @@
           "out": 2
         },
         "rawUSB": true,
+        "recordSections": ["keepAlive"],
         "interfaceSignatures": [
           {
             "variant": "USB",
@@ -12293,10 +13877,10 @@
       }
     },
     {
-      "name": "only gip has named packets: family=SonyDualSense",
+      "name": "parameter rules name the family own variants and parameters",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at defaults.session: False schema does not allow [{'id': 'XboxGIP/power-on', 'bytes': '05 20 00 01 00', 'sessionByte': 2}]",
-      "swift": "E5002: sony-dualsense.json: only XboxGIP has named packets",
+      "python": "E5002: sony-dualsense.json: parameterRules names layout, which the description does not declare",
+      "swift": "E5002: sony-dualsense.json: parameterRules names layout, which the description does not declare",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -12307,161 +13891,29 @@
           "in": 130,
           "out": 2
         },
-        "defaults": {
-          "session": {
-            "namedPackets": [
-              {
-                "id": "XboxGIP/power-on",
-                "bytes": "05 20 00 01 00",
-                "sessionByte": 2
-              }
-            ]
+        "parameters": {
+          "maker": {
+            "type": "Enum",
+            "values": ["ThirdParty"]
+          },
+          "role": {
+            "type": "Enum",
+            "values": ["Receiver"]
           }
-        }
-      }
-    },
-    {
-      "name": "only gip has named packets: family=XboxXUSB",
-      "code": "E5002",
-      "python": "E5002: xbox-xusb.json at defaults.session: False schema does not allow [{'id': 'XboxGIP/power-on', 'bytes': '05 20 00 01 00', 'sessionByte': 2}]",
-      "swift": "E5002: xbox-xusb.json: only XboxGIP has named packets",
-      "fileName": "xbox-xusb.json",
-      "document": {
-        "variants": ["Wired", "Receiver"],
-        "storesVariant": true,
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "XboxXUSB",
-        "endpoints": {
-          "in": 130,
-          "out": 2
         },
-        "rawUSB": true,
-        "defaults": {
-          "session": {
-            "receiverInquiryResendLimit": 8,
-            "namedPackets": [
-              {
-                "id": "XboxGIP/power-on",
-                "bytes": "05 20 00 01 00",
-                "sessionByte": 2
-              }
-            ]
+        "parameterRules": [
+          {
+            "rule": "AtMostOne",
+            "parameters": ["maker", "layout"]
           }
-        }
+        ]
       }
     },
     {
-      "name": "only gip has named packets: family=XboxXID",
-      "code": "E5002",
-      "python": "E5002: xbox-xid.json at defaults.session: 'rumble' was expected",
-      "swift": "E5002: xbox-xid.json: only XboxGIP has named packets",
-      "fileName": "xbox-xid.json",
-      "document": {
-        "variants": ["Gamepad"],
-        "storesVariant": true,
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "XboxXID",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "rawUSB": true,
-        "recordSections": ["input", "rumble"],
-        "defaults": {
-          "session": {
-            "namedPackets": [
-              {
-                "id": "XboxGIP/power-on",
-                "bytes": "05 20 00 01 00",
-                "sessionByte": 2
-              }
-            ]
-          }
-        }
-      }
-    },
-    {
-      "name": "only gip has named packets: family=NintendoSwitch2",
-      "code": "E5002",
-      "python": "E5002: nintendo-switch2.json at defaults.session: False schema does not allow [{'id': 'XboxGIP/power-on', 'bytes': '05 20 00 01 00', 'sessionByte': 2}]",
-      "swift": "E5002: nintendo-switch2.json: only XboxGIP has named packets",
-      "fileName": "nintendo-switch2.json",
-      "document": {
-        "variants": ["USB", "BluetoothLE"],
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "NintendoSwitch2",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "defaults": {
-          "session": {
-            "commandChannel": {
-              "interface": 1,
-              "inEndpoint": 130,
-              "replyLength": 80,
-              "usbReplyTimeoutMilliseconds": 100,
-              "bluetoothLEReplyTimeoutMilliseconds": 500
-            },
-            "trailingStopPackets": 2,
-            "namedPackets": [
-              {
-                "id": "XboxGIP/power-on",
-                "bytes": "05 20 00 01 00",
-                "sessionByte": 2
-              }
-            ]
-          }
-        }
-      }
-    },
-    {
-      "name": "only switch 1 has subcommands and it must have them",
-      "code": "E5002",
-      "python": "E5002: nintendo-switch1.json: 'defaults' is a required property",
-      "swift": "E5002: nintendo-switch1.json: only NintendoSwitch1 has subcommands, and it must have them",
-      "fileName": "nintendo-switch1.json",
-      "document": {
-        "variants": ["USB", "BluetoothClassic"],
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "NintendoSwitch1",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        }
-      }
-    },
-    {
-      "name": "only switch 1 has subcommands and it must have them (2)",
-      "code": "E5002",
-      "python": "E5002: nintendo-switch1.json at defaults: 'session' is a required property",
-      "swift": "E5002: nintendo-switch1.json: only NintendoSwitch1 has subcommands, and it must have them",
-      "fileName": "nintendo-switch1.json",
-      "document": {
-        "variants": ["USB", "BluetoothClassic"],
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "NintendoSwitch1",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "defaults": {
-          "tuning": {
-            "stickDeadzone": 0.1
-          }
-        }
-      }
-    },
-    {
-      "name": "only switch 1 has subcommands and it must have them: family=SonyDualSense",
-      "code": "E5002",
-      "python": "E5002: sony-dualsense.json at defaults.session: False schema does not allow {'reportID': 1, 'counterModulus': 16, 'requests': [{'subcommand': 3, 'data': '30'}], 'playerIndicator': {'subcommand': 48, 'patterns': {'off': 0, 'player1': 1, 'player2': 3, 'player3': 7, 'player4': 15}}}",
-      "swift": "E5002: sony-dualsense.json: only NintendoSwitch1 has subcommands, and it must have them",
+      "name": "parameter rules name the family own variants and parameters (2)",
+      "code": "E5004",
+      "python": "E5004: sony-dualsense.json: parameterRules names Wired, which the family does not have",
+      "swift": "E5004: sony-dualsense.json: SonyDualSense has no variant Wired",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -12472,166 +13924,30 @@
           "in": 130,
           "out": 2
         },
-        "defaults": {
-          "session": {
-            "subcommands": {
-              "reportID": 1,
-              "counterModulus": 16,
-              "requests": [
-                {
-                  "subcommand": 3,
-                  "data": "30"
-                }
-              ],
-              "playerIndicator": {
-                "subcommand": 48,
-                "patterns": {
-                  "off": 0,
-                  "player1": 1,
-                  "player2": 3,
-                  "player3": 7,
-                  "player4": 15
-                }
-              }
-            }
+        "parameters": {
+          "maker": {
+            "type": "Enum",
+            "values": ["ThirdParty"]
+          },
+          "role": {
+            "type": "Enum",
+            "values": ["Receiver"]
           }
-        }
-      }
-    },
-    {
-      "name": "only switch 1 has subcommands and it must have them: family=XboxGIP",
-      "code": "E5002",
-      "python": "E5002: xbox-gip.json at defaults.session: False schema does not allow {'reportID': 1, 'counterModulus': 16, 'requests': [{'subcommand': 3, 'data': '30'}], 'playerIndicator': {'subcommand': 48, 'patterns': {'off': 0, 'player1': 1, 'player2': 3, 'player3': 7, 'player4': 15}}}",
-      "swift": "E5002: xbox-gip.json: only NintendoSwitch1 has subcommands, and it must have them",
-      "fileName": "xbox-gip.json",
-      "document": {
-        "variants": ["USB"],
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "XboxGIP",
-        "endpoints": {
-          "in": 130,
-          "out": 2
         },
-        "rawUSB": true,
-        "defaults": {
-          "session": {
-            "handshakeAttempts": 3,
-            "announceResendLimit": 8,
-            "subcommands": {
-              "reportID": 1,
-              "counterModulus": 16,
-              "requests": [
-                {
-                  "subcommand": 3,
-                  "data": "30"
-                }
-              ],
-              "playerIndicator": {
-                "subcommand": 48,
-                "patterns": {
-                  "off": 0,
-                  "player1": 1,
-                  "player2": 3,
-                  "player3": 7,
-                  "player4": 15
-                }
-              }
-            }
+        "parameterRules": [
+          {
+            "rule": "AtMostOne",
+            "parameters": ["maker", "role"],
+            "variants": ["Wired"]
           }
-        }
+        ]
       }
     },
     {
-      "name": "only switch 1 has subcommands and it must have them: family=XboxXID",
+      "name": "parameter rules name the family own variants and parameters: rule={'rule': 'None', 'parameters': ['maker']}",
       "code": "E5002",
-      "python": "E5002: xbox-xid.json at defaults.session: 'rumble' was expected",
-      "swift": "E5002: xbox-xid.json: only NintendoSwitch1 has subcommands, and it must have them",
-      "fileName": "xbox-xid.json",
-      "document": {
-        "variants": ["Gamepad"],
-        "storesVariant": true,
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "XboxXID",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "rawUSB": true,
-        "recordSections": ["input", "rumble"],
-        "defaults": {
-          "session": {
-            "subcommands": {
-              "reportID": 1,
-              "counterModulus": 16,
-              "requests": [
-                {
-                  "subcommand": 3,
-                  "data": "30"
-                }
-              ],
-              "playerIndicator": {
-                "subcommand": 48,
-                "patterns": {
-                  "off": 0,
-                  "player1": 1,
-                  "player2": 3,
-                  "player3": 7,
-                  "player4": 15
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    {
-      "name": "only switch 1 has subcommands and it must have them: family=HIDReportLayout",
-      "code": "E5002",
-      "python": "E5002: hid-report-layout.json at defaults.session: False schema does not allow {'reportID': 1, 'counterModulus': 16, 'requests': [{'subcommand': 3, 'data': '30'}], 'playerIndicator': {'subcommand': 48, 'patterns': {'off': 0, 'player1': 1, 'player2': 3, 'player3': 7, 'player4': 15}}}",
-      "swift": "E5002: hid-report-layout.json: only NintendoSwitch1 has subcommands, and it must have them",
-      "fileName": "hid-report-layout.json",
-      "document": {
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "HIDReportLayout",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "recordSections": ["input", "rumble"],
-        "defaults": {
-          "session": {
-            "subcommands": {
-              "reportID": 1,
-              "counterModulus": 16,
-              "requests": [
-                {
-                  "subcommand": 3,
-                  "data": "30"
-                }
-              ],
-              "playerIndicator": {
-                "subcommand": 48,
-                "patterns": {
-                  "off": 0,
-                  "player1": 1,
-                  "player2": 3,
-                  "player3": 7,
-                  "player4": 15
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    {
-      "name": "only the valve families have activation and they must have it: family=SonyDualSense, key=activation",
-      "code": "E5002",
-      "python": "E5002: sony-dualsense.json at defaults.session: False schema does not allow [{'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}]",
-      "swift": "E5002: sony-dualsense.json: only the Valve families have activation and deactivation, and they must have them",
+      "python": "E5002: sony-dualsense.json at parameterRules.0: {'rule': 'None', 'parameters': ['maker']} should not be valid under {'required': ['parameters']}",
+      "swift": "E5002: sony-dualsense.json: description.parameterRules.[0]: a parameter rule has a known kind, unique parameters (none for None) and unique variants",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -12642,27 +13958,29 @@
           "in": 130,
           "out": 2
         },
-        "defaults": {
-          "session": {
-            "activation": [
-              {
-                "report": {
-                  "kind": "Feature",
-                  "id": 0,
-                  "length": 2
-                },
-                "bytes": "81 00"
-              }
-            ]
+        "parameters": {
+          "maker": {
+            "type": "Enum",
+            "values": ["ThirdParty"]
+          },
+          "role": {
+            "type": "Enum",
+            "values": ["Receiver"]
           }
-        }
+        },
+        "parameterRules": [
+          {
+            "rule": "None",
+            "parameters": ["maker"]
+          }
+        ]
       }
     },
     {
-      "name": "only the valve families have activation and they must have it: family=SonyDualSense, key=deactivation",
+      "name": "parameter rules name the family own variants and parameters: rule={'rule': 'AtMostOne'}",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at defaults.session: False schema does not allow [{'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}]",
-      "swift": "E5002: sony-dualsense.json: only the Valve families have activation and deactivation, and they must have them",
+      "python": "E5002: sony-dualsense.json at parameterRules.0: 'parameters' is a required property",
+      "swift": "E5002: sony-dualsense.json: description.parameterRules.[0]: a parameter rule has a known kind, unique parameters (none for None) and unique variants",
       "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
@@ -12673,458 +13991,54 @@
           "in": 130,
           "out": 2
         },
-        "defaults": {
-          "session": {
-            "deactivation": [
-              {
-                "report": {
-                  "kind": "Feature",
-                  "id": 0,
-                  "length": 2
-                },
-                "bytes": "81 00"
-              }
-            ]
+        "parameters": {
+          "maker": {
+            "type": "Enum",
+            "values": ["ThirdParty"]
+          },
+          "role": {
+            "type": "Enum",
+            "values": ["Receiver"]
           }
-        }
-      }
-    },
-    {
-      "name": "only the valve families have activation and they must have it: family=XboxGIP, key=activation",
-      "code": "E5002",
-      "python": "E5002: xbox-gip.json at defaults.session: False schema does not allow [{'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}]",
-      "swift": "E5002: xbox-gip.json: only the Valve families have activation and deactivation, and they must have them",
-      "fileName": "xbox-gip.json",
-      "document": {
-        "variants": ["USB"],
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "XboxGIP",
-        "endpoints": {
-          "in": 130,
-          "out": 2
         },
-        "rawUSB": true,
-        "defaults": {
-          "session": {
-            "handshakeAttempts": 3,
-            "announceResendLimit": 8,
-            "activation": [
-              {
-                "report": {
-                  "kind": "Feature",
-                  "id": 0,
-                  "length": 2
-                },
-                "bytes": "81 00"
-              }
-            ]
+        "parameterRules": [
+          {
+            "rule": "AtMostOne"
           }
-        }
+        ]
       }
     },
     {
-      "name": "only the valve families have activation and they must have it: family=XboxGIP, key=deactivation",
+      "name": "parameter rules name the family own variants and parameters: rule={'rule': 'Sometimes', 'parameters': ['maker']}",
       "code": "E5002",
-      "python": "E5002: xbox-gip.json at defaults.session: False schema does not allow [{'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}]",
-      "swift": "E5002: xbox-gip.json: only the Valve families have activation and deactivation, and they must have them",
-      "fileName": "xbox-gip.json",
-      "document": {
-        "variants": ["USB"],
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "XboxGIP",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "rawUSB": true,
-        "defaults": {
-          "session": {
-            "handshakeAttempts": 3,
-            "announceResendLimit": 8,
-            "deactivation": [
-              {
-                "report": {
-                  "kind": "Feature",
-                  "id": 0,
-                  "length": 2
-                },
-                "bytes": "81 00"
-              }
-            ]
-          }
-        }
-      }
-    },
-    {
-      "name": "only the valve families have activation and they must have it: family=XboxXUSB, key=activation",
-      "code": "E5002",
-      "python": "E5002: xbox-xusb.json at defaults.session: False schema does not allow [{'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}]",
-      "swift": "E5002: xbox-xusb.json: only the Valve families have activation and deactivation, and they must have them",
-      "fileName": "xbox-xusb.json",
-      "document": {
-        "variants": ["Wired", "Receiver"],
-        "storesVariant": true,
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "XboxXUSB",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "rawUSB": true,
-        "defaults": {
-          "session": {
-            "receiverInquiryResendLimit": 8,
-            "activation": [
-              {
-                "report": {
-                  "kind": "Feature",
-                  "id": 0,
-                  "length": 2
-                },
-                "bytes": "81 00"
-              }
-            ]
-          }
-        }
-      }
-    },
-    {
-      "name": "only the valve families have activation and they must have it: family=XboxXUSB, key=deactivation",
-      "code": "E5002",
-      "python": "E5002: xbox-xusb.json at defaults.session: False schema does not allow [{'report': {'kind': 'Feature', 'id': 0, 'length': 2}, 'bytes': '81 00'}]",
-      "swift": "E5002: xbox-xusb.json: only the Valve families have activation and deactivation, and they must have them",
-      "fileName": "xbox-xusb.json",
-      "document": {
-        "variants": ["Wired", "Receiver"],
-        "storesVariant": true,
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "XboxXUSB",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "rawUSB": true,
-        "defaults": {
-          "session": {
-            "receiverInquiryResendLimit": 8,
-            "deactivation": [
-              {
-                "report": {
-                  "kind": "Feature",
-                  "id": 0,
-                  "length": 2
-                },
-                "bytes": "81 00"
-              }
-            ]
-          }
-        }
-      }
-    },
-    {
-      "name": "only the valve families have activation and they must have it: family=NintendoSwitch1, key=activation",
-      "code": "E5002",
-      "python": "E5002: nintendo-switch1.json at defaults.session: 'subcommands' is a required property",
-      "swift": "E5002: nintendo-switch1.json: only NintendoSwitch1 has subcommands, and it must have them",
-      "fileName": "nintendo-switch1.json",
+      "python": "E5002: sony-dualsense.json at parameterRules.0.rule: 'Sometimes' is not one of ['None', 'AtMostOne', 'ExactlyOne', 'Requires']",
+      "swift": "E5002: sony-dualsense.json: description.parameterRules.[0]: a parameter rule has a known kind, unique parameters (none for None) and unique variants",
+      "fileName": "sony-dualsense.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
-        "family": "NintendoSwitch1",
+        "family": "SonyDualSense",
         "endpoints": {
           "in": 130,
           "out": 2
         },
-        "defaults": {
-          "session": {
-            "activation": [
-              {
-                "report": {
-                  "kind": "Feature",
-                  "id": 0,
-                  "length": 2
-                },
-                "bytes": "81 00"
-              }
-            ]
+        "parameters": {
+          "maker": {
+            "type": "Enum",
+            "values": ["ThirdParty"]
+          },
+          "role": {
+            "type": "Enum",
+            "values": ["Receiver"]
           }
-        }
-      }
-    },
-    {
-      "name": "only the valve families have activation and they must have it: family=NintendoSwitch1, key=deactivation",
-      "code": "E5002",
-      "python": "E5002: nintendo-switch1.json at defaults.session: 'subcommands' is a required property",
-      "swift": "E5002: nintendo-switch1.json: only NintendoSwitch1 has subcommands, and it must have them",
-      "fileName": "nintendo-switch1.json",
-      "document": {
-        "variants": ["USB", "BluetoothClassic"],
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "NintendoSwitch1",
-        "endpoints": {
-          "in": 130,
-          "out": 2
         },
-        "defaults": {
-          "session": {
-            "deactivation": [
-              {
-                "report": {
-                  "kind": "Feature",
-                  "id": 0,
-                  "length": 2
-                },
-                "bytes": "81 00"
-              }
-            ]
+        "parameterRules": [
+          {
+            "rule": "Sometimes",
+            "parameters": ["maker"]
           }
-        }
-      }
-    },
-    {
-      "name": "only the valve families have activation and they must have it: family=ValveSteamController, missing=activation",
-      "code": "E5002",
-      "python": "E5002: valve-steam-controller.json at defaults.session: 'activation' is a required property",
-      "swift": "E5002: valve-steam-controller.json: only the Valve families have activation and deactivation, and they must have them",
-      "fileName": "valve-steam-controller.json",
-      "document": {
-        "variants": ["Wired", "Dongle", "BluetoothLE"],
-        "storesVariant": true,
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "ValveSteamController",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "defaults": {
-          "session": {
-            "deactivation": [
-              {
-                "report": {
-                  "kind": "Feature",
-                  "id": 0,
-                  "length": 2
-                },
-                "bytes": "85 00"
-              }
-            ]
-          }
-        }
-      }
-    },
-    {
-      "name": "only the valve families have activation and they must have it: family=ValveSteamController, missing=deactivation",
-      "code": "E5002",
-      "python": "E5002: valve-steam-controller.json at defaults.session: 'deactivation' is a required property",
-      "swift": "E5002: valve-steam-controller.json: only the Valve families have activation and deactivation, and they must have them",
-      "fileName": "valve-steam-controller.json",
-      "document": {
-        "variants": ["Wired", "Dongle", "BluetoothLE"],
-        "storesVariant": true,
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "ValveSteamController",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "defaults": {
-          "session": {
-            "activation": [
-              {
-                "report": {
-                  "kind": "Feature",
-                  "id": 0,
-                  "length": 2
-                },
-                "bytes": "81 00"
-              }
-            ]
-          }
-        }
-      }
-    },
-    {
-      "name": "only the valve families have activation and they must have it: family=ValveSteamController, missing=defaults",
-      "code": "E5002",
-      "python": "E5002: valve-steam-controller.json: 'defaults' is a required property",
-      "swift": "E5002: valve-steam-controller.json: only the Valve families have activation and deactivation, and they must have them",
-      "fileName": "valve-steam-controller.json",
-      "document": {
-        "variants": ["Wired", "Dongle", "BluetoothLE"],
-        "storesVariant": true,
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "ValveSteamController",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        }
-      }
-    },
-    {
-      "name": "only the valve families have activation and they must have it: family=ValveSteamDeck, missing=activation",
-      "code": "E5002",
-      "python": "E5002: valve-steam-deck.json at defaults.session: 'activation' is a required property",
-      "swift": "E5002: valve-steam-deck.json: only the Valve families have activation and deactivation, and they must have them",
-      "fileName": "valve-steam-deck.json",
-      "document": {
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "ValveSteamDeck",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "defaults": {
-          "session": {
-            "deactivation": [
-              {
-                "report": {
-                  "kind": "Feature",
-                  "id": 0,
-                  "length": 2
-                },
-                "bytes": "85 00"
-              }
-            ]
-          }
-        }
-      }
-    },
-    {
-      "name": "only the valve families have activation and they must have it: family=ValveSteamDeck, missing=deactivation",
-      "code": "E5002",
-      "python": "E5002: valve-steam-deck.json at defaults.session: 'deactivation' is a required property",
-      "swift": "E5002: valve-steam-deck.json: only the Valve families have activation and deactivation, and they must have them",
-      "fileName": "valve-steam-deck.json",
-      "document": {
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "ValveSteamDeck",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "defaults": {
-          "session": {
-            "activation": [
-              {
-                "report": {
-                  "kind": "Feature",
-                  "id": 0,
-                  "length": 2
-                },
-                "bytes": "81 00"
-              }
-            ]
-          }
-        }
-      }
-    },
-    {
-      "name": "only the valve families have activation and they must have it: family=ValveSteamDeck, missing=defaults",
-      "code": "E5002",
-      "python": "E5002: valve-steam-deck.json: 'defaults' is a required property",
-      "swift": "E5002: valve-steam-deck.json: only the Valve families have activation and deactivation, and they must have them",
-      "fileName": "valve-steam-deck.json",
-      "document": {
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "ValveSteamDeck",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        }
-      }
-    },
-    {
-      "name": "only the valve families have activation and they must have it: family=ValveSteamTriton, missing=activation",
-      "code": "E5002",
-      "python": "E5002: valve-steam-triton.json at defaults.session: 'activation' is a required property",
-      "swift": "E5002: valve-steam-triton.json: only the Valve families have activation and deactivation, and they must have them",
-      "fileName": "valve-steam-triton.json",
-      "document": {
-        "variants": ["Wired", "Dongle", "BluetoothLE"],
-        "storesVariant": true,
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "ValveSteamTriton",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "defaults": {
-          "session": {
-            "deactivation": [
-              {
-                "report": {
-                  "kind": "Feature",
-                  "id": 0,
-                  "length": 2
-                },
-                "bytes": "85 00"
-              }
-            ]
-          }
-        }
-      }
-    },
-    {
-      "name": "only the valve families have activation and they must have it: family=ValveSteamTriton, missing=deactivation",
-      "code": "E5002",
-      "python": "E5002: valve-steam-triton.json at defaults.session: 'deactivation' is a required property",
-      "swift": "E5002: valve-steam-triton.json: only the Valve families have activation and deactivation, and they must have them",
-      "fileName": "valve-steam-triton.json",
-      "document": {
-        "variants": ["Wired", "Dongle", "BluetoothLE"],
-        "storesVariant": true,
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "ValveSteamTriton",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "defaults": {
-          "session": {
-            "activation": [
-              {
-                "report": {
-                  "kind": "Feature",
-                  "id": 0,
-                  "length": 2
-                },
-                "bytes": "81 00"
-              }
-            ]
-          }
-        }
-      }
-    },
-    {
-      "name": "only the valve families have activation and they must have it: family=ValveSteamTriton, missing=defaults",
-      "code": "E5002",
-      "python": "E5002: valve-steam-triton.json: 'defaults' is a required property",
-      "swift": "E5002: valve-steam-triton.json: only the Valve families have activation and deactivation, and they must have them",
-      "fileName": "valve-steam-triton.json",
-      "document": {
-        "variants": ["Wired", "Dongle", "BluetoothLE"],
-        "storesVariant": true,
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "ValveSteamTriton",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        }
+        ]
       }
     },
     {
@@ -13683,6 +14597,13 @@
           "session": {
             "handshakeAttempts": 3,
             "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ],
             "keepAlive": {
               "intervalMilliseconds": 500,
               "writes": [
@@ -13749,6 +14670,13 @@
           "session": {
             "handshakeAttempts": 3,
             "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ],
             "keepAlive": {
               "intervalMilliseconds": 500,
               "writes": [
@@ -14007,7 +14935,7 @@
     {
       "name": "rejects a parameter the family does not declare",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at parameters: 'x' is not one of ['maker', 'unprobedSensors', 'unprobedTouchpad', 'forcedVibration', 'role']",
+      "python": "E5002: sony-dualsense.json at parameters: 'x' is not one of ['shareButton', 'layout', 'usbProtocol', 'innerGrips', 'lightingMemory', 'hatSource', 'motionCalibration', 'role', 'motionScale', 'reportRevision', 'maker', 'unprobedSensors', 'unprobedTouchpad', 'forcedVibration']",
       "swift": "E5002: sony-dualsense.json: description.parameters: no driver reads parameter(s): x",
       "fileName": "sony-dualsense.json",
       "document": {
@@ -14029,7 +14957,25 @@
     {
       "name": "rejects a parameter the family does not declare (2)",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at parameters: 'layout' is not one of ['maker', 'unprobedSensors', 'unprobedTouchpad', 'forcedVibration', 'role']",
+      "python": "E5002: sony-dualsense.json at parameters: {} should be non-empty",
+      "swift": "E5002: sony-dualsense.json: description.parameters: parameters must not be empty",
+      "fileName": "sony-dualsense.json",
+      "document": {
+        "variants": ["USB", "BluetoothClassic"],
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "SonyDualSense",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "parameters": {}
+      }
+    },
+    {
+      "name": "rejects a parameter the family does not declare: family=SonyDualSense, name=layout",
+      "code": "E5002",
+      "python": "E5002: sony-dualsense.json: parameters.layout: SonyDualSense does not read it",
       "swift": "E5002: sony-dualsense.json: SonyDualSense reads no parameter(s) layout",
       "fileName": "sony-dualsense.json",
       "document": {
@@ -14049,9 +14995,45 @@
       }
     },
     {
-      "name": "rejects a parameter the family does not declare (3)",
+      "name": "rejects a parameter the family does not declare: family=XboxGIP, name=maker",
       "code": "E5002",
-      "python": "E5002: xbox-xid.json: False schema does not allow {'layout': {'type': 'Flag'}}",
+      "python": "E5002: xbox-gip.json: parameters.maker: XboxGIP does not read it",
+      "swift": "E5002: xbox-gip.json: XboxGIP reads no parameter(s) maker",
+      "fileName": "xbox-gip.json",
+      "document": {
+        "variants": ["USB"],
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "XboxGIP",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "rawUSB": true,
+        "parameters": {
+          "maker": {
+            "type": "Flag"
+          }
+        },
+        "defaults": {
+          "session": {
+            "handshakeAttempts": 3,
+            "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects a parameter the family does not declare: family=XboxXID, name=layout",
+      "code": "E5002",
+      "python": "E5002: xbox-xid.json: parameters.layout: XboxXID does not read it",
       "swift": "E5002: xbox-xid.json: XboxXID reads no parameter(s) layout",
       "fileName": "xbox-xid.json",
       "document": {
@@ -14074,21 +15056,37 @@
       }
     },
     {
-      "name": "rejects a parameter the family does not declare (4)",
+      "name": "rejects a parameter the family does not declare: family=NintendoSwitch2, name=usbProtocol",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at parameters: {} should be non-empty",
-      "swift": "E5002: sony-dualsense.json: description.parameters: parameters must not be empty",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: nintendo-switch2.json: parameters.usbProtocol: NintendoSwitch2 does not read it",
+      "swift": "E5002: nintendo-switch2.json: NintendoSwitch2 reads no parameter(s) usbProtocol",
+      "fileName": "nintendo-switch2.json",
       "document": {
-        "variants": ["USB", "BluetoothClassic"],
+        "variants": ["USB", "BluetoothLE"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
-        "family": "SonyDualSense",
+        "family": "NintendoSwitch2",
         "endpoints": {
           "in": 130,
           "out": 2
         },
-        "parameters": {}
+        "parameters": {
+          "usbProtocol": {
+            "type": "Flag"
+          }
+        },
+        "defaults": {
+          "session": {
+            "commandChannel": {
+              "interface": 1,
+              "inEndpoint": 130,
+              "replyLength": 80,
+              "usbReplyTimeoutMilliseconds": 100,
+              "bluetoothLEReplyTimeoutMilliseconds": 500
+            },
+            "trailingStopPackets": 2
+          }
+        }
       }
     },
     {
@@ -14802,7 +15800,14 @@
         "defaults": {
           "session": {
             "handshakeAttempts": 3,
-            "announceResendLimit": 8
+            "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ]
           }
         }
       }
@@ -14834,7 +15839,14 @@
         "defaults": {
           "session": {
             "handshakeAttempts": 3,
-            "announceResendLimit": 8
+            "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ]
           }
         }
       }
@@ -14866,7 +15878,14 @@
         "defaults": {
           "session": {
             "handshakeAttempts": 3,
-            "announceResendLimit": 8
+            "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ]
           }
         }
       }
@@ -15360,7 +16379,14 @@
           "unknown": {},
           "session": {
             "handshakeAttempts": 3,
-            "announceResendLimit": 8
+            "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ]
           }
         }
       }
@@ -15387,7 +16413,14 @@
           },
           "session": {
             "handshakeAttempts": 3,
-            "announceResendLimit": 8
+            "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ]
           }
         }
       }
@@ -15412,6 +16445,13 @@
           "session": {
             "handshakeAttempts": 3,
             "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ],
             "rumble": {
               "report": {
                 "kind": "Output",
@@ -15536,7 +16576,14 @@
         "defaults": {
           "session": {
             "handshakeAttempts": 3,
-            "announceResendLimit": 8
+            "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ]
           }
         }
       }
@@ -15634,6 +16681,13 @@
           "session": {
             "handshakeAttempts": 3,
             "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ],
             "startup": [
               {
                 "report": {
@@ -15668,6 +16722,13 @@
           "session": {
             "handshakeAttempts": 3,
             "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ],
             "keepAlive": {}
           }
         }
@@ -15693,6 +16754,13 @@
           "session": {
             "handshakeAttempts": 3,
             "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ],
             "keepAlive": {
               "writes": [
                 {
@@ -15724,6 +16792,13 @@
           "session": {
             "handshakeAttempts": 3,
             "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ],
             "keepAlive": {
               "intervalMilliseconds": 0
             }
@@ -15751,6 +16826,13 @@
           "session": {
             "handshakeAttempts": 3,
             "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ],
             "keepAlive": {
               "intervalMilliseconds": 60001
             }
@@ -15778,6 +16860,13 @@
           "session": {
             "handshakeAttempts": 3,
             "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ],
             "keepAlive": {
               "intervalMilliseconds": 1.5
             }
@@ -15805,6 +16894,13 @@
           "session": {
             "handshakeAttempts": 3,
             "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ],
             "keepAlive": {
               "intervalMilliseconds": "500"
             }
@@ -15832,6 +16928,13 @@
           "session": {
             "handshakeAttempts": 3,
             "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ],
             "keepAlive": {
               "intervalMilliseconds": 500,
               "unknown": 1
@@ -15860,6 +16963,13 @@
           "session": {
             "handshakeAttempts": 3,
             "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ],
             "keepAlive": {
               "intervalMilliseconds": 500,
               "writes": []
@@ -15888,6 +16998,13 @@
           "session": {
             "handshakeAttempts": 3,
             "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ],
             "keepAlive": {
               "intervalMilliseconds": 500,
               "writes": [
@@ -15944,6 +17061,13 @@
           "session": {
             "handshakeAttempts": 3,
             "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ],
             "keepAlive": {
               "intervalMilliseconds": 500,
               "writes": [
@@ -15976,6 +17100,13 @@
           "session": {
             "handshakeAttempts": 3,
             "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ],
             "keepAlive": {
               "intervalMilliseconds": 500,
               "writes": [
@@ -16008,6 +17139,13 @@
           "session": {
             "handshakeAttempts": 3,
             "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ],
             "keepAlive": {
               "intervalMilliseconds": 500,
               "writes": [
@@ -16041,6 +17179,13 @@
           "session": {
             "handshakeAttempts": 3,
             "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ],
             "keepAlive": {
               "intervalMilliseconds": 500,
               "writes": [
@@ -16074,6 +17219,13 @@
           "session": {
             "handshakeAttempts": 3,
             "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ],
             "keepAlive": {
               "intervalMilliseconds": 500,
               "writes": [
@@ -16107,6 +17259,13 @@
           "session": {
             "handshakeAttempts": 3,
             "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ],
             "keepAlive": {
               "intervalMilliseconds": 500,
               "writes": [
@@ -16140,6 +17299,13 @@
           "session": {
             "handshakeAttempts": 3,
             "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ],
             "keepAlive": {
               "intervalMilliseconds": 500,
               "writes": [
@@ -16382,7 +17548,7 @@
     {
       "name": "rejects malformed named packets: packets=[{'id': 'power-on', 'bytes': '05 20 00 01 00', 'sessionByte': 2}]",
       "code": "E5002",
-      "python": "E5002: xbox-gip.json at defaults.session.namedPackets.0.id: 'power-on' does not match '^XboxGIP/[a-z0-9]+(-[a-z0-9]+)*$'",
+      "python": "E5002: xbox-gip.json at defaults.session.namedPackets.0.id: 'power-on' does not match '^[A-Z][A-Za-z0-9]*/[a-z0-9]+(-[a-z0-9]+)*$'",
       "swift": "E5002: xbox-gip.json: description.defaults.session.namedPackets.[0]: a named packet id is a family, a slash and lowercase words joined by hyphens",
       "fileName": "xbox-gip.json",
       "document": {
@@ -16413,7 +17579,7 @@
     {
       "name": "rejects malformed named packets: packets=[{'id': 'XboxGIP/Power-On', 'bytes': '05 20 00 01 00', 'sessionByte': 2}]",
       "code": "E5002",
-      "python": "E5002: xbox-gip.json at defaults.session.namedPackets.0.id: 'XboxGIP/Power-On' does not match '^XboxGIP/[a-z0-9]+(-[a-z0-9]+)*$'",
+      "python": "E5002: xbox-gip.json at defaults.session.namedPackets.0.id: 'XboxGIP/Power-On' does not match '^[A-Z][A-Za-z0-9]*/[a-z0-9]+(-[a-z0-9]+)*$'",
       "swift": "E5002: xbox-gip.json: description.defaults.session.namedPackets.[0]: a named packet id is a family, a slash and lowercase words joined by hyphens",
       "fileName": "xbox-gip.json",
       "document": {
@@ -16444,7 +17610,7 @@
     {
       "name": "rejects malformed named packets: packets=[{'id': 'XboxGIP/power--on', 'bytes': '05 20 00 01 00', 'sessionByte': 2}]",
       "code": "E5002",
-      "python": "E5002: xbox-gip.json at defaults.session.namedPackets.0.id: 'XboxGIP/power--on' does not match '^XboxGIP/[a-z0-9]+(-[a-z0-9]+)*$'",
+      "python": "E5002: xbox-gip.json at defaults.session.namedPackets.0.id: 'XboxGIP/power--on' does not match '^[A-Z][A-Za-z0-9]*/[a-z0-9]+(-[a-z0-9]+)*$'",
       "swift": "E5002: xbox-gip.json: description.defaults.session.namedPackets.[0]: a named packet id is a family, a slash and lowercase words joined by hyphens",
       "fileName": "xbox-gip.json",
       "document": {
@@ -16475,7 +17641,7 @@
     {
       "name": "rejects malformed named packets: packets=[{'id': 'XboxGIP/', 'bytes': '05 20 00 01 00', 'sessionByte': 2}]",
       "code": "E5002",
-      "python": "E5002: xbox-gip.json at defaults.session.namedPackets.0.id: 'XboxGIP/' does not match '^XboxGIP/[a-z0-9]+(-[a-z0-9]+)*$'",
+      "python": "E5002: xbox-gip.json at defaults.session.namedPackets.0.id: 'XboxGIP/' does not match '^[A-Z][A-Za-z0-9]*/[a-z0-9]+(-[a-z0-9]+)*$'",
       "swift": "E5002: xbox-gip.json: description.defaults.session.namedPackets.[0]: a named packet id is a family, a slash and lowercase words joined by hyphens",
       "fileName": "xbox-gip.json",
       "document": {
@@ -16761,7 +17927,7 @@
     {
       "name": "rejects malformed named packets: packets=[{'id': 'XboxXUSB/power-on', 'bytes': '05 20 00 01 00', 'sessionByte': 2}]",
       "code": "E5002",
-      "python": "E5002: xbox-gip.json at defaults.session.namedPackets.0.id: 'XboxXUSB/power-on' does not match '^XboxGIP/[a-z0-9]+(-[a-z0-9]+)*$'",
+      "python": "E5002: xbox-gip.json: defaults.session.namedPackets: XboxXUSB/power-on must start with XboxGIP/",
       "swift": "E5002: xbox-gip.json: each named packet id starts with XboxGIP/",
       "fileName": "xbox-gip.json",
       "document": {
@@ -17004,6 +18170,13 @@
           "session": {
             "handshakeAttempts": 3,
             "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ],
             "startup": [
               {
                 "bytes": "05 20 00 01 00",
@@ -17034,6 +18207,13 @@
           "session": {
             "handshakeAttempts": 3,
             "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ],
             "startup": [
               {
                 "bytes": "05 20 00 01 00",
@@ -17064,6 +18244,13 @@
           "session": {
             "handshakeAttempts": 3,
             "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ],
             "startup": [
               {
                 "bytes": "05 20 00 01 00",
@@ -17094,6 +18281,13 @@
           "session": {
             "handshakeAttempts": 3,
             "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ],
             "startup": [
               {
                 "bytes": "05 20 00 01 00",
@@ -17124,6 +18318,13 @@
           "session": {
             "handshakeAttempts": 3,
             "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ],
             "startup": [
               {
                 "bytes": "05 20 00 01 00",
@@ -17154,6 +18355,13 @@
           "session": {
             "handshakeAttempts": 3,
             "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ],
             "startup": [
               {
                 "bytes": "05 20 00 01 00",
@@ -17184,6 +18392,13 @@
           "session": {
             "handshakeAttempts": 3,
             "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ],
             "startup": [
               {
                 "bytes": "05 20 00 01 00",
@@ -17214,6 +18429,13 @@
           "session": {
             "handshakeAttempts": 3,
             "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ],
             "startup": [
               {
                 "bytes": "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00"
@@ -17243,6 +18465,13 @@
           "session": {
             "handshakeAttempts": 3,
             "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ],
             "startup": [
               {
                 "bytes": ""
@@ -17272,6 +18501,13 @@
           "session": {
             "handshakeAttempts": 3,
             "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ],
             "startup": [
               {
                 "bytes": "05 20 00 01 00",
@@ -17302,6 +18538,13 @@
           "session": {
             "handshakeAttempts": 3,
             "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ],
             "startup": [
               {
                 "bytes": "05 20 00 01 00",
@@ -20114,7 +21357,7 @@
     {
       "name": "rejects raw usb rules that contradict each other: family=XboxGIP",
       "code": "E5002",
-      "python": "E5002: xbox-gip.json: {'variants': ['USB'], 'apiVersion': 'openjoystickdriver/v1alpha1', 'kind': 'ProtocolDescription', 'family': 'XboxGIP', 'endpoints': {'in': 130, 'out': 2}, 'rawUSB': True, 'tuningKeys': ['lizardResendTicks'], 'defaults': {'session': {'handshakeAttempts': 3, 'announceResendLimit': 8}}} should not be valid under {'required': ['tuningKeys']}",
+      "python": "E5002: xbox-gip.json: {'variants': ['USB'], 'apiVersion': 'openjoystickdriver/v1alpha1', 'kind': 'ProtocolDescription', 'family': 'XboxGIP', 'endpoints': {'in': 130, 'out': 2}, 'rawUSB': True, 'tuningKeys': ['lizardResendTicks'], 'defaults': {'session': {'handshakeAttempts': 3, 'announceResendLimit': 8, 'namedPackets': [{'id': 'XboxGIP/power-on', 'bytes': '05 20 00 01 00', 'sessionByte': 2}]}}} should not be valid under {'required': ['tuningKeys']}",
       "swift": "E5002: xbox-gip.json: a family that is always raw USB reads its tuning through rawUSBTuningKeys",
       "fileName": "xbox-gip.json",
       "document": {
@@ -20131,7 +21374,14 @@
         "defaults": {
           "session": {
             "handshakeAttempts": 3,
-            "announceResendLimit": 8
+            "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ]
           }
         }
       }
@@ -20478,35 +21728,6 @@
       }
     },
     {
-      "name": "rejects startup that refers to an unknown packet (2)",
-      "code": "E5002",
-      "python": "E5002: xbox-gip.json: defaults.session.startup[0].packet: XboxGIP/power-on is not a named packet of the family",
-      "swift": "E5002: xbox-gip.json: startup names XboxGIP/power-on, which is not a named packet",
-      "fileName": "xbox-gip.json",
-      "document": {
-        "variants": ["USB"],
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "XboxGIP",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "rawUSB": true,
-        "defaults": {
-          "session": {
-            "handshakeAttempts": 3,
-            "announceResendLimit": 8,
-            "startup": [
-              {
-                "packet": "XboxGIP/power-on"
-              }
-            ]
-          }
-        }
-      }
-    },
-    {
       "name": "rejects startup writes mixing hid and usb formats",
       "code": "E5002",
       "python": "E5002: sony-dualsense.json at defaults.session: {'startup': [{'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03'}, {'bytes': '05 20 00 01 00'}]} should not be valid under {'required': ['startup'], 'properties': {'startup': {'allOf': [{'contains': {'required': ['report']}}, {'contains': {'not': {'required': ['report']}}}]}}}",
@@ -20578,7 +21799,14 @@
         "defaults": {
           "session": {
             "handshakeAttempts": 3,
-            "announceResendLimit": 8
+            "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ]
           }
         }
       }
@@ -20666,7 +21894,14 @@
         "defaults": {
           "session": {
             "handshakeAttempts": 3,
-            "announceResendLimit": 8
+            "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ]
           }
         }
       }
@@ -20694,7 +21929,14 @@
           },
           "session": {
             "handshakeAttempts": 3,
-            "announceResendLimit": 8
+            "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ]
           }
         }
       }
@@ -20726,7 +21968,14 @@
           },
           "session": {
             "handshakeAttempts": 3,
-            "announceResendLimit": 8
+            "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ]
           }
         }
       }
@@ -20902,678 +22151,6 @@
       }
     },
     {
-      "name": "session limits belong to their family: family=XboxGIP, key=handshakeAttempts, case=required",
-      "code": "E5002",
-      "python": "E5002: xbox-gip.json at defaults.session: 'handshakeAttempts' is a required property",
-      "swift": "E5002: xbox-gip.json: only XboxGIP has handshakeAttempts and announceResendLimit, and it must have them",
-      "fileName": "xbox-gip.json",
-      "document": {
-        "variants": ["USB"],
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "XboxGIP",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "rawUSB": true,
-        "defaults": {
-          "session": {
-            "announceResendLimit": 8
-          }
-        }
-      }
-    },
-    {
-      "name": "session limits belong to their family: family=XboxGIP, key=announceResendLimit, case=required",
-      "code": "E5002",
-      "python": "E5002: xbox-gip.json at defaults.session: 'announceResendLimit' is a required property",
-      "swift": "E5002: xbox-gip.json: only XboxGIP has handshakeAttempts and announceResendLimit, and it must have them",
-      "fileName": "xbox-gip.json",
-      "document": {
-        "variants": ["USB"],
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "XboxGIP",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "rawUSB": true,
-        "defaults": {
-          "session": {
-            "handshakeAttempts": 3
-          }
-        }
-      }
-    },
-    {
-      "name": "session limits belong to their family: family=XboxGIP, case=no session",
-      "code": "E5002",
-      "python": "E5002: xbox-gip.json: 'defaults' is a required property",
-      "swift": "E5002: xbox-gip.json: only XboxGIP has handshakeAttempts and announceResendLimit, and it must have them",
-      "fileName": "xbox-gip.json",
-      "document": {
-        "variants": ["USB"],
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "XboxGIP",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "rawUSB": true
-      }
-    },
-    {
-      "name": "session limits belong to their family: family=XboxXUSB, key=receiverInquiryResendLimit, case=required",
-      "code": "E5002",
-      "python": "E5002: xbox-xusb.json at defaults.session: {} should be non-empty",
-      "swift": "E5002: xbox-xusb.json: description.defaults.session: session must not be empty",
-      "fileName": "xbox-xusb.json",
-      "document": {
-        "variants": ["Wired", "Receiver"],
-        "storesVariant": true,
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "XboxXUSB",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "rawUSB": true,
-        "defaults": {
-          "session": {}
-        }
-      }
-    },
-    {
-      "name": "session limits belong to their family: family=XboxXUSB, case=no session",
-      "code": "E5002",
-      "python": "E5002: xbox-xusb.json: 'defaults' is a required property",
-      "swift": "E5002: xbox-xusb.json: only XboxXUSB has receiverInquiryResendLimit, and it must have it",
-      "fileName": "xbox-xusb.json",
-      "document": {
-        "variants": ["Wired", "Receiver"],
-        "storesVariant": true,
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "XboxXUSB",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "rawUSB": true
-      }
-    },
-    {
-      "name": "session limits belong to their family: family=NintendoSwitch2, key=commandChannel, case=required",
-      "code": "E5002",
-      "python": "E5002: nintendo-switch2.json at defaults.session: 'commandChannel' is a required property",
-      "swift": "E5002: nintendo-switch2.json: only NintendoSwitch2 has commandChannel and trailingStopPackets, and it must have them",
-      "fileName": "nintendo-switch2.json",
-      "document": {
-        "variants": ["USB", "BluetoothLE"],
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "NintendoSwitch2",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "defaults": {
-          "session": {
-            "trailingStopPackets": 2
-          }
-        }
-      }
-    },
-    {
-      "name": "session limits belong to their family: family=NintendoSwitch2, key=trailingStopPackets, case=required",
-      "code": "E5002",
-      "python": "E5002: nintendo-switch2.json at defaults.session: 'trailingStopPackets' is a required property",
-      "swift": "E5002: nintendo-switch2.json: only NintendoSwitch2 has commandChannel and trailingStopPackets, and it must have them",
-      "fileName": "nintendo-switch2.json",
-      "document": {
-        "variants": ["USB", "BluetoothLE"],
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "NintendoSwitch2",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "defaults": {
-          "session": {
-            "commandChannel": {
-              "interface": 1,
-              "inEndpoint": 130,
-              "replyLength": 80,
-              "usbReplyTimeoutMilliseconds": 100,
-              "bluetoothLEReplyTimeoutMilliseconds": 500
-            }
-          }
-        }
-      }
-    },
-    {
-      "name": "session limits belong to their family: family=NintendoSwitch2, case=no session",
-      "code": "E5002",
-      "python": "E5002: nintendo-switch2.json: 'defaults' is a required property",
-      "swift": "E5002: nintendo-switch2.json: only NintendoSwitch2 has commandChannel and trailingStopPackets, and it must have them",
-      "fileName": "nintendo-switch2.json",
-      "document": {
-        "variants": ["USB", "BluetoothLE"],
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "NintendoSwitch2",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        }
-      }
-    },
-    {
-      "name": "session limits belong to their family: family=XboxGIP, key=receiverInquiryResendLimit, case=forbidden",
-      "code": "E5002",
-      "python": "E5002: xbox-gip.json at defaults.session: False schema does not allow 3",
-      "swift": "E5002: xbox-gip.json: only XboxXUSB has receiverInquiryResendLimit, and it must have it",
-      "fileName": "xbox-gip.json",
-      "document": {
-        "variants": ["USB"],
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "XboxGIP",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "rawUSB": true,
-        "defaults": {
-          "session": {
-            "handshakeAttempts": 3,
-            "announceResendLimit": 8,
-            "receiverInquiryResendLimit": 3
-          }
-        }
-      }
-    },
-    {
-      "name": "session limits belong to their family: family=XboxGIP, key=commandChannel, case=forbidden",
-      "code": "E5002",
-      "python": "E5002: xbox-gip.json at defaults.session.commandChannel: 3 is not of type 'object'",
-      "swift": "E5002: xbox-gip.json: description.defaults.session.commandChannel: Expected to decode Dictionary<String, Any> but found number instead.",
-      "fileName": "xbox-gip.json",
-      "document": {
-        "variants": ["USB"],
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "XboxGIP",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "rawUSB": true,
-        "defaults": {
-          "session": {
-            "handshakeAttempts": 3,
-            "announceResendLimit": 8,
-            "commandChannel": 3
-          }
-        }
-      }
-    },
-    {
-      "name": "session limits belong to their family: family=XboxGIP, key=trailingStopPackets, case=forbidden",
-      "code": "E5002",
-      "python": "E5002: xbox-gip.json at defaults.session: False schema does not allow 3",
-      "swift": "E5002: xbox-gip.json: only NintendoSwitch2 has commandChannel and trailingStopPackets, and it must have them",
-      "fileName": "xbox-gip.json",
-      "document": {
-        "variants": ["USB"],
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "XboxGIP",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "rawUSB": true,
-        "defaults": {
-          "session": {
-            "handshakeAttempts": 3,
-            "announceResendLimit": 8,
-            "trailingStopPackets": 3
-          }
-        }
-      }
-    },
-    {
-      "name": "session limits belong to their family: family=XboxXUSB, key=handshakeAttempts, case=forbidden",
-      "code": "E5002",
-      "python": "E5002: xbox-xusb.json at defaults.session: False schema does not allow 3",
-      "swift": "E5002: xbox-xusb.json: only XboxGIP has handshakeAttempts and announceResendLimit, and it must have them",
-      "fileName": "xbox-xusb.json",
-      "document": {
-        "variants": ["Wired", "Receiver"],
-        "storesVariant": true,
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "XboxXUSB",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "rawUSB": true,
-        "defaults": {
-          "session": {
-            "receiverInquiryResendLimit": 8,
-            "handshakeAttempts": 3
-          }
-        }
-      }
-    },
-    {
-      "name": "session limits belong to their family: family=XboxXUSB, key=announceResendLimit, case=forbidden",
-      "code": "E5002",
-      "python": "E5002: xbox-xusb.json at defaults.session: False schema does not allow 3",
-      "swift": "E5002: xbox-xusb.json: only XboxGIP has handshakeAttempts and announceResendLimit, and it must have them",
-      "fileName": "xbox-xusb.json",
-      "document": {
-        "variants": ["Wired", "Receiver"],
-        "storesVariant": true,
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "XboxXUSB",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "rawUSB": true,
-        "defaults": {
-          "session": {
-            "receiverInquiryResendLimit": 8,
-            "announceResendLimit": 3
-          }
-        }
-      }
-    },
-    {
-      "name": "session limits belong to their family: family=XboxXUSB, key=commandChannel, case=forbidden",
-      "code": "E5002",
-      "python": "E5002: xbox-xusb.json at defaults.session.commandChannel: 3 is not of type 'object'",
-      "swift": "E5002: xbox-xusb.json: description.defaults.session.commandChannel: Expected to decode Dictionary<String, Any> but found number instead.",
-      "fileName": "xbox-xusb.json",
-      "document": {
-        "variants": ["Wired", "Receiver"],
-        "storesVariant": true,
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "XboxXUSB",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "rawUSB": true,
-        "defaults": {
-          "session": {
-            "receiverInquiryResendLimit": 8,
-            "commandChannel": 3
-          }
-        }
-      }
-    },
-    {
-      "name": "session limits belong to their family: family=XboxXUSB, key=trailingStopPackets, case=forbidden",
-      "code": "E5002",
-      "python": "E5002: xbox-xusb.json at defaults.session: False schema does not allow 3",
-      "swift": "E5002: xbox-xusb.json: only NintendoSwitch2 has commandChannel and trailingStopPackets, and it must have them",
-      "fileName": "xbox-xusb.json",
-      "document": {
-        "variants": ["Wired", "Receiver"],
-        "storesVariant": true,
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "XboxXUSB",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "rawUSB": true,
-        "defaults": {
-          "session": {
-            "receiverInquiryResendLimit": 8,
-            "trailingStopPackets": 3
-          }
-        }
-      }
-    },
-    {
-      "name": "session limits belong to their family: family=XboxXID, key=handshakeAttempts, case=forbidden",
-      "code": "E5002",
-      "python": "E5002: xbox-xid.json at defaults.session: 'rumble' was expected",
-      "swift": "E5002: xbox-xid.json: only XboxGIP has handshakeAttempts and announceResendLimit, and it must have them",
-      "fileName": "xbox-xid.json",
-      "document": {
-        "variants": ["Gamepad"],
-        "storesVariant": true,
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "XboxXID",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "rawUSB": true,
-        "recordSections": ["input", "rumble"],
-        "defaults": {
-          "session": {
-            "handshakeAttempts": 3
-          }
-        }
-      }
-    },
-    {
-      "name": "session limits belong to their family: family=XboxXID, key=announceResendLimit, case=forbidden",
-      "code": "E5002",
-      "python": "E5002: xbox-xid.json at defaults.session: 'rumble' was expected",
-      "swift": "E5002: xbox-xid.json: only XboxGIP has handshakeAttempts and announceResendLimit, and it must have them",
-      "fileName": "xbox-xid.json",
-      "document": {
-        "variants": ["Gamepad"],
-        "storesVariant": true,
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "XboxXID",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "rawUSB": true,
-        "recordSections": ["input", "rumble"],
-        "defaults": {
-          "session": {
-            "announceResendLimit": 3
-          }
-        }
-      }
-    },
-    {
-      "name": "session limits belong to their family: family=XboxXID, key=receiverInquiryResendLimit, case=forbidden",
-      "code": "E5002",
-      "python": "E5002: xbox-xid.json at defaults.session: 'rumble' was expected",
-      "swift": "E5002: xbox-xid.json: only XboxXUSB has receiverInquiryResendLimit, and it must have it",
-      "fileName": "xbox-xid.json",
-      "document": {
-        "variants": ["Gamepad"],
-        "storesVariant": true,
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "XboxXID",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "rawUSB": true,
-        "recordSections": ["input", "rumble"],
-        "defaults": {
-          "session": {
-            "receiverInquiryResendLimit": 3
-          }
-        }
-      }
-    },
-    {
-      "name": "session limits belong to their family: family=XboxXID, key=commandChannel, case=forbidden",
-      "code": "E5002",
-      "python": "E5002: xbox-xid.json at defaults.session.commandChannel: 3 is not of type 'object'",
-      "swift": "E5002: xbox-xid.json: description.defaults.session.commandChannel: Expected to decode Dictionary<String, Any> but found number instead.",
-      "fileName": "xbox-xid.json",
-      "document": {
-        "variants": ["Gamepad"],
-        "storesVariant": true,
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "XboxXID",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "rawUSB": true,
-        "recordSections": ["input", "rumble"],
-        "defaults": {
-          "session": {
-            "commandChannel": 3
-          }
-        }
-      }
-    },
-    {
-      "name": "session limits belong to their family: family=XboxXID, key=trailingStopPackets, case=forbidden",
-      "code": "E5002",
-      "python": "E5002: xbox-xid.json at defaults.session: 'rumble' was expected",
-      "swift": "E5002: xbox-xid.json: only NintendoSwitch2 has commandChannel and trailingStopPackets, and it must have them",
-      "fileName": "xbox-xid.json",
-      "document": {
-        "variants": ["Gamepad"],
-        "storesVariant": true,
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "XboxXID",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "rawUSB": true,
-        "recordSections": ["input", "rumble"],
-        "defaults": {
-          "session": {
-            "trailingStopPackets": 3
-          }
-        }
-      }
-    },
-    {
-      "name": "session limits belong to their family: family=SonyDualSense, key=handshakeAttempts, case=forbidden",
-      "code": "E5002",
-      "python": "E5002: sony-dualsense.json at defaults.session: False schema does not allow 3",
-      "swift": "E5002: sony-dualsense.json: only XboxGIP has handshakeAttempts and announceResendLimit, and it must have them",
-      "fileName": "sony-dualsense.json",
-      "document": {
-        "variants": ["USB", "BluetoothClassic"],
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "SonyDualSense",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "defaults": {
-          "session": {
-            "handshakeAttempts": 3
-          }
-        }
-      }
-    },
-    {
-      "name": "session limits belong to their family: family=SonyDualSense, key=announceResendLimit, case=forbidden",
-      "code": "E5002",
-      "python": "E5002: sony-dualsense.json at defaults.session: False schema does not allow 3",
-      "swift": "E5002: sony-dualsense.json: only XboxGIP has handshakeAttempts and announceResendLimit, and it must have them",
-      "fileName": "sony-dualsense.json",
-      "document": {
-        "variants": ["USB", "BluetoothClassic"],
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "SonyDualSense",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "defaults": {
-          "session": {
-            "announceResendLimit": 3
-          }
-        }
-      }
-    },
-    {
-      "name": "session limits belong to their family: family=SonyDualSense, key=receiverInquiryResendLimit, case=forbidden",
-      "code": "E5002",
-      "python": "E5002: sony-dualsense.json at defaults.session: False schema does not allow 3",
-      "swift": "E5002: sony-dualsense.json: only XboxXUSB has receiverInquiryResendLimit, and it must have it",
-      "fileName": "sony-dualsense.json",
-      "document": {
-        "variants": ["USB", "BluetoothClassic"],
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "SonyDualSense",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "defaults": {
-          "session": {
-            "receiverInquiryResendLimit": 3
-          }
-        }
-      }
-    },
-    {
-      "name": "session limits belong to their family: family=SonyDualSense, key=commandChannel, case=forbidden",
-      "code": "E5002",
-      "python": "E5002: sony-dualsense.json at defaults.session.commandChannel: 3 is not of type 'object'",
-      "swift": "E5002: sony-dualsense.json: description.defaults.session.commandChannel: Expected to decode Dictionary<String, Any> but found number instead.",
-      "fileName": "sony-dualsense.json",
-      "document": {
-        "variants": ["USB", "BluetoothClassic"],
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "SonyDualSense",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "defaults": {
-          "session": {
-            "commandChannel": 3
-          }
-        }
-      }
-    },
-    {
-      "name": "session limits belong to their family: family=SonyDualSense, key=trailingStopPackets, case=forbidden",
-      "code": "E5002",
-      "python": "E5002: sony-dualsense.json at defaults.session: False schema does not allow 3",
-      "swift": "E5002: sony-dualsense.json: only NintendoSwitch2 has commandChannel and trailingStopPackets, and it must have them",
-      "fileName": "sony-dualsense.json",
-      "document": {
-        "variants": ["USB", "BluetoothClassic"],
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "SonyDualSense",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "defaults": {
-          "session": {
-            "trailingStopPackets": 3
-          }
-        }
-      }
-    },
-    {
-      "name": "session limits belong to their family: family=NintendoSwitch2, key=handshakeAttempts, case=forbidden",
-      "code": "E5002",
-      "python": "E5002: nintendo-switch2.json at defaults.session: False schema does not allow 3",
-      "swift": "E5002: nintendo-switch2.json: only XboxGIP has handshakeAttempts and announceResendLimit, and it must have them",
-      "fileName": "nintendo-switch2.json",
-      "document": {
-        "variants": ["USB", "BluetoothLE"],
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "NintendoSwitch2",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "defaults": {
-          "session": {
-            "commandChannel": {
-              "interface": 1,
-              "inEndpoint": 130,
-              "replyLength": 80,
-              "usbReplyTimeoutMilliseconds": 100,
-              "bluetoothLEReplyTimeoutMilliseconds": 500
-            },
-            "trailingStopPackets": 2,
-            "handshakeAttempts": 3
-          }
-        }
-      }
-    },
-    {
-      "name": "session limits belong to their family: family=NintendoSwitch2, key=announceResendLimit, case=forbidden",
-      "code": "E5002",
-      "python": "E5002: nintendo-switch2.json at defaults.session: False schema does not allow 3",
-      "swift": "E5002: nintendo-switch2.json: only XboxGIP has handshakeAttempts and announceResendLimit, and it must have them",
-      "fileName": "nintendo-switch2.json",
-      "document": {
-        "variants": ["USB", "BluetoothLE"],
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "NintendoSwitch2",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "defaults": {
-          "session": {
-            "commandChannel": {
-              "interface": 1,
-              "inEndpoint": 130,
-              "replyLength": 80,
-              "usbReplyTimeoutMilliseconds": 100,
-              "bluetoothLEReplyTimeoutMilliseconds": 500
-            },
-            "trailingStopPackets": 2,
-            "announceResendLimit": 3
-          }
-        }
-      }
-    },
-    {
-      "name": "session limits belong to their family: family=NintendoSwitch2, key=receiverInquiryResendLimit, case=forbidden",
-      "code": "E5002",
-      "python": "E5002: nintendo-switch2.json at defaults.session: False schema does not allow 3",
-      "swift": "E5002: nintendo-switch2.json: only XboxXUSB has receiverInquiryResendLimit, and it must have it",
-      "fileName": "nintendo-switch2.json",
-      "document": {
-        "variants": ["USB", "BluetoothLE"],
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "NintendoSwitch2",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "defaults": {
-          "session": {
-            "commandChannel": {
-              "interface": 1,
-              "inEndpoint": 130,
-              "replyLength": 80,
-              "usbReplyTimeoutMilliseconds": 100,
-              "bluetoothLEReplyTimeoutMilliseconds": 500
-            },
-            "trailingStopPackets": 2,
-            "receiverInquiryResendLimit": 3
-          }
-        }
-      }
-    },
-    {
       "name": "session limits have ranges: key=handshakeAttempts, value=0",
       "code": "E5002",
       "python": "E5002: xbox-gip.json at defaults.session.handshakeAttempts: 0 is less than the minimum of 1",
@@ -21592,7 +22169,14 @@
         "defaults": {
           "session": {
             "handshakeAttempts": 0,
-            "announceResendLimit": 8
+            "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ]
           }
         }
       }
@@ -21616,7 +22200,14 @@
         "defaults": {
           "session": {
             "handshakeAttempts": 11,
-            "announceResendLimit": 8
+            "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ]
           }
         }
       }
@@ -21640,7 +22231,14 @@
         "defaults": {
           "session": {
             "handshakeAttempts": 3,
-            "announceResendLimit": 0
+            "announceResendLimit": 0,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ]
           }
         }
       }
@@ -21664,7 +22262,14 @@
         "defaults": {
           "session": {
             "handshakeAttempts": 3,
-            "announceResendLimit": 101
+            "announceResendLimit": 101,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ]
           }
         }
       }

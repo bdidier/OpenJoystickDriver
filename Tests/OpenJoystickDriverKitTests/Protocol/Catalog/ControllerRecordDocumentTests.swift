@@ -235,7 +235,7 @@ struct ControllerRecordDocumentTests {
     let schema = try Self.controllerSchema()
     let definitions = try #require(schema["$defs"] as? [String: Any])
     // The description defines the ids; the schema holds only their shape.
-    let action = try #require(definitions["gipInitializationAction"] as? [String: Any])
+    let action = try #require(definitions["namedPacketAction"] as? [String: Any])
     let pattern = try #require(action["pattern"] as? String)
     let identifiers = try #require(
       ProtocolDescription.bundled[.xboxGIP]?.namedPackets?.packets.map(\.id)
@@ -252,35 +252,24 @@ struct ControllerRecordDocumentTests {
     #expect(
       Self.enumValues(properties["assembly"]) == ControllerAssemblyPolicy.allCases.map(\.name)
     )
-    let storedVariants = PhysicalProtocolID.allCases.filter(\.storesVariant).flatMap(\.variants)
-    #expect(
-      Set(Self.enumValues(properties["variant"]) ?? []) == Set(storedVariants.map(\.rawValue))
-    )
 
-    let branches = try #require(protocolSchema["allOf"] as? [[String: Any]])
-    var declaredParameters: Set<String> = []
-    for branch in branches {
-      for name in Self.familyNames(branch) {
-        guard let family = PhysicalProtocolID(rawValue: name),
-          let then = branch["then"] as? [String: Any],
-          let thenProperties = then["properties"] as? [String: Any]
+    // The parameter names are one vocabulary, which the descriptions declare from.
+    let descriptionSchema = try Self.descriptionSchema()
+    let descriptionProperties = try #require(descriptionSchema["properties"] as? [String: Any])
+    let parameters = try #require(descriptionProperties["parameters"] as? [String: Any])
+    let names = try #require(parameters["propertyNames"] as? [String: Any])
+    #expect(Set(Self.enumValues(names) ?? []) == ProtocolParameters.names)
+    let declared = PhysicalProtocolID.allCases.flatMap {
+      ProtocolParameters.declared(by: $0)
+    }
+    #expect(Set(declared) == ProtocolParameters.names)
+    for family in PhysicalProtocolID.allCases {
+      for (name, type) in family.protocolDescription.parameters {
+        guard case .enumeration(let values) = type, let swiftValues = Self.parameterEnums[name]
         else { continue }
-        if let parameters = thenProperties["parameters"] as? [String: Any] {
-          let schemas = parameters["properties"] as? [String: Any] ?? [:]
-          #expect(Set(schemas.keys) == ProtocolParameters.declared(by: family), "\(name)")
-          #expect(parameters["additionalProperties"] as? Bool == false, "\(name)")
-          declaredParameters.formUnion(schemas.keys)
-          for (parameter, values) in Self.parameterEnums {
-            guard let schemaValues = Self.enumValues(schemas[parameter]) else { continue }
-            #expect(Set(schemaValues).isSubset(of: values), "\(name) \(parameter)")
-            if parameter != "layout", parameter != "role" {
-              #expect(schemaValues == values, "\(name) \(parameter)")
-            }
-          }
-        }
+        #expect(Set(values).isSubset(of: swiftValues), "\(family.rawValue) \(name)")
       }
     }
-    #expect(declaredParameters == ProtocolParameters.names)
   }
 
   /// An input layout belongs to the `HIDReportLayout` family, which cannot run without one.
@@ -457,6 +446,14 @@ struct ControllerRecordDocumentTests {
     return try #require(JSONSerialization.jsonObject(with: Data(contentsOf: url)) as? [String: Any])
   }
 
+  private static func descriptionSchema() throws -> [String: Any] {
+    let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+      .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+      .deletingLastPathComponent()
+    let url = root.appendingPathComponent("Resources/Schemas/protocol-description.schema.json")
+    return try #require(JSONSerialization.jsonObject(with: Data(contentsOf: url)) as? [String: Any])
+  }
+
   private static func enumValues(_ node: Any?) -> [String]? {
     (node as? [String: Any])?["enum"] as? [String]
   }
@@ -473,15 +470,6 @@ struct ControllerRecordDocumentTests {
     "reportRevision": ProtocolParameters.ReportRevision.allCases.map(\.rawValue),
     "maker": ProtocolParameters.Maker.allCases.map(\.rawValue),
   ]
-
-  /// The families a branch's condition selects with `const` or `enum`.
-  private static func familyNames(_ branch: [String: Any]) -> [String] {
-    let condition = branch["if"] as? [String: Any]
-    let properties = condition?["properties"] as? [String: Any]
-    let family = properties?["family"] as? [String: Any]
-    if let name = family?["const"] as? String { return [name] }
-    return family?["enum"] as? [String] ?? []
-  }
 
   private func decode(
     protocol protocolInfo: [String: any Sendable],

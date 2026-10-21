@@ -98,8 +98,8 @@ public final class Switch2Driver: PhysicalProtocolDriver {
     PhysicalProtocolID.nintendoSwitch2.descriptionOutputEndpoint
   }
 
-  /// The USB interface that carries commands and replies, from the description. A description
-  /// that sets none is a defect.
+  /// The USB interface that carries commands and replies, from the description. Loading refuses
+  /// a NintendoSwitch2 description without one, so the guard cannot fail.
   static var commandChannel: ProtocolDescription.CommandChannel {
     guard let channel = PhysicalProtocolID.nintendoSwitch2.protocolDescription.commandChannel
     else {
