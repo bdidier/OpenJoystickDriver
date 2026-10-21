@@ -15,14 +15,7 @@
           selectedIndex: screens.activity.mode.rawValue,
           selector: #selector(selectActivityMode(_:))
         )
-      case .activityFilter:
-        return makeSegmentedItem(
-          for: action,
-          titleKeys: ActivityLogFilter.allCases.map(\.titleKey),
-          selectedIndex: screens.activity.log.filter.rawValue,
-          selector: #selector(selectActivityFilter(_:))
-        )
-      case .activityLines: return makeLinesItem(for: action)
+      case .activityFilter: return makeFilterItem(for: action)
       case .activitySearch: return makeSearchItem(for: action)
       case .refreshControllers, .newProfile, .importProfile, .installLibraryItem,
         .copyActivityLog, .saveActivityLog, .showActivityLogInFinder, .runDiagnostics:
@@ -52,7 +45,9 @@
       return group
     }
 
-    private func makeLinesItem(for action: MainWindowToolbarAction) -> NSToolbarItem {
+    /// One menu holds the stream filter and the line count, so the toolbar fits at the window's
+    /// minimum width without an overflow chevron.
+    private func makeFilterItem(for action: MainWindowToolbarAction) -> NSToolbarItem {
       let item = NSMenuToolbarItem(itemIdentifier: action.identifier)
       item.label = OJDLocalized.string(action.labelKey)
       item.paletteLabel = item.label
@@ -63,6 +58,24 @@
       )
       item.showsIndicator = true
       let menu = NSMenu()
+      for filter in ActivityLogFilter.allCases {
+        let entry = NSMenuItem(
+          title: OJDLocalized.string(filter.titleKey),
+          action: #selector(selectActivityFilter(_:)),
+          keyEquivalent: ""
+        )
+        entry.target = self
+        entry.tag = filter.rawValue
+        menu.addItem(entry)
+      }
+      menu.addItem(.separator())
+      let heading = NSMenuItem(
+        title: OJDLocalized.string("activity.lines"),
+        action: nil,
+        keyEquivalent: ""
+      )
+      heading.isEnabled = false
+      menu.addItem(heading)
       for count in ActivityLogLineCount.choices {
         let entry = NSMenuItem(
           title: count.formatted(),
@@ -97,8 +110,8 @@
     }
 
     @objc
-    func selectActivityFilter(_ sender: NSToolbarItemGroup) {
-      guard let filter = ActivityLogFilter(rawValue: sender.selectedIndex) else { return }
+    func selectActivityFilter(_ sender: NSMenuItem) {
+      guard let filter = ActivityLogFilter(rawValue: sender.tag) else { return }
       screens.activity.log.filter = filter
     }
 
@@ -131,6 +144,8 @@
     func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
       if menuItem.action == #selector(selectActivityLineCount(_:)) {
         menuItem.state = menuItem.tag == screens.activity.log.lineCount ? .on : .off
+      } else if menuItem.action == #selector(selectActivityFilter(_:)) {
+        menuItem.state = menuItem.tag == screens.activity.log.filter.rawValue ? .on : .off
       }
       return true
     }

@@ -40,6 +40,7 @@ enum LocalizationCatalogAudit {
       "keyboard.return", "keyboard.shift", "keyboard.tab",
     ],
     "de-DE": [
+      "activity.filter",
       "activity.column.details",
       "mainMenu.controller",
       "access.details", "library.details",
@@ -68,6 +69,7 @@ enum LocalizationCatalogAudit {
     ]),
     "hi-IN": ["keyboard.escape", "keyboard.return"],
     "id-ID": [
+      "activity.filter",
       "activity.mode.log",
       "access.token.issued.title", "access.token.named",
       "access.web.port", "access.web.enable.port", "mainMenu.window.zoom",
@@ -101,6 +103,7 @@ enum LocalizationCatalogAudit {
       "keyboard.alt", "keyboard.return", "keyboard.shift",
     ],
     "nl-NL": [
+      "activity.filter",
       "activity.column.details",
       "access.details", "library.details",
       "access.token.issued.title", "access.token.named", "access.tokens", "library.mods",

@@ -1841,3 +1841,9 @@
 "activity.status.warn" = "Cảnh báo";
 "activity.status.skip" = "Đã bỏ qua";
 "cli.log.sharing_warning" = "Nhật ký dịch vụ có thể chứa tên thiết bị, mã định danh hoặc đường dẫn chẩn đoán. Hãy xem lại trước khi chia sẻ.";
+"activity.filter" = "Bộ lọc";
+"activity.check.transportExtensionBundle" = "Gói tiện ích mở rộng trình điều khiển";
+"activity.check.transportExtensionRegistration" = "Đăng ký tiện ích mở rộng trình điều khiển";
+"activity.check.configFiles" = "Tệp cấu hình";
+"activity.check.usbAccess" = "Quyền truy cập USB";
+"activity.fix.showLibrary" = "Hiển thị Thư viện";

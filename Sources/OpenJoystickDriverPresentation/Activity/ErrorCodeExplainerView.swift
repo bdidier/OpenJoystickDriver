@@ -1,6 +1,7 @@
 #if canImport(AppKit) && canImport(SwiftUI)
 
   import AppKit
+  import OpenJoystickDriverKit
   import SwiftUI
 
   @MainActor
@@ -44,10 +45,16 @@
     @ViewBuilder
     private var answer: some View {
       switch model.answer {
-      case .explained(let code, let explanation)?:
+      case .explained(let facts)?:
         VStack(alignment: .leading, spacing: 4) {
-          Text(code).font(.system(.body, design: .monospaced))
-          Text(explanation).textSelection(.enabled).fixedSize(horizontal: false, vertical: true)
+          Text(facts.code).font(.system(.body, design: .monospaced))
+          ForEach(Self.factLines(facts), id: \.self) { line in
+            Text(line).foregroundColor(Color(NSColor.secondaryLabelColor))
+          }
+          Text(facts.explanation).textSelection(.enabled).fixedSize(
+            horizontal: false,
+            vertical: true
+          ).padding(.top, 4)
         }
       case .unknown(let typed)?:
         Text(OJDLocalized.formatted("cli.explain.unknown", typed)).foregroundColor(
@@ -55,6 +62,18 @@
         ).fixedSize(horizontal: false, vertical: true)
       case nil: EmptyView()
       }
+    }
+  }
+
+  extension ErrorCodeExplainerView {
+    /// The labeled lines that `ojd explain` prints between the code and the explanation.
+    static func factLines(_ facts: ErrorCodeFacts) -> [String] {
+      var lines = [OJDLocalized.formatted("cli.explain.area", facts.area)]
+      if let exitCode = facts.exitCode {
+        lines.append(OJDLocalized.formatted("cli.explain.exit_code", String(exitCode)))
+      }
+      if let wire = facts.wire { lines.append(OJDLocalized.formatted("cli.explain.wire", wire)) }
+      return lines
     }
   }
 

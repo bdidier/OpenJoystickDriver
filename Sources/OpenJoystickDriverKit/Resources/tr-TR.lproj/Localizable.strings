@@ -1841,3 +1841,9 @@
 "activity.status.warn" = "Uyarı";
 "activity.status.skip" = "Atlandı";
 "cli.log.sharing_warning" = "Hizmet günlükleri aygıt adları, tanımlayıcılar veya tanılama yolları içerebilir. Paylaşmadan önce gözden geçirin.";
+"activity.filter" = "Süz";
+"activity.check.transportExtensionBundle" = "Sürücü uzantısı paketi";
+"activity.check.transportExtensionRegistration" = "Sürücü uzantısı kaydı";
+"activity.check.configFiles" = "Yapılandırma dosyaları";
+"activity.check.usbAccess" = "USB erişimi";
+"activity.fix.showLibrary" = "Kitaplığı Göster";

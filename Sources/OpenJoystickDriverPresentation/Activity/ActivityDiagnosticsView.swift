@@ -4,11 +4,12 @@
   import OpenJoystickDriverKit
   import SwiftUI
 
-  /// The `ojd diagnose` checks as a table: each check with its result and, when it is not a
-  /// pass, the fix.
+  /// The `ojd diagnose` checks as a table: each check with its result, its details and, for a
+  /// warning or failure the app can fix, a button for the fix.
   struct ActivityDiagnosticsView: View {
     @ObservedObject
     var model: ActivityDiagnosticsModel
+    let perform: (ActivityCheckFix) -> Void
 
     var body: some View {
       content.task { await model.runIfNeeded() }
@@ -27,10 +28,17 @@
               Image(systemName: row.symbolName).foregroundColor(Self.color(of: row.status))
             }
           }.width(min: 90, ideal: 110, max: 140)
-          TableColumn(OJDLocalized.string("activity.column.check")) { row in Text(row.id) }
-            .width(min: 140, ideal: 200)
+          TableColumn(OJDLocalized.string("activity.column.check")) { row in
+            Text(row.nameKey.map { OJDLocalized.string($0) } ?? row.id).help(row.id)
+          }.width(min: 140, ideal: 200)
           TableColumn(OJDLocalized.string("activity.column.details")) { row in
-            Text(row.detail).textSelection(.enabled)
+            HStack {
+              Text(row.detail).textSelection(.enabled)
+              Spacer(minLength: 8)
+              if let fix = row.fix {
+                Button(OJDLocalized.string(fix.titleKey)) { perform(fix) }
+              }
+            }
           }
         }
       }

@@ -1842,3 +1842,9 @@
 "activity.status.warn" = "Waarschuwing";
 "activity.status.skip" = "Overgeslagen";
 "cli.log.sharing_warning" = "Servicelogboeken kunnen apparaatnamen, identificaties of diagnosepaden bevatten. Controleer ze voordat je ze deelt.";
+"activity.filter" = "Filter";
+"activity.check.transportExtensionBundle" = "Bundel van de stuurprogrammaextensie";
+"activity.check.transportExtensionRegistration" = "Registratie van de stuurprogrammaextensie";
+"activity.check.configFiles" = "Configuratiebestanden";
+"activity.check.usbAccess" = "USB-toegang";
+"activity.fix.showLibrary" = "Toon bibliotheek";

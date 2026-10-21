@@ -1841,3 +1841,9 @@
 "activity.status.warn" = "警告";
 "activity.status.skip" = "已跳过";
 "cli.log.sharing_warning" = "服务日志可能包含设备名称、标识符或诊断路径。分享前请先检查。";
+"activity.filter" = "筛选";
+"activity.check.transportExtensionBundle" = "驱动扩展包";
+"activity.check.transportExtensionRegistration" = "驱动扩展注册";
+"activity.check.configFiles" = "设置文件";
+"activity.check.usbAccess" = "USB 访问";
+"activity.fix.showLibrary" = "显示资源库";

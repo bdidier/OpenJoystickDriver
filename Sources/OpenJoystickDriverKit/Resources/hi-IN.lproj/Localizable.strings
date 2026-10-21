@@ -1841,3 +1841,9 @@
 "activity.status.warn" = "चेतावनी";
 "activity.status.skip" = "छोड़ी गई";
 "cli.log.sharing_warning" = "सेवा के लॉग में डिवाइस के नाम, पहचानकर्ता या निदान के पाथ हो सकते हैं। साझा करने से पहले उन्हें देख लें।";
+"activity.filter" = "फ़िल्टर";
+"activity.check.transportExtensionBundle" = "ड्राइवर एक्सटेंशन बंडल";
+"activity.check.transportExtensionRegistration" = "ड्राइवर एक्सटेंशन पंजीकरण";
+"activity.check.configFiles" = "कॉन्फ़िगरेशन फ़ाइलें";
+"activity.check.usbAccess" = "USB एक्सेस";
+"activity.fix.showLibrary" = "लाइब्रेरी दिखाएँ";

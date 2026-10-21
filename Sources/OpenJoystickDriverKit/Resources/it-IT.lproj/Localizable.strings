@@ -1842,3 +1842,9 @@
 "activity.status.warn" = "Avviso";
 "activity.status.skip" = "Saltato";
 "cli.log.sharing_warning" = "I registri del servizio possono contenere nomi di dispositivi, identificatori o percorsi diagnostici. Controllali prima di condividerli.";
+"activity.filter" = "Filtra";
+"activity.check.transportExtensionBundle" = "Pacchetto dell’estensione driver";
+"activity.check.transportExtensionRegistration" = "Registrazione dell’estensione driver";
+"activity.check.configFiles" = "File di configurazione";
+"activity.check.usbAccess" = "Accesso USB";
+"activity.fix.showLibrary" = "Mostra libreria";

@@ -1842,3 +1842,9 @@
 "activity.status.warn" = "Aviso";
 "activity.status.skip" = "Omitida";
 "cli.log.sharing_warning" = "Los registros del servicio pueden contener nombres de dispositivos, identificadores o rutas de diagnóstico. Revísalos antes de compartirlos.";
+"activity.filter" = "Filtrar";
+"activity.check.transportExtensionBundle" = "Paquete de la extensión de controlador";
+"activity.check.transportExtensionRegistration" = "Registro de la extensión de controlador";
+"activity.check.configFiles" = "Archivos de configuración";
+"activity.check.usbAccess" = "Acceso USB";
+"activity.fix.showLibrary" = "Mostrar biblioteca";

@@ -100,10 +100,14 @@
 
     init(source: ActivityLogSource = .system) { self.source = source }
 
-    var rows: [ActivityLogEntry] { filter.rows(in: entries, matching: searchText) }
+    /// The shown entries, newest first. A SwiftUI `Table` cannot scroll to its last row, so the log
+    /// keeps the newest line visible at the top instead of pinning the bottom as Console does.
+    var rows: [ActivityLogEntry] {
+      filter.rows(in: entries, matching: searchText).reversed()
+    }
 
-    /// The shown lines, one per line.
-    var copyText: String { rows.map(\.text).joined(separator: "\n") }
+    /// The shown lines in the order they were written, one per line.
+    var copyText: String { rows.reversed().map(\.text).joined(separator: "\n") }
 
     /// Reads the end of both logs and follows what they gain.
     func start() {

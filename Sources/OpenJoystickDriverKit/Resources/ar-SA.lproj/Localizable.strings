@@ -1841,3 +1841,9 @@
 "activity.status.warn" = "تحذير";
 "activity.status.skip" = "تم التخطي";
 "cli.log.sharing_warning" = "قد تحتوي سجلات الخدمة على أسماء أجهزة أو معرّفات أو مسارات تشخيص. راجعها قبل المشاركة.";
+"activity.filter" = "تصفية";
+"activity.check.transportExtensionBundle" = "حزمة امتداد برنامج التشغيل";
+"activity.check.transportExtensionRegistration" = "تسجيل امتداد برنامج التشغيل";
+"activity.check.configFiles" = "ملفات الإعداد";
+"activity.check.usbAccess" = "الوصول إلى USB";
+"activity.fix.showLibrary" = "إظهار المكتبة";

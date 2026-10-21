@@ -80,7 +80,7 @@ struct MainWindowAreaTests {
   func activityActionsFollowTheViewItShows() {
     #expect(
       MainWindowArea.activity.toolbarActions(activityMode: .log) == [
-        .activityMode, .activityFilter, .activityLines, .activitySearch, .copyActivityLog,
+        .activityMode, .activityFilter, .activitySearch, .copyActivityLog,
         .saveActivityLog, .showActivityLogInFinder,
       ]
     )

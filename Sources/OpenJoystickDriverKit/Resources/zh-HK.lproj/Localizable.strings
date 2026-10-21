@@ -1841,3 +1841,9 @@
 "activity.status.warn" = "警告";
 "activity.status.skip" = "已略過";
 "cli.log.sharing_warning" = "服務記錄檔可能包含裝置名稱、識別碼或診斷路徑。分享前請先檢查。";
+"activity.filter" = "篩選";
+"activity.check.transportExtensionBundle" = "驅動程式擴充功能套件";
+"activity.check.transportExtensionRegistration" = "驅動程式擴充功能註冊";
+"activity.check.configFiles" = "組態檔案";
+"activity.check.usbAccess" = "USB 存取";
+"activity.fix.showLibrary" = "顯示資源庫";

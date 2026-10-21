@@ -1841,3 +1841,9 @@
 "activity.status.warn" = "Предупреждение";
 "activity.status.skip" = "Пропущена";
 "cli.log.sharing_warning" = "Журналы службы могут содержать имена устройств, идентификаторы или пути диагностики. Проверьте их, прежде чем делиться.";
+"activity.filter" = "Фильтр";
+"activity.check.transportExtensionBundle" = "Пакет расширения драйвера";
+"activity.check.transportExtensionRegistration" = "Регистрация расширения драйвера";
+"activity.check.configFiles" = "Файлы конфигурации";
+"activity.check.usbAccess" = "Доступ к USB";
+"activity.fix.showLibrary" = "Показать библиотеку";

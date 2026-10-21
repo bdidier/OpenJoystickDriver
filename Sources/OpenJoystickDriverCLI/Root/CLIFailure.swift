@@ -12,18 +12,12 @@ enum CLIExitCode: Int32, Sendable {
   case installedCLIFailed = 127
   case interrupted = 130
 
-  /// The exit code of the failure that `id` names; `Resources/ErrorCodes.json` lists it as
-  /// `exitCode`. A code of another area, such as a remapping code, is a plain failure.
+  /// The exit code of the failure that `id` names.
   init(for id: ErrorCode) {
-    switch id {
-    case .unknownCommand, .usage, .confirmationRequired, .noAccessScope, .duplicateTokenName,
-      .invalidTokenName, .invalidWebOrigin, .webPortUnavailable, .controlScopeWithOrigins:
-      self = .usage
-    case .serviceUnavailable: self = .serviceUnavailable
-    case .permissionMissing: self = .permissionDenied
-    case .installedCLIFailed: self = .installedCLIFailed
-    default: self = .failure
+    guard let code = Self(rawValue: id.commandLineExitStatus) else {
+      preconditionFailure("\(id.rawValue) has an exit status that CLIExitCode does not list.")
     }
+    self = code
   }
 }
 

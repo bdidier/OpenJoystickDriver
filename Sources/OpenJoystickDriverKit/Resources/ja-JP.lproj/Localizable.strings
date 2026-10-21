@@ -1841,3 +1841,9 @@
 "activity.status.warn" = "警告";
 "activity.status.skip" = "スキップ";
 "cli.log.sharing_warning" = "サービスのログには、デバイス名、識別子、診断用のパスが含まれることがあります。共有する前に内容を確認してください。";
+"activity.filter" = "フィルタ";
+"activity.check.transportExtensionBundle" = "ドライバ拡張機能のバンドル";
+"activity.check.transportExtensionRegistration" = "ドライバ拡張機能の登録";
+"activity.check.configFiles" = "設定ファイル";
+"activity.check.usbAccess" = "USBアクセス";
+"activity.fix.showLibrary" = "ライブラリを表示";

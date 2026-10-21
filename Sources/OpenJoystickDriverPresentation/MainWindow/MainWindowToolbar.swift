@@ -11,7 +11,6 @@
     case installLibraryItem
     case activityMode
     case activityFilter
-    case activityLines
     case activitySearch
     case copyActivityLog
     case saveActivityLog
@@ -37,7 +36,6 @@
       case .installLibraryItem: return "square.and.arrow.down.on.square"
       case .activityMode: return "list.bullet.rectangle"
       case .activityFilter: return "line.3.horizontal.decrease.circle"
-      case .activityLines: return "list.number"
       case .activitySearch: return "magnifyingglass"
       case .copyActivityLog: return "doc.on.doc"
       case .saveActivityLog: return "square.and.arrow.down"
@@ -54,8 +52,7 @@
       case .importProfile: return "profiles.import"
       case .installLibraryItem: return "library.install"
       case .activityMode: return "area.activity.title"
-      case .activityFilter: return "console.stream"
-      case .activityLines: return "activity.lines"
+      case .activityFilter: return "activity.filter"
       case .activitySearch: return "activity.search"
       case .copyActivityLog: return "common.copyAll"
       case .saveActivityLog: return "mainMenu.file.saveActivityLog"
@@ -72,8 +69,7 @@
       case .importProfile: return "profiles.import"
       case .installLibraryItem: return "mainMenu.file.installRecordOrMod"
       case .activityMode: return "area.activity.title"
-      case .activityFilter: return "console.stream"
-      case .activityLines: return "activity.lines"
+      case .activityFilter: return "activity.filter"
       case .activitySearch: return "activity.search"
       case .copyActivityLog: return "common.copyAll"
       case .saveActivityLog: return "mainMenu.file.saveActivityLog"
@@ -96,7 +92,7 @@
         switch activityMode {
         case .log:
           return [
-            .activityMode, .activityFilter, .activityLines, .activitySearch, .copyActivityLog,
+            .activityMode, .activityFilter, .activitySearch, .copyActivityLog,
             .saveActivityLog, .showActivityLogInFinder,
           ]
         case .diagnostics: return [.activityMode, .runDiagnostics]

@@ -1841,3 +1841,9 @@
 "activity.status.warn" = "Peringatan";
 "activity.status.skip" = "Dilewati";
 "cli.log.sharing_warning" = "Log layanan dapat berisi nama perangkat, pengenal, atau jalur diagnostik. Tinjau sebelum membagikannya.";
+"activity.filter" = "Filter";
+"activity.check.transportExtensionBundle" = "Bundel ekstensi driver";
+"activity.check.transportExtensionRegistration" = "Pendaftaran ekstensi driver";
+"activity.check.configFiles" = "File konfigurasi";
+"activity.check.usbAccess" = "Akses USB";
+"activity.fix.showLibrary" = "Tampilkan Pustaka";

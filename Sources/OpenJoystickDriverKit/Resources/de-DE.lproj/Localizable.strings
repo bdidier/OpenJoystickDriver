@@ -1842,3 +1842,9 @@
 "activity.status.warn" = "Warnung";
 "activity.status.skip" = "Übersprungen";
 "cli.log.sharing_warning" = "Dienstprotokolle können Gerätenamen, Kennungen oder Diagnosepfade enthalten. Vor dem Teilen prüfen.";
+"activity.filter" = "Filter";
+"activity.check.transportExtensionBundle" = "Paket der Treibererweiterung";
+"activity.check.transportExtensionRegistration" = "Registrierung der Treibererweiterung";
+"activity.check.configFiles" = "Konfigurationsdateien";
+"activity.check.usbAccess" = "USB-Zugriff";
+"activity.fix.showLibrary" = "Bibliothek zeigen";

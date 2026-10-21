@@ -69,28 +69,17 @@ struct ExplainCommand: AsyncParsableCommand {
   }
 
   private static func result(for code: String) throws -> Result {
-    if let id = ErrorCode(typed: code) {
-      return Result(
-        code: id.rawValue,
-        domain: id.domain.rawValue,
-        area: area(of: id.domain),
-        explanation: id.localizedExplanation,
-        exitCode: id.domain == .commandLine ? CLIExitCode(for: id).rawValue : nil,
-        wire: id.domain == .remapping
-          ? ApplicationServiceRemappingRPCError.Code.allCases.first { $0.errorCode == id }?.rawValue
-          : nil
-      )
+    guard let id = ErrorCode(typed: code) else {
+      throw CLIFailure.usage(CLILocalized.format("cli.explain.unknown", code))
     }
-    throw CLIFailure.usage(CLILocalized.format("cli.explain.unknown", code))
-  }
-
-  private static func area(of domain: ErrorCode.Domain) -> String {
-    switch domain {
-    case .endpoint: CLILocalized.text("cli.explain.area.endpoint")
-    case .commandLine: CLILocalized.text("cli.explain.area.cli")
-    case .remapping: CLILocalized.text("cli.explain.area.remapping")
-    case .mod: CLILocalized.text("cli.explain.area.mod")
-    case .document: CLILocalized.text("cli.explain.area.document")
-    }
+    let facts = id.facts
+    return Result(
+      code: facts.code,
+      domain: facts.domain,
+      area: facts.area,
+      explanation: facts.explanation,
+      exitCode: facts.exitCode,
+      wire: facts.wire
+    )
   }
 }

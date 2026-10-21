@@ -1842,3 +1842,9 @@
 "activity.status.warn" = "Avertissement";
 "activity.status.skip" = "Ignorée";
 "cli.log.sharing_warning" = "Les journaux du service peuvent contenir des noms d’appareils, des identifiants ou des chemins de diagnostic. Relisez-les avant de les partager.";
+"activity.filter" = "Filtrer";
+"activity.check.transportExtensionBundle" = "Bundle de l’extension de pilote";
+"activity.check.transportExtensionRegistration" = "Enregistrement de l’extension de pilote";
+"activity.check.configFiles" = "Fichiers de configuration";
+"activity.check.usbAccess" = "Accès USB";
+"activity.fix.showLibrary" = "Afficher la bibliothèque";

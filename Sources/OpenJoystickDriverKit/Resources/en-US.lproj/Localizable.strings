@@ -1842,3 +1842,9 @@
 "activity.status.warn" = "Warning";
 "activity.status.skip" = "Skipped";
 "cli.log.sharing_warning" = "Application service logs may contain device names, identifiers, or diagnostic paths. Review before sharing.";
+"activity.filter" = "Filter";
+"activity.check.transportExtensionBundle" = "Driver extension bundle";
+"activity.check.transportExtensionRegistration" = "Driver extension registration";
+"activity.check.configFiles" = "Configuration files";
+"activity.check.usbAccess" = "USB access";
+"activity.fix.showLibrary" = "Show Library";

@@ -42,7 +42,8 @@
       persistence: any MainWindowAreaPersistence = UserDefaultsMainWindowAreaPersistence()
     ) {
       self.visibilityChanged = visibilityChanged
-      navigation = MainWindowNavigationModel(persistence: persistence)
+      let navigation = MainWindowNavigationModel(persistence: persistence)
+      self.navigation = navigation
       screens = MainWindowScreens(
         runtime: runtime,
         supportReport: supportReport,
@@ -54,7 +55,26 @@
           diagnostics: ActivityDiagnosticsModel {
             await ActivityDiagnosticsChecks.run(gateway: supportReport.gateway)
           }
-        ),
+        ) { fix in
+          switch fix {
+          case .requestInputRead:
+            PermissionAccessActions.requestControllerAccess(
+              viewModel: runtime,
+              requirement: .inputRead
+            )
+          case .requestInputInject:
+            PermissionAccessActions.requestControllerAccess(
+              viewModel: runtime,
+              requirement: .inputInject
+            )
+          case .approveDriver:
+            if !SystemExtensionApproval.openSystemSettings() {
+              return OJDLocalized.string("setup.openSystemSettingsFailed")
+            }
+          case .showLibrary: _ = navigation.requestArea(.library)
+          }
+          return nil
+        },
         errorCodeExplainer: ErrorCodeExplainerModel(),
         libraryArea: LibraryViewModel(),
         access: AccessViewModel(),
@@ -132,9 +152,8 @@
         guard let self else { return }
         showToolbarActions(of: navigation.selectedArea)
       }
-      summaryObservation = runtime.$statusState.sink { [weak self] status in
-        guard let self else { return }
-        window.subtitle = MainWindowSummary.text(for: navigation.selectedArea, status: status)
+      summaryObservation = runtime.$statusState.sink { [weak window] status in
+        window?.subtitle = MainWindowSummary.text(for: navigation.selectedArea, status: status)
       }
     }
 
@@ -326,7 +345,7 @@
       case .saveActivityLog: saveActivityLog()
       case .showActivityLogInFinder: screens.activity.log.showInFinder()
       case .runDiagnostics: Task { await screens.activity.diagnostics.run() }
-      case .activityMode, .activityFilter, .activityLines, .activitySearch:
+      case .activityMode, .activityFilter, .activitySearch:
         preconditionFailure("\(action) has its own control action")
       }
     }
@@ -337,7 +356,7 @@
       case .newProfile, .importProfile:
         return !screens.profiles.isActionBlocked(library: screens.library, runtime: screens.runtime)
       case .installLibraryItem, .saveActivityLog, .showActivityLogInFinder: return true
-      case .activityMode, .activityFilter, .activityLines, .activitySearch: return true
+      case .activityMode, .activityFilter, .activitySearch: return true
       case .copyActivityLog: return !screens.activity.log.rows.isEmpty
       case .runDiagnostics: return !screens.activity.diagnostics.isRunning
       }

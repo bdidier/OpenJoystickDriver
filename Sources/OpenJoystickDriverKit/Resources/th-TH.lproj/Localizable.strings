@@ -1841,3 +1841,9 @@
 "activity.status.warn" = "คำเตือน";
 "activity.status.skip" = "ข้ามแล้ว";
 "cli.log.sharing_warning" = "บันทึกของบริการอาจมีชื่ออุปกรณ์ ตัวระบุ หรือพาธการวินิจฉัย โปรดตรวจสอบก่อนแชร์";
+"activity.filter" = "ตัวกรอง";
+"activity.check.transportExtensionBundle" = "แพ็กเกจส่วนขยายไดรเวอร์";
+"activity.check.transportExtensionRegistration" = "การลงทะเบียนส่วนขยายไดรเวอร์";
+"activity.check.configFiles" = "ไฟล์การกำหนดค่า";
+"activity.check.usbAccess" = "การเข้าถึง USB";
+"activity.fix.showLibrary" = "แสดงคลัง";
