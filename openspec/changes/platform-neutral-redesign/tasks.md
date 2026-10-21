@@ -463,7 +463,7 @@ Order of the open tasks:
 
 1. Bugs first: 24.40 to 24.45.
 2. The 20.x groups in order, each with its `/impeccable` pass, apple-docs HIG checks and the user's recorded approval: 20.1 and 20.6 (shell), 20.7 (Controllers), 20.8 (Input Test), 20.9 (Profiles), 20.10 (Library), 20.11 (Access), 20.12 (Activity), then the Settings window, 20.13 (status item) and main menu groups of 20.2; 20.3 to 20.5 and 21.1 to 21.4 alongside.
-3. 9.1h, then 15.8, 24.30, 24.30a, 24.30b, 24.30c, 9.1a, 9.3, 24.7, 24.50 to 24.56, 17.1 with 17.1d, 17.4a, 17.2a.
+3. 9.1h, then 15.8, 24.30, 24.30a, 24.30b, 24.30c, 9.1a, 9.3, 24.7, 24.50 to 24.57, 17.1 with 17.1d, 17.4a, 17.2a.
 4. 22.1 to 22.5 and 22.7.
 5. 24.16 after 17.1 and section 15; 24.18 after H6; 16.4 after H5; 16.5 after H7.
 6. 23.1 to 23.4 last.
