@@ -182,7 +182,7 @@
             ),
             primaryButton: .destructive(
               Text(OJDLocalized.string("common.setActive"))
-            ) { activateProfile() },
+            ) { activateProfile(allowEmpty: true) },
             secondaryButton: .cancel { self.confirmation = nil }
           )
         case .clearInputs:
@@ -198,6 +198,15 @@
             primaryButton: .destructive(
               Text(OJDLocalized.string("profiles.clearInputs"))
             ) { clearInputs() },
+            secondaryButton: .cancel { self.confirmation = nil }
+          )
+        case .removeAllAssignments:
+          Alert(
+            title: Text(OJDLocalized.string("profiles.removeAllAssignmentsTitle")),
+            message: Text(OJDLocalized.string("profiles.removeAllAssignmentsMessage")),
+            primaryButton: .destructive(
+              Text(OJDLocalized.string("profiles.removeAllAssignmentsConfirm"))
+            ) { removeAllAssignments() },
             secondaryButton: .cancel { self.confirmation = nil }
           )
         }

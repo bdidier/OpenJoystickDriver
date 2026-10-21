@@ -58,6 +58,12 @@
     var menuActions: [ProfileEditorMenuAction] {
       var actions: [ProfileEditorMenuAction] = []
       if draft.profile.suppressesAllControllerInput { actions.append(.restoreDefaultInput) }
+      let profile = draft.profile
+      if !(profile.bindings.isEmpty && profile.chords.isEmpty && profile.sequences.isEmpty
+        && profile.layers.isEmpty)
+      {
+        actions.append(.removeAllAssignments)
+      }
       actions.append(.clearInputs)
       if isActive, profile.joyConPair == nil { actions.append(.deactivateAll) }
       return actions
@@ -68,12 +74,17 @@
       case .details: activeSheet = .metadata
       case .restoreDefaultInput: restoreDefaultInput()
       case .clearInputs: confirmation = .clearInputs
+      case .removeAllAssignments: confirmation = .removeAllAssignments
       case .deactivateAll: deactivateAllProfiles()
       }
     }
 
     func restoreDefaultInput() {
       applyDraftChange { RuntimeProfileDraft(profile: draft.profile.restoringDefaultInput()) }
+    }
+
+    func removeAllAssignments() {
+      applyDraftChange { try draft.removingAllBindings() }
     }
 
     func clearInputs() {
@@ -84,16 +95,22 @@
       if profile.producesNoOutput {
         confirmation = .activateEmpty
       } else {
-        activateProfile()
+        activateProfile(allowEmpty: false)
       }
     }
 
-    func activateProfile() {
+    /// Activates the profile; `allowEmpty` is true only after the person confirmed that it
+    /// produces no output.
+    func activateProfile(allowEmpty: Bool) {
       guard !isMutationActive else { return }
       let request = RuntimeMutationRequest(operation: .activate(profileID: profile.id))
       guard onMutationStarted(request) else { return }
       Task { @MainActor in
-        let result = await library.activateRemappingProfile(id: profile.id, request: request)
+        let result = await library.activateRemappingProfile(
+          id: profile.id,
+          allowEmpty: allowEmpty,
+          request: request
+        )
         onMutationResult(result)
       }
     }
@@ -292,6 +309,7 @@
     case details
     case restoreDefaultInput
     case clearInputs
+    case removeAllAssignments
     case deactivateAll
 
     var title: String {
@@ -303,6 +321,8 @@
         )
       case .clearInputs:
         return OJDLocalized.string("profiles.clearInputs")
+      case .removeAllAssignments:
+        return OJDLocalized.string("profiles.removeAllAssignments")
       case .deactivateAll:
         return OJDLocalized.string("profiles.deactivateController")
       }

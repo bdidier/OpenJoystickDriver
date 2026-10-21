@@ -226,6 +226,31 @@ extension RuntimeProfileDraftTests {
   }
 
   @Test
+  func removingAllBindingsKeepsTheOtherInputSettings() throws {
+    var draft = RuntimeProfileDraft(profile: makeProfile())
+    draft = try draft.addingChord(
+      sources: [.button(.east), .button(.west)],
+      destination: .keyboard(key: .b, modifiers: []),
+      mode: .simultaneous,
+      windowMs: 375
+    )
+    draft = try draft.addingLayer(
+      name: "Precision",
+      activator: .button(.leftShoulder),
+      activationMode: .hold
+    )
+    let sticks = draft.profile.stickMappings
+
+    draft = try draft.removingAllBindings()
+
+    #expect(draft.profile.bindings.isEmpty)
+    #expect(draft.profile.chords.isEmpty)
+    #expect(draft.profile.sequences.isEmpty)
+    #expect(draft.profile.layers.isEmpty)
+    #expect(draft.profile.stickMappings == sticks)
+  }
+
+  @Test
   func profileDraftSupportsCLIChordSequenceAndLayerParity() throws {
     var draft = RuntimeProfileDraft(profile: makeProfile())
     draft = try draft.addingChord(

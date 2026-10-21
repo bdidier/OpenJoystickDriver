@@ -252,4 +252,19 @@ struct ProfileCreationFieldsTests {
     #expect(edited.showsValidation(isValid: false))
     #expect(!edited.showsValidation(isValid: true))
   }
+
+  @Test
+  func theChosenOutputPolicyIsTheProposedProfilesPolicy() {
+    let context = Self.context(devices: [Self.padA])
+    var fields = ProfileCreationFields()
+    #expect(
+      fields.proposedProfile(in: context)?.outputPolicy
+        == RemappingOutputPolicy(virtualGamepad: .passthrough, physicalInput: .shared)
+    )
+    fields.outputPolicy = RemappingOutputPolicy(
+      virtualGamepad: .disabled,
+      physicalInput: .exclusive
+    )
+    #expect(fields.proposedProfile(in: context)?.outputPolicy == fields.outputPolicy)
+  }
 }

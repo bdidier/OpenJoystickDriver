@@ -100,12 +100,13 @@ final class ProfileLibraryModel: ObservableObject {
   @discardableResult
   func activateRemappingProfile(
     id: UUID,
+    allowEmpty: Bool,
     request: RuntimeMutationRequest
   ) async -> RuntimeMutationResult {
     guard !runtime.mutationInFlight else { return rejectMutation(request) }
     let gateway = self.gateway
     return await performMutation(request: request, conflictProfileID: id) {
-      try await gateway.activateRemappingProfile(id: id)
+      try await gateway.activateRemappingProfile(id: id, allowEmpty: allowEmpty)
     }
   }
 

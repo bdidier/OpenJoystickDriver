@@ -176,11 +176,12 @@
 
     @objc
     func activateProfileFromMenu(_ sender: NSMenuItem) {
-      guard let profileID = sender.representedObject as? UUID else { return }
+      guard let profileID = sender.representedObject as? UUID,
+        let operation = confirmedActivation(of: profileID)
+      else { return }
       Task { @MainActor in
         guard let mainWindow else { return }
-        let outcome = await StatusItemProfileOperation.activate(profileID: profileID)
-          .perform(on: mainWindow)
+        let outcome = await operation.perform(on: mainWindow)
         guard let outcome else {
           showMainMenuAlert(
             title: OJDLocalized.string("mainMenu.profile.activateFailed"),

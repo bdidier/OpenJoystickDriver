@@ -46,7 +46,7 @@
       }
     }
 
-    private static func color(of status: DiagnoseStatus) -> Color {
+    static func color(of status: DiagnoseStatus) -> Color {
       switch status {
       case .pass: return Color(NSColor.systemGreen)
       case .warn: return Color(NSColor.systemOrange)
