@@ -74,29 +74,5 @@
 			<string>コントローラ出力デバイスが%d台検出されました</string>
 		</dict>
 	</dict>
-	<key>library.records.bundled</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@count@</string>
-		<key>count</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>d</string>
-			<key>one</key>
-			<string>このほかに%d件のレコードがAppに含まれています。</string>
-			<key>zero</key>
-			<string>このほかに%d件のレコードがAppに含まれています。</string>
-			<key>two</key>
-			<string>このほかに%d件のレコードがAppに含まれています。</string>
-			<key>few</key>
-			<string>このほかに%d件のレコードがAppに含まれています。</string>
-			<key>many</key>
-			<string>このほかに%d件のレコードがAppに含まれています。</string>
-			<key>other</key>
-			<string>このほかに%d件のレコードがAppに含まれています。</string>
-		</dict>
-	</dict>
 </dict>
 </plist>

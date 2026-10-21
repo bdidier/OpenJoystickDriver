@@ -75,11 +75,7 @@ enum RecordTransportClaim: String, Encodable, Equatable {
   case unclaimed = "Unclaimed"
 
   init?(_ record: ControllerRecord) {
-    guard record.usesRawUSB else { return nil }
-    let claimed = PlatformHosts.current.extensionEntitlementCovers(
-      vendorID: record.model.vendorID,
-      productID: record.model.productID
-    )
+    guard let claimed = record.isClaimedByUSBExtension else { return nil }
     self = claimed ? .claimed : .unclaimed
   }
 }

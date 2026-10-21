@@ -74,29 +74,5 @@
 			<string>Đã phát hiện %d thiết bị đầu ra bộ điều khiển</string>
 		</dict>
 	</dict>
-	<key>library.records.bundled</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@count@</string>
-		<key>count</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>d</string>
-			<key>one</key>
-			<string>Ứng dụng đi kèm thêm %d bản ghi.</string>
-			<key>zero</key>
-			<string>Ứng dụng đi kèm thêm %d bản ghi.</string>
-			<key>two</key>
-			<string>Ứng dụng đi kèm thêm %d bản ghi.</string>
-			<key>few</key>
-			<string>Ứng dụng đi kèm thêm %d bản ghi.</string>
-			<key>many</key>
-			<string>Ứng dụng đi kèm thêm %d bản ghi.</string>
-			<key>other</key>
-			<string>Ứng dụng đi kèm thêm %d bản ghi.</string>
-		</dict>
-	</dict>
 </dict>
 </plist>

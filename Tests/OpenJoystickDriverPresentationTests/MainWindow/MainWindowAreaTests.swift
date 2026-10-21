@@ -61,7 +61,11 @@ struct MainWindowAreaTests {
   func eachAreaShowsItsOwnActionsAfterTheFixedItems() {
     #expect(MainWindowArea.controllers.toolbarActions == [.refreshControllers])
     #expect(MainWindowArea.profiles.toolbarActions == [.newProfile, .importProfile])
-    #expect(MainWindowArea.library.toolbarActions == [.installLibraryItem])
+    #expect(
+      MainWindowArea.library.toolbarActions == [
+        .installLibraryItem, .validateLibraryItem, .testLibraryRecord, .removeLibraryItem,
+      ]
+    )
     #expect(MainWindowArea.access.toolbarActions.isEmpty)
     #expect(MainWindowArea.activity.toolbarActions.isEmpty)
     #expect(

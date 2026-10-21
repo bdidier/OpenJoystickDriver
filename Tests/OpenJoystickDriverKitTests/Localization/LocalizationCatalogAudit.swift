@@ -24,7 +24,8 @@ enum LocalizationCatalogAudit {
     "settingsPane.general.title",
   ]
   private static let frenchTerms: Set<String> = [
-    "capture.gain", "cli.controller.show.label.session",
+    "library.field.source", "library.field.transport", "library.field.version", "capture.gain",
+    "cli.controller.show.label.session",
     "cli.status.label.transport_extension", "cli.status.label.service", "common.destination",
     "inputTest.menu", "keyboard.alt", "mapping.guide",
     "mapping.start", "motion.calibration.pause",
@@ -40,7 +41,7 @@ enum LocalizationCatalogAudit {
       "keyboard.return", "keyboard.shift", "keyboard.tab",
     ],
     "de-DE": [
-      "mainMenu.controller",
+      "library.field.version", "mainMenu.controller",
       "access.details", "library.details",
       "access.token.name", "access.web.port", "access.web.enable.port", "access.socket",
       "access.transport.socket", "access.token.issued.title", "access.token.named",
@@ -65,7 +66,7 @@ enum LocalizationCatalogAudit {
     ]),
     "hi-IN": ["keyboard.escape", "keyboard.return"],
     "id-ID": [
-      "access.token.issued.title", "access.token.named",
+      "library.layer.driver", "access.token.issued.title", "access.token.named",
       "access.web.port", "access.web.enable.port", "mainMenu.window.zoom",
       "cli.controller.show.label.input", "cli.explain.area", "cli.explain.area.endpoint",
       "common.status", "console.output", "console.stream", "developer.packetColumnData",
@@ -97,7 +98,7 @@ enum LocalizationCatalogAudit {
       "keyboard.alt", "keyboard.return", "keyboard.shift",
     ],
     "nl-NL": [
-      "access.details", "library.details",
+      "library.field.transport", "access.details", "library.details",
       "access.token.issued.title", "access.token.named", "access.tokens", "library.mods",
       "mainMenu.window.zoom",
       "area.controllers.title", "menuBar.controllers",

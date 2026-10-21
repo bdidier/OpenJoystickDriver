@@ -113,6 +113,7 @@
         runtime.scopedRefreshInFlightPublisher.map { _ in () }.eraseToAnyPublisher(),
         runtime.$remappingState.map { _ in () }.eraseToAnyPublisher(),
         screens.library.objectWillChange.map { _ in () }.eraseToAnyPublisher(),
+        screens.libraryArea.objectWillChange.map { _ in () }.eraseToAnyPublisher(),
         screens.profiles.objectWillChange.map { _ in () }.eraseToAnyPublisher(),
         navigation.objectWillChange.map { _ in () }.eraseToAnyPublisher()
       ).receive(on: DispatchQueue.main).sink { [weak self] in
@@ -302,6 +303,17 @@
       case .newProfile: screens.profiles.isCreatingProfile = true
       case .importProfile: screens.profiles.chooseProfileToImport()
       case .installLibraryItem: installRecordOrMod()
+      case .validateLibraryItem:
+        if let url = LibraryFilePicker.chooseRecordOrModFolder() {
+          screens.libraryArea.validate(at: url)
+        }
+      case .testLibraryRecord:
+        if let capture = LibraryFilePicker.chooseCapture(),
+          let expectation = LibraryFilePicker.chooseExpectation()
+        {
+          screens.libraryArea.testSelectedRecord(capture: capture, expectation: expectation)
+        }
+      case .removeLibraryItem: screens.libraryArea.requestRemoveSelection()
       }
     }
 
@@ -310,7 +322,9 @@
       case .refreshControllers: return !screens.runtime.isScopedRefreshInFlight
       case .newProfile, .importProfile:
         return !screens.profiles.isActionBlocked(library: screens.library, runtime: screens.runtime)
-      case .installLibraryItem: return true
+      case .installLibraryItem, .validateLibraryItem: return true
+      case .testLibraryRecord: return screens.libraryArea.canTestSelection
+      case .removeLibraryItem: return screens.libraryArea.canRemoveSelection
       }
     }
   }

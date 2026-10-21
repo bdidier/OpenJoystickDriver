@@ -7,7 +7,8 @@ struct LibraryFailure: Error, Equatable {
   let code: ErrorCode?
 }
 
-/// A controller record that a user file or an installed package adds or patches.
+/// A controller record: a bundled one, or one that a user file or an installed package adds or
+/// patches.
 struct LibraryRecordItem: Equatable, Identifiable {
   let model: ControllerModelID
   let family: String
@@ -30,9 +31,42 @@ struct LibrarySkippedFile: Equatable, Identifiable {
 }
 
 struct LibraryRecordListing: Equatable {
+  /// Every effective record, by model.
   var items: [LibraryRecordItem] = []
   var skipped: [LibrarySkippedFile] = []
-  var bundledCount = 0
+
+  /// The records that a user file or a package adds or patches.
+  var installed: [LibraryRecordItem] { items.filter { $0.layer != .bundled } }
+  /// The records the app comes with, no file of which changes them.
+  var builtIn: [LibraryRecordItem] { items.filter { $0.layer == .bundled } }
+}
+
+/// A top-level field of a record and the layer that sets it.
+struct LibraryRecordField: Equatable, Identifiable {
+  let name: String
+  let layer: ControllerRecordLayer
+
+  var id: String { name }
+}
+
+/// Everything `ojd record show` prints for one record.
+struct LibraryRecordDetail: Equatable {
+  let item: LibraryRecordItem
+  /// How OJD reaches the controller: `HID` or `USB`.
+  let transport: String
+  /// Why OJD reaches the controller only in a limited way, in words.
+  let notes: [String]
+  let fields: [LibraryRecordField]
+  /// The effective record as JSON text; nil when it is not UTF-8.
+  let document: String?
+}
+
+/// The outcome of replaying a capture through a record's parser.
+struct LibraryTestRun: Equatable {
+  let model: ControllerModelID
+  /// The name of the expectation file.
+  let expectation: String
+  let result: ControllerRecordTestResult
 }
 
 /// What validation found in a record file.
@@ -69,7 +103,17 @@ struct LibraryModCheck: Equatable {
 /// The controller records and mod packages the Library area lists, validates, installs and
 /// removes. The operations are those of `ojd record` and `ojd mod`.
 protocol LibraryStore: Sendable {
-  func installedRecords() -> LibraryRecordListing
+  func records() -> LibraryRecordListing
+  func recordDetail(_ model: ControllerModelID) -> LibraryRecordDetail?
+  /// Replays the capture through the record's parser and compares the state with the
+  /// expectation. The names label the files in a failure.
+  func testRecord(
+    _ model: ControllerModelID,
+    capture: Data,
+    captureName: String,
+    expectation: Data,
+    expectationName: String
+  ) throws -> ControllerRecordTestResult
   func checkRecord(_ data: Data) throws -> LibraryRecordCheck
   func installRecord(_ data: Data) throws -> LibraryRecordCheck
   func removeRecord(_ model: ControllerModelID) throws
@@ -98,25 +142,72 @@ struct DirectoryLibraryStore: LibraryStore {
     ModPackageStore(directory: packagesDirectory, runningVersion: runningVersion)
   }
 
-  func installedRecords() -> LibraryRecordListing {
+  func records() -> LibraryRecordListing {
     let set = ControllerRecordSet.load(userDirectory: recordsDirectory)
-    let items = set.records.values.sorted { $0.model < $1.model }.compactMap {
-      record -> LibraryRecordItem? in
-      guard record.layer != .bundled else { return nil }
-      return LibraryRecordItem(
-        model: record.model,
-        family: CommandLineName.kebab(record.family),
-        layer: record.layer,
-        file: record.file
-      )
-    }
     return LibraryRecordListing(
-      items: items,
+      items: set.records.values.sorted { $0.model < $1.model }.map(Self.item),
       skipped: set.userFiles.compactMap { file in
         file.problem.map { LibrarySkippedFile(path: file.url.path, problem: $0) }
-      },
-      bundledCount: set.records.count - items.count
+      }
     )
+  }
+
+  private static func item(_ record: ControllerRecord) -> LibraryRecordItem {
+    LibraryRecordItem(
+      model: record.model,
+      family: CommandLineName.kebab(record.family),
+      layer: record.layer,
+      file: record.file
+    )
+  }
+
+  func recordDetail(_ model: ControllerModelID) -> LibraryRecordDetail? {
+    guard let record = ControllerRecordSet.load(userDirectory: recordsDirectory).records[model]
+    else { return nil }
+    var notes: [String] = []
+    if record.isClaimedByUSBExtension == false {
+      notes.append(OJDLocalized.string("cli.record.usb_not_claimed"))
+    }
+    if record.isSwitch2WithoutBluetoothLE {
+      notes.append(OJDLocalized.string("cli.record.usb_only_switch2"))
+    }
+    return LibraryRecordDetail(
+      item: Self.item(record),
+      transport: record.usesRawUSB ? "USB" : "HID",
+      notes: notes,
+      fields: record.fieldLayers.sorted { $0.key < $1.key }.map {
+        LibraryRecordField(name: $0.key, layer: $0.value)
+      },
+      document: String(bytes: record.document, encoding: .utf8)
+    )
+  }
+
+  func testRecord(
+    _ model: ControllerModelID,
+    capture: Data,
+    captureName: String,
+    expectation: Data,
+    expectationName: String
+  ) throws -> ControllerRecordTestResult {
+    guard let record = ControllerRecordSet.load(userDirectory: recordsDirectory).records[model]
+    else {
+      throw LibraryFailure(
+        message: OJDLocalized.formatted("library.record.notFound", model.description),
+        code: .notFound
+      )
+    }
+    do { return try record.test(capture: capture, expectation: expectation) } catch let error
+      as ControllerRecordTestError
+    {
+      throw LibraryFailure(
+        message: error.message(
+          model: model,
+          capture: captureName,
+          expectation: expectationName
+        ),
+        code: .invalidInputFile
+      )
+    }
   }
 
   func checkRecord(_ data: Data) throws -> LibraryRecordCheck {

@@ -9,6 +9,9 @@
     case newProfile
     case importProfile
     case installLibraryItem
+    case validateLibraryItem
+    case testLibraryRecord
+    case removeLibraryItem
 
     var identifier: NSToolbarItem.Identifier {
       NSToolbarItem.Identifier("OpenJoystickDriver.MainWindowToolbar.\(rawValue)")
@@ -27,6 +30,9 @@
       case .newProfile: return "plus"
       case .importProfile: return "square.and.arrow.down"
       case .installLibraryItem: return "square.and.arrow.down.on.square"
+      case .validateLibraryItem: return "checkmark.circle"
+      case .testLibraryRecord: return "play.circle"
+      case .removeLibraryItem: return "trash"
       }
     }
 
@@ -37,6 +43,9 @@
       case .newProfile: return "profiles.new"
       case .importProfile: return "profiles.import"
       case .installLibraryItem: return "library.install"
+      case .validateLibraryItem: return "library.validate"
+      case .testLibraryRecord: return "library.testRecord"
+      case .removeLibraryItem: return "library.remove"
       }
     }
 
@@ -47,6 +56,9 @@
       case .newProfile: return "profiles.new"
       case .importProfile: return "profiles.import"
       case .installLibraryItem: return "mainMenu.file.installRecordOrMod"
+      case .validateLibraryItem: return "library.validate"
+      case .testLibraryRecord: return "library.testRecord"
+      case .removeLibraryItem: return "library.remove"
       }
     }
   }
@@ -57,7 +69,8 @@
       switch self {
       case .controllers: return [.refreshControllers]
       case .profiles: return [.newProfile, .importProfile]
-      case .library: return [.installLibraryItem]
+      case .library:
+        return [.installLibraryItem, .validateLibraryItem, .testLibraryRecord, .removeLibraryItem]
       case .access, .activity: return []
       }
     }

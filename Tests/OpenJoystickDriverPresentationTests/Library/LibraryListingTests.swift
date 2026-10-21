@@ -1,0 +1,174 @@
+import Foundation
+import OpenJoystickDriverKit
+import Testing
+
+@testable import OpenJoystickDriverPresentation
+
+@MainActor
+struct LibraryListingTests {
+  private let userModel = ControllerModelID(vendorID: 0x1234, productID: 0x0001)
+  private let builtInModel = ControllerModelID(vendorID: 0x045E, productID: 0x028E)
+
+  private func item(
+    _ model: ControllerModelID,
+    _ layer: ControllerRecordLayer
+  )
+    -> LibraryRecordItem
+  { LibraryRecordItem(model: model, family: "xbox-gip", layer: layer, file: nil) }
+
+  private func detail(_ item: LibraryRecordItem) -> LibraryRecordDetail {
+    LibraryRecordDetail(item: item, transport: "HID", notes: [], fields: [], document: "{}")
+  }
+
+  private func loadedModel() -> (LibraryViewModel, FakeLibraryStore) {
+    let store = FakeLibraryStore()
+    let user = item(userModel, .user)
+    let builtIn = item(builtInModel, .bundled)
+    store.listing = LibraryRecordListing(items: [user, builtIn])
+    store.details = [userModel: detail(user), builtInModel: detail(builtIn)]
+    store.mods = [
+      LibraryModItem(name: "arcade", version: "1.0.0", author: "Ada", files: [], problem: nil)
+    ]
+    let model = LibraryViewModel(store: store) { _ in Data() }
+    model.reload()
+    return (model, store)
+  }
+
+  @Test
+  func installedScopeListsInstalledRecordsAndMods() {
+    let (model, _) = loadedModel()
+
+    #expect(model.visibleRecords.map(\.model) == [userModel])
+    #expect(model.visibleMods.map(\.name) == ["arcade"])
+  }
+
+  @Test
+  func builtInScopeListsBundledRecordsAndNoMods() {
+    let (model, _) = loadedModel()
+
+    model.scope = .builtIn
+
+    #expect(model.visibleRecords.map(\.model) == [builtInModel])
+    #expect(model.visibleMods.isEmpty)
+  }
+
+  @Test
+  func changingScopeClearsTheSelection() {
+    let (model, _) = loadedModel()
+    model.select(.record(userModel))
+
+    model.scope = .builtIn
+
+    #expect(model.selection == nil)
+    #expect(model.recordDetail == nil)
+  }
+
+  @Test
+  func selectingARecordShowsItsDetail() {
+    let (model, _) = loadedModel()
+
+    model.select(.record(userModel))
+
+    #expect(model.recordDetail?.item.model == userModel)
+    #expect(model.selectedMod == nil)
+  }
+
+  @Test
+  func selectingAModShowsTheMod() {
+    let (model, _) = loadedModel()
+
+    model.select(.mod("arcade"))
+
+    #expect(model.selectedMod?.name == "arcade")
+    #expect(model.recordDetail == nil)
+  }
+
+  @Test
+  func selectingSomethingMissingSelectsNothing() {
+    let (model, _) = loadedModel()
+
+    model.select(.mod("missing"))
+
+    #expect(model.selection == nil)
+  }
+
+  @Test
+  func removeAndTestFollowTheSelection() {
+    let (model, _) = loadedModel()
+    #expect(!model.canRemoveSelection)
+    #expect(!model.canTestSelection)
+
+    model.select(.record(userModel))
+    #expect(model.canRemoveSelection)
+    #expect(model.canTestSelection)
+
+    model.scope = .builtIn
+    model.select(.record(builtInModel))
+    #expect(!model.canRemoveSelection)
+    #expect(model.canTestSelection)
+
+    model.scope = .installed
+    model.select(.mod("arcade"))
+    #expect(model.canRemoveSelection)
+    #expect(!model.canTestSelection)
+  }
+
+  @Test
+  func testingARecordKeepsItsResultUntilTheSelectionChanges() {
+    let (model, store) = loadedModel()
+    store.testOutcome = ControllerRecordTestResult(
+      inputReports: 2,
+      differences: [.init(field: "pressed", expected: "[]", actual: "[1]")]
+    )
+    model.select(.record(userModel))
+
+    model.testSelectedRecord(
+      capture: URL(fileURLWithPath: "/tmp/capture.jsonl"),
+      expectation: URL(fileURLWithPath: "/tmp/state.json")
+    )
+
+    #expect(store.testedRecords == [userModel])
+    #expect(model.testRun?.result.matches == false)
+    #expect(model.testRun?.expectation == "state.json")
+    model.select(.mod("arcade"))
+    #expect(model.testRun == nil)
+  }
+
+  @Test
+  func aTestRefusalShowsAFailure() {
+    let (model, store) = loadedModel()
+    store.refusal = LibraryFailure(message: "bad capture", code: .invalidInputFile)
+    model.select(.record(userModel))
+
+    model.testSelectedRecord(
+      capture: URL(fileURLWithPath: "/tmp/capture.jsonl"),
+      expectation: URL(fileURLWithPath: "/tmp/state.json")
+    )
+
+    #expect(model.testRun == nil)
+    #expect(model.failure?.code == .invalidInputFile)
+  }
+
+  @Test
+  func theLibraryToolbarLabelsResolve() {
+    for action in MainWindowArea.library.toolbarActions {
+      #expect(OJDLocalized.string(action.labelKey) != action.labelKey)
+      #expect(OJDLocalized.string(action.descriptionKey) != action.descriptionKey)
+    }
+  }
+
+  @Test
+  func theStoreListsTheBundledRecordsApartFromInstalledOnes() throws {
+    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(
+      UUID().uuidString,
+      isDirectory: true
+    ).appendingPathComponent("Controllers", isDirectory: true)
+    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+
+    let listing = DirectoryLibraryStore(recordsDirectory: directory).records()
+
+    #expect(listing.installed.isEmpty)
+    #expect(!listing.builtIn.isEmpty)
+    #expect(listing.builtIn.allSatisfy { $0.layer == .bundled })
+  }
+}
