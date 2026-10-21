@@ -289,6 +289,26 @@ struct ControllerRecordSetTests {
     )
   }
 
+  @Test(arguments: [
+    #"{"kind":"ControllerPatch","selector":{"vendorID":13932,"productID":5},"patch":{}}"#,
+    #"{"apiVersion":"unsupported.example/v9","kind":"ControllerPatch","#
+      + #""selector":{"vendorID":13932,"productID":5},"patch":{}}"#,
+  ])
+  func aUserPatchWithoutTheSupportedAPIVersionIsReportedWithE5001(document: String) throws {
+    let directory = MacOSDataDirectory().url(for: .temporary).appendingPathComponent(
+      "ojd-stored-patch-\(UUID().uuidString)",
+      isDirectory: true
+    )
+    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+    defer { try? FileManager.default.removeItem(at: directory) }
+    try Data(document.utf8).write(to: directory.appendingPathComponent("366c-0005.patch.json"))
+
+    let set = ControllerRecordSet.load(userDirectory: directory)
+
+    #expect(set.problems.count == 1)
+    #expect(set.problems.first?.problem?.hasPrefix("E5001: ") == true)
+  }
+
   /// The stored-file rule: OJD does not migrate a stored file. A file it can read keeps working;
   /// a file it cannot read is dropped, reported with its reason, and left as it was.
   @Test
@@ -308,20 +328,20 @@ struct ControllerRecordSetTests {
     let currentURL = directory.appendingPathComponent("366c-0005.patch.json")
     try current.write(to: currentURL)
     // A Controller file with an unsupported apiVersion.
-    let released = Data(
+    let unsupported = Data(
       (#"{"apiVersion":"unsupported.example/v9","#
         + #""kind":"\#(ControllerRecordDocument.kind)","vendorID":4660,"productID":43981,"#
         + #""modes":[{"id":"default","protocol":{"family":"XboxGIP"}}]}"#).utf8
     )
-    let releasedURL = directory.appendingPathComponent("1234-abcd.json")
-    try released.write(to: releasedURL)
+    let unsupportedURL = directory.appendingPathComponent("1234-abcd.json")
+    try unsupported.write(to: unsupportedURL)
     // A file of an unknown kind.
-    let removed = Data(
+    let wrongKind = Data(
       (#"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"NotAKind","#
         + #""operation":"patch","vendorID":13932,"productID":5,"set":{"usb":{}}}"#).utf8
     )
-    let removedURL = directory.appendingPathComponent("366c-0005.json")
-    try removed.write(to: removedURL)
+    let wrongKindURL = directory.appendingPathComponent("366c-0005.json")
+    try wrongKind.write(to: wrongKindURL)
 
     let set = ControllerRecordSet.load(userDirectory: directory)
 
@@ -339,9 +359,9 @@ struct ControllerRecordSetTests {
       set.problems.last?.problem
         == "366c-0005.json: expected ControllerPatch, found NotAKind"
     )
-    #expect(try Data(contentsOf: releasedURL) == released)
+    #expect(try Data(contentsOf: unsupportedURL) == unsupported)
     #expect(try Data(contentsOf: currentURL) == current)
-    #expect(try Data(contentsOf: removedURL) == removed)
+    #expect(try Data(contentsOf: wrongKindURL) == wrongKind)
   }
 
   @Test

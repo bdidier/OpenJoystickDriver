@@ -127,11 +127,11 @@ struct VirtualHIDProfileOverrideStoreTests {
   @Test
   func aFileWithAnUnsupportedAPIVersionIsSkipped() throws {
     try withDirectory { directory in
-      let unversioned = persona(vendorID: 1, productID: 2).replacingOccurrences(
+      let unsupported = persona(vendorID: 1, productID: 2).replacingOccurrences(
         of: OpenJoystickDriverAPI.version,
         with: "unsupported.example/v9"
       )
-      try write(unversioned, named: "old.json", in: directory)
+      try write(unsupported, named: "unsupported.json", in: directory)
       let store = Store(directory: directory)
 
       #expect(store.override(vendorID: 1, productID: 2) == nil)
@@ -142,6 +142,22 @@ struct VirtualHIDProfileOverrideStoreTests {
         ) == true
       )
       #expect(store.problems.first?.problem?.contains(OpenJoystickDriverAPI.version) == true)
+    }
+  }
+
+  @Test
+  func aFileWithoutAnAPIVersionIsSkippedWithE5001() throws {
+    try withDirectory { directory in
+      let missing = persona(vendorID: 1, productID: 2).replacingOccurrences(
+        of: #""apiVersion":"\#(OpenJoystickDriverAPI.version)","#,
+        with: ""
+      )
+      try write(missing, named: "missing.json", in: directory)
+      let store = Store(directory: directory)
+
+      #expect(store.override(vendorID: 1, productID: 2) == nil)
+      #expect(store.problems.first?.problem?.hasPrefix("E5001: ") == true)
+      #expect(store.problems.first?.problem?.contains("no apiVersion found") == true)
     }
   }
 
