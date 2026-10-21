@@ -99,12 +99,17 @@
       switch model.state {
       case .idle:
         Button(OJDLocalized.string("common.cancel")) { presentationMode.wrappedValue.dismiss() }
+          .keyboardShortcut(.cancelAction)
         Button(OJDLocalized.string("developer.soakStart")) { model.start() }
           .keyboardShortcut(.defaultAction).disabled(model.problem != nil)
       case .running:
         Button(OJDLocalized.string("common.stop")) { model.cancel() }
+          .keyboardShortcut(.cancelAction)
       case .finished:
-        Button(OJDLocalized.string("developer.soakStart")) { model.reset() }
+        Button(OJDLocalized.string("developer.soakStart")) {
+          model.reset()
+          model.start()
+        }
         Button(OJDLocalized.string("common.done")) {
           model.reset()
           presentationMode.wrappedValue.dismiss()

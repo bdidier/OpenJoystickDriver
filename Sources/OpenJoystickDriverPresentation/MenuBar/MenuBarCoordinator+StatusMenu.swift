@@ -133,8 +133,9 @@
         device.name
       )
       alert.addButton(withTitle: OJDLocalized.string("controllers.disconnectWirelessConfirm"))
+        .hasDestructiveAction = true
       alert.addButton(withTitle: OJDLocalized.string("common.cancel"))
-      guard alert.runModal() == .alertFirstButtonReturn else { return }
+      guard alert.runActivatingApp() == .alertFirstButtonReturn else { return }
       runControllerAction(sessionToken) { device in
         await self.viewModel.disconnectWirelessController(device)
       }
@@ -156,7 +157,7 @@
         alert.informativeText = OJDLocalized.string("profiles.emptyActivationMessage")
         alert.addButton(withTitle: OJDLocalized.string("common.setActive"))
         alert.addButton(withTitle: OJDLocalized.string("common.cancel"))
-        return alert.runModal() == .alertFirstButtonReturn
+        return alert.runActivatingApp() == .alertFirstButtonReturn
       }
     }
 
@@ -183,13 +184,24 @@
       alert.messageText = OJDLocalized.string("menuBar.actionFailedTitle")
       alert.informativeText = message
       alert.addButton(withTitle: OJDLocalized.string("common.ok"))
-      alert.runModal()
+      alert.runActivatingApp()
     }
 
     func menuImage(symbol: String) -> NSImage? {
       let image = NSImage(systemSymbolName: symbol, accessibilityDescription: nil)
       image?.isTemplate = true
       return image
+    }
+  }
+
+  extension NSAlert {
+    /// Runs the alert modally after bringing the app forward: the menu bar app has no Dock icon,
+    /// so without activation the alert opens behind the windows of the active app.
+    @MainActor
+    @discardableResult
+    func runActivatingApp() -> NSApplication.ModalResponse {
+      NSApplication.shared.activate(ignoringOtherApps: true)
+      return runModal()
     }
   }
 

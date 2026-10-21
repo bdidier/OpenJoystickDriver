@@ -122,14 +122,17 @@ final class SoakTestModel: ObservableObject {
   struct Source {
     /// Asks the service once, as `ojd diagnose` does; a stopped or failing service never throws.
     let snapshot: @MainActor () async -> DiagnoseServiceSnapshot
-    /// The service process identifier, or nil when nothing answers.
-    let processIdentifier: @MainActor () -> Int32?
+    /// The service process identifier, or nil when nothing answers. It connects to the service's
+    /// socket, so it runs off the main actor.
+    let processIdentifier: @Sendable () async -> Int32?
     let sample: @Sendable (Int32, SoakTestSettings) async throws -> RuntimeHealthSummary
 
     static func service(gateway: any ApplicationServiceGateway) -> Self {
       Self(
         snapshot: { await ActivityDiagnosticsChecks.serviceSnapshot(gateway) },
-        processIdentifier: { LocalServiceRPCClient.serverProcessIdentifier() },
+        processIdentifier: {
+          await Task.detached { LocalServiceRPCClient.serverProcessIdentifier() }.value
+        },
         sample: { processID, settings in
           try await ApplicationServiceRuntimeHealthSampler.sample(
             processID: processID,
@@ -172,8 +175,9 @@ final class SoakTestModel: ObservableObject {
     }
   }
 
-  /// Stops a run in progress and shows the entry again.
+  /// Stops a run in progress and shows the entry again; with no run in progress it does nothing.
   func cancel() {
+    guard isRunning else { return }
     task?.cancel()
     task = nil
     state = .idle
@@ -190,7 +194,8 @@ final class SoakTestModel: ObservableObject {
   private func check(_ settings: SoakTestSettings) async -> DiagnoseCheck {
     let id = "runtime-health"
     let snapshot = await source.snapshot()
-    guard snapshot.availability == .running, let processID = source.processIdentifier() else {
+    guard snapshot.availability == .running else { return DiagnosticsService.skipped(id, snapshot) }
+    guard let processID = await source.processIdentifier() else {
       return DiagnosticsService.skipped(id, snapshot)
     }
     do {
