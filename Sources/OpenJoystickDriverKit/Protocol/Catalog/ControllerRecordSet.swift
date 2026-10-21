@@ -217,7 +217,7 @@ public struct ControllerRecordSet: Sendable {
       } catch {
         throw ControllerRecordProblem(
           code: .invalidControllerRecord,
-          "\(url.path): \(problemDescription(error))"
+          "\(url.path): \(problemDescription(error, document: "record"))"
         )
       }
     }
@@ -310,7 +310,7 @@ public struct ControllerRecordSet: Sendable {
   public static func problemDescription(
     _ error: any Error,
     includingCode: Bool = true,
-    document: String = "record"
+    document: String
   ) -> String {
     func path(_ codingPath: [any CodingKey]) -> String {
       codingPath.map { $0.intValue.map { "[\($0)]" } ?? $0.stringValue }.joined(separator: ".")

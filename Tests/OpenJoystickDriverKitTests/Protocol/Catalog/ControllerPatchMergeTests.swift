@@ -66,7 +66,7 @@ struct ControllerPatchMergeTests {
         let code = ControllerRecordSet.problemCode(error)?.rawValue
         #expect(code == fixture["code"] as? String, "\(name)")
         #expect(
-          ControllerRecordSet.problemDescription(error) == fixture["message"] as? String,
+          ControllerRecordSet.problemDescription(error, document: "record") == fixture["message"] as? String,
           "\(name)"
         )
       }

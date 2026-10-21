@@ -9,7 +9,7 @@ extension VirtualDevice {
   static func decode(
     _ data: Data,
     fileName: String? = nil,
-    requiresMatch: Bool = false
+    requiresMatch: Bool
   ) throws -> Self {
     guard let object = try? JSONSerialization.jsonObject(with: data),
       let document = object as? [String: Any]

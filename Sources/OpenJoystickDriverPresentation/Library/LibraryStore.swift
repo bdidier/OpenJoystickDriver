@@ -235,7 +235,7 @@ final class DirectoryLibraryStore: LibraryStore {
       throw LibraryFailure(
         message: OJDLocalized.formatted(
           "library.record.invalid",
-          ControllerRecordSet.problemDescription(error, includingCode: false)
+          ControllerRecordSet.problemDescription(error, includingCode: false, document: "record")
         ),
         code: ControllerRecordSet.problemCode(error) ?? .invalidInputFile
       )

@@ -43,7 +43,7 @@ public struct ControllerDefaults: Equatable, Sendable {
       return Self(
         url: url,
         tuning: .none,
-        problem: ControllerRecordSet.problemDescription(error),
+        problem: ControllerRecordSet.problemDescription(error, document: "tuning"),
         patch: nil
       )
     }

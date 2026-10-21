@@ -29,11 +29,11 @@ struct VirtualDeviceTests {
     var document = try #require(
       try JSONSerialization.jsonObject(with: Data(contentsOf: url)) as? [String: Any]
     )
-    _ = try VirtualDevice.decode(JSONSerialization.data(withJSONObject: document))
+    _ = try VirtualDevice.decode(JSONSerialization.data(withJSONObject: document), requiresMatch: false)
     for value: Any? in [nil, "yes", 1] {
       document["worksWithDefaultSDLHints"] = value
       #expect(throws: ControllerRecordProblem.self, "\(String(describing: value))") {
-        try VirtualDevice.decode(JSONSerialization.data(withJSONObject: document))
+        try VirtualDevice.decode(JSONSerialization.data(withJSONObject: document), requiresMatch: false)
       }
     }
   }
@@ -44,7 +44,7 @@ struct VirtualDeviceTests {
       "{\(Self.header),\"persona\":\"Generic\","
       + "\"match\":{\"vendorID\":1,\"productID\":2},\"worksWithDefaultSDLHints\":true}"
     #expect(throws: ControllerRecordProblem.self) {
-      try VirtualDevice.decode(Data(document.utf8))
+      try VirtualDevice.decode(Data(document.utf8), requiresMatch: false)
     }
   }
 
@@ -61,7 +61,7 @@ struct VirtualDeviceTests {
   ])
   func aBadHeaderIsRefusedWithE5001(document: String) {
     let problem = #expect(throws: DocumentHeaderProblem.self) {
-      try VirtualDevice.decode(Data(document.utf8))
+      try VirtualDevice.decode(Data(document.utf8), requiresMatch: false)
     }
     #expect(problem?.code == .unsupportedAPIVersion)
     #expect(problem?.description.hasPrefix("E5001") == true)
@@ -71,7 +71,7 @@ struct VirtualDeviceTests {
   func aDocumentWithAnUnknownPersonaIsRefused() {
     let document = "{\(Self.header),\"persona\":\"NotAPersona\"}"
     #expect(throws: ControllerRecordProblem.self) {
-      try VirtualDevice.decode(Data(document.utf8))
+      try VirtualDevice.decode(Data(document.utf8), requiresMatch: false)
     }
   }
 
@@ -79,7 +79,7 @@ struct VirtualDeviceTests {
   func aProblemWithAVirtualDeviceCarriesNoErrorCode() {
     let document = "{\(Self.header),\"persona\":\"NotAPersona\"}"
     let problem = #expect(throws: ControllerRecordProblem.self) {
-      try VirtualDevice.decode(Data(document.utf8))
+      try VirtualDevice.decode(Data(document.utf8), requiresMatch: false)
     }
     #expect(problem?.code == nil)
     #expect(problem.flatMap { ControllerRecordSet.problemCode($0) } == nil)

@@ -117,7 +117,7 @@ extension ControllerRecordSet {
           url: entry.url,
           model: nil,
           operation: nil,
-          problem: problemDescription(error)
+          problem: problemDescription(error, document: "record")
         )
       }
     }
@@ -131,7 +131,7 @@ extension ControllerRecordSet {
       for target in targets {
         do {
           records[target] = try apply(patch, to: records[target]!, layer: layer, file: entry.url)
-        } catch { failure = failure ?? problemDescription(error) }
+        } catch { failure = failure ?? problemDescription(error, document: "record") }
       }
       let model: ControllerModelID? =
         switch patch.selector {

@@ -68,7 +68,7 @@ public enum ControllerServerWriter {
         options: [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
       )
       _ = try ControllerRecordSet.validate(data, file: file, packages: packages)
-    } catch { throw .invalidResult(ControllerRecordSet.problemDescription(error)) }
+    } catch { throw .invalidResult(ControllerRecordSet.problemDescription(error, document: "record")) }
     return Change(
       model: model,
       server: server,
@@ -99,7 +99,7 @@ public enum ControllerServerWriter {
     let operation: ControllerRecordOperation
     do {
       operation = try ControllerRecordSet.validate(data, file: file, packages: packages).operation
-    } catch { throw .invalidFile(ControllerRecordSet.problemDescription(error)) }
+    } catch { throw .invalidFile(ControllerRecordSet.problemDescription(error, document: "record")) }
     guard var document = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] else {
       throw .invalidFile("the file is not a JSON object")
     }

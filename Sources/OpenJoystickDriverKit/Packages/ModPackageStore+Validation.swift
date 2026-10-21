@@ -192,7 +192,7 @@ extension ModPackageStore {
       throw ModPackageError(
         ControllerRecordSet.problemCode(error) == .unsupportedAPIVersion
           ? .unsupportedAPIVersion : .invalidPackageContent,
-        "\(label): \(ControllerRecordSet.problemDescription(error, includingCode: false))"
+        "\(label): \(ControllerRecordSet.problemDescription(error, includingCode: false, document: "record"))"
       )
     }
   }

@@ -30,7 +30,7 @@ struct SchemaRejectionTests {
     } catch {
       return (
         ControllerRecordSet.problemCode(error)?.rawValue,
-        ControllerRecordSet.problemDescription(error)
+        ControllerRecordSet.problemDescription(error, document: "record")
       )
     }
   }

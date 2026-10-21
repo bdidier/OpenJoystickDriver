@@ -31,7 +31,7 @@ struct ControllerRecordSetTests {
     do {
       _ = try ControllerRecordSet.validate(data)
       return nil
-    } catch { return ControllerRecordSet.problemDescription(error) }
+    } catch { return ControllerRecordSet.problemDescription(error, document: "record") }
   }
 
   private static func record(_ data: Data) throws -> ControllerRecord {
