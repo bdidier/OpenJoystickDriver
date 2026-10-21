@@ -7,7 +7,7 @@
   struct InputTestLiveInputView: View {
     @ObservedObject
     var liveState: InputTestLiveState
-    let publishedProfile: VirtualDeviceProfile
+    let presentation: VirtualIdentityPresentation
   }
 
   struct InputTestStickView: View {

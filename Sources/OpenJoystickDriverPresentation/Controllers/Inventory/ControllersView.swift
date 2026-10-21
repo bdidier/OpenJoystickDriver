@@ -232,7 +232,7 @@
 
     /// The identity shown for this controller, computed once so icon and caption always agree.
     var presentedIdentity: PresentedControllerIdentity {
-      guard publication?.state == .published else {
+      guard publication?.state == .published, let identity = publishedVirtualProfile else {
         return PresentedControllerIdentity(
           publishesVirtualDevice: false,
           presentation: protocolBinding.protocolID.physicalPresentation,
@@ -241,7 +241,6 @@
             : RuntimePresentation.noVirtualHIDProfileLabel
         )
       }
-      let identity = publishedVirtualProfile ?? VirtualHIDProfileID.generic.identity
       return PresentedControllerIdentity(
         publishesVirtualDevice: true,
         presentation: identity.presentation,

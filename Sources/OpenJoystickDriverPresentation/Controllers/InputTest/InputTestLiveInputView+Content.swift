@@ -10,7 +10,6 @@
     var content: some View {
       let snapshot = liveState.snapshot
       let pressed = snapshot.pressed
-      let presentation = publishedProfile.presentation
       let symbols = InputTestControllerSymbolSet.resolve(for: presentation.glyphFamily)
       return VStack(spacing: 10) {
         shoulderRow(snapshot: snapshot, symbols: symbols)
