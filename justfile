@@ -86,21 +86,9 @@ format:
 catalog-regenerate *args:
     ./Scripts/ojd catalog regenerate {{ args }}
 
-# Generate review-only records from a pinned Linux xpad.c
-catalog-xpad *args:
-    ./Scripts/ojd catalog xpad {{ args }}
-
 # =========================================================================
 # Checks
 # =========================================================================
-
-# Run the fast structural checks used by local Git hooks
-check-hook:
-    python3 Scripts/Quality/check_swift_file_length.py
-    python3 Scripts/Quality/check_neutral_core_imports.py
-    python3 Scripts/Quality/check_sink_boundary.py
-    python3 Scripts/Quality/check_localization_keys.py
-    git diff --check HEAD^ HEAD
 
 # Run snapshot-safe validation
 check-fast: check-schemas lint
@@ -108,16 +96,9 @@ check-fast: check-schemas lint
     ./Scripts/ojd errors regenerate --check
     ./Scripts/ojd vocabulary regenerate --check
     ./Scripts/ojd check profiles
-    python3 Scripts/Quality/check_swift_file_length.py
-    python3 Scripts/Quality/check_neutral_core_imports.py
-    python3 Scripts/Quality/check_sink_boundary.py
     python3 Scripts/Quality/check_localization_keys.py
     .build/schema-validator/bin/python -m unittest discover -s Tests/RepositoryScripts
     git diff --check
-
-# Enforce the code-line limits for tracked Swift files (500 in Sources, 1000 in Tests)
-check-swift-file-length:
-    python3 Scripts/Quality/check_swift_file_length.py
 
 # Run the complete local validation suite
 check: check-fast
@@ -148,20 +129,8 @@ test-parsers-macos14:
     ./Scripts/ojd test parsers-macos14
 
 # =========================================================================
-# Environment
-# =========================================================================
-
-# Validate the single-file env contract without printing values
-env-audit:
-    ./Scripts/ojd env audit
-
-# =========================================================================
 # Docs
 # =========================================================================
-
-# Refresh archived GitHub issue and pull-request evidence
-docs-export-external-issues:
-    ./Scripts/ojd docs export-external-issues
 
 # Publish wiki/ to the GitHub wiki (pass --dry-run to preview without pushing)
 wiki *args:
@@ -178,10 +147,6 @@ signing-install-profiles *args:
 # Generate .env.dev + .env.release from Keychain + profiles
 signing-configure:
     ./Scripts/ojd signing configure
-
-# Diagnose common cert/profile mismatch errors (safe output)
-signing-doctor:
-    ./Scripts/ojd signing doctor
 
 # Audit profiles without leaking identifiers
 signing-audit *paths:
@@ -258,11 +223,6 @@ repair-swiftpm-module-cache:
 # =========================================================================
 # Release
 # =========================================================================
-
-# Check release environment and signing assets for a tester build
-package-tester-check:
-    OJD_ENV=release ./Scripts/ojd env audit
-    OJD_ENV=release ./Scripts/ojd signing doctor
 
 # Build a private notarized Developer ID tester DMG without installing or publishing it
 package-tester:

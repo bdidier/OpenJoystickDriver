@@ -7,12 +7,6 @@ Repository scripts load exactly one optional local file from the project root:
 
 `OJD_ENV` selects `dev` or `release`; other values fail immediately. Scripts do not load generic `.env` or `Scripts/.env*` files. Signed build and package routes create or repair the appropriate root file from discovered Apple assets.
 
-Audit the file structure without exposing values:
-
-```bash
-./Scripts/ojd env audit
-```
-
 Examples show annotated output; never source identities, profiles, Team IDs, or credentials from them. Read [Signing assets](signing.md) before creating either local file. Development configuration requires the two development profiles and an Apple Development identity; publisher-only Developer ID assets are optional and do not block `.env.dev` generation.
 
 Unsigned `swift build` and `./Scripts/ojd check driverkit` do not load `.env.dev`. Signed local development installs create or repair `.env.dev` before building. Notarization keys belong only in `.env.release`; they are not inputs to unsigned or Apple Development builds.
@@ -36,6 +30,6 @@ GitHub injects workflow secrets directly; CI neither creates nor requires a loca
 - certificate and profile secrets → Keychain identities plus the Developer ID profiles consumed by `signing configure` (or `signing ci-release-setup` on the runner);
 - `NOTARIZE_APPLE_ID` / `NOTARIZE_PASSWORD` → the same keys in `.env.release`, or `NOTARIZE_KEYCHAIN_PROFILE` after storing credentials in Keychain.
 
-Do not copy the CI-only `*_BASE64` / `CERTIFICATE_SECRET` / `KEYCHAIN_SECRET` keys into `.env.dev` or `.env.release`; `./Scripts/ojd env audit` rejects them.
+Do not copy the CI-only `*_BASE64` / `CERTIFICATE_SECRET` / `KEYCHAIN_SECRET` keys into `.env.dev` or `.env.release`.
 
 The GUI provisioning profile must authorize the host app's exact `com.apple.developer.driverkit.userclient-access` allowlist, exactly `com.openjoystickdriver.XboxUSBDevice`. The DriverKit profile (`DEXT_PROVISIONING_PROFILE`, Xcode specifier `DEXT_BUILD_PROFILE`, default `OpenJoystickDriver (XboxUSBDevice)`) authorizes the single system extension. The build rejects an allow-any user-client entitlement in either artifact. A development GUI profile without a grant for `com.openjoystickdriver.XboxUSBDevice` builds the app without the DEXT; see [Signing](signing.md).

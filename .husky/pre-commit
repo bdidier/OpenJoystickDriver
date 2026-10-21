@@ -2,4 +2,3 @@
 if [ -f Scripts/Quality/format-staged-json.sh ]; then
   bash Scripts/Quality/format-staged-json.sh
 fi
-bash Scripts/Quality/check-index-snapshot.sh

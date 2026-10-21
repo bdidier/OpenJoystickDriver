@@ -21,7 +21,7 @@ The user documentation is in the [wiki](https://github.com/xsyetopz/OpenJoystick
 
 ## Contributing
 
-Read [CONTRIBUTING.md](CONTRIBUTING.md) and [docs/README.md](docs/README.md). See also [LOCALIZATION.md](LOCALIZATION.md), [Scripts/README.md](Scripts/README.md), [Tools/README.md](Tools/README.md), and [AGENTS.md](AGENTS.md).
+Read [CONTRIBUTING.md](CONTRIBUTING.md) and [docs/README.md](docs/README.md). See also [LOCALIZATION.md](LOCALIZATION.md), [Tools/README.md](Tools/README.md), and [AGENTS.md](AGENTS.md).
 
 ## License
 

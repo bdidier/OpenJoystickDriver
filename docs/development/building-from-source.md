@@ -45,7 +45,7 @@ swift test
 ./Scripts/ojd build install-fast dev      # needs Apple Development signing
 ```
 
-`just check` runs the complete validation that CI repeats. The full command list is in [`CLAUDE.md`](../../CLAUDE.md), and route details are in [`Scripts/README.md`](../../Scripts/README.md).
+`just check` runs the complete validation that CI repeats. The `justfile` lists the commands, and `./Scripts/ojd --help` lists the repository routes.
 
 ## Building in Xcode
 

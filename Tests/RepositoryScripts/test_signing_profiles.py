@@ -1,4 +1,4 @@
-"""Behavior tests for the provisioning-profile checks in signing configure and doctor."""
+"""Behavior tests for the provisioning-profile checks in signing configure."""
 
 from __future__ import annotations
 
@@ -14,10 +14,19 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "Scripts" / "Signin
 
 import profile_certs
 
-from Scripts.Signing import configure, doctor
+from Scripts.Signing import configure
 
 DEXT = "com.openjoystickdriver.XboxUSBDevice"
 USB = "com.apple.developer.driverkit.transport.usb"
+PRODUCTION_USB = [
+    {"idVendor": 1118, "idProduct": 721},
+    {"idVendor": 1118, "idProduct": 746},
+    {"idVendor": 1118, "idProduct": 2834},
+    {"idVendor": 1118, "idProduct": 2816},
+    {"idVendor": 1118, "idProduct": 739},
+    {"idVendor": 1118, "idProduct": 2826},
+    {"idVendor": 1118, "idProduct": 733},
+]
 FORBIDDEN_DEXT_KEYS = (
     "com.apple.developer.hid.virtual.device",
     "com.apple.developer.driverkit.family.hid.device",
@@ -35,7 +44,7 @@ HOST = {
 }
 FULL_DEXT = {
     "com.apple.developer.driverkit": True,
-    USB: doctor.PRODUCTION_USB,
+    USB: PRODUCTION_USB,
 }
 
 
@@ -61,8 +70,8 @@ class ConfigureProfileTests(unittest.TestCase):
     def test_dext_profile_rejects_wrong_usb_and_forbidden_keys(self) -> None:
         wrong_usb = (
             [],
-            doctor.PRODUCTION_USB[:-1],
-            [*doctor.PRODUCTION_USB, {"idVendor": 1118, "idProduct": 1}],
+            PRODUCTION_USB[:-1],
+            [*PRODUCTION_USB, {"idVendor": 1118, "idProduct": 1}],
         )
         for entitlements in (
             *({**FULL_DEXT, USB: value} for value in wrong_usb),
@@ -112,105 +121,6 @@ class ConfigureProfileTests(unittest.TestCase):
             entitlements = {**HOST, USERCLIENT: value}
             with self.subTest(value=value), self.assertRaises(SystemExit):
                 self.check(configure.require_host_profile, entitlements)
-
-
-class DoctorProfileTests(unittest.TestCase):
-    def test_userclient_access_states(self) -> None:
-        granted = {"Entitlements": HOST}
-        absent = {"Entitlements": without(HOST, USERCLIENT)}
-        wider = {"Entitlements": {**HOST, USERCLIENT: [DEXT, "other"]}}
-        self.assertEqual(doctor.userclient_access_errors("host", granted), [])
-        self.assertEqual(
-            doctor.userclient_access_errors("host", absent, allow_ungranted=True), []
-        )
-        other = {"Entitlements": {**HOST, USERCLIENT: ["com.example.OtherDriver"]}}
-        self.assertEqual(
-            doctor.userclient_access_errors("host", other, allow_ungranted=True), []
-        )
-        self.assertEqual(len(doctor.userclient_access_errors("host", absent)), 1)
-        self.assertEqual(
-            doctor.userclient_access_errors("host", wider, allow_ungranted=True), []
-        )
-
-    def test_userclient_access_accepts_grant_that_includes_virtual_hid(self) -> None:
-        profile = {"Entitlements": {**HOST, USERCLIENT: [DEXT, OTHER_DRIVER]}}
-        self.assertEqual(doctor.userclient_access_errors("host", profile), [])
-
-    def test_userclient_access_refuses_wildcard_and_non_string_items(self) -> None:
-        for value in ("*", [DEXT, 1]):
-            profile = {"Entitlements": {**HOST, USERCLIENT: value}}
-            with self.subTest(value=value):
-                errors = doctor.userclient_access_errors(
-                    "host", profile, allow_ungranted=True
-                )
-                self.assertEqual(len(errors), 1)
-
-    def test_userclient_access_refuses_release_grant_without_dext(self) -> None:
-        profile = {"Entitlements": {**HOST, USERCLIENT: [OTHER_DRIVER]}}
-        self.assertEqual(len(doctor.userclient_access_errors("host", profile)), 1)
-
-    def test_dext_profile_accepts_exact_usb_grant(self) -> None:
-        self.assertEqual(
-            doctor.dext_profile_errors("dext", {"Entitlements": FULL_DEXT}), []
-        )
-
-    def test_dext_profile_requires_driverkit_and_exact_usb_grant(self) -> None:
-        for key in FULL_DEXT:
-            with self.subTest(key=key):
-                profile = {"Entitlements": without(FULL_DEXT, key)}
-                self.assertEqual(len(doctor.dext_profile_errors("dext", profile)), 1)
-        for value in ([], doctor.PRODUCTION_USB[:-1]):
-            with self.subTest(usb=value):
-                profile = {"Entitlements": {**FULL_DEXT, USB: value}}
-                self.assertEqual(len(doctor.dext_profile_errors("dext", profile)), 1)
-
-    def test_dext_profile_rejects_forbidden_entitlements(self) -> None:
-        for key in FORBIDDEN_DEXT_KEYS:
-            with self.subTest(key=key):
-                profile = {"Entitlements": {**FULL_DEXT, key: True}}
-                self.assertTrue(doctor.dext_profile_errors("dext", profile))
-
-    def test_match_terms_outside_the_grant_are_named(self) -> None:
-        granted = [721, 733, 739, 746, 2816, 2826, 2834]
-        documents = {
-            "entitlements": {USB: [{"idVendor": 1118, "idProductArray": granted}]},
-            "personality": {
-                "IOKitPersonalities": {
-                    "Driver": {"idVendor": 1118, "idProductArray": granted}
-                }
-            },
-            "signing entitlements": {USB: doctor.PRODUCTION_USB},
-        }
-        with tempfile.TemporaryDirectory() as directory:
-            paths = []
-            for name, document in documents.items():
-                path = Path(directory, name)
-                path.write_bytes(plistlib.dumps(document))
-                paths.append(path)
-            self.assertEqual(doctor.match_term_errors(paths), [])
-
-            outside = {
-                "extra product": {
-                    USB: [{"idVendor": 1118, "idProductArray": [721, 767]}]
-                },
-                "other vendor": {
-                    "IOKitPersonalities": {
-                        "Driver": {"idVendor": 3695, "idProduct": 721}
-                    }
-                },
-                "vendor-wide": {"IOKitPersonalities": {"Driver": {"idVendor": 1118}}},
-            }
-            for name, document in outside.items():
-                with self.subTest(name):
-                    path = Path(directory, name)
-                    path.write_bytes(plistlib.dumps(document))
-                    errors = doctor.match_term_errors([path])
-                    self.assertEqual(len(errors), 1)
-            errors = doctor.match_term_errors([Path(directory, "extra product")])
-            self.assertIn("045E:02FF", errors[0])
-
-    def test_tree_match_terms_stay_within_the_grant(self) -> None:
-        self.assertEqual(doctor.match_term_errors(doctor.DEXT_MATCH_FILES), [])
 
 
 if __name__ == "__main__":

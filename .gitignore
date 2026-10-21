@@ -10,8 +10,6 @@ glossaries/
 # Internal planning and evidence (local only)
 /.claude/worktrees/
 /.claudetto/
-# Regenerate with `./Scripts/ojd docs export-external-issues`.
-/docs/external/
 
 # Session exports of `/export` (YYYY-MM-DD-HHMMSS-<slug>.txt)
 /[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9][0-9][0-9]-*.txt

@@ -21,7 +21,7 @@ just lint
 swift test
 ```
 
-Parser/protocol: `./Scripts/ojd test parsers-macos14`. Cache: `./Scripts/ojd repair swiftpm-module-cache`. Hardware, signing, notarization, and permission behavior need the focused local diagnostics in `docs/testing/` and `Scripts/README.md`. Unsigned generation does not prove those facts.
+Parser/protocol: `./Scripts/ojd test parsers-macos14`. Cache: `./Scripts/ojd repair swiftpm-module-cache`. Hardware, signing, notarization, and permission behavior need the focused local diagnostics in `docs/testing/`. Unsigned generation does not prove those facts.
 
 ## Docs
 
@@ -53,7 +53,7 @@ Parser/protocol: `./Scripts/ojd test parsers-macos14`. Cache: `./Scripts/ojd rep
 - [Experimental controllers](docs/development/experimental-controllers.md): source-backed unfinished support
 - [Implementation status](docs/development/implementation-status.md): remaining product gaps
 - [Schema instructions](Resources/Schemas/AGENTS.md): JSON contract ownership
-- [Scripts](Scripts/README.md): `./Scripts/ojd` build, install, DriverKit, and release
+- [Scripts](Scripts/ojd): `./Scripts/ojd --help` lists build, install, DriverKit, and release routes
 - [Package graph](Package.swift): SwiftPM targets and deployment floor
 
 ## Testing

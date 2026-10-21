@@ -81,8 +81,6 @@ def requirements_for(argv: list[str]) -> tuple[Capability, ...]:
         )
     if route[:3] == ("release", "notarize", "store-credentials"):
         return (Capability.FULL_XCODE, Capability.RELEASE_SIGNING)
-    if route[:2] == ("docs", "export-external-issues"):
-        return (Capability.GH, Capability.GH_AUTH)
     if route[:2] == ("github", "ensure-auth"):
         return (Capability.GH, Capability.GH_AUTH)
     if route[:2] == ("signing", "export-github-secrets") and "--apply" in route:

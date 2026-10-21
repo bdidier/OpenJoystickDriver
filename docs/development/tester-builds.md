@@ -34,13 +34,11 @@ just release-notarize-store-credentials
 
 ## 2. Check the Environment
 
-Run the tester-build checks:
+Audit the signing assets. This command does not build, install, notarize, or publish an app.
 
 ```bash
-just package-tester-check
+just signing-audit
 ```
-
-This command checks the release environment and signing assets. It does not build, install, notarize, or publish an app.
 
 Commit or remove all intended source changes before packaging. The package command stops when the worktree is not clean. This rule keeps the DMG metadata tied to one Git commit.
 
@@ -78,7 +76,7 @@ Send the DMG without changing its contents, with the [tester instructions](../te
 | Failure | Required action |
 | --- | --- |
 | The worktree is not clean. | Commit the exact test changes, then run the package command again. |
-| A profile or entitlement does not match. | Run `just signing-configure`, then run `just package-tester-check`. |
+| A profile or entitlement does not match. | Run `just signing-configure`, then run `just signing-audit`. |
 | Notarization credentials are missing. | Run `just release-notarize-store-credentials`. |
 | Notarization fails. | Read the submission log with `just release-notarize-log <id>`. |
 | Gatekeeper or stapling fails. | Do not send the DMG. Fix signing, then create a new tester build. |

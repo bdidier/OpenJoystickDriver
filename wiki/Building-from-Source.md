@@ -45,7 +45,6 @@ There is no scripted unsigned or ad-hoc app build. The build scripts stop if the
    ```shell
    ./Scripts/ojd signing install-profiles
    ./Scripts/ojd signing configure
-   ./Scripts/ojd signing doctor
    ```
 
    `signing install-profiles` copies the profiles to `~/Library/MobileDevice/Provisioning Profiles`. `signing configure` reads them from there.
@@ -59,8 +58,6 @@ There is no scripted unsigned or ad-hoc app build. The build scripts stop if the
    This command builds the system extension too. When the app profile has no `userclient-access` grant for `com.openjoystickdriver.XboxUSBDevice`, the build skips the extension and the app has no driver extension.
 
 5. Open OJD from **Applications**.
-
-The `signing doctor` command checks your signing setup. Fix each problem it reports before you build.
 
 ## Build Options and Limits
 

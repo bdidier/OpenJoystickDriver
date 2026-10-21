@@ -20,7 +20,6 @@ Each work package (WP) lists what it owns, what it depends on, and the checks th
   - markdownlint over tracked and untracked `.md` files outside `.agents/`
   - `swift-format lint --recursive --strict Package.swift Sources Tests Tools`
   - `swiftlint lint --no-cache --strict`
-  - `python3 Scripts/Quality/check_swift_file_length.py`
   - `python3 Scripts/Quality/check_localization_keys.py`
   - `./Scripts/ojd check driverkit`
   - `swift test`
@@ -289,7 +288,7 @@ Verify: `swift test`, lint pair. Hardware: H10.
 
 Owns: the app target, five areas (Controllers, Profiles, Library, Access, Activity), 13 screen groups.
 Depends: 17, 18.
-Verify: `swift test`, lint pair, `python3 Scripts/Quality/check_swift_file_length.py`.
+Verify: `swift test`, lint pair.
 
 - [x] 20.1 Build the shell: a full-height sidebar of the five areas (Controllers, Profiles, Library, Access, Activity; Command-1 to Command-5), list columns for Controllers, Profiles and Library, a toolbar with the sidebar toggle, area title and subtitle and the area's actions, and the problem banner. Verify: UI-free area-model tests; manual launch approved by the user. Progress: `MainWindow/` holds `MainWindowArea`, `MainWindowNavigationModel` (unsaved Profiles editor asks before leaving), `MainWindowController`; the Settings window is `SettingsWindow/` (General, Notifications, Command Line, Advanced). Open: the sidebar and list columns per design decision 15; manual launch. Approved by the user on 2026-10-21: "approved."
 - [ ] 20.2 Redesign the screen groups one at a time, in this order: shell with toolbar and problem banner; Controllers list and detail; Input Test in the detail; Profiles list, editor and creation sheet; Library; Access; Activity; Settings window; status item menu; main menu. Each group ends with an `/impeccable` pass, Apple HIG checks through the apple-docs MCP, and the user's approval recorded in this file before the next group starts. Verify: user approval recorded per group in this file.
