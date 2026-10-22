@@ -538,7 +538,9 @@ class CommentCopyTests(unittest.TestCase):
             guard.StringsEntry("ui.x.y", "X", "Label."),
         ]
         self.assertEqual(
-            sorted(key for key, _ in guard.comment_copy_problems(entries, self.english)),
+            sorted(
+                key for key, _ in guard.comment_copy_problems(entries, self.english)
+            ),
             ["ui.c.d", "ui.x.y"],
         )
 
@@ -546,7 +548,11 @@ class CommentCopyTests(unittest.TestCase):
         scratch = tempfile.TemporaryDirectory()
         self.addCleanup(scratch.cleanup)
         root = Path(scratch.name)
-        for name, comment in (("en-US", "Label."), ("C", "Label."), ("de-DE", "Etikett.")):
+        for name, comment in (
+            ("en-US", "Label."),
+            ("C", "Label."),
+            ("de-DE", "Etikett."),
+        ):
             directory = root / guard.RESOURCES_DIRECTORY / f"{name}.lproj"
             directory.mkdir(parents=True)
             (directory / "Localizable.strings").write_text(
@@ -558,9 +564,7 @@ class CommentCopyTests(unittest.TestCase):
         self.assertIn("de-DE.lproj", found["commentCopy"][0].message)
 
     def test_every_bundle_of_the_repository_copies_the_en_us_comments(self) -> None:
-        self.assertEqual(
-            [p.message for p in guard.rule_problems()["commentCopy"]], []
-        )
+        self.assertEqual([p.message for p in guard.rule_problems()["commentCopy"]], [])
 
 
 class StaleNotACountTests(unittest.TestCase):

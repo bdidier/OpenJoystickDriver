@@ -601,7 +601,9 @@ def comment_copy_problems(
         if key not in found:
             problems.append((key, f"{key!r}: the key is missing"))
         elif found[key] != comment:
-            problems.append((key, f"{key!r}: the comment differs from the en-US comment"))
+            problems.append(
+                (key, f"{key!r}: the comment differs from the en-US comment")
+            )
     return problems
 
 
