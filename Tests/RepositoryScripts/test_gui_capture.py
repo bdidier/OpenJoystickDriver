@@ -992,6 +992,16 @@ class GuiCaptureTests(unittest.TestCase):
             ],
         )
 
+    def test_a_submenu_over_its_parent_menu_does_not_cover_it(self) -> None:
+        parent = self.menu_window(id=1, x=100, y=33, width=200, height=300)
+        submenu = self.menu_window(id=2, x=294, y=120, width=150, height=500)
+        both = [submenu, parent]
+        target = capture.MenuTarget("menu-profile", ("menu.profile", "activateProfile"))
+        _, _, failure = self.shoot_menu_with(
+            target, [[], both, both, both, [parent], [parent], [], []]
+        )
+        self.assertIsNone(failure)
+
     def test_shoot_menu_refuses_a_menu_that_is_already_open(self) -> None:
         stale = [self.menu_window(id=5)]
         target = capture.MenuTarget("menu-file", ("menu.file",))

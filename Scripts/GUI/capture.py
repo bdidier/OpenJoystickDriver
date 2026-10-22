@@ -568,8 +568,13 @@ def shoot_menu(
     try:
         gui(*open_menu_command(target))
         menus, windows = wait_for_menu(pid, target.depth, clock, sleep)
+        # A submenu overlaps its parent menu, and both belong in the image.
         covering = [
-            owner for menu in menus for owner in covering_windows(menu, windows)
+            owner
+            for menu in menus
+            for owner in covering_windows(
+                menu, [w for w in windows if w is menu or w not in menus]
+            )
         ]
         if covering:
             raise CaptureError(

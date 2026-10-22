@@ -54,6 +54,10 @@ const AX_TRANSIENT = [-25204, -25202];
 // An app that does not answer blocks an AX call for the default timeout of about 6 s,
 // which would overrun the readiness deadline of capture.py; the probe gives up sooner.
 const PROBE_MESSAGING_TIMEOUT_SECONDS = 1;
+// AXError -25204: the app cannot complete the request, here because its menu is tracking.
+const AX_CANNOT_COMPLETE = -25204;
+// The status item press waits this long instead of the default of about 6 s.
+const STATUS_PRESS_TIMEOUT_SECONDS = 0.5;
 
 function readCode(element, name) {
 	const out = Ref();
@@ -330,7 +334,14 @@ function run(argv) {
 		case "open-status-menu": {
 			activate(app, pid);
 			const item = statusMenuBarItem(app);
-			pressMenuElement(item, "status item");
+			if (attribute(item, "AXEnabled") === false) throw new Error("the status item is disabled");
+			// The status menu tracks on the app's main thread until it closes, so AXPress on the
+			// status item cannot complete and times out with -25204 while the menu is open.
+			// capture.py confirms the open menu from the window list.
+			const timeout = $.AXUIElementSetMessagingTimeout(item, STATUS_PRESS_TIMEOUT_SECONDS);
+			if (timeout !== 0) throw new Error("setting the status item timeout failed with AXError " + timeout);
+			const code = $.AXUIElementPerformAction(item, "AXPress");
+			if (code !== 0 && code !== AX_CANNOT_COMPLETE) throw new Error("AXPress failed with AXError " + code);
 			pressPath(item, argument === undefined ? [] : [argument, ...rest]);
 			return "";
 		}
