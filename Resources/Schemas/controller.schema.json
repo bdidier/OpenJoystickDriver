@@ -731,7 +731,7 @@
       }
     },
     "hidUsageMap": {
-      "$comment": "Maps HID usages to canonical controls for HIDDescriptor. A record's map replaces the family's map whole. Each (page, usage) appears once, an axis range has min below max, and a hat range is 0...7 or 1...8: the Swift decoder enforces the first two. reportID, when present, limits the map to element values of that report.",
+      "$comment": "Maps HID usages to canonical controls for HIDDescriptor. A record's map replaces the family's map whole. Each (page, usage) appears once, an axis range has min below max, and a hat range is 0...7 or 1...8: the schema checks the hat range, and the Swift decoder, the only validator, enforces all three. reportID, when present, limits the map to element values of that report.",
       "type": "object",
       "additionalProperties": false,
       "required": ["usages"],
