@@ -21,29 +21,29 @@
     private var content: some View {
       switch model.loadState {
       case .idle:
-        Section(OJDLocalized.string("developer.controllerDetails")) {
-          Text(OJDLocalized.string("developer.notLoaded")).foregroundColor(
+        Section(OJDLocalized.string("ui.developer.controllerDetails")) {
+          Text(OJDLocalized.string("ui.developer.notLoaded")).foregroundColor(
             Color(NSColor.secondaryLabelColor)
           )
           refreshButton
         }
       case .loading:
         Section {
-          Text(OJDLocalized.string("developer.loadingControllers")).foregroundColor(
+          Text(OJDLocalized.string("ui.developer.loadingControllers")).foregroundColor(
             Color(NSColor.secondaryLabelColor)
           )
         }
       case .noControllers:
-        Section(OJDLocalized.string("developer.controllerDetails")) {
-          Text(OJDLocalized.string("developer.noControllers"))
-          Text(OJDLocalized.string("developer.noControllersDetail")).foregroundColor(
+        Section(OJDLocalized.string("ui.developer.controllerDetails")) {
+          Text(OJDLocalized.string("ui.developer.noControllers"))
+          Text(OJDLocalized.string("ui.developer.noControllersDetail")).foregroundColor(
             Color(NSColor.secondaryLabelColor)
           )
           refreshButton
         }
       case .unavailable(let message):
-        Section(OJDLocalized.string("developer.controllerDetails")) {
-          Text(OJDLocalized.string("developer.unavailable"))
+        Section(OJDLocalized.string("ui.developer.controllerDetails")) {
+          Text(OJDLocalized.string("ui.developer.unavailable"))
           Text(message).foregroundColor(Color(NSColor.secondaryLabelColor))
           refreshButton
         }
@@ -55,20 +55,20 @@
     }
 
     private var refreshButton: some View {
-      Button(OJDLocalized.string("common.refresh")) {
+      Button(OJDLocalized.string("action.refresh")) {
         Task { @MainActor in await model.refresh() }
       }
     }
 
     private var extraInputDiscovery: some View {
-      Section(OJDLocalized.string("developer.extraInputs")) {
-        Text(OJDLocalized.string("developer.extraInputsDescription")).font(.caption)
+      Section(OJDLocalized.string("ui.developer.extraInputs")) {
+        Text(OJDLocalized.string("ui.developer.extraInputsDescription")).font(.caption)
           .foregroundColor(Color(NSColor.secondaryLabelColor)).fixedSize(
             horizontal: false,
             vertical: true
           )
         if model.observedExtraInputs.isEmpty {
-          Text(OJDLocalized.string("developer.noExtraInputs")).foregroundColor(
+          Text(OJDLocalized.string("ui.developer.noExtraInputs")).foregroundColor(
             Color(NSColor.secondaryLabelColor)
           )
         } else {

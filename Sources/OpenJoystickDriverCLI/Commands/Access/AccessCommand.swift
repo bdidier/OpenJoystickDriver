@@ -6,10 +6,10 @@ struct AccessCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "access",
     abstract: CLILocalized.text(
-      "cli.access.abstract"
+      "cli.access.group.abstract"
     ),
     discussion: CLILocalized.text(
-      "cli.access.discussion"
+      "cli.access.group.discussion"
     ),
     subcommands: [
       AccessStatusCommand.self, AccessEnableCommand.self, AccessDisableCommand.self,
@@ -98,7 +98,7 @@ struct AccessStatusCommand: AsyncParsableCommand {
         )
         CLIOutput.stdout(
           CLILocalized.format(
-            "cli.access.status.token_counts",
+            "cli.access.status.tokenCounts",
             String(status.tokens.count),
             String(status.refusedTokens.count)
           )
@@ -128,7 +128,7 @@ struct AccessEnableCommand: AsyncParsableCommand {
 
   @Flag(
     name: [.short, .long],
-    help: ArgumentHelp(CLILocalized.text("cli.option.force"))
+    help: ArgumentHelp(CLILocalized.text("cli.shared.option.force"))
   )
   var force = false
 
@@ -267,7 +267,7 @@ struct AccessListCommand: AsyncParsableCommand {
       )
     }
     CLIOutput.stdout(
-      CLILocalized.text("cli.access.list.refused_tokens")
+      CLILocalized.text("cli.access.list.refusedTokens")
     )
     if status.refusedTokens.isEmpty {
       CLIOutput.stdout(CLILocalized.text("cli.access.list.none"))
@@ -275,7 +275,7 @@ struct AccessListCommand: AsyncParsableCommand {
     for token in status.refusedTokens {
       let name =
         token.name.map { "token:\($0)" }
-        ?? CLILocalized.text("cli.access.list.unknown_token")
+        ?? CLILocalized.text("cli.access.list.unknownToken")
       CLIOutput.stdout(
         "  \(name)  \(AccessText.scopes(token.scopes))  "
           + "\(CommandLineName.kebab(token.transport.rawValue))  " + (token.origin ?? "")
@@ -288,23 +288,23 @@ struct AccessListCommand: AsyncParsableCommand {
 enum AccessText {
   static var needsForce: String {
     CLILocalized.text(
-      "cli.access.needs_force"
+      "cli.access.group.needsForce"
     )
   }
 
   /// `WebSocket: on at ws://…, pages at http://…`, or off.
   static func web(_ web: AccessWebStatus) -> String {
     guard web.enabled else {
-      return CLILocalized.text("cli.access.status.web_off")
+      return CLILocalized.text("cli.access.status.webOff")
     }
     guard web.listening else {
       return CLILocalized.format(
-        "cli.access.status.web_closed",
+        "cli.access.status.webClosed",
         web.port.map(String.init) ?? ""
       )
     }
     return CLILocalized.format(
-      "cli.access.status.web_on",
+      "cli.access.status.webOn",
       web.url ?? "",
       web.pagesURL ?? "",
       web.pagesPath

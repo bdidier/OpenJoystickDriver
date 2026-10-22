@@ -49,20 +49,20 @@
     func assignmentsSection(rowLayout: ProfileAssignmentRowLayout) -> some View {
       Section(
         header: HStack(alignment: .firstTextBaseline) {
-          Text(OJDLocalized.string("common.assignments"))
+          Text(OJDLocalized.string("term.assignments"))
           Spacer()
           OJDCompactSymbolButton(
             symbolName: "plus",
-            label: OJDLocalized.string("common.addAssignment")
+            label: OJDLocalized.string("action.addAssignment")
           ) { activeSheet = .capture }
-          Button(OJDLocalized.string("profiles.clearInputs")) {
+          Button(OJDLocalized.string("ui.profiles.clearInputs")) {
             confirmation = .clearInputs
           }.disabled(isEditingDisabled)
         }
       ) {
         if draft.profile.bindings.isEmpty {
-          Text(OJDLocalized.string("profiles.noAssignments"))
-          Text(OJDLocalized.string("profiles.assignmentInstructions"))
+          Text(OJDLocalized.string("ui.profiles.noAssignments"))
+          Text(OJDLocalized.string("ui.profiles.assignmentInstructions"))
             .foregroundColor(Color(NSColor.secondaryLabelColor))
         }
       }
@@ -98,7 +98,7 @@
         HStack(spacing: 10) {
           Spacer(minLength: 8)
           saveStatusView
-          Button(OJDLocalized.string("common.save")) { save() }.disabled(
+          Button(OJDLocalized.string("action.save")) { save() }.disabled(
             draft.profile == expectedCurrent || saveInFlight || isMutationActive
           )
         }
@@ -111,7 +111,7 @@
         if saveStatus == .saving { ProgressView() }
         Text(saveStatus.label).foregroundColor(saveStatus.color)
       }.frame(minHeight: 28).ojdAccessibilityLabel(
-        OJDLocalized.string("profiles.saveStatus")
+        OJDLocalized.string("ui.profiles.saveStatus")
       ).ojdAccessibilityValue(saveStatus.accessibilityValue)
     }
 

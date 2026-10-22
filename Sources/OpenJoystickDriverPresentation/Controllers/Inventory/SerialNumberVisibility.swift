@@ -29,13 +29,13 @@ struct SerialNumberVisibility: Equatable {
 
     /// What VoiceOver and sentence templates read.
     var spokenText: String {
-      isObscured ? OJDLocalized.string("controllers.serial.hidden") : value.spokenText
+      isObscured ? OJDLocalized.string("ui.controllers.serial.hidden") : value.spokenText
     }
 
     var toggleSymbolName: String { isRevealed ? "eye.slash" : "eye" }
 
     var toggleLabelKey: String {
-      isRevealed ? "controllers.serial.hide" : "controllers.serial.show"
+      isRevealed ? "ui.controllers.serial.hide" : "ui.controllers.serial.show"
     }
   }
 }

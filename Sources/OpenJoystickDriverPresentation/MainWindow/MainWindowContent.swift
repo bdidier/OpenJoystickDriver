@@ -122,24 +122,26 @@
       ).background(Color(NSColor.windowBackgroundColor)).onAppear { refreshIfNeeded() }.background(
         Color.clear.alert(isPresented: $navigation.isMutationRefusalPresented) {
           Alert(
-            title: Text(OJDLocalized.string("mainWindow.profileMutationRunning")),
-            dismissButton: .default(Text(OJDLocalized.string("common.ok")))
+            title: Text(OJDLocalized.string("ui.mainWindow.profileMutationRunning")),
+            dismissButton: .default(Text(OJDLocalized.string("action.ok")))
           )
         }
       ).background(
         Color.clear.alert(isPresented: $driverApprovalFailed) {
           Alert(
-            title: Text(OJDLocalized.string("setup.openSystemSettingsFailed")),
-            dismissButton: .default(Text(OJDLocalized.string("common.ok")))
+            title: Text(OJDLocalized.string("platform.macos.ui.setup.openSystemSettingsFailed")),
+            dismissButton: .default(Text(OJDLocalized.string("action.ok")))
           )
         }
       ).background(ErrorCodeExplainerSheetHost(model: screens.errorCodeExplainer)).alert(
         isPresented: $navigation.isDiscardConfirmationPresented
       ) {
         Alert(
-          title: Text(OJDLocalized.string("settings.discardTitle")),
-          message: Text(OJDLocalized.string("settings.discardProfileMessage")),
-          primaryButton: .destructive(Text(OJDLocalized.string("settings.discardAction"))) {
+          title: Text(OJDLocalized.string("ui.settings.advanced.discardTitle")),
+          message: Text(OJDLocalized.string("ui.settings.advanced.discardProfileMessage")),
+          primaryButton: .destructive(
+            Text(OJDLocalized.string("ui.settings.advanced.discardAction"))
+          ) {
             navigation.discardPendingArea()
           },
           secondaryButton: .cancel { navigation.cancelPendingArea() }

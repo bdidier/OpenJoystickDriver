@@ -280,7 +280,7 @@ struct VirtualHIDProfileOverrideTests {
     #expect(unpublished.publishedVirtualProfile == nil)
     #expect(
       unpublished.publishedIdentityLabel
-        == OJDLocalized.string("controllers.systemGamepadNotPublished")
+        == OJDLocalized.string("platform.macos.ui.controllers.systemGamepadNotPublished")
     )
   }
 
@@ -302,7 +302,7 @@ struct VirtualHIDProfileOverrideTests {
     let name = try #require(pad.publishedVirtualProfile?.productName)
     #expect(
       ControllerDetailFacts.automaticProfileLabel(pad)
-        == OJDLocalized.formatted("virtualProfile.automaticSelected", name)
+        == OJDLocalized.formatted("ui.virtualProfile.automaticSelected", name)
     )
     #expect(pad.publishedIdentityPresentation == VirtualHIDProfileID.generic.identity.presentation)
   }
@@ -347,7 +347,8 @@ struct VirtualHIDProfileOverrideTests {
     #expect(!pad.presentedIdentity.publishesVirtualDevice)
     #expect(pad.presentedIdentity.presentation == .playstation)
     #expect(
-      pad.presentedIdentity.label == OJDLocalized.string("controllers.systemGamepadNotPublished")
+      pad.presentedIdentity.label
+        == OJDLocalized.string("platform.macos.ui.controllers.systemGamepadNotPublished")
     )
   }
 
@@ -398,7 +399,7 @@ struct VirtualHIDProfileOverrideTests {
           #expect(!identity.label.contains("045E:02FD"))
           let expected =
             ownership.isServedBySystem
-            ? OJDLocalized.string("controllers.systemGamepadNotPublished")
+            ? OJDLocalized.string("platform.macos.ui.controllers.systemGamepadNotPublished")
             : RuntimePresentation.noVirtualHIDProfileLabel
           #expect(identity.label == expected)
         }

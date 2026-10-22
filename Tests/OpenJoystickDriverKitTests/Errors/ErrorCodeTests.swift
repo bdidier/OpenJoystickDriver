@@ -99,14 +99,14 @@ struct ErrorCodeTests {
       encoding: .utf8
     )
     for code in ErrorCode.allCases {
-      #expect(english.contains("\"error.\(code.rawValue)\" = "), "\(code.rawValue)")
+      #expect(english.contains("\"error.\(code.rawValue).message\" = "), "\(code.rawValue)")
     }
   }
 
   @Test
   func theExplanationIsLocalized() {
     for code in ErrorCode.allCases {
-      #expect(code.localizedExplanation != "error.\(code.rawValue)")
+      #expect(code.localizedExplanation != "error.\(code.rawValue).message")
     }
   }
 

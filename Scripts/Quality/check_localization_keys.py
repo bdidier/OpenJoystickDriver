@@ -27,12 +27,7 @@ violates fails the check.
 
 `--write-gated-keys` only removes entries: the keys that no longer violate their rule and the keys
 that no longer exist. A violation not yet listed makes it fail, naming the key and the rule, and it
-writes nothing. `--write-gated-keys --gate KEY RULE` (repeatable) adds exactly the named pairs. It
-accepts only the `namespace` rule, and only for a key that violates it and belongs to a family a
-pattern of `key_readers` reads (such as `error.E####`) whose other keys are all gated for
-`namespace`: that reader builds the key from a code or prefix, so the key cannot take the shape
-before the re-key. Any other addition is refused with the reason; `comment`, `osWord`, `specifier`
-and `pluralCount` violations are fixed on the key itself.
+writes nothing; the violation is fixed on the key itself.
 Removing a rule from `GATED_RULES` enforces it everywhere.
 """
 
@@ -61,7 +56,7 @@ KEY_POSITION = re.compile(
     CALL.pattern + r"\s*$|Key\s*:\s*String\s*\{\s*$",
 )
 # Interpolations whose values are a closed set, so the pattern names that set instead of any text.
-EXACT_INTERPOLATIONS = {"error.\\(rawValue)": r"error\.E\d{4}"}
+EXACT_INTERPOLATIONS = {"error.\\(rawValue).message": r"error\.E\d{4}\.message"}
 STRINGS_KEY = re.compile(r'^"((?:[^"\\]|\\.)*)"\s*=', re.MULTILINE)
 LITERAL = re.compile(r'"((?:[^"\\]|\\.)*)"')
 
@@ -69,8 +64,6 @@ LITERAL = re.compile(r'"((?:[^"\\]|\\.)*)"')
 # Rules that do not fail on the keys in `GATED_KEYS_PATH`, each with the task that lifts it. Lifting
 # a rule is deleting its entry.
 GATED_RULES: dict[str, str] = {
-    "namespace": "22.2",
-    "osWord": "22.2",
     "specifier": "22.3",
     "comment": "22.3",
     "pluralCount": "22.3",
@@ -539,112 +532,33 @@ def gated_keys(root: Path = ROOT) -> dict[str, set[str]]:
     return {rule: set(data.get(rule, [])) for rule in GATED_RULES}
 
 
-def family_problem(
-    key: str, root: Path, gated: dict[str, set[str]], adding: set[str]
-) -> str | None:
-    """Return why `key` is not in a key family whose reader blocks the namespace shape, or None.
-
-    A family is the keys one pattern of `key_readers` reads. It blocks the shape when every other
-    key of the family is gated for `namespace` and at least one such key already exists outside the
-    keys being added, so a family cannot be invented and gated in one change: the reader builds the key from a code or prefix, so
-    the key cannot take the shape before the re-key without breaking the reader.
-    """
-    _, patterns = key_readers(root)
-    matching = [text for text, pattern in patterns.items() if pattern.fullmatch(key)]
-    if not matching:
-        return f"{key!r} is read by no pattern, so it can take the namespace shape; rename it"
-    keys = catalog_keys(root)
-    namespace = gated.get("namespace", set())
-    for text in matching:
-        pattern = patterns[text]
-        ungated = sorted(
-            member
-            for member in keys
-            if pattern.fullmatch(member)
-            and member not in adding
-            and member not in namespace
-        )
-        if ungated:
-            return (
-                f"{key!r}: the family read by {text!r} has the ungated member "
-                f"{ungated[0]!r}, so the family can take the namespace shape"
-            )
-        if not any(
-            pattern.fullmatch(member) and member not in adding and member in namespace
-            for member in keys
-        ):
-            return (
-                f"{key!r}: the family read by {text!r} has no gated key besides the ones "
-                "added, so it is not an existing family"
-            )
-    return None
-
-
 def update_gated_keys(
-    root: Path = ROOT, additions: list[tuple[str, str]] | None = None
+    root: Path = ROOT,
 ) -> tuple[dict[str, list[str]], list[str]]:
     """Return (the new gated keys per rule, the reasons the update is refused).
 
-    The update drops the keys that no longer violate their rule or no longer exist. It adds only
-    the `additions` that `--gate` names, each a `namespace` key of a fully gated family. A key that
+    The update drops the keys that no longer violate their rule or no longer exist. A key that
     violates a rule without being listed is refused with the key and the rule.
     """
-    additions = additions or []
     found = rule_problems(root)
     violating = {rule: {p.key for p in found[rule]} for rule in GATED_RULES}
     current = gated_keys(root)
-    refused: list[str] = []
-    accepted: set[tuple[str, str]] = set()
-    adding = {key for key, rule in additions if rule == "namespace"}
-    for key, rule in additions:
-        if rule not in GATED_RULES:
-            refused.append(f"--gate {key} {rule}: {rule!r} is not a gated rule")
-        elif rule != "namespace":
-            refused.append(
-                f"--gate {key} {rule}: only namespace can be gated; fix the key's {rule} violation"
-            )
-        elif key not in violating[rule]:
-            refused.append(f"--gate {key} {rule}: the key violates no {rule} rule")
-        else:
-            reason = family_problem(key, root, current, adding)
-            if reason:
-                refused.append(f"--gate {key} {rule}: {reason}")
-            else:
-                accepted.add((key, rule))
     kept = {rule: current[rule] & violating[rule] for rule in GATED_RULES}
-    for key, rule in accepted:
-        kept[rule].add(key)
-    for rule in GATED_RULES:
-        refused.extend(
-            f"{key!r} would need gating for the {rule} rule; fix the key instead"
-            for key in sorted(violating[rule] - kept[rule])
-        )
+    refused = [
+        f"{key!r} would need gating for the {rule} rule; fix the key instead"
+        for rule in GATED_RULES
+        for key in sorted(violating[rule] - kept[rule])
+    ]
     return {rule: sorted(keys) for rule, keys in kept.items()}, refused
 
 
-def write_gated_keys(
-    root: Path = ROOT, additions: list[tuple[str, str]] | None = None
-) -> list[str]:
+def write_gated_keys(root: Path = ROOT) -> list[str]:
     """Write `update_gated_keys` to `GATED_KEYS_PATH` unless it refuses; return the refusals."""
-    data, refused = update_gated_keys(root, additions)
+    data, refused = update_gated_keys(root)
     if not refused:
         text = json.dumps(data, indent=2, ensure_ascii=False) + "\n"
         (root / GATED_KEYS_PATH).write_text(text, encoding="utf-8")
     return refused
-
-
-def parse_gate_arguments(arguments: list[str]) -> list[tuple[str, str]] | None:
-    """Return the (key, rule) pairs of `--write-gated-keys [--gate KEY RULE]...`, or None."""
-    if not arguments or arguments[0] != "--write-gated-keys":
-        return None
-    rest = arguments[1:]
-    pairs: list[tuple[str, str]] = []
-    while rest:
-        if rest[0] != "--gate" or len(rest) < 3:
-            return None
-        pairs.append((rest[1], rest[2]))
-        rest = rest[3:]
-    return pairs
 
 
 def rule_report(
@@ -691,14 +605,13 @@ def check(root: Path = ROOT) -> tuple[list[tuple[KeyUse, str]], list[KeyUse]]:
 
 def main(arguments: list[str] | None = None) -> int:
     if arguments:
-        additions = parse_gate_arguments(arguments)
-        if additions is None:
+        if arguments != ["--write-gated-keys"]:
             print(
-                "usage: check_localization_keys.py [--write-gated-keys [--gate KEY RULE]...]",
+                "usage: check_localization_keys.py [--write-gated-keys]",
                 file=sys.stderr,
             )
             return 2
-        refused = write_gated_keys(ROOT, additions)
+        refused = write_gated_keys(ROOT)
         for reason in refused:
             print(reason, file=sys.stderr)
         return 1 if refused else 0

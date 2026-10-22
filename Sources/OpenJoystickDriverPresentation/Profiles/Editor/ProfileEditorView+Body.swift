@@ -172,40 +172,40 @@
           Alert(
             title: Text(
               OJDLocalized.string(
-                "profiles.emptyActivationTitle"
+                "ui.profiles.emptyActivationTitle"
               )
             ),
             message: Text(
               OJDLocalized.string(
-                "profiles.emptyActivationMessage"
+                "ui.profiles.emptyActivationMessage"
               )
             ),
             primaryButton: .destructive(
-              Text(OJDLocalized.string("common.setActive"))
+              Text(OJDLocalized.string("action.setActive"))
             ) { activateProfile(allowEmpty: true) },
             secondaryButton: .cancel { self.confirmation = nil }
           )
         case .clearInputs:
           Alert(
             title: Text(
-              OJDLocalized.string("profiles.clearInputsTitle")
+              OJDLocalized.string("ui.profiles.clearInputsTitle")
             ),
             message: Text(
               OJDLocalized.string(
-                "profiles.clearInputsMessage"
+                "ui.profiles.clearInputsMessage"
               )
             ),
             primaryButton: .destructive(
-              Text(OJDLocalized.string("profiles.clearInputsConfirm"))
+              Text(OJDLocalized.string("ui.profiles.clearInputsConfirm"))
             ) { clearInputs() },
             secondaryButton: .cancel { self.confirmation = nil }
           )
         case .removeAllAssignments:
           Alert(
-            title: Text(OJDLocalized.string("profiles.removeAllAssignmentsTitle")),
-            message: Text(OJDLocalized.string("profiles.removeAllAssignmentsMessage")),
+            title: Text(OJDLocalized.string("ui.profiles.removeAllAssignmentsTitle")),
+            message: Text(OJDLocalized.string("ui.profiles.removeAllAssignmentsMessage")),
             primaryButton: .destructive(
-              Text(OJDLocalized.string("profiles.removeAllAssignmentsConfirm"))
+              Text(OJDLocalized.string("ui.profiles.removeAllAssignmentsConfirm"))
             ) { removeAllAssignments() },
             secondaryButton: .cancel { self.confirmation = nil }
           )
@@ -222,11 +222,11 @@
             maxWidth: .infinity,
             alignment: .leading
           ).ojdAccessibilityLabel(
-            OJDLocalized.string("common.profileName")
+            OJDLocalized.string("term.profileName")
           )
           OJDCompactSymbolButton(
             symbolName: "pencil",
-            label: OJDLocalized.string("profiles.details")
+            label: OJDLocalized.string("ui.profiles.details")
           ) { activeSheet = .metadata }
           primaryActivationAction
           profileActionMenu
@@ -259,11 +259,11 @@
           HStack(spacing: 8) {
             Text(
               OJDLocalized.string(
-                "profiles.emptyInputWarning"
+                "ui.profiles.emptyInputWarning"
               )
             ).foregroundColor(Color(NSColor.systemOrange))
             Button(
-              OJDLocalized.string("profiles.restoreDefaultInput")
+              OJDLocalized.string("ui.profiles.restoreDefaultInput")
             ) { restoreDefaultInput() }
           }.font(.caption)
         }
@@ -286,7 +286,7 @@
       if profile.joyConPair == nil {
         Button(
           OJDLocalized.string(
-            isActive ? "common.deactivate" : "common.setActive"
+            isActive ? "action.deactivate" : "action.setActive"
           )
         ) { isActive ? deactivateProfile() : requestActivation() }.disabled(isMutationActive)
       }
@@ -294,18 +294,18 @@
 
     var profileActionMenu: some View {
       Picker(
-        OJDLocalized.string("profiles.actions"),
+        OJDLocalized.string("ui.profiles.actions"),
         selection: Binding<ProfileEditorMenuAction?>(
           get: { nil },
           set: { action in if let action { performMenuAction(action) } }
         )
       ) {
-        Text(OJDLocalized.string("profiles.actions")).tag(
+        Text(OJDLocalized.string("ui.profiles.actions")).tag(
           Optional<ProfileEditorMenuAction>.none
         )
         ForEach(menuActions, id: \.self) { action in Text(action.title).tag(Optional(action)) }
       }.pickerStyle(PopUpButtonPickerStyle()).labelsHidden().frame(width: 132)
-        .ojdAccessibilityLabel(OJDLocalized.string("profiles.actions"))
+        .ojdAccessibilityLabel(OJDLocalized.string("ui.profiles.actions"))
         .disabled(isMutationActive)
     }
 
@@ -313,7 +313,7 @@
       Group {
         if ProfilePresentationPolicy.navigationStyle(for: width) == .segmented {
           Picker(
-            OJDLocalized.string("profiles.editorSection"),
+            OJDLocalized.string("ui.profiles.editorSection"),
             selection: $selectedSection
           ) {
             ForEach(ProfilePresentationPolicy.sectionOrder) { section in
@@ -322,18 +322,18 @@
           }.pickerStyle(SegmentedPickerStyle()).labelsHidden()
         } else {
           HStack {
-            Text(OJDLocalized.string("profiles.editorSection"))
+            Text(OJDLocalized.string("ui.profiles.editorSection"))
               .foregroundColor(Color(NSColor.secondaryLabelColor))
             Picker("", selection: $selectedSection) {
               ForEach(ProfilePresentationPolicy.sectionOrder) { section in
                 Text(section.title).tag(section)
               }
             }.labelsHidden().pickerStyle(PopUpButtonPickerStyle()).frame(maxWidth: .infinity)
-              .ojdAccessibilityLabel(OJDLocalized.string("profiles.editorSection"))
+              .ojdAccessibilityLabel(OJDLocalized.string("ui.profiles.editorSection"))
           }
         }
       }.padding(.horizontal, 28).padding(.vertical, 10).ojdAccessibilityLabel(
-        OJDLocalized.string("profiles.editorSection")
+        OJDLocalized.string("ui.profiles.editorSection")
       ).ojdAccessibilityValue(selectedSection.title)
     }
   }

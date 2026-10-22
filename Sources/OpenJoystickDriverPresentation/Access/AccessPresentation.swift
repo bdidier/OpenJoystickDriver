@@ -9,8 +9,8 @@ enum AccessPresentation {
 
   static func scope(_ scope: EndpointScope) -> String {
     switch scope {
-    case .read: OJDLocalized.string("access.scope.read")
-    case .control: OJDLocalized.string("access.scope.control")
+    case .read: OJDLocalized.string("ui.access.scope.read")
+    case .control: OJDLocalized.string("ui.access.scope.control")
     }
   }
 
@@ -18,27 +18,27 @@ enum AccessPresentation {
   static func signer(_ kind: CodeSigningIdentity.Kind, _ publisherID: String?) -> String {
     switch kind {
     case .signed:
-      publisherID.map { OJDLocalized.formatted("access.signer.signed", $0) }
-        ?? OJDLocalized.string("access.signer.signedUnknownPublisher")
-    case .platform: OJDLocalized.string("access.signer.platform")
-    case .adHoc: OJDLocalized.string("access.signer.adHoc")
+      publisherID.map { OJDLocalized.formatted("ui.access.signer.signed", $0) }
+        ?? OJDLocalized.string("ui.access.signer.signedUnknownPublisher")
+    case .platform: OJDLocalized.string("platform.macos.ui.access.signer.platform")
+    case .adHoc: OJDLocalized.string("ui.access.signer.adHoc")
     }
   }
 
   static func transport(_ transport: AccessTransport) -> String {
     switch transport {
-    case .socket: OJDLocalized.string("access.transport.socket")
-    case .web: OJDLocalized.string("access.transport.web")
+    case .socket: OJDLocalized.string("ui.access.transport.socket")
+    case .web: OJDLocalized.string("ui.access.transport.web")
     }
   }
 
   /// The state of the WebSocket in a sentence.
   static func web(_ web: AccessWebStatus) -> String {
-    guard web.enabled else { return OJDLocalized.string("access.web.off") }
+    guard web.enabled else { return OJDLocalized.string("ui.access.web.off") }
     guard let port = web.port, let url = web.url, let pagesURL = web.pagesURL else {
-      return OJDLocalized.string("access.web.noPort")
+      return OJDLocalized.string("ui.access.web.noPort")
     }
-    guard web.listening else { return OJDLocalized.formatted("access.web.closed", String(port)) }
-    return OJDLocalized.formatted("access.web.on", url, pagesURL)
+    guard web.listening else { return OJDLocalized.formatted("ui.access.web.closed", String(port)) }
+    return OJDLocalized.formatted("ui.access.web.on", url, pagesURL)
   }
 }

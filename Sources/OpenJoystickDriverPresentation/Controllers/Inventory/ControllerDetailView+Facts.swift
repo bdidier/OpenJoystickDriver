@@ -13,8 +13,8 @@
         if showsSessionState {
           Section {
             if device.sessionState == .suspended {
-              OJDLabeledRow(OJDLocalized.string("controllers.suspended")) {
-                Button(OJDLocalized.string("mainMenu.controller.resume")) {
+              OJDLabeledRow(OJDLocalized.string("ui.controllers.suspended")) {
+                Button(OJDLocalized.string("ui.menu.controller.resume")) {
                   Task { @MainActor in await viewModel.resumeController(device) }
                 }
               }
@@ -40,7 +40,7 @@
             ControllerServerPicker(viewModel: viewModel, device: device)
             if let record {
               OJDLabeledValue(
-                OJDLocalized.string("controllers.server.source"),
+                OJDLocalized.string("ui.controllers.server.source"),
                 CommandLineName.kebab(record.serverSource)
               )
             }
@@ -63,7 +63,7 @@
           }
         }
         if let record {
-          Section(header: Text(OJDLocalized.string("cli.controller.show.label.tuning"))) {
+          Section(header: Text(OJDLocalized.string("cli.controller.show.labelTuning"))) {
             tuningRows(for: record)
           }
         }
@@ -129,7 +129,7 @@
         }
         ControllerTimedActionRows(actions: actions)
       } label: {
-        Button(OJDLocalized.string("virtualProfile.advanced")) { showsAdvanced.toggle() }
+        Button(OJDLocalized.string("ui.virtualProfile.advanced")) { showsAdvanced.toggle() }
           .buttonStyle(.plain).frame(maxWidth: .infinity, alignment: .leading)
       }
     }
@@ -138,20 +138,20 @@
       HStack(alignment: .top, spacing: 8) {
         OJDSystemSymbol(
           name: SemanticState.failure.presentation.symbolName,
-          fallback: OJDLocalized.string("common.needsAttention")
+          fallback: OJDLocalized.string("status.needsAttention")
         ).foregroundColor(Color(SemanticState.failure.presentation.tone.color))
         Text(message).font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor)).fixedSize(
           horizontal: false,
           vertical: true
         )
       }.ojdAccessibilityLabel(
-        OJDLocalized.string("common.needsAttention")
+        OJDLocalized.string("status.needsAttention")
       ).ojdAccessibilityValue(message)
     }
 
     private var inputTestAction: some View {
-      OJDLabeledRow(OJDLocalized.string("inputTest.title")) {
-        Button(OJDLocalized.string("inputTest.open")) {
+      OJDLabeledRow(OJDLocalized.string("ui.inputTest.title")) {
+        Button(OJDLocalized.string("ui.inputTest.open")) {
           openInputTest(device)
         }.disabled(device.sessionState == .suspended)
       }
@@ -180,27 +180,27 @@
       switch activeProfile {
       case .loading:
         OJDLabeledValue(
-          OJDLocalized.string("controllers.activeProfile"),
+          OJDLocalized.string("ui.controllers.activeProfile"),
           OJDLocalized.string("status.checking")
         )
       case .noProfile:
         OJDLabeledValue(
-          OJDLocalized.string("controllers.activeProfile"),
-          OJDLocalized.string("common.none")
+          OJDLocalized.string("ui.controllers.activeProfile"),
+          OJDLocalized.string("status.none")
         )
       case .profile(let name):
-        OJDLabeledValue(OJDLocalized.string("controllers.activeProfile"), name)
+        OJDLabeledValue(OJDLocalized.string("ui.controllers.activeProfile"), name)
       case .unavailable(let message):
         profileFailureRow(
           label: OJDLocalized.string(
-            "controllers.profileUnavailable"
+            "ui.controllers.profileUnavailable"
           ),
           message: message
         )
       case .error(let message):
         profileFailureRow(
           label: OJDLocalized.string(
-            "controllers.profileLoadError"
+            "ui.controllers.profileLoadError"
           ),
           message: message
         )
@@ -210,10 +210,10 @@
     private func profileFailureRow(label: String, message: String) -> some View {
       VStack(alignment: .leading, spacing: 4) {
         HStack {
-          Text(OJDLocalized.string("controllers.activeProfile"))
+          Text(OJDLocalized.string("ui.controllers.activeProfile"))
             .foregroundColor(Color(NSColor.secondaryLabelColor))
           Spacer()
-          Text(OJDLocalized.string("common.needsAttention"))
+          Text(OJDLocalized.string("status.needsAttention"))
             .foregroundColor(Color(NSColor.secondaryLabelColor))
         }
 
@@ -222,7 +222,7 @@
           horizontal: false,
           vertical: true
         )
-        Button(OJDLocalized.string("common.tryAgain"), action: retry)
+        Button(OJDLocalized.string("action.tryAgain"), action: retry)
 
       }
     }

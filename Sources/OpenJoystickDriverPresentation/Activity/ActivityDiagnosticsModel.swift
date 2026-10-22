@@ -10,9 +10,9 @@ enum ActivityCheckFix: Equatable {
 
   var titleKey: String {
     switch self {
-    case .requestInputRead, .requestInputInject: return "common.request"
-    case .approveDriver: return "setup.openSystemSettings"
-    case .showLibrary: return "activity.fix.showLibrary"
+    case .requestInputRead, .requestInputInject: return "action.request"
+    case .approveDriver: return "platform.macos.ui.setup.openSystemSettings"
+    case .showLibrary: return "ui.activity.fix.showLibrary"
     }
   }
 }
@@ -34,21 +34,33 @@ struct ActivityCheckKind: Equatable {
   static let all = [
     Self(
       id: "transport-extension-bundle",
-      nameKey: "activity.check.transportExtensionBundle",
+      nameKey: "ui.activity.check.transportExtensionBundle",
       action: .noGUIAction
     ),
     Self(
       id: "transport-extension-registration",
-      nameKey: "activity.check.transportExtensionRegistration",
+      nameKey: "ui.activity.check.transportExtensionRegistration",
       action: .fix(.approveDriver)
     ),
-    Self(id: "service", nameKey: "cli.status.label.service", action: .noGUIAction),
-    Self(id: "input-read", nameKey: "common.inputRead", action: .fix(.requestInputRead)),
-    Self(id: "input-inject", nameKey: "common.inputInject", action: .fix(.requestInputInject)),
-    Self(id: "virtual-device", nameKey: "cli.status.label.virtual_device", action: .noGUIAction),
-    Self(id: "controller-records", nameKey: "library.records", action: .fix(.showLibrary)),
-    Self(id: "config-files", nameKey: "activity.check.configFiles", action: .noGUIAction),
-    Self(id: "usb-access", nameKey: "activity.check.usbAccess", action: .fix(.requestInputRead)),
+    Self(id: "service", nameKey: "cli.status.group.labelService", action: .noGUIAction),
+    Self(
+      id: "input-read",
+      nameKey: "platform.macos.term.inputRead",
+      action: .fix(.requestInputRead)
+    ),
+    Self(
+      id: "input-inject",
+      nameKey: "platform.macos.term.inputInject",
+      action: .fix(.requestInputInject)
+    ),
+    Self(
+      id: "virtual-device",
+      nameKey: "cli.status.group.labelVirtualDevice",
+      action: .noGUIAction
+    ),
+    Self(id: "controller-records", nameKey: "ui.library.records", action: .fix(.showLibrary)),
+    Self(id: "config-files", nameKey: "ui.activity.check.configFiles", action: .noGUIAction),
+    Self(id: "usb-access", nameKey: "ui.activity.check.usbAccess", action: .fix(.requestInputRead)),
   ]
 
   static func kind(of id: String) -> Self? { all.first { $0.id == id } }
@@ -80,10 +92,10 @@ struct ActivityCheckRow: Identifiable, Equatable {
 
   var statusKey: String {
     switch status {
-    case .pass: return "activity.status.pass"
-    case .warn: return "activity.status.warn"
-    case .fail: return "common.failed"
-    case .skip: return "activity.status.skip"
+    case .pass: return "ui.activity.status.pass"
+    case .warn: return "ui.activity.status.warn"
+    case .fail: return "status.failed"
+    case .skip: return "ui.activity.status.skip"
     }
   }
 

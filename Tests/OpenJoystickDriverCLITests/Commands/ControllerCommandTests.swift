@@ -567,7 +567,7 @@ struct ControllerCommandTests {
     #expect(json.result.code == 0, "\(json.result.standardError)")
     let controller = try json.result.json()
     #expect(controller["record"] as? [String: String] == ["layer": "Bundled"])
-    let bundled = CLILocalized.text("cli.controller.show.record.bundled")
+    let bundled = CLILocalized.text("cli.controller.show.recordBundled")
     #expect(Self.rows(human.result, endingIn: bundled).count == 1)
     #expect(plain.result.standardOutput.contains("record\tbundled\t\n"))
   }
@@ -600,7 +600,7 @@ struct ControllerCommandTests {
     #expect(json.result.code == 0, "\(json.result.standardError)")
     let controller = try json.result.json()
     #expect(controller["record"] == nil)
-    let none = CLILocalized.text("cli.controller.show.record.none")
+    let none = CLILocalized.text("cli.controller.show.recordNone")
     #expect(Self.rows(human.result, endingIn: none).count == 1)
     #expect(plain.result.standardOutput.contains("record\tnone\t\n"))
   }

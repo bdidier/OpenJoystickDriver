@@ -12,14 +12,14 @@
 
     var body: some View {
       VStack(alignment: .leading, spacing: 8) {
-        Text(OJDLocalized.string("profiles.additionalActions"))
+        Text(OJDLocalized.string("ui.profiles.additionalActions"))
           .font(.headline)
         ScrollView {
           VStack(alignment: .leading, spacing: 10) {
             ForEach(actions) { action in
               VStack(alignment: .leading, spacing: 5) {
                 Picker(
-                  OJDLocalized.string("common.destination"),
+                  OJDLocalized.string("term.destination"),
                   selection: destinationBinding(action)
                 ) {
                   ForEach(
@@ -34,15 +34,15 @@
                 PhysicalOutputDestinationFields(destination: destinationBinding(action))
                 HStack {
                   Button(
-                    OJDLocalized.string("profiles.bindingBehavior")
+                    OJDLocalized.string("ui.profiles.bindingBehavior")
                   ) { editing = action }
-                  Button(OJDLocalized.string("profiles.moveUp")) {
+                  Button(OJDLocalized.string("ui.profiles.moveUp")) {
                     move(action, by: -1)
                   }.disabled(actions.first?.id == action.id)
-                  Button(OJDLocalized.string("profiles.moveDown")) {
+                  Button(OJDLocalized.string("ui.profiles.moveDown")) {
                     move(action, by: 1)
                   }.disabled(actions.last?.id == action.id)
-                  Button(OJDLocalized.string("common.remove")) {
+                  Button(OJDLocalized.string("action.remove")) {
                     actions.removeAll { $0.id == action.id }
                   }
                 }
@@ -50,7 +50,7 @@
             }
           }
         }.frame(height: actions.isEmpty ? 0 : 170)
-        Button(OJDLocalized.string("profiles.addAction")) {
+        Button(OJDLocalized.string("ui.profiles.addAction")) {
           guard
             let destination = DestinationOption.options(for: source, capabilities: capabilities)
               .first?.destination

@@ -55,7 +55,7 @@
         case .unavailable(let message):
           ServiceFailureStateView(
             title: OJDLocalized.string(
-              "controllers.unavailable"
+              "ui.controllers.unavailable"
             ),
             message: message,
             retry: refresh
@@ -63,7 +63,7 @@
         case .error(let message):
           ServiceFailureStateView(
             title: OJDLocalized.string(
-              "controllers.loadError"
+              "ui.controllers.loadError"
             ),
             message: message,
             retry: refresh
@@ -72,7 +72,7 @@
           if let liveStatusError = screen.liveStatusError {
             ServiceFailureStateView(
               title: OJDLocalized.string(
-                "controllers.loadError"
+                "ui.controllers.loadError"
               ),
               message: liveStatusError,
               retry: refresh
@@ -118,16 +118,16 @@
     @ViewBuilder
     private func sessionCommands(for device: ApplicationServiceDeviceDescription) -> some View {
       if device.sessionState == .suspended {
-        Button(OJDLocalized.string("mainMenu.controller.resume")) {
+        Button(OJDLocalized.string("ui.menu.controller.resume")) {
           Task { @MainActor in await viewModel.resumeController(device) }
         }
       } else {
-        Button(OJDLocalized.string("mainMenu.controller.suspend")) {
+        Button(OJDLocalized.string("ui.menu.controller.suspend")) {
           Task { @MainActor in await viewModel.suspendController(device) }
         }
       }
       if device.supportsWirelessDisconnect {
-        Button(OJDLocalized.string("mainMenu.controller.disconnectWirelessLink")) {
+        Button(OJDLocalized.string("ui.menu.controller.disconnectWirelessLink")) {
           wirelessDisconnectRequest = WirelessDisconnectRequest(device: device)
         }
       }
@@ -179,7 +179,7 @@
         case .unavailable(let message):
           ServiceFailureStateView(
             title: OJDLocalized.string(
-              "controllers.unavailable"
+              "ui.controllers.unavailable"
             ),
             message: message,
             retry: refresh
@@ -187,7 +187,7 @@
         case .error(let message):
           ServiceFailureStateView(
             title: OJDLocalized.string(
-              "controllers.loadError"
+              "ui.controllers.loadError"
             ),
             message: message,
             retry: refresh
@@ -196,10 +196,10 @@
           EmptyStateView(
             symbol: "gamecontroller",
             title: OJDLocalized.string(
-              "controllers.emptyTitle"
+              "ui.controllers.emptyTitle"
             ),
             message: OJDLocalized.string(
-              "controllers.emptyMessage"
+              "ui.controllers.emptyMessage"
             )
           )
         }
@@ -247,7 +247,7 @@
           publishesVirtualDevice: false,
           presentation: protocolBinding.protocolID.physicalPresentation,
           label: physicalOwnership.isServedBySystem
-            ? OJDLocalized.string("controllers.systemGamepadNotPublished")
+            ? OJDLocalized.string("platform.macos.ui.controllers.systemGamepadNotPublished")
             : RuntimePresentation.noVirtualHIDProfileLabel
         )
       }
@@ -268,10 +268,11 @@
     /// as `serving.route`.
     var servingRouteLabel: String {
       switch servingDecision.route {
-      case .nativePassThrough: OJDLocalized.string("controllers.serving.nativePassThrough")
-      case .virtualHID: OJDLocalized.string("controllers.serving.virtualHID")
-      case .extensionOwned: OJDLocalized.string("controllers.serving.extensionOwned")
-      case .outputDisabled: OJDLocalized.string("controllers.serving.outputDisabled")
+      case .nativePassThrough:
+        OJDLocalized.string("platform.macos.ui.controllers.serving.nativePassThrough")
+      case .virtualHID: OJDLocalized.string("ui.controllers.serving.virtualHID")
+      case .extensionOwned: OJDLocalized.string("ui.controllers.serving.extensionOwned")
+      case .outputDisabled: OJDLocalized.string("ui.controllers.serving.outputDisabled")
       }
     }
   }

@@ -128,7 +128,7 @@ def english_strings(root: Path) -> dict[str, str]:
 
 
 def meaning(entry: Entry, strings: dict[str, str]) -> str:
-    key = f"error.{entry['code']}"
+    key = f"error.{entry['code']}.message"
     if key not in strings:
         raise ErrorCodeError(f"{ENGLISH_STRINGS.name} has no key {key}")
     text = strings[key].replace("|", "\\|")

@@ -41,15 +41,16 @@
       Form {
         if let failure = model.failure {
           Section {
-            errorView(failure, actionTitle: "access.dismiss", action: model.dismissFailure)
+            errorView(failure, actionTitle: "ui.access.dismiss", action: model.dismissFailure)
           }
         }
         permissionsSection
         switch model.load {
-        case .loading: Section { LoadingStateView(message: OJDLocalized.string("access.loading")) }
+        case .loading:
+          Section { LoadingStateView(message: OJDLocalized.string("ui.access.loading")) }
         case .failed(let failure):
           Section {
-            errorView(failure, actionTitle: "access.tryAgain") { Task { await model.refresh() } }
+            errorView(failure, actionTitle: "ui.access.tryAgain") { Task { await model.refresh() } }
           }
         case .loaded(let status):
           endpointsSection(status)
@@ -79,11 +80,11 @@
       InlineErrorView(
         message: failure.message,
         code: failure.code,
-        detailsTitle: OJDLocalized.string("access.details"),
+        detailsTitle: OJDLocalized.string("ui.access.details"),
         detailsAccessibilityLabel: OJDLocalized.string("a11y.access.details"),
         actionTitle: OJDLocalized.string(actionTitle),
         actionAccessibilityLabel: OJDLocalized.string(
-          actionTitle == "access.dismiss" ? "a11y.access.dismissError" : "a11y.access.tryAgain"
+          actionTitle == "ui.access.dismiss" ? "a11y.access.dismissError" : "a11y.access.tryAgain"
         ),
         action: action
       )
@@ -93,11 +94,15 @@
 
     private var permissionsSection: some View {
       let readiness = readiness
-      return Section(header: Text(OJDLocalized.string("settings.accessReadiness"))) {
+      return Section(header: Text(OJDLocalized.string("ui.settings.notifications.accessReadiness")))
+      {
         ForEach(readiness.rows) { row in permissionRow(row) }
         if readiness.needsRestart {
-          Button(OJDLocalized.string("permissions.restartApplication"), action: restartApplication)
-            .ojdAccessibilityLabel(OJDLocalized.string("a11y.access.restart"))
+          Button(
+            OJDLocalized.string("ui.permissions.restartApplication"),
+            action: restartApplication
+          )
+          .ojdAccessibilityLabel(OJDLocalized.string("a11y.access.restart"))
         }
       }
     }
@@ -109,7 +114,9 @@
           Text(row.status.value)
           if let key = row.actionTitleKey {
             Button(OJDLocalized.string(key)) { requestPermission(row.kind) }
-              .ojdAccessibilityLabel(OJDLocalized.formatted("settings.requestAccess", title))
+              .ojdAccessibilityLabel(
+                OJDLocalized.formatted("ui.settings.notifications.requestAccess", title)
+              )
               .ojdAccessibilityValue(row.status.value)
           }
         }
@@ -135,7 +142,7 @@
     private func endpointsSection(_ status: AccessStatusPayload) -> some View {
       Section {
         Toggle(
-          OJDLocalized.string("access.endpoint"),
+          OJDLocalized.string("ui.access.endpoint"),
           isOn: Binding(
             get: { status.enabled },
             set: { isOn in
@@ -146,11 +153,11 @@
               }
             }
           )
-        ).disabled(model.busy).help(OJDLocalized.formatted("access.socket", status.socketPath))
+        ).disabled(model.busy).help(OJDLocalized.formatted("ui.access.socket", status.socketPath))
           .contextMenu { copySocketPathButton(status) }
         if status.enabled { copySocketPathButton(status) }
         Toggle(
-          OJDLocalized.string("access.web"),
+          OJDLocalized.string("ui.access.web"),
           isOn: Binding(
             get: { status.web.enabled },
             set: { isOn in
@@ -158,19 +165,19 @@
             }
           )
         ).disabled(model.busy).help(
-          OJDLocalized.formatted("access.web.pages", status.web.pagesPath)
+          OJDLocalized.formatted("ui.access.web.pages", status.web.pagesPath)
         )
         if status.web.enabled {
           Text(AccessPresentation.web(status.web)).font(.caption).foregroundColor(
             Color(NSColor.secondaryLabelColor)
           ).textSelection(.enabled)
         } else {
-          OJDLabeledRow(OJDLocalized.string("access.web.port")) {
+          OJDLabeledRow(OJDLocalized.string("ui.access.web.port")) {
             HStack {
               if model.canChooseAutomaticPort {
-                Button(OJDLocalized.string("access.web.port.choose")) {
+                Button(OJDLocalized.string("ui.access.web.port.choose")) {
                   model.chooseAutomaticPort()
-                }.ojdAccessibilityLabel(OJDLocalized.string("access.web.port.choose"))
+                }.ojdAccessibilityLabel(OJDLocalized.string("ui.access.web.port.choose"))
               }
               portField.labelsHidden().textFieldStyle(RoundedBorderTextFieldStyle())
                 .multilineTextAlignment(.trailing).frame(width: 120)
@@ -187,7 +194,7 @@
     private var portField: some View {
       if #available(macOS 13, *) {
         TextField(
-          OJDLocalized.string("access.web.port"),
+          OJDLocalized.string("ui.access.web.port"),
           text: $model.portText,
           prompt: Text(model.portPlaceholder)
         )
@@ -197,10 +204,10 @@
     }
 
     private func copySocketPathButton(_ status: AccessStatusPayload) -> some View {
-      Button(OJDLocalized.string("access.socket.copy")) {
+      Button(OJDLocalized.string("ui.access.socket.copy")) {
         NSPasteboard.general.clearContents()
         NSPasteboard.general.setString(status.socketPath, forType: .string)
-      }.ojdAccessibilityLabel(OJDLocalized.string("access.socket.copy"))
+      }.ojdAccessibilityLabel(OJDLocalized.string("ui.access.socket.copy"))
     }
   }
 

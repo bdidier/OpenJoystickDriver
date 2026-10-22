@@ -38,25 +38,25 @@
       VStack(alignment: .leading, spacing: 16) {
         Text(
           OJDLocalized.formatted(
-            "capture.adjust",
+            "ui.capture.adjust",
             RuntimePresentation.sourceLabel(binding.source)
           )
         ).font(.headline.weight(.semibold))
         SliderRow(
-          title: OJDLocalized.string("capture.deadZone"),
+          title: OJDLocalized.string("ui.capture.deadZone"),
           value: $deadzone,
           range: RemappingAxisTuning.deadzoneRange,
           suffix: "%"
         )
         SliderRow(
-          title: OJDLocalized.string("capture.gain"),
+          title: OJDLocalized.string("ui.capture.gain"),
           value: $gain,
           range: RemappingAxisTuning.gainRange,
           suffix: "×"
         )
-        Toggle(OJDLocalized.string("capture.invertAxis"), isOn: $inverted)
+        Toggle(OJDLocalized.string("ui.capture.invertAxis"), isOn: $inverted)
         Picker(
-          OJDLocalized.string("capture.responseCurve"),
+          OJDLocalized.string("ui.capture.responseCurve"),
           selection: $curve
         ) {
           ForEach(RemappingResponseCurve.allCases, id: \.self) { value in
@@ -64,17 +64,17 @@
           }
         }
         SliderRow(
-          title: OJDLocalized.string("capture.digitalThreshold"),
+          title: OJDLocalized.string("ui.capture.digitalThreshold"),
           value: $threshold,
           range: RemappingAxisTuning.digitalActivationThresholdRange,
           suffix: "%"
         )
         HStack {
           Spacer()
-          Button(OJDLocalized.string("common.cancel")) {
+          Button(OJDLocalized.string("action.cancel")) {
             presentationMode.wrappedValue.dismiss()
           }
-          Button(OJDLocalized.string("common.save")) {
+          Button(OJDLocalized.string("action.save")) {
             onSave(
               RemappingAxisTuning(
                 deadzone: deadzone,
@@ -92,10 +92,10 @@
 
     private func responseCurveLabel(_ value: RemappingResponseCurve) -> String {
       switch value {
-      case .linear: return OJDLocalized.string("capture.linear")
-      case .easeIn: return OJDLocalized.string("capture.easeIn")
-      case .easeOut: return OJDLocalized.string("capture.easeOut")
-      case .smoothStep: return OJDLocalized.string("capture.smoothStep")
+      case .linear: return OJDLocalized.string("ui.capture.linear")
+      case .easeIn: return OJDLocalized.string("ui.capture.easeIn")
+      case .easeOut: return OJDLocalized.string("ui.capture.easeOut")
+      case .smoothStep: return OJDLocalized.string("ui.capture.smoothStep")
       }
     }
   }
@@ -133,12 +133,12 @@
       VStack(alignment: .leading, spacing: 7) {
         Text(
           OJDLocalized.string(
-            "error.profileChanged"
+            "ui.error.profileChanged"
           )
         ).font(.subheadline.weight(.semibold))
         HStack(spacing: 10) {
-          Button(OJDLocalized.string("common.reload")) { reload() }
-          Button(OJDLocalized.string("common.keepEditing")) {
+          Button(OJDLocalized.string("action.reload")) { reload() }
+          Button(OJDLocalized.string("action.keepEditing")) {
             keepEditing()
           }
         }

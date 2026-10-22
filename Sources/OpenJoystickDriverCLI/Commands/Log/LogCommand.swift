@@ -6,7 +6,7 @@ struct LogCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "log",
     abstract: CLILocalized.text(
-      "cli.log.abstract"
+      "cli.log.group.abstract"
     ),
     subcommands: [LogShowCommand.self, LogPathCommand.self, LogExportCommand.self]
   )
@@ -84,7 +84,7 @@ struct LogShowCommand: AsyncParsableCommand {
   func validate() throws {
     guard ApplicationServiceLogService.linesRange.contains(lines) else {
       throw ValidationError(
-        CLILocalized.text("cli.log.show.lines_range")
+        CLILocalized.text("cli.log.show.linesRange")
       )
     }
   }
@@ -99,7 +99,7 @@ struct LogShowCommand: AsyncParsableCommand {
         throw CLIFailure(
           .fileAccessFailed,
           CLILocalized.format(
-            "cli.log.show.read_failed",
+            "cli.log.show.readFailed",
             error.localizedDescription
           )
         )

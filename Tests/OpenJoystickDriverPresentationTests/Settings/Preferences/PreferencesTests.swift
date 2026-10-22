@@ -277,8 +277,8 @@ struct PreferencesTests {
   @MainActor
   func sendTestNotificationShowsEachNamedOutcome() async {
     let outcomes: [(TestNotificationOutcome, String?)] = [
-      (.denied, OJDLocalized.string("error.E2037")),
-      (.noAnswer, OJDLocalized.string("error.E2036")),
+      (.denied, OJDLocalized.string("error.E2037.message")),
+      (.noAnswer, OJDLocalized.string("error.E2036.message")),
       (.failed("the system said no"), "the system said no"),
     ]
     for (outcome, message) in outcomes {

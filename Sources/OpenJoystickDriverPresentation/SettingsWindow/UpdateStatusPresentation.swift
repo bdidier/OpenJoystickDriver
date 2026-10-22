@@ -34,24 +34,24 @@ struct UpdateStatusPresentation: Equatable {
     switch state {
     case .idle:
       indicator = .none
-      title = OJDLocalized.string("settings.version")
+      title = OJDLocalized.string("ui.settings.general.version")
     case .checking:
       indicator = .progress
-      title = OJDLocalized.string("settings.updateChecking")
+      title = OJDLocalized.string("ui.settings.general.updateChecking")
     case .upToDate(let current, _):
       indicator = .symbol(name: "checkmark.circle.fill", tone: .positive)
-      title = OJDLocalized.string("settings.upToDate")
+      title = OJDLocalized.string("ui.settings.general.upToDate")
       version = current
     case .available(let info):
       indicator = .symbol(name: "arrow.down.circle.fill", tone: .attention)
-      title = OJDLocalized.string("settings.updateAvailable")
+      title = OJDLocalized.string("ui.settings.general.updateAvailable")
       version = Self.versionText(ofTag: info.tagName)
     case .aheadOfLatestRelease(let current, let latest):
       indicator = .symbol(name: "arrow.up.circle.fill", tone: .informational)
-      title = OJDLocalized.string("settings.updateAhead")
+      title = OJDLocalized.string("ui.settings.general.updateAhead")
       version = current
       latestRelease = OJDLocalized.formatted(
-        "settings.latestRelease",
+        "ui.settings.general.latestRelease",
         Self.versionText(ofTag: latest)
       )
     case .failed(let failure):

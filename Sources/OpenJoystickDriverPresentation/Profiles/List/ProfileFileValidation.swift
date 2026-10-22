@@ -38,19 +38,19 @@ enum ProfileFileValidation: Equatable, Identifiable {
 
   var title: String {
     switch self {
-    case .valid: return OJDLocalized.string("profiles.validTitle")
-    case .invalid: return OJDLocalized.string("profiles.invalidTitle")
+    case .valid: return OJDLocalized.string("ui.profiles.validTitle")
+    case .invalid: return OJDLocalized.string("ui.profiles.invalidTitle")
     }
   }
 
   var message: String {
     switch self {
     case .valid(let name, let controller, let scope):
-      return OJDLocalized.formatted("profiles.validMessage", name, controller, scope)
+      return OJDLocalized.formatted("ui.profiles.validMessage", name, controller, scope)
     case .invalid(let fileName, let code, let problem):
       return OJDLocalized.formatted(
-        "error.withCode",
-        OJDLocalized.formatted("cli.profile.document_invalid", fileName, problem),
+        "ui.error.withCode",
+        OJDLocalized.formatted("cli.profile.group.documentInvalid", fileName, problem),
         code
       )
     }
@@ -71,7 +71,7 @@ enum ProfileScopeCaption {
     case .global: return assignments
     case .application(let appID):
       return OJDLocalized.formatted(
-        "profiles.scopedCaption",
+        "ui.profiles.scopedCaption",
         resolveName(appID) ?? appID,
         assignments
       )

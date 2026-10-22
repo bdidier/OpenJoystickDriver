@@ -34,10 +34,10 @@
         guard preferenceIsEnabled(.notifyControllerConnected) else { return }
         delivery.deliver(
           title: OJDLocalized.string(
-            "notifications.controllerConnected"
+            "notify.controllerConnected"
           ),
           body: OJDLocalized.formatted(
-            "notifications.controllerConnectedBody",
+            "notify.controllerConnectedBody",
             name
           ),
           sound: notificationSoundIsEnabled
@@ -46,10 +46,10 @@
         guard preferenceIsEnabled(.notifyControllerDisconnected) else { return }
         delivery.deliver(
           title: OJDLocalized.string(
-            "notifications.controllerDisconnected"
+            "notify.controllerDisconnected"
           ),
           body: OJDLocalized.formatted(
-            "notifications.controllerDisconnectedBody",
+            "notify.controllerDisconnectedBody",
             name
           ),
           sound: notificationSoundIsEnabled
@@ -60,7 +60,7 @@
         guard preferenceIsEnabled(preferenceKey) else { return }
         delivery.deliver(
           title: OJDLocalized.string(
-            "notifications.profileChanged"
+            "notify.profileChanged"
           ),
           body: profileChangeBody(from: previousName, to: currentName),
           sound: notificationSoundIsEnabled
@@ -69,10 +69,10 @@
         guard preferenceIsEnabled(.notifyControllerConnected) else { return }
         delivery.deliver(
           title: OJDLocalized.string(
-            "notifications.controllerNeedsAttention"
+            "notify.controllerNeedsAttention"
           ),
           body: OJDLocalized.formatted(
-            "notifications.controllerNeedsAttentionBody",
+            "notify.controllerNeedsAttentionBody",
             name
           ),
           sound: notificationSoundIsEnabled
@@ -99,18 +99,18 @@
       switch (previousName, currentName) {
       case (.some(let previous), .some(let current)):
         return OJDLocalized.formatted(
-          "notifications.profileSwitchedBody",
+          "notify.profileSwitchedBody",
           previous,
           current
         )
       case (.none, .some(let current)):
         return OJDLocalized.formatted(
-          "notifications.profileActivatedBody",
+          "notify.profileActivatedBody",
           current
         )
       case (.some(let previous), .none):
         return OJDLocalized.formatted(
-          "notifications.profileDeactivatedBody",
+          "notify.profileDeactivatedBody",
           previous
         )
       case (.none, .none):

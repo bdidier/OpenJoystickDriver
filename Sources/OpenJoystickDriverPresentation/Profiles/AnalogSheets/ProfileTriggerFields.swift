@@ -48,7 +48,7 @@
     }
 
     private func label(_ key: String) -> String {
-      OJDLocalized.string("profiles.trigger." + key)
+      OJDLocalized.string("ui.profiles.trigger." + key)
     }
   }
 #endif

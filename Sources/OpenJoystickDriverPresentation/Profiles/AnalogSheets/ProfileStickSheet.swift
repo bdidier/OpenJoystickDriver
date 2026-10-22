@@ -36,15 +36,15 @@
 
     var body: some View {
       VStack(alignment: .leading, spacing: 16) {
-        Text(OJDLocalized.string("profiles.stick.title")).font(.headline)
+        Text(OJDLocalized.string("ui.profiles.stick.title")).font(.headline)
         Picker(
-          OJDLocalized.string("profiles.stick.source"),
+          OJDLocalized.string("ui.profiles.stick.source"),
           selection: $selected
         ) {
-          Text(OJDLocalized.string("profiles.gyro.leftStick")).tag(
+          Text(OJDLocalized.string("ui.profiles.gyro.leftStick")).tag(
             RemappingStickSource.left
           )
-          Text(OJDLocalized.string("profiles.gyro.rightStick")).tag(
+          Text(OJDLocalized.string("ui.profiles.gyro.rightStick")).tag(
             RemappingStickSource.right
           )
         }.pickerStyle(SegmentedPickerStyle())
@@ -53,7 +53,7 @@
         }
         if let errorMessage { Text(errorMessage).foregroundColor(.red) }
         HStack {
-          Button(OJDLocalized.string("common.reset")) {
+          Button(OJDLocalized.string("action.reset")) {
             if selected == .left {
               left = ProfileStickDraft(source: .left, mapping: nil)
             } else {
@@ -62,10 +62,10 @@
             errorMessage = nil
           }
           Spacer()
-          Button(OJDLocalized.string("common.cancel")) {
+          Button(OJDLocalized.string("action.cancel")) {
             presentationMode.wrappedValue.dismiss()
           }
-          Button(OJDLocalized.string("common.save")) {
+          Button(OJDLocalized.string("action.save")) {
             do {
               let separator = Locale.current.decimalSeparator ?? "."
               let mappings = try [left, right].compactMap {

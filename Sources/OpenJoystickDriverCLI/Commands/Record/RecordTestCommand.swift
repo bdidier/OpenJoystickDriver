@@ -29,7 +29,7 @@ struct RecordTestCommand: AsyncParsableCommand {
 
   @Argument(
     help: ArgumentHelp(
-      CLILocalized.text("cli.record.identity"),
+      CLILocalized.text("cli.record.group.identity"),
       valueName: "VVVV:PPPP"
     )
   )
@@ -58,7 +58,7 @@ struct RecordTestCommand: AsyncParsableCommand {
       guard let record = set.records[model] else {
         throw CLIFailure(
           .notFound,
-          CLILocalized.format("cli.record.show.not_found", model.description)
+          CLILocalized.format("cli.record.show.notFound", model.description)
         )
       }
       let outcome = try test(

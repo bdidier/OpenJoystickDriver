@@ -12,37 +12,37 @@
     var body: some View {
       Form {
         SettingsErrorSection(preferences: preferences)
-        Section(OJDLocalized.string("settings.controllers")) {
+        Section(OJDLocalized.string("ui.settings.general.controllers")) {
           eventToggle(
-            "settings.controllerConnectedShort",
-            "settings.controllerNotifications",
+            "ui.settings.notifications.controllerConnectedShort",
+            "ui.settings.notifications.controllerNotifications",
             \.controllerNotifications,
             preferences.setControllerNotifications
           )
           eventToggle(
-            "settings.controllerDisconnectedShort",
-            "settings.controllerDisconnectedNotifications",
+            "ui.settings.notifications.controllerDisconnectedShort",
+            "ui.settings.notifications.controllerDisconnectedNotifications",
             \.controllerDisconnectedNotifications,
             preferences.setControllerDisconnectedNotifications
           )
         }
-        Section(OJDLocalized.string("settings.profiles")) {
+        Section(OJDLocalized.string("ui.settings.general.profiles")) {
           eventToggle(
-            "settings.profileActivatedShort",
-            "settings.profileNotifications",
+            "ui.settings.notifications.profileActivatedShort",
+            "ui.settings.notifications.profileNotifications",
             \.profileNotifications,
             preferences.setProfileNotifications
           )
           eventToggle(
-            "settings.profileDeactivatedShort",
-            "settings.profileDeactivatedNotifications",
+            "ui.settings.notifications.profileDeactivatedShort",
+            "ui.settings.notifications.profileDeactivatedNotifications",
             \.profileDeactivatedNotifications,
             preferences.setProfileDeactivatedNotifications
           )
         }
         Section {
           Toggle(
-            OJDLocalized.string("settings.notificationSounds"),
+            OJDLocalized.string("ui.settings.notifications.notificationSounds"),
             isOn: Binding(
               get: { preferences.notificationSounds },
               set: { preferences.setNotificationSounds($0) }
@@ -61,11 +61,11 @@
         ).fixedSize(horizontal: false, vertical: true)
         Spacer(minLength: 12)
         if deliveryNeedsAttention {
-          Button(OJDLocalized.string("settings.openNotificationSettings")) {
+          Button(OJDLocalized.string("ui.settings.general.openNotificationSettings")) {
             preferences.openNotificationSettings()
           }
         }
-        Button(OJDLocalized.string("settings.testNotification")) {
+        Button(OJDLocalized.string("ui.settings.notifications.testNotification")) {
           preferences.sendTestNotification()
         }
       }
@@ -91,19 +91,28 @@
 
     private var deliveryStatus: String {
       guard preferences.notificationAuthorization == .allowed else {
-        return OJDLocalized.string("settings.notificationPermissionRequired")
+        return OJDLocalized.string("ui.settings.notifications.notificationPermissionRequired")
       }
       switch (
         preferences.notificationSystemSettings.alertStyle,
         preferences.notificationSystemSettings.soundsEnabled
       ) {
-      case (.none, false): return OJDLocalized.string("settings.notificationBannersAndSoundOff")
-      case (.none, _): return OJDLocalized.string("settings.notificationBannersOffDetail")
-      case (_, false): return OJDLocalized.string("settings.notificationSoundOffDetail")
+      case (.none, false):
+        return OJDLocalized.string(
+          "platform.macos.ui.settings.notifications.notificationBannersAndSoundOff"
+        )
+      case (.none, _):
+        return OJDLocalized.string(
+          "platform.macos.ui.settings.notifications.notificationBannersOffDetail"
+        )
+      case (_, false):
+        return OJDLocalized.string(
+          "platform.macos.ui.settings.notifications.notificationSoundOffDetail"
+        )
       case (.banner, true), (.alert, true):
-        return OJDLocalized.string("settings.notificationDeliveryReady")
+        return OJDLocalized.string("ui.settings.notifications.notificationDeliveryReady")
       case (.unknown, _), (_, nil):
-        return OJDLocalized.string("settings.notificationDeliveryAllowed")
+        return OJDLocalized.string("ui.settings.notifications.notificationDeliveryAllowed")
       }
     }
   }

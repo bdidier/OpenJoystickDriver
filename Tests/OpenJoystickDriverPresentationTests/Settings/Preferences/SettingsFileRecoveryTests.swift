@@ -141,13 +141,13 @@ struct SettingsFileRecoveryTests {
   func theAlertDefaultsToShowInFinderAndQuitAnswersEscape() {
     let alert = SettingsUnreadableAlert.make(reason: "Reason")
 
-    #expect(alert.messageText == OJDLocalized.string("settings.unreadable.title"))
+    #expect(alert.messageText == OJDLocalized.string("ui.settings.advanced.unreadableTitle"))
     #expect(alert.informativeText == "Reason")
     #expect(
       alert.buttons.map(\.title) == [
-        OJDLocalized.string("settings.unreadable.showInFinder"),
-        OJDLocalized.string("settings.unreadable.resetSettings"),
-        MainMenuRenderer.title("mainMenu.app.quit", appName: OJDLocalized.string("app.name")),
+        OJDLocalized.string("platform.macos.ui.settings.advanced.unreadableShowInFinder"),
+        OJDLocalized.string("ui.settings.advanced.unreadableResetSettings"),
+        MainMenuRenderer.title("ui.menu.app.quit", appName: OJDLocalized.string("term.app.name")),
       ]
     )
     #expect(alert.buttons[0].keyEquivalent == "\r")

@@ -6,10 +6,10 @@ struct SettingCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "setting",
     abstract: CLILocalized.text(
-      "cli.setting.abstract"
+      "cli.setting.group.abstract"
     ),
     discussion: CLILocalized.text(
-      "cli.setting.discussion"
+      "cli.setting.group.discussion"
     ),
     subcommands: [
       SettingListCommand.self, SettingGetCommand.self, SettingSetCommand.self,
@@ -26,30 +26,30 @@ enum SettingCatalog {
   static func description(of key: ApplicationSettingKey) -> String {
     switch key {
     case .launchAtLogin:
-      CLILocalized.text("cli.setting.launch_at_login")
+      CLILocalized.text("cli.setting.group.launchAtLogin")
     case .showInMenuBar:
-      CLILocalized.text("cli.setting.show_in_menu_bar")
+      CLILocalized.text("cli.setting.group.showInMenuBar")
     case .showInDock:
-      CLILocalized.text("cli.setting.show_in_dock")
+      CLILocalized.text("platform.macos.cli.setting.group.showInDock")
     case .notifyControllerConnected:
-      CLILocalized.text("cli.setting.notify_controller_connected")
+      CLILocalized.text("cli.setting.group.notifyControllerConnected")
     case .notifyControllerDisconnected:
-      CLILocalized.text("cli.setting.notify_controller_disconnected")
+      CLILocalized.text("cli.setting.group.notifyControllerDisconnected")
     case .notifyProfileActivated:
-      CLILocalized.text("cli.setting.notify_profile_activated")
+      CLILocalized.text("cli.setting.group.notifyProfileActivated")
     case .notifyProfileDeactivated:
-      CLILocalized.text("cli.setting.notify_profile_deactivated")
+      CLILocalized.text("cli.setting.group.notifyProfileDeactivated")
     case .notifySounds:
-      CLILocalized.text("cli.setting.notification_sounds")
+      CLILocalized.text("cli.setting.group.notificationSounds")
     case .updatesCheckAutomatically:
-      CLILocalized.text("cli.setting.check_updates_automatically")
+      CLILocalized.text("cli.setting.group.checkUpdatesAutomatically")
     case .updatesIncludePrereleases:
       CLILocalized.text(
-        "cli.setting.include_prerelease_updates"
+        "cli.setting.group.includePrereleaseUpdates"
       )
     case .developerTools:
       CLILocalized.text(
-        "cli.setting.developer_tools"
+        "cli.setting.group.developerTools"
       )
     }
   }
@@ -62,7 +62,7 @@ enum SettingCatalog {
     guard let key = ApplicationSettingKey(rawValue: name) else {
       throw ValidationError(
         CLILocalized.format(
-          "cli.setting.unknown_key",
+          "cli.setting.group.unknownKey",
           name,
           keyNames
         )
@@ -79,7 +79,7 @@ enum SettingCatalog {
     default:
       throw ValidationError(
         CLILocalized.format(
-          "cli.setting.bad_value",
+          "cli.setting.group.badValue",
           text,
           key.rawValue
         )
@@ -155,7 +155,7 @@ struct SettingGetCommand: AsyncParsableCommand {
 
   @Argument(
     help: ArgumentHelp(
-      CLILocalized.text("cli.setting.key"),
+      CLILocalized.text("cli.setting.group.key"),
       valueName: "key"
     )
   )
@@ -180,7 +180,7 @@ struct SettingSetCommand: AsyncParsableCommand {
     commandName: "set",
     abstract: CLILocalized.text("cli.setting.set.abstract"),
     discussion: CLILocalized.text(
-      "cli.setting.set.discussion"
+      "platform.macos.cli.setting.set.discussion"
     )
   )
 
@@ -216,7 +216,7 @@ struct SettingSetCommand: AsyncParsableCommand {
         throw CLIFailure(
           .systemRequestFailed,
           CLILocalized.format(
-            "cli.setting.set.not_applied",
+            "platform.macos.cli.setting.set.notApplied",
             key.rawValue,
             key.rawValue
           )
@@ -259,7 +259,7 @@ struct SettingResetCommand: AsyncParsableCommand {
 
   @Flag(
     name: [.short, .long],
-    help: ArgumentHelp(CLILocalized.text("cli.option.force"))
+    help: ArgumentHelp(CLILocalized.text("cli.shared.option.force"))
   )
   var force = false
 
@@ -324,11 +324,11 @@ struct SettingTestNotificationCommand: AsyncParsableCommand {
       switch outcome {
       case .shown: break
       case .denied:
-        throw CLIFailure(.notificationsDenied, CLILocalized.text("error.E2037"))
+        throw CLIFailure(.notificationsDenied, CLILocalized.text("error.E2037.message"))
       case .failed(let reason):
         throw CLIFailure.serviceRequestFailed(reason)
       case .noAnswer:
-        throw CLIFailure(.noApplicationAnswered, CLILocalized.text("error.E2036"))
+        throw CLIFailure(.noApplicationAnswered, CLILocalized.text("error.E2036.message"))
       }
       switch CLIContext.current.format {
       case .json:

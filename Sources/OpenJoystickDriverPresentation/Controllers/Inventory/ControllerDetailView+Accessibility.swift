@@ -9,7 +9,7 @@
 
     var accessibilityValue: String {
       let details = OJDLocalized.formatted(
-        "controllers.accessibilityDetails",
+        "ui.controllers.accessibilityDetails",
         connectionValue.spokenText,
         profileAccessibilityValue,
         device.protocolBinding.displayName,
@@ -20,7 +20,7 @@
         OJDValue.endpoint(device.outputEndpoint).spokenText
       )
       let battery = OJDLocalized.formatted(
-        "controllers.batteryAccessibilityDetails",
+        "ui.controllers.batteryAccessibilityDetails",
         ControllerDetailFacts.battery(device).spokenText,
         ControllerDetailFacts.chargingState(device).spokenText,
         ControllerDetailFacts.cableState(device).spokenText
@@ -32,25 +32,25 @@
       switch activeProfile {
       case .loading:
         return OJDLocalized.string(
-          "controllers.profileCheckingSentence"
+          "ui.controllers.profileCheckingSentence"
         )
       case .noProfile:
         return OJDLocalized.string(
-          "controllers.noActiveProfileSentence"
+          "ui.controllers.noActiveProfileSentence"
         )
       case .profile(let name):
         return OJDLocalized.formatted(
-          "controllers.activeProfileSentence",
+          "ui.controllers.activeProfileSentence",
           name
         )
       case .unavailable(let message):
         return OJDLocalized.formatted(
-          "controllers.profileUnavailableSentence",
+          "ui.controllers.profileUnavailableSentence",
           message
         )
       case .error(let message):
         return OJDLocalized.formatted(
-          "controllers.profileErrorSentence",
+          "ui.controllers.profileErrorSentence",
           message
         )
       }

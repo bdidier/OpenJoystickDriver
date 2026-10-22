@@ -6,10 +6,10 @@ struct BindingCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "binding",
     abstract: CLILocalized.text(
-      "cli.binding.abstract"
+      "cli.binding.group.abstract"
     ),
     discussion: CLILocalized.text(
-      "cli.binding.discussion"
+      "cli.binding.group.discussion"
     ),
     subcommands: [BindingListCommand.self, BindingSetCommand.self, BindingClearCommand.self]
   )
@@ -216,14 +216,14 @@ struct BindingClearCommand: AsyncParsableCommand {
 
   @Flag(
     name: [.short, .long],
-    help: ArgumentHelp(CLILocalized.text("cli.option.force"))
+    help: ArgumentHelp(CLILocalized.text("cli.shared.option.force"))
   )
   var force = false
 
   @Flag(
     name: [.customShort("n"), .long],
     help: ArgumentHelp(
-      CLILocalized.text("cli.option.dry_run")
+      CLILocalized.text("cli.shared.option.dryRun")
     )
   )
   var dryRun = false
@@ -294,7 +294,7 @@ struct BindingClearCommand: AsyncParsableCommand {
         let message =
           dryRun
           ? CLILocalized.format(
-            "cli.binding.clear.dry_run",
+            "cli.binding.clear.dryRun",
             current.name,
             result.removed.count
           )
@@ -310,7 +310,7 @@ struct BindingClearCommand: AsyncParsableCommand {
       {
         CLIOutput.stderr(
           CLILocalized.format(
-            "cli.binding.clear.blocks_input",
+            "cli.binding.clear.blocksInput",
             current.name
           )
         )

@@ -126,10 +126,10 @@ enum ApplicationServiceGatewayError: Error, LocalizedError, Sendable, Equatable 
   var errorDescription: String? {
     switch self {
     case .profileRecoveryUnavailable:
-      return OJDLocalized.string("profiles.unavailable")
+      return OJDLocalized.string("ui.profiles.unavailable")
     case .controllerSessionChangeRejected:
       return OJDLocalized.string(
-        "error.controllerSessionChangeRejected"
+        "ui.error.controllerSessionChangeRejected"
       )
     }
   }

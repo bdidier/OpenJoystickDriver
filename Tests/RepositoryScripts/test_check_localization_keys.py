@@ -4,8 +4,6 @@ import contextlib
 import io
 import json
 import plistlib
-import re
-import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -14,7 +12,6 @@ from unittest import mock
 from Scripts.Quality import check_localization_keys as guard
 
 KEYS = {"common.ok", "error.one", "error.two"}
-ERROR_PATTERN = {"error.\\(rawValue)": re.compile(r"error\.E\d{4}")}
 
 
 class KeyArgumentTests(unittest.TestCase):
@@ -78,14 +75,15 @@ class ReaderTests(unittest.TestCase):
         self.assertIsNone(guard.interpolation_pattern("\\(prefix).title"))
 
     def test_error_reader_covers_only_error_code_keys(self) -> None:
-        pattern = guard.interpolation_pattern("error.\\(rawValue)")
+        pattern = guard.interpolation_pattern("error.\\(rawValue).message")
         assert pattern is not None
-        self.assertTrue(pattern.fullmatch("error.E1001"))
-        self.assertFalse(pattern.fullmatch("error.noControllerInput"))
+        self.assertTrue(pattern.fullmatch("error.E1001.message"))
+        self.assertFalse(pattern.fullmatch("error.E1001"))
+        self.assertFalse(pattern.fullmatch("error.noControllerInput.message"))
 
     def test_interpolated_literal_reads_keys_only_in_key_position(self) -> None:
         source = (
-            'let a = Localization().string("error.\\(rawValue)")\n'
+            'let a = Localization().string("error.\\(rawValue).message")\n'
             'var titleKey: String { "area.\\(rawValue).title" }\n'
             'let item = Entry(id: "controllers.\\(controller.id)")\n'
         )
@@ -95,7 +93,8 @@ class ReaderTests(unittest.TestCase):
             with mock.patch.object(guard, "reader_files", return_value=[path]):
                 _, patterns = guard.key_readers()
         self.assertEqual(
-            set(patterns), {"error.\\(rawValue)", "area.\\(rawValue).title"}
+            set(patterns),
+            {"error.\\(rawValue).message", "area.\\(rawValue).title"},
         )
 
     def test_key_call_literals_are_checked_against_the_catalog(self) -> None:
@@ -341,13 +340,7 @@ class GateTests(unittest.TestCase):
     def test_each_gated_rule_names_the_task_that_lifts_it(self) -> None:
         self.assertEqual(
             guard.GATED_RULES,
-            {
-                "namespace": "22.2",
-                "osWord": "22.2",
-                "specifier": "22.3",
-                "comment": "22.3",
-                "pluralCount": "22.3",
-            },
+            {"specifier": "22.3", "comment": "22.3", "pluralCount": "22.3"},
         )
 
     def found(self, rule: str) -> dict[str, list[guard.RuleProblem]]:
@@ -366,7 +359,7 @@ class GateTests(unittest.TestCase):
 
     def test_key_gated_for_another_rule_fails(self) -> None:
         failing, held, stale = guard.rule_report(
-            self.found("osWord"), {"comment": {"old.key"}}
+            self.found("specifier"), {"comment": {"old.key"}}
         )
         self.assertEqual(failing, ["old.key: violation"])
         self.assertEqual(held, [])
@@ -386,7 +379,9 @@ class GateTests(unittest.TestCase):
         self.assertIn("gone.key", stale[0])
 
     def test_main_fails_when_a_gate_is_off_and_a_violation_exists(self) -> None:
-        violation = {"osWord": [guard.RuleProblem("old.key", "old.key: names macOS")]}
+        violation = {
+            "comment": [guard.RuleProblem("old.key", "old.key: no translator comment")]
+        }
         for gate in (True, False):
             with (
                 mock.patch.object(
@@ -395,11 +390,11 @@ class GateTests(unittest.TestCase):
                     return_value={name: [] for name in guard.GATED_RULES} | violation,
                 ),
                 mock.patch.object(
-                    guard, "gated_keys", return_value={"osWord": {"old.key"}}
+                    guard, "gated_keys", return_value={"comment": {"old.key"}}
                 ),
                 mock.patch.dict(
                     guard.GATED_RULES,
-                    {"osWord": "22.2"} if gate else {},
+                    {"comment": "22.3"} if gate else {},
                     clear=True,
                 ),
                 contextlib.redirect_stdout(io.StringIO()),
@@ -417,9 +412,6 @@ class WriteGatedKeysTests(unittest.TestCase):
         self,
         violating: dict[str, set[str]],
         gated: dict[str, set[str]],
-        keys: set[str],
-        additions: list[tuple[str, str]] | None = None,
-        patterns: dict[str, re.Pattern[str]] | None = None,
     ) -> tuple[dict[str, list[str]], list[str]]:
         found = {
             rule: [
@@ -437,23 +429,12 @@ class WriteGatedKeysTests(unittest.TestCase):
                     rule: gated.get(rule, set()) for rule in guard.GATED_RULES
                 },
             ),
-            mock.patch.object(guard, "catalog_keys", return_value=keys),
-            mock.patch.object(
-                guard,
-                "key_readers",
-                return_value=(
-                    set(),
-                    ERROR_PATTERN if patterns is None else patterns,
-                ),
-            ),
         ):
-            return guard.update_gated_keys(Path("."), additions)
+            return guard.update_gated_keys(Path("."))
 
     def test_a_new_violation_is_refused_with_its_key_and_rule(self) -> None:
         _, refused = self.update(
-            {"comment": {"old.key", "new.key"}},
-            {"comment": {"old.key"}},
-            {"old.key", "new.key"},
+            {"comment": {"old.key", "new.key"}}, {"comment": {"old.key"}}
         )
         self.assertEqual(len(refused), 1)
         self.assertIn("'new.key'", refused[0])
@@ -474,103 +455,14 @@ class WriteGatedKeysTests(unittest.TestCase):
     def test_stale_and_missing_entries_are_removed(self) -> None:
         data, refused = self.update(
             {"comment": {"kept.key"}},
-            {"comment": {"kept.key", "fixed.key", "gone.key"}, "osWord": {"fixed.key"}},
-            {"kept.key", "fixed.key"},
+            {
+                "comment": {"kept.key", "fixed.key", "gone.key"},
+                "specifier": {"fixed.key"},
+            },
         )
         self.assertEqual(refused, [])
         self.assertEqual(data["comment"], ["kept.key"])
-        self.assertEqual(data["osWord"], [])
-
-    def test_gate_adds_a_namespace_key_of_a_fully_gated_family(self) -> None:
-        data, refused = self.update(
-            {"namespace": {"error.E0001", "error.E0002"}},
-            {"namespace": {"error.E0001"}},
-            {"error.E0001", "error.E0002"},
-            [("error.E0002", "namespace")],
-        )
-        self.assertEqual(refused, [])
-        self.assertEqual(data["namespace"], ["error.E0001", "error.E0002"])
-
-    def test_gate_adds_several_keys_of_one_family(self) -> None:
-        _, refused = self.update(
-            {"namespace": {"error.E0001", "error.E0002", "error.E0003"}},
-            {"namespace": {"error.E0001"}},
-            {"error.E0001", "error.E0002", "error.E0003"},
-            [("error.E0002", "namespace"), ("error.E0003", "namespace")],
-        )
-        self.assertEqual(refused, [])
-
-    def test_gate_refuses_a_family_whose_only_member_is_the_added_key(self) -> None:
-        _, refused = self.update(
-            {"namespace": {"error.E0002"}},
-            {},
-            {"error.E0002"},
-            [("error.E0002", "namespace")],
-        )
-        self.assertIn("not an existing family", refused[0])
-
-    def test_gate_refuses_several_new_keys_of_an_invented_family(self) -> None:
-        _, refused = self.update(
-            {"namespace": {"error.E0002", "error.E0003"}},
-            {},
-            {"error.E0002", "error.E0003"},
-            [("error.E0002", "namespace"), ("error.E0003", "namespace")],
-        )
-        family = [r for r in refused if "not an existing family" in r]
-        self.assertEqual(len(family), 2)
-
-    def test_gate_names_only_the_pairs_it_is_given(self) -> None:
-        _, refused = self.update(
-            {"namespace": {"error.E0002"}, "comment": {"error.E0002"}},
-            {"namespace": {"error.E0001"}},
-            {"error.E0001", "error.E0002"},
-            [("error.E0002", "namespace")],
-        )
-        self.assertEqual(len(refused), 1)
-        self.assertIn("comment", refused[0])
-
-    def test_gate_refuses_every_rule_but_namespace(self) -> None:
-        for rule in ("comment", "osWord", "specifier", "pluralCount"):
-            _, refused = self.update(
-                {rule: {"error.E0002"}}, {}, {"error.E0002"}, [("error.E0002", rule)]
-            )
-            self.assertIn("only namespace can be gated", refused[0], rule)
-
-    def test_gate_refuses_a_key_outside_every_family(self) -> None:
-        _, refused = self.update(
-            {"namespace": {"plain.key"}},
-            {},
-            {"plain.key"},
-            [("plain.key", "namespace")],
-        )
-        self.assertIn("read by no pattern", refused[0])
-
-    def test_gate_refuses_a_family_with_an_ungated_member(self) -> None:
-        _, refused = self.update(
-            {"namespace": {"error.E0002"}},
-            {},
-            {"error.E0001", "error.E0002"},
-            [("error.E0002", "namespace")],
-        )
-        self.assertIn("'error.E0001'", refused[0])
-
-    def test_gate_refuses_a_key_without_the_violation(self) -> None:
-        _, refused = self.update(
-            {}, {}, {"error.E0002"}, [("error.E0002", "namespace")]
-        )
-        self.assertIn("violates no namespace rule", refused[0])
-
-    def test_arguments_pair_each_gate_with_a_key_and_a_rule(self) -> None:
-        parse = guard.parse_gate_arguments
-        self.assertEqual(parse(["--write-gated-keys"]), [])
-        self.assertEqual(
-            parse(
-                ["--write-gated-keys", "--gate", "a", "namespace", "--gate", "b", "x"]
-            ),
-            [("a", "namespace"), ("b", "x")],
-        )
-        self.assertIsNone(parse(["--gate", "a", "namespace"]))
-        self.assertIsNone(parse(["--write-gated-keys", "--gate", "a"]))
+        self.assertEqual(data["specifier"], [])
 
 
 class WriteGatedKeysCommandTests(unittest.TestCase):
@@ -578,22 +470,18 @@ class WriteGatedKeysCommandTests(unittest.TestCase):
         scratch = tempfile.TemporaryDirectory()
         self.addCleanup(scratch.cleanup)
         root = Path(scratch.name)
-        subprocess.run(["git", "init", "-q"], cwd=root, check=True)
         directory = root / guard.CATALOG_DIRECTORY
         directory.mkdir(parents=True)
         (directory / "Localizable.strings").write_text(
-            "".join(f'/* Comment. */\n"{key}" = "Text";\n' for key in keys)
+            "".join(f'"{key}" = "Text";\n' for key in keys)
         )
         (directory / "Localizable.stringsdict").write_bytes(plistlib.dumps({}))
         c_directory = root / guard.RESOURCES_DIRECTORY / "C.lproj"
         c_directory.mkdir(parents=True)
         (c_directory / "Localizable.strings").write_text("")
-        source = root / "Sources" / "Reader.swift"
-        source.parent.mkdir(exist_ok=True)
-        source.write_text('let text = OJDLocalized.string("error.\\(rawValue)")\n')
         path = root / guard.GATED_KEYS_PATH
         path.parent.mkdir(parents=True)
-        path.write_text(json.dumps({"namespace": gated}))
+        path.write_text(json.dumps({"comment": gated}))
         return root
 
     def run_main(self, root: Path, *arguments: str) -> tuple[int, str]:
@@ -604,26 +492,26 @@ class WriteGatedKeysCommandTests(unittest.TestCase):
 
     def gated(self, root: Path) -> list[str]:
         data = json.loads((root / guard.GATED_KEYS_PATH).read_text())
-        return data["namespace"]
+        return data["comment"]
 
-    def test_gate_accepts_a_key_of_a_gated_family(self) -> None:
-        root = self.repository(["error.E0001", "error.E0002"], ["error.E0001"])
-        code, _ = self.run_main(root, "--gate", "error.E0002", "namespace")
+    def test_the_write_keeps_the_listed_violations(self) -> None:
+        root = self.repository(["ui.a.one", "ui.a.two"], ["ui.a.one", "ui.a.two"])
+        code, _ = self.run_main(root)
         self.assertEqual(code, 0)
-        self.assertEqual(self.gated(root), ["error.E0001", "error.E0002"])
+        self.assertEqual(self.gated(root), ["ui.a.one", "ui.a.two"])
 
-    def test_gate_refuses_a_family_without_a_gated_key(self) -> None:
-        root = self.repository(["error.E0002"], [])
-        code, errors = self.run_main(root, "--gate", "error.E0002", "namespace")
-        self.assertEqual(code, 1)
-        self.assertIn("not an existing family", errors)
-        self.assertEqual(self.gated(root), [])
-
-    def test_an_unlisted_violation_is_refused_without_gate(self) -> None:
-        root = self.repository(["error.E0001", "error.E0002"], ["error.E0001"])
+    def test_an_unlisted_violation_is_refused(self) -> None:
+        root = self.repository(["ui.a.one", "ui.a.two"], ["ui.a.one"])
         code, errors = self.run_main(root)
         self.assertEqual(code, 1)
-        self.assertIn("'error.E0002'", errors)
+        self.assertIn("'ui.a.two'", errors)
+        self.assertEqual(self.gated(root), ["ui.a.one"])
+
+    def test_another_argument_is_a_usage_error(self) -> None:
+        root = self.repository(["ui.a.one"], ["ui.a.one"])
+        code, errors = self.run_main(root, "--gate", "ui.a.one", "comment")
+        self.assertEqual(code, 2)
+        self.assertIn("usage:", errors)
 
 
 class RepositoryTests(unittest.TestCase):

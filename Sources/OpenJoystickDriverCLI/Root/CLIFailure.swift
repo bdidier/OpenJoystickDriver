@@ -46,7 +46,7 @@ struct CLIFailure: Error, Equatable, Sendable {
     Self(
       .serviceUnavailable,
       CLILocalized.text(
-        "cli.error.service_unavailable"
+        "cli.shared.error.serviceUnavailable"
       )
     )
   }
@@ -57,7 +57,7 @@ struct CLIFailure: Error, Equatable, Sendable {
     Self(
       id,
       CLILocalized.format(
-        "cli.error.service_request_failed",
+        "cli.shared.error.serviceRequestFailed",
         // The service's message ends with a period; the format adds its own.
         detail.hasSuffix(".") ? String(detail.dropLast()) : detail
       )
@@ -69,7 +69,7 @@ struct CLIFailure: Error, Equatable, Sendable {
     Self(
       .permissionMissing,
       CLILocalized.format(
-        "cli.error.permission_missing",
+        "cli.shared.error.permissionMissing",
         permissionName
       )
     )

@@ -30,14 +30,14 @@ struct VirtualMappingExport: Encodable, Equatable {
 /// The note for a persona that SDL does not recognize with its default hints; it names the
 /// persona as the command line does.
 func sdlHintsNote(_ profile: String) -> String {
-  CLILocalized.format("cli.virtual.sdl_hints_note", CommandLineName.kebab(profile))
+  CLILocalized.format("cli.virtual.group.sdlHintsNote", CommandLineName.kebab(profile))
 }
 
 struct VirtualExportMappingCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "export-mapping",
-    abstract: CLILocalized.text("cli.virtual.export_mapping.abstract"),
-    discussion: CLILocalized.text("cli.virtual.export_mapping.discussion")
+    abstract: CLILocalized.text("cli.virtual.exportMapping.abstract"),
+    discussion: CLILocalized.text("cli.virtual.exportMapping.discussion")
   )
 
   @OptionGroup(visibility: GlobalOptions.subcommandVisibility)
@@ -45,14 +45,14 @@ struct VirtualExportMappingCommand: AsyncParsableCommand {
 
   @Argument(
     help: ArgumentHelp(
-      CLILocalized.text("cli.virtual.export_mapping.profile"),
+      CLILocalized.text("cli.virtual.exportMapping.profile"),
       valueName: "profile"
     )
   )
   var profile: VirtualHIDProfileID?
 
   @Option(
-    help: ArgumentHelp(CLILocalized.text("cli.virtual.export_mapping.format"), valueName: "format")
+    help: ArgumentHelp(CLILocalized.text("cli.virtual.exportMapping.format"), valueName: "format")
   )
   var format: VirtualMappingFormat = .sdl
 

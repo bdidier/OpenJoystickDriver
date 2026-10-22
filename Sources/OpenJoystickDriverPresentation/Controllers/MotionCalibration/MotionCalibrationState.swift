@@ -123,11 +123,11 @@
       switch error as? RemappingMotionCalibrationError {
       case .controllerUnavailable:
         return OJDLocalized.string(
-          "motion.calibration.controllerUnavailable"
+          "ui.motion.calibration.controllerUnavailable"
         )
       case .motionUnavailable:
         return OJDLocalized.string(
-          "motion.calibration.motionUnavailable"
+          "ui.motion.calibration.motionUnavailable"
         )
       case nil: return RuntimePresentation.userFacingError(error)
       }

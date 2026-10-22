@@ -9,27 +9,27 @@
 
     private var captureStatusAccessibilityValue: String {
       switch viewModel.inputCaptureState {
-      case .idle: return OJDLocalized.string("capture.ready")
+      case .idle: return OJDLocalized.string("ui.capture.ready")
       case .listening:
         return OJDLocalized.string(
-          "capture.listening"
+          "ui.capture.listening"
         )
       case .received(_, let state):
         if let detected = RuntimePresentation.detectedSource(from: state) {
           return OJDLocalized.formatted(
-            "capture.detected",
+            "ui.capture.detected",
             RuntimePresentation.sourceLabel(detected)
           )
         }
         return OJDLocalized.string(
-          "capture.noSupported"
+          "ui.capture.noSupported"
         )
       case .detected(_, _, let detected):
         return OJDLocalized.formatted(
-          "capture.detectedWithDestination",
+          "ui.capture.detectedWithDestination",
           RuntimePresentation.sourceLabel(detected),
           OJDLocalized.string(
-            "capture.destinationReady"
+            "ui.capture.destinationReady"
           )
         )
       case .unavailable(_, let message), .error(_, let message): return message
@@ -42,20 +42,20 @@
       case .idle, .received: return
       case .listening:
         message = OJDLocalized.string(
-          "capture.listeningCancel"
+          "ui.capture.listeningCancel"
         )
       case .detected(let selector, _, let detected):
         guard selectedDeviceSelector == selector else { return }
         message = OJDLocalized.formatted(
-          "capture.detectedWithDestination",
+          "ui.capture.detectedWithDestination",
           RuntimePresentation.sourceLabel(detected),
           OJDLocalized.string(
-            "capture.destinationReady"
+            "ui.capture.destinationReady"
           )
         )
       case .unavailable(_, let detail): message = detail
       case .error(_, let detail):
-        message = OJDLocalized.formatted("capture.error", detail)
+        message = OJDLocalized.formatted("ui.capture.error", detail)
       }
       NSAccessibility.post(
         element: NSApp as Any,
@@ -72,7 +72,7 @@
         case .listening:
           Text(
             OJDLocalized.string(
-              "capture.listeningEllipsis"
+              "ui.capture.listeningEllipsis"
             )
           )
         case .received(_, let state):
@@ -80,14 +80,14 @@
             if let detected = RuntimePresentation.detectedSource(from: state) {
               Text(
                 OJDLocalized.formatted(
-                  "capture.detectedNoPeriod",
+                  "ui.capture.detectedNoPeriod",
                   RuntimePresentation.sourceLabel(detected)
                 )
               ).font(.subheadline.weight(.semibold))
             } else {
               Text(
                 OJDLocalized.string(
-                  "capture.noSupported"
+                  "ui.capture.noSupported"
                 )
               ).font(.subheadline.weight(.semibold))
             }
@@ -97,7 +97,7 @@
           VStack(alignment: .leading, spacing: 3) {
             Text(
               OJDLocalized.formatted(
-                "capture.detectedNoPeriod",
+                "ui.capture.detectedNoPeriod",
                 RuntimePresentation.sourceLabel(detected)
               )
             ).font(.subheadline.weight(.semibold))
@@ -106,16 +106,16 @@
         case .unavailable(_, let message), .error(_, let message):
           Text(message).foregroundColor(Color(NSColor.systemRed))
         }
-      }.ojdAccessibilityLabel(OJDLocalized.string("capture.status"))
+      }.ojdAccessibilityLabel(OJDLocalized.string("ui.capture.status"))
         .ojdAccessibilityValue(captureStatusAccessibilityValue)
     }
     private func heldControlsText(_ state: ControllerState) -> String {
       let held = Control.allCases.filter(state.pressed.contains)
       guard !held.isEmpty else {
-        return OJDLocalized.string("capture.noButton")
+        return OJDLocalized.string("ui.capture.noButton")
       }
       return OJDLocalized.formatted(
-        "capture.buttonsHeld",
+        "ui.capture.buttonsHeld",
         held.map(\.rawValue).joined(separator: ", ")
       )
     }

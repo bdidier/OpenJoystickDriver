@@ -49,7 +49,7 @@ struct RecordValidation: Encodable, Equatable {
       if CLIContext.current.format == .json { try CLIOutput.json(Self(problem: problem)) }
       throw CLIFailure(
         ControllerRecordSet.problemCode(error) ?? .invalidInputFile,
-        CLILocalized.format("cli.record.invalid", path, problem)
+        CLILocalized.format("cli.record.group.invalid", path, problem)
       )
     }
   }
@@ -58,7 +58,7 @@ struct RecordValidation: Encodable, Equatable {
 /// The `FILE|-` operand of `record validate` and `record install`.
 private func recordFileHelp() -> ArgumentHelp {
   ArgumentHelp(
-    CLILocalized.text("cli.record.file"),
+    CLILocalized.text("cli.record.group.file"),
     valueName: "FILE|-"
   )
 }
@@ -139,14 +139,14 @@ struct RecordInstallCommand: AsyncParsableCommand {
 
   @Flag(
     name: [.short, .long],
-    help: ArgumentHelp(CLILocalized.text("cli.option.force"))
+    help: ArgumentHelp(CLILocalized.text("cli.shared.option.force"))
   )
   var force = false
 
   @Flag(
     name: [.customShort("n"), .long],
     help: ArgumentHelp(
-      CLILocalized.text("cli.option.dry_run")
+      CLILocalized.text("cli.shared.option.dryRun")
     )
   )
   var dryRun = false
@@ -181,7 +181,7 @@ struct RecordInstallCommand: AsyncParsableCommand {
       case .human:
         if dryRun {
           CLIOutput.stdout(
-            CLILocalized.format("cli.record.install.dry_run", destination.path)
+            CLILocalized.format("cli.record.install.dryRun", destination.path)
           )
         } else {
           CLIOutput.success(
@@ -235,7 +235,7 @@ struct RecordRemoveCommand: AsyncParsableCommand {
 
   @Argument(
     help: ArgumentHelp(
-      CLILocalized.text("cli.record.identity"),
+      CLILocalized.text("cli.record.group.identity"),
       valueName: "VVVV:PPPP"
     )
   )
@@ -243,14 +243,14 @@ struct RecordRemoveCommand: AsyncParsableCommand {
 
   @Flag(
     name: [.short, .long],
-    help: ArgumentHelp(CLILocalized.text("cli.option.force"))
+    help: ArgumentHelp(CLILocalized.text("cli.shared.option.force"))
   )
   var force = false
 
   @Flag(
     name: [.customShort("n"), .long],
     help: ArgumentHelp(
-      CLILocalized.text("cli.option.dry_run")
+      CLILocalized.text("cli.shared.option.dryRun")
     )
   )
   var dryRun = false
@@ -269,7 +269,7 @@ struct RecordRemoveCommand: AsyncParsableCommand {
         throw CLIFailure(
           .notFound,
           CLILocalized.format(
-            "cli.record.remove.not_found",
+            "cli.record.remove.notFound",
             model.description
           )
         )
@@ -300,7 +300,7 @@ struct RecordRemoveCommand: AsyncParsableCommand {
       case .human:
         if dryRun {
           CLIOutput.stdout(
-            CLILocalized.format("cli.record.remove.dry_run", paths)
+            CLILocalized.format("cli.record.remove.dryRun", paths)
           )
         } else {
           CLIOutput.success(

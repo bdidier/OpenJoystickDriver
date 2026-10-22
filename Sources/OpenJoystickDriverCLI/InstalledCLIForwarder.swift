@@ -70,7 +70,7 @@ package enum InstalledCLIForwarder {
     CLIFailure(
       .staleInstallation,
       CLILocalized.text(
-        "cli.error.stale_installation"
+        "cli.shared.error.staleInstallation"
       )
     )
   }
@@ -79,7 +79,7 @@ package enum InstalledCLIForwarder {
     CLIFailure(
       .installedCLIFailed,
       CLILocalized.text(
-        "cli.error.forwarder_allocation"
+        "cli.shared.error.forwarderAllocation"
       )
     )
   }
@@ -89,7 +89,7 @@ package enum InstalledCLIForwarder {
     CLIFailure(
       .installedCLIFailed,
       CLILocalized.format(
-        "cli.error.forwarder_exec",
+        "cli.shared.error.forwarderExec",
         reason
       )
     )

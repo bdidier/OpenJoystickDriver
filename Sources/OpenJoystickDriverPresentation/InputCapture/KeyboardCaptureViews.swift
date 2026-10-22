@@ -20,7 +20,7 @@
         HStack {
           Group {
             if isCleared {
-              Text(OJDLocalized.string("keyboard.noKey"))
+              Text(OJDLocalized.string("ui.keyboard.noKey"))
                 .foregroundColor(Color(NSColor.secondaryLabelColor))
             } else {
               KeyboardDestinationLabel(destination: destination)
@@ -29,18 +29,18 @@
           Spacer()
           Button(
             isCapturing
-              ? OJDLocalized.string("keyboard.pressKey")
-              : OJDLocalized.string("keyboard.captureKey")
+              ? OJDLocalized.string("ui.keyboard.pressKey")
+              : OJDLocalized.string("ui.keyboard.captureKey")
           ) {
             isCapturing = true
             isCleared = false
             Self.announce(
               OJDLocalized.string(
-                "keyboard.captureStarted"
+                "ui.keyboard.captureStarted"
               )
             )
           }.disabled(isCapturing)
-          Button(OJDLocalized.string("common.clear")) {
+          Button(OJDLocalized.string("action.clear")) {
             isCapturing = false
             isCleared = true
           }.disabled(isCleared)
@@ -48,7 +48,7 @@
         if isCapturing {
           Text(
             OJDLocalized.string(
-              "keyboard.instructions"
+              "ui.keyboard.instructions"
             )
           ).font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor))
           KeyboardDestinationCaptureRepresentable(
@@ -58,7 +58,7 @@
               isCapturing = false
               Self.announce(
                 OJDLocalized.formatted(
-                  "keyboard.captured",
+                  "ui.keyboard.captured",
                   RuntimePresentation.destinationLabel(captured)
                 )
               )
@@ -67,7 +67,7 @@
               isCapturing = false
               Self.announce(
                 OJDLocalized.string(
-                  "keyboard.captureCanceled"
+                  "ui.keyboard.captureCanceled"
                 )
               )
             }
@@ -111,7 +111,7 @@
       setAccessibilityElement(true)
       setAccessibilityRole(.textField)
       setAccessibilityLabel(
-        OJDLocalized.string("keyboard.captureTitle")
+        OJDLocalized.string("ui.keyboard.captureTitle")
       )
     }
 

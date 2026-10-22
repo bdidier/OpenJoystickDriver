@@ -4,7 +4,7 @@ import OpenJoystickDriverKit
 
 /// The `FOLDER` operand of `mod validate` and `mod install`.
 private func modFolderHelp() -> ArgumentHelp {
-  ArgumentHelp(CLILocalized.text("cli.mod.folder"), valueName: "FOLDER")
+  ArgumentHelp(CLILocalized.text("cli.mod.group.folder"), valueName: "FOLDER")
 }
 
 struct ModValidateCommand: AsyncParsableCommand {
@@ -68,7 +68,7 @@ struct ModInstallCommand: AsyncParsableCommand {
 
   @Flag(
     name: [.customShort("n"), .long],
-    help: ArgumentHelp(CLILocalized.text("cli.option.dry_run"))
+    help: ArgumentHelp(CLILocalized.text("cli.shared.option.dryRun"))
   )
   var dryRun = false
 
@@ -87,7 +87,7 @@ struct ModInstallCommand: AsyncParsableCommand {
       if replaced && !force {
         throw CLIFailure(
           .packageAlreadyInstalled,
-          CLILocalized.format("cli.mod.already_installed", manifest.name)
+          CLILocalized.format("cli.mod.group.alreadyInstalled", manifest.name)
         )
       }
       if !dryRun {
@@ -110,7 +110,7 @@ struct ModInstallCommand: AsyncParsableCommand {
       case .plain: CLIOutput.plain([[destination.path]])
       case .human:
         if dryRun {
-          CLIOutput.stdout(CLILocalized.format("cli.mod.install.dry_run", destination.path))
+          CLIOutput.stdout(CLILocalized.format("cli.mod.install.dryRun", destination.path))
         } else {
           CLIOutput.success(CLILocalized.format("cli.mod.install.success", destination.path))
         }
@@ -171,18 +171,18 @@ struct ModRemoveCommand: AsyncParsableCommand {
     let dryRun: Bool
   }
 
-  @Argument(help: ArgumentHelp(CLILocalized.text("cli.mod.name"), valueName: "NAME"))
+  @Argument(help: ArgumentHelp(CLILocalized.text("cli.mod.group.name"), valueName: "NAME"))
   var name: String
 
   @Flag(
     name: [.short, .long],
-    help: ArgumentHelp(CLILocalized.text("cli.option.force"))
+    help: ArgumentHelp(CLILocalized.text("cli.shared.option.force"))
   )
   var force = false
 
   @Flag(
     name: [.customShort("n"), .long],
-    help: ArgumentHelp(CLILocalized.text("cli.option.dry_run"))
+    help: ArgumentHelp(CLILocalized.text("cli.shared.option.dryRun"))
   )
   var dryRun = false
 
@@ -196,7 +196,10 @@ struct ModRemoveCommand: AsyncParsableCommand {
       // names no entry. The check comes first, so a missing package is E4006 in every mode.
       let named = !name.isEmpty && !name.hasPrefix(".") && !name.contains("/")
       guard named, (try? FileManager.default.attributesOfItem(atPath: target.path)) != nil else {
-        throw CLIFailure(.packageNotInstalled, CLILocalized.format("cli.mod.not_installed", name))
+        throw CLIFailure(
+          .packageNotInstalled,
+          CLILocalized.format("cli.mod.group.notInstalled", name)
+        )
       }
       if !dryRun {
         try CLITerminal.confirm(
@@ -213,7 +216,7 @@ struct ModRemoveCommand: AsyncParsableCommand {
       case .plain: CLIOutput.plain([[target.path]])
       case .human:
         if dryRun {
-          CLIOutput.stdout(CLILocalized.format("cli.mod.remove.dry_run", target.path))
+          CLIOutput.stdout(CLILocalized.format("cli.mod.remove.dryRun", target.path))
         } else {
           CLIOutput.success(CLILocalized.format("cli.mod.remove.success", target.path))
         }

@@ -8,17 +8,17 @@
   @available(macOS 13, *)
   struct ControllerEntity: AppEntity {
     static let typeDisplayRepresentation = TypeDisplayRepresentation(
-      name: LocalizedStringResource("shortcuts.controller.type")
+      name: LocalizedStringResource("ui.shortcuts.controller.type")
     )
     static let defaultQuery = ControllerEntityQuery()
 
     /// The unit ID, the runtime ID when the controller reports no unit ID, or `VVVV:PPPP` for
     /// the one connected controller of that model.
     let id: String
-    @Property(title: LocalizedStringResource("shortcuts.controller.name"))
+    @Property(title: LocalizedStringResource("ui.shortcuts.controller.name"))
     var name: String
     /// `VVVV:PPPP`.
-    @Property(title: LocalizedStringResource("shortcuts.controller.model"))
+    @Property(title: LocalizedStringResource("ui.shortcuts.controller.model"))
     var model: String
     let isModelMatch: Bool
 

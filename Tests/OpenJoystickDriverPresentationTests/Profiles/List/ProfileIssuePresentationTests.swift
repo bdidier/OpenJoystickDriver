@@ -20,8 +20,8 @@ struct ProfileIssuePresentationTests {
     for code in codes {
       let presentation = ProfileIssuePresentation(Self.issue(.damagedProfile, code))
       #expect(presentation.code == code.rawValue)
-      #expect(presentation.title == OJDLocalized.string("profiles.damagedProfile"))
-      #expect(presentation.message == OJDLocalized.string("profiles.damagedProfileMessage"))
+      #expect(presentation.title == OJDLocalized.string("ui.profiles.damagedProfile"))
+      #expect(presentation.message == OJDLocalized.string("ui.profiles.damagedProfileMessage"))
       #expect(presentation.titleWithCode.contains(code.rawValue))
       #expect(presentation.accessibilityValue.contains(code.rawValue))
     }
@@ -31,7 +31,7 @@ struct ProfileIssuePresentationTests {
   func anUnusableLibraryShowsItsIssueCodeAndText() {
     let presentation = ProfileIssuePresentation(Self.issue(.unusableLibrary, .corruptLibrary))
     #expect(presentation.code == ErrorCode.corruptLibrary.rawValue)
-    #expect(presentation.title == OJDLocalized.string("profiles.damagedLibrary"))
-    #expect(presentation.message == OJDLocalized.string("profiles.damagedSelectionsMessage"))
+    #expect(presentation.title == OJDLocalized.string("ui.profiles.damagedLibrary"))
+    #expect(presentation.message == OJDLocalized.string("ui.profiles.damagedSelectionsMessage"))
   }
 }

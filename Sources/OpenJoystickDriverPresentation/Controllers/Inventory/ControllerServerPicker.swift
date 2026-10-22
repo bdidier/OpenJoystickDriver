@@ -20,9 +20,11 @@
     }
 
     var body: some View {
-      Picker(OJDLocalized.string("controllers.server.label"), selection: serverBinding) {
-        Text(OJDLocalized.string("controllers.server.system")).tag(ControllerServer.system)
-        Text(OJDLocalized.string("controllers.server.ojd")).tag(ControllerServer.ojd)
+      Picker(OJDLocalized.string("ui.controllers.server.label"), selection: serverBinding) {
+        Text(OJDLocalized.string("platform.macos.ui.controllers.server.system")).tag(
+          ControllerServer.system
+        )
+        Text(OJDLocalized.string("ui.controllers.server.ojd")).tag(ControllerServer.ojd)
       }.pickerStyle(.segmented)
     }
 

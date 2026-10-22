@@ -79,7 +79,7 @@ struct RecordDraftCommand: AsyncParsableCommand {
           throw CLIFailure(
             .controllerRequestFailed,
             CLILocalized.format(
-              "cli.record.draft.no_layout",
+              "cli.record.draft.noLayout",
               device.identity,
               device.identity
             )
@@ -146,7 +146,7 @@ struct RecordDraftCommand: AsyncParsableCommand {
       for byte in changed {
         CLIOutput.success(
           CLILocalized.format(
-            "cli.record.draft.changed_byte",
+            "cli.record.draft.changedByte",
             byte.byte,
             byte.minimum,
             byte.maximum

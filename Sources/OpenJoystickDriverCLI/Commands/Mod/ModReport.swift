@@ -20,7 +20,7 @@ enum ModStore {
 
   /// The failure that reports `error` with its E4xxx code.
   static func failure(_ error: ModPackageError, subject: String) -> CLIFailure {
-    CLIFailure(error.code, CLILocalized.format("cli.mod.refused", subject, error.detail))
+    CLIFailure(error.code, CLILocalized.format("cli.mod.group.refused", subject, error.detail))
   }
 }
 

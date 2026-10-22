@@ -110,7 +110,7 @@ final class ControllerDetailActions: ObservableObject {
       switch kind {
       case .capturePackets:
         guard !packets.isEmpty else {
-          timedState = .failed(OJDLocalized.string("cli.controller.capture.no_packets"))
+          timedState = .failed(OJDLocalized.string("cli.controller.capture.noPackets"))
           return
         }
         pendingSave = SaveRequest(
@@ -185,7 +185,7 @@ final class ControllerDetailActions: ObservableObject {
   ) {
     do {
       try data.write(to: url, options: .atomic)
-      let saved = OJDLocalized.formatted("controllers.fileSaved", url.lastPathComponent)
+      let saved = OJDLocalized.formatted("ui.controllers.fileSaved", url.lastPathComponent)
       notice = Notice(
         source: source,
         text: [summary, saved].compactMap { $0 }.joined(separator: " "),

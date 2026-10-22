@@ -276,7 +276,7 @@ struct SettingsStoreTests {
     ]
     for error in errors {
       let text = try #require(error.errorDescription)
-      #expect(!text.hasPrefix("settings.error."), "\(error) renders its raw key")
+      #expect(!text.hasPrefix("ui.settings.advanced.error"), "\(error) renders its raw key")
       #expect(error.file == (error == .noVisibleEntryPoint ? nil : file))
     }
     for error in errors where error.fileIsUnusable {

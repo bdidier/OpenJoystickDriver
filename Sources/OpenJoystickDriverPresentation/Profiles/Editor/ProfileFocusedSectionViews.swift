@@ -13,10 +13,10 @@
     var body: some View {
       Group {
         combinationGroup(
-          title: OJDLocalized.string("profiles.chords"),
-          addTitle: OJDLocalized.string("profiles.addChord"),
+          title: OJDLocalized.string("ui.profiles.chords"),
+          addTitle: OJDLocalized.string("ui.profiles.addChord"),
           isEmpty: profile.chords.isEmpty,
-          emptyMessage: OJDLocalized.string("profiles.noChords"),
+          emptyMessage: OJDLocalized.string("ui.profiles.noChords"),
           add: { openSheet(.chord) },
           content: {
             ForEach(profile.chords) { chord in
@@ -35,11 +35,11 @@
           }
         )
         combinationGroup(
-          title: OJDLocalized.string("profiles.sequences"),
-          addTitle: OJDLocalized.string("profiles.addSequence"),
+          title: OJDLocalized.string("ui.profiles.sequences"),
+          addTitle: OJDLocalized.string("ui.profiles.addSequence"),
           isEmpty: profile.sequences.isEmpty,
           emptyMessage: OJDLocalized.string(
-            "profiles.noSequences"
+            "ui.profiles.noSequences"
           ),
           add: { openSheet(.sequence) },
           content: {
@@ -96,16 +96,16 @@
     var body: some View {
       Section(
         header: HStack {
-          Text(OJDLocalized.string("profiles.layers"))
+          Text(OJDLocalized.string("ui.profiles.layers"))
           Spacer()
           OJDCompactSymbolButton(
             symbolName: "plus",
-            label: OJDLocalized.string("profiles.addLayer")
+            label: OJDLocalized.string("ui.profiles.addLayer")
           ) { openSheet(.layer) }
         }
       ) {
         if profile.layers.isEmpty {
-          Text(OJDLocalized.string("profiles.noLayers"))
+          Text(OJDLocalized.string("ui.profiles.noLayers"))
             .foregroundColor(Color(NSColor.secondaryLabelColor))
         }
       }
@@ -124,11 +124,11 @@
           Spacer()
           OJDCompactSymbolButton(
             symbolName: "plus",
-            label: OJDLocalized.string("common.addAssignment")
+            label: OJDLocalized.string("action.addAssignment")
           ) { openSheet(.layerBinding(layer)) }
           OJDCompactSymbolButton(
             symbolName: "pencil",
-            label: OJDLocalized.string("profiles.motion.title")
+            label: OJDLocalized.string("ui.profiles.motion.title")
           ) { openSheet(.layerMotion(layer)) }.disabled(
             !capabilities.physicalInput.motion && layer.motionTuning == nil
           )
@@ -136,7 +136,7 @@
         }
       ) {
         if layer.bindings.isEmpty {
-          Text(OJDLocalized.string("profiles.noAssignments"))
+          Text(OJDLocalized.string("ui.profiles.noAssignments"))
             .foregroundColor(Color(NSColor.secondaryLabelColor))
         }
         ForEach(layer.bindings) { binding in
@@ -146,11 +146,11 @@
             KeyboardDestinationLabel(destination: binding.destination)
             Spacer()
             if binding.axisTuning != nil {
-              Button(OJDLocalized.string("common.adjust")) {
+              Button(OJDLocalized.string("action.adjust")) {
                 openSheet(.layerAdjustment(layer.id, binding))
               }
             }
-            Button(OJDLocalized.string("profiles.behavior")) {
+            Button(OJDLocalized.string("ui.profiles.behavior")) {
               openSheet(.layerBehavior(layer.id, binding))
             }
             removeButton { removeBinding(layer.id, binding.id) }
@@ -162,8 +162,8 @@
     private func layerDescription(_ layer: RemappingLayer) -> String {
       let mode =
         layer.activationMode == .hold
-        ? OJDLocalized.string("profiles.hold")
-        : OJDLocalized.string("profiles.toggle")
+        ? OJDLocalized.string("ui.profiles.hold")
+        : OJDLocalized.string("ui.profiles.toggle")
       return "\(mode): \(RuntimePresentation.sourceLabel(layer.activator))"
     }
   }
@@ -177,16 +177,16 @@
 
     var body: some View {
       Group {
-        Section(header: Text(OJDLocalized.string("profiles.details"))) {
+        Section(header: Text(OJDLocalized.string("ui.profiles.details"))) {
           OJDLabeledValue(
-            OJDLocalized.string("common.controller"),
+            OJDLocalized.string("term.controller"),
             OJDValue.usbIdentifier(
               vendorID: profile.device.vendorID,
               productID: profile.device.productID
             )
           )
           OJDLabeledValue(
-            OJDLocalized.string("profiles.target"),
+            OJDLocalized.string("ui.profiles.target"),
             RuntimePresentation.profileScopeLabel(profile.applicationScope)
           )
         }
@@ -195,25 +195,25 @@
         }
         Section {
           configurationRow(
-            title: OJDLocalized.string("profiles.motion.title"),
-            summary: OJDLocalized.string("profiles.motion.space")
-              + " · " + OJDLocalized.string("profiles.gyro.output"),
+            title: OJDLocalized.string("ui.profiles.motion.title"),
+            summary: OJDLocalized.string("ui.profiles.motion.space")
+              + " · " + OJDLocalized.string("ui.profiles.gyro.output"),
             supported: capabilities.physicalInput.motion
           ) { openSheet(.motion) }
           configurationRow(
-            title: OJDLocalized.string("profiles.stick.title"),
+            title: OJDLocalized.string("ui.profiles.stick.title"),
             summary: assignmentCountLabel(profile.stickMappings.count),
             supported: capabilities.supportsStickAxes,
             enabled: capabilities.supportsStickAxes || !profile.stickMappings.isEmpty
           ) { openSheet(.sticks) }
           configurationRow(
-            title: OJDLocalized.string("profiles.trigger.title"),
+            title: OJDLocalized.string("ui.profiles.trigger.title"),
             summary: assignmentCountLabel(profile.triggerMappings.count),
             supported: capabilities.supportsAnalogTriggers,
             enabled: capabilities.supportsAnalogTriggers || !profile.triggerMappings.isEmpty
           ) { openSheet(.triggers) }
           configurationRow(
-            title: OJDLocalized.string("profiles.touch.title"),
+            title: OJDLocalized.string("ui.profiles.touch.title"),
             summary: assignmentCountLabel(profile.touchMappings.count),
             supported: !capabilities.physicalInput.touchSurfaces.isEmpty,
             enabled: capabilities.physicalInput.touchContactCount > 0
@@ -237,7 +237,7 @@
       HStack(alignment: .firstTextBaseline, spacing: 12) {
         VStack(alignment: .leading, spacing: 3) {
           Text(title)
-          Text(supported ? summary : OJDLocalized.string("profiles.notSupportedByController"))
+          Text(supported ? summary : OJDLocalized.string("ui.profiles.notSupportedByController"))
             .font(.caption).foregroundColor(
               supported ? Color(NSColor.secondaryLabelColor) : Color(NSColor.systemOrange)
             ).fixedSize(horizontal: false, vertical: true)
@@ -245,26 +245,26 @@
         Spacer(minLength: 8)
         OJDCompactSymbolButton(
           symbolName: "pencil",
-          label: OJDLocalized.string("common.adjust")
+          label: OJDLocalized.string("action.adjust")
         ) { action() }.disabled(!(enabled ?? supported))
       }
     }
 
     private func assignmentCountLabel(_ count: Int) -> String {
-      OJDLocalized.plural("profiles.assignments", count: count)
+      OJDLocalized.plural("ui.profiles.assignments", count: count)
     }
   }
 
   @MainActor
   private func removeButton(action: @escaping () -> Void) -> some View {
     Button(action: action) {
-      OJDSystemSymbol(name: "minus.circle", fallback: OJDLocalized.string("common.remove")).frame(
+      OJDSystemSymbol(name: "minus.circle", fallback: OJDLocalized.string("action.remove")).frame(
         minWidth: 28,
         minHeight: 28
       )
       .contentShape(Rectangle())
     }.buttonStyle(BorderlessButtonStyle()).ojdAccessibilityLabel(
-      OJDLocalized.string("common.remove")
+      OJDLocalized.string("action.remove")
     )
   }
 #endif

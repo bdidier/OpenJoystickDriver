@@ -6,10 +6,10 @@ struct RecordCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "record",
     abstract: CLILocalized.text(
-      "cli.record.abstract"
+      "cli.record.group.abstract"
     ),
     discussion: CLILocalized.text(
-      "cli.record.discussion"
+      "cli.record.group.discussion"
     ),
     subcommands: [
       RecordDraftCommand.self, RecordListCommand.self, RecordShowCommand.self,
@@ -100,7 +100,7 @@ struct RecordShowCommand: AsyncParsableCommand {
 
   @Argument(
     help: ArgumentHelp(
-      CLILocalized.text("cli.record.identity"),
+      CLILocalized.text("cli.record.group.identity"),
       valueName: "VVVV:PPPP"
     )
   )
@@ -117,7 +117,7 @@ struct RecordShowCommand: AsyncParsableCommand {
         throw CLIFailure(
           .notFound,
           CLILocalized.format(
-            "cli.record.show.not_found",
+            "cli.record.show.notFound",
             model.description
           )
         )

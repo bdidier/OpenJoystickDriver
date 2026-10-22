@@ -99,7 +99,7 @@ struct UpdateCommandTests {
       "timed out"
     )
     let versionMessage = CLILocalized.format(
-      "cli.update.check.failed_reason",
+      "cli.update.check.failedReason",
       "not SemVer"
     )
     #expect(networkResult.standardError == "error[E2019]: " + networkMessage + "\n")

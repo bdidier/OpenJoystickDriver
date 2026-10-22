@@ -64,9 +64,9 @@ struct StatusItemModelTests {
   @Test
   func settingsAndQuitUseTheAppMenuTitles() {
     let entries = StatusItemModel.entries(for: Self.state())
-    #expect(Self.entry("settings", in: entries)?.title == .key("mainMenu.app.settings"))
-    #expect(Self.entry("quit", in: entries)?.title == .key("mainMenu.app.quit"))
-    #expect(Self.entry("openWindow", in: entries)?.title == .key("menuBar.openWindow"))
+    #expect(Self.entry("settings", in: entries)?.title == .key("ui.menu.app.settings"))
+    #expect(Self.entry("quit", in: entries)?.title == .key("ui.menu.app.quit"))
+    #expect(Self.entry("openWindow", in: entries)?.title == .key("ui.extra.openWindow"))
   }
 
   @Test
@@ -95,7 +95,7 @@ struct StatusItemModelTests {
     #expect(controllers.isEnabled)
     #expect(controllers.submenu?.map(\.id) == ["controllers.none"])
     let none = try #require(Self.entry("controllers.none", in: entries))
-    #expect(none.title == .key("controllers.emptyTitle"))
+    #expect(none.title == .key("ui.controllers.emptyTitle"))
     #expect(!none.isEnabled)
     #expect(none.action == nil)
     #expect(try #require(Self.entry("grantAccess", in: entries)).isEnabled)
@@ -334,10 +334,10 @@ struct StatusItemModelTests {
       <string>test.statusline</string></dict></plist>
       """
     try Data(info.utf8).write(to: root.appendingPathComponent("Contents/Info.plist"))
-    try Data("\"menuBar.statusLine\" = \"%1$@ · %2$@ · %3$@\";\n".utf8).write(
+    try Data("\"ui.extra.statusLine\" = \"%1$@ · %2$@ · %3$@\";\n".utf8).write(
       to: resources.appendingPathComponent("en-US.lproj/Localizable.strings")
     )
-    try Data("\"menuBar.statusLine\" = \"%3$@ ، %2$@ ، %1$@\";\n".utf8).write(
+    try Data("\"ui.extra.statusLine\" = \"%3$@ ، %2$@ ، %1$@\";\n".utf8).write(
       to: resources.appendingPathComponent("ar-SA.lproj/Localizable.strings")
     )
     let bundle = try #require(Bundle(path: root.path))

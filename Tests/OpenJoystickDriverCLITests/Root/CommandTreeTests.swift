@@ -61,7 +61,7 @@ struct CommandTreeTests {
 
   @Test
   func onlyTheRootHelpListsTheGlobalOptions() async {
-    let footer = CLILocalized.text("cli.help.global_options")
+    let footer = CLILocalized.text("cli.shared.help.globalOptions")
     let root = await CLIRun.run(["--help"])
     let leaf = await CLIRun.run(["controller", "list", "--help"])
 

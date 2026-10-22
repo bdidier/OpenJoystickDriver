@@ -14,8 +14,8 @@
         SettingsErrorSection(preferences: preferences)
         Section {
           SettingsSwitchRow(
-            title: OJDLocalized.string("settings.startAtLogin"),
-            description: OJDLocalized.string("settings.startAtLoginDescription"),
+            title: OJDLocalized.string("ui.settings.general.startAtLogin"),
+            description: OJDLocalized.string("ui.settings.general.startAtLoginDescription"),
             isOn: Binding(
               get: { preferences.startAtLogin },
               set: { preferences.setStartAtLogin($0) }
@@ -23,24 +23,30 @@
             isEnabled: preferences.launchAtLoginIsAvailable
           )
           SettingsSwitchRow(
-            title: OJDLocalized.string("settingsPane.general.showInMenuBar"),
-            description: OJDLocalized.string("settingsPane.general.showInMenuBarDescription"),
+            title: OJDLocalized.string("ui.settings.general.showInMenuBar"),
+            description: OJDLocalized.string("ui.settings.general.showInMenuBarDescription"),
             isOn: Binding(
               get: { preferences.showInMenuBar },
               set: { preferences.setShowInMenuBar($0) }
             ),
             isEnabled: !preferences.showInMenuBarIsLocked,
-            disabledReason: OJDLocalized.string("settingsPane.general.entryPointRequired")
+            disabledReason: OJDLocalized.string(
+              "platform.macos.ui.settings.general.entryPointRequired"
+            )
           )
           SettingsSwitchRow(
-            title: OJDLocalized.string("settingsPane.general.showInDock"),
-            description: OJDLocalized.string("settingsPane.general.showInDockDescription"),
+            title: OJDLocalized.string("platform.macos.ui.settings.general.showInDock"),
+            description: OJDLocalized.string(
+              "platform.macos.ui.settings.general.showInDockDescription"
+            ),
             isOn: Binding(
               get: { preferences.showInDock },
               set: { preferences.setShowInDock($0) }
             ),
             isEnabled: !preferences.showInDockIsLocked,
-            disabledReason: OJDLocalized.string("settingsPane.general.entryPointRequired")
+            disabledReason: OJDLocalized.string(
+              "platform.macos.ui.settings.general.entryPointRequired"
+            )
           )
         }
         updates
@@ -48,7 +54,7 @@
     }
 
     private var updates: some View {
-      Section(OJDLocalized.string("settings.updates")) {
+      Section(OJDLocalized.string("ui.settings.general.updates")) {
         HStack(alignment: .firstTextBaseline, spacing: 8) {
           VStack(alignment: .leading, spacing: 2) {
             HStack(spacing: 6) {
@@ -64,18 +70,18 @@
           Spacer(minLength: 8)
           Text(status.version).foregroundColor(Color(NSColor.secondaryLabelColor))
           if case .available = preferences.updateState {
-            Button(OJDLocalized.string("settings.viewUpdate")) {
+            Button(OJDLocalized.string("ui.settings.general.viewUpdate")) {
               preferences.openAvailableUpdate()
             }
           }
-          Button(OJDLocalized.string("settings.checkUpdates")) {
+          Button(OJDLocalized.string("ui.settings.general.checkUpdates")) {
             preferences.checkForUpdates()
           }.disabled(preferences.updateState == .checking)
         }
         SettingsSwitchRow(
-          title: OJDLocalized.string("settingsPane.general.checkUpdatesAutomatically"),
+          title: OJDLocalized.string("ui.settings.general.checkUpdatesAutomatically"),
           description: OJDLocalized.string(
-            "settingsPane.general.checkUpdatesAutomaticallyDescription"
+            "ui.settings.general.checkUpdatesAutomaticallyDescription"
           ),
           isOn: Binding(
             get: { preferences.checkUpdatesAutomatically },
@@ -83,7 +89,7 @@
           )
         )
         Toggle(
-          OJDLocalized.string("settings.prereleaseUpdates"),
+          OJDLocalized.string("ui.settings.general.prereleaseUpdates"),
           isOn: Binding(
             get: { preferences.includePrereleaseUpdates },
             set: { preferences.setIncludePrereleaseUpdates($0) }

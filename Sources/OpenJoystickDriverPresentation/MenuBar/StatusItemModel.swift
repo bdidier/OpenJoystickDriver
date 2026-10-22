@@ -117,7 +117,7 @@ enum StatusItemModel {
       ? [
         StatusItemEntry(
           id: "grantAccess",
-          title: .key("menuBar.grantAccess"),
+          title: .key("ui.extra.grantAccess"),
           action: .showArea(.access)
         )
       ] : []
@@ -131,16 +131,16 @@ enum StatusItemModel {
       .separator("separator.status"),
       StatusItemEntry(
         id: "controllers",
-        title: .key("menuBar.controllers"),
+        title: .key("ui.extra.controllers"),
         submenu: controllersSubmenu(controllers: state.controllers)
       ),
       StatusItemEntry(
         id: "profiles",
-        title: .key("menuBar.profiles"),
+        title: .key("ui.extra.profiles"),
         submenu: [
           StatusItemEntry(
             id: "profiles.activate",
-            title: .key("menuBar.activate"),
+            title: .key("ui.extra.activate"),
             isEnabled: state.profiles.contains { !$0.isActive },
             submenu: profileEntries(
               state.profiles.filter { !$0.isActive },
@@ -151,7 +151,7 @@ enum StatusItemModel {
           ),
           StatusItemEntry(
             id: "profiles.deactivate",
-            title: .key("menuBar.deactivate"),
+            title: .key("ui.extra.deactivate"),
             isEnabled: state.profiles.contains { $0.isActive },
             submenu: profileEntries(
               state.profiles.filter { $0.isActive },
@@ -166,18 +166,18 @@ enum StatusItemModel {
     ] + grantAccess + [
       StatusItemEntry(
         id: "openWindow",
-        title: .key("menuBar.openWindow"),
+        title: .key("ui.extra.openWindow"),
         action: .openWindow
       ),
       StatusItemEntry(
         id: "settings",
-        title: .key("mainMenu.app.settings"),
+        title: .key("ui.menu.app.settings"),
         action: .showSettings
       ),
       .separator("separator.window"),
-      StatusItemEntry(id: "help", title: .key("menuBar.help"), submenu: helpSubmenu()),
+      StatusItemEntry(id: "help", title: .key("ui.extra.help"), submenu: helpSubmenu()),
       .separator("separator.help"),
-      StatusItemEntry(id: "quit", title: .key("mainMenu.app.quit"), action: .quit),
+      StatusItemEntry(id: "quit", title: .key("ui.menu.app.quit"), action: .quit),
     ]
   }
 
@@ -190,7 +190,7 @@ enum StatusItemModel {
       return [
         StatusItemEntry(
           id: "controllers.none",
-          title: .key("controllers.emptyTitle"),
+          title: .key("ui.controllers.emptyTitle"),
           isEnabled: false
         )
       ]
@@ -212,13 +212,13 @@ enum StatusItemModel {
     if controller.isSuspended {
       suspend = StatusItemEntry(
         id: "\(prefix).resume",
-        title: .key("menuBar.resume"),
+        title: .key("ui.extra.resume"),
         action: .resumeController(sessionToken: controller.id)
       )
     } else {
       suspend = StatusItemEntry(
         id: "\(prefix).suspend",
-        title: .key("menuBar.suspend"),
+        title: .key("ui.extra.suspend"),
         action: .suspendController(sessionToken: controller.id)
       )
     }
@@ -226,12 +226,12 @@ enum StatusItemModel {
       suspend,
       StatusItemEntry(
         id: "\(prefix).testInput",
-        title: .key("menuBar.testInput"),
+        title: .key("ui.extra.testInput"),
         action: .testInput(sessionToken: controller.id)
       ),
       StatusItemEntry(
         id: "\(prefix).activeProfile",
-        title: .key("menuBar.activeProfile"),
+        title: .key("ui.extra.activeProfile"),
         isEnabled: !controller.profiles.isEmpty,
         submenu: profileEntries(
           controller.profiles,
@@ -242,13 +242,13 @@ enum StatusItemModel {
       ),
       StatusItemEntry(
         id: "\(prefix).disconnectWireless",
-        title: .key("menuBar.disconnectWireless"),
+        title: .key("ui.extra.disconnectWireless"),
         isEnabled: controller.isWireless,
         action: controller.isWireless ? .disconnectWireless(sessionToken: controller.id) : nil
       ),
       StatusItemEntry(
         id: "\(prefix).showInWindow",
-        title: .key("menuBar.showInWindow"),
+        title: .key("ui.extra.showInWindow"),
         action: .showController(sessionToken: controller.id)
       ),
     ]
@@ -274,22 +274,22 @@ enum StatusItemModel {
     [
       StatusItemEntry(
         id: "help.activityLog",
-        title: .key("menuBar.activityLog"),
+        title: .key("ui.extra.activityLog"),
         action: .showArea(.activity)
       ),
       StatusItemEntry(
         id: "help.explainErrorCode",
-        title: .key("menuBar.explainErrorCode"),
+        title: .key("ui.extra.explainErrorCode"),
         action: .explainErrorCode
       ),
       StatusItemEntry(
         id: "help.reportProblem",
-        title: .key("menuBar.reportProblem"),
+        title: .key("ui.extra.reportProblem"),
         action: .openProblemReport
       ),
       StatusItemEntry(
         id: "help.projectWebsite",
-        title: .key("menuBar.projectWebsite"),
+        title: .key("ui.extra.projectWebsite"),
         action: .openProjectWebsite
       ),
     ]
@@ -299,7 +299,7 @@ enum StatusItemModel {
 /// The status line: one localized format with positional arguments, so each language orders and
 /// punctuates the readiness, controller count and profile as one phrase.
 enum StatusItemStatusLine {
-  static let formatKey = "menuBar.statusLine"
+  static let formatKey = "ui.extra.statusLine"
 
   static func make(
     readiness: String,

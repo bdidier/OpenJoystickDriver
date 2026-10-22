@@ -7,7 +7,7 @@ struct ServiceCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "service",
     abstract: CLILocalized.text(
-      "cli.service.abstract"
+      "cli.service.group.abstract"
     ),
     subcommands: [ServiceStartCommand.self, ServiceStopCommand.self, ServiceWaitCommand.self]
   )
@@ -53,7 +53,7 @@ struct ServiceStartCommand: AsyncParsableCommand {
       }
       try ServiceStateResult.print(
         .running,
-        message: CLILocalized.text("cli.service.running")
+        message: CLILocalized.text("cli.service.group.running")
       )
     }
   }
@@ -63,7 +63,7 @@ struct ServiceStartCommand: AsyncParsableCommand {
       throw CLIFailure(
         .installationProblem,
         CLILocalized.text(
-          "cli.service.start.no_bundle"
+          "cli.service.start.noBundle"
         )
       )
     }
@@ -71,7 +71,7 @@ struct ServiceStartCommand: AsyncParsableCommand {
       throw CLIFailure(
         .systemRequestFailed,
         CLILocalized.format(
-          "cli.service.start.open_failed",
+          "platform.macos.cli.service.start.openFailed",
           bundle.path
         )
       )
@@ -88,7 +88,7 @@ struct ServiceStopCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "stop",
     abstract: CLILocalized.text(
-      "cli.service.stop.abstract"
+      "platform.macos.cli.service.stop.abstract"
     )
   )
 
@@ -102,7 +102,7 @@ struct ServiceStopCommand: AsyncParsableCommand {
           throw CLIFailure(
             .systemRequestFailed,
             CLILocalized.format(
-              "cli.service.stop.signal_failed",
+              "cli.service.stop.signalFailed",
               String(cString: strerror(errno))
             )
           )
@@ -111,7 +111,7 @@ struct ServiceStopCommand: AsyncParsableCommand {
       }
       try ServiceStateResult.print(
         .stopped,
-        message: CLILocalized.text("cli.service.stopped")
+        message: CLILocalized.text("cli.service.group.stopped")
       )
     }
   }
@@ -149,7 +149,7 @@ struct ServiceWaitCommand: AsyncParsableCommand {
       try await Self.waitUntilReady(timeout: CLIContext.current.waitTimeout)
       try ServiceStateResult.print(
         .running,
-        message: CLILocalized.text("cli.service.running")
+        message: CLILocalized.text("cli.service.group.running")
       )
     }
   }

@@ -188,13 +188,13 @@ final class ProfileLibraryModel: ObservableObject {
   ) async -> String? {
     guard !profileRecoveryInFlight, !runtime.mutationInFlight else {
       return OJDLocalized.string(
-        "error.actionInProgress"
+        "ui.error.actionInProgress"
       )
     }
     await runtime.waitForExclusiveAccess()
     guard !profileRecoveryInFlight, !runtime.mutationInFlight else {
       return OJDLocalized.string(
-        "error.actionInProgress"
+        "ui.error.actionInProgress"
       )
     }
     profileRecoveryInFlight = true
@@ -219,7 +219,7 @@ final class ProfileLibraryModel: ObservableObject {
     lastMutationOperation = request.operation
     lastMutationID = request.id
     let message = OJDLocalized.string(
-      "error.actionInProgress"
+      "ui.error.actionInProgress"
     )
     mutationState = .error(message)
     lastError = message

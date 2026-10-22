@@ -133,15 +133,15 @@ struct MainWindowProblemTests {
     #expect(problems == [.liveUpdatesPolling(.timeout)])
     #expect(problems.first?.isFailure == false)
     #expect(problems.first?.action == nil)
-    #expect(problems.first?.titleKey == "banner.liveUpdates.title")
-    #expect(problems.first?.detailKey == "banner.liveUpdates.detail.timeout")
+    #expect(problems.first?.titleKey == "ui.banner.liveUpdates.title")
+    #expect(problems.first?.detailKey == "ui.banner.liveUpdates.detail.timeout")
   }
 
   @Test
   func anEmptyOrMissingValueShowsNone() {
-    #expect(OJDValue(nil).displayText == OJDLocalized.string("common.none"))
-    #expect(OJDValue("").displayText == OJDLocalized.string("common.none"))
-    #expect(OJDValue(nil).accessibilityKey == "common.none")
+    #expect(OJDValue(nil).displayText == OJDLocalized.string("status.none"))
+    #expect(OJDValue("").displayText == OJDLocalized.string("status.none"))
+    #expect(OJDValue(nil).accessibilityKey == "status.none")
     #expect(OJDValue("Xbox One").displayText == "Xbox One")
     #expect(OJDValue("Xbox One").accessibilityKey == nil)
   }
@@ -160,7 +160,7 @@ struct MainWindowProblemTests {
 
   @Test
   func sentencesReadAMissingValueAsAWordAndNotAHyphen() {
-    #expect(OJDValue.none.spokenText == OJDLocalized.string("common.none"))
+    #expect(OJDValue.none.spokenText == OJDLocalized.string("status.none"))
     #expect(OJDValue.none.spokenText != "-")
     #expect(OJDValue.text("x").spokenText == "x")
   }
@@ -173,7 +173,7 @@ struct MainWindowProblemTests {
     #expect(visibility.presentation(of: serial).displayText != "ABC123")
     #expect(
       visibility.presentation(of: serial).spokenText
-        == OJDLocalized.string("controllers.serial.hidden")
+        == OJDLocalized.string("ui.controllers.serial.hidden")
     )
     #expect(visibility.presentation(of: serial).toggleSymbolName == "eye")
     visibility.toggle()
@@ -189,6 +189,6 @@ struct MainWindowProblemTests {
     let presentation = SerialNumberVisibility().presentation(of: .none)
     #expect(!presentation.canToggle)
     #expect(!presentation.isObscured)
-    #expect(presentation.displayText == OJDLocalized.string("common.none"))
+    #expect(presentation.displayText == OJDLocalized.string("status.none"))
   }
 }

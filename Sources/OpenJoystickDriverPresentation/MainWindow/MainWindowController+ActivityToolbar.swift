@@ -73,7 +73,7 @@
       }
       menu.addItem(.separator())
       let heading = NSMenuItem(
-        title: OJDLocalized.string("activity.lines"),
+        title: OJDLocalized.string("ui.activity.lines"),
         action: nil,
         keyEquivalent: ""
       )
@@ -135,7 +135,7 @@
     func saveActivityLog() {
       guard let window else { return }
       let panel = NSSavePanel()
-      panel.title = OJDLocalized.string("debug.saveLogsPanel")
+      panel.title = OJDLocalized.string("ui.debug.saveLogsPanel")
       panel.message = ApplicationServiceLogService.sharingWarning
       panel.nameFieldStringValue = screens.supportReport.defaultSupportLogsFilename
       panel.canCreateDirectories = true
@@ -146,7 +146,7 @@
           await self.screens.supportReport.saveSupportLogs(to: url)
           if case .error(let message) = self.screens.supportReport.supportLogsState {
             self.screens.activity.failure = ActivityActionFailure(
-              title: OJDLocalized.string("mainMenu.file.saveFailed"),
+              title: OJDLocalized.string("ui.menu.file.saveFailed"),
               message: message
             )
           }
@@ -157,7 +157,7 @@
     func showActivityLogInFinder() {
       if !screens.activity.log.showInFinder() {
         screens.activity.failure = ActivityActionFailure(
-          title: OJDLocalized.string("activity.showInFinder.failed"),
+          title: OJDLocalized.string("ui.activity.showInFinder.failed"),
           message: nil
         )
       }

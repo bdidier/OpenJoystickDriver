@@ -176,8 +176,8 @@ struct ProfileCreationFieldsTests {
     let sections = ProfileControllerGroup.sections(of: choices)
     #expect(
       sections.map(\.title) == [
-        OJDLocalized.string("settings.controllerConnectedShort"),
-        OJDLocalized.string("profiles.controllersOfProfiles"),
+        OJDLocalized.string("ui.settings.notifications.controllerConnectedShort"),
+        OJDLocalized.string("ui.profiles.controllersOfProfiles"),
         PhysicalProtocolID.sonyDualSense.displayName, gip,
       ]
     )

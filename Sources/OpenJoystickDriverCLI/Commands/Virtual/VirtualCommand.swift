@@ -6,13 +6,13 @@ struct VirtualCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "virtual",
     abstract: CLILocalized.text(
-      "cli.virtual.abstract"
+      "cli.virtual.group.abstract"
     ),
     discussion: CLILocalized.text(
-      "cli.virtual.discussion"
+      "cli.virtual.group.discussion"
     ) + " "
       + CLILocalized.text(
-        "cli.virtual.discussion.unit"
+        "cli.virtual.group.discussionUnit"
       ),
     subcommands: [
       VirtualShowCommand.self, VirtualSetCommand.self, VirtualResetCommand.self,
@@ -160,7 +160,7 @@ struct VirtualShowCommand: AsyncParsableCommand {
 /// The `--unit` flag of `virtual set` and `virtual reset`.
 private let unitFlagHelp = ArgumentHelp(
   CLILocalized.text(
-    "cli.virtual.unit"
+    "cli.virtual.group.unit"
   )
 )
 
@@ -170,7 +170,7 @@ private func requireUnit(_ unit: Bool, _ device: ApplicationServiceDeviceDescrip
   throw CLIFailure(
     .controllerRequestFailed,
     CLILocalized.format(
-      "cli.virtual.error.no_unit",
+      "cli.virtual.group.errorNoUnit",
       device.name
     )
   )
@@ -188,7 +188,7 @@ private func printChange(
     throw CLIFailure(
       .serviceRequestFailed,
       CLILocalized.format(
-        "cli.virtual.error.failed",
+        "cli.virtual.group.errorFailed",
         device.name,
         reason
       )
@@ -212,14 +212,14 @@ private func printChange(
   case .human where stored:
     CLIOutput.success(
       CLILocalized.format(
-        "cli.virtual.stored",
+        "cli.virtual.group.stored",
         device.name
       )
     )
   case .human:
     CLIOutput.success(
       CLILocalized.format(
-        "cli.virtual.changed",
+        "cli.virtual.group.changed",
         device.name,
         report.live.map(CommandLineName.kebab) ?? CLILocalized.text("cli.virtual.show.none"),
         CommandLineName.kebab(report.source.rawValue)
@@ -303,14 +303,14 @@ struct VirtualResetCommand: AsyncParsableCommand {
 
   @Flag(
     name: [.short, .long],
-    help: ArgumentHelp(CLILocalized.text("cli.option.force"))
+    help: ArgumentHelp(CLILocalized.text("cli.shared.option.force"))
   )
   var force = false
 
   @Flag(
     name: [.customShort("n"), .long],
     help: ArgumentHelp(
-      CLILocalized.text("cli.option.dry_run")
+      CLILocalized.text("cli.shared.option.dryRun")
     )
   )
   var dryRun = false
@@ -318,13 +318,13 @@ struct VirtualResetCommand: AsyncParsableCommand {
   func validate() throws {
     guard all != (controller != nil) else {
       throw ValidationError(
-        CLILocalized.text("cli.virtual.reset.error.target")
+        CLILocalized.text("cli.virtual.reset.errorTarget")
       )
     }
     guard !(all && unit) else {
       throw ValidationError(
         CLILocalized.text(
-          "cli.virtual.reset.error.unit_all"
+          "cli.virtual.reset.errorUnitAll"
         )
       )
     }
@@ -342,7 +342,7 @@ struct VirtualResetCommand: AsyncParsableCommand {
       try requireUnit(unit, device)
       CLIOutput.stdout(
         CLILocalized.format(
-          "cli.virtual.reset.dry_run",
+          "cli.virtual.reset.dryRun",
           device.name
         )
       )
@@ -365,12 +365,12 @@ struct VirtualResetCommand: AsyncParsableCommand {
 
   private func resetAll() async throws {
     let summary = CLILocalized.text(
-      "cli.virtual.reset.all.summary"
+      "cli.virtual.reset.allSummary"
     )
     if dryRun {
       CLIOutput.stdout(
         CLILocalized.text(
-          "cli.virtual.reset.all.dry_run"
+          "cli.virtual.reset.allDryRun"
         )
       )
       return
@@ -383,7 +383,7 @@ struct VirtualResetCommand: AsyncParsableCommand {
       throw CLIFailure(
         .serviceRequestFailed,
         CLILocalized.text(
-          "cli.virtual.reset.all.failed"
+          "cli.virtual.reset.allFailed"
         )
       )
     }
@@ -393,7 +393,7 @@ struct VirtualResetCommand: AsyncParsableCommand {
     case .human:
       CLIOutput.success(
         CLILocalized.text(
-          "cli.virtual.reset.all.done"
+          "cli.virtual.reset.allDone"
         )
       )
     }

@@ -101,8 +101,8 @@ struct ProfileControllerGroup: Equatable, Identifiable {
   /// The title of the section of `group`: the family's display name for a catalog family.
   static func title(of group: ProfileControllerChoice.Group) -> String {
     switch group {
-    case .connected: OJDLocalized.string("settings.controllerConnectedShort")
-    case .profiles: OJDLocalized.string("profiles.controllersOfProfiles")
+    case .connected: OJDLocalized.string("ui.settings.notifications.controllerConnectedShort")
+    case .profiles: OJDLocalized.string("ui.profiles.controllersOfProfiles")
     case .family(let family): family.displayName
     }
   }

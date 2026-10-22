@@ -83,7 +83,7 @@ enum ControllerRecordDrafting {
     let identity: String
 
     var message: String {
-      OJDLocalized.formatted("controllers.draftRecord.noLayout", identity)
+      OJDLocalized.formatted("ui.controllers.draftRecord.noLayout", identity)
     }
   }
 

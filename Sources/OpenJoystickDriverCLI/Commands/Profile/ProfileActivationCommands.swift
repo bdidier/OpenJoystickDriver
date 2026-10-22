@@ -19,7 +19,7 @@ struct ProfileActivateCommand: AsyncParsableCommand {
   @Flag(
     help: ArgumentHelp(
       CLILocalized.text(
-        "cli.profile.activate.allow_empty"
+        "cli.profile.activate.allowEmpty"
       )
     )
   )

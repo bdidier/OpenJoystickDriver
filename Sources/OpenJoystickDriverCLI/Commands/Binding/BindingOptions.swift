@@ -7,7 +7,7 @@ func parseSource(_ text: String) throws -> RemappingSource {
   do { return try RemappingCommandValueParser.source(text) } catch {
     throw CLIFailure.usage(
       CLILocalized.format(
-        "cli.binding.source_invalid",
+        "cli.binding.group.sourceInvalid",
         text
       )
     )
@@ -19,7 +19,7 @@ func parseTarget(_ text: String) throws -> RemappingDestination {
   do { return try RemappingCommandValueParser.destination(text) } catch {
     throw CLIFailure.usage(
       CLILocalized.format(
-        "cli.binding.target_invalid",
+        "cli.binding.group.targetInvalid",
         text
       )
     )
@@ -31,7 +31,7 @@ struct BindingOptions: ParsableArguments {
   @Option(
     help: ArgumentHelp(
       CLILocalized.text(
-        "cli.binding.option.behavior"
+        "cli.binding.group.optionBehavior"
       )
     )
   )
@@ -41,7 +41,7 @@ struct BindingOptions: ParsableArguments {
     name: .customLong("pulse-ms"),
     help: ArgumentHelp(
       CLILocalized.text(
-        "cli.binding.option.pulse_ms"
+        "cli.binding.group.optionPulseMs"
       ),
       valueName: "ms"
     )
@@ -51,7 +51,7 @@ struct BindingOptions: ParsableArguments {
   @Option(
     help: ArgumentHelp(
       CLILocalized.text(
-        "cli.binding.option.deadzone"
+        "cli.binding.group.optionDeadzone"
       )
     )
   )
@@ -60,7 +60,7 @@ struct BindingOptions: ParsableArguments {
   @Option(
     help: ArgumentHelp(
       CLILocalized.text(
-        "cli.binding.option.gain"
+        "cli.binding.group.optionGain"
       )
     )
   )
@@ -68,7 +68,7 @@ struct BindingOptions: ParsableArguments {
 
   @Flag(
     help: ArgumentHelp(
-      CLILocalized.text("cli.binding.option.invert")
+      CLILocalized.text("cli.binding.group.optionInvert")
     )
   )
   var invert = false
@@ -76,7 +76,7 @@ struct BindingOptions: ParsableArguments {
   @Option(
     help: ArgumentHelp(
       CLILocalized.text(
-        "cli.binding.option.response_curve"
+        "cli.binding.group.optionResponseCurve"
       )
     )
   )
@@ -85,7 +85,7 @@ struct BindingOptions: ParsableArguments {
   @Option(
     help: ArgumentHelp(
       CLILocalized.text(
-        "cli.binding.option.digital_threshold"
+        "cli.binding.group.optionDigitalThreshold"
       )
     )
   )
@@ -94,7 +94,7 @@ struct BindingOptions: ParsableArguments {
   @Option(
     help: ArgumentHelp(
       CLILocalized.text(
-        "cli.binding.option.turbo_rate"
+        "cli.binding.group.optionTurboRate"
       ),
       valueName: "hz"
     )
@@ -104,7 +104,7 @@ struct BindingOptions: ParsableArguments {
   @Option(
     help: ArgumentHelp(
       CLILocalized.text(
-        "cli.binding.option.turbo_duty"
+        "cli.binding.group.optionTurboDuty"
       )
     )
   )
@@ -113,7 +113,7 @@ struct BindingOptions: ParsableArguments {
   @Option(
     help: ArgumentHelp(
       CLILocalized.text(
-        "cli.binding.option.long_hold"
+        "cli.binding.group.optionLongHold"
       ),
       valueName: "ms:target"
     )
@@ -123,7 +123,7 @@ struct BindingOptions: ParsableArguments {
   @Option(
     help: ArgumentHelp(
       CLILocalized.text(
-        "cli.binding.option.double_tap"
+        "cli.binding.group.optionDoubleTap"
       ),
       valueName: "ms:target"
     )
@@ -134,7 +134,7 @@ struct BindingOptions: ParsableArguments {
     name: .customLong("actions-json"),
     help: ArgumentHelp(
       CLILocalized.text(
-        "cli.binding.option.actions_json"
+        "cli.binding.group.optionActionsJson"
       ),
       valueName: "json"
     )
@@ -182,7 +182,7 @@ struct BindingOptions: ParsableArguments {
       guard !supplied else {
         throw CLIFailure.usage(
           CLILocalized.text(
-            "cli.binding.axis_options_source"
+            "cli.binding.group.axisOptionsSource"
           )
         )
       }
@@ -203,14 +203,14 @@ struct BindingOptions: ParsableArguments {
     guard let turboRate, let turboDuty else {
       throw CLIFailure.usage(
         CLILocalized.text(
-          "cli.binding.turbo_pair"
+          "cli.binding.group.turboPair"
         )
       )
     }
     guard target.acceptsTurbo else {
       throw CLIFailure.usage(
         CLILocalized.text(
-          "cli.binding.turbo_unsupported"
+          "cli.binding.group.turboUnsupported"
         )
       )
     }
@@ -225,7 +225,7 @@ struct BindingOptions: ParsableArguments {
     guard parts.count == 2, let milliseconds = Double(parts[0]), milliseconds.isFinite else {
       throw CLIFailure.usage(
         CLILocalized.format(
-          "cli.binding.alternate_format",
+          "cli.binding.group.alternateFormat",
           option
         )
       )
@@ -238,13 +238,13 @@ struct BindingOptions: ParsableArguments {
     let data = Data(actionsJSON.utf8)
     guard data.count <= RemappingProfile.maximumEncodedBytes else {
       throw CLIFailure.usage(
-        CLILocalized.text("cli.binding.actions_too_large")
+        CLILocalized.text("cli.binding.group.actionsTooLarge")
       )
     }
     do { return try JSONDecoder().decode([RemappingAction].self, from: data) } catch {
       throw CLIFailure.usage(
         CLILocalized.format(
-          "cli.binding.actions_invalid",
+          "cli.binding.group.actionsInvalid",
           DocumentProblem.describe(error)
         )
       )

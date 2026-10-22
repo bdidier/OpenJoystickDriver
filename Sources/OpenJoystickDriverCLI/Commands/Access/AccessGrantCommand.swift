@@ -21,7 +21,7 @@ struct AccessClient {
         throw CLIFailure(
           .unsignedClient,
           CLILocalized.format(
-            "cli.access.client.unsigned",
+            "cli.access.group.clientUnsigned",
             url.path
           )
         )
@@ -45,7 +45,7 @@ struct AccessClient {
     throw CLIFailure(
       .notFound,
       CLILocalized.format(
-        "cli.access.client.unknown",
+        "cli.access.group.clientUnknown",
         text
       )
     )
@@ -65,7 +65,7 @@ struct AccessGrantCommand: AsyncParsableCommand {
 
   @Argument(
     help: ArgumentHelp(
-      CLILocalized.text("cli.access.client"),
+      CLILocalized.text("cli.access.group.client"),
       valueName: "client"
     )
   )
@@ -106,7 +106,7 @@ struct AccessGrantCommand: AsyncParsableCommand {
 
   @Flag(
     name: [.short, .long],
-    help: ArgumentHelp(CLILocalized.text("cli.option.force"))
+    help: ArgumentHelp(CLILocalized.text("cli.shared.option.force"))
   )
   var force = false
 
@@ -116,18 +116,18 @@ struct AccessGrantCommand: AsyncParsableCommand {
   func validate() throws {
     guard (client == nil) != (token == nil) else {
       throw ValidationError(
-        CLILocalized.text("cli.access.grant.client_or_token")
+        CLILocalized.text("cli.access.grant.clientOrToken")
       )
     }
     guard token != nil || origin.isEmpty else {
       throw ValidationError(
-        CLILocalized.text("cli.access.grant.origin_needs_token")
+        CLILocalized.text("cli.access.grant.originNeedsToken")
       )
     }
     guard origin.isEmpty || !scope.contains(.control) else {
       throw ValidationError(
         CLILocalized.text(
-          "cli.access.grant.origin_control"
+          "cli.access.grant.originControl"
         )
       )
     }
@@ -147,7 +147,7 @@ struct AccessGrantCommand: AsyncParsableCommand {
         throw CLIFailure(
           .unsignedClient,
           CLILocalized.format(
-            "cli.access.grant.ad_hoc",
+            "platform.macos.cli.access.grant.adHoc",
             identity.identifier
           )
         )
@@ -181,12 +181,12 @@ struct AccessGrantCommand: AsyncParsableCommand {
     var lines = [
       origin.isEmpty
         ? CLILocalized.format(
-          "cli.access.grant.token_confirm",
+          "platform.macos.cli.access.grant.tokenConfirm",
           name,
           AccessText.scopes(scope)
         )
         : CLILocalized.format(
-          "cli.access.grant.token_web_confirm",
+          "platform.macos.cli.access.grant.tokenWebConfirm",
           name,
           AccessText.scopes(scope),
           origin.joined(separator: ", ")
@@ -209,7 +209,7 @@ struct AccessGrantCommand: AsyncParsableCommand {
     case .human:
       CLIOutput.success(
         CLILocalized.format(
-          "cli.access.grant.token_success",
+          "cli.access.grant.tokenSuccess",
           AccessText.scopes(result.grant.scopes),
           result.grant.name,
           result.grant.id
@@ -221,7 +221,7 @@ struct AccessGrantCommand: AsyncParsableCommand {
 
   private static var controlWarning: String {
     CLILocalized.text(
-      "cli.access.grant.control_warning"
+      "cli.access.grant.controlWarning"
     )
   }
 
@@ -237,7 +237,7 @@ struct AccessGrantCommand: AsyncParsableCommand {
     if identity.kind == .platform {
       lines.insert(
         CLILocalized.text(
-          "cli.access.grant.platform_warning"
+          "platform.macos.cli.access.grant.platformWarning"
         ),
         at: 0
       )

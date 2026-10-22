@@ -8,24 +8,24 @@ extension ControllerRecordTestError {
     switch self {
     case .capture(let line, let problem):
       return localization.formatted(
-        "cli.record.test.capture_invalid",
+        "cli.record.test.captureInvalid",
         arguments: [capture, "line \(line): \(problem)"]
       )
     case .expectation(let problem):
       return localization.formatted(
-        "cli.record.test.expect_invalid",
+        "cli.record.test.expectInvalid",
         arguments: [expectation, problem]
       )
     case .replay(.noParser):
-      return localization.formatted("cli.record.test.no_parser", arguments: [model.description])
+      return localization.formatted("cli.record.test.noParser", arguments: [model.description])
     case .replay(.invalidReport(let index)):
       return localization.formatted(
-        "cli.record.test.parse_failed",
+        "cli.record.test.parseFailed",
         arguments: [model.description, index + 1, capture]
       )
     case .replay(.noInput):
       return localization.formatted(
-        "cli.record.test.no_input",
+        "cli.record.test.noInput",
         arguments: [capture, model.description]
       )
     }

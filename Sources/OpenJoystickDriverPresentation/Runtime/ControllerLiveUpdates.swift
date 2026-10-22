@@ -26,9 +26,9 @@ enum ControllerLiveUpdateFailure: Equatable, Sendable {
   /// Localization key of the banner detail.
   var detailKey: String {
     switch self {
-    case .serviceClosedConnection: return "banner.liveUpdates.detail.closed"
-    case .timeout: return "banner.liveUpdates.detail.timeout"
-    case .other: return "banner.liveUpdates.detail.other"
+    case .serviceClosedConnection: return "ui.banner.liveUpdates.detail.closed"
+    case .timeout: return "ui.banner.liveUpdates.detail.timeout"
+    case .other: return "ui.banner.liveUpdates.detail.other"
     }
   }
 }

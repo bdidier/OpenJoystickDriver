@@ -79,7 +79,7 @@ enum DiagnoseChecks {
       return DiagnoseCheck(
         id,
         .skip,
-        CLILocalized.text("cli.diagnose.soak.not_requested")
+        CLILocalized.text("cli.diagnose.group.soakNotRequested")
       )
     }
     guard snapshot.availability == .running, let processID = ServiceConnection.processIdentifier()
@@ -90,7 +90,7 @@ enum DiagnoseChecks {
     )
     CLIOutput.stderr(
       CLILocalized.format(
-        "cli.diagnose.soak.progress",
+        "cli.diagnose.group.soakProgress",
         Double(soak.seconds).durationText
       )
     )

@@ -6,7 +6,7 @@ struct TransportExtensionCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "transport-extension",
     abstract: CLILocalized.text(
-      "cli.transport_extension.abstract"
+      "platform.macos.cli.transportExtension.group.abstract"
     ),
     subcommands: [
       TransportExtensionStatusCommand.self, TransportExtensionActivateCommand.self,
@@ -39,10 +39,10 @@ struct TransportExtensionStatusCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "status",
     abstract: CLILocalized.text(
-      "cli.transport_extension.status.abstract"
+      "platform.macos.cli.transportExtension.status.abstract"
     ),
     discussion: CLILocalized.text(
-      "cli.transport_extension.status.discussion"
+      "cli.transportExtension.status.discussion"
     )
   )
 
@@ -63,13 +63,13 @@ struct TransportExtensionStatusCommand: AsyncParsableCommand {
       case .human:
         CLIOutput.stdout(
           CLILocalized.format(
-            "cli.transport_extension.status.bundle",
+            "cli.transportExtension.status.bundle",
             CommandLineName.kebab(report.bundle.rawValue)
           )
         )
         CLIOutput.stdout(
           CLILocalized.format(
-            "cli.transport_extension.status.registration",
+            "platform.macos.cli.transportExtension.status.registration",
             CommandLineName.kebab(report.registration.rawValue)
           )
         )
@@ -81,7 +81,7 @@ struct TransportExtensionStatusCommand: AsyncParsableCommand {
         throw CLIFailure(
           .systemRequestFailed,
           CLILocalized.format(
-            "cli.transport_extension.status.unavailable",
+            "platform.macos.cli.transportExtension.status.unavailable",
             reason
           )
         )
@@ -116,14 +116,14 @@ private func submit(
     throw CLIFailure(
       .systemRequestFailed,
       CLILocalized.text(
-        "cli.transport_extension.timeout"
+        "platform.macos.cli.transportExtension.group.timeout"
       )
     )
   case .failed:
     throw CLIFailure(
       .systemRequestFailed,
       CLILocalized.text(
-        "cli.transport_extension.submit_failed"
+        "platform.macos.cli.transportExtension.group.submitFailed"
       )
     )
   }
@@ -134,7 +134,7 @@ private func submit(
     if result == .awaitingApproval {
       CLIOutput.stderr(
         CLILocalized.text(
-          "cli.transport_extension.approval"
+          "platform.macos.cli.transportExtension.group.approval"
         )
       )
     } else {
@@ -147,10 +147,10 @@ struct TransportExtensionActivateCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "activate",
     abstract: CLILocalized.text(
-      "cli.transport_extension.activate.abstract"
+      "platform.macos.cli.transportExtension.activate.abstract"
     ),
     discussion: CLILocalized.text(
-      "cli.transport_extension.activate.discussion"
+      "cli.transportExtension.activate.discussion"
     )
   )
 
@@ -162,7 +162,7 @@ struct TransportExtensionActivateCommand: AsyncParsableCommand {
       try await submit(
         .activate,
         done: .active,
-        message: CLILocalized.text("cli.transport_extension.activated")
+        message: CLILocalized.text("cli.transportExtension.group.activated")
       )
     }
   }
@@ -172,10 +172,10 @@ struct TransportExtensionDeactivateCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "deactivate",
     abstract: CLILocalized.text(
-      "cli.transport_extension.deactivate.abstract"
+      "platform.macos.cli.transportExtension.deactivate.abstract"
     ),
     discussion: CLILocalized.text(
-      "cli.transport_extension.deactivate.discussion"
+      "cli.transportExtension.deactivate.discussion"
     )
   )
 
@@ -187,7 +187,7 @@ struct TransportExtensionDeactivateCommand: AsyncParsableCommand {
       try await submit(
         .deactivate,
         done: .inactive,
-        message: CLILocalized.text("cli.transport_extension.deactivated")
+        message: CLILocalized.text("cli.transportExtension.group.deactivated")
       )
     }
   }

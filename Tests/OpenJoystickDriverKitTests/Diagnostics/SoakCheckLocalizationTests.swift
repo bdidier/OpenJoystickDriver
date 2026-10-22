@@ -48,10 +48,10 @@ struct SoakCheckLocalizationTests {
   func everyVerdictAndErrorHasAResolvedEntryInEveryLocale() {
     let verdictKeys = RuntimeSoakVerdict.allCases.map(DiagnosticsService.verdictKey)
     let errorKeys = [
-      "cli.diagnose.soak.error.process_unavailable",
-      "cli.diagnose.soak.error.invalid_configuration",
-      "cli.diagnose.soak.error.too_many_samples",
-      "cli.diagnose.soak.error.no_samples",
+      "cli.diagnose.group.soakErrorProcessUnavailable",
+      "cli.diagnose.group.soakErrorInvalidConfiguration",
+      "cli.diagnose.group.soakErrorTooManySamples",
+      "cli.diagnose.group.soakErrorNoSamples",
     ]
     #expect(Set(verdictKeys).count == RuntimeSoakVerdict.allCases.count)
 

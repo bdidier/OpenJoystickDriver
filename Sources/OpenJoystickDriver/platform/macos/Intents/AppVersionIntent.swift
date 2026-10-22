@@ -6,11 +6,11 @@
   @available(macOS 13, *)
   struct AppVersionIntent: AppIntent {
     static let title = LocalizedStringResource(
-      "shortcuts.action.app_version.title"
+      "ui.shortcuts.action.appVersion.title"
     )
     static let description = IntentDescription(
       LocalizedStringResource(
-        "shortcuts.action.app_version.description"
+        "ui.shortcuts.action.appVersion.description"
       )
     )
 

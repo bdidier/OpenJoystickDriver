@@ -203,7 +203,7 @@
       let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
       statusItem = item
       if let button = item.button {
-        button.toolTip = OJDLocalized.string("app.name")
+        button.toolTip = OJDLocalized.string("term.app.name")
         button.image = MenuBarStatusItemImage.make(
           accessibilityDescription: OJDLocalized.string("a11y.menuBar.statusItem")
         )
@@ -256,7 +256,7 @@
       guard !statusMenuTracker.isOpen else { return }
       let menu = makeStatusMenu(
         from: StatusItemModel.entries(for: menuBarViewModel.statusItemState),
-        title: OJDLocalized.string("app.name")
+        title: OJDLocalized.string("term.app.name")
       )
       menu.delegate = statusMenuTracker
       statusMenu = menu

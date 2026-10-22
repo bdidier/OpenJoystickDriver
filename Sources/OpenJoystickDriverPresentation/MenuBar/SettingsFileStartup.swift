@@ -63,17 +63,19 @@
     static func make(reason: String) -> NSAlert {
       let alert = NSAlert()
       alert.alertStyle = .warning
-      alert.messageText = OJDLocalized.string("settings.unreadable.title")
+      alert.messageText = OJDLocalized.string("ui.settings.advanced.unreadableTitle")
       alert.informativeText = reason
-      alert.addButton(withTitle: OJDLocalized.string("settings.unreadable.showInFinder"))
+      alert.addButton(
+        withTitle: OJDLocalized.string("platform.macos.ui.settings.advanced.unreadableShowInFinder")
+      )
       let reset = alert.addButton(
-        withTitle: OJDLocalized.string("settings.unreadable.resetSettings")
+        withTitle: OJDLocalized.string("ui.settings.advanced.unreadableResetSettings")
       )
       reset.hasDestructiveAction = true
       let quit = alert.addButton(
         withTitle: MainMenuRenderer.title(
-          "mainMenu.app.quit",
-          appName: OJDLocalized.string("app.name")
+          "ui.menu.app.quit",
+          appName: OJDLocalized.string("term.app.name")
         )
       )
       quit.keyEquivalent = "\u{1b}"

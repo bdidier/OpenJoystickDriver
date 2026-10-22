@@ -25,27 +25,27 @@
       VStack(alignment: .leading, spacing: 8) {
         Text(
           OJDLocalized.string(
-            "motion.calibration.instructions"
+            "ui.motion.calibration.instructions"
           )
         ).font(.caption).fixedSize(horizontal: false, vertical: true)
         if let status = model.status {
           if !status.hasMotionBaseline {
             Text(
               OJDLocalized.string(
-                "motion.calibration.waiting"
+                "ui.motion.calibration.waiting"
               )
             ).font(.caption).fixedSize(horizontal: false, vertical: true)
           }
           Text(
             status.isCollecting
-              ? OJDLocalized.string("motion.calibration.collecting")
+              ? OJDLocalized.string("ui.motion.calibration.collecting")
               : OJDLocalized.string(
-                "motion.calibration.paused"
+                "ui.motion.calibration.paused"
               )
           )
           Text(
             OJDLocalized.formatted(
-              "motion.calibration.offset",
+              "ui.motion.calibration.offset",
               status.offsetDegreesPerSecond.x,
               status.offsetDegreesPerSecond.y,
               status.offsetDegreesPerSecond.z
@@ -54,7 +54,7 @@
           if status.isCollecting {
             Text(
               OJDLocalized.string(
-                "motion.calibration.continues"
+                "ui.motion.calibration.continues"
               )
             ).font(.caption).fixedSize(horizontal: false, vertical: true)
           }
@@ -64,16 +64,16 @@
             horizontal: false,
             vertical: true
           )
-          Button(OJDLocalized.string("common.tryAgain")) { attempt += 1 }
+          Button(OJDLocalized.string("action.tryAgain")) { attempt += 1 }
         }
         HStack {
-          Button(OJDLocalized.string("motion.calibration.start")) {
+          Button(OJDLocalized.string("ui.motion.calibration.start")) {
             Task { await model.perform(.start) }
           }.disabled(model.status?.hasMotionBaseline != true || model.status?.isCollecting == true)
-          Button(OJDLocalized.string("motion.calibration.pause")) {
+          Button(OJDLocalized.string("ui.motion.calibration.pause")) {
             Task { await model.perform(.pause) }
           }.disabled(model.status?.isCollecting != true)
-          Button(OJDLocalized.string("common.reset")) {
+          Button(OJDLocalized.string("action.reset")) {
             Task { await model.perform(.reset) }
           }.disabled(model.status == nil)
           if model.isBusy { ProgressView().controlSize(.small) }

@@ -23,7 +23,7 @@
         }
         HStack {
           Spacer()
-          Button(OJDLocalized.string("common.cancel")) { model.cancelSheet() }.keyboardShortcut(
+          Button(OJDLocalized.string("action.cancel")) { model.cancelSheet() }.keyboardShortcut(
             .cancelAction
           ).ojdAccessibilityLabel(OJDLocalized.string("a11y.access.cancel"))
           Button(confirmation.confirmTitle) { Task { await model.confirm(pending) } }
@@ -45,10 +45,10 @@
 
     var body: some View {
       VStack(alignment: .leading, spacing: 14) {
-        Text(OJDLocalized.string("access.token.form.title")).font(.headline)
-        TextField(OJDLocalized.string("access.token.name"), text: $model.tokenDraft.name)
+        Text(OJDLocalized.string("ui.access.token.form.title")).font(.headline)
+        TextField(OJDLocalized.string("ui.access.token.name"), text: $model.tokenDraft.name)
           .ojdAccessibilityLabel(OJDLocalized.string("a11y.access.tokenName"))
-        Text(OJDLocalized.string("access.token.origins")).font(.caption)
+        Text(OJDLocalized.string("ui.access.token.origins")).font(.caption)
         TextEditor(text: $model.tokenDraft.originsText).font(.body).frame(height: 70)
           .ojdAccessibilityLabel(OJDLocalized.string("a11y.access.tokenOrigins"))
         scopeToggles(scopes: $model.tokenDraft.scopes)
@@ -58,10 +58,10 @@
         }
         HStack {
           Spacer()
-          Button(OJDLocalized.string("common.cancel")) { model.cancelSheet() }.keyboardShortcut(
+          Button(OJDLocalized.string("action.cancel")) { model.cancelSheet() }.keyboardShortcut(
             .cancelAction
           ).ojdAccessibilityLabel(OJDLocalized.string("a11y.access.cancel"))
-          Button(OJDLocalized.string("access.token.continue")) { model.requestGrantToken() }
+          Button(OJDLocalized.string("ui.access.token.continue")) { model.requestGrantToken() }
             .keyboardShortcut(.defaultAction).ojdAccessibilityLabel(
               OJDLocalized.string("a11y.access.tokenContinue")
             )
@@ -76,19 +76,19 @@
 
     var body: some View {
       VStack(alignment: .leading, spacing: 14) {
-        Text(OJDLocalized.formatted("access.token.issued.title", issued.name)).font(.headline)
-        Text(OJDLocalized.string("access.token.issued.message")).foregroundColor(
+        Text(OJDLocalized.formatted("ui.access.token.issued.title", issued.name)).font(.headline)
+        Text(OJDLocalized.string("ui.access.token.issued.message")).foregroundColor(
           Color(NSColor.secondaryLabelColor)
         ).fixedSize(horizontal: false, vertical: true)
         Text(issued.token).font(.system(.body, design: .monospaced)).textSelection(.enabled)
           .ojdAccessibilityLabel(OJDLocalized.string("a11y.access.tokenValue"))
         HStack {
-          Button(OJDLocalized.string("access.token.copy")) {
+          Button(OJDLocalized.string("ui.access.token.copy")) {
             NSPasteboard.general.clearContents()
             NSPasteboard.general.setString(issued.token, forType: .string)
           }.ojdAccessibilityLabel(OJDLocalized.string("a11y.access.copyToken"))
           Spacer()
-          Button(OJDLocalized.string("access.done"), action: close).keyboardShortcut(
+          Button(OJDLocalized.string("ui.access.done"), action: close).keyboardShortcut(
             .defaultAction
           ).ojdAccessibilityLabel(OJDLocalized.string("a11y.access.done"))
         }
@@ -130,8 +130,8 @@
       panel.canChooseFiles = true
       panel.canChooseDirectories = false
       panel.treatsFilePackagesAsDirectories = false
-      panel.message = OJDLocalized.string("access.grant.pick")
-      panel.prompt = OJDLocalized.string("access.choose")
+      panel.message = OJDLocalized.string("ui.access.grant.pick")
+      panel.prompt = OJDLocalized.string("ui.access.choose")
       return panel.runModal() == .OK ? panel.url : nil
     }
   }

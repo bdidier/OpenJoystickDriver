@@ -10,10 +10,10 @@ enum SoakTestField: CaseIterable {
 
   var labelKey: String {
     switch self {
-    case .seconds: "developer.soakDuration"
-    case .interval: "developer.soakInterval"
-    case .residentLimit: "developer.soakResidentLimit"
-    case .footprintLimit: "developer.soakFootprintLimit"
+    case .seconds: "ui.developer.soakDuration"
+    case .interval: "ui.developer.soakInterval"
+    case .residentLimit: "ui.developer.soakResidentLimit"
+    case .footprintLimit: "ui.developer.soakFootprintLimit"
     }
   }
 
@@ -37,15 +37,16 @@ enum SoakTestProblem: Error, Equatable {
   var message: String {
     switch self {
     case .notANumber(let field):
-      OJDLocalized.formatted("developer.soakNotANumber", OJDLocalized.string(field.labelKey))
+      OJDLocalized.formatted("ui.developer.soakNotANumber", OJDLocalized.string(field.labelKey))
     case .outOfRange(let field):
       OJDLocalized.formatted(
-        "developer.soakOutOfRange",
+        "ui.developer.soakOutOfRange",
         OJDLocalized.string(field.labelKey),
         field.range.lowerBound,
         field.range.upperBound
       )
-    case .tooManySamples(let count): OJDLocalized.formatted("developer.soakTooManySamples", count)
+    case .tooManySamples(let count):
+      OJDLocalized.formatted("ui.developer.soakTooManySamples", count)
     }
   }
 }

@@ -30,7 +30,7 @@ enum RecordStore {
     do { return try Data(contentsOf: URL(fileURLWithPath: path)) } catch {
       throw CLIFailure.usage(
         CLILocalized.format(
-          "cli.record.error.unreadable",
+          "cli.record.group.errorUnreadable",
           path,
           error.localizedDescription
         )
@@ -43,7 +43,7 @@ enum RecordStore {
     for file in files {
       CLIOutput.stderr(
         CLILocalized.format(
-          "cli.record.skipped",
+          "cli.record.group.skipped",
           file.url.path,
           file.problem ?? ""
         )

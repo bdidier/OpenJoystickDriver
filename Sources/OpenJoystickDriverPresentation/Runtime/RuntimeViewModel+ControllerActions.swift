@@ -43,7 +43,7 @@ extension RuntimeViewModel {
     inputCaptureState = .unavailable(
       selector,
       OJDLocalized.string(
-        "error.noDetectedControl"
+        "ui.error.noDetectedControl"
       )
     )
   }
@@ -60,7 +60,7 @@ extension RuntimeViewModel {
   ) async -> String? {
     guard !mutationInFlight else {
       return OJDLocalized.string(
-        "error.actionInProgress"
+        "ui.error.actionInProgress"
       )
     }
     do {
@@ -74,7 +74,7 @@ extension RuntimeViewModel {
   func unpairRemappingJoyCons(sessionID: UUID) async -> String? {
     guard !mutationInFlight else {
       return OJDLocalized.string(
-        "error.actionInProgress"
+        "ui.error.actionInProgress"
       )
     }
     do {
@@ -126,7 +126,7 @@ extension RuntimeViewModel {
     var failure: String?
     do {
       if try await !gateway.resetAllVirtualHIDProfileOverrides() {
-        failure = OJDLocalized.string("controllers.virtual.resetAllFailed")
+        failure = OJDLocalized.string("ui.controllers.virtual.resetAllFailed")
       }
     } catch { failure = RuntimePresentation.userFacingError(error) }
     await refreshControllerInventory()

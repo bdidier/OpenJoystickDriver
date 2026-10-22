@@ -10,10 +10,10 @@ import Testing
 struct ServingRouteLabelTests {
   private static func key(for route: ServingRoute) -> String {
     switch route {
-    case .nativePassThrough: "controllers.serving.nativePassThrough"
-    case .virtualHID: "controllers.serving.virtualHID"
-    case .extensionOwned: "controllers.serving.extensionOwned"
-    case .outputDisabled: "controllers.serving.outputDisabled"
+    case .nativePassThrough: "platform.macos.ui.controllers.serving.nativePassThrough"
+    case .virtualHID: "ui.controllers.serving.virtualHID"
+    case .extensionOwned: "ui.controllers.serving.extensionOwned"
+    case .outputDisabled: "ui.controllers.serving.outputDisabled"
     }
   }
 

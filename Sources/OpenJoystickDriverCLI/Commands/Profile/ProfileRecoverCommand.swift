@@ -21,14 +21,14 @@ struct ProfileRecoverCommand: AsyncParsableCommand {
 
   @Flag(
     name: [.short, .long],
-    help: ArgumentHelp(CLILocalized.text("cli.option.force"))
+    help: ArgumentHelp(CLILocalized.text("cli.shared.option.force"))
   )
   var force = false
 
   @Flag(
     name: [.customShort("n"), .long],
     help: ArgumentHelp(
-      CLILocalized.text("cli.option.dry_run")
+      CLILocalized.text("cli.shared.option.dryRun")
     )
   )
   var dryRun = false
@@ -91,26 +91,26 @@ struct ProfileRecoverCommand: AsyncParsableCommand {
     case (.damagedProfile, true):
       CLIOutput.stdout(
         CLILocalized.format(
-          "cli.profile.recover.remove.dry_run",
+          "cli.profile.recover.removeDryRun",
           id
         )
       )
     case (.damagedProfile, false):
       CLIOutput.success(
         CLILocalized.format(
-          "cli.profile.recover.remove.done",
+          "cli.profile.recover.removeDone",
           id
         )
       )
     case (.unusableLibrary, true):
       CLIOutput.stdout(
         CLILocalized.text(
-          "cli.profile.recover.reset.dry_run"
+          "cli.profile.recover.resetDryRun"
         )
       )
     case (.unusableLibrary, false):
       CLIOutput.success(
-        CLILocalized.text("cli.profile.recover.reset.done")
+        CLILocalized.text("cli.profile.recover.resetDone")
       )
     }
   }

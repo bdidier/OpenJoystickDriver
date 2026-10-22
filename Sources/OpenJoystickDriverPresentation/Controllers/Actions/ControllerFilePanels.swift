@@ -37,7 +37,7 @@
       completion: @escaping ((format: VirtualMappingFormat, url: URL)?) -> Void
     ) {
       let panel = NSSavePanel()
-      panel.title = OJDLocalized.string("controllers.exportMapping.title")
+      panel.title = OJDLocalized.string("ui.controllers.exportMapping.title")
       panel.canCreateDirectories = true
       let accessory = ExportMappingAccessory(panel: panel, profile: profile)
       panel.accessoryView = accessory.view
@@ -54,18 +54,20 @@
       completion: @escaping ((program: URL, gameControllerBackend: Bool)?) -> Void
     ) {
       let panel = NSOpenPanel()
-      panel.title = OJDLocalized.string("controllers.launch.title")
-      panel.prompt = OJDLocalized.string("controllers.launch.prompt")
+      panel.title = OJDLocalized.string("ui.controllers.launch.title")
+      panel.prompt = OJDLocalized.string("ui.controllers.launch.prompt")
       panel.allowedContentTypes = [.application, .unixExecutable]
       panel.canChooseFiles = true
       panel.canChooseDirectories = false
       panel.allowsMultipleSelection = false
       let backend = NSButton(
-        checkboxWithTitle: OJDLocalized.string("controllers.launch.gameControllerBackend"),
+        checkboxWithTitle: OJDLocalized.string("ui.controllers.launch.gameControllerBackend"),
         target: nil,
         action: nil
       )
-      backend.toolTip = OJDLocalized.string("cli.virtual.launch.sdl_gamecontroller_backend")
+      backend.toolTip = OJDLocalized.string(
+        "platform.macos.cli.virtual.launch.sdlGamecontrollerBackend"
+      )
       backend.sizeToFit()
       panel.accessoryView = backend
       present(panel) { response in
@@ -88,7 +90,7 @@
       self.panel = panel
       self.profile = profile
       let label = NSTextField(
-        labelWithString: OJDLocalized.string("controllers.exportMapping.format")
+        labelWithString: OJDLocalized.string("ui.controllers.exportMapping.format")
       )
       popup.setAccessibilityTitleUIElement(label)
       let stack = NSStackView(views: [label, popup])

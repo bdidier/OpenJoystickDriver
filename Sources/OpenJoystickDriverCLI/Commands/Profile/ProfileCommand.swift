@@ -6,10 +6,10 @@ struct ProfileCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "profile",
     abstract: CLILocalized.text(
-      "cli.profile.abstract"
+      "cli.profile.group.abstract"
     ),
     discussion: CLILocalized.text(
-      "cli.profile.discussion"
+      "cli.profile.group.discussion"
     ),
     subcommands: [
       ProfileListCommand.self, ProfileShowCommand.self, ProfileCreateCommand.self,
@@ -48,7 +48,7 @@ func savedSummary(
     throw CLIFailure(
       .serviceRequestFailed,
       CLILocalized.text(
-        "cli.profile.vanished"
+        "cli.profile.group.vanished"
       )
     )
   }
@@ -116,7 +116,7 @@ struct ProfileListCommand: AsyncParsableCommand {
       if !result.issues.isEmpty {
         CLIOutput.stderr(
           CLILocalized.text(
-            "cli.profile.list.recover_hint"
+            "cli.profile.list.recoverHint"
           )
         )
       }
@@ -175,7 +175,7 @@ struct ProfileCreateCommand: AsyncParsableCommand {
 
   @Argument(
     help: ArgumentHelp(
-      CLILocalized.text("cli.profile.name"),
+      CLILocalized.text("cli.profile.group.name"),
       valueName: "name"
     )
   )
@@ -204,7 +204,7 @@ struct ProfileCreateCommand: AsyncParsableCommand {
   @Option(
     help: ArgumentHelp(
       CLILocalized.text(
-        "cli.profile.create.virtual_gamepad"
+        "cli.profile.create.virtualGamepad"
       )
     )
   )
@@ -213,7 +213,7 @@ struct ProfileCreateCommand: AsyncParsableCommand {
   @Option(
     help: ArgumentHelp(
       CLILocalized.text(
-        "cli.profile.create.physical_input"
+        "platform.macos.cli.profile.create.physicalInput"
       )
     )
   )
@@ -359,14 +359,14 @@ struct ProfileDeleteCommand: AsyncParsableCommand {
 
   @Flag(
     name: [.short, .long],
-    help: ArgumentHelp(CLILocalized.text("cli.option.force"))
+    help: ArgumentHelp(CLILocalized.text("cli.shared.option.force"))
   )
   var force = false
 
   @Flag(
     name: [.customShort("n"), .long],
     help: ArgumentHelp(
-      CLILocalized.text("cli.option.dry_run")
+      CLILocalized.text("cli.shared.option.dryRun")
     )
   )
   var dryRun = false
@@ -403,7 +403,7 @@ struct ProfileDeleteCommand: AsyncParsableCommand {
         if dryRun {
           CLIOutput.stdout(
             CLILocalized.format(
-              "cli.profile.delete.dry_run",
+              "cli.profile.delete.dryRun",
               target.name
             )
           )

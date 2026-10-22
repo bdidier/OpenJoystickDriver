@@ -6,7 +6,7 @@ struct UpdateCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "update",
     abstract: CLILocalized.text(
-      "cli.update.abstract"
+      "cli.update.group.abstract"
     ),
     subcommands: [UpdateCheckCommand.self]
   )
@@ -117,7 +117,7 @@ struct UpdateCheckCommand: AsyncParsableCommand {
       case .upToDate:
         CLIOutput.stdout(
           CLILocalized.format(
-            "cli.update.check.up_to_date",
+            "cli.update.check.upToDate",
             result.currentVersion,
             result.latestVersion
           )
@@ -152,7 +152,7 @@ struct UpdateCheckCommand: AsyncParsableCommand {
         detail
       )
       : CLILocalized.format(
-        "cli.update.check.failed_reason",
+        "cli.update.check.failedReason",
         detail
       )
     return CLIFailure(.updateCheckFailed, message)

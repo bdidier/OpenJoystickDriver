@@ -15,9 +15,9 @@ struct SettingsWindowPaneModelTests {
   @Test
   func theTitleKeyFollowsTheSelectedPane() {
     let model = SettingsWindowPaneModel()
-    #expect(model.titleKey == "settingsPane.general.title")
+    #expect(model.titleKey == "ui.settings.general.title")
     model.select(.notifications)
-    #expect(model.titleKey == "settingsPane.notifications.title")
+    #expect(model.titleKey == "ui.settings.notifications.title")
     #expect(model.selectedIndex == 1)
   }
 

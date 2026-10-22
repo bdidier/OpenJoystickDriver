@@ -26,16 +26,16 @@
 
     var body: some View {
       VStack(alignment: .leading, spacing: 12) {
-        Text(OJDLocalized.string("console.explain.title")).font(.headline)
-        TextField(OJDLocalized.string("console.explain.prompt"), text: $model.typedCode) {
+        Text(OJDLocalized.string("ui.console.explain.title")).font(.headline)
+        TextField(OJDLocalized.string("ui.console.explain.prompt"), text: $model.typedCode) {
           model.explain()
         }
         answer.frame(maxWidth: .infinity, minHeight: 64, alignment: .topLeading)
         HStack {
           Spacer()
-          Button(OJDLocalized.string("common.done")) { model.isPresented = false }
+          Button(OJDLocalized.string("action.done")) { model.isPresented = false }
             .keyboardShortcut(.cancelAction)
-          Button(OJDLocalized.string("console.explain.action")) { model.explain() }
+          Button(OJDLocalized.string("ui.console.explain.action")) { model.explain() }
             .keyboardShortcut(.defaultAction)
             .disabled(model.typedCode.trimmingCharacters(in: .whitespaces).isEmpty)
         }
@@ -57,7 +57,7 @@
           ).padding(.top, 4)
         }
       case .unknown(let typed)?:
-        Text(OJDLocalized.formatted("cli.explain.unknown", typed)).foregroundColor(
+        Text(OJDLocalized.formatted("cli.explain.group.unknown", typed)).foregroundColor(
           Color(NSColor.secondaryLabelColor)
         ).fixedSize(horizontal: false, vertical: true)
       case nil: EmptyView()
@@ -68,11 +68,13 @@
   extension ErrorCodeExplainerView {
     /// The labeled lines that `ojd explain` prints between the code and the explanation.
     static func factLines(_ facts: ErrorCodeFacts) -> [String] {
-      var lines = [OJDLocalized.formatted("cli.explain.area", facts.area)]
+      var lines = [OJDLocalized.formatted("cli.explain.group.area", facts.area)]
       if let exitCode = facts.exitCode {
-        lines.append(OJDLocalized.formatted("cli.explain.exit_code", String(exitCode)))
+        lines.append(OJDLocalized.formatted("cli.explain.group.exitCode", String(exitCode)))
       }
-      if let wire = facts.wire { lines.append(OJDLocalized.formatted("cli.explain.wire", wire)) }
+      if let wire = facts.wire {
+        lines.append(OJDLocalized.formatted("cli.explain.group.wire", wire))
+      }
       return lines
     }
   }

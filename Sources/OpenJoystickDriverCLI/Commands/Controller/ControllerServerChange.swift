@@ -51,7 +51,7 @@ enum ControllerServerChange {
         if dryRun {
           CLIOutput.stdout(
             CLILocalized.format(
-              "cli.controller.server.dry_run",
+              "cli.controller.group.serverDryRun",
               result.identity,
               CommandLineName.kebab(result.server.rawValue),
               result.file
@@ -60,7 +60,7 @@ enum ControllerServerChange {
         } else {
           CLIOutput.success(
             CLILocalized.format(
-              "cli.controller.server.success",
+              "cli.controller.group.serverSuccess",
               result.identity,
               CommandLineName.kebab(result.server.rawValue),
               result.file
@@ -85,13 +85,13 @@ enum ControllerServerChange {
     if accessRoute != .system {
       throw CLIFailure(
         .claimUnsupported,
-        CLILocalized.format("cli.controller.server.raw_usb", device.identity)
+        CLILocalized.format("cli.controller.group.serverRawUsb", device.identity)
       )
     }
     guard ServingPolicy.offersServerChoice(input) else {
       throw CLIFailure(
         .claimUnsupported,
-        CLILocalized.format("cli.controller.server.not_native", device.identity)
+        CLILocalized.format("platform.macos.cli.controller.group.serverNotNative", device.identity)
       )
     }
   }
@@ -114,13 +114,17 @@ enum ControllerServerChange {
       case .noRecord:
         throw CLIFailure(
           .claimUnsupported,
-          CLILocalized.format("cli.controller.server.no_record", device.identity, device.identity)
+          CLILocalized.format(
+            "cli.controller.group.serverNoRecord",
+            device.identity,
+            device.identity
+          )
         )
       case .invalidFile(let problem), .invalidResult(let problem):
         throw CLIFailure(
           .invalidInputFile,
           CLILocalized.format(
-            "cli.controller.server.invalid",
+            "cli.controller.group.serverInvalid",
             RecordStore.directory.appendingPathComponent(
               ControllerRecordSet.fileName(for: model)
             ).path,

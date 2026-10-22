@@ -258,7 +258,7 @@ final class RuntimeViewModel: ObservableObject {
       : .unavailable(
         failureMessage
           ?? OJDLocalized.string(
-            "error.notAvailable"
+            "ui.error.notAvailable"
           )
       )
   }

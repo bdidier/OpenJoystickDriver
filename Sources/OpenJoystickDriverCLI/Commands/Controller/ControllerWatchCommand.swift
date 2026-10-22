@@ -19,7 +19,7 @@ func validateDuration(_ duration: Double?) throws {
   if let duration, !isPositiveSeconds(duration) {
     throw ValidationError(
       CLILocalized.text(
-        "cli.controller.error.duration"
+        "cli.controller.group.errorDuration"
       )
     )
   }
@@ -27,7 +27,7 @@ func validateDuration(_ duration: Double?) throws {
 
 let durationHelp = ArgumentHelp(
   CLILocalized.text(
-    "cli.controller.option.duration"
+    "cli.controller.group.optionDuration"
   ),
   valueName: "seconds"
 )
@@ -76,7 +76,7 @@ struct ControllerWatchCommand: AsyncParsableCommand {
       "cli.controller.watch.discussion"
     ) + " "
       + CLILocalized.text(
-        "cli.controller.watch.discussion.all"
+        "cli.controller.watch.discussionAll"
       ) + "\n\n" + CLILocalized.text("cli.controller.watch.examples")
   )
 
@@ -101,7 +101,7 @@ struct ControllerWatchCommand: AsyncParsableCommand {
   @Flag(
     help: ArgumentHelp(
       CLILocalized.text(
-        "cli.controller.watch.first_press"
+        "cli.controller.watch.firstPress"
       )
     )
   )
@@ -127,14 +127,14 @@ struct ControllerWatchCommand: AsyncParsableCommand {
     if all == (controller != nil) {
       throw ValidationError(
         CLILocalized.text(
-          "cli.controller.watch.error.target"
+          "cli.controller.watch.errorTarget"
         )
       )
     }
     if all, firstPress {
       throw ValidationError(
         CLILocalized.text(
-          "cli.controller.watch.error.first_press_all"
+          "cli.controller.watch.errorFirstPressAll"
         )
       )
     }
@@ -198,7 +198,7 @@ struct ControllerWatchCommand: AsyncParsableCommand {
       return false
     }
     if previous == nil, CLIContext.current.format == .human {
-      CLIOutput.stderr(CLILocalized.text("cli.controller.watch.no_input"))
+      CLIOutput.stderr(CLILocalized.text("cli.controller.watch.noInput"))
     }
   }
 
@@ -209,7 +209,7 @@ struct ControllerWatchCommand: AsyncParsableCommand {
     if CLIContext.current.format == .human {
       CLIOutput.success(
         CLILocalized.format(
-          "cli.controller.watch.press_prompt",
+          "cli.controller.watch.pressPrompt",
           device.name,
           device.identity
         )
@@ -229,7 +229,7 @@ struct ControllerWatchCommand: AsyncParsableCommand {
       throw CLIFailure(
         .aborted,
         CLILocalized.format(
-          "cli.controller.watch.no_press",
+          "cli.controller.watch.noPress",
           (duration ?? 0).durationText
         )
       )
@@ -353,7 +353,7 @@ struct ControllerCaptureCommand: AsyncParsableCommand {
         }
         if !received, CLIContext.current.format == .human {
           CLIOutput.stderr(
-            CLILocalized.text("cli.controller.capture.no_packets")
+            CLILocalized.text("cli.controller.capture.noPackets")
           )
         }
       }

@@ -112,7 +112,7 @@ package final class SystemExtensionSubmission: NSObject, OSSystemExtensionReques
     setResult(
       .completed(
         localization.formatted(
-          "cli.transport_extension.completed",
+          "cli.transportExtension.group.completed",
           arguments: [String(result.rawValue)]
         )
       )
@@ -126,7 +126,7 @@ package final class SystemExtensionSubmission: NSObject, OSSystemExtensionReques
     setResult(
       .failed(
         localization.formatted(
-          "cli.transport_extension.failed",
+          "cli.transportExtension.group.failed",
           arguments: [nsError.domain, nsError.code, nsError.localizedDescription]
         )
       )
@@ -146,7 +146,7 @@ package final class SystemExtensionSubmission: NSObject, OSSystemExtensionReques
     withExtension ext: OSSystemExtensionProperties
   ) -> OSSystemExtensionRequest.ReplacementAction {
     let message = localization.formatted(
-      "cli.transport_extension.replacing",
+      "cli.transportExtension.group.replacing",
       arguments: [existing.bundleIdentifier, existing.bundleVersion, ext.bundleVersion]
     )
     FileHandle.standardError.write(Data((message + "\n").utf8))
@@ -172,7 +172,7 @@ package final class SystemExtensionSubmission: NSObject, OSSystemExtensionReques
     setResult(
       .failed(
         localization.string(
-          "cli.transport_extension.cancelled"
+          "cli.transportExtension.group.cancelled"
         )
       )
     )

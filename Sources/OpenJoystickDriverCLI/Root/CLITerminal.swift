@@ -52,7 +52,7 @@ enum CLITerminal {
         .confirmationRequired,
         needsForce
           ?? CLILocalized.text(
-            "cli.error.confirm_needs_force"
+            "cli.shared.error.confirmNeedsForce"
           )
       )
     }
@@ -61,7 +61,7 @@ enum CLITerminal {
     guard answer == "y" || answer == "yes" else {
       throw CLIFailure(
         .aborted,
-        CLILocalized.text("cli.error.confirm_declined")
+        CLILocalized.text("cli.shared.error.confirmDeclined")
       )
     }
   }

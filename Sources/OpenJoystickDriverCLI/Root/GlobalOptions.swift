@@ -12,12 +12,12 @@ struct GlobalOptions: ParsableArguments {
   @TaskLocal
   static var subcommandVisibility = ArgumentVisibility.hidden
 
-  @Flag(help: ArgumentHelp(CLILocalized.text("cli.option.json")))
+  @Flag(help: ArgumentHelp(CLILocalized.text("cli.shared.option.json")))
   var json = false
 
   @Flag(
     help: ArgumentHelp(
-      CLILocalized.text("cli.option.plain")
+      CLILocalized.text("cli.shared.option.plain")
     )
   )
   var plain = false
@@ -25,17 +25,17 @@ struct GlobalOptions: ParsableArguments {
   @Flag(
     name: [.short, .long],
     help: ArgumentHelp(
-      CLILocalized.text("cli.option.quiet")
+      CLILocalized.text("cli.shared.option.quiet")
     )
   )
   var quiet = false
 
-  @Flag(help: ArgumentHelp(CLILocalized.text("cli.option.no_color")))
+  @Flag(help: ArgumentHelp(CLILocalized.text("cli.shared.option.noColor")))
   var noColor = false
 
   @Flag(
     help: ArgumentHelp(
-      CLILocalized.text("cli.option.no_input")
+      CLILocalized.text("cli.shared.option.noInput")
     )
   )
   var noInput = false
@@ -43,7 +43,7 @@ struct GlobalOptions: ParsableArguments {
   /// Formatted once, because the parser builds this group many times per parse. No locale, so
   /// the defaults read as `--timeout` parses them ("0.5", not "0,5").
   private static let timeoutHelp = String(
-    format: CLILocalized.text("cli.option.timeout"),
+    format: CLILocalized.text("cli.shared.option.timeout"),
     ServiceTimeouts.request,
     ServiceTimeouts.wait
   )
@@ -54,12 +54,12 @@ struct GlobalOptions: ParsableArguments {
   func validate() throws {
     if json, plain {
       throw ValidationError(
-        CLILocalized.text("cli.error.json_plain")
+        CLILocalized.text("cli.shared.error.jsonPlain")
       )
     }
     if let timeout, !isPositiveSeconds(timeout) {
       throw ValidationError(
-        CLILocalized.text("cli.error.timeout_value")
+        CLILocalized.text("cli.shared.error.timeoutValue")
       )
     }
     _ = try EnvironmentOptions(ProcessInfo.processInfo.environment)
@@ -103,17 +103,17 @@ struct EnvironmentOptions {
     switch (environment["OJD_NO_INPUT"] ?? "").lowercased() {
     case "", "0", "false", "no": noInput = false
     case "1", "true", "yes": noInput = true
-    default: throw ValidationError(CLILocalized.text("cli.error.env_no_input"))
+    default: throw ValidationError(CLILocalized.text("cli.shared.error.envNoInput"))
     }
     if let value = environment["OJD_TIMEOUT"], !value.isEmpty {
       guard let seconds = Double(value), isPositiveSeconds(seconds) else {
-        throw ValidationError(CLILocalized.text("cli.error.env_timeout"))
+        throw ValidationError(CLILocalized.text("cli.shared.error.envTimeout"))
       }
       timeout = seconds
     }
     if let value = environment["OJD_COLOR"], !value.isEmpty {
       guard let color = Color(rawValue: value) else {
-        throw ValidationError(CLILocalized.text("cli.error.env_color"))
+        throw ValidationError(CLILocalized.text("cli.shared.error.envColor"))
       }
       self.color = color
     }

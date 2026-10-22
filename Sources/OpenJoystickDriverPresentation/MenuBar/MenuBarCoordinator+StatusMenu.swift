@@ -47,7 +47,7 @@
       let title: String
       switch entry.title {
       case .key(let key):
-        title = MainMenuRenderer.title(key, appName: OJDLocalized.string("app.name"))
+        title = MainMenuRenderer.title(key, appName: OJDLocalized.string("term.app.name"))
       case .verbatim(let text): title = text
       }
       let item = NSMenuItem(title: title, action: nil, keyEquivalent: "")
@@ -127,14 +127,14 @@
       else { return }
       let alert = NSAlert()
       alert.alertStyle = .warning
-      alert.messageText = OJDLocalized.string("controllers.disconnectWirelessConfirmTitle")
+      alert.messageText = OJDLocalized.string("ui.controllers.disconnectWirelessConfirmTitle")
       alert.informativeText = OJDLocalized.formatted(
-        "controllers.disconnectWirelessConfirmMessage",
+        "ui.controllers.disconnectWirelessConfirmMessage",
         device.name
       )
-      alert.addButton(withTitle: OJDLocalized.string("controllers.disconnectWirelessConfirm"))
+      alert.addButton(withTitle: OJDLocalized.string("ui.controllers.disconnectWirelessConfirm"))
         .hasDestructiveAction = true
-      alert.addButton(withTitle: OJDLocalized.string("common.cancel"))
+      alert.addButton(withTitle: OJDLocalized.string("action.cancel"))
       guard alert.runActivatingApp() == .alertFirstButtonReturn else { return }
       runControllerAction(sessionToken) { device in
         await self.viewModel.disconnectWirelessController(device)
@@ -153,10 +153,10 @@
       return StatusItemProfileOperation.activation(of: profileID, in: profiles) { _ in
         let alert = NSAlert()
         alert.alertStyle = .warning
-        alert.messageText = OJDLocalized.string("profiles.emptyActivationTitle")
-        alert.informativeText = OJDLocalized.string("profiles.emptyActivationMessage")
-        alert.addButton(withTitle: OJDLocalized.string("common.setActive"))
-        alert.addButton(withTitle: OJDLocalized.string("common.cancel"))
+        alert.messageText = OJDLocalized.string("ui.profiles.emptyActivationTitle")
+        alert.informativeText = OJDLocalized.string("ui.profiles.emptyActivationMessage")
+        alert.addButton(withTitle: OJDLocalized.string("action.setActive"))
+        alert.addButton(withTitle: OJDLocalized.string("action.cancel"))
         return alert.runActivatingApp() == .alertFirstButtonReturn
       }
     }
@@ -166,14 +166,14 @@
         guard let mainWindow else { return }
         let outcome = await operation.perform(on: mainWindow)
         guard let outcome else {
-          presentFailure(OJDLocalized.string("menuBar.profileEditorBusy"))
+          presentFailure(OJDLocalized.string("ui.extra.profileEditorBusy"))
           return
         }
         switch outcome.result {
         case .succeeded: return
         case .failed(_, _, let message), .rejected(_, _, let message): presentFailure(message)
         case .conflict:
-          presentFailure(outcome.lastError ?? OJDLocalized.string("menuBar.profileConflict"))
+          presentFailure(outcome.lastError ?? OJDLocalized.string("ui.extra.profileConflict"))
         }
       }
     }
@@ -181,9 +181,9 @@
     private func presentFailure(_ message: String) {
       let alert = NSAlert()
       alert.alertStyle = .warning
-      alert.messageText = OJDLocalized.string("menuBar.actionFailedTitle")
+      alert.messageText = OJDLocalized.string("ui.extra.actionFailedTitle")
       alert.informativeText = message
-      alert.addButton(withTitle: OJDLocalized.string("common.ok"))
+      alert.addButton(withTitle: OJDLocalized.string("action.ok"))
       alert.runActivatingApp()
     }
 

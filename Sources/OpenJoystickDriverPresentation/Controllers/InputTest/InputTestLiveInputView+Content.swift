@@ -24,14 +24,14 @@
         Divider()
         HStack(alignment: .top, spacing: 24) {
           InputTestStickView(
-            title: OJDLocalized.string("inputTest.leftStick"),
+            title: OJDLocalized.string("ui.inputTest.leftStick"),
             x: snapshot.leftStick.x.normalized,
             y: snapshot.leftStick.y.normalized,
             clickPresentation: symbols.leftStickClick,
             clickActive: pressed.contains(.leftStickClick)
           )
           InputTestStickView(
-            title: OJDLocalized.string("inputTest.rightStick"),
+            title: OJDLocalized.string("ui.inputTest.rightStick"),
             x: snapshot.rightStick.x.normalized,
             y: snapshot.rightStick.y.normalized,
             clickPresentation: symbols.rightStickClick,
@@ -42,7 +42,7 @@
         if !additionalButtons.isEmpty {
           Divider()
           VStack(alignment: .leading, spacing: 8) {
-            Text(OJDLocalized.string("inputTest.additionalButtons"))
+            Text(OJDLocalized.string("ui.inputTest.additionalButtons"))
               .font(.subheadline.weight(.semibold))
             VStack(alignment: .leading, spacing: 8) {
               ForEach(additionalButtons, id: \.self) { control in
@@ -82,12 +82,16 @@
     private func dpadCluster(hat: HatDirection) -> some View {
       let directions = RuntimePresentation.dpadDirections(hat)
       return VStack(spacing: 6) {
-        dpadIndicator(.up, title: "inputTest.dpadUp", active: directions.contains(.up))
+        dpadIndicator(.up, title: "ui.inputTest.dpadUp", active: directions.contains(.up))
         HStack(spacing: 6) {
-          dpadIndicator(.left, title: "inputTest.dpadLeft", active: directions.contains(.left))
-          dpadIndicator(.right, title: "inputTest.dpadRight", active: directions.contains(.right))
+          dpadIndicator(.left, title: "ui.inputTest.dpadLeft", active: directions.contains(.left))
+          dpadIndicator(
+            .right,
+            title: "ui.inputTest.dpadRight",
+            active: directions.contains(.right)
+          )
         }
-        dpadIndicator(.down, title: "inputTest.dpadDown", active: directions.contains(.down))
+        dpadIndicator(.down, title: "ui.inputTest.dpadDown", active: directions.contains(.down))
       }
     }
 
@@ -143,7 +147,7 @@
     ) -> some View {
       InputTestIndicator(
         title: presentation.title,
-        displayedText: value.map { OJDLocalized.formatted("inputTest.axisValue", $0) },
+        displayedText: value.map { OJDLocalized.formatted("ui.inputTest.axisValue", $0) },
         symbol: presentation.symbol,
         fallbackSymbol: presentation.fallbackSymbol,
         fallbackText: presentation.fallbackText,

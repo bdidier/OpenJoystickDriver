@@ -33,17 +33,17 @@ struct ControllerSelector: ExpressibleByArgument, Equatable, Sendable {
       message =
         devices.isEmpty
         ? CLILocalized.format(
-          "cli.controller.selector.none_connected",
+          "cli.controller.group.selectorNoneConnected",
           text
         )
         : CLILocalized.format(
-          "cli.controller.selector.not_found",
+          "cli.controller.group.selectorNotFound",
           text
         )
     } else {
       listed = matches
       message = CLILocalized.format(
-        "cli.controller.selector.ambiguous",
+        "cli.controller.group.selectorAmbiguous",
         text,
         matches.count
       )

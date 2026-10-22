@@ -26,14 +26,14 @@
                 .foregroundColor(Color(NSColor.secondaryLabelColor))
             }
           } else {
-            TextField(OJDLocalized.string("common.profileName"), text: nameBinding)
+            TextField(OJDLocalized.string("term.profileName"), text: nameBinding)
             if let message = nameProblem {
               Text(message).foregroundColor(Color(NSColor.systemRed)).fixedSize(
                 horizontal: false,
                 vertical: true
               )
             }
-            Picker(OJDLocalized.string("common.controller"), selection: controllerBinding) {
+            Picker(OJDLocalized.string("term.controller"), selection: controllerBinding) {
               ForEach(context.sections) { section in
                 Section(header: Text(section.title)) {
                   ForEach(section.choices) { choice in Text(choice.label).tag(choice.id) }
@@ -44,30 +44,30 @@
               ProgressView().controlSize(.small)
             }
             if fields.controller(in: context) == nil {
-              Text(OJDLocalized.string("profiles.chooseController"))
+              Text(OJDLocalized.string("ui.profiles.chooseController"))
                 .foregroundColor(Color(NSColor.secondaryLabelColor))
             }
             if context.unreadableRecordFiles > 0 {
               Text(
                 OJDLocalized.formatted(
-                  "profiles.unreadableRecords",
-                  OJDLocalized.string("area.library.title")
+                  "ui.profiles.unreadableRecords",
+                  OJDLocalized.string("ui.sidebar.library.title")
                 )
               )
               .foregroundColor(Color(NSColor.secondaryLabelColor))
             }
-            Picker(OJDLocalized.string("profiles.target"), selection: $fields.scopeKind) {
-              Text(OJDLocalized.string("profiles.targetGlobal")).tag(ProfileScopeKind.global)
-              Text(OJDLocalized.string("profiles.targetApplication")).tag(
+            Picker(OJDLocalized.string("ui.profiles.target"), selection: $fields.scopeKind) {
+              Text(OJDLocalized.string("ui.profiles.targetGlobal")).tag(ProfileScopeKind.global)
+              Text(OJDLocalized.string("ui.profiles.targetApplication")).tag(
                 ProfileScopeKind.application
               )
             }
             if fields.scopeKind == .application {
-              TextField(OJDLocalized.string("profiles.appID"), text: $fields.appID)
+              TextField(OJDLocalized.string("ui.profiles.appID"), text: $fields.appID)
             }
             ProfileOutputPolicyView(policy: fields.outputPolicy) { fields.outputPolicy = $0 }
             if fields.showsValidation(isValid: proposedProfile != nil) && nameProblem == nil {
-              Text(OJDLocalized.string("profiles.creationValidation"))
+              Text(OJDLocalized.string("ui.profiles.creationValidation"))
                 .foregroundColor(Color(NSColor.systemRed)).fixedSize(
                   horizontal: false,
                   vertical: true
@@ -77,10 +77,10 @@
         }
         HStack {
           Spacer()
-          Button(OJDLocalized.string("common.cancel")) {
+          Button(OJDLocalized.string("action.cancel")) {
             presentationMode.wrappedValue.dismiss()
           }
-          Button(OJDLocalized.string("common.create")) {
+          Button(OJDLocalized.string("action.create")) {
             guard let proposedProfile else { return }
             onCreate(proposedProfile)
             presentationMode.wrappedValue.dismiss()
@@ -93,9 +93,9 @@
 
     private var nameProblem: String? {
       let name = fields.name(in: context)
-      if fields.isNameTaken(in: context) { return OJDLocalized.string("error.duplicateProfile") }
+      if fields.isNameTaken(in: context) { return OJDLocalized.string("ui.error.duplicateProfile") }
       if !name.isEmpty && ProfileNameValidation.trimmedName(name).isEmpty {
-        return OJDLocalized.string("capture.profileNameValidation")
+        return OJDLocalized.string("ui.capture.profileNameValidation")
       }
       return nil
     }
@@ -127,23 +127,23 @@
 
     var body: some View {
       VStack(alignment: .leading, spacing: 16) {
-        Text(OJDLocalized.string("common.duplicate")).font(.headline)
+        Text(OJDLocalized.string("action.duplicate")).font(.headline)
         Form {
-          TextField(OJDLocalized.string("common.profileName"), text: nameBinding)
+          TextField(OJDLocalized.string("term.profileName"), text: nameBinding)
           if ProfileNaming.isTaken(shownName, in: profiles) {
-            Text(OJDLocalized.string("error.duplicateProfile"))
+            Text(OJDLocalized.string("ui.error.duplicateProfile"))
               .foregroundColor(Color(NSColor.systemRed))
           } else if !shownName.isEmpty && ProfileNameValidation.trimmedName(shownName).isEmpty {
-            Text(OJDLocalized.string("capture.profileNameValidation"))
+            Text(OJDLocalized.string("ui.capture.profileNameValidation"))
               .foregroundColor(Color(NSColor.systemRed))
           }
         }
         HStack {
           Spacer()
-          Button(OJDLocalized.string("common.cancel")) {
+          Button(OJDLocalized.string("action.cancel")) {
             presentationMode.wrappedValue.dismiss()
           }
-          Button(OJDLocalized.string("common.duplicate")) {
+          Button(OJDLocalized.string("action.duplicate")) {
             guard let duplicate else { return }
             onDuplicate(duplicate)
             presentationMode.wrappedValue.dismiss()

@@ -6,7 +6,7 @@ struct PermissionCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "permission",
     abstract: CLILocalized.text(
-      "cli.permission.abstract"
+      "platform.macos.cli.permission.group.abstract"
     ),
     subcommands: [PermissionListCommand.self, PermissionRequestCommand.self]
   )
@@ -25,7 +25,7 @@ struct PermissionCommand: AsyncParsableCommand {
         guard let id = PermissionID(rawValue: entry.id) else { return nil }
         var purpose = id.localizedPurpose
         if entry.requiredByActiveProfile == true {
-          purpose += " (" + CLILocalized.text("cli.permission.required_by_profile") + ")"
+          purpose += " (" + CLILocalized.text("cli.permission.group.requiredByProfile") + ")"
         }
         return (id.localizedName, CommandLineName.kebab(entry.state.rawValue), purpose)
       }
@@ -79,7 +79,7 @@ struct PermissionListCommand: AsyncParsableCommand {
         )
         CLIOutput.stderr(
           CLILocalized.text(
-            "cli.permission.list.local_state"
+            "cli.permission.list.localState"
           )
         )
       }
@@ -117,7 +117,7 @@ struct PermissionRequestCommand: AsyncParsableCommand {
       "cli.permission.request.abstract"
     ),
     discussion: CLILocalized.text(
-      "cli.permission.request.discussion"
+      "platform.macos.cli.permission.request.discussion"
     )
   )
 
@@ -139,7 +139,7 @@ struct PermissionRequestCommand: AsyncParsableCommand {
     for id in ids where !valid.contains(id) {
       throw ValidationError(
         CLILocalized.format(
-          "cli.permission.request.unknown_id",
+          "cli.permission.request.unknownId",
           id,
           valid.joined(separator: ", ")
         )
@@ -187,7 +187,7 @@ extension CLIFailure {
     Self(
       .permissionMissing,
       CLILocalized.format(
-        "cli.error.permission_still_missing",
+        "platform.macos.cli.shared.error.permissionStillMissing",
         missing.map(\.localizedName).joined(separator: ", "),
         missing.map(\.localizedSettingsPane).joined(separator: " and ")
       )

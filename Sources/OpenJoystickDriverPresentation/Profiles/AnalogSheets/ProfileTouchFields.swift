@@ -33,7 +33,7 @@
     }
 
     private func label(_ key: String) -> String {
-      OJDLocalized.string("profiles.touch." + key)
+      OJDLocalized.string("ui.profiles.touch." + key)
     }
   }
 #endif

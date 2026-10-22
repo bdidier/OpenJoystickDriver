@@ -16,7 +16,7 @@
         #expect(
           text
             == OJDLocalized.formatted(
-              "settings.commandLineTool.linkTargetUnreadable",
+              "ui.settings.commandLine.toolLinkTargetUnreadable",
               "/usr/local/bin/ojd"
             )
         )
@@ -30,7 +30,7 @@
         linkPath: "/l"
       )
       #expect(
-        text == OJDLocalized.formatted("settings.commandLineTool.linkedElsewhere", "/l", "/gone")
+        text == OJDLocalized.formatted("ui.settings.commandLine.toolLinkedElsewhere", "/l", "/gone")
       )
     }
   }

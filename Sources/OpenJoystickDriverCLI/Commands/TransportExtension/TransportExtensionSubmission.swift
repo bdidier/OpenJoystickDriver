@@ -32,7 +32,7 @@ enum TransportExtensionSubmission {
       throw CLIFailure(
         .installationProblem,
         CLILocalized.format(
-          "cli.transport_extension.not_installed",
+          "cli.transportExtension.group.notInstalled",
           bundle.path
         )
       )
@@ -48,7 +48,7 @@ enum TransportExtensionSubmission {
       throw CLIFailure(
         .installationProblem,
         CLILocalized.format(
-          "cli.transport_extension.bundle_missing",
+          "cli.transportExtension.group.bundleMissing",
           PlatformHosts.current.extensionID
         )
       )
@@ -66,7 +66,7 @@ enum TransportExtensionSubmission {
       throw CLIFailure(
         .installationProblem,
         CLILocalized.format(
-          "cli.transport_extension.codesign_failed_to_run",
+          "platform.macos.cli.transportExtension.group.codesignFailedToRun",
           error.localizedDescription
         )
       )
@@ -74,7 +74,7 @@ enum TransportExtensionSubmission {
     if let problem {
       throw CLIFailure(
         .installationProblem,
-        CLILocalized.format("cli.transport_extension.signature_invalid", problem)
+        CLILocalized.format("cli.transportExtension.group.signatureInvalid", problem)
       )
     }
   }

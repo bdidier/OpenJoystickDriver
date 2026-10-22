@@ -6,10 +6,10 @@ struct StatusCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "status",
     abstract: CLILocalized.text(
-      "cli.status.abstract"
+      "cli.status.group.abstract"
     ),
     discussion: CLILocalized.text(
-      "cli.status.discussion"
+      "cli.status.group.discussion"
     )
   )
 
@@ -145,37 +145,37 @@ struct StatusCommand: AsyncParsableCommand {
     let transport = report.transportExtension
     var rows: [(String, String)] = [
       (
-        CLILocalized.text("cli.status.label.service"),
+        CLILocalized.text("cli.status.group.labelService"),
         CommandLineName.kebab(report.service.state.rawValue)
           + (report.service.version.map { " (\($0))" } ?? "")
       ),
       (
-        CLILocalized.text("cli.status.label.transport_extension"),
+        CLILocalized.text("cli.status.group.labelTransportExtension"),
         "\(CommandLineName.kebab(transport.bundle.rawValue)), "
           + CommandLineName.kebab(transport.registration.rawValue)
       ),
       (
-        CLILocalized.text("cli.status.label.command_line_tool"),
+        CLILocalized.text("cli.status.group.labelCommandLineTool"),
         "\(CommandLineName.kebab(report.commandLineTool.state.rawValue)), "
           + report.commandLineTool.path
       ),
     ]
     if let failure = report.service.listenerFailure {
-      rows.append((CLILocalized.text("cli.status.listenerFailure.label"), failure.message))
+      rows.append((CLILocalized.text("cli.status.group.listenerFailureLabel"), failure.message))
     }
     if let problem = report.service.listenerFailureProblem {
-      rows.append((CLILocalized.text("cli.status.listenerFailure.label"), problem))
+      rows.append((CLILocalized.text("cli.status.group.listenerFailureLabel"), problem))
     }
     if let permissions = report.permissions {
       rows.append(
         (
-          CLILocalized.text("cli.status.label.input_read"),
+          CLILocalized.text("platform.macos.cli.status.group.labelInputRead"),
           CommandLineName.kebab(permissions.inputRead.rawValue)
         )
       )
       rows.append(
         (
-          CLILocalized.text("cli.status.label.input_inject"),
+          CLILocalized.text("platform.macos.cli.status.group.labelInputInject"),
           CommandLineName.kebab(permissions.inputInject.rawValue)
         )
       )
@@ -183,12 +183,12 @@ struct StatusCommand: AsyncParsableCommand {
     if let virtual = report.virtualDevice {
       rows.append(
         (
-          CLILocalized.text("cli.status.label.virtual_device"),
+          CLILocalized.text("cli.status.group.labelVirtualDevice"),
           virtual.status ?? (virtual.enabled == true ? "enabled" : "disabled")
         )
       )
       if let error = virtual.overrideError {
-        rows.append((CLILocalized.text("cli.status.label.override_error"), error))
+        rows.append((CLILocalized.text("cli.status.group.labelOverrideError"), error))
       }
     }
     let width = rows.map(\.0.count).max() ?? 0
@@ -199,7 +199,7 @@ struct StatusCommand: AsyncParsableCommand {
     if report.service.state == .stopped {
       CLIOutput.stderr(
         CLILocalized.text(
-          "cli.status.start_hint"
+          "cli.status.group.startHint"
         )
       )
     }
@@ -209,7 +209,7 @@ struct StatusCommand: AsyncParsableCommand {
     if let controllers = report.controllers {
       CLIOutput.stdout("")
       CLIOutput.stdout(
-        CLILocalized.format("cli.status.label.controllers", controllers.count)
+        CLILocalized.format("cli.status.group.labelControllers", controllers.count)
       )
       for controller in controllers {
         let identity = deviceIdentity(
@@ -224,7 +224,7 @@ struct StatusCommand: AsyncParsableCommand {
     if let unbound = report.unboundDevices, !unbound.isEmpty {
       CLIOutput.stdout("")
       CLIOutput.stdout(
-        CLILocalized.format("cli.status.label.unbound", unbound.count)
+        CLILocalized.format("cli.status.group.labelUnbound", unbound.count)
       )
       for device in unbound {
         let identity = deviceIdentity(vendorID: device.vendorID, productID: device.productID)
@@ -237,7 +237,7 @@ struct StatusCommand: AsyncParsableCommand {
       CLIOutput.stdout("")
       CLIOutput.stdout(
         CLILocalized.format(
-          "cli.status.label.pass_through",
+          "platform.macos.cli.status.group.labelPassThrough",
           passThrough.count
         )
       )
@@ -250,7 +250,7 @@ struct StatusCommand: AsyncParsableCommand {
       CLIOutput.stdout("")
       CLIOutput.stdout(
         CLILocalized.format(
-          "cli.status.label.skipped_records",
+          "cli.status.group.labelSkippedRecords",
           report.skippedRecords.count
         )
       )
@@ -260,14 +260,14 @@ struct StatusCommand: AsyncParsableCommand {
     }
     if let ignored = report.ignoredDefaults {
       CLIOutput.stdout("")
-      CLIOutput.stdout(CLILocalized.text("cli.status.label.ignored_defaults"))
+      CLIOutput.stdout(CLILocalized.text("cli.status.group.labelIgnoredDefaults"))
       CLIOutput.stdout("  \(ignored.file)  \(ignored.problem)")
     }
     if !report.skippedPersonas.isEmpty {
       CLIOutput.stdout("")
       CLIOutput.stdout(
         CLILocalized.format(
-          "cli.status.label.skipped_personas",
+          "cli.status.group.labelSkippedPersonas",
           report.skippedPersonas.count
         )
       )

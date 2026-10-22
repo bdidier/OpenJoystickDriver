@@ -131,23 +131,23 @@
         }
         if let errorMessage { Text(errorMessage).foregroundColor(.red) }
         HStack {
-          Button(OJDLocalized.string("common.reset")) {
+          Button(OJDLocalized.string("action.reset")) {
             draft = ProfileMotionDraft(.default)
             numericText = draft.numericText
             gyro = ProfileGyroDraft(.default)
             errorMessage = nil
           }
           if let onInherit {
-            Button(OJDLocalized.string("profiles.motion.inherit")) {
+            Button(OJDLocalized.string("ui.profiles.motion.inherit")) {
               onInherit()
               presentationMode.wrappedValue.dismiss()
             }
           }
           Spacer()
-          Button(OJDLocalized.string("common.cancel")) {
+          Button(OJDLocalized.string("action.cancel")) {
             presentationMode.wrappedValue.dismiss()
           }
-          Button(OJDLocalized.string("common.save")) {
+          Button(OJDLocalized.string("action.save")) {
             do {
               let edited = try draft.applyingNumericText(
                 numericText,
@@ -165,7 +165,7 @@
     }
 
     private func label(_ key: String) -> String {
-      OJDLocalized.string("profiles.motion." + key)
+      OJDLocalized.string("ui.profiles.motion." + key)
     }
 
     private func slider(

@@ -17,7 +17,8 @@ struct ActivityCheckRowTests {
 
     #expect(
       rows.map(\.statusKey) == [
-        "activity.status.pass", "activity.status.warn", "common.failed", "activity.status.skip",
+        "ui.activity.status.pass", "ui.activity.status.warn", "status.failed",
+        "ui.activity.status.skip",
       ]
     )
     #expect(Set(rows.map(\.symbolName)).count == 4)

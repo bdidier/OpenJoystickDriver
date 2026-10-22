@@ -9,7 +9,7 @@ func decodeProfile(_ data: Data, source: String) throws -> RemappingProfile {
     throw CLIFailure(
       RemappingProfileFileStore.problemCode(error),
       CLILocalized.format(
-        "cli.profile.document_invalid",
+        "cli.profile.group.documentInvalid",
         source,
         DocumentProblem.describe(error)
       )
@@ -143,7 +143,7 @@ struct ProfileValidateCommand: AsyncParsableCommand {
         throw CLIFailure(
           RemappingProfileFileStore.problemCode(error),
           CLILocalized.format(
-            "cli.profile.document_invalid",
+            "cli.profile.group.documentInvalid",
             file == "-" ? "stdin" : file,
             problem
           )
@@ -213,7 +213,7 @@ struct ProfileExportCommand: AsyncParsableCommand {
         throw CLIFailure(
           .fileAccessFailed,
           CLILocalized.format(
-            "cli.profile.export.write_failed",
+            "cli.profile.export.writeFailed",
             output,
             error.localizedDescription
           )
@@ -253,7 +253,7 @@ enum ProfileEditor {
       throw CLIFailure(
         .aborted,
         CLILocalized.format(
-          "cli.profile.edit.editor_failed",
+          "cli.profile.edit.editorFailed",
           Int(process.terminationStatus)
         )
       )
@@ -281,7 +281,7 @@ struct ProfileEditCommand: AsyncParsableCommand {
       guard CLITerminal.canPrompt() else {
         throw CLIFailure.usage(
           CLILocalized.text(
-            "cli.profile.edit.needs_terminal"
+            "cli.profile.edit.needsTerminal"
           )
         )
       }
@@ -322,7 +322,7 @@ struct ProfileEditCommand: AsyncParsableCommand {
     guard edited.id == profile.id else {
       throw CLIFailure.usage(
         CLILocalized.text(
-          "cli.profile.edit.id_changed"
+          "cli.profile.edit.idChanged"
         )
       )
     }

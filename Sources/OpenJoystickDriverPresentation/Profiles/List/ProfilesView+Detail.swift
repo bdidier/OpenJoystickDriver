@@ -63,18 +63,18 @@
         switch viewModel.remappingState {
         case .loading:
           LoadingStateView(
-            message: OJDLocalized.string("profiles.loading")
+            message: OJDLocalized.string("ui.profiles.loading")
           ).padding(28)
         case .unavailable(let message):
           ServiceFailureStateView(
-            title: OJDLocalized.string("profiles.unavailable"),
+            title: OJDLocalized.string("ui.profiles.unavailable"),
             message: message,
             retry: refreshProfiles
           ).padding(28)
         case .error(let message):
           ServiceFailureStateView(
             title: OJDLocalized.string(
-              "profiles.loadError"
+              "ui.profiles.loadError"
             ),
             message: message,
             retry: refreshProfiles
@@ -97,7 +97,7 @@
           Button(
             OJDLocalized.string(
               issue.kind == .damagedProfile
-                ? "profiles.deleteDamagedButton" : "profiles.resetLibraryButton"
+                ? "ui.profiles.deleteDamagedButton" : "ui.profiles.resetLibraryButton"
             )
           ) {
             activeAlert =
@@ -112,19 +112,19 @@
     func joyConPairControls(_ profile: RemappingProfile) -> some View {
       let sessions = currentSnapshot?.joyConPairs.filter { $0.profileID == profile.id } ?? []
       HStack(spacing: 10) {
-        Text(OJDLocalized.string("profiles.joyConPair")).font(
+        Text(OJDLocalized.string("ui.profiles.joyConPair")).font(
           .caption.weight(.semibold)
         )
         if sessions.isEmpty {
           Button(
-            OJDLocalized.string("profiles.pairJoyCons")
+            OJDLocalized.string("ui.profiles.pairJoyCons")
           ) { pairingProfile = profile }.disabled(!hasAvailableJoyConPair || isProfileActionBlocked)
         } else {
-          Text(OJDLocalized.string("profiles.joyConPairActive")).font(
+          Text(OJDLocalized.string("ui.profiles.joyConPairActive")).font(
             .caption
           ).foregroundColor(Color(NSColor.secondaryLabelColor))
           ForEach(sessions, id: \.sessionID) { session in
-            Button(OJDLocalized.string("profiles.unpairJoyCons")) {
+            Button(OJDLocalized.string("ui.profiles.unpairJoyCons")) {
               Task { @MainActor in
                 profileActionError = await viewModel.unpairRemappingJoyCons(
                   sessionID: session.sessionID
@@ -154,19 +154,19 @@
     var noProfilesState: some View {
       EmptyStateView(
         symbol: "slider.horizontal.3",
-        title: OJDLocalized.string("profiles.none"),
-        message: OJDLocalized.string("profiles.createMessage")
+        title: OJDLocalized.string("ui.profiles.none"),
+        message: OJDLocalized.string("ui.profiles.createMessage")
       )
     }
 
     func assignmentCountLabel(_ count: Int) -> String {
-      OJDLocalized.plural("profiles.assignments", count: count)
+      OJDLocalized.plural("ui.profiles.assignments", count: count)
     }
 
     func profileAccessibilityValue(_ profile: RemappingProfile) -> String {
       let count = assignmentCountLabel(profile.bindings.count)
       guard isActive(profile) else { return count }
-      return OJDLocalized.formatted("profiles.activeAssignmentCount", count)
+      return OJDLocalized.formatted("ui.profiles.activeAssignmentCount", count)
     }
 
     @ViewBuilder
@@ -175,16 +175,16 @@
       case .loading:
         HStack(spacing: 8) {
           ProgressView()
-          Text(OJDLocalized.string("profiles.refreshing"))
+          Text(OJDLocalized.string("ui.profiles.refreshing"))
             .foregroundColor(Color(NSColor.secondaryLabelColor))
         }.padding(.horizontal, 28).padding(.top, 14)
       case .unavailable(let message):
         ServiceFailureStateView(
           title: OJDLocalized.string(
-            "profiles.stateUnavailable"
+            "ui.profiles.stateUnavailable"
           ),
           message: OJDLocalized.formatted(
-            "profiles.draftPreserved",
+            "ui.profiles.draftPreserved",
             message
           ),
           retry: refreshProfiles
@@ -192,10 +192,10 @@
       case .error(let message):
         ServiceFailureStateView(
           title: OJDLocalized.string(
-            "profiles.refreshError"
+            "ui.profiles.refreshError"
           ),
           message: OJDLocalized.formatted(
-            "profiles.draftPreserved",
+            "ui.profiles.draftPreserved",
             message
           ),
           retry: refreshProfiles

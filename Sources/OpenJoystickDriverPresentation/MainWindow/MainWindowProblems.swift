@@ -27,10 +27,10 @@ enum MainWindowProblem: Equatable, Sendable, Identifiable {
 
   var titleKey: String {
     switch self {
-    case .serviceUnavailable, .listenerStopped: return "banner.service.title"
-    case .driver: return "setup.driverTitle"
-    case .accessMissing: return "banner.access.title"
-    case .liveUpdatesPolling: return "banner.liveUpdates.title"
+    case .serviceUnavailable, .listenerStopped: return "ui.banner.service.title"
+    case .driver: return "ui.setup.driverTitle"
+    case .accessMissing: return "ui.banner.access.title"
+    case .liveUpdatesPolling: return "ui.banner.liveUpdates.title"
     }
   }
 
@@ -41,14 +41,14 @@ enum MainWindowProblem: Equatable, Sendable, Identifiable {
     case .liveUpdatesPolling(let failure): return failure.detailKey
     case .driver(let state):
       switch state {
-      case .missingEmbedded: return "setup.missingDetail"
-      case .invalid: return "setup.invalidDetail"
-      case .awaitingApproval: return "setup.approvalDetail"
-      case .needsActivation, .replacementNeeded, .failed: return "setup.repairDetail"
+      case .missingEmbedded: return "ui.setup.missingDetail"
+      case .invalid: return "ui.setup.invalidDetail"
+      case .awaitingApproval: return "platform.macos.ui.setup.approvalDetail"
+      case .needsActivation, .replacementNeeded, .failed: return "ui.setup.repairDetail"
       case .checking, .active:
         preconditionFailure("A driver problem is never made for \(state)")
       }
-    case .accessMissing: return "banner.access.detail"
+    case .accessMissing: return "platform.macos.ui.banner.access.detail"
     }
   }
 
@@ -118,11 +118,11 @@ enum MainWindowProblemAction: Equatable, Sendable {
 
   var titleKey: String {
     switch self {
-    case .retryService: return "common.tryAgain"
+    case .retryService: return "action.tryAgain"
     case .restartListener: return "status.listenerFailure.restart"
-    case .openDriverApproval: return "setup.openSystemSettings"
-    case .repairDriver: return "setup.repairDriver"
-    case .showAccess: return "menuBar.grantAccess"
+    case .openDriverApproval: return "platform.macos.ui.setup.openSystemSettings"
+    case .repairDriver: return "ui.setup.repairDriver"
+    case .showAccess: return "ui.extra.grantAccess"
     }
   }
 }

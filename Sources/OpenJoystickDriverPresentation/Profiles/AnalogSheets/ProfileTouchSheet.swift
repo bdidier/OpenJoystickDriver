@@ -36,35 +36,35 @@
 
     var body: some View {
       VStack(alignment: .leading, spacing: 16) {
-        Text(OJDLocalized.string("profiles.touch.title")).font(
+        Text(OJDLocalized.string("ui.profiles.touch.title")).font(
           .headline
         )
         Picker(
-          OJDLocalized.string("profiles.touch.surface"),
+          OJDLocalized.string("ui.profiles.touch.surface"),
           selection: $selected
         ) {
-          Text(OJDLocalized.string("mapping.touchSurfacePrimary")).tag(
+          Text(OJDLocalized.string("ui.mapping.touchSurfacePrimary")).tag(
             RemappingTouchSurface.primary
           ).disabled(!canSelect(.primary))
-          Text(OJDLocalized.string("mapping.touchSurfaceLeft")).tag(
+          Text(OJDLocalized.string("ui.mapping.touchSurfaceLeft")).tag(
             RemappingTouchSurface.left
           ).disabled(!canSelect(.left))
-          Text(OJDLocalized.string("mapping.touchSurfaceRight")).tag(
+          Text(OJDLocalized.string("ui.mapping.touchSurfaceRight")).tag(
             RemappingTouchSurface.right
           ).disabled(!canSelect(.right))
         }.pickerStyle(SegmentedPickerStyle())
         ScrollView { ProfileTouchFields(draft: selectedDraft).padding(.trailing, 8) }
         if let errorMessage { Text(errorMessage).foregroundColor(.red) }
         HStack {
-          Button(OJDLocalized.string("common.reset")) {
+          Button(OJDLocalized.string("action.reset")) {
             resetSelected()
             errorMessage = nil
           }
           Spacer()
-          Button(OJDLocalized.string("common.cancel")) {
+          Button(OJDLocalized.string("action.cancel")) {
             presentationMode.wrappedValue.dismiss()
           }
-          Button(OJDLocalized.string("common.save")) { save() }
+          Button(OJDLocalized.string("action.save")) { save() }
         }
       }.padding(28).frame(
         width: 500,

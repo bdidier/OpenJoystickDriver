@@ -237,7 +237,7 @@ struct ConfigCommandTests {
     #expect(run.code == 0, "\(run.standardError)")
     #expect(
       run.standardError.trimmingCharacters(in: .whitespacesAndNewlines)
-        == CLILocalized.text("cli.config.show.unread_skipped_no_controller")
+        == CLILocalized.text("cli.config.show.unreadSkippedNoController")
     )
     #expect(try values(run)["inputLivenessTimeoutMs"]?["value"] as? Double == 900)
   }
@@ -254,7 +254,7 @@ struct ConfigCommandTests {
     #expect(run.code == 0, "\(run.standardError)")
     #expect(
       run.standardError.trimmingCharacters(in: .whitespacesAndNewlines)
-        == CLILocalized.text("cli.config.show.unread_skipped_no_service")
+        == CLILocalized.text("cli.config.show.unreadSkippedNoService")
     )
   }
 

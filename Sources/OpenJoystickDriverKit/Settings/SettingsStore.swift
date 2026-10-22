@@ -37,17 +37,21 @@ public enum SettingsStoreError: Error, Equatable, LocalizedError, Sendable {
   public var errorDescription: String? {
     switch self {
     case .damaged(let file):
-      Self.localization.formatted("settings.error.damaged", arguments: [file])
+      Self.localization.formatted("ui.settings.advanced.errorDamaged", arguments: [file])
     case .unsupported(let file, let problem):
-      Self.localization.formatted("settings.error.unsupported", arguments: [file])
+      Self.localization.formatted("ui.settings.advanced.errorUnsupported", arguments: [file])
         + "\n" + problem.description
     case .unwritable(let file):
-      Self.localization.formatted("settings.error.unwritable", arguments: [file])
+      Self.localization.formatted("ui.settings.advanced.errorUnwritable", arguments: [file])
     case .cannotReset(let file):
-      Self.localization.formatted("settings.error.cannotReset", arguments: [file])
+      Self.localization.formatted("ui.settings.advanced.errorCannotReset", arguments: [file])
     case .storedNoVisibleEntryPoint(let file):
-      Self.localization.formatted("settings.error.storedNoVisibleEntryPoint", arguments: [file])
-    case .noVisibleEntryPoint: Self.localization.string("settings.error.noVisibleEntryPoint")
+      Self.localization.formatted(
+        "platform.macos.ui.settings.advanced.errorStoredNoVisibleEntryPoint",
+        arguments: [file]
+      )
+    case .noVisibleEntryPoint:
+      Self.localization.string("platform.macos.ui.settings.advanced.errorNoVisibleEntryPoint")
     }
   }
 }
