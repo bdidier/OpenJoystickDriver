@@ -11,16 +11,15 @@ extension USBTransportProvider {
   /// before the claim already request it, and a device observed unconfigured gets it too, since
   /// none of its interfaces can be claimed otherwise. Explicit catalog endpoint pins stay
   /// authoritative, but a pinned device is read too, so validation can confirm its interface class
-  /// and that the pinned endpoints exist. Returns nil when the descriptor cannot be read, so a
-  /// later poll retries instead of running on unvalidated or family-default endpoints.
+  /// and that the pinned endpoints exist.
   ///
-  /// - Throws: ``USBTransportError/accessDenied`` when the host refuses the read because another
-  ///   owner holds the device. The refusal does not clear on its own, so the caller names it
-  ///   instead of retrying.
+  /// - Throws: ``USBConfigurationReadFailure`` when the descriptor cannot be read, so the caller
+  ///   decides whether to read it again instead of running on unvalidated or family-default
+  ///   endpoints.
   public func resolveUSBConfiguration(
     _ device: USBTransportDevice,
     passive: USBTransportResolution
-  ) async throws(USBTransportError) -> USBTransportResolution? {
+  ) async throws(USBConfigurationReadFailure) -> USBTransportResolution {
     let configured = settingConfigurationIfUnconfigured(
       passive.profile,
       observed: passive.physicalDevice
@@ -35,26 +34,40 @@ extension USBTransportProvider {
         observed: passive.physicalDevice
       ) == nil
     else { return passiveResolution }
+    let observed: PhysicalDevice?
     do {
-      guard let observed = try await configurationObservation(for: device, configurationValue: 1)
-      else {
-        print("[USBTransport] USB configuration descriptor unavailable for \(device.serviceID)")
-        return nil
-      }
-      return USBTransportResolution(
-        profile: USBDescriptorTransportResolver.resolve(configured: configured, observed: observed),
-        physicalDevice: observed
-      )
+      observed = try await configurationObservation(for: device, configurationValue: 1)
     } catch USBTransportError.notSupported {
       // The provider has no descriptor source; the passive facts are all there is.
       return passiveResolution
     } catch USBTransportError.accessDenied {
-      throw .accessDenied
+      throw .refused
     } catch {
-      print(
-        "[USBTransport] USB configuration descriptor read failed for \(device.serviceID): \(error)"
-      )
-      return nil
+      throw .failed(String(describing: error))
+    }
+    guard let observed else { throw .unavailable }
+    return USBTransportResolution(
+      profile: USBDescriptorTransportResolver.resolve(configured: configured, observed: observed),
+      physicalDevice: observed
+    )
+  }
+}
+
+/// Why the configuration descriptor of a raw-USB device could not be read.
+public enum USBConfigurationReadFailure: Error, Equatable, Sendable, CustomStringConvertible {
+  /// The host refused the read (``USBTransportError/accessDenied``): another owner holds the
+  /// device exclusively, or the host denies OJD access to it.
+  case refused
+  /// The host reports no descriptor of configuration 1 for the device's service.
+  case unavailable
+  /// The read failed with another error, described as the provider reported it.
+  case failed(String)
+
+  public var description: String {
+    switch self {
+    case .refused: return "accessDenied"
+    case .unavailable: return "descriptor unavailable"
+    case .failed(let error): return error
     }
   }
 }
@@ -178,60 +191,6 @@ extension DeviceManager {
     }
   }
 
-  /// Leaves a raw-USB service unclaimed because another owner holds the device and the host
-  /// refused to read its configuration. The caller acknowledges the service, so the poll does not
-  /// retry it; the log line and the unbound record appear once per attachment.
-  /// `releaseHeldUSBServices(in:provider:)` admits it again when the host stops reporting the
-  /// owner it reported here, and a re-enumeration admits it as a new attachment.
-  func holdForOwner(
-    _ device: USBTransportDevice,
-    provider: any USBTransportProvider,
-    interfaces: [PhysicalInterfaceSignature]
-  ) async {
-    let owner: String?
-    let ownerNote: String
-    do {
-      owner = try await provider.exclusiveOwner(of: device)
-      ownerNote = owner.map { "held by \($0)" } ?? "the host reports no exclusive owner"
-    } catch {
-      owner = nil
-      ownerNote = "the host owner cannot be read (\(error))"
-    }
-    heldUSBServices[device.serviceAddress] = HeldUSBService(owner: owner)
-    print(
-      "[DeviceManager] USB device \(device.serviceID) refused the configuration read: "
-        + "\(ownerNote); left unclaimed until it re-enumerates"
-        + (owner == nil ? "" : " or its owner releases it")
-    )
-    recordUnboundDevice(
-      .usb(device.serviceAddress),
-      vendorID: device.vendorID,
-      productID: device.productID,
-      connection: "USB",
-      backend: DeviceAccessBackend(route: device.route),
-      reason: .deviceInUse,
-      rejectedCandidates: [],
-      interfaces: interfaces
-    )
-  }
-
-  /// Makes the polling loop attach a held service again once the host no longer reports the
-  /// exclusive owner it reported when the service was held. A service held without a reported
-  /// owner, or whose owner cannot be read, stays held until it re-enumerates.
-  func releaseHeldUSBServices(
-    in enumeration: inout USBEnumerationTracker,
-    provider: any USBTransportProvider
-  ) async {
-    for (service, held) in heldUSBServices where held.owner != nil {
-      guard let device = enumeration.acknowledgedDevices[service] else { continue }
-      let current: String?
-      do { current = try await provider.exclusiveOwner(of: device) } catch { continue }
-      guard current == nil, heldUSBServices.removeValue(forKey: service) != nil else { continue }
-      clearUnboundDevice(.usb(service))
-      enumeration.unacknowledge(device)
-    }
-  }
-
   /// Native pass-through wins over raw USB for a controller reachable by both, so the route does
   /// not depend on which admission ran first. Removes and stops each raw-USB pipeline of the
   /// same physical controller as `identifier`, which closes its USB claim, and drops the HID
@@ -333,12 +292,6 @@ extension DeviceManager {
       deviceInfos[$0]?.usbTransportDevice != nil && Self.isSamePhysicalController($0, identifier)
     }
   }
-}
-
-/// A raw-USB service held by another owner. `owner` is the exclusive owner the host reported when
-/// the service was held; nil when it reported none.
-struct HeldUSBService: Equatable {
-  let owner: String?
 }
 
 /// A HID connection stopped for a raw-USB pipeline of its controller, with the key it ran under.

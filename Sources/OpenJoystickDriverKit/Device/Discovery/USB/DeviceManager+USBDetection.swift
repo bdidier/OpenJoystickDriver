@@ -137,7 +137,9 @@ extension DeviceManager {
       }
       await restoreYieldedHIDRoutes()
       releaseNativeShadowedUSBServices(in: &enumeration)
-      await releaseHeldUSBServices(in: &enumeration, provider: provider)
+      await releaseHeldUSBServices(in: &enumeration, provider: provider, generation: generation)
+      guard isCurrentUSBDetection(generation) else { return }
+      if case .available(let devices) = poll { pruneUSBConfigurationReadFailures(keeping: devices) }
       try? await Task.sleep(nanoseconds: usbDetectionPollNanoseconds)
     }
   }
@@ -182,6 +184,7 @@ extension DeviceManager {
     clearUnboundDevice(.usb(device.serviceAddress))
     nativeShadowedUSBServices.removeValue(forKey: device.serviceAddress)
     heldUSBServices.removeValue(forKey: device.serviceAddress)
+    usbConfigurationReadFailures.removeValue(forKey: device.serviceAddress)
     let identifiers = (serviceToIdentifiers.removeValue(forKey: device.serviceAddress) ?? [])
       .filter { isRunningUSBRole($0, of: device) }
     guard !identifiers.isEmpty else { return }
@@ -266,24 +269,21 @@ extension DeviceManager {
       configured: configuredProfile
     )
     guard isCurrentUSBDetection(generation) else { return .retry }
-    let configuredResolution: USBTransportResolution?
+    let resolution: USBTransportResolution
     do {
-      configuredResolution = try await provider.resolveUSBConfiguration(
-        device,
-        passive: passiveResolution
-      )
+      resolution = try await provider.resolveUSBConfiguration(device, passive: passiveResolution)
     } catch {
       guard isCurrentUSBDetection(generation) else { return .retry }
-      await holdForOwner(
-        device,
+      return await handleUSBConfigurationReadFailure(
+        error,
+        device: device,
         provider: provider,
-        interfaces: passiveResolution.physicalDevice?.interfaces ?? interfaces
+        interfaces: passiveResolution.physicalDevice?.interfaces ?? interfaces,
+        generation: generation
       )
-      return .ignored
     }
-    guard isCurrentUSBDetection(generation), let resolution = configuredResolution else {
-      return .retry
-    }
+    guard isCurrentUSBDetection(generation) else { return .retry }
+    usbConfigurationReadFailures.removeValue(forKey: device.serviceAddress)
 
     // Revalidate the service after the suspension. A removed/replaced service
     // must not be acknowledged from the earlier device snapshot.

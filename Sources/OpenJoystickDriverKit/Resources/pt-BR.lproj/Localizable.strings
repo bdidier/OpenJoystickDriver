@@ -150,6 +150,8 @@
 "ui.controllers.emptyMessage" = "Conecte um controle.";
 /* Reason shown in the Controllers list and in the output of 'ojd status' for a connected controller that another program holds, so OJD cannot read it. The text tells the person how to free it. */
 "ui.controllers.deviceInUse" = "Outro programa está usando este controle. Feche-o ou reconecte o controle.";
+/* Reason shown in the Controllers list and in the output of 'ojd status' for a connected controller whose USB configuration OJD could not read. OJD tries again only when the controller reconnects, so the text asks for that. USB stays as written. */
+"ui.controllers.configurationUnreadable" = "Não foi possível ler a configuração USB deste controle. Reconecte o controle.";
 /* Label of the battery fact in the Controllers detail. */
 "ui.controllers.battery" = "Bateria";
 /* VoiceOver label of the button that shows the serial number in the Controllers detail. */

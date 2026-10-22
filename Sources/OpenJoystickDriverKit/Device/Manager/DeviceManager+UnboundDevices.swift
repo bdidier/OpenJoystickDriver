@@ -60,6 +60,21 @@ extension DeviceManager {
     )
   }
 
+  /// Changes the reason of the device recorded under `key`, keeping what was observed of it.
+  func replaceUnboundReason(of key: UnboundDeviceKey, with reason: ProtocolBindingReason) {
+    guard let recorded = unboundDevices[key], recorded.reason != reason else { return }
+    unboundDevices[key] = UnboundDeviceSnapshot(
+      vendorID: recorded.vendorID,
+      productID: recorded.productID,
+      connection: recorded.connection,
+      accessBackend: recorded.accessBackend,
+      reason: reason,
+      rejectedCandidates: recorded.rejectedCandidates,
+      interfaces: recorded.interfaces
+    )
+    notifyServiceStatusChanged()
+  }
+
   func clearUnboundDevice(_ key: UnboundDeviceKey) {
     if case .hid(let connectionID) = key { unboundHIDClaims.removeValue(forKey: connectionID) }
     guard unboundDevices.removeValue(forKey: key) != nil else { return }
