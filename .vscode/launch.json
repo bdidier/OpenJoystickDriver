@@ -99,6 +99,26 @@
       "target": "ParserCompatibilityHarness",
       "configuration": "release",
       "preLaunchTask": "swift: Build Release ParserCompatibilityHarness"
+    },
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:OpenJoystickDriver}",
+      "name": "Debug OJDRepositoryTool",
+      "target": "OJDRepositoryTool",
+      "configuration": "debug",
+      "preLaunchTask": "swift: Build Debug OJDRepositoryTool"
+    },
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:OpenJoystickDriver}",
+      "name": "Release OJDRepositoryTool",
+      "target": "OJDRepositoryTool",
+      "configuration": "release",
+      "preLaunchTask": "swift: Build Release OJDRepositoryTool"
     }
   ]
 }
