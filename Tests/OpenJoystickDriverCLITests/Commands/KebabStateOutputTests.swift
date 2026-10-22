@@ -55,6 +55,27 @@ struct KebabStateOutputTests {
   }
 
   @Test
+  func aDeviceHeldByAnotherProgramIsExplainedInHumanOutputOnly() async throws {
+    let held = ApplicationServiceUnboundDevice(
+      vendorID: 0x3537,
+      productID: 0x1010,
+      connection: "USB",
+      accessBackend: .rawUSB,
+      reason: .deviceInUse,
+      rejectedCandidates: [],
+      interfaces: []
+    )
+    let service = try FakeService(devices: [], unboundDevices: [held])
+    let human = await runStatus(service, [])
+    let plain = await runStatus(service, ["--plain"])
+
+    #expect(human.standardOutput.contains("USB  device-in-use"))
+    #expect(human.standardOutput.contains(CLILocalized.text("ui.controllers.deviceInUse")))
+    #expect(plain.standardOutput.contains("\tUSB\tdevice-in-use\n"))
+    #expect(!plain.standardOutput.contains(CLILocalized.text("ui.controllers.deviceInUse")))
+  }
+
+  @Test
   func theInputHealthIsKebabCaseInPlainAndHumanOutput() async throws {
     let service = try FakeService(devices: [
       .fixture(id: "pad-1"),

@@ -212,6 +212,24 @@ public enum ProtocolBindingReason: String, CaseIterable, Codable, Error, Sendabl
   case requiredInitializationFailed = "RequiredInitializationFailed"
   case catalogConflict = "CatalogConflict"
   case virtualProfileUnavailable = "VirtualProfileUnavailable"
+  /// Another owner holds the device exclusively, so OJD cannot read its USB configuration.
+  case deviceInUse = "DeviceInUse"
+}
+
+extension ProtocolBindingReason {
+  /// The catalog key of the sentence that tells a person why the device is unserved and how to
+  /// free it. Nil for a reason that the person cannot act on, which the app and `ojd` show by its
+  /// ID alone.
+  public var explanationKey: String? {
+    switch self {
+    case .deviceInUse: return "ui.controllers.deviceInUse"
+    case .noProtocolMatch, .ambiguousProtocolMatch, .interfaceContractMismatch,
+      .descriptorContractMismatch, .packetContractMismatch, .unsupportedProtocolVariant,
+      .unsupportedTransportVariant, .requiredInitializationFailed, .catalogConflict,
+      .virtualProfileUnavailable:
+      return nil
+    }
+  }
 }
 
 /// Observed facts that supported a binding.

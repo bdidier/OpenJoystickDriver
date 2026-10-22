@@ -137,6 +137,7 @@ extension DeviceManager {
       }
       await restoreYieldedHIDRoutes()
       releaseNativeShadowedUSBServices(in: &enumeration)
+      await releaseHeldUSBServices(in: &enumeration, provider: provider)
       try? await Task.sleep(nanoseconds: usbDetectionPollNanoseconds)
     }
   }
@@ -180,6 +181,7 @@ extension DeviceManager {
   ) async {
     clearUnboundDevice(.usb(device.serviceAddress))
     nativeShadowedUSBServices.removeValue(forKey: device.serviceAddress)
+    heldUSBServices.removeValue(forKey: device.serviceAddress)
     let identifiers = (serviceToIdentifiers.removeValue(forKey: device.serviceAddress) ?? [])
       .filter { isRunningUSBRole($0, of: device) }
     guard !identifiers.isEmpty else { return }
@@ -264,10 +266,21 @@ extension DeviceManager {
       configured: configuredProfile
     )
     guard isCurrentUSBDetection(generation) else { return .retry }
-    let configuredResolution = await provider.resolveUSBConfiguration(
-      device,
-      passive: passiveResolution
-    )
+    let configuredResolution: USBTransportResolution?
+    do {
+      configuredResolution = try await provider.resolveUSBConfiguration(
+        device,
+        passive: passiveResolution
+      )
+    } catch {
+      guard isCurrentUSBDetection(generation) else { return .retry }
+      await holdForOwner(
+        device,
+        provider: provider,
+        interfaces: passiveResolution.physicalDevice?.interfaces ?? interfaces
+      )
+      return .ignored
+    }
     guard isCurrentUSBDetection(generation), let resolution = configuredResolution else {
       return .retry
     }

@@ -123,6 +123,9 @@ public actor DeviceManager {
   /// Raw-USB services left acknowledged unclaimed because a native HID controller serves the
   /// same physical controller, keyed by service with the key the service would have claimed.
   var nativeShadowedUSBServices: [ControllerConnectionAddress: LogicalControllerID] = [:]
+  /// Raw-USB services left acknowledged unclaimed because another owner holds the device and the
+  /// host refused to read its configuration, keyed by service.
+  var heldUSBServices: [ControllerConnectionAddress: HeldUSBService] = [:]
   /// HID connections left to macOS by native pass-through, keyed by connection ID.
   var passThroughDevices: [UUID: PassThroughHIDDevice] = [:]
   /// Models whose controller records changed, for raw-USB detection to re-admit on its next poll.

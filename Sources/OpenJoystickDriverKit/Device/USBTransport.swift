@@ -265,6 +265,11 @@ public protocol USBTransportProvider: Sendable {
   /// Resets the device's USB port, which makes the host enumerate the device again as a replug
   /// does. Every open interface of the device ends, and the device returns as a new attachment.
   func resetDevice(_ device: USBTransportDevice) async throws
+
+  /// The process or driver that holds the device exclusively, as the host reports it, or nil when
+  /// the host reports no exclusive owner. Throws ``USBTransportError/notSupported`` when the
+  /// provider cannot observe owners.
+  func exclusiveOwner(of device: USBTransportDevice) async throws -> String?
 }
 
 extension USBTransportProvider {
@@ -302,6 +307,10 @@ extension USBTransportProvider {
   ) throws -> PhysicalDevice? { throw USBTransportError.notSupported }
 
   public func resetDevice(_: USBTransportDevice) throws { throw USBTransportError.notSupported }
+
+  public func exclusiveOwner(of device: USBTransportDevice) throws -> String? {
+    throw USBTransportError.notSupported
+  }
 }
 
 /// Stable failure categories shared by USB transport implementations.
