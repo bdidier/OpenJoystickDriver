@@ -34,7 +34,7 @@ Schema sources SHALL be flat files `Resources/Schemas/<kind>.schema.json` with t
 
 ### Requirement: Single version constant
 
-The version string SHALL come from one Swift constant and one Python constant, and a test SHALL assert they equal each other and every schema's `apiVersion` const.
+The version string SHALL come from one Swift constant, which Python tooling reads through `OJDRepositoryTool facts`, and a test SHALL assert it equals every schema's `apiVersion` const.
 
 #### Scenario: Drift
 

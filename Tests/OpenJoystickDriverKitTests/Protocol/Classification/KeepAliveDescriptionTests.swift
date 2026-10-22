@@ -5,7 +5,7 @@ import Testing
 
 /// The keep-alive interval and fixed writes of GameSir, GIP, Switch 2 and the Steam
 /// Deck and Triton come from `defaults.session.keepAlive` in the family's description. The decoder
-/// accepts and rejects the documents the Python validator does (the protocol description tests),
+/// is the only validator of these documents (the protocol description tests),
 /// and each driver sends the description's bytes at the description's interval.
 private let writes500 = #"{"intervalMilliseconds": 500, "writes": ["#
 private let hidWriteHead =
