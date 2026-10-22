@@ -1889,6 +1889,10 @@
 "platform.macos.cli.diagnose.group.usbFailed" = "Quét USB thất bại: %@. Hãy cấp Giám sát đầu vào cho OpenJoystickDriver.";
 /* Detail of the USB check of 'ojd diagnose'. %lld is the number of vendor-specific USB controllers that the system lists. */
 "cli.diagnose.group.usbOk" = "Bộ điều khiển USB dành riêng cho nhà sản xuất có thể thấy: %lld";
+/* Detail of the hid-input-drops check of 'ojd diagnose' when the system dropped no input report of any controller. HID is a term of the USB HID standard. */
+"cli.diagnose.group.hidInputDropsNone" = "Không có báo cáo đầu vào HID nào bị mất";
+/* Detail of the hid-input-drops check of 'ojd diagnose', one entry per controller that lost input reports. %1$@ is the controller name, or its vendor and product ID when it has no name. %2$lld is the number of input reports the system dropped because the queue between the controller and the service was full. */
+"cli.diagnose.group.hidInputDropsFound" = "Báo cáo đầu vào bị mất của %1$@: %2$lld";
 /* Detail of the virtual gamepad check of 'ojd diagnose' when the user turned the virtual gamepad off. */
 "cli.diagnose.group.virtualDisabled" = "tay cầm ảo đã tắt";
 /* Detail of the virtual gamepad check of 'ojd diagnose' when the virtual gamepad reports an error. %@ is the error message of the system. */

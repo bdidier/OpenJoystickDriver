@@ -200,6 +200,8 @@ extension HIDDeviceStream {
     return .failed(.init(ioReturn: lastResult))
   }
 
+  /// Replaces the seize of each device at a location with a shared open, so another client can
+  /// open the devices while input keeps flowing here.
   package func releaseInputClaim(locationID: UInt32) -> PhysicalHIDClaimResult {
     seizeLock.withLock {
       guard let devices = seizedByLocation.removeValue(forKey: locationID), !devices.isEmpty else {
@@ -207,8 +209,12 @@ extension HIDDeviceStream {
       }
       var lastFailure: IOReturn?
       for device in devices {
-        let result = IOHIDDeviceClose(device, IOOptionBits(kIOHIDOptionsTypeSeizeDevice))
-        if result != kIOReturnSuccess { lastFailure = result }
+        let result = HIDInputClaim.release(port: HIDDeviceOpenPort(device: device))
+        if result == kIOReturnSuccess {
+          sizeReportQueue(device)
+        } else {
+          lastFailure = result
+        }
       }
       if let lastFailure { return .failed(.init(ioReturn: lastFailure)) }
       releasedByLocation[locationID] = devices
@@ -216,6 +222,8 @@ extension HIDDeviceStream {
     }
   }
 
+  /// Seizes again the devices ``releaseInputClaim(locationID:)`` released. When one seize is
+  /// refused, the devices seized so far return to a shared open and the refusal is the result.
   package func reacquireInputClaim(locationID: UInt32) -> PhysicalHIDClaimResult {
     seizeLock.withLock {
       guard let devices = releasedByLocation[locationID], !devices.isEmpty else {
@@ -223,12 +231,15 @@ extension HIDDeviceStream {
       }
       var acquired: [IOHIDDevice] = []
       for device in devices {
-        let result = IOHIDDeviceOpen(device, IOOptionBits(kIOHIDOptionsTypeSeizeDevice))
-        guard result == kIOReturnSuccess else {
+        let port = HIDDeviceOpenPort(device: device)
+        let claim = HIDInputClaim.reclaim(port: port)
+        if claim.inputResult == kIOReturnSuccess { sizeReportQueue(device) }
+        guard claim.seized else {
           for acquiredDevice in acquired {
-            IOHIDDeviceClose(acquiredDevice, IOOptionBits(kIOHIDOptionsTypeSeizeDevice))
+            _ = HIDInputClaim.release(port: HIDDeviceOpenPort(device: acquiredDevice))
+            sizeReportQueue(acquiredDevice)
           }
-          return .failed(.init(ioReturn: result))
+          return .failed(.init(ioReturn: claim.seizeResult ?? kIOReturnError))
         }
         acquired.append(device)
       }
@@ -253,7 +264,14 @@ extension HIDDeviceStream {
     for candidate in candidates {
       switch eventAdapter.ownership(deviceID: candidate.deviceID) {
       case .ownedByAnotherClient, .acquisitionFailed:
-        seizeInput(candidate.device, deviceID: candidate.deviceID, locationID: locationID)
+        let claim = HIDInputClaim.reclaim(port: HIDDeviceOpenPort(device: candidate.device))
+        if claim.inputResult == kIOReturnSuccess { sizeReportQueue(candidate.device) }
+        record(
+          claim,
+          device: candidate.device,
+          deviceID: candidate.deviceID,
+          locationID: locationID
+        )
       default: continue
       }
     }

@@ -60,16 +60,15 @@ extension HIDDeviceStream {
         disconnectsIndividually: roleModels.contains(model)
       )
     else { return nil }
-    // The shared open keeps input flowing while the seize is released for another client.
-    let openKr = IOHIDDeviceOpen(device, IOOptionBits(kIOHIDOptionsTypeNone))
+    // macOS keeps every interface of a native controller, so a sibling is never seized either.
+    let wantsSeize = !nativePassThrough && !eventAdapter.hasNativeDevice(locationID: locationID)
+    let claim = HIDInputClaim.admit(port: HIDDeviceOpenPort(device: device), seize: wantsSeize)
+    let openKr = claim.inputResult
     if failingOnAccessDenial, let failure = Self.accessFailure(forInitialOpenResult: openKr) {
       _ = eventAdapter.remove(deviceID: deviceID)
       return failure
     }
-    // macOS keeps every interface of a native controller, so a sibling is never seized either.
-    if !nativePassThrough, !eventAdapter.hasNativeDevice(locationID: locationID) {
-      seizeInput(device, deviceID: deviceID, locationID: locationID)
-    }
+    if wantsSeize { record(claim, device: device, deviceID: deviceID, locationID: locationID) }
     let physicalDevice = physicalDeviceObservation(
       for: device,
       vendorID: model.vendorID,
@@ -147,11 +146,16 @@ extension HIDDeviceStream {
     return Set(tracked.filter { changedLocations.contains($0.value.ioKitLocationID) }.keys)
   }
 
-  /// Seizes a shared-open device and records whether isolation was acquired; a failed seize keeps
-  /// shared input for existing profiles.
-  func seizeInput(_ device: IOHIDDevice, deviceID: UInt64, locationID: UInt32) {
-    let seizeKr = IOHIDDeviceOpen(device, IOOptionBits(kIOHIDOptionsTypeSeizeDevice))
-    if seizeKr == kIOReturnSuccess {
+  /// Records the outcome of a seize request: the device joins the location's seized devices when
+  /// the seize holds, and its ownership names the result, so a refused seize is never reported as
+  /// exclusive.
+  func record(
+    _ claim: HIDInputClaim,
+    device: IOHIDDevice,
+    deviceID: UInt64,
+    locationID: UInt32
+  ) {
+    if claim.seized {
       seizeLock.withLock {
         var devices = seizedByLocation[locationID] ?? []
         if !devices.contains(where: { CFEqual($0, device) }) {
@@ -160,20 +164,16 @@ extension HIDDeviceStream {
         }
       }
     }
-    let ownership: HIDInputOwnership
-    switch seizeKr {
-    case kIOReturnSuccess: ownership = .exclusive
-    case kIOReturnExclusiveAccess: ownership = .ownedByAnotherClient
-    case kIOReturnNotPermitted, kIOReturnNotPrivileged: ownership = .accessDenied
-    default: ownership = .acquisitionFailed
+    if let ownership = claim.ownership {
+      eventAdapter.updateOwnership(ownership, deviceID: deviceID)
     }
-    eventAdapter.updateOwnership(ownership, deviceID: deviceID)
   }
 
   /// Routes input reports of one opened device into this stream. Element values are routed only
   /// after a bound driver asks for them, since IOKit decodes every element of every report.
   private func attachInput(_ device: IOHIDDevice, deviceID: UInt64) {
     let size = max(Int(unsignedProperty(device, kIOHIDMaxInputReportSizeKey) ?? 0), 1)
+    sizeReportQueue(device)
     let reportBuffer = UnsafeMutableBufferPointer<UInt8>.allocate(capacity: size)
     reportBuffer.initialize(repeating: 0)
     let context = Unmanaged.passUnretained(self).toOpaque()
@@ -189,6 +189,15 @@ extension HIDDeviceStream {
     seizeLock.withLock {
       sharedOpenByDeviceID[deviceID] = SharedOpenDevice(device: device, reportBuffer: reportBuffer)
     }
+  }
+
+  /// Sizes the kernel report queue of an open device so a reader that is late by a second or more
+  /// loses no report. A refused size leaves the default queue and is written to the log; the drop
+  /// count of `ojd diagnose` shows what the default queue loses.
+  func sizeReportQueue(_ device: IOHIDDevice) {
+    let reportSize = Int(unsignedProperty(device, kIOHIDMaxInputReportSizeKey) ?? 0)
+    guard !HIDInputReportQueue.size(device, maxInputReportSize: reportSize) else { return }
+    print("[HIDDeviceStream] Report queue not sized for a device with \(reportSize)-byte reports")
   }
 
   /// Starts routing descriptor-decoded element values of a connection's shared open, for a
@@ -290,13 +299,12 @@ extension HIDDeviceStream {
   /// Copies raw report bytes and yields an `.inputReport` event.
   func handleInputReport(
     deviceID: UInt64,
-    locationID: UInt32,
     reportID: UInt8,
     report: UnsafePointer<UInt8>,
     reportLength: CFIndex
   ) {
     guard eventAdapter.acceptsInput(deviceID: deviceID),
-      let connectionID = seizeLock.withLock({ connectionsByDeviceID[deviceID]?.connectionID })
+      let connection = seizeLock.withLock({ connectionsByDeviceID[deviceID] })
     else { return }
     let bytes = Self.framedInputReport(
       reportID: reportID,
@@ -304,8 +312,8 @@ extension HIDDeviceStream {
     )
     continuation?.yield(
       .inputReport(
-        address: .ioKit(locationID: locationID, interfaceNumber: nil),
-        connectionID: connectionID,
+        address: connection.routingAddress,
+        connectionID: connection.connectionID,
         reportID: reportID,
         data: Data(bytes)
       )

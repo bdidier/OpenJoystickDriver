@@ -106,11 +106,9 @@ package final class HIDDeviceStream: @unchecked Sendable {
     length in
     guard let context, let sender else { return }
     let device = Unmanaged<IOHIDDevice>.fromOpaque(sender).takeUnretainedValue()
-    let loc = IOHIDDeviceGetProperty(device, kIOHIDLocationIDKey as CFString) as? Int ?? 0
     let stream = Unmanaged<HIDDeviceStream>.fromOpaque(context).takeUnretainedValue()
     stream.handleInputReport(
       deviceID: stream.trackingID(for: device),
-      locationID: UInt32(truncatingIfNeeded: loc),
       reportID: UInt8(truncatingIfNeeded: reportID),
       report: report,
       reportLength: length

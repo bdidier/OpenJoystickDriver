@@ -342,6 +342,31 @@ public enum DiagnosticsService {
     }
   }
 
+  /// The `hid-input-drops` check: warns for each device whose input reports the system dropped
+  /// before the service read them.
+  package static func hidInputDropsCheck(_ observations: [HIDInputDropObservation]) -> DiagnoseCheck
+  {
+    let dropping = observations.filter { $0.droppedReports > 0 }
+    guard !dropping.isEmpty else {
+      return DiagnoseCheck(
+        "hid-input-drops",
+        .pass,
+        localization.string("cli.diagnose.group.hidInputDropsNone")
+      )
+    }
+    let detail = dropping.map {
+      localization.formatted(
+        "cli.diagnose.group.hidInputDropsFound",
+        arguments: [
+          $0.productName.isEmpty
+            ? String(format: "%04X:%04X", $0.vendorID, $0.productID) : $0.productName,
+          $0.droppedReports,
+        ]
+      )
+    }.joined(separator: " ")
+    return DiagnoseCheck("hid-input-drops", .warn, detail)
+  }
+
   public static func soakCheck(_ summary: RuntimeHealthSummary) -> DiagnoseCheck {
     let mebibyte = 1_048_576.0
     let detail = localization.formatted(

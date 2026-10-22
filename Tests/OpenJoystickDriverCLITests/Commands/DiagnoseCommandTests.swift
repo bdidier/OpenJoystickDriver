@@ -72,6 +72,7 @@ struct DiagnoseCommandTests {
     socketPath: String,
     extensionStatus: @escaping @Sendable () -> ExtensionStatus = Self.healthyExtension,
     usb: @escaping @Sendable () async throws -> Int = { 1 },
+    drops: @escaping @Sendable (Int32) -> [HIDInputDropObservation] = { _ in [] },
     records: URL = URL(fileURLWithPath: "/nonexistent-\(UUID().uuidString)")
   ) async -> CLIRun {
     await RecordStore.$directory.withValue(records) {
@@ -79,7 +80,8 @@ struct DiagnoseCommandTests {
         arguments,
         socketPath: socketPath,
         extensionStatus: extensionStatus,
-        usb: usb
+        usb: usb,
+        drops: drops
       )
     }
   }
@@ -88,13 +90,16 @@ struct DiagnoseCommandTests {
     _ arguments: [String],
     socketPath: String,
     extensionStatus: @escaping @Sendable () -> ExtensionStatus,
-    usb: @escaping @Sendable () async throws -> Int
+    usb: @escaping @Sendable () async throws -> Int,
+    drops: @escaping @Sendable (Int32) -> [HIDInputDropObservation]
   ) async -> CLIRun {
     await ServiceConnection.$socketPath.withValue(socketPath) {
       await StatusCommand.$extensionProbe.withValue(extensionStatus) {
         await DiagnoseCommand.$usbProbe.withValue(usb) {
-          await DiagnoseCommand.$gameControllerAudit.withValue(Self.noAudit) {
-            await CLIRun.run(["diagnose"] + arguments + testServerTimeout)
+          await DiagnoseCommand.$hidDropProbe.withValue(drops) {
+            await DiagnoseCommand.$gameControllerAudit.withValue(Self.noAudit) {
+              await CLIRun.run(["diagnose"] + arguments + testServerTimeout)
+            }
           }
         }
       }
@@ -208,7 +213,8 @@ struct DiagnoseCommandTests {
 
     #expect(result.code == 0, "\(result.standardError)")
     let statuses = try statuses(result)
-    for id in ["input-read", "input-inject", "virtual-device", "runtime-health"] {
+    for id in ["input-read", "input-inject", "virtual-device", "hid-input-drops", "runtime-health"]
+    {
       #expect(statuses[id] == "Skip", "\(id)")
     }
     #expect(statuses["service"] == "Warn")
@@ -236,6 +242,42 @@ struct DiagnoseCommandTests {
 
     #expect(result.code == 0)
     #expect(try statuses(result)["usb-access"] == "Warn")
+  }
+
+  @Test
+  func droppedInputReportsWarnWithoutFailing() async throws {
+    let socketPath = temporarySocketPath()
+    let server = try serve(socketPath: socketPath)
+    defer { server.stop() }
+    let drops: @Sendable (Int32) -> [HIDInputDropObservation] = { _ in
+      [
+        HIDInputDropObservation(
+          productName: "PLAYSTATION(R)3 Controller",
+          vendorID: 0x054C,
+          productID: 0x0268,
+          droppedReports: 458
+        )
+      ]
+    }
+    let result = await run(["--json"], socketPath: socketPath, drops: drops)
+
+    #expect(result.code == 0, "\(result.standardError)")
+    let checks = try #require(try result.json()["checks"] as? [[String: String]])
+    let check = try #require(checks.first { $0["id"] == "hid-input-drops" })
+    #expect(check["status"] == "Warn")
+    #expect(check["detail"]?.contains("458") == true)
+    #expect(check["detail"]?.contains("PLAYSTATION(R)3 Controller") == true)
+  }
+
+  @Test
+  func noDroppedInputReportsPass() async throws {
+    let socketPath = temporarySocketPath()
+    let server = try serve(socketPath: socketPath)
+    defer { server.stop() }
+
+    let result = await run(["--json"], socketPath: socketPath)
+
+    #expect(try statuses(result)["hid-input-drops"] == "Pass")
   }
 
   @Test
