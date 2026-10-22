@@ -1,3 +1,4 @@
+import AppKit
 import Testing
 
 @testable import OpenJoystickDriverPresentation
@@ -111,6 +112,14 @@ struct MainMenuModelTests {
     )
     #expect(
       MainMenuModel.emptyActivateProfileTitleKey(profileListRead: false)
+        == "ui.menu.profile.unavailable"
+    )
+    #expect(
+      MainMenuModel.emptyDeactivateProfileTitleKey(profileListRead: true)
+        == "ui.menu.profile.noneActive"
+    )
+    #expect(
+      MainMenuModel.emptyDeactivateProfileTitleKey(profileListRead: false)
         == "ui.menu.profile.unavailable"
     )
   }
@@ -256,6 +265,7 @@ struct MainMenuModelTests {
     for key in [
       MainMenuModel.noControllerTitleKey, "ui.menu.controller.noneSelected",
       MainMenuModel.noProfilesTitleKey, MainMenuModel.profilesUnavailableTitleKey,
+      MainMenuModel.noActiveProfileTitleKey,
       "ui.extra.reportProblem",
     ] { checkTitleStyle(key) }
     for item in MainMenuModel.allItems where item.action != .controllerTarget {
@@ -506,5 +516,27 @@ struct MainMenuRoutingTests {
     } else {
       Issue.record("Activate Profile is not routed as a submenu parent")
     }
+  }
+}
+
+@Suite
+struct MainMenuIdentifierTests {
+  @Test
+  func menuBarItemIdentifiersAreUniqueAndApartFromItemIDs() {
+    let barIDs = MainMenuModel.sections.map {
+      MainMenuModel.menuBarItemIdentifier(sectionID: $0.id)
+    }
+    #expect(Set(barIDs).count == barIDs.count)
+    #expect(Set(barIDs).isDisjoint(with: MainMenuModel.allItems.map(\.id)))
+    #expect(MainMenuModel.menuBarItemIdentifier(sectionID: "profile") == "menu.profile")
+  }
+
+  @Test
+  @MainActor
+  func identifyingAnItemSetsItsIdentifierAndItsAccessibilityIdentifier() {
+    let item = NSMenuItem(title: "Activate Profile", action: nil, keyEquivalent: "")
+    MainMenuRenderer.identify(item, as: "activateProfile")
+    #expect(item.identifier?.rawValue == "activateProfile")
+    #expect(item.accessibilityIdentifier() == "activateProfile")
   }
 }

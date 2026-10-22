@@ -17,13 +17,15 @@ struct StatusItemModelTests {
   private static func state(
     controllers: [StatusItemState.Controller] = [],
     profiles: [StatusItemState.Profile] = [],
-    needsAccess: Bool = true
+    needsAccess: Bool = true,
+    profileListRead: Bool = true
   ) -> StatusItemState {
     StatusItemState(
       statusLine: "status",
       needsAccess: needsAccess,
       controllers: controllers,
       profiles: profiles,
+      profileListRead: profileListRead,
       statusSymbolName: "circle"
     )
   }
@@ -83,6 +85,7 @@ struct StatusItemModelTests {
       Self.entry("controllers.pad-a.activeProfile.\(other.id.uuidString)", in: entries)
     )
     #expect(activeEntry.isChecked)
+    #expect(!activeEntry.isEnabled)
     #expect(activeEntry.action == nil)
     #expect(!otherEntry.isChecked)
     #expect(otherEntry.action == .activateProfile(other.id))
@@ -100,8 +103,110 @@ struct StatusItemModelTests {
     #expect(none.action == nil)
     #expect(try #require(Self.entry("grantAccess", in: entries)).isEnabled)
     #expect(try #require(Self.entry("quit", in: entries)).isEnabled)
-    #expect(!(try #require(Self.entry("profiles.activate", in: entries))).isEnabled)
-    #expect(!(try #require(Self.entry("profiles.deactivate", in: entries))).isEnabled)
+    // Both profile submenus stay openable; each holds one disabled row.
+    #expect(try #require(Self.entry("profiles.activate", in: entries)).isEnabled)
+    #expect(try #require(Self.entry("profiles.deactivate", in: entries)).isEnabled)
+  }
+
+  @Test
+  func activateSubmenuStaysOpenableWithOneDisabledRowWhenNoProfileExists() throws {
+    let entries = StatusItemModel.entries(for: Self.state())
+    let activate = try #require(Self.entry("profiles.activate", in: entries))
+    #expect(activate.isEnabled)
+    #expect(activate.submenu?.map(\.id) == ["profiles.activate.none"])
+    let row = try #require(Self.entry("profiles.activate.none", in: entries))
+    #expect(row.title == .key("ui.menu.profile.none"))
+    #expect(!row.isEnabled)
+    #expect(row.action == nil)
+  }
+
+  @Test
+  func activateSubmenuSaysProfilesAreUnavailableUntilTheListIsRead() throws {
+    let entries = StatusItemModel.entries(for: Self.state(profileListRead: false))
+    let row = try #require(Self.entry("profiles.activate.none", in: entries))
+    #expect(row.title == .key("ui.menu.profile.unavailable"))
+    #expect(!row.isEnabled)
+    #expect(try #require(Self.entry("profiles.activate", in: entries)).isEnabled)
+    let deactivate = try #require(Self.entry("profiles.deactivate.none", in: entries))
+    #expect(deactivate.title == .key("ui.menu.profile.unavailable"))
+  }
+
+  @Test
+  func statusAndMainMenuNameTheEmptyActivateRowFromOneFunction() throws {
+    for read in [true, false] {
+      let entries = StatusItemModel.entries(for: Self.state(profileListRead: read))
+      let row = try #require(Self.entry("profiles.activate.none", in: entries))
+      #expect(
+        row.title == .key(MainMenuModel.emptyActivateProfileTitleKey(profileListRead: read))
+      )
+    }
+  }
+
+  @Test
+  func activateSubmenuListsEveryProfileAndChecksTheActiveOne() throws {
+    let active = StatusItemState.Profile(id: UUID(), name: "A", isActive: true)
+    let other = StatusItemState.Profile(id: UUID(), name: "B", isActive: false)
+    let entries = StatusItemModel.entries(for: Self.state(profiles: [active, other]))
+    let rows = try #require(Self.entry("profiles.activate", in: entries)?.submenu)
+    #expect(rows.map(\.title) == [.verbatim("A"), .verbatim("B")])
+    #expect(rows.map(\.isChecked) == [true, false])
+    #expect(rows.map(\.isEnabled) == [false, true])
+    #expect(rows.map(\.action) == [nil, .activateProfile(other.id)])
+  }
+
+  @Test
+  func deactivateSubmenuHoldsOneDisabledRowWhileNoProfileIsActive() throws {
+    let idle = StatusItemState.Profile(id: UUID(), name: "B", isActive: false)
+    let entries = StatusItemModel.entries(for: Self.state(profiles: [idle]))
+    let deactivate = try #require(Self.entry("profiles.deactivate", in: entries))
+    #expect(deactivate.isEnabled)
+    #expect(deactivate.submenu?.map(\.id) == ["profiles.deactivate.none"])
+    let row = try #require(Self.entry("profiles.deactivate.none", in: entries))
+    #expect(row.title == .key("ui.menu.profile.noneActive"))
+    #expect(!row.isEnabled)
+  }
+
+  @Test
+  func controllerWithoutApplicableProfilesKeepsItsProfileSubmenuOpenable() throws {
+    let entries = StatusItemModel.entries(for: Self.state(controllers: [Self.pad]))
+    let submenu = try #require(Self.entry("controllers.pad-a.activeProfile", in: entries))
+    #expect(submenu.isEnabled)
+    #expect(submenu.submenu?.map(\.id) == ["controllers.pad-a.activeProfile.none"])
+    let row = try #require(Self.entry("controllers.pad-a.activeProfile.none", in: entries))
+    #expect(row.title == .key("ui.menu.profile.none"))
+    #expect(!row.isEnabled)
+  }
+
+  @Test
+  func controllerProfileSubmenuSaysProfilesAreUnavailableUntilTheListIsRead() throws {
+    let entries = StatusItemModel.entries(
+      for: Self.state(controllers: [Self.pad], profileListRead: false)
+    )
+    let row = try #require(Self.entry("controllers.pad-a.activeProfile.none", in: entries))
+    #expect(row.title == .key("ui.menu.profile.unavailable"))
+    #expect(!row.isEnabled)
+    #expect(try #require(Self.entry("controllers.pad-a.activeProfile", in: entries)).isEnabled)
+  }
+
+  @Test
+  func entryIDsAreUniqueBecauseTheyAreTheAccessibilityIdentifiers() {
+    let profile = StatusItemState.Profile(id: UUID(), name: "A", isActive: true)
+    var pad = Self.pad
+    pad.profiles = [profile]
+    let other = StatusItemState.Controller(
+      id: "pad-b",
+      name: "Pad",
+      isSuspended: false,
+      isWireless: false
+    )
+    let entries = StatusItemModel.entries(
+      for: Self.state(controllers: [pad, other], profiles: [profile])
+    )
+    func allIDs(_ entries: [StatusItemEntry]) -> [String] {
+      entries.filter { !$0.isSeparator }.flatMap { [$0.id] + allIDs($0.submenu ?? []) }
+    }
+    let ids = allIDs(entries)
+    #expect(Set(ids).count == ids.count)
   }
 
   @Test
@@ -147,7 +252,7 @@ struct StatusItemModelTests {
       #expect(actions.map(\.id) == suffixes.map { "controllers.\(token).\($0)" })
     }
     let wiredActions = try #require(Self.entry("controllers.pad-b", in: entries)?.submenu)
-    #expect(wiredActions.map(\.isEnabled) == [true, true, false, false, true])
+    #expect(wiredActions.map(\.isEnabled) == [true, true, true, false, true])
     #expect(wiredActions[3].action == nil)
   }
 
@@ -171,7 +276,7 @@ struct StatusItemModelTests {
         .disconnectWireless(sessionToken: "pad-a"), .showController(sessionToken: "pad-a"),
       ]
     )
-    #expect(padActions.map(\.isEnabled) == [true, true, false, true, true])
+    #expect(padActions.map(\.isEnabled) == [true, true, true, true, true])
 
     let wiredActions = try #require(Self.entry("controllers.pad-b", in: entries)?.submenu)
     #expect(
@@ -180,7 +285,7 @@ struct StatusItemModelTests {
         .showController(sessionToken: "pad-b"),
       ]
     )
-    #expect(wiredActions.map(\.isEnabled) == [true, true, false, false, true])
+    #expect(wiredActions.map(\.isEnabled) == [true, true, true, false, true])
   }
 
   @Test
@@ -204,7 +309,7 @@ struct StatusItemModelTests {
     #expect(active.isEnabled)
     #expect(active.submenu?.map(\.isChecked) == [true, false])
     let activate = try #require(Self.entry("profiles.activate", in: entries))
-    #expect(activate.submenu?.map(\.action) == [.activateProfile(other.id)])
+    #expect(activate.submenu?.map(\.action) == [nil, .activateProfile(other.id)])
     let deactivate = try #require(Self.entry("profiles.deactivate", in: entries))
     #expect(deactivate.submenu?.map(\.action) == [.deactivateProfile(profile.id)])
   }

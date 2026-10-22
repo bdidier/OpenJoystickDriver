@@ -3305,10 +3305,12 @@
 "ui.menu.profile.activate" = "تفعيل ملف التعريف";
 /* Item of the Profile menu that turns off the active profile. */
 "ui.menu.profile.deactivate" = "إلغاء تفعيل ملف التعريف";
-/* Disabled item of the Profile menu's Activate Profile submenu when no profile exists. */
+/* Disabled item of the Profile menu's Activate Profile submenu, the status item's Profiles > Activate submenu and a controller's Active Profile submenu in the status item when no profile exists or none applies to the controller. */
 "ui.menu.profile.none" = "لا توجد ملفات تعريف";
-/* Disabled item of the Profile menu's Activate Profile submenu while the profile list is loading or cannot be read. */
+/* Disabled item of the Profile menu's Activate Profile submenu and of the status item's Profiles > Activate, Profiles > Deactivate and controller Active Profile submenus while the profile list is loading or cannot be read. */
 "ui.menu.profile.unavailable" = "ملفات التعريف غير متوفرة";
+/* Disabled item of the status item's Profiles > Deactivate submenu while no profile is active. */
+"ui.menu.profile.noneActive" = "لا يوجد ملف تعريف نشط";
 /* Title of the alert shown when turning off a profile from the menu fails. */
 "ui.menu.profile.deactivateFailed" = "تعذّر إلغاء تفعيل ملف التعريف";
 /* Message of the alert shown when the profile changed elsewhere during the turn off. */

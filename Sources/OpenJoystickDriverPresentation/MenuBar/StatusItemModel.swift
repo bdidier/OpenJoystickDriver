@@ -102,6 +102,9 @@ struct StatusItemState: Equatable {
   /// Link is enabled only for a wireless one.
   var controllers: [Controller]
   var profiles: [Profile]
+  /// Whether the service reported the profile list. An empty list claims that no profile exists
+  /// only when it was reported.
+  var profileListRead: Bool
   /// The state glyph shown beside the status line.
   var statusSymbolName: String
 }
@@ -132,7 +135,10 @@ enum StatusItemModel {
       StatusItemEntry(
         id: "controllers",
         title: .key("ui.extra.controllers"),
-        submenu: controllersSubmenu(controllers: state.controllers)
+        submenu: controllersSubmenu(
+          controllers: state.controllers,
+          profileListRead: state.profileListRead
+        )
       ),
       StatusItemEntry(
         id: "profiles",
@@ -141,23 +147,27 @@ enum StatusItemModel {
           StatusItemEntry(
             id: "profiles.activate",
             title: .key("ui.extra.activate"),
-            isEnabled: state.profiles.contains { !$0.isActive },
             submenu: profileEntries(
-              state.profiles.filter { !$0.isActive },
+              state.profiles,
               idPrefix: "profiles.activate",
               action: { .activateProfile($0) },
-              checkActive: false
+              checkActive: true,
+              emptyTitleKey: MainMenuModel.emptyActivateProfileTitleKey(
+                profileListRead: state.profileListRead
+              )
             )
           ),
           StatusItemEntry(
             id: "profiles.deactivate",
             title: .key("ui.extra.deactivate"),
-            isEnabled: state.profiles.contains { $0.isActive },
             submenu: profileEntries(
-              state.profiles.filter { $0.isActive },
+              state.profiles.filter(\.isActive),
               idPrefix: "profiles.deactivate",
               action: { .deactivateProfile($0) },
-              checkActive: false
+              checkActive: false,
+              emptyTitleKey: MainMenuModel.emptyDeactivateProfileTitleKey(
+                profileListRead: state.profileListRead
+              )
             )
           ),
         ]
@@ -184,7 +194,8 @@ enum StatusItemModel {
   /// One submenu per connected controller, each with that controller's own actions. With no
   /// controller connected the submenu holds one disabled row that says so.
   private static func controllersSubmenu(
-    controllers: [StatusItemState.Controller]
+    controllers: [StatusItemState.Controller],
+    profileListRead: Bool
   ) -> [StatusItemEntry] {
     guard !controllers.isEmpty else {
       return [
@@ -199,13 +210,14 @@ enum StatusItemModel {
       StatusItemEntry(
         id: "controllers.\(controller.id)",
         title: .verbatim(controller.name),
-        submenu: controllerActions(controller)
+        submenu: controllerActions(controller, profileListRead: profileListRead)
       )
     }
   }
 
   private static func controllerActions(
-    _ controller: StatusItemState.Controller
+    _ controller: StatusItemState.Controller,
+    profileListRead: Bool
   ) -> [StatusItemEntry] {
     let prefix = "controllers.\(controller.id)"
     let suspend: StatusItemEntry
@@ -232,12 +244,14 @@ enum StatusItemModel {
       StatusItemEntry(
         id: "\(prefix).activeProfile",
         title: .key("ui.extra.activeProfile"),
-        isEnabled: !controller.profiles.isEmpty,
         submenu: profileEntries(
           controller.profiles,
           idPrefix: "\(prefix).activeProfile",
           action: { .activateProfile($0) },
-          checkActive: true
+          checkActive: true,
+          emptyTitleKey: MainMenuModel.emptyActivateProfileTitleKey(
+            profileListRead: profileListRead
+          )
         )
       ),
       StatusItemEntry(
@@ -254,18 +268,33 @@ enum StatusItemModel {
     ]
   }
 
+  /// The profile rows of a submenu. A submenu stays enabled when it holds no profile: it then
+  /// holds one disabled row that says why (HIG, Menus). With `checkActive`, the active profile
+  /// shows a checkmark and cannot be chosen again.
   private static func profileEntries(
     _ profiles: [StatusItemState.Profile],
     idPrefix: String,
     action: (UUID) -> StatusItemAction,
-    checkActive: Bool
+    checkActive: Bool,
+    emptyTitleKey: String
   ) -> [StatusItemEntry] {
-    profiles.map {
-      StatusItemEntry(
+    guard !profiles.isEmpty else {
+      return [
+        StatusItemEntry(
+          id: "\(idPrefix).none",
+          title: .key(emptyTitleKey),
+          isEnabled: false
+        )
+      ]
+    }
+    return profiles.map {
+      let isChosen = checkActive && $0.isActive
+      return StatusItemEntry(
         id: "\(idPrefix).\($0.id.uuidString)",
         title: .verbatim($0.name),
-        isChecked: checkActive && $0.isActive,
-        action: checkActive && $0.isActive ? nil : action($0.id)
+        isEnabled: !isChosen,
+        isChecked: isChosen,
+        action: isChosen ? nil : action($0.id)
       )
     }
   }

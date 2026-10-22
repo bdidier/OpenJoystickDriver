@@ -2,7 +2,7 @@
 // that runs osascript. System Events is not used: it is a separate process whose
 // Accessibility trust is attributed apart from the host app and reports no windows
 // when that attribution fails.
-// Usage: osascript -l JavaScript ax.js <command> <pid> [argument]
+// Usage: osascript -l JavaScript ax.js <command> <pid> [argument...]
 //   session                    "locked=true|false console=true|false" (no pid needed)
 //   probe                      0, or the AXError of reading the app role (-25211: not trusted)
 //   app-state                  "main=true|false settings=<tab>|none"
@@ -12,10 +12,23 @@
 //   open-settings <tab>        opens Settings from the app menu and selects the tab
 //   window-bounds main|settings   "x y width height"
 //   close-window main|settings    presses the close button
+//   activate                   makes the app frontmost (AXFrontmost and NSRunningApplication)
+//   raise main|settings        activates the app and raises that window (AXRaise)
+//   menu-ids                   AXIdentifier of each main menu bar item after the Apple menu, one
+//                              per line, in menu bar order
+//   open-menu <id> [item-id...]   activates the app, opens the main menu bar item with that
+//                              AXIdentifier and presses each item with the given AXIdentifier in
+//                              turn, which opens its submenu
+//   open-status-menu [item-id...] the same for the app's status item (AXExtrasMenuBar)
+//   press-escape               posts an Escape key press (CGEvent, HID event tap), which closes
+//                              the innermost open menu
+// Menus are matched by AXIdentifier, which the app sets from its menu model ids, so the menu
+// commands work in every UI language.
 // The main window is the one with a split group (the sidebar). The Settings window is
 // the one without a sidebar whose toolbar holds all three tabs.
 ObjC.import("ApplicationServices");
 ObjC.import("CoreGraphics");
+ObjC.import("AppKit");
 ObjC.bindFunction("AXUIElementCreateApplication", ["id", ["int"]]);
 ObjC.bindFunction("AXUIElementCopyAttributeValue", ["int", ["id", "id", "id *"]]);
 ObjC.bindFunction("AXUIElementSetAttributeValue", ["int", ["id", "id", "id"]]);
@@ -23,6 +36,10 @@ ObjC.bindFunction("AXUIElementSetMessagingTimeout", ["int", ["id", "float"]]);
 ObjC.bindFunction("AXUIElementPerformAction", ["int", ["id", "id"]]);
 
 const AX_NOT_TRUSTED = -25211;
+// NSApplicationActivateAllWindows: brings every window of the app forward, not only the key one.
+const ACTIVATE_ALL_WINDOWS = 1;
+// Virtual key code of Escape.
+const KEY_ESCAPE = 53;
 // $.kCFBooleanTrue is a pointer to the constant, which AX rejects as a value (AXError -25201); a boxed NSNumber bool bridges to a CFBoolean.
 const AX_TRUE = $.NSNumber.numberWithBool(true);
 const SETTINGS_TABS = ["General", "Notifications", "Advanced"];
@@ -115,6 +132,56 @@ function find(app, kind) {
 	return found;
 }
 
+// Makes the app frontmost through the Accessibility API and NSRunningApplication. The return
+// value of activateWithOptions is not read: macOS may grant or defer an activation that another
+// app requests, so whether the app came forward is decided by the window list, which capture.py
+// reads and refuses on by name.
+function activate(app, pid) {
+	const code = $.AXUIElementSetAttributeValue(app, "AXFrontmost", AX_TRUE);
+	if (code !== 0) throw new Error("bringing the app to the front failed with AXError " + code);
+	const running = $.NSRunningApplication.runningApplicationWithProcessIdentifier(pid);
+	if (running.isNil()) throw new Error("no running application has pid " + pid);
+	running.activateWithOptions(ACTIVATE_ALL_WINDOWS);
+}
+
+function identifier(element) {
+	return attribute(element, "AXIdentifier");
+}
+
+// Presses a menu bar item or menu item, refusing one that is disabled: AXPress on it would
+// open nothing and the capture would wait for a menu that never comes.
+function pressMenuElement(element, id) {
+	if (attribute(element, "AXEnabled") === false) throw new Error("menu item " + id + " is disabled");
+	press(element);
+}
+
+function mainMenuBar(app) {
+	const bar = children(app, "AXMenuBar")[0];
+	if (!bar) throw new Error("the app has no menu bar");
+	return bar;
+}
+
+function statusMenuBarItem(app) {
+	const { value: bar } = read(app, "AXExtrasMenuBar");
+	if (bar === null) throw new Error("the app has no status item menu bar");
+	const found = children(bar, "AXMenuBarItem");
+	if (found.length !== 1) throw new Error("the app has " + found.length + " status items, expected 1");
+	return found[0];
+}
+
+// Presses each item, by AXIdentifier, of the menu that belongs to `start`, so its submenu opens.
+function pressPath(start, ids) {
+	let element = start;
+	for (const id of ids) {
+		const entry = waitFor(() => {
+			const menu = children(element, "AXMenu")[0];
+			return menu && children(menu, "AXMenuItem").find((item) => identifier(item) === id);
+		}, "menu item " + id + " did not appear");
+		pressMenuElement(entry, id);
+		element = entry;
+	}
+}
+
 function sidebar(app) {
 	const split = children(find(app, "main"), "AXSplitGroup")[0];
 	const group = children(split, "AXGroup")[0];
@@ -162,7 +229,7 @@ function waitFor(condition, what) {
 }
 
 function run(argv) {
-	const [command, pidText, argument] = argv;
+	const [command, pidText, argument, ...rest] = argv;
 	if (command === "session") {
 		const dictionary = $.CGSessionCopyCurrentDictionary();
 		const session = dictionary && ObjC.deepUnwrap(ObjC.castRefToObject(dictionary));
@@ -231,6 +298,49 @@ function run(argv) {
 			const { value: button } = read(find(app, argument), "AXCloseButton");
 			if (button === null) throw new Error("the " + argument + " window has no close button");
 			press(button);
+			return "";
+		}
+		case "activate":
+			activate(app, pid);
+			return "";
+		case "raise": {
+			activate(app, pid);
+			const code = $.AXUIElementPerformAction(find(app, argument), "AXRaise");
+			if (code !== 0) throw new Error("raising the " + argument + " window failed with AXError " + code);
+			return "";
+		}
+		case "menu-ids":
+			// The first item is the Apple menu, which macOS adds to every app's menu bar.
+			return children(mainMenuBar(app), "AXMenuBarItem")
+				.slice(1)
+				.map((item, index) => {
+					const id = identifier(item);
+					if (!id) throw new Error("main menu bar item " + (index + 2) + " (" + label(item) + ") has no AXIdentifier");
+					return id;
+				})
+				.join("\n");
+		case "open-menu": {
+			activate(app, pid);
+			const item = children(mainMenuBar(app), "AXMenuBarItem").find((candidate) => identifier(candidate) === argument);
+			if (!item) throw new Error("the main menu bar has no item with AXIdentifier " + argument);
+			pressMenuElement(item, argument);
+			pressPath(item, rest);
+			return "";
+		}
+		case "open-status-menu": {
+			activate(app, pid);
+			const item = statusMenuBarItem(app);
+			pressMenuElement(item, "status item");
+			pressPath(item, argument === undefined ? [] : [argument, ...rest]);
+			return "";
+		}
+		case "press-escape": {
+			// The JXA bridge owns the returned event and frees it: CFRelease on it crashes osascript.
+			for (const down of [true, false]) {
+				const event = $.CGEventCreateKeyboardEvent(null, KEY_ESCAPE, down);
+				if (!event) throw new Error("creating the Escape key " + (down ? "down" : "up") + " event failed");
+				$.CGEventPost($.kCGHIDEventTap, event);
+			}
 			return "";
 		}
 		default:

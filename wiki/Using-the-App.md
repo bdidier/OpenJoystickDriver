@@ -29,7 +29,10 @@ The menu contains these items, from top to bottom:
   It shows readiness, the number of controllers, and the active profile.
 - **Controllers** lists each connected controller as a submenu.
   **No Controller Connected** appears when the list is empty.
-- **Profiles** has **Activate** and **Deactivate** submenus with the profiles that apply.
+- **Profiles** has **Activate** and **Deactivate** submenus.
+  **Activate** lists every profile and checks the active one.
+  **Deactivate** lists the active profiles.
+  A submenu with nothing to list still opens and shows one dimmed row: **No Profiles** in **Activate**, **No Active Profile** in **Deactivate**, or **Profiles Unavailable** in either while the profile list is loading or cannot be read.
 - **Grant Access** appears only when a permission is missing.
   It opens the **Access** area.
 - **Open Window** opens the app window on the area you used last.
@@ -45,6 +48,7 @@ Each controller in the **Controllers** submenu has its own submenu:
   While the controller is suspended, the item reads **Resume**.
 - **Test Input** opens the Input Test window.
 - **Active Profile** lists the profiles that apply to this controller and checks the active one.
+  With none, it shows a dimmed **No Profiles** row, or **Profiles Unavailable** while the profile list is loading or cannot be read.
 - **Disconnect Wireless Link** is on only for a controller that connects by Bluetooth.
   OJD shows a **Disconnect Wireless Controller?** alert to confirm.
   The controller stays disconnected until you connect it again by hand.

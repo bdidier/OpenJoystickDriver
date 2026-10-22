@@ -5,6 +5,7 @@ import shutil
 import subprocess
 import tempfile
 import unittest
+from collections.abc import Callable
 from datetime import datetime
 from pathlib import Path
 from unittest.mock import patch
@@ -23,6 +24,7 @@ APP_WINDOW: dict[str, object] = {
     "pid": 1,
     "owner": "OpenJoystickDriver",
     "layer": 0,
+    "alpha": 1,
     "x": 10,
     "y": 20,
     "width": 300,
@@ -76,6 +78,33 @@ class GuiCaptureTests(unittest.TestCase):
         ):
             capture.process_id()
 
+    def process_id_with(self, completed: subprocess.CompletedProcess[str]) -> int:
+        with (
+            patch.object(capture, "APP", capture.PROJECT_DIR),
+            patch.object(capture.subprocess, "run", return_value=completed),
+        ):
+            return capture.process_id()
+
+    def test_process_id_is_the_one_running_app(self) -> None:
+        self.assertEqual(self.process_id_with(self.completed(0, "412\n")), 412)
+
+    def test_app_that_is_not_running_is_refused_by_name(self) -> None:
+        with self.assertRaisesRegex(
+            capture.CaptureError, "OpenJoystickDriver is not running: open "
+        ):
+            self.process_id_with(self.completed(1, ""))
+
+    def test_pgrep_failure_is_not_taken_for_an_app_that_is_not_running(self) -> None:
+        failed = subprocess.CompletedProcess([], 3, "", "pgrep: bad option")
+        with self.assertRaisesRegex(capture.CaptureError, "exit status 3: pgrep"):
+            self.process_id_with(failed)
+
+    def test_two_running_apps_are_refused_with_their_pids(self) -> None:
+        with self.assertRaisesRegex(
+            capture.CaptureError, "2 OpenJoystickDriver.*412, 413"
+        ):
+            self.process_id_with(self.completed(0, "412\n413\n"))
+
     def window(self, **fields: object) -> dict:
         return {**APP_WINDOW, **fields}
 
@@ -126,6 +155,14 @@ class GuiCaptureTests(unittest.TestCase):
         self.assertEqual(capture.covering_windows(target, windows), ["Code"])
         self.assertEqual(capture.covering_windows(target, [target]), [])
 
+    def fake_time(self) -> tuple[Callable[[], float], Callable[[float], None]]:
+        now = [0.0]
+
+        def sleep(seconds: float) -> None:
+            now[0] += seconds
+
+        return lambda: now[0], sleep
+
     def shoot_with(self, windows: list[dict]) -> tuple[list[list[str]], Path]:
         commands: list[list[str]] = []
 
@@ -138,12 +175,13 @@ class GuiCaptureTests(unittest.TestCase):
 
         folder = Path(tempfile.mkdtemp())
         self.addCleanup(shutil.rmtree, folder)
+        clock, sleep = self.fake_time()
         with (
             patch.object(capture, "run", side_effect=fake_run),
             patch.object(capture, "gui", return_value="10 20 300 200"),
             patch("builtins.print"),
         ):
-            capture.shoot(1, "main", folder / "main.png")
+            capture.shoot(1, "main", folder / "main.png", 1.0, clock, sleep)
         return commands, folder
 
     def test_shoot_captures_the_screen_rectangle_of_the_window(self) -> None:
@@ -163,6 +201,10 @@ class GuiCaptureTests(unittest.TestCase):
         with self.assertRaises(capture.CaptureError) as raised:
             self.shoot_with(windows)
         self.assertIn("covered by windows of Code", str(raised.exception))
+        self.assertIn(
+            "after 1 s of bringing the app forward (--front-timeout)",
+            str(raised.exception),
+        )
 
     def test_capture_folders_are_unique_within_one_second(self) -> None:
         with (
@@ -545,6 +587,528 @@ class GuiCaptureTests(unittest.TestCase):
                 self.assertRaises(capture.CaptureError),
             ):
                 capture.read_state()
+
+    def test_bring_forward_raises_the_window_until_nothing_covers_it(self) -> None:
+        covered = [self.window(id=3, pid=7, owner="Code", x=200), self.window()]
+        clear = [self.window()]
+        reads = [covered, covered, clear]
+        calls: list[tuple[str, ...]] = []
+
+        def fake_gui(*command: str) -> str:
+            calls.append(command)
+            return "10 20 300 200"
+
+        clock, sleep = self.fake_time()
+        with (
+            patch.object(capture, "gui", side_effect=fake_gui),
+            patch.object(capture, "on_screen_windows", side_effect=reads),
+        ):
+            found = capture.bring_forward(1, "main", 5.0, clock, sleep)
+        self.assertEqual(found["id"], 9)
+        raises = [call for call in calls if call[0] == "raise"]
+        self.assertEqual(raises, [("raise", "main")] * 3)
+        self.assertEqual(clock(), 2 * capture.FRONT_POLL_SECONDS)
+
+    def test_bring_forward_gives_up_at_the_deadline_naming_the_owners(self) -> None:
+        covered = [
+            self.window(id=3, pid=7, owner="Code", x=200),
+            self.window(id=4, pid=8, owner="Finder", x=100),
+            self.window(),
+        ]
+        clock, sleep = self.fake_time()
+        with (
+            patch.object(capture, "gui", return_value="10 20 300 200"),
+            patch.object(capture, "on_screen_windows", return_value=covered),
+            self.assertRaises(capture.CaptureError) as raised,
+        ):
+            capture.bring_forward(1, "settings", 1.0, clock, sleep)
+        message = str(raised.exception)
+        self.assertIn(
+            "the settings window is covered by windows of Code, Finder after 1 s of "
+            "bringing the app forward (--front-timeout)",
+            message,
+        )
+        self.assertLessEqual(clock(), 1.0)
+
+    def test_covered_window_is_never_captured(self) -> None:
+        commands: list[list[str]] = []
+
+        def fake_run(command: list[str]) -> str:
+            commands.append(command)
+            return json.dumps([self.window(id=3, pid=7, owner="Code"), self.window()])
+
+        clock, sleep = self.fake_time()
+        with (
+            patch.object(capture, "run", side_effect=fake_run),
+            patch.object(capture, "gui", return_value="10 20 300 200"),
+            self.assertRaises(capture.CaptureError),
+        ):
+            capture.shoot(1, "main", Path("/nonexistent/main.png"), 1.0, clock, sleep)
+        self.assertEqual(
+            [command for command in commands if command[0] == "screencapture"], []
+        )
+
+    def test_help_names_each_timeout_default(self) -> None:
+        with (
+            patch.object(capture.sys, "stdout") as stdout,
+            self.assertRaises(SystemExit),
+        ):
+            capture.parse_args(["--help"])
+        text = " ".join(
+            "".join(call.args[0] for call in stdout.write.call_args_list).split()
+        )
+        self.assertIn(f"(default {capture.FRONT_TIMEOUT_SECONDS:g})", text)
+        self.assertIn(f"(default {capture.APP_READY_TIMEOUT_SECONDS:g})", text)
+
+    def test_front_timeout_option_is_positive(self) -> None:
+        self.assertEqual(
+            capture.parse_args(["--all", "--front-timeout", "2"]).front_timeout, 2.0
+        )
+        self.assertEqual(
+            capture.parse_args(["--all"]).front_timeout, capture.FRONT_TIMEOUT_SECONDS
+        )
+        for value in ("0", "-1", "nan", "inf"):
+            with self.subTest(value=value), self.assertRaises(SystemExit):
+                capture.parse_args(["--all", "--front-timeout", value])
+
+    def test_menus_is_one_of_the_exclusive_choices(self) -> None:
+        self.assertTrue(capture.parse_args(["--menus"]).menus)
+        self.assertFalse(capture.parse_args(["--all"]).menus)
+        for argv in (["--menus", "--all"], ["--menus", "--area", "Library"]):
+            with self.subTest(argv=argv), self.assertRaises(SystemExit):
+                capture.parse_args(argv)
+
+    def menu_window(self, **fields: object) -> dict:
+        return self.window(layer=capture.MENU_LAYER, **fields)
+
+    def test_union_rectangle_spans_the_parent_menu_and_its_submenu(self) -> None:
+        parent = self.menu_window(id=1, x=100, y=33, width=200, height=300)
+        submenu = self.menu_window(id=2, x=300, y=120, width=150, height=500)
+        self.assertEqual(
+            capture.union_rectangle([parent, submenu]),
+            {"x": 100, "y": 33, "width": 350, "height": 587},
+        )
+        self.assertEqual(
+            capture.screen_rectangle(capture.union_rectangle([parent, submenu])),
+            "100,33,350,587",
+        )
+        # A submenu that opens to the left of its parent extends the rectangle to the left.
+        left = self.menu_window(id=3, x=-20, y=40, width=120, height=100)
+        self.assertEqual(capture.union_rectangle([parent, left])["x"], -20)
+        self.assertEqual(capture.union_rectangle([parent])["width"], 200)
+
+    def test_union_rectangle_refuses_no_window(self) -> None:
+        with self.assertRaises(capture.CaptureError):
+            capture.union_rectangle([])
+
+    def test_menu_windows_are_the_popup_layer_windows_of_the_app(self) -> None:
+        menu = self.menu_window(id=1)
+        windows = [
+            self.menu_window(id=2, pid=2, owner="Safari"),
+            menu,
+            self.window(id=3),
+            self.window(id=4, layer=25),
+        ]
+        self.assertEqual(capture.menu_windows(1, windows), [menu])
+
+    def test_menu_targets_follow_the_menu_bar_order(self) -> None:
+        ids = [
+            "menu.app",
+            "menu.file",
+            "menu.edit",
+            "menu.view",
+            "menu.controller",
+            "menu.profile",
+            "menu.window",
+            "menu.help",
+        ]
+        targets = capture.menu_targets(ids)
+        self.assertEqual(
+            [target.name for target in targets],
+            [
+                "menu-app",
+                "menu-file",
+                "menu-edit",
+                "menu-view",
+                "menu-controller",
+                "menu-profile",
+                "menu-profile-activate-profile",
+                "menu-window",
+                "menu-help",
+                "menu-status-item",
+                "menu-status-item-profiles-activate",
+            ],
+        )
+        by_name = {target.name: target for target in targets}
+        self.assertEqual(
+            by_name["menu-profile-activate-profile"].path,
+            ("menu.profile", "activateProfile"),
+        )
+        self.assertEqual(
+            by_name["menu-status-item-profiles-activate"].path,
+            ("profiles", "profiles.activate"),
+        )
+        self.assertEqual(
+            [by_name[name].depth for name in by_name],
+            [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 3],
+        )
+        self.assertTrue(by_name["menu-status-item"].status_item)
+        self.assertFalse(by_name["menu-help"].status_item)
+
+    def test_menu_targets_refuse_a_menu_bar_without_a_profile_menu(self) -> None:
+        with self.assertRaisesRegex(capture.CaptureError, "no menu.profile menu"):
+            capture.menu_targets(["menu.app", "menu.file"])
+        with self.assertRaisesRegex(capture.CaptureError, "identifier"):
+            capture.menu_targets([""])
+        with self.assertRaisesRegex(capture.CaptureError, "'Profile'"):
+            capture.menu_targets(["menu.profile", "Profile"])
+
+    def test_menu_targets_refuse_identifiers_with_one_file_name(self) -> None:
+        with self.assertRaisesRegex(capture.CaptureError, "menu-view"):
+            capture.menu_targets(["menu.profile", "menu.view", "menu.View"])
+
+    def test_menu_identifiers_are_the_ones_the_swift_menu_model_sets(self) -> None:
+        sources = capture.PROJECT_DIR / "Sources" / "OpenJoystickDriverPresentation"
+        main_menu = (sources / "MainMenu" / "MainMenuModel.swift").read_text()
+        renderer = (sources / "MainMenu" / "MainMenuRenderer.swift").read_text()
+        status = (sources / "MenuBar" / "StatusItemModel.swift").read_text()
+        status_menu = (
+            sources / "MenuBar" / "MenuBarCoordinator+StatusMenu.swift"
+        ).read_text()
+        section = capture.PROFILE_MENU_ID.removeprefix(capture.MENU_BAR_ID_PREFIX)
+        self.assertIn(f'"{capture.MENU_BAR_ID_PREFIX}\\(sectionID)"', main_menu)
+        self.assertIn(f'id: "{section}"', main_menu)
+        self.assertIn(f'"{capture.ACTIVATE_PROFILE_ID}"', main_menu)
+        self.assertIn(f'id: "{capture.STATUS_PROFILES_ID}"', status)
+        self.assertIn(f'id: "{capture.STATUS_ACTIVATE_ID}"', status)
+        self.assertIn("menuBarItemIdentifier(sectionID: section.id)", renderer)
+        self.assertIn("setAccessibilityIdentifier(id)", renderer)
+        self.assertIn("identify(item, as: entry.id)", status_menu)
+
+    def test_menu_commands_open_the_menu_bar_item_or_the_status_item(self) -> None:
+        main = capture.MenuTarget("menu-profile", ("menu.profile",))
+        sub = capture.MenuTarget(
+            "menu-profile-activate-profile", ("menu.profile", "activateProfile")
+        )
+        status = capture.MenuTarget("menu-status-item", (), status_item=True)
+        status_sub = capture.MenuTarget(
+            "x", ("profiles", "profiles.activate"), status_item=True
+        )
+        self.assertEqual(capture.open_menu_command(main), ("open-menu", "menu.profile"))
+        self.assertEqual(
+            capture.open_menu_command(sub),
+            ("open-menu", "menu.profile", "activateProfile"),
+        )
+        self.assertEqual(capture.open_menu_command(status), ("open-status-menu",))
+        self.assertEqual(
+            capture.open_menu_command(status_sub),
+            ("open-status-menu", "profiles", "profiles.activate"),
+        )
+
+    def test_ax_command_line_carries_every_menu_argument(self) -> None:
+        with patch.object(capture, "run", return_value="") as run:
+            capture.ax("open-menu", 7, "menu.profile", "activateProfile")
+        run.assert_called_once_with(
+            [
+                "osascript",
+                "-l",
+                "JavaScript",
+                str(capture.GUI_DIR / "ax.js"),
+                "open-menu",
+                "7",
+                "menu.profile",
+                "activateProfile",
+            ]
+        )
+
+    def wait_for_menu_with(
+        self, reads: list[list[dict]], depth: int
+    ) -> tuple[list[dict] | None, str | None, int]:
+        clock, sleep = self.fake_time()
+        with patch.object(
+            capture, "on_screen_windows", side_effect=reads * 200
+        ) as listing:
+            try:
+                menus, _ = capture.wait_for_menu(1, depth, clock, sleep)
+            except capture.CaptureError as error:
+                return None, str(error), listing.call_count
+        return menus, None, listing.call_count
+
+    def test_menu_wait_returns_after_two_equal_reads(self) -> None:
+        parent = self.menu_window(id=1)
+        submenu = self.menu_window(id=2, x=300)
+        moving = self.menu_window(id=2, x=290)
+        menus, error, reads = self.wait_for_menu_with(
+            [[], [parent], [parent, moving], [parent, submenu], [parent, submenu]], 2
+        )
+        self.assertIsNone(error)
+        self.assertEqual(menus, [parent, submenu])
+        self.assertEqual(reads, 5)
+
+    def test_menu_wait_names_how_many_menus_never_appeared(self) -> None:
+        menus, error, _ = self.wait_for_menu_with([[self.menu_window(id=1)]], 2)
+        self.assertIsNone(menus)
+        assert error is not None
+        self.assertIn(
+            "1 menu windows of OpenJoystickDriver were on screen where 2", error
+        )
+        self.assertIn(f"{capture.MENU_TIMEOUT_SECONDS:g} s", error)
+
+    def test_menu_wait_refuses_more_menus_than_it_opened(self) -> None:
+        # A menu left open by another action would join the image.
+        extra = [self.menu_window(id=1), self.menu_window(id=2, x=300)]
+        menus, error, _ = self.wait_for_menu_with([extra], 1)
+        self.assertIsNone(menus)
+        assert error is not None
+        self.assertIn(
+            "2 menu windows of OpenJoystickDriver were on screen where 1", error
+        )
+
+    def test_menu_wait_waits_for_a_fading_menu(self) -> None:
+        fading = self.menu_window(id=1, alpha=0.5)
+        shown = self.menu_window(id=1)
+        menus, error, reads = self.wait_for_menu_with([[fading], [shown], [shown]], 1)
+        self.assertIsNone(error)
+        self.assertEqual(menus, [shown])
+        self.assertEqual(reads, 3)
+
+    def test_menu_wait_refuses_a_menu_that_never_settles(self) -> None:
+        flicker = [[self.menu_window(id=1, x=index)] for index in range(10_000)]
+        clock, sleep = self.fake_time()
+        with (
+            patch.object(capture, "on_screen_windows", side_effect=flicker),
+            self.assertRaises(capture.CaptureError),
+        ):
+            capture.wait_for_menu(1, 1, clock, sleep)
+
+    def test_close_menu_presses_escape_until_no_menu_window_is_left(self) -> None:
+        open_menus = [self.menu_window(id=1)]
+        reads = [open_menus, open_menus, [], []]
+        clock, sleep = self.fake_time()
+        with (
+            patch.object(capture, "on_screen_windows", side_effect=reads),
+            patch.object(capture, "gui") as gui,
+        ):
+            capture.close_menu(1, clock, sleep)
+        gui.assert_called_once_with("press-escape")
+
+    def test_close_menu_presses_again_once_the_submenu_closed(self) -> None:
+        parent = self.menu_window(id=1)
+        both = [parent, self.menu_window(id=2, x=300)]
+        reads = [both, [parent], [parent], [], []]
+        clock, sleep = self.fake_time()
+        with (
+            patch.object(capture, "on_screen_windows", side_effect=reads),
+            patch.object(capture, "gui") as gui,
+        ):
+            capture.close_menu(1, clock, sleep)
+        self.assertEqual(gui.call_count, 2)
+        # Neither press waited out the settle time: each saw one fewer menu at once.
+        self.assertEqual(clock(), 0.0)
+
+    def test_close_menu_without_an_open_menu_presses_nothing(self) -> None:
+        clock, sleep = self.fake_time()
+        with (
+            patch.object(capture, "on_screen_windows", return_value=[self.window()]),
+            patch.object(capture, "gui") as gui,
+        ):
+            capture.close_menu(1, clock, sleep)
+        gui.assert_not_called()
+
+    def test_close_menu_gives_up_after_the_escape_presses(self) -> None:
+        stuck = [self.menu_window(id=1)]
+        clock, sleep = self.fake_time()
+        with (
+            patch.object(capture, "on_screen_windows", return_value=stuck),
+            patch.object(capture, "gui") as gui,
+            self.assertRaisesRegex(capture.CaptureError, "still open after 4 Escape"),
+        ):
+            capture.close_menu(1, clock, sleep)
+        self.assertEqual(gui.call_count, capture.ESCAPE_PRESSES)
+
+    def shoot_menu_with(
+        self, target: capture.MenuTarget, reads: list[list[dict]]
+    ) -> tuple[list[object], Path, Exception | None]:
+        events: list[object] = []
+        folder = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, folder)
+
+        def fake_run(command: list[str]) -> str:
+            events.append(command)
+            Path(command[-1]).write_bytes(b"png")
+            return ""
+
+        def fake_gui(*command: str) -> str:
+            events.append(command)
+            return ""
+
+        clock, sleep = self.fake_time()
+        failure: Exception | None = None
+        with (
+            patch.object(capture, "run", side_effect=fake_run),
+            patch.object(capture, "gui", side_effect=fake_gui),
+            patch.object(capture, "on_screen_windows", side_effect=reads),
+            patch("builtins.print"),
+            patch.object(capture.sys, "stderr"),
+        ):
+            try:
+                capture.shoot_menu(1, target, folder / "menu.png", clock, sleep)
+            except capture.CaptureError as error:
+                failure = error
+        return events, folder, failure
+
+    def test_shoot_menu_captures_the_union_then_closes_with_escape(self) -> None:
+        parent = self.menu_window(id=1, x=100, y=33, width=200, height=300)
+        submenu = self.menu_window(id=2, x=300, y=120, width=150, height=500)
+        both = [parent, submenu]
+        target = capture.MenuTarget("menu-profile", ("menu.profile", "activateProfile"))
+        # No menu before the open; two reads settle the menus; close_menu reads them open,
+        # then one fewer, then none.
+        events, folder, failure = self.shoot_menu_with(
+            target, [[], both, both, both, [parent], [parent], [], []]
+        )
+        self.assertIsNone(failure)
+        self.assertEqual(
+            events,
+            [
+                ("open-menu", "menu.profile", "activateProfile"),
+                [
+                    "screencapture",
+                    "-x",
+                    "-R",
+                    "100,33,350,587",
+                    str(folder / "menu.png"),
+                ],
+                ("press-escape",),
+                ("press-escape",),
+            ],
+        )
+
+    def test_shoot_menu_refuses_a_menu_that_is_already_open(self) -> None:
+        stale = [self.menu_window(id=5)]
+        target = capture.MenuTarget("menu-file", ("menu.file",))
+        events, _, failure = self.shoot_menu_with(target, [stale])
+        assert failure is not None
+        self.assertIn(
+            "1 menu windows of OpenJoystickDriver are open before", str(failure)
+        )
+        self.assertEqual(events, [])
+
+    def test_shoot_menu_refuses_a_covered_menu_and_still_closes_it(self) -> None:
+        menu = self.menu_window(id=1, x=100, y=33, width=200, height=300)
+        cover = self.window(id=3, pid=7, owner="Code", x=150, y=100, layer=102)
+        covered = [cover, menu]
+        target = capture.MenuTarget("menu-file", ("menu.file",))
+        events, _, failure = self.shoot_menu_with(
+            target, [[], covered, covered, covered, [], []]
+        )
+        assert failure is not None
+        self.assertIn(
+            "the menu-file menu is covered by windows of Code once it opened",
+            str(failure),
+        )
+        self.assertEqual(events, [("open-menu", "menu.file"), ("press-escape",)])
+
+    def test_shoot_menu_refuses_when_the_menu_never_opens(self) -> None:
+        target = capture.MenuTarget("menu-status-item", (), status_item=True)
+        events, _, failure = self.shoot_menu_with(target, [[]] * 200)
+        assert failure is not None
+        self.assertIn(
+            "0 menu windows of OpenJoystickDriver were on screen where 1", str(failure)
+        )
+        self.assertEqual(events, [("open-status-menu",)])
+
+    def run_menu_capture(
+        self, argv: list[str], ids: str, english: object = None
+    ) -> tuple[list, list]:
+        shots: list[str] = []
+        calls: list[tuple[str, ...]] = []
+
+        def fake_gui(*command: str) -> str:
+            calls.append(command)
+            if command[0] == "menu-ids":
+                return ids
+            return "Activity" if command[0] == "current-sidebar" else ""
+
+        with (
+            tempfile.TemporaryDirectory() as root,
+            patch.object(capture, "PROJECT_DIR", Path(root)),
+            patch.object(capture, "process_id", return_value=1),
+            patch.object(capture, "require_unlocked_console_session"),
+            patch.object(capture, "require_accessibility"),
+            patch.object(capture, "require_english_ui", side_effect=english),
+            patch.object(capture, "run"),
+            patch.object(capture, "read_state", return_value=(True, None)),
+            patch.object(capture, "gui", side_effect=fake_gui),
+            patch.object(capture, "shoot"),
+            patch.object(
+                capture,
+                "shoot_menu",
+                side_effect=lambda pid, target, destination: shots.append(
+                    f"{target.name}={destination.name}"
+                ),
+            ),
+            patch.object(capture.sys, "stderr"),
+        ):
+            capture.capture(capture.parse_args(argv))
+        return shots, calls
+
+    def test_menus_capture_writes_one_png_per_menu_named_like_the_other_shots(
+        self,
+    ) -> None:
+        shots, _ = self.run_menu_capture(["--menus"], "menu.file\nmenu.profile")
+        self.assertEqual(
+            shots,
+            [
+                "menu-file=menu-file.png",
+                "menu-profile=menu-profile.png",
+                "menu-profile-activate-profile=menu-profile-activate-profile.png",
+                "menu-status-item=menu-status-item.png",
+                "menu-status-item-profiles-activate=menu-status-item-profiles-activate.png",
+            ],
+        )
+
+    def test_all_includes_the_menus_and_an_area_does_not(self) -> None:
+        all_shots, _ = self.run_menu_capture(["--all"], "menu.profile")
+        self.assertIn("menu-profile=menu-profile.png", all_shots)
+        area_shots, calls = self.run_menu_capture(["--area", "Library"], "menu.profile")
+        self.assertEqual(area_shots, [])
+        self.assertNotIn(("menu-ids",), calls)
+
+    def test_only_sidebar_and_settings_captures_need_an_english_ui(self) -> None:
+        refused = capture.CaptureError("the app UI language is de-DE")
+        shots, _ = self.run_menu_capture(["--menus"], "menu.profile", english=refused)
+        self.assertIn("menu-profile=menu-profile.png", shots)
+        for argv in (["--all"], ["--area", "Library"], ["--settings-pane", "General"]):
+            with (
+                self.subTest(argv=argv),
+                self.assertRaisesRegex(capture.CaptureError, "de-DE"),
+            ):
+                self.run_menu_capture(argv, "menu.profile", english=refused)
+
+    def test_menus_capture_without_a_profile_menu_fails_by_name(self) -> None:
+        with self.assertRaisesRegex(capture.CaptureError, "no menu.profile menu"):
+            self.run_menu_capture(["--menus"], "menu.app\nmenu.file")
+
+    @unittest.skipUnless(
+        shutil.which("osacompile"), "osacompile is not installed: ax.js needs JXA"
+    )
+    def test_ax_script_compiles(self) -> None:
+        with tempfile.TemporaryDirectory() as folder:
+            result = subprocess.run(
+                [
+                    "osacompile",
+                    "-l",
+                    "JavaScript",
+                    "-o",
+                    str(Path(folder) / "ax.scpt"),
+                    str(capture.GUI_DIR / "ax.js"),
+                ],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+        self.assertEqual(result.returncode, 0, result.stderr)
 
 
 if __name__ == "__main__":
