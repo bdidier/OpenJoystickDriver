@@ -3954,3 +3954,11 @@
 "cli.setting.testNotification.discussion" = "서비스에 열려 있는 OpenJoystickDriver 앱으로 테스트 알림을 알리도록 요청하고 앱이 알림을 표시할 때까지 기다립니다. 알림이 거부되었거나 전달에 실패했거나 제때 응답하는 앱이 없으면 이름이 있는 오류로 실패합니다. 여기서 --timeout의 기본값은 %@초입니다.";
 /* Printed by ojd setting test-notification after the app reported that it showed the test notification. */
 "cli.setting.testNotification.success" = "앱이 테스트 알림을 표시했습니다.";
+/* Says which app uses the USB interface of a controller exclusively and that OpenJoystickDriver serves the controller when the app releases it, in the controller detail and the controller list. %1$@ is the process name and %2$@ the process ID. */
+"status.controllerOwner.named" = "%1$@(프로세스 %2$@)이(가) 사용 중입니다. 이 컨트롤러는 직접 읽히고 있습니다. 해제되면 OpenJoystickDriver가 처리합니다.";
+/* Says which holder the USB interface of a controller names, such as a driver class that has no process ID, and that OpenJoystickDriver serves the controller when the holder releases it, in the controller detail and the controller list. %@ is the holder name. */
+"status.controllerOwner.nameOnly" = "%@이(가) 사용 중입니다. 이 컨트롤러는 직접 읽히고 있습니다. 해제되면 OpenJoystickDriver가 처리합니다.";
+/* Says that another app uses the USB interface of a controller exclusively and that OpenJoystickDriver serves the controller when the app releases it, when the interface names no holder, in the controller detail and the controller list. */
+"status.controllerOwner.unnamed" = "다른 앱이 사용 중입니다. 이 컨트롤러는 직접 읽히고 있습니다. 해제되면 OpenJoystickDriver가 처리합니다.";
+/* Label in the controller detail for who holds the USB interface of the controller exclusively. */
+"ui.controllers.exclusiveOwner" = "단독 접근";

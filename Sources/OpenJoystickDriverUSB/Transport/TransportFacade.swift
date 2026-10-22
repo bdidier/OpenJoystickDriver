@@ -191,6 +191,15 @@ public actor OpenJoystickDriverUSBTransportProvider: USBTransportProvider,
     }
   }
 
+  /// Both routes watch the interface's `IOUSBHostInterface` service: a DEXT route's failed open
+  /// leaves the same registry entry held by the other client.
+  public func waitForRelease(of device: USBTransportDevice, interfaceNumber: UInt8) async throws {
+    try await IOUSBHostTransportProvider.waitForRelease(
+      of: device,
+      interfaceNumber: interfaceNumber
+    )
+  }
+
   public func resolveTransport(
     for device: USBTransportDevice,
     configured: DeviceTransportProfile

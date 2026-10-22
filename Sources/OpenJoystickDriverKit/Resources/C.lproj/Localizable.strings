@@ -3955,3 +3955,11 @@
 "cli.setting.testNotification.discussion" = "Asks the service to announce a test notification to the open OpenJoystickDriver app and waits for the app to show it. Fails with a named error when notifications are denied, the delivery fails or no app answers in time. Default --timeout here, in seconds: %@.";
 /* Printed by ojd setting test-notification after the app reported that it showed the test notification. */
 "cli.setting.testNotification.success" = "The app showed the test notification.";
+/* Says which app uses the USB interface of a controller exclusively and that OpenJoystickDriver serves the controller when the app releases it, in the controller detail and the controller list. %1$@ is the process name and %2$@ the process ID. */
+"status.controllerOwner.named" = "Used by %1$@ (process %2$@). This controller is read directly. OpenJoystickDriver serves it once it is released.";
+/* Says which holder the USB interface of a controller names, such as a driver class that has no process ID, and that OpenJoystickDriver serves the controller when the holder releases it, in the controller detail and the controller list. %@ is the holder name. */
+"status.controllerOwner.nameOnly" = "Used by %@. This controller is read directly. OpenJoystickDriver serves it once it is released.";
+/* Says that another app uses the USB interface of a controller exclusively and that OpenJoystickDriver serves the controller when the app releases it, when the interface names no holder, in the controller detail and the controller list. */
+"status.controllerOwner.unnamed" = "Used by another app. This controller is read directly. OpenJoystickDriver serves it once it is released.";
+/* Label in the controller detail for who holds the USB interface of the controller exclusively. */
+"ui.controllers.exclusiveOwner" = "Exclusive access";

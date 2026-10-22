@@ -561,6 +561,7 @@
               "hasSerialNumber",
               "id",
               "name",
+              "ownedByAnotherClient",
               "productID",
               "protocol",
               "session",
@@ -579,6 +580,13 @@
               },
               "name": {
                 "type": "string"
+              },
+              "ownedByAnotherClient": {
+                "description": "Whether another client holds the controller's USB interface exclusively.",
+                "type": "boolean"
+              },
+              "owner": {
+                "$ref": "#/$defs/sharedExclusiveOwner"
               },
               "power": {
                 "description": "The latest power state the controller reports. Absent when the service reports none.",
@@ -843,6 +851,9 @@
                 "OwnedByAnotherClient",
                 "AcquisitionFailed"
               ]
+            },
+            "owner": {
+              "$ref": "#/$defs/sharedExclusiveOwner"
             },
             "physical": {
               "enum": [
@@ -2677,6 +2688,22 @@
         }
       }
     },
+    "sharedExclusiveOwner": {
+      "description": "The client that holds the controller's USB interface exclusively, as the interface names it. Absent when none does or the interface names none.",
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "description": "The process name, which the kernel truncates to 16 characters, or the class of the kernel driver.",
+          "type": "string"
+        },
+        "processID": {
+          "description": "The owning process. Absent when a kernel driver holds the interface.",
+          "type": "integer"
+        }
+      }
+    },
     "sharedServer": {
       "description": "Who serves the controller model, the server setting: System leaves it to the system, OJD lets OpenJoystickDriver seize it and publish a virtual gamepad.",
       "enum": ["System", "OJD"]
@@ -2691,6 +2718,7 @@
         "id",
         "kind",
         "name",
+        "ownedByAnotherClient",
         "productID",
         "protocol",
         "session",
@@ -2703,6 +2731,12 @@
         },
         "kind": {
           "const": "Controller"
+        },
+        "ownedByAnotherClient": {
+          "$ref": "#/$defs/controllerList/properties/items/items/properties/ownedByAnotherClient"
+        },
+        "owner": {
+          "$ref": "#/$defs/sharedExclusiveOwner"
         },
         "connection": {
           "$ref": "#/$defs/controllerList/properties/items/items/properties/connection"

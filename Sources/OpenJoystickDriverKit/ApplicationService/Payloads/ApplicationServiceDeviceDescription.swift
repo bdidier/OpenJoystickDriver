@@ -24,8 +24,12 @@ public struct ApplicationServiceDeviceDescription: Codable, Sendable {
   public let discoverySource: DeviceDiscoverySource
   /// Observed physical ownership route used by virtual exposure policy.
   public let physicalOwnership: ControllerOwnershipObservation
-  /// Current HID acquisition result; unknown for non-HID discovery routes.
+  /// Current HID acquisition result; unknown for non-HID discovery routes, except that a raw-USB
+  /// controller whose interface another client holds exclusively reports `ownedByAnotherClient`.
   public let hidInputOwnership: HIDInputOwnership
+  /// The client that holds the controller's USB interface exclusively; nil when none does or the
+  /// interface names none.
+  public let inputOwner: USBExclusiveOwner?
   /// Duplicate-device risk implied by the current physical ownership observation.
   public let duplicateExposureRisk: DuplicateExposureRisk
   /// USB serial number, or nil if not reported.
@@ -84,6 +88,7 @@ public struct ApplicationServiceDeviceDescription: Codable, Sendable {
     discoverySource: DeviceDiscoverySource,
     physicalOwnership: ControllerOwnershipObservation = .unknown,
     hidInputOwnership: HIDInputOwnership = .unknown,
+    inputOwner: USBExclusiveOwner? = nil,
     duplicateExposureRisk: DuplicateExposureRisk = .unknownOwnership,
     serialNumber: String?,
     parameters: [String] = [],
@@ -117,6 +122,7 @@ public struct ApplicationServiceDeviceDescription: Codable, Sendable {
     self.discoverySource = discoverySource
     self.physicalOwnership = physicalOwnership
     self.hidInputOwnership = hidInputOwnership
+    self.inputOwner = inputOwner
     self.duplicateExposureRisk = duplicateExposureRisk
     self.serialNumber = serialNumber
     self.parameters = parameters
@@ -160,6 +166,7 @@ public struct ApplicationServiceDeviceDescription: Codable, Sendable {
       HIDInputOwnership.self,
       forKey: .hidInputOwnership
     )
+    self.inputOwner = try container.decodeIfPresent(USBExclusiveOwner.self, forKey: .inputOwner)
     self.duplicateExposureRisk = try container.decode(
       DuplicateExposureRisk.self,
       forKey: .duplicateExposureRisk
@@ -219,6 +226,7 @@ public struct ApplicationServiceDeviceDescription: Codable, Sendable {
     case discoverySource
     case physicalOwnership
     case hidInputOwnership
+    case inputOwner
     case duplicateExposureRisk
     case serialNumber
     case parameters
@@ -256,6 +264,7 @@ extension ApplicationServiceDeviceDescription {
       discoverySource: snapshot.discoverySource,
       physicalOwnership: snapshot.physicalOwnership,
       hidInputOwnership: snapshot.hidInputOwnership,
+      inputOwner: snapshot.inputOwner,
       duplicateExposureRisk: snapshot.duplicateExposureRisk,
       serialNumber: snapshot.serialNumber,
       parameters: snapshot.parameters,

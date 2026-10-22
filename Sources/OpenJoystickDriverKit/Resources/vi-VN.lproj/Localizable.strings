@@ -3954,3 +3954,11 @@
 "cli.setting.testNotification.discussion" = "Yêu cầu dịch vụ báo một thông báo thử tới ứng dụng OpenJoystickDriver đang mở và chờ ứng dụng hiển thị. Lệnh thất bại với một lỗi có tên khi thông báo bị từ chối, việc gửi thất bại hoặc không có ứng dụng nào trả lời kịp lúc. Ở đây --timeout mặc định là %@ giây.";
 /* Printed by ojd setting test-notification after the app reported that it showed the test notification. */
 "cli.setting.testNotification.success" = "Ứng dụng đã hiển thị thông báo thử.";
+/* Says which app uses the USB interface of a controller exclusively and that OpenJoystickDriver serves the controller when the app releases it, in the controller detail and the controller list. %1$@ is the process name and %2$@ the process ID. */
+"status.controllerOwner.named" = "Đang được %1$@ (tiến trình %2$@) sử dụng. Bộ điều khiển này đang được đọc trực tiếp. OpenJoystickDriver sẽ phục vụ ngay khi nó được nhả.";
+/* Says which holder the USB interface of a controller names, such as a driver class that has no process ID, and that OpenJoystickDriver serves the controller when the holder releases it, in the controller detail and the controller list. %@ is the holder name. */
+"status.controllerOwner.nameOnly" = "Đang được %@ sử dụng. Bộ điều khiển này đang được đọc trực tiếp. OpenJoystickDriver sẽ phục vụ ngay khi nó được nhả.";
+/* Says that another app uses the USB interface of a controller exclusively and that OpenJoystickDriver serves the controller when the app releases it, when the interface names no holder, in the controller detail and the controller list. */
+"status.controllerOwner.unnamed" = "Đang được ứng dụng khác sử dụng. Bộ điều khiển này đang được đọc trực tiếp. OpenJoystickDriver sẽ phục vụ ngay khi nó được nhả.";
+/* Label in the controller detail for who holds the USB interface of the controller exclusively. */
+"ui.controllers.exclusiveOwner" = "Quyền truy cập độc quyền";

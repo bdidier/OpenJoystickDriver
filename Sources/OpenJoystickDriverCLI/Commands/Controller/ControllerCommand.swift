@@ -58,6 +58,8 @@ struct ControllerListCommand: AsyncParsableCommand {
             [
               $0.id, deviceIdentity(vendorID: $0.vendorID, productID: $0.productID), $0.connection,
               CommandLineName.kebab($0.session), $0.name, $0.unit ?? "",
+              $0.ownedByAnotherClient ? "owned-by-another-client" : "",
+              $0.owner.map { $0.processID.map { "\($0)" } ?? "" } ?? "", $0.owner?.name ?? "",
               $0.power?.battery.percentageText ?? "",
               $0.power.map { CommandLineName.kebab($0.charging.rawValue) } ?? "",
             ]
@@ -93,9 +95,14 @@ struct ControllerListCommand: AsyncParsableCommand {
           let suspended =
             controller.session == ControllerSessionState.suspended.rawValue
             ? "  " + CLILocalized.text("cli.controller.list.suspended") : ""
+          let held =
+            controller.ownedByAnotherClient
+            ? "  "
+              + USBExclusiveOwner.heldMessage(for: controller.owner, localize: CLILocalized.text)
+            : ""
           CLIOutput.stdout(
             "\(id)  \(unit)\(identity)  \(controller.connection)  \(battery)\(controller.name)"
-              + suspended
+              + suspended + held
           )
         }
       }
@@ -292,6 +299,14 @@ struct ControllerShowCommand: AsyncParsableCommand {
         list(detail.capabilities.lightingFeatures.map(CommandLineName.kebab))
       ),
     ]
+    if detail.ownership.hidInput == HIDInputOwnership.ownedByAnotherClient.rawValue {
+      rows.append(
+        (
+          CLILocalized.text("ui.controllers.exclusiveOwner"),
+          USBExclusiveOwner.heldMessage(for: detail.ownership.owner, localize: CLILocalized.text)
+        )
+      )
+    }
     // The output lists above hold only what macOS leaves undone, so say why.
     if detail.capabilities.outputOwner == ControllerServer.system.rawValue {
       rows.append(

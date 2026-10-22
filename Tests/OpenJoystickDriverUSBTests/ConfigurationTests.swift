@@ -149,6 +149,16 @@ struct USBDriverKitExtensionConfigurationTests {
     #expect(
       USBDriverKitTransportProvider.transportError(
         DriverKitError(kind: .ioReturn(kIOReturnExclusiveAccess), operation: "open")
+      ) == .ownedByAnotherClient(owner: nil)
+    )
+    #expect(
+      USBDriverKitTransportProvider.transportError(
+        DriverKitError(kind: .ioReturn(kIOReturnNotPermitted), operation: "open")
+      ) == .accessDenied
+    )
+    #expect(
+      USBDriverKitTransportProvider.transportError(
+        DriverKitError(kind: .ioReturn(kIOReturnNotPrivileged), operation: "open")
       ) == .accessDenied
     )
     #expect(

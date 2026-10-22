@@ -7,6 +7,9 @@ struct ControllerShowReport: Encodable, Equatable {
     let discoverySource: String
     let physical: String
     let hidInput: String
+    /// The client that holds the controller's USB interface exclusively; absent when none does or
+    /// the interface names none.
+    let owner: USBExclusiveOwner?
     let duplicateExposureRisk: String
     /// Who the record lets serve the model: `system` or `ojd`, the `server` setting.
     let server: ControllerServer
@@ -216,6 +219,7 @@ struct ControllerShowReport: Encodable, Equatable {
         discoverySource: device.discoverySource.rawValue,
         physical: device.physicalOwnership.rawValue,
         hidInput: device.hidInputOwnership.rawValue,
+        owner: device.inputOwner,
         duplicateExposureRisk: device.duplicateExposureRisk.rawValue,
         server: record?.server ?? .system,
         serverSource: record?.serverSource ?? ControllerRecord.defaultServerSource

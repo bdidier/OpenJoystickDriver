@@ -30,6 +30,10 @@ The virtual controller override in the controller detail applies to every connec
 
 The `com.openjoystickdriver.XboxUSBDevice` extension can only match the seven Microsoft USB IDs in Apple's grant: `045E:02D1`, `045E:02DD`, `045E:02E3`, `045E:02EA`, `045E:0B00`, `045E:0B0A`, and `045E:0B12`. OJD reaches every other wired Xbox controller through raw USB access or leaves it to macOS. Adding an ID to the extension needs a new request to Apple, so the list stays as it is until Apple grants more.
 
+## Another App Reads a USB Controller Directly
+
+Steam or another app can open the USB interface of a controller exclusively. OJD never requests or seizes that interface. The controller detail and `ojd controller list` show **Used by** with the app name and process ID, as the USB host reports them. The state is informational, not an error. OJD opens the controller when the app releases it. Whether the host announces every release has not been confirmed on hardware.
+
 ## Some Apps Do Not Read the Virtual Controller
 
 Steam, CrossOver, RPCS3, and older games that use SDL2 or IOHIDManager may not read the virtual Xbox controller. For more information, see [Game and app compatibility](Playing-Games.md).

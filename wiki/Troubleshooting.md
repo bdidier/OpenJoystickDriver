@@ -52,6 +52,7 @@ The built-in catalog has 696 records. A record without a physical test is unveri
 - **Runtime disconnected:** Run `ojd service start`, then run `ojd status`.
 - **SDL sees 0 controllers:** Grant **Input Monitoring** and **Accessibility**, restart OJD, and try again.
 - **Xbox USB driver extension install fails:** Rebuild the signed app, then run `ojd transport-extension activate`.
+- **The controller shows Used by an app:** That app reads the controller directly, so OJD cannot. You do not need to do anything for OJD. It serves the controller when the app lets go. The controller detail and `ojd controller list` show the app name.
 - **Input stays held, or the status says Needs attention:** Release the controls. Then check the controller input health with `ojd status --json`.
 
 ### Check From the Terminal
