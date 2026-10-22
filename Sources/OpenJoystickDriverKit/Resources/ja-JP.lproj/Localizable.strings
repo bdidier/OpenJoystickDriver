@@ -3293,6 +3293,8 @@
 "ui.menu.controller.disconnectWirelessLink" = "ワイヤレス接続を切断";
 /* Item of the Controller menu that shows the selected controller in the main window. */
 "ui.menu.controller.showInWindow" = "ウインドウに表示";
+/* Disabled item of the Controller menu and of the status item's Controllers submenu when no controller is connected. */
+"ui.menu.controller.noneConnected" = "コントローラ未接続";
 /* Disabled item of the Controller menu when no controller is selected. */
 "ui.menu.controller.noneSelected" = "コントローラ未選択";
 /* Title of the Profile menu in the menu bar. */
@@ -3301,6 +3303,10 @@
 "ui.menu.profile.activate" = "プロファイルを有効にする";
 /* Item of the Profile menu that turns off the active profile. */
 "ui.menu.profile.deactivate" = "プロファイルを無効にする";
+/* Disabled item of the Profile menu's Activate Profile submenu when no profile exists. */
+"ui.menu.profile.none" = "プロファイルなし";
+/* Disabled item of the Profile menu's Activate Profile submenu while the profile list is loading or cannot be read. */
+"ui.menu.profile.unavailable" = "プロファイルを利用できません";
 /* Title of the alert shown when turning off a profile from the menu fails. */
 "ui.menu.profile.deactivateFailed" = "プロファイルを無効にできませんでした";
 /* Message of the alert shown when the profile changed elsewhere during the turn off. */

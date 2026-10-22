@@ -3293,6 +3293,8 @@
 "ui.menu.controller.disconnectWirelessLink" = "Kablosuz Bağlantıyı Kes";
 /* Item of the Controller menu that shows the selected controller in the main window. */
 "ui.menu.controller.showInWindow" = "Pencerede Göster";
+/* Disabled item of the Controller menu and of the status item's Controllers submenu when no controller is connected. */
+"ui.menu.controller.noneConnected" = "Bağlı Kontrolcü Yok";
 /* Disabled item of the Controller menu when no controller is selected. */
 "ui.menu.controller.noneSelected" = "Seçili Kontrolcü Yok";
 /* Title of the Profile menu in the menu bar. */
@@ -3301,6 +3303,10 @@
 "ui.menu.profile.activate" = "Profili Etkinleştir";
 /* Item of the Profile menu that turns off the active profile. */
 "ui.menu.profile.deactivate" = "Profili Devre Dışı Bırak";
+/* Disabled item of the Profile menu's Activate Profile submenu when no profile exists. */
+"ui.menu.profile.none" = "Profil Yok";
+/* Disabled item of the Profile menu's Activate Profile submenu while the profile list is loading or cannot be read. */
+"ui.menu.profile.unavailable" = "Profiller Kullanılamıyor";
 /* Title of the alert shown when turning off a profile from the menu fails. */
 "ui.menu.profile.deactivateFailed" = "Profil devre dışı bırakılamadı";
 /* Message of the alert shown when the profile changed elsewhere during the turn off. */

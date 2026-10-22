@@ -95,7 +95,7 @@ struct StatusItemModelTests {
     #expect(controllers.isEnabled)
     #expect(controllers.submenu?.map(\.id) == ["controllers.none"])
     let none = try #require(Self.entry("controllers.none", in: entries))
-    #expect(none.title == .key("ui.controllers.emptyTitle"))
+    #expect(none.title == .key("ui.menu.controller.noneConnected"))
     #expect(!none.isEnabled)
     #expect(none.action == nil)
     #expect(try #require(Self.entry("grantAccess", in: entries)).isEnabled)

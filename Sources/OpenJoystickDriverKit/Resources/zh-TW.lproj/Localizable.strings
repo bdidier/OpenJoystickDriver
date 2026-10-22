@@ -3293,6 +3293,8 @@
 "ui.menu.controller.disconnectWirelessLink" = "中斷無線連結";
 /* Item of the Controller menu that shows the selected controller in the main window. */
 "ui.menu.controller.showInWindow" = "在視窗中顯示";
+/* Disabled item of the Controller menu and of the status item's Controllers submenu when no controller is connected. */
+"ui.menu.controller.noneConnected" = "未連接控制器";
 /* Disabled item of the Controller menu when no controller is selected. */
 "ui.menu.controller.noneSelected" = "未選取控制器";
 /* Title of the Profile menu in the menu bar. */
@@ -3301,6 +3303,10 @@
 "ui.menu.profile.activate" = "啟用設定檔";
 /* Item of the Profile menu that turns off the active profile. */
 "ui.menu.profile.deactivate" = "停用設定檔";
+/* Disabled item of the Profile menu's Activate Profile submenu when no profile exists. */
+"ui.menu.profile.none" = "沒有設定檔";
+/* Disabled item of the Profile menu's Activate Profile submenu while the profile list is loading or cannot be read. */
+"ui.menu.profile.unavailable" = "無法使用設定檔";
 /* Title of the alert shown when turning off a profile from the menu fails. */
 "ui.menu.profile.deactivateFailed" = "無法停用該設定檔";
 /* Message of the alert shown when the profile changed elsewhere during the turn off. */

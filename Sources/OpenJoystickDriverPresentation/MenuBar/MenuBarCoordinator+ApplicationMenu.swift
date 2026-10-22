@@ -159,8 +159,15 @@
       menu.removeAllItems()
       guard case .available(let snapshot) = viewModel.remappingState, !snapshot.profiles.isEmpty
       else {
+        let profileListRead: Bool
+        if case .available = viewModel.remappingState {
+          profileListRead = true
+        } else {
+          profileListRead = false
+        }
+        let key = MainMenuModel.emptyActivateProfileTitleKey(profileListRead: profileListRead)
         let placeholder = NSMenuItem(
-          title: OJDLocalized.string("ui.profiles.none"),
+          title: OJDLocalized.string(key),
           action: nil,
           keyEquivalent: ""
         )

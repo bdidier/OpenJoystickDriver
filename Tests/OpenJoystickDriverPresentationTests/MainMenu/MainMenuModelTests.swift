@@ -105,6 +105,14 @@ struct MainMenuModelTests {
     let activate = try #require(MainMenuModel.item(for: .activateProfile))
     // The submenu parent stays available so people can open it and see there are no profiles.
     #expect(MainMenuModel.isEnabled(activate, state: MainMenuState()))
+    // Its one disabled row claims no profile exists only after the service reported the list.
+    #expect(
+      MainMenuModel.emptyActivateProfileTitleKey(profileListRead: true) == "ui.menu.profile.none"
+    )
+    #expect(
+      MainMenuModel.emptyActivateProfileTitleKey(profileListRead: false)
+        == "ui.menu.profile.unavailable"
+    )
   }
 
   @Test
@@ -118,10 +126,19 @@ struct MainMenuModelTests {
 
   @Test
   func fileMenuHoldsTheCommandsAndTheStandardClose() throws {
+    // The File menu order: items that open a file, then Close, then items that write a file.
+    let file = try section("file")
     #expect(
-      try section("file").items.map(\.action) == [
-        .importProfile, .exportProfile, .installRecordOrMod, .close, .saveSupportReport,
+      file.items.map(\.action) == [
+        .importProfile, .installRecordOrMod, .close, .exportProfile, .saveSupportReport,
         .saveActivityLog,
+      ]
+    )
+    let groups = file.entries.split(separator: .separator).map { $0.compactMap(\.item?.action) }
+    #expect(
+      groups == [
+        [.importProfile, .installRecordOrMod], [.close],
+        [.exportProfile, .saveSupportReport, .saveActivityLog],
       ]
     )
     let close = try #require(MainMenuModel.item(for: .close))
@@ -150,7 +167,7 @@ struct MainMenuModelTests {
   }
 
   @Test
-  func keyEquivalentsAreUniqueAndFollowTheStandardShortcuts() {
+  func keyEquivalentsAreTheStandardOnesPlusTheAreaDigits() {
     struct Shortcut: Hashable {
       let key: String
       let modifiers: MainMenuModifiers
@@ -158,11 +175,24 @@ struct MainMenuModelTests {
     let shortcuts = MainMenuModel.allItems.filter { !$0.keyEquivalent.isEmpty }
     let keys = shortcuts.map { Shortcut(key: $0.keyEquivalent, modifiers: $0.modifiers) }
     #expect(Set(keys).count == keys.count, "two items share a key equivalent")
-    // Shortcuts that the system or Apple's keyboard guidance reserve for another action.
+    // Shortcuts that the system or Apple's standard keyboard shortcuts give another action.
     let reserved: Set<Shortcut> = [
       Shortcut(key: "n", modifiers: [.command]), Shortcut(key: "p", modifiers: [.command]),
-      Shortcut(key: "s", modifiers: [.command]), Shortcut(key: "i", modifiers: [.command]),
-      Shortcut(key: "f", modifiers: [.command]), Shortcut(key: " ", modifiers: [.command]),
+      Shortcut(key: "p", modifiers: [.command, .shift]),
+      Shortcut(key: "s", modifiers: [.command]), Shortcut(key: "s", modifiers: [.command, .shift]),
+      Shortcut(key: "e", modifiers: [.command]), Shortcut(key: "e", modifiers: [.command, .shift]),
+      Shortcut(key: "f", modifiers: [.command]),
+      Shortcut(key: "f", modifiers: [.command, .option]),
+      Shortcut(key: "g", modifiers: [.command]), Shortcut(key: "i", modifiers: [.command]),
+      Shortcut(key: "t", modifiers: [.command]),
+      Shortcut(key: "d", modifiers: [.command, .option]),
+      Shortcut(key: "d", modifiers: [.command, .control]),
+      Shortcut(key: "q", modifiers: [.command, .shift]),
+      Shortcut(key: "q", modifiers: [.command, .control]),
+      Shortcut(key: "3", modifiers: [.command, .shift]),
+      Shortcut(key: "4", modifiers: [.command, .shift]),
+      Shortcut(key: " ", modifiers: [.command]),
+      Shortcut(key: " ", modifiers: [.command, .control]),
       Shortcut(key: "\t", modifiers: [.command]), Shortcut(key: "`", modifiers: [.command]),
       Shortcut(key: ".", modifiers: [.command]), Shortcut(key: "?", modifiers: [.command]),
     ]
@@ -171,38 +201,66 @@ struct MainMenuModelTests {
       #expect(!reserved.contains(shortcut), "\(item.id) takes a reserved shortcut")
       #expect(item.modifiers.contains(.command), "\(item.id) has no Command modifier")
     }
-    let standard: [(MainMenuAction, String, MainMenuModifiers)] = [
-      (.settings, ",", [.command]), (.hide, "h", [.command]),
-      (.hideOthers, "h", [.command, .option]), (.quit, "q", [.command]),
-      (.close, "w", [.command]), (.undo, "z", [.command]), (.redo, "z", [.command, .shift]),
-      (.cut, "x", [.command]), (.copy, "c", [.command]), (.paste, "v", [.command]),
-      (.selectAll, "a", [.command]), (.minimize, "m", [.command]),
-      (.toggleToolbar, "t", [.command, .option]), (.toggleSidebar, "s", [.command, .control]),
-      (.toggleFullScreen, "f", [.command, .control]),
+    // Every key equivalent: the standard shortcut of a standard item, Command-O for the item
+    // that opens a file, Control-Command-S for Show Sidebar as AppKit's own menu has it, and
+    // the five area digits.
+    var expected: [MainMenuAction: Shortcut] = [
+      .settings: Shortcut(key: ",", modifiers: [.command]),
+      .hide: Shortcut(key: "h", modifiers: [.command]),
+      .hideOthers: Shortcut(key: "h", modifiers: [.command, .option]),
+      .quit: Shortcut(key: "q", modifiers: [.command]),
+      .importProfile: Shortcut(key: "o", modifiers: [.command]),
+      .close: Shortcut(key: "w", modifiers: [.command]),
+      .undo: Shortcut(key: "z", modifiers: [.command]),
+      .redo: Shortcut(key: "z", modifiers: [.command, .shift]),
+      .cut: Shortcut(key: "x", modifiers: [.command]),
+      .copy: Shortcut(key: "c", modifiers: [.command]),
+      .paste: Shortcut(key: "v", modifiers: [.command]),
+      .selectAll: Shortcut(key: "a", modifiers: [.command]),
+      .toggleToolbar: Shortcut(key: "t", modifiers: [.command, .option]),
+      .toggleSidebar: Shortcut(key: "s", modifiers: [.command, .control]),
+      .toggleFullScreen: Shortcut(key: "f", modifiers: [.command, .control]),
+      .minimize: Shortcut(key: "m", modifiers: [.command]),
     ]
-    for (action, key, modifiers) in standard {
-      let item = MainMenuModel.item(for: action)
-      #expect(item?.keyEquivalent == key && item?.modifiers == modifiers, "\(action)")
+    for area in MainWindowArea.allCases {
+      expected[.showArea(area)] = Shortcut(key: area.keyEquivalent, modifiers: [.command])
     }
+    let actual = Dictionary(
+      uniqueKeysWithValues: shortcuts.map {
+        ($0.action, Shortcut(key: $0.keyEquivalent, modifiers: $0.modifiers))
+      }
+    )
+    #expect(actual == expected)
   }
 
   @Test
   func titlesUseTitleStyleCapitalizationAndEllipsisOnlyWhenMoreInputFollows() {
-    let small: Set<String> = ["a", "an", "the", "and", "or", "but", "in", "of", "to", "on", "for"]
+    let small: Set<String> = ["and", "or", "but", "in", "of", "to", "on", "for"]
+    let articles: Set<String> = ["a", "an", "the"]
     let moreInput: Set<MainMenuAction> = [
       .settings, .importProfile, .exportProfile, .installRecordOrMod, .saveSupportReport,
       .saveActivityLog, .explainErrorCode, .reportProblem,
     ]
+    func checkTitleStyle(_ key: String) {
+      let title = OJDLocalized.string(key)
+      let words = title.replacingOccurrences(of: "...", with: "").split(separator: " ")
+      for (index, word) in words.enumerated() {
+        #expect(!articles.contains(word.lowercased()), "\(key) holds an article: \(title)")
+        let isEdge = index == 0 || index == words.count - 1
+        let expected = isEdge || !small.contains(String(word))
+        let isCapitalized = word.first.map { !$0.isLetter || $0.isUppercase } ?? true
+        if expected { #expect(isCapitalized, "\(key) is not title-style: \(title)") }
+      }
+    }
+    // The disabled rows that say why a menu has nothing to act on are menu items too.
+    for key in [
+      MainMenuModel.noControllerTitleKey, "ui.menu.controller.noneSelected",
+      MainMenuModel.noProfilesTitleKey, MainMenuModel.profilesUnavailableTitleKey,
+      "ui.extra.reportProblem",
+    ] { checkTitleStyle(key) }
     for item in MainMenuModel.allItems where item.action != .controllerTarget {
       for key in [item.titleKey, item.alternateTitleKey].compactMap({ $0 }) {
-        let title = OJDLocalized.string(key)
-        let words = title.replacingOccurrences(of: "...", with: "").split(separator: " ")
-        for (index, word) in words.enumerated() {
-          let isEdge = index == 0 || index == words.count - 1
-          let expected = isEdge || !small.contains(String(word))
-          let isCapitalized = word.first.map { !$0.isLetter || $0.isUppercase } ?? true
-          if expected { #expect(isCapitalized, "\(key) is not title-style: \(title)") }
-        }
+        checkTitleStyle(key)
       }
       let title = OJDLocalized.string(item.titleKey)
       #expect(
@@ -352,7 +410,9 @@ struct MainMenuModelTests {
   func controllerTargetRowSaysWhyTheMenuIsDisabled() throws {
     let target = try #require(MainMenuModel.item(for: .controllerTarget))
     var state = MainMenuState()
-    #expect(MainMenuModel.controllerTargetTitle(state: state) == .key("ui.controllers.emptyTitle"))
+    #expect(
+      MainMenuModel.controllerTargetTitle(state: state) == .key("ui.menu.controller.noneConnected")
+    )
     #expect(!MainMenuModel.isEnabled(target, state: state))
     state.controllers = [
       MainMenuControllerState(
@@ -389,14 +449,16 @@ struct MainMenuModelTests {
       MainMenuModel.controllerTargetTitle(state: state) == .key("ui.menu.controller.noneSelected")
     )
     state.controllers = []
-    #expect(MainMenuModel.controllerTargetTitle(state: state) == .key("ui.controllers.emptyTitle"))
+    #expect(
+      MainMenuModel.controllerTargetTitle(state: state) == .key("ui.menu.controller.noneConnected")
+    )
   }
 
   @Test
   @MainActor
   func controllerTargetRowTextIsTheNameOrLocalizedText() {
     #expect(MainMenuRenderer.text(of: .verbatim("Pad")) == "Pad")
-    for key in ["ui.controllers.emptyTitle", "ui.menu.controller.noneSelected"] {
+    for key in ["ui.menu.controller.noneConnected", "ui.menu.controller.noneSelected"] {
       let text = MainMenuRenderer.text(of: .key(key))
       #expect(!text.isEmpty && text != key, "\(key) has no text")
     }

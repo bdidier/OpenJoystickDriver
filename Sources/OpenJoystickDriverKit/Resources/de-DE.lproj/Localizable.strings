@@ -3516,6 +3516,8 @@
 "ui.menu.controller.disconnectWirelessLink" = "Funkverbindung trennen";
 /* Item of the Controller menu that shows the selected controller in the main window. */
 "ui.menu.controller.showInWindow" = "Im Fenster anzeigen";
+/* Disabled item of the Controller menu and of the status item's Controllers submenu when no controller is connected. */
+"ui.menu.controller.noneConnected" = "Kein Controller verbunden";
 /* Disabled item of the Controller menu when no controller is selected. */
 "ui.menu.controller.noneSelected" = "Kein Controller ausgewählt";
 /* Title of the Profile menu in the menu bar. */
@@ -3524,6 +3526,10 @@
 "ui.menu.profile.activate" = "Profil aktivieren";
 /* Item of the Profile menu that turns off the active profile. */
 "ui.menu.profile.deactivate" = "Profil deaktivieren";
+/* Disabled item of the Profile menu's Activate Profile submenu when no profile exists. */
+"ui.menu.profile.none" = "Keine Profile";
+/* Disabled item of the Profile menu's Activate Profile submenu while the profile list is loading or cannot be read. */
+"ui.menu.profile.unavailable" = "Profile nicht verfügbar";
 /* Title of the alert shown when turning off a profile from the menu fails. */
 "ui.menu.profile.deactivateFailed" = "Das Profil konnte nicht deaktiviert werden";
 /* Message of the alert shown when the profile changed elsewhere during the turn off. */

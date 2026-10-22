@@ -190,7 +190,7 @@ enum StatusItemModel {
       return [
         StatusItemEntry(
           id: "controllers.none",
-          title: .key("ui.controllers.emptyTitle"),
+          title: .key(MainMenuModel.noControllerTitleKey),
           isEnabled: false
         )
       ]

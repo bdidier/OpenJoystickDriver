@@ -3293,6 +3293,8 @@
 "ui.menu.controller.disconnectWirelessLink" = "वायरलेस लिंक डिस्कनेक्ट करें";
 /* Item of the Controller menu that shows the selected controller in the main window. */
 "ui.menu.controller.showInWindow" = "विंडो में दिखाएँ";
+/* Disabled item of the Controller menu and of the status item's Controllers submenu when no controller is connected. */
+"ui.menu.controller.noneConnected" = "कोई कंट्रोलर कनेक्ट नहीं है";
 /* Disabled item of the Controller menu when no controller is selected. */
 "ui.menu.controller.noneSelected" = "कोई कंट्रोलर चयनित नहीं है";
 /* Title of the Profile menu in the menu bar. */
@@ -3301,6 +3303,10 @@
 "ui.menu.profile.activate" = "प्रोफ़ाइल सक्रिय करें";
 /* Item of the Profile menu that turns off the active profile. */
 "ui.menu.profile.deactivate" = "प्रोफ़ाइल निष्क्रिय करें";
+/* Disabled item of the Profile menu's Activate Profile submenu when no profile exists. */
+"ui.menu.profile.none" = "कोई प्रोफ़ाइल नहीं";
+/* Disabled item of the Profile menu's Activate Profile submenu while the profile list is loading or cannot be read. */
+"ui.menu.profile.unavailable" = "प्रोफ़ाइल उपलब्ध नहीं";
 /* Title of the alert shown when turning off a profile from the menu fails. */
 "ui.menu.profile.deactivateFailed" = "प्रोफ़ाइल निष्क्रिय नहीं की जा सकी";
 /* Message of the alert shown when the profile changed elsewhere during the turn off. */

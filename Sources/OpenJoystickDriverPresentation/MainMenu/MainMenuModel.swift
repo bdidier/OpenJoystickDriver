@@ -26,8 +26,26 @@ enum MainMenuModel {
   /// selected one is gone), the key that says no controller is selected.
   static func controllerTargetTitle(state: MainMenuState) -> StatusItemTitle {
     if let controller = state.controller { return .verbatim(controller.name) }
-    if state.controllers.isEmpty { return .key("ui.controllers.emptyTitle") }
+    if state.controllers.isEmpty { return .key(noControllerTitleKey) }
     return .key("ui.menu.controller.noneSelected")
+  }
+
+  /// The disabled row of the Controller menu and the status item's Controllers submenu while no
+  /// controller is connected.
+  static let noControllerTitleKey = "ui.menu.controller.noneConnected"
+
+  /// The disabled row of the Activate Profile submenu while no profile exists: the submenu stays
+  /// openable, so its one row says why it holds no profile.
+  static let noProfilesTitleKey = "ui.menu.profile.none"
+
+  /// The disabled row of the Activate Profile submenu while the profile list is loading or the
+  /// service cannot report it, so the submenu does not claim that no profile exists.
+  static let profilesUnavailableTitleKey = "ui.menu.profile.unavailable"
+
+  /// The one disabled row of an Activate Profile submenu that lists no profile: No Profiles once
+  /// the service reported an empty list, Profiles Unavailable while it has not reported one.
+  static func emptyActivateProfileTitleKey(profileListRead: Bool) -> String {
+    profileListRead ? noProfilesTitleKey : profilesUnavailableTitleKey
   }
 
   /// The title key to show: the alternate one for Hide Sidebar, Exit Full Screen and Resume.
@@ -134,16 +152,6 @@ enum MainMenuModel {
         gui: .area(.profiles)
       ),
       entry(
-        "exportProfile",
-        "ui.menu.file.exportProfile",
-        key: "e",
-        modifiers: [.command, .shift],
-        action: .exportProfile,
-        enabled: .requires([.mainWindow, .profileSelected]),
-        gui: .area(.profiles)
-      ),
-      .separator,
-      entry(
         "installRecordOrMod",
         "ui.menu.file.installRecordOrMod",
         action: .installRecordOrMod,
@@ -160,6 +168,13 @@ enum MainMenuModel {
         gui: .standardCommand
       ),
       .separator,
+      entry(
+        "exportProfile",
+        "ui.menu.file.exportProfile",
+        action: .exportProfile,
+        enabled: .requires([.mainWindow, .profileSelected]),
+        gui: .area(.profiles)
+      ),
       entry(
         "saveSupportReport",
         "ui.menu.file.saveSupportReport",
@@ -293,7 +308,7 @@ enum MainMenuModel {
     entries: [
       entry(
         "controllerTarget",
-        "ui.controllers.emptyTitle",
+        noControllerTitleKey,
         action: .controllerTarget,
         enabled: .never,
         gui: .area(.controllers)

@@ -3293,6 +3293,8 @@
 "ui.menu.controller.disconnectWirelessLink" = "Ngắt liên kết không dây";
 /* Item of the Controller menu that shows the selected controller in the main window. */
 "ui.menu.controller.showInWindow" = "Hiện trong cửa sổ";
+/* Disabled item of the Controller menu and of the status item's Controllers submenu when no controller is connected. */
+"ui.menu.controller.noneConnected" = "Chưa kết nối bộ điều khiển";
 /* Disabled item of the Controller menu when no controller is selected. */
 "ui.menu.controller.noneSelected" = "Chưa chọn bộ điều khiển";
 /* Title of the Profile menu in the menu bar. */
@@ -3301,6 +3303,10 @@
 "ui.menu.profile.activate" = "Kích hoạt cấu hình";
 /* Item of the Profile menu that turns off the active profile. */
 "ui.menu.profile.deactivate" = "Hủy kích hoạt cấu hình";
+/* Disabled item of the Profile menu's Activate Profile submenu when no profile exists. */
+"ui.menu.profile.none" = "Không có cấu hình";
+/* Disabled item of the Profile menu's Activate Profile submenu while the profile list is loading or cannot be read. */
+"ui.menu.profile.unavailable" = "Cấu hình không khả dụng";
 /* Title of the alert shown when turning off a profile from the menu fails. */
 "ui.menu.profile.deactivateFailed" = "Không thể hủy kích hoạt cấu hình";
 /* Message of the alert shown when the profile changed elsewhere during the turn off. */

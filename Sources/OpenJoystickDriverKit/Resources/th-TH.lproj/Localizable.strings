@@ -3293,6 +3293,8 @@
 "ui.menu.controller.disconnectWirelessLink" = "ตัดการเชื่อมต่อไร้สาย";
 /* Item of the Controller menu that shows the selected controller in the main window. */
 "ui.menu.controller.showInWindow" = "แสดงในหน้าต่าง";
+/* Disabled item of the Controller menu and of the status item's Controllers submenu when no controller is connected. */
+"ui.menu.controller.noneConnected" = "ไม่มีคอนโทรลเลอร์ที่เชื่อมต่อ";
 /* Disabled item of the Controller menu when no controller is selected. */
 "ui.menu.controller.noneSelected" = "ไม่ได้เลือกคอนโทรลเลอร์";
 /* Title of the Profile menu in the menu bar. */
@@ -3301,6 +3303,10 @@
 "ui.menu.profile.activate" = "เปิดใช้งานโปรไฟล์";
 /* Item of the Profile menu that turns off the active profile. */
 "ui.menu.profile.deactivate" = "ปิดใช้งานโปรไฟล์";
+/* Disabled item of the Profile menu's Activate Profile submenu when no profile exists. */
+"ui.menu.profile.none" = "ไม่มีโปรไฟล์";
+/* Disabled item of the Profile menu's Activate Profile submenu while the profile list is loading or cannot be read. */
+"ui.menu.profile.unavailable" = "โปรไฟล์ไม่พร้อมใช้งาน";
 /* Title of the alert shown when turning off a profile from the menu fails. */
 "ui.menu.profile.deactivateFailed" = "ไม่สามารถปิดใช้งานโปรไฟล์ได้";
 /* Message of the alert shown when the profile changed elsewhere during the turn off. */

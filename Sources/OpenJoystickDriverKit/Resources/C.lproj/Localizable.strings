@@ -3516,14 +3516,20 @@
 "ui.menu.controller.disconnectWirelessLink" = "Disconnect Wireless Link";
 /* Item of the Controller menu that shows the selected controller in the main window. */
 "ui.menu.controller.showInWindow" = "Show in Window";
+/* Disabled item of the Controller menu and of the status item's Controllers submenu when no controller is connected. */
+"ui.menu.controller.noneConnected" = "No Controller Connected";
 /* Disabled item of the Controller menu when no controller is selected. */
-"ui.menu.controller.noneSelected" = "No controller selected";
+"ui.menu.controller.noneSelected" = "No Controller Selected";
 /* Title of the Profile menu in the menu bar. */
 "ui.menu.profile.title" = "Profile";
 /* Item of the Profile menu that turns on the selected profile. */
 "ui.menu.profile.activate" = "Activate Profile";
 /* Item of the Profile menu that turns off the active profile. */
 "ui.menu.profile.deactivate" = "Deactivate Profile";
+/* Disabled item of the Profile menu's Activate Profile submenu when no profile exists. */
+"ui.menu.profile.none" = "No Profiles";
+/* Disabled item of the Profile menu's Activate Profile submenu while the profile list is loading or cannot be read. */
+"ui.menu.profile.unavailable" = "Profiles Unavailable";
 /* Title of the alert shown when turning off a profile from the menu fails. */
 "ui.menu.profile.deactivateFailed" = "The profile could not be deactivated";
 /* Message of the alert shown when the profile changed elsewhere during the turn off. */
@@ -3545,7 +3551,7 @@
 /* Item of the Help menu that opens the sheet that explains an error code. Keep the three dots. */
 "ui.menu.help.explainErrorCode" = "Explain Error Code...";
 /* Item of the Help menu that opens the page where the user reports a problem. Keep the three dots. */
-"ui.menu.help.reportProblem" = "Report a Problem...";
+"ui.menu.help.reportProblem" = "Report Problem...";
 /* Item of the Help menu that opens the project website. */
 "ui.menu.help.projectWebsite" = "Project Website";
 /* Title of the alert shown after the support report is copied. */
@@ -3631,7 +3637,7 @@
 /* Menu item in the help submenu that opens the sheet that explains an error code. Keep the three dots. */
 "ui.extra.explainErrorCode" = "Explain Error Code...";
 /* Menu item in the help submenu that opens the page where the user reports a problem. Keep the three dots. */
-"ui.extra.reportProblem" = "Report a Problem...";
+"ui.extra.reportProblem" = "Report Problem...";
 /* Menu item in the help submenu that opens the project website. */
 "ui.extra.projectWebsite" = "Project Website";
 /* Title of the alert shown when an action of the menu bar menu fails. */
