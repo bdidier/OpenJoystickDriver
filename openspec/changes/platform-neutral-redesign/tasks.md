@@ -445,6 +445,9 @@ Verify: the full check list.
   OJD's HID client on the pad shows `"ClientOptions"=1` (seize requested) and `"ClientSeized"=No`.
   Steam's mapping of that second pad is `0500f9d2ac05000004000000fdde6d04,PLAYSTATION(R)3 Controller,a:b0,b:b1,x:b5,y:b6,back:b4,guide:b2,start:b3,leftstick:b12,rightstick:b15,leftshoulder:b11,rightshoulder:b14,dpup:b10,dpdown:b7,dpleft:b8,dpright:b9,leftx:a0,lefty:a1~,rightx:a2,righty:a3~,lefttrigger:b13,righttrigger:b16,platform:macOS` (bus `0x0005`, `05AC:0004`): L2 and R2 are buttons with no analog range, and Select gives no input although `back:b4` is mapped.
   With the `Native` profile this is the only pad Steam shows.
+  With the `SDLCompatible` profile and Steam Input on for Xbox and generic controllers, Steam shows three pads for the one DS3: this one; OJD's virtual pad (24.65); and "XInput Controller #3", which is Steam reading the DS3 itself through SDL's HID driver (`03007a2e4c0500006802000000016800,*,…,lefttrigger:a4,…,righttrigger:a5,…,crc:2e7a`: bus `0x0003`, `054C:0268`, version `0x0100`, byte 14 `h`).
+  On that third pad the analog triggers work, L3, R3 and rumble do not.
+  Since OJD does not seize the pad, any other app can read it and write its output reports alongside OJD.
   Find why the seize does not take and what keeps Apple's driver bound, make OJD the only source of the pad's input while it serves it, and name the state in the controller detail and `ojd controller list` when macOS still publishes its own pad.
   Verify: a test for the seize result and its user-facing state; translations reviewed against `LOCALIZATION.md`; `wiki/Known-Issues.md` describes what remains; `just check` passes; H-line: Steam lists one DS3 pad with analog L2/R2 and Select.
 - [ ] 24.68 OJD's HID client on the DualShock 3 `054C:0268` shows `"EnqueueErrorCount"=458` in the IORegistry, so the kernel drops input reports before OJD reads them.
