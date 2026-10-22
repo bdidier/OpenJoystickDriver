@@ -2,7 +2,7 @@
 // that runs osascript. System Events is not used: it is a separate process whose
 // Accessibility trust is attributed apart from the host app and reports no windows
 // when that attribution fails.
-// Usage: osascript -l JavaScript ax.js <command> <pid> [argument]
+// Usage: osascript -l JavaScript ax.js <command> <pid> [argument...]
 //   session                    "locked=true|false console=true|false" (no pid needed)
 //   probe                      0, or the AXError of reading the app role (-25211: not trusted)
 //   app-state                  "main=true|false settings=<tab>|none"
@@ -12,10 +12,19 @@
 //   open-settings <tab>        opens Settings from the app menu and selects the tab
 //   window-bounds main|settings   "x y width height"
 //   close-window main|settings    presses the close button
+//   activate                   makes the app frontmost (AXFrontmost and NSRunningApplication)
+//   raise main|settings        activates the app and raises that window (AXRaise)
+//   menu-titles                titles of the main menu bar items, one per line, in menu bar order
+//   open-menu <title> [item...]   activates the app, opens that main menu bar item and presses
+//                              each named item in turn, which opens a submenu
+//   open-status-menu [item...] the same for the app's status item (AXExtrasMenuBar)
+//   press-escape               posts an Escape key press to the frontmost app, which closes
+//                              the innermost open menu
 // The main window is the one with a split group (the sidebar). The Settings window is
 // the one without a sidebar whose toolbar holds all three tabs.
 ObjC.import("ApplicationServices");
 ObjC.import("CoreGraphics");
+ObjC.import("AppKit");
 ObjC.bindFunction("AXUIElementCreateApplication", ["id", ["int"]]);
 ObjC.bindFunction("AXUIElementCopyAttributeValue", ["int", ["id", "id", "id *"]]);
 ObjC.bindFunction("AXUIElementSetAttributeValue", ["int", ["id", "id", "id"]]);
@@ -23,6 +32,10 @@ ObjC.bindFunction("AXUIElementSetMessagingTimeout", ["int", ["id", "float"]]);
 ObjC.bindFunction("AXUIElementPerformAction", ["int", ["id", "id"]]);
 
 const AX_NOT_TRUSTED = -25211;
+// NSApplicationActivateAllWindows: brings every window of the app forward, not only the key one.
+const ACTIVATE_ALL_WINDOWS = 1;
+// Virtual key code of Escape.
+const KEY_ESCAPE = 53;
 // $.kCFBooleanTrue is a pointer to the constant, which AX rejects as a value (AXError -25201); a boxed NSNumber bool bridges to a CFBoolean.
 const AX_TRUE = $.NSNumber.numberWithBool(true);
 const SETTINGS_TABS = ["General", "Notifications", "Advanced"];
@@ -115,6 +128,42 @@ function find(app, kind) {
 	return found;
 }
 
+// Makes the app frontmost through the Accessibility API and NSRunningApplication. The return
+// value of activateWithOptions is not read: whether the app came forward is decided by the
+// window list, which capture.py reads and refuses on.
+function activate(app, pid) {
+	const code = $.AXUIElementSetAttributeValue(app, "AXFrontmost", AX_TRUE);
+	if (code !== 0) throw new Error("bringing the app to the front failed with AXError " + code);
+	$.NSRunningApplication.runningApplicationWithProcessIdentifier(pid).activateWithOptions(ACTIVATE_ALL_WINDOWS);
+}
+
+function mainMenuBar(app) {
+	const bar = children(app, "AXMenuBar")[0];
+	if (!bar) throw new Error("the app has no menu bar");
+	return bar;
+}
+
+function statusMenuBarItem(app) {
+	const { value: bar } = read(app, "AXExtrasMenuBar");
+	if (bar === null) throw new Error("the app has no status item menu bar");
+	const found = children(bar, "AXMenuBarItem");
+	if (found.length !== 1) throw new Error("the app has " + found.length + " status items, expected 1");
+	return found[0];
+}
+
+// Presses each named item of the menu that belongs to `start`, so a submenu opens.
+function pressPath(start, names) {
+	let element = start;
+	for (const name of names) {
+		const entry = waitFor(() => {
+			const menu = children(element, "AXMenu")[0];
+			return menu && children(menu, "AXMenuItem").find((item) => label(item) === name);
+		}, "menu item " + name + " did not appear");
+		press(entry);
+		element = entry;
+	}
+}
+
 function sidebar(app) {
 	const split = children(find(app, "main"), "AXSplitGroup")[0];
 	const group = children(split, "AXGroup")[0];
@@ -162,7 +211,7 @@ function waitFor(condition, what) {
 }
 
 function run(argv) {
-	const [command, pidText, argument] = argv;
+	const [command, pidText, argument, ...rest] = argv;
 	if (command === "session") {
 		const dictionary = $.CGSessionCopyCurrentDictionary();
 		const session = dictionary && ObjC.deepUnwrap(ObjC.castRefToObject(dictionary));
@@ -231,6 +280,45 @@ function run(argv) {
 			const { value: button } = read(find(app, argument), "AXCloseButton");
 			if (button === null) throw new Error("the " + argument + " window has no close button");
 			press(button);
+			return "";
+		}
+		case "activate":
+			activate(app, pid);
+			return "";
+		case "raise": {
+			activate(app, pid);
+			const code = $.AXUIElementPerformAction(find(app, argument), "AXRaise");
+			if (code !== 0) throw new Error("raising the " + argument + " window failed with AXError " + code);
+			return "";
+		}
+		case "menu-titles":
+			return children(mainMenuBar(app), "AXMenuBarItem")
+				.map((item) => {
+					const title = label(item);
+					if (!title) throw new Error("a main menu bar item has no title");
+					return title;
+				})
+				.join("\n");
+		case "open-menu": {
+			activate(app, pid);
+			const item = children(mainMenuBar(app), "AXMenuBarItem").find((candidate) => label(candidate) === argument);
+			if (!item) throw new Error("the main menu bar has no item named " + argument);
+			press(item);
+			pressPath(item, rest);
+			return "";
+		}
+		case "open-status-menu": {
+			activate(app, pid);
+			const item = statusMenuBarItem(app);
+			press(item);
+			pressPath(item, argument === undefined ? [] : [argument, ...rest]);
+			return "";
+		}
+		case "press-escape": {
+			for (const down of [true, false]) {
+				const event = $.CGEventCreateKeyboardEvent(null, KEY_ESCAPE, down);
+				$.CGEventPost($.kCGHIDEventTap, event);
+			}
 			return "";
 		}
 		default:

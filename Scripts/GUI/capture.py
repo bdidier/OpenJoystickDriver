@@ -10,6 +10,7 @@ import subprocess
 import sys
 import time
 from collections.abc import Callable
+from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 
@@ -31,10 +32,47 @@ ACCESSIBILITY_CANNOT_COMPLETE = "-25204"
 # element that answers. Readiness is therefore polled, bounded by this deadline.
 APP_READY_TIMEOUT_SECONDS = 15.0
 APP_READY_POLL_SECONDS = 0.25
+# After the app is activated and its window raised, the window list needs a moment to show
+# nothing in front of it. No signal reports that, so the list is polled until this deadline.
+FRONT_TIMEOUT_SECONDS = 5.0
+FRONT_POLL_SECONDS = 0.25
+# kCGPopUpMenuWindowLevel: the layer of every open menu and submenu window.
+MENU_LAYER = 101
+# An open menu is on screen once the app owns as many menu windows as menus are open, and
+# stable once two window lists in a row show the same menu windows at the same bounds.
+MENU_TIMEOUT_SECONDS = 5.0
+MENU_POLL_SECONDS = 0.1
+MENU_STABLE_READS = 2
+# Escape closes the innermost open menu: a parent menu with an open submenu needs two presses.
+ESCAPE_PRESSES = 4
+ESCAPE_SETTLE_SECONDS = 1.0
+# The title of the system menu that leads the menu bar of every app; it is not the app's menu.
+APPLE_MENU_TITLE = "Apple"
+PROFILE_MENU_TITLE = "Profile"
+ACTIVATE_PROFILE_TITLE = "Activate Profile"
+STATUS_PROFILES_TITLE = "Profiles"
+STATUS_ACTIVATE_TITLE = "Activate"
 
 
 class CaptureError(Exception):
     pass
+
+
+@dataclass(frozen=True)
+class MenuTarget:
+    """One menu capture: the file name stem, the menu bar item and the submenu items to open.
+
+    `status_item` selects the app's status item instead of a main menu bar item; its `path`
+    then holds only submenu items. `depth` is the number of menus open at the end.
+    """
+
+    name: str
+    path: tuple[str, ...]
+    status_item: bool = False
+
+    @property
+    def depth(self) -> int:
+        return len(self.path) + (1 if self.status_item else 0)
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
@@ -51,7 +89,17 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         "--settings-pane", choices=SETTINGS_PANES, help="tab of the Settings window"
     )
     choice.add_argument(
-        "--all", action="store_true", help="every sidebar area and settings pane"
+        "--menus",
+        action="store_true",
+        help=(
+            "every main menu, the Activate Profile submenu and the status item menu, "
+            "each with its open submenu in one image"
+        ),
+    )
+    choice.add_argument(
+        "--all",
+        action="store_true",
+        help="every sidebar area, settings pane and menu",
     )
     parser.add_argument(
         "--ready-timeout",
@@ -63,11 +111,25 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
             f"(default {APP_READY_TIMEOUT_SECONDS:g})"
         ),
     )
+    parser.add_argument(
+        "--front-timeout",
+        type=float,
+        default=FRONT_TIMEOUT_SECONDS,
+        metavar="SECONDS",
+        help=(
+            "longest wait for no other window to cover a captured window after the app "
+            f"is brought forward (default {FRONT_TIMEOUT_SECONDS:g})"
+        ),
+    )
     args = parser.parse_args(argv)
-    if not math.isfinite(args.ready_timeout) or args.ready_timeout <= 0:
-        parser.error(
-            "--ready-timeout must be a finite number of seconds greater than zero"
-        )
+    for option, value in (
+        ("--ready-timeout", args.ready_timeout),
+        ("--front-timeout", args.front_timeout),
+    ):
+        if not math.isfinite(value) or value <= 0:
+            parser.error(
+                f"{option} must be a finite number of seconds greater than zero"
+            )
     return args
 
 
@@ -259,27 +321,220 @@ def read_state() -> tuple[bool, str | None]:
     return found.group(1) == "true", tab
 
 
-def shoot(pid: int, kind: str, destination: Path) -> None:
-    """Captures the screen rectangle of the window, so its materials show what lies behind.
+def covered_message(subject: str, covering: list[str]) -> str:
+    return (
+        f"{subject} is covered by windows of {', '.join(sorted(set(covering)))} "
+        "although the app was brought forward: move them off and run the capture again"
+    )
 
-    `screencapture -l` draws one window alone over transparency: a Liquid Glass or other
-    translucent surface then has no backdrop and comes out washed out over a checkerboard.
-    The rectangle shows whatever is in front of the window too, so a covered window fails.
+
+def bring_forward(
+    pid: int,
+    kind: str,
+    timeout: float = FRONT_TIMEOUT_SECONDS,
+    clock: Callable[[], float] = time.monotonic,
+    sleep: Callable[[float], None] = time.sleep,
+) -> dict:
+    """Activates the app, raises its `kind` window and returns it once nothing covers it.
+
+    The raise is repeated on every read of the window list, until `timeout` seconds have
+    passed on `clock`. A window that is still covered then fails by the owners of the
+    windows in front of it: a covered window is never captured.
     """
-    windows = on_screen_windows()
-    window = find_window(pid, kind, windows)
-    covering = covering_windows(window, windows)
-    if covering:
-        raise CaptureError(
-            f"the {kind} window is covered by windows of {', '.join(sorted(set(covering)))}: "
-            "move them off the window and run the capture again"
-        )
+    deadline = clock() + timeout
+    while True:
+        gui("raise", kind)
+        windows = on_screen_windows()
+        window = find_window(pid, kind, windows)
+        covering = covering_windows(window, windows)
+        if not covering:
+            return window
+        if clock() >= deadline:
+            raise CaptureError(covered_message(f"the {kind} window", covering))
+        sleep(min(FRONT_POLL_SECONDS, max(0.0, deadline - clock())))
+
+
+def capture_rectangle(window: dict, destination: Path) -> None:
+    """Writes the screen rectangle of `window` to `destination` and prints the path."""
     run(["screencapture", "-x", "-R", screen_rectangle(window), str(destination)])
     if not destination.is_file() or destination.stat().st_size == 0:
         raise CaptureError(
             f"screencapture wrote no image to {destination}: grant Screen Recording"
         )
     print(destination)
+
+
+def shoot(
+    pid: int,
+    kind: str,
+    destination: Path,
+    timeout: float = FRONT_TIMEOUT_SECONDS,
+    clock: Callable[[], float] = time.monotonic,
+    sleep: Callable[[float], None] = time.sleep,
+) -> None:
+    """Captures the screen rectangle of the window, so its materials show what lies behind.
+
+    `screencapture -l` draws one window alone over transparency: a Liquid Glass or other
+    translucent surface then has no backdrop and comes out washed out over a checkerboard.
+    The rectangle shows whatever is in front of the window too, so the app is brought
+    forward first and a window that stays covered fails.
+    """
+    capture_rectangle(bring_forward(pid, kind, timeout, clock, sleep), destination)
+
+
+def menu_slug(title: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "-", title.lower()).strip("-")
+
+
+def menu_targets(titles: list[str]) -> list[MenuTarget]:
+    """The menu captures in order: each main menu in menu bar order, the Activate Profile
+    submenu right after the Profile menu, then the status item menu and its Activate submenu.
+
+    The Apple menu is the system's, not the app's, so it is left out. Menu titles that give
+    the same file name, and a menu bar without a Profile menu, are refused.
+    """
+    own = [title for title in titles if title != APPLE_MENU_TITLE]
+    if PROFILE_MENU_TITLE not in own:
+        raise CaptureError(
+            f"the main menu bar has no {PROFILE_MENU_TITLE} menu (found {own or 'none'})"
+        )
+    targets: list[MenuTarget] = []
+    for title in own:
+        targets.append(MenuTarget(f"menu-{menu_slug(title)}", (title,)))
+        if title == PROFILE_MENU_TITLE:
+            targets.append(
+                MenuTarget(
+                    f"menu-{menu_slug(title)}-{menu_slug(ACTIVATE_PROFILE_TITLE)}",
+                    (title, ACTIVATE_PROFILE_TITLE),
+                )
+            )
+    targets.append(MenuTarget("menu-status-item", (), status_item=True))
+    targets.append(
+        MenuTarget(
+            "menu-status-item-profiles-activate",
+            (STATUS_PROFILES_TITLE, STATUS_ACTIVATE_TITLE),
+            status_item=True,
+        )
+    )
+    names = [target.name for target in targets]
+    for name in sorted(set(names)):
+        if names.count(name) > 1:
+            raise CaptureError(f"two menus give the capture name {name}")
+    return targets
+
+
+def open_menu_command(target: MenuTarget) -> tuple[str, ...]:
+    if target.status_item:
+        return ("open-status-menu", *target.path)
+    return ("open-menu", *target.path)
+
+
+def menu_windows(pid: int, windows: list[dict]) -> list[dict]:
+    """The open menu and submenu windows of the app, front to back."""
+    return [
+        window
+        for window in windows
+        if window["pid"] == pid and window["layer"] == MENU_LAYER
+    ]
+
+
+def union_rectangle(windows: list[dict]) -> dict:
+    """The smallest rectangle that holds every window, as a window of its own."""
+    if not windows:
+        raise CaptureError("no window to take a rectangle from")
+    left = min(window["x"] for window in windows)
+    top = min(window["y"] for window in windows)
+    right = max(window["x"] + window["width"] for window in windows)
+    bottom = max(window["y"] + window["height"] for window in windows)
+    return {"x": left, "y": top, "width": right - left, "height": bottom - top}
+
+
+def menu_signature(windows: list[dict]) -> list[tuple]:
+    return sorted((w["id"], w["x"], w["y"], w["width"], w["height"]) for w in windows)
+
+
+def wait_for_menu(
+    pid: int,
+    depth: int,
+    clock: Callable[[], float] = time.monotonic,
+    sleep: Callable[[float], None] = time.sleep,
+) -> tuple[list[dict], list[dict]]:
+    """Waits until `depth` menu windows are on screen and unchanged over two reads.
+
+    Returns the menu windows and the whole window list they were read from.
+    """
+    deadline = clock() + MENU_TIMEOUT_SECONDS
+    previous: list[tuple] | None = None
+    stable = 0
+    while True:
+        windows = on_screen_windows()
+        menus = menu_windows(pid, windows)
+        signature = menu_signature(menus)
+        if len(menus) >= depth:
+            stable = stable + 1 if signature == previous else 1
+            if stable >= MENU_STABLE_READS:
+                return menus, windows
+        else:
+            stable = 0
+        previous = signature
+        if clock() >= deadline:
+            raise CaptureError(
+                f"{len(menus)} of {depth} menu windows of {PROCESS} were on screen and "
+                f"stable within {MENU_TIMEOUT_SECONDS:g} s"
+            )
+        sleep(MENU_POLL_SECONDS)
+
+
+def close_menu(
+    pid: int,
+    clock: Callable[[], float] = time.monotonic,
+    sleep: Callable[[float], None] = time.sleep,
+) -> None:
+    """Presses Escape until the app has no open menu window, at most ESCAPE_PRESSES times."""
+    for _ in range(ESCAPE_PRESSES):
+        if not menu_windows(pid, on_screen_windows()):
+            return
+        gui("press-escape")
+        deadline = clock() + ESCAPE_SETTLE_SECONDS
+        while clock() < deadline:
+            if not menu_windows(pid, on_screen_windows()):
+                return
+            sleep(MENU_POLL_SECONDS)
+    if menu_windows(pid, on_screen_windows()):
+        raise CaptureError(
+            f"a menu of {PROCESS} is still open after {ESCAPE_PRESSES} Escape presses"
+        )
+
+
+def shoot_menu(
+    pid: int,
+    target: MenuTarget,
+    destination: Path,
+    clock: Callable[[], float] = time.monotonic,
+    sleep: Callable[[float], None] = time.sleep,
+) -> None:
+    """Opens the menu through the Accessibility API, captures the union rectangle of its
+    open menu windows (a parent menu and its open submenu in one image), then closes it.
+
+    A menu that a window covers fails like a covered window. A close that fails after another
+    failure is printed and the first failure is raised.
+    """
+    try:
+        gui(*open_menu_command(target))
+        menus, windows = wait_for_menu(pid, target.depth, clock, sleep)
+        covering = [
+            owner for menu in menus for owner in covering_windows(menu, windows)
+        ]
+        if covering:
+            raise CaptureError(covered_message(f"the {target.name} menu", covering))
+        capture_rectangle(union_rectangle(menus), destination)
+    except CaptureError:
+        try:
+            close_menu(pid, clock, sleep)
+        except CaptureError as error:
+            print(f"error: close {target.name}: {error}", file=sys.stderr)
+        raise
+    close_menu(pid, clock, sleep)
 
 
 def make_folder() -> Path:
@@ -321,6 +576,7 @@ def capture(args: argparse.Namespace) -> int:
         if args.settings_pane
         else ()
     )
+    menus = args.all or args.menus
     main_was_open, settings_tab = read_state()
     folder = make_folder()
     sidebar = None
@@ -331,11 +587,19 @@ def capture(args: argparse.Namespace) -> int:
         sidebar = gui("current-sidebar")
         for area in areas:
             gui("select-sidebar", area)
-            shoot(pid, "main", folder / f"main-{area.lower()}.png")
+            shoot(pid, "main", folder / f"main-{area.lower()}.png", args.front_timeout)
         for pane in panes:
             opens_settings = settings_tab is None
             gui("open-settings", pane)
-            shoot(pid, "settings", folder / f"settings-{pane.lower()}.png")
+            shoot(
+                pid,
+                "settings",
+                folder / f"settings-{pane.lower()}.png",
+                args.front_timeout,
+            )
+        if menus:
+            for target in menu_targets(gui("menu-titles").split("\n")):
+                shoot_menu(pid, target, folder / f"{target.name}.png")
     finally:
         steps: list[tuple[str, tuple[str, ...]]] = []
         if sidebar is not None:
