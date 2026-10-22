@@ -26,7 +26,7 @@ struct SchemaRejectionTests {
   /// The code the Swift decoder gives one case.
   private static func controllerRefusal(_ document: [String: Any]) -> String?? {
     do {
-      _ = try ControllerRecordSet.makeRecord(document, order: nil, layers: [:])
+      _ = try ControllerRecordSet.makeRecord(OrderedJSON(foundation: document), layers: [:])
       return .none
     } catch {
       return .some(ControllerRecordSet.problemCode(error)?.rawValue)

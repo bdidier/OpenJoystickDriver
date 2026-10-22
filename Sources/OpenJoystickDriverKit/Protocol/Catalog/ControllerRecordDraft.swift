@@ -72,10 +72,13 @@ public struct ControllerRecordDraft: Sendable {
     var fields: [String: Any] = ["modes": [defaultMode]]
     if let layout { fields["input"] = layout.json }
     let body: [String: Any]
+    var restatedModes: OrderedJSON?
     if bundled {
       // A patch overrides `modes` as a whole, so it restates the bundled record's other modes.
-      if let modes = Self.bundledModes(of: model) {
-        fields["modes"] = modes.map { $0["id"] as? String == "default" ? defaultMode : $0 }
+      if let modes = Self.bundledModes(of: model),
+        let defaultJSON = try? OrderedJSON(foundation: defaultMode)
+      {
+        restatedModes = .array(modes.map { $0["id"]?.string == "default" ? defaultJSON : $0 })
       }
       if ControllerRecordSet.bundled.records[model]?.family != family.rawValue {
         // The byte layout replaces the old record's usage map instead of merging into it.
@@ -94,18 +97,23 @@ public struct ControllerRecordDraft: Sendable {
       fields["productID"] = Int(model.productID)
       body = fields
     }
-    guard
-      let text = try? OrderedJSON(foundation: body, order: .recordKeys).formatted()
-    else { return nil }
-    self.text = text
+    guard var json = try? OrderedJSON(foundation: body, order: .recordKeys) else { return nil }
+    if let restatedModes {
+      json = ControllerPatchMerge.mergePatch(
+        json,
+        .object([.init(key: "patch", value: .object([.init(key: "modes", value: restatedModes)]))])
+      )
+    }
+    text = json.formatted()
   }
 
-  /// The `modes` of the bundled record of `model`, as written in its document.
-  private static func bundledModes(of model: ControllerModelID) -> [[String: Any]]? {
+  /// The `modes` of the bundled record of `model`, as written in its document: member order and
+  /// number text are the file's.
+  private static func bundledModes(of model: ControllerModelID) -> [OrderedJSON]? {
     guard let data = ControllerRecordSet.bundled.records[model]?.document,
-      let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
+      case .array(let modes)? = (try? OrderedJSON.parse(data))?["modes"]
     else { return nil }
-    return object["modes"] as? [[String: Any]]
+    return modes
   }
 
   /// The most common length among `reports`, the longest on a tie, or nil when none is 1 to 64

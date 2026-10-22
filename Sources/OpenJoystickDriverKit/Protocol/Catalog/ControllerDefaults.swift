@@ -56,23 +56,21 @@ public struct ControllerDefaults: Equatable, Sendable {
     file: String? = nil
   ) throws -> (patch: ControllerPatch, tuning: ControllerTuning) {
     try ControllerRecordSet.requireUTF8(data)
-    guard let object = try? JSONSerialization.jsonObject(with: data),
-      let document = object as? [String: Any]
-    else {
+    guard (try? JSONSerialization.jsonObject(with: data)) is [String: Any] else {
       throw ControllerRecordProblem(code: .invalidControllerRecord, "the file is not a JSON object")
     }
-    _ = try ControllerRecordSet.ordered(data)
-    let patch = try ControllerPatch.parse(document, file: file)
+    let patch = try ControllerPatch.parse(try ControllerRecordSet.ordered(data), file: file)
     guard patch.selector == .all else {
       throw ControllerRecordProblem(
         code: .invalidControllerRecord,
         "the selector must be all in \(fileName)"
       )
     }
-    var values = patch.body["tuning"] as? [String: Any] ?? [:]
-    values = values.filter { !($0.value is NSNull) }
+    let values = (patch.body["tuning"]?.members ?? []).filter { $0.value != .null }
     do {
-      let section = try JSONSerialization.data(withJSONObject: values)
+      let section = try JSONSerialization.data(
+        withJSONObject: OrderedJSON.object(values).foundationValue()
+      )
       return (
         patch, try JSONDecoder().decode(ControllerRecordDocument.Tuning.self, from: section).tuning
       )

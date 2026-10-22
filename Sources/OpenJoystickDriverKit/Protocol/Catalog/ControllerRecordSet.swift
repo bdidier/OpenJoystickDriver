@@ -220,11 +220,12 @@ public struct ControllerRecordSet: Sendable {
       do {
         let data = try RepositoryProblem.read(url)
         try requireUTF8(data)
-        let document = try jsonObject(data)
+        _ = try jsonObject(data)
+        let document = try ordered(data)
         let layers = Dictionary(
           uniqueKeysWithValues: fieldNames(of: document).map { ($0, ControllerRecordLayer.bundled) }
         )
-        let record = try makeRecord(document, order: ordered(data), layers: layers)
+        let record = try makeRecord(document, layers: layers)
         guard url.lastPathComponent == fileName(for: record.model) else {
           throw ControllerRecordProblem(
             code: .invalidControllerRecord,
@@ -252,11 +253,14 @@ public struct ControllerRecordSet: Sendable {
     return stem.enumerated().allSatisfy { offset, character in offset == 4 || character.isHexDigit }
   }
 
+  /// The model and the typed document of `record`. The typed document is read from the
+  /// Foundation view of `record` (``OrderedJSON/foundationValue()``) and is never written back as
+  /// text.
   static func decode(
-    _ record: [String: Any]
+    _ record: OrderedJSON
   ) throws -> (model: ControllerModelID, document: ControllerRecordDocument) {
     let data: Data
-    do { data = try JSONSerialization.data(withJSONObject: record) } catch {
+    do { data = try JSONSerialization.data(withJSONObject: record.foundationValue()) } catch {
       throw ControllerRecordProblem(code: .invalidControllerRecord, error.localizedDescription)
     }
     let document = try JSONDecoder().decode(ControllerRecordDocument.self, from: data)
@@ -301,11 +305,10 @@ public struct ControllerRecordSet: Sendable {
     }
   }
 
-  /// The record for `record`, whose ``ControllerRecord/text`` lists the members in the order
-  /// of `order` and sorts the members `order` lacks.
+  /// The record for `record`, whose ``ControllerRecord/text`` is `record` as it is: members in
+  /// its order and numbers as written.
   static func makeRecord(
-    _ record: [String: Any],
-    order: OrderedJSON?,
+    _ record: OrderedJSON,
     layers: [String: ControllerRecordLayer],
     tuningLayers: [String: ControllerRecordLayer]? = nil,
     userFile: URL? = nil,
@@ -315,7 +318,7 @@ public struct ControllerRecordSet: Sendable {
     let set = decoded.document.tuning.setKeys
     return ControllerRecord(
       model: decoded.model,
-      text: try OrderedJSON(foundation: record, order: order).formatted(),
+      text: record.formatted(),
       fieldLayers: layers,
       tuningLayers: tuningLayers
         ?? Dictionary(
@@ -331,8 +334,10 @@ public struct ControllerRecordSet: Sendable {
     )
   }
 
-  static func fieldNames(of record: [String: Any]) -> [String] {
-    record.keys.filter { !["apiVersion", "kind", "vendorID", "productID"].contains($0) }
+  static func fieldNames(of record: OrderedJSON) -> [String] {
+    (record.members ?? []).map(\.key).filter {
+      !["apiVersion", "kind", "vendorID", "productID"].contains($0)
+    }
   }
 
   /// An integer JSON number; booleans and fractions are not integers.

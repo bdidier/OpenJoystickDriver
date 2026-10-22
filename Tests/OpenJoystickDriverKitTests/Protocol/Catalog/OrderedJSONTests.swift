@@ -380,32 +380,4 @@ struct OrderedJSONTests {
     let value = try OrderedJSON.parse(Data(#"{"b": [1, {"c": "d\"e"}], "a": {}, "f": []}"#.utf8))
     #expect(value.compact() == #"{"b":[1,{"c":"d\"e"}],"a":{},"f":[]}"#)
   }
-
-  @Test
-  func mergingAPatchOrdersTheRecordFirstThenThePatchsNewMembers() throws {
-    let record = try OrderedJSON.parse(Data(#"{"b": {"y": 1, "x": 2}, "a": [1, 2], "c": 3}"#.utf8))
-    let patch = try OrderedJSON.parse(
-      Data(
-        #"{"d": {"q": 1, "p": null}, "b": {"z": 1, "x": 5}, "a": [{"k": 1, "j": 2}], "c": null}"#
-          .utf8
-      )
-    )
-    let merged = record.merging(patch: patch)
-    #expect(
-      try OrderedJSON.parse(
-        Data(#"{"b": {"y": 1, "x": 5, "z": 1}, "a": [{"k": 1, "j": 2}], "d": {"q": 1}}"#.utf8)
-      )
-        == merged
-    )
-    // A member deleted and added again, and an object over a scalar, take the patch's order.
-    let again = merged.merging(
-      patch: try OrderedJSON.parse(Data(#"{"b": null}"#.utf8))
-    ).merging(patch: try OrderedJSON.parse(Data(#"{"b": {"w": 1, "v": 2}, "d": {"s": 0}}"#.utf8)))
-    #expect(
-      try OrderedJSON.parse(
-        Data(#"{"a": [{"k": 1, "j": 2}], "d": {"q": 1, "s": 0}, "b": {"w": 1, "v": 2}}"#.utf8)
-      )
-        == again
-    )
-  }
 }

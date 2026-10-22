@@ -324,4 +324,31 @@ struct RecordCommandTests {
     let positions = try names.map { try #require(output.range(of: "\n  \"\($0)\"")).lowerBound }
     #expect(positions == positions.sorted())
   }
+
+  /// A user patch over a bundled record keeps the number text of the patch file in every output
+  /// that prints the record text (`--plain` lists layers only): `8E-2` and `1e3` stay as written,
+  /// not `0.08` and `1000`.
+  @Test
+  func aPatchedRecordPrintsItsNumbersAsThePatchFileWritesThem() async throws {
+    let directory = Directory()
+    let patch = Data(
+      """
+      {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "ControllerPatch",
+       "selector": {"vendorID": 13932, "productID": 5},
+       "patch": {"tuning": {"stickDeadzone": 8E-2, "usbTransferTimeoutMs": 1e3}}}
+      """.utf8
+    )
+    try directory.write(patch, as: "366c-0005.patch.json")
+
+    let json = await run(["show", "366C:0005", "--json"], in: directory)
+    let human = await run(["show", "366C:0005"], in: directory)
+
+    for result in [json, human] {
+      #expect(result.code == 0, "\(result.standardError)")
+      #expect(result.standardOutput.contains("8E-2"), "\(result.standardOutput)")
+      #expect(result.standardOutput.contains("1e3"), "\(result.standardOutput)")
+      #expect(!result.standardOutput.contains("0.08"))
+    }
+    #expect(json.standardOutput.contains("\"stickDeadzone\": 8E-2,"))
+  }
 }

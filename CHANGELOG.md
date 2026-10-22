@@ -234,6 +234,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The pr
 
 ### Fixed
 
+- A record that a patch changed keeps the text of its numbers: `ojd record show`, `ojd record show --json` and `ojd record draft` print `8E-2` and `1e3` where the patch file writes them, not `0.08` and `1000`, and an integer of more than 64 bits keeps its digits. The patch merge works on `OrderedJSON` values, keeps the member order of the record, and appends the members a patch adds in the patch's order; an array that a patch replaces has the patch's order.
 - An endpoint client that the service refuses or closes with an error, such as `E1004` for a ninth connection, always reads that error line before the connection ends; a close that came while the service finished writing an earlier line could end the connection without it.
 - The native-send deadline of a virtual gamepad, the 2-second wait for a virtual device to report cancellation, and the deadline of `withTimeout` in the command line now run on a timer thread of their own instead of `Task.sleep` on the cooperative pool, so a busy pool no longer delays them past their limit.
 - The idle and hung-send deadline of a virtual feed, the frame-hold pacing of its player, and the timeouts of a virtual output transition now run on the same timer thread, so a busy pool no longer delays them.
