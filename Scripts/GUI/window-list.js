@@ -1,8 +1,8 @@
-// Prints the on-screen windows of a process as JSON: [{id, x, y, width, height}].
-// Usage: osascript -l JavaScript window-list.js <pid>
+// Prints the on-screen windows of every process, front to back, as JSON:
+// [{id, pid, owner, layer, x, y, width, height}].
+// Usage: osascript -l JavaScript window-list.js
 ObjC.import("CoreGraphics");
-function run(argv) {
-	const pid = Number(argv[0]);
+function run() {
 	const info = ObjC.deepUnwrap(
 		ObjC.castRefToObject(
 			$.CGWindowListCopyWindowInfo(
@@ -12,14 +12,15 @@ function run(argv) {
 		),
 	);
 	return JSON.stringify(
-		info
-			.filter((w) => w.kCGWindowOwnerPID === pid && w.kCGWindowLayer === 0)
-			.map((w) => ({
-				id: w.kCGWindowNumber,
-				x: w.kCGWindowBounds.X,
-				y: w.kCGWindowBounds.Y,
-				width: w.kCGWindowBounds.Width,
-				height: w.kCGWindowBounds.Height,
-			})),
+		info.map((w) => ({
+			id: w.kCGWindowNumber,
+			pid: w.kCGWindowOwnerPID,
+			owner: w.kCGWindowOwnerName || "",
+			layer: w.kCGWindowLayer,
+			x: w.kCGWindowBounds.X,
+			y: w.kCGWindowBounds.Y,
+			width: w.kCGWindowBounds.Width,
+			height: w.kCGWindowBounds.Height,
+		})),
 	);
 }

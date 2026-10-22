@@ -18,6 +18,16 @@ class TargetInvoked(Exception):
 
 
 UNLOCKED = "locked=false console=true"
+APP_WINDOW: dict[str, object] = {
+    "id": 9,
+    "pid": 1,
+    "owner": "OpenJoystickDriver",
+    "layer": 0,
+    "x": 10,
+    "y": 20,
+    "width": 300,
+    "height": 200,
+}
 
 
 class GuiCaptureTests(unittest.TestCase):
@@ -66,39 +76,93 @@ class GuiCaptureTests(unittest.TestCase):
         ):
             capture.process_id()
 
-    def window_id_with(self, bounds: str, windows: list[dict[str, int]]) -> int:
-        with (
-            patch.object(capture, "gui", return_value=bounds),
-            patch.object(capture, "run", return_value=json.dumps(windows)),
-        ):
-            return capture.window_id(1, "settings")
+    def window(self, **fields: object) -> dict:
+        return {**APP_WINDOW, **fields}
 
-    def test_window_id_matches_bounds_within_tolerance(self) -> None:
-        windows = [
-            {"id": 7, "x": 0, "y": 0, "width": 100, "height": 50},
-            {"id": 9, "x": 10, "y": 20, "width": 300, "height": 200},
-        ]
-        self.assertEqual(self.window_id_with("10 20 300 200", windows), 9)
-        self.assertEqual(self.window_id_with("11.5 18.5 301 199", windows), 9)
+    def find_window_with(self, bounds: str, windows: list[dict]) -> dict:
+        with patch.object(capture, "gui", return_value=bounds):
+            return capture.find_window(1, "settings", windows)
 
-    def test_window_id_rejects_bounds_outside_tolerance(self) -> None:
-        windows = [{"id": 9, "x": 10, "y": 20, "width": 300, "height": 200}]
+    def test_find_window_matches_bounds_within_tolerance(self) -> None:
+        windows = [self.window(id=7, x=0, y=0, width=100, height=50), self.window()]
+        self.assertEqual(self.find_window_with("10 20 300 200", windows)["id"], 9)
+        self.assertEqual(self.find_window_with("11.5 18.5 301 199", windows)["id"], 9)
+
+    def test_find_window_takes_only_app_windows_of_layer_zero(self) -> None:
+        for other in (self.window(pid=2), self.window(layer=101)):
+            with self.subTest(other=other), self.assertRaises(capture.CaptureError):
+                self.find_window_with("10 20 300 200", [other])
+
+    def test_find_window_rejects_bounds_outside_tolerance(self) -> None:
         with self.assertRaises(capture.CaptureError):
-            self.window_id_with("13 20 300 200", windows)
+            self.find_window_with("13 20 300 200", [self.window()])
         with self.assertRaises(capture.CaptureError):
-            self.window_id_with("10 20 300 200", [])
+            self.find_window_with("10 20 300 200", [])
 
-    def test_window_id_rejects_unparsable_bounds(self) -> None:
+    def test_find_window_rejects_unparsable_bounds(self) -> None:
         with self.assertRaises(capture.CaptureError):
-            self.window_id_with("not numbers", [])
+            self.find_window_with("not numbers", [])
 
-    def test_window_id_rejects_wrong_number_of_bounds(self) -> None:
+    def test_find_window_rejects_wrong_number_of_bounds(self) -> None:
         for reported in ("1 2 3", "1 2 3 4 5", ""):
             with (
                 self.subTest(reported=reported),
                 self.assertRaises(capture.CaptureError),
             ):
-                self.window_id_with(reported, [])
+                self.find_window_with(reported, [])
+
+    def test_covering_windows_are_the_overlapping_ones_in_front(self) -> None:
+        target = self.window()
+        windows = [
+            self.window(id=1, pid=5, owner="Menubar", layer=24, y=0, height=33),
+            self.window(id=2, pid=6, owner="Dock", layer=20, x=0, y=0, width=1728),
+            self.window(id=3, pid=7, owner="Code", x=200, y=100),
+            self.window(id=4, pid=8, owner="Safari", x=310, y=20),
+            target,
+            self.window(id=5, pid=9, owner="Finder", x=0, y=0, width=1728),
+        ]
+        # Code overlaps in front; Safari only touches the right edge; the menu bar and the
+        # Dock lie over every window; Finder is behind.
+        self.assertEqual(capture.covering_windows(target, windows), ["Code"])
+        self.assertEqual(capture.covering_windows(target, [target]), [])
+
+    def shoot_with(self, windows: list[dict]) -> tuple[list[list[str]], Path]:
+        commands: list[list[str]] = []
+
+        def fake_run(command: list[str]) -> str:
+            commands.append(command)
+            if command[0] == "osascript":
+                return json.dumps(windows)
+            Path(command[-1]).write_bytes(b"png")
+            return ""
+
+        folder = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, folder)
+        with (
+            patch.object(capture, "run", side_effect=fake_run),
+            patch.object(capture, "gui", return_value="10 20 300 200"),
+            patch("builtins.print"),
+        ):
+            capture.shoot(1, "main", folder / "main.png")
+        return commands, folder
+
+    def test_shoot_captures_the_screen_rectangle_of_the_window(self) -> None:
+        # screencapture -l draws the window alone over transparency, so translucent
+        # materials lose their backdrop; -R captures the screen as it shows.
+        commands, folder = self.shoot_with([self.window(x=10.5)])
+        self.assertEqual(
+            commands[-1],
+            ["screencapture", "-x", "-R", "10.5,20,300,200", str(folder / "main.png")],
+        )
+        captures = [command for command in commands if command[0] == "screencapture"]
+        self.assertEqual(len(captures), 1)
+        self.assertNotIn("-l", captures[0])
+
+    def test_shoot_refuses_a_covered_window_and_names_the_owner(self) -> None:
+        windows = [self.window(id=3, pid=7, owner="Code", x=200), self.window()]
+        with self.assertRaises(capture.CaptureError) as raised:
+            self.shoot_with(windows)
+        self.assertIn("covered by windows of Code", str(raised.exception))
 
     def test_capture_folders_are_unique_within_one_second(self) -> None:
         with (
