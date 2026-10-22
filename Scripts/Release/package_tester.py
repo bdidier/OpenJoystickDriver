@@ -168,13 +168,16 @@ def main(argv: list[str]) -> int:
             ]
         )
         print("\n=== Notarize and staple tester app ===")
-        notary_env = env | {
-            "OJD_NOTARIZE_APP": str(app_path),
-            "OJD_NOTARIZE_ZIP": str(notary_zip),
-        }
         run(
-            ["/usr/bin/env", "bash", str(SCRIPT_DIR / "notarize.sh"), "submit"],
-            env=notary_env,
+            [
+                "/usr/bin/env",
+                "bash",
+                str(SCRIPT_DIR / "notarize.sh"),
+                "submit",
+                str(app_path),
+                str(notary_zip),
+            ],
+            env=env,
         )
         print("\n=== Verify notarization ticket and Gatekeeper acceptance ===")
         run(["/usr/bin/xcrun", "stapler", "validate", str(app_path)])
@@ -192,12 +195,7 @@ def main(argv: list[str]) -> int:
         run(["/usr/bin/ditto", str(app_path), str(staging / "OpenJoystickDriver.app")])
         (staging / "Applications").symlink_to("/Applications")
         build_info = staging / "OpenJoystickDriver-TESTER-BUILD.txt"
-        app_identity = os.environ.get(
-            "GUI_CODESIGN_IDENTITY", os.environ.get("CODESIGN_IDENTITY", "-")
-        )
-        dext_identity = os.environ.get(
-            "DEXT_BUILD_IDENTITY", os.environ.get("CODESIGN_IDENTITY", "-")
-        )
+        signing_identity = os.environ.get("CODESIGN_IDENTITY", "-")
         metadata = tester_metadata(artifact.name, version, build_version)
         build_info.write_text(f"""OpenJoystickDriver local tester artifact
 
@@ -208,8 +206,7 @@ bundle_version: {metadata["bundle_version"]}
 commit: {commit}
 working_tree: {tree_state}
 built_at_utc: {dt.datetime.now(dt.UTC).strftime("%Y-%m-%dT%H:%M:%SZ")}
-app_signing_identity: {app_identity}
-dext_signing_identity: {dext_identity}
+signing_identity: {signing_identity}
 notarization: {metadata["notarization"]}
 stapling: {metadata["stapling"]}
 gatekeeper: {metadata["gatekeeper"]}

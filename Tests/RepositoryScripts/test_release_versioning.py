@@ -100,8 +100,8 @@ def validate_tester_packaging_flow(*, fail_after_dmg: bool) -> None:
                 shutil.copytree(command[1], command[2])
             elif "notarize.sh" in " ".join(command):
                 events.append("notarize")
-                assert env is not None
-                Path(env["OJD_NOTARIZE_ZIP"]).write_text("temporary upload")
+                assert command[-3] == "submit"
+                Path(command[-1]).write_text("temporary upload")
             elif command[:3] == ["/usr/bin/xcrun", "stapler", "validate"]:
                 events.append("stapler")
             elif command[0] == "/usr/sbin/spctl":

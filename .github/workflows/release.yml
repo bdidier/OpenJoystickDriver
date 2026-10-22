@@ -47,6 +47,9 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
+      - name: Swift toolchain
+        uses: ./.github/actions/swift-toolchain
+
       - name: Remove unused untrusted Homebrew taps
         run: |
           if brew tap | grep -Fxq aws/tap; then

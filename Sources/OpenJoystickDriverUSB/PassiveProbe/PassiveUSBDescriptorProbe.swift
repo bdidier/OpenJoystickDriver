@@ -7,25 +7,15 @@ public enum PassiveUSBDescriptorProbe {
     PassiveUSBDescriptorTuple(vendorID: 0x3537, productID: 0x1010)
   ]
 
-  /// The passive probe runs in debug builds only.
-  public static func contributorGate() -> Bool {
-    _isDebugAssertConfiguration()
-  }
-
-  #if DEBUG
-    public static let buildMode = "DEBUG"
-  #else
-    public static let buildMode = "RELEASE"
-  #endif
-
+  /// Reads the registry facts of the one connected device of an authorized tuple. The read claims
+  /// no interface and issues no USB transfer, as the passive read of USB detection does.
   public static func scan(
     authorizedTuple tuple: PassiveUSBDescriptorTuple
   ) throws -> PassiveUSBProbeResult {
-    guard contributorGate() else { throw PassiveUSBDescriptorProbeError.contributorGateRequired }
-    return try scanWithoutGate(authorizedTuple: tuple, source: IOUSBHostPassiveUSBRegistrySource())
+    try scan(authorizedTuple: tuple, source: IOUSBHostPassiveUSBRegistrySource())
   }
 
-  static func scanWithoutGate(
+  static func scan(
     authorizedTuple tuple: PassiveUSBDescriptorTuple,
     source: any PassiveUSBRegistrySource
   ) throws -> PassiveUSBProbeResult {
@@ -55,8 +45,8 @@ public enum PassiveUSBDescriptorProbe {
   }
 
   /// Reads descriptor-backed transport facts without claiming an interface or
-  /// issuing a USB transfer. This path is intentionally independent of the
-  /// contributor gate and does not participate in raw-USB admission.
+  /// issuing a USB transfer. It takes any device, not only an authorized tuple, and does not
+  /// participate in raw-USB admission.
   ///
   /// `configurationDescriptor` is the device's own descriptor of its current configuration, read by
   /// the transport; it replaces any registry descriptor bytes, so its endpoints become observable.
@@ -230,14 +220,4 @@ public enum PassiveUSBDescriptorProbe {
     default: return .unknown
     }
   }
-
-  #if DEBUG
-    public static func scanUsingContributorSource(
-      authorizedTuple tuple: PassiveUSBDescriptorTuple,
-      source: any PassiveUSBRegistrySource
-    ) throws -> PassiveUSBProbeResult {
-      guard contributorGate() else { throw PassiveUSBDescriptorProbeError.contributorGateRequired }
-      return try scanWithoutGate(authorizedTuple: tuple, source: source)
-    }
-  #endif
 }

@@ -20,9 +20,9 @@ from .capability_model import (
     CapabilityError,
     OutcomeKind,
     RepairOutcome,
-    _load_env_file,
-    update_env_value,
 )
+from .env_file import read as read_env_file
+from .env_file import update as update_env_value
 
 
 def _truthy(value: str | None) -> bool:
@@ -256,12 +256,10 @@ class Resolver:
     def _ensure_signing(self, capability: Capability) -> RepairOutcome:
         mode = "release" if capability == Capability.RELEASE_SIGNING else "dev"
         env_file = self.project_dir / f".env.{mode}"
-        values = _load_env_file(env_file, self.environ)
+        values = read_env_file(env_file, self.environ)
         required = {
             "CODESIGN_IDENTITY",
             "DEVELOPMENT_TEAM",
-            "DEXT_BUILD_IDENTITY",
-            "DEXT_BUILD_PROFILE",
             "DEXT_PROVISIONING_PROFILE",
             "GUI_PROVISIONING_PROFILE",
         }
@@ -276,9 +274,9 @@ class Resolver:
                 stdout=subprocess.PIPE,
                 stderr=subprocess.DEVNULL,
             )
-            identities_available = result.returncode == 0 and all(
-                values[key].lower() in result.stdout.lower()
-                for key in ("CODESIGN_IDENTITY", "DEXT_BUILD_IDENTITY")
+            identities_available = (
+                result.returncode == 0
+                and values["CODESIGN_IDENTITY"].lower() in result.stdout.lower()
             )
         if paths_available and identities_available:
             return RepairOutcome(capability, OutcomeKind.AVAILABLE)
@@ -289,10 +287,10 @@ class Resolver:
                 f"{mode} signing is not configured; noninteractive mode cannot acquire Apple assets.",
             )
         signing = self.project_dir / "Scripts/Signing/signing.sh"
-        signing_mode = "release" if mode == "release" else "development"
-        env = self.environ | {"OJD_SIGNING_MODE": signing_mode}
+        signing_mode = ["--mode", "release" if mode == "release" else "development"]
+        env = self.environ
         result = self.run(
-            ["/usr/bin/env", "bash", str(signing), "configure"],
+            ["/usr/bin/env", "bash", str(signing), "configure", *signing_mode],
             env=env,
             text=True,
             check=False,
@@ -300,7 +298,7 @@ class Resolver:
         if result.returncode == 0:
             return RepairOutcome(capability, OutcomeKind.REPAIRED)
         result = self.run(
-            ["/usr/bin/env", "bash", str(signing), "install-profiles"],
+            ["/usr/bin/env", "bash", str(signing), "install-profiles", *signing_mode],
             env=env,
             text=True,
             check=False,
@@ -312,7 +310,7 @@ class Resolver:
                 "Required Apple provisioning profiles were not found. Re-run the original command after downloading them from the Apple Developer portal.",
             )
         result = self.run(
-            ["/usr/bin/env", "bash", str(signing), "configure"],
+            ["/usr/bin/env", "bash", str(signing), "configure", *signing_mode],
             env=env,
             text=True,
             check=False,
@@ -327,7 +325,7 @@ class Resolver:
 
     def _ensure_notarization(self) -> RepairOutcome:
         env_file = self.project_dir / ".env.release"
-        values = _load_env_file(env_file, self.environ)
+        values = read_env_file(env_file, self.environ)
         if _truthy(self.environ.get("CI")) and all(
             self.environ.get(key) or values.get(key)
             for key in ("NOTARIZE_APPLE_ID", "NOTARIZE_PASSWORD", "DEVELOPMENT_TEAM")

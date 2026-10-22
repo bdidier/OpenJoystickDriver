@@ -133,6 +133,14 @@ class EquivalenceSnapshotCommandTests(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertIn("no longer produced by the tree", output)
 
+    def test_check_reports_the_changed_lines_of_a_json_snapshot(self) -> None:
+        (self.snapshots / "report.json").write_text('{\n  "a" : 1,\n  "b" : 2\n}\n')
+        code, output = self.run_check({"report.json": '{\n  "a" : 1,\n  "b" : 3\n}\n'})
+        self.assertEqual(code, 1)
+        self.assertIn("report.json:\n  changed document\n", output)
+        self.assertIn('    -   "b" : 2\n    +   "b" : 3\n', output)
+        self.assertIn("1 difference(s)", output)
+
     def test_check_returns_the_test_status_when_tests_fail(self) -> None:
         (self.snapshots / "a.txt").write_text("## A\nx\n")
         code, _ = self.run_check({"a.txt": "## A\nx\n"}, status=3)

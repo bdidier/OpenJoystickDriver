@@ -1,9 +1,13 @@
 from __future__ import annotations
 
+import contextlib
+import io
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
+from Scripts.Platform import swift_sdk
 from Scripts.Platform.swift_sdk import (
     FOUNDATION_MODULE,
     installed_sdks,
@@ -69,6 +73,16 @@ class SwiftSDKTests(unittest.TestCase):
             sdk = make_sdk(root, "MacOSX27.0.sdk", "6.4")
             (root / "MacOSX.sdk").symlink_to(sdk.name)
             self.assertEqual(installed_sdks([root]), [sdk.resolve()])
+
+    def test_a_compiler_without_a_version_is_an_error(self) -> None:
+        errors = io.StringIO()
+        with (
+            mock.patch.object(swift_sdk, "compiler_version", return_value=None),
+            contextlib.redirect_stderr(errors),
+        ):
+            status = swift_sdk.main(["/stub/swift", "/stub/MacOSX.sdk", "0"])
+        self.assertEqual(status, 1)
+        self.assertIn("names no Swift version", errors.getvalue())
 
 
 if __name__ == "__main__":

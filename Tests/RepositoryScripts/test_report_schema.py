@@ -8,7 +8,11 @@ from typing import Any, cast
 
 from Scripts.Quality import validate_schemas
 
-FIXTURE = Path(__file__).resolve().parent / "fixtures" / "support_report_binding.json"
+FIXTURE = (
+    Path(__file__).resolve().parents[1]
+    / "EquivalenceSnapshots"
+    / "support-report-binding.json"
+)
 
 
 def load_fixture() -> dict[str, Any]:

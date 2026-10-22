@@ -14,7 +14,6 @@ DRIVERKIT_PRODUCT_NAME="XboxUSBDevice"
 DRIVERKIT_GENERATED="$DRIVERKIT_ROOT/generated"
 DRIVERKIT_DERIVED_DATA="$DRIVERKIT_ROOT/derived-data"
 DRIVERKIT_PROJECT="$DRIVERKIT_GENERATED/SwifterKitRuntime.xcodeproj"
-DRIVERKIT_PROFILE_SPECIFIER="${DEXT_BUILD_PROFILE:-OpenJoystickDriver (XboxUSBDevice)}"
 DRIVERKIT_SIGNING_ENTITLEMENTS="$PROJECT_DIR/Sources/DriverKitGenerator/Entitlements/XboxUSBDevice.entitlements"
 _driverkit_profile_suffix=""
 [[ "${OJD_ENV:-dev}" == "release" ]] && _driverkit_profile_suffix="_DevID"
@@ -342,6 +341,15 @@ _driverkit_xcodebuild() {
     "$@" clean build
 }
 
+# The profile's own Name, which Xcode takes as PROVISIONING_PROFILE_SPECIFIER.
+_driverkit_profile_name() {
+  local name
+  name="$(security cms -D -i "$1" 2>/dev/null | plutil -extract Name raw -o - - 2>/dev/null)" \
+    || die "DriverKit provisioning profile has no readable Name: $1"
+  [[ -n "$name" ]] || die "DriverKit provisioning profile has an empty Name: $1"
+  printf '%s\n' "$name"
+}
+
 # Builds, signs, and embeds the dext into the app.
 _build_dext() {
   local configuration="$1" app="$2"
@@ -354,12 +362,13 @@ _build_dext() {
   _validate_driverkit_metadata \
     "$DRIVERKIT_GENERATED" "$DRIVERKIT_SHORT_VERSION" "$DRIVERKIT_BUILD_VERSION"
 
-  local identity="${DEXT_BUILD_IDENTITY:-$CODESIGN_IDENTITY}"
+  local identity="$IDENTITY" specifier
+  specifier="$(_driverkit_profile_name "$DRIVERKIT_PROFILE")"
   verify_profile_cert "$DRIVERKIT_PROFILE" "$identity"
   local signing=(
     CODE_SIGN_IDENTITY="$identity"
     DEVELOPMENT_TEAM="$DEVELOPMENT_TEAM"
-    PROVISIONING_PROFILE_SPECIFIER="$DRIVERKIT_PROFILE_SPECIFIER"
+    PROVISIONING_PROFILE_SPECIFIER="$specifier"
     CODE_SIGN_STYLE=Manual
     CODE_SIGN_ENTITLEMENTS="$DRIVERKIT_SIGNING_ENTITLEMENTS"
   )
@@ -405,7 +414,7 @@ build_dext_bundle() {
   fi
 
   _resolve_host_entitlements "$GUI_PROFILE" "$GUI_ENTITLEMENTS"
-  OJD_ACTIVE_SIGN_IDENTITY="$GUI_IDENTITY" ojd_sign "$app" --entitlements "$GUI_ENTITLEMENTS"
+  ojd_sign "$app" --entitlements "$GUI_ENTITLEMENTS"
   _require_signed_host_access "$app" "$GUI_PROFILE"
 }
 

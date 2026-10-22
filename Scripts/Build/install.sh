@@ -69,7 +69,7 @@ install_fast() {
   [[ -f "$GUI_ENTITLEMENTS" ]] || resolve_entitlements "$GUI_ENTITLEMENTS_TEMPLATE" "$GUI_ENTITLEMENTS"
   _require_codesign_identity
   echo "  Signing: $APP_SRC"
-  OJD_ACTIVE_SIGN_IDENTITY="$GUI_IDENTITY" ojd_sign "$APP_SRC" --entitlements "$GUI_ENTITLEMENTS"
+  ojd_sign "$APP_SRC" --entitlements "$GUI_ENTITLEMENTS"
   echo "  Verifying signature (strict)..."
   /usr/bin/codesign --verify --deep --strict --verbose=2 "$APP_SRC" >/dev/null 2>&1 \
     || die "App signature verification failed after re-sign (run codesign --verify to see why)."
@@ -117,8 +117,9 @@ install_full() {
   if [[ "$OJD_ENV" == "release" ]]; then
     echo ""
     echo "=== Notarizing ==="
-    OJD_NOTARIZE_APP="$PROJECT_DIR/.build/debug/OpenJoystickDriver.app" \
-      /usr/bin/env bash "$SCRIPT_DIR/../Release/notarize.sh" submit
+    /usr/bin/env bash "$SCRIPT_DIR/../Release/notarize.sh" submit \
+      "$PROJECT_DIR/.build/debug/OpenJoystickDriver.app" \
+      "$PROJECT_DIR/.build/OpenJoystickDriver-notarize.zip"
   fi
 
   echo ""

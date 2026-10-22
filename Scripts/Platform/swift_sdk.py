@@ -96,16 +96,19 @@ def main(argv: list[str]) -> int:
     swift, preferred, explicit = argv[0], Path(argv[1]), argv[2] == "1"
     compiler = compiler_version(swift)
     if compiler is None:
-        # An unknown compiler gets the SDK it would have used anyway.
-        print(preferred)
-        return 0
+        print(
+            f"error: `{swift} --version` names no Swift version, so no SDK can be paired with it",
+            file=sys.stderr,
+        )
+        return 1
     if explicit:
         if readable(compiler, preferred):
             print(preferred)
             return 0
         print(
             f"error: SDKROOT={preferred} needs a newer Swift than {swift} "
-            f"({compiler[0]}.{compiler[1]}); unset SDKROOT or TOOLCHAINS",
+            f"({compiler[0]}.{compiler[1]}); unset SDKROOT, or run `swiftly install` for the "
+            "Swift that .swift-version names",
             file=sys.stderr,
         )
         return 1
@@ -113,7 +116,7 @@ def main(argv: list[str]) -> int:
     if sdk is None:
         print(
             f"error: no installed macOS SDK can be read by Swift {compiler[0]}.{compiler[1]} "
-            f"({swift}); install a matching Xcode or unset TOOLCHAINS",
+            f"({swift}); run `swiftly install` for the Swift that .swift-version names",
             file=sys.stderr,
         )
         return 1

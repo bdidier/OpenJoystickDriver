@@ -1,3 +1,4 @@
+import argparse
 import os
 import pathlib
 import plistlib
@@ -6,18 +7,14 @@ import sys
 
 import profile_certs
 
-project_dir = pathlib.Path(os.environ.get("PROJECT_DIR", "."))
-
-dev_env = project_dir / ".env.dev"
-rel_env = project_dir / ".env.release"
-
-gui_dev_profile = os.path.expanduser(os.environ.get("GUI_DEV_PROFILE", ""))
-gui_devid_profile = os.path.expanduser(os.environ.get("GUI_DEVID_PROFILE", ""))
-dext_profile = os.path.expanduser(os.environ.get("DEXT_PROFILE", ""))
-dext_devid_profile = os.path.expanduser(os.environ.get("DEXT_DEVID_PROFILE", ""))
-signing_mode = os.environ.get("OJD_SIGNING_MODE", "all")
-if signing_mode not in {"all", "development", "release"}:
-    raise SystemExit("ERROR: OJD_SIGNING_MODE must be all, development, or release")
+# `signing install-profiles` installs every profile under these file names.
+profiles_dir = pathlib.Path.home() / "Library/MobileDevice/Provisioning Profiles"
+gui_dev_profile = str(profiles_dir / "OpenJoystickDriver.provisionprofile")
+gui_devid_profile = str(profiles_dir / "OpenJoystickDriver_DevID.provisionprofile")
+dext_profile = str(profiles_dir / "OpenJoystickDriver_XboxUSBDevice.provisionprofile")
+dext_devid_profile = str(
+    profiles_dir / "OpenJoystickDriver_XboxUSBDevice_DevID.provisionprofile"
+)
 
 
 def run(args, *, check=True):
@@ -89,24 +86,18 @@ def team_id_from_profile(path: str) -> str:
     raise SystemExit(f"ERROR: Could not read TeamIdentifier from profile: {path}")
 
 
-def profile_name(path: str) -> str:
-    obj = decode_profile(path)
-    name = obj.get("Name")
-    return name if isinstance(name, str) else ""
-
-
 dext_bundle_id = "com.openjoystickdriver.XboxUSBDevice"
 
 
 # A profile embeds every certificate it was generated for. The identity must be embedded in
 # all given profiles and have a private key in the Keychain.
-def pick_identity_matching_profiles(prefix: str, profile_paths: list[str]) -> str:
-    override = os.environ.get(
-        "APPLE_DEV_IDENTITY" if prefix == "Apple Development" else "DEVID_APP_IDENTITY",
-        "",
-    )
-    if override:
-        return override
+def pick_identity_matching_profiles(
+    prefix: str, profile_paths: list[str], chosen: str | None = None
+) -> str:
+    """`chosen` (the `--development-identity` or `--release-identity` option) when given;
+    otherwise the lowest SHA1 of the Keychain identities embedded in every profile."""
+    if chosen:
+        return chosen
     embedded = {path: embedded_cert_sha1s_from_profile(path) for path in profile_paths}
     try:
         keychain = profile_certs.keychain_identities(prefix)
@@ -171,7 +162,7 @@ def update_env_file(
         stripped = line.lstrip()
         matched_key = None
         for key in values:
-            if stripped.startswith((f"{key}=", f"export {key}=")):
+            if stripped.startswith(f"{key}="):
                 matched_key = key
                 break
         if matched_key is None:
@@ -282,7 +273,7 @@ def require_dext_profile(path: str, label: str) -> None:
             raise SystemExit(f"ERROR: {label} contains forbidden entitlement {key}")
 
 
-def configure_development() -> None:
+def configure_development(dev_env: pathlib.Path, chosen_identity: str | None) -> None:
     must_exist(gui_dev_profile, "GUI development provisioning profile")
     must_exist(dext_profile, "DriverKit development provisioning profile")
     require_host_profile(
@@ -295,7 +286,7 @@ def configure_development() -> None:
             "ERROR: development host and DEXT profiles use different teams"
         )
     apple_dev_identity = pick_identity_matching_profiles(
-        "Apple Development", [gui_dev_profile, dext_profile]
+        "Apple Development", [gui_dev_profile, dext_profile], chosen_identity
     )
     update_env_file(
         dev_env,
@@ -303,8 +294,6 @@ def configure_development() -> None:
         {
             "CODESIGN_IDENTITY": apple_dev_identity,
             "DEVELOPMENT_TEAM": dev_team,
-            "DEXT_BUILD_IDENTITY": apple_dev_identity,
-            "DEXT_BUILD_PROFILE": profile_name(dext_profile),
             "DEXT_PROVISIONING_PROFILE": dext_profile,
             "GUI_PROVISIONING_PROFILE": gui_dev_profile,
         },
@@ -312,7 +301,9 @@ def configure_development() -> None:
     print(f"Updated {dev_env}")
 
 
-def configure_release(*, optional: bool) -> None:
+def configure_release(
+    rel_env: pathlib.Path, chosen_identity: str | None, *, optional: bool
+) -> None:
     if optional and (
         not os.path.isfile(gui_devid_profile) or not os.path.isfile(dext_devid_profile)
     ):
@@ -332,19 +323,16 @@ def configure_release(*, optional: bool) -> None:
             "ERROR: Developer ID host and DEXT profiles use different teams"
         )
     devid_identity = pick_identity_matching_profiles(
-        "Developer ID Application", [gui_devid_profile, dext_devid_profile]
+        "Developer ID Application",
+        [gui_devid_profile, dext_devid_profile],
+        chosen_identity,
     )
-    gui_devid_identity = devid_identity
-    dext_devid_identity = devid_identity
     update_env_file(
         rel_env,
         "# Release signing (managed by ./Scripts/ojd signing configure)",
         {
-            "CODESIGN_IDENTITY": gui_devid_identity,
-            "GUI_CODESIGN_IDENTITY": gui_devid_identity,
+            "CODESIGN_IDENTITY": devid_identity,
             "DEVELOPMENT_TEAM": rel_team,
-            "DEXT_BUILD_IDENTITY": dext_devid_identity,
-            "DEXT_BUILD_PROFILE": profile_name(dext_devid_profile),
             "DEXT_PROVISIONING_PROFILE": dext_devid_profile,
             "GUI_PROVISIONING_PROFILE": gui_devid_profile,
         },
@@ -352,8 +340,26 @@ def configure_release(*, optional: bool) -> None:
     print(f"Updated {rel_env}")
 
 
+def main(argv: list[str]) -> None:
+    parser = argparse.ArgumentParser(prog="./Scripts/ojd signing configure")
+    parser.add_argument("--project-dir", type=pathlib.Path, required=True)
+    parser.add_argument(
+        "--mode", choices=("all", "development", "release"), default="all"
+    )
+    parser.add_argument("--development-identity")
+    parser.add_argument("--release-identity")
+    arguments = parser.parse_args(argv)
+    if arguments.mode in {"all", "development"}:
+        configure_development(
+            arguments.project_dir / ".env.dev", arguments.development_identity
+        )
+    if arguments.mode in {"all", "release"}:
+        configure_release(
+            arguments.project_dir / ".env.release",
+            arguments.release_identity,
+            optional=arguments.mode == "all",
+        )
+
+
 if __name__ == "__main__":
-    if signing_mode in {"all", "development"}:
-        configure_development()
-    if signing_mode in {"all", "release"}:
-        configure_release(optional=signing_mode == "all")
+    main(sys.argv[1:])

@@ -2,8 +2,10 @@ import Foundation
 
 /// Reads and writes the equivalence snapshots in `Tests/EquivalenceSnapshots`.
 ///
-/// A snapshot is a text file of sections, each starting with a `## <record>` line, so a
-/// comparison can name the records that changed. Modes, chosen by environment variable:
+/// A `.txt` snapshot is a text file of sections, each starting with a `## <record>` line, so a
+/// comparison can name the records that changed; a `.json` snapshot is one JSON document, which
+/// the comparison diffs by line. Biome skips `Tests/EquivalenceSnapshots`, because each file holds
+/// the exact bytes a test renders. Modes, chosen by environment variable:
 /// - default: compare the rendered text with the file and report a mismatch;
 /// - `OJD_SNAPSHOT_WRITE=1`: rewrite the file from the current tree;
 /// - `OJD_SNAPSHOT_ACTUAL_DIR=<dir>`: write the rendered text to `<dir>` and never fail, so
