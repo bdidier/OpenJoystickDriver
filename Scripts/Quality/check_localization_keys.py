@@ -27,22 +27,15 @@ The catalog itself follows these rules:
   `LocalizationTests` checks the rest of the plural rules: every `%#@name@` value has an entry in
   its bundle, and each entry has the plural categories its language needs.
 
-`GATED_RULES` names each rule that does not fail yet and the task id that lifts it. The keys that
-violate a gated rule are listed per rule in `localization-gated-keys.json`
-(`{"rule": ["key", ...]}`). A gated rule does not fail on the keys listed under it and fails on
-every other key, so a key cannot pick up a violation of a rule it is not listed under. The
-check prints how many violations each gated rule holds back. A key listed under a rule it no longer
-violates fails the check.
+- comment layout: no key has two comments stacked above it;
+- counts: every `NOT_A_COUNT` entry names a key that has an integer count specifier and no
+  `.stringsdict` entry, so an entry cannot outlive its key or its reason.
 
-`--write-gated-keys` only removes entries: the keys that no longer violate their rule and the keys
-that no longer exist. A violation not yet listed makes it fail, naming the key and the rule, and it
-writes nothing; the violation is fixed on the key itself.
-Removing a rule from `GATED_RULES` enforces it everywhere.
+Every rule fails on every key it finds.
 """
 
 from __future__ import annotations
 
-import json
 import plistlib
 import re
 import subprocess
@@ -69,15 +62,6 @@ EXACT_INTERPOLATIONS = {"error.\\(rawValue).message": r"error\.E\d{4}\.message"}
 STRINGS_KEY = re.compile(r'^"((?:[^"\\]|\\.)*)"\s*=', re.MULTILINE)
 LITERAL = re.compile(r'"((?:[^"\\]|\\.)*)"')
 
-
-# Rules that do not fail on the keys in `GATED_KEYS_PATH`, each with the task that lifts it. Lifting
-# a rule is deleting its entry.
-GATED_RULES: dict[str, str] = {
-    "specifier": "22.3",
-    "comment": "22.3",
-    "pluralCount": "22.3",
-}
-GATED_KEYS_PATH = Path("Scripts/Quality/localization-gated-keys.json")
 
 SEGMENT = r"(?:[a-z][a-zA-Z0-9]*|E\d{4})"
 OPERATING_SYSTEMS = ("macos", "windows", "linux")
@@ -756,66 +740,9 @@ def rule_problems(
     return found
 
 
-def gated_keys(root: Path = ROOT) -> dict[str, set[str]]:
-    """Return, per gated rule, the catalog keys the rule does not fail on."""
-    if not GATED_RULES:
-        return {}
-    data = json.loads((root / GATED_KEYS_PATH).read_text(encoding="utf-8"))
-    return {rule: set(data.get(rule, [])) for rule in GATED_RULES}
-
-
-def update_gated_keys(
-    root: Path = ROOT,
-) -> tuple[dict[str, list[str]], list[str]]:
-    """Return (the new gated keys per rule, the reasons the update is refused).
-
-    The update drops the keys that no longer violate their rule or no longer exist. A key that
-    violates a rule without being listed is refused with the key and the rule.
-    """
-    found = rule_problems(root)
-    violating = {rule: {p.key for p in found[rule]} for rule in GATED_RULES}
-    current = gated_keys(root)
-    kept = {rule: current[rule] & violating[rule] for rule in GATED_RULES}
-    refused = [
-        f"{key!r} would need gating for the {rule} rule; fix the key instead"
-        for rule in GATED_RULES
-        for key in sorted(violating[rule] - kept[rule])
-    ]
-    return {rule: sorted(keys) for rule, keys in kept.items()}, refused
-
-
-def write_gated_keys(root: Path = ROOT) -> list[str]:
-    """Write `update_gated_keys` to `GATED_KEYS_PATH` unless it refuses; return the refusals."""
-    data, refused = update_gated_keys(root)
-    if not refused:
-        text = json.dumps(data, indent=2, ensure_ascii=False) + "\n"
-        (root / GATED_KEYS_PATH).write_text(text, encoding="utf-8")
-    return refused
-
-
-def rule_report(
-    found: dict[str, list[RuleProblem]], gated: dict[str, set[str]]
-) -> tuple[list[str], list[str], list[str]]:
-    """Return (failing messages, held-back notes, keys listed under a rule they do not violate)."""
-    failing: list[str] = []
-    held: list[str] = []
-    stale: list[str] = []
-    for rule, problems in found.items():
-        task = GATED_RULES.get(rule)
-        listed = gated.get(rule, set()) if task else set()
-        held_back = [p for p in problems if p.key in listed]
-        failing.extend(p.message for p in problems if p not in held_back)
-        if held_back:
-            held.append(
-                f"gated rule {rule}: {len(held_back)} violation(s) held back until "
-                f"task {task}"
-            )
-        used = {p.key for p in held_back}
-        stale.extend(
-            f"gated key {key!r} violates no {rule} rule; remove it with --write-gated-keys"
-            for key in sorted(listed - used)
-        )
-    return failing, held, stale
+def rule_report(found: dict[str, list[RuleProblem]]) -> list[str]:
+    """Return the message of every violation of every rule."""
+    return [p.message for problems in found.values() for p in problems]
 
 
 def check(root: Path = ROOT) -> tuple[list[tuple[KeyUse, str]], list[KeyUse]]:
@@ -848,25 +775,15 @@ def check(root: Path = ROOT) -> tuple[list[tuple[KeyUse, str]], list[KeyUse]]:
 
 def main(arguments: list[str] | None = None) -> int:
     if arguments:
-        if arguments != ["--write-gated-keys"]:
-            print(
-                "usage: check_localization_keys.py [--write-gated-keys]",
-                file=sys.stderr,
-            )
-            return 2
-        refused = write_gated_keys(ROOT)
-        for reason in refused:
-            print(reason, file=sys.stderr)
-        return 1 if refused else 0
+        print("usage: check_localization_keys.py", file=sys.stderr)
+        return 2
     missing, unscannable = check()
     unread, covered = unread_keys()
     unexplained = [key for key in unread if key not in KEPT_WITHOUT_READER]
     stale = stale_kept(unread, catalog_keys())
-    failing, held, stale_gated = rule_report(rule_problems(), gated_keys())
+    failing = rule_report(rule_problems())
     for problem in failing:
         print(problem)
-    for note in held + stale_gated:
-        print(note)
     for use, reason in missing:
         print(f"{use.path}:{use.line}: {reason} in the en-US catalog")
     for use in unscannable:
@@ -879,12 +796,11 @@ def main(arguments: list[str] | None = None) -> int:
         print(f"kept without reader: {key}: {reason}")
     for text, count in sorted(covered.items()):
         print(f"read by pattern: {text} ({count} keys)")
-    enforced = failing + stale_gated
-    if missing or unexplained or stale or enforced:
+    if missing or unexplained or stale or failing:
         print(
             f"error: {len(missing)} key(s) missing from en-US, {len(unexplained)} "
             f"key(s) with no reader, {len(stale)} stale kept entr(ies), "
-            f"{len(enforced)} catalog rule violation(s)",
+            f"{len(failing)} catalog rule violation(s)",
             file=sys.stderr,
         )
         return 1

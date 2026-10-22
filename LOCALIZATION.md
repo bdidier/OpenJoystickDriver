@@ -27,9 +27,12 @@ English text lives only in the `en-US` catalog. Call sites pass a key and nothin
 - Plurals: a key that takes a count (`%#@name@` or an integer specifier such as `%d`, `%lld`, `%1$lld` in `en-US`) has a `.stringsdict` entry in every bundle, with at least the plural forms CLDR gives that language, listed in `Resources/Localization/PluralCategories.json`, which `LocalizationTests` reads (`ar`: zero, one, two, few, many, other; `ru`: one, few, many, other; `es`, `fr`, `it`, `pt`: one, many, other; `en`, `de`, `hi`, `nl`, `tr`: one, other; `id`, `ja`, `ko`, `th`, `vi`, `zh`: other). An integer specifier that is not a count is listed in `NOT_A_COUNT` in the checker with the reason.
 - Comments: every `en-US` key has a translator comment, a `/* ... */` directly above the entry in `.strings` and a `<!-- ... -->` above the key in `.stringsdict`. The comment says where the text appears and what each specifier is.
 
-The checker fails on every rule above except where `GATED_RULES` in the checker holds a rule back. A held-back rule (`specifier`, `comment`, `pluralCount`) does not fail on the keys listed under it in `Scripts/Quality/localization-gated-keys.json` (`{"rule": ["key", ...]}`) and fails on every other key, so a key cannot add a violation of a rule it is not listed under. A key listed under a rule it no longer violates fails the check. The check prints how many violations each held-back rule holds.
+- Comment layout: a key has one comment above it.
+  Two comments stacked above one key fail, because the translator tool reads only the nearest one.
+- Counts: every `NOT_A_COUNT` entry names a key that still has an integer specifier and no `.stringsdict` entry.
+  An entry for a key that is gone, or that has an entry, fails.
 
-- `python3 Scripts/Quality/check_localization_keys.py --write-gated-keys` only removes entries: keys that no longer violate their rule and keys that no longer exist. A violation that is not listed makes it fail with the key and the rule, and it writes nothing.
+The checker fails on every key that breaks a rule above.
 
 ## Crowdin
 
@@ -40,7 +43,7 @@ The checker fails on every rule above except where `GATED_RULES` in the checker 
 3. Download the translations into the `<locale>.lproj` folders and review them against [Meaning](#meaning) and [Punctuation](#punctuation) before the commit.
 
 22 `.lproj` bundles: `C`, `en-US`, `ar-SA`, `de-DE`, `es-ES`, `es-MX`, `fr-CA`, `fr-FR`, `hi-IN`, `id-ID`, `it-IT`, `ja-JP`, `ko-KR`, `nl-NL`, `pt-BR`, `ru-RU`, `th-TH`, `tr-TR`, `vi-VN`, `zh-CN`, `zh-HK`, `zh-TW`.
-Three plural keys in `en-US` (`status.controllerConnected`, `ui.profiles.assignments`, `ui.debug.outputDevices`).
+Twelve plural keys in `en-US`, each with an entry in every bundle: `status.controllerConnected`, `ui.profiles.assignments`, `ui.debug.outputDevices`, `ui.developer.hiddenIdlePackets`, `ui.developer.stoppedPackets`, `ui.developer.soakTooManySamples`, `cli.controller.group.selectorAmbiguous`, `cli.profile.group.selectorAmbiguous`, `cli.diagnose.group.sampleLimit`, `cli.diagnose.group.soakErrorTooManySamples`, `cli.record.test.matched`, `cli.record.test.mismatch`.
 Every non-English locale began as a machine translation and needs review against the rules in [Meaning](#meaning).
 English source catalogs are `en-US` and `C`.
 Ship only languages that macOS itself offers.
