@@ -278,9 +278,13 @@
       )
     }
 
-    func windowDidMiniaturize(_ notification: Notification) { updateLogFollowing(area: navigation.selectedArea) }
+    func windowDidMiniaturize(_ notification: Notification) {
+      updateLogFollowing(area: navigation.selectedArea)
+    }
 
-    func windowDidDeminiaturize(_ notification: Notification) { updateLogFollowing(area: navigation.selectedArea) }
+    func windowDidDeminiaturize(_ notification: Notification) {
+      updateLogFollowing(area: navigation.selectedArea)
+    }
 
     func windowDidResize(_ notification: Notification) {
       guard !isEnforcingMinimumSize, let window = notification.object as? NSWindow else { return }
