@@ -480,6 +480,30 @@ struct OJDRepositoryToolTests {
     }
   }
 
+  /// An integer beyond 64 bits is written with its digits. `apply-patches` merges and does not
+  /// check ranges, so a tuning value out of range shows the number text and `validate records`
+  /// is what refuses it.
+  @Test
+  func applyPatchesWritesAnIntegerOfTwentyFiveDigitsAsItsPatchFileWritesIt() throws {
+    let digits = "1234567890123456789012345"
+    try Self.applyPatches(
+      record: Self.upstream,
+      patches: [
+        "057e/057e-2066.patch.json": Self.patchDocument(
+          selector: Self.identity,
+          body: #"{"tuning": {"usbTransferTimeoutMs": "# + digits + "}}"
+        )
+      ]
+    ) { result, output in
+      #expect(result.status == 0, "\(result.standardOutput)")
+      let text = try String(
+        contentsOf: output.appendingPathComponent("057e/057e-2066.json"),
+        encoding: .utf8
+      )
+      #expect(text.contains(#""usbTransferTimeoutMs": "# + digits), "\(text)")
+    }
+  }
+
   @Test
   func applyPatchesKeepsTheNumbersOfARecordNoPatchChanges() throws {
     try Self.applyPatches(

@@ -351,4 +351,23 @@ struct RecordCommandTests {
     }
     #expect(json.standardOutput.contains("\"stickDeadzone\": 8E-2,"))
   }
+
+  /// No record field takes an integer of 25 digits, so the command refuses it and does not
+  /// round it to a `Double` and accept it.
+  @Test
+  func anIntegerBeyond64BitsInATuningValueIsRefused() async throws {
+    let directory = Directory()
+    let patch = Data(
+      """
+      {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "ControllerPatch",
+       "selector": {"vendorID": 13932, "productID": 5},
+       "patch": {"tuning": {"usbTransferTimeoutMs": 1234567890123456789012345}}}
+      """.utf8
+    )
+
+    let result = await run(["validate", "-", "--json"], in: directory, stdin: patch)
+
+    #expect(result.code == 1, "\(result.standardOutput)")
+    #expect(directory.fileNames.isEmpty)
+  }
 }
