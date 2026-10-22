@@ -990,7 +990,8 @@ class GuiCaptureTests(unittest.TestCase):
 
         def fake_run(command: list[str]) -> str:
             events.append(command)
-            Path(command[-1]).write_bytes(b"png")
+            if command[0] == "screencapture":
+                Path(command[-1]).write_bytes(b"png")
             return ""
 
         def fake_gui(*command: str) -> str:
@@ -1001,6 +1002,11 @@ class GuiCaptureTests(unittest.TestCase):
         failure: Exception | None = None
         with (
             patch.object(capture, "run", side_effect=fake_run),
+            patch.object(
+                capture.repository_tool,
+                "binary",
+                return_value=Path("/tool/OJDRepositoryTool"),
+            ),
             patch.object(capture, "gui", side_effect=fake_gui),
             patch.object(capture, "on_screen_windows", side_effect=reads),
             patch("builtins.print"),
@@ -1033,6 +1039,14 @@ class GuiCaptureTests(unittest.TestCase):
                     "-R",
                     "100,33,350,587",
                     str(folder / "menu.png"),
+                ],
+                [
+                    "/tool/OJDRepositoryTool",
+                    "mask-image",
+                    str(folder / "menu.png"),
+                    "100,33,350,587",
+                    "100,33,200,300",
+                    "300,120,150,500",
                 ],
                 ("press-escape",),
                 ("press-escape",),
@@ -1115,10 +1129,20 @@ class GuiCaptureTests(unittest.TestCase):
         self.assertEqual(events, [("open-status-menu",)])
 
     def run_menu_capture(
-        self, argv: list[str], ids: str, english: object = None
+        self,
+        argv: list[str],
+        ids: str,
+        english: object = None,
+        tool: Exception | None = None,
     ) -> tuple[list, list]:
         shots: list[str] = []
         calls: list[tuple[str, ...]] = []
+
+        def fake_binary() -> Path:
+            calls.append(("build OJDRepositoryTool",))
+            if tool is not None:
+                raise tool
+            return Path("/tool/OJDRepositoryTool")
 
         def fake_gui(*command: str) -> str:
             calls.append(command)
@@ -1136,6 +1160,7 @@ class GuiCaptureTests(unittest.TestCase):
             patch.object(capture, "run"),
             patch.object(capture, "read_state", return_value=(True, None)),
             patch.object(capture, "gui", side_effect=fake_gui),
+            patch.object(capture.repository_tool, "binary", side_effect=fake_binary),
             patch.object(capture, "shoot"),
             patch.object(
                 capture,
@@ -1170,6 +1195,20 @@ class GuiCaptureTests(unittest.TestCase):
         area_shots, calls = self.run_menu_capture(["--area", "Library"], "menu.profile")
         self.assertEqual(area_shots, [])
         self.assertNotIn(("menu-ids",), calls)
+        self.assertNotIn(("build OJDRepositoryTool",), calls)
+
+    def test_menus_capture_builds_the_mask_tool_before_it_drives_the_app(self) -> None:
+        _, calls = self.run_menu_capture(["--menus"], "menu.profile")
+        self.assertEqual(calls[0], ("build OJDRepositoryTool",))
+
+    def test_a_mask_tool_that_does_not_build_stops_the_menus_capture(self) -> None:
+        failure = capture.repository_tool.ToolError(
+            "cannot build OJDRepositoryTool: no"
+        )
+        with self.assertRaisesRegex(
+            capture.CaptureError, "cannot build OJDRepositoryTool: no"
+        ):
+            self.run_menu_capture(["--menus"], "menu.profile", tool=failure)
 
     def test_only_sidebar_and_settings_captures_need_an_english_ui(self) -> None:
         refused = capture.CaptureError("the app UI language is de-DE")

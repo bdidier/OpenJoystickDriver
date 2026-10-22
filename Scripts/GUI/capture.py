@@ -14,6 +14,8 @@ from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 
+from Scripts.Quality import repository_tool
+
 PROJECT_DIR = Path(__file__).resolve().parents[2]
 GUI_DIR = Path(__file__).resolve().parent
 APP = Path("/Applications/OpenJoystickDriver.app")
@@ -388,13 +390,12 @@ def bring_forward(
 
 
 def capture_rectangle(window: dict, destination: Path) -> None:
-    """Writes the screen rectangle of `window` to `destination` and prints the path."""
+    """Writes the screen rectangle of `window` to `destination`."""
     run(["screencapture", "-x", "-R", screen_rectangle(window), str(destination)])
     if not destination.is_file() or destination.stat().st_size == 0:
         raise CaptureError(
             f"screencapture wrote no image to {destination}: grant Screen Recording"
         )
-    print(destination)
 
 
 def shoot(
@@ -413,6 +414,7 @@ def shoot(
     forward first and a window that stays covered fails.
     """
     capture_rectangle(bring_forward(pid, kind, timeout, clock, sleep), destination)
+    print(destination)
 
 
 def menu_slug(identifier: str) -> str:
@@ -485,6 +487,32 @@ def union_rectangle(windows: list[dict]) -> dict:
     right = max(window["x"] + window["width"] for window in windows)
     bottom = max(window["y"] + window["height"] for window in windows)
     return {"x": left, "y": top, "width": right - left, "height": bottom - top}
+
+
+def mask_tool() -> Path:
+    """The built `OJDRepositoryTool`, which masks a menu capture in Swift."""
+    try:
+        return repository_tool.binary()
+    except repository_tool.ToolError as error:
+        raise CaptureError(str(error)) from error
+
+
+def keep_menu_windows(menus: list[dict], frame: dict, destination: Path) -> None:
+    """Makes every pixel of the `frame` capture outside all menu windows transparent.
+
+    The union rectangle of a parent menu and its submenu, or of a status menu, holds screen
+    beside the menus that can show another app. `OJDRepositoryTool mask-image` keeps each menu
+    window's whole bounds, its rounded corners and their shadow pixels included.
+    """
+    run(
+        [
+            str(mask_tool()),
+            "mask-image",
+            str(destination),
+            screen_rectangle(frame),
+            *(screen_rectangle(menu) for menu in menus),
+        ]
+    )
 
 
 def menu_signature(windows: list[dict]) -> list[tuple]:
@@ -562,7 +590,8 @@ def shoot_menu(
     sleep: Callable[[float], None] = time.sleep,
 ) -> None:
     """Opens the menu through the Accessibility API, captures the union rectangle of its
-    open menu windows (a parent menu and its open submenu in one image), then closes it.
+    open menu windows (a parent menu and its open submenu in one image) with every pixel
+    outside the menu windows transparent, then closes it.
 
     A menu of the app that is open before the capture opens one is refused, because its
     window would join the image. A menu that a window covers fails like a covered window. A
@@ -589,7 +618,10 @@ def shoot_menu(
             raise CaptureError(
                 covered_message(f"the {target.name} menu", covering, "once it opened")
             )
-        capture_rectangle(union_rectangle(menus), destination)
+        frame = union_rectangle(menus)
+        capture_rectangle(frame, destination)
+        keep_menu_windows(menus, frame, destination)
+        print(destination)
     except CaptureError:
         try:
             close_menu(pid, clock, sleep)
@@ -640,6 +672,9 @@ def capture(args: argparse.Namespace) -> int:
     menus = args.all or args.menus
     if areas or panes:
         require_english_ui()
+    if menus:
+        # Built before any menu opens, so no build runs while a menu waits on screen.
+        mask_tool()
     main_was_open, settings_tab = read_state()
     folder = make_folder()
     sidebar = None

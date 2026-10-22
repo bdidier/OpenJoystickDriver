@@ -3,7 +3,7 @@ import OpenJoystickDriverKit
 
 /// A call that the tool refuses. It exits with ``exitCode``, which no check result uses, and names
 /// the call on standard error.
-private struct UsageError: Error {
+struct UsageError: Error {
   static let exitCode: Int32 = 64
   let message: String
 }
@@ -18,6 +18,7 @@ private let usage = """
       --out <directory>
     OJDRepositoryTool facts
     OJDRepositoryTool kebab <value>...
+    OJDRepositoryTool mask-image <png> <frame> <keep>...
   A path is a file, or a directory whose .json files are checked.
   validate controllers and descriptions read a directory at any depth. apply-patches reads
   Controller files at any depth and writes each to its relative path, and refuses a patch file
@@ -28,6 +29,11 @@ private let usage = """
   domainCodePrefixes (the start of the codes of each error domain) and domainAreas (the en-US name
   of the area of each error domain). kebab prints one JSON object that maps
   each value to its CommandLineName.kebab spelling. Neither prints problems and both exit 0.
+  mask-image rewrites a `screencapture -R <frame>` PNG so that every pixel outside all <keep>
+  rectangles is transparent and every pixel inside one is unchanged. Each rectangle is
+  x,y,width,height in global points, and each <keep> lies inside <frame>. The pixels per point
+  are the image size over the frame size. It prints nothing and exits 0, or 64 for an image it
+  cannot read or write.
   Each problem is one JSON line {"code", "file", "message"} on standard output. The exit status is
   0 without a problem, 1 with one, and 64 for a call that the tool refuses.
   """
@@ -145,6 +151,10 @@ private func document(_ arguments: [String]) throws -> [String: Any]? {
 
 do {
   let arguments = Array(CommandLine.arguments.dropFirst())
+  if arguments.first == "mask-image" {
+    try MaskImage.run(Array(arguments.dropFirst()))
+    exit(0)
+  }
   if let object = try document(arguments) {
     FileHandle.standardOutput.write(
       try JSONSerialization.data(withJSONObject: object, options: [.sortedKeys])
