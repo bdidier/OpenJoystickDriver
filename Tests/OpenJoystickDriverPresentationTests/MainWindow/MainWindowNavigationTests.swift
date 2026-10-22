@@ -10,10 +10,13 @@ struct MainWindowNavigationTests {
   @MainActor
   func theDockIconShowsWhileShowInDockIsOnOrAWindowIsOpen() {
     var requestedPolicies: [NSApplication.ActivationPolicy] = []
-    let dock = DockIconController { policy in
-      requestedPolicies.append(policy)
-      return true
-    }
+    let dock = DockIconController(
+      setActivationPolicy: { policy in
+        requestedPolicies.append(policy)
+        return true
+      },
+      activation: FakeActivation().activation
+    )
 
     // Show in Dock off, no window: no icon.
     #expect(dock.appliedPolicy == .accessory)
@@ -36,26 +39,84 @@ struct MainWindowNavigationTests {
     #expect(dock.appliedPolicy == .accessory)
   }
 
+  @Test(arguments: [DockIconController.Window.workbench, .settings, .inputTest])
+  @MainActor
+  func anActiveAppThatTurnsRegularHandsActivationToTheDockAndTakesItBack(
+    _ window: DockIconController.Window
+  ) {
+    let fake = FakeActivation()
+    fake.isActive = true
+    let dock = DockIconController(setActivationPolicy: { _ in true }, activation: fake.activation)
+
+    dock.setOpen(window, true)
+    #expect(fake.events == ["observe", "activate Dock"])
+    #expect(dock.isHandingOffActivation)
+
+    fake.resignActive()
+    #expect(fake.events == ["observe", "activate Dock", "stop", "activate app"])
+    #expect(!dock.isHandingOffActivation)
+    // The observation ended: a later resign leaves the app inactive.
+    fake.resignActive()
+    #expect(fake.events.filter { $0 == "activate app" }.count == 1)
+
+    // Another window opens while the app is regular: no switch, no hand-off.
+    dock.setOpen(window == .settings ? .workbench : .settings, true)
+    #expect(fake.events.count == 4)
+  }
+
   @Test
   @MainActor
-  func theAppIsActivatedAfterAWindowSwitchesItToRegular() {
-    var events: [String] = []
-    let dock = DockIconController(
-      setActivationPolicy: { policy in
-        events.append("policy \(policy.rawValue)")
-        return true
-      },
-      activateApplication: { events.append("activate") }
-    )
+  func showInDockTurningOnWhileTheAppIsActiveHandsActivationToTheDock() {
+    let fake = FakeActivation()
+    fake.isActive = true
+    let dock = DockIconController(setActivationPolicy: { _ in true }, activation: fake.activation)
+
+    dock.showsAlways = true
+    #expect(fake.events == ["observe", "activate Dock"])
+  }
+
+  @Test
+  @MainActor
+  func anInactiveAppThatTurnsRegularHandsNothingOff() {
+    let fake = FakeActivation()
+    let dock = DockIconController(setActivationPolicy: { _ in true }, activation: fake.activation)
 
     dock.setOpen(.workbench, true)
-    dock.setOpen(.settings, true)
-    dock.setOpen(.settings, false)
-    dock.setOpen(.workbench, false)
-    // Show in Dock turning on without a window opens no window to activate for.
-    dock.showsAlways = true
+    #expect(fake.events.isEmpty)
+    #expect(!dock.isHandingOffActivation)
+  }
 
-    #expect(events == ["policy 0", "activate", "policy 1", "policy 0"])
+  @Test
+  @MainActor
+  func turningAccessoryBeforeTheResignEndsTheHandOff() {
+    let fake = FakeActivation()
+    fake.isActive = true
+    let dock = DockIconController(setActivationPolicy: { _ in true }, activation: fake.activation)
+
+    dock.setOpen(.workbench, true)
+    dock.setOpen(.workbench, false)
+    #expect(!dock.isHandingOffActivation)
+    fake.resignActive()
+    #expect(fake.events == ["observe", "activate Dock", "stop"])
+
+    // The next switch to regular of the active app hands off once more.
+    fake.isActive = true
+    dock.setOpen(.workbench, true)
+    #expect(fake.events == ["observe", "activate Dock", "stop", "observe", "activate Dock"])
+  }
+
+  @Test(arguments: [DockIconController.DockActivation.notRunning, .refused])
+  @MainActor
+  func aDockThatDoesNotActivateEndsTheHandOff(_ outcome: DockIconController.DockActivation) {
+    let fake = FakeActivation()
+    fake.isActive = true
+    fake.dockActivation = outcome
+    let dock = DockIconController(setActivationPolicy: { _ in true }, activation: fake.activation)
+
+    dock.setOpen(.workbench, true)
+    #expect(!dock.isHandingOffActivation)
+    fake.resignActive()
+    #expect(fake.events == ["observe", "activate Dock", "stop"])
   }
 
   @Test
@@ -63,17 +124,24 @@ struct MainWindowNavigationTests {
   func aRefusedPolicyChangeIsRetriedOnTheNextChange() {
     var shouldSucceed = false
     var requestedPolicies: [NSApplication.ActivationPolicy] = []
-    let dock = DockIconController { policy in
-      requestedPolicies.append(policy)
-      return shouldSucceed
-    }
+    let fake = FakeActivation()
+    fake.isActive = true
+    let dock = DockIconController(
+      setActivationPolicy: { policy in
+        requestedPolicies.append(policy)
+        return shouldSucceed
+      },
+      activation: fake.activation
+    )
 
     dock.setOpen(.settings, true)
     #expect(dock.appliedPolicy == .accessory)
+    #expect(fake.events.isEmpty)
     shouldSucceed = true
     dock.setOpen(.workbench, true)
     #expect(dock.appliedPolicy == .regular)
     #expect(requestedPolicies == [.regular, .regular])
+    #expect(fake.events == ["observe", "activate Dock"])
   }
 
   @Test
@@ -426,5 +494,38 @@ struct MainWindowNavigationTests {
     #expect(navigation.pendingArea == .library)
     #expect(navigation.isDiscardConfirmationPresented)
     #expect(transition.isDirty)
+  }
+}
+
+/// Records the activation calls of `DockIconController` and delivers resigns on demand.
+@MainActor
+private final class FakeActivation {
+  var isActive = false
+  var dockActivation = DockIconController.DockActivation.requested
+  private(set) var events: [String] = []
+  private var resignHandler: (@MainActor () -> Void)?
+
+  var activation: DockIconController.Activation {
+    DockIconController.Activation(
+      isActive: { self.isActive },
+      activateDock: {
+        self.events.append("activate Dock")
+        return self.dockActivation
+      },
+      activateApp: { self.events.append("activate app") },
+      observeResignActive: { handler in
+        self.events.append("observe")
+        self.resignHandler = handler
+        return {
+          self.events.append("stop")
+          self.resignHandler = nil
+        }
+      }
+    )
+  }
+
+  func resignActive() {
+    isActive = false
+    resignHandler?()
   }
 }
