@@ -51,6 +51,7 @@
       case .verbatim(let text): title = text
       }
       let item = NSMenuItem(title: title, action: nil, keyEquivalent: "")
+      MainMenuRenderer.identify(item, as: entry.id)
       item.isEnabled = entry.isEnabled
       item.state = entry.isChecked ? .on : .off
       if let symbolName = entry.symbolName { item.image = menuImage(symbol: symbolName) }

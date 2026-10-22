@@ -38,20 +38,24 @@ FRONT_TIMEOUT_SECONDS = 5.0
 FRONT_POLL_SECONDS = 0.25
 # kCGPopUpMenuWindowLevel: the layer of every open menu and submenu window.
 MENU_LAYER = 101
-# An open menu is on screen once the app owns as many menu windows as menus are open, and
-# stable once two window lists in a row show the same menu windows at the same bounds.
+# An open menu is on screen once the app owns exactly as many menu windows as menus are open,
+# and stable once two window lists in a row show the same menu windows at the same bounds and
+# alpha, so a menu that still moves or fades is not captured.
 MENU_TIMEOUT_SECONDS = 5.0
 MENU_POLL_SECONDS = 0.1
 MENU_STABLE_READS = 2
-# Escape closes the innermost open menu: a parent menu with an open submenu needs two presses.
+# Escape closes the innermost open menu: the deepest capture holds three menus, so four presses
+# leave one to spare. After each press the menu windows are read until one fewer is open.
 ESCAPE_PRESSES = 4
 ESCAPE_SETTLE_SECONDS = 1.0
-# The title of the system menu that leads the menu bar of every app; it is not the app's menu.
-APPLE_MENU_TITLE = "Apple"
-PROFILE_MENU_TITLE = "Profile"
-ACTIVATE_PROFILE_TITLE = "Activate Profile"
-STATUS_PROFILES_TITLE = "Profiles"
-STATUS_ACTIVATE_TITLE = "Activate"
+# Menus are found by AXIdentifier, which the app sets from its Swift menu model ids
+# (MainMenuModel.menuBarItemIdentifier, MainMenuModel item ids, StatusItemModel entry ids), so
+# the menu capture does not depend on the UI language.
+MENU_BAR_ID_PREFIX = "menu."
+PROFILE_MENU_ID = "menu.profile"
+ACTIVATE_PROFILE_ID = "activateProfile"
+STATUS_PROFILES_ID = "profiles"
+STATUS_ACTIVATE_ID = "profiles.activate"
 
 
 class CaptureError(Exception):
@@ -60,7 +64,8 @@ class CaptureError(Exception):
 
 @dataclass(frozen=True)
 class MenuTarget:
-    """One menu capture: the file name stem, the menu bar item and the submenu items to open.
+    """One menu capture: the file name stem and the AXIdentifiers of the menu bar item and
+    of the submenu items to open.
 
     `status_item` selects the app's status item instead of a main menu bar item; its `path`
     then holds only submenu items. `depth` is the number of menus open at the end.
@@ -107,7 +112,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         default=APP_READY_TIMEOUT_SECONDS,
         metavar="SECONDS",
         help=(
-            "longest wait for the app to answer Accessibility requests "
+            "longest wait, in seconds, for the app to answer Accessibility requests "
             f"(default {APP_READY_TIMEOUT_SECONDS:g})"
         ),
     )
@@ -117,8 +122,8 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         default=FRONT_TIMEOUT_SECONDS,
         metavar="SECONDS",
         help=(
-            "longest wait for no other window to cover a captured window after the app "
-            f"is brought forward (default {FRONT_TIMEOUT_SECONDS:g})"
+            "longest wait, in seconds, for no other window to cover a captured window "
+            f"after the app is brought forward (default {FRONT_TIMEOUT_SECONDS:g})"
         ),
     )
     args = parser.parse_args(argv)
@@ -186,9 +191,19 @@ def process_id() -> int:
         text=True,
         check=False,
     )
-    pids = result.stdout.split()
-    if not pids:
+    # pgrep exits 0 when it found a process, 1 when none matched, and 2 or 3 on an error.
+    if result.returncode == 1:
         raise CaptureError(f"{PROCESS} is not running: open {APP}")
+    if result.returncode != 0:
+        raise CaptureError(
+            f"pgrep failed with exit status {result.returncode}: {result.stderr.strip()}"
+        )
+    pids = result.stdout.split()
+    if len(pids) != 1:
+        raise CaptureError(
+            f"{len(pids)} {PROCESS} processes run from {APP} (pids {', '.join(pids)}): "
+            "quit all but one and run the capture again"
+        )
     return int(pids[0])
 
 
@@ -288,7 +303,8 @@ def screen_rectangle(window: dict) -> str:
 
 
 def require_english_ui() -> None:
-    """The GUI scripts click English labels, so another UI language is refused."""
+    """The sidebar and Settings scripts click English labels, so another UI language is
+    refused. The menu capture finds menus by AXIdentifier and needs no English."""
     for domain in (BUNDLE_ID, "-g"):
         result = subprocess.run(
             ["defaults", "read", domain, "AppleLanguages"],
@@ -302,9 +318,9 @@ def require_english_ui() -> None:
                 return
             first = languages[0] if languages else "none"
             raise CaptureError(
-                f"the app UI language is {first} ({domain}): the GUI scripts match "
-                "English labels; put English first in System Settings > General > "
-                "Language & Region"
+                f"the app UI language is {first} ({domain}): the sidebar and Settings "
+                "captures match English labels; put English first in System Settings > "
+                "General > Language & Region, or capture only --menus"
             )
     raise CaptureError("AppleLanguages is unset: cannot tell the app UI language")
 
@@ -321,10 +337,10 @@ def read_state() -> tuple[bool, str | None]:
     return found.group(1) == "true", tab
 
 
-def covered_message(subject: str, covering: list[str]) -> str:
+def covered_message(subject: str, covering: list[str], waited: str) -> str:
     return (
         f"{subject} is covered by windows of {', '.join(sorted(set(covering)))} "
-        "although the app was brought forward: move them off and run the capture again"
+        f"{waited}: move them off and run the capture again"
     )
 
 
@@ -350,7 +366,13 @@ def bring_forward(
         if not covering:
             return window
         if clock() >= deadline:
-            raise CaptureError(covered_message(f"the {kind} window", covering))
+            raise CaptureError(
+                covered_message(
+                    f"the {kind} window",
+                    covering,
+                    f"after {timeout:g} s of bringing the app forward (--front-timeout)",
+                )
+            )
         sleep(min(FRONT_POLL_SECONDS, max(0.0, deadline - clock())))
 
 
@@ -382,37 +404,42 @@ def shoot(
     capture_rectangle(bring_forward(pid, kind, timeout, clock, sleep), destination)
 
 
-def menu_slug(title: str) -> str:
-    return re.sub(r"[^a-z0-9]+", "-", title.lower()).strip("-")
+def menu_slug(identifier: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "-", identifier.lower()).strip("-")
 
 
-def menu_targets(titles: list[str]) -> list[MenuTarget]:
+def menu_targets(ids: list[str]) -> list[MenuTarget]:
     """The menu captures in order: each main menu in menu bar order, the Activate Profile
     submenu right after the Profile menu, then the status item menu and its Activate submenu.
 
-    The Apple menu is the system's, not the app's, so it is left out. Menu titles that give
-    the same file name, and a menu bar without a Profile menu, are refused.
+    `ids` are the AXIdentifiers of the main menu bar items after the Apple menu, as
+    `ax.js menu-ids` reports them. An identifier without the `menu.` prefix, identifiers that
+    give the same file name, and a menu bar without a Profile menu are refused.
     """
-    own = [title for title in titles if title != APPLE_MENU_TITLE]
-    if PROFILE_MENU_TITLE not in own:
+    for identifier in ids:
+        if not identifier.startswith(MENU_BAR_ID_PREFIX):
+            raise CaptureError(
+                f"main menu bar item {identifier!r} has no {MENU_BAR_ID_PREFIX!r} identifier"
+            )
+    if PROFILE_MENU_ID not in ids:
         raise CaptureError(
-            f"the main menu bar has no {PROFILE_MENU_TITLE} menu (found {own or 'none'})"
+            f"the main menu bar has no {PROFILE_MENU_ID} menu (found {ids or 'none'})"
         )
     targets: list[MenuTarget] = []
-    for title in own:
-        targets.append(MenuTarget(f"menu-{menu_slug(title)}", (title,)))
-        if title == PROFILE_MENU_TITLE:
+    for identifier in ids:
+        name = f"menu-{menu_slug(identifier.removeprefix(MENU_BAR_ID_PREFIX))}"
+        targets.append(MenuTarget(name, (identifier,)))
+        if identifier == PROFILE_MENU_ID:
             targets.append(
                 MenuTarget(
-                    f"menu-{menu_slug(title)}-{menu_slug(ACTIVATE_PROFILE_TITLE)}",
-                    (title, ACTIVATE_PROFILE_TITLE),
+                    f"{name}-activate-profile", (identifier, ACTIVATE_PROFILE_ID)
                 )
             )
     targets.append(MenuTarget("menu-status-item", (), status_item=True))
     targets.append(
         MenuTarget(
             "menu-status-item-profiles-activate",
-            (STATUS_PROFILES_TITLE, STATUS_ACTIVATE_TITLE),
+            (STATUS_PROFILES_ID, STATUS_ACTIVATE_ID),
             status_item=True,
         )
     )
@@ -450,7 +477,9 @@ def union_rectangle(windows: list[dict]) -> dict:
 
 
 def menu_signature(windows: list[dict]) -> list[tuple]:
-    return sorted((w["id"], w["x"], w["y"], w["width"], w["height"]) for w in windows)
+    return sorted(
+        (w["id"], w["x"], w["y"], w["width"], w["height"], w["alpha"]) for w in windows
+    )
 
 
 def wait_for_menu(
@@ -459,9 +488,10 @@ def wait_for_menu(
     clock: Callable[[], float] = time.monotonic,
     sleep: Callable[[float], None] = time.sleep,
 ) -> tuple[list[dict], list[dict]]:
-    """Waits until `depth` menu windows are on screen and unchanged over two reads.
+    """Waits until exactly `depth` menu windows are on screen and unchanged over two reads.
 
-    Returns the menu windows and the whole window list they were read from.
+    More menu windows than `depth` are never taken as the menu: they would add a menu that
+    the capture did not open. Returns the menu windows and the window list they came from.
     """
     deadline = clock() + MENU_TIMEOUT_SECONDS
     previous: list[tuple] | None = None
@@ -470,7 +500,7 @@ def wait_for_menu(
         windows = on_screen_windows()
         menus = menu_windows(pid, windows)
         signature = menu_signature(menus)
-        if len(menus) >= depth:
+        if len(menus) == depth:
             stable = stable + 1 if signature == previous else 1
             if stable >= MENU_STABLE_READS:
                 return menus, windows
@@ -479,8 +509,9 @@ def wait_for_menu(
         previous = signature
         if clock() >= deadline:
             raise CaptureError(
-                f"{len(menus)} of {depth} menu windows of {PROCESS} were on screen and "
-                f"stable within {MENU_TIMEOUT_SECONDS:g} s"
+                f"{len(menus)} menu windows of {PROCESS} were on screen where {depth} "
+                f"were opened, or they did not stay still, within "
+                f"{MENU_TIMEOUT_SECONDS:g} s"
             )
         sleep(MENU_POLL_SECONDS)
 
@@ -490,15 +521,21 @@ def close_menu(
     clock: Callable[[], float] = time.monotonic,
     sleep: Callable[[float], None] = time.sleep,
 ) -> None:
-    """Presses Escape until the app has no open menu window, at most ESCAPE_PRESSES times."""
+    """Presses Escape until the app has no open menu window, at most ESCAPE_PRESSES times.
+
+    Escape is only posted while a menu of the app is on screen, so it reaches the menu and
+    not a window. After each press the window list is read until fewer menus are open, for at
+    most ESCAPE_SETTLE_SECONDS, before the next press.
+    """
     for _ in range(ESCAPE_PRESSES):
-        if not menu_windows(pid, on_screen_windows()):
+        before = len(menu_windows(pid, on_screen_windows()))
+        if before == 0:
             return
         gui("press-escape")
         deadline = clock() + ESCAPE_SETTLE_SECONDS
         while clock() < deadline:
-            if not menu_windows(pid, on_screen_windows()):
-                return
+            if len(menu_windows(pid, on_screen_windows())) < before:
+                break
             sleep(MENU_POLL_SECONDS)
     if menu_windows(pid, on_screen_windows()):
         raise CaptureError(
@@ -516,9 +553,16 @@ def shoot_menu(
     """Opens the menu through the Accessibility API, captures the union rectangle of its
     open menu windows (a parent menu and its open submenu in one image), then closes it.
 
-    A menu that a window covers fails like a covered window. A close that fails after another
-    failure is printed and the first failure is raised.
+    A menu of the app that is open before the capture opens one is refused, because its
+    window would join the image. A menu that a window covers fails like a covered window. A
+    close that fails after another failure is printed and the first failure is raised.
     """
+    already_open = menu_windows(pid, on_screen_windows())
+    if already_open:
+        raise CaptureError(
+            f"{len(already_open)} menu windows of {PROCESS} are open before the "
+            f"{target.name} capture: close the menu and run the capture again"
+        )
     try:
         gui(*open_menu_command(target))
         menus, windows = wait_for_menu(pid, target.depth, clock, sleep)
@@ -526,7 +570,9 @@ def shoot_menu(
             owner for menu in menus for owner in covering_windows(menu, windows)
         ]
         if covering:
-            raise CaptureError(covered_message(f"the {target.name} menu", covering))
+            raise CaptureError(
+                covered_message(f"the {target.name} menu", covering, "once it opened")
+            )
         capture_rectangle(union_rectangle(menus), destination)
     except CaptureError:
         try:
@@ -567,7 +613,6 @@ def capture(args: argparse.Namespace) -> int:
     pid = process_id()
     require_unlocked_console_session()
     require_accessibility(pid, args.ready_timeout)
-    require_english_ui()
     areas = AREAS if args.all else (args.area,) if args.area else ()
     panes = (
         SETTINGS_PANES
@@ -577,6 +622,8 @@ def capture(args: argparse.Namespace) -> int:
         else ()
     )
     menus = args.all or args.menus
+    if areas or panes:
+        require_english_ui()
     main_was_open, settings_tab = read_state()
     folder = make_folder()
     sidebar = None
@@ -598,7 +645,7 @@ def capture(args: argparse.Namespace) -> int:
                 args.front_timeout,
             )
         if menus:
-            for target in menu_targets(gui("menu-titles").split("\n")):
+            for target in menu_targets(gui("menu-ids").split("\n")):
                 shoot_menu(pid, target, folder / f"{target.name}.png")
     finally:
         steps: list[tuple[str, tuple[str, ...]]] = []

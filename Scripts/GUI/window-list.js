@@ -1,5 +1,5 @@
 // Prints the on-screen windows of every process, front to back, as JSON:
-// [{id, pid, owner, layer, x, y, width, height}].
+// [{id, pid, owner, layer, alpha, x, y, width, height}].
 // Usage: osascript -l JavaScript window-list.js
 ObjC.import("CoreGraphics");
 function run() {
@@ -17,6 +17,7 @@ function run() {
 			pid: w.kCGWindowOwnerPID,
 			owner: w.kCGWindowOwnerName || "",
 			layer: w.kCGWindowLayer,
+			alpha: w.kCGWindowAlpha,
 			x: w.kCGWindowBounds.X,
 			y: w.kCGWindowBounds.Y,
 			width: w.kCGWindowBounds.Width,

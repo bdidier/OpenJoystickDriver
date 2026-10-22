@@ -3305,11 +3305,11 @@
 "ui.menu.profile.activate" = "Kích hoạt cấu hình";
 /* Item of the Profile menu that turns off the active profile. */
 "ui.menu.profile.deactivate" = "Hủy kích hoạt cấu hình";
-/* Disabled item of the Profile menu's Activate Profile submenu when no profile exists. */
+/* Disabled item of the Profile menu's Activate Profile submenu, the status item's Profiles > Activate submenu and a controller's Active Profile submenu in the status item when no profile exists or none applies to the controller. */
 "ui.menu.profile.none" = "Không có cấu hình";
-/* Disabled item of the Profile menu's Activate Profile submenu while the profile list is loading or cannot be read. */
+/* Disabled item of the Profile menu's Activate Profile submenu and of the status item's Profiles > Activate, Profiles > Deactivate and controller Active Profile submenus while the profile list is loading or cannot be read. */
 "ui.menu.profile.unavailable" = "Cấu hình không khả dụng";
-/* Disabled item of the Profile menu's Deactivate Profile submenu in the status item menu while no profile is active. */
+/* Disabled item of the status item's Profiles > Deactivate submenu while no profile is active. */
 "ui.menu.profile.noneActive" = "Không có cấu hình đang hoạt động";
 /* Title of the alert shown when turning off a profile from the menu fails. */
 "ui.menu.profile.deactivateFailed" = "Không thể hủy kích hoạt cấu hình";

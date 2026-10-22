@@ -33,6 +33,7 @@
           }
         }
         let sectionItem = NSMenuItem(title: submenu.title, action: nil, keyEquivalent: "")
+        identify(sectionItem, as: MainMenuModel.menuBarItemIdentifier(sectionID: section.id))
         sectionItem.submenu = submenu
         menu.addItem(sectionItem)
         if section.id == "window" { windowMenu = submenu }
@@ -57,6 +58,14 @@
       }
     }
 
+    /// Gives the item its model id as its identifier, which the coordinator looks items up by,
+    /// and as its accessibility identifier, so Accessibility clients such as
+    /// `Scripts/GUI/ax.js` find it in every language.
+    static func identify(_ menuItem: NSMenuItem, as id: String) {
+      menuItem.identifier = NSUserInterfaceItemIdentifier(id)
+      menuItem.setAccessibilityIdentifier(id)
+    }
+
     static func title(_ key: String, appName: String) -> String {
       let text = OJDLocalized.string(key)
       return text.contains("%@") ? String(format: text, appName) : text
@@ -73,7 +82,7 @@
         action: nil,
         keyEquivalent: item.keyEquivalent
       )
-      menuItem.identifier = NSUserInterfaceItemIdentifier(item.id)
+      identify(menuItem, as: item.id)
       menuItem.keyEquivalentModifierMask = modifierMask(item.modifiers)
       switch routing(for: item.action) {
       case .services:

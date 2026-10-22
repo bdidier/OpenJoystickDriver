@@ -1,3 +1,4 @@
+import AppKit
 import Testing
 
 @testable import OpenJoystickDriverPresentation
@@ -515,5 +516,27 @@ struct MainMenuRoutingTests {
     } else {
       Issue.record("Activate Profile is not routed as a submenu parent")
     }
+  }
+}
+
+@Suite
+struct MainMenuIdentifierTests {
+  @Test
+  func menuBarItemIdentifiersAreUniqueAndApartFromItemIDs() {
+    let barIDs = MainMenuModel.sections.map {
+      MainMenuModel.menuBarItemIdentifier(sectionID: $0.id)
+    }
+    #expect(Set(barIDs).count == barIDs.count)
+    #expect(Set(barIDs).isDisjoint(with: MainMenuModel.allItems.map(\.id)))
+    #expect(MainMenuModel.menuBarItemIdentifier(sectionID: "profile") == "menu.profile")
+  }
+
+  @Test
+  @MainActor
+  func identifyingAnItemSetsItsIdentifierAndItsAccessibilityIdentifier() {
+    let item = NSMenuItem(title: "Activate Profile", action: nil, keyEquivalent: "")
+    MainMenuRenderer.identify(item, as: "activateProfile")
+    #expect(item.identifier?.rawValue == "activateProfile")
+    #expect(item.accessibilityIdentifier() == "activateProfile")
   }
 }

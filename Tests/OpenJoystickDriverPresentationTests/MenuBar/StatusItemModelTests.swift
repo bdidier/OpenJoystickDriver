@@ -178,6 +178,38 @@ struct StatusItemModelTests {
   }
 
   @Test
+  func controllerProfileSubmenuSaysProfilesAreUnavailableUntilTheListIsRead() throws {
+    let entries = StatusItemModel.entries(
+      for: Self.state(controllers: [Self.pad], profileListRead: false)
+    )
+    let row = try #require(Self.entry("controllers.pad-a.activeProfile.none", in: entries))
+    #expect(row.title == .key("ui.menu.profile.unavailable"))
+    #expect(!row.isEnabled)
+    #expect(try #require(Self.entry("controllers.pad-a.activeProfile", in: entries)).isEnabled)
+  }
+
+  @Test
+  func entryIDsAreUniqueBecauseTheyAreTheAccessibilityIdentifiers() {
+    let profile = StatusItemState.Profile(id: UUID(), name: "A", isActive: true)
+    var pad = Self.pad
+    pad.profiles = [profile]
+    let other = StatusItemState.Controller(
+      id: "pad-b",
+      name: "Pad",
+      isSuspended: false,
+      isWireless: false
+    )
+    let entries = StatusItemModel.entries(
+      for: Self.state(controllers: [pad, other], profiles: [profile])
+    )
+    func allIDs(_ entries: [StatusItemEntry]) -> [String] {
+      entries.filter { !$0.isSeparator }.flatMap { [$0.id] + allIDs($0.submenu ?? []) }
+    }
+    let ids = allIDs(entries)
+    #expect(Set(ids).count == ids.count)
+  }
+
+  @Test
   func eachControllerListsOnlyItsOwnProfilesAndChecksItsActiveOne() throws {
     let racing = StatusItemState.Profile(id: UUID(), name: "Racing", isActive: true)
     let menu = StatusItemState.Profile(id: UUID(), name: "Menu", isActive: false)

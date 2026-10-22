@@ -48,6 +48,12 @@ enum MainMenuModel {
     profileListRead ? noProfilesTitleKey : profilesUnavailableTitleKey
   }
 
+  /// The identifier of the menu bar item that opens a section's menu. The `menu.` prefix keeps
+  /// it apart from every item id, which the coordinator looks items up by.
+  static func menuBarItemIdentifier(sectionID: String) -> String {
+    "menu.\(sectionID)"
+  }
+
   /// The disabled row of the status item's Deactivate submenu while no profile is active.
   static let noActiveProfileTitleKey = "ui.menu.profile.noneActive"
 
