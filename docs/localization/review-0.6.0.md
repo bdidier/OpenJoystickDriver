@@ -130,7 +130,7 @@ In addition, ja-JP, ko-KR, hi-IN, id-ID, th-TH, tr-TR, vi-VN, zh-CN, zh-TW, and 
 
 The tr-TR catalog uses `servis` for the OpenJoystickDriver background service. `servis` already stood in 92 lines. `hizmet` named the same service in some values and the verb "serve" in others (`hizmet vermek`, `Hizmet veren`, `Hizmet yolu`), so it covered two concepts. `ui.menu.app.services` keeps `Hizmetler`, the Turkish macOS name of the Services menu; that is a different concept from the daemon, so it does not clash with `servis`.
 
-The verb "serve" (labels "Served by" and "Serving route", "serves a controller") is `sunmak`: `Sunan`, `Sunum yolu`, `sunar`. "Serves only programs" is `yanıt verir` and "serves 8 connections" is `karşılıyor`.
+The verb "serve" (labels "Served by" and "Serving route", "serves a controller") is `sunmak`: `Sunan`, `Sunma yolu`, `sunar`. `Sunma yolu` takes the verbal noun because `Sunum` reads as "presentation". `sunmak` takes the controller as its object: "OpenJoystickDriver tarafından sunulmasını", "%@ kontrolcüsünü yerel olarak sunmaz". "Serves only programs" is `yanıt verir`, because the service answers only granted programs, and "serves 8 connections" is `yönetiyor`.
 
 Changed values: 24, counted with `git diff -U0 -- Sources/OpenJoystickDriverKit/Resources/tr-TR.lproj | rg -c '^\+"'`. The `.stringsdict` has no such term. The one remaining `hizmet` line, from `rg -c -i hizmet Sources/OpenJoystickDriverKit/Resources/tr-TR.lproj`, is the Services menu item.
 

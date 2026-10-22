@@ -199,7 +199,7 @@
 /* Option of the server popup: OpenJoystickDriver serves the controller as a virtual gamepad. OpenJoystickDriver is the product name. */
 "ui.controllers.server.ojd" = "OpenJoystickDriver (sanal)";
 /* Label of the serving route fact in the Controllers detail. The route is the way the input reaches games. */
-"ui.controllers.serving.label" = "Sunum yolu";
+"ui.controllers.serving.label" = "Sunma yolu";
 /* Value of the serving route in the Controllers area: macOS serves the controller and the driver passes the input through. */
 "platform.macos.ui.controllers.serving.nativePassThrough" = "macOS (doğrudan aktarılır)";
 /* Value of the serving route when OpenJoystickDriver serves a virtual gamepad. OpenJoystickDriver is the product name. */
@@ -2176,7 +2176,7 @@
 /* Error of the controller output commands when the controller lacks the feature. %1$@ is the controller name, %2$@ is the missing feature as a noun phrase and %3$@ is the session token for 'ojd controller show'. */
 "cli.controller.group.outputUnsupported" = "%1$@ kontrolcüsünde %2$@ yok. Nelerin desteklendiğini görmek için “ojd controller show %3$@” komutunu çalıştırın.";
 /* One-line summary of 'ojd controller claim' in the command list and at the top of its help. OpenJoystickDriver is the product name. To serve a model means to read its input and publish it as a virtual gamepad. */
-"cli.controller.claim.abstract" = "Bir kontrolcü modeline OpenJoystickDriver’ın sunmasını sağlayın.";
+"cli.controller.claim.abstract" = "Bir kontrolcü modelinin OpenJoystickDriver tarafından sunulmasını sağlayın.";
 /* Long description in the help of 'ojd controller claim'. server, ojd, VVVV-PPPP.json and the record terms stay as written. */
 "platform.macos.cli.controller.claim.discussion" = "Model için kaydınızda, yani kayıt dizininizdeki VVVV-PPPP.json dosyasında server değerini ojd yapar ve kaydın diğer alanlarını korur. Modelin her kontrolcüsü için geçerlidir. Çalışan servis bunu yeniden takmadan uygular. Kontrolcüyü bulmak için servis gerekir. --dry-run hiçbir şey yazmaz. OpenJoystickDriver’ın her zaman sunduğu ham USB kullanan ya da macOS’un yerel olarak sunmadığı bir kontrolcü için E2023 ile 1 koduyla çıkar.";
 /* One-line summary of 'ojd controller release' in the command list and at the top of its help. */
@@ -2190,7 +2190,7 @@
 /* Error when a controller has no record to change. %1$@ is the controller identity and %2$@ repeats it as the argument of the command in quotes, which stays as written. */
 "cli.controller.group.serverNoRecord" = "%1$@ için değiştirilecek bir kontrolcü kaydı yok. “ojd record draft %2$@” ile bir tane oluşturun.";
 /* Message when a controller cannot be released to macOS because macOS does not serve it natively. %@ is the controller identity. OpenJoystickDriver is the product name. */
-"platform.macos.cli.controller.group.serverNotNative" = "macOS %@ için yerel olarak sunmaz, bu yüzden onu her zaman OpenJoystickDriver sunar.";
+"platform.macos.cli.controller.group.serverNotNative" = "macOS %@ kontrolcüsünü yerel olarak sunmaz, bu yüzden onu her zaman OpenJoystickDriver sunar.";
 /* Message when the server of a controller cannot be changed because it uses raw USB. %@ is the controller identity. OpenJoystickDriver is the product name. */
 "cli.controller.group.serverRawUsb" = "%@ ham USB kullanır, bu yüzden onu her zaman OpenJoystickDriver sunar.";
 /* Message printed after the server of a controller is changed. %1$@ is the controller identity, %2$@ is the server name in kebab case and %3$@ is the record file. The service picks the change up without a restart. */
@@ -2264,7 +2264,7 @@
 /* Row label in the output of 'ojd controller show'. The component that serves the controller follows, with where that choice comes from. */
 "cli.controller.show.labelServer" = "Sunan";
 /* Row label in the output of 'ojd controller show'. The route that the input of the controller takes follows, with the reason in parentheses. */
-"cli.controller.show.labelServing" = "Sunum yolu";
+"cli.controller.show.labelServing" = "Sunma yolu";
 /* Row label in the output of 'ojd controller show'. The gamepad model that the virtual gamepad presents follows. */
 "cli.controller.show.labelPersona" = "Yayınlanan persona";
 /* Value of the Served by row of 'ojd controller show'. %1$@ is the server name and %2$@ is where the choice comes from, in kebab case, which stays as written. */
@@ -3462,7 +3462,7 @@
 /* Text of error E1003, sent when a line on the endpoint is invalid or arrives at the wrong time. Hello is the name of the first line kind and stays as written. */
 "error.E1003.message" = "Servis satırı kabul edemedi. Satır geçersiz ya da yanlış zamanda geldi. Önce hello, sonra bir istek gönderin ve her satırı uç noktanın şemasıyla denetleyin.";
 /* Text of error E1004, sent when the endpoint refuses a ninth connection on one transport. The number 8 is the fixed limit; the socket and the WebSocket are the two transports. */
-"error.E1004.message" = "Uç nokta, taşıma başına (soket ve WebSocket ayrı ayrı) zaten 8 bağlantıyı karşılıyor. İhtiyacınız olmayan bir bağlantıyı kapatın ve yeniden bağlanın.";
+"error.E1004.message" = "Uç nokta, taşıma başına (soket ve WebSocket ayrı ayrı) zaten 8 bağlantıyı yönetiyor. İhtiyacınız olmayan bir bağlantıyı kapatın ve yeniden bağlanın.";
 /* Text of error E1005, sent to an endpoint client whose grant is removed while it is connected. The command in quotes stays as written. */
 "error.E1005.message" = "Bu istemcinin izni, bağlıyken kaldırıldı. Ona “ojd access grant” komutuyla yeniden izin verin ve yeniden bağlanın.";
 /* Text of error E1006, sent to an endpoint client that reads lines too slowly, so that 256 lines wait for it. 256 is the fixed limit. */
