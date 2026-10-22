@@ -150,4 +150,18 @@ struct ControllerPatchMergeTests {
     #expect(!record.hasSameValue(as: try Self.json(#"{"a": 1, "b": 0.08, "c": [1001]}"#)))
     #expect(!record.hasSameValue(as: try Self.json(#"{"a": 1, "b": 0.08}"#)))
   }
+
+  /// A number is compared by its digits and exponent, not through a type with a digit limit.
+  @Test
+  func longNumbersAreComparedByAllTheirDigits() throws {
+    let same = [("100.50", "1.005E2"), ("-0", "0"), ("1e3", "1000"), ("1e400", "10E399")]
+    for (left, right) in same {
+      #expect(try Self.json(left).hasSameValue(as: Self.json(right)), "\(left) \(right)")
+    }
+    let forty = "123456789012345678901234567890123456789"
+    let different = [(forty + "0", forty + "1"), ("1e400", "1e401"), ("0.08", "-0.08")]
+    for (left, right) in different {
+      #expect(try !Self.json(left).hasSameValue(as: Self.json(right)), "\(left) \(right)")
+    }
+  }
 }

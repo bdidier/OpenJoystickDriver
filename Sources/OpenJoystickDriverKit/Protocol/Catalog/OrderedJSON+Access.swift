@@ -36,8 +36,8 @@ extension OrderedJSON {
   }
 
   /// Whether the two values are the same JSON value: object members in any order, and numbers by
-  /// value, so `8E-2` and `0.08` are the same. A number that `Decimal` cannot read compares by
-  /// its text.
+  /// value at any length, so `8E-2` and `0.08` are the same and two integers of 40 digits that
+  /// differ in the last digit are not.
   func hasSameValue(as other: Self) -> Bool {
     switch (self, other) {
     case (.object(let left), .object(let right)):
@@ -49,12 +49,41 @@ extension OrderedJSON {
       return left.count == right.count
         && zip(left, right).allSatisfy { $0.hasSameValue(as: $1) }
     case (.number(let left), .number(let right)):
-      guard let first = Decimal(string: left), let second = Decimal(string: right) else {
+      guard let first = Self.canonicalNumber(left), let second = Self.canonicalNumber(right) else {
         return left == right
       }
       return first == second
     default:
       return self == other
     }
+  }
+
+  /// The sign, significant digits and power of ten of the JSON number `text`, with no leading or
+  /// trailing zero in the digits, so numbers of the same value give the same result. Zero has no
+  /// sign and no digits. Nil when the exponent does not fit an `Int`.
+  private static func canonicalNumber(_ text: String) -> (
+    negative: Bool, digits: String, exponent: Int
+  )? {
+    var rest = Substring(text)
+    let negative = rest.hasPrefix("-")
+    if negative { rest = rest.dropFirst() }
+    let parts = rest.split(omittingEmptySubsequences: false) { $0 == "e" || $0 == "E" }
+    let mantissa = parts[0].split(separator: ".", omittingEmptySubsequences: false)
+    var exponent = 0
+    if parts.count == 2 {
+      guard let written = Int(parts[1]) else { return nil }
+      exponent = written
+    }
+    let fraction = mantissa.count == 2 ? mantissa[1] : ""
+    var digits = Substring(mantissa[0] + fraction).drop { $0 == "0" }
+    guard !digits.isEmpty else { return (false, "", 0) }
+    let (scaled, overflow) = exponent.subtractingReportingOverflow(fraction.count)
+    guard !overflow else { return nil }
+    exponent = scaled
+    while digits.last == "0" {
+      digits = digits.dropLast()
+      exponent += 1
+    }
+    return (negative, String(digits), exponent)
   }
 }
