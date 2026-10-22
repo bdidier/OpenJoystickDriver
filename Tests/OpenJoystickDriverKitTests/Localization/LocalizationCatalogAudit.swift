@@ -217,7 +217,9 @@ enum LocalizationCatalogAudit {
     for localization: String,
     required: Set<String>
   ) -> [String] {
-    pluralCategoryProblems(in: stringsDictionary(for: localization), required: required)
+    let entries = stringsDictionary(for: localization)
+    guard !entries.isEmpty else { return ["no .stringsdict entry"] }
+    return pluralCategoryProblems(in: entries, required: required)
   }
 
   /// The problems of `entries`: an entry with no plural variable, and a plural variable that lacks
@@ -241,12 +243,20 @@ enum LocalizationCatalogAudit {
   /// The keys whose `.strings` value takes a count (`%#@name@`) but that have no `.stringsdict`
   /// entry in the same bundle.
   static func countKeysWithoutPluralEntry(for localization: String) -> [String] {
-    let entries = stringsDictionary(for: localization)
-    return (stringsData(for: localization).map(parseStrings) ?? [:])
-      .filter { key, value in
-        value.range(of: #"%#@[A-Za-z0-9_]+@"#, options: .regularExpression) != nil
-          && entries[key] == nil
-      }.keys.sorted()
+    countKeysWithoutPluralEntry(
+      strings: values(for: localization),
+      entries: stringsDictionary(for: localization)
+    )
+  }
+
+  static func countKeysWithoutPluralEntry(
+    strings: [String: String],
+    entries: [String: Any]
+  ) -> [String] {
+    strings.filter { key, value in
+      value.range(of: #"%#@[A-Za-z0-9_]+@"#, options: .regularExpression) != nil
+        && entries[key] == nil
+    }.keys.sorted()
   }
 
   static func sourceIdenticalEnglishProseKeys(for localization: String) -> Set<String> {

@@ -138,6 +138,19 @@ struct LocalizationTests {
   }
 
   @Test
+  func aCountValueNeedsAStringsdictEntryOfTheSameKey() {
+    let strings = [
+      "files.moved": "%#@files@", "files.count": "%#@count@ files", "files.name": "%@",
+    ]
+    #expect(
+      LocalizationCatalogAudit.countKeysWithoutPluralEntry(
+        strings: strings,
+        entries: ["files.count": [:]]
+      ) == ["files.moved"]
+    )
+  }
+
+  @Test
   func pluralResourcesCarryTheCategoriesEachLanguageNeeds() throws {
     let root = URL(fileURLWithPath: #filePath)
       .deletingLastPathComponent()  // Localization
