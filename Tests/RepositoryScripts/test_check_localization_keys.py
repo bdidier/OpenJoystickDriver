@@ -6,6 +6,7 @@ import plistlib
 import tempfile
 import unittest
 from pathlib import Path
+from typing import ClassVar
 from unittest import mock
 
 from Scripts.Quality import check_localization_keys as guard
@@ -471,7 +472,9 @@ class StackedCommentTests(unittest.TestCase):
 
 
 class StaleNotACountTests(unittest.TestCase):
-    entries = [guard.StringsEntry("ui.a.b", "status %d", "Label.")]
+    entries: ClassVar[list[guard.StringsEntry]] = [
+        guard.StringsEntry("ui.a.b", "status %d", "Label.")
+    ]
 
     def test_a_key_outside_the_catalog_fails(self) -> None:
         self.assertIn(

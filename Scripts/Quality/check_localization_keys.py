@@ -36,6 +36,7 @@ Every rule fails on every key it finds.
 
 from __future__ import annotations
 
+import itertools
 import plistlib
 import re
 import subprocess
@@ -158,15 +159,11 @@ NOT_A_COUNT: dict[str, str] = {
     "cli.status.group.labelUnbound": (
         "the number follows its label (after a colon or in parentheses), so no noun agrees with it"
     ),
-    "cli.transportExtension.group.failed": (
-        "the number is an error code"
-    ),
+    "cli.transportExtension.group.failed": ("the number is an error code"),
     "platform.macos.cli.status.group.labelPassThrough": (
         "the number follows its label (after a colon or in parentheses), so no noun agrees with it"
     ),
-    "ui.access.web.enable.port": (
-        "the number is a network port"
-    ),
+    "ui.access.web.enable.port": ("the number is a network port"),
     "ui.access.web.portRange": (
         "the numbers are the bounds of a range of the allowed ports"
     ),
@@ -578,7 +575,7 @@ def stacked_comment_keys(
     """Return the keys under a run of two or more comments with only whitespace between them."""
     spans = [match.span() for match in comment.finditer(text)]
     found: list[str] = []
-    for (_, end), (start, _) in zip(spans, spans[1:]):
+    for (_, end), (start, _) in itertools.pairwise(spans):
         if text[end:start].strip():
             continue
         following = key.search(text, start)
