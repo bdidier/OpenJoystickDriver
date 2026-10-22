@@ -44,7 +44,7 @@ struct IOHIDVirtualDevicePublisherTests {
 
   @Test
   func xboxOneSIdentityAdvertisesNumberedReportSizes() throws {
-    let format = try XboxGeckoHIDReportFormat()
+    let format = XboxOneGIPHIDReportFormat()
     let properties = IOHIDVirtualDevicePublisher.deviceProperties(
       profile: .sdlCompatible,
       format: format,
@@ -59,7 +59,7 @@ struct IOHIDVirtualDevicePublisherTests {
 
   @Test
   func propertiesPreserveDescriptorAndIdentity() throws {
-    let format = try XboxGeckoHIDReportFormat()
+    let format = XboxOneGIPHIDReportFormat()
     let profile = VirtualDeviceProfile.sdlCompatible
     let properties = IOHIDVirtualDevicePublisher.deviceProperties(
       profile: profile,
@@ -91,7 +91,7 @@ struct IOHIDVirtualDevicePublisherTests {
   }
 
   @Test(arguments: [
-    (VirtualDeviceProfile.sdlCompatible, kIOHIDTransportBluetoothValue),
+    (VirtualDeviceProfile.sdlCompatible, kIOHIDTransportUSBValue),
     (VirtualDeviceProfile.generic, kIOHIDTransportUSBValue),
   ])
   func ioHIDTransportValueMatchesIdentity(_ profile: VirtualDeviceProfile, _ expected: String) {
@@ -114,7 +114,7 @@ struct IOHIDVirtualDevicePublisherTests {
   @Test(arguments: [
     (
       VirtualHIDProfileID.sdlCompatible, 0x045E, 0x02FD, 0x0000, "Xbox Wireless Controller",
-      "Microsoft", "Bluetooth", UInt64(0x8C79_2AA2_4C28_57BD), Int?(9)
+      "Microsoft", "USB", UInt64(0x48E9_971C_3CA8_EDB6), Int?(13)
     ),
     (
       VirtualHIDProfileID.generic, 0x1209, 0x4A4F, 0x0408, "OpenJoystickDriver Generic HID Gamepad",
@@ -148,7 +148,10 @@ struct IOHIDVirtualDevicePublisherTests {
     let hash = descriptor.reduce(UInt64(0xCBF2_9CE4_8422_2325)) {
       ($0 ^ UInt64($1)) &* 0x0000_0100_0000_01B3
     }
-    #expect(hash == descriptorFNV1a)
+    #expect(
+      hash == descriptorFNV1a,
+      "descriptor FNV-1a is 0x\(String(hash, radix: 16, uppercase: true))"
+    )
     // The generic profile is input-only, so it publishes no output report size.
     #expect(properties[kIOHIDMaxOutputReportSizeKey as String] as? Int == maxOutputReportSize)
   }

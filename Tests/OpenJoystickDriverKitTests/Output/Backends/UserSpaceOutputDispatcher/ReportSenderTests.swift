@@ -206,7 +206,7 @@ struct ReportSenderTests {
   func hostSetReportReturnsAfterOrderedEnqueue() async throws {
     let gate = ReportSendGate()
     let backend = OrderedReportBackend(gate: gate)
-    let input = UserSpaceInputReportState(format: try XboxGeckoHIDReportFormat())
+    let input = UserSpaceInputReportState(format: XboxOneGIPHIDReportFormat())
     let entry = UserSpaceOutputDispatcher.Entry(backend: backend, inputReportState: input)
     let outputs = OutputRecorder()
     let isOpen: @Sendable () -> Bool = { true }
@@ -221,8 +221,8 @@ struct ReportSenderTests {
     let blocking = entry.sender.submit { [[1]] }
     await gate.waitForEntry()
 
-    _ = try handler.setReport(type: .output, reportID: 3, bytes: Self.xboxRumble(10, 20))
-    _ = try handler.setReport(type: .output, reportID: 3, bytes: Self.xboxRumble(30, 40))
+    _ = try handler.setReport(type: .output, reportID: 9, bytes: Self.xboxRumble(10, 20))
+    _ = try handler.setReport(type: .output, reportID: 9, bytes: Self.xboxRumble(30, 40))
     #expect(outputs.snapshot().isEmpty)
     await gate.open()
     try await blocking.value()
@@ -326,7 +326,7 @@ struct ReportSenderTests {
   func eventsRepublishedStateAndHostOutputShareOneOrder() async throws {
     let gate = ReportSendGate()
     let backend = OrderedReportBackend(gate: gate)
-    let format = try XboxGeckoHIDReportFormat()
+    let format = XboxOneGIPHIDReportFormat()
     let input = UserSpaceInputReportState(format: format)
     let entry = UserSpaceOutputDispatcher.Entry(backend: backend, inputReportState: input)
     let first = entry.sender.submit { [input] in [input.update { $0.buttons = 1 }] }
@@ -345,7 +345,7 @@ struct ReportSenderTests {
       },
       onRumbleStatus: { _ in }
     )
-    let output = try handler.setReport(type: .output, reportID: 3, bytes: Self.xboxRumble(10, 20))
+    let output = try handler.setReport(type: .output, reportID: 9, bytes: Self.xboxRumble(10, 20))
     await gate.open()
     try await first.value()
     try await second.value()
@@ -475,8 +475,8 @@ struct ReportSenderTests {
     await ready.beginClose().value
   }
 
-  /// An Xbox One rumble report (ID 3) for the main motors, lasting the default 250 ms.
+  /// An Xbox One GIP rumble report (ID 9) for the main motors, lasting the default 250 ms.
   private static func xboxRumble(_ left: UInt8, _ right: UInt8) -> [UInt8] {
-    [0x03, 0x0C, 0, 0, left, right, 25, 0, 0]
+    gipRumbleReport(activation: 0x0C, left: left, right: right, duration: 25)
   }
 }

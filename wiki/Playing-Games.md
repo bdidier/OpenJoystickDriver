@@ -17,7 +17,7 @@ Games do not read your physical controller. OJD reads it and publishes one virtu
 
 | Profile | Shown to games as | VID:PID | Rumble |
 | --- | --- | --- | --- |
-| `SDLCompatible` | Xbox Wireless Controller, Microsoft, Bluetooth | `045E:02FD` | Accepts rumble output |
+| `SDLCompatible` | Xbox Wireless Controller, Microsoft, USB | `045E:02FD` | Accepts rumble output |
 | `Generic` | OpenJoystickDriver Generic HID Gamepad, USB | `1209:4A4F` | Input only |
 
 The `SDLCompatible` profile is an approximation of an Xbox controller. It is not a byte-exact copy of a real controller. The `Generic` profile has 16 buttons and no hat. The D-pad uses four of the 16 buttons.
@@ -63,9 +63,9 @@ Games read controllers through different programming interfaces. The interface d
 | Browser | Gamepad API | Works |
 | Apple Game Controller framework | Silksong (GOG) | Works after you turn on its native gamepad or MFi options |
 | Native macOS games | Non-Steam native games | Works |
-| SDL | Steam | Does not work. Shows a "Gamepad 1" with no input |
+| SDL | Steam | Not verified on hardware. Steam lists the `SDLCompatible` profile as "Xbox One S Controller". macOS reports the virtual controller's transport as `Virtual`, so SDL reads its reports as USB Xbox One packets, and the profile sends those packets for input and takes them for rumble. |
 | Wine | CrossOver | Does not work. Sees no controller |
-| SDL | RPCS3 | Does not work. Sees "Xbox One S Controller" with no input |
+| SDL | RPCS3 | Not verified on hardware. It lists "Xbox One S Controller", which SDL reads like Steam does |
 | IOHIDManager or SDL2 | Super Meat Boy, Cuphead, LEGO Marvel's Avengers, older Unity or Feral ports | Does not work. These games do not detect the controller |
 
 ### Generic HID Profile Results

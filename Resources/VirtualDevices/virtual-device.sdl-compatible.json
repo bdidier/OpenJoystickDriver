@@ -2,8 +2,8 @@
   "apiVersion": "openjoystickdriver/v1alpha1",
   "kind": "VirtualDevice",
   "persona": "SDLCompatible",
-  "layout": "XboxOneSBluetooth",
-  "transport": "Bluetooth",
+  "layout": "XboxOneGIP",
+  "transport": "USB",
   "worksWithDefaultSDLHints": false,
   "labels": "Xbox",
   "identity": {

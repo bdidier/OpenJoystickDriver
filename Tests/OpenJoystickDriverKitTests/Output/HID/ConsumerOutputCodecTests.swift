@@ -35,23 +35,52 @@ func consumerOutput(
   return try ConsumerOutputCodec.decode(request, in: format)
 }
 
+/// One GIP rumble output report as SDL writes it (`SDL_hidapi_xboxone.c`
+/// `HIDAPI_DriverXboxOne_UpdateRumble`): command 0x09, options, sequence, length 9, sub-command,
+/// then the activation mask, trigger and motor magnitudes, duration, delay and repeat.
+func gipRumbleReport(
+  activation: UInt8,
+  leftTrigger: UInt8 = 0,
+  rightTrigger: UInt8 = 0,
+  left: UInt8 = 0,
+  right: UInt8 = 0,
+  duration: UInt8 = 0xFF
+) -> [UInt8] {
+  [
+    0x09, 0x00, 0x00, 0x09, 0x00, activation, leftTrigger, rightTrigger, left, right, duration,
+    0x00, 0xEB,
+  ]
+}
+
 struct ConsumerOutputCodecTests {
   @Test
   func allZeroConsumerReportsStopRumble() throws {
+    let format = XboxOneGIPHIDReportFormat()
     // Every motor activated at zero, with a nonzero duration.
     #expect(
-      try consumerOutput(3, [0x03, 0x0F, 0, 0, 0, 0, 5, 0, 0], in: XboxGeckoHIDReportFormat())
+      try consumerOutput(9, gipRumbleReport(activation: 0x0F, duration: 5), in: format)
         == .stopRumble
     )
     // Nonzero intensities whose activation bits are clear.
     #expect(
-      try consumerOutput(3, [0x03, 0x00, 10, 20, 30, 40, 5, 0, 0], in: XboxGeckoHIDReportFormat())
-        == .stopRumble
+      try consumerOutput(
+        9,
+        gipRumbleReport(
+          activation: 0,
+          leftTrigger: 10,
+          rightTrigger: 20,
+          left: 30,
+          right: 40,
+          duration: 5
+        ),
+        in: format
+      ) == .stopRumble
     )
   }
 
   @Test
   func rumbleDurationComesFromTheReport() throws {
+    let format = XboxOneGIPHIDReportFormat()
     // Magnitudes span 0...100; 255 clamps to full strength.
     let intensities = RumbleIntensities(
       lowFrequency: UnipolarValue(unitInterval: 0.01),
@@ -62,19 +91,26 @@ struct ConsumerOutputCodecTests {
     #expect(intensities.lowFrequency.rawValue == 655)
     // A duration byte of 0 is an immediate rumble, not a stop.
     #expect(
-      try consumerOutput(3, [0x03, 0x0C, 0, 0, 1, 255, 0, 0, 0], in: XboxGeckoHIDReportFormat())
-        == .setRumble(intensities, duration: .milliseconds(0))
+      try consumerOutput(
+        9,
+        gipRumbleReport(activation: 0x0C, left: 1, right: 255, duration: 0),
+        in: format
+      ) == .setRumble(intensities, duration: .milliseconds(0))
     )
     // The duration byte counts 10 ms units.
     #expect(
-      try consumerOutput(3, [0x03, 0x0C, 0, 0, 1, 255, 50, 0, 0], in: XboxGeckoHIDReportFormat())
-        == .setRumble(intensities, duration: .milliseconds(500))
+      try consumerOutput(
+        9,
+        gipRumbleReport(activation: 0x0C, left: 1, right: 255, duration: 50),
+        in: format
+      ) == .setRumble(intensities, duration: .milliseconds(500))
     )
   }
 
-  /// SDL's HIDAPI Xbox One driver scales Bluetooth rumble to `0...100` (`SDL_hidapi_xboxone.c`
-  /// `HIDAPI_DriverXboxOne_RumbleJoystick`, `/ 655`) and sends
-  /// `03 0F lt rt low high FF 00 EB`; the descriptor declares Magnitude `0...100` too.
+  /// SDL's HIDAPI Xbox One driver scales rumble to `0...100` (`SDL_hidapi_xboxone.c`
+  /// `HIDAPI_DriverXboxOne_RumbleJoystick`, `/ 655`) and, for a device it does not read as
+  /// Bluetooth, sends `09 00 seq 09 00 0F lt rt low high FF 00 EB`
+  /// (`HIDAPI_DriverXboxOne_UpdateRumble`).
   @Test
   func sdlRumbleMagnitudesSpanZeroToOneHundred() throws {
     // SDL_RumbleJoystick(0xFFFF, 0x8000): low = 100, high = 50.
@@ -86,28 +122,41 @@ struct ConsumerOutputCodecTests {
     )
     #expect(
       try consumerOutput(
-        3,
-        [0x03, 0x0F, 0, 0, 100, 50, 0xFF, 0x00, 0xEB],
-        in: XboxGeckoHIDReportFormat()
+        9,
+        [0x09, 0x00, 0x00, 0x09, 0x00, 0x0F, 0x00, 0x00, 100, 50, 0xFF, 0x00, 0xEB],
+        in: XboxOneGIPHIDReportFormat()
       ) == .setRumble(intensities, duration: .milliseconds(2_550))
     )
   }
 
   @Test
-  func shortReportsAreRejectedByTheCodec() throws {
-    let xboxOne = try XboxGeckoHIDReportFormat()
+  func shortAndMisframedReportsAreRejectedByTheCodec() throws {
+    let xboxOne = XboxOneGIPHIDReportFormat()
     #expect(throws: VirtualHostReportError.malformed) {
-      try consumerOutput(3, [0x03, 0x0F, 10, 20, 30, 40], in: xboxOne)
+      try consumerOutput(9, [0x09, 0x00, 0x00, 0x09, 0x00, 0x0F, 10, 20], in: xboxOne)
+    }
+    // The GIP length field and sub-command must be those of a rumble packet.
+    var wrongLength = gipRumbleReport(activation: 0x0F)
+    wrongLength[3] = 0x08
+    #expect(throws: VirtualHostReportError.malformed) {
+      try consumerOutput(9, wrongLength, in: xboxOne)
+    }
+    var wrongSubCommand = gipRumbleReport(activation: 0x0F)
+    wrongSubCommand[4] = 0x01
+    #expect(throws: VirtualHostReportError.malformed) {
+      try consumerOutput(9, wrongSubCommand, in: xboxOne)
     }
   }
 
   @Test
   func oversizedAndUndeclaredReportsAreRejectedByTheCodec() throws {
+    let xboxOne = XboxOneGIPHIDReportFormat()
     #expect(throws: VirtualHostReportError.tooLarge) {
-      try consumerOutput(3, [0x03, 0x0F, 0, 0, 10, 20, 5, 0, 0, 0], in: XboxGeckoHIDReportFormat())
+      try consumerOutput(9, gipRumbleReport(activation: 0x0F) + [0], in: xboxOne)
     }
+    // The Bluetooth rumble report is not one the format declares.
     #expect(throws: VirtualHostReportError.unsupported) {
-      try consumerOutput(9, [0x09, 0x0F, 0, 0, 10, 20, 5, 0, 0], in: XboxGeckoHIDReportFormat())
+      try consumerOutput(3, [0x03, 0x0F, 0, 0, 10, 20, 5, 0, 0], in: xboxOne)
     }
   }
 
@@ -117,7 +166,8 @@ struct ConsumerOutputCodecTests {
     // One report.
     let reports: [(UInt32, [UInt8])] = [
       (0, [0x4F, 1, 2, 3, 4, 0xF4, 0x01]), (0, [0x4F, 1, 2, 3, 4]), (0, [0x08, 0x00, 10, 20]),
-      (0, [0x08, 0x00, 10, 20, 0, 0, 0]), (3, [0x03, 0x0F, 0, 0, 10, 20, 5, 0, 0]),
+      (0, [0x08, 0x00, 10, 20, 0, 0, 0]),
+      (9, gipRumbleReport(activation: 0x0F, left: 10, right: 20)),
     ]
     for (reportID, bytes) in reports {
       #expect(throws: VirtualHostReportError.unsupported) {

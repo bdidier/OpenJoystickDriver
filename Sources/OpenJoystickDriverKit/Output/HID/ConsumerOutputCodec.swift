@@ -1,11 +1,16 @@
 import Foundation
 
 /// Decodes the output reports a consumer sends to a virtual format into the output command it
-/// requests. The Xbox One rumble report (report ID 3) is the only output report any format
+/// requests. The Xbox One GIP rumble report (report ID 9) is the only output report any format
 /// declares; the generic format is input-only.
 enum ConsumerOutputCodec {
-  static let xboxOneReportID: UInt8 = 3
-  static let xboxOneReportPayloadSize = 8
+  static let xboxOneReportID = XboxOneGIPHIDDescriptor.rumbleReportID
+  static let xboxOneReportPayloadSize = XboxOneGIPHIDDescriptor.rumbleReportPayloadSize
+
+  /// The GIP rumble packet's length field and sub-command, which follow its options and sequence.
+  private static let gipRumbleLength: UInt8 = 9
+  private static let gipRumbleSubCommand: UInt8 = 0
+  private static let gipRumbleBodyOffset = 4
 
   /// Duration of a rumble report that carries none.
   static let defaultRumbleDurationMs = 250
@@ -31,14 +36,16 @@ enum ConsumerOutputCodec {
     guard payload.count <= maximum else { throw .tooLarge }
     switch request.reportID {
     case xboxOneReportID:
-      guard payload.count == xboxOneReportPayloadSize else { throw .malformed }
-      return activatedRumble(payload)
+      guard payload.count == xboxOneReportPayloadSize,
+        payload[2] == gipRumbleLength, payload[3] == gipRumbleSubCommand
+      else { throw .malformed }
+      return activatedRumble(Array(payload[gipRumbleBodyOffset...]))
     default: throw .unsupported
     }
   }
 
-  /// The largest rumble magnitude: the descriptor's Magnitude logical maximum (0x64), and SDL's
-  /// and the Xbox Bluetooth firmware's full strength.
+  /// The largest rumble magnitude: SDL scales a 16-bit strength to `0...100`
+  /// (`SDL_hidapi_xboxone.c` `HIDAPI_DriverXboxOne_RumbleJoystick`, division by 655).
   private static let rumbleMagnitudeMax = 100.0
 
   /// A rumble command from report magnitudes in `0...100` (larger values clamp to full strength);
@@ -63,8 +70,8 @@ enum ConsumerOutputCodec {
     return .setRumble(intensities, duration: .milliseconds(durationMs))
   }
 
-  /// Xbox One layout: an activation mask, then left trigger, right trigger, left, right
-  /// and a duration in 10 ms units.
+  /// The GIP rumble body after its sub-command: an activation mask, then left trigger, right
+  /// trigger, left, right and a duration in 10 ms units.
   private static func activatedRumble(_ bytes: [UInt8]) -> ControllerOutputCommand {
     let activation = bytes[0] & rumbleActivationAllMotors
     func channel(_ mask: UInt8, _ offset: Int) -> UInt8 {

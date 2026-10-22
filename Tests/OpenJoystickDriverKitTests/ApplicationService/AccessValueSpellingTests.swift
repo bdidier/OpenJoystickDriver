@@ -57,9 +57,10 @@ struct AccessValueSpellingTests {
   @Test
   func virtualDeviceLayoutsAndLabelsRefuseTheirEarlierSpellings() {
     #expect(VirtualDeviceLayout(rawValue: "OJDGenericGamepad") == .ojdGenericGamepad)
-    #expect(VirtualDeviceLayout(rawValue: "XboxOneSBluetooth") == .xboxOneSBluetooth)
+    #expect(VirtualDeviceLayout(rawValue: "XboxOneGIP") == .xboxOneGIP)
     #expect(VirtualDeviceLayout(rawValue: "ojd-generic-gamepad") == nil)
-    #expect(VirtualDeviceLayout(rawValue: "xbox-one-s-bluetooth") == nil)
+    #expect(VirtualDeviceLayout(rawValue: "xbox-one-gip") == nil)
+    #expect(VirtualDeviceLayout(rawValue: "XboxOneSBluetooth") == nil)
     #expect(VirtualIdentityGlyphFamily(rawValue: "Xbox") == .xbox)
     #expect(VirtualIdentityGlyphFamily(rawValue: "Generic") == .generic)
     #expect(VirtualIdentityGlyphFamily(rawValue: "xbox") == nil)

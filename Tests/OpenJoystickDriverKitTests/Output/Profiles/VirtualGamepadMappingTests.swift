@@ -19,10 +19,12 @@ struct VirtualGamepadMappingTests {
   }
 
   @Test
-  func theSDLCompatiblePersonaReadsTheDpadAsAHat() throws {
+  func theSDLCompatiblePersonaReadsTheDpadAsButtonsAndBindsBothYAxesInverted() throws {
     let mapping = try VirtualHIDProfileID.sdlCompatible.gamepadMapping()
-    #expect(mapping.guid == "050000005e040000fd02000000000000")
-    #expect(mapping.sdlMapping.contains("dpup:h0.1,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,"))
+    #expect(mapping.guid == "030000005e040000fd02000000000000")
+    #expect(mapping.sdlMapping.contains("dpup:b"))
+    #expect(mapping.sdlMapping.contains("lefty:a1~,"))
+    #expect(mapping.sdlMapping.contains("righty:a4~,"))
     #expect(mapping.sdlMapping.contains("lefttrigger:+a2,righttrigger:+a5,"))
     #expect(mapping.unmapped.isEmpty)
   }

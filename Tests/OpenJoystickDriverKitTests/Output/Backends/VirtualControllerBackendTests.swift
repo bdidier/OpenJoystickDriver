@@ -1,4 +1,5 @@
 import Foundation
+import ProtocolPacketFixtures
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -48,13 +49,9 @@ struct VirtualControllerBackendTests {
 
   @Test
   func testXboxOneVirtualOutputFormatDeclaresRumbleOutputSize() throws {
-    let format = try HIDDescriptorReportFormat(
-      descriptor: XboxOneBluetoothHIDDescriptor.oneSDescriptor,
-      outputReportID: ConsumerOutputCodec.xboxOneReportID,
-      outputReportPayloadSize: ConsumerOutputCodec.xboxOneReportPayloadSize
-    )
+    let format = XboxOneGIPHIDReportFormat()
 
-    #expect(format.inputReportID == 1)
+    #expect(format.inputReportID == 0x20)
     #expect(format.outputReportID == ConsumerOutputCodec.xboxOneReportID)
     #expect(format.outputReportPayloadSize == ConsumerOutputCodec.xboxOneReportPayloadSize)
   }
@@ -62,14 +59,10 @@ struct VirtualControllerBackendTests {
   @Test
   func testVirtualOutputFormatsReturnFullyNeutralReportsAfterRelease() throws {
     let generic = OJDGenericGamepadFormat().buildInputReport(from: VirtualGamepadState())
-    let xone = try XboxGeckoHIDReportFormat().buildInputReport(from: VirtualGamepadState())
+    let xone = XboxOneGIPHIDReportFormat().buildInputReport(from: VirtualGamepadState())
 
     #expect(generic == [UInt8](repeating: 0, count: generic.count))
-    #expect(xone[0] == 1)
-    #expect(Array(xone[1...8]) == [0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80])
-    #expect(xone[14] == 0x00)
-    #expect(xone[15] == 0x00)
-    #expect(xone.count == 16)
+    #expect(xone == ProtocolPacketFixtures.XboxOneGIP.neutralInputReport)
   }
 
   @Test

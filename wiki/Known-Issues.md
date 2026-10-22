@@ -32,7 +32,7 @@ The `com.openjoystickdriver.XboxUSBDevice` extension can only match the seven Mi
 
 ## Some Apps Do Not Read the Virtual Controller
 
-Steam, CrossOver, RPCS3, and older games that use SDL2 or IOHIDManager may not read the virtual Xbox controller. For more information, see [Game and app compatibility](Playing-Games.md).
+CrossOver and older games that use SDL2 or IOHIDManager may not read the virtual Xbox controller. Steam and RPCS3 list the `SDLCompatible` profile as "Xbox One S Controller". macOS reports its transport as `Virtual`, so SDL reads its reports as USB Xbox One packets, and the profile sends and takes those packets. The maintainer has not verified input or rumble in Steam on hardware. For more information, see [Game and app compatibility](Playing-Games.md).
 
 ## Further Reading
 

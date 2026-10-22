@@ -52,17 +52,17 @@ struct VirtualHostReportTests {
       let request = try VirtualHostReportRequest(type: .output, reportID: 0, bytes: bytes)
       #expect(throws: VirtualHostReportError.unsupported) { try generic.consumerOutput(request) }
     }
-    let xbox = UserSpaceInputReportState(format: try XboxGeckoHIDReportFormat())
+    let xbox = UserSpaceInputReportState(format: XboxOneGIPHIDReportFormat())
     let rumble = try VirtualHostReportRequest(
       type: .output,
-      reportID: 3,
-      bytes: [3, 0x0C, 0, 0, 127, 255, 25, 0, 0]
+      reportID: 9,
+      bytes: gipRumbleReport(activation: 0x0C, left: 127, right: 255, duration: 25)
     )
     #expect(try xbox.consumerOutput(rumble) == .consumerRumble(left: 127, right: 255))
     let feature = try VirtualHostReportRequest(
       type: .feature,
-      reportID: 3,
-      bytes: [3, 0x0C, 0, 0, 127, 255, 25, 0, 0]
+      reportID: 9,
+      bytes: gipRumbleReport(activation: 0x0C, left: 127, right: 255, duration: 25)
     )
     #expect(throws: VirtualHostReportError.unsupported) { try xbox.consumerOutput(feature) }
   }

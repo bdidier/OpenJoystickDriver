@@ -4,15 +4,16 @@
 /// report codec, the HID fields its report changes are read from the persona's descriptor, and
 /// SDL's macOS order names them: buttons by ascending button usage (`bN`), axes by ascending
 /// Generic Desktop usage (`aN`), and the hat as `h0.<mask>`. A control the report cannot carry,
-/// or one SDL has no name for, is listed in ``unmapped``. The mapping adds no axis modifier,
-/// because no derived binding needs one: the report carries each axis in the direction SDL reads.
+/// or one SDL has no name for, is listed in ``unmapped``. An axis whose report value falls as the
+/// control rises is bound inverted (`aN~`); a trigger binds the positive half (`+aN`).
 public struct VirtualGamepadMapping: Equatable, Sendable {
   /// One control driven alone, and the descriptor fields its report changed.
   public struct Probe: Equatable, Sendable {
     public let control: Control
     /// The changed fields as `usagePage:usage`.
     public let fields: [String]
-    /// `bN`, `aN` or `h0.<mask>`, or nil when the report carries the control nowhere.
+    /// `bN`, `aN`, `aN~` (the axis runs opposite to the
+    /// control) or `h0.<mask>`, or nil when the report carries the control nowhere.
     public let binding: String?
   }
 
@@ -20,7 +21,7 @@ public struct VirtualGamepadMapping: Equatable, Sendable {
   public struct W3CEntry: Equatable, Sendable {
     public let index: Int
     public let control: Control
-    /// The same `bN`, `aN` or `h0.<mask>` binding the SDL mapping uses.
+    /// The same `bN`, `aN`, `aN~` or `h0.<mask>` binding the SDL mapping uses.
     public let source: String
   }
 
@@ -124,7 +125,10 @@ extension VirtualHIDProfileID {
       }),
         let index = axisUsages.firstIndex(of: axis.usage)
       {
-        binding = "a\(index)"
+        let inverted =
+          Self.signedValue(of: axis, in: report, numbered: numbered)
+          < Self.signedValue(of: axis, in: neutral, numbered: numbered)
+        binding = "a\(index)" + (inverted ? "~" : "")
       } else if let hat = changed.first(where: { $0.usagePage == 1 && $0.usage == 0x39 }) {
         let mask = [1: 1, 2: 3, 3: 2, 4: 6, 5: 4, 6: 12, 7: 8, 8: 9]
         let raw = Self.value(of: hat, in: report, numbered: numbered) - hat.logicalMin + 1
@@ -228,6 +232,14 @@ extension VirtualHIDProfileID {
       if payload[position / 8] & (1 << UInt8(position % 8)) != 0 { value |= 1 << bit }
     }
     return value
+  }
+
+  /// `value(of:in:numbered:)` read as two's complement when the field's logical minimum is below
+  /// zero.
+  private static func signedValue(of field: HIDField, in report: [UInt8], numbered: Bool) -> Int {
+    let raw = value(of: field, in: report, numbered: numbered)
+    guard field.logicalMin < 0, raw >= 1 << (field.bitSize - 1) else { return raw }
+    return raw - (1 << field.bitSize)
   }
 
   private static func hex(_ value: Int) -> String {

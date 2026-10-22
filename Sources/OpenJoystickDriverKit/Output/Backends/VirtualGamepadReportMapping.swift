@@ -130,9 +130,9 @@ enum VirtualGamepadReportMapping {
   ///   sdl-compatible Xbox One report has no slot SDL names for them.
   /// - `rightTrackpadClick`: a pad click is R3 only where the right pad is the right stick
   ///   (``virtualControl(_:rightPadIsRightStick:)``); elsewhere it has no slot.
-  /// - `capture` is bit 15 in the generic persona only. The sdl-compatible report is the 16-byte
-  ///   Xbox One layout (``XboxGeckoHIDReportFormat``), which has no Share field and clears that
-  ///   bit.
+  /// - `capture` is bit 15 in the generic persona only. The sdl-compatible report is the 18-byte
+  ///   Xbox One GIP packet (``XboxOneGIPHIDReportFormat``), which has no Share field and clears
+  ///   that bit.
   static func buttonBit(for control: Control) -> UInt32? {
     switch control {
     case .south: return 0

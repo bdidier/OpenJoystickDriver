@@ -61,7 +61,7 @@ extension VirtualDevice {
       guard let layout = (value as? String).flatMap(VirtualDeviceLayout.init) else {
         throw ControllerRecordProblem(
           code: .invalidControllerRecord,
-          "layout must be OJDGenericGamepad or XboxOneSBluetooth"
+          "layout must be OJDGenericGamepad or XboxOneGIP"
         )
       }
       return layout

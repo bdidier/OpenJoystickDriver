@@ -1,4 +1,5 @@
 import Foundation
+import ProtocolPacketFixtures
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -41,17 +42,10 @@ struct VirtualHIDProfileTests {
     let profile = try VirtualHIDProfileID.sdlCompatible.makeProfile()
     #expect(profile.identity == .sdlCompatible)
     #expect(profile.identity.vendorID == 0x045E && profile.identity.productID == 0x02FD)
-    #expect(profile.descriptor == XboxOneBluetoothHIDDescriptor.oneSDescriptor)
+    #expect(profile.descriptor == XboxOneGIPHIDDescriptor.descriptor)
     let neutral = profile.inputReport(for: .neutral)
-    #expect(
-      neutral == [
-        0x01, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00,
-      ]
-    )
-    #expect(
-      neutral == (try XboxGeckoHIDReportFormat()).buildInputReport(from: VirtualGamepadState())
-    )
+    #expect(neutral == ProtocolPacketFixtures.XboxOneGIP.neutralInputReport)
+    #expect(neutral == XboxOneGIPHIDReportFormat().buildInputReport(from: VirtualGamepadState()))
   }
 
   @Test
@@ -78,7 +72,14 @@ struct VirtualHIDProfileTests {
   @Test
   func xboxProfileDecodesOnlyItsOwnRumbleReport() throws {
     let profile = try VirtualHIDProfileID.sdlCompatible.makeProfile()
-    let report: [UInt8] = [0x03, 0x0F, 10, 20, 30, 40, 50, 0, 0]
+    let report = gipRumbleReport(
+      activation: 0x0F,
+      leftTrigger: 10,
+      rightTrigger: 20,
+      left: 30,
+      right: 40,
+      duration: 50
+    )
     let expected = ControllerOutputCommand.consumerRumble(
       left: 30,
       right: 40,
@@ -87,9 +88,9 @@ struct VirtualHIDProfileTests {
       durationMs: 500
     )
     #expect(
-      profile.consumerOutput(type: .output, reportID: 3, bytes: report) == expected
+      profile.consumerOutput(type: .output, reportID: 9, bytes: report) == expected
     )
-    #expect(try consumerOutput(3, report, in: XboxGeckoHIDReportFormat()) == expected)
+    #expect(try consumerOutput(9, report, in: XboxOneGIPHIDReportFormat()) == expected)
     #expect(
       profile.consumerOutput(
         type: .output,
@@ -97,23 +98,23 @@ struct VirtualHIDProfileTests {
         bytes: Self.unnumberedVendorReport
       ) == nil
     )
-    #expect(profile.consumerOutput(type: .input, reportID: 3, bytes: report) == nil)
+    #expect(profile.consumerOutput(type: .input, reportID: 9, bytes: report) == nil)
     #expect(
-      profile.consumerOutput(type: .feature, reportID: 3, bytes: report) == nil
+      profile.consumerOutput(type: .feature, reportID: 9, bytes: report) == nil
     )
     #expect(
       profile.consumerOutput(
         type: .output,
-        reportID: 3,
-        bytes: [0x03, 0x0F, 0, 0, 0, 0, 50, 0, 0]
+        reportID: 9,
+        bytes: gipRumbleReport(activation: 0x0F, duration: 50)
       ) == .stopRumble
     )
     // The short report the set-report callback rejects is rejected by the profile's codec too.
     #expect(
       profile.consumerOutput(
         type: .output,
-        reportID: 3,
-        bytes: [0x03, 0x0F, 10, 20, 30, 40]
+        reportID: 9,
+        bytes: [0x09, 0x00, 0x00, 0x09, 0x00, 0x0F, 10, 20, 30, 40]
       ) == nil
     )
   }

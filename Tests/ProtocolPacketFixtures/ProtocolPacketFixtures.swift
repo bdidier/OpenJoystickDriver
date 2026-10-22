@@ -184,9 +184,11 @@ public enum ProtocolPacketFixtures {
     }
   }
 
-  public enum XboxBluetooth {
+  public enum XboxOneGIP {
+    /// GIP command 0x20, options, sequence, length 14, then buttons, triggers and sticks. The Y
+    /// axes are the complement of zero, which SDL reads as centred.
     public static let neutralInputReport: [UInt8] = [
-      1, 0, 128, 0, 128, 0, 128, 0, 128, 0, 0, 0, 0, 0, 0, 0,
+      0x20, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0xFF, 0xFF, 0, 0, 0xFF, 0xFF,
     ]
   }
 

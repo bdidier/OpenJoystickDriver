@@ -19,7 +19,7 @@ struct VirtualInputEventTests {
 
   /// The `SDLCompatible` input report for `state`.
   private func xboxOneSReport(_ state: VirtualGamepadState) throws -> [UInt8] {
-    try XboxGeckoHIDReportFormat().buildInputReport(from: state)
+    XboxOneGIPHIDReportFormat().buildInputReport(from: state)
   }
 
   @Test(arguments: [false, true])
@@ -59,10 +59,9 @@ struct VirtualInputEventTests {
     #expect(state.leftStickY == -Int16.max)
     #expect(state.rightStickX == -Int16.max)
     #expect(state.rightStickY > 32_000)
-    #expect(virtualReport[14] == 0x11)
-    #expect(virtualReport[15] == 0x04)
-    #expect(Array(virtualReport[9...10]) == [0xFF, 0x03])
-    #expect(virtualReport[13] == 0)
+    #expect(virtualReport[4] == 0x10)
+    #expect(virtualReport[5] == 0x10)
+    #expect(Array(virtualReport[6...7]) == [0xFF, 0x03])
     #expect(
       parser.power
         == ControllerConnectionState.Power(
@@ -84,13 +83,13 @@ struct VirtualInputEventTests {
     apply(try parser.parseReport(Data(packet)), to: &state)
     #expect(state.leftTriggerPressed)
     #expect(state.rightTriggerPressed)
-    #expect(Array(try xboxOneSReport(state)[9...12]) == [0xFF, 0x03, 0xFF, 0x03])
+    #expect(Array(try xboxOneSReport(state)[6...9]) == [0xFF, 0x03, 0xFF, 0x03])
     packet[3] = 0
     packet[5] = 0
     apply(try parser.parseReport(Data(packet)), to: &state)
     #expect(state.leftTriggerPressed == false)
     #expect(state.rightTriggerPressed == false)
-    #expect(Array(try xboxOneSReport(state)[9...12]) == [0, 0, 0, 0])
+    #expect(Array(try xboxOneSReport(state)[6...9]) == [0, 0, 0, 0])
   }
 
   @Test
@@ -143,9 +142,9 @@ struct VirtualInputEventTests {
     var state = VirtualGamepadState()
     let parser = xidDriver()
     apply(try parser.parseReport(Data(packet)), to: &state)
-    #expect(try xboxOneSReport(state)[13] == 0x04)
+    #expect(try xboxOneSReport(state)[5] & 0x0F == 0x0A)
     packet[2] = 0
     apply(try parser.parseReport(Data(packet)), to: &state)
-    #expect(try xboxOneSReport(state)[13] == 0)
+    #expect(try xboxOneSReport(state)[5] & 0x0F == 0)
   }
 }
