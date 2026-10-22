@@ -28,6 +28,25 @@ public enum BoundedProcessRunner {
     timeoutSeconds: TimeInterval = defaultTimeoutSeconds,
     maximumOutputBytes: Int = defaultMaximumOutputBytes
   ) throws -> BoundedProcessResult {
+    try run(
+      executableURL: executableURL,
+      arguments: arguments,
+      environment: environment,
+      timeoutSeconds: timeoutSeconds,
+      maximumOutputBytes: maximumOutputBytes
+    ) { $0.wait(timeout: .now() + $1) }
+  }
+
+  /// `waitForExit` waits on the termination signal for the given seconds; tests replace it to
+  /// observe the deadline a child is given.
+  static func run(
+    executableURL: URL,
+    arguments: [String],
+    environment: [String: String]?,
+    timeoutSeconds: TimeInterval,
+    maximumOutputBytes: Int,
+    waitForExit: (DispatchSemaphore, TimeInterval) -> DispatchTimeoutResult
+  ) throws -> BoundedProcessResult {
     let process = Process()
     process.executableURL = executableURL
     process.arguments = arguments
@@ -70,7 +89,7 @@ public enum BoundedProcessRunner {
     pipe.fileHandleForWriting.closeFile()
 
     let timeout = max(0, timeoutSeconds)
-    var timedOut = terminationFinished.wait(timeout: .now() + timeout) == .timedOut
+    var timedOut = waitForExit(terminationFinished, timeout) == .timedOut
     if timedOut {
       process.terminate()
       if terminationFinished.wait(timeout: .now() + 1) == .timedOut {

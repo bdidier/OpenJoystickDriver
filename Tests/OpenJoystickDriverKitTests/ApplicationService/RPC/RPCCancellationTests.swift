@@ -34,7 +34,8 @@ struct LocalServiceRPCCancellationTests {
   @Test(.timeLimit(.minutes(1)))
   func cancellingConnectStopsRetryingAndLeavesTheClientDisconnected() async throws {
     let client = ApplicationServiceClient(socketPath: temporarySocketPath())
-    let task = Task { await client.connect(timeoutSeconds: 30) }
+    // The connect deadline exceeds the test's time limit, so only the cancellation can end it.
+    let task = Task { await client.connect(timeoutSeconds: 3600) }
     await waitUntil("the client has probed twice without an answer") {
       client.stateLock.withLock { client.unansweredProbes } >= 2
     }

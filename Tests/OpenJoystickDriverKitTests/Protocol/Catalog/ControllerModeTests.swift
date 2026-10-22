@@ -270,6 +270,23 @@ struct ControllerModeTests {
     #expect(log.withLock { $0 }.first?.contains("GATT") == true)
   }
 
+  @Test
+  func aReadIsGivenTheDeadlineItWasAskedFor() async {
+    let deadlines = Locked<[TimeInterval]>([])
+    let reads = BoundedHIDRead { timeout, action in
+      deadlines.withLock { $0.append(timeout) }
+      action()
+    }
+    let release = DispatchSemaphore(value: 0)
+    _ = await reads.run(key: UUID(), timeout: 0.75) {
+      release.wait()
+      return .success(Data([1]))
+    }
+    release.signal()
+
+    #expect(deadlines.withLock { $0 } == [0.75])
+  }
+
   @Test(.timeLimit(.minutes(1)))
   func aReadThatNeverReturnsGivesUpAtTheDeadline() async {
     let release = DispatchSemaphore(value: 0)

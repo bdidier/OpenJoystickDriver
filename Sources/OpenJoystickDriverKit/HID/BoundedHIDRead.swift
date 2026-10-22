@@ -8,6 +8,23 @@ import IOKit
 /// `kIOReturnBusy`, so a silent device cannot pile up blocked threads.
 final class BoundedHIDRead: Sendable {
   private let outstanding = Locked<Set<UUID>>([])
+  private let scheduleDeadline: DeadlineScheduler
+
+  typealias DeadlineScheduler = @Sendable (TimeInterval, @escaping @Sendable () -> Void) -> Void
+
+  /// `scheduleDeadline` runs its action once `timeout` seconds have passed; tests replace it to
+  /// observe the deadline a read is given.
+  init(scheduleDeadline: @escaping DeadlineScheduler = BoundedHIDRead.dispatchAfter) {
+    self.scheduleDeadline = scheduleDeadline
+  }
+
+  @Sendable
+  private static func dispatchAfter(
+    _ timeout: TimeInterval,
+    _ action: @escaping @Sendable () -> Void
+  ) {
+    DispatchQueue.global().asyncAfter(deadline: .now() + timeout, execute: action)
+  }
 
   /// The outcome of `read` for the device `key`, a `kIOReturnTimeout` failure when it has not
   /// returned within `timeout` seconds, or a `kIOReturnBusy` failure, without calling `read`,
@@ -39,9 +56,7 @@ final class BoundedHIDRead: Sendable {
         _ = outstanding.withLock { $0.remove(key) }
         finish(result)
       }
-      DispatchQueue.global().asyncAfter(deadline: .now() + timeout) {
-        finish(.failed(.ioReturn(kIOReturnTimeout)))
-      }
+      scheduleDeadline(timeout) { finish(.failed(.ioReturn(kIOReturnTimeout))) }
     }
   }
 }

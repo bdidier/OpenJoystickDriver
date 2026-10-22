@@ -54,7 +54,8 @@ struct ServiceStatusChangesTests {
     let baseline = await Self.revision(changes)
 
     let registered = Self.heldWaits(changes)
-    async let next = changes.wait(after: baseline, holdSeconds: 30)
+    // The hold time exceeds the suite's time limit, so only the notification can end the wait.
+    async let next = changes.wait(after: baseline, holdSeconds: 3600)
     await Self.nextHeldWait(registered)
     center.post(name: .ojdServiceStatusDidChange, object: nil)
 
@@ -112,7 +113,7 @@ struct ServiceStatusChangesTests {
     let task = Task { await changes.wait(after: baseline, holdSeconds: 3600) }
     task.cancel()
 
-    #expect(await task.value.revision == baseline)
+    #expect(await task.value == ServiceStatusReply(revision: baseline, event: .holdElapsed))
   }
 
   @Test
