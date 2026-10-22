@@ -97,7 +97,7 @@ Override inputs live at:
 Resources/Controllers/<vid>/<vid>-<pid>.json
 ```
 
-A `Controller` file supplies a complete canonical record missing from the pinned source. A `ControllerPatch` file in `Resources/ControllerPatches/<vid>/<vid>-<pid>.patch.json` merges a patch into an existing imported record. The generator rejects:
+A `Controller` file supplies a complete canonical record missing from the pinned source. A `ControllerPatch` file in `Resources/ControllerPatches/<vid>/<vid>-<pid>.patch.json` merges a patch into an existing imported record. `OJDRepositoryTool apply-patches` applies the patches, so the merge rules are Swift's, a number keeps the text of the file that writes it, and a patch file below the vendor directory is refused; `OJDRepositoryTool validate records` then checks every record, including its stored variant. The generator rejects:
 
 - `Controller` files that collide with upstream;
 - patches without an upstream record;

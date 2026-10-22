@@ -114,8 +114,7 @@ extension ControllerRecord {
 extension ControllerTuning {
   /// Why `key` does not apply to a controller of this family and stored variant, or nil when a
   /// driver reads it. A nil `protocolID` is a record with no known family: it reads only
-  /// `stickDeadzone` and `frameQueueCapacity`. The family's description holds the keys;
-  /// `controller_patch.py` reads the same description.
+  /// `stickDeadzone` and `frameQueueCapacity`. The family's description holds the keys.
   static func scopeViolation(
     _ key: Key,
     protocolID: PhysicalProtocolID?,

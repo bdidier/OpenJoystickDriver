@@ -16,7 +16,7 @@ import urllib.error
 import urllib.request
 from typing import Any
 
-from Scripts.Catalog import controller_patch, protocol_descriptions
+from Scripts.Catalog import protocol_descriptions, repository_tool
 from Scripts.Catalog.catalog_rules import load_rules, parse_id, parse_identity
 from Scripts.Catalog.schema_header import KINDS, header
 from Scripts.Catalog.xpad_io import json_text, run_gh
@@ -109,13 +109,6 @@ def stores_variant(family: str) -> bool:
     return protocol_descriptions.stores_variant(protocol_descriptions.bundled()[family])
 
 
-def require_stored_variant(family: str, variant: str | None) -> None:
-    """Fails when `variant` is not what a record of `family` stores."""
-    problem = protocol_descriptions.stored_variant_problem(family, variant)
-    if problem is not None:
-        raise CatalogError(problem)
-
-
 def build_hid_records(sources: dict[str, str]) -> list[dict[str, Any]]:
     defines = parse_defines(sources["hid_ids"])
     records: list[dict[str, Any]] = []
@@ -145,7 +138,6 @@ def build_hid_records(sources: dict[str, str]) -> list[dict[str, Any]]:
             product_id = defines[product_macro]
         except KeyError as error:
             raise CatalogError(f"missing Linux HID ID definition: {error}") from error
-        require_stored_variant(family, variant)
         protocol: dict[str, Any] = {"family": family}
         if variant is not None:
             protocol["variant"] = variant
@@ -407,7 +399,6 @@ def build_sdl_records(
             if key not in STEAM_VARIANTS:
                 raise CatalogError(f"{family} row {key} has no STEAM_VARIANTS entry")
             variant = STEAM_VARIANTS[key]
-        require_stored_variant(family, variant)
         protocol: dict[str, Any] = {"family": family}
         if variant is not None:
             protocol["variant"] = variant
@@ -477,23 +468,11 @@ def load_lock() -> dict[str, Any]:
         raise CatalogError(f"invalid {LOCK_PATH.name}: {error}") from error
 
 
-def patch_path(root: pathlib.Path, selector: dict[str, Any]) -> pathlib.Path:
-    """Where the built-in patch with `selector` is stored under `root`."""
-    name = controller_patch.selector_file_name(selector)
-    if "vendorID" in selector:
-        return root / f"{int(selector['vendorID']):04x}" / name
-    return root / name
-
-
-def load_authored(
+def load_authored_records(
     validator: Any,
     controller_dir: pathlib.Path = CONTROLLER_DIR,
-    patch_dir: pathlib.Path = PATCH_DIR,
-) -> tuple[
-    dict[tuple[int, int], dict[str, Any]],
-    list[tuple[dict[str, Any], dict[str, Any]]],
-]:
-    """The authored `Controller` records and the built-in `ControllerPatch` bodies."""
+) -> dict[tuple[int, int], dict[str, Any]]:
+    """The authored `Controller` records."""
     adds: dict[tuple[int, int], dict[str, Any]] = {}
     for path in sorted(controller_dir.glob("*/*.json")):
         record = json.loads(path.read_text())
@@ -504,53 +483,65 @@ def load_authored(
         if path != expected:
             raise CatalogError(f"{path}: controller path must be {expected}")
         adds[key] = record
-    patches: list[tuple[dict[str, Any], dict[str, Any]]] = []
-    for path in sorted([*patch_dir.glob("*.json"), *patch_dir.glob("*/*.json")]):
-        try:
-            selector, body = controller_patch.parse_patch(json.loads(path.read_text()))
-        except controller_patch.PatchError as error:
-            raise CatalogError(f"{path}: {error}") from error
-        expected = patch_path(patch_dir, selector)
-        if path != expected:
-            raise CatalogError(f"{path}: patch path must be {expected}")
-        patches.append((selector, body))
-    return adds, patches
+    return adds
 
 
-def apply_patches(
+def apply_built_in_patches(
     records: dict[tuple[int, int], dict[str, Any]],
     adds: dict[tuple[int, int], dict[str, Any]],
-    patches: list[tuple[dict[str, Any], dict[str, Any]]],
-) -> None:
-    """Adds the authored records, then applies the built-in layer to every record."""
-    for key, record in adds.items():
+    controller_dir: pathlib.Path = CONTROLLER_DIR,
+    patch_dir: pathlib.Path = PATCH_DIR,
+) -> dict[tuple[int, int], str]:
+    """The text of every record with the built-in patches applied.
+
+    `OJDRepositoryTool apply-patches` merges the patches, so the merge rules, the patch layout
+    and the text of the numbers are Swift's. An authored record enters unchanged, and the
+    result is checked by `OJDRepositoryTool validate records` before it is returned.
+    """
+    for key in adds:
         if key in records:
             raise CatalogError(f"controller conflicts with upstream identity {key}")
-        records[key] = record
-    known = {controller_patch.model_id(record) for record in records.values()}
-    for selector, _ in patches:
-        if "all" in selector:
-            continue
-        target = selector.get("model") or "{:04x}-{:04x}".format(
-            int(selector["vendorID"]), int(selector["productID"])
-        )
-        if target not in known:
-            raise CatalogError(f"orphan patch for {target}")
-    for key, record in list(records.items()):
-        merged = record
-        chosen = controller_patch.ordered(
+    with tempfile.TemporaryDirectory() as directory:
+        root = pathlib.Path(directory)
+        unpatched, patched = root / "unpatched", root / "patched"
+        for key, record in records.items():
+            path = record_path(unpatched, key)
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(json_text(record), encoding="utf-8")
+        for key in adds:
+            path = record_path(unpatched, key)
+            path.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(record_path(controller_dir, key), path)
+        problems = repository_tool.run(
             [
-                (selector, body, "")
-                for selector, body in patches
-                if controller_patch.selects(selector, record)
+                "apply-patches",
+                "--records",
+                str(unpatched),
+                "--patches",
+                str(patch_dir),
+                "--out",
+                str(patched),
             ]
         )
-        for selector, body, _ in chosen:
-            after = controller_patch.apply_patch(selector, body, merged)
-            if after == merged and "all" not in selector:
-                raise CatalogError(f"redundant patch for {key}")
-            merged = after
-        records[key] = merged
+        if not problems:
+            problems = repository_tool.run(["validate", "records", str(patched)])
+        if problems:
+            raise CatalogError(
+                "the built-in patches do not give valid records:\n"
+                + "\n".join(str(problem) for problem in problems)
+            )
+        return {
+            key: record_path(patched, key).read_text(encoding="utf-8")
+            for key in sorted({*records, *adds})
+        }
+
+
+def default_family(record: dict[str, Any]) -> str:
+    """The protocol family of `record`'s `default` mode."""
+    for mode in record["modes"]:
+        if mode["id"] == "default":
+            return str(mode["protocol"]["family"])
+    raise CatalogError(f"{record_key(record)} has no default mode")
 
 
 def merge_sdl_records(
@@ -559,18 +550,16 @@ def merge_sdl_records(
     rows: list[tuple[int, int, str]],
 ) -> dict[str, int]:
     """Adds SDL identities to Linux `records`; Linux rows and authored controllers win."""
-    existing = {
-        key: controller_patch.default_protocol(record)["family"]
-        for key, record in records.items()
-    }
+    existing = {key: default_family(record) for key, record in records.items()}
     for key, record in adds.items():
-        existing[key] = controller_patch.default_protocol(record)["family"]
+        existing[key] = default_family(record)
     sdl_records, counts = build_sdl_records(rows, existing)
     records.update(sdl_records)
     return counts
 
 
-def build_catalog() -> dict[tuple[int, int], dict[str, Any]]:
+def build_catalog() -> dict[tuple[int, int], str]:
+    """The text of every canonical controller record, before the JSON formatter."""
     generator = load_module(
         "ojd_generate_xpad_records",
         ROOT / "Scripts" / "Catalog" / "generate_xpad_records.py",
@@ -605,26 +594,26 @@ def build_catalog() -> dict[tuple[int, int], dict[str, Any]]:
             raise CatalogError(f"Linux sources produced duplicate identity {key}")
         records[key] = record
 
-    adds, patches = load_authored(validator)
+    adds = load_authored_records(validator)
     sdl_rows = parse_sdl_controllers(load_locked_files(lock["sdl"])["controller_list"])
     sdl_counts = merge_sdl_records(records, adds, sdl_rows)
-    apply_patches(records, adds, patches)
+    texts = apply_built_in_patches(records, adds)
 
-    if not records:
+    if not texts:
         raise CatalogError("generation produced no controller records")
 
     with tempfile.TemporaryDirectory() as directory:
         temporary_root = pathlib.Path(directory)
-        for key, record in sorted(records.items()):
+        for key, text in texts.items():
             path = record_path(temporary_root, key)
             path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(json_text(record))
+            path.write_text(text, encoding="utf-8")
             validator.validate_record(path, enforce_path=False)
 
     if skipped:
         print(f"Linux rows intentionally skipped: {len(skipped)}")
     print(sdl_summary(sdl_rows, sdl_counts))
-    return records
+    return texts
 
 
 def sdl_summary(rows: list[tuple[int, int, str]], counts: dict[str, int]) -> str:
@@ -653,13 +642,10 @@ def sdl_summary(rows: list[tuple[int, int, str]], counts: dict[str, int]) -> str
 
 
 def expected_files(
-    records: dict[tuple[int, int], dict[str, Any]],
+    records: dict[tuple[int, int], str],
 ) -> dict[pathlib.Path, str]:
     files = format_json(
-        {
-            record_path(OUTPUT_DIR, key): json_text(record)
-            for key, record in sorted(records.items())
-        }
+        {record_path(OUTPUT_DIR, key): text for key, text in sorted(records.items())}
     )
     # The bundle ships the authored protocol descriptions unchanged.
     for path in sorted(PROTOCOL_DIR.glob("*.json")):
@@ -670,7 +656,7 @@ def expected_files(
     return files
 
 
-def check_catalog(records: dict[tuple[int, int], dict[str, Any]]) -> None:
+def check_catalog(records: dict[tuple[int, int], str]) -> None:
     expected = expected_files(records)
     actual = {
         *OUTPUT_DIR.glob("*/*.json"),
@@ -695,7 +681,7 @@ def check_catalog(records: dict[tuple[int, int], dict[str, Any]]) -> None:
         )
 
 
-def write_catalog(records: dict[tuple[int, int], dict[str, Any]]) -> None:
+def write_catalog(records: dict[tuple[int, int], str]) -> None:
     expected = expected_files(records)
     for directory in (OUTPUT_DIR, PROTOCOL_OUTPUT_DIR, VIRTUAL_DEVICE_OUTPUT_DIR):
         if directory.exists():

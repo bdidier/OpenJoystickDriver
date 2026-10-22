@@ -3,11 +3,9 @@ from __future__ import annotations
 import base64
 import hashlib
 import json
-import tempfile
 import unittest
 import urllib.error
 from email.message import Message
-from pathlib import Path
 from typing import Any, ClassVar
 from unittest.mock import patch
 
@@ -207,67 +205,6 @@ class HIDRecordTests(unittest.TestCase):
             {"family": "ValveSteamController", "variant": "Dongle"},
         )
         self.assertNotIn("transport", records[0])
-
-    def write_patch(self, root: Path, selector: dict[str, Any], body: Any) -> Path:
-        path = catalog.patch_path(root, selector)
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(
-            json.dumps(
-                {**header("ControllerPatch"), "selector": selector, "patch": body}
-            )
-        )
-        return path
-
-    def test_patch_rejects_an_unknown_field(self) -> None:
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            self.write_patch(
-                root,
-                {"vendorID": 0x045E, "productID": 0x02EA},
-                {"notAField": "hid"},
-            )
-            with self.assertRaises(catalog.CatalogError):
-                catalog.load_authored(
-                    validator=None, controller_dir=root / "c", patch_dir=root
-                )
-
-    def test_patch_path_must_follow_its_selector(self) -> None:
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            path = self.write_patch(
-                root, {"vendorID": 0x11C1, "productID": 0x5600}, {"server": "OJD"}
-            )
-            path.rename(root / "11c1" / "wrong.patch.json")
-            with self.assertRaises(catalog.CatalogError):
-                catalog.load_authored(
-                    validator=None, controller_dir=root / "c", patch_dir=root
-                )
-
-    def test_patch_adds_tuning(self) -> None:
-        tuning = {"stickDeadzone": 0.02}
-        selector = {"vendorID": 0x11C1, "productID": 0x5600}
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            self.write_patch(root, selector, {"tuning": tuning})
-            adds, patches = catalog.load_authored(
-                validator=None, controller_dir=root / "c", patch_dir=root
-            )
-        upstream = {
-            "vendorID": 0x11C1,
-            "productID": 0x5600,
-            "modes": [{"id": "default", "protocol": {"family": "HIDDescriptor"}}],
-        }
-        records = {(0x11C1, 0x5600): upstream}
-        catalog.apply_patches(records, adds, patches)
-        self.assertEqual(records[(0x11C1, 0x5600)], {**upstream, "tuning": tuning})
-
-    def test_orphan_and_redundant_patches_fail(self) -> None:
-        upstream = {"vendorID": 1, "productID": 2, "server": "OJD"}
-        orphan = ({"vendorID": 1, "productID": 3}, {"server": "OJD"})
-        redundant = ({"vendorID": 1, "productID": 2}, {"server": "OJD"})
-        for patches in ([orphan], [redundant]):
-            with self.assertRaises(catalog.CatalogError):
-                catalog.apply_patches({(1, 2): dict(upstream)}, {}, patches)
 
 
 SDL_FIXTURE = """\
@@ -509,32 +446,12 @@ class SDLControllerListTests(unittest.TestCase):
                 records, adds, [(0x1532, 0x1000, "PS4Controller")]
             )
         self.assertEqual(counts, {"conflict": 1})
-        catalog.apply_patches(records, adds, [])
-        self.assertEqual(records, {(0x1532, 0x1000): override})
+        self.assertEqual(records, {})
 
-    def test_modes_patch_overrides_the_array_and_keeps_other_sections(self) -> None:
-        upstream = {
-            "vendorID": 1,
-            "productID": 1,
-            "modes": [
-                {
-                    "id": "default",
-                    "protocol": {
-                        "family": "XboxGIP",
-                        "parameters": {"shareButton": {"fromEnd": 26}},
-                    },
-                }
-            ],
-            "usb": {"interface": 0},
-        }
-        records = {(1, 1): upstream}
-        restated = [{"id": "default", "protocol": {"family": "HIDDescriptor"}}]
-        catalog.apply_patches(
-            records, {}, [({"vendorID": 1, "productID": 1}, {"modes": restated})]
-        )
-        changed = records[(1, 1)]
-        self.assertEqual(changed["modes"], restated)
-        self.assertEqual(changed["usb"], {"interface": 0})
+    def test_an_authored_record_may_not_take_an_upstream_identity(self) -> None:
+        record: dict[str, object] = {"vendorID": 1, "productID": 2}
+        with self.assertRaises(catalog.CatalogError):
+            catalog.apply_built_in_patches({(1, 2): record}, {(1, 2): record})
 
     def test_third_party_dualsense_is_admitted_and_360_product_ids_are_skipped(
         self,
