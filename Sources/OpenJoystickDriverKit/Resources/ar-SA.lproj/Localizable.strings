@@ -56,52 +56,89 @@
 "status.noActiveProfile" = "لا يوجد ملف تعريف نشط";
 /* Message in the Controllers area while the service lists the connected controllers. Keep the three dots. */
 "status.checkingControllers" = "جارٍ التحقق من وحدات التحكم المتصلة…";
+/* Heading of the controller events section in the Notifications pane of the settings window. */
 "ui.settings.general.controllers" = "وحدات التحكم";
+/* Heading of the profile events section in the Notifications pane of the settings window. */
 "ui.settings.general.profiles" = "ملفات التعريف";
+/* Heading of the section in the Access area that lists the readiness of permissions and notifications. */
 "ui.settings.notifications.accessReadiness" = "الوصول والجاهزية";
+/* Button in the Updates section of the settings window that checks for an update. */
 "ui.settings.general.checkUpdates" = "تحقق الآن";
+/* Value of the connection state of a controller in the Controllers detail: the controller is connected. */
 "ui.settings.notifications.controllerConnectedShort" = "متصل";
+/* Button of a permission row in the Access area that asks macOS for the permission. %@ is the name of the permission. */
 "ui.settings.notifications.requestAccess" = "طلب الوصول إلى %@";
+/* VoiceOver label of the switch for notifications about a controller that disconnects. */
 "ui.settings.notifications.controllerDisconnectedNotifications" = "تم فصل وحدة التحكم";
+/* Title of the switch for notifications about a controller that disconnects, and value of the connection state of a controller that is not connected. */
 "ui.settings.notifications.controllerDisconnectedShort" = "غير متصل";
+/* VoiceOver label of the switch for notifications about a controller that connects. */
 "ui.settings.notifications.controllerNotifications" = "تم توصيل وحدة التحكم";
+/* Heading of the developer tools section in the Advanced pane of the settings window. */
 "ui.settings.advanced.developerTools" = "أدوات المطوّر";
+/* Description of the switch that turns on the developer tools in the Advanced pane of the settings window. */
 "ui.settings.advanced.developerToolsDescription" = "إظهار أدوات إدخال وحدة التحكم وحزم USB.";
+/* Title of the alert shown when the user leaves the profile editor with unsaved changes. */
 "ui.settings.advanced.discardTitle" = "هل تريد تجاهل التغييرات غير المحفوظة؟";
+/* Message of the alert shown when the user leaves the profile editor with unsaved changes. */
 "ui.settings.advanced.discardProfileMessage" = "لم تُحفظ تغييرات ملف التعريف.";
+/* Destructive button of the alert that throws away the unsaved changes of a profile. */
 "ui.settings.advanced.discardAction" = "تجاهل التغييرات";
+/* Title of the switch that turns on the developer tools in the Advanced pane of the settings window. */
 "ui.settings.advanced.enableDeveloperTools" = "تمكين أدوات المطوّر";
 /* Note in the Notifications pane of the settings window when macOS has turned off both banners and sounds for the app. System Settings is the name of the macOS app. */
 "platform.macos.ui.settings.notifications.notificationBannersAndSoundOff" = "اللافتات والأصوات متوقفة في إعدادات النظام.";
+/* Value of the notification row in the Access area when macOS has turned off banners for the app. */
 "ui.settings.notifications.notificationBannersOff" = "اللافتات متوقفة";
 /* Note in the Notifications pane of the settings window when macOS has turned off banners for the app. System Settings is the name of the macOS app. */
 "platform.macos.ui.settings.notifications.notificationBannersOffDetail" = "لافتات الإشعارات متوقفة في إعدادات النظام.";
+/* Status text in the Notifications pane of the settings window when macOS allows notifications. */
 "ui.settings.notifications.notificationDeliveryAllowed" = "يُسمح بتسليم الإشعارات.";
+/* Status text in the Notifications pane of the settings window when macOS allows banners, Notification Center and sounds. Notification Center is the macOS name. */
 "ui.settings.notifications.notificationDeliveryReady" = "اللافتات ومركز الإشعارات والأصوات مفعّلة.";
+/* Status text in the Notifications pane of the settings window when the user has not allowed notifications in macOS. */
 "ui.settings.notifications.notificationPermissionRequired" = "يلزم الإذن قبل تسليم الإشعارات.";
+/* Value of the notification row in the Access area when macOS has turned off sounds for the app. */
 "ui.settings.notifications.notificationSoundOff" = "الصوت متوقف";
 /* Note in the Notifications pane of the settings window when macOS has turned off sounds for the app. System Settings is the name of the macOS app. */
 "platform.macos.ui.settings.notifications.notificationSoundOffDetail" = "أصوات الإشعارات متوقفة في إعدادات النظام.";
+/* Title of the switch in the Notifications pane of the settings window that plays a sound with a notification. */
 "ui.settings.notifications.notificationSounds" = "تشغيل صوت";
+/* Name of the notification permission in the Access area. */
 "ui.settings.notifications.notifications" = "الإشعارات";
 /* Error shown when the user turns on notifications in the app while macOS denies them. System Settings is the name of the macOS app. OpenJoystickDriver is the product name. */
 "platform.macos.ui.settings.notifications.notificationsDenied" = "إشعارات OpenJoystickDriver متوقفة في إعدادات النظام.";
+/* Button in the Notifications pane of the settings window that opens the notification settings of macOS. */
 "ui.settings.general.openNotificationSettings" = "فتح إعدادات الإشعارات";
+/* Button in a pane of the settings window that opens System Settings, the macOS app. */
 "ui.settings.general.openSystemSettings" = "فتح الإعدادات";
+/* Title of the switch in the Updates section of the settings window that includes prerelease versions in the update check. */
 "ui.settings.general.prereleaseUpdates" = "تضمين تحديثات ما قبل الإصدار";
+/* Title of the switch for notifications about a profile that is activated or switched. */
 "ui.settings.notifications.profileActivatedShort" = "تم التفعيل أو التبديل";
+/* VoiceOver label of the switch for notifications about a profile that is deactivated. */
 "ui.settings.notifications.profileDeactivatedNotifications" = "تم إلغاء تفعيل ملف التعريف";
+/* Title of the switch for notifications about a profile that is deactivated. */
 "ui.settings.notifications.profileDeactivatedShort" = "تم إلغاء التفعيل";
+/* VoiceOver label of the switch for notifications about a profile that is activated or switched. */
 "ui.settings.notifications.profileNotifications" = "تم تفعيل ملف التعريف أو تبديله";
+/* Title of the switch in the General pane of the settings window that opens the app when the user logs in. */
 "ui.settings.general.startAtLogin" = "فتح عند تسجيل الدخول";
 /* Error shown in the General pane of the settings window after the user turns on Start at login and macOS wants approval. System Settings, General and Login Items are names in macOS and are written as macOS shows them. */
 "platform.macos.ui.settings.general.startAtLoginApprovalRequired" = "اسمح لـ OpenJoystickDriver في إعدادات النظام > عام > عناصر تسجيل الدخول.";
+/* Description under the Start at login switch in the General pane of the settings window. OpenJoystickDriver is the product name. */
 "ui.settings.general.startAtLoginDescription" = "افتح OpenJoystickDriver في شريط القائمة عند تسجيل الدخول.";
+/* Button in the Notifications pane of the settings window that sends a test notification. */
 "ui.settings.notifications.testNotification" = "إرسال إشعار تجريبي";
+/* Result of the update check: the installed version is the latest. */
 "ui.settings.general.upToDate" = "محدَّث";
+/* Result of the update check: a newer version exists. */
 "ui.settings.general.updateAvailable" = "يتوفر تحديث";
+/* Status of the update check while it runs. Keep the three dots. */
 "ui.settings.general.updateChecking" = "جارٍ التحقق…";
+/* Heading of the updates section in the General pane of the settings window. */
 "ui.settings.general.updates" = "التحديثات";
+/* Button in the Updates section of the settings window that opens the page of the available update. */
 "ui.settings.general.viewUpdate" = "عرض التحديث";
 /* Title of the message in the Controllers area when the service cannot list controllers. */
 "ui.controllers.unavailable" = "وحدات التحكم غير متوفرة";
@@ -177,20 +214,35 @@
 "ui.controllers.server.invalidRecord" = "سجل وحدة التحكم غير صالح. لم يتغير شيء.";
 /* Message when the app cannot save the changed controller record. */
 "ui.controllers.server.persistenceFailed" = "تعذر حفظ سجل وحدة التحكم. لم يتغير شيء.";
+/* Button in the Controllers detail that shows or hides the advanced virtual HID profile choices. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.virtualProfile.advanced" = "متقدم";
+/* Heading of the virtual HID profile section in the Controllers detail. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.virtualProfile.title" = "ملف تعريف HID الافتراضي";
+/* Note under the virtual HID profile popup. The choice applies to all connected controllers of the model. */
 "ui.virtualProfile.modelScope" = "ينطبق على كل وحدة تحكم متصلة من هذا الطراز.";
+/* Value of the virtual HID profile source: the user chose the profile. */
 "ui.virtualProfile.sourceOverride" = "تجاوز";
+/* Value of the virtual HID profile source: the app chose the profile because the controller cannot use the profile that the user chose. */
 "ui.virtualProfile.sourceAutomaticAfterRejecting" = "تلقائي، تم رفض التجاوز";
+/* Value of the virtual HID profile when the controller has none. */
 "ui.virtualProfile.none" = "لا يوجد ملف تعريف HID افتراضي";
+/* Status shown while the app changes the virtual HID profile. Keep the three dots. */
 "ui.virtualProfile.updating" = "جارٍ تحديث ملف تعريف HID الافتراضي…";
+/* Error when the user picks a virtual HID profile that the service does not know. The service stored nothing. */
 "ui.virtualProfile.failure.unknownProfile" = "ملف تعريف HID الافتراضي هذا غير معروف. لم يُحفظ أي شيء.";
+/* Error when the controller is gone while the user changes its virtual HID profile. The stored override stays unchanged. */
 "ui.virtualProfile.failure.controllerNotFound" = "انقطع اتصال وحدة التحكم أو تعذر العثور عليها. لم يتغير التجاوز.";
+/* Message when the service stores the override of the virtual HID profile but the controller cannot use it, so the app picks a profile itself. */
 "ui.virtualProfile.failure.overrideRejected" = "تم حفظ التجاوز، لكن وحدة التحكم هذه لا يمكنها استخدامه، لذا يُختار ملف تعريف تلقائيًا.";
+/* Error when a virtual HID profile fails to activate and the app restores the last working profile. %@ is the reason. */
 "ui.virtualProfile.failure.activationFailed" = "فشل التنشيط، لذا تمت استعادة ملف تعريف HID الافتراضي السابق: %@";
+/* Message when the service stores the override while virtual output is off. The override takes effect when the user turns virtual output on. */
 "ui.virtualProfile.failure.outputDisabled" = "تم حفظ التجاوز وسيُطبق عند تمكين الإخراج الافتراضي.";
+/* Error when the service stops while the user changes the virtual HID profile. The stored override stays unchanged. */
 "ui.virtualProfile.failure.serverStopped" = "توقفت الخدمة. لم يتغير التجاوز.";
+/* Error when the service cannot save the override of the virtual HID profile. Nothing is stored. */
 "ui.virtualProfile.failure.persistenceFailed" = "تعذر حفظ التجاوز. لم يُحفظ أي شيء.";
+/* Error when the stored virtual HID profile overrides cannot be read. %@ is the reason. Controllers pick a profile themselves. */
 "ui.virtualProfile.storeError" = "تعذّرت قراءة تجاوزات ملف تعريف HID الافتراضي (%@). تختار وحدات التحكم تلقائيًا.";
 /* Value of the key field in the capture assignment sheet before the user captures a key. */
 "ui.keyboard.noKey" = "لم يُحدد أي مفتاح";
@@ -270,99 +322,193 @@
 "ui.capture.buttonsHeld" = "الأزرار المضغوطة: %@";
 /* Error under the name field of the profile creation sheet when the name is empty. */
 "ui.capture.profileNameValidation" = "أدخل اسم ملف تعريف.";
+/* Toolbar button in the Profiles area that creates a profile. */
 "ui.profiles.new" = "ملف تعريف جديد";
+/* Title of the alert that deletes a profile. */
 "ui.profiles.deleteTitle" = "هل تريد حذف ملف التعريف؟";
+/* Message of the alert that deletes a profile. OpenJoystickDriver is the product name. */
 "ui.profiles.deleteMessage" = "يزيل هذا ملف التعريف من OpenJoystickDriver.";
+/* Message of the alert that asks to discard the unsaved changes of a profile. */
 "ui.profiles.discardMessage" = "لم تُحفظ تغييراتك على ملف التعريف هذا.";
+/* Message in the Profiles area while the profiles load. Keep the three dots. */
 "ui.profiles.loading" = "جارٍ تحميل ملفات التعريف…";
+/* Message in the Profiles area when the profiles cannot be loaded. */
 "ui.profiles.loadError" = "تعذر تحميل ملفات التعريف.";
+/* Title of the message in the Profiles area when the profiles are unavailable. */
 "ui.profiles.unavailable" = "ملفات التعريف غير متوفرة";
+/* Title of the message in the Profiles area when the app cannot read the current state of the profiles. */
 "ui.profiles.refreshError" = "تعذر تحديث حالة ملف التعريف";
+/* Title of the empty state in the Profiles area when no profile exists. */
 "ui.profiles.none" = "لا توجد ملفات تعريف";
+/* Message of the empty state in the Profiles area. An assignment links a control of the controller to a destination. */
 "ui.profiles.createMessage" = "أنشئ ملف تعريف لبدء تعيين العناصر.";
+/* Status in the Profiles area while the app reads the state of the profiles. Keep the three dots. */
 "ui.profiles.refreshing" = "جارٍ تحديث حالة ملف التعريف…";
+/* Title of the message in the Profiles area when the state of the profiles cannot be read. */
 "ui.profiles.stateUnavailable" = "حالة ملف التعريف غير متوفرة";
+/* Message in the Profiles area when the state cannot be read. The editor keeps the draft. %@ is the reason sentence. */
 "ui.profiles.draftPreserved" = "حُفظت المسودة الحالية. %@";
+/* Error when a profile action such as delete or duplicate fails. */
 "ui.profiles.actionError" = "تعذر إكمال إجراء ملف التعريف هذا. حاول مرة أخرى.";
+/* Title of the message in the profile editor when a profile action needs the user to act. */
 "ui.profiles.actionNeedsAttention" = "إجراء ملف التعريف يحتاج إلى انتباه";
+/* Title of the message in the profile editor when a profile action failed. */
 "ui.profiles.actionErrorTitle" = "خطأ في إجراء ملف التعريف";
+/* Label of the popup in the layer sheet that picks how the activator control turns the layer on. */
 "ui.profiles.activationMode" = "التفعيل";
+/* Label of the popup in the layer sheet that picks the control that turns the layer on. */
 "ui.profiles.activator" = "المُفعِّل";
+/* Value of the state of a profile: it is active. */
 "ui.profiles.active" = "نشط";
+/* Value of the state of a profile: it is not active. */
 "ui.profiles.notActive" = "غير نشط";
+/* Caption of a profile in the Profiles list. %@ is the assignment count text, for example 3 assignments. The profile is active. */
 "ui.profiles.activeAssignmentCount" = "%@، نشط";
+/* Button of the combination sheet that adds a chord. A chord is a set of controls pressed together. */
 "ui.profiles.addChord" = "إضافة تركيبة";
+/* Button of the combination sheet that adds a control to the chord or sequence. */
 "ui.profiles.addControl" = "إضافة عنصر تحكم";
+/* Title of the sheet that adds a layer. A layer is a second set of assignments that a held control turns on. */
 "ui.profiles.addLayer" = "إضافة طبقة";
+/* Title of the sheet that adds an assignment to a layer. %@ is the name of the layer. */
 "ui.profiles.addLayerAssignment" = "إضافة تعيين إلى %@";
+/* Button of the combination sheet that adds a sequence. A sequence is a set of controls pressed one after the other. */
 "ui.profiles.addSequence" = "إضافة تسلسل";
+/* Title of the empty state in the profile editor when the profile has no assignment. */
 "ui.profiles.noAssignments" = "لا توجد تعيينات بعد";
+/* Instruction in the empty state of the profile editor. The destination is a key, a mouse button or a pointer movement. */
 "ui.profiles.assignmentInstructions" = "أضف عنصراً من وحدة التحكم، ثم اختر وجهته على لوحة المفاتيح أو المؤشر.";
+/* VoiceOver label of the save status in the profile editor. */
 "ui.profiles.saveStatus" = "حالة حفظ ملف التعريف";
+/* Heading of the group of shoulder buttons in the assignment list of the profile editor. */
 "ui.profiles.sectionShoulders" = "أزرار الكتف";
+/* Heading of the group of stick click buttons in the assignment list of the profile editor. */
 "ui.profiles.sectionStickClicks" = "نقرات العصي";
+/* Heading of the group of system buttons, such as Start and Back, in the assignment list of the profile editor. */
 "ui.profiles.sectionSystemControls" = "عناصر النظام";
+/* Heading of the group of face buttons in the assignment list of the profile editor. */
 "ui.profiles.sectionFaceButtons" = "الأزرار الأمامية";
+/* Heading of the group of directional pad buttons in the assignment list of the profile editor. */
 "ui.profiles.sectionDpad" = "لوحة الاتجاهات";
+/* Heading of the group of triggers in the assignment list of the profile editor. */
 "ui.profiles.sectionTriggers" = "الزنادات";
+/* Heading of the group of sticks in the assignment list of the profile editor. */
 "ui.profiles.sectionSticks" = "العصي";
+/* Name of a duplicated profile. %@ is the name of the profile that the copy comes from. */
 "ui.profiles.copyName" = "نسخة من %@";
+/* Error in the profile editor when the profile changed elsewhere while the user edited it. */
 "ui.profiles.changedElsewhere" = "غُيّر ملف التعريف في مكان آخر.";
+/* Error in the profile editor when the service saved the profile but the app cannot read the state afterwards. */
 "ui.profiles.savedButUnavailable" = "حُفظ ملف التعريف، لكن أحدث حالته غير متوفرة.";
+/* Save status of the profile editor: there are changes that are not saved. */
 "ui.profiles.unsaved" = "تغييرات غير محفوظة";
+/* Save status of the profile editor while the profile is being saved. Keep the three dots. */
 "ui.profiles.saving" = "جارٍ الحفظ…";
+/* Save status of the profile editor: the profile is saved. */
 "ui.profiles.saved" = "محفوظ";
+/* Save status of the profile editor: saving failed. */
 "ui.profiles.saveFailed" = "فشل الحفظ";
+/* VoiceOver summary of an assignment. %1$@ is the controller control and %2$@ is the destination. */
 "ui.profiles.assignmentSummary" = "%1$@ إلى %2$@";
+/* VoiceOver summary of an assignment that can be tuned. %1$@ is the controller control and %2$@ is the destination. Adjust is the title of the button that tunes the assignment. */
 "ui.profiles.assignmentAdjustSummary" = "%1$@ إلى %2$@، الضبط متاح";
+/* Button of an assignment row that opens the behavior sheet. Keep the three dots. */
 "ui.profiles.behavior" = "السلوك…";
+/* Title of the behavior sheet of an assignment. The sheet sets turbo, hold and double tap. */
 "ui.profiles.bindingBehavior" = "سلوك التعيين";
+/* Placeholder of the field in the profile creation sheet for the identifier of the app that the profile applies to, for example com.apple.Safari. */
 "ui.profiles.appID" = "معرّف التطبيق";
+/* Help text of the chord sheet. The destination fires while all chosen controls are held down. */
 "ui.profiles.chordHelp" = "تُطلَق الوجهة ما دامت جميع عناصر التحكم المحددة مضغوطة.";
+/* Label of the popup in the chord sheet that picks how the chord works. */
 "ui.profiles.chordMode" = "وضع التركيبة";
+/* Option of the chord mode popup: the first control works as a modifier of the others. */
 "ui.profiles.chordModeModifier" = "مُعدِّل";
+/* Option of the chord mode popup: all controls must be pressed at the same time. */
 "ui.profiles.chordModeSimultaneous" = "متزامن";
+/* Label of the field in the chord sheet that sets the time within which the controls must be pressed. The value is in milliseconds. */
 "ui.profiles.chordWindow" = "نافذة الضغط";
+/* Heading of the chords section in the profile editor. */
 "ui.profiles.chords" = "التركيبات";
+/* Label of a control picker in the combination sheet. %d is the number of the control, counted from 1. */
 "ui.profiles.controlNumber" = "عنصر التحكم %d";
+/* Error under the form of the profile creation sheet when the name or the app target is not valid. */
 "ui.profiles.creationValidation" = "راجع اسم ملف التعريف وهدف التطبيق.";
+/* Heading of the group in the controller popup of the profile creation sheet that lists models used by existing profiles. */
 "ui.profiles.controllersOfProfiles" = "مستخدمة في ملفات التعريف لديك";
+/* Placeholder of the controller popup in the profile creation sheet. */
 "ui.profiles.chooseController" = "اختر وحدة تحكم";
+/* Tooltip of a toolbar button that needs a saved profile. It asks the user to save the profile first. */
 "ui.profiles.saveFirst" = "احفظ ملف التعريف أولًا.";
+/* Warning in the profile creation sheet when some controller record files cannot be read. %@ is the list of reasons. */
 "ui.profiles.unreadableRecords" = "تعذرت قراءة بعض ملفات سجلات وحدات التحكم. التفاصيل: %@.";
+/* Caption of a profile in the Profiles list. %1$@ is the controller model and %2$@ is the app scope. The dot between them separates the two and may change. */
 "ui.profiles.scopedCaption" = "%1$@ · %2$@";
+/* Menu item that turns off all active profiles of one controller. */
 "ui.profiles.deactivateController" = "إلغاء تنشيط الكل";
+/* Title of the sheet that edits the details of a profile. */
 "ui.profiles.details" = "تفاصيل ملف التعريف";
+/* Note on an assignment row when the controller or its protocol cannot do what the assignment needs. */
 "ui.profiles.notSupportedByController" = "غير مدعوم من وحدة التحكم هذه أو بروتوكولها.";
+/* Label of the field in the behavior sheet for the destination of a double tap of a control. */
 "ui.profiles.doubleTap" = "النقر المزدوج";
+/* Toolbar button in the Profiles area that exports the profile to a file. */
 "ui.profiles.export" = "تصدير ملف التعريف";
+/* Option of the activation popup in the layer sheet: the layer is on while the control is held. */
 "ui.profiles.hold" = "إبقاء";
+/* Label of the field in the behavior sheet that sets how long a control must be held. The value is in milliseconds. */
 "ui.profiles.holdDuration" = "مدة الإبقاء";
+/* Hint under the vendor ID and product ID fields. 0x marks a hexadecimal number and stays as written. */
 "ui.profiles.identifierHint" = "استخدم معرّفات عشرية أو سداسية عشرية بالبادئة 0x.";
+/* Toolbar button in the Profiles area that imports a profile from a file. */
 "ui.profiles.import" = "استيراد ملف التعريف";
+/* Toolbar button in the Profiles area that checks a profile file without importing it. */
 "ui.profiles.validateFile" = "التحقق من صحة ملف التعريف";
+/* Title of the alert when the checked profile file is valid. */
 "ui.profiles.validTitle" = "ملف تعريف صالح";
+/* Title of the alert when the checked profile file is not valid. */
 "ui.profiles.invalidTitle" = "ملف تعريف غير صالح";
+/* Message of the alert when the checked profile file is valid. %1$@ is the profile name, %2$@ is the controller model and %3$@ is the app scope. */
 "ui.profiles.validMessage" = "%1$@ (%2$@). ينطبق على: %3$@.";
+/* Error in the profile details sheet when the vendor ID or product ID is not a 16-bit number. */
 "ui.profiles.invalidIdentifiers" = "أدخل معرّفَي مورّد ومنتج صالحين بطول 16 بت.";
+/* Placeholder of the name field in the layer sheet. */
 "ui.profiles.layerName" = "اسم الطبقة";
+/* Heading of the layers section in the profile editor. */
 "ui.profiles.layers" = "الطبقات";
+/* Label of the field in the behavior sheet for the destination of a long hold of a control. */
 "ui.profiles.longHold" = "إبقاء مطوّل";
+/* Message in the chords section of the profile editor when none exists. */
 "ui.profiles.noChords" = "لا توجد تركيبات مضبوطة.";
+/* Message in the layers section of the profile editor when none exists. */
 "ui.profiles.noLayers" = "لا توجد طبقات مضبوطة.";
+/* Message in the sequences section of the profile editor when none exists. */
 "ui.profiles.noSequences" = "لا توجد تسلسلات مضبوطة.";
+/* Label of the product ID field in the profile details sheet. */
 "ui.profiles.productID" = "معرّف المنتج";
+/* Help text of the sequence sheet. The destination fires when the controls are pressed in the listed order. */
 "ui.profiles.sequenceHelp" = "تُطلَق الوجهة عند الضغط على عناصر التحكم بهذا الترتيب.";
+/* Label of the field in the sequence sheet that sets the time within which the sequence must finish. The value is in milliseconds. */
 "ui.profiles.sequenceWindow" = "نافذة الإكمال";
+/* Heading of the sequences section in the profile editor. */
 "ui.profiles.sequences" = "التسلسلات";
+/* Label of the field in the behavior sheet that sets the time within which a second tap counts as a double tap. The value is in milliseconds. */
 "ui.profiles.tapWindow" = "نافذة النقر";
+/* Label of the popup in the profile creation sheet that picks which apps the profile applies to. */
 "ui.profiles.target" = "الهدف";
+/* Option of the target popup: the profile applies to one app. */
 "ui.profiles.targetApplication" = "تطبيق واحد";
+/* Option of the target popup: the profile applies to all apps. */
 "ui.profiles.targetGlobal" = "جميع التطبيقات";
+/* Option of the activation popup in the layer sheet: pressing the control turns the layer on or off. */
 "ui.profiles.toggle" = "تبديل";
+/* Title of the switch in the behavior sheet that repeats the destination while the control is held. */
 "ui.profiles.turbo" = "توربو";
+/* Label of the field in the behavior sheet that sets the share of each repeat in which the destination is pressed. The value is a percentage. */
 "ui.profiles.turboDuty" = "دورة العمل";
+/* Label of the field in the behavior sheet that sets how often the destination repeats, in presses per second. */
 "ui.profiles.turboRate" = "معدل التكرار";
+/* Label of the vendor ID field in the profile details sheet. */
 "ui.profiles.vendorID" = "معرّف البائع";
 /* Title of the save panel for the debug report, a text file that the user can attach to a problem report. */
 "ui.debug.saveReportPanel" = "حفظ تقرير التصحيح";
@@ -396,45 +542,85 @@
 "ui.error.timeout" = "يستغرق OpenJoystickDriver وقتاً طويلاً للرد.";
 /* Error shown when the service answers with a reply that the app does not understand. OpenJoystickDriver is the product name. */
 "ui.error.unexpected" = "أعاد OpenJoystickDriver نتيجة غير متوقعة.";
+/* Value of the app scope of a profile: it applies to all apps. */
 "ui.mapping.allApps" = "جميع التطبيقات";
+/* Value of the app scope of a profile: it applies to one app. */
 "ui.mapping.specificApp" = "تطبيق محدد";
+/* Status of the controller output in the profile editor: the output cannot work. */
 "ui.mapping.outputUnavailable" = "إخراج وحدة التحكم غير متوفر";
+/* Status of the controller output in the profile editor: the output works. */
 "ui.mapping.outputReady" = "إخراج وحدة التحكم جاهز";
+/* Status of the controller output in the profile editor: the output needs action from the user. */
 "ui.mapping.outputNeedsAttention" = "إخراج وحدة التحكم يحتاج إلى انتباه";
+/* Name of a directional pad direction as a control. %@ is the direction: up, down, left or right. */
 "ui.mapping.dpadDirection" = "لوحة الاتجاهات %@";
+/* Name of one direction of an axis. %1$@ is the axis name, for example Left stick horizontal, and %2$@ is the direction. */
 "ui.mapping.axisDirection" = "%1$@ %2$@";
+/* Name of a mouse button destination. %@ is the button, for example left or right. */
 "ui.mapping.mouseButton" = "زر الفأرة %@";
+/* Name of a pointer movement destination. %@ is the direction of the movement. */
 "ui.mapping.pointerMovement" = "حركة المؤشر %@";
+/* Name of a scroll destination. %@ is the direction of the scroll. */
 "ui.mapping.scroll" = "تمرير %@";
+/* Name of the bottom face button: A on Xbox, Cross on PlayStation. The slash stays. */
 "ui.mapping.buttonSouth" = "A / صليب";
+/* Name of the right face button: B on Xbox, Circle on PlayStation. The slash stays. */
 "ui.mapping.buttonEast" = "B / دائرة";
+/* Name of the left face button: X on Xbox, Square on PlayStation. The slash stays. */
 "ui.mapping.buttonWest" = "X / مربع";
+/* Name of the top face button: Y on Xbox, Triangle on PlayStation. The slash stays. */
 "ui.mapping.buttonNorth" = "Y / مثلث";
+/* Name of the left shoulder button of a controller. */
 "ui.mapping.leftShoulder" = "الكتف الأيسر";
+/* Name of the right shoulder button of a controller. */
 "ui.mapping.rightShoulder" = "الكتف الأيمن";
+/* Name of the button that the user presses by pushing down the left stick. */
 "ui.mapping.leftStickClick" = "نقرة العصا اليسرى";
+/* Name of the button that the user presses by pushing down the right stick. */
 "ui.mapping.rightStickClick" = "نقرة العصا اليمنى";
+/* Name of the Start button of a controller. */
 "ui.mapping.start" = "ابدأ";
+/* Name of the Back button of a controller. */
 "ui.mapping.back" = "رجوع";
+/* Name of the Guide button of a controller, the one with the Xbox logo. */
 "ui.mapping.guide" = "الدليل";
+/* Name of the Share button of a controller, the one that captures a screenshot. */
 "ui.mapping.share" = "مشاركة";
+/* Name of the click of the touchpad of a controller. */
 "ui.mapping.touchpadClick" = "نقرة لوحة اللمس";
+/* Name of a touch contact as a control. %@ is the touch surface. */
 "ui.mapping.touchContact" = "لمس %@";
+/* Name of a touch grid cell as a control. %1$@ is the touch surface, %2$d is the number of columns, %3$d is the number of rows, %4$d is the column of the cell and %5$d is the row of the cell. The multiplication sign stays between the grid sizes. */
 "ui.mapping.touchGridCell" = "%1$@ شبكة %2$d×%3$d خلية %4$d,%5$d";
+/* Name of a touch swipe as a control. %1$@ is the touch surface and %2$@ is the swipe direction. */
 "ui.mapping.touchSwipe" = "%1$@ سحب %2$@";
+/* Option of the touch surface popup: the main touch surface of the controller. */
 "ui.mapping.touchSurfacePrimary" = "السطح الأساسي";
+/* Option of the touch surface popup: the left touch surface of the controller. */
 "ui.mapping.touchSurfaceLeft" = "السطح الأيسر";
+/* Option of the touch surface popup: the right touch surface of the controller. */
 "ui.mapping.touchSurfaceRight" = "السطح الأيمن";
+/* Heading of the group of touch controls in the assignment list of the profile editor. */
 "ui.profiles.sectionTouch" = "اللمس";
+/* Title of the sheet that sets the touch mappings of a profile. */
 "ui.profiles.touch.title" = "تعيينات اللمس";
+/* Label of the touch surface popup in the touch sheet. */
 "ui.profiles.touch.surface" = "السطح";
+/* Title of the switch in the touch sheet that turns on continuous touch output. */
 "ui.profiles.touch.enabled" = "تمكين إخراج اللمس المستمر";
+/* Label of the popup in the touch sheet that picks what touch does. */
 "ui.profiles.touch.mode" = "وضع اللمس";
+/* Option of the touch mode popup and of the gyro mode popup: it moves the pointer. */
 "ui.profiles.touch.pointer" = "المؤشر";
+/* Option of the touch and gyro mode popups: it moves the left stick of the virtual gamepad. */
 "ui.profiles.touch.leftStick" = "العصا اليسرى";
+/* Option of the touch and gyro mode popups: it moves the right stick of the virtual gamepad. */
 "ui.profiles.touch.rightStick" = "العصا اليمنى";
+/* Label of the field in the touch sheet that sets how many pointer points one full swipe over the surface moves. */
 "ui.profiles.touch.pointerSensitivity" = "نقاط المؤشر لكل سطح";
+/* Label of the field in the touch sheet that sets the share of the surface that moves the stick all the way. */
 "ui.profiles.touch.stickRadius" = "نصف قطر العصا الكامل (كسر من السطح)";
+/* Label of the field in the touch sheet that sets the stick deadzone. The deadzone is the part of the travel near the center that is ignored. */
 "ui.profiles.touch.deadzone" = "المنطقة الميتة للعصا";
 /* Label of the stepper that sets the number of columns of a touch grid in the capture assignment sheet. %d is the number of columns. */
 "ui.capture.touchColumns" = "أعمدة الشبكة: %d";
@@ -446,14 +632,23 @@
 "ui.capture.touchRow" = "صف الخلية: %d";
 /* Label of the slider that sets the shortest swipe that counts, as a share of the touch surface. %.0f is a percentage; %% is the percent sign. */
 "ui.capture.touchSwipeDistance" = "الحد الأدنى لمسافة السحب: %.0f%%";
+/* Name of the microphone mute button of a controller. */
 "ui.mapping.mute" = "كتم الصوت";
+/* Name of the digital click of the left trigger of a controller. */
 "ui.mapping.leftTriggerClick" = "نقرة الزناد الأيسر";
+/* Name of the digital click of the right trigger of a controller. */
 "ui.mapping.rightTriggerClick" = "نقرة الزناد الأيمن";
+/* Name of the horizontal axis of the left stick. */
 "ui.mapping.leftStickHorizontal" = "العصا اليسرى أفقياً";
+/* Name of the vertical axis of the left stick. */
 "ui.mapping.leftStickVertical" = "العصا اليسرى عمودياً";
+/* Name of the horizontal axis of the right stick. */
 "ui.mapping.rightStickHorizontal" = "العصا اليمنى أفقياً";
+/* Name of the vertical axis of the right stick. */
 "ui.mapping.rightStickVertical" = "العصا اليمنى عمودياً";
+/* Name of the left trigger as an axis. */
 "ui.mapping.leftTrigger" = "الزناد الأيسر";
+/* Name of the right trigger as an axis. */
 "ui.mapping.rightTrigger" = "الزناد الأيمن";
 /* Accessibility value of a selectable card or row that the user has chosen. */
 "status.selected" = "محدد";
@@ -841,7 +1036,9 @@
 "term.key.alt" = "Option";
 /* Name of the Shift modifier key in the text that describes a captured key press. */
 "term.key.shift" = "Shift";
+/* Value of the virtual HID profile when the app picks it. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.mapping.automatic" = "تلقائي";
+/* Value of the virtual HID profile when the app picks it. %@ is the name of the picked profile. */
 "ui.virtualProfile.automaticSelected" = "تلقائي (%@)";
 /* Detail line in the Driver section of the settings window when the driver extension for Xbox USB controllers is installed and works. */
 "ui.setup.activeDetail" = "مُثبَّت برنامج تشغيل Xbox USB المقيَّد وجاهز.";
@@ -925,74 +1122,118 @@
 "ui.settings.notifications.testReportLost" = "انتهى طلب ojd أو انتهت مهلة الرد عليه قبل وصول تقرير الإشعار التجريبي.";
 /* Error text the service returns to an app that reports the outcome noAnswer for a test notification, which only the service decides. The inline error of the Settings window shows it. shown, denied, failed and noAnswer are outcome names and stay as written. */
 "ui.settings.notifications.testReportNoAnswer" = "يجب أن يكون تقرير الإشعار التجريبي shown أو denied أو failed؛ الخدمة وحدها تقرر noAnswer.";
+/* Label of the popup in the profile editor that sets what the virtual gamepad of the profile publishes. */
 "ui.profiles.virtualOutput" = "وحدة تحكم افتراضية";
+/* Option of the virtual output popup: the profile publishes no virtual gamepad. */
 "ui.profiles.virtualDisabled" = "معطّل";
+/* Option of the virtual output popup: the virtual gamepad carries only the controls that the profile maps. */
 "ui.profiles.virtualMapped" = "عناصر التحكم المعاد تعيينها فقط";
+/* Option of the virtual output popup: the virtual gamepad also carries the controls that the profile does not map. */
 "ui.profiles.virtualPassthrough" = "تضمين عناصر التحكم غير المعاد تعيينها";
+/* Title of the switch in the profile editor that makes the profile need exclusive access to the physical controller. */
 "ui.profiles.exclusiveInput" = "اشتراط الوصول الحصري إلى الإدخال الفعلي";
+/* VoiceOver label of the group of profile action buttons in the profile editor. */
 "ui.profiles.actions" = "إجراءات ملف التعريف";
+/* VoiceOver label of the picker that switches the section of the profile editor. */
 "ui.profiles.editorSection" = "قسم محرر ملف التعريف";
+/* Title of the section of the profile editor that holds chords, sequences and layers. */
 "ui.profiles.combinations" = "التوليفات";
 
+/* Option of the tap timing popup in the behavior sheet: the tap fires when the control is pressed. */
 "ui.profiles.tapOnPress" = "نقرة عند الضغط";
 
+/* Option of the tap timing popup in the behavior sheet: the tap fires when the control is released. */
 "ui.profiles.tapOnRelease" = "نقرة عند الإفلات";
 
+/* Option of the tap timing popup in the behavior sheet: the tap fires as a short pulse of fixed length. */
 "ui.profiles.pulse" = "نبضة";
 
+/* Label of the field in the behavior sheet that sets the length of the pulse. The value is in milliseconds. */
 "ui.profiles.pulseDuration" = "مدة النبضة";
 
+/* Option of the tap timing popup in the behavior sheet: only the press reaches the destination. */
 "ui.profiles.pressOnly" = "ضغط فقط";
 
+/* Option of the tap timing popup in the behavior sheet: only the release reaches the destination. */
 "ui.profiles.releaseOnly" = "إفلات فقط";
 
+/* Heading of the list of additional actions that an assignment runs. */
 "ui.profiles.additionalActions" = "إجراءات إضافية";
 
+/* Button that adds an additional action to an assignment. */
 "ui.profiles.addAction" = "إضافة إجراء";
 
+/* Button that moves an additional action one place up in the list. */
 "ui.profiles.moveUp" = "نقل لأعلى";
 
+/* Button that moves an additional action one place down in the list. */
 "ui.profiles.moveDown" = "نقل لأسفل";
 
+/* Name of the function button on the left side of a controller. */
 "ui.mapping.leftFunctionButton" = "زر الوظيفة الأيسر";
 
+/* Name of the function button on the right side of a controller. */
 "ui.mapping.rightFunctionButton" = "زر الوظيفة الأيمن";
 
+/* Name of the paddle on the back of a controller on the left side. */
 "ui.mapping.leftPaddle" = "المجداف الأيسر";
 
+/* Name of the paddle on the back of a controller on the right side. */
 "ui.mapping.rightPaddle" = "المجداف الأيمن";
 
+/* Name of the SL button on the rail of the left Joy-Con. SL is the label printed on the Joy-Con. Joy-Con is a Nintendo product name. */
 "ui.mapping.leftJoyConSL" = "Joy-Con الأيسر SL";
 
+/* Name of the SR button on the rail of the left Joy-Con. SR is the label printed on the Joy-Con. Joy-Con is a Nintendo product name. */
 "ui.mapping.leftJoyConSR" = "Joy-Con الأيسر SR";
 
+/* Name of the SL button on the rail of the right Joy-Con. SL is the label printed on the Joy-Con. Joy-Con is a Nintendo product name. */
 "ui.mapping.rightJoyConSL" = "Joy-Con الأيمن SL";
 
+/* Name of the SR button on the rail of the right Joy-Con. SR is the label printed on the Joy-Con. Joy-Con is a Nintendo product name. */
 "ui.mapping.rightJoyConSR" = "Joy-Con الأيمن SR";
 
+/* Name of the second grip button on the back of a controller on the left side. */
 "ui.mapping.leftGrip" = "المقبض الأيسر";
 
+/* Name of the second grip button on the back of a controller on the right side. */
 "ui.mapping.rightGrip" = "المقبض الأيمن";
 
+/* Name of the click of the left trackpad of a controller. */
 "ui.mapping.leftPadClick" = "نقر اللوحة اليسرى";
 
+/* Name of the click of the right trackpad of a controller. */
 "ui.mapping.rightPadClick" = "نقر اللوحة اليمنى";
 
-/* Motion tuning: English source. */
+/* Title of the sheet that tunes the motion sensor of a controller in a profile. */
 "ui.profiles.motion.title" = "ضبط الحركة";
+/* Label of the popup in the motion sheet that picks the coordinate space of the motion. */
 "ui.profiles.motion.space" = "فضاء الإحداثيات";
+/* Option of the coordinate space popup: motion is measured relative to the controller. */
 "ui.profiles.motion.local" = "محلي";
+/* Option of the coordinate space popup: motion is measured relative to the player who holds the controller. */
 "ui.profiles.motion.player" = "اللاعب";
+/* Option of the coordinate space popup: motion is measured relative to the room, with gravity pointing down. */
 "ui.profiles.motion.world" = "العالم";
+/* Label of the slider in the motion sheet that sets how strongly tilting forward and back moves the output. Pitch is the tilt around the horizontal axis. */
 "ui.profiles.motion.pitchSensitivity" = "حساسية الميل";
+/* Label of the slider in the motion sheet that sets how strongly turning left and right moves the output. Yaw is the turn around the vertical axis. */
 "ui.profiles.motion.yawSensitivity" = "حساسية الانحراف";
+/* Label of the slider in the motion sheet that sets the half-time of the smoothing filter. The value is in milliseconds. */
 "ui.profiles.motion.smoothingHalfTimeMs" = "زمن نصف التنعيم (مللي ثانية)";
+/* Label of the slider in the motion sheet that sets the turn rate below which motion is ignored. The value is in degrees per second. */
 "ui.profiles.motion.thresholdDegreesPerSecond" = "عتبة السرعة الزاوية (درجة/ثانية)";
+/* Label of the slider in the motion sheet that sets how fast the player space follows the turn of the player. */
 "ui.profiles.motion.yawRelaxation" = "سماحية الانحراف في فضاء اللاعب";
+/* Label of the slider in the motion sheet that sets how much sideways motion is reduced in world space. */
 "ui.profiles.motion.sideReductionThreshold" = "التوهين الجانبي في فضاء العالم";
+/* Label of the slider in the motion sheet that sets how fast the estimate of gravity is corrected. The unit is per second. */
 "ui.profiles.motion.gravityCorrectionRate" = "معدل تصحيح الجاذبية (1/ثانية)";
+/* Title of the switch in the motion sheet that reverses the pitch direction. */
 "ui.profiles.motion.invertPitch" = "عكس الميل";
+/* Title of the switch in the motion sheet that reverses the yaw direction. */
 "ui.profiles.motion.invertYaw" = "عكس الانحراف";
+/* Title of the switch in the motion sheet that corrects the sensor drift automatically while the controller lies still. */
 "ui.profiles.motion.automaticBias" = "المعايرة التلقائية عند السكون";
 
 /* Hint under the motion calibration controls of the input test window: keep the controller still on a surface while the gyro bias, the small constant rotation the sensor reports at rest, is collected. */
@@ -1019,163 +1260,297 @@
 /* Note in the motion calibration controls: collecting gyro bias keeps running in the service after the window closes, and the Pause button stops it. */
 "ui.motion.calibration.continues" = "يستمر الجمع عند إغلاق هذه النافذة. استخدم «إيقاف مؤقت» لإيقافه.";
 
-/* Gyro authoring. Native translation review pending. */
+/* Label of the popup in the gyro sheet that picks what the gyro controls: the pointer or a stick. */
 "ui.profiles.gyro.output" = "إخراج الجيروسكوب";
+/* Option of the gyro output popup: the gyro does nothing. */
 "ui.profiles.gyro.disabled" = "معطّل";
+/* Option of the gyro output popup: the gyro moves the mouse pointer. */
 "ui.profiles.gyro.mouse" = "مؤشر الفأرة";
+/* Option of the gyro output popup: the gyro moves the left stick of the virtual gamepad. */
 "ui.profiles.gyro.leftStick" = "العصا اليسرى";
+/* Option of the gyro output popup: the gyro moves the right stick of the virtual gamepad. */
 "ui.profiles.gyro.rightStick" = "العصا اليمنى";
+/* Label of the field in the gyro sheet that sets how many pointer points one degree of turn moves. */
 "ui.profiles.gyro.pointerScale" = "نقاط المؤشر لكل درجة";
+/* Label of the field in the gyro sheet that sets the turn rate that moves the stick all the way. The value is in degrees per second. */
 "ui.profiles.gyro.stickScale" = "سرعة العصا الكاملة (درجة/ثانية)";
+/* Label of the popup in the gyro sheet that picks when the gyro is active. */
 "ui.profiles.gyro.activation" = "تفعيل الجيروسكوب";
+/* Option of the gyro activation popup: the gyro is always active. */
 "ui.profiles.gyro.always" = "نشط دائمًا";
+/* Option of the gyro activation popup: the gyro is active while the activation control is held. */
 "ui.profiles.gyro.whileHeld" = "أثناء الإبقاء";
+/* Option of the gyro activation popup: the gyro is active while the activation control is not held. */
 "ui.profiles.gyro.whileReleased" = "أثناء الإفلات";
+/* Option of the gyro activation popup: pressing the activation control turns the gyro on or off. */
 "ui.profiles.gyro.toggle" = "تبديل عند الضغط";
+/* Label of the popup in the gyro sheet that picks the control that activates the gyro. */
 "ui.profiles.gyro.source" = "عنصر التفعيل";
 
+/* Title of the switch in the gyro sheet that keeps the activation control from reaching the virtual gamepad. */
 "ui.profiles.gyro.consume" = "منع عنصر التفعيل الافتراضي الأصلي";
 
-/* Trackball authoring. Translation review pending. */
+/* Title of the switch in the trackball sheet that turns on the trackball mode. In this mode motion carries on after the control is held, like a rolling ball. */
 "ui.profiles.trackball.enabled" = "كرة التتبع";
+/* Hint in the trackball sheet. The user holds the control to keep the motion going while the user puts the controller back. */
 "ui.profiles.trackball.hint" = "أبقِ عنصر التحكم مضغوطًا لمواصلة الحركة أثناء إعادة وضع وحدة التحكم.";
+/* Label of the popup in the trackball sheet that picks the control that holds the motion. */
 "ui.profiles.trackball.source" = "عنصر تحكم كرة التتبع";
+/* Label of the popup in the trackball sheet that picks which motion axes the trackball follows. */
 "ui.profiles.trackball.axes" = "محاور كرة التتبع";
+/* Option of the trackball axes popup: tilt forward and back only. */
 "ui.profiles.trackball.pitch" = "الميل";
+/* Option of the trackball axes popup: turn left and right only. */
 "ui.profiles.trackball.yaw" = "الانحراف";
+/* Option of the trackball axes popup: both pitch and yaw. */
 "ui.profiles.trackball.both" = "الميل والانحراف";
+/* Label of the field in the trackball sheet that sets how many times per second the speed halves. */
 "ui.profiles.trackball.decay" = "مرات تنصيف السرعة في الثانية";
+/* Hint under the decay field of the trackball sheet. Zero keeps the speed and one halves it each second. */
 "ui.profiles.trackball.decayHint" = "الصفر يُبقي السرعة ثابتة. الواحد يُنصّف السرعة كل ثانية.";
+/* Title of the switch in the trackball sheet that keeps the trackball control from reaching the virtual gamepad. */
 "ui.profiles.trackball.consume" = "منع عنصر كرة التتبع الافتراضي الأصلي";
 
+/* Button in the motion sheet of an assignment that drops the tuning of the assignment and uses the tuning of the profile. */
 "ui.profiles.motion.inherit" = "استخدام ضبط ملف التعريف";
 
+/* Option of the stick mode popup: the stick turns the aim at a set rate. */
 "ui.profiles.stick.aim" = "التصويب";
+/* Label of the field in the stick sheet that sets the aim turn rate. The value is in degrees per second. */
 "ui.profiles.stick.aimRate" = "سرعة التصويب (درجة/ثانية)";
+/* Title of the switch in the stick sheet that turns on pointer output for the stick. */
 "ui.profiles.stick.enabled" = "تمكين إخراج المؤشر";
+/* Label of the field in the stick sheet that sets the exponent of the response curve. Higher values make small movements finer. */
 "ui.profiles.stick.exponent" = "أس الاستجابة";
+/* Option of the stick mode popup: a quick push flicks the view, and a turn of the stick rotates it. */
 "ui.profiles.stick.flick" = "حركة سريعة ودوران";
+/* Label of the field in the stick sheet that sets how long a flick takes. The value is in milliseconds. */
 "ui.profiles.stick.flickDuration" = "مدة الحركة السريعة (مللي ثانية)";
+/* Option of the stick mode popup: the stick only flicks. */
 "ui.profiles.stick.flickOnly" = "الحركة السريعة فقط";
+/* Label of the field in the stick sheet that sets how far the stick must return before a flick can fire again. */
 "ui.profiles.stick.hysteresis" = "هستريسيس إفلات الحركة السريعة";
+/* Label of the field in the stick sheet that sets the inner deadzone. The inner deadzone is the part of the travel near the center that is ignored. */
 "ui.profiles.stick.innerDeadzone" = "المنطقة الميتة الداخلية";
+/* Title of the switch in the stick sheet that reverses the horizontal axis. */
 "ui.profiles.stick.invertX" = "عكس المحور الأفقي";
+/* Title of the switch in the stick sheet that reverses the vertical axis. */
 "ui.profiles.stick.invertY" = "عكس المحور العمودي";
+/* Label of the popup in the stick sheet that picks what the stick does. */
 "ui.profiles.stick.mode" = "وضع العصا";
+/* Label of the field in the stick sheet that sets the outer deadzone. The outer deadzone is the part of the travel near the edge that counts as full. */
 "ui.profiles.stick.outerDeadzone" = "المنطقة الميتة الخارجية";
+/* Label of the field in the stick sheet that sets how many pointer points one degree moves. */
 "ui.profiles.stick.pointerScale" = "نقاط المؤشر لكل درجة";
+/* Option of the stick mode popup: the stick only rotates the view. */
 "ui.profiles.stick.rotateOnly" = "الدوران فقط";
+/* Label of the popup in the stick sheet that picks the stick. */
 "ui.profiles.stick.source" = "العصا";
+/* Label of the field in the stick sheet that sets how far the stick must move before a flick starts. */
 "ui.profiles.stick.threshold" = "عتبة بدء الحركة السريعة";
+/* Title of the sheet that sets the stick modes of a profile. */
 "ui.profiles.stick.title" = "أوضاع العصا";
-/* Advanced stick, trigger, and lean authoring. Translation review pending. */
+/* Name of a trigger stage as a control. %1$@ is the trigger, for example Left, and %2$@ is the stage of the pull, soft or full. */
 "ui.mapping.triggerStage" = "الزناد %1$@، سحب %2$@";
+/* Name of a motion lean direction as a control. %@ is the direction. */
 "ui.mapping.motionLean" = "ميل الحركة %@";
+/* Heading of the group of motion controls in the assignment list of the profile editor. */
 "ui.profiles.sectionMotion" = "الحركة";
+/* Option of the stick mode popup: the stick places the pointer inside an area of the screen. */
 "ui.profiles.stick.pointerArea" = "منطقة المؤشر";
+/* Option of the stick mode popup: the stick places the pointer on a ring around the center. */
 "ui.profiles.stick.pointerRing" = "حلقة المؤشر";
+/* Option of the stick mode popup: turning the stick scrolls like a wheel. */
 "ui.profiles.stick.scrollWheel" = "عجلة التمرير";
+/* Option of the stick mode popup: the stick works as the steering wheel of a vehicle. */
 "ui.profiles.stick.steering" = "عجلة القيادة";
+/* Label of the field in the stick sheet that sets the radius of the pointer area or ring. The value is in points. */
 "ui.profiles.stick.pointerRadius" = "نصف قطر المؤشر (نقاط)";
+/* Label of the field in the stick sheet that sets how many degrees of rotation scroll one line. */
 "ui.profiles.stick.scrollDegrees" = "الدوران لكل سطر تمرير (درجة)";
+/* Label of the popup in the stick sheet that picks the direction of the scrolling. */
 "ui.profiles.stick.scrollAxis" = "محور التمرير";
+/* Option of the scroll axis popup: horizontal scrolling. */
 "ui.profiles.stick.horizontal" = "أفقي";
+/* Option of the scroll axis popup: vertical scrolling. */
 "ui.profiles.stick.vertical" = "رأسي";
+/* Label of the field in the stick sheet that sets the rotation of the stick that counts as full steering. The value is in degrees. */
 "ui.profiles.stick.steeringFullScale" = "الدوران عند التوجيه الكامل (درجة)";
+/* Label of the field in the stick sheet that sets how fast the steering returns to the center. The value is in degrees per second. */
 "ui.profiles.stick.steeringReturnRate" = "سرعة عودة التوجيه (درجة/ثانية)";
+/* Label of the popup in the stick sheet that picks the axis of the virtual gamepad that the steering moves. */
 "ui.profiles.stick.steeringOutput" = "محور التوجيه الافتراضي";
+/* Option of the steering axis popup: the horizontal axis of the left stick. */
 "ui.profiles.stick.leftStickX" = "العصا اليسرى أفقيًا";
+/* Option of the steering axis popup: the horizontal axis of the right stick. */
 "ui.profiles.stick.rightStickX" = "العصا اليمنى أفقيًا";
+/* Label of the popup in the stick sheet that picks which rotation direction steers to the right. */
 "ui.profiles.stick.rotationDirection" = "الدوران الموجب";
+/* Option of the rotation popup: turning the stick clockwise. */
 "ui.profiles.stick.clockwise" = "في اتجاه الساعة";
+/* Option of the rotation popup: turning the stick counterclockwise. */
 "ui.profiles.stick.counterclockwise" = "في الاتجاه المعاكس للساعة";
+/* Title of the switch in the stick sheet that keeps sending the physical stick to the virtual gamepad as well. */
 "ui.profiles.stick.passthrough" = "إبقاء تمرير العصا الفعلية";
+/* Title of the sheet that sets the stages of a trigger. A dual-stage trigger has a soft pull and a full pull. */
 "ui.profiles.trigger.title" = "مراحل الزناد";
+/* Label of the popup in the trigger sheet that picks the trigger. */
 "ui.profiles.trigger.source" = "الزناد";
+/* Option of the trigger popup: the left trigger. */
 "ui.profiles.trigger.left" = "الزناد الأيسر";
+/* Option of the trigger popup: the right trigger. */
 "ui.profiles.trigger.right" = "الزناد الأيمن";
+/* Title of the switch in the trigger sheet that turns on the two stages of the trigger. */
 "ui.profiles.trigger.enabled" = "تمكين الزناد ثنائي المرحلة";
+/* Label of the popup in the trigger sheet that picks how the soft pull and the full pull work together. */
 "ui.profiles.trigger.mode" = "تفاعل المراحل";
+/* Label of the field in the trigger sheet that sets how far the trigger must move for the soft pull. The value is a number from 0 to 1. */
 "ui.profiles.trigger.softThreshold" = "عتبة السحب الخفيف (0...1)";
+/* Label of the field in the trigger sheet that sets how far the trigger must move for the full pull. The value is a number from 0 to 1. */
 "ui.profiles.trigger.fullThreshold" = "عتبة السحب الكامل (0...1)";
+/* Label of the field in the trigger sheet that sets how far the trigger must go back before a stage is released. */
 "ui.profiles.trigger.hysteresis" = "هستريسيس الإفلات";
+/* Label of the field in the trigger sheet that sets the time within which a fast pull skips the soft stage. The value is in milliseconds. */
 "ui.profiles.trigger.skipWindow" = "نافذة السحب السريع (مللي ثانية)";
+/* Title of the switch in the trigger sheet that keeps sending the analog trigger to the virtual gamepad as well. */
 "ui.profiles.trigger.passthrough" = "إبقاء تمرير الزناد التناظري";
+/* Option of the stage interaction popup: the soft stage and the full stage are both active at the same time. */
 "ui.profiles.trigger.simultaneous" = "الخفيف والكامل معًا";
+/* Option of the stage interaction popup: the full stage replaces the soft stage. */
 "ui.profiles.trigger.exclusive" = "الكامل يحل محل الخفيف";
+/* Option of the stage interaction popup: a quick pull goes straight to the full stage. */
 "ui.profiles.trigger.preferFull" = "تفضيل الكامل السريع";
+/* Option of the stage interaction popup: a quick pull goes straight to the full stage, and a slow pull combines both stages late. */
 "ui.profiles.trigger.preferFullCombined" = "تفضيل الكامل السريع؛ الدمج المتأخر";
+/* Option of the stage interaction popup: the soft stage fires at once, and a quick pull goes straight to the full stage. */
 "ui.profiles.trigger.responsivePreferFull" = "خفيف سريع الاستجابة؛ تفضيل الكامل السريع";
+/* Option of the stage interaction popup: the soft stage fires at once, and both stages combine late. */
 "ui.profiles.trigger.responsivePreferFullCombined" = "خفيف سريع الاستجابة؛ الدمج المتأخر";
+/* Title of the switch in the motion sheet that turns on lean sources. A lean source is a control that is active while the controller is tilted to one side. */
 "ui.profiles.motion.leanEnabled" = "تمكين مصادر الميل";
+/* Label of the slider in the motion sheet that sets the tilt at which a lean starts. The value is in degrees. */
 "ui.profiles.motion.leanThresholdDegrees" = "عتبة الميل (درجة)";
+/* Label of the slider in the motion sheet that sets how far the tilt must go back before a lean ends. The value is in degrees. */
 "ui.profiles.motion.leanHysteresisDegrees" = "هستريسيس إفلات الميل (درجة)";
+/* Title of the switch in the motion sheet that turns on steering by tilting the controller. */
 "ui.profiles.motion.steeringEnabled" = "تمكين التوجيه بالحركة";
+/* Label of the popup in the motion sheet that picks the axis of the virtual gamepad that the steering moves. */
 "ui.profiles.motion.steeringOutput" = "محور التوجيه الافتراضي";
+/* Option of the steering axis popup: the horizontal axis of the left stick. */
 "ui.profiles.motion.steeringLeft" = "العصا اليسرى أفقيًا";
+/* Option of the steering axis popup: the horizontal axis of the right stick. */
 "ui.profiles.motion.steeringRight" = "العصا اليمنى أفقيًا";
+/* Label of the slider in the motion sheet that sets the tilt around the center that is ignored. The value is in degrees. */
 "ui.profiles.motion.steeringDeadzoneDegrees" = "المنطقة الميتة للتوجيه (درجة)";
+/* Label of the slider in the motion sheet that sets the tilt that counts as full steering. The value is in degrees. */
 "ui.profiles.motion.steeringFullScaleDegrees" = "زاوية التوجيه الكاملة (درجة)";
+/* Label of the slider in the motion sheet that sets the exponent of the steering response curve. */
 "ui.profiles.motion.steeringResponseExponent" = "أس استجابة التوجيه";
+/* Title of the switch in the motion sheet that reverses the steering direction. */
 "ui.profiles.motion.steeringInverted" = "عكس التوجيه";
 
 /* Value of a physical output destination field when the output is turned off. */
 "status.disabled" = "معطّل";
+/* Label of the switch or heading in the profile details sheet for a profile that applies to a pair of Joy-Cons. Joy-Con is a Nintendo product name. */
 "ui.profiles.joyConPair" = "ملف تعريف Joy-Con المقترن";
+/* Label of the popup in the profile details sheet that picks which Joy-Con of the pair provides the gyro. */
 "ui.profiles.joyConGyro" = "مصدر جيروسكوب الزوج";
+/* Option of the gyro source popup: the left Joy-Con. Joy-Con is a Nintendo product name. */
 "ui.profiles.joyConLeft" = "Joy-Con الأيسر";
+/* Option of the gyro source popup: the right Joy-Con. Joy-Con is a Nintendo product name. */
 "ui.profiles.joyConRight" = "Joy-Con الأيمن";
+/* Button in the Profiles area that opens the sheet that pairs two connected Joy-Cons. Keep the three dots. Joy-Con is a Nintendo product name. */
 "ui.profiles.pairJoyCons" = "اقتران وحدتي Joy-Con المتصلتين…";
+/* Status in the Profiles area when two Joy-Cons are paired. */
 "ui.profiles.joyConPairActive" = "الاقتران نشط";
+/* Button in the Profiles area that ends the pairing of two Joy-Cons. */
 "ui.profiles.unpairJoyCons" = "إلغاء الاقتران";
+/* Hint in the Joy-Con pairing sheet. The pairing lasts until the user quits the app. */
 "ui.profiles.joyConPairSessionHint" = "يستخدم الاقتران وحدتي التحكم هاتين بالتحديد لجلسة التطبيق الحالية.";
+/* Confirm button of the Joy-Con pairing sheet. */
 "ui.profiles.pair" = "اقتران";
 /* Error shown when two Joy-Cons cannot be combined into one controller. Joy-Con is a Nintendo product name. */
 "ui.error.joyConPairUnavailable" = "تعذّر اقتران وحدتي Joy-Con المحددتين. حدّث وحدات التحكم المتصلة وحاول مرة أخرى.";
+/* Status in the profile editor for a profile that applies to an explicit pairing of two Joy-Cons. */
 "ui.profiles.joyConSessionState" = "اقتران صريح";
 
-/* Mapping-owned physical controller output. Translation review pending. */
+/* Name of a rumble output destination. %1$@ is the motor and %2$@ is the intensity as a number; %% is the percent sign. */
 "ui.mapping.physicalRumble" = "اهتزاز %1$@ (%2$@%%)";
+/* Name of a player indicator output destination. %@ is the indicator pattern. */
 "ui.mapping.physicalPlayerIndicator" = "مؤشر اللاعب %@";
+/* Name of a controller color output destination. %@ is the color. */
 "ui.mapping.physicalColor" = "لون وحدة التحكم %@";
+/* Name of a controller brightness output destination. %@ is the brightness as a number; %% is the percent sign. */
 "ui.mapping.physicalBrightness" = "سطوع وحدة التحكم (%@%%)";
+/* Name of an adaptive trigger output destination. %1$@ is the trigger and %2$@ is the effect. */
 "ui.mapping.physicalAdaptiveTrigger" = "الزناد التكيفي %1$@: %2$@";
 
-/* Physical mapping value editor. Translation review pending. */
+/* Label of the popup in the output destination editor that picks the rumble motor. */
 "ui.profiles.physical.motor" = "المحرك";
+/* Label of the slider in the output destination editor that sets the rumble strength. */
 "ui.profiles.physical.intensity" = "الشدة";
+/* Label of the popup in the output destination editor that picks the player indicator pattern. */
 "ui.profiles.physical.player" = "مؤشر اللاعب";
+/* Label of the slider in the output destination editor for the red part of the controller color. */
 "ui.profiles.physical.red" = "الأحمر";
+/* Label of the slider in the output destination editor for the green part of the controller color. */
 "ui.profiles.physical.green" = "الأخضر";
+/* Label of the slider in the output destination editor for the blue part of the controller color. */
 "ui.profiles.physical.blue" = "الأزرق";
+/* Label of the slider in the output destination editor that sets the brightness of the controller light. */
 "ui.profiles.physical.brightness" = "السطوع";
+/* Label of the popup in the output destination editor that picks the adaptive trigger. */
 "ui.profiles.physical.trigger" = "الزناد التكيفي";
+/* Label of the popup in the output destination editor that picks the effect of the adaptive trigger. */
 "ui.profiles.physical.effect" = "التأثير";
+/* Label of the slider in the output destination editor that sets where the resistance of the adaptive trigger starts. */
 "ui.profiles.physical.startPosition" = "بداية المقاومة";
+/* Label of the slider in the output destination editor that sets how strong the resistance of the adaptive trigger is. */
 "ui.profiles.physical.strength" = "قوة المقاومة";
 
+/* Menu item in the profile editor that removes all inputs of the profile. Keep the three dots. */
 "ui.profiles.clearInputs" = "مسح كل الإدخالات…";
+/* Destructive button of the alert that removes all inputs of the profile. */
 "ui.profiles.clearInputsConfirm" = "مسح الكل";
+/* Message of the alert that removes all inputs of the profile. */
 "ui.profiles.clearInputsMessage" = "يزيل هذا كل التعيينات ومعالجة الإدخال من ملف التعريف هذا.";
+/* Title of the alert that removes all inputs of the profile. */
 "ui.profiles.clearInputsTitle" = "هل تريد مسح كل الإدخالات؟";
+/* Menu item in the profile editor that removes all assignments of the profile. Keep the three dots. */
 "ui.profiles.removeAllAssignments" = "إزالة كل التعيينات…";
+/* Title of the alert that removes all assignments of the profile. */
 "ui.profiles.removeAllAssignmentsTitle" = "هل تريد إزالة كل التعيينات؟";
+/* Message of the alert that removes all assignments of the profile. The stick, trigger, touch and motion settings stay. */
 "ui.profiles.removeAllAssignmentsMessage" = "يزيل هذا من ملف التعريف هذا كل التعيينات والتركيبات والتسلسلات والطبقات. تبقى إعدادات العصي والزنادات واللمس والحركة كما هي.";
+/* Destructive button of the alert that removes all assignments of the profile. */
 "ui.profiles.removeAllAssignmentsConfirm" = "إزالة الكل";
+/* Message of the alert shown before the app activates a profile that sends no input. */
 "ui.profiles.emptyActivationMessage" = "يكتم ملف التعريف هذا كل إدخال من وحدة التحكم.";
+/* Title of the alert shown before the app activates a profile that sends no input. */
 "ui.profiles.emptyActivationTitle" = "هل تريد تفعيل ملف تعريف بلا إدخال من وحدة التحكم؟";
+/* Warning in the profile editor when the profile sends no input. */
 "ui.profiles.emptyInputWarning" = "يكتم ملف التعريف هذا كل إدخال من وحدة التحكم.";
+/* Menu item in the profile editor that sets the inputs of the profile to the default. */
 "ui.profiles.restoreDefaultInput" = "استعادة الإدخال الافتراضي";
 /* Button of the controller actions that resets all settings of the controller. A confirmation alert with the same label follows. */
 "action.reset" = "إعادة تعيين";
+/* Title of the switch in the lighting editor that uses the color that the controller shows by default. */
 "ui.profiles.useControllerDefaultColor" = "استخدام الإعداد الافتراضي لوحدة التحكم";
+/* Title of the message in the Profiles area when a saved profile cannot be read. */
 "ui.profiles.damagedProfile" = "ملف تعريف تالف";
+/* Title of the message in the Profiles area when the list of active profiles cannot be read. */
 "ui.profiles.damagedLibrary" = "قائمة ملفات التعريف النشطة تالفة";
+/* Button in the Profiles area that deletes a damaged profile. Keep the three dots. */
 "ui.profiles.deleteDamagedButton" = "حذف ملف التعريف التالف…";
+/* Button in the Profiles area that backs up and resets the list of active profiles. The ampersand stays. Keep the three dots. */
 "ui.profiles.resetLibraryButton" = "نسخ احتياطي لملفات التعريف النشطة وإعادة ضبطها…";
+/* Message of the recovery alert. The app saves a backup before it removes damaged data. */
 "ui.profiles.recoveryBackupMessage" = "سيتم إنشاء نسخة احتياطية قبل إزالة البيانات التالفة.";
+/* Message in the Profiles area when a saved profile cannot be read. The user deletes it to go on with the other profiles. */
 "ui.profiles.damagedProfileMessage" = "تعذرت قراءة ملف التعريف المحفوظ هذا. احذفه لمتابعة استخدام ملفات التعريف الصالحة.";
+/* Message in the Profiles area when the list of active profiles cannot be read. The user resets the list. The profiles stay. */
 "ui.profiles.damagedSelectionsMessage" = "تعذّرت قراءة قائمة ملفات التعريف النشطة. أعد ضبطها للمتابعة. سيتم الاحتفاظ بملفات التعريف.";
+/* Confirm button of the recovery alert that backs up and resets the list of active profiles. The ampersand stays. */
 "ui.profiles.resetLibraryAction" = "نسخ احتياطي وإعادة ضبط";
 
 /* Label of the row in the Controllers detail that tells that the session of the controller is suspended. The row holds the Resume button. */
@@ -1716,17 +2091,23 @@
 "cli.update.check.prerelease" = "ضمّن الإصدارات التجريبية.";
 /* Message printed by 'ojd update check' when the installed version is the latest. %1$@ is the installed version and %2$@ is the latest release. */
 "cli.update.check.upToDate" = "الإصدار %1$@ من OpenJoystickDriver محدّث (أحدث إصدار: %2$@).";
+/* Heading of the Command-Line Tool section in the settings window. */
 "ui.settings.commandLine.tool" = "أداة سطر الأوامر";
+/* Error in the Command-Line Tool section when a regular file is in the place of the link. %@ is the path. */
 "ui.settings.commandLine.toolBlocked" = "%@ ملف وليس رابطًا. احذفه، ثم ثبّت مرة أخرى.";
+/* Status in the Command-Line Tool section after the user cancels the installation. */
 "ui.settings.commandLine.toolCancelled" = "تم الإلغاء.";
 /* Error shown in the Command Line Tool section of the settings window when macOS refuses to install or remove the tool. */
 "platform.macos.ui.settings.commandLine.toolFailed" = "لم يسمح macOS بالتغيير.";
+/* Button in the Command-Line Tool section that installs the ojd link. ojd is the command name and stays as written. */
 "ui.settings.commandLine.toolInstall" = "تثبيت أداة سطر الأوامر";
 /* Status in the Command Line Tool section of the settings window when ojd is installed. %@ is the path of the link. Terminal is the macOS app and ojd is the command name. */
 "platform.macos.ui.settings.commandLine.toolInstalled" = "تم التثبيت. شغّل ojd في Terminal؛ ويؤدي إلغاء التثبيت إلى إزالة %@.";
+/* Note in the Command-Line Tool section when the link points to another program. %1$@ is the path of the link and %2$@ is the path it points to. Installing changes the link to point to this app. */
 "ui.settings.commandLine.toolLinkedElsewhere" = "%1$@ يشير إلى %2$@. يؤدي التثبيت إلى ربطه بهذا التطبيق بدلًا من ذلك.";
 /* Description in the Command Line Tool section of the settings window before the tool is installed. %@ is the path where the link is created. Terminal is the macOS app and ojd is the command name. */
 "platform.macos.ui.settings.commandLine.toolNotInstalled" = "يربط %@ بهذا التطبيق لتتمكن من تشغيل ojd في Terminal. يطلب macOS كلمة مرور المسؤول.";
+/* Button in the Command-Line Tool section that removes the ojd link. */
 "ui.settings.commandLine.toolUninstall" = "إلغاء التثبيت";
 /* One-line summary of 'ojd controller' in the command list and at the top of its help. */
 "cli.controller.group.abstract" = "اعرض وحدات التحكم المتصلة واختبرها وتحكّم بها.";
@@ -2966,8 +3347,11 @@
 "cli.setting.group.showInMenuBar" = "إظهار عنصر OpenJoystickDriver في شريط القوائم.";
 /* Help text of the checkUpdatesAutomatically setting in 'ojd setting list'. */
 "cli.setting.group.checkUpdatesAutomatically" = "التحقق من وجود تحديثات عند بدء التطبيق.";
+/* Title of the General pane and of its toolbar item in the settings window. */
 "ui.settings.general.title" = "عام";
+/* Title of the Notifications pane and of its toolbar item in the settings window. */
 "ui.settings.notifications.title" = "الإشعارات";
+/* Title of the Advanced pane and of its toolbar item in the settings window. */
 "ui.settings.advanced.title" = "متقدم";
 /* VoiceOver label of the General pane of the settings window. The key is built from the pane identifier. */
 "a11y.settingsPane.general" = "الإعدادات العامة";
@@ -2975,14 +3359,21 @@
 "a11y.settingsPane.notifications" = "إعدادات الإشعارات";
 /* VoiceOver label of the Advanced pane of the settings window. The key is built from the pane identifier. */
 "a11y.settingsPane.advanced" = "الإعدادات المتقدمة";
+/* Title of the switch in the General pane of the settings window that shows the app item in the menu bar. */
 "ui.settings.general.showInMenuBar" = "إظهار في شريط القوائم";
+/* Description under the Show in menu bar switch in the General pane of the settings window. OpenJoystickDriver is the product name. */
 "ui.settings.general.showInMenuBarDescription" = "إظهار عنصر OpenJoystickDriver في شريط القوائم.";
+/* Title of the switch in the Updates section of the settings window that checks for an update at startup. */
 "ui.settings.general.checkUpdatesAutomatically" = "التحقق من التحديثات تلقائيًا";
+/* Description under the automatic update check switch in the Updates section of the settings window. */
 "ui.settings.general.checkUpdatesAutomaticallyDescription" = "التحقق من وجود إصدار أحدث عند بدء التطبيق.";
+/* Title of the alert that removes the command-line tool. */
 "ui.settings.commandLine.uninstallTitle" = "هل تريد إلغاء تثبيت أداة سطر الأوامر؟";
 /* Message of the confirmation alert that removes the command line tool. %1$@ is the path of the link. The app stays installed. Terminal is the macOS app and ojd is the command name. */
 "platform.macos.ui.settings.commandLine.uninstallMessage" = "يؤدي هذا إلى إزالة الرابط في %1$@. يبقى التطبيق مثبّتًا، ولن يعمل ojd في الطرفية حتى تثبّت الأداة مرة أخرى.";
+/* Confirm button of the alert that removes the command-line tool. */
 "ui.settings.commandLine.uninstallConfirm" = "إلغاء التثبيت";
+/* Hint in the Advanced pane of the settings window while the developer tools are off. */
 "ui.settings.advanced.developerToolsOff" = "شغّل أدوات المطوّر لرؤية إدخال وحدات التحكم وحزم USB.";
 /* Status line in the menu bar menu. %1$@ is the runtime state, %2$@ is the controller count text and %3$@ is the active profile text. The dots between them separate the parts and may change. */
 "ui.extra.statusLine" = "%1$@‏ · %2$@‏ · %3$@‏";
@@ -3050,7 +3441,9 @@
 "ui.menu.profile.activateFailed" = "تعذّر تفعيل ملف التعريف";
 /* Message of the alert shown when the profile changed elsewhere during the turn on. */
 "ui.menu.profile.activateConflict" = "تغيّر ملف التعريف أثناء تفعيله. حاول مرة أخرى.";
+/* Error when the user imports a profile while another profile change runs. Import Profile is the title of the toolbar button and is written as in this catalog. */
 "ui.profiles.importBlocked" = "هناك تغيير في ملف تعريف قيد التنفيذ. اختر «استيراد ملف التعريف» مرة أخرى عند انتهائه.";
+/* Body of the notification about an available update. %@ is the version tag. */
 "ui.settings.general.updateAvailableBody" = "الإصدار %@ متاح.";
 /* Title of the message in the main window while a profile change is still running. */
 "ui.mainWindow.profileMutationRunning" = "لا يزال تغيير ملف التعريف قيد التنفيذ. حاول مرة أخرى عند انتهائه.";
@@ -3058,6 +3451,7 @@
 "ui.access.web.noPort" = "نقطة نهاية الويب قيد التشغيل، لكن لم يتم اختيار منفذ بعد";
 /* Description of the signer of a program that has a signature without a known publisher. */
 "ui.access.signer.signedUnknownPublisher" = "موقَّع من ناشر غير معروف";
+/* Note in the Command-Line Tool section when the target of the link cannot be read. %@ is the path of the link. Installing changes the link to point to this app. */
 "ui.settings.commandLine.toolLinkTargetUnreadable" = "%@ رابط لا يمكن قراءة هدفه. يؤدي التثبيت إلى ربطه بهذا التطبيق بدلًا من ذلك.";
 /* Text of error E1001, sent to a client that connects to the endpoint while the endpoint is off, and printed by 'ojd explain'. The command in quotes stays as written. */
 "error.E1001.message" = "نقطة النهاية متوقفة. شغّلها باستخدام «ojd access enable» ثم اتصل مرة أخرى.";
@@ -3283,8 +3677,11 @@
 "ui.error.withCode" = "%1$@ (%2$@)";
 /* Message printed by 'ojd update check' when the installed version is newer than the latest release. %1$@ is the installed version and %2$@ is the latest release. */
 "cli.update.check.ahead" = "إصدار OpenJoystickDriver %1$@ أحدث من آخر إصدار منشور (%2$@).";
+/* Result of the update check: the installed version is newer than the latest release. */
 "ui.settings.general.updateAhead" = "أحدث من آخر إصدار منشور";
+/* Label of the installed version in the General pane of the settings window. */
 "ui.settings.general.version" = "الإصدار";
+/* Line in the Updates section of the settings window. %@ is the version of the latest release. */
 "ui.settings.general.latestRelease" = "أحدث إصدار: %@";
 /* Title of the switch in the General pane of the settings window that shows the app icon in the Dock. Dock is the macOS name. */
 "platform.macos.ui.settings.general.showInDock" = "إظهار في Dock";
@@ -3414,15 +3811,21 @@
 "ui.controllers.inputHealth.stale" = "غير محدَّث";
 /* Value of the input health fact: the app waits until all controls are at rest before it sends input again. */
 "ui.controllers.inputHealth.waitingForNeutral" = "في انتظار الوضع المحايد";
+/* Error shown when the settings file is damaged. %@ is the path of the file. The command in backticks stays as written, and Trash is the macOS name. */
 "ui.settings.advanced.errorDamaged" = "ملف الإعدادات %@ تالف. أصلحه أو انقله إلى سلة المهملات باستخدام `ojd setting reset`.";
+/* Error shown when the settings file has an unsupported version. %@ is the path of the file. apiVersion and the command in backticks stay as written, and Trash is the macOS name. */
 "ui.settings.advanced.errorUnsupported" = "ملف الإعدادات %@ غير مدعوم. أعد كتابة الملف وفق apiVersion المدعوم، أو انقله إلى سلة المهملات باستخدام `ojd setting reset`.";
+/* Error shown when the settings file cannot be written. %@ is the path of the file. */
 "ui.settings.advanced.errorUnwritable" = "تعذّرت الكتابة في ملف الإعدادات %@.";
+/* Error shown when the settings file cannot be moved to the Trash. %@ is the path of the file. Trash is the macOS name. */
 "ui.settings.advanced.errorCannotReset" = "تعذّر نقل ملف الإعدادات %@ إلى سلة المهملات.";
 /* Error shown at startup when the stored settings file turns off both entry points. %@ is the path of the settings file. The two switch names are written as in this catalog, and the command in backticks stays as written. */
 "platform.macos.ui.settings.advanced.errorStoredNoVisibleEntryPoint" = "ملف الإعدادات %@ يوقف كلاً من «إظهار في شريط القوائم» و«إظهار في Dock»، لذلك لن يكون للتطبيق نقطة دخول مرئية. أصلحه أو انقله إلى سلة المهملات باستخدام `ojd setting reset`.";
 /* Error shown when the user turns off both Show in menu bar and Show in Dock. The two switch names are written as in this catalog. */
 "platform.macos.ui.settings.advanced.errorNoVisibleEntryPoint" = "لا يمكن إيقاف «إظهار في شريط القوائم» و«إظهار في Dock» معًا: لن يكون للتطبيق نقطة دخول مرئية.";
+/* Title of the alert at startup when the settings file cannot be read. */
 "ui.settings.advanced.unreadableTitle" = "تعذّرت قراءة الإعدادات";
+/* Destructive button of the alert at startup that resets the settings, which discards the unreadable settings file. */
 "ui.settings.advanced.unreadableResetSettings" = "إعادة ضبط الإعدادات";
 /* Button of the alert about an unreadable settings file at startup that shows the file in Finder, the macOS file manager. */
 "platform.macos.ui.settings.advanced.unreadableShowInFinder" = "إظهار في Finder";

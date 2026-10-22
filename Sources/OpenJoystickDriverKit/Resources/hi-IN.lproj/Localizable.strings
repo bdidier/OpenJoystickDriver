@@ -56,52 +56,89 @@
 "status.noActiveProfile" = "कोई सक्रिय प्रोफ़ाइल नहीं";
 /* Message in the Controllers area while the service lists the connected controllers. Keep the three dots. */
 "status.checkingControllers" = "कनेक्ट किए गए कंट्रोलर जाँचे जा रहे हैं…";
+/* Heading of the controller events section in the Notifications pane of the settings window. */
 "ui.settings.general.controllers" = "कंट्रोलर";
+/* Heading of the profile events section in the Notifications pane of the settings window. */
 "ui.settings.general.profiles" = "प्रोफ़ाइल";
+/* Heading of the section in the Access area that lists the readiness of permissions and notifications. */
 "ui.settings.notifications.accessReadiness" = "ऐक्सेस और तैयारी";
+/* Button in the Updates section of the settings window that checks for an update. */
 "ui.settings.general.checkUpdates" = "अब जाँचें";
+/* Value of the connection state of a controller in the Controllers detail: the controller is connected. */
 "ui.settings.notifications.controllerConnectedShort" = "कनेक्टेड";
+/* Button of a permission row in the Access area that asks macOS for the permission. %@ is the name of the permission. */
 "ui.settings.notifications.requestAccess" = "%@ ऐक्सेस का अनुरोध करें";
+/* VoiceOver label of the switch for notifications about a controller that disconnects. */
 "ui.settings.notifications.controllerDisconnectedNotifications" = "कंट्रोलर डिस्कनेक्ट हुआ";
+/* Title of the switch for notifications about a controller that disconnects, and value of the connection state of a controller that is not connected. */
 "ui.settings.notifications.controllerDisconnectedShort" = "डिस्कनेक्टेड";
+/* VoiceOver label of the switch for notifications about a controller that connects. */
 "ui.settings.notifications.controllerNotifications" = "कंट्रोलर कनेक्ट हुआ";
+/* Heading of the developer tools section in the Advanced pane of the settings window. */
 "ui.settings.advanced.developerTools" = "डेवलपर टूल";
+/* Description of the switch that turns on the developer tools in the Advanced pane of the settings window. */
 "ui.settings.advanced.developerToolsDescription" = "कंट्रोलर इनपुट और USB पैकेट टूल दिखाएँ।";
+/* Title of the alert shown when the user leaves the profile editor with unsaved changes. */
 "ui.settings.advanced.discardTitle" = "बिना सहेजे गए बदलाव छोड़ें?";
+/* Message of the alert shown when the user leaves the profile editor with unsaved changes. */
 "ui.settings.advanced.discardProfileMessage" = "आपके प्रोफ़ाइल के बदलाव सहेजे नहीं गए हैं।";
+/* Destructive button of the alert that throws away the unsaved changes of a profile. */
 "ui.settings.advanced.discardAction" = "बदलाव छोड़ें";
+/* Title of the switch that turns on the developer tools in the Advanced pane of the settings window. */
 "ui.settings.advanced.enableDeveloperTools" = "डेवलपर टूल सक्षम करें";
 /* Note in the Notifications pane of the settings window when macOS has turned off both banners and sounds for the app. System Settings is the name of the macOS app. */
 "platform.macos.ui.settings.notifications.notificationBannersAndSoundOff" = "सिस्टम सेटिंग्स में बैनर और ध्वनियाँ बंद हैं।";
+/* Value of the notification row in the Access area when macOS has turned off banners for the app. */
 "ui.settings.notifications.notificationBannersOff" = "बैनर बंद";
 /* Note in the Notifications pane of the settings window when macOS has turned off banners for the app. System Settings is the name of the macOS app. */
 "platform.macos.ui.settings.notifications.notificationBannersOffDetail" = "सूचना बैनर सिस्टम सेटिंग्स में बंद हैं।";
+/* Status text in the Notifications pane of the settings window when macOS allows notifications. */
 "ui.settings.notifications.notificationDeliveryAllowed" = "सूचनाएँ भेजने की अनुमति है।";
+/* Status text in the Notifications pane of the settings window when macOS allows banners, Notification Center and sounds. Notification Center is the macOS name. */
 "ui.settings.notifications.notificationDeliveryReady" = "बैनर, सूचना केंद्र और ध्वनियाँ चालू हैं।";
+/* Status text in the Notifications pane of the settings window when the user has not allowed notifications in macOS. */
 "ui.settings.notifications.notificationPermissionRequired" = "सूचनाएँ भेजने से पहले अनुमति ज़रूरी है।";
+/* Value of the notification row in the Access area when macOS has turned off sounds for the app. */
 "ui.settings.notifications.notificationSoundOff" = "ध्वनि बंद";
 /* Note in the Notifications pane of the settings window when macOS has turned off sounds for the app. System Settings is the name of the macOS app. */
 "platform.macos.ui.settings.notifications.notificationSoundOffDetail" = "सूचना ध्वनियाँ सिस्टम सेटिंग्स में बंद हैं।";
+/* Title of the switch in the Notifications pane of the settings window that plays a sound with a notification. */
 "ui.settings.notifications.notificationSounds" = "ध्वनि बजाएँ";
+/* Name of the notification permission in the Access area. */
 "ui.settings.notifications.notifications" = "सूचनाएँ";
 /* Error shown when the user turns on notifications in the app while macOS denies them. System Settings is the name of the macOS app. OpenJoystickDriver is the product name. */
 "platform.macos.ui.settings.notifications.notificationsDenied" = "OpenJoystickDriver के लिए सूचनाएँ सिस्टम सेटिंग्स में बंद हैं।";
+/* Button in the Notifications pane of the settings window that opens the notification settings of macOS. */
 "ui.settings.general.openNotificationSettings" = "सूचना सेटिंग्स खोलें";
+/* Button in a pane of the settings window that opens System Settings, the macOS app. */
 "ui.settings.general.openSystemSettings" = "सेटिंग्स खोलें";
+/* Title of the switch in the Updates section of the settings window that includes prerelease versions in the update check. */
 "ui.settings.general.prereleaseUpdates" = "प्री-रिलीज़ अपडेट शामिल करें";
+/* Title of the switch for notifications about a profile that is activated or switched. */
 "ui.settings.notifications.profileActivatedShort" = "सक्रिय किया गया या बदला गया";
+/* VoiceOver label of the switch for notifications about a profile that is deactivated. */
 "ui.settings.notifications.profileDeactivatedNotifications" = "प्रोफ़ाइल निष्क्रिय हुई";
+/* Title of the switch for notifications about a profile that is deactivated. */
 "ui.settings.notifications.profileDeactivatedShort" = "निष्क्रिय किया गया";
+/* VoiceOver label of the switch for notifications about a profile that is activated or switched. */
 "ui.settings.notifications.profileNotifications" = "प्रोफ़ाइल सक्रिय हुई या बदली गई";
+/* Title of the switch in the General pane of the settings window that opens the app when the user logs in. */
 "ui.settings.general.startAtLogin" = "लॉगिन पर शुरू करें";
 /* Error shown in the General pane of the settings window after the user turns on Start at login and macOS wants approval. System Settings, General and Login Items are names in macOS and are written as macOS shows them. */
 "platform.macos.ui.settings.general.startAtLoginApprovalRequired" = "सिस्टम सेटिंग्स > सामान्य > लॉगिन आइटम में OpenJoystickDriver को अनुमति दें।";
+/* Description under the Start at login switch in the General pane of the settings window. OpenJoystickDriver is the product name. */
 "ui.settings.general.startAtLoginDescription" = "लॉग इन करने पर OpenJoystickDriver को मेनू बार में खोलें।";
+/* Button in the Notifications pane of the settings window that sends a test notification. */
 "ui.settings.notifications.testNotification" = "परीक्षण सूचना भेजें";
+/* Result of the update check: the installed version is the latest. */
 "ui.settings.general.upToDate" = "अप-टू-डेट";
+/* Result of the update check: a newer version exists. */
 "ui.settings.general.updateAvailable" = "अपडेट उपलब्ध है";
+/* Status of the update check while it runs. Keep the three dots. */
 "ui.settings.general.updateChecking" = "जाँच हो रही है…";
+/* Heading of the updates section in the General pane of the settings window. */
 "ui.settings.general.updates" = "अपडेट";
+/* Button in the Updates section of the settings window that opens the page of the available update. */
 "ui.settings.general.viewUpdate" = "अपडेट देखें";
 /* Title of the message in the Controllers area when the service cannot list controllers. */
 "ui.controllers.unavailable" = "कंट्रोलर उपलब्ध नहीं";
@@ -177,20 +214,35 @@
 "ui.controllers.server.invalidRecord" = "कंट्रोलर रिकॉर्ड मान्य नहीं है। कुछ नहीं बदला।";
 /* Message when the app cannot save the changed controller record. */
 "ui.controllers.server.persistenceFailed" = "कंट्रोलर रिकॉर्ड सहेजा नहीं जा सका। कुछ नहीं बदला।";
+/* Button in the Controllers detail that shows or hides the advanced virtual HID profile choices. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.virtualProfile.advanced" = "उन्नत";
+/* Heading of the virtual HID profile section in the Controllers detail. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.virtualProfile.title" = "वर्चुअल HID प्रोफ़ाइल";
+/* Note under the virtual HID profile popup. The choice applies to all connected controllers of the model. */
 "ui.virtualProfile.modelScope" = "इस मॉडल के हर कनेक्टेड कंट्रोलर पर लागू होता है।";
+/* Value of the virtual HID profile source: the user chose the profile. */
 "ui.virtualProfile.sourceOverride" = "ओवरराइड";
+/* Value of the virtual HID profile source: the app chose the profile because the controller cannot use the profile that the user chose. */
 "ui.virtualProfile.sourceAutomaticAfterRejecting" = "स्वचालित, ओवरराइड अस्वीकृत";
+/* Value of the virtual HID profile when the controller has none. */
 "ui.virtualProfile.none" = "कोई वर्चुअल HID प्रोफ़ाइल नहीं";
+/* Status shown while the app changes the virtual HID profile. Keep the three dots. */
 "ui.virtualProfile.updating" = "वर्चुअल HID प्रोफ़ाइल अपडेट हो रही है…";
+/* Error when the user picks a virtual HID profile that the service does not know. The service stored nothing. */
 "ui.virtualProfile.failure.unknownProfile" = "यह वर्चुअल HID प्रोफ़ाइल अज्ञात है। कुछ भी सहेजा नहीं गया।";
+/* Error when the controller is gone while the user changes its virtual HID profile. The stored override stays unchanged. */
 "ui.virtualProfile.failure.controllerNotFound" = "कंट्रोलर डिस्कनेक्ट हो गया या नहीं मिल रहा। ओवरराइड अपरिवर्तित है।";
+/* Message when the service stores the override of the virtual HID profile but the controller cannot use it, so the app picks a profile itself. */
 "ui.virtualProfile.failure.overrideRejected" = "ओवरराइड सहेजा गया है, लेकिन यह कंट्रोलर इसका उपयोग नहीं कर सकता, इसलिए यह स्वचालित रूप से चुनता है।";
+/* Error when a virtual HID profile fails to activate and the app restores the last working profile. %@ is the reason. */
 "ui.virtualProfile.failure.activationFailed" = "सक्रियण विफल हुआ, इसलिए पिछली वर्चुअल HID प्रोफ़ाइल बहाल की गई: %@";
+/* Message when the service stores the override while virtual output is off. The override takes effect when the user turns virtual output on. */
 "ui.virtualProfile.failure.outputDisabled" = "ओवरराइड सहेजा गया है और वर्चुअल आउटपुट सक्षम होने पर लागू होगा।";
+/* Error when the service stops while the user changes the virtual HID profile. The stored override stays unchanged. */
 "ui.virtualProfile.failure.serverStopped" = "सेवा रुक गई। ओवरराइड अपरिवर्तित है।";
+/* Error when the service cannot save the override of the virtual HID profile. Nothing is stored. */
 "ui.virtualProfile.failure.persistenceFailed" = "ओवरराइड सहेजा नहीं जा सका। कुछ भी सहेजा नहीं गया।";
+/* Error when the stored virtual HID profile overrides cannot be read. %@ is the reason. Controllers pick a profile themselves. */
 "ui.virtualProfile.storeError" = "वर्चुअल HID प्रोफ़ाइल ओवरराइड पढ़े नहीं जा सकते (%@)। कंट्रोलर स्वचालित रूप से चुनते हैं।";
 /* Value of the key field in the capture assignment sheet before the user captures a key. */
 "ui.keyboard.noKey" = "कोई कुंजी चयनित नहीं";
@@ -270,99 +322,193 @@
 "ui.capture.buttonsHeld" = "दबाकर रखे गए बटन: %@";
 /* Error under the name field of the profile creation sheet when the name is empty. */
 "ui.capture.profileNameValidation" = "प्रोफ़ाइल नाम दर्ज करें।";
+/* Toolbar button in the Profiles area that creates a profile. */
 "ui.profiles.new" = "नई प्रोफ़ाइल";
+/* Title of the alert that deletes a profile. */
 "ui.profiles.deleteTitle" = "प्रोफ़ाइल डिलीट करें?";
+/* Message of the alert that deletes a profile. OpenJoystickDriver is the product name. */
 "ui.profiles.deleteMessage" = "यह प्रोफ़ाइल OpenJoystickDriver से हटा दी जाएगी।";
+/* Message of the alert that asks to discard the unsaved changes of a profile. */
 "ui.profiles.discardMessage" = "इस प्रोफ़ाइल के बदलाव सहेजे नहीं गए हैं।";
+/* Message in the Profiles area while the profiles load. Keep the three dots. */
 "ui.profiles.loading" = "प्रोफ़ाइल लोड हो रही हैं…";
+/* Message in the Profiles area when the profiles cannot be loaded. */
 "ui.profiles.loadError" = "प्रोफ़ाइल लोड नहीं हो सकीं।";
+/* Title of the message in the Profiles area when the profiles are unavailable. */
 "ui.profiles.unavailable" = "प्रोफ़ाइल उपलब्ध नहीं";
+/* Title of the message in the Profiles area when the app cannot read the current state of the profiles. */
 "ui.profiles.refreshError" = "प्रोफ़ाइल स्थिति रीफ़्रेश नहीं हो सकी";
+/* Title of the empty state in the Profiles area when no profile exists. */
 "ui.profiles.none" = "कोई प्रोफ़ाइल नहीं";
+/* Message of the empty state in the Profiles area. An assignment links a control of the controller to a destination. */
 "ui.profiles.createMessage" = "नियंत्रण असाइन करना शुरू करने के लिए प्रोफ़ाइल बनाएँ।";
+/* Status in the Profiles area while the app reads the state of the profiles. Keep the three dots. */
 "ui.profiles.refreshing" = "प्रोफ़ाइल स्थिति रीफ़्रेश हो रही है…";
+/* Title of the message in the Profiles area when the state of the profiles cannot be read. */
 "ui.profiles.stateUnavailable" = "प्रोफ़ाइल स्थिति उपलब्ध नहीं";
+/* Message in the Profiles area when the state cannot be read. The editor keeps the draft. %@ is the reason sentence. */
 "ui.profiles.draftPreserved" = "आपका वर्तमान ड्राफ़्ट सुरक्षित है। %@";
+/* Error when a profile action such as delete or duplicate fails. */
 "ui.profiles.actionError" = "यह प्रोफ़ाइल कार्रवाई पूरी नहीं हो सकी। फिर कोशिश करें।";
+/* Title of the message in the profile editor when a profile action needs the user to act. */
 "ui.profiles.actionNeedsAttention" = "प्रोफ़ाइल कार्रवाई पर ध्यान देने की ज़रूरत";
+/* Title of the message in the profile editor when a profile action failed. */
 "ui.profiles.actionErrorTitle" = "प्रोफ़ाइल कार्रवाई त्रुटि";
+/* Label of the popup in the layer sheet that picks how the activator control turns the layer on. */
 "ui.profiles.activationMode" = "सक्रियण";
+/* Label of the popup in the layer sheet that picks the control that turns the layer on. */
 "ui.profiles.activator" = "सक्रियणकर्ता";
+/* Value of the state of a profile: it is active. */
 "ui.profiles.active" = "सक्रिय";
+/* Value of the state of a profile: it is not active. */
 "ui.profiles.notActive" = "सक्रिय नहीं";
+/* Caption of a profile in the Profiles list. %@ is the assignment count text, for example 3 assignments. The profile is active. */
 "ui.profiles.activeAssignmentCount" = "%@, सक्रिय";
+/* Button of the combination sheet that adds a chord. A chord is a set of controls pressed together. */
 "ui.profiles.addChord" = "कॉर्ड जोड़ें";
+/* Button of the combination sheet that adds a control to the chord or sequence. */
 "ui.profiles.addControl" = "नियंत्रण जोड़ें";
+/* Title of the sheet that adds a layer. A layer is a second set of assignments that a held control turns on. */
 "ui.profiles.addLayer" = "परत जोड़ें";
+/* Title of the sheet that adds an assignment to a layer. %@ is the name of the layer. */
 "ui.profiles.addLayerAssignment" = "%@ में असाइनमेंट जोड़ें";
+/* Button of the combination sheet that adds a sequence. A sequence is a set of controls pressed one after the other. */
 "ui.profiles.addSequence" = "अनुक्रम जोड़ें";
+/* Title of the empty state in the profile editor when the profile has no assignment. */
 "ui.profiles.noAssignments" = "अभी कोई असाइनमेंट नहीं";
+/* Instruction in the empty state of the profile editor. The destination is a key, a mouse button or a pointer movement. */
 "ui.profiles.assignmentInstructions" = "कंट्रोलर नियंत्रण जोड़ें, फिर उसका कीबोर्ड या पॉइंटर गंतव्य चुनें।";
+/* VoiceOver label of the save status in the profile editor. */
 "ui.profiles.saveStatus" = "प्रोफ़ाइल सहेजने की स्थिति";
+/* Heading of the group of shoulder buttons in the assignment list of the profile editor. */
 "ui.profiles.sectionShoulders" = "शोल्डर";
+/* Heading of the group of stick click buttons in the assignment list of the profile editor. */
 "ui.profiles.sectionStickClicks" = "स्टिक क्लिक";
+/* Heading of the group of system buttons, such as Start and Back, in the assignment list of the profile editor. */
 "ui.profiles.sectionSystemControls" = "सिस्टम नियंत्रण";
+/* Heading of the group of face buttons in the assignment list of the profile editor. */
 "ui.profiles.sectionFaceButtons" = "फेस बटन";
+/* Heading of the group of directional pad buttons in the assignment list of the profile editor. */
 "ui.profiles.sectionDpad" = "डी-पैड";
+/* Heading of the group of triggers in the assignment list of the profile editor. */
 "ui.profiles.sectionTriggers" = "ट्रिगर";
+/* Heading of the group of sticks in the assignment list of the profile editor. */
 "ui.profiles.sectionSticks" = "स्टिक";
+/* Name of a duplicated profile. %@ is the name of the profile that the copy comes from. */
 "ui.profiles.copyName" = "%@ कॉपी";
+/* Error in the profile editor when the profile changed elsewhere while the user edited it. */
 "ui.profiles.changedElsewhere" = "प्रोफ़ाइल कहीं और बदल गई।";
+/* Error in the profile editor when the service saved the profile but the app cannot read the state afterwards. */
 "ui.profiles.savedButUnavailable" = "प्रोफ़ाइल सहेजी गई, लेकिन उसकी नवीनतम स्थिति उपलब्ध नहीं है।";
+/* Save status of the profile editor: there are changes that are not saved. */
 "ui.profiles.unsaved" = "बिना सहेजे गए बदलाव";
+/* Save status of the profile editor while the profile is being saved. Keep the three dots. */
 "ui.profiles.saving" = "सहेजा जा रहा है…";
+/* Save status of the profile editor: the profile is saved. */
 "ui.profiles.saved" = "सहेजा गया";
+/* Save status of the profile editor: saving failed. */
 "ui.profiles.saveFailed" = "सहेजना विफल";
+/* VoiceOver summary of an assignment. %1$@ is the controller control and %2$@ is the destination. */
 "ui.profiles.assignmentSummary" = "%1$@ से %2$@";
+/* VoiceOver summary of an assignment that can be tuned. %1$@ is the controller control and %2$@ is the destination. Adjust is the title of the button that tunes the assignment. */
 "ui.profiles.assignmentAdjustSummary" = "%1$@ से %2$@, समायोजन उपलब्ध";
+/* Button of an assignment row that opens the behavior sheet. Keep the three dots. */
 "ui.profiles.behavior" = "व्यवहार…";
+/* Title of the behavior sheet of an assignment. The sheet sets turbo, hold and double tap. */
 "ui.profiles.bindingBehavior" = "असाइनमेंट का व्यवहार";
+/* Placeholder of the field in the profile creation sheet for the identifier of the app that the profile applies to, for example com.apple.Safari. */
 "ui.profiles.appID" = "ऐप ID";
+/* Help text of the chord sheet. The destination fires while all chosen controls are held down. */
 "ui.profiles.chordHelp" = "जब तक सभी चयनित नियंत्रण दबे रहते हैं, गंतव्य सक्रिय रहता है।";
+/* Label of the popup in the chord sheet that picks how the chord works. */
 "ui.profiles.chordMode" = "कॉर्ड मोड";
+/* Option of the chord mode popup: the first control works as a modifier of the others. */
 "ui.profiles.chordModeModifier" = "मॉडिफ़ायर";
+/* Option of the chord mode popup: all controls must be pressed at the same time. */
 "ui.profiles.chordModeSimultaneous" = "एक साथ";
+/* Label of the field in the chord sheet that sets the time within which the controls must be pressed. The value is in milliseconds. */
 "ui.profiles.chordWindow" = "दबाने की विंडो";
+/* Heading of the chords section in the profile editor. */
 "ui.profiles.chords" = "कॉर्ड";
+/* Label of a control picker in the combination sheet. %d is the number of the control, counted from 1. */
 "ui.profiles.controlNumber" = "नियंत्रण %d";
+/* Error under the form of the profile creation sheet when the name or the app target is not valid. */
 "ui.profiles.creationValidation" = "प्रोफ़ाइल नाम और लक्ष्य ऐप की समीक्षा करें।";
+/* Heading of the group in the controller popup of the profile creation sheet that lists models used by existing profiles. */
 "ui.profiles.controllersOfProfiles" = "आपके प्रोफ़ाइल में उपयोग किए गए";
+/* Placeholder of the controller popup in the profile creation sheet. */
 "ui.profiles.chooseController" = "कोई कंट्रोलर चुनें";
+/* Tooltip of a toolbar button that needs a saved profile. It asks the user to save the profile first. */
 "ui.profiles.saveFirst" = "पहले प्रोफ़ाइल सहेजें।";
+/* Warning in the profile creation sheet when some controller record files cannot be read. %@ is the list of reasons. */
 "ui.profiles.unreadableRecords" = "कुछ कंट्रोलर रिकॉर्ड फ़ाइलें पढ़ी नहीं जा सकीं। विवरण: %@।";
+/* Caption of a profile in the Profiles list. %1$@ is the controller model and %2$@ is the app scope. The dot between them separates the two and may change. */
 "ui.profiles.scopedCaption" = "%1$@ · %2$@";
+/* Menu item that turns off all active profiles of one controller. */
 "ui.profiles.deactivateController" = "सभी को निष्क्रिय करें";
+/* Title of the sheet that edits the details of a profile. */
 "ui.profiles.details" = "प्रोफ़ाइल विवरण";
+/* Note on an assignment row when the controller or its protocol cannot do what the assignment needs. */
 "ui.profiles.notSupportedByController" = "यह कंट्रोलर या प्रोटोकॉल इसका समर्थन नहीं करता है।";
+/* Label of the field in the behavior sheet for the destination of a double tap of a control. */
 "ui.profiles.doubleTap" = "डबल टैप";
+/* Toolbar button in the Profiles area that exports the profile to a file. */
 "ui.profiles.export" = "प्रोफ़ाइल एक्सपोर्ट करें";
+/* Option of the activation popup in the layer sheet: the layer is on while the control is held. */
 "ui.profiles.hold" = "दबाए रखें";
+/* Label of the field in the behavior sheet that sets how long a control must be held. The value is in milliseconds. */
 "ui.profiles.holdDuration" = "दबाए रखने की अवधि";
+/* Hint under the vendor ID and product ID fields. 0x marks a hexadecimal number and stays as written. */
 "ui.profiles.identifierHint" = "दशमलव या 0x से शुरू होने वाले हेक्साडेसिमल पहचानकर्ता का उपयोग करें।";
+/* Toolbar button in the Profiles area that imports a profile from a file. */
 "ui.profiles.import" = "प्रोफ़ाइल इंपोर्ट करें";
+/* Toolbar button in the Profiles area that checks a profile file without importing it. */
 "ui.profiles.validateFile" = "प्रोफ़ाइल फ़ाइल जाँचें";
+/* Title of the alert when the checked profile file is valid. */
 "ui.profiles.validTitle" = "मान्य प्रोफ़ाइल";
+/* Title of the alert when the checked profile file is not valid. */
 "ui.profiles.invalidTitle" = "अमान्य प्रोफ़ाइल";
+/* Message of the alert when the checked profile file is valid. %1$@ is the profile name, %2$@ is the controller model and %3$@ is the app scope. */
 "ui.profiles.validMessage" = "%1$@ (%2$@). इन पर लागू: %3$@.";
+/* Error in the profile details sheet when the vendor ID or product ID is not a 16-bit number. */
 "ui.profiles.invalidIdentifiers" = "वैध 16-बिट विक्रेता और उत्पाद पहचानकर्ता दर्ज करें।";
+/* Placeholder of the name field in the layer sheet. */
 "ui.profiles.layerName" = "परत का नाम";
+/* Heading of the layers section in the profile editor. */
 "ui.profiles.layers" = "परतें";
+/* Label of the field in the behavior sheet for the destination of a long hold of a control. */
 "ui.profiles.longHold" = "लंबे समय तक दबाए रखें";
+/* Message in the chords section of the profile editor when none exists. */
 "ui.profiles.noChords" = "कोई कॉर्ड कॉन्फ़िगर नहीं किया गया है।";
+/* Message in the layers section of the profile editor when none exists. */
 "ui.profiles.noLayers" = "कोई परत कॉन्फ़िगर नहीं की गई है।";
+/* Message in the sequences section of the profile editor when none exists. */
 "ui.profiles.noSequences" = "कोई अनुक्रम कॉन्फ़िगर नहीं किया गया है।";
+/* Label of the product ID field in the profile details sheet. */
 "ui.profiles.productID" = "उत्पाद आईडी";
+/* Help text of the sequence sheet. The destination fires when the controls are pressed in the listed order. */
 "ui.profiles.sequenceHelp" = "जब नियंत्रण इसी क्रम में दबाए जाते हैं, तब गंतव्य सक्रिय होता है।";
+/* Label of the field in the sequence sheet that sets the time within which the sequence must finish. The value is in milliseconds. */
 "ui.profiles.sequenceWindow" = "पूरा होने की समय-सीमा";
+/* Heading of the sequences section in the profile editor. */
 "ui.profiles.sequences" = "अनुक्रम";
+/* Label of the field in the behavior sheet that sets the time within which a second tap counts as a double tap. The value is in milliseconds. */
 "ui.profiles.tapWindow" = "टैप विंडो";
+/* Label of the popup in the profile creation sheet that picks which apps the profile applies to. */
 "ui.profiles.target" = "लक्ष्य";
+/* Option of the target popup: the profile applies to one app. */
 "ui.profiles.targetApplication" = "एक ऐप";
+/* Option of the target popup: the profile applies to all apps. */
 "ui.profiles.targetGlobal" = "सभी ऐप्स";
+/* Option of the activation popup in the layer sheet: pressing the control turns the layer on or off. */
 "ui.profiles.toggle" = "टगल";
+/* Title of the switch in the behavior sheet that repeats the destination while the control is held. */
 "ui.profiles.turbo" = "टर्बो";
+/* Label of the field in the behavior sheet that sets the share of each repeat in which the destination is pressed. The value is a percentage. */
 "ui.profiles.turboDuty" = "ड्यूटी साइकिल";
+/* Label of the field in the behavior sheet that sets how often the destination repeats, in presses per second. */
 "ui.profiles.turboRate" = "पुनरावृत्ति दर";
+/* Label of the vendor ID field in the profile details sheet. */
 "ui.profiles.vendorID" = "विक्रेता आईडी";
 /* Title of the save panel for the debug report, a text file that the user can attach to a problem report. */
 "ui.debug.saveReportPanel" = "डिबग रिपोर्ट सहेजें";
@@ -396,45 +542,85 @@
 "ui.error.timeout" = "OpenJoystickDriver को जवाब देने में बहुत समय लग रहा है।";
 /* Error shown when the service answers with a reply that the app does not understand. OpenJoystickDriver is the product name. */
 "ui.error.unexpected" = "OpenJoystickDriver ने अप्रत्याशित परिणाम लौटाया।";
+/* Value of the app scope of a profile: it applies to all apps. */
 "ui.mapping.allApps" = "सभी ऐप्स";
+/* Value of the app scope of a profile: it applies to one app. */
 "ui.mapping.specificApp" = "कोई खास ऐप";
+/* Status of the controller output in the profile editor: the output cannot work. */
 "ui.mapping.outputUnavailable" = "कंट्रोलर आउटपुट उपलब्ध नहीं";
+/* Status of the controller output in the profile editor: the output works. */
 "ui.mapping.outputReady" = "कंट्रोलर आउटपुट तैयार है";
+/* Status of the controller output in the profile editor: the output needs action from the user. */
 "ui.mapping.outputNeedsAttention" = "कंट्रोलर आउटपुट पर ध्यान देने की ज़रूरत";
+/* Name of a directional pad direction as a control. %@ is the direction: up, down, left or right. */
 "ui.mapping.dpadDirection" = "डी-पैड %@";
+/* Name of one direction of an axis. %1$@ is the axis name, for example Left stick horizontal, and %2$@ is the direction. */
 "ui.mapping.axisDirection" = "%1$@ %2$@";
+/* Name of a mouse button destination. %@ is the button, for example left or right. */
 "ui.mapping.mouseButton" = "माउस %@ बटन";
+/* Name of a pointer movement destination. %@ is the direction of the movement. */
 "ui.mapping.pointerMovement" = "पॉइंटर %@ मूवमेंट";
+/* Name of a scroll destination. %@ is the direction of the scroll. */
 "ui.mapping.scroll" = "स्क्रोल %@";
+/* Name of the bottom face button: A on Xbox, Cross on PlayStation. The slash stays. */
 "ui.mapping.buttonSouth" = "A / क्रॉस";
+/* Name of the right face button: B on Xbox, Circle on PlayStation. The slash stays. */
 "ui.mapping.buttonEast" = "B / सर्कल";
+/* Name of the left face button: X on Xbox, Square on PlayStation. The slash stays. */
 "ui.mapping.buttonWest" = "X / स्क्वेयर";
+/* Name of the top face button: Y on Xbox, Triangle on PlayStation. The slash stays. */
 "ui.mapping.buttonNorth" = "Y / ट्रायंगल";
+/* Name of the left shoulder button of a controller. */
 "ui.mapping.leftShoulder" = "बायाँ शोल्डर";
+/* Name of the right shoulder button of a controller. */
 "ui.mapping.rightShoulder" = "दायाँ शोल्डर";
+/* Name of the button that the user presses by pushing down the left stick. */
 "ui.mapping.leftStickClick" = "बाएँ स्टिक क्लिक";
+/* Name of the button that the user presses by pushing down the right stick. */
 "ui.mapping.rightStickClick" = "दाएँ स्टिक क्लिक";
+/* Name of the Start button of a controller. */
 "ui.mapping.start" = "शुरू करें";
+/* Name of the Back button of a controller. */
 "ui.mapping.back" = "वापस";
+/* Name of the Guide button of a controller, the one with the Xbox logo. */
 "ui.mapping.guide" = "गाइड";
+/* Name of the Share button of a controller, the one that captures a screenshot. */
 "ui.mapping.share" = "साझा करें";
+/* Name of the click of the touchpad of a controller. */
 "ui.mapping.touchpadClick" = "टचपैड क्लिक";
+/* Name of a touch contact as a control. %@ is the touch surface. */
 "ui.mapping.touchContact" = "%@ स्पर्श";
+/* Name of a touch grid cell as a control. %1$@ is the touch surface, %2$d is the number of columns, %3$d is the number of rows, %4$d is the column of the cell and %5$d is the row of the cell. The multiplication sign stays between the grid sizes. */
 "ui.mapping.touchGridCell" = "%1$@ ग्रिड %2$d×%3$d सेल %4$d,%5$d";
+/* Name of a touch swipe as a control. %1$@ is the touch surface and %2$@ is the swipe direction. */
 "ui.mapping.touchSwipe" = "%1$@ स्वाइप %2$@";
+/* Option of the touch surface popup: the main touch surface of the controller. */
 "ui.mapping.touchSurfacePrimary" = "प्राथमिक सतह";
+/* Option of the touch surface popup: the left touch surface of the controller. */
 "ui.mapping.touchSurfaceLeft" = "बाईं सतह";
+/* Option of the touch surface popup: the right touch surface of the controller. */
 "ui.mapping.touchSurfaceRight" = "दाईं सतह";
+/* Heading of the group of touch controls in the assignment list of the profile editor. */
 "ui.profiles.sectionTouch" = "स्पर्श";
+/* Title of the sheet that sets the touch mappings of a profile. */
 "ui.profiles.touch.title" = "स्पर्श मैपिंग";
+/* Label of the touch surface popup in the touch sheet. */
 "ui.profiles.touch.surface" = "सतह";
+/* Title of the switch in the touch sheet that turns on continuous touch output. */
 "ui.profiles.touch.enabled" = "निरंतर स्पर्श आउटपुट सक्षम करें";
+/* Label of the popup in the touch sheet that picks what touch does. */
 "ui.profiles.touch.mode" = "स्पर्श मोड";
+/* Option of the touch mode popup and of the gyro mode popup: it moves the pointer. */
 "ui.profiles.touch.pointer" = "पॉइंटर";
+/* Option of the touch and gyro mode popups: it moves the left stick of the virtual gamepad. */
 "ui.profiles.touch.leftStick" = "बायाँ स्टिक";
+/* Option of the touch and gyro mode popups: it moves the right stick of the virtual gamepad. */
 "ui.profiles.touch.rightStick" = "दायाँ स्टिक";
+/* Label of the field in the touch sheet that sets how many pointer points one full swipe over the surface moves. */
 "ui.profiles.touch.pointerSensitivity" = "प्रति सतह पॉइंटर पॉइंट";
+/* Label of the field in the touch sheet that sets the share of the surface that moves the stick all the way. */
 "ui.profiles.touch.stickRadius" = "पूर्ण स्टिक त्रिज्या (सतह का अंश)";
+/* Label of the field in the touch sheet that sets the stick deadzone. The deadzone is the part of the travel near the center that is ignored. */
 "ui.profiles.touch.deadzone" = "स्टिक डेडज़ोन";
 /* Label of the stepper that sets the number of columns of a touch grid in the capture assignment sheet. %d is the number of columns. */
 "ui.capture.touchColumns" = "ग्रिड कॉलम: %d";
@@ -446,14 +632,23 @@
 "ui.capture.touchRow" = "सेल पंक्ति: %d";
 /* Label of the slider that sets the shortest swipe that counts, as a share of the touch surface. %.0f is a percentage; %% is the percent sign. */
 "ui.capture.touchSwipeDistance" = "न्यूनतम स्वाइप दूरी: %.0f%%";
+/* Name of the microphone mute button of a controller. */
 "ui.mapping.mute" = "म्यूट";
+/* Name of the digital click of the left trigger of a controller. */
 "ui.mapping.leftTriggerClick" = "बाएँ ट्रिगर क्लिक";
+/* Name of the digital click of the right trigger of a controller. */
 "ui.mapping.rightTriggerClick" = "दाएँ ट्रिगर क्लिक";
+/* Name of the horizontal axis of the left stick. */
 "ui.mapping.leftStickHorizontal" = "बाएँ स्टिक क्षैतिज";
+/* Name of the vertical axis of the left stick. */
 "ui.mapping.leftStickVertical" = "बाएँ स्टिक ऊर्ध्वाधर";
+/* Name of the horizontal axis of the right stick. */
 "ui.mapping.rightStickHorizontal" = "दाएँ स्टिक क्षैतिज";
+/* Name of the vertical axis of the right stick. */
 "ui.mapping.rightStickVertical" = "दाएँ स्टिक ऊर्ध्वाधर";
+/* Name of the left trigger as an axis. */
 "ui.mapping.leftTrigger" = "बायाँ ट्रिगर";
+/* Name of the right trigger as an axis. */
 "ui.mapping.rightTrigger" = "दायाँ ट्रिगर";
 /* Accessibility value of a selectable card or row that the user has chosen. */
 "status.selected" = "चयनित";
@@ -841,7 +1036,9 @@
 "term.key.alt" = "ऑप्शन";
 /* Name of the Shift modifier key in the text that describes a captured key press. */
 "term.key.shift" = "शिफ़्ट";
+/* Value of the virtual HID profile when the app picks it. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.mapping.automatic" = "स्वचालित";
+/* Value of the virtual HID profile when the app picks it. %@ is the name of the picked profile. */
 "ui.virtualProfile.automaticSelected" = "स्वचालित (%@)";
 /* Detail line in the Driver section of the settings window when the driver extension for Xbox USB controllers is installed and works. */
 "ui.setup.activeDetail" = "प्रतिबंधित Xbox USB ड्राइवर इंस्टॉल है और तैयार है।";
@@ -925,74 +1122,118 @@
 "ui.settings.notifications.testReportLost" = "परीक्षण सूचना की रिपोर्ट आने से पहले ही ojd का अनुरोध समाप्त हो गया या उसके उत्तर का समय पूरा हो गया।";
 /* Error text the service returns to an app that reports the outcome noAnswer for a test notification, which only the service decides. The inline error of the Settings window shows it. shown, denied, failed and noAnswer are outcome names and stay as written. */
 "ui.settings.notifications.testReportNoAnswer" = "परीक्षण सूचना की रिपोर्ट shown, denied या failed होनी चाहिए; noAnswer केवल सेवा तय करती है।";
+/* Label of the popup in the profile editor that sets what the virtual gamepad of the profile publishes. */
 "ui.profiles.virtualOutput" = "वर्चुअल गेमपैड";
+/* Option of the virtual output popup: the profile publishes no virtual gamepad. */
 "ui.profiles.virtualDisabled" = "अक्षम";
+/* Option of the virtual output popup: the virtual gamepad carries only the controls that the profile maps. */
 "ui.profiles.virtualMapped" = "केवल रीमैप किए गए नियंत्रण";
+/* Option of the virtual output popup: the virtual gamepad also carries the controls that the profile does not map. */
 "ui.profiles.virtualPassthrough" = "बिना रीमैप किए नियंत्रण शामिल करें";
+/* Title of the switch in the profile editor that makes the profile need exclusive access to the physical controller. */
 "ui.profiles.exclusiveInput" = "भौतिक इनपुट तक विशेष पहुँच आवश्यक करें";
+/* VoiceOver label of the group of profile action buttons in the profile editor. */
 "ui.profiles.actions" = "प्रोफ़ाइल कार्रवाइयाँ";
+/* VoiceOver label of the picker that switches the section of the profile editor. */
 "ui.profiles.editorSection" = "प्रोफ़ाइल संपादक अनुभाग";
+/* Title of the section of the profile editor that holds chords, sequences and layers. */
 "ui.profiles.combinations" = "संयोजन";
 
+/* Option of the tap timing popup in the behavior sheet: the tap fires when the control is pressed. */
 "ui.profiles.tapOnPress" = "दबाने पर टैप";
 
+/* Option of the tap timing popup in the behavior sheet: the tap fires when the control is released. */
 "ui.profiles.tapOnRelease" = "छोड़ने पर टैप";
 
+/* Option of the tap timing popup in the behavior sheet: the tap fires as a short pulse of fixed length. */
 "ui.profiles.pulse" = "पल्स";
 
+/* Label of the field in the behavior sheet that sets the length of the pulse. The value is in milliseconds. */
 "ui.profiles.pulseDuration" = "पल्स की अवधि";
 
+/* Option of the tap timing popup in the behavior sheet: only the press reaches the destination. */
 "ui.profiles.pressOnly" = "केवल दबाएँ";
 
+/* Option of the tap timing popup in the behavior sheet: only the release reaches the destination. */
 "ui.profiles.releaseOnly" = "केवल छोड़ें";
 
+/* Heading of the list of additional actions that an assignment runs. */
 "ui.profiles.additionalActions" = "अतिरिक्त कार्रवाइयाँ";
 
+/* Button that adds an additional action to an assignment. */
 "ui.profiles.addAction" = "कार्रवाई जोड़ें";
 
+/* Button that moves an additional action one place up in the list. */
 "ui.profiles.moveUp" = "ऊपर ले जाएँ";
 
+/* Button that moves an additional action one place down in the list. */
 "ui.profiles.moveDown" = "नीचे ले जाएँ";
 
+/* Name of the function button on the left side of a controller. */
 "ui.mapping.leftFunctionButton" = "बायाँ फ़ंक्शन बटन";
 
+/* Name of the function button on the right side of a controller. */
 "ui.mapping.rightFunctionButton" = "दायाँ फ़ंक्शन बटन";
 
+/* Name of the paddle on the back of a controller on the left side. */
 "ui.mapping.leftPaddle" = "बायाँ पैडल";
 
+/* Name of the paddle on the back of a controller on the right side. */
 "ui.mapping.rightPaddle" = "दायाँ पैडल";
 
+/* Name of the SL button on the rail of the left Joy-Con. SL is the label printed on the Joy-Con. Joy-Con is a Nintendo product name. */
 "ui.mapping.leftJoyConSL" = "बायाँ Joy-Con SL";
 
+/* Name of the SR button on the rail of the left Joy-Con. SR is the label printed on the Joy-Con. Joy-Con is a Nintendo product name. */
 "ui.mapping.leftJoyConSR" = "बायाँ Joy-Con SR";
 
+/* Name of the SL button on the rail of the right Joy-Con. SL is the label printed on the Joy-Con. Joy-Con is a Nintendo product name. */
 "ui.mapping.rightJoyConSL" = "दायाँ Joy-Con SL";
 
+/* Name of the SR button on the rail of the right Joy-Con. SR is the label printed on the Joy-Con. Joy-Con is a Nintendo product name. */
 "ui.mapping.rightJoyConSR" = "दायाँ Joy-Con SR";
 
+/* Name of the second grip button on the back of a controller on the left side. */
 "ui.mapping.leftGrip" = "बायाँ ग्रिप";
 
+/* Name of the second grip button on the back of a controller on the right side. */
 "ui.mapping.rightGrip" = "दायाँ ग्रिप";
 
+/* Name of the click of the left trackpad of a controller. */
 "ui.mapping.leftPadClick" = "बाएँ पैड का क्लिक";
 
+/* Name of the click of the right trackpad of a controller. */
 "ui.mapping.rightPadClick" = "दाएँ पैड का क्लिक";
 
-/* Motion tuning: English source. */
+/* Title of the sheet that tunes the motion sensor of a controller in a profile. */
 "ui.profiles.motion.title" = "गति समायोजन";
+/* Label of the popup in the motion sheet that picks the coordinate space of the motion. */
 "ui.profiles.motion.space" = "निर्देशांक स्पेस";
+/* Option of the coordinate space popup: motion is measured relative to the controller. */
 "ui.profiles.motion.local" = "स्थानीय";
+/* Option of the coordinate space popup: motion is measured relative to the player who holds the controller. */
 "ui.profiles.motion.player" = "प्लेयर";
+/* Option of the coordinate space popup: motion is measured relative to the room, with gravity pointing down. */
 "ui.profiles.motion.world" = "वर्ल्ड";
+/* Label of the slider in the motion sheet that sets how strongly tilting forward and back moves the output. Pitch is the tilt around the horizontal axis. */
 "ui.profiles.motion.pitchSensitivity" = "पिच संवेदनशीलता";
+/* Label of the slider in the motion sheet that sets how strongly turning left and right moves the output. Yaw is the turn around the vertical axis. */
 "ui.profiles.motion.yawSensitivity" = "यॉ संवेदनशीलता";
+/* Label of the slider in the motion sheet that sets the half-time of the smoothing filter. The value is in milliseconds. */
 "ui.profiles.motion.smoothingHalfTimeMs" = "स्मूथिंग का अर्धकाल (मिलीसेकंड)";
+/* Label of the slider in the motion sheet that sets the turn rate below which motion is ignored. The value is in degrees per second. */
 "ui.profiles.motion.thresholdDegreesPerSecond" = "कोणीय गति की सीमा (डिग्री/सेकंड)";
+/* Label of the slider in the motion sheet that sets how fast the player space follows the turn of the player. */
 "ui.profiles.motion.yawRelaxation" = "प्लेयर स्पेस में यॉ ढील";
+/* Label of the slider in the motion sheet that sets how much sideways motion is reduced in world space. */
 "ui.profiles.motion.sideReductionThreshold" = "वर्ल्ड स्पेस में पार्श्व कमी";
+/* Label of the slider in the motion sheet that sets how fast the estimate of gravity is corrected. The unit is per second. */
 "ui.profiles.motion.gravityCorrectionRate" = "गुरुत्व सुधार दर (1/सेकंड)";
+/* Title of the switch in the motion sheet that reverses the pitch direction. */
 "ui.profiles.motion.invertPitch" = "पिच उलटें";
+/* Title of the switch in the motion sheet that reverses the yaw direction. */
 "ui.profiles.motion.invertYaw" = "यॉ उलटें";
+/* Title of the switch in the motion sheet that corrects the sensor drift automatically while the controller lies still. */
 "ui.profiles.motion.automaticBias" = "स्थिर अवस्था में स्वचालित कैलिब्रेशन";
 
 /* Hint under the motion calibration controls of the input test window: keep the controller still on a surface while the gyro bias, the small constant rotation the sensor reports at rest, is collected. */
@@ -1019,163 +1260,297 @@
 /* Note in the motion calibration controls: collecting gyro bias keeps running in the service after the window closes, and the Pause button stops it. */
 "ui.motion.calibration.continues" = "यह विंडो बंद होने पर भी इकट्ठा करना जारी रहता है। इसे रोकने के लिए “रोकें” का उपयोग करें।";
 
-/* Gyro authoring. Native translation review pending. */
+/* Label of the popup in the gyro sheet that picks what the gyro controls: the pointer or a stick. */
 "ui.profiles.gyro.output" = "गायरो आउटपुट";
+/* Option of the gyro output popup: the gyro does nothing. */
 "ui.profiles.gyro.disabled" = "अक्षम";
+/* Option of the gyro output popup: the gyro moves the mouse pointer. */
 "ui.profiles.gyro.mouse" = "माउस पॉइंटर";
+/* Option of the gyro output popup: the gyro moves the left stick of the virtual gamepad. */
 "ui.profiles.gyro.leftStick" = "बायाँ स्टिक";
+/* Option of the gyro output popup: the gyro moves the right stick of the virtual gamepad. */
 "ui.profiles.gyro.rightStick" = "दायाँ स्टिक";
+/* Label of the field in the gyro sheet that sets how many pointer points one degree of turn moves. */
 "ui.profiles.gyro.pointerScale" = "प्रति डिग्री पॉइंटर पॉइंट";
+/* Label of the field in the gyro sheet that sets the turn rate that moves the stick all the way. The value is in degrees per second. */
 "ui.profiles.gyro.stickScale" = "पूर्ण स्टिक गति (डिग्री/सेकंड)";
+/* Label of the popup in the gyro sheet that picks when the gyro is active. */
 "ui.profiles.gyro.activation" = "गायरो सक्रियण";
+/* Option of the gyro activation popup: the gyro is always active. */
 "ui.profiles.gyro.always" = "हमेशा सक्रिय";
+/* Option of the gyro activation popup: the gyro is active while the activation control is held. */
 "ui.profiles.gyro.whileHeld" = "दबाए रखने के दौरान";
+/* Option of the gyro activation popup: the gyro is active while the activation control is not held. */
 "ui.profiles.gyro.whileReleased" = "छोड़े रहने के दौरान";
+/* Option of the gyro activation popup: pressing the activation control turns the gyro on or off. */
 "ui.profiles.gyro.toggle" = "दबाने पर टॉगल करें";
+/* Label of the popup in the gyro sheet that picks the control that activates the gyro. */
 "ui.profiles.gyro.source" = "सक्रियण नियंत्रण";
 
+/* Title of the switch in the gyro sheet that keeps the activation control from reaching the virtual gamepad. */
 "ui.profiles.gyro.consume" = "मूल वर्चुअल सक्रियण नियंत्रण को रोकें";
 
-/* Trackball authoring. Translation review pending. */
+/* Title of the switch in the trackball sheet that turns on the trackball mode. In this mode motion carries on after the control is held, like a rolling ball. */
 "ui.profiles.trackball.enabled" = "ट्रैकबॉल";
+/* Hint in the trackball sheet. The user holds the control to keep the motion going while the user puts the controller back. */
 "ui.profiles.trackball.hint" = "कंट्रोलर की स्थिति बदलते समय गति जारी रखने के लिए नियंत्रण को दबाए रखें।";
+/* Label of the popup in the trackball sheet that picks the control that holds the motion. */
 "ui.profiles.trackball.source" = "ट्रैकबॉल नियंत्रण";
+/* Label of the popup in the trackball sheet that picks which motion axes the trackball follows. */
 "ui.profiles.trackball.axes" = "ट्रैकबॉल अक्ष";
+/* Option of the trackball axes popup: tilt forward and back only. */
 "ui.profiles.trackball.pitch" = "पिच";
+/* Option of the trackball axes popup: turn left and right only. */
 "ui.profiles.trackball.yaw" = "यॉ";
+/* Option of the trackball axes popup: both pitch and yaw. */
 "ui.profiles.trackball.both" = "पिच और यॉ";
+/* Label of the field in the trackball sheet that sets how many times per second the speed halves. */
 "ui.profiles.trackball.decay" = "प्रति सेकंड गति का आधा होना";
+/* Hint under the decay field of the trackball sheet. Zero keeps the speed and one halves it each second. */
 "ui.profiles.trackball.decayHint" = "शून्य गति को स्थिर रखता है। एक होने पर गति हर सेकंड आधी हो जाती है।";
+/* Title of the switch in the trackball sheet that keeps the trackball control from reaching the virtual gamepad. */
 "ui.profiles.trackball.consume" = "मूल वर्चुअल ट्रैकबॉल नियंत्रण को रोकें";
 
+/* Button in the motion sheet of an assignment that drops the tuning of the assignment and uses the tuning of the profile. */
 "ui.profiles.motion.inherit" = "प्रोफ़ाइल ट्यूनिंग का उपयोग करें";
 
+/* Option of the stick mode popup: the stick turns the aim at a set rate. */
 "ui.profiles.stick.aim" = "निशाना";
+/* Label of the field in the stick sheet that sets the aim turn rate. The value is in degrees per second. */
 "ui.profiles.stick.aimRate" = "निशाने की गति (डिग्री/सेकंड)";
+/* Title of the switch in the stick sheet that turns on pointer output for the stick. */
 "ui.profiles.stick.enabled" = "पॉइंटर आउटपुट सक्षम करें";
+/* Label of the field in the stick sheet that sets the exponent of the response curve. Higher values make small movements finer. */
 "ui.profiles.stick.exponent" = "प्रतिक्रिया एक्सपोनेंट";
+/* Option of the stick mode popup: a quick push flicks the view, and a turn of the stick rotates it. */
 "ui.profiles.stick.flick" = "फ्लिक और रोटेट";
+/* Label of the field in the stick sheet that sets how long a flick takes. The value is in milliseconds. */
 "ui.profiles.stick.flickDuration" = "फ्लिक अवधि (ms)";
+/* Option of the stick mode popup: the stick only flicks. */
 "ui.profiles.stick.flickOnly" = "केवल फ्लिक";
+/* Label of the field in the stick sheet that sets how far the stick must return before a flick can fire again. */
 "ui.profiles.stick.hysteresis" = "फ्लिक रिलीज़ हिस्टेरिसिस";
+/* Label of the field in the stick sheet that sets the inner deadzone. The inner deadzone is the part of the travel near the center that is ignored. */
 "ui.profiles.stick.innerDeadzone" = "आंतरिक डेडज़ोन";
+/* Title of the switch in the stick sheet that reverses the horizontal axis. */
 "ui.profiles.stick.invertX" = "क्षैतिज अक्ष को उलटें";
+/* Title of the switch in the stick sheet that reverses the vertical axis. */
 "ui.profiles.stick.invertY" = "ऊर्ध्वाधर अक्ष को उलटें";
+/* Label of the popup in the stick sheet that picks what the stick does. */
 "ui.profiles.stick.mode" = "स्टिक मोड";
+/* Label of the field in the stick sheet that sets the outer deadzone. The outer deadzone is the part of the travel near the edge that counts as full. */
 "ui.profiles.stick.outerDeadzone" = "बाहरी डेडज़ोन";
+/* Label of the field in the stick sheet that sets how many pointer points one degree moves. */
 "ui.profiles.stick.pointerScale" = "प्रति डिग्री पॉइंटर पॉइंट";
+/* Option of the stick mode popup: the stick only rotates the view. */
 "ui.profiles.stick.rotateOnly" = "केवल घुमाएँ";
+/* Label of the popup in the stick sheet that picks the stick. */
 "ui.profiles.stick.source" = "स्टिक";
+/* Label of the field in the stick sheet that sets how far the stick must move before a flick starts. */
 "ui.profiles.stick.threshold" = "फ्लिक सक्रियण सीमा";
+/* Title of the sheet that sets the stick modes of a profile. */
 "ui.profiles.stick.title" = "स्टिक मोड";
-/* Advanced stick, trigger, and lean authoring. Translation review pending. */
+/* Name of a trigger stage as a control. %1$@ is the trigger, for example Left, and %2$@ is the stage of the pull, soft or full. */
 "ui.mapping.triggerStage" = "%1$@ ट्रिगर %2$@ खींचें";
+/* Name of a motion lean direction as a control. %@ is the direction. */
 "ui.mapping.motionLean" = "गति झुकाव %@";
+/* Heading of the group of motion controls in the assignment list of the profile editor. */
 "ui.profiles.sectionMotion" = "मोशन";
+/* Option of the stick mode popup: the stick places the pointer inside an area of the screen. */
 "ui.profiles.stick.pointerArea" = "पॉइंटर क्षेत्र";
+/* Option of the stick mode popup: the stick places the pointer on a ring around the center. */
 "ui.profiles.stick.pointerRing" = "पॉइंटर रिंग";
+/* Option of the stick mode popup: turning the stick scrolls like a wheel. */
 "ui.profiles.stick.scrollWheel" = "स्क्रॉल व्हील";
+/* Option of the stick mode popup: the stick works as the steering wheel of a vehicle. */
 "ui.profiles.stick.steering" = "स्टीयरिंग व्हील";
+/* Label of the field in the stick sheet that sets the radius of the pointer area or ring. The value is in points. */
 "ui.profiles.stick.pointerRadius" = "पॉइंटर त्रिज्या (पॉइंट)";
+/* Label of the field in the stick sheet that sets how many degrees of rotation scroll one line. */
 "ui.profiles.stick.scrollDegrees" = "प्रति स्क्रॉल लाइन घुमाव (डिग्री)";
+/* Label of the popup in the stick sheet that picks the direction of the scrolling. */
 "ui.profiles.stick.scrollAxis" = "स्क्रॉल अक्ष";
+/* Option of the scroll axis popup: horizontal scrolling. */
 "ui.profiles.stick.horizontal" = "क्षैतिज";
+/* Option of the scroll axis popup: vertical scrolling. */
 "ui.profiles.stick.vertical" = "लंबवत";
+/* Label of the field in the stick sheet that sets the rotation of the stick that counts as full steering. The value is in degrees. */
 "ui.profiles.stick.steeringFullScale" = "पूर्ण स्टीयरिंग पर घुमाव (डिग्री)";
+/* Label of the field in the stick sheet that sets how fast the steering returns to the center. The value is in degrees per second. */
 "ui.profiles.stick.steeringReturnRate" = "स्टीयरिंग वापसी गति (डिग्री/सेकंड)";
+/* Label of the popup in the stick sheet that picks the axis of the virtual gamepad that the steering moves. */
 "ui.profiles.stick.steeringOutput" = "वर्चुअल स्टीयरिंग अक्ष";
+/* Option of the steering axis popup: the horizontal axis of the left stick. */
 "ui.profiles.stick.leftStickX" = "बायाँ स्टिक क्षैतिज";
+/* Option of the steering axis popup: the horizontal axis of the right stick. */
 "ui.profiles.stick.rightStickX" = "दायाँ स्टिक क्षैतिज";
+/* Label of the popup in the stick sheet that picks which rotation direction steers to the right. */
 "ui.profiles.stick.rotationDirection" = "धनात्मक घुमाव";
+/* Option of the rotation popup: turning the stick clockwise. */
 "ui.profiles.stick.clockwise" = "घड़ी की दिशा में";
+/* Option of the rotation popup: turning the stick counterclockwise. */
 "ui.profiles.stick.counterclockwise" = "घड़ी के विपरीत दिशा में";
+/* Title of the switch in the stick sheet that keeps sending the physical stick to the virtual gamepad as well. */
 "ui.profiles.stick.passthrough" = "भौतिक स्टिक का पासथ्रू बनाए रखें";
+/* Title of the sheet that sets the stages of a trigger. A dual-stage trigger has a soft pull and a full pull. */
 "ui.profiles.trigger.title" = "ट्रिगर चरण";
+/* Label of the popup in the trigger sheet that picks the trigger. */
 "ui.profiles.trigger.source" = "ट्रिगर";
+/* Option of the trigger popup: the left trigger. */
 "ui.profiles.trigger.left" = "बायाँ ट्रिगर";
+/* Option of the trigger popup: the right trigger. */
 "ui.profiles.trigger.right" = "दायाँ ट्रिगर";
+/* Title of the switch in the trigger sheet that turns on the two stages of the trigger. */
 "ui.profiles.trigger.enabled" = "दो-चरण ट्रिगर सक्षम करें";
+/* Label of the popup in the trigger sheet that picks how the soft pull and the full pull work together. */
 "ui.profiles.trigger.mode" = "चरणों का पारस्परिक व्यवहार";
+/* Label of the field in the trigger sheet that sets how far the trigger must move for the soft pull. The value is a number from 0 to 1. */
 "ui.profiles.trigger.softThreshold" = "हल्का दबाने की सीमा (0...1)";
+/* Label of the field in the trigger sheet that sets how far the trigger must move for the full pull. The value is a number from 0 to 1. */
 "ui.profiles.trigger.fullThreshold" = "पूरा दबाने की सीमा (0...1)";
+/* Label of the field in the trigger sheet that sets how far the trigger must go back before a stage is released. */
 "ui.profiles.trigger.hysteresis" = "रिलीज़ हिस्टेरिसिस";
+/* Label of the field in the trigger sheet that sets the time within which a fast pull skips the soft stage. The value is in milliseconds. */
 "ui.profiles.trigger.skipWindow" = "त्वरित दबाव विंडो (ms)";
+/* Title of the switch in the trigger sheet that keeps sending the analog trigger to the virtual gamepad as well. */
 "ui.profiles.trigger.passthrough" = "एनालॉग ट्रिगर पासथ्रू बनाए रखें";
+/* Option of the stage interaction popup: the soft stage and the full stage are both active at the same time. */
 "ui.profiles.trigger.simultaneous" = "हल्का और पूरा साथ-साथ";
+/* Option of the stage interaction popup: the full stage replaces the soft stage. */
 "ui.profiles.trigger.exclusive" = "पूरा दबाव हल्के की जगह लेता है";
+/* Option of the stage interaction popup: a quick pull goes straight to the full stage. */
 "ui.profiles.trigger.preferFull" = "तेज़ पूरे दबाव को प्राथमिकता दें";
+/* Option of the stage interaction popup: a quick pull goes straight to the full stage, and a slow pull combines both stages late. */
 "ui.profiles.trigger.preferFullCombined" = "तेज़ पूरे दबाव को प्राथमिकता दें; बाद में संयोजित करें";
+/* Option of the stage interaction popup: the soft stage fires at once, and a quick pull goes straight to the full stage. */
 "ui.profiles.trigger.responsivePreferFull" = "तेज़ प्रतिक्रिया वाला हल्का दबाव; तेज़ पूरे दबाव को प्राथमिकता दें";
+/* Option of the stage interaction popup: the soft stage fires at once, and both stages combine late. */
 "ui.profiles.trigger.responsivePreferFullCombined" = "तेज़ प्रतिक्रिया वाला हल्का दबाव; बाद में संयोजित करें";
+/* Title of the switch in the motion sheet that turns on lean sources. A lean source is a control that is active while the controller is tilted to one side. */
 "ui.profiles.motion.leanEnabled" = "झुकाव स्रोत सक्षम करें";
+/* Label of the slider in the motion sheet that sets the tilt at which a lean starts. The value is in degrees. */
 "ui.profiles.motion.leanThresholdDegrees" = "झुकाव सीमा (डिग्री)";
+/* Label of the slider in the motion sheet that sets how far the tilt must go back before a lean ends. The value is in degrees. */
 "ui.profiles.motion.leanHysteresisDegrees" = "झुकाव रिलीज़ हिस्टेरिसिस (डिग्री)";
+/* Title of the switch in the motion sheet that turns on steering by tilting the controller. */
 "ui.profiles.motion.steeringEnabled" = "गति स्टीयरिंग सक्षम करें";
+/* Label of the popup in the motion sheet that picks the axis of the virtual gamepad that the steering moves. */
 "ui.profiles.motion.steeringOutput" = "वर्चुअल स्टीयरिंग अक्ष";
+/* Option of the steering axis popup: the horizontal axis of the left stick. */
 "ui.profiles.motion.steeringLeft" = "बायाँ स्टिक क्षैतिज";
+/* Option of the steering axis popup: the horizontal axis of the right stick. */
 "ui.profiles.motion.steeringRight" = "दायाँ स्टिक क्षैतिज";
+/* Label of the slider in the motion sheet that sets the tilt around the center that is ignored. The value is in degrees. */
 "ui.profiles.motion.steeringDeadzoneDegrees" = "स्टीयरिंग डेडज़ोन (डिग्री)";
+/* Label of the slider in the motion sheet that sets the tilt that counts as full steering. The value is in degrees. */
 "ui.profiles.motion.steeringFullScaleDegrees" = "पूर्ण स्टीयरिंग कोण (डिग्री)";
+/* Label of the slider in the motion sheet that sets the exponent of the steering response curve. */
 "ui.profiles.motion.steeringResponseExponent" = "स्टीयरिंग प्रतिक्रिया एक्सपोनेंट";
+/* Title of the switch in the motion sheet that reverses the steering direction. */
 "ui.profiles.motion.steeringInverted" = "स्टीयरिंग उलटें";
 
 /* Value of a physical output destination field when the output is turned off. */
 "status.disabled" = "अक्षम";
+/* Label of the switch or heading in the profile details sheet for a profile that applies to a pair of Joy-Cons. Joy-Con is a Nintendo product name. */
 "ui.profiles.joyConPair" = "जोड़ीदार Joy-Con प्रोफ़ाइल";
+/* Label of the popup in the profile details sheet that picks which Joy-Con of the pair provides the gyro. */
 "ui.profiles.joyConGyro" = "जोड़ी का गायरो स्रोत";
+/* Option of the gyro source popup: the left Joy-Con. Joy-Con is a Nintendo product name. */
 "ui.profiles.joyConLeft" = "बायाँ Joy-Con";
+/* Option of the gyro source popup: the right Joy-Con. Joy-Con is a Nintendo product name. */
 "ui.profiles.joyConRight" = "दायाँ Joy-Con";
+/* Button in the Profiles area that opens the sheet that pairs two connected Joy-Cons. Keep the three dots. Joy-Con is a Nintendo product name. */
 "ui.profiles.pairJoyCons" = "कनेक्ट किए गए Joy-Con को जोड़ें…";
+/* Status in the Profiles area when two Joy-Cons are paired. */
 "ui.profiles.joyConPairActive" = "जोड़ी सक्रिय";
+/* Button in the Profiles area that ends the pairing of two Joy-Cons. */
 "ui.profiles.unpairJoyCons" = "जोड़ी हटाएँ";
+/* Hint in the Joy-Con pairing sheet. The pairing lasts until the user quits the app. */
 "ui.profiles.joyConPairSessionHint" = "जोड़ने पर इस ऐप सत्र के लिए ठीक यही कंट्रोलर इस्तेमाल होते हैं।";
+/* Confirm button of the Joy-Con pairing sheet. */
 "ui.profiles.pair" = "जोड़ें";
 /* Error shown when two Joy-Cons cannot be combined into one controller. Joy-Con is a Nintendo product name. */
 "ui.error.joyConPairUnavailable" = "चयनित Joy-Con को जोड़ा नहीं जा सका। कनेक्ट किए गए कंट्रोलर रीफ़्रेश करें और फिर कोशिश करें।";
+/* Status in the profile editor for a profile that applies to an explicit pairing of two Joy-Cons. */
 "ui.profiles.joyConSessionState" = "स्पष्ट जोड़ी";
 
-/* Mapping-owned physical controller output. Translation review pending. */
+/* Name of a rumble output destination. %1$@ is the motor and %2$@ is the intensity as a number; %% is the percent sign. */
 "ui.mapping.physicalRumble" = "%1$@ रम्बल (%2$@%%)";
+/* Name of a player indicator output destination. %@ is the indicator pattern. */
 "ui.mapping.physicalPlayerIndicator" = "प्लेयर इंडिकेटर %@";
+/* Name of a controller color output destination. %@ is the color. */
 "ui.mapping.physicalColor" = "कंट्रोलर का रंग %@";
+/* Name of a controller brightness output destination. %@ is the brightness as a number; %% is the percent sign. */
 "ui.mapping.physicalBrightness" = "कंट्रोलर की चमक (%@%%)";
+/* Name of an adaptive trigger output destination. %1$@ is the trigger and %2$@ is the effect. */
 "ui.mapping.physicalAdaptiveTrigger" = "%1$@ अडैप्टिव ट्रिगर: %2$@";
 
-/* Physical mapping value editor. Translation review pending. */
+/* Label of the popup in the output destination editor that picks the rumble motor. */
 "ui.profiles.physical.motor" = "मोटर";
+/* Label of the slider in the output destination editor that sets the rumble strength. */
 "ui.profiles.physical.intensity" = "तीव्रता";
+/* Label of the popup in the output destination editor that picks the player indicator pattern. */
 "ui.profiles.physical.player" = "प्लेयर इंडिकेटर";
+/* Label of the slider in the output destination editor for the red part of the controller color. */
 "ui.profiles.physical.red" = "लाल";
+/* Label of the slider in the output destination editor for the green part of the controller color. */
 "ui.profiles.physical.green" = "हरा";
+/* Label of the slider in the output destination editor for the blue part of the controller color. */
 "ui.profiles.physical.blue" = "नीला";
+/* Label of the slider in the output destination editor that sets the brightness of the controller light. */
 "ui.profiles.physical.brightness" = "चमक";
+/* Label of the popup in the output destination editor that picks the adaptive trigger. */
 "ui.profiles.physical.trigger" = "अडैप्टिव ट्रिगर";
+/* Label of the popup in the output destination editor that picks the effect of the adaptive trigger. */
 "ui.profiles.physical.effect" = "प्रभाव";
+/* Label of the slider in the output destination editor that sets where the resistance of the adaptive trigger starts. */
 "ui.profiles.physical.startPosition" = "प्रतिरोध की शुरुआत";
+/* Label of the slider in the output destination editor that sets how strong the resistance of the adaptive trigger is. */
 "ui.profiles.physical.strength" = "प्रतिरोध की शक्ति";
 
+/* Menu item in the profile editor that removes all inputs of the profile. Keep the three dots. */
 "ui.profiles.clearInputs" = "सभी इनपुट साफ़ करें…";
+/* Destructive button of the alert that removes all inputs of the profile. */
 "ui.profiles.clearInputsConfirm" = "सभी साफ़ करें";
+/* Message of the alert that removes all inputs of the profile. */
 "ui.profiles.clearInputsMessage" = "इससे इस प्रोफ़ाइल से सभी असाइनमेंट और इनपुट प्रोसेसिंग हट जाएगी।";
+/* Title of the alert that removes all inputs of the profile. */
 "ui.profiles.clearInputsTitle" = "सभी इनपुट साफ़ करें?";
+/* Menu item in the profile editor that removes all assignments of the profile. Keep the three dots. */
 "ui.profiles.removeAllAssignments" = "सभी असाइनमेंट हटाएँ…";
+/* Title of the alert that removes all assignments of the profile. */
 "ui.profiles.removeAllAssignmentsTitle" = "सभी असाइनमेंट हटाएँ?";
+/* Message of the alert that removes all assignments of the profile. The stick, trigger, touch and motion settings stay. */
 "ui.profiles.removeAllAssignmentsMessage" = "इससे इस प्रोफ़ाइल से सभी असाइनमेंट, कॉर्ड, अनुक्रम और परतें हट जाएँगी। स्टिक, ट्रिगर, स्पर्श और मोशन की सेटिंग बनी रहेंगी।";
+/* Destructive button of the alert that removes all assignments of the profile. */
 "ui.profiles.removeAllAssignmentsConfirm" = "सभी हटाएँ";
+/* Message of the alert shown before the app activates a profile that sends no input. */
 "ui.profiles.emptyActivationMessage" = "यह प्रोफ़ाइल सभी कंट्रोलर इनपुट को रोक देती है।";
+/* Title of the alert shown before the app activates a profile that sends no input. */
 "ui.profiles.emptyActivationTitle" = "बिना कंट्रोलर इनपुट वाली प्रोफ़ाइल सक्रिय करें?";
+/* Warning in the profile editor when the profile sends no input. */
 "ui.profiles.emptyInputWarning" = "यह प्रोफ़ाइल सभी कंट्रोलर इनपुट को रोक देती है।";
+/* Menu item in the profile editor that sets the inputs of the profile to the default. */
 "ui.profiles.restoreDefaultInput" = "डिफ़ॉल्ट इनपुट बहाल करें";
 /* Button of the controller actions that resets all settings of the controller. A confirmation alert with the same label follows. */
 "action.reset" = "रीसेट करें";
+/* Title of the switch in the lighting editor that uses the color that the controller shows by default. */
 "ui.profiles.useControllerDefaultColor" = "कंट्रोलर का डिफ़ॉल्ट इस्तेमाल करें";
+/* Title of the message in the Profiles area when a saved profile cannot be read. */
 "ui.profiles.damagedProfile" = "क्षतिग्रस्त प्रोफ़ाइल";
+/* Title of the message in the Profiles area when the list of active profiles cannot be read. */
 "ui.profiles.damagedLibrary" = "सक्रिय प्रोफ़ाइल सूची क्षतिग्रस्त है";
+/* Button in the Profiles area that deletes a damaged profile. Keep the three dots. */
 "ui.profiles.deleteDamagedButton" = "क्षतिग्रस्त प्रोफ़ाइल हटाएँ…";
+/* Button in the Profiles area that backs up and resets the list of active profiles. The ampersand stays. Keep the three dots. */
 "ui.profiles.resetLibraryButton" = "बैकअप लें और सक्रिय प्रोफ़ाइल रीसेट करें…";
+/* Message of the recovery alert. The app saves a backup before it removes damaged data. */
 "ui.profiles.recoveryBackupMessage" = "क्षतिग्रस्त डेटा को हटाने से पहले एक बैकअप बनाया जाएगा।";
+/* Message in the Profiles area when a saved profile cannot be read. The user deletes it to go on with the other profiles. */
 "ui.profiles.damagedProfileMessage" = "यह सहेजी गई प्रोफ़ाइल पढ़ी नहीं जा सकी। मान्य प्रोफ़ाइल का इस्तेमाल जारी रखने के लिए इसे हटाएँ।";
+/* Message in the Profiles area when the list of active profiles cannot be read. The user resets the list. The profiles stay. */
 "ui.profiles.damagedSelectionsMessage" = "सक्रिय प्रोफ़ाइल की सूची पढ़ी नहीं जा सकी। जारी रखने के लिए इसे रीसेट करें। आपकी प्रोफ़ाइल सुरक्षित रहती हैं।";
+/* Confirm button of the recovery alert that backs up and resets the list of active profiles. The ampersand stays. */
 "ui.profiles.resetLibraryAction" = "बैकअप लें और रीसेट करें";
 
 /* Label of the row in the Controllers detail that tells that the session of the controller is suspended. The row holds the Resume button. */
@@ -1716,17 +2091,23 @@
 "cli.update.check.prerelease" = "प्री-रिलीज़ वर्शन शामिल करें।";
 /* Message printed by 'ojd update check' when the installed version is the latest. %1$@ is the installed version and %2$@ is the latest release. */
 "cli.update.check.upToDate" = "OpenJoystickDriver %1$@ अप-टू-डेट है (नवीनतम रिलीज़: %2$@)।";
+/* Heading of the Command-Line Tool section in the settings window. */
 "ui.settings.commandLine.tool" = "कमांड-लाइन टूल";
+/* Error in the Command-Line Tool section when a regular file is in the place of the link. %@ is the path. */
 "ui.settings.commandLine.toolBlocked" = "%@ एक फ़ाइल है, लिंक नहीं। इसे हटाएँ, फिर दोबारा इंस्टॉल करें।";
+/* Status in the Command-Line Tool section after the user cancels the installation. */
 "ui.settings.commandLine.toolCancelled" = "रद्द किया गया।";
 /* Error shown in the Command Line Tool section of the settings window when macOS refuses to install or remove the tool. */
 "platform.macos.ui.settings.commandLine.toolFailed" = "macOS ने बदलाव की अनुमति नहीं दी।";
+/* Button in the Command-Line Tool section that installs the ojd link. ojd is the command name and stays as written. */
 "ui.settings.commandLine.toolInstall" = "कमांड-लाइन टूल इंस्टॉल करें";
 /* Status in the Command Line Tool section of the settings window when ojd is installed. %@ is the path of the link. Terminal is the macOS app and ojd is the command name. */
 "platform.macos.ui.settings.commandLine.toolInstalled" = "इंस्टॉल हो गया। Terminal में ojd चलाएँ; अनइंस्टॉल करने पर %@ हट जाता है।";
+/* Note in the Command-Line Tool section when the link points to another program. %1$@ is the path of the link and %2$@ is the path it points to. Installing changes the link to point to this app. */
 "ui.settings.commandLine.toolLinkedElsewhere" = "%1$@ का संकेत %2$@ की ओर है। इंस्टॉल करने पर यह इसके बजाय इस ऐप से जुड़ जाएगा।";
 /* Description in the Command Line Tool section of the settings window before the tool is installed. %@ is the path where the link is created. Terminal is the macOS app and ojd is the command name. */
 "platform.macos.ui.settings.commandLine.toolNotInstalled" = "%@ को इस ऐप से जोड़ता है ताकि आप Terminal में ojd चला सकें। macOS एडमिनिस्ट्रेटर पासवर्ड माँगता है।";
+/* Button in the Command-Line Tool section that removes the ojd link. */
 "ui.settings.commandLine.toolUninstall" = "अनइंस्टॉल करें";
 /* One-line summary of 'ojd controller' in the command list and at the top of its help. */
 "cli.controller.group.abstract" = "कनेक्ट किए गए कंट्रोलर की सूची देखें, उनकी जाँच करें, उनका परीक्षण करें और नियंत्रित करें।";
@@ -2966,8 +3347,11 @@
 "cli.setting.group.showInMenuBar" = "मेनू बार में OpenJoystickDriver आइटम दिखाएँ।";
 /* Help text of the checkUpdatesAutomatically setting in 'ojd setting list'. */
 "cli.setting.group.checkUpdatesAutomatically" = "ऐप शुरू होने पर अपडेट जाँचें।";
+/* Title of the General pane and of its toolbar item in the settings window. */
 "ui.settings.general.title" = "सामान्य";
+/* Title of the Notifications pane and of its toolbar item in the settings window. */
 "ui.settings.notifications.title" = "सूचनाएँ";
+/* Title of the Advanced pane and of its toolbar item in the settings window. */
 "ui.settings.advanced.title" = "उन्नत";
 /* VoiceOver label of the General pane of the settings window. The key is built from the pane identifier. */
 "a11y.settingsPane.general" = "सामान्य सेटिंग्स";
@@ -2975,14 +3359,21 @@
 "a11y.settingsPane.notifications" = "सूचना सेटिंग्स";
 /* VoiceOver label of the Advanced pane of the settings window. The key is built from the pane identifier. */
 "a11y.settingsPane.advanced" = "उन्नत सेटिंग्स";
+/* Title of the switch in the General pane of the settings window that shows the app item in the menu bar. */
 "ui.settings.general.showInMenuBar" = "मेनू बार में दिखाएँ";
+/* Description under the Show in menu bar switch in the General pane of the settings window. OpenJoystickDriver is the product name. */
 "ui.settings.general.showInMenuBarDescription" = "मेनू बार में OpenJoystickDriver आइटम दिखाएँ।";
+/* Title of the switch in the Updates section of the settings window that checks for an update at startup. */
 "ui.settings.general.checkUpdatesAutomatically" = "अपडेट अपने आप जाँचें";
+/* Description under the automatic update check switch in the Updates section of the settings window. */
 "ui.settings.general.checkUpdatesAutomaticallyDescription" = "ऐप शुरू होने पर नए संस्करण की जाँच करें।";
+/* Title of the alert that removes the command-line tool. */
 "ui.settings.commandLine.uninstallTitle" = "कमांड-लाइन टूल अनइंस्टॉल करें?";
 /* Message of the confirmation alert that removes the command line tool. %1$@ is the path of the link. The app stays installed. Terminal is the macOS app and ojd is the command name. */
 "platform.macos.ui.settings.commandLine.uninstallMessage" = "इससे %1$@ पर मौजूद लिंक हट जाता है। ऐप इंस्टॉल रहता है, लेकिन टूल दोबारा इंस्टॉल करने तक ojd टर्मिनल में नहीं चलता।";
+/* Confirm button of the alert that removes the command-line tool. */
 "ui.settings.commandLine.uninstallConfirm" = "अनइंस्टॉल करें";
+/* Hint in the Advanced pane of the settings window while the developer tools are off. */
 "ui.settings.advanced.developerToolsOff" = "कंट्रोलर इनपुट और USB पैकेट देखने के लिए डेवलपर टूल चालू करें।";
 /* Status line in the menu bar menu. %1$@ is the runtime state, %2$@ is the controller count text and %3$@ is the active profile text. The dots between them separate the parts and may change. */
 "ui.extra.statusLine" = "%1$@ · %2$@ · %3$@";
@@ -3050,7 +3441,9 @@
 "ui.menu.profile.activateFailed" = "प्रोफ़ाइल सक्रिय नहीं की जा सकी";
 /* Message of the alert shown when the profile changed elsewhere during the turn on. */
 "ui.menu.profile.activateConflict" = "सक्रिय किए जाने के दौरान प्रोफ़ाइल बदल गई। फिर कोशिश करें।";
+/* Error when the user imports a profile while another profile change runs. Import Profile is the title of the toolbar button and is written as in this catalog. */
 "ui.profiles.importBlocked" = "प्रोफ़ाइल में बदलाव जारी है। उसके पूरा होने पर “प्रोफ़ाइल इंपोर्ट करें” फिर से चुनें।";
+/* Body of the notification about an available update. %@ is the version tag. */
 "ui.settings.general.updateAvailableBody" = "संस्करण %@ उपलब्ध है।";
 /* Title of the message in the main window while a profile change is still running. */
 "ui.mainWindow.profileMutationRunning" = "प्रोफ़ाइल में बदलाव अभी जारी है। उसके पूरा होने पर फिर से कोशिश करें।";
@@ -3058,6 +3451,7 @@
 "ui.access.web.noPort" = "वेब एंडपॉइंट चालू है, पर अभी तक कोई पोर्ट नहीं चुना गया";
 /* Description of the signer of a program that has a signature without a known publisher. */
 "ui.access.signer.signedUnknownPublisher" = "अज्ञात प्रकाशक द्वारा साइन किया गया";
+/* Note in the Command-Line Tool section when the target of the link cannot be read. %@ is the path of the link. Installing changes the link to point to this app. */
 "ui.settings.commandLine.toolLinkTargetUnreadable" = "%@ एक लिंक है जिसका लक्ष्य पढ़ा नहीं जा सकता। इंस्टॉल करने पर यह इसके बजाय इस ऐप से जुड़ जाएगा।";
 /* Text of error E1001, sent to a client that connects to the endpoint while the endpoint is off, and printed by 'ojd explain'. The command in quotes stays as written. */
 "error.E1001.message" = "एंडपॉइंट बंद है। इसे “ojd access enable” से चालू करें और फिर से कनेक्ट करें।";
@@ -3283,8 +3677,11 @@
 "ui.error.withCode" = "%1$@ (%2$@)";
 /* Message printed by 'ojd update check' when the installed version is newer than the latest release. %1$@ is the installed version and %2$@ is the latest release. */
 "cli.update.check.ahead" = "OpenJoystickDriver %1$@ प्रकाशित नवीनतम रिलीज़ (%2$@) से नया है।";
+/* Result of the update check: the installed version is newer than the latest release. */
 "ui.settings.general.updateAhead" = "नवीनतम रिलीज़ से नया";
+/* Label of the installed version in the General pane of the settings window. */
 "ui.settings.general.version" = "संस्करण";
+/* Line in the Updates section of the settings window. %@ is the version of the latest release. */
 "ui.settings.general.latestRelease" = "नवीनतम रिलीज़: %@";
 /* Title of the switch in the General pane of the settings window that shows the app icon in the Dock. Dock is the macOS name. */
 "platform.macos.ui.settings.general.showInDock" = "डॉक में दिखाएँ";
@@ -3414,15 +3811,21 @@
 "ui.controllers.inputHealth.stale" = "अपडेट नहीं हो रहा";
 /* Value of the input health fact: the app waits until all controls are at rest before it sends input again. */
 "ui.controllers.inputHealth.waitingForNeutral" = "न्यूट्रल की प्रतीक्षा";
+/* Error shown when the settings file is damaged. %@ is the path of the file. The command in backticks stays as written, and Trash is the macOS name. */
 "ui.settings.advanced.errorDamaged" = "सेटिंग्स फ़ाइल %@ क्षतिग्रस्त है। इसे ठीक करें, या `ojd setting reset` से इसे ट्रैश में भेजें।";
+/* Error shown when the settings file has an unsupported version. %@ is the path of the file. apiVersion and the command in backticks stay as written, and Trash is the macOS name. */
 "ui.settings.advanced.errorUnsupported" = "सेटिंग्स फ़ाइल %@ समर्थित नहीं है। फ़ाइल को समर्थित apiVersion के लिए दोबारा लिखें, या `ojd setting reset` से इसे ट्रैश में भेजें।";
+/* Error shown when the settings file cannot be written. %@ is the path of the file. */
 "ui.settings.advanced.errorUnwritable" = "सेटिंग्स फ़ाइल %@ में लिखा नहीं जा सकता।";
+/* Error shown when the settings file cannot be moved to the Trash. %@ is the path of the file. Trash is the macOS name. */
 "ui.settings.advanced.errorCannotReset" = "सेटिंग्स फ़ाइल %@ को ट्रैश में नहीं भेजा जा सकता।";
 /* Error shown at startup when the stored settings file turns off both entry points. %@ is the path of the settings file. The two switch names are written as in this catalog, and the command in backticks stays as written. */
 "platform.macos.ui.settings.advanced.errorStoredNoVisibleEntryPoint" = "सेटिंग्स फ़ाइल %@ “मेनू बार में दिखाएँ” और “डॉक में दिखाएँ” दोनों को बंद करती है, इसलिए ऐप का कोई दिखने वाला प्रवेश बिंदु नहीं रहेगा। इसे ठीक करें, या `ojd setting reset` से इसे ट्रैश में भेजें।";
 /* Error shown when the user turns off both Show in menu bar and Show in Dock. The two switch names are written as in this catalog. */
 "platform.macos.ui.settings.advanced.errorNoVisibleEntryPoint" = "“मेनू बार में दिखाएँ” और “डॉक में दिखाएँ” दोनों बंद नहीं हो सकते: ऐप का कोई दिखने वाला प्रवेश बिंदु नहीं रहेगा।";
+/* Title of the alert at startup when the settings file cannot be read. */
 "ui.settings.advanced.unreadableTitle" = "सेटिंग्स पढ़ी नहीं जा सकतीं";
+/* Destructive button of the alert at startup that resets the settings, which discards the unreadable settings file. */
 "ui.settings.advanced.unreadableResetSettings" = "सेटिंग्स रीसेट करें";
 /* Button of the alert about an unreadable settings file at startup that shows the file in Finder, the macOS file manager. */
 "platform.macos.ui.settings.advanced.unreadableShowInFinder" = "Finder में दिखाएँ";

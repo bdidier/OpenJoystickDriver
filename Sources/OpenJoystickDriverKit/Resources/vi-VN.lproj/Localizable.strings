@@ -56,52 +56,89 @@
 "status.noActiveProfile" = "Không có cấu hình đang hoạt động";
 /* Message in the Controllers area while the service lists the connected controllers. Keep the three dots. */
 "status.checkingControllers" = "Đang kiểm tra các bộ điều khiển đã kết nối…";
+/* Heading of the controller events section in the Notifications pane of the settings window. */
 "ui.settings.general.controllers" = "Bộ điều khiển";
+/* Heading of the profile events section in the Notifications pane of the settings window. */
 "ui.settings.general.profiles" = "Cấu hình";
+/* Heading of the section in the Access area that lists the readiness of permissions and notifications. */
 "ui.settings.notifications.accessReadiness" = "Quyền truy cập & mức sẵn sàng";
+/* Button in the Updates section of the settings window that checks for an update. */
 "ui.settings.general.checkUpdates" = "Kiểm tra ngay";
+/* Value of the connection state of a controller in the Controllers detail: the controller is connected. */
 "ui.settings.notifications.controllerConnectedShort" = "Đã kết nối";
+/* Button of a permission row in the Access area that asks macOS for the permission. %@ is the name of the permission. */
 "ui.settings.notifications.requestAccess" = "Yêu cầu quyền %@";
+/* VoiceOver label of the switch for notifications about a controller that disconnects. */
 "ui.settings.notifications.controllerDisconnectedNotifications" = "Bộ điều khiển đã ngắt kết nối";
+/* Title of the switch for notifications about a controller that disconnects, and value of the connection state of a controller that is not connected. */
 "ui.settings.notifications.controllerDisconnectedShort" = "Đã ngắt kết nối";
+/* VoiceOver label of the switch for notifications about a controller that connects. */
 "ui.settings.notifications.controllerNotifications" = "Bộ điều khiển đã kết nối";
+/* Heading of the developer tools section in the Advanced pane of the settings window. */
 "ui.settings.advanced.developerTools" = "Công cụ Nhà phát triển";
+/* Description of the switch that turns on the developer tools in the Advanced pane of the settings window. */
 "ui.settings.advanced.developerToolsDescription" = "Hiện công cụ đầu vào bộ điều khiển và gói USB.";
+/* Title of the alert shown when the user leaves the profile editor with unsaved changes. */
 "ui.settings.advanced.discardTitle" = "Hủy bỏ các thay đổi chưa lưu?";
+/* Message of the alert shown when the user leaves the profile editor with unsaved changes. */
 "ui.settings.advanced.discardProfileMessage" = "Các thay đổi đối với cấu hình của bạn chưa được lưu.";
+/* Destructive button of the alert that throws away the unsaved changes of a profile. */
 "ui.settings.advanced.discardAction" = "Hủy bỏ thay đổi";
+/* Title of the switch that turns on the developer tools in the Advanced pane of the settings window. */
 "ui.settings.advanced.enableDeveloperTools" = "Bật công cụ nhà phát triển";
 /* Note in the Notifications pane of the settings window when macOS has turned off both banners and sounds for the app. System Settings is the name of the macOS app. */
 "platform.macos.ui.settings.notifications.notificationBannersAndSoundOff" = "Biểu ngữ và âm thanh đã tắt trong Cài đặt hệ thống.";
+/* Value of the notification row in the Access area when macOS has turned off banners for the app. */
 "ui.settings.notifications.notificationBannersOff" = "Biểu ngữ đã tắt";
 /* Note in the Notifications pane of the settings window when macOS has turned off banners for the app. System Settings is the name of the macOS app. */
 "platform.macos.ui.settings.notifications.notificationBannersOffDetail" = "Biểu ngữ thông báo đã tắt trong Cài đặt hệ thống.";
+/* Status text in the Notifications pane of the settings window when macOS allows notifications. */
 "ui.settings.notifications.notificationDeliveryAllowed" = "Cho phép gửi thông báo.";
+/* Status text in the Notifications pane of the settings window when macOS allows banners, Notification Center and sounds. Notification Center is the macOS name. */
 "ui.settings.notifications.notificationDeliveryReady" = "Biểu ngữ, Trung tâm thông báo và âm thanh đã bật.";
+/* Status text in the Notifications pane of the settings window when the user has not allowed notifications in macOS. */
 "ui.settings.notifications.notificationPermissionRequired" = "Cần có quyền trước khi có thể gửi thông báo.";
+/* Value of the notification row in the Access area when macOS has turned off sounds for the app. */
 "ui.settings.notifications.notificationSoundOff" = "Âm thanh đã tắt";
 /* Note in the Notifications pane of the settings window when macOS has turned off sounds for the app. System Settings is the name of the macOS app. */
 "platform.macos.ui.settings.notifications.notificationSoundOffDetail" = "Âm thanh thông báo đã tắt trong Cài đặt hệ thống.";
+/* Title of the switch in the Notifications pane of the settings window that plays a sound with a notification. */
 "ui.settings.notifications.notificationSounds" = "Phát âm thanh";
+/* Name of the notification permission in the Access area. */
 "ui.settings.notifications.notifications" = "Thông báo";
 /* Error shown when the user turns on notifications in the app while macOS denies them. System Settings is the name of the macOS app. OpenJoystickDriver is the product name. */
 "platform.macos.ui.settings.notifications.notificationsDenied" = "Thông báo của OpenJoystickDriver đã tắt trong Cài đặt hệ thống.";
+/* Button in the Notifications pane of the settings window that opens the notification settings of macOS. */
 "ui.settings.general.openNotificationSettings" = "Mở Cài đặt thông báo";
+/* Button in a pane of the settings window that opens System Settings, the macOS app. */
 "ui.settings.general.openSystemSettings" = "Mở Cài đặt";
+/* Title of the switch in the Updates section of the settings window that includes prerelease versions in the update check. */
 "ui.settings.general.prereleaseUpdates" = "Bao gồm bản cập nhật phát hành trước";
+/* Title of the switch for notifications about a profile that is activated or switched. */
 "ui.settings.notifications.profileActivatedShort" = "Đã kích hoạt hoặc chuyển đổi";
+/* VoiceOver label of the switch for notifications about a profile that is deactivated. */
 "ui.settings.notifications.profileDeactivatedNotifications" = "Cấu hình đã hủy kích hoạt";
+/* Title of the switch for notifications about a profile that is deactivated. */
 "ui.settings.notifications.profileDeactivatedShort" = "Đã hủy kích hoạt";
+/* VoiceOver label of the switch for notifications about a profile that is activated or switched. */
 "ui.settings.notifications.profileNotifications" = "Cấu hình đã kích hoạt hoặc chuyển đổi";
+/* Title of the switch in the General pane of the settings window that opens the app when the user logs in. */
 "ui.settings.general.startAtLogin" = "Khởi động khi đăng nhập";
 /* Error shown in the General pane of the settings window after the user turns on Start at login and macOS wants approval. System Settings, General and Login Items are names in macOS and are written as macOS shows them. */
 "platform.macos.ui.settings.general.startAtLoginApprovalRequired" = "Cho phép OpenJoystickDriver trong Cài đặt hệ thống > Cài đặt chung > Mục đăng nhập.";
+/* Description under the Start at login switch in the General pane of the settings window. OpenJoystickDriver is the product name. */
 "ui.settings.general.startAtLoginDescription" = "Mở OpenJoystickDriver trong thanh menu khi bạn đăng nhập.";
+/* Button in the Notifications pane of the settings window that sends a test notification. */
 "ui.settings.notifications.testNotification" = "Gửi thông báo thử";
+/* Result of the update check: the installed version is the latest. */
 "ui.settings.general.upToDate" = "Đã cập nhật";
+/* Result of the update check: a newer version exists. */
 "ui.settings.general.updateAvailable" = "Có sẵn bản cập nhật";
+/* Status of the update check while it runs. Keep the three dots. */
 "ui.settings.general.updateChecking" = "Đang kiểm tra…";
+/* Heading of the updates section in the General pane of the settings window. */
 "ui.settings.general.updates" = "Bản cập nhật";
+/* Button in the Updates section of the settings window that opens the page of the available update. */
 "ui.settings.general.viewUpdate" = "Xem bản cập nhật";
 /* Title of the message in the Controllers area when the service cannot list controllers. */
 "ui.controllers.unavailable" = "Bộ điều khiển không khả dụng";
@@ -177,20 +214,35 @@
 "ui.controllers.server.invalidRecord" = "Bản ghi bộ điều khiển không hợp lệ. Không có gì thay đổi.";
 /* Message when the app cannot save the changed controller record. */
 "ui.controllers.server.persistenceFailed" = "Không thể lưu bản ghi bộ điều khiển. Không có gì thay đổi.";
+/* Button in the Controllers detail that shows or hides the advanced virtual HID profile choices. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.virtualProfile.advanced" = "Nâng cao";
+/* Heading of the virtual HID profile section in the Controllers detail. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.virtualProfile.title" = "Cấu hình HID ảo";
+/* Note under the virtual HID profile popup. The choice applies to all connected controllers of the model. */
 "ui.virtualProfile.modelScope" = "Áp dụng cho mọi bộ điều khiển đã kết nối thuộc kiểu máy này.";
+/* Value of the virtual HID profile source: the user chose the profile. */
 "ui.virtualProfile.sourceOverride" = "Ghi đè";
+/* Value of the virtual HID profile source: the app chose the profile because the controller cannot use the profile that the user chose. */
 "ui.virtualProfile.sourceAutomaticAfterRejecting" = "Tự động, ghi đè bị từ chối";
+/* Value of the virtual HID profile when the controller has none. */
 "ui.virtualProfile.none" = "Không có cấu hình HID ảo";
+/* Status shown while the app changes the virtual HID profile. Keep the three dots. */
 "ui.virtualProfile.updating" = "Đang cập nhật cấu hình HID ảo…";
+/* Error when the user picks a virtual HID profile that the service does not know. The service stored nothing. */
 "ui.virtualProfile.failure.unknownProfile" = "Cấu hình HID ảo này không xác định. Không có gì được lưu.";
+/* Error when the controller is gone while the user changes its virtual HID profile. The stored override stays unchanged. */
 "ui.virtualProfile.failure.controllerNotFound" = "Bộ điều khiển đã ngắt kết nối hoặc không tìm thấy. Ghi đè không thay đổi.";
+/* Message when the service stores the override of the virtual HID profile but the controller cannot use it, so the app picks a profile itself. */
 "ui.virtualProfile.failure.overrideRejected" = "Ghi đè đã được lưu, nhưng bộ điều khiển này không thể dùng nó, nên sẽ tự động chọn.";
+/* Error when a virtual HID profile fails to activate and the app restores the last working profile. %@ is the reason. */
 "ui.virtualProfile.failure.activationFailed" = "Kích hoạt thất bại, nên cấu hình HID ảo trước đó đã được khôi phục: %@";
+/* Message when the service stores the override while virtual output is off. The override takes effect when the user turns virtual output on. */
 "ui.virtualProfile.failure.outputDisabled" = "Ghi đè đã được lưu và sẽ áp dụng khi đầu ra ảo được bật.";
+/* Error when the service stops while the user changes the virtual HID profile. The stored override stays unchanged. */
 "ui.virtualProfile.failure.serverStopped" = "Dịch vụ đã dừng. Ghi đè không thay đổi.";
+/* Error when the service cannot save the override of the virtual HID profile. Nothing is stored. */
 "ui.virtualProfile.failure.persistenceFailed" = "Không thể lưu ghi đè. Không có gì được lưu.";
+/* Error when the stored virtual HID profile overrides cannot be read. %@ is the reason. Controllers pick a profile themselves. */
 "ui.virtualProfile.storeError" = "Không thể đọc các ghi đè cấu hình HID ảo (%@). Bộ điều khiển sẽ tự động chọn.";
 /* Value of the key field in the capture assignment sheet before the user captures a key. */
 "ui.keyboard.noKey" = "Chưa chọn phím";
@@ -270,99 +322,193 @@
 "ui.capture.buttonsHeld" = "Nút đang giữ: %@";
 /* Error under the name field of the profile creation sheet when the name is empty. */
 "ui.capture.profileNameValidation" = "Nhập tên cấu hình.";
+/* Toolbar button in the Profiles area that creates a profile. */
 "ui.profiles.new" = "Cấu hình mới";
+/* Title of the alert that deletes a profile. */
 "ui.profiles.deleteTitle" = "Xóa cấu hình?";
+/* Message of the alert that deletes a profile. OpenJoystickDriver is the product name. */
 "ui.profiles.deleteMessage" = "Thao tác này sẽ xóa cấu hình khỏi OpenJoystickDriver.";
+/* Message of the alert that asks to discard the unsaved changes of a profile. */
 "ui.profiles.discardMessage" = "Các thay đổi của bạn đối với cấu hình này chưa được lưu.";
+/* Message in the Profiles area while the profiles load. Keep the three dots. */
 "ui.profiles.loading" = "Đang tải cấu hình…";
+/* Message in the Profiles area when the profiles cannot be loaded. */
 "ui.profiles.loadError" = "Không thể tải cấu hình.";
+/* Title of the message in the Profiles area when the profiles are unavailable. */
 "ui.profiles.unavailable" = "Cấu hình không khả dụng";
+/* Title of the message in the Profiles area when the app cannot read the current state of the profiles. */
 "ui.profiles.refreshError" = "Không thể làm mới trạng thái cấu hình";
+/* Title of the empty state in the Profiles area when no profile exists. */
 "ui.profiles.none" = "Không có cấu hình";
+/* Message of the empty state in the Profiles area. An assignment links a control of the controller to a destination. */
 "ui.profiles.createMessage" = "Tạo cấu hình để bắt đầu gán các thành phần điều khiển.";
+/* Status in the Profiles area while the app reads the state of the profiles. Keep the three dots. */
 "ui.profiles.refreshing" = "Đang làm mới trạng thái cấu hình…";
+/* Title of the message in the Profiles area when the state of the profiles cannot be read. */
 "ui.profiles.stateUnavailable" = "Trạng thái cấu hình không khả dụng";
+/* Message in the Profiles area when the state cannot be read. The editor keeps the draft. %@ is the reason sentence. */
 "ui.profiles.draftPreserved" = "Bản nháp hiện tại của bạn được giữ nguyên. %@";
+/* Error when a profile action such as delete or duplicate fails. */
 "ui.profiles.actionError" = "Không thể hoàn tất thao tác cấu hình này. Hãy thử lại.";
+/* Title of the message in the profile editor when a profile action needs the user to act. */
 "ui.profiles.actionNeedsAttention" = "Thao tác cấu hình cần chú ý";
+/* Title of the message in the profile editor when a profile action failed. */
 "ui.profiles.actionErrorTitle" = "Lỗi thao tác cấu hình";
+/* Label of the popup in the layer sheet that picks how the activator control turns the layer on. */
 "ui.profiles.activationMode" = "Kích hoạt";
+/* Label of the popup in the layer sheet that picks the control that turns the layer on. */
 "ui.profiles.activator" = "Bộ kích hoạt";
+/* Value of the state of a profile: it is active. */
 "ui.profiles.active" = "Hoạt động";
+/* Value of the state of a profile: it is not active. */
 "ui.profiles.notActive" = "Không hoạt động";
+/* Caption of a profile in the Profiles list. %@ is the assignment count text, for example 3 assignments. The profile is active. */
 "ui.profiles.activeAssignmentCount" = "%@, đang hoạt động";
+/* Button of the combination sheet that adds a chord. A chord is a set of controls pressed together. */
 "ui.profiles.addChord" = "Thêm tổ hợp nút";
+/* Button of the combination sheet that adds a control to the chord or sequence. */
 "ui.profiles.addControl" = "Thêm thành phần";
+/* Title of the sheet that adds a layer. A layer is a second set of assignments that a held control turns on. */
 "ui.profiles.addLayer" = "Thêm lớp";
+/* Title of the sheet that adds an assignment to a layer. %@ is the name of the layer. */
 "ui.profiles.addLayerAssignment" = "Thêm phép gán vào %@";
+/* Button of the combination sheet that adds a sequence. A sequence is a set of controls pressed one after the other. */
 "ui.profiles.addSequence" = "Thêm chuỗi nút";
+/* Title of the empty state in the profile editor when the profile has no assignment. */
 "ui.profiles.noAssignments" = "Chưa có phép gán";
+/* Instruction in the empty state of the profile editor. The destination is a key, a mouse button or a pointer movement. */
 "ui.profiles.assignmentInstructions" = "Thêm một thành phần của bộ điều khiển, sau đó chọn đích là bàn phím hoặc con trỏ.";
+/* VoiceOver label of the save status in the profile editor. */
 "ui.profiles.saveStatus" = "Trạng thái lưu cấu hình";
+/* Heading of the group of shoulder buttons in the assignment list of the profile editor. */
 "ui.profiles.sectionShoulders" = "Nút vai";
+/* Heading of the group of stick click buttons in the assignment list of the profile editor. */
 "ui.profiles.sectionStickClicks" = "Nhấn cần";
+/* Heading of the group of system buttons, such as Start and Back, in the assignment list of the profile editor. */
 "ui.profiles.sectionSystemControls" = "Điều khiển hệ thống";
+/* Heading of the group of face buttons in the assignment list of the profile editor. */
 "ui.profiles.sectionFaceButtons" = "Nút mặt trước";
+/* Heading of the group of directional pad buttons in the assignment list of the profile editor. */
 "ui.profiles.sectionDpad" = "D-pad";
+/* Heading of the group of triggers in the assignment list of the profile editor. */
 "ui.profiles.sectionTriggers" = "Cò";
+/* Heading of the group of sticks in the assignment list of the profile editor. */
 "ui.profiles.sectionSticks" = "Cần";
+/* Name of a duplicated profile. %@ is the name of the profile that the copy comes from. */
 "ui.profiles.copyName" = "Bản sao %@";
+/* Error in the profile editor when the profile changed elsewhere while the user edited it. */
 "ui.profiles.changedElsewhere" = "Cấu hình đã được thay đổi ở nơi khác.";
+/* Error in the profile editor when the service saved the profile but the app cannot read the state afterwards. */
 "ui.profiles.savedButUnavailable" = "Cấu hình đã được lưu, nhưng trạng thái mới nhất của nó không khả dụng.";
+/* Save status of the profile editor: there are changes that are not saved. */
 "ui.profiles.unsaved" = "Thay đổi chưa lưu";
+/* Save status of the profile editor while the profile is being saved. Keep the three dots. */
 "ui.profiles.saving" = "Đang lưu…";
+/* Save status of the profile editor: the profile is saved. */
 "ui.profiles.saved" = "Đã lưu";
+/* Save status of the profile editor: saving failed. */
 "ui.profiles.saveFailed" = "Lưu thất bại";
+/* VoiceOver summary of an assignment. %1$@ is the controller control and %2$@ is the destination. */
 "ui.profiles.assignmentSummary" = "%1$@ đến %2$@";
+/* VoiceOver summary of an assignment that can be tuned. %1$@ is the controller control and %2$@ is the destination. Adjust is the title of the button that tunes the assignment. */
 "ui.profiles.assignmentAdjustSummary" = "%1$@ đến %2$@, có thể điều chỉnh";
+/* Button of an assignment row that opens the behavior sheet. Keep the three dots. */
 "ui.profiles.behavior" = "Hành vi…";
+/* Title of the behavior sheet of an assignment. The sheet sets turbo, hold and double tap. */
 "ui.profiles.bindingBehavior" = "Hành vi của phép gán";
+/* Placeholder of the field in the profile creation sheet for the identifier of the app that the profile applies to, for example com.apple.Safari. */
 "ui.profiles.appID" = "Mã định danh ứng dụng";
+/* Help text of the chord sheet. The destination fires while all chosen controls are held down. */
 "ui.profiles.chordHelp" = "Đích được kích hoạt khi tất cả thành phần đã chọn đang được nhấn.";
+/* Label of the popup in the chord sheet that picks how the chord works. */
 "ui.profiles.chordMode" = "Chế độ tổ hợp nút";
+/* Option of the chord mode popup: the first control works as a modifier of the others. */
 "ui.profiles.chordModeModifier" = "Phím bổ trợ";
+/* Option of the chord mode popup: all controls must be pressed at the same time. */
 "ui.profiles.chordModeSimultaneous" = "Đồng thời";
+/* Label of the field in the chord sheet that sets the time within which the controls must be pressed. The value is in milliseconds. */
 "ui.profiles.chordWindow" = "Khoảng thời gian nhấn";
+/* Heading of the chords section in the profile editor. */
 "ui.profiles.chords" = "Tổ hợp nút";
+/* Label of a control picker in the combination sheet. %d is the number of the control, counted from 1. */
 "ui.profiles.controlNumber" = "Thành phần %d";
+/* Error under the form of the profile creation sheet when the name or the app target is not valid. */
 "ui.profiles.creationValidation" = "Xem lại tên cấu hình và ứng dụng đích.";
+/* Heading of the group in the controller popup of the profile creation sheet that lists models used by existing profiles. */
 "ui.profiles.controllersOfProfiles" = "Được cấu hình của bạn sử dụng";
+/* Placeholder of the controller popup in the profile creation sheet. */
 "ui.profiles.chooseController" = "Chọn bộ điều khiển";
+/* Tooltip of a toolbar button that needs a saved profile. It asks the user to save the profile first. */
 "ui.profiles.saveFirst" = "Hãy lưu cấu hình trước.";
+/* Warning in the profile creation sheet when some controller record files cannot be read. %@ is the list of reasons. */
 "ui.profiles.unreadableRecords" = "Không đọc được một số tệp bản ghi bộ điều khiển. Chi tiết: %@.";
+/* Caption of a profile in the Profiles list. %1$@ is the controller model and %2$@ is the app scope. The dot between them separates the two and may change. */
 "ui.profiles.scopedCaption" = "%1$@ · %2$@";
+/* Menu item that turns off all active profiles of one controller. */
 "ui.profiles.deactivateController" = "Hủy kích hoạt tất cả";
+/* Title of the sheet that edits the details of a profile. */
 "ui.profiles.details" = "Chi tiết cấu hình";
+/* Note on an assignment row when the controller or its protocol cannot do what the assignment needs. */
 "ui.profiles.notSupportedByController" = "Không được bộ điều khiển hoặc giao thức này hỗ trợ.";
+/* Label of the field in the behavior sheet for the destination of a double tap of a control. */
 "ui.profiles.doubleTap" = "Nhấn đúp";
+/* Toolbar button in the Profiles area that exports the profile to a file. */
 "ui.profiles.export" = "Xuất cấu hình";
+/* Option of the activation popup in the layer sheet: the layer is on while the control is held. */
 "ui.profiles.hold" = "Giữ";
+/* Label of the field in the behavior sheet that sets how long a control must be held. The value is in milliseconds. */
 "ui.profiles.holdDuration" = "Thời lượng giữ";
+/* Hint under the vendor ID and product ID fields. 0x marks a hexadecimal number and stays as written. */
 "ui.profiles.identifierHint" = "Dùng mã định danh dạng thập phân hoặc thập lục phân có tiền tố 0x.";
+/* Toolbar button in the Profiles area that imports a profile from a file. */
 "ui.profiles.import" = "Nhập cấu hình";
+/* Toolbar button in the Profiles area that checks a profile file without importing it. */
 "ui.profiles.validateFile" = "Xác thực tệp cấu hình";
+/* Title of the alert when the checked profile file is valid. */
 "ui.profiles.validTitle" = "Cấu hình hợp lệ";
+/* Title of the alert when the checked profile file is not valid. */
 "ui.profiles.invalidTitle" = "Cấu hình không hợp lệ";
+/* Message of the alert when the checked profile file is valid. %1$@ is the profile name, %2$@ is the controller model and %3$@ is the app scope. */
 "ui.profiles.validMessage" = "%1$@ (%2$@). Áp dụng cho: %3$@.";
+/* Error in the profile details sheet when the vendor ID or product ID is not a 16-bit number. */
 "ui.profiles.invalidIdentifiers" = "Nhập mã nhà cung cấp và mã sản phẩm 16 bit hợp lệ.";
+/* Placeholder of the name field in the layer sheet. */
 "ui.profiles.layerName" = "Tên lớp";
+/* Heading of the layers section in the profile editor. */
 "ui.profiles.layers" = "Lớp";
+/* Label of the field in the behavior sheet for the destination of a long hold of a control. */
 "ui.profiles.longHold" = "Giữ lâu";
+/* Message in the chords section of the profile editor when none exists. */
 "ui.profiles.noChords" = "Chưa cấu hình tổ hợp nút nào.";
+/* Message in the layers section of the profile editor when none exists. */
 "ui.profiles.noLayers" = "Chưa cấu hình lớp nào.";
+/* Message in the sequences section of the profile editor when none exists. */
 "ui.profiles.noSequences" = "Chưa cấu hình chuỗi nút nào.";
+/* Label of the product ID field in the profile details sheet. */
 "ui.profiles.productID" = "ID sản phẩm";
+/* Help text of the sequence sheet. The destination fires when the controls are pressed in the listed order. */
 "ui.profiles.sequenceHelp" = "Đích được kích hoạt khi các thành phần được nhấn theo thứ tự này.";
+/* Label of the field in the sequence sheet that sets the time within which the sequence must finish. The value is in milliseconds. */
 "ui.profiles.sequenceWindow" = "Khoảng thời gian hoàn tất";
+/* Heading of the sequences section in the profile editor. */
 "ui.profiles.sequences" = "Chuỗi nút";
+/* Label of the field in the behavior sheet that sets the time within which a second tap counts as a double tap. The value is in milliseconds. */
 "ui.profiles.tapWindow" = "Khoảng thời gian chạm";
+/* Label of the popup in the profile creation sheet that picks which apps the profile applies to. */
 "ui.profiles.target" = "Đích";
+/* Option of the target popup: the profile applies to one app. */
 "ui.profiles.targetApplication" = "Một ứng dụng";
+/* Option of the target popup: the profile applies to all apps. */
 "ui.profiles.targetGlobal" = "Tất cả ứng dụng";
+/* Option of the activation popup in the layer sheet: pressing the control turns the layer on or off. */
 "ui.profiles.toggle" = "Chuyển đổi";
+/* Title of the switch in the behavior sheet that repeats the destination while the control is held. */
 "ui.profiles.turbo" = "Turbo";
+/* Label of the field in the behavior sheet that sets the share of each repeat in which the destination is pressed. The value is a percentage. */
 "ui.profiles.turboDuty" = "Chu kỳ làm việc";
+/* Label of the field in the behavior sheet that sets how often the destination repeats, in presses per second. */
 "ui.profiles.turboRate" = "Tốc độ lặp";
+/* Label of the vendor ID field in the profile details sheet. */
 "ui.profiles.vendorID" = "ID nhà cung cấp";
 /* Title of the save panel for the debug report, a text file that the user can attach to a problem report. */
 "ui.debug.saveReportPanel" = "Lưu báo cáo gỡ lỗi";
@@ -396,45 +542,85 @@
 "ui.error.timeout" = "OpenJoystickDriver phản hồi quá lâu.";
 /* Error shown when the service answers with a reply that the app does not understand. OpenJoystickDriver is the product name. */
 "ui.error.unexpected" = "OpenJoystickDriver trả về một kết quả không mong đợi.";
+/* Value of the app scope of a profile: it applies to all apps. */
 "ui.mapping.allApps" = "Tất cả ứng dụng";
+/* Value of the app scope of a profile: it applies to one app. */
 "ui.mapping.specificApp" = "Một ứng dụng cụ thể";
+/* Status of the controller output in the profile editor: the output cannot work. */
 "ui.mapping.outputUnavailable" = "Đầu ra bộ điều khiển không khả dụng";
+/* Status of the controller output in the profile editor: the output works. */
 "ui.mapping.outputReady" = "Đầu ra bộ điều khiển đã sẵn sàng";
+/* Status of the controller output in the profile editor: the output needs action from the user. */
 "ui.mapping.outputNeedsAttention" = "Đầu ra bộ điều khiển cần chú ý";
+/* Name of a directional pad direction as a control. %@ is the direction: up, down, left or right. */
 "ui.mapping.dpadDirection" = "D-pad %@";
+/* Name of one direction of an axis. %1$@ is the axis name, for example Left stick horizontal, and %2$@ is the direction. */
 "ui.mapping.axisDirection" = "%1$@ %2$@";
+/* Name of a mouse button destination. %@ is the button, for example left or right. */
 "ui.mapping.mouseButton" = "Nút %@ của chuột";
+/* Name of a pointer movement destination. %@ is the direction of the movement. */
 "ui.mapping.pointerMovement" = "Di chuyển con trỏ %@";
+/* Name of a scroll destination. %@ is the direction of the scroll. */
 "ui.mapping.scroll" = "Cuộn %@";
+/* Name of the bottom face button: A on Xbox, Cross on PlayStation. The slash stays. */
 "ui.mapping.buttonSouth" = "A / Chéo";
+/* Name of the right face button: B on Xbox, Circle on PlayStation. The slash stays. */
 "ui.mapping.buttonEast" = "B / Tròn";
+/* Name of the left face button: X on Xbox, Square on PlayStation. The slash stays. */
 "ui.mapping.buttonWest" = "X / Vuông";
+/* Name of the top face button: Y on Xbox, Triangle on PlayStation. The slash stays. */
 "ui.mapping.buttonNorth" = "Y / Tam giác";
+/* Name of the left shoulder button of a controller. */
 "ui.mapping.leftShoulder" = "Nút vai trái";
+/* Name of the right shoulder button of a controller. */
 "ui.mapping.rightShoulder" = "Nút vai phải";
+/* Name of the button that the user presses by pushing down the left stick. */
 "ui.mapping.leftStickClick" = "Nhấn cần trái";
+/* Name of the button that the user presses by pushing down the right stick. */
 "ui.mapping.rightStickClick" = "Nhấn cần phải";
+/* Name of the Start button of a controller. */
 "ui.mapping.start" = "Bắt đầu";
+/* Name of the Back button of a controller. */
 "ui.mapping.back" = "Quay lại";
+/* Name of the Guide button of a controller, the one with the Xbox logo. */
 "ui.mapping.guide" = "Guide";
+/* Name of the Share button of a controller, the one that captures a screenshot. */
 "ui.mapping.share" = "Chia sẻ";
+/* Name of the click of the touchpad of a controller. */
 "ui.mapping.touchpadClick" = "Nhấn bàn di chuột";
+/* Name of a touch contact as a control. %@ is the touch surface. */
 "ui.mapping.touchContact" = "Chạm %@";
+/* Name of a touch grid cell as a control. %1$@ is the touch surface, %2$d is the number of columns, %3$d is the number of rows, %4$d is the column of the cell and %5$d is the row of the cell. The multiplication sign stays between the grid sizes. */
 "ui.mapping.touchGridCell" = "%1$@ lưới %2$d×%3$d ô %4$d,%5$d";
+/* Name of a touch swipe as a control. %1$@ is the touch surface and %2$@ is the swipe direction. */
 "ui.mapping.touchSwipe" = "%1$@ vuốt %2$@";
+/* Option of the touch surface popup: the main touch surface of the controller. */
 "ui.mapping.touchSurfacePrimary" = "Bề mặt chính";
+/* Option of the touch surface popup: the left touch surface of the controller. */
 "ui.mapping.touchSurfaceLeft" = "Bề mặt trái";
+/* Option of the touch surface popup: the right touch surface of the controller. */
 "ui.mapping.touchSurfaceRight" = "Bề mặt phải";
+/* Heading of the group of touch controls in the assignment list of the profile editor. */
 "ui.profiles.sectionTouch" = "Chạm";
+/* Title of the sheet that sets the touch mappings of a profile. */
 "ui.profiles.touch.title" = "Ánh xạ chạm";
+/* Label of the touch surface popup in the touch sheet. */
 "ui.profiles.touch.surface" = "Bề mặt";
+/* Title of the switch in the touch sheet that turns on continuous touch output. */
 "ui.profiles.touch.enabled" = "Bật đầu ra chạm liên tục";
+/* Label of the popup in the touch sheet that picks what touch does. */
 "ui.profiles.touch.mode" = "Chế độ chạm";
+/* Option of the touch mode popup and of the gyro mode popup: it moves the pointer. */
 "ui.profiles.touch.pointer" = "Con trỏ";
+/* Option of the touch and gyro mode popups: it moves the left stick of the virtual gamepad. */
 "ui.profiles.touch.leftStick" = "Cần trái";
+/* Option of the touch and gyro mode popups: it moves the right stick of the virtual gamepad. */
 "ui.profiles.touch.rightStick" = "Cần phải";
+/* Label of the field in the touch sheet that sets how many pointer points one full swipe over the surface moves. */
 "ui.profiles.touch.pointerSensitivity" = "Số điểm con trỏ trên mỗi bề mặt";
+/* Label of the field in the touch sheet that sets the share of the surface that moves the stick all the way. */
 "ui.profiles.touch.stickRadius" = "Bán kính cần tối đa (phần của bề mặt)";
+/* Label of the field in the touch sheet that sets the stick deadzone. The deadzone is the part of the travel near the center that is ignored. */
 "ui.profiles.touch.deadzone" = "Vùng chết của cần";
 /* Label of the stepper that sets the number of columns of a touch grid in the capture assignment sheet. %d is the number of columns. */
 "ui.capture.touchColumns" = "Số cột lưới: %d";
@@ -446,14 +632,23 @@
 "ui.capture.touchRow" = "Hàng của ô: %d";
 /* Label of the slider that sets the shortest swipe that counts, as a share of the touch surface. %.0f is a percentage; %% is the percent sign. */
 "ui.capture.touchSwipeDistance" = "Khoảng cách vuốt tối thiểu: %.0f%%";
+/* Name of the microphone mute button of a controller. */
 "ui.mapping.mute" = "Tắt tiếng";
+/* Name of the digital click of the left trigger of a controller. */
 "ui.mapping.leftTriggerClick" = "Nhấn cò trái";
+/* Name of the digital click of the right trigger of a controller. */
 "ui.mapping.rightTriggerClick" = "Nhấn cò phải";
+/* Name of the horizontal axis of the left stick. */
 "ui.mapping.leftStickHorizontal" = "Cần trái theo chiều ngang";
+/* Name of the vertical axis of the left stick. */
 "ui.mapping.leftStickVertical" = "Cần trái theo chiều dọc";
+/* Name of the horizontal axis of the right stick. */
 "ui.mapping.rightStickHorizontal" = "Cần phải theo chiều ngang";
+/* Name of the vertical axis of the right stick. */
 "ui.mapping.rightStickVertical" = "Cần phải theo chiều dọc";
+/* Name of the left trigger as an axis. */
 "ui.mapping.leftTrigger" = "Cò trái";
+/* Name of the right trigger as an axis. */
 "ui.mapping.rightTrigger" = "Cò phải";
 /* Accessibility value of a selectable card or row that the user has chosen. */
 "status.selected" = "Đã chọn";
@@ -841,7 +1036,9 @@
 "term.key.alt" = "Option";
 /* Name of the Shift modifier key in the text that describes a captured key press. */
 "term.key.shift" = "Shift";
+/* Value of the virtual HID profile when the app picks it. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.mapping.automatic" = "Tự động";
+/* Value of the virtual HID profile when the app picks it. %@ is the name of the picked profile. */
 "ui.virtualProfile.automaticSelected" = "Tự động (%@)";
 /* Detail line in the Driver section of the settings window when the driver extension for Xbox USB controllers is installed and works. */
 "ui.setup.activeDetail" = "Trình điều khiển Xbox USB bị hạn chế đã được cài đặt và sẵn sàng.";
@@ -925,74 +1122,118 @@
 "ui.settings.notifications.testReportLost" = "Yêu cầu ojd đã kết thúc hoặc hết thời gian trả lời trước khi báo cáo về thông báo thử đến nơi.";
 /* Error text the service returns to an app that reports the outcome noAnswer for a test notification, which only the service decides. The inline error of the Settings window shows it. shown, denied, failed and noAnswer are outcome names and stay as written. */
 "ui.settings.notifications.testReportNoAnswer" = "Báo cáo về thông báo thử phải là shown, denied hoặc failed; chỉ dịch vụ mới quyết định noAnswer.";
+/* Label of the popup in the profile editor that sets what the virtual gamepad of the profile publishes. */
 "ui.profiles.virtualOutput" = "Tay cầm ảo";
+/* Option of the virtual output popup: the profile publishes no virtual gamepad. */
 "ui.profiles.virtualDisabled" = "Bị vô hiệu";
+/* Option of the virtual output popup: the virtual gamepad carries only the controls that the profile maps. */
 "ui.profiles.virtualMapped" = "Chỉ các thành phần đã ánh xạ";
+/* Option of the virtual output popup: the virtual gamepad also carries the controls that the profile does not map. */
 "ui.profiles.virtualPassthrough" = "Bao gồm các thành phần chưa ánh xạ";
+/* Title of the switch in the profile editor that makes the profile need exclusive access to the physical controller. */
 "ui.profiles.exclusiveInput" = "Yêu cầu đầu vào vật lý độc quyền";
+/* VoiceOver label of the group of profile action buttons in the profile editor. */
 "ui.profiles.actions" = "Thao tác cấu hình";
+/* VoiceOver label of the picker that switches the section of the profile editor. */
 "ui.profiles.editorSection" = "Mục trình sửa cấu hình";
+/* Title of the section of the profile editor that holds chords, sequences and layers. */
 "ui.profiles.combinations" = "Kết hợp";
 
+/* Option of the tap timing popup in the behavior sheet: the tap fires when the control is pressed. */
 "ui.profiles.tapOnPress" = "Chạm khi nhấn";
 
+/* Option of the tap timing popup in the behavior sheet: the tap fires when the control is released. */
 "ui.profiles.tapOnRelease" = "Chạm khi nhả";
 
+/* Option of the tap timing popup in the behavior sheet: the tap fires as a short pulse of fixed length. */
 "ui.profiles.pulse" = "Xung";
 
+/* Label of the field in the behavior sheet that sets the length of the pulse. The value is in milliseconds. */
 "ui.profiles.pulseDuration" = "Thời lượng xung";
 
+/* Option of the tap timing popup in the behavior sheet: only the press reaches the destination. */
 "ui.profiles.pressOnly" = "Chỉ khi nhấn";
 
+/* Option of the tap timing popup in the behavior sheet: only the release reaches the destination. */
 "ui.profiles.releaseOnly" = "Chỉ khi nhả";
 
+/* Heading of the list of additional actions that an assignment runs. */
 "ui.profiles.additionalActions" = "Thao tác bổ sung";
 
+/* Button that adds an additional action to an assignment. */
 "ui.profiles.addAction" = "Thêm thao tác";
 
+/* Button that moves an additional action one place up in the list. */
 "ui.profiles.moveUp" = "Di chuyển lên";
 
+/* Button that moves an additional action one place down in the list. */
 "ui.profiles.moveDown" = "Di chuyển xuống";
 
+/* Name of the function button on the left side of a controller. */
 "ui.mapping.leftFunctionButton" = "Nút chức năng trái";
 
+/* Name of the function button on the right side of a controller. */
 "ui.mapping.rightFunctionButton" = "Nút chức năng phải";
 
+/* Name of the paddle on the back of a controller on the left side. */
 "ui.mapping.leftPaddle" = "Paddle trái";
 
+/* Name of the paddle on the back of a controller on the right side. */
 "ui.mapping.rightPaddle" = "Paddle phải";
 
+/* Name of the SL button on the rail of the left Joy-Con. SL is the label printed on the Joy-Con. Joy-Con is a Nintendo product name. */
 "ui.mapping.leftJoyConSL" = "Joy-Con trái SL";
 
+/* Name of the SR button on the rail of the left Joy-Con. SR is the label printed on the Joy-Con. Joy-Con is a Nintendo product name. */
 "ui.mapping.leftJoyConSR" = "Joy-Con trái SR";
 
+/* Name of the SL button on the rail of the right Joy-Con. SL is the label printed on the Joy-Con. Joy-Con is a Nintendo product name. */
 "ui.mapping.rightJoyConSL" = "Joy-Con phải SL";
 
+/* Name of the SR button on the rail of the right Joy-Con. SR is the label printed on the Joy-Con. Joy-Con is a Nintendo product name. */
 "ui.mapping.rightJoyConSR" = "Joy-Con phải SR";
 
+/* Name of the second grip button on the back of a controller on the left side. */
 "ui.mapping.leftGrip" = "Grip trái";
 
+/* Name of the second grip button on the back of a controller on the right side. */
 "ui.mapping.rightGrip" = "Grip phải";
 
+/* Name of the click of the left trackpad of a controller. */
 "ui.mapping.leftPadClick" = "Nhấn pad trái";
 
+/* Name of the click of the right trackpad of a controller. */
 "ui.mapping.rightPadClick" = "Nhấn pad phải";
 
-/* Motion tuning: English source. */
+/* Title of the sheet that tunes the motion sensor of a controller in a profile. */
 "ui.profiles.motion.title" = "Tinh chỉnh chuyển động";
+/* Label of the popup in the motion sheet that picks the coordinate space of the motion. */
 "ui.profiles.motion.space" = "Không gian tọa độ";
+/* Option of the coordinate space popup: motion is measured relative to the controller. */
 "ui.profiles.motion.local" = "Cục bộ";
+/* Option of the coordinate space popup: motion is measured relative to the player who holds the controller. */
 "ui.profiles.motion.player" = "Người chơi";
+/* Option of the coordinate space popup: motion is measured relative to the room, with gravity pointing down. */
 "ui.profiles.motion.world" = "Thế giới";
+/* Label of the slider in the motion sheet that sets how strongly tilting forward and back moves the output. Pitch is the tilt around the horizontal axis. */
 "ui.profiles.motion.pitchSensitivity" = "Độ nhạy góc chúc";
+/* Label of the slider in the motion sheet that sets how strongly turning left and right moves the output. Yaw is the turn around the vertical axis. */
 "ui.profiles.motion.yawSensitivity" = "Độ nhạy góc lệch hướng";
+/* Label of the slider in the motion sheet that sets the half-time of the smoothing filter. The value is in milliseconds. */
 "ui.profiles.motion.smoothingHalfTimeMs" = "Nửa thời gian làm mượt (ms)";
+/* Label of the slider in the motion sheet that sets the turn rate below which motion is ignored. The value is in degrees per second. */
 "ui.profiles.motion.thresholdDegreesPerSecond" = "Ngưỡng tốc độ (độ/giây)";
+/* Label of the slider in the motion sheet that sets how fast the player space follows the turn of the player. */
 "ui.profiles.motion.yawRelaxation" = "Nới lỏng góc lệch hướng theo người chơi";
+/* Label of the slider in the motion sheet that sets how much sideways motion is reduced in world space. */
 "ui.profiles.motion.sideReductionThreshold" = "Giảm khi nghiêng ngang theo thế giới";
+/* Label of the slider in the motion sheet that sets how fast the estimate of gravity is corrected. The unit is per second. */
 "ui.profiles.motion.gravityCorrectionRate" = "Tốc độ hiệu chỉnh trọng lực (1/giây)";
+/* Title of the switch in the motion sheet that reverses the pitch direction. */
 "ui.profiles.motion.invertPitch" = "Đảo ngược góc chúc";
+/* Title of the switch in the motion sheet that reverses the yaw direction. */
 "ui.profiles.motion.invertYaw" = "Đảo ngược góc lệch hướng";
+/* Title of the switch in the motion sheet that corrects the sensor drift automatically while the controller lies still. */
 "ui.profiles.motion.automaticBias" = "Tự động hiệu chỉnh khi đứng yên";
 
 /* Hint under the motion calibration controls of the input test window: keep the controller still on a surface while the gyro bias, the small constant rotation the sensor reports at rest, is collected. */
@@ -1019,163 +1260,297 @@
 /* Note in the motion calibration controls: collecting gyro bias keeps running in the service after the window closes, and the Pause button stops it. */
 "ui.motion.calibration.continues" = "Việc thu thập vẫn tiếp tục khi cửa sổ này đóng. Dùng Tạm dừng để dừng lại.";
 
-/* Gyro authoring. Native translation review pending. */
+/* Label of the popup in the gyro sheet that picks what the gyro controls: the pointer or a stick. */
 "ui.profiles.gyro.output" = "Đầu ra con quay hồi chuyển";
+/* Option of the gyro output popup: the gyro does nothing. */
 "ui.profiles.gyro.disabled" = "Bị vô hiệu";
+/* Option of the gyro output popup: the gyro moves the mouse pointer. */
 "ui.profiles.gyro.mouse" = "Con trỏ chuột";
+/* Option of the gyro output popup: the gyro moves the left stick of the virtual gamepad. */
 "ui.profiles.gyro.leftStick" = "Cần trái";
+/* Option of the gyro output popup: the gyro moves the right stick of the virtual gamepad. */
 "ui.profiles.gyro.rightStick" = "Cần phải";
+/* Label of the field in the gyro sheet that sets how many pointer points one degree of turn moves. */
 "ui.profiles.gyro.pointerScale" = "Điểm con trỏ trên mỗi độ";
+/* Label of the field in the gyro sheet that sets the turn rate that moves the stick all the way. The value is in degrees per second. */
 "ui.profiles.gyro.stickScale" = "Tốc độ cần tối đa (độ/giây)";
+/* Label of the popup in the gyro sheet that picks when the gyro is active. */
 "ui.profiles.gyro.activation" = "Kích hoạt con quay hồi chuyển";
+/* Option of the gyro activation popup: the gyro is always active. */
 "ui.profiles.gyro.always" = "Luôn hoạt động";
+/* Option of the gyro activation popup: the gyro is active while the activation control is held. */
 "ui.profiles.gyro.whileHeld" = "Khi đang giữ";
+/* Option of the gyro activation popup: the gyro is active while the activation control is not held. */
 "ui.profiles.gyro.whileReleased" = "Khi đã nhả";
+/* Option of the gyro activation popup: pressing the activation control turns the gyro on or off. */
 "ui.profiles.gyro.toggle" = "Chuyển đổi khi nhấn";
+/* Label of the popup in the gyro sheet that picks the control that activates the gyro. */
 "ui.profiles.gyro.source" = "Thành phần kích hoạt";
 
+/* Title of the switch in the gyro sheet that keeps the activation control from reaching the virtual gamepad. */
 "ui.profiles.gyro.consume" = "Chặn thành phần kích hoạt ảo gốc";
 
-/* Trackball authoring. Translation review pending. */
+/* Title of the switch in the trackball sheet that turns on the trackball mode. In this mode motion carries on after the control is held, like a rolling ball. */
 "ui.profiles.trackball.enabled" = "Trackball";
+/* Hint in the trackball sheet. The user holds the control to keep the motion going while the user puts the controller back. */
 "ui.profiles.trackball.hint" = "Giữ thành phần này để tiếp tục chuyển động trong khi đặt lại vị trí bộ điều khiển.";
+/* Label of the popup in the trackball sheet that picks the control that holds the motion. */
 "ui.profiles.trackball.source" = "Thành phần trackball";
+/* Label of the popup in the trackball sheet that picks which motion axes the trackball follows. */
 "ui.profiles.trackball.axes" = "Trục trackball";
+/* Option of the trackball axes popup: tilt forward and back only. */
 "ui.profiles.trackball.pitch" = "Góc chúc";
+/* Option of the trackball axes popup: turn left and right only. */
 "ui.profiles.trackball.yaw" = "Góc lệch hướng";
+/* Option of the trackball axes popup: both pitch and yaw. */
 "ui.profiles.trackball.both" = "Góc chúc và góc lệch hướng";
+/* Label of the field in the trackball sheet that sets how many times per second the speed halves. */
 "ui.profiles.trackball.decay" = "Số lần giảm nửa vận tốc mỗi giây";
+/* Hint under the decay field of the trackball sheet. Zero keeps the speed and one halves it each second. */
 "ui.profiles.trackball.decayHint" = "Giá trị 0 giữ nguyên tốc độ. Giá trị 1 giảm một nửa tốc độ mỗi giây.";
+/* Title of the switch in the trackball sheet that keeps the trackball control from reaching the virtual gamepad. */
 "ui.profiles.trackball.consume" = "Chặn thành phần trackball ảo gốc";
 
+/* Button in the motion sheet of an assignment that drops the tuning of the assignment and uses the tuning of the profile. */
 "ui.profiles.motion.inherit" = "Dùng tinh chỉnh của cấu hình";
 
+/* Option of the stick mode popup: the stick turns the aim at a set rate. */
 "ui.profiles.stick.aim" = "Ngắm";
+/* Label of the field in the stick sheet that sets the aim turn rate. The value is in degrees per second. */
 "ui.profiles.stick.aimRate" = "Tốc độ ngắm (độ/giây)";
+/* Title of the switch in the stick sheet that turns on pointer output for the stick. */
 "ui.profiles.stick.enabled" = "Bật đầu ra con trỏ";
+/* Label of the field in the stick sheet that sets the exponent of the response curve. Higher values make small movements finer. */
 "ui.profiles.stick.exponent" = "Số mũ phản hồi";
+/* Option of the stick mode popup: a quick push flicks the view, and a turn of the stick rotates it. */
 "ui.profiles.stick.flick" = "Vẩy và xoay";
+/* Label of the field in the stick sheet that sets how long a flick takes. The value is in milliseconds. */
 "ui.profiles.stick.flickDuration" = "Thời lượng vẩy (ms)";
+/* Option of the stick mode popup: the stick only flicks. */
 "ui.profiles.stick.flickOnly" = "Chỉ vẩy";
+/* Label of the field in the stick sheet that sets how far the stick must return before a flick can fire again. */
 "ui.profiles.stick.hysteresis" = "Độ trễ ngưỡng khi nhả vẩy";
+/* Label of the field in the stick sheet that sets the inner deadzone. The inner deadzone is the part of the travel near the center that is ignored. */
 "ui.profiles.stick.innerDeadzone" = "Vùng chết trong";
+/* Title of the switch in the stick sheet that reverses the horizontal axis. */
 "ui.profiles.stick.invertX" = "Đảo ngược trục ngang";
+/* Title of the switch in the stick sheet that reverses the vertical axis. */
 "ui.profiles.stick.invertY" = "Đảo ngược trục dọc";
+/* Label of the popup in the stick sheet that picks what the stick does. */
 "ui.profiles.stick.mode" = "Chế độ cần";
+/* Label of the field in the stick sheet that sets the outer deadzone. The outer deadzone is the part of the travel near the edge that counts as full. */
 "ui.profiles.stick.outerDeadzone" = "Vùng chết ngoài";
+/* Label of the field in the stick sheet that sets how many pointer points one degree moves. */
 "ui.profiles.stick.pointerScale" = "Điểm con trỏ trên mỗi độ";
+/* Option of the stick mode popup: the stick only rotates the view. */
 "ui.profiles.stick.rotateOnly" = "Chỉ xoay";
+/* Label of the popup in the stick sheet that picks the stick. */
 "ui.profiles.stick.source" = "Cần";
+/* Label of the field in the stick sheet that sets how far the stick must move before a flick starts. */
 "ui.profiles.stick.threshold" = "Ngưỡng kích hoạt vẩy";
+/* Title of the sheet that sets the stick modes of a profile. */
 "ui.profiles.stick.title" = "Các chế độ cần";
-/* Advanced stick, trigger, and lean authoring. Translation review pending. */
+/* Name of a trigger stage as a control. %1$@ is the trigger, for example Left, and %2$@ is the stage of the pull, soft or full. */
 "ui.mapping.triggerStage" = "%1$@ cò %2$@ nhấn";
+/* Name of a motion lean direction as a control. %@ is the direction. */
 "ui.mapping.motionLean" = "Nghiêng chuyển động %@";
+/* Heading of the group of motion controls in the assignment list of the profile editor. */
 "ui.profiles.sectionMotion" = "Cảm biến chuyển động";
+/* Option of the stick mode popup: the stick places the pointer inside an area of the screen. */
 "ui.profiles.stick.pointerArea" = "Vùng con trỏ";
+/* Option of the stick mode popup: the stick places the pointer on a ring around the center. */
 "ui.profiles.stick.pointerRing" = "Vòng con trỏ";
+/* Option of the stick mode popup: turning the stick scrolls like a wheel. */
 "ui.profiles.stick.scrollWheel" = "Con lăn cuộn";
+/* Option of the stick mode popup: the stick works as the steering wheel of a vehicle. */
 "ui.profiles.stick.steering" = "Vô lăng";
+/* Label of the field in the stick sheet that sets the radius of the pointer area or ring. The value is in points. */
 "ui.profiles.stick.pointerRadius" = "Bán kính con trỏ (điểm)";
+/* Label of the field in the stick sheet that sets how many degrees of rotation scroll one line. */
 "ui.profiles.stick.scrollDegrees" = "Góc xoay mỗi dòng cuộn (độ)";
+/* Label of the popup in the stick sheet that picks the direction of the scrolling. */
 "ui.profiles.stick.scrollAxis" = "Trục cuộn";
+/* Option of the scroll axis popup: horizontal scrolling. */
 "ui.profiles.stick.horizontal" = "Ngang";
+/* Option of the scroll axis popup: vertical scrolling. */
 "ui.profiles.stick.vertical" = "Dọc";
+/* Label of the field in the stick sheet that sets the rotation of the stick that counts as full steering. The value is in degrees. */
 "ui.profiles.stick.steeringFullScale" = "Góc xoay khi đánh lái hết cỡ (độ)";
+/* Label of the field in the stick sheet that sets how fast the steering returns to the center. The value is in degrees per second. */
 "ui.profiles.stick.steeringReturnRate" = "Tốc độ trả lái (độ/giây)";
+/* Label of the popup in the stick sheet that picks the axis of the virtual gamepad that the steering moves. */
 "ui.profiles.stick.steeringOutput" = "Trục lái ảo";
+/* Option of the steering axis popup: the horizontal axis of the left stick. */
 "ui.profiles.stick.leftStickX" = "Cần trái ngang";
+/* Option of the steering axis popup: the horizontal axis of the right stick. */
 "ui.profiles.stick.rightStickX" = "Cần phải ngang";
+/* Label of the popup in the stick sheet that picks which rotation direction steers to the right. */
 "ui.profiles.stick.rotationDirection" = "Chiều xoay dương";
+/* Option of the rotation popup: turning the stick clockwise. */
 "ui.profiles.stick.clockwise" = "Theo chiều kim đồng hồ";
+/* Option of the rotation popup: turning the stick counterclockwise. */
 "ui.profiles.stick.counterclockwise" = "Ngược chiều kim đồng hồ";
+/* Title of the switch in the stick sheet that keeps sending the physical stick to the virtual gamepad as well. */
 "ui.profiles.stick.passthrough" = "Giữ truyền thẳng cần vật lý";
+/* Title of the sheet that sets the stages of a trigger. A dual-stage trigger has a soft pull and a full pull. */
 "ui.profiles.trigger.title" = "Nấc cò";
+/* Label of the popup in the trigger sheet that picks the trigger. */
 "ui.profiles.trigger.source" = "Cò";
+/* Option of the trigger popup: the left trigger. */
 "ui.profiles.trigger.left" = "Cò trái";
+/* Option of the trigger popup: the right trigger. */
 "ui.profiles.trigger.right" = "Cò phải";
+/* Title of the switch in the trigger sheet that turns on the two stages of the trigger. */
 "ui.profiles.trigger.enabled" = "Bật cò hai nấc";
+/* Label of the popup in the trigger sheet that picks how the soft pull and the full pull work together. */
 "ui.profiles.trigger.mode" = "Tương tác giữa các nấc";
+/* Label of the field in the trigger sheet that sets how far the trigger must move for the soft pull. The value is a number from 0 to 1. */
 "ui.profiles.trigger.softThreshold" = "Ngưỡng nhấn nhẹ (0...1)";
+/* Label of the field in the trigger sheet that sets how far the trigger must move for the full pull. The value is a number from 0 to 1. */
 "ui.profiles.trigger.fullThreshold" = "Ngưỡng nhấn hết (0...1)";
+/* Label of the field in the trigger sheet that sets how far the trigger must go back before a stage is released. */
 "ui.profiles.trigger.hysteresis" = "Độ trễ ngưỡng khi nhả";
+/* Label of the field in the trigger sheet that sets the time within which a fast pull skips the soft stage. The value is in milliseconds. */
 "ui.profiles.trigger.skipWindow" = "Khoảng nhấn nhanh (ms)";
+/* Title of the switch in the trigger sheet that keeps sending the analog trigger to the virtual gamepad as well. */
 "ui.profiles.trigger.passthrough" = "Giữ truyền thẳng cò analog";
+/* Option of the stage interaction popup: the soft stage and the full stage are both active at the same time. */
 "ui.profiles.trigger.simultaneous" = "Nhẹ và hết cùng lúc";
+/* Option of the stage interaction popup: the full stage replaces the soft stage. */
 "ui.profiles.trigger.exclusive" = "Nhấn hết thay thế nhấn nhẹ";
+/* Option of the stage interaction popup: a quick pull goes straight to the full stage. */
 "ui.profiles.trigger.preferFull" = "Ưu tiên nhấn hết nhanh";
+/* Option of the stage interaction popup: a quick pull goes straight to the full stage, and a slow pull combines both stages late. */
 "ui.profiles.trigger.preferFullCombined" = "Ưu tiên nhấn hết nhanh; kết hợp muộn";
+/* Option of the stage interaction popup: the soft stage fires at once, and a quick pull goes straight to the full stage. */
 "ui.profiles.trigger.responsivePreferFull" = "Nhấn nhẹ phản hồi nhanh; ưu tiên nhấn hết nhanh";
+/* Option of the stage interaction popup: the soft stage fires at once, and both stages combine late. */
 "ui.profiles.trigger.responsivePreferFullCombined" = "Nhạy khi nhấn nhẹ; kết hợp muộn";
+/* Title of the switch in the motion sheet that turns on lean sources. A lean source is a control that is active while the controller is tilted to one side. */
 "ui.profiles.motion.leanEnabled" = "Bật nguồn nghiêng";
+/* Label of the slider in the motion sheet that sets the tilt at which a lean starts. The value is in degrees. */
 "ui.profiles.motion.leanThresholdDegrees" = "Ngưỡng nghiêng (độ)";
+/* Label of the slider in the motion sheet that sets how far the tilt must go back before a lean ends. The value is in degrees. */
 "ui.profiles.motion.leanHysteresisDegrees" = "Độ trễ ngưỡng khi nhả nghiêng (độ)";
+/* Title of the switch in the motion sheet that turns on steering by tilting the controller. */
 "ui.profiles.motion.steeringEnabled" = "Bật lái bằng chuyển động";
+/* Label of the popup in the motion sheet that picks the axis of the virtual gamepad that the steering moves. */
 "ui.profiles.motion.steeringOutput" = "Trục lái ảo";
+/* Option of the steering axis popup: the horizontal axis of the left stick. */
 "ui.profiles.motion.steeringLeft" = "Cần trái ngang";
+/* Option of the steering axis popup: the horizontal axis of the right stick. */
 "ui.profiles.motion.steeringRight" = "Cần phải ngang";
+/* Label of the slider in the motion sheet that sets the tilt around the center that is ignored. The value is in degrees. */
 "ui.profiles.motion.steeringDeadzoneDegrees" = "Vùng chết khi lái (độ)";
+/* Label of the slider in the motion sheet that sets the tilt that counts as full steering. The value is in degrees. */
 "ui.profiles.motion.steeringFullScaleDegrees" = "Góc lái tối đa (độ)";
+/* Label of the slider in the motion sheet that sets the exponent of the steering response curve. */
 "ui.profiles.motion.steeringResponseExponent" = "Số mũ phản hồi khi lái";
+/* Title of the switch in the motion sheet that reverses the steering direction. */
 "ui.profiles.motion.steeringInverted" = "Đảo chiều lái";
 
 /* Value of a physical output destination field when the output is turned off. */
 "status.disabled" = "Bị vô hiệu";
+/* Label of the switch or heading in the profile details sheet for a profile that applies to a pair of Joy-Cons. Joy-Con is a Nintendo product name. */
 "ui.profiles.joyConPair" = "Cấu hình Joy-Con ghép đôi";
+/* Label of the popup in the profile details sheet that picks which Joy-Con of the pair provides the gyro. */
 "ui.profiles.joyConGyro" = "Nguồn con quay hồi chuyển của cặp";
+/* Option of the gyro source popup: the left Joy-Con. Joy-Con is a Nintendo product name. */
 "ui.profiles.joyConLeft" = "Joy-Con trái";
+/* Option of the gyro source popup: the right Joy-Con. Joy-Con is a Nintendo product name. */
 "ui.profiles.joyConRight" = "Joy-Con phải";
+/* Button in the Profiles area that opens the sheet that pairs two connected Joy-Cons. Keep the three dots. Joy-Con is a Nintendo product name. */
 "ui.profiles.pairJoyCons" = "Ghép đôi các Joy-Con đã kết nối…";
+/* Status in the Profiles area when two Joy-Cons are paired. */
 "ui.profiles.joyConPairActive" = "Cặp đang hoạt động";
+/* Button in the Profiles area that ends the pairing of two Joy-Cons. */
 "ui.profiles.unpairJoyCons" = "Hủy ghép đôi";
+/* Hint in the Joy-Con pairing sheet. The pairing lasts until the user quits the app. */
 "ui.profiles.joyConPairSessionHint" = "Việc ghép đôi dùng đúng các bộ điều khiển này trong phiên ứng dụng hiện tại.";
+/* Confirm button of the Joy-Con pairing sheet. */
 "ui.profiles.pair" = "Ghép đôi";
 /* Error shown when two Joy-Cons cannot be combined into one controller. Joy-Con is a Nintendo product name. */
 "ui.error.joyConPairUnavailable" = "Không thể ghép đôi các Joy-Con đã chọn. Hãy làm mới các bộ điều khiển đã kết nối và thử lại.";
+/* Status in the profile editor for a profile that applies to an explicit pairing of two Joy-Cons. */
 "ui.profiles.joyConSessionState" = "Ghép đôi chủ động";
 
-/* Mapping-owned physical controller output. Translation review pending. */
+/* Name of a rumble output destination. %1$@ is the motor and %2$@ is the intensity as a number; %% is the percent sign. */
 "ui.mapping.physicalRumble" = "%1$@ rung (%2$@%%)";
+/* Name of a player indicator output destination. %@ is the indicator pattern. */
 "ui.mapping.physicalPlayerIndicator" = "Chỉ báo người chơi %@";
+/* Name of a controller color output destination. %@ is the color. */
 "ui.mapping.physicalColor" = "Màu bộ điều khiển %@";
+/* Name of a controller brightness output destination. %@ is the brightness as a number; %% is the percent sign. */
 "ui.mapping.physicalBrightness" = "Độ sáng bộ điều khiển (%@%%)";
+/* Name of an adaptive trigger output destination. %1$@ is the trigger and %2$@ is the effect. */
 "ui.mapping.physicalAdaptiveTrigger" = "%1$@ cò thích ứng: %2$@";
 
-/* Physical mapping value editor. Translation review pending. */
+/* Label of the popup in the output destination editor that picks the rumble motor. */
 "ui.profiles.physical.motor" = "Mô-tơ";
+/* Label of the slider in the output destination editor that sets the rumble strength. */
 "ui.profiles.physical.intensity" = "Cường độ";
+/* Label of the popup in the output destination editor that picks the player indicator pattern. */
 "ui.profiles.physical.player" = "Chỉ báo người chơi";
+/* Label of the slider in the output destination editor for the red part of the controller color. */
 "ui.profiles.physical.red" = "Đỏ";
+/* Label of the slider in the output destination editor for the green part of the controller color. */
 "ui.profiles.physical.green" = "Lục";
+/* Label of the slider in the output destination editor for the blue part of the controller color. */
 "ui.profiles.physical.blue" = "Lam";
+/* Label of the slider in the output destination editor that sets the brightness of the controller light. */
 "ui.profiles.physical.brightness" = "Độ sáng";
+/* Label of the popup in the output destination editor that picks the adaptive trigger. */
 "ui.profiles.physical.trigger" = "Cò thích ứng";
+/* Label of the popup in the output destination editor that picks the effect of the adaptive trigger. */
 "ui.profiles.physical.effect" = "Hiệu ứng";
+/* Label of the slider in the output destination editor that sets where the resistance of the adaptive trigger starts. */
 "ui.profiles.physical.startPosition" = "Điểm bắt đầu lực cản";
+/* Label of the slider in the output destination editor that sets how strong the resistance of the adaptive trigger is. */
 "ui.profiles.physical.strength" = "Độ mạnh lực cản";
 
+/* Menu item in the profile editor that removes all inputs of the profile. Keep the three dots. */
 "ui.profiles.clearInputs" = "Xóa tất cả đầu vào…";
+/* Destructive button of the alert that removes all inputs of the profile. */
 "ui.profiles.clearInputsConfirm" = "Xóa tất cả";
+/* Message of the alert that removes all inputs of the profile. */
 "ui.profiles.clearInputsMessage" = "Thao tác này xóa mọi phép gán và xử lý đầu vào khỏi cấu hình này.";
+/* Title of the alert that removes all inputs of the profile. */
 "ui.profiles.clearInputsTitle" = "Xóa tất cả đầu vào?";
+/* Menu item in the profile editor that removes all assignments of the profile. Keep the three dots. */
 "ui.profiles.removeAllAssignments" = "Xóa mọi phép gán…";
+/* Title of the alert that removes all assignments of the profile. */
 "ui.profiles.removeAllAssignmentsTitle" = "Xóa mọi phép gán?";
+/* Message of the alert that removes all assignments of the profile. The stick, trigger, touch and motion settings stay. */
 "ui.profiles.removeAllAssignmentsMessage" = "Thao tác này xóa mọi phép gán, tổ hợp nút, chuỗi nút và lớp khỏi cấu hình này. Cài đặt cần, cò, chạm và cảm biến chuyển động được giữ nguyên.";
+/* Destructive button of the alert that removes all assignments of the profile. */
 "ui.profiles.removeAllAssignmentsConfirm" = "Xóa tất cả";
+/* Message of the alert shown before the app activates a profile that sends no input. */
 "ui.profiles.emptyActivationMessage" = "Cấu hình này chặn mọi đầu vào của bộ điều khiển.";
+/* Title of the alert shown before the app activates a profile that sends no input. */
 "ui.profiles.emptyActivationTitle" = "Kích hoạt cấu hình không có đầu vào bộ điều khiển?";
+/* Warning in the profile editor when the profile sends no input. */
 "ui.profiles.emptyInputWarning" = "Cấu hình này chặn mọi đầu vào của bộ điều khiển.";
+/* Menu item in the profile editor that sets the inputs of the profile to the default. */
 "ui.profiles.restoreDefaultInput" = "Khôi phục đầu vào mặc định";
 /* Button of the controller actions that resets all settings of the controller. A confirmation alert with the same label follows. */
 "action.reset" = "Đặt lại";
+/* Title of the switch in the lighting editor that uses the color that the controller shows by default. */
 "ui.profiles.useControllerDefaultColor" = "Dùng mặc định của bộ điều khiển";
+/* Title of the message in the Profiles area when a saved profile cannot be read. */
 "ui.profiles.damagedProfile" = "Cấu hình bị hỏng";
+/* Title of the message in the Profiles area when the list of active profiles cannot be read. */
 "ui.profiles.damagedLibrary" = "Danh sách cấu hình đang hoạt động bị hỏng";
+/* Button in the Profiles area that deletes a damaged profile. Keep the three dots. */
 "ui.profiles.deleteDamagedButton" = "Xóa cấu hình bị hỏng…";
+/* Button in the Profiles area that backs up and resets the list of active profiles. The ampersand stays. Keep the three dots. */
 "ui.profiles.resetLibraryButton" = "Sao lưu và đặt lại cấu hình đang hoạt động…";
+/* Message of the recovery alert. The app saves a backup before it removes damaged data. */
 "ui.profiles.recoveryBackupMessage" = "Một bản sao lưu sẽ được tạo trước khi dữ liệu bị hỏng bị xóa.";
+/* Message in the Profiles area when a saved profile cannot be read. The user deletes it to go on with the other profiles. */
 "ui.profiles.damagedProfileMessage" = "Không thể đọc cấu hình đã lưu này. Hãy xóa nó để tiếp tục dùng các cấu hình hợp lệ.";
+/* Message in the Profiles area when the list of active profiles cannot be read. The user resets the list. The profiles stay. */
 "ui.profiles.damagedSelectionsMessage" = "Không thể đọc danh sách cấu hình đang hoạt động. Hãy đặt lại để tiếp tục. Các cấu hình của bạn vẫn được giữ.";
+/* Confirm button of the recovery alert that backs up and resets the list of active profiles. The ampersand stays. */
 "ui.profiles.resetLibraryAction" = "Sao lưu và đặt lại";
 
 /* Label of the row in the Controllers detail that tells that the session of the controller is suspended. The row holds the Resume button. */
@@ -1716,17 +2091,23 @@
 "cli.update.check.prerelease" = "Bao gồm các phiên bản phát hành trước.";
 /* Message printed by 'ojd update check' when the installed version is the latest. %1$@ is the installed version and %2$@ is the latest release. */
 "cli.update.check.upToDate" = "OpenJoystickDriver %1$@ đã được cập nhật (bản phát hành mới nhất: %2$@).";
+/* Heading of the Command-Line Tool section in the settings window. */
 "ui.settings.commandLine.tool" = "Công cụ dòng lệnh";
+/* Error in the Command-Line Tool section when a regular file is in the place of the link. %@ is the path. */
 "ui.settings.commandLine.toolBlocked" = "%@ là một tệp, không phải liên kết. Hãy xóa nó, rồi cài đặt lại.";
+/* Status in the Command-Line Tool section after the user cancels the installation. */
 "ui.settings.commandLine.toolCancelled" = "Đã hủy.";
 /* Error shown in the Command Line Tool section of the settings window when macOS refuses to install or remove the tool. */
 "platform.macos.ui.settings.commandLine.toolFailed" = "macOS không cho phép thay đổi này.";
+/* Button in the Command-Line Tool section that installs the ojd link. ojd is the command name and stays as written. */
 "ui.settings.commandLine.toolInstall" = "Cài đặt công cụ dòng lệnh";
 /* Status in the Command Line Tool section of the settings window when ojd is installed. %@ is the path of the link. Terminal is the macOS app and ojd is the command name. */
 "platform.macos.ui.settings.commandLine.toolInstalled" = "Đã cài đặt. Chạy ojd trong Terminal; gỡ cài đặt sẽ xóa %@.";
+/* Note in the Command-Line Tool section when the link points to another program. %1$@ is the path of the link and %2$@ is the path it points to. Installing changes the link to point to this app. */
 "ui.settings.commandLine.toolLinkedElsewhere" = "%1$@ trỏ đến %2$@. Cài đặt sẽ liên kết nó với ứng dụng này.";
 /* Description in the Command Line Tool section of the settings window before the tool is installed. %@ is the path where the link is created. Terminal is the macOS app and ojd is the command name. */
 "platform.macos.ui.settings.commandLine.toolNotInstalled" = "Liên kết %@ với ứng dụng này để bạn có thể chạy ojd trong Terminal. macOS sẽ yêu cầu mật khẩu quản trị viên.";
+/* Button in the Command-Line Tool section that removes the ojd link. */
 "ui.settings.commandLine.toolUninstall" = "Gỡ cài đặt";
 /* One-line summary of 'ojd controller' in the command list and at the top of its help. */
 "cli.controller.group.abstract" = "Liệt kê, kiểm tra, thử nghiệm và điều khiển các bộ điều khiển đã kết nối.";
@@ -2966,8 +3347,11 @@
 "cli.setting.group.showInMenuBar" = "Hiện mục OpenJoystickDriver trên thanh menu.";
 /* Help text of the checkUpdatesAutomatically setting in 'ojd setting list'. */
 "cli.setting.group.checkUpdatesAutomatically" = "Kiểm tra cập nhật khi ứng dụng khởi động.";
+/* Title of the General pane and of its toolbar item in the settings window. */
 "ui.settings.general.title" = "Chung";
+/* Title of the Notifications pane and of its toolbar item in the settings window. */
 "ui.settings.notifications.title" = "Thông báo";
+/* Title of the Advanced pane and of its toolbar item in the settings window. */
 "ui.settings.advanced.title" = "Nâng cao";
 /* VoiceOver label of the General pane of the settings window. The key is built from the pane identifier. */
 "a11y.settingsPane.general" = "Cài đặt chung";
@@ -2975,14 +3359,21 @@
 "a11y.settingsPane.notifications" = "Cài đặt thông báo";
 /* VoiceOver label of the Advanced pane of the settings window. The key is built from the pane identifier. */
 "a11y.settingsPane.advanced" = "Cài đặt nâng cao";
+/* Title of the switch in the General pane of the settings window that shows the app item in the menu bar. */
 "ui.settings.general.showInMenuBar" = "Hiện trên thanh menu";
+/* Description under the Show in menu bar switch in the General pane of the settings window. OpenJoystickDriver is the product name. */
 "ui.settings.general.showInMenuBarDescription" = "Hiện mục OpenJoystickDriver trên thanh menu.";
+/* Title of the switch in the Updates section of the settings window that checks for an update at startup. */
 "ui.settings.general.checkUpdatesAutomatically" = "Tự động kiểm tra cập nhật";
+/* Description under the automatic update check switch in the Updates section of the settings window. */
 "ui.settings.general.checkUpdatesAutomaticallyDescription" = "Kiểm tra phiên bản mới hơn khi ứng dụng khởi động.";
+/* Title of the alert that removes the command-line tool. */
 "ui.settings.commandLine.uninstallTitle" = "Gỡ cài đặt công cụ dòng lệnh?";
 /* Message of the confirmation alert that removes the command line tool. %1$@ is the path of the link. The app stays installed. Terminal is the macOS app and ojd is the command name. */
 "platform.macos.ui.settings.commandLine.uninstallMessage" = "Thao tác này xóa liên kết tại %1$@. Ứng dụng vẫn được cài, và ojd không còn chạy trong Terminal cho đến khi bạn cài lại công cụ.";
+/* Confirm button of the alert that removes the command-line tool. */
 "ui.settings.commandLine.uninstallConfirm" = "Gỡ cài đặt";
+/* Hint in the Advanced pane of the settings window while the developer tools are off. */
 "ui.settings.advanced.developerToolsOff" = "Hãy bật công cụ nhà phát triển để xem đầu vào bộ điều khiển và gói USB.";
 /* Status line in the menu bar menu. %1$@ is the runtime state, %2$@ is the controller count text and %3$@ is the active profile text. The dots between them separate the parts and may change. */
 "ui.extra.statusLine" = "%1$@ · %2$@ · %3$@";
@@ -3050,7 +3441,9 @@
 "ui.menu.profile.activateFailed" = "Không thể kích hoạt cấu hình";
 /* Message of the alert shown when the profile changed elsewhere during the turn on. */
 "ui.menu.profile.activateConflict" = "Cấu hình đã thay đổi trong khi đang kích hoạt. Hãy thử lại.";
+/* Error when the user imports a profile while another profile change runs. Import Profile is the title of the toolbar button and is written as in this catalog. */
 "ui.profiles.importBlocked" = "Một thay đổi cấu hình đang diễn ra. Hãy chọn lại “Nhập cấu hình” khi nó hoàn tất.";
+/* Body of the notification about an available update. %@ is the version tag. */
 "ui.settings.general.updateAvailableBody" = "Đã có phiên bản %@.";
 /* Title of the message in the main window while a profile change is still running. */
 "ui.mainWindow.profileMutationRunning" = "Một thay đổi cấu hình vẫn đang chạy. Hãy thử lại khi nó hoàn tất.";
@@ -3058,6 +3451,7 @@
 "ui.access.web.noPort" = "Điểm cuối web đã bật, nhưng chưa chọn cổng";
 /* Description of the signer of a program that has a signature without a known publisher. */
 "ui.access.signer.signedUnknownPublisher" = "Do nhà phát hành không xác định ký";
+/* Note in the Command-Line Tool section when the target of the link cannot be read. %@ is the path of the link. Installing changes the link to point to this app. */
 "ui.settings.commandLine.toolLinkTargetUnreadable" = "%@ là một liên kết có đích không đọc được. Cài đặt sẽ liên kết nó với ứng dụng này.";
 /* Text of error E1001, sent to a client that connects to the endpoint while the endpoint is off, and printed by 'ojd explain'. The command in quotes stays as written. */
 "error.E1001.message" = "Điểm cuối đã tắt. Hãy bật bằng “ojd access enable” và kết nối lại.";
@@ -3283,8 +3677,11 @@
 "ui.error.withCode" = "%1$@ (%2$@)";
 /* Message printed by 'ojd update check' when the installed version is newer than the latest release. %1$@ is the installed version and %2$@ is the latest release. */
 "cli.update.check.ahead" = "OpenJoystickDriver %1$@ mới hơn bản phát hành mới nhất đã công bố (%2$@).";
+/* Result of the update check: the installed version is newer than the latest release. */
 "ui.settings.general.updateAhead" = "Mới hơn bản phát hành mới nhất";
+/* Label of the installed version in the General pane of the settings window. */
 "ui.settings.general.version" = "Phiên bản";
+/* Line in the Updates section of the settings window. %@ is the version of the latest release. */
 "ui.settings.general.latestRelease" = "Bản phát hành mới nhất: %@";
 /* Title of the switch in the General pane of the settings window that shows the app icon in the Dock. Dock is the macOS name. */
 "platform.macos.ui.settings.general.showInDock" = "Hiện trong Dock";
@@ -3414,15 +3811,21 @@
 "ui.controllers.inputHealth.stale" = "Không cập nhật";
 /* Value of the input health fact: the app waits until all controls are at rest before it sends input again. */
 "ui.controllers.inputHealth.waitingForNeutral" = "Đang chờ vị trí trung tính";
+/* Error shown when the settings file is damaged. %@ is the path of the file. The command in backticks stays as written, and Trash is the macOS name. */
 "ui.settings.advanced.errorDamaged" = "Tệp cài đặt %@ bị hỏng. Hãy sửa tệp, hoặc chuyển tệp vào Thùng rác bằng `ojd setting reset`.";
+/* Error shown when the settings file has an unsupported version. %@ is the path of the file. apiVersion and the command in backticks stay as written, and Trash is the macOS name. */
 "ui.settings.advanced.errorUnsupported" = "Tệp cài đặt %@ không được hỗ trợ. Hãy viết lại tệp theo apiVersion được hỗ trợ, hoặc chuyển tệp vào Thùng rác bằng `ojd setting reset`.";
+/* Error shown when the settings file cannot be written. %@ is the path of the file. */
 "ui.settings.advanced.errorUnwritable" = "Không thể ghi tệp cài đặt %@.";
+/* Error shown when the settings file cannot be moved to the Trash. %@ is the path of the file. Trash is the macOS name. */
 "ui.settings.advanced.errorCannotReset" = "Không thể chuyển tệp cài đặt %@ vào Thùng rác.";
 /* Error shown at startup when the stored settings file turns off both entry points. %@ is the path of the settings file. The two switch names are written as in this catalog, and the command in backticks stays as written. */
 "platform.macos.ui.settings.advanced.errorStoredNoVisibleEntryPoint" = "Tệp cài đặt %@ tắt cả “Hiện trên thanh menu” và “Hiện trong Dock”, nên ứng dụng sẽ không có điểm vào nào hiển thị. Hãy sửa tệp, hoặc chuyển tệp vào Thùng rác bằng `ojd setting reset`.";
 /* Error shown when the user turns off both Show in menu bar and Show in Dock. The two switch names are written as in this catalog. */
 "platform.macos.ui.settings.advanced.errorNoVisibleEntryPoint" = "Không thể tắt cả “Hiện trên thanh menu” và “Hiện trong Dock”: ứng dụng sẽ không có điểm vào nào hiển thị.";
+/* Title of the alert at startup when the settings file cannot be read. */
 "ui.settings.advanced.unreadableTitle" = "Không thể đọc cài đặt";
+/* Destructive button of the alert at startup that resets the settings, which discards the unreadable settings file. */
 "ui.settings.advanced.unreadableResetSettings" = "Đặt lại cài đặt";
 /* Button of the alert about an unreadable settings file at startup that shows the file in Finder, the macOS file manager. */
 "platform.macos.ui.settings.advanced.unreadableShowInFinder" = "Hiện trong Finder";
