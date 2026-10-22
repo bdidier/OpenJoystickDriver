@@ -19,7 +19,7 @@
 /* Menu item and toolbar button that deletes the selected profile. */
 "action.delete" = "Xóa";
 /* Button that closes an error banner of the profile editor and of the profile list without further action. */
-"action.dismiss" = "Bỏ qua";
+"action.dismiss" = "Đóng";
 /* Button in the mapping capture banner that discards local edits and loads the stored profile again. It sits beside Keep editing. */
 "action.reload" = "Tải lại";
 /* Button in the mapping capture banner that keeps the local edits when the stored profile changed. It sits beside Reload. */
@@ -93,7 +93,7 @@
 /* Note in the Notifications pane of the settings window when macOS has turned off banners for the app. System Settings is the name of the macOS app. */
 "platform.macos.ui.settings.notifications.notificationBannersOffDetail" = "Biểu ngữ thông báo đã tắt trong Cài đặt hệ thống.";
 /* Status text in the Notifications pane of the settings window when macOS allows notifications. */
-"ui.settings.notifications.notificationDeliveryAllowed" = "Cho phép gửi thông báo.";
+"ui.settings.notifications.notificationDeliveryAllowed" = "Đã cho phép gửi thông báo.";
 /* Status text in the Notifications pane of the settings window when macOS allows banners, Notification Center and sounds. Notification Center is the macOS name. */
 "ui.settings.notifications.notificationDeliveryReady" = "Biểu ngữ, Trung tâm thông báo và âm thanh đã bật.";
 /* Status text in the Notifications pane of the settings window when the user has not allowed notifications in macOS. */
@@ -131,7 +131,7 @@
 /* Button in the Notifications pane of the settings window that sends a test notification. */
 "ui.settings.notifications.testNotification" = "Gửi thông báo thử";
 /* Result of the update check: the installed version is the latest. */
-"ui.settings.general.upToDate" = "Đã cập nhật";
+"ui.settings.general.upToDate" = "Đã là bản mới nhất";
 /* Result of the update check: a newer version exists. */
 "ui.settings.general.updateAvailable" = "Có sẵn bản cập nhật";
 /* Status of the update check while it runs. Keep the three dots. */
@@ -203,7 +203,7 @@
 /* Value of the serving route in the Controllers area: macOS serves the controller and the driver passes the input through. */
 "platform.macos.ui.controllers.serving.nativePassThrough" = "macOS (chuyển thẳng)";
 /* Value of the serving route when OpenJoystickDriver serves a virtual gamepad. OpenJoystickDriver is the product name. */
-"ui.controllers.serving.virtualHID" = "OpenJoystickDriver (tay cầm ảo)";
+"ui.controllers.serving.virtualHID" = "OpenJoystickDriver, tay cầm ảo";
 /* Value of the serving route when the driver extension owns the controller. */
 "ui.controllers.serving.extensionOwned" = "Tiện ích mở rộng trình điều khiển";
 /* Value of the serving route when the user turned the output off. */
@@ -1554,7 +1554,7 @@
 "ui.profiles.resetLibraryAction" = "Sao lưu và đặt lại";
 
 /* Label of the row in the Controllers detail that tells that the session of the controller is suspended. The row holds the Resume button. */
-"ui.controllers.suspended" = "Đã tạm ngưng";
+"ui.controllers.suspended" = "Đã tạm dừng";
 /* Error shown when the service refuses to change the session of a controller. */
 "ui.error.controllerSessionChangeRejected" = "Không thể thay đổi phiên của bộ điều khiển.";
 
@@ -2162,7 +2162,7 @@
 /* Message printed by 'ojd controller list' when no controller is connected. */
 "cli.controller.list.empty" = "Không có bộ điều khiển nào đang kết nối.";
 /* Marker appended to the line of a suspended controller in 'ojd controller list'. Keep the parentheses. */
-"cli.controller.list.suspended" = "(đã tạm ngưng)";
+"cli.controller.list.suspended" = "(đã tạm dừng)";
 /* Help text of the --duration option of 'ojd controller watch' and 'ojd controller capture'. Control-C is the key combination that stops a program in a terminal. */
 "cli.controller.group.optionDuration" = "Dừng sau số giây này. Nếu không có, chạy cho đến khi bạn nhấn Control-C.";
 /* Error of the controller output commands when the controller rejects a command. %1$@ is the controller name, %2$@ is the command name and %3$@ is the outcome in kebab case, which stays as written. The command in quotes stays as written. */
@@ -2908,7 +2908,7 @@
 /* Title of the details button of an error message in the Library area. */
 "ui.library.details" = "Chi tiết";
 /* Button of an error message in the Library area that hides the message. */
-"ui.library.dismiss" = "Bỏ qua";
+"ui.library.dismiss" = "Đóng";
 /* Button of the open panel in which the user picks a record file or a mod folder. It confirms the choice. */
 "ui.library.choose" = "Chọn";
 /* Toolbar button in the Library area that checks a record file or mod folder without installing it. Keep the three dots. */
@@ -3034,9 +3034,9 @@
 /* VoiceOver label of the button in the Library error banner that shows the details of the error. */
 "a11y.library.details" = "Hiện chi tiết của lỗi";
 /* VoiceOver label of the button in the Library error banner that closes the error. */
-"a11y.library.dismissError" = "Bỏ qua lỗi";
+"a11y.library.dismissError" = "Đóng lỗi";
 /* VoiceOver label of the button that closes an informational message in the Library detail view. */
-"a11y.library.dismissNotice" = "Bỏ qua thông báo";
+"a11y.library.dismissNotice" = "Đóng thông báo";
 /* VoiceOver label of the Library cancel button. It leaves the library unchanged. */
 "a11y.library.cancel" = "Hủy và giữ nguyên thư viện";
 /* VoiceOver label for the hexadecimal reading shown after the vendorID and productID lines of a record in the Library. %1$@ is the member name, vendorID or productID, which stays as written; %2$@ is the value in hexadecimal, such as 0x353D. */
@@ -3046,7 +3046,7 @@
 /* Title of the details button of an error message in the Access area. */
 "ui.access.details" = "Chi tiết";
 /* Button of an error message in the Access area that hides the message. */
-"ui.access.dismiss" = "Bỏ qua";
+"ui.access.dismiss" = "Đóng";
 /* Button of an error message in the Access area that reads the access settings again. */
 "ui.access.tryAgain" = "Thử lại";
 /* Message in the Access area while it reads the access settings. Keep the three dots. */
@@ -3164,7 +3164,7 @@
 /* Footer of the list of refused programs and tokens. */
 "ui.access.refused.message" = "Các chương trình và token mà điểm cuối đã từ chối trong 24 giờ qua.";
 /* Heading of the list of connections that are open at the moment in the Access area. */
-"ui.access.connections" = "Đã kết nối";
+"ui.access.connections" = "Hiện đã kết nối";
 /* Name of the read scope. It lets a program read controller state. */
 "ui.access.scope.read" = "Đọc";
 /* Name of the control scope. It lets a program change controller state and send output. */
@@ -3190,7 +3190,7 @@
 /* VoiceOver label of the button in the Access error banner that shows the details of the error. */
 "a11y.access.details" = "Hiện chi tiết của lỗi";
 /* VoiceOver label of the Access error banner button when the banner offers to close the error. */
-"a11y.access.dismissError" = "Bỏ qua lỗi";
+"a11y.access.dismissError" = "Đóng lỗi";
 /* VoiceOver label of the Access error banner button when the banner offers to read the access settings again. */
 "a11y.access.tryAgain" = "Đọc lại cài đặt quyền truy cập";
 /* VoiceOver label of the button in the Access area that restarts the app so that newly granted permissions take effect. */

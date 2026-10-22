@@ -105,7 +105,7 @@ enum LocalizationCatalogAudit {
       "ui.profiles.physical.motor",
       "ui.profiles.stick.horizontal",
       "ui.profiles.target", "ui.profiles.trackball.enabled", "ui.profiles.turbo",
-      "ui.shortcuts.controller.model",
+      "ui.shortcuts.controller.model", "ui.menu.file.title", "ui.menu.edit.title",
     ],
     "it-IT": [
       "term.parser", "term.protocolVariant.dongle",
@@ -122,7 +122,7 @@ enum LocalizationCatalogAudit {
     ],
     "ja-JP": [
       "term.key.capsLock", "term.key.escape", "term.key.alt", "term.key.return",
-      "term.key.shift",
+      "term.key.shift", "ui.profiles.appID",
     ],
     "ko-KR": [
       "term.key.capsLock", "term.key.meta", "term.key.control", "term.key.escape",
@@ -193,8 +193,9 @@ enum LocalizationCatalogAudit {
       "term.key.shift", "term.key.tab", "ui.mapping.guide", "ui.profiles.trackball.enabled",
       "ui.profiles.turbo", "ui.access.token.issued.title", "ui.access.token.named",
     ],
-    "zh-CN": ["term.key.alt", "term.key.shift"],
-    "zh-TW": ["term.key.escape", "term.key.alt"],
+    "zh-CN": ["term.key.alt", "term.key.shift", "ui.profiles.appID"],
+    "zh-HK": ["ui.profiles.appID"],
+    "zh-TW": ["term.key.escape", "term.key.alt", "ui.profiles.appID"],
   ]
 
   static func allowedSourceIdenticalEnglishProseKeys(for localization: String) -> Set<String> {

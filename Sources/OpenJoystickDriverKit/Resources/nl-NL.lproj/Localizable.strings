@@ -67,7 +67,7 @@
 /* Value of the connection state of a controller in the Controllers detail: the controller is connected. */
 "ui.settings.notifications.controllerConnectedShort" = "Verbonden";
 /* Button of a permission row in the Access area that asks macOS for the permission. %@ is the name of the permission. */
-"ui.settings.notifications.requestAccess" = "Vraag toegang tot “%@” aan";
+"ui.settings.notifications.requestAccess" = "Vraag toegang tot ‘%@’ aan";
 /* VoiceOver label of the switch for notifications about a controller that disconnects. */
 "ui.settings.notifications.controllerDisconnectedNotifications" = "Controller verbroken";
 /* Title of the switch for notifications about a controller that disconnects, and value of the connection state of a controller that is not connected. */
@@ -113,7 +113,7 @@
 /* Button in a pane of the settings window that opens System Settings, the macOS app. */
 "ui.settings.general.openSystemSettings" = "Open Instellingen";
 /* Title of the switch in the Updates section of the settings window that includes prerelease versions in the update check. */
-"ui.settings.general.prereleaseUpdates" = "Neem prerelease-updates op";
+"ui.settings.general.prereleaseUpdates" = "Neem pre-releaseversies op";
 /* Title of the switch for notifications about a profile that is activated or switched. */
 "ui.settings.notifications.profileActivatedShort" = "Geactiveerd of gewisseld";
 /* VoiceOver label of the switch for notifications about a profile that is deactivated. */
@@ -203,9 +203,9 @@
 /* Value of the serving route in the Controllers area: macOS serves the controller and the driver passes the input through. */
 "platform.macos.ui.controllers.serving.nativePassThrough" = "macOS (doorgegeven)";
 /* Value of the serving route when OpenJoystickDriver serves a virtual gamepad. OpenJoystickDriver is the product name. */
-"ui.controllers.serving.virtualHID" = "OpenJoystickDriver (virtuele gamepad)";
+"ui.controllers.serving.virtualHID" = "OpenJoystickDriver, virtuele gamepad";
 /* Value of the serving route when the driver extension owns the controller. */
-"ui.controllers.serving.extensionOwned" = "Stuurprogrammaextensie";
+"ui.controllers.serving.extensionOwned" = "Stuurprogramma-extensie";
 /* Value of the serving route when the user turned the output off. */
 "ui.controllers.serving.outputDisabled" = "Uitvoer uit";
 /* Message when the user changes the server of a controller that no controller record describes. */
@@ -349,7 +349,7 @@
 /* Message in the Profiles area when the state cannot be read. The editor keeps the draft. %@ is the reason sentence. */
 "ui.profiles.draftPreserved" = "Het huidige concept blijft bewaard. %@";
 /* Error when a profile action such as delete or duplicate fails. */
-"ui.profiles.actionError" = "Deze profielactie kon niet worden voltooid. Probeer opnieuw.";
+"ui.profiles.actionError" = "Deze profielactie kon niet worden voltooid. Probeer het opnieuw.";
 /* Title of the message in the profile editor when a profile action needs the user to act. */
 "ui.profiles.actionNeedsAttention" = "Profielactie vereist aandacht";
 /* Title of the message in the profile editor when a profile action failed. */
@@ -793,7 +793,7 @@
 /* Heading of the controller summary section in the developer tools. */
 "ui.developer.controllerDetails" = "Controller";
 /* Message in the packet capture list of the developer tools before a capture. Start Capture is the title of the button and is written as in this catalog. */
-"ui.developer.emptyCapture" = "Klik op “Start de opname” en druk daarna op de knoppen van de controller.";
+"ui.developer.emptyCapture" = "Klik op ‘Start de opname’ en druk daarna op de knoppen van de controller.";
 /* Title of the save panel that exports the packet capture. */
 "ui.developer.exportCapture" = "Exporteer pakketopname";
 /* Heading of the section in the developer tools that lists buttons beyond the standard ones. */
@@ -813,7 +813,7 @@
 /* Title of the empty state in the developer tools when no controller is connected. */
 "ui.developer.noControllers" = "Geen aangesloten controllers";
 /* Detail of the empty state in the developer tools. Refresh is the title of a button and is written as in this catalog. */
-"ui.developer.noControllersDetail" = "Verbind een controller en kies daarna “Vernieuwen”.";
+"ui.developer.noControllersDetail" = "Verbind een controller en kies daarna ‘Vernieuwen’.";
 /* Message in the extra buttons section of the developer tools when the capture detected none. */
 "ui.developer.noExtraInputs" = "Geen extra knoppen gevonden.";
 /* Title of the empty state in the packet list of the developer tools. */
@@ -1077,7 +1077,7 @@
 /* Detail of the live updates banner for any other failure of the live connection. OpenJoystickDriver is the product name. */
 "ui.banner.liveUpdates.detail.other" = "Live-updates van de service werken niet. OpenJoystickDriver controleert in plaats daarvan regelmatig op wijzigingen aan controllers.";
 /* Button of the Driver Extension section in the settings window that removes the driver extension from the system. */
-"cli.login.group.uninstallAction" = "Verwijder installatie";
+"cli.login.group.uninstallAction" = "Deïnstalleer";
 /* Option of the stream filter in the Activity log that shows all entries. */
 "ui.console.all" = "Alles";
 /* Message in the Activity log when no entry matches. */
@@ -1630,7 +1630,7 @@
 /* Examples block at the end of the help of 'ojd record install'. The command lines and file names stay as written; translate only the lines that start with #. */
 "cli.record.install.examples" = "Voorbeelden:\n  # Installeer een opnamebestand\n  ojd record install 045E-028E.json\n  # Lees de opname van stdin\n  ojd record install - < 045E-028E.json";
 /* Examples block at the end of the help of 'ojd access grant'. The command lines and option names stay as written; translate only the lines that start with #. */
-"cli.access.grant.examples" = "Voorbeelden:\n  # Laat een programma de service gebruiken\n  ojd access grant /Applications/Example.app\n  # Maak een token voor pagina's die vanaf één oorsprong worden aangeboden\n  ojd access grant --token overlay --origin http://127.0.0.1:8080";
+"cli.access.grant.examples" = "Voorbeelden:\n  # Laat een programma de service gebruiken\n  ojd access grant /Applications/Example.app\n  # Maak een token voor pagina’s die vanaf één oorsprong worden aangeboden\n  ojd access grant --token overlay --origin http://127.0.0.1:8080";
 /* One-line summary of 'ojd service' in the command list and at the top of its help. OpenJoystickDriver is the product name. */
 "cli.service.group.abstract" = "Start of stop de OpenJoystickDriver-service, of wacht tot die verzoeken accepteert.";
 /* Message printed by 'ojd service' commands when the service runs. */
@@ -1812,7 +1812,7 @@
 /* Error of 'ojd diagnose --output' when the folder of the path is missing. %@ is the folder path. --output stays as written. */
 "cli.diagnose.group.outputParent" = "--output vereist een bestaande map; %@ bestaat niet.";
 /* Progress line of 'ojd diagnose --output' while the support bundle is written. Keep the three dots. */
-"cli.diagnose.group.outputProgress" = "Supportbundel wordt geschreven...";
+"cli.diagnose.group.outputProgress" = "Supportbundel wordt geschreven…";
 /* Message printed after 'ojd diagnose --output' wrote the support bundle. %@ is the file path. The bundle lists the names of the devices, so the user should read it first. */
 "cli.diagnose.group.outputWritten" = "Supportbundel geschreven naar %@. Controleer hem voordat je hem deelt; apparaatnamen zijn inbegrepen.";
 /* Long description in the help of 'ojd diagnose'. pass, warn, fail and skip are the check results printed by the command and stay as written, as do --soak and the other option names. */
@@ -1866,7 +1866,7 @@
 /* Detail of the runtime health check of 'ojd diagnose' when --soak is not given. --soak SECONDS stays as written. */
 "cli.diagnose.group.soakNotRequested" = "niet gevraagd; gebruik --soak SECONDS";
 /* Progress line of 'ojd diagnose --soak'. %@ is the sampling duration, such as 30 seconds. Keep the three dots. */
-"cli.diagnose.group.soakProgress" = "De service wordt gedurende %@ bemonsterd...";
+"cli.diagnose.group.soakProgress" = "De service wordt gedurende %@ bemonsterd…";
 /* Verdict of the runtime health check of 'ojd diagnose --soak' when the physical footprint passed its limit. %1$.1f is the resident size in MiB, %2$.1f is the footprint in MiB, %3$lld is the number of open file descriptors, %4$.1f is the CPU load in percent and %5$.0f is the sampling time in seconds. The double percent sign prints one percent sign. */
 "cli.diagnose.group.soakVerdictFootprintLimit" = "Limiet voor geheugenvoetafdruk overschreden: resident geheugen %1$.1f MiB, geheugenvoetafdruk %2$.1f MiB, bestandsbeschrijvers %3$lld, cpu %4$.1f%% gedurende %5$.0f s";
 /* Verdict of the runtime health check of 'ojd diagnose --soak' when too few samples were taken. %1$.1f is the resident size in MiB, %2$.1f is the footprint in MiB, %3$lld is the number of open file descriptors, %4$.1f is the CPU load in percent and %5$.0f is the sampling time in seconds. The double percent sign prints one percent sign. */
@@ -2000,7 +2000,7 @@
 /* One-line summary of 'ojd permission request' in the command list and at the top of its help. */
 "cli.permission.request.abstract" = "Vraagt de service om toegang aan te vragen; in de terminal verschijnt nooit een vraag.";
 /* Long description in the help of 'ojd permission request'. Exit code 77, input-read, input-inject and --timeout stay as written. */
-"platform.macos.cli.permission.request.discussion" = "macOS toont een eigen vraag voor de service. Stopt met code 77 als een gevraagde toegang nog niet is verleend. Zonder id's worden input-read en input-inject aangevraagd. --timeout staat hier standaard op 10 seconden.";
+"platform.macos.cli.permission.request.discussion" = "macOS toont een eigen vraag voor de service. Stopt met code 77 als een gevraagde toegang nog niet is verleend. Zonder id’s worden input-read en input-inject aangevraagd. --timeout staat hier standaard op 10 seconden.";
 /* Message printed by 'ojd permission request' when macOS granted the permission. */
 "cli.permission.request.granted" = "De gevraagde toegang is verleend.";
 /* Help text of the PERMISSION argument of 'ojd permission request'. input-read and input-inject are values the user types and stay as written. */
@@ -2108,7 +2108,7 @@
 /* Description in the Command Line Tool section of the settings window before the tool is installed. %@ is the path where the link is created. Terminal is the macOS app and ojd is the command name. */
 "platform.macos.ui.settings.commandLine.toolNotInstalled" = "Koppelt %@ aan deze app, zodat je ojd in Terminal kunt uitvoeren. macOS vraagt om een beheerderswachtwoord.";
 /* Button in the Command-Line Tool section that removes the ojd link. */
-"ui.settings.commandLine.toolUninstall" = "Verwijder installatie";
+"ui.settings.commandLine.toolUninstall" = "Deïnstalleer";
 /* One-line summary of 'ojd controller' in the command list and at the top of its help. */
 "cli.controller.group.abstract" = "Aangesloten controllers weergeven, inspecteren, testen en bedienen.";
 /* Help text of the CONTROLLER argument shared by the 'ojd controller' commands. VVVV:PPPP is the vendor ID and product ID in hexadecimal and stays as written. */
@@ -2238,7 +2238,7 @@
 /* One-line summary of 'ojd controller show' in the command list and at the top of its help. */
 "cli.controller.show.abstract" = "De identiteit, het eigenaarschap, de mogelijkheden en het virtuele gamepad van een controller weergeven.";
 /* Long description in the help of 'ojd controller show'. It adds that the command also lists output checks: commands that exercise each rumble motor and light, with what to observe. */
-"cli.controller.show.discussion" = "Toont ook uitvoercontroles: commando's die elke rumblemotor en elk lampje uitproberen, met wat je moet waarnemen.";
+"cli.controller.show.discussion" = "Toont ook uitvoercontroles: commando’s die elke rumblemotor en elk lampje uitproberen, met wat je moet waarnemen.";
 /* Row label in the output of 'ojd controller show', present when the controller reports power. The charge in percent and the charging state follow. */
 "cli.controller.show.labelBattery" = "Batterij";
 /* Row label in the output of 'ojd controller show'. The connection type follows, such as USB or Bluetooth. */
@@ -3122,7 +3122,7 @@
 /* Text of error E5005, printed when the access file is damaged. AccessGrants.json is a file name and stays as written. */
 "error.E5005.message" = "Het toegangsbestand AccessGrants.json is beschadigd. Herstel het bestand of verwijder het, en verleen daarna opnieuw toegang.";
 /* Text of error E5006, printed when the key file of the unit IDs cannot be read or has the wrong size. PortKeyInstallation.key is a file name and stays as written. OpenJoystickDriver is the product name. */
-"error.E5006.message" = "Het sleutelbestand van de apparaat-ID's, PortKeyInstallation.key, kan niet worden gelezen of is niet 32 bytes. Zet het bestand terug vanuit een reservekopie. Als je het in plaats daarvan verwijdert, maakt OpenJoystickDriver een nieuwe sleutel en verandert elke apparaat-ID.";
+"error.E5006.message" = "Het sleutelbestand van de apparaat-ID’s, PortKeyInstallation.key, kan niet worden gelezen of is niet 32 bytes. Zet het bestand terug vanuit een reservekopie. Als je het in plaats daarvan verwijdert, maakt OpenJoystickDriver een nieuwe sleutel en verandert elke apparaat-ID.";
 /* Error E5007, shown when a controller record or patch fails its schema; the message names the field. */
 "error.E5007.message" = "Een controllerrecord of patch is ongeldig. Controleer het bestand met zijn schema en herstel het veld dat het bericht noemt.";
 /* Error text with the error code. %1$@ is the message and %2$@ is the code, for example E2011. The code is in parentheses. */
@@ -3215,11 +3215,11 @@
 /* Value of the USB extension field: the extension does not claim the controller. */
 "ui.library.claim.unclaimed" = "Neemt deze controller niet over";
 /* Placeholder of the search field in the toolbar of the Library area. */
-"ui.library.search" = "Zoeken";
+"ui.library.search" = "Zoek";
 /* Title of the empty state in the Library area when the search matches nothing. */
 "ui.library.search.noMatches" = "Geen resultaten";
 /* Toolbar button in the Library area that runs a record against a packet capture. Keep the three dots. */
-"ui.library.testRecord" = "Record testen…";
+"ui.library.testRecord" = "Test record…";
 /* Value of the status of a library item that is installed. */
 "ui.library.installed" = "Geïnstalleerd";
 /* Badge on a library item that ships with the app. */
@@ -3289,7 +3289,7 @@
 /* Title of the alert that turns on the local endpoint. */
 "ui.access.enable.title" = "Het lokale eindpunt aanzetten?";
 /* Message of the alert that turns on the local endpoint. The control scope allows a program to change controller state. */
-"ui.access.enable.message" = "Programma’s waaraan je toegang verleent, kunnen dan de controllerstatus lezen en deze met het bereik Besturen wijzigen.";
+"ui.access.enable.message" = "Programma’s waaraan je toegang verleent, kunnen dan de controllerstatus lezen en deze met het bereik ‘Besturen’ wijzigen.";
 /* Label of the row in the Access area for the WebSocket endpoint, where web pages connect. */
 "ui.access.web" = "WebSocket";
 /* Value of the WebSocket row when it is on. %1$@ is the address of the endpoint and %2$@ is the address where pages are served. */
@@ -3333,7 +3333,7 @@
 /* Question of the alert that grants access. %1$@ is the identifier of the program, %2$@ is the description of its signer and %3$@ is the list of scopes. */
 "ui.access.grant.question" = "Deze bereiken aan %1$@ (%2$@) verlenen: %3$@?";
 /* Warning in the alert that grants access when the control scope is part of the grant. Rumble is vibration of the controller. */
-"ui.access.grant.controlWarning" = "Met het bereik Besturen kan het programma uitvoer naar je controllers sturen, zoals trillingen en lichten.";
+"ui.access.grant.controlWarning" = "Met het bereik ‘Besturen’ kan het programma uitvoer naar je controllers sturen, zoals trillingen en lichten.";
 /* Warning line of the confirmation alert that grants access to a program that Apple signed. */
 "platform.macos.ui.access.grant.platformWarning" = "Dit programma is door Apple ondertekend. Elk programma dat Apple met dezelfde identifier ondertekent, zou de toegang krijgen.";
 /* Button on a program or token that removes its access. */
@@ -3365,7 +3365,7 @@
 /* Error of the token creation sheet when the name or the scopes are missing. */
 "ui.access.token.incomplete" = "Een token heeft een naam en minstens één bereik nodig.";
 /* Error of the token creation sheet when the user picks the control scope together with web origins. */
-"ui.access.token.originControl" = "Een token voor webpagina’s kan het bereik Besturen niet hebben.";
+"ui.access.token.originControl" = "Een token voor webpagina’s kan het bereik ‘Besturen’ niet hebben.";
 /* Title of the alert that creates a token. %@ is the name of the token. */
 "ui.access.token.title" = "Het token %@ maken?";
 /* Question of the alert that creates a token without origins. %1$@ is the name of the token and %2$@ is the list of scopes. */
@@ -3475,7 +3475,7 @@
 /* Item of the File menu that saves the Activity log to a file. Keep the three dots. */
 "ui.menu.file.saveActivityLog" = "Bewaar activiteitenlogboek…";
 /* Title of the alert shown when saving a file from the File menu fails. */
-"ui.menu.file.saveFailed" = "Het bestand kan niet worden bewaard";
+"ui.menu.file.saveFailed" = "Het bestand kon niet worden bewaard";
 /* Title of the Edit menu in the menu bar. */
 "ui.menu.edit.title" = "Wijzig";
 /* Item of the Edit menu that undoes the last edit. */
@@ -3493,9 +3493,9 @@
 /* Title of the View menu in the menu bar. */
 "ui.menu.view.title" = "Weergave";
 /* Item of the View menu that makes the window full screen. */
-"ui.menu.view.enterFullScreen" = "Ga naar volledig scherm";
+"ui.menu.view.enterFullScreen" = "Start schermvullende weergave";
 /* Item of the View menu that leaves full screen. It replaces Enter Full Screen while the window is full screen. */
-"ui.menu.view.exitFullScreen" = "Verlaat volledig scherm";
+"ui.menu.view.exitFullScreen" = "Stop schermvullende weergave";
 /* Item of the View menu that shows the sidebar. */
 "ui.menu.view.showSidebar" = "Toon navigatiekolom";
 /* Item of the View menu that hides the sidebar. It replaces Show Sidebar while the sidebar is visible. */
@@ -3525,9 +3525,9 @@
 /* Item of the Profile menu that turns off the active profile. */
 "ui.menu.profile.deactivate" = "Deactiveer profiel";
 /* Title of the alert shown when turning off a profile from the menu fails. */
-"ui.menu.profile.deactivateFailed" = "Het profiel kan niet worden gedeactiveerd";
+"ui.menu.profile.deactivateFailed" = "Het profiel kon niet worden gedeactiveerd";
 /* Message of the alert shown when the profile changed elsewhere during the turn off. */
-"ui.menu.profile.deactivateConflict" = "Het profiel is gewijzigd tijdens het deactiveren. Probeer opnieuw.";
+"ui.menu.profile.deactivateConflict" = "Het profiel is gewijzigd tijdens het deactiveren. Probeer het opnieuw.";
 /* Title of the Window menu in the menu bar. */
 "ui.menu.window.title" = "Venster";
 /* Item of the Window menu that minimizes the window to the Dock. */
@@ -3535,7 +3535,7 @@
 /* Item of the Window menu that zooms the window. */
 "ui.menu.window.zoom" = "Zoom";
 /* Item of the Window menu that brings all windows of the app to the front. */
-"ui.menu.window.bringAllToFront" = "Alles naar de voorgrond";
+"ui.menu.window.bringAllToFront" = "Breng alles naar voren";
 /* Title of the Help menu in the menu bar. */
 "ui.menu.help.title" = "Help";
 /* Item of the Help menu that opens the Activity log. */
@@ -3553,9 +3553,9 @@
 /* Message of the alert shown after the support report is copied. */
 "ui.menu.copySupportReport.doneDetail" = "Het supportrapport staat op het klembord.";
 /* Title of the alert shown when the support report cannot be copied. */
-"ui.menu.copySupportReport.failed" = "Het supportrapport kan niet worden gekopieerd";
+"ui.menu.copySupportReport.failed" = "Het supportrapport kon niet worden gekopieerd";
 /* Message of the alert shown when the support report cannot be copied. The user saves it to a file with the File menu. */
-"ui.menu.copySupportReport.failedDetail" = "Het rapport kan niet worden verzameld. Bewaar het in plaats daarvan in een bestand.";
+"ui.menu.copySupportReport.failedDetail" = "Het rapport kon niet worden verzameld. Bewaar het in plaats daarvan in een bestand.";
 /* Title of the Controllers item in the sidebar of the main window and in the window title when it is selected. */
 "ui.sidebar.controllers.title" = "Controllers";
 /* Title of the Profiles item in the sidebar of the main window and in the window title when it is selected. */
@@ -3573,13 +3573,13 @@
 /* Title of the General pane and of its toolbar item in the settings window. */
 "ui.settings.general.title" = "Algemeen";
 /* Title of the Notifications pane and of its toolbar item in the settings window. */
-"ui.settings.notifications.title" = "Notificaties";
+"ui.settings.notifications.title" = "Meldingen";
 /* Title of the Advanced pane and of its toolbar item in the settings window. */
 "ui.settings.advanced.title" = "Geavanceerd";
 /* VoiceOver label of the General pane of the settings window. The key is built from the pane identifier. */
 "a11y.settingsPane.general" = "Algemene instellingen";
 /* VoiceOver label of the Notifications pane of the settings window. The key is built from the pane identifier. */
-"a11y.settingsPane.notifications" = "Notificatie-instellingen";
+"a11y.settingsPane.notifications" = "Meldingsinstellingen";
 /* VoiceOver label of the Advanced pane of the settings window. The key is built from the pane identifier. */
 "a11y.settingsPane.advanced" = "Geavanceerde instellingen";
 /* Title of the switch in the General pane of the settings window that shows the app item in the menu bar. */
@@ -3591,13 +3591,13 @@
 /* Description under the automatic update check switch in the Updates section of the settings window. */
 "ui.settings.general.checkUpdatesAutomaticallyDescription" = "Zoekt naar een nieuwere versie wanneer de app start.";
 /* Title of the alert that removes the command-line tool. */
-"ui.settings.commandLine.uninstallTitle" = "Het opdrachtregelprogramma verwijderen?";
+"ui.settings.commandLine.uninstallTitle" = "Het opdrachtregelprogramma deïnstalleren?";
 /* Message of the confirmation alert that removes the command line tool. %1$@ is the path of the link. The app stays installed. Terminal is the macOS app and ojd is the command name. */
 "platform.macos.ui.settings.commandLine.uninstallMessage" = "Hiermee wordt de link op %1$@ verwijderd. De app blijft geïnstalleerd, maar ojd werkt niet meer in Terminal totdat je het programma opnieuw installeert.";
 /* Confirm button of the alert that removes the command-line tool. */
-"ui.settings.commandLine.uninstallConfirm" = "Verwijder installatie";
+"ui.settings.commandLine.uninstallConfirm" = "Deïnstalleer";
 /* Hint in the Advanced pane of the settings window while the developer tools are off. */
-"ui.settings.advanced.developerToolsOff" = "Zet de ontwikkelaarsgereedschappen aan om controllerinvoer en USB-pakketten te zien.";
+"ui.settings.advanced.developerToolsOff" = "Zet de ontwikkelaarshulpmiddelen aan om controllerinvoer en USB-pakketten te zien.";
 /* Status line in the menu bar menu. %1$@ is the runtime state, %2$@ is the controller count text and %3$@ is the active profile text. The dots between them separate the parts and may change. */
 "ui.extra.statusLine" = "%1$@ · %2$@ · %3$@";
 /* Heading of the controllers section in the menu bar menu. */
@@ -3637,7 +3637,7 @@
 /* Title of the alert shown when an action of the menu bar menu fails. */
 "ui.extra.actionFailedTitle" = "De actie is niet voltooid";
 /* Message of the alert shown when a profile changed elsewhere before an action of the menu bar menu ran. */
-"ui.extra.profileConflict" = "Het profiel is gewijzigd voordat deze actie werd uitgevoerd. Probeer opnieuw.";
+"ui.extra.profileConflict" = "Het profiel is gewijzigd voordat deze actie werd uitgevoerd. Probeer het opnieuw.";
 /* VoiceOver label and accessibility description of the menu bar status item. The product name stays as written. */
 "a11y.menuBar.statusItem" = "Status van OpenJoystickDriver";
 /* VoiceOver label of the sidebar list of the main window, which switches between the areas of the app. */
@@ -3657,13 +3657,13 @@
 /* Detail line of a mod in the mods list. %1$@ is the version and %2$@ is the author. The dot between them separates the two and may change. */
 "ui.library.mod.detail" = "%1$@ · %2$@";
 /* Message of the alert shown when a menu action needs the profile editor and the editor saves a change. */
-"ui.extra.profileEditorBusy" = "De profieleditor slaat een wijziging op of past die toe. Probeer opnieuw als dat klaar is.";
+"ui.extra.profileEditorBusy" = "De profieleditor slaat een wijziging op of past die toe. Probeer het opnieuw als dat klaar is.";
 /* Message of the open panel in which the user picks a controller record file or a mod folder. */
 "ui.library.recordOrMod.pick" = "Kies een controllerrecordbestand of een modmap.";
 /* Title of the alert shown when turning on a profile from the menu fails. */
 "ui.menu.profile.activateFailed" = "Het profiel kon niet worden geactiveerd";
 /* Message of the alert shown when the profile changed elsewhere during the turn on. */
-"ui.menu.profile.activateConflict" = "Het profiel is gewijzigd tijdens het activeren. Probeer opnieuw.";
+"ui.menu.profile.activateConflict" = "Het profiel is gewijzigd tijdens het activeren. Probeer het opnieuw.";
 /* Error when the user imports a profile while another profile change runs. Import Profile is the title of the toolbar button and is written as in this catalog. */
 "ui.profiles.importBlocked" = "Er loopt een profielwijziging. Kies „Importeer profiel” opnieuw als die klaar is.";
 /* Body of the notification about an available update. %@ is the version tag. */
@@ -3699,7 +3699,7 @@
 /* Title of the toolbar popup in the Activity area that sets how many log lines show. */
 "ui.activity.lines" = "Regels";
 /* Placeholder of the search field in the toolbar of the Activity area. */
-"ui.activity.search" = "Zoeken";
+"ui.activity.search" = "Zoek";
 /* Toolbar button in the Activity area that shows the log file in Finder, the macOS file manager. */
 "platform.macos.ui.activity.showInFinder" = "Toon in Finder";
 /* Title of the alert shown when the folder of the log cannot be opened. */
@@ -3723,9 +3723,9 @@
 /* Title of the toolbar popup in the Activity area that filters the log by stream. */
 "ui.activity.filter" = "Filter";
 /* Name of the check in the diagnostics table that looks for the driver extension inside the app. */
-"ui.activity.check.transportExtensionBundle" = "Bundel van de stuurprogrammaextensie";
+"ui.activity.check.transportExtensionBundle" = "Bundel van de stuurprogramma-extensie";
 /* Name of the check in the diagnostics table that asks macOS whether the driver extension is registered. */
-"ui.activity.check.transportExtensionRegistration" = "Registratie van de stuurprogrammaextensie";
+"ui.activity.check.transportExtensionRegistration" = "Registratie van de stuurprogramma-extensie";
 /* Name of the check in the diagnostics table that validates the configuration files. */
 "ui.activity.check.configFiles" = "Configuratiebestanden";
 /* Name of the check in the diagnostics table that tests whether the app can read USB controllers. */

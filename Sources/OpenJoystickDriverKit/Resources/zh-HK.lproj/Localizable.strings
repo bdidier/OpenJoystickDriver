@@ -203,7 +203,7 @@
 /* Value of the serving route in the Controllers area: macOS serves the controller and the driver passes the input through. */
 "platform.macos.ui.controllers.serving.nativePassThrough" = "macOS（直接傳遞）";
 /* Value of the serving route when OpenJoystickDriver serves a virtual gamepad. OpenJoystickDriver is the product name. */
-"ui.controllers.serving.virtualHID" = "OpenJoystickDriver（虛擬遊戲控制器）";
+"ui.controllers.serving.virtualHID" = "OpenJoystickDriver，虛擬遊戲控制器";
 /* Value of the serving route when the driver extension owns the controller. */
 "ui.controllers.serving.extensionOwned" = "驅動程式擴充功能";
 /* Value of the serving route when the user turned the output off. */
@@ -395,7 +395,7 @@
 /* Heading of the group of sticks in the assignment list of the profile editor. */
 "ui.profiles.sectionSticks" = "搖桿";
 /* Name of a duplicated profile. %@ is the name of the profile that the copy comes from. */
-"ui.profiles.copyName" = "%@副本";
+"ui.profiles.copyName" = "%@ 副本";
 /* Error in the profile editor when the profile changed elsewhere while the user edited it. */
 "ui.profiles.changedElsewhere" = "設定檔已在其他位置更改。";
 /* Error in the profile editor when the service saved the profile but the app cannot read the state afterwards. */
@@ -417,7 +417,7 @@
 /* Title of the behavior sheet of an assignment. The sheet sets turbo, hold and double tap. */
 "ui.profiles.bindingBehavior" = "對應行為";
 /* Placeholder of the field in the profile creation sheet for the identifier of the app that the profile applies to, for example com.apple.Safari. */
-"ui.profiles.appID" = "應用程式 ID";
+"ui.profiles.appID" = "App ID";
 /* Help text of the chord sheet. The destination fires while all chosen controls are held down. */
 "ui.profiles.chordHelp" = "所選控制項全部按下期間，目的地會觸發。";
 /* Label of the popup in the chord sheet that picks how the chord works. */
@@ -559,7 +559,7 @@
 /* Name of a mouse button destination. %@ is the button, for example left or right. */
 "ui.mapping.mouseButton" = "滑鼠「%@」按鈕";
 /* Name of a pointer movement destination. %@ is the direction of the movement. */
-"ui.mapping.pointerMovement" = "指標%@移動";
+"ui.mapping.pointerMovement" = "指標 %@ 移動";
 /* Name of a scroll destination. %@ is the direction of the scroll. */
 "ui.mapping.scroll" = "捲動 %@";
 /* Name of the bottom face button: A on Xbox, Cross on PlayStation. The slash stays. */
@@ -1574,11 +1574,11 @@
 /* Error of every command that talks to the service when the service refuses this ojd because its code signature differs from the app. ojd and OpenJoystickDriver.app stay as written. */
 "cli.shared.error.peerRejected" = "服務拒絕了此 ojd，因為它的簽章與 App 不同。請執行 OpenJoystickDriver.app 內的 ojd。";
 /* Error of every command that talks to the service when it does not reply in time. %@ is the waited time, such as 5 seconds. --timeout stays as written. */
-"cli.shared.error.requestTimeout" = "服務未在 %@內回覆。請使用較大的 --timeout 重試。";
+"cli.shared.error.requestTimeout" = "服務未在 %@ 內回覆。請使用較大的 --timeout 重試。";
 /* Error of every command that talks to the service when the service reports a failure. %@ is the reason from the service. The command in quotes stays as written. */
 "cli.shared.error.serviceRequestFailed" = "服務未能完成要求：%@。請用「ojd status」檢查。";
 /* Error of the profile commands when another profile has the name. The command in quotes stays as written. */
-"cli.shared.error.duplicateProfileName" = "已存在相同名稱的設定檔。「ojd profile list」 會顯示所有設定檔。";
+"cli.shared.error.duplicateProfileName" = "已存在相同名稱的設定檔。「ojd profile list」會顯示所有設定檔。";
 /* Error of every command that talks to the service when it did not reply in time and the wait is not named. The command in quotes stays as written. */
 "cli.shared.error.serviceTimeout" = "服務未及時回覆。請重試，或用「ojd status」檢查。";
 /* Error of every command that needs the service when it is not running. OpenJoystickDriver is the product name. The command in quotes stays as written. */
@@ -1646,13 +1646,13 @@
 /* Error of 'ojd service stop' when the system refuses to stop the service. %@ is the reason from the system. OpenJoystickDriver is the product name. */
 "cli.service.stop.signalFailed" = "無法停止服務：%@。請從選單結束 OpenJoystickDriver。";
 /* Error of 'ojd service stop' when the service keeps running. %@ is the waited time, such as 5 seconds. --timeout stays as written. */
-"cli.service.stop.timeout" = "服務未在 %@內停止。請使用較大的 --timeout 重試。";
+"cli.service.stop.timeout" = "服務未在 %@ 內停止。請使用較大的 --timeout 重試。";
 /* Message printed by 'ojd service stop' when the service is stopped. */
 "cli.service.group.stopped" = "服務已停止。";
 /* One-line summary of 'ojd service wait' in the command list and at the top of its help. --timeout stays as written and the default of 5 seconds is fixed. */
 "cli.service.wait.abstract" = "等待服務開始接受要求。--timeout 限制等待時間（預設 5 秒）。";
 /* Error of 'ojd service wait' when the service does not answer in time. %@ is the waited time, such as 5 seconds. The command in quotes and --timeout stay as written. */
-"cli.service.wait.timeout" = "服務未在 %@內開始接受要求。請用「ojd service start」啟動，或使用較大的 --timeout 重試。";
+"cli.service.wait.timeout" = "服務未在 %@ 內開始接受要求。請用「ojd service start」啟動，或使用較大的 --timeout 重試。";
 /* One-line summary of 'ojd status' in the command list and at the top of its help. */
 "cli.status.group.abstract" = "顯示服務、延伸功能、權限和已連接的控制器。";
 /* Long description in the help of 'ojd status'. It says that the command also works while the service is stopped. The exit status 0 stays as written. */
@@ -1818,7 +1818,7 @@
 /* Long description in the help of 'ojd diagnose'. pass, warn, fail and skip are the check results printed by the command and stay as written, as do --soak and the other option names. */
 "cli.diagnose.group.discussion" = "每項檢查會回報 pass、warn、fail 或 skip。需要服務的檢查在服務停止時會被略過。任何檢查為 fail 時會以結束碼 1 結束。--soak 會增加一項執行階段健康檢查，在指定時間內對服務取樣；未使用時會略過該檢查。--output 也會寫入支援報告，分享前請先檢查。";
 /* Detail of the transport extension check of 'ojd diagnose' when macOS has no registration of the extension. The command in quotes stays as written. */
-"platform.macos.cli.diagnose.group.transportExtensionAbsent" = "未在 macOS 中註冊；請執行 「ojd transport-extension activate」";
+"platform.macos.cli.diagnose.group.transportExtensionAbsent" = "未在 macOS 中註冊；請執行「ojd transport-extension activate」";
 /* Detail of the transport extension check of 'ojd diagnose' when macOS has the extension active. */
 "platform.macos.cli.diagnose.group.transportExtensionActive" = "在 macOS 中已啟用";
 /* Detail of the transport extension check of 'ojd diagnose' when the extension bundle has an unexpected identifier. %@ is that identifier. OpenJoystickDriver is the product name. */
@@ -1828,11 +1828,11 @@
 /* Detail of the transport extension check of 'ojd diagnose' when the extension is inside the app. */
 "cli.diagnose.group.transportExtensionBundlePresent" = "已嵌入 App";
 /* Detail of the transport extension check of 'ojd diagnose' when the extension is registered but the user has not approved it. The command in quotes stays as written. */
-"cli.diagnose.group.transportExtensionInactive" = "已註冊但未啟用；請使用 「ojd transport-extension activate」 核准";
+"cli.diagnose.group.transportExtensionInactive" = "已註冊但未啟用；請使用「ojd transport-extension activate」核准";
 /* Detail of the transport extension check of 'ojd diagnose' when macOS does not report the registration. %@ is the reason from macOS. */
 "platform.macos.cli.diagnose.group.transportExtensionUnavailable" = "macOS 未回報註冊情況：%@";
 /* Last line of 'ojd diagnose' when checks failed. %lld is the number of failed checks. The command with <path> in quotes stays as written. */
-"cli.diagnose.group.failed" = "未通過的檢查：%lld 項。請根據上方詳細資訊修正，或執行 「ojd diagnose --output <path>」 並將檔案附在錯誤報告中。";
+"cli.diagnose.group.failed" = "未通過的檢查：%lld 項。請根據上方詳細資訊修正，或執行「ojd diagnose --output <path>」並將檔案附在錯誤報告中。";
 /* Help text of the --footprint-limit-mib option of 'ojd diagnose'. The physical footprint is the memory charged to the service in MiB, mebibytes. The range 0-65536 is fixed. */
 "cli.diagnose.group.footprintLimit" = "使用 --soak 時，超過此實體佔用量（MiB）即判為失敗；0 表示停用（0-65536）。";
 /* Help text of the --interval-ms option of 'ojd diagnose'. The range 100-60000 is fixed. */
@@ -1842,7 +1842,7 @@
 /* Error of 'ojd diagnose' when a memory limit option is out of range. Both option names stay as written. */
 "cli.diagnose.group.limitRange" = "--rss-limit-mib 和 --footprint-limit-mib 必須介於 0 和 65536 之間。";
 /* Detail of a permission check of 'ojd diagnose' when macOS denied the permission. The command in quotes stays as written. */
-"cli.diagnose.group.permissionDenied" = "已拒絕；請使用 「ojd permission request」 授權";
+"cli.diagnose.group.permissionDenied" = "已拒絕；請使用「ojd permission request」授權";
 /* Detail of a permission check of 'ojd diagnose' when the state of the permission cannot be read. */
 "cli.diagnose.group.permissionUnknown" = "狀態未知";
 /* Help text of the --rss-limit-mib option of 'ojd diagnose'. The resident size is the memory of the service held in RAM, in MiB, mebibytes. The range 0-65536 is fixed. */
@@ -1850,7 +1850,7 @@
 /* Detail of the service check of 'ojd diagnose' when the service runs. %@ is the version of the service. */
 "cli.diagnose.group.serviceRunning" = "執行中 %@";
 /* Detail of the service check of 'ojd diagnose' when the service is stopped. The command in quotes stays as written. */
-"cli.diagnose.group.serviceStopped" = "未執行；請使用 「ojd service start」 啟動";
+"cli.diagnose.group.serviceStopped" = "未執行；請使用「ojd service start」啟動";
 /* Reason shown for a skipped check of 'ojd diagnose' when the service did not answer. */
 "cli.diagnose.group.skipServiceFailed" = "服務沒有回應";
 /* Reason shown for a skipped check of 'ojd diagnose' when the service is not running. */
@@ -1892,9 +1892,9 @@
 /* Detail of the virtual gamepad check of 'ojd diagnose' when the stored profile overrides cannot be read. %@ is the error message. */
 "cli.diagnose.group.virtualOverride" = "無法讀取已儲存的設定檔覆寫項目：%@";
 /* Error of the commands that need a macOS permission. %@ is the permission name. The command in quotes stays as written. */
-"cli.shared.error.permissionMissing" = "缺少%@取用權限。請使用 「ojd permission request」 授權。";
+"cli.shared.error.permissionMissing" = "缺少 %@ 取用權限。請使用「ojd permission request」授權。";
 /* Error of 'ojd permission request' when a permission is missing after the request. %1$@ is the permission name and %2$@ is the path of the pane in System Settings. The command in quotes stays as written. */
-"platform.macos.cli.shared.error.permissionStillMissing" = "仍缺少%1$@取用權限。請在「系統設定」> %2$@ 中允許 OpenJoystickDriver，然後再次執行 「ojd permission request」。";
+"platform.macos.cli.shared.error.permissionStillMissing" = "仍缺少 %1$@ 取用權限。請在「系統設定」> %2$@ 中允許 OpenJoystickDriver，然後再次執行「ojd permission request」。";
 /* One-line summary of 'ojd transport-extension' in the command list and at the top of its help. DriverKit is an Apple framework name. */
 "platform.macos.cli.transportExtension.group.abstract" = "顯示、啟用或停用 OpenJoystickDriver 的 DriverKit 系統延伸功能。";
 /* One-line summary of 'ojd transport-extension activate' in the command list and at the top of its help. System Settings is the name of the macOS app. */
@@ -1906,7 +1906,7 @@
 /* Message of 'ojd transport-extension activate' when the user must approve the extension. The menu path in System Settings is written as macOS shows it. */
 "platform.macos.cli.transportExtension.group.approval" = "此要求需要您的核准。請在「系統設定」>「一般」>「登入項目與延伸功能」>「驅動程式延伸功能」中允許。";
 /* Error of 'ojd transport-extension activate' when the app has no driver extension inside. %@ is the extension name, which stays as written with .dext. The build command stays as written. */
-"cli.transportExtension.group.bundleMissing" = "App 中不包含 %@.dext。請執行 「./Scripts/ojd build install dev」，然後從 /Applications 重試。";
+"cli.transportExtension.group.bundleMissing" = "App 中不包含 %@.dext。請執行「./Scripts/ojd build install dev」，然後從 /Applications 重試。";
 /* Error of 'ojd transport-extension' commands when the codesign tool cannot run. %@ is the reason from the system. codesign and its path stay as written. */
 "platform.macos.cli.transportExtension.group.codesignFailedToRun" = "無法執行 codesign 來驗證 App：%@。請檢查 /usr/bin/codesign 是否存在。";
 /* One-line summary of 'ojd transport-extension deactivate' in the command list and at the top of its help. */
@@ -1918,7 +1918,7 @@
 /* Error of 'ojd transport-extension' commands when ojd runs from a folder other than Applications. %@ is the path of this ojd. The path of the installed app stays as written. */
 "cli.transportExtension.group.notInstalled" = "此 ojd 是從 %@ 執行，而不是從 /Applications 執行。請執行 /Applications/OpenJoystickDriver.app 內的 ojd。";
 /* Error of 'ojd transport-extension' commands when the app code signature is not valid. %@ is the description of the signature problem. The build command stays as written. */
-"cli.transportExtension.group.signatureInvalid" = "App 的簽章無效（%@）。請使用 「./Scripts/ojd build install-fast dev」 重新建置，然後重試。";
+"cli.transportExtension.group.signatureInvalid" = "App 的簽章無效（%@）。請使用「./Scripts/ojd build install-fast dev」重新建置，然後重試。";
 /* One-line summary of 'ojd transport-extension status' in the command list and at the top of its help. */
 "platform.macos.cli.transportExtension.status.abstract" = "顯示延伸功能是否在 App 中並已在 macOS 中註冊。";
 /* Row of 'ojd transport-extension status'. %@ is the state of the extension inside the app: present, missing or invalid. Keep the two spaces after the colon. */
@@ -1928,11 +1928,11 @@
 /* Row of 'ojd transport-extension status'. %@ is the registration state: active, inactive, absent or unavailable. Keep the two spaces after the colon. */
 "platform.macos.cli.transportExtension.status.registration" = "macOS 註冊狀態：  %@";
 /* Error of 'ojd transport-extension status' when macOS does not report the registration. %@ is the reason from macOS. systemextensionsctl list is a macOS command and stays as written. */
-"platform.macos.cli.transportExtension.status.unavailable" = "macOS 未回報延伸功能的註冊情況：%@。請重試，或執行 「systemextensionsctl list」。";
+"platform.macos.cli.transportExtension.status.unavailable" = "macOS 未回報延伸功能的註冊情況：%@。請重試，或執行「systemextensionsctl list」。";
 /* Error of 'ojd transport-extension' when macOS rejects the request. Both commands in quotes stay as written. */
-"platform.macos.cli.transportExtension.group.submitFailed" = "macOS 拒絕了該要求。請執行 「ojd transport-extension status」 並檢查 「systemextensionsctl list」。";
+"platform.macos.cli.transportExtension.group.submitFailed" = "macOS 拒絕了該要求。請執行「ojd transport-extension status」並檢查「systemextensionsctl list」。";
 /* Error of 'ojd transport-extension' when macOS does not finish the request in time. System Settings is the name of the macOS app. The command in quotes stays as written. */
-"platform.macos.cli.transportExtension.group.timeout" = "macOS 未能及時完成該要求。請檢查「系統設定」中是否有核准提示，然後執行 「ojd transport-extension status」。";
+"platform.macos.cli.transportExtension.group.timeout" = "macOS 未能及時完成該要求。請檢查「系統設定」中是否有核准提示，然後執行「ojd transport-extension status」。";
 /* One-line summary of 'ojd log' in the command list and at the top of its help. */
 "cli.log.group.abstract" = "顯示服務記錄，或印出記錄所在位置。";
 /* One-line summary of 'ojd log path' in the command list and at the top of its help. The command line after 'Open it with:' stays as written, including the backslashes before the quotes. */
@@ -1950,7 +1950,7 @@
 /* One-line summary of 'ojd log show' in the command list and at the top of its help. */
 "cli.log.show.abstract" = "印出服務記錄的結尾部分。";
 /* Long description in the help of 'ojd log show'. $PAGER, the default 'less -FRX', --follow, --json and Control-C stay as written. Control-C is the key combination that stops a program in a terminal. */
-"cli.log.show.discussion" = "在終端機中，輸出會經過 $PAGER（預設為 「less -FRX」；將 PAGER 設為空值可關閉分頁）。--follow 會持續印出新行，直到您按下 Control-C；與 --json 一起使用時，每行印出一個 JSON 物件。";
+"cli.log.show.discussion" = "在終端機中，輸出會經過 $PAGER（預設為「less -FRX」；將 PAGER 設為空值可關閉分頁）。--follow 會持續印出新行，直到您按下 Control-C；與 --json 一起使用時，每行印出一個 JSON 物件。";
 /* Placeholder line printed for a log file without content, in the log text that 'ojd log show' prints. Keep the parentheses. */
 "cli.log.show.empty" = "（記錄檔為空）";
 /* Help text of the --follow flag of 'ojd log show'. */
@@ -1962,7 +1962,7 @@
 /* Placeholder line printed for a log file that does not exist, in the log text that 'ojd log show' prints. Keep the parentheses. */
 "cli.log.show.missing" = "（記錄檔不存在）";
 /* Error of 'ojd log show' when the log files cannot be read. %@ is the reason from the system. The command in quotes stays as written. */
-"cli.log.show.readFailed" = "無法讀取服務記錄：%@。請檢查 「ojd log path」 印出的資料夾。";
+"cli.log.show.readFailed" = "無法讀取服務記錄：%@。請檢查「ojd log path」印出的資料夾。";
 /* Placeholder line printed above the shown part of a long log file, in the log text that 'ojd log show' prints. Keep the parentheses. */
 "cli.log.show.truncated" = "（更早的記錄內容已省略）";
 /* One-line summary of 'ojd permission' in the command list and at the top of its help. OpenJoystickDriver is the product name. */
@@ -1972,7 +1972,7 @@
 /* Long description in the help of 'ojd permission list'. granted, denied and unknown are the states printed by the command and stay as written, as do stderr and exit code 0. */
 "cli.permission.list.discussion" = "狀態為 granted、denied 或 unknown。服務停止時，狀態由本程式讀取，並會在 stderr 上提示；結束碼仍為 0。";
 /* Note that 'ojd permission list' prints on the error stream when the service is stopped. The command in quotes stays as written. */
-"cli.permission.list.localState" = "服務未執行，因此這些狀態由本程式讀取。請使用 「ojd service start」 啟動服務，以查看服務所見的狀態。";
+"cli.permission.list.localState" = "服務未執行，因此這些狀態由本程式讀取。請使用「ojd service start」啟動服務，以查看服務所見的狀態。";
 /* Name of the Accessibility permission in the output of 'ojd permission list'. It is written as macOS names it. */
 "platform.macos.cli.permission.group.nameInputInject" = "輔助使用";
 /* Name of the permission for the approval of the driver extension, in the output of 'ojd permission list' and 'ojd diagnose'. */
@@ -2006,7 +2006,7 @@
 /* Help text of the PERMISSION argument of 'ojd permission request'. input-read and input-inject are values the user types and stay as written. */
 "cli.permission.request.ids" = "要要求的權限：input-read 或 input-inject。";
 /* Error of 'ojd permission request' for an unknown permission. %1$@ is the text the user gave and %2$@ is the comma-separated list of valid values, which stay as written. */
-"cli.permission.request.unknownId" = "未知的權限 「%1$@」。請使用 %2$@。";
+"cli.permission.request.unknownId" = "未知的權限「%1$@」。請使用 %2$@。";
 /* One-line summary of 'ojd config' in the command list and at the top of its help. */
 "cli.config.group.abstract" = "顯示 OpenJoystickDriver 套用的設定，以及設定每個值的層級。";
 /* Long description in the help of 'ojd config'. It lists the configuration layers from lowest to highest priority; all.patch.json is a file name that stays as written. */
@@ -2032,7 +2032,7 @@
 /* One-line summary of 'ojd setting' in the command list and at the top of its help. */
 "cli.setting.group.abstract" = "列出、讀取或更改 OpenJoystickDriver App 設定。";
 /* Error of 'ojd setting set' when the value is neither true nor false. %1$@ is the text the user gave and %2$@ is the setting name, which stays as written. true and false stay as written. */
-"cli.setting.group.badValue" = "「%1$@」 不是 %2$@ 的有效值。請使用 true 或 false。";
+"cli.setting.group.badValue" = "「%1$@」不是 %2$@ 的有效值。請使用 true 或 false。";
 /* Help text of the developerTools setting in 'ojd setting list'. */
 "cli.setting.group.developerTools" = "在「設定」視窗中顯示開發者工具。";
 /* Long description in the help of 'ojd setting'. It says that the running service applies each setting, so every 'ojd setting' command needs the service. */
@@ -2066,13 +2066,13 @@
 /* Help text of the KEY argument of 'ojd setting set'. launchAtLogin is a setting name and stays as written. */
 "cli.setting.set.key" = "要更改的設定，例如 launchAtLogin。";
 /* Error of 'ojd setting set' when macOS does not apply a setting that needs approval. %1$@ is the setting name and %2$@ repeats it as the argument of the command in quotes, which stays as written. */
-"platform.macos.cli.setting.set.notApplied" = "macOS 未套用 %1$@。請在「系統設定」>「一般」>「登入項目」中允許 OpenJoystickDriver，然後執行 「ojd setting get %2$@」。";
+"platform.macos.cli.setting.set.notApplied" = "macOS 未套用 %1$@。請在「系統設定」>「一般」>「登入項目」中允許 OpenJoystickDriver，然後執行「ojd setting get %2$@」。";
 /* Message printed after 'ojd setting set'. %1$@ is the setting name, which stays as written, and %2$@ is the value the service applied, true or false. */
 "cli.setting.set.success" = "已將 %1$@ 設為 %2$@。";
 /* Help text of the VALUE argument of 'ojd setting set'. true and false stay as written. */
 "cli.setting.set.value" = "新值：true 或 false。";
 /* Error of 'ojd setting' commands for an unknown setting. %1$@ is the text the user gave and %2$@ is the comma-separated list of valid setting names, which stay as written. */
-"cli.setting.group.unknownKey" = "未知的設定 「%1$@」。請使用以下其中一個：%2$@。";
+"cli.setting.group.unknownKey" = "未知的設定「%1$@」。請使用以下其中一個：%2$@。";
 /* One-line summary of 'ojd update' in the command list and at the top of its help. */
 "cli.update.group.abstract" = "檢查是否有更新的 OpenJoystickDriver 版本。";
 /* One-line summary of 'ojd update check' in the command list and at the top of its help. GitHub is a brand name. */
@@ -2102,17 +2102,17 @@
 /* Button in the Command-Line Tool section that installs the ojd link. ojd is the command name and stays as written. */
 "ui.settings.commandLine.toolInstall" = "安裝命令列工具";
 /* Status in the Command Line Tool section of the settings window when ojd is installed. %@ is the path of the link. Terminal is the macOS app and ojd is the command name. */
-"platform.macos.ui.settings.commandLine.toolInstalled" = "已安裝。請在 Terminal 中執行 ojd；解除安裝會移除 %@。";
+"platform.macos.ui.settings.commandLine.toolInstalled" = "已安裝。請在「終端機」中執行 ojd；解除安裝會移除 %@。";
 /* Note in the Command-Line Tool section when the link points to another program. %1$@ is the path of the link and %2$@ is the path it points to. Installing changes the link to point to this app. */
 "ui.settings.commandLine.toolLinkedElsewhere" = "%1$@ 指向 %2$@。安裝後將改為連結到此 App。";
 /* Description in the Command Line Tool section of the settings window before the tool is installed. %@ is the path where the link is created. Terminal is the macOS app and ojd is the command name. */
-"platform.macos.ui.settings.commandLine.toolNotInstalled" = "將 %@ 連結到此 App，以便您在 Terminal 中執行 ojd。macOS 會要求輸入管理員密碼。";
+"platform.macos.ui.settings.commandLine.toolNotInstalled" = "將 %@ 連結到此 App，以便您在「終端機」中執行 ojd。macOS 會要求輸入管理員密碼。";
 /* Button in the Command-Line Tool section that removes the ojd link. */
 "ui.settings.commandLine.toolUninstall" = "解除安裝";
 /* One-line summary of 'ojd controller' in the command list and at the top of its help. */
 "cli.controller.group.abstract" = "列出、檢視、測試和控制已連接的控制器。";
 /* Help text of the CONTROLLER argument shared by the 'ojd controller' commands. VVVV:PPPP is the vendor ID and product ID in hexadecimal and stays as written. */
-"cli.controller.group.argument" = "控制器：「ojd controller list」 顯示的 ID，或 VVVV:PPPP。";
+"cli.controller.group.argument" = "控制器：「ojd controller list」顯示的 ID，或 VVVV:PPPP。";
 /* One-line summary of 'ojd controller capture' in the command list and at the top of its help. */
 "cli.controller.capture.abstract" = "顯示控制器傳送和接收的原始封包。";
 /* Long description in the help of 'ojd controller capture'. rx and tx mark received and transmitted packets and stay as written, as does --json. */
@@ -2136,7 +2136,7 @@
 /* Error of 'ojd controller disconnect' for a controller on a wire. %@ is the controller name. */
 "cli.controller.disconnect.notBluetooth" = "%@ 不是透過 Bluetooth 連接。請拔除連接線以中斷連接。";
 /* Long description in the help of 'ojd controller'. CONTROLLER, the command in quotes and VVVV:PPPP stay as written. */
-"cli.controller.group.discussion" = "CONTROLLER 是 「ojd controller list」 顯示的 ID；若只有一部已連接的控制器符合，也可使用 VVVV:PPPP（十六進位的供應商和產品 ID）。所有控制器指令都需要服務。";
+"cli.controller.group.discussion" = "CONTROLLER 是「ojd controller list」顯示的 ID；若只有一部已連接的控制器符合，也可使用 VVVV:PPPP（十六進位的供應商和產品 ID）。所有控制器指令都需要服務。";
 /* Second paragraph of the help of 'ojd controller'. It explains the unit ID, which starts with U- and stays as written. */
 "cli.controller.group.discussionUnit" = "單元 ID（U-...）透過型號和所用的 USB 連接埠來識別一部控制器。只要該控制器繼續使用該連接埠，重新啟動後也會保持不變。";
 /* Error of 'ojd controller' commands when --duration is not a number above 0. --duration stays as written. */
@@ -2166,7 +2166,7 @@
 /* Help text of the --duration option of 'ojd controller watch' and 'ojd controller capture'. Control-C is the key combination that stops a program in a terminal. */
 "cli.controller.group.optionDuration" = "經過這段秒數後停止。未指定時會持續執行，直到您按下 Control-C。";
 /* Error of the controller output commands when the controller rejects a command. %1$@ is the controller name, %2$@ is the command name and %3$@ is the outcome in kebab case, which stays as written. The command in quotes stays as written. */
-"cli.controller.group.outputFailed" = "%1$@ 沒有接受 %2$@ 指令（%3$@）。請用 「ojd log show」 檢查。";
+"cli.controller.group.outputFailed" = "%1$@ 沒有接受 %2$@ 指令（%3$@）。請用「ojd log show」檢查。";
 /* Error of the controller output commands when the controller disconnects before the command is sent. %@ is the controller name. */
 "cli.controller.group.outputGone" = "%@ 在指令傳送前已中斷連接。請重新連接後再試。";
 /* Error of the controller output commands when the controller cannot take output yet. %@ is the controller name. */
@@ -2174,7 +2174,7 @@
 /* Message printed after the controller output commands succeeded. %1$@ is the comma-separated list of commands sent and %2$@ is the controller name. */
 "cli.controller.group.outputSent" = "已將 %1$@ 傳送到 %2$@。";
 /* Error of the controller output commands when the controller lacks the feature. %1$@ is the controller name, %2$@ is the missing feature as a noun phrase and %3$@ is the session token for 'ojd controller show'. */
-"cli.controller.group.outputUnsupported" = "%1$@ 沒有%2$@。執行 「ojd controller show %3$@」 查看它支援什麼。";
+"cli.controller.group.outputUnsupported" = "%1$@ 沒有 %2$@。執行「ojd controller show %3$@」查看它支援什麼。";
 /* One-line summary of 'ojd controller claim' in the command list and at the top of its help. OpenJoystickDriver is the product name. To serve a model means to read its input and publish it as a virtual gamepad. */
 "cli.controller.claim.abstract" = "讓 OpenJoystickDriver 處理某個控制器型號。";
 /* Long description in the help of 'ojd controller claim'. server, ojd, VVVV-PPPP.json and the record terms stay as written. */
@@ -2210,7 +2210,7 @@
 /* Long description in the help of 'ojd controller rumble'. The numbers are fixed limits of the command. */
 "cli.controller.rumble.discussion" = "強度範圍為 0 至 255。未指定強度選項時，兩個主馬達都以 180 運作。主馬達也會驅動觸控板的觸覺回饋。將所有強度設為 0 即可停止震動。";
 /* Warning of 'ojd controller rumble' about a requested motor the controller lacks. %1$@ is the controller name and %2$@ is the motor name in kebab case, which stays as written. */
-"cli.controller.rumble.dropped" = "warning: %1$@ 沒有%2$@馬達；它沒有運作。";
+"cli.controller.rumble.dropped" = "warning: %1$@ 沒有 %2$@ 馬達；它沒有運作。";
 /* Help text of the --duration option of 'ojd controller rumble'. The limit of 5 seconds is fixed. */
 "cli.controller.rumble.duration" = "震動秒數，須大於 0 且最多 5。";
 /* Error of 'ojd controller rumble' when --duration is outside the allowed range. --duration stays as written. */
@@ -2220,7 +2220,7 @@
 /* Help text of the --left-trigger option of 'ojd controller rumble'. */
 "cli.controller.rumble.leftTrigger" = "左扳機馬達的強度。";
 /* Error of 'ojd controller rumble' when the controller has none of the requested motors. %1$@ is the controller name and %2$@ is the session token for 'ojd controller show'. */
-"cli.controller.rumble.noneRan" = "%1$@ 沒有任何所要求的馬達。執行 「ojd controller show %2$@」 查看它的馬達。";
+"cli.controller.rumble.noneRan" = "%1$@ 沒有任何所要求的馬達。執行「ojd controller show %2$@」查看它的馬達。";
 /* Help text of the --right option of 'ojd controller rumble'. The main motors are the large motors in the grips. */
 "cli.controller.rumble.right" = "右主馬達的強度。";
 /* Help text of the --right-trigger option of 'ojd controller rumble'. */
@@ -2230,11 +2230,11 @@
 /* Message printed after 'ojd controller rumble' stopped all motors. %@ is the controller name. */
 "cli.controller.rumble.stopped" = "已停止 %@ 上的震動。";
 /* Error when a CONTROLLER argument cannot match because no controller is connected. %@ is the text the user gave. The command in quotes stays as written. */
-"cli.controller.group.selectorNoneConnected" = "沒有控制器符合 「%@」，因為沒有已連接的控制器。請連接一部，然後執行 「ojd controller list」。";
+"cli.controller.group.selectorNoneConnected" = "沒有控制器符合「%@」，因為沒有已連接的控制器。請連接一部，然後執行「ojd controller list」。";
 /* Error when a CONTROLLER argument matches no connected controller; the list of valid IDs follows on the next lines, so the text ends with a colon. %@ is the text the user gave. VVVV:PPPP stays as written. */
-"cli.controller.group.selectorNotFound" = "沒有已連接的控制器符合 「%@」。請使用此清單中的 ID 或 VVVV:PPPP：";
+"cli.controller.group.selectorNotFound" = "沒有已連接的控制器符合「%@」。請使用此清單中的 ID 或 VVVV:PPPP：";
 /* Error when the controller disconnected between choosing it and sending the request. %@ is the controller identifier the user gave. */
-"cli.controller.group.sessionNotFound" = "「%@」 在要求送達前已中斷連接。請重新連接後再試。";
+"cli.controller.group.sessionNotFound" = "「%@」在要求送達前已中斷連接。請重新連接後再試。";
 /* One-line summary of 'ojd controller show' in the command list and at the top of its help. */
 "cli.controller.show.abstract" = "顯示控制器的身分、擁有者、功能和虛擬遊戲控制器。";
 /* Long description in the help of 'ojd controller show'. It adds that the command also lists output checks: commands that exercise each rumble motor and light, with what to observe. */
@@ -2328,7 +2328,7 @@
 /* Message printed to the error stream by 'ojd controller watch' when the controller sent no input. */
 "cli.controller.watch.noInput" = "沒有收到輸入。";
 /* Error of 'ojd controller watch --first-press' when the time ran out. %@ is the duration, such as 10 seconds. */
-"cli.controller.watch.noPress" = "在 %@內沒有按下任何控制項。";
+"cli.controller.watch.noPress" = "在 %@ 內沒有按下任何控制項。";
 /* Prompt of 'ojd controller watch --first-press'. %1$@ is the controller name and %2$@ is its vendor and product ID. */
 "cli.controller.watch.pressPrompt" = "請按 %1$@ (%2$@) 上的一個控制項。";
 /* First line of 'ojd controller watch'. %1$@ is the controller name and %2$@ is its vendor and product ID. */
@@ -2396,11 +2396,11 @@
 /* Help text of the --unit option of 'ojd virtual set' and 'ojd virtual reset'. A unit ID names one controller by model and USB port. */
 "cli.virtual.group.unit" = "只套用到此控制器（按其單元 ID），而不是其整個型號。";
 /* Long description in the help of 'ojd virtual'. reset stays as written because it is a command name. */
-"cli.virtual.group.discussion" = "選擇會套用到同一型號的所有控制器。「reset」 會讓型號恢復自動選擇。";
+"cli.virtual.group.discussion" = "選擇會套用到同一型號的所有控制器。「reset」會讓型號恢復自動選擇。";
 /* Paragraph in the help of 'ojd virtual' about --unit. set and reset are command names and stay as written. */
-"cli.virtual.group.discussionUnit" = "使用 --unit 時，「set」 只會套用到按單元 ID 指定的那一部控制器，「reset」 會讓該控制器恢復為其型號的選擇。";
+"cli.virtual.group.discussionUnit" = "使用 --unit 時，「set」只會套用到按單元 ID 指定的那一部控制器，「reset」會讓該控制器恢復為其型號的選擇。";
 /* Error of 'ojd virtual set' when the service could not apply the choice. %1$@ is the controller name and %2$@ is the reason. The command in quotes stays as written. */
-"cli.virtual.group.errorFailed" = "%1$@ 的虛擬遊戲控制器沒有改變（%2$@）。請用 「ojd virtual show」 檢查。";
+"cli.virtual.group.errorFailed" = "%1$@ 的虛擬遊戲控制器沒有改變（%2$@）。請用「ojd virtual show」檢查。";
 /* Error of 'ojd virtual' commands when --unit is used for a controller without a unit ID. %@ is the controller name. --unit stays as written. */
 "cli.virtual.group.errorNoUnit" = "%@ 沒有單元 ID，因此所做選擇只能套用到其整個型號。請不帶 --unit 執行該指令。";
 /* One-line summary of 'ojd virtual export-mapping' in the command list and at the top of its help. SDL is a game controller library and W3C names the web standard gamepad layout; both stay as written. */
@@ -2414,13 +2414,13 @@
 /* One-line summary of 'ojd virtual feed' in the command list and at the top of its help. Standard input is the input stream of the program. */
 "cli.virtual.feed.abstract" = "發布由 stdin 驅動的虛擬遊戲控制器。";
 /* Long description in the help of 'ojd virtual feed'. The JSON field names buttons, dpad and axes and the control names stay as written. */
-"cli.virtual.feed.discussion" = "每行讀取一個 JSON 物件：「buttons」 和 「dpad」 列出被按下的控制項，例如 South 和 up；「axes」 將軸名稱（例如 LeftStickX）對應到數值。缺少的控制項保持中立。搖桿範圍為 -1 到 1，Y 軸向下；扳機範圍為 0 到 1。影格依序播放，每個影格至少持續 8 ms；「holdMilliseconds」 可讓影格維持更久，最長 60000。將遊戲傳送給遊戲控制器的每個輸出指令（例如震動）以每行一個 JSON 物件的形式輸出。輸入結束且所有影格播放完畢後停止。";
+"cli.virtual.feed.discussion" = "每行讀取一個 JSON 物件：「buttons」和「dpad」列出被按下的控制項，例如 South 和 up；「axes」將軸名稱（例如 LeftStickX）對應到數值。缺少的控制項保持中立。搖桿範圍為 -1 到 1，Y 軸向下；扳機範圍為 0 到 1。影格依序播放，每個影格至少持續 8 ms；「holdMilliseconds」可讓影格維持更久，最長 60000。將遊戲傳送給遊戲控制器的每個輸出指令（例如震動）以每行一個 JSON 物件的形式輸出。輸入結束且所有影格播放完畢後停止。";
 /* Error of 'ojd virtual feed' when the service closed the virtual gamepad. The command in quotes stays as written. */
 "cli.virtual.feed.errorClosed" = "服務已關閉虛擬遊戲控制器。請用「ojd status」檢查。";
 /* Error from `ojd virtual feed` when the service connection broke while the virtual gamepad was closing. */
 "cli.virtual.feed.errorCloseInterrupted" = "關閉虛擬遊戲控制器的操作被中斷。請用「ojd status」檢查。";
 /* Error of 'ojd virtual feed' for an input line that is not a valid frame. %@ is the line number. The command in quotes stays as written. */
-"cli.virtual.feed.errorFrame" = "第 %@ 行不是有效的影格。「ojd virtual feed --help」 會顯示格式。";
+"cli.virtual.feed.errorFrame" = "第 %@ 行不是有效的影格。「ojd virtual feed --help」會顯示格式。";
 /* Help text of the profile argument of 'ojd virtual feed'. */
 "cli.virtual.feed.profile" = "要發布的虛擬遊戲控制器設定檔。";
 /* First line of 'ojd virtual feed'. %@ is the profile name. Control-C is the key combination that stops a program in a terminal. */
@@ -2456,7 +2456,7 @@
 /* Message printed by 'ojd virtual reset --all --dry-run' instead of resetting. */
 "cli.virtual.reset.allDryRun" = "會讓所有控制器型號恢復自動選擇虛擬遊戲控制器。";
 /* Error of 'ojd virtual reset --all' when the service could not clear the choices. The command in quotes stays as written. */
-"cli.virtual.reset.allFailed" = "服務無法清除虛擬遊戲控制器的選擇。請用 「ojd status」 檢查。";
+"cli.virtual.reset.allFailed" = "服務無法清除虛擬遊戲控制器的選擇。請用「ojd status」檢查。";
 /* Yes or no question that 'ojd virtual reset --all' asks on a terminal. */
 "cli.virtual.reset.allSummary" = "要讓所有控制器型號恢復自動選擇虛擬遊戲控制器嗎？";
 /* Long description in the help of 'ojd virtual reset'. --all and --force stay as written. */
@@ -2564,7 +2564,7 @@
 /* Line of the output of 'ojd record test' for each field of the controller state that differs. %1$@ is the field name, %2$@ is the expected value and %3$@ is the value found. */
 "cli.record.test.difference" = "%1$@：預期 %2$@，實際 %3$@";
 /* Long description in the help of 'ojd record test'. The command in quotes and the JSON terms stay as written. */
-"cli.record.test.discussion" = "以記錄的解析器重播擷取檔中接收到的封包，然後將最後一個輸入報告之後的控制器狀態與預期狀態比較。擷取檔是 「ojd controller capture --json」 輸出的 JSON 行。預期狀態是一個 JSON 物件，形狀與 「ojd controller watch --json」 的一行相同。指令會列出每個不同的欄位，只要有欄位不同就以結束碼 1 結束。它會比較除了 connection 以外的所有欄位，connection 由執行中的服務設定。不需要執行中的服務。";
+"cli.record.test.discussion" = "以記錄的解析器重播擷取檔中接收到的封包，然後將最後一個輸入報告之後的控制器狀態與預期狀態比較。擷取檔是「ojd controller capture --json」輸出的 JSON 行。預期狀態是一個 JSON 物件，形狀與「ojd controller watch --json」的一行相同。指令會列出每個不同的欄位，只要有欄位不同就以結束碼 1 結束。它會比較除了 connection 以外的所有欄位，connection 由執行中的服務設定。不需要執行中的服務。";
 /* Help text of the expected state argument of 'ojd record test'. The state is a JSON file. */
 "cli.record.test.expect" = "預期的控制器狀態，JSON 檔案。";
 /* Error of 'ojd record test' when the expected state file is invalid. %1$@ is the file path and %2$@ is the description of the problem. */
@@ -2574,7 +2574,7 @@
 /* Error of 'ojd record test' when the family of the controller has no parser that can run without the controller. %@ is the controller model. */
 "cli.record.test.noParser" = "%@ 的系列沒有不需控制器即可執行的解析器。";
 /* Help text of the packet capture argument of 'ojd record test'. The command in quotes stays as written. */
-"cli.record.test.packets" = "封包擷取檔，即 「ojd controller capture --json」 輸出的 JSON 行。";
+"cli.record.test.packets" = "封包擷取檔，即「ojd controller capture --json」輸出的 JSON 行。";
 /* Error of 'ojd record test' when the parser rejects a packet. %1$@ is the controller model, %2$lld is the packet number and %3$@ is the capture file path. */
 "cli.record.test.parseFailed" = "%1$@ 的解析器拒絕了接收到的第 %2$lld 個封包（%3$@）。";
 /* Text of error E2022, printed when the controller state that a record parser produces from a capture differs from the expected state. */
@@ -2640,7 +2640,7 @@
 /* Help text of the --all flag of 'ojd binding clear'. */
 "cli.binding.clear.all" = "移除所有對應、組合鍵、序列和層。";
 /* Warning of 'ojd binding clear' when removing the bindings leaves an active profile without any binding, so its controller sends no input. %@ is the profile name. The two commands in quotes stay as written. */
-"cli.binding.clear.blocksInput" = "「%@」在已連接的控制器上處於啟用狀態，現在會阻擋其所有輸入。請用 「ojd binding set」 新增對應，或用 「ojd profile deactivate」 停止此設定檔。";
+"cli.binding.clear.blocksInput" = "「%@」在已連接的控制器上處於啟用狀態，現在會阻擋其所有輸入。請用「ojd binding set」新增對應，或用「ojd profile deactivate」停止此設定檔。";
 /* Yes or no question that 'ojd binding clear --all' asks on a terminal. %@ is the profile name. */
 "cli.binding.clear.confirm" = "要從「%@」移除所有對應、組合鍵、序列和層嗎？";
 /* Long description in the help of 'ojd binding clear'. --all and --force stay as written. */
@@ -2656,13 +2656,13 @@
 /* Error of 'ojd binding clear' when neither sources nor --all are given. --all stays as written. */
 "cli.binding.clear.usage" = "請提供一個或多個來源，或使用 --all。";
 /* Long description in the help of 'ojd binding'. It lists the SOURCE and TARGET forms. Words in capitals, forms such as button:NAME and all option names stay as written. */
-"cli.binding.group.discussion" = "對應會在使用控制器的 SOURCE 時傳送 TARGET。\n\nSOURCE：button:NAME、dpad:DIRECTION、axis:NAME[:negative|positive]、trigger:NAME:STAGE、motion:lean:DIRECTION、touch:SURFACE:contact、touch:SURFACE:grid:COLUMNS:ROWS:COLUMN:ROW，或 touch:SURFACE:swipe:DIRECTION:DISTANCE。\n\nTARGET：key:KEY[:mods=meta,control,alt,shift]、mouse:BUTTON、move:x|y、scroll:x|y、gamepad:button:NAME、gamepad:dpad:DIRECTION、gamepad:axis:NAME，或用於震動、燈光和自適應扳機的 physical:...。\n\n「ojd profile show」 會以這些形式輸出對應。請用 「ojd profile edit」 編輯組合鍵、序列和層。";
+"cli.binding.group.discussion" = "對應會在使用控制器的 SOURCE 時傳送 TARGET。\n\nSOURCE：button:NAME、dpad:DIRECTION、axis:NAME[:negative|positive]、trigger:NAME:STAGE、motion:lean:DIRECTION、touch:SURFACE:contact、touch:SURFACE:grid:COLUMNS:ROWS:COLUMN:ROW，或 touch:SURFACE:swipe:DIRECTION:DISTANCE。\n\nTARGET：key:KEY[:mods=meta,control,alt,shift]、mouse:BUTTON、move:x|y、scroll:x|y、gamepad:button:NAME、gamepad:dpad:DIRECTION、gamepad:axis:NAME，或用於震動、燈光和自適應扳機的 physical:...。\n\n「ojd profile show」會以這些形式輸出對應。請用「ojd profile edit」編輯組合鍵、序列和層。";
 /* One-line summary of 'ojd binding list' in the command list and at the top of its help. */
 "cli.binding.list.abstract" = "列出設定檔的對應。";
 /* Message of 'ojd binding list' when the profile has no bindings. %@ is the profile name. The command in quotes stays as written. */
-"cli.binding.list.empty" = "「%@」沒有對應。請用 「ojd binding set」 加入。";
+"cli.binding.list.empty" = "「%@」沒有對應。請用「ojd binding set」加入。";
 /* Help text of the --actions-json option of 'ojd binding set'. 'ojd profile export' stays as written. */
-"cli.binding.group.optionActionsJson" = "額外動作，以 JSON 陣列表示，格式與 「ojd profile export」 寫出的相同。";
+"cli.binding.group.optionActionsJson" = "額外動作，以 JSON 陣列表示，格式與「ojd profile export」寫出的相同。";
 /* Help text of the --behavior option of 'ojd binding set'. The behavior hold is a value the user types. */
 "cli.binding.group.optionBehavior" = "目標何時觸發。預設：目前對應的行為，或 hold。";
 /* Help text of the --deadzone option of 'ojd binding set'. The dead zone is the part of an axis travel that is ignored. */
@@ -2694,9 +2694,9 @@
 /* Help text of the TARGET argument of 'ojd binding set'. key:space stays as written. */
 "cli.binding.set.target" = "它傳送的內容，例如 key:space。";
 /* Error of 'ojd binding' commands when a source cannot be parsed. %@ is the text the user gave. The command in quotes stays as written. */
-"cli.binding.group.sourceInvalid" = "「%@」不是來源。「ojd binding set --help」 會列出來源的寫法。";
+"cli.binding.group.sourceInvalid" = "「%@」不是來源。「ojd binding set --help」會列出來源的寫法。";
 /* Error of 'ojd binding set' when the target cannot be parsed. %@ is the text the user gave. The command in quotes stays as written. */
-"cli.binding.group.targetInvalid" = "「%@」不是目標。「ojd binding set --help」 會列出目標的寫法。";
+"cli.binding.group.targetInvalid" = "「%@」不是目標。「ojd binding set --help」會列出目標的寫法。";
 /* Error of 'ojd binding set' when only one of --turbo-rate and --turbo-duty is given. Both option names stay as written. */
 "cli.binding.group.turboPair" = "--turbo-rate 和 --turbo-duty 必須一起提供。";
 /* Error of 'ojd binding set' when turbo is requested for a pointer movement or scrolling target. */
@@ -2716,19 +2716,19 @@
 /* Calibration line of 'ojd controller calibrate'. %1$@ is the controller name, %2$@ is the state word, and %3$@, %4$@ and %5$@ are the X, Y and Z components of the gyro offset in degrees per second. */
 "cli.controller.calibrate.status" = "%1$@：%2$@，陀螺儀偏移 x %3$@ y %4$@ z %5$@ 度／秒";
 /* Error of 'ojd controller calibrate' when no profile is active for the controller. %@ is the controller name. The command in quotes stays as written. */
-"cli.controller.calibrate.unavailable" = "%@ 沒有使用中的重新對應工作階段。請用 「ojd profile activate」 為其啟用設定檔。";
+"cli.controller.calibrate.unavailable" = "%@ 沒有使用中的重新對應工作階段。請用「ojd profile activate」為其啟用設定檔。";
 /* State word in the calibration line of 'ojd controller calibrate'. It fills %2$@ of the status line. */
 "cli.controller.calibrate.uncalibrated" = "未校準";
 /* One-line summary of 'ojd controller pair' in the command list and at the top of its help. A Joy-Con is a Nintendo Switch controller half and stays as written. */
 "cli.controller.pair.abstract" = "將左右兩個 Joy-Con 合併為一個控制器。";
 /* Long description in the help of 'ojd controller pair'. PROFILE and the command in quotes stay as written. */
-"cli.controller.pair.discussion" = "該配對使用 PROFILE，它必須是配對 Joy-Con 的設定檔。「ojd controller unpair」 可將它們再次分開。";
+"cli.controller.pair.discussion" = "該配對使用 PROFILE，它必須是配對 Joy-Con 的設定檔。「ojd controller unpair」可將它們再次分開。";
 /* Message printed after 'ojd controller pair'. %1$@ is the session ID of the pair and %2$@ is the profile name, which is shown in quotes. */
 "cli.controller.pair.done" = "已將 Joy-Con 配對為 %1$@，使用「%2$@」。";
 /* Help text of the LEFT argument of 'ojd controller pair'. */
 "cli.controller.pair.left" = "左 Joy-Con。";
 /* Error of 'ojd controller pair' when the service reports no pair. The command in quotes stays as written. */
-"cli.controller.pair.missing" = "服務未能配對 Joy-Con。請用 「ojd controller list」 檢查它們。";
+"cli.controller.pair.missing" = "服務未能配對 Joy-Con。請用「ojd controller list」檢查它們。";
 /* Help text of the RIGHT argument of 'ojd controller pair'. */
 "cli.controller.pair.right" = "右 Joy-Con。";
 /* One-line summary of 'ojd controller unpair' in the command list and at the top of its help. */
@@ -2738,7 +2738,7 @@
 /* Error of 'ojd controller unpair' when no pair matches. %@ is the text the user gave. */
 "cli.controller.unpair.notFound" = "沒有與「%@」相符的 Joy-Con 配對。";
 /* Help text of the PAIR argument of 'ojd controller unpair'. The command in quotes stays as written. */
-"cli.controller.unpair.pair" = "配對：來自 「ojd controller pair」 的工作階段 ID，或任一 Joy-Con 的 ID。";
+"cli.controller.unpair.pair" = "配對：來自「ojd controller pair」的工作階段 ID，或任一 Joy-Con 的 ID。";
 /* One-line summary of 'ojd profile' in the command list and at the top of its help. */
 "cli.profile.group.abstract" = "建立、變更和啟用重新對應設定檔。";
 /* One-line summary of 'ojd profile activate' in the command list and at the top of its help. */
@@ -2754,7 +2754,7 @@
 /* Marker appended to the line of the active profile in 'ojd profile list'. Keep the parentheses. */
 "cli.profile.group.activeMarker" = "（使用中）";
 /* Help text of the PROFILE argument shared by the 'ojd profile' commands. The command in quotes stays as written. */
-"cli.profile.group.argument" = "設定檔：其 ID，或來自 「ojd profile list」 的名稱。";
+"cli.profile.group.argument" = "設定檔：其 ID，或來自「ojd profile list」的名稱。";
 /* One-line summary of 'ojd profile create' in the command list and at the top of its help. */
 "cli.profile.create.abstract" = "為某一控制器型號建立空設定檔。";
 /* Help text of the --app option of 'ojd profile create'. An app ID is the bundle identifier of an app, such as com.apple.Safari. */
@@ -2762,7 +2762,7 @@
 /* Help text of the --controller option of 'ojd profile create'. VVVV:PPPP is the vendor ID and product ID in hexadecimal and stays as written. */
 "cli.profile.create.controller" = "控制器型號：VVVV:PPPP，或已連接控制器的 ID。";
 /* Long description in the help of 'ojd profile create'. --app and the command in quotes stay as written. */
-"cli.profile.create.discussion" = "除非用 --app 指定某個 App，否則該設定檔會在所有 App 中生效。依預設，虛擬遊戲控制器會直通所有未被對應使用的控制項。設定檔建立後處於未啟用狀態；請用 「ojd profile activate」 啟用。";
+"cli.profile.create.discussion" = "除非用 --app 指定某個 App，否則該設定檔會在所有 App 中生效。依預設，虛擬遊戲控制器會直通所有未被對應使用的控制項。設定檔建立後處於未啟用狀態；請用「ojd profile activate」啟用。";
 /* Message printed after 'ojd profile create'. %1$@ is the profile name, shown in quotes, and %2$@ is the profile ID. */
 "cli.profile.create.done" = "已建立「%1$@」（%2$@）。";
 /* Help text of the physical input option of 'ojd profile create'. shared and exclusive are values the user types and stay as written. */
@@ -2784,7 +2784,7 @@
 /* Message printed by 'ojd profile delete --dry-run' instead of deleting. %@ is the profile name, shown in quotes. */
 "cli.profile.delete.dryRun" = "將會刪除設定檔「%@」。";
 /* Long description in the help of 'ojd profile'. PROFILE and the commands in quotes stay as written. */
-"cli.profile.group.discussion" = "重新對應設定檔會把某一控制器型號的控制項轉換為遊戲控制器、鍵盤和指標輸入。PROFILE 是來自 「ojd profile list」 的設定檔 ID 或名稱。請用 「ojd binding」 變更對應，其他內容用 「ojd profile set」 或 「ojd profile edit」 變更。除 「ojd profile validate」 外，每個設定檔指令都需要服務。";
+"cli.profile.group.discussion" = "重新對應設定檔會把某一控制器型號的控制項轉換為遊戲控制器、鍵盤和指標輸入。PROFILE 是來自「ojd profile list」的設定檔 ID 或名稱。請用「ojd binding」變更對應，其他內容用「ojd profile set」或「ojd profile edit」變更。除「ojd profile validate」外，每個設定檔指令都需要服務。";
 /* Error of the profile file commands when a profile document is invalid. %1$@ is the file path or the word stdin and %2$@ is the description of the problem. */
 "cli.profile.group.documentInvalid" = "%1$@ 不是有效的設定檔：%2$@";
 /* Reason fragment of a document problem: the text is not JSON. It follows a file name in a message and starts in lowercase. */
@@ -2810,13 +2810,13 @@
 /* Error of 'ojd profile edit' when the editor ends with a failure. %lld is the exit status number of the editor. */
 "cli.profile.edit.editorFailed" = "編輯器以狀態 %lld 結束。未變更任何內容。";
 /* Error of 'ojd profile edit' when the edit changed the profile ID. The command in quotes stays as written. */
-"cli.profile.edit.idChanged" = "此次編輯變更了設定檔 ID。未變更任何內容；請用 「ojd profile duplicate」 建立副本。";
+"cli.profile.edit.idChanged" = "此次編輯變更了設定檔 ID。未變更任何內容；請用「ojd profile duplicate」建立副本。";
 /* Error of 'ojd profile edit' when the input is not a terminal. The three commands in quotes stay as written. */
-"cli.profile.edit.needsTerminal" = "「ojd profile edit」 需要終端機。請改用 「ojd profile export」 和 「ojd profile import」。";
+"cli.profile.edit.needsTerminal" = "「ojd profile edit」需要終端機。請改用「ojd profile export」和「ojd profile import」。";
 /* Message printed by 'ojd profile edit' when the file is saved without a change. */
 "cli.profile.edit.unchanged" = "未變更任何內容。";
 /* One-line summary of 'ojd profile export' in the command list and at the top of its help. The command in quotes stays as written. */
-"cli.profile.export.abstract" = "將設定檔輸出為 「ojd profile import」 可讀取的檔案。";
+"cli.profile.export.abstract" = "將設定檔輸出為「ojd profile import」可讀取的檔案。";
 /* Long description in the help of 'ojd profile export'. --json and --plain stay as written. */
 "cli.profile.export.discussion" = "設定檔為 JSON，因此 --json 和 --plain 不會改變輸出。";
 /* Message printed after 'ojd profile export --output'. %1$@ is the profile name, shown in quotes, and %2$@ is the file path. */
@@ -2828,11 +2828,11 @@
 /* One-line summary of 'ojd profile get' in the command list and at the top of its help. */
 "cli.profile.get.abstract" = "輸出設定檔中的一個值。";
 /* Long description in the help of 'ojd profile get'. KEY, the command in quotes, the example key path and --json stay as written. */
-"cli.profile.get.discussion" = "KEY 是 「ojd profile export」 所輸出的設定檔中的路徑，例如 stickMappings.0.tuning.innerDeadzone。字串單獨輸出，其他任何值以 JSON 輸出。使用 --json 時，輸出鍵和值。";
+"cli.profile.get.discussion" = "KEY 是「ojd profile export」所輸出的設定檔中的路徑，例如 stickMappings.0.tuning.innerDeadzone。字串單獨輸出，其他任何值以 JSON 輸出。使用 --json 時，輸出鍵和值。";
 /* Error of 'ojd profile get' when the key has no value. %1$@ is the profile name, shown in quotes, and %2$@ is the key path. */
-"cli.profile.get.missing" = "「%1$@」 在 %2$@ 處沒有值。";
+"cli.profile.get.missing" = "「%1$@」在 %2$@ 處沒有值。";
 /* One-line summary of 'ojd profile import' in the command list and at the top of its help. The command in quotes stays as written. */
-"cli.profile.import.abstract" = "從 「ojd profile export」 寫出的檔案加入設定檔。";
+"cli.profile.import.abstract" = "從「ojd profile export」寫出的檔案加入設定檔。";
 /* Message printed after 'ojd profile import' added a profile. %1$@ is the profile name, shown in quotes, and %2$@ is the profile ID. */
 "cli.profile.import.added" = "已匯入「%1$@」（%2$@）。";
 /* Long description in the help of 'ojd profile import'. The single hyphen is the argument that means stdin and stays as written. */
@@ -2848,7 +2848,7 @@
 /* One-line summary of 'ojd profile list' in the command list and at the top of its help. */
 "cli.profile.list.abstract" = "列出重新對應設定檔。";
 /* Message printed by 'ojd profile list' when no profile exists. The command in quotes stays as written. */
-"cli.profile.list.empty" = "沒有設定檔。請用 「ojd profile create」 建立。";
+"cli.profile.list.empty" = "沒有設定檔。請用「ojd profile create」建立。";
 /* Warning printed by 'ojd profile list' for a stored profile that the service could not load. %@ is the description of the problem. */
 "cli.profile.list.issue" = "服務無法載入已儲存的設定檔：%@";
 /* Hint printed by 'ojd profile list' after the issue warnings. The command in quotes stays as written. */
@@ -2878,19 +2878,19 @@
 /* Help text of the NAME argument of 'ojd profile rename'. The limit of 80 characters is fixed. */
 "cli.profile.rename.name" = "新名稱，1 到 80 個字元。";
 /* Error when a PROFILE argument matches no profile. %@ is the text the user gave. The command in quotes stays as written. */
-"cli.profile.group.selectorNotFound" = "沒有 ID 或名稱為「%@」的設定檔。「ojd profile list」 會顯示所有設定檔。";
+"cli.profile.group.selectorNotFound" = "沒有 ID 或名稱為「%@」的設定檔。「ojd profile list」會顯示所有設定檔。";
 /* One-line summary of 'ojd profile set' in the command list and at the top of its help. */
 "cli.profile.set.abstract" = "變更設定檔中的一個值。";
 /* Long description in the help of 'ojd profile set'. KEY, VALUE, null, JSON, the command in quotes and the example values stay as written. */
-"cli.profile.set.discussion" = "KEY 是設定檔中的路徑，與 「ojd profile get」 相同。VALUE 以 JSON 讀取，不是 JSON 時以字串讀取，因此 0.2 是數字，space 是字串。null 會移除該鍵或陣列項目，而陣列末尾之後的一個索引會新增一個項目。儲存前會檢查整個設定檔，且 ID 不能變更。";
+"cli.profile.set.discussion" = "KEY 是設定檔中的路徑，與「ojd profile get」相同。VALUE 以 JSON 讀取，不是 JSON 時以字串讀取，因此 0.2 是數字，space 是字串。null 會移除該鍵或陣列項目，而陣列末尾之後的一個索引會新增一個項目。儲存前會檢查整個設定檔，且 ID 不能變更。";
 /* Message printed after 'ojd profile set'. %1$@ is the key path and %2$@ is the profile name, shown in quotes. */
-"cli.profile.set.done" = "已在 「%1$@」 中設定 %2$@。";
+"cli.profile.set.done" = "已在「%1$@」中設定 %2$@。";
 /* Error of 'ojd profile set' when the key is the profile ID. The command in quotes stays as written. */
-"cli.profile.set.idChanged" = "設定檔 ID 不能變更。請使用 「ojd profile duplicate」 建立副本。";
+"cli.profile.set.idChanged" = "設定檔 ID 不能變更。請使用「ojd profile duplicate」建立副本。";
 /* Error of 'ojd profile set' when the given value makes the profile invalid. %1$@ is the key path and %2$@ is the description of the problem. */
 "cli.profile.set.invalid" = "設定 %1$@ 會使設定檔無效：%2$@";
 /* Error of 'ojd profile set' when the key has no place in the profile. %1$@ is the profile name, shown in quotes, and %2$@ is the key path. */
-"cli.profile.set.missing" = "「%1$@」 中沒有 %2$@ 的位置。請設定已存在的鍵，或將其父層設定為完整的值。";
+"cli.profile.set.missing" = "「%1$@」中沒有 %2$@ 的位置。請設定已存在的鍵，或將其父層設定為完整的值。";
 /* Help text of the VALUE argument of 'ojd profile set'. JSON stays as written. */
 "cli.profile.set.value" = "新值，以 JSON 或字串形式給出。";
 /* One-line summary of 'ojd profile show' in the command list and at the top of its help. */
@@ -2902,9 +2902,9 @@
 /* Help text of the FILE argument of 'ojd profile validate'. The single hyphen means stdin and stays as written. */
 "cli.profile.validate.file" = "設定檔，或用 - 表示 stdin。";
 /* Message printed by 'ojd profile validate' for a correct profile. %1$@ is the file path or the word stdin, %2$@ is the profile name, shown in quotes, %3$@ is the controller model and %4$@ is the app scope. The command in quotes stays as written. */
-"cli.profile.validate.valid" = "%1$@ 是有效的設定檔：「%2$@」，對應 %3$@（%4$@）。可用 「ojd profile import」 新增。";
+"cli.profile.validate.valid" = "%1$@ 是有效的設定檔：「%2$@」，對應 %3$@（%4$@）。可用「ojd profile import」新增。";
 /* Error when the service accepted a profile and does not list it afterwards. The command in quotes stays as written. */
-"cli.profile.group.vanished" = "服務未保留該設定檔。請用 「ojd profile list」 檢查。";
+"cli.profile.group.vanished" = "服務未保留該設定檔。請用「ojd profile list」檢查。";
 /* Title of the details button of an error message in the Library area. */
 "ui.library.details" = "詳細資料";
 /* Button of an error message in the Library area that hides the message. */
@@ -3220,7 +3220,7 @@
 /* VoiceOver label of the button that closes the token sheet after the token is shown. */
 "a11y.access.done" = "關閉權杖";
 /* VoiceOver label of one access scope in the token sheet. %@ is the localized scope name, such as the permission the token carries. */
-"a11y.access.scope" = "%@範圍";
+"a11y.access.scope" = "%@ 範圍";
 /* VoiceOver label of the cancel button in the access sheets. It leaves the access unchanged. */
 "a11y.access.cancel" = "取消並維持取用權限不變";
 /* Item of the application menu that opens the About window. %@ is the product name. */
@@ -3446,7 +3446,7 @@
 /* Body of the notification about an available update. %@ is the version tag. */
 "ui.settings.general.updateAvailableBody" = "版本 %@ 可用。";
 /* Title of the message in the main window while a profile change is still running. */
-"ui.mainWindow.profileMutationRunning" = "設定檔變更仍在進行。請在完成後再試一次。";
+"ui.mainWindow.profileMutationRunning" = "設定檔變更仍在進行。請在完成後重試。";
 /* Value of the WebSocket row when it is on but the port is not set yet. */
 "ui.access.web.noPort" = "Web 端點已開啟，但尚未選擇連接埠";
 /* Description of the signer of a program that has a signature without a known publisher. */
@@ -3502,7 +3502,7 @@
 /* Name of the controller type in the Shortcuts app. It is singular and names one connected controller. */
 "ui.shortcuts.controller.type" = "控制器";
 /* Error shown in the Shortcuts app when a controller reports no battery level. %@ is the controller name. */
-"ui.shortcuts.error.batteryUnknown" = "%@未回報其電池電量。";
+"ui.shortcuts.error.batteryUnknown" = "%@ 未回報其電池電量。";
 /* Name of the controller parameter of an action in the Shortcuts app. */
 "ui.shortcuts.parameter.controller" = "控制器";
 /* Name of the profile parameter of an action in the Shortcuts app. */

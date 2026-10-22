@@ -87,11 +87,11 @@
 /* Title of the switch that turns on the developer tools in the Advanced pane of the settings window. */
 "ui.settings.advanced.enableDeveloperTools" = "Activar herramientas para desarrolladores";
 /* Note in the Notifications pane of the settings window when macOS has turned off both banners and sounds for the app. System Settings is the name of the macOS app. */
-"platform.macos.ui.settings.notifications.notificationBannersAndSoundOff" = "Los banners y los sonidos están desactivados en Ajustes del Sistema.";
+"platform.macos.ui.settings.notifications.notificationBannersAndSoundOff" = "Los banners y los sonidos están desactivados en Configuración del Sistema.";
 /* Value of the notification row in the Access area when macOS has turned off banners for the app. */
 "ui.settings.notifications.notificationBannersOff" = "Banners desactivados";
 /* Note in the Notifications pane of the settings window when macOS has turned off banners for the app. System Settings is the name of the macOS app. */
-"platform.macos.ui.settings.notifications.notificationBannersOffDetail" = "Los banners de notificación están desactivados en Ajustes del Sistema.";
+"platform.macos.ui.settings.notifications.notificationBannersOffDetail" = "Los banners de notificación están desactivados en Configuración del Sistema.";
 /* Status text in the Notifications pane of the settings window when macOS allows notifications. */
 "ui.settings.notifications.notificationDeliveryAllowed" = "La entrega de notificaciones está permitida.";
 /* Status text in the Notifications pane of the settings window when macOS allows banners, Notification Center and sounds. Notification Center is the macOS name. */
@@ -101,13 +101,13 @@
 /* Value of the notification row in the Access area when macOS has turned off sounds for the app. */
 "ui.settings.notifications.notificationSoundOff" = "Sonido desactivado";
 /* Note in the Notifications pane of the settings window when macOS has turned off sounds for the app. System Settings is the name of the macOS app. */
-"platform.macos.ui.settings.notifications.notificationSoundOffDetail" = "Los sonidos de notificación están desactivados en Ajustes del Sistema.";
+"platform.macos.ui.settings.notifications.notificationSoundOffDetail" = "Los sonidos de notificación están desactivados en Configuración del Sistema.";
 /* Title of the switch in the Notifications pane of the settings window that plays a sound with a notification. */
 "ui.settings.notifications.notificationSounds" = "Reproducir un sonido";
 /* Name of the notification permission in the Access area. */
 "ui.settings.notifications.notifications" = "Notificaciones";
 /* Error shown when the user turns on notifications in the app while macOS denies them. System Settings is the name of the macOS app. OpenJoystickDriver is the product name. */
-"platform.macos.ui.settings.notifications.notificationsDenied" = "Las notificaciones de OpenJoystickDriver están desactivadas en Ajustes del Sistema.";
+"platform.macos.ui.settings.notifications.notificationsDenied" = "Las notificaciones de OpenJoystickDriver están desactivadas en Configuración del Sistema.";
 /* Button in the Notifications pane of the settings window that opens the notification settings of macOS. */
 "ui.settings.general.openNotificationSettings" = "Abrir configuración de notificaciones";
 /* Button in a pane of the settings window that opens System Settings, the macOS app. */
@@ -125,7 +125,7 @@
 /* Title of the switch in the General pane of the settings window that opens the app when the user logs in. */
 "ui.settings.general.startAtLogin" = "Abrir al iniciar sesión";
 /* Error shown in the General pane of the settings window after the user turns on Start at login and macOS wants approval. System Settings, General and Login Items are names in macOS and are written as macOS shows them. */
-"platform.macos.ui.settings.general.startAtLoginApprovalRequired" = "Permite OpenJoystickDriver en Ajustes del Sistema > General > Elementos de inicio.";
+"platform.macos.ui.settings.general.startAtLoginApprovalRequired" = "Permite OpenJoystickDriver en Configuración del Sistema > General > Elementos de inicio.";
 /* Description under the Start at login switch in the General pane of the settings window. OpenJoystickDriver is the product name. */
 "ui.settings.general.startAtLoginDescription" = "Abre OpenJoystickDriver en la barra de menús al iniciar sesión.";
 /* Button in the Notifications pane of the settings window that sends a test notification. */
@@ -203,7 +203,7 @@
 /* Value of the serving route in the Controllers area: macOS serves the controller and the driver passes the input through. */
 "platform.macos.ui.controllers.serving.nativePassThrough" = "macOS (transferido)";
 /* Value of the serving route when OpenJoystickDriver serves a virtual gamepad. OpenJoystickDriver is the product name. */
-"ui.controllers.serving.virtualHID" = "OpenJoystickDriver (control virtual)";
+"ui.controllers.serving.virtualHID" = "OpenJoystickDriver, control virtual";
 /* Value of the serving route when the driver extension owns the controller. */
 "ui.controllers.serving.extensionOwned" = "Extensión de controlador";
 /* Value of the serving route when the user turned the output off. */
@@ -1043,7 +1043,7 @@
 /* Detail line in the Driver section of the settings window when the driver extension for Xbox USB controllers is installed and works. */
 "ui.setup.activeDetail" = "El controlador USB de Xbox restringido está instalado y listo.";
 /* Detail line of the problem banner when the driver extension waits for approval. System Settings is the name of the macOS app. The extension is needed for supported Microsoft USB controllers. */
-"platform.macos.ui.setup.approvalDetail" = "Aprueba el controlador en Ajustes del Sistema para usar los controles USB de Microsoft compatibles.";
+"platform.macos.ui.setup.approvalDetail" = "Aprueba el controlador en Configuración del Sistema para usar los controles USB de Microsoft compatibles.";
 /* Detail line in the Driver section of the settings window while the app checks the driver extension for Xbox USB controllers. */
 "ui.setup.checkingDetail" = "Comprobando el controlador USB de Xbox instalado.";
 /* Title of the problem banner and of the Driver section of the settings window for the driver extension that serves Xbox USB controllers. */
@@ -1053,9 +1053,9 @@
 /* Detail line of the problem banner when the app has no driver extension. The user reinstalls the signed app. */
 "ui.setup.missingDetail" = "Esta app no contiene el controlador USB de Xbox. Reinstala la app firmada.";
 /* Button that opens the System Settings app on the pane where the user can allow the permission or the extension. */
-"platform.macos.ui.setup.openSystemSettings" = "Abrir Ajustes del Sistema";
+"platform.macos.ui.setup.openSystemSettings" = "Abrir Configuración del Sistema";
 /* Title of the alert shown when the System Settings app could not be opened. */
-"platform.macos.ui.setup.openSystemSettingsFailed" = "No se pudo abrir Ajustes del Sistema.";
+"platform.macos.ui.setup.openSystemSettingsFailed" = "No se pudo abrir Configuración del Sistema.";
 /* Detail line of the problem banner when the driver extension needs activation or replacement. The app repairs it when the user presses the repair button. OpenJoystickDriver is the product name. */
 "ui.setup.repairDetail" = "OpenJoystickDriver reparará el controlador USB de Xbox sin herramientas de desarrollo.";
 /* Message of the confirmation alert that removes the driver extension from the settings window. */
@@ -1521,7 +1521,7 @@
 /* Title of the alert that removes all assignments of the profile. */
 "ui.profiles.removeAllAssignmentsTitle" = "¿Quitar todas las asignaciones?";
 /* Message of the alert that removes all assignments of the profile. The stick, trigger, touch and motion settings stay. */
-"ui.profiles.removeAllAssignmentsMessage" = "Esto quita de este perfil todas las asignaciones, acordes, secuencias y capas. Los ajustes de palancas, gatillos, táctil y movimiento se conservan.";
+"ui.profiles.removeAllAssignmentsMessage" = "Esto quita de este perfil todas las asignaciones, acordes, secuencias y capas. La configuración de palancas, gatillos, táctil y movimiento se conserva.";
 /* Destructive button of the alert that removes all assignments of the profile. */
 "ui.profiles.removeAllAssignmentsConfirm" = "Quitar todo";
 /* Message of the alert shown before the app activates a profile that sends no input. */
@@ -2030,25 +2030,25 @@
 /* Value shown by 'ojd config show' for a tuning key that no layer sets, so the driver default applies. */
 "cli.config.show.unset" = "valor predeterminado del controlador";
 /* One-line summary of 'ojd setting' in the command list and at the top of its help. */
-"cli.setting.group.abstract" = "Lista, lee o cambia los ajustes de la app OpenJoystickDriver.";
+"cli.setting.group.abstract" = "Lista, lee o cambia la configuración de la app OpenJoystickDriver.";
 /* Error of 'ojd setting set' when the value is neither true nor false. %1$@ is the text the user gave and %2$@ is the setting name, which stays as written. true and false stay as written. */
 "cli.setting.group.badValue" = "“%1$@” no es un valor válido para %2$@. Usa true o false.";
 /* Help text of the developerTools setting in 'ojd setting list'. */
-"cli.setting.group.developerTools" = "Muestra las herramientas de desarrollo en la ventana de Ajustes.";
+"cli.setting.group.developerTools" = "Muestra las herramientas para desarrolladores en la ventana de Configuración.";
 /* Long description in the help of 'ojd setting'. It says that the running service applies each setting, so every 'ojd setting' command needs the service. */
-"cli.setting.group.discussion" = "El servicio en ejecución aplica cada ajuste, así que todos los comandos de ajustes lo necesitan.";
+"cli.setting.group.discussion" = "El servicio en ejecución aplica cada configuración, así que todos los comandos de configuración lo necesitan.";
 /* One-line summary of 'ojd setting get' in the command list and at the top of its help. */
-"cli.setting.get.abstract" = "Imprime el valor de un ajuste.";
+"cli.setting.get.abstract" = "Imprime el valor de una configuración.";
 /* Long description in the help of 'ojd setting get'. true, false and --json stay as written. */
 "cli.setting.get.discussion" = "Imprime solo true o false, para scripts. Con --json, imprime la clave y el valor.";
 /* Help text of the includePrereleaseUpdates setting in 'ojd setting list'. A pre-release version is a test version before a stable release. */
 "cli.setting.group.includePrereleaseUpdates" = "Incluye versiones preliminares al buscar actualizaciones.";
 /* Help text of the KEY argument of 'ojd setting get'. launchAtLogin is a setting name and stays as written. */
-"cli.setting.group.key" = "El ajuste que leer, como launchAtLogin.";
+"cli.setting.group.key" = "La configuración que leer, como launchAtLogin.";
 /* Help text of the launchAtLogin setting in 'ojd setting list'. OpenJoystickDriver is the product name. */
 "cli.setting.group.launchAtLogin" = "Abre OpenJoystickDriver cuando inicias sesión.";
 /* One-line summary of 'ojd setting list' in the command list and at the top of its help. */
-"cli.setting.list.abstract" = "Lista todos los ajustes y su valor.";
+"cli.setting.list.abstract" = "Lista todas las configuraciones y su valor.";
 /* Help text of the notificationSounds setting in 'ojd setting list'. */
 "cli.setting.group.notificationSounds" = "Reproduce un sonido con las notificaciones.";
 /* Help text of the notifyControllerConnected setting in 'ojd setting list'. */
@@ -2060,11 +2060,11 @@
 /* Help text of the notifyProfileDeactivated setting in 'ojd setting list'. */
 "cli.setting.group.notifyProfileDeactivated" = "Notifica cuando se desactiva el perfil activo.";
 /* One-line summary of 'ojd setting set' in the command list and at the top of its help. */
-"cli.setting.set.abstract" = "Cambia un ajuste.";
+"cli.setting.set.abstract" = "Cambia una configuración.";
 /* Long description in the help of 'ojd setting set'. true, false, launchAtLogin and System Settings stay as written. */
 "platform.macos.cli.setting.set.discussion" = "Los valores son true o false. Termina con código 1 cuando macOS deja launchAtLogin desactivado hasta que lo apruebes en Configuración del Sistema.";
 /* Help text of the KEY argument of 'ojd setting set'. launchAtLogin is a setting name and stays as written. */
-"cli.setting.set.key" = "El ajuste que cambiar, como launchAtLogin.";
+"cli.setting.set.key" = "La configuración que cambiar, como launchAtLogin.";
 /* Error of 'ojd setting set' when macOS does not apply a setting that needs approval. %1$@ is the setting name and %2$@ repeats it as the argument of the command in quotes, which stays as written. */
 "platform.macos.cli.setting.set.notApplied" = "macOS no aplicó %1$@. Permite OpenJoystickDriver en Configuración del Sistema > General > Ítems de inicio y extensiones y ejecuta “ojd setting get %2$@”.";
 /* Message printed after 'ojd setting set'. %1$@ is the setting name, which stays as written, and %2$@ is the value the service applied, true or false. */
@@ -2072,7 +2072,7 @@
 /* Help text of the VALUE argument of 'ojd setting set'. true and false stay as written. */
 "cli.setting.set.value" = "El valor nuevo: true o false.";
 /* Error of 'ojd setting' commands for an unknown setting. %1$@ is the text the user gave and %2$@ is the comma-separated list of valid setting names, which stay as written. */
-"cli.setting.group.unknownKey" = "Ajuste desconocido “%1$@”. Usa uno de estos: %2$@.";
+"cli.setting.group.unknownKey" = "Configuración desconocida “%1$@”. Usa una de estas: %2$@.";
 /* One-line summary of 'ojd update' in the command list and at the top of its help. */
 "cli.update.group.abstract" = "Comprueba si existe una versión más reciente de OpenJoystickDriver.";
 /* One-line summary of 'ojd update check' in the command list and at the top of its help. GitHub is a brand name. */
@@ -2608,7 +2608,7 @@
 /* Error E2036, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
 "error.E2036.message" = "Ninguna app de OpenJoystickDriver respondió a tiempo a la notificación de prueba. Verifica que la app esté en ejecución e inténtalo de nuevo.";
 /* Error E2037, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */
-"error.E2037.message" = "Las notificaciones no están permitidas para OpenJoystickDriver. Permítelas en los ajustes de notificaciones del sistema e inténtalo de nuevo.";
+"error.E2037.message" = "Las notificaciones no están permitidas para OpenJoystickDriver. Permítelas en la configuración de notificaciones del sistema e inténtalo de nuevo.";
 /* Note about a controller record whose raw USB family the USB extension cannot claim because Apple signs its product list. OJD is the short product name. */
 "platform.macos.cli.record.group.usbNotClaimed" = "La familia usa USB sin procesar, y la extensión USB no puede reclamar este control, porque su lista de productos está firmada por Apple. OJD solo llega a él mediante acceso USB directo, cuando macOS lo permite.";
 /* Note about a Switch 2 controller record that connects over USB only. bluetoothLE.vibrationCharacteristic is a field of the record and stays as written. */
@@ -2644,7 +2644,7 @@
 /* Yes or no question that 'ojd binding clear --all' asks on a terminal. %@ is the profile name. */
 "cli.binding.clear.confirm" = "¿Eliminar todas las asignaciones, combinaciones, secuencias y capas de “%@”?";
 /* Long description in the help of 'ojd binding clear'. --all and --force stay as written. */
-"cli.binding.clear.discussion" = "--all también elimina las combinaciones, secuencias y capas del perfil, y pide confirmación en un terminal; sin terminal necesita --force. Se mantienen los ajustes de palancas, gatillos, táctil, movimiento y salida.";
+"cli.binding.clear.discussion" = "--all también elimina las combinaciones, secuencias y capas del perfil, y pide confirmación en un terminal; sin terminal necesita --force. Se mantiene la configuración de palancas, gatillos, táctil, movimiento y salida.";
 /* Message printed after 'ojd binding clear' removed bindings. %1$@ is the profile name and %2$lld is the number of removed bindings, shown after a colon. */
 "cli.binding.clear.done" = "Asignaciones eliminadas de “%1$@”: %2$lld.";
 /* Message printed by 'ojd binding clear --dry-run' instead of changing the profile. %1$@ is the profile name and %2$lld is the number of bindings that would be removed, shown after a colon. */
@@ -2894,7 +2894,7 @@
 /* Help text of the VALUE argument of 'ojd profile set'. JSON stays as written. */
 "cli.profile.set.value" = "El valor nuevo, como JSON o como cadena.";
 /* One-line summary of 'ojd profile show' in the command list and at the top of its help. */
-"cli.profile.show.abstract" = "Muestra los ajustes y las asignaciones de un perfil.";
+"cli.profile.show.abstract" = "Muestra la configuración y las asignaciones de un perfil.";
 /* One-line summary of 'ojd profile validate' in the command list and at the top of its help. */
 "cli.profile.validate.abstract" = "Comprueba un archivo de perfil sin importarlo.";
 /* Long description in the help of 'ojd profile validate'. The single hyphen means stdin and stays as written. */
@@ -3026,7 +3026,7 @@
 /* Text of error E2014, printed when the app is not fully installed or its signature is not valid. OpenJoystickDriver is the product name. The command in quotes stays as written. */
 "error.E2014.message" = "OpenJoystickDriver no está instalado por completo o su firma no es válida. Vuelve a instalar la aplicación y ejecuta “ojd diagnose”.";
 /* Text of error E2015, printed when macOS does not complete or apply a request of the driver. */
-"error.E2015.message" = "El sistema no completó o no aplicó la solicitud. Revisa los ajustes del sistema y vuelve a intentarlo.";
+"error.E2015.message" = "El sistema no completó o no aplicó la solicitud. Revisa la configuración del sistema y vuelve a intentarlo.";
 /* Text of error E2016, printed when a file cannot be read, written or deleted, or is present although it must not be. */
 "error.E2016.message" = "No se pudo leer, escribir o eliminar un archivo, o ya existe. Revisa la ruta y sus permisos.";
 /* Text of error E2017, printed when a client is unsigned or signed ad hoc and so cannot be granted access. Developer ID is the name of an Apple signing identity and stays as written. */
@@ -3161,7 +3161,7 @@
 /* Error when no installed record matches a controller model. %@ is the controller model. */
 "ui.library.record.notFound" = "No hay ningún registro instalado para %@.";
 /* Notice after a record is installed. %@ is the controller model. */
-"ui.library.record.installed" = "Se ha instalado el registro de %@.";
+"ui.library.record.installed" = "Se instaló el registro de %@.";
 /* Error when a record file cannot be written. %1$@ is the file name and %2$@ is the reason. */
 "ui.library.record.installFailed" = "No se puede escribir %1$@: %2$@";
 /* Title of the alert that installs a record. %@ is the controller model. */
@@ -3177,7 +3177,7 @@
 /* Message of the alert that removes an installed record. OpenJoystickDriver is the product name. */
 "ui.library.record.remove.message" = "OpenJoystickDriver elimina el archivo de registro de tu carpeta de registros de controles. Los controles que usan el registro dejan de ser reconocidos por él.";
 /* Notice after a record is removed. %@ is the controller model. */
-"ui.library.record.removed" = "Se ha quitado el registro de %@.";
+"ui.library.record.removed" = "Se quitó el registro de %@.";
 /* Error when a record file cannot be removed. %1$@ is the file name and %2$@ is the reason. */
 "ui.library.record.removeFailed" = "No se puede quitar %1$@: %2$@";
 /* Heading of the mods list in the Library area. A mod is a package of records, profiles and personas. */
@@ -3187,11 +3187,11 @@
 /* Notice after a mod check passed. %1$@ is the folder name and %2$@ is the mod name. */
 "ui.library.mod.valid" = "%1$@ es un mod válido: %2$@.";
 /* Error when a mod is refused. %1$@ is the folder name or mod name and %2$@ is the reason. */
-"ui.library.mod.refused" = "%1$@ se ha rechazado: %2$@";
+"ui.library.mod.refused" = "%1$@ se rechazó: %2$@";
 /* Line in the mod detail for a part of a mod that the app does not use. %@ is the reason. */
 "ui.library.mod.unused" = "Sin usar: %@";
 /* Notice after a mod is installed. %@ is the mod name. */
-"ui.library.mod.installed" = "Se ha instalado el mod %@.";
+"ui.library.mod.installed" = "Se instaló el mod %@.";
 /* Title of the alert that installs a mod. %@ is the mod name. */
 "ui.library.mod.install.title" = "¿Instalar el mod %@?";
 /* Message of the alert that installs a mod. %1$@ is the mod name, %2$@ is its version and %3$@ is its author. OpenJoystickDriver is the product name. */
@@ -3205,15 +3205,15 @@
 /* Message of the alert that removes a mod. OpenJoystickDriver is the product name. Personas are the identities that a virtual gamepad can show. */
 "ui.library.mod.remove.message" = "OpenJoystickDriver elimina el mod y los registros, perfiles y personas que añadió.";
 /* Notice after a mod is removed. %@ is the mod name. */
-"ui.library.mod.removed" = "Se ha quitado el mod %@.";
+"ui.library.mod.removed" = "Se quitó el mod %@.";
 /* Line in the records list for a record that a mod changes. %@ is the name of the mod. */
 "ui.library.record.patchedBy" = "Modificado por %@";
 /* Label of the field in the record detail that tells whether the USB extension claims the controller. */
 "ui.library.field.usbClaim" = "Extensión USB";
 /* Value of the USB extension field: the extension claims the controller. */
-"ui.library.claim.claimed" = "Reclama este control";
+"ui.library.claim.claimed" = "Maneja este control";
 /* Value of the USB extension field: the extension does not claim the controller. */
-"ui.library.claim.unclaimed" = "No reclama este control";
+"ui.library.claim.unclaimed" = "No maneja este control";
 /* Placeholder of the search field in the toolbar of the Library area. */
 "ui.library.search" = "Buscar";
 /* Title of the empty state in the Library area when the search matches nothing. */
@@ -3289,7 +3289,7 @@
 /* Title of the alert that turns on the local endpoint. */
 "ui.access.enable.title" = "¿Activar el punto de conexión local?";
 /* Message of the alert that turns on the local endpoint. The control scope allows a program to change controller state. */
-"ui.access.enable.message" = "Los programas a los que concedas acceso podrán leer el estado de los controles y, con el ámbito control, cambiarlo.";
+"ui.access.enable.message" = "Los programas a los que concedas acceso podrán leer el estado de los controles y, con el ámbito “Control”, cambiarlo.";
 /* Label of the row in the Access area for the WebSocket endpoint, where web pages connect. */
 "ui.access.web" = "WebSocket";
 /* Value of the WebSocket row when it is on. %1$@ is the address of the endpoint and %2$@ is the address where pages are served. */
@@ -3333,7 +3333,7 @@
 /* Question of the alert that grants access. %1$@ is the identifier of the program, %2$@ is the description of its signer and %3$@ is the list of scopes. */
 "ui.access.grant.question" = "¿Conceder a %1$@ (%2$@) estos ámbitos: %3$@?";
 /* Warning in the alert that grants access when the control scope is part of the grant. Rumble is vibration of the controller. */
-"ui.access.grant.controlWarning" = "El ámbito control permite que el programa envíe salida a tus controles, como vibración y luces.";
+"ui.access.grant.controlWarning" = "El ámbito “Control” permite que el programa envíe salida a tus controles, como vibración y luces.";
 /* Warning line of the confirmation alert that grants access to a program that Apple signed. */
 "platform.macos.ui.access.grant.platformWarning" = "Este programa está firmado por Apple. Cualquier programa que Apple firme con el mismo identificador obtendría el acceso.";
 /* Button on a program or token that removes its access. */
@@ -3365,7 +3365,7 @@
 /* Error of the token creation sheet when the name or the scopes are missing. */
 "ui.access.token.incomplete" = "Un token necesita un nombre y al menos un ámbito.";
 /* Error of the token creation sheet when the user picks the control scope together with web origins. */
-"ui.access.token.originControl" = "Un token para páginas web no puede tener el ámbito control.";
+"ui.access.token.originControl" = "Un token para páginas web no puede tener el ámbito “Control”.";
 /* Title of the alert that creates a token. %@ is the name of the token. */
 "ui.access.token.title" = "¿Crear el token %@?";
 /* Question of the alert that creates a token without origins. %1$@ is the name of the token and %2$@ is the list of scopes. */
@@ -3385,7 +3385,7 @@
 /* Heading of the list of programs and tokens that the endpoint refused in the last 24 hours. */
 "ui.access.refused" = "Rechazados recientemente";
 /* Footer of the list of refused programs and tokens. */
-"ui.access.refused.message" = "Programas y tokens que el punto de conexión ha rechazado en las últimas 24 horas.";
+"ui.access.refused.message" = "Programas y tokens que el punto de conexión rechazó en las últimas 24 horas.";
 /* Heading of the list of connections that are open at the moment in the Access area. */
 "ui.access.connections" = "Conectados ahora";
 /* Name of the read scope. It lets a program read controller state. */
@@ -3405,11 +3405,11 @@
 /* Error of the Access area when the service is not running. OpenJoystickDriver is the product name. */
 "ui.access.error.serviceUnavailable" = "OpenJoystickDriver no se está ejecutando, así que no se puede leer ni cambiar la configuración de acceso.";
 /* Error of the Access area when the service does not answer in time. OpenJoystickDriver is the product name. */
-"ui.access.error.serviceTimeout" = "OpenJoystickDriver no ha respondido a tiempo.";
+"ui.access.error.serviceTimeout" = "OpenJoystickDriver no respondió a tiempo.";
 /* Error of the Access area when the service refuses the request of the app. OpenJoystickDriver is the product name. */
-"ui.access.error.peerRejected" = "OpenJoystickDriver ha rechazado esta solicitud.";
+"ui.access.error.peerRejected" = "OpenJoystickDriver rechazó esta solicitud.";
 /* Error of the Access area when a request fails. %@ is the reason. */
-"ui.access.error.requestFailed" = "La solicitud ha fallado: %@";
+"ui.access.error.requestFailed" = "La solicitud falló: %@";
 /* VoiceOver label of the button in the Access error banner that shows the details of the error. */
 "a11y.access.details" = "Mostrar los detalles del error";
 /* VoiceOver label of the Access error banner button when the banner offers to close the error. */
@@ -3475,7 +3475,7 @@
 /* Item of the File menu that saves the Activity log to a file. Keep the three dots. */
 "ui.menu.file.saveActivityLog" = "Guardar registro de actividad…";
 /* Title of the alert shown when saving a file from the File menu fails. */
-"ui.menu.file.saveFailed" = "No se ha podido guardar el archivo";
+"ui.menu.file.saveFailed" = "No se pudo guardar el archivo";
 /* Title of the Edit menu in the menu bar. */
 "ui.menu.edit.title" = "Edición";
 /* Item of the Edit menu that undoes the last edit. */
@@ -3525,7 +3525,7 @@
 /* Item of the Profile menu that turns off the active profile. */
 "ui.menu.profile.deactivate" = "Desactivar perfil";
 /* Title of the alert shown when turning off a profile from the menu fails. */
-"ui.menu.profile.deactivateFailed" = "No se ha podido desactivar el perfil";
+"ui.menu.profile.deactivateFailed" = "No se pudo desactivar el perfil";
 /* Message of the alert shown when the profile changed elsewhere during the turn off. */
 "ui.menu.profile.deactivateConflict" = "El perfil cambió mientras se desactivaba. Vuelve a intentarlo.";
 /* Title of the Window menu in the menu bar. */
@@ -3553,9 +3553,9 @@
 /* Message of the alert shown after the support report is copied. */
 "ui.menu.copySupportReport.doneDetail" = "El informe de soporte está en el portapapeles.";
 /* Title of the alert shown when the support report cannot be copied. */
-"ui.menu.copySupportReport.failed" = "No se ha podido copiar el informe de soporte";
+"ui.menu.copySupportReport.failed" = "No se pudo copiar el informe de soporte";
 /* Message of the alert shown when the support report cannot be copied. The user saves it to a file with the File menu. */
-"ui.menu.copySupportReport.failedDetail" = "No se ha podido recopilar el informe. Guárdalo en un archivo.";
+"ui.menu.copySupportReport.failedDetail" = "No se pudo recopilar el informe. Guárdalo en un archivo.";
 /* Title of the Controllers item in the sidebar of the main window and in the window title when it is selected. */
 "ui.sidebar.controllers.title" = "Controles";
 /* Title of the Profiles item in the sidebar of the main window and in the window title when it is selected. */
@@ -3635,7 +3635,7 @@
 /* Menu item in the help submenu that opens the project website. */
 "ui.extra.projectWebsite" = "Sitio web del proyecto";
 /* Title of the alert shown when an action of the menu bar menu fails. */
-"ui.extra.actionFailedTitle" = "La acción no se ha completado";
+"ui.extra.actionFailedTitle" = "La acción no se completó";
 /* Message of the alert shown when a profile changed elsewhere before an action of the menu bar menu ran. */
 "ui.extra.profileConflict" = "El perfil cambió antes de que se ejecutara esta acción. Vuelve a intentarlo.";
 /* VoiceOver label and accessibility description of the menu bar status item. The product name stays as written. */
@@ -3821,7 +3821,7 @@
 /* Error shown when the settings file cannot be moved to the Trash. %@ is the path of the file. Trash is the macOS name. */
 "ui.settings.advanced.errorCannotReset" = "No se puede mover el archivo de configuración %@ a la Papelera.";
 /* Error shown at startup when the stored settings file turns off both entry points. %@ is the path of the settings file. The two switch names are written as in this catalog, and the command in backticks stays as written. */
-"platform.macos.ui.settings.advanced.errorStoredNoVisibleEntryPoint" = "El archivo de ajustes %@ desactiva “Mostrar en la barra de menús” y “Mostrar en el Dock”, así que la app no tendría ningún punto de acceso visible. Corrígelo o muévelo a la Papelera con `ojd setting reset`.";
+"platform.macos.ui.settings.advanced.errorStoredNoVisibleEntryPoint" = "El archivo de configuración %@ desactiva “Mostrar en la barra de menús” y “Mostrar en el Dock”, así que la app no tendría ningún punto de acceso visible. Corrígelo o muévelo a la Papelera con `ojd setting reset`.";
 /* Error shown when the user turns off both Show in menu bar and Show in Dock. The two switch names are written as in this catalog. */
 "platform.macos.ui.settings.advanced.errorNoVisibleEntryPoint" = "“Mostrar en la barra de menús” y “Mostrar en el Dock” no pueden estar desactivados a la vez: la app no tendría ningún punto de acceso visible.";
 /* Title of the alert at startup when the settings file cannot be read. */
@@ -3831,15 +3831,15 @@
 /* Button of the alert about an unreadable settings file at startup that shows the file in Finder, the macOS file manager. */
 "platform.macos.ui.settings.advanced.unreadableShowInFinder" = "Mostrar en el Finder";
 /* One-line summary of 'ojd setting reset' in the command list and at the top of its help. */
-"cli.setting.reset.abstract" = "Mueve el archivo de ajustes a la Papelera.";
+"cli.setting.reset.abstract" = "Mueve el archivo de configuración a la Papelera.";
 /* Long description in the help of 'ojd setting reset'. Settings.json is a file name and stays as written. */
-"cli.setting.reset.discussion" = "Mueve Settings.json a la Papelera para que cada ajuste vuelva a su valor predeterminado. Úsalo cuando el archivo esté dañado o se rechace.";
+"cli.setting.reset.discussion" = "Mueve Settings.json a la Papelera para que cada configuración vuelva a su valor predeterminado. Úsalo cuando el archivo esté dañado o se rechace.";
 /* Yes or no question that 'ojd setting reset' asks on a terminal. */
-"cli.setting.reset.confirm" = "¿Mover el archivo de ajustes a la Papelera y devolver cada ajuste a su valor predeterminado?";
+"cli.setting.reset.confirm" = "¿Mover el archivo de configuración a la Papelera y devolver cada configuración a su valor predeterminado?";
 /* Message printed after 'ojd setting reset'. %@ is the path of the settings file. */
 "cli.setting.reset.success" = "%@ se ha movido a la Papelera.";
 /* Message printed by 'ojd setting reset' when there is no settings file. %@ is the path where the file would be. */
-"cli.setting.reset.none" = "No hay ningún archivo de ajustes en %@.";
+"cli.setting.reset.none" = "No hay ningún archivo de configuración en %@.";
 /* Reason the controller has no virtual gamepad: the user turned the virtual output off. */
 "ui.controllers.publication.reason.outputDisabled" = "La salida virtual está desactivada";
 /* Reason the controller has no virtual gamepad: macOS serves it as a gamepad. */

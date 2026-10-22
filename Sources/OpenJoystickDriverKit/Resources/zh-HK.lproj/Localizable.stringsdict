@@ -89,7 +89,7 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>lld</string>
 			<key>other</key>
-			<string>「%1$@」 符合 %2$lld 部控制器。請使用以下其中一個 ID：</string>
+			<string>「%1$@」符合 %2$lld 部控制器。請使用以下其中一個 ID：</string>
 		</dict>
 	</dict>
 	<!-- Error line of ojd when a profile name or ID matches more than one profile; the matching IDs follow on the next lines. %1$@ is the selector text that was given, %2$lld is the number of matching profiles. The Chinese (Hong Kong) plural forms are a first draft that a native speaker reviews. -->

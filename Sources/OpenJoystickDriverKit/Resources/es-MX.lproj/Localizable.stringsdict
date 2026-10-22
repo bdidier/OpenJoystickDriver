@@ -22,7 +22,7 @@
 			<key>few</key>
 			<string>%d controles conectados</string>
 			<key>many</key>
-			<string>%d controles conectados</string>
+			<string>%d de controles conectados</string>
 			<key>other</key>
 			<string>%d controles conectados</string>
 		</dict>
@@ -47,7 +47,7 @@
 			<key>few</key>
 			<string>%d asignaciones</string>
 			<key>many</key>
-			<string>%d asignaciones</string>
+			<string>%d de asignaciones</string>
 			<key>other</key>
 			<string>%d asignaciones</string>
 		</dict>
@@ -72,7 +72,7 @@
 			<key>few</key>
 			<string>%d dispositivos de salida de control detectados</string>
 			<key>many</key>
-			<string>%d dispositivos de salida de control detectados</string>
+			<string>%d de dispositivos de salida de control detectados</string>
 			<key>other</key>
 			<string>%d dispositivos de salida de control detectados</string>
 		</dict>

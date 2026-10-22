@@ -203,7 +203,7 @@
 /* Value of the serving route in the Controllers area: macOS serves the controller and the driver passes the input through. */
 "platform.macos.ui.controllers.serving.nativePassThrough" = "macOS (ส่งผ่านตรง)";
 /* Value of the serving route when OpenJoystickDriver serves a virtual gamepad. OpenJoystickDriver is the product name. */
-"ui.controllers.serving.virtualHID" = "OpenJoystickDriver (เกมแพดเสมือน)";
+"ui.controllers.serving.virtualHID" = "OpenJoystickDriver, เกมแพดเสมือน";
 /* Value of the serving route when the driver extension owns the controller. */
 "ui.controllers.serving.extensionOwned" = "ส่วนขยายไดรเวอร์";
 /* Value of the serving route when the user turned the output off. */
@@ -1554,7 +1554,7 @@
 "ui.profiles.resetLibraryAction" = "สำรองข้อมูลและรีเซ็ต";
 
 /* Label of the row in the Controllers detail that tells that the session of the controller is suspended. The row holds the Resume button. */
-"ui.controllers.suspended" = "ถูกระงับ";
+"ui.controllers.suspended" = "หยุดชั่วคราวแล้ว";
 /* Error shown when the service refuses to change the session of a controller. */
 "ui.error.controllerSessionChangeRejected" = "ไม่สามารถเปลี่ยนเซสชั่นของคอนโทรลเลอร์ได้";
 
@@ -2162,7 +2162,7 @@
 /* Message printed by 'ojd controller list' when no controller is connected. */
 "cli.controller.list.empty" = "ไม่มีคอนโทรลเลอร์ที่เชื่อมต่ออยู่";
 /* Marker appended to the line of a suspended controller in 'ojd controller list'. Keep the parentheses. */
-"cli.controller.list.suspended" = "(ถูกระงับ)";
+"cli.controller.list.suspended" = "(หยุดชั่วคราวแล้ว)";
 /* Help text of the --duration option of 'ojd controller watch' and 'ojd controller capture'. Control-C is the key combination that stops a program in a terminal. */
 "cli.controller.group.optionDuration" = "หยุดหลังจากจำนวนวินาทีนี้ หากไม่ใช้ จะทำงานต่อไปจนกว่าคุณจะกด Control-C";
 /* Error of the controller output commands when the controller rejects a command. %1$@ is the controller name, %2$@ is the command name and %3$@ is the outcome in kebab case, which stays as written. The command in quotes stays as written. */
@@ -2378,7 +2378,7 @@
 /* Long description in the help of 'ojd mod remove'. Packages/NAME, --force, --dry-run and E4006 stay as written. */
 "cli.mod.remove.discussion" = "ลบเฉพาะ Packages/NAME ขอการยืนยันในเทอร์มินัล มิฉะนั้นต้องใช้ --force --dry-run ตรวจสอบว่าติดตั้งแพ็กเกจแล้วและไม่เปลี่ยนอะไร จบด้วยรหัส 1 และ E4006 เมื่อยังไม่ได้ติดตั้ง";
 /* Yes or no question that 'ojd mod remove' asks on a terminal. %@ is the folder to delete. */
-"cli.mod.remove.confirm" = "ลบ %@ หรือไม่?";
+"cli.mod.remove.confirm" = "ลบ %@ หรือไม่";
 /* Message printed by 'ojd mod remove --dry-run' instead of deleting. %@ is the folder. */
 "cli.mod.remove.dryRun" = "หากดำเนินการจริง จะลบ %@";
 /* Message printed after 'ojd mod remove'. %@ is the folder that is deleted. */

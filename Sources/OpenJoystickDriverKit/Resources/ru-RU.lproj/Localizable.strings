@@ -197,13 +197,13 @@
 /* Entry of the server picker in the Controllers detail: macOS serves the controller itself. */
 "platform.macos.ui.controllers.server.system" = "macOS (нативно)";
 /* Option of the server popup: OpenJoystickDriver serves the controller as a virtual gamepad. OpenJoystickDriver is the product name. */
-"ui.controllers.server.ojd" = "OpenJoystickDriver (виртуально)";
+"ui.controllers.server.ojd" = "OpenJoystickDriver (виртуальный)";
 /* Label of the serving route fact in the Controllers detail. The route is the way the input reaches games. */
 "ui.controllers.serving.label" = "Маршрут обслуживания";
 /* Value of the serving route in the Controllers area: macOS serves the controller and the driver passes the input through. */
 "platform.macos.ui.controllers.serving.nativePassThrough" = "macOS (напрямую)";
 /* Value of the serving route when OpenJoystickDriver serves a virtual gamepad. OpenJoystickDriver is the product name. */
-"ui.controllers.serving.virtualHID" = "OpenJoystickDriver (виртуальный геймпад)";
+"ui.controllers.serving.virtualHID" = "OpenJoystickDriver, виртуальный геймпад";
 /* Value of the serving route when the driver extension owns the controller. */
 "ui.controllers.serving.extensionOwned" = "Расширение драйвера";
 /* Value of the serving route when the user turned the output off. */
@@ -1660,7 +1660,7 @@
 /* Row label in the output of 'ojd status' for the Accessibility permission. It is written as macOS names it. */
 "platform.macos.cli.status.group.labelInputInject" = "Универсальный доступ";
 /* Row label in the output of 'ojd status'. The version of this command line tool follows. */
-"cli.status.group.labelCommandLineTool" = "Программа командной строки";
+"cli.status.group.labelCommandLineTool" = "Инструмент командной строки";
 /* Heading in the output of 'ojd status' above the list of connected controllers. %lld is the number of controllers. */
 "cli.status.group.labelControllers" = "Контроллеры (%lld)";
 /* Row label in the output of 'ojd status'. The state of the driver extension follows. */
@@ -2092,7 +2092,7 @@
 /* Message printed by 'ojd update check' when the installed version is the latest. %1$@ is the installed version and %2$@ is the latest release. */
 "cli.update.check.upToDate" = "Установлена актуальная версия OpenJoystickDriver %1$@ (последний выпуск: %2$@).";
 /* Heading of the Command-Line Tool section in the settings window. */
-"ui.settings.commandLine.tool" = "Программа командной строки";
+"ui.settings.commandLine.tool" = "Инструмент командной строки";
 /* Error in the Command-Line Tool section when a regular file is in the place of the link. %@ is the path. */
 "ui.settings.commandLine.toolBlocked" = "%@ — это файл, а не ссылка. Удалите его и установите снова.";
 /* Status in the Command-Line Tool section after the user cancels the installation. */
@@ -2100,7 +2100,7 @@
 /* Error shown in the Command Line Tool section of the settings window when macOS refuses to install or remove the tool. */
 "platform.macos.ui.settings.commandLine.toolFailed" = "macOS не разрешила изменение.";
 /* Button in the Command-Line Tool section that installs the ojd link. ojd is the command name and stays as written. */
-"ui.settings.commandLine.toolInstall" = "Установить программу командной строки";
+"ui.settings.commandLine.toolInstall" = "Установить инструмент командной строки";
 /* Status in the Command Line Tool section of the settings window when ojd is installed. %@ is the path of the link. Terminal is the macOS app and ojd is the command name. */
 "platform.macos.ui.settings.commandLine.toolInstalled" = "Установлено. Запускайте ojd в Терминале; при удалении будет удалён %@.";
 /* Note in the Command-Line Tool section when the link points to another program. %1$@ is the path of the link and %2$@ is the path it points to. Installing changes the link to point to this app. */
@@ -3274,9 +3274,9 @@
 /* Item of the View menu that leaves full screen. It replaces Enter Full Screen while the window is full screen. */
 "ui.menu.view.exitFullScreen" = "Выйти из полноэкранного режима";
 /* Item of the View menu that shows the sidebar. */
-"ui.menu.view.showSidebar" = "Показать боковое меню";
+"ui.menu.view.showSidebar" = "Показать боковую панель";
 /* Item of the View menu that hides the sidebar. It replaces Show Sidebar while the sidebar is visible. */
-"ui.menu.view.hideSidebar" = "Скрыть боковое меню";
+"ui.menu.view.hideSidebar" = "Скрыть боковую панель";
 /* Item of the View menu that shows the toolbar. */
 "ui.menu.view.showToolbar" = "Показать панель инструментов";
 /* Item of the View menu that hides the toolbar. It replaces Show Toolbar while the toolbar is visible. */

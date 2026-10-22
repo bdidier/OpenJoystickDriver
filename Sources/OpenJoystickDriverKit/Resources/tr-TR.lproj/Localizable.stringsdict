@@ -225,9 +225,9 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>lld</string>
 			<key>one</key>
-			<string>Durduruldu · %lld Paket</string>
+			<string>Durduruldu · %lld paket</string>
 			<key>other</key>
-			<string>Durduruldu · %lld Paket</string>
+			<string>Durduruldu · %lld paket</string>
 		</dict>
 	</dict>
 </dict>
