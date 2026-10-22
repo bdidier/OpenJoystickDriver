@@ -206,6 +206,57 @@ struct LocalizationTests {
   }
 
   @Test
+  func countedTextPicksTheFormOfTheSelectedLanguage() {
+    func text(_ language: String, _ key: String, _ arguments: CVarArg...) -> String {
+      Localization(preferredLanguages: [language]).plural(key, arguments: arguments)
+    }
+    #expect(
+      text("en-US", "ui.developer.hiddenIdlePackets", 1)
+        == "Hidden 1 idle packet (still included in Export)."
+    )
+    #expect(
+      text("en-US", "ui.developer.hiddenIdlePackets", 2)
+        == "Hidden 2 idle packets (still included in Export)."
+    )
+    // The count is the second argument; the first is the selector text.
+    #expect(
+      text("en-US", "cli.profile.group.selectorAmbiguous", "work", 3)
+        == "'work' names 3 profiles. Use one of these IDs:"
+    )
+    #expect(
+      text("de-DE", "cli.controller.group.selectorAmbiguous", "pad", 1)
+        == "„pad“ passt zu 1 Controller. Verwende eine dieser IDs:"
+    )
+    // The count is the third argument.
+    #expect(
+      text("en-US", "cli.record.test.mismatch", "A", "b.json", 1)
+        == "The state that the parser of A produced differs from b.json in 1 field."
+    )
+    for (count, expected) in [
+      (1, "пакет"), (2, "пакета"), (5, "пакетов"), (11, "пакетов"), (21, "пакет"), (22, "пакета"),
+    ] {
+      #expect(
+        text("ru-RU", "ui.developer.stoppedPackets", count) == "Остановлено · \(count) \(expected)"
+      )
+    }
+    for (count, expected) in [
+      (1, "متوقف · حزمة واحدة"), (2, "متوقف · حزمتان"), (3, "متوقف · ٣ حزم"),
+      (11, "متوقف · ١١ حزمة"),
+    ] {
+      #expect(text("ar-SA", "ui.developer.stoppedPackets", count) == expected)
+    }
+    #expect(text("ja-JP", "ui.developer.stoppedPackets", 1) == "停止 · 1パケット")
+    // French and Spanish write a million with "de": the `many` category.
+    #expect(
+      text("fr-FR", "cli.diagnose.group.sampleLimit", 1_000_000).contains("000 d’échantillons")
+    )
+    #expect(
+      text("es-ES", "cli.diagnose.group.soakErrorTooManySamples", 1_000_000)
+        == "El muestreo tomaría 1.000.000 de muestras. Aumente el intervalo de muestreo."
+    )
+  }
+
+  @Test
   func preferredLanguageSelectionUsesTheLocaleCatalog() {
     let resolver = Localization(preferredLanguages: ["fr-FR", "en-US"])
     #expect(resolver.resolvedLanguage?.lowercased() == "fr-fr")

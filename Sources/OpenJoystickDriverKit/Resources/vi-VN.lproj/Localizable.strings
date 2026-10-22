@@ -426,7 +426,6 @@
 "ui.developer.extraInputs" = "Nút bổ sung";
 "ui.developer.extraInputsDescription" = "Nhấn từng nút bổ sung một. Các nút được phát hiện vẫn hiện trong danh sách cho đến khi bạn xóa bản ghi.";
 "ui.developer.hid" = "HID";
-"ui.developer.hiddenIdlePackets" = "Đã ẩn %d gói tin nhàn rỗi (vẫn được đưa vào khi xuất).";
 "ui.developer.keepAliveNote" = "Lưu lượng nhàn rỗi thông thường bị ẩn để hoạt động của bộ điều khiển luôn dễ thấy.";
 "ui.developer.leftStick" = "Cần trái";
 "ui.developer.loadingControllers" = "Đang tải chẩn đoán bộ điều khiển…";
@@ -449,7 +448,6 @@
 "ui.developer.route" = "Tuyến";
 "ui.developer.startCapture" = "Bắt đầu ghi";
 "ui.developer.starting" = "Đang bắt đầu…";
-"ui.developer.stoppedPackets" = "Đã dừng · %d gói tin";
 "ui.developer.unavailable" = "Công cụ nhà phát triển không khả dụng";
 "ui.developer.usbEndpoints" = "Điểm cuối USB";
 "ui.developer.usbID" = "ID USB";
@@ -466,7 +464,6 @@
 "ui.developer.soakRunning" = "Đang lấy mẫu dịch vụ…";
 "ui.developer.soakNotANumber" = "%@: nhập một số nguyên.";
 "ui.developer.soakOutOfRange" = "%1$@: nhập giá trị từ %2$lld đến %3$lld.";
-"ui.developer.soakTooManySamples" = "Lần chạy này cần %lld mẫu. Hãy tăng khoảng lấy mẫu.";
 "ui.inputTest.aButton" = "Nút A";
 "ui.inputTest.aCross" = "A / Chéo";
 "ui.inputTest.additionalButtons" = "Nút bổ sung";
@@ -662,21 +659,28 @@
 "ui.profiles.motion.invertYaw" = "Đảo ngược góc lệch hướng";
 "ui.profiles.motion.automaticBias" = "Tự động hiệu chỉnh khi đứng yên";
 
-/* Motion calibration CLI. Non-English translation pending. */
-
-/* Motion calibration controls. Non-English translation pending. */
+/* Hint under the motion calibration controls of the input test window: keep the controller still on a surface while the gyro bias, the small constant rotation the sensor reports at rest, is collected. */
 "ui.motion.calibration.instructions" = "Giữ bộ điều khiển đứng yên trong khi thu thập độ lệch con quay hồi chuyển.";
+/* Status line in the motion calibration controls while the service collects gyro bias samples. Bias is the constant rotation offset of the gyro sensor at rest. */
 "ui.motion.calibration.collecting" = "Đang thu thập độ lệch";
+/* Status line in the motion calibration controls when the user paused collecting gyro bias samples by hand. */
 "ui.motion.calibration.paused" = "Đã tạm dừng thu thập thủ công";
+/* Line in the motion calibration controls that shows the gyro bias found so far, in degrees per second. %1$.3f, %2$.3f and %3$.3f are the X, Y and Z components. Keep the axis letters and the unit. */
 "ui.motion.calibration.offset" = "Độ lệch (°/s): X %1$.3f · Y %2$.3f · Z %3$.3f";
+/* Button in the motion calibration controls that starts collecting gyro bias samples. Disabled while collecting or while the controller reports no motion baseline. */
 "ui.motion.calibration.start" = "Bắt đầu hiệu chỉnh";
+/* Button in the motion calibration controls that pauses collecting gyro bias samples. Disabled while nothing is collected. */
 "ui.motion.calibration.pause" = "Tạm dừng";
+/* Header of the motion calibration section in the input test window, which holds the gyro calibration controls for the selected controller. */
 "ui.motion.calibration.title" = "Hiệu chỉnh chuyển động";
 
-/* Calibration guidance. Non-English translation pending. */
+/* Guidance in the motion calibration controls when the service cannot reach the controller: connect the controller again, then use Refresh to read the calibration status. */
 "ui.motion.calibration.controllerUnavailable" = "Hãy kết nối lại bộ điều khiển, sau đó làm mới trạng thái hiệu chỉnh.";
+/* Guidance in the motion calibration controls when the controller has no usable motion data: turn on a profile for this controller and check that motion data is available. */
 "ui.motion.calibration.motionUnavailable" = "Bật một cấu hình ánh xạ lại cho bộ điều khiển này và kiểm tra xem cảm biến chuyển động có khả dụng không.";
+/* Status line in the motion calibration controls while the service has no motion samples yet; Refresh checks again. */
 "ui.motion.calibration.waiting" = "Đang chờ mẫu chuyển động. Hãy làm mới để kiểm tra lại.";
+/* Note in the motion calibration controls: collecting gyro bias keeps running in the service after the window closes, and the Pause button stops it. */
 "ui.motion.calibration.continues" = "Việc thu thập vẫn tiếp tục khi cửa sổ này đóng. Dùng Tạm dừng để dừng lại.";
 
 /* Gyro authoring. Native translation review pending. */
@@ -984,7 +988,6 @@
 "cli.diagnose.group.permissionDenied" = "bị từ chối; hãy cấp bằng “ojd permission request”";
 "cli.diagnose.group.permissionUnknown" = "trạng thái không xác định";
 "cli.diagnose.group.rssLimit" = "Với --soak, báo lỗi khi vượt kích thước thường trú này tính bằng MiB; 0 để tắt (0-65536).";
-"cli.diagnose.group.sampleLimit" = "--soak với --interval-ms này sẽ lấy %lld mẫu; hãy tăng --interval-ms.";
 "cli.diagnose.group.serviceRunning" = "đang chạy %@";
 "cli.diagnose.group.serviceStopped" = "chưa chạy; hãy khởi động bằng “ojd service start”";
 "cli.diagnose.group.skipServiceFailed" = "dịch vụ không phản hồi";
@@ -993,7 +996,6 @@
 "cli.diagnose.group.soakErrorInvalidConfiguration" = "Việc lấy mẫu cần %1$lld...%2$lld giây và khoảng lấy mẫu %3$lld...%4$lld ms.";
 "cli.diagnose.group.soakErrorNoSamples" = "Dịch vụ không tạo ra mẫu thời gian chạy nào.";
 "cli.diagnose.group.soakErrorProcessUnavailable" = "Không thể đọc thông tin thời gian chạy của tiến trình dịch vụ %d.";
-"cli.diagnose.group.soakErrorTooManySamples" = "Việc lấy mẫu sẽ cần %lld mẫu. Hãy tăng khoảng lấy mẫu.";
 "cli.diagnose.group.soakNotRequested" = "chưa được yêu cầu; hãy dùng --soak SECONDS";
 "cli.diagnose.group.soakProgress" = "Đang lấy mẫu dịch vụ trong %@…";
 "cli.diagnose.group.soakVerdictFootprintLimit" = "Vượt giới hạn dấu vết bộ nhớ: kích thước thường trú %1$.1f MiB, dấu vết bộ nhớ %2$.1f MiB, bộ mô tả tệp %3$lld, CPU %4$.1f%% trong %5$.0f giây";
@@ -1177,7 +1179,6 @@
 "cli.controller.rumble.rightTrigger" = "Cường độ mô-tơ cò phải.";
 "cli.controller.rumble.sent" = "Đã rung %1$@ trên %2$@.";
 "cli.controller.rumble.stopped" = "Đã dừng rung trên %@.";
-"cli.controller.group.selectorAmbiguous" = "“%1$@” khớp với %2$lld bộ điều khiển. Hãy dùng một trong các ID này:";
 "cli.controller.group.selectorNoneConnected" = "Không có bộ điều khiển nào khớp “%@”, vì chưa có bộ nào được kết nối. Hãy kết nối một bộ và chạy “ojd controller list”.";
 "cli.controller.group.selectorNotFound" = "Không có bộ điều khiển đã kết nối nào khớp “%@”. Hãy dùng một ID hoặc VVVV:PPPP từ danh sách này:";
 "cli.controller.group.sessionNotFound" = "“%@” đã ngắt kết nối trước khi yêu cầu đến được nó. Hãy kết nối lại và thử lại.";
@@ -1272,6 +1273,7 @@
 "cli.virtual.feed.abstract" = "Cung cấp một tay cầm ảo do đầu vào chuẩn điều khiển.";
 "cli.virtual.feed.discussion" = "Đọc một đối tượng JSON mỗi dòng: “buttons” và “dpad” liệt kê các thành phần được nhấn, như South và up, và “axes” ánh xạ tên trục, như LeftStickX, tới giá trị. Thành phần bị thiếu ở trạng thái trung tính. Các cần chạy từ -1 đến 1 với Y hướng xuống; các cò chạy từ 0 đến 1. Các khung được phát theo thứ tự, mỗi khung ít nhất 8 ms; “holdMilliseconds” giữ một khung lâu hơn, tối đa 60000. In mỗi lệnh đầu ra mà trò chơi gửi đến tay cầm, như rung, thành một đối tượng JSON mỗi dòng. Dừng khi mọi khung đã phát xong sau khi đầu vào kết thúc.";
 "cli.virtual.feed.errorClosed" = "Dịch vụ đã đóng tay cầm ảo. Hãy kiểm tra bằng “ojd status”.";
+/* Error from `ojd virtual feed` when the service connection broke while the virtual gamepad was closing. */
 "cli.virtual.feed.errorCloseInterrupted" = "Việc đóng tay cầm ảo đã bị gián đoạn. Hãy kiểm tra bằng “ojd status”.";
 "cli.virtual.feed.errorFrame" = "Dòng %@ không phải là khung hợp lệ. “ojd virtual feed --help” hiển thị định dạng.";
 "cli.virtual.feed.profile" = "Cấu hình tay cầm ảo để cung cấp.";
@@ -1348,8 +1350,6 @@
 "cli.record.test.discussion" = "Phát lại các gói tin đã nhận trong một nội dung ghi qua trình phân tích của bản ghi, rồi so sánh trạng thái bộ điều khiển sau báo cáo đầu vào cuối cùng với trạng thái mong đợi. Nội dung ghi là các dòng JSON của “ojd controller capture --json”. Trạng thái mong đợi là một đối tượng JSON có dạng một dòng của “ojd controller watch --json”. Lệnh liệt kê từng trường khác nhau và thoát với mã 1 nếu có trường khác. Lệnh so sánh mọi trường trừ connection, do dịch vụ đang chạy đặt. Không cần dịch vụ đang chạy.";
 "cli.record.test.expect" = "Trạng thái bộ điều khiển mong đợi, dưới dạng tệp JSON.";
 "cli.record.test.expectInvalid" = "%1$@ không phải trạng thái bộ điều khiển: %2$@";
-"cli.record.test.matched" = "%1$@ khớp với trạng thái mong đợi: đã phát lại %2$lld báo cáo đầu vào.";
-"cli.record.test.mismatch" = "Trạng thái do trình phân tích của %1$@ tạo ra khác %2$@ ở %3$lld trường.";
 "cli.record.test.noInput" = "Không có báo cáo nào trong %1$@ chứa đầu vào cho %2$@. Hãy ghi lại trong khi nhấn các nút điều khiển.";
 "cli.record.test.noParser" = "Họ của %@ không có trình phân tích chạy được khi không có bộ điều khiển.";
 "cli.record.test.packets" = "Một nội dung ghi gói tin, dưới dạng các dòng JSON của “ojd controller capture --json”.";
@@ -1366,7 +1366,9 @@
 "error.E2031.message" = "Cổng này trên 127.0.0.1 đang được dùng hoặc không thể mở. Hãy chọn cổng khác bằng --port.";
 "error.E2032.message" = "Mã thông báo có nguồn gốc không thể có phạm vi control, vì một trang không bao giờ được điều khiển tay cầm ảo. Hãy cấp control cho mã thông báo không có nguồn gốc.";
 "error.E2033.message" = "Không thể khởi động chương trình. Hãy kiểm tra đường dẫn của nó chỉ tới một tệp thực thi hoặc một ứng dụng và bạn có quyền chạy nó.";
+/* Error E2034, shown in the app or the CLI when the service no longer accepts requests. */
 "error.E2034.message" = "Dịch vụ đã ngừng nhận yêu cầu. Hãy thoát OpenJoystickDriver, mở lại, rồi thử lại.";
+/* Error E2035, shown in the app or the CLI when the file that records why the request listener stopped is unusable. */
 "error.E2035.message" = "Không dùng được tệp ghi lại lý do trình lắng nghe yêu cầu dừng. Hãy xóa tệp, rồi mở lại OpenJoystickDriver.";
 /* Error E2036, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
 "error.E2036.message" = "Không có ứng dụng OpenJoystickDriver nào trả lời thông báo thử kịp lúc. Hãy kiểm tra ứng dụng đang chạy, rồi thử lại.";
@@ -1506,7 +1508,6 @@
 "cli.profile.rename.abstract" = "Đổi tên một cấu hình.";
 "cli.profile.rename.done" = "Đã đổi tên thành “%@”.";
 "cli.profile.rename.name" = "Tên mới, từ 1 đến 80 ký tự.";
-"cli.profile.group.selectorAmbiguous" = "“%1$@” trùng tên với %2$lld cấu hình. Hãy dùng một trong các ID này:";
 "cli.profile.group.selectorNotFound" = "Không có cấu hình nào có ID hoặc tên “%@”. “ojd profile list” hiển thị mọi cấu hình.";
 "cli.profile.set.abstract" = "Thay đổi một giá trị trong một cấu hình.";
 "cli.profile.set.discussion" = "KEY là một đường dẫn vào tệp cấu hình, như trong “ojd profile get”. VALUE được đọc dưới dạng JSON, hoặc dưới dạng chuỗi khi không phải JSON, nên 0.2 là một số và space là một chuỗi. null xóa khóa hoặc mục mảng, và chỉ số ngay sau cuối mảng sẽ thêm một mục. Toàn bộ cấu hình được kiểm tra trước khi lưu, và ID không thể thay đổi.";
@@ -1521,7 +1522,7 @@
 "cli.profile.validate.file" = "Tệp cấu hình, hoặc - cho stdin.";
 "cli.profile.validate.valid" = "%1$@ là cấu hình hợp lệ: “%2$@” cho %3$@ (%4$@). Hãy thêm bằng “ojd profile import”.";
 "cli.profile.group.vanished" = "Dịch vụ không giữ cấu hình. Hãy kiểm tra bằng “ojd profile list”.";
-/* Main window, menus, settings, library and access */
+/* Main window, status item, main menu, settings window, library and access. */
 "ui.library.details" = "Chi tiết";
 "ui.library.dismiss" = "Bỏ qua";
 "ui.library.choose" = "Chọn";
@@ -1907,6 +1908,7 @@
 "error.E5004.message" = "Mô tả giao thức liệt kê một biến thể mà họ của nó không có. Hãy dùng một trong các biến thể của họ.";
 "error.E5005.message" = "Tệp truy cập AccessGrants.json bị hỏng. Hãy sửa hoặc xóa tệp, rồi cấp quyền truy cập lại.";
 "error.E5006.message" = "Không thể đọc tệp khóa của ID thiết bị, PortKeyInstallation.key, hoặc tệp không có kích thước 32 byte. Hãy khôi phục tệp từ bản sao lưu. Nếu bạn xóa tệp, OpenJoystickDriver sẽ tạo khóa mới và mọi ID thiết bị đều thay đổi.";
+/* Error E5007, shown when a controller record or patch fails its schema; the message names the field. */
 "error.E5007.message" = "Bản ghi bộ điều khiển hoặc patch không hợp lệ. Kiểm tra tệp với lược đồ của nó và sửa trường mà thông báo nêu.";
 "ui.error.withCode" = "%1$@ (%2$@)";
 "cli.update.check.ahead" = "OpenJoystickDriver %1$@ mới hơn bản phát hành mới nhất đã công bố (%2$@).";

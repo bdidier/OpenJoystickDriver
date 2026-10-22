@@ -426,7 +426,6 @@
 "ui.developer.extraInputs" = "Extra Buttons";
 "ui.developer.extraInputsDescription" = "Press one extra button at a time. Detected buttons stay listed until you clear the capture.";
 "ui.developer.hid" = "HID";
-"ui.developer.hiddenIdlePackets" = "Hidden %d idle packets (still included in Export).";
 "ui.developer.keepAliveNote" = "Routine idle traffic is hidden so controller activity stays visible.";
 "ui.developer.leftStick" = "Left stick";
 "ui.developer.loadingControllers" = "Loading controller diagnostics...";
@@ -449,7 +448,6 @@
 "ui.developer.route" = "Route";
 "ui.developer.startCapture" = "Start Capture";
 "ui.developer.starting" = "Starting...";
-"ui.developer.stoppedPackets" = "Stopped · %d packets";
 "ui.developer.unavailable" = "Developer tools are unavailable";
 "ui.developer.usbEndpoints" = "USB endpoints";
 "ui.developer.usbID" = "USB ID";
@@ -466,7 +464,6 @@
 "ui.developer.soakRunning" = "Sampling the service...";
 "ui.developer.soakNotANumber" = "%@: enter a whole number.";
 "ui.developer.soakOutOfRange" = "%1$@: enter a value between %2$lld and %3$lld.";
-"ui.developer.soakTooManySamples" = "This run would take %lld samples. Raise the sample interval.";
 "ui.inputTest.aButton" = "A button";
 "ui.inputTest.aCross" = "A / Cross";
 "ui.inputTest.additionalButtons" = "Additional buttons";
@@ -662,21 +659,28 @@
 "ui.profiles.motion.invertYaw" = "Invert yaw";
 "ui.profiles.motion.automaticBias" = "Automatic stillness calibration";
 
-/* Motion calibration CLI. Non-English translation pending. */
-
-/* Motion calibration controls. Non-English translation pending. */
+/* Hint under the motion calibration controls of the input test window: keep the controller still on a surface while the gyro bias, the small constant rotation the sensor reports at rest, is collected. */
 "ui.motion.calibration.instructions" = "Keep the controller still while collecting gyro bias.";
+/* Status line in the motion calibration controls while the service collects gyro bias samples. Bias is the constant rotation offset of the gyro sensor at rest. */
 "ui.motion.calibration.collecting" = "Collecting bias";
+/* Status line in the motion calibration controls when the user paused collecting gyro bias samples by hand. */
 "ui.motion.calibration.paused" = "Manual collection paused";
+/* Line in the motion calibration controls that shows the gyro bias found so far, in degrees per second. %1$.3f, %2$.3f and %3$.3f are the X, Y and Z components. Keep the axis letters and the unit. */
 "ui.motion.calibration.offset" = "Bias (°/s): X %1$.3f · Y %2$.3f · Z %3$.3f";
+/* Button in the motion calibration controls that starts collecting gyro bias samples. Disabled while collecting or while the controller reports no motion baseline. */
 "ui.motion.calibration.start" = "Start calibration";
+/* Button in the motion calibration controls that pauses collecting gyro bias samples. Disabled while nothing is collected. */
 "ui.motion.calibration.pause" = "Pause";
+/* Header of the motion calibration section in the input test window, which holds the gyro calibration controls for the selected controller. */
 "ui.motion.calibration.title" = "Motion calibration";
 
-/* Calibration guidance. Non-English translation pending. */
+/* Guidance in the motion calibration controls when the service cannot reach the controller: connect the controller again, then use Refresh to read the calibration status. */
 "ui.motion.calibration.controllerUnavailable" = "Reconnect the controller, then refresh calibration status.";
+/* Guidance in the motion calibration controls when the controller has no usable motion data: turn on a profile for this controller and check that motion data is available. */
 "ui.motion.calibration.motionUnavailable" = "Enable a remapping profile for this controller and check that motion is available.";
+/* Status line in the motion calibration controls while the service has no motion samples yet; Refresh checks again. */
 "ui.motion.calibration.waiting" = "Waiting for motion samples. Refresh to check again.";
+/* Note in the motion calibration controls: collecting gyro bias keeps running in the service after the window closes, and the Pause button stops it. */
 "ui.motion.calibration.continues" = "Collection continues when this window closes. Use Pause to stop it.";
 
 /* Gyro authoring. Native translation review pending. */
@@ -984,7 +988,6 @@
 "cli.diagnose.group.permissionDenied" = "denied; grant it with 'ojd permission request'";
 "cli.diagnose.group.permissionUnknown" = "state unknown";
 "cli.diagnose.group.rssLimit" = "With --soak, fail above this resident size in MiB; 0 disables (0-65536).";
-"cli.diagnose.group.sampleLimit" = "--soak with this --interval-ms would take %lld samples; raise --interval-ms.";
 "cli.diagnose.group.serviceRunning" = "running %@";
 "cli.diagnose.group.serviceStopped" = "not running; start it with 'ojd service start'";
 "cli.diagnose.group.skipServiceFailed" = "service did not answer";
@@ -993,7 +996,6 @@
 "cli.diagnose.group.soakErrorInvalidConfiguration" = "Runtime sampling needs %1$lld...%2$lld seconds and a sample interval of %3$lld...%4$lld ms.";
 "cli.diagnose.group.soakErrorNoSamples" = "The service produced no runtime samples.";
 "cli.diagnose.group.soakErrorProcessUnavailable" = "Could not read runtime information for service process %d.";
-"cli.diagnose.group.soakErrorTooManySamples" = "Runtime sampling would take %lld samples. Raise the sample interval.";
 "cli.diagnose.group.soakNotRequested" = "not requested; use --soak SECONDS";
 "cli.diagnose.group.soakProgress" = "Sampling the service for %@...";
 "cli.diagnose.group.soakVerdictFootprintLimit" = "Footprint limit exceeded: resident size %1$.1f MiB, footprint %2$.1f MiB, file descriptors %3$lld, CPU %4$.1f%% over %5$.0f s";
@@ -1177,7 +1179,6 @@
 "cli.controller.rumble.rightTrigger" = "Right trigger motor intensity.";
 "cli.controller.rumble.sent" = "Rumbled %1$@ on %2$@.";
 "cli.controller.rumble.stopped" = "Stopped rumble on %@.";
-"cli.controller.group.selectorAmbiguous" = "'%1$@' matches %2$lld controllers. Use one of these IDs:";
 "cli.controller.group.selectorNoneConnected" = "No controller matches '%@', because none is connected. Connect one and run 'ojd controller list'.";
 "cli.controller.group.selectorNotFound" = "No connected controller matches '%@'. Use an ID or VVVV:PPPP from this list:";
 "cli.controller.group.sessionNotFound" = "'%@' disconnected before the request reached it. Reconnect it and retry.";
@@ -1272,6 +1273,7 @@
 "cli.virtual.feed.abstract" = "Publish a virtual gamepad that standard input drives.";
 "cli.virtual.feed.discussion" = "Reads one JSON object per line: 'buttons' and 'dpad' list the pressed controls, such as South and up, and 'axes' maps axis names, such as LeftStickX, to values. Missing controls are neutral. Sticks run from -1 to 1 with Y down; triggers run from 0 to 1. Frames play in order, each for at least 8 ms; 'holdMilliseconds' keeps a frame longer, up to 60000. Prints each output command that games send to the gamepad, such as rumble, as one JSON object per line. Stops when every frame has played after the input ends.";
 "cli.virtual.feed.errorClosed" = "The service closed the virtual gamepad. Check it with 'ojd status'.";
+/* Error from `ojd virtual feed` when the service connection broke while the virtual gamepad was closing. */
 "cli.virtual.feed.errorCloseInterrupted" = "Closing the virtual gamepad was interrupted. Check it with 'ojd status'.";
 "cli.virtual.feed.errorFrame" = "Line %@ is not a valid frame. 'ojd virtual feed --help' shows the format.";
 "cli.virtual.feed.profile" = "The virtual gamepad profile to publish.";
@@ -1348,8 +1350,6 @@
 "cli.record.test.discussion" = "Replays the received packets of a capture through the parser of the record, then compares the controller state after the last input report with the expected state. The capture is the JSON lines of 'ojd controller capture --json'. The expected state is one JSON object in the shape of a line of 'ojd controller watch --json'. The command lists each field that differs and exits with code 1 when any does. It compares every field except connection, which the running service sets. It needs no running service.";
 "cli.record.test.expect" = "The expected controller state, as a JSON file.";
 "cli.record.test.expectInvalid" = "%1$@ is not a controller state: %2$@";
-"cli.record.test.matched" = "%1$@ matches the expected state: %2$lld input reports replayed.";
-"cli.record.test.mismatch" = "The state that the parser of %1$@ produced differs from %2$@ in %3$lld fields.";
 "cli.record.test.noInput" = "No report in %1$@ carried input for %2$@. Capture again while you press the controls.";
 "cli.record.test.noParser" = "The family of %@ has no parser that runs without a controller.";
 "cli.record.test.packets" = "A packet capture, as the JSON lines of 'ojd controller capture --json'.";
@@ -1488,7 +1488,6 @@
 "cli.profile.rename.abstract" = "Rename a profile.";
 "cli.profile.rename.done" = "Renamed to '%@'.";
 "cli.profile.rename.name" = "The new name, 1 to 80 characters.";
-"cli.profile.group.selectorAmbiguous" = "'%1$@' names %2$lld profiles. Use one of these IDs:";
 "cli.profile.group.selectorNotFound" = "No profile has the ID or name '%@'. 'ojd profile list' shows every profile.";
 "cli.profile.set.abstract" = "Change one value in a profile.";
 "cli.profile.set.discussion" = "KEY is a path into the profile file, as in 'ojd profile get'. VALUE is read as JSON, or as a string when it is not JSON, so 0.2 is a number and space is a string. null removes the key or the array item, and the index one past the end of an array adds an item. The whole profile is checked before it is saved, and the ID cannot change.";
@@ -1582,7 +1581,9 @@
 "error.E2031.message" = "This port on 127.0.0.1 is in use or cannot be opened. Choose another with --port.";
 "error.E2032.message" = "A token with origins cannot have the control scope, because a page must never drive a virtual gamepad. Grant control to a token without origins.";
 "error.E2033.message" = "The program could not be started. Check that its path names an executable file or an app, and that you may run it.";
+/* Error E2034, shown in the app or the CLI when the service no longer accepts requests. */
 "error.E2034.message" = "The service stopped accepting requests. Quit and reopen OpenJoystickDriver, then try again.";
+/* Error E2035, shown in the app or the CLI when the file that records why the request listener stopped is unusable. */
 "error.E2035.message" = "The file that records why the request listener stopped cannot be used. Delete the file, then open OpenJoystickDriver again.";
 /* Error E2036, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
 "error.E2036.message" = "No OpenJoystickDriver app answered the test notification in time. Check that the app is running, then try again.";
@@ -1630,6 +1631,7 @@
 "error.E5004.message" = "A protocol description lists a variant that its family does not have. Use one of the variants of the family.";
 "error.E5005.message" = "The access file AccessGrants.json is damaged. Fix the file or delete it, then grant access again.";
 "error.E5006.message" = "The key file of the unit IDs, PortKeyInstallation.key, cannot be read or is not 32 bytes. Restore the file from a backup. If you delete it instead, OpenJoystickDriver creates a new key and every unit ID changes.";
+/* Error E5007, shown when a controller record or patch fails its schema; the message names the field. */
 "error.E5007.message" = "A controller record or patch is invalid. Check the file against its schema and fix the field that the message names.";
 "ui.error.withCode" = "%1$@ (%2$@)";
 

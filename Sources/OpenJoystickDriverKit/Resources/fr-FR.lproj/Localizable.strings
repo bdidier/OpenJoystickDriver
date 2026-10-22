@@ -426,7 +426,6 @@
 "ui.developer.extraInputs" = "Boutons supplémentaires";
 "ui.developer.extraInputsDescription" = "Appuyez sur un bouton supplémentaire à la fois. Les boutons détectés restent listés jusqu’à ce que vous effaciez la capture.";
 "ui.developer.hid" = "HID";
-"ui.developer.hiddenIdlePackets" = "%d paquets inactifs masqués (toujours inclus dans l’exportation).";
 "ui.developer.keepAliveNote" = "Le trafic de routine en veille est masqué afin que l’activité de la manette reste visible.";
 "ui.developer.leftStick" = "Stick gauche";
 "ui.developer.loadingControllers" = "Chargement des diagnostics de manette…";
@@ -449,7 +448,6 @@
 "ui.developer.route" = "Itinéraire";
 "ui.developer.startCapture" = "Démarrer la capture";
 "ui.developer.starting" = "Démarrage…";
-"ui.developer.stoppedPackets" = "Arrêté · %d paquets";
 "ui.developer.unavailable" = "Outils développeur indisponibles";
 "ui.developer.usbEndpoints" = "Points de terminaison USB";
 "ui.developer.usbID" = "USB ID";
@@ -466,7 +464,6 @@
 "ui.developer.soakRunning" = "Échantillonnage du service…";
 "ui.developer.soakNotANumber" = "%@ : saisissez un nombre entier.";
 "ui.developer.soakOutOfRange" = "%1$@ : saisissez une valeur comprise entre %2$lld et %3$lld.";
-"ui.developer.soakTooManySamples" = "Cette exécution prélèverait %lld échantillons. Augmentez l’intervalle d’échantillonnage.";
 "ui.inputTest.aButton" = "Bouton A";
 "ui.inputTest.aCross" = "A / Croix";
 "ui.inputTest.additionalButtons" = "Boutons supplémentaires";
@@ -645,7 +642,7 @@
 
 "ui.mapping.rightPadClick" = "Clic du pavé droit";
 
-/* Motion tuning: first-pass translation; native review pending. */
+/* Motion tuning: English source. */
 "ui.profiles.motion.title" = "Réglage du mouvement";
 "ui.profiles.motion.space" = "Espace de coordonnées";
 "ui.profiles.motion.local" = "Local";
@@ -662,21 +659,28 @@
 "ui.profiles.motion.invertYaw" = "Inverser le lacet";
 "ui.profiles.motion.automaticBias" = "Étalonnage automatique à l’arrêt";
 
-/* Motion calibration CLI. First-pass translation; native review pending. */
-
-/* Motion calibration controls. First-pass translation; native review pending. */
+/* Hint under the motion calibration controls of the input test window: keep the controller still on a surface while the gyro bias, the small constant rotation the sensor reports at rest, is collected. */
 "ui.motion.calibration.instructions" = "Gardez la manette immobile pendant la mesure du biais du gyroscope.";
+/* Status line in the motion calibration controls while the service collects gyro bias samples. Bias is the constant rotation offset of the gyro sensor at rest. */
 "ui.motion.calibration.collecting" = "Mesure du biais en cours";
+/* Status line in the motion calibration controls when the user paused collecting gyro bias samples by hand. */
 "ui.motion.calibration.paused" = "Mesure manuelle en pause";
+/* Line in the motion calibration controls that shows the gyro bias found so far, in degrees per second. %1$.3f, %2$.3f and %3$.3f are the X, Y and Z components. Keep the axis letters and the unit. */
 "ui.motion.calibration.offset" = "Biais (°/s) : X %1$.3f · Y %2$.3f · Z %3$.3f";
+/* Button in the motion calibration controls that starts collecting gyro bias samples. Disabled while collecting or while the controller reports no motion baseline. */
 "ui.motion.calibration.start" = "Démarrer l’étalonnage";
+/* Button in the motion calibration controls that pauses collecting gyro bias samples. Disabled while nothing is collected. */
 "ui.motion.calibration.pause" = "Pause";
+/* Header of the motion calibration section in the input test window, which holds the gyro calibration controls for the selected controller. */
 "ui.motion.calibration.title" = "Étalonnage du mouvement";
 
-/* Calibration guidance. First-pass translation; native review pending. */
+/* Guidance in the motion calibration controls when the service cannot reach the controller: connect the controller again, then use Refresh to read the calibration status. */
 "ui.motion.calibration.controllerUnavailable" = "Reconnectez la manette, puis actualisez l’état de l’étalonnage.";
+/* Guidance in the motion calibration controls when the controller has no usable motion data: turn on a profile for this controller and check that motion data is available. */
 "ui.motion.calibration.motionUnavailable" = "Activez un profil de remappage pour cette manette et vérifiez que les données de mouvement sont disponibles.";
+/* Status line in the motion calibration controls while the service has no motion samples yet; Refresh checks again. */
 "ui.motion.calibration.waiting" = "En attente de données de mouvement. Actualisez pour vérifier à nouveau.";
+/* Note in the motion calibration controls: collecting gyro bias keeps running in the service after the window closes, and the Pause button stops it. */
 "ui.motion.calibration.continues" = "La mesure continue après la fermeture de cette fenêtre. Utilisez Pause pour l’arrêter.";
 
 /* Gyro authoring. Native translation review pending. */
@@ -984,7 +988,6 @@
 "cli.diagnose.group.permissionDenied" = "refusée ; accordez-la avec « ojd permission request »";
 "cli.diagnose.group.permissionUnknown" = "état inconnu";
 "cli.diagnose.group.rssLimit" = "Avec --soak, échoue au-delà de cette taille résidente en MiB ; 0 désactive (0-65536).";
-"cli.diagnose.group.sampleLimit" = "--soak avec cet --interval-ms prendrait %lld échantillons ; augmentez --interval-ms.";
 "cli.diagnose.group.serviceRunning" = "en cours d’exécution %@";
 "cli.diagnose.group.serviceStopped" = "arrêté ; démarrez-le avec « ojd service start »";
 "cli.diagnose.group.skipServiceFailed" = "le service n’a pas répondu";
@@ -993,7 +996,6 @@
 "cli.diagnose.group.soakErrorInvalidConfiguration" = "L’échantillonnage requiert %1$lld...%2$lld secondes et un intervalle d’échantillonnage de %3$lld...%4$lld ms.";
 "cli.diagnose.group.soakErrorNoSamples" = "Le service n’a produit aucun échantillon d’exécution.";
 "cli.diagnose.group.soakErrorProcessUnavailable" = "Impossible de lire les informations d’exécution du processus du service %d.";
-"cli.diagnose.group.soakErrorTooManySamples" = "L’échantillonnage prélèverait %lld échantillons. Augmentez l’intervalle d’échantillonnage.";
 "cli.diagnose.group.soakNotRequested" = "non demandé ; utilisez --soak SECONDS";
 "cli.diagnose.group.soakProgress" = "Échantillonnage du service pendant %@…";
 "cli.diagnose.group.soakVerdictFootprintLimit" = "Limite d’empreinte mémoire dépassée : taille résidente %1$.1f MiB, empreinte mémoire %2$.1f MiB, descripteurs de fichier %3$lld, processeur %4$.1f %% sur %5$.0f s";
@@ -1177,7 +1179,6 @@
 "cli.controller.rumble.rightTrigger" = "Intensité du moteur de la gâchette droite.";
 "cli.controller.rumble.sent" = "Moteurs %1$@ activés sur %2$@.";
 "cli.controller.rumble.stopped" = "Vibration arrêtée sur %@.";
-"cli.controller.group.selectorAmbiguous" = "« %1$@ » correspond à %2$lld manettes. Utilisez l’un de ces identifiants :";
 "cli.controller.group.selectorNoneConnected" = "Aucune manette ne correspond à « %@ », car aucune n’est connectée. Connectez-en une et exécutez « ojd controller list ».";
 "cli.controller.group.selectorNotFound" = "Aucune manette connectée ne correspond à « %@ ». Utilisez un identifiant ou VVVV:PPPP de cette liste :";
 "cli.controller.group.sessionNotFound" = "« %@ » s’est déconnectée avant que la requête ne l’atteigne. Reconnectez-la et réessayez.";
@@ -1272,6 +1273,7 @@
 "cli.virtual.feed.abstract" = "Publier une manette virtuelle pilotée par stdin.";
 "cli.virtual.feed.discussion" = "Lit un objet JSON par ligne : « buttons » et « dpad » listent les commandes actionnées, par exemple South et up, et « axes » associe des valeurs aux noms d’axes, par exemple LeftStickX. Les commandes absentes restent neutres. Les sticks vont de -1 à 1, avec Y vers le bas ; les gâchettes vont de 0 à 1. Les images sont lues dans l’ordre, chacune pendant au moins 8 ms ; « holdMilliseconds » maintient une image plus longtemps, jusqu’à 60000. Affiche chaque commande de sortie que les jeux envoient à la manette, comme la vibration, sous forme d’un objet JSON par ligne. S’arrête quand toutes les images ont été lues après la fin de l’entrée.";
 "cli.virtual.feed.errorClosed" = "Le service a fermé la manette virtuelle. Vérifiez avec « ojd status ».";
+/* Error from `ojd virtual feed` when the service connection broke while the virtual gamepad was closing. */
 "cli.virtual.feed.errorCloseInterrupted" = "La fermeture de la manette virtuelle a été interrompue. Vérifiez avec « ojd status ».";
 "cli.virtual.feed.errorFrame" = "La ligne %@ n’est pas une trame valide. « ojd virtual feed --help » indique le format.";
 "cli.virtual.feed.profile" = "Le profil de la manette virtuelle à publier.";
@@ -1348,8 +1350,6 @@
 "cli.record.test.discussion" = "Rejoue les paquets reçus d’une capture avec l’analyseur de la fiche, puis compare l’état de la manette après le dernier rapport d’entrée avec l’état attendu. La capture est constituée des lignes JSON de « ojd controller capture --json ». L’état attendu est un objet JSON de la forme d’une ligne de « ojd controller watch --json ». La commande liste chaque champ qui diffère et se termine avec le code 1 si l’un d’eux diffère. Elle compare tous les champs sauf connection, que définit le service en cours d’exécution. Elle n’a pas besoin du service.";
 "cli.record.test.expect" = "L’état attendu de la manette, sous forme de fichier JSON.";
 "cli.record.test.expectInvalid" = "%1$@ n’est pas un état de manette : %2$@";
-"cli.record.test.matched" = "%1$@ correspond à l’état attendu : %2$lld rapports d’entrée rejoués.";
-"cli.record.test.mismatch" = "L’état produit par l’analyseur de %1$@ diffère de %2$@ dans %3$lld champs.";
 "cli.record.test.noInput" = "Aucun rapport de %1$@ ne contenait d’entrée pour %2$@. Capturez de nouveau en appuyant sur les commandes.";
 "cli.record.test.noParser" = "La famille de %@ n’a pas d’analyseur qui fonctionne sans manette.";
 "cli.record.test.packets" = "Une capture de paquets, sous forme de lignes JSON de « ojd controller capture --json ».";
@@ -1366,7 +1366,9 @@
 "error.E2031.message" = "Ce port sur 127.0.0.1 est utilisé ou ne peut pas être ouvert. Choisissez-en un autre avec --port.";
 "error.E2032.message" = "Un jeton avec des origines ne peut pas avoir la portée control, car une page ne doit jamais piloter une manette virtuelle. Accordez control à un jeton sans origines.";
 "error.E2033.message" = "Le programme n'a pas pu être lancé. Vérifiez que son chemin désigne un fichier exécutable ou une app, et que vous avez le droit de l'exécuter.";
+/* Error E2034, shown in the app or the CLI when the service no longer accepts requests. */
 "error.E2034.message" = "Le service n’accepte plus de requêtes. Quittez OpenJoystickDriver, rouvrez-le, puis réessayez.";
+/* Error E2035, shown in the app or the CLI when the file that records why the request listener stopped is unusable. */
 "error.E2035.message" = "Le fichier qui indique pourquoi l’écoute des requêtes s’est arrêtée est inutilisable. Supprimez le fichier, puis rouvrez OpenJoystickDriver.";
 /* Error E2036, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
 "error.E2036.message" = "Aucune app OpenJoystickDriver n’a répondu à temps à la notification test. Vérifiez que l’app est en cours d’exécution, puis réessayez.";
@@ -1506,7 +1508,6 @@
 "cli.profile.rename.abstract" = "Renommer un profil.";
 "cli.profile.rename.done" = "Profil renommé en « %@ ».";
 "cli.profile.rename.name" = "Le nouveau nom, de 1 à 80 caractères.";
-"cli.profile.group.selectorAmbiguous" = "« %1$@ » désigne %2$lld profils. Utilisez l’un de ces ID :";
 "cli.profile.group.selectorNotFound" = "Aucun profil n’a l’ID ou le nom « %@ ». « ojd profile list » affiche tous les profils.";
 "cli.profile.set.abstract" = "Modifie une valeur d’un profil.";
 "cli.profile.set.discussion" = "KEY est un chemin dans le fichier de profil, comme pour « ojd profile get ». VALUE est lue comme du JSON, ou comme une chaîne si ce n’est pas du JSON ; 0.2 est donc un nombre et space une chaîne. null supprime la clé ou l’élément du tableau, et l’index situé juste après la fin d’un tableau ajoute un élément. Le profil entier est vérifié avant d’être enregistré, et l’ID ne peut pas changer.";
@@ -1630,6 +1631,7 @@
 "error.E5004.message" = "Une description de protocole liste une variante que sa famille n’a pas. Utilisez l’une des variantes de la famille.";
 "error.E5005.message" = "Le fichier d’accès AccessGrants.json est endommagé. Corrigez le fichier ou supprimez-le, puis accordez de nouveau l’accès.";
 "error.E5006.message" = "Le fichier de clé des identifiants d’unité, PortKeyInstallation.key, est illisible ou ne fait pas 32 octets. Restaurez le fichier depuis une sauvegarde. Si vous le supprimez, OpenJoystickDriver crée une nouvelle clé et chaque identifiant d’unité change.";
+/* Error E5007, shown when a controller record or patch fails its schema; the message names the field. */
 "error.E5007.message" = "Une fiche de manette ou un patch n’est pas valide. Vérifiez le fichier avec son schéma et corrigez le champ que le message nomme.";
 "ui.error.withCode" = "%1$@ (%2$@)";
 

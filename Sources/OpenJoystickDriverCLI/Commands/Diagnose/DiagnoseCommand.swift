@@ -128,7 +128,7 @@ struct DiagnoseCommand: AsyncParsableCommand {
     )
     guard samples <= ApplicationServiceRuntimeHealthSampler.maximumSampleCount else {
       throw ValidationError(
-        CLILocalized.format(
+        CLILocalized.plural(
           "cli.diagnose.group.sampleLimit",
           samples
         )

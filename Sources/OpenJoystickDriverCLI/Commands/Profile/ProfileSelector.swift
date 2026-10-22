@@ -22,7 +22,7 @@ struct ProfileSelector: ExpressibleByArgument, Equatable, Sendable {
     let matches = profiles.filter { $0.name.caseInsensitiveCompare(text) == .orderedSame }
     if matches.count == 1, let profile = matches.first { return profile }
     guard matches.isEmpty else {
-      let message = CLILocalized.format(
+      let message = CLILocalized.plural(
         "cli.profile.group.selectorAmbiguous",
         text,
         matches.count

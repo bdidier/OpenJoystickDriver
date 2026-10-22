@@ -426,7 +426,6 @@
 "ui.developer.extraInputs" = "Extra knoppen";
 "ui.developer.extraInputsDescription" = "Druk op één extra knop tegelijk. Gedetecteerde knoppen blijven in de lijst staan totdat je de opname wist.";
 "ui.developer.hid" = "HID";
-"ui.developer.hiddenIdlePackets" = "%d inactieve pakketten verborgen (nog steeds inbegrepen in de export).";
 "ui.developer.keepAliveNote" = "Routinematig inactief dataverkeer wordt verborgen, zodat de activiteit van de controller zichtbaar blijft.";
 "ui.developer.leftStick" = "Linker stick";
 "ui.developer.loadingControllers" = "Controllerdiagnose laden…";
@@ -449,7 +448,6 @@
 "ui.developer.route" = "Route";
 "ui.developer.startCapture" = "Start de opname";
 "ui.developer.starting" = "Starten…";
-"ui.developer.stoppedPackets" = "Gestopt · %d pakketten";
 "ui.developer.unavailable" = "Ontwikkelaartools zijn niet beschikbaar";
 "ui.developer.usbEndpoints" = "USB-eindpunten";
 "ui.developer.usbID" = "USB ID";
@@ -466,7 +464,6 @@
 "ui.developer.soakRunning" = "Service wordt gemeten…";
 "ui.developer.soakNotANumber" = "%@: voer een geheel getal in.";
 "ui.developer.soakOutOfRange" = "%1$@: voer een waarde tussen %2$lld en %3$lld in.";
-"ui.developer.soakTooManySamples" = "Deze meting zou %lld metingen vereisen. Verhoog het meetinterval.";
 "ui.inputTest.aButton" = "Knop A";
 "ui.inputTest.aCross" = "A / Kruis";
 "ui.inputTest.additionalButtons" = "Extra knoppen";
@@ -645,7 +642,7 @@
 
 "ui.mapping.rightPadClick" = "Klik op rechterpad";
 
-/* Motion tuning: first-pass translation; native review pending. */
+/* Motion tuning: English source. */
 "ui.profiles.motion.title" = "Bewegingsinstellingen";
 "ui.profiles.motion.space" = "Coördinatenruimte";
 "ui.profiles.motion.local" = "Lokaal";
@@ -662,21 +659,28 @@
 "ui.profiles.motion.invertYaw" = "Gieren omkeren";
 "ui.profiles.motion.automaticBias" = "Automatische kalibratie bij stilstand";
 
-/* Motion calibration CLI. Non-English translation pending. */
-
-/* Motion calibration controls. Non-English translation pending. */
+/* Hint under the motion calibration controls of the input test window: keep the controller still on a surface while the gyro bias, the small constant rotation the sensor reports at rest, is collected. */
 "ui.motion.calibration.instructions" = "Houd de controller stil terwijl de gyro-bias wordt verzameld.";
+/* Status line in the motion calibration controls while the service collects gyro bias samples. Bias is the constant rotation offset of the gyro sensor at rest. */
 "ui.motion.calibration.collecting" = "Bias verzamelen";
+/* Status line in the motion calibration controls when the user paused collecting gyro bias samples by hand. */
 "ui.motion.calibration.paused" = "Handmatig verzamelen onderbroken";
+/* Line in the motion calibration controls that shows the gyro bias found so far, in degrees per second. %1$.3f, %2$.3f and %3$.3f are the X, Y and Z components. Keep the axis letters and the unit. */
 "ui.motion.calibration.offset" = "Bias (°/s): X %1$.3f · Y %2$.3f · Z %3$.3f";
+/* Button in the motion calibration controls that starts collecting gyro bias samples. Disabled while collecting or while the controller reports no motion baseline. */
 "ui.motion.calibration.start" = "Start kalibratie";
+/* Button in the motion calibration controls that pauses collecting gyro bias samples. Disabled while nothing is collected. */
 "ui.motion.calibration.pause" = "Pauze";
+/* Header of the motion calibration section in the input test window, which holds the gyro calibration controls for the selected controller. */
 "ui.motion.calibration.title" = "Bewegingskalibratie";
 
-/* Calibration guidance. Non-English translation pending. */
+/* Guidance in the motion calibration controls when the service cannot reach the controller: connect the controller again, then use Refresh to read the calibration status. */
 "ui.motion.calibration.controllerUnavailable" = "Verbind de controller opnieuw en vernieuw daarna de kalibratiestatus.";
+/* Guidance in the motion calibration controls when the controller has no usable motion data: turn on a profile for this controller and check that motion data is available. */
 "ui.motion.calibration.motionUnavailable" = "Schakel een hertoewijzingsprofiel in voor deze controller en controleer of beweging beschikbaar is.";
+/* Status line in the motion calibration controls while the service has no motion samples yet; Refresh checks again. */
 "ui.motion.calibration.waiting" = "Wachten op bewegingsmetingen. Vernieuw om opnieuw te controleren.";
+/* Note in the motion calibration controls: collecting gyro bias keeps running in the service after the window closes, and the Pause button stops it. */
 "ui.motion.calibration.continues" = "Het verzamelen gaat door wanneer dit venster sluit. Gebruik Pauze om te stoppen.";
 
 /* Gyro authoring. Native translation review pending. */
@@ -984,7 +988,6 @@
 "cli.diagnose.group.permissionDenied" = "geweigerd; verleen het met ‘ojd permission request’";
 "cli.diagnose.group.permissionUnknown" = "status onbekend";
 "cli.diagnose.group.rssLimit" = "Met --soak: fout boven deze resident size in MiB; 0 schakelt uit (0-65536).";
-"cli.diagnose.group.sampleLimit" = "--soak met deze --interval-ms zou %lld metingen nemen; verhoog --interval-ms.";
 "cli.diagnose.group.serviceRunning" = "actief %@";
 "cli.diagnose.group.serviceStopped" = "draait niet; start de service met ‘ojd service start’";
 "cli.diagnose.group.skipServiceFailed" = "service antwoordde niet";
@@ -993,7 +996,6 @@
 "cli.diagnose.group.soakErrorInvalidConfiguration" = "Meten vereist %1$lld...%2$lld seconden en een meetinterval van %3$lld...%4$lld ms.";
 "cli.diagnose.group.soakErrorNoSamples" = "De service heeft geen runtimemetingen opgeleverd.";
 "cli.diagnose.group.soakErrorProcessUnavailable" = "De runtimegegevens van het serviceproces %d konden niet worden gelezen.";
-"cli.diagnose.group.soakErrorTooManySamples" = "Meten zou %lld metingen vereisen. Verhoog het meetinterval.";
 "cli.diagnose.group.soakNotRequested" = "niet gevraagd; gebruik --soak SECONDS";
 "cli.diagnose.group.soakProgress" = "De service wordt gedurende %@ bemonsterd...";
 "cli.diagnose.group.soakVerdictFootprintLimit" = "Limiet voor geheugenvoetafdruk overschreden: resident geheugen %1$.1f MiB, geheugenvoetafdruk %2$.1f MiB, bestandsbeschrijvers %3$lld, cpu %4$.1f%% gedurende %5$.0f s";
@@ -1177,7 +1179,6 @@
 "cli.controller.rumble.rightTrigger" = "Intensiteit van de rechter triggermotor.";
 "cli.controller.rumble.sent" = "%1$@ laten rumblen op %2$@.";
 "cli.controller.rumble.stopped" = "Rumble gestopt op %@.";
-"cli.controller.group.selectorAmbiguous" = "‘%1$@’ komt overeen met %2$lld controllers. Gebruik een van deze ID's:";
 "cli.controller.group.selectorNoneConnected" = "Geen controller komt overeen met ‘%@’, omdat er geen is aangesloten. Sluit er een aan en voer ‘ojd controller list’ uit.";
 "cli.controller.group.selectorNotFound" = "Geen aangesloten controller komt overeen met ‘%@’. Gebruik een ID of VVVV:PPPP uit deze lijst:";
 "cli.controller.group.sessionNotFound" = "‘%@’ is losgekoppeld voordat het verzoek hem bereikte. Sluit hem opnieuw aan en probeer het opnieuw.";
@@ -1272,6 +1273,7 @@
 "cli.virtual.feed.abstract" = "Een virtueel gamepad publiceren dat door stdin wordt aangestuurd.";
 "cli.virtual.feed.discussion" = "Leest één JSON-object per regel: ‘buttons’ en ‘dpad’ geven de ingedrukte bedieningselementen weer, zoals South en up, en ‘axes’ koppelt namen van assen, zoals LeftStickX, aan waarden. Ontbrekende bedieningselementen blijven neutraal. Sticks lopen van -1 tot 1 met Y omlaag; triggers lopen van 0 tot 1. Frames worden op volgorde afgespeeld, elk minstens 8 ms; ‘holdMilliseconds’ houdt een frame langer vast, tot 60000. Drukt elk uitvoercommando dat games naar de gamepad sturen, zoals trillen, af als één JSON-object per regel. Stopt wanneer elk frame is afgespeeld nadat de invoer is geëindigd.";
 "cli.virtual.feed.errorClosed" = "De service heeft het virtuele gamepad gesloten. Controleer dit met ‘ojd status’.";
+/* Error from `ojd virtual feed` when the service connection broke while the virtual gamepad was closing. */
 "cli.virtual.feed.errorCloseInterrupted" = "Het sluiten van het virtuele gamepad is onderbroken. Controleer dit met ‘ojd status’.";
 "cli.virtual.feed.errorFrame" = "Regel %@ is geen geldig frame. ‘ojd virtual feed --help’ toont het formaat.";
 "cli.virtual.feed.profile" = "Het profiel van het virtuele gamepad dat moet worden gepubliceerd.";
@@ -1348,8 +1350,6 @@
 "cli.record.test.discussion" = "Speelt de ontvangen pakketten van een opname af via de parser van het record en vergelijkt daarna de controllerstatus na het laatste invoerrapport met de verwachte status. De opname bestaat uit de JSON-regels van ‘ojd controller capture --json’. De verwachte status is één JSON-object in de vorm van een regel van ‘ojd controller watch --json’. De opdracht toont elk afwijkend veld en stopt met code 1 als er een afwijkt. Ze vergelijkt elk veld behalve connection, dat de draaiende service instelt. Er is geen draaiende service nodig.";
 "cli.record.test.expect" = "De verwachte controllerstatus, als JSON-bestand.";
 "cli.record.test.expectInvalid" = "%1$@ is geen controllerstatus: %2$@";
-"cli.record.test.matched" = "%1$@ komt overeen met de verwachte status: %2$lld invoerrapporten afgespeeld.";
-"cli.record.test.mismatch" = "De status die de parser van %1$@ opleverde, wijkt van %2$@ af in %3$lld velden.";
 "cli.record.test.noInput" = "Geen enkel rapport in %1$@ bevatte invoer voor %2$@. Leg opnieuw vast terwijl je de bedieningselementen indrukt.";
 "cli.record.test.noParser" = "De familie van %@ heeft geen parser die zonder controller werkt.";
 "cli.record.test.packets" = "Een pakketopname, als de JSON-regels van ‘ojd controller capture --json’.";
@@ -1366,7 +1366,9 @@
 "error.E2031.message" = "Deze poort op 127.0.0.1 is in gebruik of kan niet worden geopend. Kies een andere met --port.";
 "error.E2032.message" = "Een token met herkomsten kan het bereik control niet hebben, omdat een pagina nooit een virtuele gamepad mag besturen. Verleen control aan een token zonder herkomsten.";
 "error.E2033.message" = "Het programma kon niet worden gestart. Controleer of het pad een uitvoerbaar bestand of een app aanwijst en of je het mag uitvoeren.";
+/* Error E2034, shown in the app or the CLI when the service no longer accepts requests. */
 "error.E2034.message" = "De service accepteert geen verzoeken meer. Sluit OpenJoystickDriver af, open het opnieuw en probeer het opnieuw.";
+/* Error E2035, shown in the app or the CLI when the file that records why the request listener stopped is unusable. */
 "error.E2035.message" = "Het bestand dat vastlegt waarom de verzoeklistener is gestopt, kan niet worden gebruikt. Verwijder het bestand en open OpenJoystickDriver daarna opnieuw.";
 /* Error E2036, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
 "error.E2036.message" = "Geen enkele OpenJoystickDriver-app heeft op tijd op de testmelding geantwoord. Controleer of de app draait en probeer het opnieuw.";
@@ -1506,7 +1508,6 @@
 "cli.profile.rename.abstract" = "Hernoem een profiel.";
 "cli.profile.rename.done" = "Hernoemd naar ‘%@’.";
 "cli.profile.rename.name" = "De nieuwe naam, 1 tot 80 tekens.";
-"cli.profile.group.selectorAmbiguous" = "‘%1$@’ is de naam van %2$lld profielen. Gebruik een van deze ID’s:";
 "cli.profile.group.selectorNotFound" = "Geen profiel heeft de ID of naam ‘%@’. ‘ojd profile list’ toont alle profielen.";
 "cli.profile.set.abstract" = "Wijzigt één waarde in een profiel.";
 "cli.profile.set.discussion" = "KEY is een pad in het profielbestand, zoals bij ‘ojd profile get’. VALUE wordt als JSON gelezen, of als tekenreeks als het geen JSON is, dus 0.2 is een getal en space is een tekenreeks. null verwijdert de sleutel of het array-item, en de index één voorbij het einde van een array voegt een item toe. Het hele profiel wordt gecontroleerd voordat het wordt bewaard, en de ID kan niet veranderen.";
@@ -1630,6 +1631,7 @@
 "error.E5004.message" = "Een protocolbeschrijving noemt een variant die de familie niet heeft. Gebruik een van de varianten van de familie.";
 "error.E5005.message" = "Het toegangsbestand AccessGrants.json is beschadigd. Herstel het bestand of verwijder het, en verleen daarna opnieuw toegang.";
 "error.E5006.message" = "Het sleutelbestand van de apparaat-ID's, PortKeyInstallation.key, kan niet worden gelezen of is niet 32 bytes. Zet het bestand terug vanuit een reservekopie. Als je het in plaats daarvan verwijdert, maakt OpenJoystickDriver een nieuwe sleutel en verandert elke apparaat-ID.";
+/* Error E5007, shown when a controller record or patch fails its schema; the message names the field. */
 "error.E5007.message" = "Een controllerrecord of patch is ongeldig. Controleer het bestand met zijn schema en herstel het veld dat het bericht noemt.";
 "ui.error.withCode" = "%1$@ (%2$@)";
 

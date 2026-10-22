@@ -426,7 +426,6 @@
 "ui.developer.extraInputs" = "추가 버튼";
 "ui.developer.extraInputsDescription" = "한 번씩 추가 버튼을 누르면, 발견된 버튼은 캡처를 제거할 때까지 계속 표시됩니다.";
 "ui.developer.hid" = "HID";
-"ui.developer.hiddenIdlePackets" = "유휴 패킷 %d개를 숨겼습니다(내보내기에는 계속 포함됨).";
 "ui.developer.keepAliveNote" = "컨트롤러 활동이 잘 보이도록 일반적인 유휴 패킷은 숨겨집니다.";
 "ui.developer.leftStick" = "왼쪽 스틱";
 "ui.developer.loadingControllers" = "컨트롤러 진단 정보를 불러오는 중…";
@@ -449,7 +448,6 @@
 "ui.developer.route" = "경로";
 "ui.developer.startCapture" = "캡처 시작";
 "ui.developer.starting" = "시작하는 중…";
-"ui.developer.stoppedPackets" = "중지됨 · 패킷 %d개";
 "ui.developer.unavailable" = "개발자 도구를 사용할 수 없습니다";
 "ui.developer.usbEndpoints" = "USB 엔드포인트";
 "ui.developer.usbID" = "USB ID";
@@ -466,7 +464,6 @@
 "ui.developer.soakRunning" = "서비스 샘플링 중…";
 "ui.developer.soakNotANumber" = "%@: 정수를 입력하세요.";
 "ui.developer.soakOutOfRange" = "%1$@: %2$lld에서 %3$lld 사이의 값을 입력하세요.";
-"ui.developer.soakTooManySamples" = "이 실행은 샘플 %lld개가 필요합니다. 샘플링 간격을 늘리세요.";
 "ui.inputTest.aButton" = "A 버튼";
 "ui.inputTest.aCross" = "A / 크로스";
 "ui.inputTest.additionalButtons" = "추가 버튼";
@@ -645,7 +642,7 @@
 
 "ui.mapping.rightPadClick" = "오른쪽 패드 클릭";
 
-/* Motion tuning: first-pass translation; native review pending. */
+/* Motion tuning: English source. */
 "ui.profiles.motion.title" = "모션 조정";
 "ui.profiles.motion.space" = "좌표 공간";
 "ui.profiles.motion.local" = "로컬";
@@ -662,21 +659,28 @@
 "ui.profiles.motion.invertYaw" = "요 반전";
 "ui.profiles.motion.automaticBias" = "정지 상태 자동 보정";
 
-/* Motion calibration CLI. Non-English translation pending. */
-
-/* Motion calibration controls. Non-English translation pending. */
+/* Hint under the motion calibration controls of the input test window: keep the controller still on a surface while the gyro bias, the small constant rotation the sensor reports at rest, is collected. */
 "ui.motion.calibration.instructions" = "자이로 편향을 수집하는 동안 컨트롤러를 가만히 두십시오.";
+/* Status line in the motion calibration controls while the service collects gyro bias samples. Bias is the constant rotation offset of the gyro sensor at rest. */
 "ui.motion.calibration.collecting" = "편향 수집 중";
+/* Status line in the motion calibration controls when the user paused collecting gyro bias samples by hand. */
 "ui.motion.calibration.paused" = "수동 수집 일시 중지됨";
+/* Line in the motion calibration controls that shows the gyro bias found so far, in degrees per second. %1$.3f, %2$.3f and %3$.3f are the X, Y and Z components. Keep the axis letters and the unit. */
 "ui.motion.calibration.offset" = "편향 (°/s): X %1$.3f · Y %2$.3f · Z %3$.3f";
+/* Button in the motion calibration controls that starts collecting gyro bias samples. Disabled while collecting or while the controller reports no motion baseline. */
 "ui.motion.calibration.start" = "보정 시작";
+/* Button in the motion calibration controls that pauses collecting gyro bias samples. Disabled while nothing is collected. */
 "ui.motion.calibration.pause" = "일시 정지";
+/* Header of the motion calibration section in the input test window, which holds the gyro calibration controls for the selected controller. */
 "ui.motion.calibration.title" = "모션 보정";
 
-/* Calibration guidance. Non-English translation pending. */
+/* Guidance in the motion calibration controls when the service cannot reach the controller: connect the controller again, then use Refresh to read the calibration status. */
 "ui.motion.calibration.controllerUnavailable" = "컨트롤러를 다시 연결하고, 캘리브레이션 상태를 업데이트하십시오.";
+/* Guidance in the motion calibration controls when the controller has no usable motion data: turn on a profile for this controller and check that motion data is available. */
 "ui.motion.calibration.motionUnavailable" = "이 컨트롤러에 리매핑 프로파일을 활성화하고 모션을 사용할 수 있는지 확인하십시오.";
+/* Status line in the motion calibration controls while the service has no motion samples yet; Refresh checks again. */
 "ui.motion.calibration.waiting" = "모션 샘플을 기다리는 중입니다. 새로 고쳐 다시 확인하십시오.";
+/* Note in the motion calibration controls: collecting gyro bias keeps running in the service after the window closes, and the Pause button stops it. */
 "ui.motion.calibration.continues" = "이 창을 닫아도 수집은 계속됩니다. 중지하려면 “일시 중지”를 사용하십시오.";
 
 /* Gyro authoring. Native translation review pending. */
@@ -984,7 +988,6 @@
 "cli.diagnose.group.permissionDenied" = "거부됨. ‘ojd permission request’로 허용하십시오";
 "cli.diagnose.group.permissionUnknown" = "상태를 알 수 없음";
 "cli.diagnose.group.rssLimit" = "--soak 사용 시 이 상주 크기(MiB)를 초과하면 실패 처리합니다. 0이면 사용 안 함 (0-65536).";
-"cli.diagnose.group.sampleLimit" = "이 --interval-ms로 --soak을 사용하면 샘플을 %lld개 수집하게 됩니다. --interval-ms를 늘리십시오.";
 "cli.diagnose.group.serviceRunning" = "실행 중 %@";
 "cli.diagnose.group.serviceStopped" = "실행 중이 아닙니다. ‘ojd service start’로 시작하십시오";
 "cli.diagnose.group.skipServiceFailed" = "서비스가 응답하지 않았습니다";
@@ -993,7 +996,6 @@
 "cli.diagnose.group.soakErrorInvalidConfiguration" = "샘플링에는 %1$lld...%2$lld초의 시간과 %3$lld...%4$lld ms의 샘플링 간격이 필요합니다.";
 "cli.diagnose.group.soakErrorNoSamples" = "서비스에서 런타임 샘플을 수집하지 못했습니다.";
 "cli.diagnose.group.soakErrorProcessUnavailable" = "서비스 프로세스 %d의 런타임 정보를 읽을 수 없습니다.";
-"cli.diagnose.group.soakErrorTooManySamples" = "샘플링에서 샘플 %lld개가 필요합니다. 샘플링 간격을 늘리세요.";
 "cli.diagnose.group.soakNotRequested" = "요청되지 않음. --soak SECONDS를 사용하십시오";
 "cli.diagnose.group.soakProgress" = "서비스를 %@ 동안 샘플링하는 중...";
 "cli.diagnose.group.soakVerdictFootprintLimit" = "풋프린트 제한 초과: 상주 크기 %1$.1f MiB, 풋프린트 %2$.1f MiB, 파일 디스크립터 %3$lld, CPU %4$.1f%% (%5$.0f초 동안)";
@@ -1177,7 +1179,6 @@
 "cli.controller.rumble.rightTrigger" = "오른쪽 트리거 모터 강도.";
 "cli.controller.rumble.sent" = "%1$@ 모터를 %2$@에서 진동시켰습니다.";
 "cli.controller.rumble.stopped" = "%@의 진동을 멈췄습니다.";
-"cli.controller.group.selectorAmbiguous" = "‘%1$@’에 해당하는 컨트롤러가 %2$lld개 있습니다. 다음 ID 중 하나를 사용하세요:";
 "cli.controller.group.selectorNoneConnected" = "연결된 컨트롤러가 없어서 ‘%@’에 해당하는 컨트롤러가 없습니다. 컨트롤러를 연결하고 ‘ojd controller list’를 실행하세요.";
 "cli.controller.group.selectorNotFound" = "‘%@’에 해당하는 연결된 컨트롤러가 없습니다. 이 목록의 ID 또는 VVVV:PPPP를 사용하세요:";
 "cli.controller.group.sessionNotFound" = "요청이 도달하기 전에 ‘%@’ 연결이 끊어졌습니다. 다시 연결한 후 재시도하세요.";
@@ -1272,6 +1273,7 @@
 "cli.virtual.feed.abstract" = "stdin으로 구동되는 가상 게임패드를 게시합니다.";
 "cli.virtual.feed.discussion" = "한 줄에 JSON 객체 하나를 읽습니다. ‘buttons’와 ‘dpad’는 South, up처럼 눌린 컨트롤을 나열하고, ‘axes’는 LeftStickX 같은 축 이름을 값에 대응시킵니다. 없는 컨트롤은 중립으로 처리됩니다. 스틱은 -1에서 1까지이며 Y는 아래쪽입니다. 트리거는 0에서 1까지입니다. 프레임은 순서대로 재생되며 각각 최소 8 ms 동안 유지됩니다. ‘holdMilliseconds’는 프레임을 더 오래 유지하며 최대 60000까지 가능합니다. 게임이 게임패드로 보내는 모든 출력 명령(예: 진동)을 한 줄에 JSON 객체 하나로 출력합니다. 입력이 끝난 뒤 모든 프레임이 재생되면 중지됩니다.";
 "cli.virtual.feed.errorClosed" = "서비스가 가상 게임패드를 닫았습니다. ‘ojd status’로 확인하세요.";
+/* Error from `ojd virtual feed` when the service connection broke while the virtual gamepad was closing. */
 "cli.virtual.feed.errorCloseInterrupted" = "가상 게임패드를 닫는 작업이 중단되었습니다. ‘ojd status’로 확인하세요.";
 "cli.virtual.feed.errorFrame" = "%@번째 줄은 올바른 프레임이 아닙니다. ‘ojd virtual feed --help’에서 형식을 확인할 수 있습니다.";
 "cli.virtual.feed.profile" = "게시할 가상 게임패드 프로파일.";
@@ -1348,8 +1350,6 @@
 "cli.record.test.discussion" = "캡처에서 수신한 패킷을 레코드의 파서로 재생한 뒤, 마지막 입력 리포트 이후의 컨트롤러 상태를 예상 상태와 비교합니다. 캡처는 ‘ojd controller capture --json’의 JSON 줄입니다. 예상 상태는 ‘ojd controller watch --json’의 한 줄 형태인 JSON 객체 하나입니다. 이 명령은 다른 필드를 모두 나열하고, 하나라도 다르면 종료 코드 1로 끝납니다. 실행 중인 서비스가 설정하는 connection을 제외한 모든 필드를 비교합니다. 실행 중인 서비스가 필요 없습니다.";
 "cli.record.test.expect" = "예상 컨트롤러 상태(JSON 파일)입니다.";
 "cli.record.test.expectInvalid" = "%1$@은(는) 컨트롤러 상태가 아닙니다: %2$@";
-"cli.record.test.matched" = "%1$@이(가) 예상 상태와 일치합니다: 입력 리포트 %2$lld개를 재생했습니다.";
-"cli.record.test.mismatch" = "%1$@의 파서가 만든 상태가 %2$@와 %3$lld개 필드에서 다릅니다.";
 "cli.record.test.noInput" = "%1$@의 어떤 리포트에도 %2$@의 입력이 없습니다. 컨트롤을 누르면서 다시 캡처하세요.";
 "cli.record.test.noParser" = "%@의 패밀리에는 컨트롤러 없이 실행되는 파서가 없습니다.";
 "cli.record.test.packets" = "패킷 캡처(‘ojd controller capture --json’의 JSON 줄)입니다.";
@@ -1366,7 +1366,9 @@
 "error.E2031.message" = "127.0.0.1의 이 포트는 사용 중이거나 열 수 없습니다. --port로 다른 포트를 선택하세요.";
 "error.E2032.message" = "오리진이 있는 토큰은 control 범위를 가질 수 없습니다. 페이지가 가상 게임패드를 조작해서는 안 되기 때문입니다. 오리진이 없는 토큰에 control을 허용하세요.";
 "error.E2033.message" = "프로그램을 시작할 수 없습니다. 경로가 실행 파일 또는 앱을 가리키는지, 실행할 권한이 있는지 확인하세요.";
+/* Error E2034, shown in the app or the CLI when the service no longer accepts requests. */
 "error.E2034.message" = "서비스가 더 이상 요청을 받지 않습니다. OpenJoystickDriver를 종료했다가 다시 열고 다시 시도하세요.";
+/* Error E2035, shown in the app or the CLI when the file that records why the request listener stopped is unusable. */
 "error.E2035.message" = "요청 수신기가 중지된 이유를 기록한 파일을 사용할 수 없습니다. 파일을 삭제한 다음 OpenJoystickDriver를 다시 여세요.";
 /* Error E2036, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
 "error.E2036.message" = "제때 테스트 알림에 응답한 OpenJoystickDriver 앱이 없습니다. 앱이 실행 중인지 확인하고 다시 시도하세요.";
@@ -1506,7 +1508,6 @@
 "cli.profile.rename.abstract" = "프로파일의 이름을 변경합니다.";
 "cli.profile.rename.done" = "이름을 ‘%@’(으)로 변경했습니다.";
 "cli.profile.rename.name" = "새 이름이며 1~80자입니다.";
-"cli.profile.group.selectorAmbiguous" = "‘%1$@’은(는) 프로파일 %2$lld개의 이름입니다. 다음 ID 중 하나를 사용하세요:";
 "cli.profile.group.selectorNotFound" = "ID 또는 이름이 ‘%@’인 프로파일이 없습니다. ‘ojd profile list’에서 모든 프로파일을 확인할 수 있습니다.";
 "cli.profile.set.abstract" = "프로파일의 값 하나를 변경합니다.";
 "cli.profile.set.discussion" = "KEY는 ‘ojd profile get’와 같이 프로파일 파일 안의 경로입니다. VALUE는 JSON으로 읽으며, JSON이 아니면 문자열로 읽습니다. 따라서 0.2는 숫자이고 space는 문자열입니다. null은 키 또는 배열 항목을 제거하고, 배열 끝 바로 다음 인덱스는 항목을 추가합니다. 저장하기 전에 프로파일 전체를 검사하며, ID는 바꿀 수 없습니다.";
@@ -1521,7 +1522,7 @@
 "cli.profile.validate.file" = "프로파일 파일입니다. stdin에서 읽으려면 - 를 사용합니다.";
 "cli.profile.validate.valid" = "%1$@은(는) 올바른 프로파일입니다. ‘%2$@’, 대상 %3$@(%4$@). ‘ojd profile import’로 추가하세요.";
 "cli.profile.group.vanished" = "서비스가 프로파일을 보관하지 않았습니다. ‘ojd profile list’로 확인하세요.";
-/* Main window, menus, settings, library and access */
+/* Main window, status item, main menu, settings window, library and access. */
 "ui.library.details" = "세부사항";
 "ui.library.dismiss" = "닫기";
 "ui.library.choose" = "선택";
@@ -1907,6 +1908,7 @@
 "error.E5004.message" = "프로토콜 설명이 해당 패밀리에 없는 변형을 나열합니다. 패밀리의 변형 중 하나를 사용하세요.";
 "error.E5005.message" = "접근 파일 AccessGrants.json이(가) 손상되었습니다. 파일을 고치거나 삭제한 다음 접근을 다시 허용하세요.";
 "error.E5006.message" = "유닛 ID의 키 파일 PortKeyInstallation.key를 읽을 수 없거나 크기가 32바이트가 아닙니다. 백업에서 파일을 복원하세요. 대신 삭제하면 OpenJoystickDriver가 새 키를 만들고 모든 유닛 ID가 바뀝니다.";
+/* Error E5007, shown when a controller record or patch fails its schema; the message names the field. */
 "error.E5007.message" = "컨트롤러 레코드 또는 patch가 올바르지 않습니다. 해당 스키마로 파일을 확인하고 메시지가 알려 주는 필드를 고치세요.";
 "ui.error.withCode" = "%1$@ (%2$@)";
 "cli.update.check.ahead" = "OpenJoystickDriver %1$@은(는) 게시된 최신 릴리스(%2$@)보다 새로운 버전입니다.";

@@ -426,7 +426,6 @@
 "ui.developer.extraInputs" = "额外按钮";
 "ui.developer.extraInputsDescription" = "每次按一个额外按钮。检测到的按钮会一直列出，直到你清除捕捉。";
 "ui.developer.hid" = "HID";
-"ui.developer.hiddenIdlePackets" = "已隐藏 %d 个空闲数据包（仍包含在导出中）。";
 "ui.developer.keepAliveNote" = "已隐藏常规的空闲数据包，以便清楚看到控制器的活动。";
 "ui.developer.leftStick" = "左摇杆";
 "ui.developer.loadingControllers" = "正在加载控制器诊断信息…";
@@ -449,7 +448,6 @@
 "ui.developer.route" = "路径";
 "ui.developer.startCapture" = "开始捕捉";
 "ui.developer.starting" = "正在启动…";
-"ui.developer.stoppedPackets" = "已停止 · %d 个数据包";
 "ui.developer.unavailable" = "开发工具不可用";
 "ui.developer.usbEndpoints" = "USB 端点";
 "ui.developer.usbID" = "USB ID";
@@ -466,7 +464,6 @@
 "ui.developer.soakRunning" = "正在采样服务…";
 "ui.developer.soakNotANumber" = "%@：请输入整数。";
 "ui.developer.soakOutOfRange" = "%1$@：请输入介于 %2$lld 和 %3$lld 之间的值。";
-"ui.developer.soakTooManySamples" = "此次运行需要 %lld 个样本。请增大采样间隔。";
 "ui.inputTest.aButton" = "A 按钮";
 "ui.inputTest.aCross" = "A / 叉";
 "ui.inputTest.additionalButtons" = "附加按钮";
@@ -645,7 +642,7 @@
 
 "ui.mapping.rightPadClick" = "右触控板点击";
 
-/* Motion tuning: first-pass translation; native review pending. */
+/* Motion tuning: English source. */
 "ui.profiles.motion.title" = "体感调校";
 "ui.profiles.motion.space" = "坐标空间";
 "ui.profiles.motion.local" = "局部";
@@ -662,21 +659,28 @@
 "ui.profiles.motion.invertYaw" = "反转偏航";
 "ui.profiles.motion.automaticBias" = "静止时自动校准";
 
-/* Motion calibration CLI. Non-English translation pending. */
-
-/* Motion calibration controls. Non-English translation pending. */
+/* Hint under the motion calibration controls of the input test window: keep the controller still on a surface while the gyro bias, the small constant rotation the sensor reports at rest, is collected. */
 "ui.motion.calibration.instructions" = "收集陀螺仪偏差时，请保持控制器静止。";
+/* Status line in the motion calibration controls while the service collects gyro bias samples. Bias is the constant rotation offset of the gyro sensor at rest. */
 "ui.motion.calibration.collecting" = "正在收集偏差";
+/* Status line in the motion calibration controls when the user paused collecting gyro bias samples by hand. */
 "ui.motion.calibration.paused" = "手动收集已暂停";
+/* Line in the motion calibration controls that shows the gyro bias found so far, in degrees per second. %1$.3f, %2$.3f and %3$.3f are the X, Y and Z components. Keep the axis letters and the unit. */
 "ui.motion.calibration.offset" = "偏差（°/s）：X %1$.3f · Y %2$.3f · Z %3$.3f";
+/* Button in the motion calibration controls that starts collecting gyro bias samples. Disabled while collecting or while the controller reports no motion baseline. */
 "ui.motion.calibration.start" = "开始校准";
+/* Button in the motion calibration controls that pauses collecting gyro bias samples. Disabled while nothing is collected. */
 "ui.motion.calibration.pause" = "暂停";
+/* Header of the motion calibration section in the input test window, which holds the gyro calibration controls for the selected controller. */
 "ui.motion.calibration.title" = "体感校准";
 
-/* Calibration guidance. Non-English translation pending. */
+/* Guidance in the motion calibration controls when the service cannot reach the controller: connect the controller again, then use Refresh to read the calibration status. */
 "ui.motion.calibration.controllerUnavailable" = "请重新连接控制器，然后刷新校准状态。";
+/* Guidance in the motion calibration controls when the controller has no usable motion data: turn on a profile for this controller and check that motion data is available. */
 "ui.motion.calibration.motionUnavailable" = "启用该控制器的重新映射配置文件，并检查体感是否可用。";
+/* Status line in the motion calibration controls while the service has no motion samples yet; Refresh checks again. */
 "ui.motion.calibration.waiting" = "正在等待体感样本。刷新以再次检查。";
+/* Note in the motion calibration controls: collecting gyro bias keeps running in the service after the window closes, and the Pause button stops it. */
 "ui.motion.calibration.continues" = "关闭此窗口后收集仍会继续。使用“暂停”停止收集。";
 
 /* Gyro authoring. Native translation review pending. */
@@ -984,7 +988,6 @@
 "cli.diagnose.group.permissionDenied" = "已拒绝；请使用 “ojd permission request” 授权";
 "cli.diagnose.group.permissionUnknown" = "状态未知";
 "cli.diagnose.group.rssLimit" = "使用 --soak 时，超过此常驻内存大小（MiB）则判为失败；0 表示停用（0-65536）。";
-"cli.diagnose.group.sampleLimit" = "在此 --interval-ms 下使用 --soak 将采样 %lld 次；请调大 --interval-ms。";
 "cli.diagnose.group.serviceRunning" = "正在运行 %@";
 "cli.diagnose.group.serviceStopped" = "未运行；请使用 “ojd service start” 启动";
 "cli.diagnose.group.skipServiceFailed" = "服务没有响应";
@@ -993,7 +996,6 @@
 "cli.diagnose.group.soakErrorInvalidConfiguration" = "采样需要 %1$lld...%2$lld 秒的时长和 %3$lld...%4$lld 毫秒的采样间隔。";
 "cli.diagnose.group.soakErrorNoSamples" = "服务未产生任何运行时样本。";
 "cli.diagnose.group.soakErrorProcessUnavailable" = "无法读取服务进程 %d 的运行时信息。";
-"cli.diagnose.group.soakErrorTooManySamples" = "采样将需要 %lld 个样本。请增大采样间隔。";
 "cli.diagnose.group.soakNotRequested" = "未请求；请使用 --soak SECONDS";
 "cli.diagnose.group.soakProgress" = "正在对服务采样 %@...";
 "cli.diagnose.group.soakVerdictFootprintLimit" = "超出内存占用上限：常驻大小 %1$.1f MiB，内存占用 %2$.1f MiB，文件描述符 %3$lld，CPU %4$.1f%%，历时 %5$.0f 秒";
@@ -1177,7 +1179,6 @@
 "cli.controller.rumble.rightTrigger" = "右扳机马达强度。";
 "cli.controller.rumble.sent" = "已振动 %1$@，设备：%2$@。";
 "cli.controller.rumble.stopped" = "已停止 %@ 的振动。";
-"cli.controller.group.selectorAmbiguous" = "“%1$@” 匹配 %2$lld 个控制器。请使用以下 ID 之一：";
 "cli.controller.group.selectorNoneConnected" = "没有控制器匹配 “%@”，因为没有已连接的控制器。请连接一个并运行 “ojd controller list”。";
 "cli.controller.group.selectorNotFound" = "没有已连接的控制器匹配 “%@”。请使用此列表中的 ID 或 VVVV:PPPP：";
 "cli.controller.group.sessionNotFound" = "“%@” 在请求到达前已断开。请重新连接后重试。";
@@ -1272,6 +1273,7 @@
 "cli.virtual.feed.abstract" = "发布一个由 stdin 驱动的虚拟游戏手柄。";
 "cli.virtual.feed.discussion" = "每行读取一个 JSON 对象：“buttons” 和 “dpad” 列出被按下的控件，例如 South 和 up；“axes” 将轴名称（例如 LeftStickX）映射到数值。缺少的控件保持中立。摇杆范围为 -1 到 1，Y 轴向下；扳机范围为 0 到 1。帧按顺序播放，每帧至少持续 8 ms；“holdMilliseconds” 可让某一帧保持更久，最长 60000。将游戏发送给游戏手柄的每条输出命令（例如震动）以每行一个 JSON 对象的形式输出。输入结束且所有帧播放完毕后停止。";
 "cli.virtual.feed.errorClosed" = "服务已关闭虚拟游戏手柄。请用“ojd status”检查。";
+/* Error from `ojd virtual feed` when the service connection broke while the virtual gamepad was closing. */
 "cli.virtual.feed.errorCloseInterrupted" = "关闭虚拟游戏手柄的操作被中断。请用“ojd status”检查。";
 "cli.virtual.feed.errorFrame" = "第 %@ 行不是有效的帧。“ojd virtual feed --help” 会显示格式。";
 "cli.virtual.feed.profile" = "要发布的虚拟游戏手柄配置文件。";
@@ -1348,8 +1350,6 @@
 "cli.record.test.discussion" = "用记录的解析器重放捕获文件中收到的数据包，然后将最后一个输入报告之后的控制器状态与期望状态比较。捕获文件是 “ojd controller capture --json” 输出的 JSON 行。期望状态是一个 JSON 对象，形状与 “ojd controller watch --json” 的一行相同。命令会列出每个不同的字段，只要有字段不同就以退出码 1 结束。它比较除 connection 之外的所有字段，connection 由运行中的服务设置。无需运行中的服务。";
 "cli.record.test.expect" = "期望的控制器状态，JSON 文件。";
 "cli.record.test.expectInvalid" = "%1$@ 不是控制器状态：%2$@";
-"cli.record.test.matched" = "%1$@ 与期望状态一致：已重放 %2$lld 个输入报告。";
-"cli.record.test.mismatch" = "%1$@ 的解析器生成的状态与 %2$@ 在 %3$lld 个字段上不同。";
 "cli.record.test.noInput" = "%1$@ 中没有任何报告包含 %2$@ 的输入。请在按下控制器按键的同时重新捕获。";
 "cli.record.test.noParser" = "%@ 的系列没有无需控制器即可运行的解析器。";
 "cli.record.test.packets" = "数据包捕获文件，即 “ojd controller capture --json” 输出的 JSON 行。";
@@ -1366,7 +1366,9 @@
 "error.E2031.message" = "127.0.0.1 上的这个端口已被占用或无法打开。请用 --port 选择另一个。";
 "error.E2032.message" = "带源的令牌不能拥有 control 范围，因为网页绝不能操控虚拟游戏手柄。请把 control 授予不带源的令牌。";
 "error.E2033.message" = "无法启动程序。请检查其路径指向可执行文件或 App，并且你有权运行它。";
+/* Error E2034, shown in the app or the CLI when the service no longer accepts requests. */
 "error.E2034.message" = "服务已停止接受请求。请退出并重新打开 OpenJoystickDriver，然后重试。";
+/* Error E2035, shown in the app or the CLI when the file that records why the request listener stopped is unusable. */
 "error.E2035.message" = "无法使用记录请求监听停止原因的文件。请删除该文件，然后重新打开 OpenJoystickDriver。";
 /* Error E2036, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
 "error.E2036.message" = "没有 OpenJoystickDriver 应用及时响应测试通知。请确认应用正在运行，然后重试。";
@@ -1506,7 +1508,6 @@
 "cli.profile.rename.abstract" = "重命名配置文件。";
 "cli.profile.rename.done" = "已重命名为“%@”。";
 "cli.profile.rename.name" = "新名称，1 到 80 个字符。";
-"cli.profile.group.selectorAmbiguous" = "“%1$@”对应 %2$lld 个配置文件。请使用以下某个 ID：";
 "cli.profile.group.selectorNotFound" = "没有 ID 或名称为“%@”的配置文件。“ojd profile list” 会显示所有配置文件。";
 "cli.profile.set.abstract" = "更改配置文件中的一个值。";
 "cli.profile.set.discussion" = "KEY 是配置文件中的路径，与 “ojd profile get” 相同。VALUE 按 JSON 读取，不是 JSON 时按字符串读取，因此 0.2 是数字，space 是字符串。null 会删除该键或数组项，而数组末尾之后的一个索引会添加一项。存储前会检查整个配置文件，且 ID 不能更改。";
@@ -1521,7 +1522,7 @@
 "cli.profile.validate.file" = "配置文件，或用 - 表示 stdin。";
 "cli.profile.validate.valid" = "%1$@ 是有效的配置文件：“%2$@”，对应 %3$@（%4$@）。可用 “ojd profile import” 添加。";
 "cli.profile.group.vanished" = "服务未保留该配置文件。请用 “ojd profile list” 检查。";
-/* Main window, menus, settings, library and access */
+/* Main window, status item, main menu, settings window, library and access. */
 "ui.library.details" = "详细信息";
 "ui.library.dismiss" = "忽略";
 "ui.library.choose" = "选取";
@@ -1907,6 +1908,7 @@
 "error.E5004.message" = "协议描述列出了其系列没有的变体。请使用该系列的某个变体。";
 "error.E5005.message" = "访问文件 AccessGrants.json 已损坏。请修复或删除该文件，然后重新授予访问权限。";
 "error.E5006.message" = "无法读取单元 ID 的密钥文件 PortKeyInstallation.key，或其大小不是 32 字节。请从备份恢复该文件。如果改为删除它，OpenJoystickDriver 会创建新密钥，所有单元 ID 都会改变。";
+/* Error E5007, shown when a controller record or patch fails its schema; the message names the field. */
 "error.E5007.message" = "控制器记录或 patch 无效。请对照其架构检查该文件，并修正消息指出的字段。";
 "ui.error.withCode" = "%1$@ (%2$@)";
 "cli.update.check.ahead" = "OpenJoystickDriver %1$@ 比已发布的最新版本（%2$@）更新。";

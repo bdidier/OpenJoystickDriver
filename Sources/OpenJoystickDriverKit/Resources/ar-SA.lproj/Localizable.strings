@@ -426,7 +426,6 @@
 "ui.developer.extraInputs" = "أزرار إضافية";
 "ui.developer.extraInputsDescription" = "اضغط على زر إضافي واحد في كل مرة. تبقى الأزرار المكتشفة في القائمة حتى تمسح الالتقاط.";
 "ui.developer.hid" = "HID";
-"ui.developer.hiddenIdlePackets" = "تم إخفاء %d من حزم الخمول (ما زالت مضمّنة في التصدير).";
 "ui.developer.keepAliveNote" = "تُخفى حزم البيانات الروتينية الخاملة بحيث يظل نشاط وحدة التحكم مرئيًا.";
 "ui.developer.leftStick" = "العصا اليسرى";
 "ui.developer.loadingControllers" = "جارٍ تحميل تشخيصات وحدات التحكم…";
@@ -449,7 +448,6 @@
 "ui.developer.route" = "المسار";
 "ui.developer.startCapture" = "بدء الالتقاط";
 "ui.developer.starting" = "جارٍ البدء…";
-"ui.developer.stoppedPackets" = "متوقف · %d حزمة";
 "ui.developer.unavailable" = "أدوات المطوّر غير متوفرة";
 "ui.developer.usbEndpoints" = "نقاط نهاية USB";
 "ui.developer.usbID" = "USB ID";
@@ -466,7 +464,6 @@
 "ui.developer.soakRunning" = "جارٍ قياس الخدمة…";
 "ui.developer.soakNotANumber" = "%@: أدخل عددًا صحيحًا.";
 "ui.developer.soakOutOfRange" = "%1$@: أدخل قيمة بين %2$lld و%3$lld.";
-"ui.developer.soakTooManySamples" = "سيتطلب هذا التشغيل %lld قياسًا. زد الفاصل بين القياسات.";
 "ui.inputTest.aButton" = "الزر A";
 "ui.inputTest.aCross" = "A / صليب";
 "ui.inputTest.additionalButtons" = "أزرار إضافية";
@@ -645,7 +642,7 @@
 
 "ui.mapping.rightPadClick" = "نقر اللوحة اليمنى";
 
-/* Motion tuning: first-pass translation; native review pending. */
+/* Motion tuning: English source. */
 "ui.profiles.motion.title" = "ضبط الحركة";
 "ui.profiles.motion.space" = "فضاء الإحداثيات";
 "ui.profiles.motion.local" = "محلي";
@@ -662,21 +659,28 @@
 "ui.profiles.motion.invertYaw" = "عكس الانحراف";
 "ui.profiles.motion.automaticBias" = "المعايرة التلقائية عند السكون";
 
-/* Motion calibration CLI. Non-English translation pending. */
-
-/* Motion calibration controls. Non-English translation pending. */
+/* Hint under the motion calibration controls of the input test window: keep the controller still on a surface while the gyro bias, the small constant rotation the sensor reports at rest, is collected. */
 "ui.motion.calibration.instructions" = "أبقِ وحدة التحكم ثابتة أثناء جمع انحراف الجيروسكوب.";
+/* Status line in the motion calibration controls while the service collects gyro bias samples. Bias is the constant rotation offset of the gyro sensor at rest. */
 "ui.motion.calibration.collecting" = "جارٍ جمع الانحراف";
+/* Status line in the motion calibration controls when the user paused collecting gyro bias samples by hand. */
 "ui.motion.calibration.paused" = "أُوقف الجمع اليدوي مؤقتًا";
+/* Line in the motion calibration controls that shows the gyro bias found so far, in degrees per second. %1$.3f, %2$.3f and %3$.3f are the X, Y and Z components. Keep the axis letters and the unit. */
 "ui.motion.calibration.offset" = "الانحراف (°/s): X %1$.3f · Y %2$.3f · Z %3$.3f";
+/* Button in the motion calibration controls that starts collecting gyro bias samples. Disabled while collecting or while the controller reports no motion baseline. */
 "ui.motion.calibration.start" = "بدء المعايرة";
+/* Button in the motion calibration controls that pauses collecting gyro bias samples. Disabled while nothing is collected. */
 "ui.motion.calibration.pause" = "إيقاف مؤقت";
+/* Header of the motion calibration section in the input test window, which holds the gyro calibration controls for the selected controller. */
 "ui.motion.calibration.title" = "معايرة الحركة";
 
-/* Calibration guidance. Non-English translation pending. */
+/* Guidance in the motion calibration controls when the service cannot reach the controller: connect the controller again, then use Refresh to read the calibration status. */
 "ui.motion.calibration.controllerUnavailable" = "أعد توصيل وحدة التحكم، ثم حدّث حالة المعايرة.";
+/* Guidance in the motion calibration controls when the controller has no usable motion data: turn on a profile for this controller and check that motion data is available. */
 "ui.motion.calibration.motionUnavailable" = "فعّل ملف تعريف لإعادة التعيين لوحدة التحكم هذه وتأكد من توفر الحركة.";
+/* Status line in the motion calibration controls while the service has no motion samples yet; Refresh checks again. */
 "ui.motion.calibration.waiting" = "في انتظار عينات الحركة. حدّث للتحقق مرة أخرى.";
+/* Note in the motion calibration controls: collecting gyro bias keeps running in the service after the window closes, and the Pause button stops it. */
 "ui.motion.calibration.continues" = "يستمر الجمع عند إغلاق هذه النافذة. استخدم «إيقاف مؤقت» لإيقافه.";
 
 /* Gyro authoring. Native translation review pending. */
@@ -984,7 +988,6 @@
 "cli.diagnose.group.permissionDenied" = "مرفوض؛ امنحه باستخدام «ojd permission request»";
 "cli.diagnose.group.permissionUnknown" = "الحالة غير معروفة";
 "cli.diagnose.group.rssLimit" = "مع --soak، يفشل الفحص عند تجاوز هذا الحجم المقيم بالـ MiB؛ القيمة 0 تعطّل الحد (0-65536).";
-"cli.diagnose.group.sampleLimit" = "سيأخذ --soak مع قيمة --interval-ms هذه %lld عينة؛ ارفع قيمة --interval-ms.";
 "cli.diagnose.group.serviceRunning" = "قيد التشغيل %@";
 "cli.diagnose.group.serviceStopped" = "غير قيد التشغيل؛ شغّلها باستخدام «ojd service start»";
 "cli.diagnose.group.skipServiceFailed" = "لم تستجب الخدمة";
@@ -993,7 +996,6 @@
 "cli.diagnose.group.soakErrorInvalidConfiguration" = "يتطلب أخذ العينات %1$lld...%2$lld ثانية وفاصلًا بين القياسات %3$lld...%4$lld مللي ثانية.";
 "cli.diagnose.group.soakErrorNoSamples" = "لم تُنتج الخدمة أي عينات لوقت التشغيل.";
 "cli.diagnose.group.soakErrorProcessUnavailable" = "تعذرت قراءة معلومات وقت التشغيل لعملية الخدمة %d.";
-"cli.diagnose.group.soakErrorTooManySamples" = "سيتطلب أخذ العينات %lld قياسًا. زد الفاصل بين القياسات.";
 "cli.diagnose.group.soakNotRequested" = "لم يُطلب؛ استخدم --soak SECONDS";
 "cli.diagnose.group.soakProgress" = "جارٍ أخذ عينات من الخدمة لمدة %@…";
 "cli.diagnose.group.soakVerdictFootprintLimit" = "تجاوز حد البصمة: الحجم المقيم %1$.1f MiB، البصمة %2$.1f MiB، واصفات الملفات %3$lld، وحدة المعالجة المركزية %4$.1f%% خلال %5$.0f ثانية";
@@ -1177,7 +1179,6 @@
 "cli.controller.rumble.rightTrigger" = "شدة محرك الزناد الأيمن.";
 "cli.controller.rumble.sent" = "تم تشغيل الاهتزاز (%1$@) على %2$@.";
 "cli.controller.rumble.stopped" = "تم إيقاف الاهتزاز في %@.";
-"cli.controller.group.selectorAmbiguous" = "«%1$@» يطابق %2$lld من وحدات التحكم. استخدم أحد هذه المعرّفات:";
 "cli.controller.group.selectorNoneConnected" = "لا توجد وحدة تحكم تطابق «%@» لأنه لا توجد أي وحدة متصلة. وصّل واحدة ثم شغّل «ojd controller list».";
 "cli.controller.group.selectorNotFound" = "لا توجد وحدة تحكم متصلة تطابق «%@». استخدم معرّفًا أو VVVV:PPPP من هذه القائمة:";
 "cli.controller.group.sessionNotFound" = "انقطع اتصال «%@» قبل أن يصل الطلب إليها. أعد توصيلها وحاول مرة أخرى.";
@@ -1272,6 +1273,7 @@
 "cli.virtual.feed.abstract" = "انشر وحدة تحكم افتراضية يتحكم فيها stdin.";
 "cli.virtual.feed.discussion" = "يقرأ كائن JSON واحدًا في كل سطر: يسرد «buttons» و«dpad» عناصر التحكم المضغوطة، مثل South و up، ويربط «axes» أسماء المحاور، مثل LeftStickX، بالقيم. عناصر التحكم المفقودة محايدة. تتراوح العصي من -1 إلى 1 مع اتجاه Y للأسفل؛ وتتراوح الزنادات من 0 إلى 1. تُشغَّل الإطارات بالترتيب، كل إطار لمدة 8 مللي ثانية على الأقل؛ ويُبقي «holdMilliseconds» الإطار مدة أطول، حتى 60000. يطبع كل أمر إخراج ترسله الألعاب إلى وحدة التحكم الافتراضية، مثل الاهتزاز، ككائن JSON واحد في كل سطر. يتوقف عندما يتم تشغيل كل الإطارات بعد انتهاء الإدخال.";
 "cli.virtual.feed.errorClosed" = "أغلقت الخدمة وحدة التحكم الافتراضية. تحقق منها باستخدام «ojd status».";
+/* Error from `ojd virtual feed` when the service connection broke while the virtual gamepad was closing. */
 "cli.virtual.feed.errorCloseInterrupted" = "تمت مقاطعة إغلاق وحدة التحكم الافتراضية. تحقق منها باستخدام «ojd status».";
 "cli.virtual.feed.errorFrame" = "السطر %@ ليس إطارًا صالحًا. يعرض «ojd virtual feed --help» التنسيق.";
 "cli.virtual.feed.profile" = "ملف تعريف وحدة التحكم الافتراضية المراد نشرها.";
@@ -1348,8 +1350,6 @@
 "cli.record.test.discussion" = "يعيد تشغيل الحزم المستلمة من التقاط عبر محلل السجل، ثم يقارن حالة وحدة التحكم بعد آخر تقرير إدخال بالحالة المتوقعة. الالتقاط هو أسطر JSON الناتجة عن «ojd controller capture --json». الحالة المتوقعة كائن JSON واحد بشكل سطر من «ojd controller watch --json». يسرد الأمر كل حقل مختلف وينتهي بالرمز 1 إذا اختلف أي حقل. يقارن كل الحقول عدا connection الذي تضبطه الخدمة قيد التشغيل. لا يحتاج إلى خدمة عاملة.";
 "cli.record.test.expect" = "حالة وحدة التحكم المتوقعة، كملف JSON.";
 "cli.record.test.expectInvalid" = "%1$@ ليس حالة وحدة تحكم: %2$@";
-"cli.record.test.matched" = "%1$@ يطابق الحالة المتوقعة: أُعيد تشغيل %2$lld من تقارير الإدخال.";
-"cli.record.test.mismatch" = "الحالة التي أنتجها محلل %1$@ تختلف عن %2$@ في %3$lld من الحقول.";
 "cli.record.test.noInput" = "لا يحتوي أي تقرير في %1$@ على إدخال لـ %2$@. التقط مرة أخرى أثناء الضغط على عناصر التحكم.";
 "cli.record.test.noParser" = "ليس لعائلة %@ محلل يعمل دون وحدة تحكم.";
 "cli.record.test.packets" = "التقاط حزم، كأسطر JSON الناتجة عن «ojd controller capture --json».";
@@ -1366,7 +1366,9 @@
 "error.E2031.message" = "المنفذ هذا على 127.0.0.1 قيد الاستخدام أو لا يمكن فتحه. اختر منفذًا آخر باستخدام --port.";
 "error.E2032.message" = "لا يمكن أن يملك رمز وصول له أصول نطاق control، لأن الصفحة يجب ألا تتحكم أبدًا في يد تحكم افتراضية. امنح control لرمز بلا أصول.";
 "error.E2033.message" = "تعذر بدء البرنامج. تحقق من أن مساره يشير إلى ملف تنفيذي أو تطبيق، ومن أنك مخوّل بتشغيله.";
+/* Error E2034, shown in the app or the CLI when the service no longer accepts requests. */
 "error.E2034.message" = "توقفت الخدمة عن قبول الطلبات. أغلق OpenJoystickDriver ثم افتحه من جديد، ثم حاول مرة أخرى.";
+/* Error E2035, shown in the app or the CLI when the file that records why the request listener stopped is unusable. */
 "error.E2035.message" = "لا يمكن استخدام الملف الذي يسجّل سبب توقف مستمع الطلبات. احذف الملف ثم افتح OpenJoystickDriver من جديد.";
 /* Error E2036, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
 "error.E2036.message" = "لم يرد أي تطبيق OpenJoystickDriver على الإشعار التجريبي في الوقت المناسب. تأكد من أن التطبيق قيد التشغيل ثم حاول مرة أخرى.";
@@ -1506,7 +1508,6 @@
 "cli.profile.rename.abstract" = "أعد تسمية ملف تعريف.";
 "cli.profile.rename.done" = "تمت إعادة التسمية إلى «%@».";
 "cli.profile.rename.name" = "الاسم الجديد، من 1 إلى 80 حرفًا.";
-"cli.profile.group.selectorAmbiguous" = "«%1$@» هو اسم %2$lld من ملفات التعريف. استخدم أحد هذه المعرّفات:";
 "cli.profile.group.selectorNotFound" = "لا يوجد ملف تعريف بالمعرّف أو الاسم «%@». يعرض «ojd profile list» كل ملفات التعريف.";
 "cli.profile.set.abstract" = "يغيّر قيمة واحدة في ملف تعريف.";
 "cli.profile.set.discussion" = "KEY هو مسار داخل ملف التعريف، كما في «ojd profile get». تُقرأ VALUE بصيغة JSON، أو كسلسلة نصية إذا لم تكن JSON، لذا فإن 0.2 رقم وspace سلسلة نصية. تحذف null المفتاح أو عنصر المصفوفة، ويضيف الفهرس الذي يلي نهاية المصفوفة بمقدار واحد عنصرًا. يُفحص ملف التعريف كاملًا قبل حفظه، ولا يمكن تغيير المعرّف.";
@@ -1521,7 +1522,7 @@
 "cli.profile.validate.file" = "الملف الذي يحتوي ملف التعريف، أو - لـ stdin.";
 "cli.profile.validate.valid" = "%1$@ ملف تعريف صالح: «%2$@» لـ %3$@ (%4$@). أضفه باستخدام «ojd profile import».";
 "cli.profile.group.vanished" = "لم تحتفظ الخدمة بملف التعريف. تحقّق منه باستخدام «ojd profile list».";
-/* Main window, menus, settings, library and access */
+/* Main window, status item, main menu, settings window, library and access. */
 "ui.library.details" = "التفاصيل";
 "ui.library.dismiss" = "تجاهل";
 "ui.library.choose" = "اختيار";
@@ -1907,6 +1908,7 @@
 "error.E5004.message" = "يدرج وصف البروتوكول متغيرًا لا توجد في عائلته. استخدم أحد متغيرات العائلة.";
 "error.E5005.message" = "ملف الوصول AccessGrants.json تالف. أصلح الملف أو احذفه، ثم امنح الوصول مرة أخرى.";
 "error.E5006.message" = "تعذرت قراءة ملف مفتاح معرّفات الأجهزة PortKeyInstallation.key، أو أن حجمه ليس 32 بايت. استعد الملف من نسخة احتياطية. إذا حذفته بدلاً من ذلك، فسينشئ OpenJoystickDriver مفتاحاً جديداً وسيتغير كل معرّف جهاز.";
+/* Error E5007, shown when a controller record or patch fails its schema; the message names the field. */
 "error.E5007.message" = "سجل وحدة التحكم أو patch غير صالح. تحقق من الملف مقابل مخططه وأصلح الحقل الذي تذكره الرسالة.";
 "ui.error.withCode" = "%1$@ (%2$@)";
 "cli.update.check.ahead" = "إصدار OpenJoystickDriver %1$@ أحدث من آخر إصدار منشور (%2$@).";

@@ -426,7 +426,6 @@
 "ui.developer.extraInputs" = "Дополнительные кнопки";
 "ui.developer.extraInputsDescription" = "Нажимайте по одной дополнительной кнопке. Обнаруженные кнопки остаются в списке, пока вы не очистите захват.";
 "ui.developer.hid" = "HID";
-"ui.developer.hiddenIdlePackets" = "Скрыто пакетов простоя: %d (по-прежнему входят в экспорт).";
 "ui.developer.keepAliveNote" = "Обычный служебный трафик в режиме простоя скрыт, чтобы активность контроллера оставалась видимой.";
 "ui.developer.leftStick" = "Левый стик";
 "ui.developer.loadingControllers" = "Загрузка диагностики контроллеров…";
@@ -449,7 +448,6 @@
 "ui.developer.route" = "Маршрут";
 "ui.developer.startCapture" = "Начать захват";
 "ui.developer.starting" = "Запуск…";
-"ui.developer.stoppedPackets" = "Остановлено · пакетов: %d";
 "ui.developer.unavailable" = "Инструменты разработчика недоступны";
 "ui.developer.usbEndpoints" = "Конечные точки USB";
 "ui.developer.usbID" = "USB ID";
@@ -466,7 +464,6 @@
 "ui.developer.soakRunning" = "Измерение службы…";
 "ui.developer.soakNotANumber" = "%@: введите целое число.";
 "ui.developer.soakOutOfRange" = "%1$@: введите значение от %2$lld до %3$lld.";
-"ui.developer.soakTooManySamples" = "Для этого запуска понадобилось бы %lld измерений. Увеличьте интервал измерений.";
 "ui.inputTest.aButton" = "Кнопка A";
 "ui.inputTest.aCross" = "A / Крест";
 "ui.inputTest.additionalButtons" = "Дополнительные кнопки";
@@ -645,7 +642,7 @@
 
 "ui.mapping.rightPadClick" = "Нажатие правой сенсорной панели";
 
-/* Motion tuning: first-pass translation; native review pending. */
+/* Motion tuning: English source. */
 "ui.profiles.motion.title" = "Настройка датчика движения";
 "ui.profiles.motion.space" = "Пространство координат";
 "ui.profiles.motion.local" = "Локальный";
@@ -662,21 +659,28 @@
 "ui.profiles.motion.invertYaw" = "Инвертировать рыскание";
 "ui.profiles.motion.automaticBias" = "Автоматическая калибровка в покое";
 
-/* Motion calibration CLI. Non-English translation pending. */
-
-/* Motion calibration controls. Non-English translation pending. */
+/* Hint under the motion calibration controls of the input test window: keep the controller still on a surface while the gyro bias, the small constant rotation the sensor reports at rest, is collected. */
 "ui.motion.calibration.instructions" = "Держите контроллер неподвижным, пока собирается смещение гироскопа.";
+/* Status line in the motion calibration controls while the service collects gyro bias samples. Bias is the constant rotation offset of the gyro sensor at rest. */
 "ui.motion.calibration.collecting" = "Сбор смещения";
+/* Status line in the motion calibration controls when the user paused collecting gyro bias samples by hand. */
 "ui.motion.calibration.paused" = "Ручной сбор приостановлен";
+/* Line in the motion calibration controls that shows the gyro bias found so far, in degrees per second. %1$.3f, %2$.3f and %3$.3f are the X, Y and Z components. Keep the axis letters and the unit. */
 "ui.motion.calibration.offset" = "Смещение (°/с): X %1$.3f · Y %2$.3f · Z %3$.3f";
+/* Button in the motion calibration controls that starts collecting gyro bias samples. Disabled while collecting or while the controller reports no motion baseline. */
 "ui.motion.calibration.start" = "Начать калибровку";
+/* Button in the motion calibration controls that pauses collecting gyro bias samples. Disabled while nothing is collected. */
 "ui.motion.calibration.pause" = "Пауза";
+/* Header of the motion calibration section in the input test window, which holds the gyro calibration controls for the selected controller. */
 "ui.motion.calibration.title" = "Калибровка датчика движения";
 
-/* Calibration guidance. Non-English translation pending. */
+/* Guidance in the motion calibration controls when the service cannot reach the controller: connect the controller again, then use Refresh to read the calibration status. */
 "ui.motion.calibration.controllerUnavailable" = "Переподключите контроллер, затем обновите состояние калибровки.";
+/* Guidance in the motion calibration controls when the controller has no usable motion data: turn on a profile for this controller and check that motion data is available. */
 "ui.motion.calibration.motionUnavailable" = "Включите профиль переназначения для этого контроллера и убедитесь, что датчик движения доступен.";
+/* Status line in the motion calibration controls while the service has no motion samples yet; Refresh checks again. */
 "ui.motion.calibration.waiting" = "Ожидание данных датчика движения. Обновите состояние, чтобы проверить снова.";
+/* Note in the motion calibration controls: collecting gyro bias keeps running in the service after the window closes, and the Pause button stops it. */
 "ui.motion.calibration.continues" = "Сбор продолжается после закрытия этого окна. Чтобы остановить его, нажмите «Пауза».";
 
 /* Gyro authoring. Native translation review pending. */
@@ -984,7 +988,6 @@
 "cli.diagnose.group.permissionDenied" = "отказано; предоставьте доступ командой «ojd permission request»";
 "cli.diagnose.group.permissionUnknown" = "состояние неизвестно";
 "cli.diagnose.group.rssLimit" = "С --soak: ошибка при превышении этого резидентного объёма памяти в MiB; 0 отключает (0-65536).";
-"cli.diagnose.group.sampleLimit" = "--soak с таким --interval-ms потребует %lld замеров; увеличьте --interval-ms.";
 "cli.diagnose.group.serviceRunning" = "работает %@";
 "cli.diagnose.group.serviceStopped" = "не запущена; запустите командой «ojd service start»";
 "cli.diagnose.group.skipServiceFailed" = "служба не ответила";
@@ -993,7 +996,6 @@
 "cli.diagnose.group.soakErrorInvalidConfiguration" = "Для измерения нужно %1$lld...%2$lld с и интервал измерений %3$lld...%4$lld мс.";
 "cli.diagnose.group.soakErrorNoSamples" = "Служба не предоставила данных измерений.";
 "cli.diagnose.group.soakErrorProcessUnavailable" = "Не удалось прочитать данные о работе процесса службы %d.";
-"cli.diagnose.group.soakErrorTooManySamples" = "Для измерения понадобилось бы %lld измерений. Увеличьте интервал измерений.";
 "cli.diagnose.group.soakNotRequested" = "не запрошено; используйте --soak SECONDS";
 "cli.diagnose.group.soakProgress" = "Замеры службы в течение %@…";
 "cli.diagnose.group.soakVerdictFootprintLimit" = "Превышен предел занимаемой памяти: резидентная память %1$.1f MiB, занимаемая память %2$.1f MiB, файловые дескрипторы %3$lld, загрузка процессора %4$.1f%% за %5$.0f с";
@@ -1177,7 +1179,6 @@
 "cli.controller.rumble.rightTrigger" = "Интенсивность мотора правого триггера.";
 "cli.controller.rumble.sent" = "Вибрация %1$@ запущена на %2$@.";
 "cli.controller.rumble.stopped" = "Вибрация остановлена на %@.";
-"cli.controller.group.selectorAmbiguous" = "«%1$@» соответствует нескольким контроллерам (%2$lld). Используйте один из этих ID:";
 "cli.controller.group.selectorNoneConnected" = "Ни один контроллер не соответствует «%@», так как ни один не подключён. Подключите контроллер и выполните «ojd controller list».";
 "cli.controller.group.selectorNotFound" = "Ни один подключённый контроллер не соответствует «%@». Используйте ID или VVVV:PPPP из этого списка:";
 "cli.controller.group.sessionNotFound" = "«%@» отключился до того, как запрос дошёл до него. Подключите его снова и повторите.";
@@ -1272,6 +1273,7 @@
 "cli.virtual.feed.abstract" = "Публикует виртуальный геймпад, которым управляет stdin.";
 "cli.virtual.feed.discussion" = "Читает по одному объекту JSON в строке: «buttons» и «dpad» перечисляют нажатые элементы управления, например South и up, а «axes» сопоставляет названиям осей, например LeftStickX, значения. Отсутствующие элементы управления нейтральны. Стики принимают значения от -1 до 1, ось Y направлена вниз; триггеры — от 0 до 1. Кадры воспроизводятся по порядку, каждый не менее 8 мс; «holdMilliseconds» удерживает кадр дольше, до 60000. Выводит каждую команду вывода, которую игры отправляют геймпаду, например вибрацию, как один объект JSON в строке. Останавливается, когда после окончания ввода воспроизведены все кадры.";
 "cli.virtual.feed.errorClosed" = "Служба закрыла виртуальный геймпад. Проверьте через «ojd status».";
+/* Error from `ojd virtual feed` when the service connection broke while the virtual gamepad was closing. */
 "cli.virtual.feed.errorCloseInterrupted" = "Закрытие виртуального геймпада прервано. Проверьте через «ojd status».";
 "cli.virtual.feed.errorFrame" = "Строка %@ не является допустимым кадром. Формат показывает «ojd virtual feed --help».";
 "cli.virtual.feed.profile" = "Профиль виртуального геймпада для публикации.";
@@ -1348,8 +1350,6 @@
 "cli.record.test.discussion" = "Воспроизводит принятые пакеты захвата через парсер записи, затем сравнивает состояние контроллера после последнего отчёта о вводе с ожидаемым состоянием. Захват — это строки JSON команды «ojd controller capture --json». Ожидаемое состояние — один объект JSON в форме строки команды «ojd controller watch --json». Команда перечисляет каждое отличающееся поле и завершается с кодом 1, если такие есть. Она сравнивает все поля, кроме connection, которое задаёт работающая служба. Работающая служба не нужна.";
 "cli.record.test.expect" = "Ожидаемое состояние контроллера в виде файла JSON.";
 "cli.record.test.expectInvalid" = "%1$@ не является состоянием контроллера: %2$@";
-"cli.record.test.matched" = "%1$@ совпадает с ожидаемым состоянием: воспроизведено отчётов о вводе — %2$lld.";
-"cli.record.test.mismatch" = "Состояние, полученное от парсера %1$@, не совпадает с %2$@ (различающихся полей: %3$lld).";
 "cli.record.test.noInput" = "Ни один отчёт в %1$@ не содержал ввода для %2$@. Повторите захват, нажимая элементы управления.";
 "cli.record.test.noParser" = "У семейства %@ нет парсера, работающего без контроллера.";
 "cli.record.test.packets" = "Захват пакетов в виде строк JSON команды «ojd controller capture --json».";
@@ -1366,7 +1366,9 @@
 "error.E2031.message" = "Этот порт на 127.0.0.1 занят или не может быть открыт. Выберите другой с помощью --port.";
 "error.E2032.message" = "Токен с источниками не может иметь область control, потому что страница не должна управлять виртуальным геймпадом. Предоставьте control токену без источников.";
 "error.E2033.message" = "Не удалось запустить программу. Проверьте, что путь указывает на исполняемый файл или приложение и что у вас есть право его запускать.";
+/* Error E2034, shown in the app or the CLI when the service no longer accepts requests. */
 "error.E2034.message" = "Служба перестала принимать запросы. Закройте OpenJoystickDriver, откройте его снова и повторите попытку.";
+/* Error E2035, shown in the app or the CLI when the file that records why the request listener stopped is unusable. */
 "error.E2035.message" = "Файл, в котором записано, почему остановился приём запросов, использовать нельзя. Удалите файл и снова откройте OpenJoystickDriver.";
 /* Error E2036, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
 "error.E2036.message" = "Ни одно приложение OpenJoystickDriver не ответило на тестовое уведомление вовремя. Убедитесь, что приложение запущено, и повторите попытку.";
@@ -1506,7 +1508,6 @@
 "cli.profile.rename.abstract" = "Переименовывает профиль.";
 "cli.profile.rename.done" = "Переименовано в «%@».";
 "cli.profile.rename.name" = "Новое имя, от 1 до 80 символов.";
-"cli.profile.group.selectorAmbiguous" = "«%1$@» совпадает с несколькими профилями (%2$lld). Используйте один из этих ID:";
 "cli.profile.group.selectorNotFound" = "Профиля с ID или именем «%@» нет. Все профили показывает «ojd profile list».";
 "cli.profile.set.abstract" = "Изменяет одно значение в профиле.";
 "cli.profile.set.discussion" = "KEY — путь в файле профиля, как в «ojd profile get». VALUE читается как JSON, а если это не JSON — как строка, поэтому 0.2 — число, а space — строка. null удаляет ключ или элемент массива, а индекс на единицу больше последнего добавляет элемент. Весь профиль проверяется перед сохранением, а ID изменить нельзя.";
@@ -1521,7 +1522,7 @@
 "cli.profile.validate.file" = "Файл профиля или - для stdin.";
 "cli.profile.validate.valid" = "%1$@ — допустимый профиль: «%2$@» для %3$@ (%4$@). Добавьте его командой «ojd profile import».";
 "cli.profile.group.vanished" = "Служба не сохранила профиль. Проверьте его командой «ojd profile list».";
-/* Main window, menus, settings, library and access */
+/* Main window, status item, main menu, settings window, library and access. */
 "ui.library.details" = "Подробнее";
 "ui.library.dismiss" = "Закрыть";
 "ui.library.choose" = "Выбрать";
@@ -1907,6 +1908,7 @@
 "error.E5004.message" = "Описание протокола перечисляет вариант, которого нет у его семейства. Используйте один из вариантов семейства.";
 "error.E5005.message" = "Файл доступа AccessGrants.json повреждён. Исправьте файл или удалите его, затем снова предоставьте доступ.";
 "error.E5006.message" = "Не удаётся прочитать файл ключа ID устройств PortKeyInstallation.key, или его размер не 32 байта. Восстановите файл из резервной копии. Если удалить его, OpenJoystickDriver создаст новый ключ и все ID устройств изменятся.";
+/* Error E5007, shown when a controller record or patch fails its schema; the message names the field. */
 "error.E5007.message" = "Запись контроллера или patch недопустимы. Проверьте файл по его схеме и исправьте поле, указанное в сообщении.";
 "ui.error.withCode" = "%1$@ (%2$@)";
 "cli.update.check.ahead" = "OpenJoystickDriver %1$@ новее последнего опубликованного выпуска (%2$@).";

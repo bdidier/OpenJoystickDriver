@@ -426,7 +426,6 @@
 "ui.developer.extraInputs" = "Ekstra Düğmeler";
 "ui.developer.extraInputsDescription" = "Her seferinde bir ekstra düğmeye basın. Algılanan düğmeler, yakalamayı temizleyene kadar listede kalır.";
 "ui.developer.hid" = "HID";
-"ui.developer.hiddenIdlePackets" = "%d boşta paket gizlendi (hâlâ Dışa Aktar’a dahil).";
 "ui.developer.keepAliveNote" = "Rutin boşta veri paketleri gizlenir, böylece kontrolcü etkinliği görünür kalır.";
 "ui.developer.leftStick" = "Sol Çubuk";
 "ui.developer.loadingControllers" = "Kontrolcü Tanılamaları Yükleniyor…";
@@ -449,7 +448,6 @@
 "ui.developer.route" = "Güzergâh";
 "ui.developer.startCapture" = "Yakalamayı Başlat";
 "ui.developer.starting" = "Başlatılıyor…";
-"ui.developer.stoppedPackets" = "Durduruldu · %d Paket";
 "ui.developer.unavailable" = "Geliştirici Araçları Kullanılamıyor";
 "ui.developer.usbEndpoints" = "USB Uç Noktaları";
 "ui.developer.usbID" = "USB ID";
@@ -466,7 +464,6 @@
 "ui.developer.soakRunning" = "Servis örnekleniyor…";
 "ui.developer.soakNotANumber" = "%@: tam sayı girin.";
 "ui.developer.soakOutOfRange" = "%1$@: %2$lld ile %3$lld arasında bir değer girin.";
-"ui.developer.soakTooManySamples" = "Bu çalıştırma %lld örnek gerektirir. Örnekleme aralığını artırın.";
 "ui.inputTest.aButton" = "A Düğmesi";
 "ui.inputTest.aCross" = "A / Çarpı";
 "ui.inputTest.additionalButtons" = "Ek Düğmeler";
@@ -645,7 +642,7 @@
 
 "ui.mapping.rightPadClick" = "Sağ Dokunmatik Yüzey Tıklaması";
 
-/* Motion tuning: first-pass translation; native review pending. */
+/* Motion tuning: English source. */
 "ui.profiles.motion.title" = "Hareket Ayarı";
 "ui.profiles.motion.space" = "Koordinat Uzayı";
 "ui.profiles.motion.local" = "Yerel";
@@ -662,21 +659,28 @@
 "ui.profiles.motion.invertYaw" = "Sapmayı Ters Çevir";
 "ui.profiles.motion.automaticBias" = "Hareketsizken Otomatik Kalibrasyon";
 
-/* Motion calibration CLI. Non-English translation pending. */
-
-/* Motion calibration controls. Non-English translation pending. */
+/* Hint under the motion calibration controls of the input test window: keep the controller still on a surface while the gyro bias, the small constant rotation the sensor reports at rest, is collected. */
 "ui.motion.calibration.instructions" = "Jiroskop kaymasını toplarken kontrolcüyü sabit tut.";
+/* Status line in the motion calibration controls while the service collects gyro bias samples. Bias is the constant rotation offset of the gyro sensor at rest. */
 "ui.motion.calibration.collecting" = "Kayma Toplanıyor";
+/* Status line in the motion calibration controls when the user paused collecting gyro bias samples by hand. */
 "ui.motion.calibration.paused" = "Elle Toplama Duraklatıldı";
+/* Line in the motion calibration controls that shows the gyro bias found so far, in degrees per second. %1$.3f, %2$.3f and %3$.3f are the X, Y and Z components. Keep the axis letters and the unit. */
 "ui.motion.calibration.offset" = "Kayma (°/s): X %1$.3f · Y %2$.3f · Z %3$.3f";
+/* Button in the motion calibration controls that starts collecting gyro bias samples. Disabled while collecting or while the controller reports no motion baseline. */
 "ui.motion.calibration.start" = "Kalibrasyonu Başlat";
+/* Button in the motion calibration controls that pauses collecting gyro bias samples. Disabled while nothing is collected. */
 "ui.motion.calibration.pause" = "Duraklat";
+/* Header of the motion calibration section in the input test window, which holds the gyro calibration controls for the selected controller. */
 "ui.motion.calibration.title" = "Hareket Kalibrasyonu";
 
-/* Calibration guidance. Non-English translation pending. */
+/* Guidance in the motion calibration controls when the service cannot reach the controller: connect the controller again, then use Refresh to read the calibration status. */
 "ui.motion.calibration.controllerUnavailable" = "Kontrolcüyü yeniden bağla, ardından kalibrasyon durumunu yenile.";
+/* Guidance in the motion calibration controls when the controller has no usable motion data: turn on a profile for this controller and check that motion data is available. */
 "ui.motion.calibration.motionUnavailable" = "Bu kontrolcü için bir yeniden atama profilini etkinleştir ve hareketin kullanılabilir olduğunu denetle.";
+/* Status line in the motion calibration controls while the service has no motion samples yet; Refresh checks again. */
 "ui.motion.calibration.waiting" = "Hareket örnekleri bekleniyor. Yeniden denetlemek için yenile.";
+/* Note in the motion calibration controls: collecting gyro bias keeps running in the service after the window closes, and the Pause button stops it. */
 "ui.motion.calibration.continues" = "Bu pencere kapanınca toplama devam eder.";
 
 /* Gyro authoring. Native translation review pending. */
@@ -984,7 +988,6 @@
 "cli.diagnose.group.permissionDenied" = "reddedildi; “ojd permission request” ile izin verin";
 "cli.diagnose.group.permissionUnknown" = "durum bilinmiyor";
 "cli.diagnose.group.rssLimit" = "--soak ile, MiB cinsinden bu yerleşik boyutu aşarsa başarısız olur; 0 devre dışı bırakır (0-65536).";
-"cli.diagnose.group.sampleLimit" = "Bu --interval-ms ile --soak %lld örnek alır; --interval-ms değerini artırın.";
 "cli.diagnose.group.serviceRunning" = "çalışıyor %@";
 "cli.diagnose.group.serviceStopped" = "çalışmıyor; “ojd service start” ile başlatın";
 "cli.diagnose.group.skipServiceFailed" = "servis yanıt vermedi";
@@ -993,7 +996,6 @@
 "cli.diagnose.group.soakErrorInvalidConfiguration" = "Örnekleme %1$lld...%2$lld saniye süre ve %3$lld...%4$lld ms örnekleme aralığı gerektirir.";
 "cli.diagnose.group.soakErrorNoSamples" = "Servis hiç çalışma zamanı örneği üretmedi.";
 "cli.diagnose.group.soakErrorProcessUnavailable" = "%d numaralı servis işleminin çalışma zamanı bilgileri okunamadı.";
-"cli.diagnose.group.soakErrorTooManySamples" = "Örnekleme %lld örnek gerektirir. Örnekleme aralığını artırın.";
 "cli.diagnose.group.soakNotRequested" = "istenmedi; --soak SECONDS kullanın";
 "cli.diagnose.group.soakProgress" = "Servisten %@ boyunca örnek alınıyor...";
 "cli.diagnose.group.soakVerdictFootprintLimit" = "Bellek ayak izi sınırı aşıldı: yerleşik boyut %1$.1f MiB, bellek ayak izi %2$.1f MiB, dosya tanımlayıcıları %3$lld, CPU %4$.1f%%, süre %5$.0f sn";
@@ -1177,7 +1179,6 @@
 "cli.controller.rumble.rightTrigger" = "Sağ tetik motoru şiddeti.";
 "cli.controller.rumble.sent" = "%1$@ titreşimi %2$@ üzerinde çalıştırıldı.";
 "cli.controller.rumble.stopped" = "%@ üzerindeki titreşim durduruldu.";
-"cli.controller.group.selectorAmbiguous" = "“%1$@” %2$lld kontrolcüyle eşleşiyor. Şu kimliklerden birini kullanın:";
 "cli.controller.group.selectorNoneConnected" = "Hiç kontrolcü bağlı olmadığı için “%@” ile eşleşen yok. Bir tane bağlayıp “ojd controller list” komutunu çalıştırın.";
 "cli.controller.group.selectorNotFound" = "“%@” ile eşleşen bağlı kontrolcü yok. Bu listeden bir kimlik veya VVVV:PPPP kullanın:";
 "cli.controller.group.sessionNotFound" = "“%@” istek ona ulaşmadan önce bağlantısını kaybetti. Yeniden bağlayıp tekrar deneyin.";
@@ -1272,6 +1273,7 @@
 "cli.virtual.feed.abstract" = "stdin ile yönetilen sanal bir oyun kontrolcüsü yayımlar.";
 "cli.virtual.feed.discussion" = "Her satırda bir JSON nesnesi okur: “buttons” ve “dpad” basılan denetimleri listeler, örneğin South ve up; “axes” ise eksen adlarını, örneğin LeftStickX, değerlerle eşler. Eksik denetimler nötrdür. Çubuklar -1 ile 1 arasında değişir, Y aşağı yöndedir; tetikler 0 ile 1 arasında değişir. Kareler sırayla oynatılır, her biri en az 8 ms sürer; “holdMilliseconds” bir kareyi daha uzun tutar, en fazla 60000. Oyunların sanal oyun kontrolcüsüne gönderdiği her çıkış komutunu, örneğin titreşimi, satır başına bir JSON nesnesi olarak yazdırır. Girdi bittikten sonra tüm kareler oynatıldığında durur.";
 "cli.virtual.feed.errorClosed" = "Servis sanal oyun kontrolcüsünü kapattı. “ojd status” ile kontrol edin.";
+/* Error from `ojd virtual feed` when the service connection broke while the virtual gamepad was closing. */
 "cli.virtual.feed.errorCloseInterrupted" = "Sanal oyun kontrolcüsünün kapatılması yarıda kesildi. “ojd status” ile kontrol edin.";
 "cli.virtual.feed.errorFrame" = "%@. satır geçerli bir kare değil. “ojd virtual feed --help” biçimi gösterir.";
 "cli.virtual.feed.profile" = "Yayımlanacak sanal oyun kontrolcüsünün profili.";
@@ -1348,8 +1350,6 @@
 "cli.record.test.discussion" = "Bir yakalamanın alınan paketlerini kaydın ayrıştırıcısından yeniden oynatır, ardından son giriş raporundan sonraki kontrolcü durumunu beklenen durumla karşılaştırır. Yakalama, “ojd controller capture --json” çıktısının JSON satırlarıdır. Beklenen durum, “ojd controller watch --json” çıktısının bir satırı biçiminde tek bir JSON nesnesidir. Komut, farklı olan her alanı listeler ve herhangi biri farklıysa 1 koduyla çıkar. Çalışan servisin ayarladığı connection dışında her alanı karşılaştırır. Çalışan bir servis gerektirmez.";
 "cli.record.test.expect" = "JSON dosyası olarak beklenen kontrolcü durumu.";
 "cli.record.test.expectInvalid" = "%1$@ bir kontrolcü durumu değil: %2$@";
-"cli.record.test.matched" = "%1$@ beklenen durumla eşleşiyor: %2$lld giriş raporu yeniden oynatıldı.";
-"cli.record.test.mismatch" = "%1$@ ayrıştırıcısının ürettiği durum, %2$@ dosyasından %3$lld alanda farklı.";
 "cli.record.test.noInput" = "%1$@ içindeki hiçbir rapor %2$@ için giriş içermiyordu. Kontrollere basarken yeniden yakalayın.";
 "cli.record.test.noParser" = "%@ ailesinin kontrolcüsüz çalışan bir ayrıştırıcısı yok.";
 "cli.record.test.packets" = "“ojd controller capture --json” çıktısının JSON satırları olarak bir paket yakalaması.";
@@ -1366,7 +1366,9 @@
 "error.E2031.message" = "127.0.0.1 üzerindeki bu bağlantı noktası kullanımda veya açılamıyor. --port ile başka birini seçin.";
 "error.E2032.message" = "Kaynakları olan bir belirteç control kapsamına sahip olamaz, çünkü bir sayfa asla sanal bir oyun kumandasını sürmemelidir. control kapsamını kaynağı olmayan bir belirtece verin.";
 "error.E2033.message" = "Program başlatılamadı. Yolunun yürütülebilir bir dosyayı veya uygulamayı gösterdiğini ve çalıştırma izniniz olduğunu kontrol edin.";
+/* Error E2034, shown in the app or the CLI when the service no longer accepts requests. */
 "error.E2034.message" = "Servis istekleri kabul etmeyi durdurdu. OpenJoystickDriver’ı kapatıp yeniden açın, sonra yeniden deneyin.";
+/* Error E2035, shown in the app or the CLI when the file that records why the request listener stopped is unusable. */
 "error.E2035.message" = "İstek dinleyicisinin neden durduğunu kaydeden dosya kullanılamıyor. Dosyayı silin, sonra OpenJoystickDriver’ı yeniden açın.";
 /* Error E2036, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
 "error.E2036.message" = "Hiçbir OpenJoystickDriver uygulaması test bildirimine zamanında yanıt vermedi. Uygulamanın çalıştığından emin olun, sonra yeniden deneyin.";
@@ -1506,7 +1508,6 @@
 "cli.profile.rename.abstract" = "Bir profilin adını değiştirir.";
 "cli.profile.rename.done" = "Adı “%@” olarak değiştirildi.";
 "cli.profile.rename.name" = "Yeni ad, 1 ile 80 karakter.";
-"cli.profile.group.selectorAmbiguous" = "“%1$@”, %2$lld profili adlandırıyor. Şu kimliklerden birini kullanın:";
 "cli.profile.group.selectorNotFound" = "Kimliği veya adı “%@” olan profil yok. “ojd profile list” her profili gösterir.";
 "cli.profile.set.abstract" = "Bir profildeki tek bir değeri değiştirir.";
 "cli.profile.set.discussion" = "KEY, “ojd profile get” komutundaki gibi profil dosyasındaki bir yoldur. VALUE JSON olarak okunur, JSON değilse dize olarak okunur; bu yüzden 0.2 bir sayı, space ise bir dizedir. null anahtarı veya dizi öğesini kaldırır, dizinin sonundan bir sonraki dizin ise bir öğe ekler. Profilin tamamı kaydedilmeden önce denetlenir ve kimlik değiştirilemez.";
@@ -1521,7 +1522,7 @@
 "cli.profile.validate.file" = "Profil dosyası veya stdin için -.";
 "cli.profile.validate.valid" = "%1$@ geçerli bir profil: “%2$@”, %3$@ için (%4$@). “ojd profile import” ile ekleyin.";
 "cli.profile.group.vanished" = "Servis profili saklamadı. “ojd profile list” ile kontrol edin.";
-/* Main window, menus, settings, library and access */
+/* Main window, status item, main menu, settings window, library and access. */
 "ui.library.details" = "Ayrıntılar";
 "ui.library.dismiss" = "Kapat";
 "ui.library.choose" = "Seç";
@@ -1907,6 +1908,7 @@
 "error.E5004.message" = "Bir protokol açıklaması, ailesinde olmayan bir varyant listeliyor. Ailenin varyantlarından birini kullanın.";
 "error.E5005.message" = "AccessGrants.json erişim dosyası hasarlı. Dosyayı düzeltin veya silin, sonra erişimi yeniden verin.";
 "error.E5006.message" = "Cihaz Kimliklerinin anahtar dosyası PortKeyInstallation.key okunamıyor veya boyutu 32 bayt değil. Dosyayı bir yedekten geri yükleyin. Bunun yerine silerseniz OpenJoystickDriver yeni bir anahtar oluşturur ve tüm Cihaz Kimlikleri değişir.";
+/* Error E5007, shown when a controller record or patch fails its schema; the message names the field. */
 "error.E5007.message" = "Bir kontrolcü kaydı veya patch geçersiz. Dosyayı kendi şemasına göre denetleyin ve iletinin belirttiği alanı düzeltin.";
 "ui.error.withCode" = "%1$@ (%2$@)";
 "cli.update.check.ahead" = "OpenJoystickDriver %1$@, yayımlanan en son sürümden (%2$@) daha yeni.";

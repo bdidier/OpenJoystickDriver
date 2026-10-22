@@ -426,7 +426,6 @@
 "ui.developer.extraInputs" = "ปุ่มเพิ่มเติม";
 "ui.developer.extraInputsDescription" = "กดทีละปุ่มเพิ่มเติม ปุ่มที่ตรวจพบจะอยู่ในรายการจนกว่าคุณจะล้างการจับ";
 "ui.developer.hid" = "HID";
-"ui.developer.hiddenIdlePackets" = "ซ่อนแพ็กเก็ตว่าง %d รายการ (ยังรวมอยู่ในการส่งออก)";
 "ui.developer.keepAliveNote" = "ซ่อนการรับส่งข้อมูลว่างตามปกติเพื่อให้เห็นกิจกรรมของคอนโทรลเลอร์";
 "ui.developer.leftStick" = "สติ๊กซ้าย";
 "ui.developer.loadingControllers" = "กำลังโหลดการวินิจฉัยคอนโทรลเลอร์…";
@@ -449,7 +448,6 @@
 "ui.developer.route" = "เส้นทาง";
 "ui.developer.startCapture" = "เริ่มการจับ";
 "ui.developer.starting" = "กำลังเริ่มต้น…";
-"ui.developer.stoppedPackets" = "หยุดแล้ว · %d แพ็กเก็ต";
 "ui.developer.unavailable" = "เครื่องมือนักพัฒนาไม่พร้อมใช้งาน";
 "ui.developer.usbEndpoints" = "เอนด์พอยต์ USB";
 "ui.developer.usbID" = "USB ID";
@@ -466,7 +464,6 @@
 "ui.developer.soakRunning" = "กำลังสุ่มตัวอย่างบริการ…";
 "ui.developer.soakNotANumber" = "%@: ป้อนจำนวนเต็ม";
 "ui.developer.soakOutOfRange" = "%1$@: ป้อนค่าระหว่าง %2$lld ถึง %3$lld";
-"ui.developer.soakTooManySamples" = "การเรียกใช้นี้ต้องใช้ %lld ตัวอย่าง เพิ่มช่วงห่างการสุ่มตัวอย่าง";
 "ui.inputTest.aButton" = "ปุ่ม A";
 "ui.inputTest.aCross" = "A / กากบาท";
 "ui.inputTest.additionalButtons" = "ปุ่มเพิ่มเติม";
@@ -662,21 +659,28 @@
 "ui.profiles.motion.invertYaw" = "กลับเยา";
 "ui.profiles.motion.automaticBias" = "การปรับเทียบความนิ่งอัตโนมัติ";
 
-/* Motion calibration CLI. Non-English translation pending. */
-
-/* Motion calibration controls. Non-English translation pending. */
+/* Hint under the motion calibration controls of the input test window: keep the controller still on a surface while the gyro bias, the small constant rotation the sensor reports at rest, is collected. */
 "ui.motion.calibration.instructions" = "วางคอนโทรลเลอร์ให้นิ่งขณะรวบรวมค่าเบี่ยงเบนของไจโร";
+/* Status line in the motion calibration controls while the service collects gyro bias samples. Bias is the constant rotation offset of the gyro sensor at rest. */
 "ui.motion.calibration.collecting" = "กำลังรวบรวมค่าเบี่ยงเบน";
+/* Status line in the motion calibration controls when the user paused collecting gyro bias samples by hand. */
 "ui.motion.calibration.paused" = "หยุดการรวบรวมด้วยตนเองชั่วคราว";
+/* Line in the motion calibration controls that shows the gyro bias found so far, in degrees per second. %1$.3f, %2$.3f and %3$.3f are the X, Y and Z components. Keep the axis letters and the unit. */
 "ui.motion.calibration.offset" = "ค่าเบี่ยงเบน (°/s): X %1$.3f · Y %2$.3f · Z %3$.3f";
+/* Button in the motion calibration controls that starts collecting gyro bias samples. Disabled while collecting or while the controller reports no motion baseline. */
 "ui.motion.calibration.start" = "เริ่มการปรับเทียบ";
+/* Button in the motion calibration controls that pauses collecting gyro bias samples. Disabled while nothing is collected. */
 "ui.motion.calibration.pause" = "หยุดชั่วคราว";
+/* Header of the motion calibration section in the input test window, which holds the gyro calibration controls for the selected controller. */
 "ui.motion.calibration.title" = "การปรับเทียบการเคลื่อนไหว";
 
-/* Calibration guidance. Non-English translation pending. */
+/* Guidance in the motion calibration controls when the service cannot reach the controller: connect the controller again, then use Refresh to read the calibration status. */
 "ui.motion.calibration.controllerUnavailable" = "เชื่อมต่อคอนโทรลเลอร์ใหม่ แล้วดึงข้อมูลสถานะการปรับเทียบใหม่";
+/* Guidance in the motion calibration controls when the controller has no usable motion data: turn on a profile for this controller and check that motion data is available. */
 "ui.motion.calibration.motionUnavailable" = "เปิดใช้งานโปรไฟล์การแมปใหม่สำหรับคอนโทรลเลอร์นี้ และตรวจสอบว่าการเคลื่อนไหวพร้อมใช้งาน";
+/* Status line in the motion calibration controls while the service has no motion samples yet; Refresh checks again. */
 "ui.motion.calibration.waiting" = "กำลังรอตัวอย่างการเคลื่อนไหว ดึงข้อมูลใหม่เพื่อตรวจสอบอีกครั้ง";
+/* Note in the motion calibration controls: collecting gyro bias keeps running in the service after the window closes, and the Pause button stops it. */
 "ui.motion.calibration.continues" = "การรวบรวมจะดำเนินต่อไปเมื่อปิดหน้าต่างนี้ ใช้หยุดชั่วคราวเพื่อหยุด";
 
 /* Gyro authoring. Native translation review pending. */
@@ -984,7 +988,6 @@
 "cli.diagnose.group.permissionDenied" = "ถูกปฏิเสธ ให้สิทธิ์ด้วย “ojd permission request”";
 "cli.diagnose.group.permissionUnknown" = "ไม่ทราบสถานะ";
 "cli.diagnose.group.rssLimit" = "เมื่อใช้ --soak จะล้มเหลวหากเกินขนาดที่อยู่ในหน่วยความจำนี้เป็น MiB 0 คือปิดใช้งาน (0-65536)";
-"cli.diagnose.group.sampleLimit" = "--soak ที่ใช้ --interval-ms นี้จะสุ่มตัวอย่าง %lld ครั้ง เพิ่ม --interval-ms";
 "cli.diagnose.group.serviceRunning" = "กำลังทำงาน %@";
 "cli.diagnose.group.serviceStopped" = "ไม่ได้ทำงานอยู่ เริ่มด้วย “ojd service start”";
 "cli.diagnose.group.skipServiceFailed" = "บริการไม่ตอบสนอง";
@@ -993,7 +996,6 @@
 "cli.diagnose.group.soakErrorInvalidConfiguration" = "การสุ่มตัวอย่างต้องใช้เวลา %1$lld...%2$lld วินาที และช่วงห่างการสุ่มตัวอย่าง %3$lld...%4$lld ms";
 "cli.diagnose.group.soakErrorNoSamples" = "บริการไม่ได้สร้างตัวอย่างรันไทม์ใดเลย";
 "cli.diagnose.group.soakErrorProcessUnavailable" = "อ่านข้อมูลรันไทม์ของกระบวนการบริการ %d ไม่ได้";
-"cli.diagnose.group.soakErrorTooManySamples" = "การสุ่มตัวอย่างจะต้องใช้ %lld ตัวอย่าง เพิ่มช่วงห่างการสุ่มตัวอย่าง";
 "cli.diagnose.group.soakNotRequested" = "ไม่ได้ขอ ใช้ --soak SECONDS";
 "cli.diagnose.group.soakProgress" = "กำลังสุ่มตัวอย่างบริการเป็นเวลา %@…";
 "cli.diagnose.group.soakVerdictFootprintLimit" = "เกินขีดจำกัดฟุตพริ้นต์: ขนาดที่อยู่ในหน่วยความจำ %1$.1f MiB, ฟุตพริ้นต์ %2$.1f MiB, ตัวบอกไฟล์ %3$lld, CPU %4$.1f%% ใน %5$.0f วินาที";
@@ -1177,7 +1179,6 @@
 "cli.controller.rumble.rightTrigger" = "ความแรงของมอเตอร์ทริกเกอร์ขวา";
 "cli.controller.rumble.sent" = "สั่น %1$@ บน %2$@ แล้ว";
 "cli.controller.rumble.stopped" = "หยุดแรงสั่นบน %@ แล้ว";
-"cli.controller.group.selectorAmbiguous" = "“%1$@” ตรงกับคอนโทรลเลอร์ %2$lld ตัว ใช้ ID ใดก็ได้ต่อไปนี้:";
 "cli.controller.group.selectorNoneConnected" = "ไม่มีคอนโทรลเลอร์ที่ตรงกับ “%@” เพราะไม่มีตัวใดเชื่อมต่ออยู่ เชื่อมต่อหนึ่งตัวแล้วเรียกใช้ “ojd controller list”";
 "cli.controller.group.selectorNotFound" = "ไม่มีคอนโทรลเลอร์ที่เชื่อมต่ออยู่ซึ่งตรงกับ “%@” ใช้ ID หรือ VVVV:PPPP จากรายการนี้:";
 "cli.controller.group.sessionNotFound" = "“%@” เลิกเชื่อมต่อก่อนที่คำขอจะไปถึง เชื่อมต่อใหม่แล้วลองอีกครั้ง";
@@ -1272,6 +1273,7 @@
 "cli.virtual.feed.abstract" = "เผยแพร่เกมแพดเสมือนที่ควบคุมด้วยอินพุตมาตรฐาน";
 "cli.virtual.feed.discussion" = "อ่านออบเจ็กต์ JSON หนึ่งรายการต่อบรรทัด โดย “buttons” และ “dpad” แสดงรายการตัวควบคุมที่ถูกกด เช่น South และ up ส่วน “axes” จับคู่ชื่อแกน เช่น LeftStickX กับค่า ตัวควบคุมที่ไม่ระบุจะอยู่ตำแหน่งกลาง สติ๊กมีค่าตั้งแต่ -1 ถึง 1 โดย Y ชี้ลง ทริกเกอร์มีค่าตั้งแต่ 0 ถึง 1 เฟรมจะเล่นตามลำดับ เฟรมละอย่างน้อย 8 มิลลิวินาที ส่วน “holdMilliseconds” ทำให้เฟรมอยู่นานขึ้นได้สูงสุด 60000 พิมพ์คำสั่งเอาต์พุตแต่ละรายการที่เกมส่งไปยังเกมแพด เช่นแรงสั่น เป็นออบเจ็กต์ JSON หนึ่งรายการต่อบรรทัด จะหยุดเมื่อเล่นครบทุกเฟรมหลังจากอินพุตสิ้นสุด";
 "cli.virtual.feed.errorClosed" = "บริการปิดเกมแพดเสมือนแล้ว ตรวจสอบด้วย “ojd status”";
+/* Error from `ojd virtual feed` when the service connection broke while the virtual gamepad was closing. */
 "cli.virtual.feed.errorCloseInterrupted" = "การปิดเกมแพดเสมือนถูกขัดจังหวะ ตรวจสอบด้วย “ojd status”";
 "cli.virtual.feed.errorFrame" = "บรรทัด %@ ไม่ใช่เฟรมที่ถูกต้อง “ojd virtual feed --help” แสดงรูปแบบ";
 "cli.virtual.feed.profile" = "โปรไฟล์เกมแพดเสมือนที่จะเผยแพร่";
@@ -1348,8 +1350,6 @@
 "cli.record.test.discussion" = "เล่นแพ็กเก็ตที่ได้รับจากการจับแพ็กเก็ตมาเล่นซ้ำผ่านตัวแยกวิเคราะห์ของระเบียน แล้วเปรียบเทียบสถานะของคอนโทรลเลอร์หลังรายงานอินพุตล่าสุดกับสถานะที่คาดไว้ การจับแพ็กเก็ตคือบรรทัด JSON ของ “ojd controller capture --json” สถานะที่คาดไว้คือออบเจ็กต์ JSON หนึ่งรายการในรูปแบบของหนึ่งบรรทัดจาก “ojd controller watch --json” คำสั่งจะแสดงทุกช่องที่ต่างกันและจบด้วยรหัส 1 หากมีช่องใดต่าง โดยเปรียบเทียบทุกช่องยกเว้น connection ซึ่งบริการที่กำลังทำงานเป็นผู้ตั้งค่า ไม่ต้องมีบริการที่กำลังทำงาน";
 "cli.record.test.expect" = "สถานะคอนโทรลเลอร์ที่คาดไว้ เป็นไฟล์ JSON";
 "cli.record.test.expectInvalid" = "%1$@ ไม่ใช่สถานะคอนโทรลเลอร์: %2$@";
-"cli.record.test.matched" = "%1$@ ตรงกับสถานะที่คาดไว้: เล่นรายงานอินพุตซ้ำ %2$lld รายการ";
-"cli.record.test.mismatch" = "สถานะที่ตัวแยกวิเคราะห์ของ %1$@ สร้างขึ้นต่างจาก %2$@ ใน %3$lld ช่อง";
 "cli.record.test.noInput" = "ไม่มีรายงานใน %1$@ ที่มีอินพุตสำหรับ %2$@ ให้จับแพ็กเก็ตอีกครั้งขณะกดปุ่มควบคุม";
 "cli.record.test.noParser" = "กลุ่มของ %@ ไม่มีตัวแยกวิเคราะห์ที่ทำงานได้โดยไม่มีคอนโทรลเลอร์";
 "cli.record.test.packets" = "การจับแพ็กเก็ต เป็นบรรทัด JSON ของ “ojd controller capture --json”";
@@ -1366,7 +1366,9 @@
 "error.E2031.message" = "พอร์ตนี้บน 127.0.0.1 ถูกใช้อยู่หรือเปิดไม่ได้ เลือกพอร์ตอื่นด้วย --port";
 "error.E2032.message" = "โทเค็นที่มี origin ไม่สามารถมีขอบเขต control ได้ เพราะหน้าเว็บต้องไม่ควบคุมเกมแพดเสมือน ให้ control กับโทเค็นที่ไม่มี origin";
 "error.E2033.message" = "เริ่มโปรแกรมไม่ได้ ตรวจสอบว่าพาธของโปรแกรมชี้ไปยังไฟล์ปฏิบัติการหรือแอป และคุณมีสิทธิ์เรียกใช้";
+/* Error E2034, shown in the app or the CLI when the service no longer accepts requests. */
 "error.E2034.message" = "บริการหยุดรับคำขอแล้ว ปิด OpenJoystickDriver แล้วเปิดใหม่ จากนั้นลองอีกครั้ง";
+/* Error E2035, shown in the app or the CLI when the file that records why the request listener stopped is unusable. */
 "error.E2035.message" = "ไม่สามารถใช้ไฟล์ที่บันทึกสาเหตุที่ตัวรับคำขอหยุดทำงานได้ ลบไฟล์นั้น แล้วเปิด OpenJoystickDriver ใหม่";
 /* Error E2036, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
 "error.E2036.message" = "ไม่มีแอป OpenJoystickDriver ตอบกลับการแจ้งเตือนทดสอบทันเวลา ตรวจสอบว่าแอปกำลังทำงานอยู่ แล้วลองอีกครั้ง";
@@ -1506,7 +1508,6 @@
 "cli.profile.rename.abstract" = "เปลี่ยนชื่อโปรไฟล์";
 "cli.profile.rename.done" = "เปลี่ยนชื่อเป็น “%@” แล้ว";
 "cli.profile.rename.name" = "ชื่อใหม่ 1 ถึง 80 ตัวอักษร";
-"cli.profile.group.selectorAmbiguous" = "“%1$@” เป็นชื่อของโปรไฟล์ %2$lld รายการ ใช้ ID ใดก็ได้ต่อไปนี้:";
 "cli.profile.group.selectorNotFound" = "ไม่มีโปรไฟล์ที่มี ID หรือชื่อ “%@” “ojd profile list” แสดงโปรไฟล์ทั้งหมด";
 "cli.profile.set.abstract" = "เปลี่ยนค่าหนึ่งค่าในโปรไฟล์";
 "cli.profile.set.discussion" = "KEY คือพาธเข้าไปในไฟล์โปรไฟล์ เช่นเดียวกับใน “ojd profile get” VALUE จะอ่านเป็น JSON หรืออ่านเป็นสตริงเมื่อไม่ใช่ JSON ดังนั้น 0.2 เป็นตัวเลข และ space เป็นสตริง null เอาคีย์หรือรายการอาร์เรย์ออก และดัชนีที่ถัดจากท้ายอาร์เรย์หนึ่งตำแหน่งจะเพิ่มรายการ ระบบจะตรวจสอบโปรไฟล์ทั้งหมดก่อนบันทึก และเปลี่ยน ID ไม่ได้";
@@ -1521,7 +1522,7 @@
 "cli.profile.validate.file" = "ไฟล์โปรไฟล์ หรือ - สำหรับ stdin";
 "cli.profile.validate.valid" = "%1$@ เป็นโปรไฟล์ที่ถูกต้อง: “%2$@” สำหรับ %3$@ (%4$@) เพิ่มด้วย “ojd profile import”";
 "cli.profile.group.vanished" = "บริการไม่ได้เก็บโปรไฟล์ไว้ ตรวจสอบด้วย “ojd profile list”";
-/* Main window, menus, settings, library and access */
+/* Main window, status item, main menu, settings window, library and access. */
 "ui.library.details" = "รายละเอียด";
 "ui.library.dismiss" = "ปิดทิ้ง";
 "ui.library.choose" = "เลือก";
@@ -1907,6 +1908,7 @@
 "error.E5004.message" = "คำอธิบายโปรโตคอลระบุตัวแปรที่แฟมิลีของมันไม่มี ใช้หนึ่งในตัวแปรของแฟมิลี";
 "error.E5005.message" = "ไฟล์การเข้าถึง AccessGrants.json เสียหาย แก้ไขหรือลบไฟล์นั้น แล้วให้สิทธิ์การเข้าถึงอีกครั้ง";
 "error.E5006.message" = "อ่านไฟล์คีย์ของ ID ยูนิต PortKeyInstallation.key ไม่ได้ หรือไฟล์ไม่ได้มีขนาด 32 ไบต์ กู้คืนไฟล์จากข้อมูลสำรอง หากคุณลบไฟล์แทน OpenJoystickDriver จะสร้างคีย์ใหม่ และ ID ยูนิตทุกรายการจะเปลี่ยน";
+/* Error E5007, shown when a controller record or patch fails its schema; the message names the field. */
 "error.E5007.message" = "ระเบียนคอนโทรลเลอร์หรือ patch ไม่ถูกต้อง ตรวจสอบไฟล์กับสคีมาของไฟล์นั้นแล้วแก้ฟิลด์ที่ข้อความระบุ";
 "ui.error.withCode" = "%1$@ (%2$@)";
 "cli.update.check.ahead" = "OpenJoystickDriver %1$@ ใหม่กว่ารุ่นล่าสุดที่เผยแพร่ (%2$@)";

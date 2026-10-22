@@ -78,7 +78,7 @@ struct RecordTestCommand: AsyncParsableCommand {
       if !outcome.matches {
         throw CLIFailure(
           .recordTestMismatch,
-          CLILocalized.format(
+          CLILocalized.plural(
             "cli.record.test.mismatch",
             model.description,
             expect,
@@ -111,7 +111,7 @@ struct RecordTestCommand: AsyncParsableCommand {
     case .human:
       if result.matches {
         CLIOutput.success(
-          CLILocalized.format("cli.record.test.matched", result.identity, result.inputReports)
+          CLILocalized.plural("cli.record.test.matched", result.identity, result.inputReports)
         )
       }
       for difference in result.differences {

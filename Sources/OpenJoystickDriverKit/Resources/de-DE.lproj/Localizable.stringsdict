@@ -2,6 +2,7 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<!-- Summary of how many controllers are connected, shown in the menu bar menu and in the main window summary. %d is the number of connected controllers. The German plural forms are a first draft that a native speaker reviews. -->
 	<key>status.controllerConnected</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
@@ -26,6 +27,7 @@
 			<string>%d Controller verbunden</string>
 		</dict>
 	</dict>
+	<!-- Number of assignments (controller inputs mapped to actions) that a profile holds, shown in the profile list, the profile detail and the profile editor. %d is the number of assignments. The German plural forms are a first draft that a native speaker reviews. -->
 	<key>ui.profiles.assignments</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
@@ -50,6 +52,7 @@
 			<string>%d Zuweisungen</string>
 		</dict>
 	</dict>
+	<!-- Summary in the support diagnostics of how many virtual controller output devices OpenJoystickDriver publishes. %d is that number; the zero form says that none were detected. The German plural forms are a first draft that a native speaker reviews. -->
 	<key>ui.debug.outputDevices</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
@@ -72,6 +75,159 @@
 			<string>%d Controller-Ausgabegeräte erkannt</string>
 			<key>other</key>
 			<string>%d Controller-Ausgabegeräte erkannt</string>
+		</dict>
+	</dict>
+	<!-- Error line of ojd when a controller selector matches more than one controller, and of the automation service when a request names such a selector; the matching IDs follow on the next lines. %1$@ is the selector text that was given, %2$lld is the number of matching controllers. The German plural forms are a first draft that a native speaker reviews. -->
+	<key>cli.controller.group.selectorAmbiguous</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%2$#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>„%1$@“ passt zu %2$lld Controller. Verwende eine dieser IDs:</string>
+			<key>other</key>
+			<string>„%1$@“ passt zu %2$lld Controllern. Verwende eine dieser IDs:</string>
+		</dict>
+	</dict>
+	<!-- Error line of ojd when a profile name or ID matches more than one profile; the matching IDs follow on the next lines. %1$@ is the selector text that was given, %2$lld is the number of matching profiles. The German plural forms are a first draft that a native speaker reviews. -->
+	<key>cli.profile.group.selectorAmbiguous</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%2$#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>„%1$@“ benennt %2$lld Profil. Verwende eine dieser IDs:</string>
+			<key>other</key>
+			<string>„%1$@“ benennt %2$lld Profile. Verwende eine dieser IDs:</string>
+		</dict>
+	</dict>
+	<!-- Validation error of ojd diagnose when the soak run with the given interval would take too many samples. %lld is the number of samples the run would take. The option names soak and interval-ms are written with two leading hyphens and stay as written. The German plural forms are a first draft that a native speaker reviews. -->
+	<key>cli.diagnose.group.sampleLimit</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>--soak würde mit diesem --interval-ms %lld Messung erfordern; erhöhe --interval-ms.</string>
+			<key>other</key>
+			<string>--soak würde mit diesem --interval-ms %lld Messungen erfordern; erhöhe --interval-ms.</string>
+		</dict>
+	</dict>
+	<!-- Error of the runtime sampling in ojd diagnose and in the app when the duration and sample interval would take too many samples. %lld is the number of samples. The German plural forms are a first draft that a native speaker reviews. -->
+	<key>cli.diagnose.group.soakErrorTooManySamples</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Die Laufzeitmessung würde %lld Messung erfordern. Erhöhe das Messintervall.</string>
+			<key>other</key>
+			<string>Die Laufzeitmessung würde %lld Messungen erfordern. Erhöhe das Messintervall.</string>
+		</dict>
+	</dict>
+	<!-- Error in the soak test of the Developer settings when the chosen duration and sample interval would take too many samples. %lld is the number of samples. The German plural forms are a first draft that a native speaker reviews. -->
+	<key>ui.developer.soakTooManySamples</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Dieser Durchlauf würde %lld Messung erfordern. Erhöhe das Messintervall.</string>
+			<key>other</key>
+			<string>Dieser Durchlauf würde %lld Messungen erfordern. Erhöhe das Messintervall.</string>
+		</dict>
+	</dict>
+	<!-- Success line of ojd record test and of the test result in the Library when a controller record parses a packet capture to the expected state. %1$@ is the controller model, %2$lld is the number of input reports that were replayed. The German plural forms are a first draft that a native speaker reviews. -->
+	<key>cli.record.test.matched</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%2$#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%1$@ entspricht dem erwarteten Zustand: %2$lld Eingabe-Report abgespielt.</string>
+			<key>other</key>
+			<string>%1$@ entspricht dem erwarteten Zustand: %2$lld Eingabe-Reports abgespielt.</string>
+		</dict>
+	</dict>
+	<!-- Failure line of ojd record test and of the test result in the Library when the parsed state differs from the expected state. %1$@ is the controller model, %2$@ is the file with the expected state, %3$lld is the number of fields that differ. The German plural forms are a first draft that a native speaker reviews. -->
+	<key>cli.record.test.mismatch</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%3$#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Der Zustand, den der Parser von %1$@ erzeugt hat, weicht von %2$@ in %3$lld Feld ab.</string>
+			<key>other</key>
+			<string>Der Zustand, den der Parser von %1$@ erzeugt hat, weicht von %2$@ in %3$lld Feldern ab.</string>
+		</dict>
+	</dict>
+	<!-- Note in the packet capture of the Developer settings that idle packets are left out of the list. %lld is the number of hidden idle packets; Export still includes them. The German plural forms are a first draft that a native speaker reviews. -->
+	<key>ui.developer.hiddenIdlePackets</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld Leerlaufpaket ausgeblendet (weiterhin im Export enthalten).</string>
+			<key>other</key>
+			<string>%lld Leerlaufpakete ausgeblendet (weiterhin im Export enthalten).</string>
+		</dict>
+	</dict>
+	<!-- Status of the packet capture in the Developer settings after capture stopped. %lld is the number of packets that were captured. The German plural forms are a first draft that a native speaker reviews. -->
+	<key>ui.developer.stoppedPackets</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Gestoppt · %lld Paket</string>
+			<key>other</key>
+			<string>Gestoppt · %lld Pakete</string>
 		</dict>
 	</dict>
 </dict>

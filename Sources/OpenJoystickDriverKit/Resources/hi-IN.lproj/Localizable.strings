@@ -426,7 +426,6 @@
 "ui.developer.extraInputs" = "अतिरिक्त बटन";
 "ui.developer.extraInputsDescription" = "एक बार में एक अतिरिक्त बटन दबाएँ। पता चले बटन तब तक सूची में रहते हैं, जब तक आप कैप्चर साफ़ नहीं करते।";
 "ui.developer.hid" = "HID";
-"ui.developer.hiddenIdlePackets" = "%d निष्क्रिय पैकेट छिपाए गए (एक्सपोर्ट में अब भी शामिल)।";
 "ui.developer.keepAliveNote" = "सामान्य निष्क्रिय पैकेट छिपाए गए हैं ताकि कंट्रोलर की गतिविधि दिखाई देती रहे।";
 "ui.developer.leftStick" = "बाएँ स्टिक";
 "ui.developer.loadingControllers" = "कंट्रोलर डायग्नोस्टिक लोड हो रहे हैं…";
@@ -449,7 +448,6 @@
 "ui.developer.route" = "रूट";
 "ui.developer.startCapture" = "कैप्चर शुरू करें";
 "ui.developer.starting" = "शुरू हो रहा है…";
-"ui.developer.stoppedPackets" = "रुका · %d पैकेट";
 "ui.developer.unavailable" = "डेवलपर टूल उपलब्ध नहीं हैं";
 "ui.developer.usbEndpoints" = "USB एंडपॉइंट";
 "ui.developer.usbID" = "USB ID";
@@ -466,7 +464,6 @@
 "ui.developer.soakRunning" = "सेवा का नमूना लिया जा रहा है…";
 "ui.developer.soakNotANumber" = "%@: पूर्ण संख्या दर्ज करें।";
 "ui.developer.soakOutOfRange" = "%1$@: %2$lld और %3$lld के बीच का मान दर्ज करें।";
-"ui.developer.soakTooManySamples" = "इस परीक्षण में %lld नमूने लगेंगे। नमूना अंतराल बढ़ाएँ।";
 "ui.inputTest.aButton" = "A बटन";
 "ui.inputTest.aCross" = "A / क्रॉस";
 "ui.inputTest.additionalButtons" = "अतिरिक्त बटन";
@@ -645,7 +642,7 @@
 
 "ui.mapping.rightPadClick" = "दाएँ पैड का क्लिक";
 
-/* Motion tuning: first-pass translation; native review pending. */
+/* Motion tuning: English source. */
 "ui.profiles.motion.title" = "गति समायोजन";
 "ui.profiles.motion.space" = "निर्देशांक स्पेस";
 "ui.profiles.motion.local" = "स्थानीय";
@@ -662,21 +659,28 @@
 "ui.profiles.motion.invertYaw" = "यॉ उलटें";
 "ui.profiles.motion.automaticBias" = "स्थिर अवस्था में स्वचालित कैलिब्रेशन";
 
-/* Motion calibration CLI. Non-English translation pending. */
-
-/* Motion calibration controls. Non-English translation pending. */
+/* Hint under the motion calibration controls of the input test window: keep the controller still on a surface while the gyro bias, the small constant rotation the sensor reports at rest, is collected. */
 "ui.motion.calibration.instructions" = "गायरो बायस इकट्ठा करते समय कंट्रोलर को स्थिर रखें।";
+/* Status line in the motion calibration controls while the service collects gyro bias samples. Bias is the constant rotation offset of the gyro sensor at rest. */
 "ui.motion.calibration.collecting" = "बायस इकट्ठा किया जा रहा है";
+/* Status line in the motion calibration controls when the user paused collecting gyro bias samples by hand. */
 "ui.motion.calibration.paused" = "मैन्युअल रूप से इकट्ठा करना रुका है";
+/* Line in the motion calibration controls that shows the gyro bias found so far, in degrees per second. %1$.3f, %2$.3f and %3$.3f are the X, Y and Z components. Keep the axis letters and the unit. */
 "ui.motion.calibration.offset" = "बायस (°/s): X %1$.3f · Y %2$.3f · Z %3$.3f";
+/* Button in the motion calibration controls that starts collecting gyro bias samples. Disabled while collecting or while the controller reports no motion baseline. */
 "ui.motion.calibration.start" = "कैलिब्रेशन शुरू करें";
+/* Button in the motion calibration controls that pauses collecting gyro bias samples. Disabled while nothing is collected. */
 "ui.motion.calibration.pause" = "विराम दें";
+/* Header of the motion calibration section in the input test window, which holds the gyro calibration controls for the selected controller. */
 "ui.motion.calibration.title" = "गति कैलिब्रेशन";
 
-/* Calibration guidance. Non-English translation pending. */
+/* Guidance in the motion calibration controls when the service cannot reach the controller: connect the controller again, then use Refresh to read the calibration status. */
 "ui.motion.calibration.controllerUnavailable" = "कंट्रोलर को फिर से कनेक्ट करें, फिर कैलिब्रेशन स्थिति रीफ़्रेश करें।";
+/* Guidance in the motion calibration controls when the controller has no usable motion data: turn on a profile for this controller and check that motion data is available. */
 "ui.motion.calibration.motionUnavailable" = "इस कंट्रोलर के लिए कोई रीमैपिंग प्रोफ़ाइल सक्षम करें और जाँचें कि गति उपलब्ध है।";
+/* Status line in the motion calibration controls while the service has no motion samples yet; Refresh checks again. */
 "ui.motion.calibration.waiting" = "गति के नमूनों की प्रतीक्षा है। दोबारा जाँचने के लिए रीफ़्रेश करें।";
+/* Note in the motion calibration controls: collecting gyro bias keeps running in the service after the window closes, and the Pause button stops it. */
 "ui.motion.calibration.continues" = "यह विंडो बंद होने पर भी इकट्ठा करना जारी रहता है। इसे रोकने के लिए “रोकें” का उपयोग करें।";
 
 /* Gyro authoring. Native translation review pending. */
@@ -984,7 +988,6 @@
 "cli.diagnose.group.permissionDenied" = "अस्वीकृत; “ojd permission request” से अनुमति दें";
 "cli.diagnose.group.permissionUnknown" = "स्थिति अज्ञात";
 "cli.diagnose.group.rssLimit" = "--soak के साथ, इस रेज़िडेंट आकार (MiB) से ऊपर जाने पर विफल करें; 0 बंद करता है (0-65536)।";
-"cli.diagnose.group.sampleLimit" = "इस --interval-ms के साथ --soak में %lld नमूने लगेंगे; --interval-ms बढ़ाएँ।";
 "cli.diagnose.group.serviceRunning" = "चल रही है %@";
 "cli.diagnose.group.serviceStopped" = "चल नहीं रही; “ojd service start” से शुरू करें";
 "cli.diagnose.group.skipServiceFailed" = "सेवा ने जवाब नहीं दिया";
@@ -993,7 +996,6 @@
 "cli.diagnose.group.soakErrorInvalidConfiguration" = "नमूना लेने के लिए %1$lld...%2$lld सेकंड और %3$lld...%4$lld ms का नमूना अंतराल चाहिए।";
 "cli.diagnose.group.soakErrorNoSamples" = "सेवा ने कोई रनटाइम नमूना नहीं दिया।";
 "cli.diagnose.group.soakErrorProcessUnavailable" = "सेवा प्रोसेस %d की रनटाइम जानकारी नहीं पढ़ी जा सकी।";
-"cli.diagnose.group.soakErrorTooManySamples" = "नमूना लेने में %lld नमूने लगेंगे। नमूना अंतराल बढ़ाएँ।";
 "cli.diagnose.group.soakNotRequested" = "माँगा नहीं गया; --soak SECONDS इस्तेमाल करें";
 "cli.diagnose.group.soakProgress" = "%@ तक सेवा का नमूना लिया जा रहा है…";
 "cli.diagnose.group.soakVerdictFootprintLimit" = "फ़ुटप्रिंट सीमा पार हुई: रेज़िडेंट आकार %1$.1f MiB, फ़ुटप्रिंट %2$.1f MiB, फ़ाइल डिस्क्रिप्टर %3$lld, CPU %4$.1f%%, अवधि %5$.0f सेकंड";
@@ -1177,7 +1179,6 @@
 "cli.controller.rumble.rightTrigger" = "दाएँ ट्रिगर मोटर की तीव्रता।";
 "cli.controller.rumble.sent" = "%1$@ पर %2$@ को रंबल किया गया।";
 "cli.controller.rumble.stopped" = "%@ पर रंबल रोका गया।";
-"cli.controller.group.selectorAmbiguous" = "“%1$@” %2$lld कंट्रोलर से मेल खाता है। इनमें से कोई ID इस्तेमाल करें:";
 "cli.controller.group.selectorNoneConnected" = "“%@” से कोई कंट्रोलर मेल नहीं खाता, क्योंकि कोई कनेक्ट नहीं है। एक कनेक्ट करें और “ojd controller list” चलाएँ।";
 "cli.controller.group.selectorNotFound" = "“%@” से कोई कनेक्टेड कंट्रोलर मेल नहीं खाता। इस सूची से कोई ID या VVVV:PPPP इस्तेमाल करें:";
 "cli.controller.group.sessionNotFound" = "अनुरोध पहुँचने से पहले “%@” डिस्कनेक्ट हो गया। दोबारा कनेक्ट करके फिर कोशिश करें।";
@@ -1272,6 +1273,7 @@
 "cli.virtual.feed.abstract" = "stdin से चलने वाला वर्चुअल गेमपैड प्रकाशित करें।";
 "cli.virtual.feed.discussion" = "हर पंक्ति में एक JSON ऑब्जेक्ट पढ़ता है: “buttons” और “dpad” दबाए गए कंट्रोल की सूची देते हैं, जैसे South और up, और “axes” अक्ष के नामों, जैसे LeftStickX, को मानों से जोड़ता है। जो कंट्रोल नहीं दिए गए हैं, वे न्यूट्रल रहते हैं। स्टिक -1 से 1 तक चलते हैं और Y नीचे की ओर होता है; ट्रिगर 0 से 1 तक चलते हैं। फ़्रेम क्रम से चलते हैं, हर फ़्रेम कम से कम 8 ms के लिए; “holdMilliseconds” किसी फ़्रेम को ज़्यादा देर तक रोकता है, 60000 तक। गेम गेमपैड को जो भी आउटपुट कमांड भेजते हैं, जैसे वाइब्रेशन, उसे हर पंक्ति में एक JSON ऑब्जेक्ट के रूप में प्रिंट करता है। इनपुट खत्म होने के बाद सभी फ़्रेम चल जाने पर रुक जाता है।";
 "cli.virtual.feed.errorClosed" = "सेवा ने वर्चुअल गेमपैड बंद कर दिया। “ojd status” से जाँचें।";
+/* Error from `ojd virtual feed` when the service connection broke while the virtual gamepad was closing. */
 "cli.virtual.feed.errorCloseInterrupted" = "वर्चुअल गेमपैड को बंद करने की प्रक्रिया बीच में रुक गई। “ojd status” से जाँचें।";
 "cli.virtual.feed.errorFrame" = "पंक्ति %@ मान्य फ़्रेम नहीं है। “ojd virtual feed --help” प्रारूप दिखाता है।";
 "cli.virtual.feed.profile" = "प्रकाशित किया जाने वाला वर्चुअल गेमपैड प्रोफ़ाइल।";
@@ -1348,8 +1350,6 @@
 "cli.record.test.discussion" = "कैप्चर के प्राप्त पैकेटों को रिकॉर्ड के पार्सर से दोबारा चलाता है, फिर आख़िरी इनपुट रिपोर्ट के बाद की कंट्रोलर स्थिति की तुलना अपेक्षित स्थिति से करता है। कैप्चर “ojd controller capture --json” की JSON पंक्तियाँ है। अपेक्षित स्थिति “ojd controller watch --json” की एक पंक्ति के रूप वाला एक JSON ऑब्जेक्ट है। कमांड हर अलग फ़ील्ड सूचीबद्ध करता है और कोई भी अलग हो तो कोड 1 के साथ बाहर निकलता है। यह connection को छोड़कर हर फ़ील्ड की तुलना करता है, जिसे चल रही सेवा सेट करती है। इसके लिए चलती हुई सेवा ज़रूरी नहीं है।";
 "cli.record.test.expect" = "अपेक्षित कंट्रोलर स्थिति, JSON फ़ाइल के रूप में।";
 "cli.record.test.expectInvalid" = "%1$@ कंट्रोलर स्थिति नहीं है: %2$@";
-"cli.record.test.matched" = "%1$@ अपेक्षित स्थिति से मेल खाता है: %2$lld इनपुट रिपोर्ट दोबारा चलाई गईं।";
-"cli.record.test.mismatch" = "%1$@ के पार्सर ने जो स्थिति बनाई, वह %2$@ से %3$lld फ़ील्ड में अलग है।";
 "cli.record.test.noInput" = "%1$@ की किसी भी रिपोर्ट में %2$@ के लिए इनपुट नहीं था। कंट्रोल दबाते हुए दोबारा कैप्चर करें।";
 "cli.record.test.noParser" = "%@ के परिवार में ऐसा पार्सर नहीं है जो कंट्रोलर के बिना चले।";
 "cli.record.test.packets" = "पैकेट कैप्चर, “ojd controller capture --json” की JSON पंक्तियों के रूप में।";
@@ -1366,7 +1366,9 @@
 "error.E2031.message" = "127.0.0.1 पर यह पोर्ट उपयोग में है या खोला नहीं जा सकता। --port से दूसरा चुनें।";
 "error.E2032.message" = "ऑरिजिन वाले टोकन के पास control स्कोप नहीं हो सकता, क्योंकि कोई पेज कभी वर्चुअल गेमपैड नहीं चला सकता। control ऐसे टोकन को दें जिसमें ऑरिजिन न हों।";
 "error.E2033.message" = "प्रोग्राम शुरू नहीं किया जा सका। जाँचें कि उसका पाथ किसी एक्ज़ीक्यूटेबल फ़ाइल या ऐप को दर्शाता है और आपको उसे चलाने की अनुमति है।";
+/* Error E2034, shown in the app or the CLI when the service no longer accepts requests. */
 "error.E2034.message" = "सेवा ने अनुरोध स्वीकार करना बंद कर दिया है। OpenJoystickDriver को बंद करके दोबारा खोलें, फिर दोबारा कोशिश करें।";
+/* Error E2035, shown in the app or the CLI when the file that records why the request listener stopped is unusable. */
 "error.E2035.message" = "वह फ़ाइल उपयोग नहीं की जा सकती जिसमें दर्ज है कि अनुरोध श्रोता क्यों रुका। फ़ाइल हटाएँ, फिर OpenJoystickDriver को दोबारा खोलें।";
 /* Error E2036, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
 "error.E2036.message" = "किसी भी OpenJoystickDriver ऐप ने परीक्षण सूचना का समय पर उत्तर नहीं दिया। जाँचें कि ऐप चल रहा है, फिर दोबारा कोशिश करें।";
@@ -1506,7 +1508,6 @@
 "cli.profile.rename.abstract" = "प्रोफ़ाइल का नाम बदलें।";
 "cli.profile.rename.done" = "नाम बदलकर “%@” किया गया।";
 "cli.profile.rename.name" = "नया नाम, 1 से 80 वर्ण।";
-"cli.profile.group.selectorAmbiguous" = "“%1$@” %2$lld प्रोफ़ाइल का नाम है। इनमें से कोई एक ID उपयोग करें:";
 "cli.profile.group.selectorNotFound" = "किसी प्रोफ़ाइल की ID या नाम “%@” नहीं है। “ojd profile list” सभी प्रोफ़ाइल दिखाता है।";
 "cli.profile.set.abstract" = "प्रोफ़ाइल में एक मान बदलें।";
 "cli.profile.set.discussion" = "KEY प्रोफ़ाइल फ़ाइल के भीतर का पाथ है, जैसा “ojd profile get” में होता है। VALUE को JSON के रूप में पढ़ा जाता है, या JSON न होने पर स्ट्रिंग के रूप में, इसलिए 0.2 संख्या है और space स्ट्रिंग है। null कुंजी या ऐरे आइटम हटाता है, और ऐरे के अंत से एक आगे का इंडेक्स एक आइटम जोड़ता है। सहेजने से पहले पूरी प्रोफ़ाइल जाँची जाती है, और ID नहीं बदल सकती।";
@@ -1521,7 +1522,7 @@
 "cli.profile.validate.file" = "प्रोफ़ाइल फ़ाइल, या stdin के लिए -।";
 "cli.profile.validate.valid" = "%1$@ एक मान्य प्रोफ़ाइल है: “%2$@”, %3$@ (%4$@) के लिए। इसे “ojd profile import” से जोड़ें।";
 "cli.profile.group.vanished" = "सेवा ने प्रोफ़ाइल को नहीं रखा। उसे “ojd profile list” से जाँचें।";
-/* Main window, menus, settings, library and access */
+/* Main window, status item, main menu, settings window, library and access. */
 "ui.library.details" = "ब्योरा";
 "ui.library.dismiss" = "ख़ारिज करें";
 "ui.library.choose" = "चुनें";
@@ -1907,6 +1908,7 @@
 "error.E5004.message" = "प्रोटोकॉल विवरण ऐसा वेरिएंट सूचीबद्ध करता है जो उसके परिवार में नहीं है। परिवार के वेरिएंट में से एक चुनें।";
 "error.E5005.message" = "एक्सेस फ़ाइल AccessGrants.json क्षतिग्रस्त है। फ़ाइल को ठीक करें या हटाएँ, फिर एक्सेस दोबारा दें।";
 "error.E5006.message" = "यूनिट ID की कुंजी फ़ाइल PortKeyInstallation.key पढ़ी नहीं जा सकती, या वह 32 बाइट की नहीं है। फ़ाइल को बैकअप से वापस लाएँ। अगर आप इसे हटा देते हैं, तो OpenJoystickDriver एक नई कुंजी बनाता है और हर यूनिट ID बदल जाती है।";
+/* Error E5007, shown when a controller record or patch fails its schema; the message names the field. */
 "error.E5007.message" = "कंट्रोलर रिकॉर्ड या patch अमान्य है। फ़ाइल को उसके स्कीमा से जाँचें और संदेश में बताए गए फ़ील्ड को ठीक करें।";
 "ui.error.withCode" = "%1$@ (%2$@)";
 "cli.update.check.ahead" = "OpenJoystickDriver %1$@ प्रकाशित नवीनतम रिलीज़ (%2$@) से नया है।";

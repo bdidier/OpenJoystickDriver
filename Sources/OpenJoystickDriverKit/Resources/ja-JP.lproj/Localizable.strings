@@ -426,7 +426,6 @@
 "ui.developer.extraInputs" = "追加ボタン";
 "ui.developer.extraInputsDescription" = "追加ボタンを1つずつ押してください。検出されたボタンは、キャプチャを消去するまで一覧に残ります。";
 "ui.developer.hid" = "HID";
-"ui.developer.hiddenIdlePackets" = "アイドルパケット %d 個を非表示にしています（書き出しには含まれます）。";
 "ui.developer.keepAliveNote" = "コントローラの動作が見えやすいように、通常のアイドル時のパケットは非表示になっています。";
 "ui.developer.leftStick" = "左スティック";
 "ui.developer.loadingControllers" = "コントローラの診断情報を読み込み中…";
@@ -449,7 +448,6 @@
 "ui.developer.route" = "経路";
 "ui.developer.startCapture" = "キャプチャを開始";
 "ui.developer.starting" = "起動中…";
-"ui.developer.stoppedPackets" = "停止 · %dパケット";
 "ui.developer.unavailable" = "開発者ツールは利用できません";
 "ui.developer.usbEndpoints" = "USBエンドポイント";
 "ui.developer.usbID" = "USB ID";
@@ -466,7 +464,6 @@
 "ui.developer.soakRunning" = "サービスをサンプリング中…";
 "ui.developer.soakNotANumber" = "%@：整数を入力してください。";
 "ui.developer.soakOutOfRange" = "%1$@：%2$lldから%3$lldまでの値を入力してください。";
-"ui.developer.soakTooManySamples" = "この実行では%lld個のサンプルが必要になります。サンプリング間隔を大きくしてください。";
 "ui.inputTest.aButton" = "Aボタン";
 "ui.inputTest.aCross" = "A / ×";
 "ui.inputTest.additionalButtons" = "追加ボタン";
@@ -645,7 +642,7 @@
 
 "ui.mapping.rightPadClick" = "右パッドクリック";
 
-/* Motion tuning: first-pass translation; native review pending. */
+/* Motion tuning: English source. */
 "ui.profiles.motion.title" = "モーション調整";
 "ui.profiles.motion.space" = "座標空間";
 "ui.profiles.motion.local" = "ローカル";
@@ -662,21 +659,28 @@
 "ui.profiles.motion.invertYaw" = "ヨーを反転";
 "ui.profiles.motion.automaticBias" = "静止時の自動キャリブレーション";
 
-/* Motion calibration CLI. Non-English translation pending. */
-
-/* Motion calibration controls. Non-English translation pending. */
+/* Hint under the motion calibration controls of the input test window: keep the controller still on a surface while the gyro bias, the small constant rotation the sensor reports at rest, is collected. */
 "ui.motion.calibration.instructions" = "ジャイロのバイアスを収集している間は、コントローラを静止させてください。";
+/* Status line in the motion calibration controls while the service collects gyro bias samples. Bias is the constant rotation offset of the gyro sensor at rest. */
 "ui.motion.calibration.collecting" = "バイアスを収集中";
+/* Status line in the motion calibration controls when the user paused collecting gyro bias samples by hand. */
 "ui.motion.calibration.paused" = "手動収集は一時停止中";
+/* Line in the motion calibration controls that shows the gyro bias found so far, in degrees per second. %1$.3f, %2$.3f and %3$.3f are the X, Y and Z components. Keep the axis letters and the unit. */
 "ui.motion.calibration.offset" = "バイアス (°/s): X %1$.3f · Y %2$.3f · Z %3$.3f";
+/* Button in the motion calibration controls that starts collecting gyro bias samples. Disabled while collecting or while the controller reports no motion baseline. */
 "ui.motion.calibration.start" = "キャリブレーションを開始";
+/* Button in the motion calibration controls that pauses collecting gyro bias samples. Disabled while nothing is collected. */
 "ui.motion.calibration.pause" = "一時停止";
+/* Header of the motion calibration section in the input test window, which holds the gyro calibration controls for the selected controller. */
 "ui.motion.calibration.title" = "モーションキャリブレーション";
 
-/* Calibration guidance. Non-English translation pending. */
+/* Guidance in the motion calibration controls when the service cannot reach the controller: connect the controller again, then use Refresh to read the calibration status. */
 "ui.motion.calibration.controllerUnavailable" = "コントローラを再接続してから、キャリブレーションの状態を更新してください。";
+/* Guidance in the motion calibration controls when the controller has no usable motion data: turn on a profile for this controller and check that motion data is available. */
 "ui.motion.calibration.motionUnavailable" = "このコントローラのリマッピングプロファイルを有効にし、モーションが利用できることを確認してください。";
+/* Status line in the motion calibration controls while the service has no motion samples yet; Refresh checks again. */
 "ui.motion.calibration.waiting" = "モーションのサンプルを待っています。もう一度確認するには更新してください。";
+/* Note in the motion calibration controls: collecting gyro bias keeps running in the service after the window closes, and the Pause button stops it. */
 "ui.motion.calibration.continues" = "このウインドウを閉じても収集は続きます。停止するには「一時停止」を使用してください。";
 
 /* Gyro authoring. Native translation review pending. */
@@ -984,7 +988,6 @@
 "cli.diagnose.group.permissionDenied" = "拒否されています。「ojd permission request」で許可してください";
 "cli.diagnose.group.permissionUnknown" = "状態は不明です";
 "cli.diagnose.group.rssLimit" = "--soak 使用時、このレジデントサイズ (MiB) を超えると失敗とします。0 で無効 (0-65536)。";
-"cli.diagnose.group.sampleLimit" = "この --interval-ms で --soak を使うと %lld 回のサンプリングになります。--interval-ms を大きくしてください。";
 "cli.diagnose.group.serviceRunning" = "実行中 %@";
 "cli.diagnose.group.serviceStopped" = "実行されていません。「ojd service start」で起動してください";
 "cli.diagnose.group.skipServiceFailed" = "サービスが応答しませんでした";
@@ -993,7 +996,6 @@
 "cli.diagnose.group.soakErrorInvalidConfiguration" = "サンプリングには%1$lld...%2$lld秒の時間と、%3$lld...%4$lldミリ秒のサンプリング間隔が必要です。";
 "cli.diagnose.group.soakErrorNoSamples" = "サービスから実行時サンプルが得られませんでした。";
 "cli.diagnose.group.soakErrorProcessUnavailable" = "サービスのプロセス %d の実行時情報を読み取れませんでした。";
-"cli.diagnose.group.soakErrorTooManySamples" = "サンプリングでは%lld個のサンプルが必要になります。サンプリング間隔を大きくしてください。";
 "cli.diagnose.group.soakNotRequested" = "指定されていません。--soak SECONDS を使用してください";
 "cli.diagnose.group.soakProgress" = "サービスを %@間サンプリングしています...";
 "cli.diagnose.group.soakVerdictFootprintLimit" = "フットプリントの上限を超過：常駐サイズ %1$.1f MiB、フットプリント %2$.1f MiB、ファイル記述子 %3$lld、CPU %4$.1f%%（%5$.0f秒間）";
@@ -1177,7 +1179,6 @@
 "cli.controller.rumble.rightTrigger" = "右トリガーモーターの強度。";
 "cli.controller.rumble.sent" = "%1$@ を %2$@ で振動させました。";
 "cli.controller.rumble.stopped" = "%@ の振動を停止しました。";
-"cli.controller.group.selectorAmbiguous" = "「%1$@」は %2$lld 台のコントローラに一致します。次のいずれかの ID を使用してください:";
 "cli.controller.group.selectorNoneConnected" = "接続中のコントローラがないため、「%@」に一致するものはありません。コントローラを接続して「ojd controller list」を実行してください。";
 "cli.controller.group.selectorNotFound" = "「%@」に一致する接続中のコントローラはありません。この一覧にある ID または VVVV:PPPP を使用してください:";
 "cli.controller.group.sessionNotFound" = "リクエストが届く前に「%@」が切断されました。再接続してやり直してください。";
@@ -1272,6 +1273,7 @@
 "cli.virtual.feed.abstract" = "stdin で操作される仮想ゲームパッドを公開します。";
 "cli.virtual.feed.discussion" = "1 行につき 1 つの JSON オブジェクトを読み取ります。「buttons」 と 「dpad」 は押されているコントロール (South や up など) を列挙し、「axes」 は軸名 (LeftStickX など) を値に対応付けます。省略したコントロールはニュートラルになります。スティックは -1 から 1 の範囲で Y が下方向、トリガーは 0 から 1 の範囲です。フレームは順番に再生され、各フレームは最低 8 ms 継続します。「holdMilliseconds」 を指定すると、フレームをより長く (最大 60000) 保持できます。ゲームがゲームパッドに送るすべての出力コマンド (振動など) を、1 行につき 1 つの JSON オブジェクトとして出力します。入力が終了した後、すべてのフレームを再生し終えると停止します。";
 "cli.virtual.feed.errorClosed" = "サービスが仮想ゲームパッドを閉じました。「ojd status」で確認してください。";
+/* Error from `ojd virtual feed` when the service connection broke while the virtual gamepad was closing. */
 "cli.virtual.feed.errorCloseInterrupted" = "仮想ゲームパッドを閉じる処理が中断されました。「ojd status」で確認してください。";
 "cli.virtual.feed.errorFrame" = "%@ 行目は有効なフレームではありません。「ojd virtual feed --help」 で形式を確認できます。";
 "cli.virtual.feed.profile" = "公開する仮想ゲームパッドのプロファイル。";
@@ -1348,8 +1350,6 @@
 "cli.record.test.discussion" = "キャプチャで受信したパケットをレコードのパーサーで再生し、最後の入力レポート後のコントローラの状態を期待する状態と比較します。キャプチャは 「ojd controller capture --json」 の JSON Lines です。期待する状態は、「ojd controller watch --json」 の 1 行の形をした JSON オブジェクト 1 つです。コマンドは異なるフィールドをすべて一覧表示し、1 つでも異なれば終了コード 1 で終了します。実行中のサービスが設定する connection を除くすべてのフィールドを比較します。実行中のサービスは不要です。";
 "cli.record.test.expect" = "期待するコントローラの状態 (JSON ファイル)。";
 "cli.record.test.expectInvalid" = "%1$@ はコントローラの状態ではありません: %2$@";
-"cli.record.test.matched" = "%1$@ は期待する状態と一致しました: 入力レポート %2$lld 件を再生しました。";
-"cli.record.test.mismatch" = "%1$@ のパーサーが生成した状態は、%2$@ と %3$lld 個のフィールドで異なります。";
 "cli.record.test.noInput" = "%1$@ には %2$@ の入力を含むレポートがありませんでした。操作部を押しながら、もう一度キャプチャしてください。";
 "cli.record.test.noParser" = "%@ のファミリーには、コントローラなしで動くパーサーがありません。";
 "cli.record.test.packets" = "パケットキャプチャ (「ojd controller capture --json」 の JSON Lines)。";
@@ -1366,7 +1366,9 @@
 "error.E2031.message" = "127.0.0.1 のこのポートは使用中か、開けません。--port で別のポートを選んでください。";
 "error.E2032.message" = "オリジンを持つトークンには control スコープを付けられません。ページが仮想ゲームパッドを操作してはならないためです。オリジンのないトークンに control を許可してください。";
 "error.E2033.message" = "プログラムを起動できませんでした。パスが実行可能ファイルまたは App を指していること、実行する権限があることを確認してください。";
+/* Error E2034, shown in the app or the CLI when the service no longer accepts requests. */
 "error.E2034.message" = "サービスがリクエストを受け付けなくなりました。OpenJoystickDriverを終了して開き直してから、もう一度お試しください。";
+/* Error E2035, shown in the app or the CLI when the file that records why the request listener stopped is unusable. */
 "error.E2035.message" = "リクエストの待ち受けが停止した理由を記録したファイルは使用できません。ファイルを削除してから、OpenJoystickDriverを開き直してください。";
 /* Error E2036, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
 "error.E2036.message" = "テスト通知に時間内に応答したOpenJoystickDriverアプリがありません。アプリが実行中か確認してから、もう一度お試しください。";
@@ -1506,7 +1508,6 @@
 "cli.profile.rename.abstract" = "プロファイルの名前を変更します。";
 "cli.profile.rename.done" = "「%@」に名前を変更しました。";
 "cli.profile.rename.name" = "新しい名前。1 から 80 文字。";
-"cli.profile.group.selectorAmbiguous" = "「%1$@」は %2$lld 件のプロファイルの名前です。次のいずれかの ID を使ってください:";
 "cli.profile.group.selectorNotFound" = "ID または名前が「%@」のプロファイルはありません。「ojd profile list」で全プロファイルを確認できます。";
 "cli.profile.set.abstract" = "プロファイルの値を 1 つ変更します。";
 "cli.profile.set.discussion" = "KEY は 「ojd profile get」 と同じく、プロファイルファイル内のパスです。VALUE は JSON として読み取られ、JSON でない場合は文字列として扱われるため、0.2 は数値、space は文字列になります。null を指定するとキーまたは配列の項目が削除され、配列の末尾の 1 つ後のインデックスを指定すると項目が追加されます。保存前にプロファイル全体が検証され、ID は変更できません。";
@@ -1521,7 +1522,7 @@
 "cli.profile.validate.file" = "プロファイルのファイル。stdin の場合は -。";
 "cli.profile.validate.valid" = "%1$@ は有効なプロファイルです: 「%2$@」、対象 %3$@ (%4$@)。「ojd profile import」で追加できます。";
 "cli.profile.group.vanished" = "サービスはプロファイルを保持しませんでした。「ojd profile list」で確認してください。";
-/* Main window, menus, settings, library and access */
+/* Main window, status item, main menu, settings window, library and access. */
 "ui.library.details" = "詳細";
 "ui.library.dismiss" = "閉じる";
 "ui.library.choose" = "選択";
@@ -1907,6 +1908,7 @@
 "error.E5004.message" = "プロトコル記述に、そのファミリーにないバリアントが記載されています。ファミリーのバリアントのいずれかを使ってください。";
 "error.E5005.message" = "アクセスファイル AccessGrants.json が破損しています。ファイルを修正するか削除してから、もう一度アクセスを許可してください。";
 "error.E5006.message" = "ユニット ID の鍵ファイル PortKeyInstallation.key を読み取れないか、サイズが 32 バイトではありません。バックアップからファイルを復元してください。削除すると、OpenJoystickDriver が新しい鍵を作成し、すべてのユニット ID が変わります。";
+/* Error E5007, shown when a controller record or patch fails its schema; the message names the field. */
 "error.E5007.message" = "コントローラレコードまたは patch が無効です。ファイルをそのスキーマで確認し、メッセージが示すフィールドを修正してください。";
 "ui.error.withCode" = "%1$@（%2$@）";
 "cli.update.check.ahead" = "OpenJoystickDriver %1$@ は公開されている最新リリース (%2$@) より新しいバージョンです。";

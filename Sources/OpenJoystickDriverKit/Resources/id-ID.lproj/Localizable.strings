@@ -426,7 +426,6 @@
 "ui.developer.extraInputs" = "Tombol Tambahan";
 "ui.developer.extraInputsDescription" = "Tekan satu tombol tambahan sekali satu. Tombol yang terdeteksi tetap tercantum hingga Anda menghapus penangkapan.";
 "ui.developer.hid" = "HID";
-"ui.developer.hiddenIdlePackets" = "%d paket idle disembunyikan (tetap disertakan dalam Ekspor).";
 "ui.developer.keepAliveNote" = "Lalu lintas idle rutin disembunyikan agar aktivitas pengontrol tetap terlihat.";
 "ui.developer.leftStick" = "Stik kiri";
 "ui.developer.loadingControllers" = "Memuat diagnostik pengontrol…";
@@ -449,7 +448,6 @@
 "ui.developer.route" = "Rute";
 "ui.developer.startCapture" = "Mulai Penangkapan";
 "ui.developer.starting" = "Memulai…";
-"ui.developer.stoppedPackets" = "Dihentikan · %d paket";
 "ui.developer.unavailable" = "Alat pengembang tidak tersedia";
 "ui.developer.usbEndpoints" = "Endpoint USB";
 "ui.developer.usbID" = "ID USB";
@@ -466,7 +464,6 @@
 "ui.developer.soakRunning" = "Mengambil sampel layanan…";
 "ui.developer.soakNotANumber" = "%@: masukkan bilangan bulat.";
 "ui.developer.soakOutOfRange" = "%1$@: masukkan nilai antara %2$lld dan %3$lld.";
-"ui.developer.soakTooManySamples" = "Proses ini akan mengambil %lld sampel. Perbesar interval sampel.";
 "ui.inputTest.aButton" = "Tombol A";
 "ui.inputTest.aCross" = "A / Silang";
 "ui.inputTest.additionalButtons" = "Tombol tambahan";
@@ -662,21 +659,28 @@
 "ui.profiles.motion.invertYaw" = "Balikkan yaw";
 "ui.profiles.motion.automaticBias" = "Kalibrasi diam otomatis";
 
-/* Motion calibration CLI. Non-English translation pending. */
-
-/* Motion calibration controls. Non-English translation pending. */
+/* Hint under the motion calibration controls of the input test window: keep the controller still on a surface while the gyro bias, the small constant rotation the sensor reports at rest, is collected. */
 "ui.motion.calibration.instructions" = "Jaga pengontrol tetap diam saat mengumpulkan bias giroskop.";
+/* Status line in the motion calibration controls while the service collects gyro bias samples. Bias is the constant rotation offset of the gyro sensor at rest. */
 "ui.motion.calibration.collecting" = "Mengumpulkan bias";
+/* Status line in the motion calibration controls when the user paused collecting gyro bias samples by hand. */
 "ui.motion.calibration.paused" = "Pengumpulan manual dijeda";
+/* Line in the motion calibration controls that shows the gyro bias found so far, in degrees per second. %1$.3f, %2$.3f and %3$.3f are the X, Y and Z components. Keep the axis letters and the unit. */
 "ui.motion.calibration.offset" = "Bias (°/s): X %1$.3f · Y %2$.3f · Z %3$.3f";
+/* Button in the motion calibration controls that starts collecting gyro bias samples. Disabled while collecting or while the controller reports no motion baseline. */
 "ui.motion.calibration.start" = "Mulai kalibrasi";
+/* Button in the motion calibration controls that pauses collecting gyro bias samples. Disabled while nothing is collected. */
 "ui.motion.calibration.pause" = "Jeda";
+/* Header of the motion calibration section in the input test window, which holds the gyro calibration controls for the selected controller. */
 "ui.motion.calibration.title" = "Kalibrasi sensor gerak";
 
-/* Calibration guidance. Non-English translation pending. */
+/* Guidance in the motion calibration controls when the service cannot reach the controller: connect the controller again, then use Refresh to read the calibration status. */
 "ui.motion.calibration.controllerUnavailable" = "Hubungkan ulang pengontrol, lalu segarkan status kalibrasi.";
+/* Guidance in the motion calibration controls when the controller has no usable motion data: turn on a profile for this controller and check that motion data is available. */
 "ui.motion.calibration.motionUnavailable" = "Aktifkan profil pemetaan ulang untuk pengontrol ini dan pastikan sensor gerak tersedia.";
+/* Status line in the motion calibration controls while the service has no motion samples yet; Refresh checks again. */
 "ui.motion.calibration.waiting" = "Menunggu sampel gerak. Segarkan untuk memeriksa lagi.";
+/* Note in the motion calibration controls: collecting gyro bias keeps running in the service after the window closes, and the Pause button stops it. */
 "ui.motion.calibration.continues" = "Pengumpulan berlanjut saat jendela ini ditutup. Gunakan Jeda untuk menghentikannya.";
 
 /* Gyro authoring. Native translation review pending. */
@@ -984,7 +988,6 @@
 "cli.diagnose.group.permissionDenied" = "ditolak; beri akses dengan “ojd permission request”";
 "cli.diagnose.group.permissionUnknown" = "status tidak diketahui";
 "cli.diagnose.group.rssLimit" = "Dengan --soak, gagal di atas ukuran resident ini dalam MiB; 0 menonaktifkan (0-65536).";
-"cli.diagnose.group.sampleLimit" = "--soak dengan --interval-ms ini akan mengambil %lld sampel; naikkan --interval-ms.";
 "cli.diagnose.group.serviceRunning" = "berjalan %@";
 "cli.diagnose.group.serviceStopped" = "tidak berjalan; mulai dengan “ojd service start”";
 "cli.diagnose.group.skipServiceFailed" = "layanan tidak menjawab";
@@ -993,7 +996,6 @@
 "cli.diagnose.group.soakErrorInvalidConfiguration" = "Pengambilan sampel memerlukan %1$lld...%2$lld detik dan interval sampel %3$lld...%4$lld ms.";
 "cli.diagnose.group.soakErrorNoSamples" = "Layanan tidak menghasilkan sampel runtime.";
 "cli.diagnose.group.soakErrorProcessUnavailable" = "Tidak dapat membaca informasi runtime proses layanan %d.";
-"cli.diagnose.group.soakErrorTooManySamples" = "Pengambilan sampel akan membutuhkan %lld sampel. Perbesar interval sampel.";
 "cli.diagnose.group.soakNotRequested" = "tidak diminta; gunakan --soak SECONDS";
 "cli.diagnose.group.soakProgress" = "Mengambil sampel layanan selama %@…";
 "cli.diagnose.group.soakVerdictFootprintLimit" = "Batas jejak memori terlampaui: ukuran residen %1$.1f MiB, jejak memori %2$.1f MiB, deskriptor berkas %3$lld, CPU %4$.1f%% selama %5$.0f detik";
@@ -1177,7 +1179,6 @@
 "cli.controller.rumble.rightTrigger" = "Intensitas motor pemicu kanan.";
 "cli.controller.rumble.sent" = "Getaran %1$@ dijalankan pada %2$@.";
 "cli.controller.rumble.stopped" = "Getaran pada %@ dihentikan.";
-"cli.controller.group.selectorAmbiguous" = "“%1$@” cocok dengan %2$lld pengontrol. Gunakan salah satu ID berikut:";
 "cli.controller.group.selectorNoneConnected" = "Tidak ada pengontrol yang cocok dengan “%@”, karena tidak ada yang terhubung. Hubungkan satu, lalu jalankan “ojd controller list”.";
 "cli.controller.group.selectorNotFound" = "Tidak ada pengontrol terhubung yang cocok dengan “%@”. Gunakan ID atau VVVV:PPPP dari daftar ini:";
 "cli.controller.group.sessionNotFound" = "“%@” terputus sebelum permintaan sampai. Hubungkan kembali dan coba lagi.";
@@ -1272,6 +1273,7 @@
 "cli.virtual.feed.abstract" = "Publikasikan gamepad virtual yang digerakkan oleh input standar.";
 "cli.virtual.feed.discussion" = "Membaca satu objek JSON per baris: “buttons” dan “dpad” mencantumkan kontrol yang ditekan, seperti South dan up, dan “axes” memetakan nama sumbu, seperti LeftStickX, ke nilai. Kontrol yang tidak ada dianggap netral. Stik berkisar dari -1 sampai 1 dengan Y ke bawah; pemicu berkisar dari 0 sampai 1. Frame diputar berurutan, masing-masing minimal 8 ms; “holdMilliseconds” menahan frame lebih lama, hingga 60000. Mencetak setiap perintah output yang dikirim game ke gamepad, seperti getaran, sebagai satu objek JSON per baris. Berhenti setelah semua frame diputar dan input berakhir.";
 "cli.virtual.feed.errorClosed" = "Layanan menutup gamepad virtual. Periksa dengan “ojd status”.";
+/* Error from `ojd virtual feed` when the service connection broke while the virtual gamepad was closing. */
 "cli.virtual.feed.errorCloseInterrupted" = "Penutupan gamepad virtual terhenti. Periksa dengan “ojd status”.";
 "cli.virtual.feed.errorFrame" = "Baris %@ bukan frame yang valid. “ojd virtual feed --help” menampilkan formatnya.";
 "cli.virtual.feed.profile" = "Profil gamepad virtual yang dipublikasikan.";
@@ -1348,8 +1350,6 @@
 "cli.record.test.discussion" = "Memutar ulang paket yang diterima dari sebuah tangkapan melalui parser catatan, lalu membandingkan status pengontrol setelah laporan input terakhir dengan status yang diharapkan. Tangkapan berupa baris JSON dari “ojd controller capture --json”. Status yang diharapkan adalah satu objek JSON dengan bentuk satu baris “ojd controller watch --json”. Perintah menampilkan setiap kolom yang berbeda dan keluar dengan kode 1 jika ada yang berbeda. Perintah membandingkan semua kolom kecuali connection, yang ditetapkan oleh layanan yang berjalan. Tidak perlu layanan yang berjalan.";
 "cli.record.test.expect" = "Status pengontrol yang diharapkan, sebagai file JSON.";
 "cli.record.test.expectInvalid" = "%1$@ bukan status pengontrol: %2$@";
-"cli.record.test.matched" = "%1$@ cocok dengan status yang diharapkan: %2$lld laporan input diputar ulang.";
-"cli.record.test.mismatch" = "Status yang dihasilkan parser %1$@ berbeda dari %2$@ pada %3$lld kolom.";
 "cli.record.test.noInput" = "Tidak ada laporan di %1$@ yang berisi input untuk %2$@. Tangkap lagi sambil menekan kontrol.";
 "cli.record.test.noParser" = "Keluarga %@ tidak punya parser yang berjalan tanpa pengontrol.";
 "cli.record.test.packets" = "Tangkapan paket, berupa baris JSON dari “ojd controller capture --json”.";
@@ -1366,7 +1366,9 @@
 "error.E2031.message" = "Port ini di 127.0.0.1 sedang dipakai atau tidak dapat dibuka. Pilih port lain dengan --port.";
 "error.E2032.message" = "Token dengan origin tidak boleh punya cakupan control, karena halaman tidak boleh menggerakkan gamepad virtual. Berikan control ke token tanpa origin.";
 "error.E2033.message" = "Program tidak dapat dimulai. Periksa bahwa jalurnya menunjuk berkas yang dapat dieksekusi atau sebuah app, dan Anda boleh menjalankannya.";
+/* Error E2034, shown in the app or the CLI when the service no longer accepts requests. */
 "error.E2034.message" = "Layanan berhenti menerima permintaan. Tutup OpenJoystickDriver, buka lagi, lalu coba lagi.";
+/* Error E2035, shown in the app or the CLI when the file that records why the request listener stopped is unusable. */
 "error.E2035.message" = "File yang mencatat alasan pendengar permintaan berhenti tidak dapat digunakan. Hapus file itu, lalu buka OpenJoystickDriver lagi.";
 /* Error E2036, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
 "error.E2036.message" = "Tidak ada app OpenJoystickDriver yang menjawab pemberitahuan tes tepat waktu. Pastikan app berjalan, lalu coba lagi.";
@@ -1506,7 +1508,6 @@
 "cli.profile.rename.abstract" = "Ganti nama profil.";
 "cli.profile.rename.done" = "Nama diganti menjadi “%@”.";
 "cli.profile.rename.name" = "Nama baru, 1 sampai 80 karakter.";
-"cli.profile.group.selectorAmbiguous" = "“%1$@” menamai %2$lld profil. Gunakan salah satu ID berikut:";
 "cli.profile.group.selectorNotFound" = "Tidak ada profil dengan ID atau nama “%@”. “ojd profile list” menampilkan setiap profil.";
 "cli.profile.set.abstract" = "Ubah satu nilai dalam profil.";
 "cli.profile.set.discussion" = "KEY adalah path ke dalam file profil, seperti pada “ojd profile get”. VALUE dibaca sebagai JSON, atau sebagai string jika bukan JSON, jadi 0.2 adalah angka dan space adalah string. null menghapus kunci atau item array, dan indeks satu setelah akhir array menambahkan item. Seluruh profil diperiksa sebelum disimpan, dan ID tidak dapat berubah.";
@@ -1521,7 +1522,7 @@
 "cli.profile.validate.file" = "File profil, atau - untuk stdin.";
 "cli.profile.validate.valid" = "%1$@ adalah profil yang valid: “%2$@” untuk %3$@ (%4$@). Tambahkan dengan “ojd profile import”.";
 "cli.profile.group.vanished" = "Layanan tidak menyimpan profil. Periksa dengan “ojd profile list”.";
-/* Main window, menus, settings, library and access */
+/* Main window, status item, main menu, settings window, library and access. */
 "ui.library.details" = "Detail";
 "ui.library.dismiss" = "Tutup";
 "ui.library.choose" = "Pilih";
@@ -1907,6 +1908,7 @@
 "error.E5004.message" = "Deskripsi protokol mencantumkan varian yang tidak dimiliki keluarganya. Gunakan salah satu varian keluarga tersebut.";
 "error.E5005.message" = "File akses AccessGrants.json rusak. Perbaiki atau hapus file itu, lalu berikan akses lagi.";
 "error.E5006.message" = "Berkas kunci ID perangkat, PortKeyInstallation.key, tidak dapat dibaca atau ukurannya bukan 32 byte. Pulihkan berkas dari cadangan. Jika Anda menghapusnya, OpenJoystickDriver membuat kunci baru dan setiap ID perangkat berubah.";
+/* Error E5007, shown when a controller record or patch fails its schema; the message names the field. */
 "error.E5007.message" = "Catatan pengontrol atau patch tidak valid. Periksa berkas dengan skemanya dan perbaiki kolom yang disebut pesan.";
 "ui.error.withCode" = "%1$@ (%2$@)";
 "cli.update.check.ahead" = "OpenJoystickDriver %1$@ lebih baru daripada rilis terbaru yang dipublikasikan (%2$@).";
