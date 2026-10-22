@@ -53,7 +53,7 @@ struct FrameQueueCapacityTests {
   @Test
   func aControllerWithNoRecordGetsTheDefault() {
     #expect(
-      UserSpaceOutputDispatcher.frameQueueCapacity(of: nil)
+      VirtualGamepadReportMapping.frameQueueCapacity(of: nil)
         == ControllerTuning.defaultFrameQueueCapacity
     )
   }
@@ -61,7 +61,7 @@ struct FrameQueueCapacityTests {
   @Test
   func aRecordWhoseFamilySetsNoValueGetsTheDefault() throws {
     #expect(
-      UserSpaceOutputDispatcher.frameQueueCapacity(of: try bareRecord().record)
+      VirtualGamepadReportMapping.frameQueueCapacity(of: try bareRecord().record)
         == ControllerTuning.defaultFrameQueueCapacity
     )
   }
@@ -75,7 +75,7 @@ struct FrameQueueCapacityTests {
     )
 
     #expect(
-      UserSpaceOutputDispatcher.frameQueueCapacity(
+      VirtualGamepadReportMapping.frameQueueCapacity(
         of: record,
         descriptions: [.xboxGIP: description]
       ) == 8
@@ -106,7 +106,7 @@ struct FrameQueueCapacityTests {
     )
 
     #expect(
-      UserSpaceOutputDispatcher.frameQueueCapacity(
+      VirtualGamepadReportMapping.frameQueueCapacity(
         of: record,
         descriptions: [.xboxGIP: description]
       ) == 4

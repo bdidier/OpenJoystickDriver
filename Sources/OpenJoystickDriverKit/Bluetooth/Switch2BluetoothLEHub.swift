@@ -1,6 +1,4 @@
 import Foundation
-import IOKit
-import IOKit.hid
 
 /// GATT writes to one connected Switch 2 controller. Each returns false when the link cannot send.
 public protocol Switch2BluetoothLEWriter: Sendable {
@@ -20,6 +18,8 @@ public enum Switch2BluetoothLEProfile {
 
   static let nintendoCompanyID: UInt16 = 0x0553
   static let nintendoVendorID: UInt16 = 0x057E
+  /// The `Transport` property value the host HID stack reports for a Bluetooth LE device.
+  static let hidTransportProperty = "Bluetooth Low Energy"
 
   /// The vibration characteristic UUID that the current controller record of a Nintendo product
   /// declares in its `bluetoothLE` section; nil for a product without one.
@@ -91,7 +91,7 @@ public final class Switch2BluetoothLEHub: @unchecked Sendable {
         vendorID: Switch2BluetoothLEProfile.nintendoVendorID,
         productID: productID,
         productName: productName,
-        transportProperty: kIOHIDTransportBluetoothLowEnergyValue,
+        transportProperty: Switch2BluetoothLEProfile.hidTransportProperty,
         interfaces: [
           PhysicalInterfaceSignature(
             interfaceClass: 0x03,
@@ -203,7 +203,7 @@ public final class Switch2BluetoothLEHub: @unchecked Sendable {
     guard !bytes.isEmpty else { return .unavailable }
     bytes[0] = 0
     bytes += [UInt8](repeating: 0, count: Self.vibrationReportLength - bytes.count)
-    return writer.writeVibration(bytes) ? .success(()) : .failed(.ioReturn(kIOReturnNotResponding))
+    return writer.writeVibration(bytes) ? .success(()) : .failed(.notResponding)
   }
 
   // MARK: - Command channel

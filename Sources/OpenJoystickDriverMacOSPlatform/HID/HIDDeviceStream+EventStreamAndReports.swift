@@ -1,6 +1,7 @@
 import Foundation
 import IOKit
 import IOKit.hid
+import OpenJoystickDriverKit
 
 extension HIDDeviceStream {
 
@@ -83,7 +84,7 @@ extension HIDDeviceStream {
   /// Maps a denied shared open of an already-present device to a stream-level access failure.
   static func accessFailure(forInitialOpenResult result: IOReturn) -> HIDDeviceEvent? {
     guard result == kIOReturnNotPermitted || result == kIOReturnNotPrivileged else { return nil }
-    return .accessFailure(.ioReturn(result))
+    return .accessFailure(.init(ioReturn: result))
   }
 
   /// Unschedules the HID manager from the run loop, closes the devices this stream opened, and
@@ -196,7 +197,7 @@ extension HIDDeviceStream {
       "[HIDDeviceStream] Feature report read failed for loc=\(locationID)"
         + " report=0x\(String(format: "%02X", request.reportID)) kr=\(lastResult)"
     )
-    return .failed(.ioReturn(lastResult))
+    return .failed(.init(ioReturn: lastResult))
   }
 
   public func releaseInputClaim(locationID: UInt32) -> PhysicalHIDClaimResult {
@@ -209,7 +210,7 @@ extension HIDDeviceStream {
         let result = IOHIDDeviceClose(device, IOOptionBits(kIOHIDOptionsTypeSeizeDevice))
         if result != kIOReturnSuccess { lastFailure = result }
       }
-      if let lastFailure { return .failed(.ioReturn(lastFailure)) }
+      if let lastFailure { return .failed(.init(ioReturn: lastFailure)) }
       releasedByLocation[locationID] = devices
       return .released
     }
@@ -227,7 +228,7 @@ extension HIDDeviceStream {
           for acquiredDevice in acquired {
             IOHIDDeviceClose(acquiredDevice, IOOptionBits(kIOHIDOptionsTypeSeizeDevice))
           }
-          return .failed(.ioReturn(result))
+          return .failed(.init(ioReturn: result))
         }
         acquired.append(device)
       }
@@ -298,7 +299,7 @@ extension HIDDeviceStream {
       "[HIDDeviceStream] \(label) report failed for loc=\(locationID)"
         + " report=0x\(String(format: "%02X", report.reportID)) kr=\(lastResult)"
     )
-    return .failed(.ioReturn(lastResult))
+    return .failed(.init(ioReturn: lastResult))
   }
 
   /// Reads a feature report only from the exact connection lifetime, never a sibling at its
@@ -349,7 +350,7 @@ extension HIDDeviceStream {
         &reportLength
       )
     }
-    guard result == kIOReturnSuccess else { return .failed(.ioReturn(result)) }
+    guard result == kIOReturnSuccess else { return .failed(.init(ioReturn: result)) }
     return .success(Data(bytes.prefix(reportLength)))
   }
 
@@ -372,7 +373,7 @@ extension HIDDeviceStream {
         "[HIDDeviceStream] \(label) report failed for exact connection "
           + "report=0x\(String(format: "%02X", report.reportID)) kr=\(result)"
       )
-      return .failed(.ioReturn(result))
+      return .failed(.init(ioReturn: result))
     }
     return .success(())
   }

@@ -1,5 +1,6 @@
 import Foundation
 import OpenJoystickDriverKit
+import OpenJoystickDriverMacOSPlatform
 import OpenJoystickDriverService
 import OpenJoystickDriverUSB
 
@@ -31,6 +32,20 @@ package struct MacOSPlatformHost: PlatformHost {
   package func extensionEntitlementCovers(vendorID: UInt16, productID: UInt16) -> Bool {
     vendorID == USBDriverKitExtensionConfiguration.microsoftVendorID
       && USBDriverKitExtensionConfiguration.microsoftProductIDs.contains(productID)
+  }
+
+  package var accessControl: any AccessControlSystem { MacOSAccessControlSystem() }
+
+  package var mainAppRegistration: any ApplicationServiceRegistration {
+    MainAppServiceRegistration()
+  }
+
+  package func codeSigningIdentity(ofPath url: URL) -> CodeSigningIdentity? {
+    CodeSigningIdentity.of(path: url)
+  }
+
+  package func physicalReportDescriptor(vendorID: Int, productID: Int) -> [UInt8]? {
+    PhysicalReportDescriptor.copy(vendorID: vendorID, productID: productID)
   }
 
   @MainActor

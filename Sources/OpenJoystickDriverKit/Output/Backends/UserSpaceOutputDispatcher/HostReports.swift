@@ -1,8 +1,7 @@
 import Foundation
-import IOKit.hid
 
-/// Request contract for `IOHIDUserDevice`'s synchronous report callbacks.
-final class UserSpaceHostReportHandler: Sendable {
+/// Request contract for a virtual device's synchronous report callbacks.
+package final class UserSpaceHostReportHandler: Sendable {
   /// Serializes consuming a request with enqueueing it, so publication follows callback order.
   private let lock = NSLock()
   private let identifier: LogicalControllerID
@@ -55,7 +54,20 @@ final class UserSpaceHostReportHandler: Sendable {
     }
   }
 
-  func getReport(type: VirtualHostReportType, reportID: UInt32, maxSize: Int) throws -> [UInt8] {
+  /// Validates and enqueues a host set-report request; the native callback acknowledges only that.
+  package func acknowledgeSetReport(
+    type: VirtualHostReportType,
+    reportID: UInt32,
+    bytes: [UInt8]
+  ) throws {
+    _ = try setReport(type: type, reportID: reportID, bytes: bytes)
+  }
+
+  package func getReport(
+    type: VirtualHostReportType,
+    reportID: UInt32,
+    maxSize: Int
+  ) throws -> [UInt8] {
     guard isOpen() else { throw VirtualHostReportError.closed }
     return try input.hostReport(type: type, reportID: reportID, maxSize: maxSize)
   }
@@ -66,26 +78,6 @@ final class UserSpaceHostReportHandler: Sendable {
     case .setRumble(let intensities, _): intensities
     case .stopRumble: .off
     default: nil
-    }
-  }
-
-  static func reportType(_ type: IOHIDReportType) throws -> VirtualHostReportType {
-    switch type {
-    case kIOHIDReportTypeInput: .input
-    case kIOHIDReportTypeOutput: .output
-    case kIOHIDReportTypeFeature: .feature
-    default: throw VirtualHostReportError.unsupported
-    }
-  }
-
-  static func ioKitError(_ error: any Error) -> IOReturn {
-    switch error {
-    case VirtualHostReportError.unsupported: kIOReturnUnsupported
-    case VirtualHostReportError.malformed: kIOReturnBadArgument
-    case VirtualHostReportError.tooLarge: kIOReturnMessageTooLarge
-    case VirtualHostReportError.closed: kIOReturnNotOpen
-    case is CancellationError: kIOReturnAborted
-    default: kIOReturnError
     }
   }
 }

@@ -211,6 +211,7 @@ struct DeveloperToolsTests {
   @Test
   @MainActor
   func captureIgnoresTheBaselineAndAppendsNewPackets() async throws {
+    PlatformHosts.install(FakePlatformHost())
     let first = try packetEntry(timestamp: 1, hex: "01")
     let second = try packetEntry(timestamp: 2, hex: "02")
     let gateway = GatewayStub(

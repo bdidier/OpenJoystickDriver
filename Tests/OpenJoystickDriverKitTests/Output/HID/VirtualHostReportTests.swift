@@ -104,23 +104,4 @@ struct VirtualHostReportTests {
     }
     await sender.beginClose().value
   }
-
-  @Test
-  func nativeErrorsPreserveFailureClassification() {
-    #expect(
-      UserSpaceHostReportHandler.ioKitError(VirtualHostReportError.unsupported)
-        == kIOReturnUnsupported
-    )
-    #expect(
-      UserSpaceHostReportHandler.ioKitError(VirtualHostReportError.malformed)
-        == kIOReturnBadArgument
-    )
-    #expect(
-      UserSpaceHostReportHandler.ioKitError(VirtualHostReportError.tooLarge)
-        == kIOReturnMessageTooLarge
-    )
-    #expect(
-      UserSpaceHostReportHandler.ioKitError(VirtualHostReportError.closed) == kIOReturnNotOpen
-    )
-  }
 }

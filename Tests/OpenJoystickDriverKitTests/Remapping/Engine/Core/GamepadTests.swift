@@ -8,7 +8,7 @@ struct RemappingGamepadTests {
   func remappedStateReplacesEveryInputFieldOfTheVirtualState() {
     let dispatcher = Self.dispatcher()
     var virtual = VirtualGamepadState()
-    dispatcher.apply(
+    VirtualGamepadReportMapping.apply(
       RemappingGamepadState(
         buttons: [.south, .touchpadClick],
         dpad: [.up, .right],
@@ -20,7 +20,7 @@ struct RemappingGamepadTests {
     #expect(virtual.hat == .northEast)
     #expect(virtual.leftStickX == 32 && virtual.rightStickY == -16383)
     #expect(virtual.leftTrigger == 32 && virtual.rightTrigger == 32767)
-    dispatcher.apply(.neutral, to: &virtual)
+    VirtualGamepadReportMapping.apply(.neutral, to: &virtual)
     #expect(virtual.buttons == 0 && virtual.hat == .neutral)
     #expect(virtual.leftStickX == 0 && virtual.rightStickY == 0)
     #expect(virtual.leftTrigger == 0 && virtual.rightTrigger == 0)
@@ -30,7 +30,10 @@ struct RemappingGamepadTests {
   func startBackAndCaptureEachHaveTheirOwnBit() {
     let dispatcher = Self.dispatcher()
     var virtual = VirtualGamepadState()
-    dispatcher.apply(RemappingGamepadState(buttons: [.start, .back, .capture]), to: &virtual)
+    VirtualGamepadReportMapping.apply(
+      RemappingGamepadState(buttons: [.start, .back, .capture]),
+      to: &virtual
+    )
     #expect(virtual.buttons == 1 << 8 | 1 << 9 | 1 << 15)
   }
 

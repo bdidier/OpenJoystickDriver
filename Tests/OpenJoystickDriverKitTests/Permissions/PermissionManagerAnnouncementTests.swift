@@ -1,6 +1,8 @@
 import Foundation
 import Testing
 
+import OpenJoystickDriverTestSupport
+
 @testable import OpenJoystickDriverKit
 
 struct PermissionManagerAnnouncementTests {
@@ -13,7 +15,7 @@ struct PermissionManagerAnnouncementTests {
 
   @Test
   func eachChangeOfPermissionsAnnouncesOncePerObservation() async {
-    let manager = PermissionManager()
+    let manager = PermissionManager.grantingAll()
     let posts = Posts()
     let observer = NotificationCenter.default.addObserver(
       forName: .ojdServiceStatusDidChange,

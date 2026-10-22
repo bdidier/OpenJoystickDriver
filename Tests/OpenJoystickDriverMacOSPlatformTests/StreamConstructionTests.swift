@@ -1,7 +1,7 @@
 import IOKit.hid
 import Testing
 
-@testable import OpenJoystickDriverKit
+@testable import OpenJoystickDriverMacOSPlatform
 
 struct StreamConstructionTests {
   /// Constructing a stream must not enumerate attached devices. Each enumerated device loads the

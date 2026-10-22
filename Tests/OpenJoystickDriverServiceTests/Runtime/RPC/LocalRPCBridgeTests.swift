@@ -402,7 +402,7 @@ struct LocalRPCBridgeTests {
     )
     let server = ApplicationServiceServer(
       deviceManager: DeviceManager(dispatcher: router, installationKey: testPortKeyInstallationKey),
-      permissionManager: PermissionManager(),
+      permissionManager: .grantingAll(),
       dispatcher: dispatcher,
       remappingProfileLibrary: library,
       remappingRouter: router,

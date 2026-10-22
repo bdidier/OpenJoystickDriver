@@ -1,5 +1,6 @@
 import Foundation
 import OpenJoystickDriverKit
+import OpenJoystickDriverMacOSPlatform
 
 enum AccessGrantStoreError: Error, Equatable, LocalizedError, Sendable {
   case damaged

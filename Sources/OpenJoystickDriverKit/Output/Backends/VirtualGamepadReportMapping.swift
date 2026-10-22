@@ -1,6 +1,8 @@
 import Foundation
 
-extension UserSpaceOutputDispatcher {
+/// The mapping from canonical and remapped controller state to the virtual gamepad state, shared
+/// by the user-space dispatcher and the `VirtualHIDProfile` encoders.
+enum VirtualGamepadReportMapping {
   struct StickTransfer: Equatable, Sendable {
     let deadzone: Float
     let rescalesDeadzone: Bool
@@ -64,7 +66,7 @@ extension UserSpaceOutputDispatcher {
   /// Replaces every input field of `state` with a remapped gamepad state; remapped sticks pass
   /// through without a dead zone. A digital trigger flag follows its click or, by the
   /// normalization rule, its remapped axis, with `state`'s flag as the previous.
-  func apply(_ remapped: RemappingGamepadState, to state: inout VirtualGamepadState) {
+  static func apply(_ remapped: RemappingGamepadState, to state: inout VirtualGamepadState) {
     let hat = Self.hatValue(for: remapped.dpadDirection)
     state.buttons = GamepadHIDDescriptor.dpadButtonBits(for: hat)
     for button in remapped.buttons {

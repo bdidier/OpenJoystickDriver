@@ -98,15 +98,15 @@ struct PermissionListCommand: AsyncParsableCommand {
   @TaskLocal
   static var localSnapshot: @Sendable () -> PermissionManager.Snapshot = {
     PermissionManager.Snapshot(
-      inputRead: PermissionManager.currentInputReadAccessState(),
-      inputInject: PermissionManager.currentInputInjectAccessState()
+      inputRead: PlatformHosts.current.accessControl.inputReadAccessState(),
+      inputInject: PlatformHosts.current.accessControl.inputInjectAccessState()
     )
   }
 
   /// Reads the Post Event access of this process, as the service would if it were running.
   @TaskLocal
   static var localPostEventAccess: @Sendable () -> RemappingPostEventAccessState = {
-    PermissionManager.currentPostEventAccessState()
+    PlatformHosts.current.accessControl.postEventAccessState()
   }
 }
 

@@ -22,10 +22,8 @@ private final class ScriptedProbeReader: ControllerModeProbeReader {
   }
 }
 
-private let stall = PhysicalHIDReportResult<Data>.failed(
-  .ioReturn(IOReturn(bitPattern: 0xE000_404F))
-)
-private let timeout = PhysicalHIDReportResult<Data>.failed(.ioReturn(kIOReturnTimeout))
+private let stall = PhysicalHIDReportResult<Data>.failed(.declined)
+private let timeout = PhysicalHIDReportResult<Data>.failed(.timedOut)
 
 struct ControllerModeTests {
   private static let model = ControllerModelID(vendorID: 0x1234, productID: 0xABCD)
@@ -169,7 +167,7 @@ struct ControllerModeTests {
     let replies: [(String, PhysicalHIDReportResult<Data>)] = [
       ("timeout", timeout),
       ("unavailable", .unavailable),
-      ("not responding", .failed(.ioReturn(kIOReturnNotResponding))),
+      ("not responding", .failed(.notResponding)),
     ]
     for (name, reply) in replies {
       let log = Locked<[String]>([])
@@ -233,19 +231,18 @@ struct ControllerModeTests {
         probe: ["report": 5, "length": 4, "expect": "Stalls"]
       )
     ])
-    let unsupported = PhysicalHIDReportResult<Data>.failed(.ioReturn(kIOReturnUnsupported))
+    let unsupported = PhysicalHIDReportResult<Data>.failed(.declined)
     #expect(
       await Self.select(profile, reader: ScriptedProbeReader([5: unsupported])) == .matched("quiet")
     )
-    let notTheDevices: [IOReturn] = [
-      kIOReturnNotOpen, kIOReturnNoDevice, kIOReturnAborted, kIOReturnNotPermitted,
-      kIOReturnExclusiveAccess, kIOReturnError,
+    let notTheDevices: [PhysicalHIDFailure] = [
+      .timedOut, .busy, .notResponding, .hostStatus(1), .hostStatus(2),
     ]
     for code in notTheDevices {
       let log = Locked<[String]>([])
       let selection = await Self.select(
         profile,
-        reader: ScriptedProbeReader([5: .failed(.ioReturn(code))]),
+        reader: ScriptedProbeReader([5: .failed(code)]),
         log: log
       )
       #expect(selection == .probeInconclusive(reportID: 5), "\(code)")
@@ -297,11 +294,10 @@ struct ControllerModeTests {
       release.wait()
       return .success(Data([1]))
     }
-    guard case .failed(.ioReturn(let code)) = result else {
+    guard case .failed(.timedOut) = result else {
       Issue.record("expected a timeout")
       return
     }
-    #expect(code == kIOReturnTimeout)
     // A read inside the deadline keeps its own answer, and a timeout is no stall.
     release.signal()
     let other = await reads.run(key: UUID(), timeout: 5) { .success(Data([7])) }
@@ -328,22 +324,20 @@ struct ControllerModeTests {
       release.wait()
       return .success(Data([1]))
     }
-    guard case .failed(.ioReturn(let timeout)) = first else {
+    guard case .failed(.timedOut) = first else {
       Issue.record("expected a timeout")
       return
     }
-    #expect(timeout == kIOReturnTimeout)
     // The first read has not returned, so the same device is refused without a read, and the
     // refusal is no stall.
     let second = await reads.run(key: device, timeout: 0.05) {
       calls.withLock { $0 += 1 }
       return .success(Data([2]))
     }
-    guard case .failed(.ioReturn(let busy)) = second else {
+    guard case .failed(.busy) = second else {
       Issue.record("expected a refusal")
       return
     }
-    #expect(busy == kIOReturnBusy)
     #expect(calls.withLock { $0 } == 1)
     #expect(
       ControllerModeProbe(reportID: 1, length: 1, expectation: .stalls).verdict(for: second)

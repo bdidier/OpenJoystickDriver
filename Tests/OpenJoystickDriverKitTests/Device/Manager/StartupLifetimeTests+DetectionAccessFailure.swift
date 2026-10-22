@@ -38,7 +38,7 @@ extension StartupLifetimeTests {
     #expect(await manager.deviceInfos[identifier]?.hidConnectionID == connection.connectionID)
     #expect(await manager.pipelines[identifier] != nil)
 
-    await backend.fail(.ioReturn(kIOReturnNotResponding), attempt: 1)
+    await backend.fail(.notResponding, attempt: 1)
     await waitUntil("detection task retired and device info removed") {
       let task = await manager.hidDetectionTask
       let info = await manager.deviceInfos[identifier]
@@ -54,7 +54,7 @@ extension StartupLifetimeTests {
     await manager.ensureHIDDetectionState(for: .granted)
     await backend.waitForAttempt(2)
     #expect(await backend.attemptCount() == 2)
-    await backend.fail(.ioReturn(kIOReturnNoDevice), attempt: 2)
+    await backend.fail(.hostStatus(2), attempt: 2)
     await waitUntil("manager.hidDetectionTask == nil") { await manager.hidDetectionTask == nil }
     await manager.stop()
   }
@@ -86,7 +86,7 @@ extension StartupLifetimeTests {
     #expect(await manager.hidDetectionSessionID == secondSessionID)
     #expect(await manager.hidDetectionTask != nil)
 
-    await backend.fail(.ioReturn(kIOReturnAborted), attempt: 2)
+    await backend.fail(.hostStatus(3), attempt: 2)
     await secondTask?.value
     #expect(await manager.hidDetectionTask == nil)
     #expect(await manager.hidDetectionSessionID == nil)

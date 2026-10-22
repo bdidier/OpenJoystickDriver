@@ -1,5 +1,6 @@
 import Foundation
 import OpenJoystickDriverKit
+import OpenJoystickDriverMacOSPlatform
 
 extension EndpointServer {
   /// Runs one connection on a thread of its own: the handshake, then the subscription or

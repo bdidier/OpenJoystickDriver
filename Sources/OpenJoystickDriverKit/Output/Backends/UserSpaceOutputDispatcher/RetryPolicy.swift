@@ -1,6 +1,4 @@
 import Foundation
-import IOKit
-import IOKit.hid
 
 struct UserSpaceDeviceCreationRetryPolicy {
   static let defaultDelayNanoseconds: UInt64 = 5_000_000_000

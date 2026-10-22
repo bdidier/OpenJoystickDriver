@@ -1,5 +1,6 @@
 import Foundation
 import OpenJoystickDriverKit
+import OpenJoystickDriverMacOSPlatform
 
 extension ApplicationServiceRuntime {
   /// Builds the automatic dispatcher, which applies ownership and session policy per controller
@@ -52,6 +53,7 @@ extension ApplicationServiceRuntime {
   ) throws -> any VirtualFeedDevice {
     let profile = try profileID.makeProfile()
     return try UserSpaceOutputDispatcher(
+      publisher: IOHIDVirtualDevicePublisher(),
       profile: profile.identity,
       format: profile.reportFormat,
       onOutputCommand: onOutputCommand
@@ -71,6 +73,7 @@ extension ApplicationServiceRuntime {
     }
 
     return try UserSpaceOutputDispatcher(
+      publisher: IOHIDVirtualDevicePublisher(),
       profile: profile,
       format: format,
       onOutputCommand: outputHandler

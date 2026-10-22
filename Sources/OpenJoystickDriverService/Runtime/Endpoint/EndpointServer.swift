@@ -1,6 +1,7 @@
 import Darwin
 import Foundation
 import OpenJoystickDriverKit
+import OpenJoystickDriverMacOSPlatform
 
 /// The opt-in socket on which granted local programs read controller events, and the opt-in
 /// WebSocket on `127.0.0.1` for token clients such as browser overlays.

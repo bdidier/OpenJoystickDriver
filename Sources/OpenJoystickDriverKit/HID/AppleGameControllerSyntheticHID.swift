@@ -1,6 +1,4 @@
 import Foundation
-import IOKit
-import IOKit.hid
 
 /// Identifies Apple GameController synthetic HID nodes without opening a user client.
 ///
@@ -11,6 +9,9 @@ import IOKit.hid
 /// A wedged shim hangs stock SDL `hid_init` match-all and can hang OJD if discovery
 /// opens it. Apple documents excluding these nodes from IOHID/IOService matching
 /// with `"GCSyntheticDevice" = false` (`GCSyntheticDeviceKeys.h`).
+///
+/// This type holds the property names and the classification of their values. The macOS
+/// platform target reads the IORegistry and builds the matching dictionaries.
 public enum AppleGameControllerSyntheticHID: Sendable {
   /// `kIOHIDGCSyntheticDeviceKey` (`"GCSyntheticDevice"`).
   public static let propertyKey = "GCSyntheticDevice"
@@ -18,19 +19,6 @@ public enum AppleGameControllerSyntheticHID: Sendable {
   public static let deviceTypePropertyKey = "_GCSyntheticDeviceType"
   public static let xbox360DeviceType = "Xbox360Controller"
   public static let pluginPathToken = "AppleSyntheticGameController"
-
-  /// IOHIDManager / IOService matching fragment that excludes synthetics before create/open.
-  public static var ioHIDMatchingExclusion: [String: Any] { [propertyKey: kCFBooleanFalse as Any] }
-
-  /// Replacement for `IOHIDManagerSetDeviceMatching(nil)` that still skips Apple synthetics.
-  public static var allHIDDevicesExcludingSynthetics: [String: Any] {
-    ioHIDMatchingExcludingSynthetics([kIOProviderClassKey as String: kIOHIDDeviceKey as String])
-  }
-
-  /// Adds Apple's documented synthetic exclusion to an existing HID matching dictionary.
-  public static func ioHIDMatchingExcludingSynthetics(_ matching: [String: Any]) -> [String: Any] {
-    matching.merging(ioHIDMatchingExclusion) { _, new in new }
-  }
 
   public static func isSyntheticProperty(_ value: Any?) -> Bool {
     UserSpaceVirtualDeviceConstants.isAppleGameControllerSyntheticDevice(value)
@@ -52,46 +40,5 @@ public enum AppleGameControllerSyntheticHID: Sendable {
     if deviceType == xbox360DeviceType { return true }
     if let deviceType, !deviceType.isEmpty { return true }
     return isSyntheticPluginPath(pluginPath)
-  }
-
-  /// Reads IORegistry properties on `service`. Does not `IOServiceOpen`.
-  public static func isSynthetic(service: io_service_t) -> Bool {
-    guard service != 0 else { return false }
-    var className = [CChar](repeating: 0, count: 128)
-    let resolvedClass: String?
-    if IOObjectGetClass(service, &className) == kIOReturnSuccess {
-      let bytes = className.prefix { $0 != 0 }.map { UInt8(bitPattern: $0) }
-      resolvedClass = String(bytes: bytes, encoding: .utf8)
-    } else {
-      resolvedClass = stringProperty(service, "IOClass")
-    }
-    return isSyntheticDevice(
-      className: resolvedClass,
-      syntheticProperty: cfProperty(service, propertyKey),
-      deviceType: stringProperty(service, deviceTypePropertyKey),
-      pluginPath: pluginPaths(service).first { isSyntheticPluginPath($0) }
-    )
-  }
-
-  public static func isSynthetic(device: IOHIDDevice) -> Bool {
-    let service = IOHIDDeviceGetService(device)
-    if service != 0, isSynthetic(service: service) { return true }
-    return isSyntheticDevice(
-      syntheticProperty: IOHIDDeviceGetProperty(device, propertyKey as CFString)
-    )
-  }
-
-  private static func cfProperty(_ service: io_service_t, _ key: String) -> Any? {
-    IORegistryEntryCreateCFProperty(service, key as CFString, kCFAllocatorDefault, 0)?
-      .takeRetainedValue()
-  }
-
-  private static func stringProperty(_ service: io_service_t, _ key: String) -> String? {
-    cfProperty(service, key) as? String
-  }
-
-  private static func pluginPaths(_ service: io_service_t) -> [String] {
-    guard let types = cfProperty(service, "IOCFPlugInTypes") as? [String: String] else { return [] }
-    return Array(types.values)
   }
 }

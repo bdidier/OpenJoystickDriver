@@ -2,7 +2,12 @@ import Foundation
 
 @testable import OpenJoystickDriverKit
 
-final class UserSpaceDispatcherTestBackend: UserSpaceOutputDispatcher.VirtualDeviceBackend,
+extension VirtualDeviceBackend {
+  /// Test backends have no host to answer, so activation does nothing.
+  func activate(hostReports: UserSpaceHostReportHandler) {}
+}
+
+final class UserSpaceDispatcherTestBackend: VirtualDeviceBackend,
   @unchecked Sendable
 {
   struct SendFailure: Error, Sendable {}

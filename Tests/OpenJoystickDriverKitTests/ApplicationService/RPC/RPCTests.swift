@@ -91,8 +91,6 @@ struct LocalServiceRPCTests {
 
     let peer = try #require(peers.last)
     #expect(peer.processIdentifier == getpid())
-    #expect(peer.code() != nil)
-    #expect(peer.satisfies(nil))
   }
 
   @Test

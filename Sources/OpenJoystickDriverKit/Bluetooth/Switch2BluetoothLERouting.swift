@@ -1,5 +1,4 @@
 import Foundation
-import IOKit
 
 /// Serves IOHID devices and Switch 2 Bluetooth LE controllers as one HID backend, routing each call
 /// by the address of its connection.

@@ -1,6 +1,7 @@
 import Foundation
 import IOKit
 import IOKit.hid
+import OpenJoystickDriverKit
 
 /// Watches for HID-class game controllers using Apple's IOKit HID framework.
 ///

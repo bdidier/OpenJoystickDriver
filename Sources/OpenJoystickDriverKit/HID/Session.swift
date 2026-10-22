@@ -1,7 +1,28 @@
 import Foundation
-import IOKit
 
-public enum PhysicalHIDFailure: Sendable, Equatable { case ioReturn(IOReturn) }
+/// Why a physical HID request or access stream failed, as the platform backend reports it.
+public enum PhysicalHIDFailure: Sendable, Equatable, CustomStringConvertible {
+  /// A bounded read gave up at its deadline.
+  case timedOut
+  /// An earlier bounded read of the same device is still outstanding.
+  case busy
+  /// The device or its link did not respond to a write.
+  case notResponding
+  /// The device itself declined the request: a stalled control pipe or an unsupported request.
+  case declined
+  /// A status code of the host's HID stack that has no name here.
+  case hostStatus(Int32)
+
+  public var description: String {
+    switch self {
+    case .timedOut: "timed out"
+    case .busy: "busy"
+    case .notResponding: "not responding"
+    case .declined: "declined by the device"
+    case .hostStatus(let code): "host status \(code)"
+    }
+  }
+}
 
 public enum PhysicalHIDReportResult<Value: Sendable>: Sendable {
   case success(Value)
@@ -24,7 +45,7 @@ extension PhysicalHIDReportResult {
     switch self {
     case .success: "success"
     case .unavailable: "HID interface unavailable"
-    case .failed(.ioReturn(let code)): "IOKit code \(code)"
+    case .failed(let failure): failure.description
     }
   }
 }
@@ -46,7 +67,7 @@ public struct HIDDeviceConnectionSnapshot: Equatable, Sendable {
     self.ownership = ownership
   }
 
-  static func reconcile(
+  package static func reconcile(
     trackedConnections: [UInt64: HIDDeviceConnection],
     presentDeviceIDs: Set<UInt64>,
     ownershipByLocation: [UInt32: HIDInputOwnership]
@@ -67,7 +88,7 @@ public struct HIDDeviceConnectionSnapshot: Equatable, Sendable {
   }
 }
 
-protocol HIDAccessBackend: Sendable {
+package protocol HIDAccessBackend: Sendable {
   func deviceEvents() async -> AsyncStream<HIDDeviceEvent>
   func currentConnectionSnapshots() async -> [HIDDeviceConnectionSnapshot]?
   func setOutputReport(
@@ -111,7 +132,7 @@ protocol HIDAccessBackend: Sendable {
 
 extension HIDAccessBackend {
   /// A backend with no bounded read reads as the startup reads do.
-  func probeFeatureReport(
+  package func probeFeatureReport(
     connection: HIDDeviceConnection,
     request: PhysicalHIDFeatureReadRequest
   ) async -> PhysicalHIDReportResult<Data> {
@@ -119,133 +140,23 @@ extension HIDAccessBackend {
   }
 
   /// A backend whose devices never pass through to macOS has nothing to re-evaluate.
-  func reevaluateOwnership(of _: Set<ControllerModelID>) -> Set<UUID> { [] }
+  package func reevaluateOwnership(of _: Set<ControllerModelID>) -> Set<UUID> { [] }
 }
 
-private final class IOHIDAccessBackend: HIDAccessBackend, Sendable {
-  private let stream: HIDDeviceStream
-
-  init(
-    additionalProfileModels: @escaping @Sendable () -> [ControllerModelID],
-    roleProfileModels: @escaping @Sendable () -> [ControllerModelID]
-  ) {
-    stream = HIDDeviceStream(
-      additionalProfileModels: additionalProfileModels,
-      roleProfileModels: roleProfileModels
-    )
-  }
-
-  func deviceEvents() async -> AsyncStream<HIDDeviceEvent> {
-    await MainActor.run { stream.deviceEvents() }
-  }
-
-  func currentConnectionSnapshots() async -> [HIDDeviceConnectionSnapshot]? {
-    await stream.currentConnectionSnapshots()
-  }
-
-  func setOutputReport(
-    address: ControllerConnectionAddress,
-    report: PhysicalHIDOutputReport
-  ) -> PhysicalHIDReportResult<Void> {
-    guard let locationID = address.locationID else { return .unavailable }
-    return stream.setOutputReport(locationID: locationID, report: report)
-  }
-
-  func setOutputReport(
-    connection: HIDDeviceConnection,
-    report: PhysicalHIDOutputReport
-  ) async -> PhysicalHIDReportResult<Void> {
-    await stream.setOutputReport(connection: connection, report: report)
-  }
-
-  func setFeatureReport(
-    address: ControllerConnectionAddress,
-    report: PhysicalHIDOutputReport
-  ) -> PhysicalHIDReportResult<Void> {
-    guard let locationID = address.locationID else { return .unavailable }
-    return stream.setFeatureReport(locationID: locationID, report: report)
-  }
-
-  func setFeatureReport(
-    connection: HIDDeviceConnection,
-    report: PhysicalHIDOutputReport
-  ) async -> PhysicalHIDReportResult<Void> {
-    await stream.setFeatureReport(connection: connection, report: report)
-  }
-
-  func getFeatureReport(
-    address: ControllerConnectionAddress,
-    request: PhysicalHIDFeatureReadRequest
-  ) -> PhysicalHIDReportResult<Data> {
-    guard let locationID = address.locationID else { return .unavailable }
-    return stream.getFeatureReport(locationID: locationID, request: request)
-  }
-
-  func getFeatureReport(
-    connection: HIDDeviceConnection,
-    request: PhysicalHIDFeatureReadRequest
-  ) async -> PhysicalHIDReportResult<Data> {
-    await stream.getFeatureReport(connection: connection, request: request)
-  }
-
-  func probeFeatureReport(
-    connection: HIDDeviceConnection,
-    request: PhysicalHIDFeatureReadRequest
-  ) async -> PhysicalHIDReportResult<Data> {
-    await stream.probeFeatureReport(connection: connection, request: request)
-  }
-
-  // Seizes and closes run on main, where the manager's run loop removes devices: a device that
-  // detaches mid-open must not lose its plug-in on another thread, and `retryInputClaim` yields to
-  // the main-confined stream continuation.
-  func releaseInputClaim(address: ControllerConnectionAddress) async -> PhysicalHIDClaimResult {
-    guard let locationID = address.locationID else { return .unavailable }
-    return await MainActor.run { stream.releaseInputClaim(locationID: locationID) }
-  }
-
-  func reacquireInputClaim(address: ControllerConnectionAddress) async -> PhysicalHIDClaimResult {
-    guard let locationID = address.locationID else { return .unavailable }
-    return await MainActor.run { stream.reacquireInputClaim(locationID: locationID) }
-  }
-
-  func retryInputClaim(address: ControllerConnectionAddress) async {
-    guard let locationID = address.locationID else { return }
-    await MainActor.run { stream.retryInputClaim(locationID: locationID) }
-  }
-
-  func routeElementValues(connection: HIDDeviceConnection) async {
-    await stream.routeElementValues(connection: connection)
-  }
-
-  func reevaluateOwnership(of models: Set<ControllerModelID>) async -> Set<UUID> {
-    await MainActor.run { stream.reevaluateOwnership(of: models) }
-  }
-}
-
-/// App HID access wrapper over IOHIDManager on every supported macOS release.
+/// The physical HID access of the application over a platform backend.
 ///
-/// Tests inject fake backends through `init(backend:)`.
+/// The host supplies the backend; `bluetoothLEHub` adds the Switch 2 controllers connected over
+/// Bluetooth LE GATT. Tests inject fake backends.
 public final class HIDManager: Sendable {
   private let backend: any HIDAccessBackend
 
-  init(backend: any HIDAccessBackend) { self.backend = backend }
+  package init(backend: any HIDAccessBackend) { self.backend = backend }
 
-  /// `additionalProfileModels` are the catalog's HID models, which may not advertise GamePad
-  /// usage; `roleProfileModels` are the models whose family declares HID protocol roles.
-  /// Both are read each time detection starts. `bluetoothLEHub` adds the Switch 2 controllers
-  /// connected over Bluetooth LE GATT.
-  @preconcurrency
-  public init(
-    additionalProfileModels: @escaping @Sendable () -> [ControllerModelID] = { [] },
-    roleProfileModels: @escaping @Sendable () -> [ControllerModelID] = { [] },
-    bluetoothLEHub: Switch2BluetoothLEHub? = nil
-  ) {
-    let hid = IOHIDAccessBackend(
-      additionalProfileModels: additionalProfileModels,
-      roleProfileModels: roleProfileModels
-    )
+  /// Serves `primary`'s devices and the hub's Bluetooth LE controllers as one backend, or only
+  /// `primary`'s devices without a hub.
+  package init(primary: any HIDAccessBackend, bluetoothLEHub: Switch2BluetoothLEHub?) {
     backend =
-      bluetoothLEHub.map { BluetoothLECompositeHIDBackend(primary: hid, hub: $0) } ?? hid
+      bluetoothLEHub.map { BluetoothLECompositeHIDBackend(primary: primary, hub: $0) } ?? primary
   }
 
   public func deviceEvents() async -> AsyncStream<HIDDeviceEvent> { await backend.deviceEvents() }

@@ -1,6 +1,7 @@
 import CryptoKit
 import Foundation
 import OpenJoystickDriverKit
+import OpenJoystickDriverMacOSPlatform
 import Security
 
 /// Owns runtime state and serves authenticated local RPC requests.

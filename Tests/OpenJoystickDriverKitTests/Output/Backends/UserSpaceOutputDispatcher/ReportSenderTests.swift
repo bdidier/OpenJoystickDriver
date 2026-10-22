@@ -28,7 +28,7 @@ private actor ReportSendGate {
   }
 }
 
-private final class OrderedReportBackend: UserSpaceOutputDispatcher.VirtualDeviceBackend,
+private final class OrderedReportBackend: VirtualDeviceBackend,
   @unchecked Sendable
 {
   private let lock = NSLock()
@@ -71,7 +71,7 @@ private actor CancellableSendState {
   func waitForEntry() async { if !entered { await withCheckedContinuation { waiters.append($0) } } }
 }
 
-private final class CancellableReportBackend: UserSpaceOutputDispatcher.VirtualDeviceBackend,
+private final class CancellableReportBackend: VirtualDeviceBackend,
   @unchecked Sendable
 {
   let state = CancellableSendState()
@@ -108,7 +108,7 @@ private actor NonCooperativeSendGate {
   }
 }
 
-private final class NonCooperativeReportBackend: UserSpaceOutputDispatcher.VirtualDeviceBackend,
+private final class NonCooperativeReportBackend: VirtualDeviceBackend,
   @unchecked Sendable
 {
   private let lock = NSLock()
@@ -121,7 +121,7 @@ private final class NonCooperativeReportBackend: UserSpaceOutputDispatcher.Virtu
 }
 
 /// A backend whose native teardown finishes only when its gate opens.
-private final class SlowTeardownBackend: UserSpaceOutputDispatcher.VirtualDeviceBackend,
+private final class SlowTeardownBackend: VirtualDeviceBackend,
   @unchecked Sendable
 {
   let gate = ReportSendGate()

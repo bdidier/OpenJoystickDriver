@@ -2,8 +2,21 @@ import Foundation
 import Testing
 
 @testable import OpenJoystickDriverKit
+@testable import OpenJoystickDriverMacOSPlatform
 
 struct CodeSigningIdentityTests {
+  @Test
+  func theProcessAtTheOtherEndOfASocketResolvesToCode() throws {
+    var descriptors: [Int32] = [0, 0]
+    #expect(socketpair(AF_UNIX, SOCK_STREAM, 0, &descriptors) == 0)
+    defer { descriptors.forEach { close($0) } }
+
+    let peer = try #require(LocalSocketPeer.authenticated(descriptors[0]))
+    #expect(peer.processIdentifier == getpid())
+    #expect(peer.code() != nil)
+    #expect(peer.satisfies(nil))
+  }
+
   @Test
   func systemToolIsSignedByApple() throws {
     let identity = try #require(CodeSigningIdentity.of(path: URL(fileURLWithPath: "/usr/bin/true")))

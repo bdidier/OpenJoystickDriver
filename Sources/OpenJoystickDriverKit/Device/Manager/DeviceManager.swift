@@ -138,13 +138,17 @@ public actor DeviceManager {
   ///   - usbTransportProvider: Native raw-USB transport provider, or nil to disable raw USB
   ///     discovery.
   ///   - bluetoothLEHub: Switch 2 controllers connected over Bluetooth LE GATT, or nil to serve
-  ///     IOHID devices only.
-  public init(
+  ///     the platform's HID devices only.
+  ///   - permissionManager: Tracks the access the host grants.
+  ///   - hidBackend: Builds the platform's HID backend from the driver registry's model lists.
+  package init(
     dispatcher: any OutputDispatcher,
     installationKey: SymmetricKey,
     usbTransportProvider: (any USBTransportProvider)? = nil,
     wirelessControllerDisconnector: (any WirelessControllerDisconnecting)? = nil,
-    bluetoothLEHub: Switch2BluetoothLEHub? = nil
+    bluetoothLEHub: Switch2BluetoothLEHub? = nil,
+    permissionManager: PermissionManager,
+    hidBackend: HIDAccessBackendFactory
   ) {
     self.dispatcher = dispatcher
     self.installationKey = installationKey
@@ -155,39 +159,39 @@ public actor DeviceManager {
     self.wirelessControllerDisconnector = wirelessControllerDisconnector
     let registry = ProtocolDriverRegistry()
     self.protocolDriverRegistry = registry
-    self.permissionManager = PermissionManager()
+    self.permissionManager = permissionManager
     self.hidManager = HIDManager(
-      additionalProfileModels: { registry.hidModels },
-      roleProfileModels: { registry.hidRoleModels },
+      primary: hidBackend({ registry.hidModels }, { registry.hidRoleModels }),
       bluetoothLEHub: bluetoothLEHub
     )
   }
 
-  init(dispatcher: any OutputDispatcher, installationKey: SymmetricKey, hidManager: HIDManager) {
-    self.dispatcher = dispatcher
-    self.installationKey = installationKey
-    self.usbTransportProvider = nil
-    self.wirelessControllerDisconnector = nil
-    self.protocolDriverRegistry = ProtocolDriverRegistry()
-    self.permissionManager = PermissionManager()
-    self.hidManager = hidManager
-  }
-
+  /// Creates a manager over an already built `hidManager`. The convenience initializers of the
+  /// test support target delegate here.
   init(
     dispatcher: any OutputDispatcher,
     installationKey: SymmetricKey,
+    usbTransportProvider: (any USBTransportProvider)?,
+    wirelessControllerDisconnector: (any WirelessControllerDisconnecting)?,
     hidManager: HIDManager,
-    usbTransportProvider: any USBTransportProvider
+    permissionManager: PermissionManager
   ) {
     self.dispatcher = dispatcher
     self.installationKey = installationKey
     self.usbTransportProvider = usbTransportProvider
-    self.wirelessControllerDisconnector = nil
+    self.wirelessControllerDisconnector = wirelessControllerDisconnector
     self.protocolDriverRegistry = ProtocolDriverRegistry()
-    self.permissionManager = PermissionManager()
+    self.permissionManager = permissionManager
     self.hidManager = hidManager
   }
 }
+
+/// Builds a platform HID backend from the two model lists the driver registry supplies.
+package typealias HIDAccessBackendFactory =
+  @Sendable (
+    _ additionalProfileModels: @escaping @Sendable () -> [ControllerModelID],
+    _ roleProfileModels: @escaping @Sendable () -> [ControllerModelID]
+  ) -> any HIDAccessBackend
 
 extension DeviceManager {
   /// The session state of one connected controller; output routing checks it per input report.

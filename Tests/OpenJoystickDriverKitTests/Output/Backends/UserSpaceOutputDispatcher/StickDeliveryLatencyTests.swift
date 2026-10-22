@@ -31,7 +31,7 @@ private actor HoldGate {
 
 /// Holds the first native send until the test opens it; every later send completes at once. A held
 /// send stands for one slow `IOHIDUserDeviceHandleReportWithTimeStamp` call.
-private final class FirstSendHeldBackend: UserSpaceOutputDispatcher.VirtualDeviceBackend,
+private final class FirstSendHeldBackend: VirtualDeviceBackend,
   @unchecked Sendable
 {
   private let gate = HoldGate()
@@ -268,7 +268,7 @@ struct StickDeliveryLatencyTests {
     let first = Task { try await deliver(16_000) }
     await backend.waitForHeldSend()
     let entry = try await dispatcher.entry(for: Self.identifier)
-    let capacity = UserSpaceOutputDispatcher.frameQueueCapacity(for: Self.identifier)
+    let capacity = VirtualGamepadReportMapping.frameQueueCapacity(for: Self.identifier)
     let replies = (0..<capacity).map { _ in entry.sender.submit { [[0xAA]] } }
 
     try await deliver(29_000)

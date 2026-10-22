@@ -5,7 +5,7 @@ extension RemappingDeviceState {
   mutating func updatePassthrough(
     replayingAxis: (RemappingAxis, Float)? = nil,
     rightPadIsRightStick lookup: (LogicalControllerID) -> Bool =
-      UserSpaceOutputDispatcher.rightPadIsRightStick
+      VirtualGamepadReportMapping.rightPadIsRightStick
   ) -> [RemappingEngineAction] {
     guard profile.outputPolicy.virtualGamepad == .passthrough else { return [] }
     var reserved = reservedPassthroughSources
@@ -26,7 +26,7 @@ extension RemappingDeviceState {
         // real R3 keeps it as its own control, which no virtual persona carries. One rule with
         // the report mapping.
         buttons.insert(
-          UserSpaceOutputDispatcher.virtualControl(
+          VirtualGamepadReportMapping.virtualControl(
             button,
             rightPadIsRightStick: rightPadIsRightStick
           )

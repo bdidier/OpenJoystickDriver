@@ -4,6 +4,7 @@ import GameController
 import IOKit
 import IOKit.hid
 import OpenJoystickDriverKit
+import OpenJoystickDriverMacOSPlatform
 
 func hasArg(_ name: String) -> Bool { CommandLine.arguments.dropFirst().contains(name) }
 

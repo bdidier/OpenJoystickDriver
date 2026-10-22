@@ -1,45 +1,17 @@
 import Foundation
-import ServiceManagement
 
-enum ApplicationServiceRegistrationStatus: Sendable, Equatable {
+package enum ApplicationServiceRegistrationStatus: Sendable, Equatable {
   case notRegistered
   case enabled
   case requiresApproval
   case notFound
 }
 
-protocol ApplicationServiceRegistration: Sendable {
+package protocol ApplicationServiceRegistration: Sendable {
   var status: ApplicationServiceRegistrationStatus { get }
 
   func register() throws
   func unregister() throws
-}
-
-private struct MainAppServiceRegistration: ApplicationServiceRegistration {
-  var status: ApplicationServiceRegistrationStatus {
-    guard #available(macOS 13.0, *) else { return .notFound }
-    switch SMAppService.mainApp.status {
-    case .notRegistered: return .notRegistered
-    case .enabled: return .enabled
-    case .requiresApproval: return .requiresApproval
-    case .notFound: return .notFound
-    @unknown default: return .notFound
-    }
-  }
-
-  func register() throws {
-    guard #available(macOS 13.0, *) else {
-      throw ApplicationServiceManager.ManagerError.unsupportedOperatingSystem
-    }
-    try SMAppService.mainApp.register()
-  }
-
-  func unregister() throws {
-    guard #available(macOS 13.0, *) else {
-      throw ApplicationServiceManager.ManagerError.unsupportedOperatingSystem
-    }
-    try SMAppService.mainApp.unregister()
-  }
 }
 
 /// Manages the main application's login-item registration.
@@ -66,13 +38,13 @@ public enum ApplicationServiceManager: Sendable {
 
   public static var isInstalled: Bool {
     guard #available(macOS 13.0, *) else { return false }
-    return MainAppServiceRegistration().status != .notRegistered
+    return PlatformHosts.current.mainAppRegistration.status != .notRegistered
   }
 
   /// Whether macOS will open the main application at login; false while approval is pending.
   public static var isLaunchAtLoginEnabled: Bool {
     guard #available(macOS 13.0, *) else { return false }
-    return MainAppServiceRegistration().status == .enabled
+    return PlatformHosts.current.mainAppRegistration.status == .enabled
   }
 
   /// Registers the main application itself to launch on subsequent logins.
@@ -91,7 +63,7 @@ public enum ApplicationServiceManager: Sendable {
   }
 
   private static func registerMainApp() throws {
-    try registerMainApp(using: MainAppServiceRegistration())
+    try registerMainApp(using: PlatformHosts.current.mainAppRegistration)
   }
 
   static func registerMainApp(
@@ -105,7 +77,7 @@ public enum ApplicationServiceManager: Sendable {
 
   public static func uninstall(settings: SettingsStore = SettingsStore()) throws {
     try settings.set(.launchAtLogin, to: false)
-    try unregisterMainApp(using: MainAppServiceRegistration())
+    try unregisterMainApp(using: PlatformHosts.current.mainAppRegistration)
   }
 
   static func unregisterMainApp(

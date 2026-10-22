@@ -1,25 +1,21 @@
-import Darwin
 import Foundation
-import IOKit
-import IOKit.hid
-import Security
 
 /// Publishes one virtual gamepad for each connected physical controller.
 ///
-/// Every supported macOS publishes through IOKit `IOHIDUserDevice`. This path
-/// does not run in the USB DriverKit extension.
+/// The host supplies a ``VirtualHIDDevicePublisher`` that creates the native virtual HID device;
+/// this class owns the per-controller report queues, the input state each device carries, and the
+/// backend status. This path does not run in the USB DriverKit extension.
 public final class UserSpaceOutputDispatcher: VirtualOutputDispatching,
   VirtualOutputControllerActivating, RemappingGamepadSink, RemappingGamepadOutputControlling,
   @unchecked Sendable
 {
 
-  internal let profile: VirtualDeviceProfile
   internal let format: any VirtualGamepadReportFormat
   internal let onOutputCommand: OutputCommandHandler?
   internal let onControllerDidStop: (@Sendable (LogicalControllerID) async -> Void)?
   internal let lifecycle = LifecycleState()
-  internal let testBackendFactory:
-    (@Sendable (LogicalControllerID) async throws -> any VirtualDeviceBackend)?
+  internal let backendFactory:
+    @Sendable (LogicalControllerID) async throws -> any VirtualDeviceBackend
   internal let registryLock = NSLock()
   internal var entries: [LogicalControllerID: Entry] = [:]
   internal var creationTasks: [LogicalControllerID: Task<Entry, Error>] = [:]
@@ -37,22 +33,21 @@ public final class UserSpaceOutputDispatcher: VirtualOutputDispatching,
   internal var statusChangePending = false
   internal var _lastRumbleStatus: String?
 
-  static let requiredVirtualDeviceEntitlement = "com.apple.developer.hid.virtual.device"
+  /// Publishes each controller's device through `publisher` with the identity `profile` and the
+  /// reports `format` describes.
   @preconcurrency
-  public init(
+  package init(
+    publisher: any VirtualHIDDevicePublisher,
     profile: VirtualDeviceProfile,
     format: any VirtualGamepadReportFormat,
     onOutputCommand: OutputCommandHandler? = nil,
     onControllerDidStop: (@Sendable (LogicalControllerID) async -> Void)? = nil
-  ) throws {
-    self.profile = profile
+  ) {
     self.format = format
     self.onOutputCommand = onOutputCommand
     self.onControllerDidStop = onControllerDidStop
-    self.testBackendFactory = nil
-
-    guard Self.hasRequiredVirtualDeviceEntitlement else {
-      throw CreationError.missingEntitlement(Self.requiredVirtualDeviceEntitlement)
+    self.backendFactory = { identifier in
+      try publisher.createDevice(for: identifier, profile: profile, format: format)
     }
   }
 
@@ -62,11 +57,10 @@ public final class UserSpaceOutputDispatcher: VirtualOutputDispatching,
     format: any VirtualGamepadReportFormat = OJDGenericGamepadFormat(),
     onControllerDidStop: (@Sendable (LogicalControllerID) async -> Void)? = nil
   ) {
-    profile = .generic
     self.format = format
     onOutputCommand = nil
     self.onControllerDidStop = onControllerDidStop
-    self.testBackendFactory = testBackendFactory
+    self.backendFactory = testBackendFactory
   }
 
   deinit { beginClose() }

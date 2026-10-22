@@ -1,8 +1,8 @@
 import Foundation
 
-enum VirtualHostReportType: Sendable { case input, output, feature }
+public enum VirtualHostReportType: Sendable { case input, output, feature }
 
-enum VirtualHostReportError: Error, Equatable, Sendable {
+package enum VirtualHostReportError: Error, Equatable, Sendable {
   case unsupported
   case malformed
   case tooLarge

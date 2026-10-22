@@ -59,6 +59,8 @@ Layers, each with one owner type. A device is observed, linked, bound to a recor
 | L5 Mapping | User profile over canonical state | none |
 | L6 Serving | One `ServingRoute` per controller from a pure policy | Decided in several places |
 
+Platform boundary: `OpenJoystickDriverKit` imports only Foundation, Dispatch, Darwin and CryptoKit. It declares the ports a host implements (`PlatformHost`, `AccessControlSystem`, `ApplicationServiceRegistration`, `HIDAccessBackend`, `VirtualHIDDevicePublisher`, `Switch2BluetoothLEWriter`), and `OpenJoystickDriverMacOSPlatform` implements the IOKit, Security, ServiceManagement and `IOHIDUserDevice` ones. The composition roots pass the implementations in. `Scripts/Quality/check_neutral_core_imports.py` fails on any other import in Kit, the CLI or the executable outside `platform`. Darwin and CryptoKit stay in the allow-list until the POSIX and cryptography calls have a portable provider.
+
 Record flow: observed device, then link, then record `modes[]` with match keys (interface signature, manufacturer and product strings, read-only behavioral probes for same-ID clones), then a protocol description, then canonical state, then user mapping, then one serving-route policy, then a persona. Personas are `Generic` `1209:4A4F` (default) and `SDLCompatible` `045E:02FD`, with an OJD-published SDL mapping.
 
 ### D2 Record and schema model

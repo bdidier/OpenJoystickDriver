@@ -1,10 +1,10 @@
 import Foundation
 
 /// The controller records the runtime binds with: the bundled catalog and any user records.
-struct DeviceCatalog: Sendable {
+package struct DeviceCatalog: Sendable {
   /// The catalog every ``ProtocolDriverRegistry`` reads. The service replaces it when the user's
   /// controller records change.
-  static let current = Locked(Self())
+  package static let current = Locked(Self())
 
   private let profiles: [ControllerModelID: DeviceRuntimeProfile]
   /// Each record's merged document, to tell whether a new record set changes anything.
@@ -38,7 +38,7 @@ struct DeviceCatalog: Sendable {
 
   /// Whether the record sets `server: ojd`, so OJD seizes the controller even when macOS
   /// serves it natively. The stream reads it when a device is added.
-  func takesOwnership(of model: ControllerModelID) -> Bool {
+  package func takesOwnership(of model: ControllerModelID) -> Bool {
     record(for: model)?.server == .ojd
   }
 

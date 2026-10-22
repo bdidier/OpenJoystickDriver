@@ -309,7 +309,7 @@ extension StartupLifetimeTests {
 
     var deniedCleanup: Task<Void, Never>?
     switch trigger {
-    case .accessFailure: await backend.fail(.ioReturn(kIOReturnNotResponding), attempt: 1)
+    case .accessFailure: await backend.fail(.notResponding, attempt: 1)
     case .denied: deniedCleanup = Task { await manager.ensureHIDDetectionState(for: .denied) }
     }
     await initializationStarted.wait()
@@ -348,7 +348,7 @@ extension StartupLifetimeTests {
     #expect(await manager.hidDetectionSessionID == newSessionID)
     #expect(await manager.hidDetectionTask != nil)
 
-    await backend.fail(.ioReturn(kIOReturnNoDevice), attempt: 2)
+    await backend.fail(.hostStatus(2), attempt: 2)
     await newDetectionTask?.value
     await manager.stop()
   }

@@ -45,8 +45,18 @@ let package = Package(
       name: "OpenJoystickDriverKit",
       dependencies: [],
       path: "Sources/OpenJoystickDriverKit",
-      resources: [.process("Resources/")],
-      linkerSettings: [.linkedFramework("GameController"), .linkedFramework("ServiceManagement")]
+      resources: [.process("Resources/")]
+    ),
+
+    .target(
+      name: "OpenJoystickDriverMacOSPlatform",
+      dependencies: ["OpenJoystickDriverKit"],
+      path: "Sources/OpenJoystickDriverMacOSPlatform",
+      linkerSettings: [
+        .linkedFramework("CoreGraphics"), .linkedFramework("GameController"),
+        .linkedFramework("IOKit"), .linkedFramework("Security"),
+        .linkedFramework("ServiceManagement"),
+      ]
     ),
 
     .target(
@@ -74,7 +84,9 @@ let package = Package(
 
     .target(
       name: "OpenJoystickDriverService",
-      dependencies: ["OpenJoystickDriverKit", "OpenJoystickDriverUSB"],
+      dependencies: [
+        "OpenJoystickDriverKit", "OpenJoystickDriverMacOSPlatform", "OpenJoystickDriverUSB",
+      ],
       path: "Sources/OpenJoystickDriverService",
       linkerSettings: [
         .linkedFramework("CoreBluetooth"), .linkedFramework("GameController"),
@@ -93,7 +105,8 @@ let package = Package(
     .target(
       name: "OpenJoystickDriverMacOSHost",
       dependencies: [
-        "OpenJoystickDriverKit", "OpenJoystickDriverUSB", "OpenJoystickDriverService",
+        "OpenJoystickDriverKit", "OpenJoystickDriverMacOSPlatform", "OpenJoystickDriverUSB",
+        "OpenJoystickDriverService",
         "OpenJoystickDriverPresentation",
       ],
       path: "Sources/OpenJoystickDriverMacOSHost"
@@ -118,13 +131,15 @@ let package = Package(
 
     .executableTarget(
       name: "OpenJoystickDriverHIDTool",
-      dependencies: ["OpenJoystickDriverKit", "OpenJoystickDriverUSB"],
+      dependencies: [
+        "OpenJoystickDriverKit", "OpenJoystickDriverMacOSPlatform", "OpenJoystickDriverUSB",
+      ],
       path: "Sources/OpenJoystickDriverHIDTool"
     ),
 
     .executableTarget(
       name: "OpenJoystickDriverGameControllerProbe",
-      dependencies: ["OpenJoystickDriverKit"],
+      dependencies: ["OpenJoystickDriverKit", "OpenJoystickDriverMacOSPlatform"],
       path: "Sources/OpenJoystickDriverGameControllerProbe",
       linkerSettings: [.linkedFramework("CoreHaptics"), .linkedFramework("GameController")]
     ),
@@ -201,6 +216,15 @@ let package = Package(
       linkerSettings: [.unsafeFlags(["-target", testTargetTriple])]
     ),
     .testTarget(
+      name: "OpenJoystickDriverMacOSPlatformTests",
+      dependencies: [
+        "OpenJoystickDriverKit", "OpenJoystickDriverMacOSPlatform", "OpenJoystickDriverTestSupport",
+      ],
+      path: "Tests/OpenJoystickDriverMacOSPlatformTests",
+      swiftSettings: [.unsafeFlags(["-target", testTargetTriple])],
+      linkerSettings: [.unsafeFlags(["-target", testTargetTriple])]
+    ),
+    .testTarget(
       name: "OpenJoystickDriverPresentationTests",
       dependencies: [
         "OpenJoystickDriverKit", "OpenJoystickDriverUSB", "OpenJoystickDriverPresentation",
@@ -217,7 +241,8 @@ let package = Package(
 // would also reach dependencies, and swift-argument-parser 1.8.2 uses its own deprecated
 // `_errorLabel`.
 let warningsAsErrorsTargets: Set = [
-  "OpenJoystickDriverKit", "OpenJoystickDriverUSB", "OpenJoystickDriverService",
+  "OpenJoystickDriverKit", "OpenJoystickDriverMacOSPlatform", "OpenJoystickDriverUSB",
+  "OpenJoystickDriverService",
   "OpenJoystickDriverCLI", "OpenJoystickDriverPresentation", "OpenJoystickDriverMacOSHost",
   "OpenJoystickDriver",
 ]

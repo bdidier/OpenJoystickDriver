@@ -128,7 +128,7 @@ struct UnboundHIDDeviceTests {
     await manager.handleHIDEvent(.connected(connection: connection, ownership: .exclusive))
     #expect(await manager.unboundDeviceDescriptions().count == 1)
 
-    await manager.handleHIDEvent(.accessFailure(.ioReturn(kIOReturnNotPermitted)))
+    await manager.handleHIDEvent(.accessFailure(.hostStatus(1)))
 
     #expect(await manager.unboundDeviceDescriptions().isEmpty)
     await manager.stop()

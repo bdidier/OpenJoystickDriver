@@ -1,6 +1,4 @@
 import Foundation
-import IOKit
-import IOKit.hid
 
 /// Builds input reports according to a HID report descriptor (subset parser).
 ///
@@ -54,71 +52,5 @@ public struct HIDDescriptorReportFormat: VirtualGamepadReportFormat, Sendable {
 
   public func buildInputReport(from state: VirtualGamepadState) -> [UInt8] {
     packer.pack(state: state)
-  }
-
-  // MARK: - Descriptor sourcing helpers
-
-  /// Copies the HID report descriptor from a currently connected physical HID device.
-  ///
-  /// This avoids hardcoding descriptor bytes in the repo and lets developers confirm
-  /// the exact descriptor used by their controller on their macOS build.
-  public static func copyPhysicalReportDescriptor(vendorID: Int, productID: Int) -> [UInt8]? {
-    copyPhysicalReportDescriptor(vendorID: vendorID, productID: productID, preferredTransport: nil)
-  }
-
-  /// Copies the HID report descriptor from a currently connected physical HID device,
-  /// optionally preferring a specific transport ("USB", "Bluetooth", ...).
-  ///
-  /// This function explicitly filters out OpenJoystickDriver-created virtual devices.
-  public static func copyPhysicalReportDescriptor(
-    vendorID: Int,
-    productID: Int,
-    preferredTransport: String?
-  ) -> [UInt8]? {
-    let matching = AppleGameControllerSyntheticHID.ioHIDMatchingExcludingSynthetics([
-      kIOHIDVendorIDKey as String: vendorID, kIOHIDProductIDKey as String: productID,
-    ])
-    let mgr = IOHIDManagerCreate(kCFAllocatorDefault, IOOptionBits(kIOHIDOptionsTypeNone))
-    IOHIDManagerSetDeviceMatching(mgr, matching as CFDictionary)
-    _ = IOHIDManagerOpen(mgr, IOOptionBits(kIOHIDOptionsTypeNone))
-    defer { IOHIDManagerClose(mgr, IOOptionBits(kIOHIDOptionsTypeNone)) }
-
-    let devices = (IOHIDManagerCopyDevices(mgr) as? Set<IOHIDDevice>) ?? []
-
-    func strProp(_ dev: IOHIDDevice, _ key: String) -> String? {
-      IOHIDDeviceGetProperty(dev, key as CFString) as? String
-    }
-
-    func score(_ dev: IOHIDDevice) -> Int {
-      let transport = strProp(dev, kIOHIDTransportKey as String)
-      let serial = strProp(dev, kIOHIDSerialNumberKey as String) ?? strProp(dev, "SerialNumber")
-      // Exclude OJD virtual devices.
-      if UserSpaceVirtualDeviceConstants.isOJDUserSpaceSerial(serial)
-        || !PhysicalHIDBackendEventAdapter().acceptsDescriptor(
-          syntheticProperty: IOHIDDeviceGetProperty(
-            dev,
-            AppleGameControllerSyntheticHID.propertyKey as CFString
-          )
-        )
-      {
-        return Int.min / 2
-      }
-
-      var s = 0
-      if let preferredTransport, let transport, transport == preferredTransport { s += 10_000 }
-      if let transport, transport != "Virtual" { s += 1_000 }
-      if transport == "USB" { s += 100 }
-      return s
-    }
-
-    let candidates = devices.map { ($0, score($0)) }.sorted { a, b in a.1 > b.1 }
-
-    for (dev, s) in candidates {
-      if s <= Int.min / 4 { continue }
-      if let data = IOHIDDeviceGetProperty(dev, kIOHIDReportDescriptorKey as CFString) as? Data {
-        return [UInt8](data)
-      }
-    }
-    return nil
   }
 }

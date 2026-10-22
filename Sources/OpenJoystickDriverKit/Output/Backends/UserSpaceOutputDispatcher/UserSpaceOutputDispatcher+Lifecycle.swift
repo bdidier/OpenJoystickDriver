@@ -1,8 +1,4 @@
-import Darwin
 import Foundation
-import IOKit
-import IOKit.hid
-import Security
 
 extension UserSpaceOutputDispatcher {
   public typealias OutputCommandHandler =
@@ -17,18 +13,11 @@ extension UserSpaceOutputDispatcher {
     public var description: String {
       switch self {
       case .createFailed: return "Failed to create virtual HID device"
-      case .inputReadDenied: return "Input Monitoring denied for IOKit virtual device"
-      case .inputInjectDenied: return "Accessibility denied for IOKit virtual device"
+      case .inputReadDenied: return "Input Monitoring denied for the virtual HID device"
+      case .inputInjectDenied: return "Accessibility denied for the virtual HID device"
       case .missingEntitlement(let entitlement): return "Missing entitlement: \(entitlement)"
       }
     }
-  }
-
-  protocol VirtualDeviceBackend: AnyObject, Sendable {
-    func send(_ report: [UInt8]) async throws
-    func close()
-    /// Returns once the native device is gone. Backends without async teardown return at once.
-    func waitUntilClosed() async
   }
 
   internal final class LifecycleState: Sendable {
@@ -42,98 +31,6 @@ extension UserSpaceOutputDispatcher {
         closed = true
         return true
       }
-    }
-  }
-
-  internal struct IOKitReportError: Error, Sendable { let code: IOReturn }
-
-  internal final class IOHIDBackend: VirtualDeviceBackend, @unchecked Sendable {
-    internal var device: IOHIDUserDevice?
-    let queue: DispatchQueue
-    internal let lock = NSLock()
-    internal var isClosed = false
-    /// Serial queue for blocking report calls; the sender's single worker already orders them.
-    private let sendQueue = DispatchQueue(label: "com.openjoystickdriver.output.report")
-
-    /// Longest wait for the cancel handler before teardown is reported as finished anyway.
-    static let cancellationTimeoutNanoseconds: UInt64 = 2_000_000_000
-    private let cancellation = Locked(Cancellation())
-
-    private struct Cancellation {
-      var completed = false
-      var waiters: [CheckedContinuation<Void, Never>] = []
-    }
-
-    init(device: IOHIDUserDevice, queue: DispatchQueue) {
-      self.device = device
-      self.queue = queue
-      // The cancel handler must be set before activation. It retains the device, as
-      // IOHIDUserDevice.h requires, until the cancel has been fully delivered.
-      IOHIDUserDeviceSetCancelHandler(device) { [weak self, device] in
-        _ = device
-        self?.finishCancellation()
-      }
-    }
-
-    private func finishCancellation() {
-      let waiters = cancellation.withLock { state -> [CheckedContinuation<Void, Never>] in
-        state.completed = true
-        defer { state.waiters.removeAll() }
-        return state.waiters
-      }
-      waiters.forEach { $0.resume() }
-    }
-
-    /// Suspends until the device's cancel handler ran, so the device no longer publishes.
-    func waitUntilClosed() async {
-      // A device that never reports cancellation must not stall teardown forever. The limit runs
-      // on a timer thread, so a starved cooperative pool cannot extend it.
-      let cancelTimeout = DeadlineTimer.dispatch.schedule(Self.cancellationTimeoutNanoseconds) {
-        [weak self] in self?.finishCancellation()
-      }
-      await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
-        let done = cancellation.withLock { state -> Bool in
-          if state.completed { return true }
-          state.waiters.append(continuation)
-          return false
-        }
-        if done { continuation.resume() }
-      }
-      cancelTimeout()
-    }
-
-    deinit { close() }
-
-    /// Runs the blocking native report call off the cooperative pool.
-    func send(_ report: [UInt8]) async throws {
-      try await BlockingWork.run(on: sendQueue) { [self] in try sendNow(report) }
-    }
-
-    private func sendNow(_ report: [UInt8]) throws {
-      guard let device = lock.withLock({ isClosed ? nil : device }) else {
-        throw CancellationError()
-      }
-      // Interrupt IN for IOKit clients (`hid_read`). GetReport is a separate control path.
-      let result = report.withUnsafeBytes { pointer -> IOReturn in
-        guard let base = pointer.baseAddress else { return kIOReturnBadArgument }
-        return IOHIDUserDeviceHandleReportWithTimeStamp(
-          device,
-          mach_absolute_time(),
-          base.assumingMemoryBound(to: UInt8.self),
-          pointer.count
-        )
-      }
-      guard result == kIOReturnSuccess else { throw IOKitReportError(code: result) }
-    }
-
-    func close() {
-      let device = lock.withLock { () -> IOHIDUserDevice? in
-        guard !isClosed else { return nil }
-        isClosed = true
-        defer { self.device = nil }
-        return self.device
-      }
-      if let device { IOHIDUserDeviceCancel(device) }
     }
   }
 
@@ -166,9 +63,6 @@ extension UserSpaceOutputDispatcher {
   }
 
   public var lastRumbleStatus: String? { registryLock.withLock { _lastRumbleStatus } }
-  static var hasRequiredVirtualDeviceEntitlement: Bool {
-    hasEntitlement(requiredVirtualDeviceEntitlement)
-  }
 
   public func close() async { await beginClose().value }
 
@@ -271,8 +165,4 @@ extension UserSpaceOutputDispatcher {
   internal func isOutputSuppressed(remapped: Bool) -> Bool {
     registryLock.withLock { remapped ? remappingOutputSuppressed : _suppressOutput }
   }
-}
-
-extension UserSpaceOutputDispatcher.VirtualDeviceBackend {
-  func waitUntilClosed() async { await Task.yield() }
 }

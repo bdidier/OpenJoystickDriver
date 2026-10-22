@@ -1,4 +1,4 @@
-import IOKit.hid
+import Foundation
 
 /// Identifier of one exact published virtual HID ABI.
 ///
@@ -85,7 +85,7 @@ public protocol VirtualHIDProfile: Sendable {
   /// Decodes a consumer's output report, as delivered with its report ID byte, into the command
   /// it requests; nil when the report is not one this profile declares, or is malformed.
   func consumerOutput(
-    type: IOHIDReportType,
+    type: VirtualHostReportType,
     reportID: UInt32,
     bytes: [UInt8]
   ) -> ControllerOutputCommand?
@@ -113,7 +113,7 @@ struct XboxOneSBluetoothHIDProfile: VirtualHIDProfile {
   }
 
   func consumerOutput(
-    type: IOHIDReportType,
+    type: VirtualHostReportType,
     reportID: UInt32,
     bytes: [UInt8]
   ) -> ControllerOutputCommand? {
@@ -140,7 +140,7 @@ struct OJDGenericHIDProfile: VirtualHIDProfile {
   }
 
   func consumerOutput(
-    type: IOHIDReportType,
+    type: VirtualHostReportType,
     reportID: UInt32,
     bytes: [UInt8]
   ) -> ControllerOutputCommand? { nil }
@@ -155,7 +155,7 @@ private enum ReportFormatCodec {
     in format: some VirtualGamepadReportFormat
   ) -> [UInt8] {
     var virtual = VirtualGamepadState()
-    UserSpaceOutputDispatcher.apply(
+    VirtualGamepadReportMapping.apply(
       state,
       stickTransfer: .init(deadzone: 0, rescalesDeadzone: false),
       to: &virtual
@@ -166,12 +166,12 @@ private enum ReportFormatCodec {
   /// Decodes an output report through the consumer output codec that the published device's
   /// set-report callback uses.
   static func consumerOutput(
-    type: IOHIDReportType,
+    type: VirtualHostReportType,
     reportID: UInt32,
     bytes: [UInt8],
     in format: some VirtualGamepadReportFormat
   ) -> ControllerOutputCommand? {
-    guard type == kIOHIDReportTypeOutput,
+    guard type == .output,
       let request = try? VirtualHostReportRequest(type: .output, reportID: reportID, bytes: bytes)
     else { return nil }
     return try? ConsumerOutputCodec.decode(request, in: format)

@@ -86,22 +86,6 @@ struct PhysicalHIDPolicyTests {
   }
 
   @Test
-  func onlyDeniedInitialOpensEndTheHIDStream() {
-    func failureCode(_ result: IOReturn) -> IOReturn? {
-      guard
-        case .accessFailure(.ioReturn(let code)) = HIDDeviceStream.accessFailure(
-          forInitialOpenResult: result
-        )
-      else { return nil }
-      return code
-    }
-    #expect(failureCode(kIOReturnNotPermitted) == kIOReturnNotPermitted)
-    #expect(failureCode(kIOReturnNotPrivileged) == kIOReturnNotPrivileged)
-    #expect(HIDDeviceStream.accessFailure(forInitialOpenResult: kIOReturnSuccess) == nil)
-    #expect(HIDDeviceStream.accessFailure(forInitialOpenResult: kIOReturnExclusiveAccess) == nil)
-  }
-
-  @Test
   func rejectedSyntheticInterfaceCannotChangePhysicalOwnership() {
     let adapter = SynchronizedPhysicalHIDBackendEventAdapter()
     #expect(

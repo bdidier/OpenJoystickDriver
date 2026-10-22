@@ -1,5 +1,4 @@
 import Foundation
-import IOKit.hid
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -34,7 +33,7 @@ struct VirtualControllerBackendTests {
   @Test
   func nonStandardButtonsKeepDistinctNormalizedBits() {
     func bit(_ control: Control) -> UInt32? {
-      UserSpaceOutputDispatcher.buttonBit(for: control)
+      VirtualGamepadReportMapping.buttonBit(for: control)
     }
 
     #expect(bit(.capture) == 15)
@@ -45,53 +44,6 @@ struct VirtualControllerBackendTests {
     #expect(bit(.rightTrackpadClick) == nil)
     #expect(bit(.microphone) == nil)
     #expect(bit(.touchpadClick) == nil)
-  }
-
-  @Test
-  func testUserSpaceXboxOneSIdentityAdvertisesNumberedReportSizes() throws {
-    let format = try XboxGeckoHIDReportFormat()
-    let properties = UserSpaceOutputDispatcher.deviceProperties(
-      profile: .sdlCompatible,
-      format: format,
-      identifier: LogicalControllerID(vendorID: 13623, productID: 4112)
-    )
-
-    let inputSize = properties[kIOHIDMaxInputReportSizeKey as String] as? Int
-    let outputSize = properties[kIOHIDMaxOutputReportSizeKey as String] as? Int
-    #expect(inputSize == format.inputReportPayloadSize + 1)
-    #expect(outputSize == ConsumerOutputCodec.xboxOneReportPayloadSize + 1)
-  }
-
-  @Test
-  func testIOKitPropertiesPreserveDescriptorAndIdentity() throws {
-    let format = try XboxGeckoHIDReportFormat()
-    let profile = VirtualDeviceProfile.sdlCompatible
-    let properties = UserSpaceOutputDispatcher.deviceProperties(
-      profile: profile,
-      format: format,
-      identifier: LogicalControllerID(vendorID: 13623, productID: 4112)
-    )
-
-    #expect(properties[kIOHIDReportDescriptorKey as String] as? Data == Data(format.descriptor))
-    #expect(properties[kIOHIDVendorIDKey as String] as? Int == Int(profile.vendorID))
-    #expect(properties[kIOHIDProductIDKey as String] as? Int == Int(profile.productID))
-    #expect(properties[kIOHIDVersionNumberKey as String] as? Int == profile.versionNumber)
-    #expect(profile.versionNumber == 0)
-  }
-
-  @Test
-  func testUserSpaceDispatcherFailsFastWithoutVirtualDeviceEntitlement() throws {
-    guard !UserSpaceOutputDispatcher.hasRequiredVirtualDeviceEntitlement else { return }
-
-    do {
-      _ = try UserSpaceOutputDispatcher(
-        profile: .generic,
-        format: OJDGenericGamepadFormat()
-      )
-      Issue.record("UserSpaceOutputDispatcher should require the virtual HID entitlement")
-    } catch UserSpaceOutputDispatcher.CreationError.missingEntitlement(let entitlement) {
-      #expect(entitlement == UserSpaceOutputDispatcher.requiredVirtualDeviceEntitlement)
-    } catch { Issue.record("Unexpected error: \(error)") }
   }
 
   @Test
