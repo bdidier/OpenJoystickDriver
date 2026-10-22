@@ -173,6 +173,21 @@ function statusMenuBarItem(app) {
 	return found[0];
 }
 
+// Presses the status item. Its menu tracks on the app's main thread until it closes, so AXPress
+// cannot complete and returns -25204 once the messaging timeout passes while the menu is open;
+// AX still answers the reads during tracking, and capture.py confirms the open menu from the
+// window list. Only this press waits the shorter timeout and accepts -25204.
+function pressStatusItem(item) {
+	if (attribute(item, "AXEnabled") === false) throw new Error("the status item is disabled");
+	const timeout = $.AXUIElementSetMessagingTimeout(item, STATUS_PRESS_TIMEOUT_SECONDS);
+	if (timeout !== 0) throw new Error("setting the status item timeout failed with AXError " + timeout);
+	const code = $.AXUIElementPerformAction(item, "AXPress");
+	// A timeout of 0 returns the item to the global timeout for the reads that follow.
+	const reset = $.AXUIElementSetMessagingTimeout(item, 0);
+	if (reset !== 0) throw new Error("resetting the status item timeout failed with AXError " + reset);
+	if (code !== 0 && code !== AX_CANNOT_COMPLETE) throw new Error("AXPress failed with AXError " + code);
+}
+
 // Presses each item, by AXIdentifier, of the menu that belongs to `start`, so its submenu opens.
 function pressPath(start, ids) {
 	let element = start;
@@ -334,14 +349,7 @@ function run(argv) {
 		case "open-status-menu": {
 			activate(app, pid);
 			const item = statusMenuBarItem(app);
-			if (attribute(item, "AXEnabled") === false) throw new Error("the status item is disabled");
-			// The status menu tracks on the app's main thread until it closes, so AXPress on the
-			// status item cannot complete and times out with -25204 while the menu is open.
-			// capture.py confirms the open menu from the window list.
-			const timeout = $.AXUIElementSetMessagingTimeout(item, STATUS_PRESS_TIMEOUT_SECONDS);
-			if (timeout !== 0) throw new Error("setting the status item timeout failed with AXError " + timeout);
-			const code = $.AXUIElementPerformAction(item, "AXPress");
-			if (code !== 0 && code !== AX_CANNOT_COMPLETE) throw new Error("AXPress failed with AXError " + code);
+			pressStatusItem(item);
 			pressPath(item, argument === undefined ? [] : [argument, ...rest]);
 			return "";
 		}

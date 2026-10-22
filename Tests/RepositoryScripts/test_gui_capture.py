@@ -505,6 +505,53 @@ class GuiCaptureTests(unittest.TestCase):
         self.assertIn("thing did not appear", reported["never"])
         self.assertIn("last AXError -25204", reported["never"])
 
+    @unittest.skipUnless(
+        shutil.which("osascript"), "osascript is not installed: ax.js needs JXA"
+    )
+    def test_only_the_status_item_press_accepts_a_tracking_menu(self) -> None:
+        # A fake `$` records the timeouts and answers AXPress with the given code; every
+        # other name goes to the bridge.
+        harness = (
+            "ObjC.import('Foundation');"
+            f"const path = {json.dumps(str(capture.GUI_DIR / 'ax.js'))};"
+            "const source = $.NSString.stringWithContentsOfFileEncodingError("
+            "path, $.NSUTF8StringEncoding, null).js;"
+            "const calls = []; let pressCode = 0;"
+            "const fake = { AXUIElementSetMessagingTimeout: (element, seconds) => {"
+            " calls.push('timeout ' + seconds); return 0; },"
+            " AXUIElementPerformAction: (element, action) => {"
+            " calls.push(action); return pressCode; },"
+            " AXUIElementCopyAttributeValue: () => -25205 };"
+            "const bridged = $;"
+            "const proxy = new Proxy({}, { get: (target, name) =>"
+            " name in fake ? fake[name] : bridged[name] });"
+            "const [pressStatusItem, pressMenuElement] = new Function('$', source +"
+            " '; return [pressStatusItem, pressMenuElement];')(proxy);"
+            "const outcome = (press, code) => { calls.length = 0; pressCode = code;"
+            " try { press('item', 'menu.file'); return calls.join(', '); }"
+            " catch (e) { return calls.join(', ') + ' -> ' + e.message; } };"
+            "JSON.stringify({ tracking: outcome(pressStatusItem, -25204),"
+            " opened: outcome(pressStatusItem, 0),"
+            " failed: outcome(pressStatusItem, -25200),"
+            " menu: outcome(pressMenuElement, -25204) })"
+        )
+        result = subprocess.run(
+            ["osascript", "-l", "JavaScript", "-e", harness],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(
+            json.loads(result.stdout),
+            {
+                "tracking": "timeout 0.5, AXPress, timeout 0",
+                "opened": "timeout 0.5, AXPress, timeout 0",
+                "failed": "timeout 0.5, AXPress, timeout 0 -> AXPress failed with AXError -25200",
+                "menu": "AXPress -> AXPress failed with AXError -25204",
+            },
+        )
+
     def test_capture_probes_after_finding_the_app_and_before_any_gui_call(
         self,
     ) -> None:
@@ -1001,6 +1048,37 @@ class GuiCaptureTests(unittest.TestCase):
             target, [[], both, both, both, [parent], [parent], [], []]
         )
         self.assertIsNone(failure)
+
+    def test_the_other_menus_leave_the_window_list_in_front_to_back_order(self) -> None:
+        parent = self.menu_window(id=1, x=100, y=33, width=200, height=300)
+        submenu = self.menu_window(id=2, x=294, y=120, width=150, height=500)
+        cover = self.window(id=3, pid=7, owner="Code", x=150, y=100, layer=102)
+        behind = self.window(id=4, pid=8, owner="Finder")
+        windows = [submenu, cover, parent, behind]
+        # Copies, as from another read of the window list: windows match by id.
+        menus = [dict(parent), dict(submenu)]
+        self.assertEqual(
+            capture.without_other_menus(menus[0], menus, windows),
+            [cover, parent, behind],
+        )
+        self.assertEqual(
+            capture.without_other_menus(menus[1], menus, windows),
+            [submenu, cover, behind],
+        )
+
+    def test_a_window_between_a_submenu_and_its_parent_covers_the_parent(self) -> None:
+        parent = self.menu_window(id=1, x=100, y=33, width=200, height=300)
+        submenu = self.menu_window(id=2, x=294, y=120, width=150, height=500)
+        cover = self.window(id=3, pid=7, owner="Code", x=150, y=100, layer=102)
+        covered = [submenu, cover, parent]
+        target = capture.MenuTarget("menu-profile", ("menu.profile", "activateProfile"))
+        _, _, failure = self.shoot_menu_with(
+            target, [[], covered, covered, covered, [], []]
+        )
+        assert failure is not None
+        self.assertIn(
+            "the menu-profile menu is covered by windows of Code", str(failure)
+        )
 
     def test_shoot_menu_refuses_a_menu_that_is_already_open(self) -> None:
         stale = [self.menu_window(id=5)]

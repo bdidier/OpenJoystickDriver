@@ -46,7 +46,7 @@
     let notificationMonitor = RuntimeNotificationMonitor()
     let notificationPresenter = RuntimeNotificationCenterDelegate()
     let termination = MenuBarTermination()
-    let dockIcon = DockIconController()
+    let dockIcon = DockIconController.appKit()
     static weak var activeCoordinator: MenuBarCoordinator?
 
     package init(

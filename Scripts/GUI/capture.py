@@ -298,6 +298,15 @@ def covering_windows(target: dict, windows: list[dict]) -> list[str]:
     ]
 
 
+def without_other_menus(
+    menu: dict, menus: list[dict], windows: list[dict]
+) -> list[dict]:
+    """`windows`, front to back, without the menus of the capture other than `menu`: the
+    menus the capture opened overlap one another and all belong in the image."""
+    others = {other["id"] for other in menus if other["id"] != menu["id"]}
+    return [window for window in windows if window["id"] not in others]
+
+
 def screen_rectangle(window: dict) -> str:
     """The `screencapture -R` argument for the window's frame in global points."""
     values = [window[key] for key in ("x", "y", "width", "height")]
@@ -573,7 +582,7 @@ def shoot_menu(
             owner
             for menu in menus
             for owner in covering_windows(
-                menu, [w for w in windows if w is menu or w not in menus]
+                menu, without_other_menus(menu, menus, windows)
             )
         ]
         if covering:
