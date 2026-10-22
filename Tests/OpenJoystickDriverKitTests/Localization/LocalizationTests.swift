@@ -128,7 +128,9 @@ struct LocalizationTests {
         "folders": variable(["one", "few", "many", "other", "zero"]),
       ]
     ]
-    #expect(LocalizationCatalogAudit.pluralCategoryProblems(in: complete, required: russian) == [])
+    #expect(
+      LocalizationCatalogAudit.pluralCategoryProblems(in: complete, required: russian).isEmpty
+    )
     #expect(
       LocalizationCatalogAudit.pluralCategoryProblems(
         in: ["files.none": ["NSStringLocalizedFormatKey": "none"]],
@@ -168,10 +170,11 @@ struct LocalizationTests {
     for locale in Localization.availableLocalizations() {
       let language = String(locale.split(separator: "-")[0])
       let required = try #require(needed[language], "no plural categories for \(language)")
-      #expect(
-        LocalizationCatalogAudit.pluralCategoryProblems(for: locale, required: required) == [],
-        "\(locale)"
+      let problems = LocalizationCatalogAudit.pluralCategoryProblems(
+        for: locale,
+        required: required
       )
+      #expect(problems.isEmpty, "\(locale): \(problems)")
       #expect(
         LocalizationCatalogAudit.countKeysWithoutPluralEntry(for: locale).isEmpty,
         "\(locale) takes a count but has no stringsdict entry"
