@@ -54,7 +54,7 @@ ROOT = Path(__file__).resolve().parents[2]
 RESOURCES_DIRECTORY = Path("Sources/OpenJoystickDriverKit/Resources")
 CATALOG_DIRECTORY = Path("Sources/OpenJoystickDriverKit/Resources/en-US.lproj")
 CALL = re.compile(
-    r"(?:\b(?:OJDLocalized\.(?:string|formatted|plural)|CLILocalized\.(?:text|format)"
+    r"(?:\b(?:OJDLocalized\.(?:string|formatted|plural)|CLILocalized\.(?:text|format|plural)"
     r"|LocalizedStringResource|(?:Localization\(\)|localization)\.(?:string|formatted|plural))"
     r"|\.key)\("
 )
@@ -107,12 +107,122 @@ SPECIFIER = re.compile(
 )
 COUNT_SPECIFIER = re.compile(r"%(?:\d+\$)?[-+ 0#]*\d*(?:hh|h|ll|l|q|z|t|j)?[dDiuU]")
 # En-US keys whose integer specifier is not a count, each with the reason.
-NOT_A_COUNT: dict[str, str] = {}
+NOT_A_COUNT: dict[str, str] = {
+    "cli.binding.clear.done": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it"
+    ),
+    "cli.binding.clear.dryRun": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it"
+    ),
+    "cli.diagnose.group.failed": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it"
+    ),
+    "cli.diagnose.group.recordsApplied": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it"
+    ),
+    "cli.diagnose.group.soakErrorInvalidConfiguration": (
+        "the numbers are the bounds of a range of the allowed duration and interval"
+    ),
+    "cli.diagnose.group.soakErrorProcessUnavailable": (
+        "the number is the process ID of the service"
+    ),
+    "cli.diagnose.group.soakVerdictFootprintLimit": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it; the line is a list of measurements"
+    ),
+    "cli.diagnose.group.soakVerdictInsufficientData": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it; the line is a list of measurements"
+    ),
+    "cli.diagnose.group.soakVerdictMemoryGrowth": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it; the line is a list of measurements"
+    ),
+    "cli.diagnose.group.soakVerdictResidentLimit": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it; the line is a list of measurements"
+    ),
+    "cli.diagnose.group.soakVerdictResourceGrowth": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it; the line is a list of measurements"
+    ),
+    "cli.diagnose.group.soakVerdictStable": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it; the line is a list of measurements"
+    ),
+    "cli.diagnose.group.timingsFrame": (
+        "the number is a position in a sequence, not a quantity (the frame number)"
+    ),
+    "cli.diagnose.group.usbOk": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it"
+    ),
+    "cli.profile.edit.editorFailed": (
+        "the number is a process exit status of the editor"
+    ),
+    "cli.record.draft.captured": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it"
+    ),
+    "cli.record.draft.changedByte": (
+        "the numbers are a byte position and two byte values"
+    ),
+    "cli.record.test.parseFailed": (
+        "the number is a position in a sequence, not a quantity (the packet number)"
+    ),
+    "cli.status.group.labelControllers": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it"
+    ),
+    "cli.status.group.labelSkippedPersonas": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it"
+    ),
+    "cli.status.group.labelSkippedRecords": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it"
+    ),
+    "cli.status.group.labelUnbound": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it"
+    ),
+    "cli.transportExtension.group.failed": (
+        "the number is an error code"
+    ),
+    "platform.macos.cli.status.group.labelPassThrough": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it"
+    ),
+    "ui.access.web.enable.port": (
+        "the number is a network port"
+    ),
+    "ui.access.web.portRange": (
+        "the numbers are the bounds of a range of the allowed ports"
+    ),
+    "ui.capture.touchColumn": (
+        "the number is a position in a sequence, not a quantity (the column of a touch cell)"
+    ),
+    "ui.capture.touchColumns": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it"
+    ),
+    "ui.capture.touchRow": (
+        "the number is a position in a sequence, not a quantity (the row of a touch cell)"
+    ),
+    "ui.capture.touchRows": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it"
+    ),
+    "ui.controllers.launch.exited": (
+        "the number is a process exit status of the launched program"
+    ),
+    "ui.developer.soakOutOfRange": (
+        "the numbers are the bounds of a range of the allowed value"
+    ),
+    "ui.inputTest.durationValue": (
+        "the number is a duration in milliseconds, written with the unit symbol ms"
+    ),
+    "ui.mapping.touchGridCell": (
+        "the numbers are the size of a touch grid and the position of a cell in it"
+    ),
+    "ui.profiles.controlNumber": (
+        "the number is a position in a sequence, not a quantity (the number that names a control)"
+    ),
+}
 STRINGS_ENTRY = re.compile(
     r"(?:/\*(?P<comment>(?:(?!\*/).)*)\*/[ \t]*\n?)?"
     r'"(?P<key>(?:[^"\\]|\\.)*)"\s*=\s*"(?P<value>(?:[^"\\]|\\.)*)"\s*;',
     re.DOTALL,
 )
+STRINGS_COMMENT = re.compile(r"/\*(?:(?!\*/).)*\*/", re.DOTALL)
+STRINGS_KEY_LINE = re.compile(r'"(?P<key>(?:[^"\\]|\\.)*)"\s*=')
+STRINGSDICT_COMMENT = re.compile(r"<!--(?:(?!-->).)*-->", re.DOTALL)
+STRINGSDICT_KEY = re.compile(r"<key>(?P<key>[^<]+)</key>")
 STRINGSDICT_COMMENTED_KEY = re.compile(
     r"(?P<comment><!--(?:(?!-->).)*-->[ \t]*\n)?(?m:^)\t<key>(?P<key>[^<]+)</key>",
     re.DOTALL,
@@ -478,6 +588,40 @@ def comment_problem(entry: StringsEntry) -> str | None:
     return None if entry.comment else f"{entry.key!r}: no translator comment"
 
 
+def stacked_comment_keys(
+    text: str, comment: re.Pattern[str], key: re.Pattern[str]
+) -> list[str]:
+    """Return the keys under a run of two or more comments with only whitespace between them."""
+    spans = [match.span() for match in comment.finditer(text)]
+    found: list[str] = []
+    for (_, end), (start, _) in zip(spans, spans[1:]):
+        if text[end:start].strip():
+            continue
+        following = key.search(text, start)
+        name = following["key"] if following else "(end of file)"
+        if name not in found:
+            found.append(name)
+    return found
+
+
+def stacked_comment_problems(directory: Path) -> list[RuleProblem]:
+    """Return a problem for each key that has more than one comment above it in a bundle."""
+    problems: list[RuleProblem] = []
+    for name, comment, key in (
+        ("Localizable.strings", STRINGS_COMMENT, STRINGS_KEY_LINE),
+        ("Localizable.stringsdict", STRINGSDICT_COMMENT, STRINGSDICT_KEY),
+    ):
+        text = (directory / name).read_text(encoding="utf-8")
+        for stacked in stacked_comment_keys(text, comment, key):
+            problems.append(
+                RuleProblem(
+                    stacked,
+                    f"{directory.name}/{name}: {stacked!r} has more than one comment above it",
+                )
+            )
+    return problems
+
+
 def stringsdict_uncommented_keys(root: Path = ROOT) -> set[str]:
     """Return the en-US stringsdict keys without a translator comment above them."""
     text = (root / CATALOG_DIRECTORY / "Localizable.stringsdict").read_text(
@@ -515,11 +659,13 @@ class RuleProblem:
     message: str
 
 
-def count_specifier_problem(entry: StringsEntry, plurals: set[str]) -> str | None:
+def count_specifier_problem(
+    entry: StringsEntry, plurals: set[str], not_a_count: dict[str, str] | None = None
+) -> str | None:
     """Return why an integer specifier has no plural entry, or None."""
     if (
         entry.key in plurals
-        or entry.key in NOT_A_COUNT
+        or entry.key in (NOT_A_COUNT if not_a_count is None else not_a_count)
         or not COUNT_SPECIFIER.search(entry.value.replace("%%", ""))
     ):
         return None
@@ -529,14 +675,32 @@ def count_specifier_problem(entry: StringsEntry, plurals: set[str]) -> str | Non
     )
 
 
-def rule_problems(root: Path = ROOT) -> dict[str, list[RuleProblem]]:
-    """Return the violations of the gateable rules by rule name."""
+def not_a_count_problem(
+    key: str, entries: list[StringsEntry], plurals: set[str]
+) -> str | None:
+    """Return why a `NOT_A_COUNT` entry no longer holds, or None."""
+    entry = next((e for e in entries if e.key == key), None)
+    if entry is None:
+        return f"{key!r}: NOT_A_COUNT names a key that is not in the en-US strings"
+    if key in plurals:
+        return f"{key!r}: NOT_A_COUNT names a key that has a stringsdict entry"
+    if not COUNT_SPECIFIER.search(entry.value.replace("%%", "")):
+        return f"{key!r}: NOT_A_COUNT names a value without an integer specifier"
+    return None
+
+
+def rule_problems(
+    root: Path = ROOT, not_a_count: dict[str, str] | None = None
+) -> dict[str, list[RuleProblem]]:
+    """Return the violations of the catalog rules by rule name."""
+    not_a_count = NOT_A_COUNT if not_a_count is None else not_a_count
     found: dict[str, list[RuleProblem]] = {
         "namespace": [],
         "osWord": [],
         "specifier": [],
         "comment": [],
         "pluralCount": [],
+        "stackedComment": [],
     }
 
     def add(rule: str, key: str, message: str | None, prefix: str = "") -> None:
@@ -552,7 +716,13 @@ def rule_problems(root: Path = ROOT) -> dict[str, list[RuleProblem]]:
         add("osWord", entry.key, os_word_problem(entry.key, entry.value))
         add("specifier", entry.key, specifier_problem(entry.key, entry.value))
         add("comment", entry.key, comment_problem(entry))
-        add("pluralCount", entry.key, count_specifier_problem(entry, set(plurals)))
+        add(
+            "pluralCount",
+            entry.key,
+            count_specifier_problem(entry, set(plurals), not_a_count),
+        )
+    for key in sorted(not_a_count):
+        add("pluralCount", key, not_a_count_problem(key, entries, set(plurals)))
     for key, texts in stringsdict_values(root).items():
         add("namespace", key, key_shape_problem(key))
         for text in texts:
@@ -572,6 +742,7 @@ def rule_problems(root: Path = ROOT) -> dict[str, list[RuleProblem]]:
                 f"{name}.lproj ",
             )
     for locale in locale_directories(root):
+        found["stackedComment"].extend(stacked_comment_problems(locale))
         if locale.name == "en-US.lproj":
             continue
         text = (locale / "Localizable.strings").read_text(encoding="utf-8")

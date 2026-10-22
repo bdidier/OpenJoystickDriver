@@ -373,9 +373,9 @@ class RuleTests(unittest.TestCase):
         for name, text in (("en-US", strings), ("C", c_strings)):
             (resources / f"{name}.lproj").mkdir(parents=True)
             (resources / f"{name}.lproj" / "Localizable.strings").write_text(text)
-        (resources / "en-US.lproj" / "Localizable.stringsdict").write_bytes(
-            plistlib.dumps({})
-        )
+            (resources / f"{name}.lproj" / "Localizable.stringsdict").write_bytes(
+                plistlib.dumps({})
+            )
         return root
 
     def test_each_rule_reports_its_violation_with_the_key(self) -> None:
@@ -383,15 +383,132 @@ class RuleTests(unittest.TestCase):
             '"bad key" = "Open System Settings %@ %@ %d";\n'
             '/* Label. */\n"ui.fine.title" = "Fine";\n'
         )
-        found = guard.rule_problems(root)
+        found = guard.rule_problems(root, not_a_count={})
         for rule in ("namespace", "osWord", "specifier", "comment", "pluralCount"):
             self.assertEqual({p.key for p in found[rule]}, {"bad key"}, rule)
 
     def test_a_conforming_catalog_has_no_violation(self) -> None:
         root = self.catalog('/* Label. */\n"ui.fine.title" = "Fine";\n')
         self.assertEqual(
-            {rule: p for rule, p in guard.rule_problems(root).items() if p}, {}
+            {
+                rule: p
+                for rule, p in guard.rule_problems(root, not_a_count={}).items()
+                if p
+            },
+            {},
         )
+
+
+class StackedCommentTests(unittest.TestCase):
+    def strings_keys(self, text: str) -> list[str]:
+        return guard.stacked_comment_keys(
+            text, guard.STRINGS_COMMENT, guard.STRINGS_KEY_LINE
+        )
+
+    def dict_keys(self, text: str) -> list[str]:
+        return guard.stacked_comment_keys(
+            text, guard.STRINGSDICT_COMMENT, guard.STRINGSDICT_KEY
+        )
+
+    def test_two_comments_above_a_strings_key_fail(self) -> None:
+        self.assertEqual(
+            self.strings_keys('/* One. */\n/* Two. */\n"a.b" = "A";\n'), ["a.b"]
+        )
+
+    def test_a_blank_line_between_the_comments_still_stacks(self) -> None:
+        self.assertEqual(
+            self.strings_keys('/* One. */\n\n/* Two. */\n"a.b" = "A";\n'), ["a.b"]
+        )
+
+    def test_three_comments_report_the_key_once(self) -> None:
+        self.assertEqual(
+            self.strings_keys('/* 1 */\n/* 2 */\n/* 3 */\n"a.b" = "A";\n'), ["a.b"]
+        )
+
+    def test_one_comment_per_key_passes(self) -> None:
+        self.assertEqual(
+            self.strings_keys('/* One. */\n"a.b" = "A";\n/* Two. */\n"c.d" = "C";\n'),
+            [],
+        )
+
+    def test_a_comment_inside_a_value_is_not_a_comment(self) -> None:
+        self.assertEqual(
+            self.strings_keys('/* One. */\n"a.b" = "x /* y */ z";\n"c.d" = "C";\n'), []
+        )
+
+    def test_two_comments_above_a_stringsdict_key_fail(self) -> None:
+        text = "<dict>\n\t<!-- One. -->\n\t<!-- Two. -->\n\t<key>a.b</key>\n</dict>\n"
+        self.assertEqual(self.dict_keys(text), ["a.b"])
+        text = "<dict>\n\t<!-- One. -->\n\t<key>a.b</key>\n</dict>\n"
+        self.assertEqual(self.dict_keys(text), [])
+
+    def test_the_rule_names_the_bundle_and_the_key(self) -> None:
+        with tempfile.TemporaryDirectory() as name:
+            directory = Path(name) / "de-DE.lproj"
+            directory.mkdir()
+            (directory / "Localizable.strings").write_text(
+                '/* One. */\n/* Two. */\n"a.b" = "A";\n'
+            )
+            (directory / "Localizable.stringsdict").write_text(
+                "<dict>\n\t<!-- One. -->\n\t<!-- Two. -->\n\t<key>c.d</key>\n</dict>\n"
+            )
+            self.assertEqual(
+                [p.message for p in guard.stacked_comment_problems(directory)],
+                [
+                    "de-DE.lproj/Localizable.strings: 'a.b' has more than one comment above it",
+                    "de-DE.lproj/Localizable.stringsdict: 'c.d' has more than one comment above it",
+                ],
+            )
+
+    def test_the_repository_stacks_no_comment(self) -> None:
+        self.assertEqual(
+            [
+                p.message
+                for locale in guard.locale_directories()
+                for p in guard.stacked_comment_problems(locale)
+            ],
+            [],
+        )
+
+
+class StaleNotACountTests(unittest.TestCase):
+    entries = [guard.StringsEntry("ui.a.b", "status %d", "Label.")]
+
+    def test_a_key_outside_the_catalog_fails(self) -> None:
+        self.assertIn(
+            "not in the en-US strings",
+            guard.not_a_count_problem("ui.gone.key", self.entries, set()) or "",
+        )
+
+    def test_a_value_without_an_integer_specifier_fails(self) -> None:
+        entries = [guard.StringsEntry("ui.a.b", "status %@", "Label.")]
+        self.assertIn(
+            "without an integer specifier",
+            guard.not_a_count_problem("ui.a.b", entries, set()) or "",
+        )
+
+    def test_a_key_with_a_plural_entry_fails(self) -> None:
+        self.assertIn(
+            "has a stringsdict entry",
+            guard.not_a_count_problem("ui.a.b", self.entries, {"ui.a.b"}) or "",
+        )
+
+    def test_a_current_entry_passes(self) -> None:
+        self.assertIsNone(guard.not_a_count_problem("ui.a.b", self.entries, set()))
+
+    def test_rule_problems_reports_a_stale_entry_under_the_plural_rule(self) -> None:
+        scratch = tempfile.TemporaryDirectory()
+        self.addCleanup(scratch.cleanup)
+        root = Path(scratch.name)
+        for name in ("en-US", "C"):
+            directory = root / guard.RESOURCES_DIRECTORY / f"{name}.lproj"
+            directory.mkdir(parents=True)
+            (directory / "Localizable.strings").write_text(
+                '/* Label. */\n"ui.fine.title" = "Fine";\n'
+            )
+            (directory / "Localizable.stringsdict").write_bytes(plistlib.dumps({}))
+        found = guard.rule_problems(root, not_a_count={"ui.gone.key": "an exit status"})
+        self.assertEqual([p.key for p in found["pluralCount"]], ["ui.gone.key"])
 
 
 class GateTests(unittest.TestCase):
@@ -537,6 +654,7 @@ class WriteGatedKeysCommandTests(unittest.TestCase):
         c_directory = root / guard.RESOURCES_DIRECTORY / "C.lproj"
         c_directory.mkdir(parents=True)
         (c_directory / "Localizable.strings").write_text("")
+        (c_directory / "Localizable.stringsdict").write_bytes(plistlib.dumps({}))
         path = root / guard.GATED_KEYS_PATH
         path.parent.mkdir(parents=True)
         path.write_text(json.dumps({"comment": gated}))
@@ -544,7 +662,11 @@ class WriteGatedKeysCommandTests(unittest.TestCase):
 
     def run_main(self, root: Path, *arguments: str) -> tuple[int, str]:
         errors = io.StringIO()
-        with mock.patch.object(guard, "ROOT", root), contextlib.redirect_stderr(errors):
+        with (
+            mock.patch.object(guard, "ROOT", root),
+            mock.patch.dict(guard.NOT_A_COUNT, clear=True),
+            contextlib.redirect_stderr(errors),
+        ):
             code = guard.main(["--write-gated-keys", *arguments])
         return code, errors.getvalue()
 
