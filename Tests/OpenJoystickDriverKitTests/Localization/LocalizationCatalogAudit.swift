@@ -224,8 +224,7 @@ enum LocalizationCatalogAudit {
 
   /// The problems of `entries`: an entry with no plural variable, and a plural variable that lacks
   /// a category of `required`. Each variable needs every category on its own.
-  static func pluralCategoryProblems(in entries: [String: Any], required: Set<String>) -> [String]
-  {
+  static func pluralCategoryProblems(in entries: [String: Any], required: Set<String>) -> [String] {
     var problems: [String] = []
     for (key, entry) in entries.sorted(by: { $0.key < $1.key }) {
       let variables = pluralVariables(entry)
