@@ -14,6 +14,7 @@ Find solutions for common OpenJoystickDriver (OJD) problems: a controller that i
   - [Understand Why Apps Differ](#understand-why-apps-differ)
   - [Try the Other Virtual Profile](#try-the-other-virtual-profile)
   - [Try a Different Controller Mode](#try-a-different-controller-mode)
+- [The Home Button Opens Games](#the-home-button-opens-games)
 - [App Crashes Or Does Not Start](#app-crashes-or-does-not-start)
   - [Collect Information](#collect-information)
   - [Crash At Every Start](#crash-at-every-start)
@@ -107,7 +108,16 @@ Some controllers have a Switch Pro mode. In that mode macOS reads the controller
 
 For more information, see [Game and app compatibility](Playing-Games.md).
 
-## App Crashes Or Does Not Start
+## The Home Button Opens Games
+
+macOS opens the Games app when you press the home button of a controller that it lists in **System Settings** > **Game Controllers**, which includes the OJD virtual controller with the `SDLCompatible` profile.
+On a PlayStation controller the home button is the PS button.
+To keep the button for your game or for Steam:
+
+1. Open **System Settings** > **Game Controllers**.
+2. Under **Home Button**, turn off **Enable Home Button Actions**, or choose another app in **Press Home Button to Open**.
+
+## App Crashes or Does Not Start
 
 This section explains what to do when OJD crashes, does not start, or reports a damaged profile library.
 

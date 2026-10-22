@@ -440,8 +440,17 @@ Verify: the full check list.
   Apple's `AppleGameControllerPersonality.kext` lists `045E:02FD` with `GCIOMatchVirtual: true`, so GameController also takes the virtual device as an Xbox pad. `wiki/Playing-Games.md` (Automatic Selection) and `docs/development/architecture.md` already say Automatic picks `SDLCompatible` when it fits; `design.md` D5 assumes `Generic` from SDL 3.4.18 evidence.
   Make Automatic select `SDLCompatible` when the controller's primary controls fit it and `Generic` otherwise; set the `SDLCompatible` record's SDL result from this evidence; rewrite D5, D6 and every doc that says `Generic` is the default or that `SDLCompatible` is not listed by SDL, naming the SDL versions tested.
   Verify: selector tests for both outcomes and the override; `just check` passes; the H8 line records PCSX2 and DuckStation.
+- [ ] 24.67 While OJD serves a DualShock 3 `054C:0268` over USB, `AppleGCHIDUserEventDriver` stays on the pad and GameController publishes an `AppleGCSyntheticDevice` for it, so SDL apps list a second "PLAYSTATION(R)3 Controller" beside OJD's virtual device.
+  OJD's HID client on the pad shows `"ClientOptions"=1` (seize requested) and `"ClientSeized"=No`.
+  Steam's mapping of that second pad is `0500f9d2ac05000004000000fdde6d04,PLAYSTATION(R)3 Controller,a:b0,b:b1,x:b5,y:b6,back:b4,guide:b2,start:b3,leftstick:b12,rightstick:b15,leftshoulder:b11,rightshoulder:b14,dpup:b10,dpdown:b7,dpleft:b8,dpright:b9,leftx:a0,lefty:a1~,rightx:a2,righty:a3~,lefttrigger:b13,righttrigger:b16,platform:macOS` (bus `0x0005`, `05AC:0004`): L2 and R2 are buttons with no analog range, and Select gives no input although `back:b4` is mapped.
+  With the `Native` profile this is the only pad Steam shows.
+  Find why the seize does not take and what keeps Apple's driver bound, make OJD the only source of the pad's input while it serves it, and name the state in the controller detail and `ojd controller list` when macOS still publishes its own pad.
+  Verify: a test for the seize result and its user-facing state; translations reviewed against `LOCALIZATION.md`; `wiki/Known-Issues.md` describes what remains; `just check` passes; H-line: Steam lists one DS3 pad with analog L2/R2 and Select.
+- [ ] 24.68 OJD's HID client on the DualShock 3 `054C:0268` shows `"EnqueueErrorCount"=458` in the IORegistry, so the kernel drops input reports before OJD reads them.
+  Find the cause (queue depth against the pad's report rate, or a stalled reader), fix it, and report dropped reports in the diagnostics.
+  Verify: a test for the queue setting or the reader path; `just check` passes; H-line: the count stays at 0 over a 5-minute session.
 
-## Hardware checks (maintainer)
+## Hardware Checks (Maintainer)
 
 These need the maintainer and a device. Each result is recorded in `wiki` or the record's evidence field.
 
