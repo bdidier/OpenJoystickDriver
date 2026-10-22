@@ -362,7 +362,7 @@ extension ApplicationServiceServer {
       return await self.retargetConnectedControllers()
     }
     if retargeted == false {
-      fputs("[Personas] A controller kept its earlier virtual device\n", stderr)
+      fputs("[VirtualDevices] A controller kept its earlier virtual device\n", stderr)
     }
     NotificationCenter.postServiceStatusChanged(from: self)
   }

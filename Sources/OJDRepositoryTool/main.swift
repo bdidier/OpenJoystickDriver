@@ -10,18 +10,19 @@ private struct UsageError: Error {
 
 private let usage = """
   usage:
-    OJDRepositoryTool validate records <directory>
+    OJDRepositoryTool validate controllers <directory>
     OJDRepositoryTool validate descriptions <directory>
     OJDRepositoryTool validate profiles <path>...
     OJDRepositoryTool validate virtual-devices <path>...
-    OJDRepositoryTool apply-patches --records <directory> --patches <directory> --out <directory>
+    OJDRepositoryTool apply-patches --controllers <directory> --patches <directory>
+      --out <directory>
     OJDRepositoryTool facts
     OJDRepositoryTool kebab <value>...
   A path is a file, or a directory whose .json files are checked.
-  validate records and descriptions read a directory at any depth. apply-patches reads records at
-  any depth and writes each to its relative path, and refuses a patch file that is not at the
-  path its selector gives: a vendor directory for a vendorID with productID, the top of the
-  directory for the others, so a deeper file is refused.
+  validate controllers and descriptions read a directory at any depth. apply-patches reads
+  Controller files at any depth and writes each to its relative path, and refuses a patch file
+  that is not at the path its selector gives: a vendor directory for a vendorID with productID,
+  the top of the directory for the others, so a deeper file is refused.
   facts prints one JSON object of the constants that Swift owns: apiVersion, schemaBase (the start
   of the $id of every schema), commandLineExitStatuses (the sorted exit statuses of ojd),
   domainCodePrefixes (the start of the codes of each error domain) and domainAreas (the en-US name
@@ -82,21 +83,22 @@ private func run(_ arguments: [String]) throws -> [RepositoryProblem] {
     guard let kind = rest.first else { throw UsageError(message: "validate needs a kind") }
     let paths = Array(rest.dropFirst())
     switch kind {
-    case "records", "descriptions":
+    case "controllers", "descriptions":
       guard paths.count == 1, let path = paths.first else {
         throw UsageError(message: "validate \(kind) takes one directory")
       }
       let root = try directory(path)
-      return kind == "records"
-        ? RepositoryValidation.records(in: root) : RepositoryValidation.descriptions(in: root)
+      return kind == "controllers"
+        ? RepositoryValidation.controllers(in: root) : RepositoryValidation.descriptions(in: root)
     case "profiles": return try files(paths).compactMap(RepositoryValidation.profile(at:))
-    case "virtual-devices": return try files(paths).compactMap(RepositoryValidation.persona(at:))
+    case "virtual-devices":
+      return try files(paths).compactMap(RepositoryValidation.virtualDevice(at:))
     default: throw UsageError(message: "unknown validate kind \(kind)")
     }
   case "apply-patches":
-    let values = try options(rest, names: ["--records", "--patches", "--out"])
+    let values = try options(rest, names: ["--controllers", "--patches", "--out"])
     return RepositoryValidation.applyPatches(
-      records: try directory(values["--records"] ?? ""),
+      controllers: try directory(values["--controllers"] ?? ""),
       patches: try directory(values["--patches"] ?? ""),
       output: URL(fileURLWithPath: values["--out"] ?? "", isDirectory: true)
     )

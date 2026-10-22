@@ -2621,8 +2621,10 @@
 "cli.record.validate.valid" = "%1$@ 是有效的 %2$@ 记录，适用于 %3$@ (%4$@)。请用“ojd record install”安装。";
 /* Heading in the output of 'ojd status' above the defaults file that the driver ignores. */
 "cli.status.group.labelIgnoredDefaults" = "已忽略的默认值文件";
-/* Heading in the output of 'ojd status' above the list of skipped persona files. %lld is the number of files. */
-"cli.status.group.labelSkippedPersonas" = "已跳过的人设文件 (%lld)";
+/* Heading in the output of 'ojd status' above the list of skipped virtual device files. %lld is the number of entries. */
+"cli.status.group.labelSkippedVirtualDevices" = "已跳过的虚拟设备文件 (%lld)";
+/* Reason beside a folder named Personas in 'ojd status' and 'ojd diagnose': the folder is not read, because virtual device files live in VirtualDevices. %@ is the path of the VirtualDevices folder. OpenJoystickDriver is the product name. */
+"status.virtualDeviceFolderNotRead" = "OpenJoystickDriver 不读取此文件夹。请将其中的文件移到 %@，然后移除该文件夹。";
 /* Heading in the output of 'ojd status' above the list of skipped controller records. %lld is the number of records. */
 "cli.status.group.labelSkippedRecords" = "已跳过的控制器记录 (%lld)";
 /* One-line summary of 'ojd binding' in the command list and at the top of its help. */

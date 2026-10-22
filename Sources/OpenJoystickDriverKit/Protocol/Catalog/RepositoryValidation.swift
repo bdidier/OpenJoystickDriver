@@ -19,9 +19,9 @@ package struct RepositoryProblem: Error, Equatable, Sendable {
   /// The problem that `error` reports for `file`, with the code that
   /// ``ControllerRecordSet/problemCode(_:)`` gives and the reason that
   /// ``ControllerRecordSet/problemDescription(_:includingCode:document:)`` gives for a `document`
-  /// of that kind. A ``RepositoryProblem`` is reported as it is. The record, patch and persona
-  /// checks throw only errors that ``ControllerRecordSet/problemCode(_:)`` names, so any other
-  /// error stops the tool.
+  /// of that kind. A ``RepositoryProblem`` is reported as it is. The record, patch and virtual
+  /// device checks throw only errors that ``ControllerRecordSet/problemCode(_:)`` names, so any
+  /// other error stops the tool.
   init(file: String, error: any Error, document: String) {
     if let problem = error as? Self {
       self = problem
@@ -58,7 +58,7 @@ package enum RepositoryValidation {
   /// The problems of the Controller files under `directory`, found recursively, by
   /// ``ControllerRecordSet``: each file's record rules, the file name its record needs, and an
   /// identity that is not held twice.
-  package static func records(in directory: URL) -> [RepositoryProblem] {
+  package static func controllers(in directory: URL) -> [RepositoryProblem] {
     switch jsonFiles(under: directory) {
     case .failure(let problem): return [problem]
     case .success(let urls):
@@ -106,11 +106,12 @@ package enum RepositoryValidation {
     return nil
   }
 
-  /// The problem of the persona file `url`, or nil when ``VirtualHIDProfileOverrideStore`` reads
-  /// it. A file that cannot be read is ``ErrorCode/fileAccessFailed``.
-  package static func persona(at url: URL) -> RepositoryProblem? {
+  /// The problem of the `VirtualDevice` file `url`, or nil when
+  /// ``VirtualHIDProfileOverrideStore`` reads it. A file that cannot be read is
+  /// ``ErrorCode/fileAccessFailed``.
+  package static func virtualDevice(at url: URL) -> RepositoryProblem? {
     do { _ = try VirtualHIDProfileOverrideStore.parse(try RepositoryProblem.read(url)) } catch {
-      return RepositoryProblem(file: url.path, error: error, document: "persona")
+      return RepositoryProblem(file: url.path, error: error, document: "virtualDevice")
     }
     return nil
   }

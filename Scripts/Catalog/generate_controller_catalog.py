@@ -494,7 +494,7 @@ def apply_built_in_patches(
 
     `OJDRepositoryTool apply-patches` merges the patches, so the merge rules, the patch layout
     and the text of the numbers are Swift's. An authored record enters unchanged, and the
-    result is checked by `OJDRepositoryTool validate records` before it is returned.
+    result is checked by `OJDRepositoryTool validate controllers` before it is returned.
     """
     for key in adds:
         if key in records:
@@ -514,7 +514,7 @@ def apply_built_in_patches(
             repository_tool.check(
                 [
                     "apply-patches",
-                    "--records",
+                    "--controllers",
                     str(unpatched),
                     "--patches",
                     str(patch_dir),
@@ -522,7 +522,7 @@ def apply_built_in_patches(
                     str(patched),
                 ]
             )
-            repository_tool.check(["validate", "records", str(patched)])
+            repository_tool.check(["validate", "controllers", str(patched)])
         except repository_tool.ToolError as error:
             raise CatalogError(
                 f"the built-in patches do not give valid records:\n{error}"

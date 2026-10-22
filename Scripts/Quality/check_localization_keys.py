@@ -155,7 +155,7 @@ NOT_A_COUNT: dict[str, str] = {
     "cli.status.group.labelControllers": (
         "the number follows its label (after a colon or in parentheses), so no noun agrees with it"
     ),
-    "cli.status.group.labelSkippedPersonas": (
+    "cli.status.group.labelSkippedVirtualDevices": (
         "the number follows its label (after a colon or in parentheses), so no noun agrees with it"
     ),
     "cli.status.group.labelSkippedRecords": (

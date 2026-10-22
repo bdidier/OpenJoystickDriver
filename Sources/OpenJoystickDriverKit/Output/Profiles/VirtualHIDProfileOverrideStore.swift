@@ -23,7 +23,8 @@ public struct VirtualPersona: Equatable, Sendable {
   public let identity: Identity?
 }
 
-/// One file in the persona directory and whether OJD applied it.
+/// One file of the `VirtualDevices` directory or of a package, or the folder that OJD does not
+/// read, and whether OJD applied it.
 public struct VirtualPersonaFile: Equatable, Sendable {
   public let url: URL
   /// Why OJD skipped the file, or nil when it applied it.
@@ -36,6 +37,8 @@ public struct VirtualPersonaFile: Equatable, Sendable {
 /// A file matches a VID:PID model, or one unit of it (see ``ControllerPortKey``). A unit's persona
 /// wins over its model's. A file that fails validation, or repeats the match of an earlier file in
 /// file-name order, is skipped and listed in ``problems``. A missing directory holds no personas.
+/// A folder named ``unreadFolderName`` beside the directory is not read, and ``files`` lists it
+/// with the reason, so that the files a user keeps there are not ignored without a word.
 /// `set` writes `vvvv-pppp.json` or `vvvv-pppp-<unit>.json`, and keeps the identity of a persona
 /// that already matches.
 public struct VirtualHIDProfileOverrideStore: Sendable {
@@ -45,8 +48,18 @@ public struct VirtualHIDProfileOverrideStore: Sendable {
   /// `~/Library/Application Support/OpenJoystickDriver/VirtualDevices`.
   public static var userDirectory: URL {
     ControllerRecordSet.userDirectory.deletingLastPathComponent()
-      .appendingPathComponent("VirtualDevices", isDirectory: true)
+      .appendingPathComponent(directoryName, isDirectory: true)
   }
+
+  /// The name of the folder of `VirtualDevice` files, in the user data folder and in a package.
+  public static let directoryName = "VirtualDevices"
+
+  /// The folder name `Personas`, which OJD does not read. The concept is a persona, but the files
+  /// are `VirtualDevice` documents and live in ``directoryName``; ``files`` lists this folder when
+  /// it exists beside the directory, so that its files do not go unnoticed.
+  public static let unreadFolderName = "Personas"
+
+  private static let localization = Localization()
 
   /// A controller model, or one unit of it when `unit` is set.
   struct Model: Hashable {
@@ -95,10 +108,30 @@ public struct VirtualHIDProfileOverrideStore: Sendable {
     return nil
   }
 
-  /// Every file in the directory, in file-name order, with the reason OJD skipped it.
+  /// Every file in the directory, in file-name order, with the reason OJD skipped it, then the
+  /// ``unreadFolderName`` folder beside the directory when it exists.
   public var files: [VirtualPersonaFile] {
-    if case .success(let loaded) = load() { return loaded.files }
-    return []
+    let unread = unreadFolder.map { [$0] } ?? []
+    if case .success(let loaded) = load() { return loaded.files + unread }
+    return unread
+  }
+
+  /// The ``unreadFolderName`` folder beside the directory, with the reason it is not read; nil
+  /// when there is no such folder.
+  private var unreadFolder: VirtualPersonaFile? {
+    let url = directory.deletingLastPathComponent()
+      .appendingPathComponent(Self.unreadFolderName, isDirectory: true)
+    var isDirectory: ObjCBool = false
+    guard FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory),
+      isDirectory.boolValue
+    else { return nil }
+    return VirtualPersonaFile(
+      url: url,
+      problem: Self.localization.formatted(
+        "status.virtualDeviceFolderNotRead",
+        arguments: [directory.path]
+      )
+    )
   }
 
   /// The files OJD skipped.
@@ -229,7 +262,7 @@ public struct VirtualHIDProfileOverrideStore: Sendable {
         continue
       }
       for file in package.manifest?.virtualDevices.sorted() ?? [] {
-        let url = package.directory.appendingPathComponent("VirtualDevices/\(file)")
+        let url = package.directory.appendingPathComponent("\(Self.directoryName)/\(file)")
         do {
           let (model, persona) = try Self.parse(Data(contentsOf: url))
           if let first = loaded.personas[model] {
@@ -245,7 +278,7 @@ public struct VirtualHIDProfileOverrideStore: Sendable {
           loaded.files.append(
             VirtualPersonaFile(
               url: url,
-              problem: ControllerRecordSet.problemDescription(error, document: "persona")
+              problem: ControllerRecordSet.problemDescription(error, document: "virtualDevice")
             )
           )
         }
@@ -280,7 +313,7 @@ public struct VirtualHIDProfileOverrideStore: Sendable {
         loaded.files.append(
           VirtualPersonaFile(
             url: url,
-            problem: ControllerRecordSet.problemDescription(error, document: "persona")
+            problem: ControllerRecordSet.problemDescription(error, document: "virtualDevice")
           )
         )
       }

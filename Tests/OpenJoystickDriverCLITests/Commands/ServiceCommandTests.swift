@@ -69,20 +69,20 @@ struct ServiceCommandTests {
   }
 
   @Test
-  func statusNamesAnIgnoredDefaultsFileAndSkippedPersonaFiles() async throws {
+  func statusNamesAnIgnoredDefaultsFileAndSkippedVirtualDeviceFiles() async throws {
     let support = FileManager.default.temporaryDirectory.appendingPathComponent(
       "ojd-status-\(UUID().uuidString)",
       isDirectory: true
     )
-    let personas = support.appendingPathComponent("VirtualDevices", isDirectory: true)
+    let devices = support.appendingPathComponent("VirtualDevices", isDirectory: true)
     try FileManager.default.createDirectory(
       at: support.appendingPathComponent("Controllers"),
       withIntermediateDirectories: true
     )
-    try FileManager.default.createDirectory(at: personas, withIntermediateDirectories: true)
+    try FileManager.default.createDirectory(at: devices, withIntermediateDirectories: true)
     defer { try? FileManager.default.removeItem(at: support) }
     try Data("{".utf8).write(to: support.appendingPathComponent("Controllers/all.patch.json"))
-    try Data("{".utf8).write(to: personas.appendingPathComponent("broken.json"))
+    try Data("{".utf8).write(to: devices.appendingPathComponent("broken.json"))
 
     let json = await runStatus(["--json"], records: support.appendingPathComponent("Controllers"))
     let plain = await runStatus(["--plain"], records: support.appendingPathComponent("Controllers"))
@@ -92,13 +92,40 @@ struct ServiceCommandTests {
     let defaults = try #require(report["ignoredDefaults"] as? [String: String])
     #expect(defaults["file"]?.hasSuffix("/Controllers/all.patch.json") == true)
     #expect(defaults["problem"] == "the file is not a JSON object")
-    let skipped = try #require(report["skippedPersonas"] as? [[String: String]])
+    let skipped = try #require(report["skippedVirtualDevices"] as? [[String: String]])
     #expect(skipped.map { $0["file"]?.hasSuffix("/VirtualDevices/broken.json") } == [true])
     #expect(plain.standardOutput.contains("ignored-defaults\t"))
-    #expect(plain.standardOutput.contains("skipped-persona\t"))
+    #expect(plain.standardOutput.contains("skipped-virtual-device\t"))
     let cleanReport = try clean.json()
     #expect(cleanReport["ignoredDefaults"] == nil)
-    #expect((cleanReport["skippedPersonas"] as? [Any])?.isEmpty == true)
+    #expect((cleanReport["skippedVirtualDevices"] as? [Any])?.isEmpty == true)
+  }
+
+  @Test
+  func statusNamesAPersonasFolderThatOJDDoesNotRead() async throws {
+    let support = FileManager.default.temporaryDirectory.appendingPathComponent(
+      "ojd-status-\(UUID().uuidString)",
+      isDirectory: true
+    )
+    let unread = support.appendingPathComponent("Personas", isDirectory: true)
+    try FileManager.default.createDirectory(at: unread, withIntermediateDirectories: true)
+    defer { try? FileManager.default.removeItem(at: support) }
+    try Data("{}".utf8).write(to: unread.appendingPathComponent("1209-0001.json"))
+    let records = support.appendingPathComponent("Controllers")
+
+    let json = await runStatus(["--json"], records: records)
+    let plain = await runStatus(["--plain"], records: records)
+    let human = await runStatus([], records: records)
+
+    #expect(json.code == 0, "\(json.standardError)")
+    let skipped = try #require(json.json()["skippedVirtualDevices"] as? [[String: String]])
+    let entry = try #require(skipped.first)
+    #expect(skipped.count == 1)
+    #expect(entry["file"]?.hasSuffix("/Personas") == true)
+    let devices = support.appendingPathComponent("VirtualDevices").path
+    #expect(entry["problem"]?.contains(devices) == true, "\(entry)")
+    #expect(plain.standardOutput.contains("skipped-virtual-device\t\(unread.path)\t"))
+    #expect(human.standardOutput.contains(entry["problem"] ?? "-"), "\(human.standardOutput)")
   }
 
   @Test

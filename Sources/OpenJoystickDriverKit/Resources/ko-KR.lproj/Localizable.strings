@@ -2621,8 +2621,10 @@
 "cli.record.validate.valid" = "%1$@은(는) 유효한 %2$@ 레코드입니다(대상: %3$@, %4$@). ‘ojd record install’로 설치하세요.";
 /* Heading in the output of 'ojd status' above the defaults file that the driver ignores. */
 "cli.status.group.labelIgnoredDefaults" = "무시된 기본값 파일";
-/* Heading in the output of 'ojd status' above the list of skipped persona files. %lld is the number of files. */
-"cli.status.group.labelSkippedPersonas" = "건너뛴 페르소나 파일 (%lld)";
+/* Heading in the output of 'ojd status' above the list of skipped virtual device files. %lld is the number of entries. */
+"cli.status.group.labelSkippedVirtualDevices" = "건너뛴 가상 기기 파일 (%lld)";
+/* Reason beside a folder named Personas in 'ojd status' and 'ojd diagnose': the folder is not read, because virtual device files live in VirtualDevices. %@ is the path of the VirtualDevices folder. OpenJoystickDriver is the product name. */
+"status.virtualDeviceFolderNotRead" = "OpenJoystickDriver는 이 폴더를 읽지 않습니다. 폴더의 파일을 %@(으)로 옮긴 뒤 폴더를 제거하세요.";
 /* Heading in the output of 'ojd status' above the list of skipped controller records. %lld is the number of records. */
 "cli.status.group.labelSkippedRecords" = "건너뛴 컨트롤러 레코드 (%lld)";
 /* One-line summary of 'ojd binding' in the command list and at the top of its help. */

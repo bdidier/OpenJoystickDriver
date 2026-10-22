@@ -371,20 +371,20 @@ struct DiagnoseCommandTests {
   }
 
   @Test
-  func anIgnoredDefaultsFileOrSkippedPersonaWarnsButDoesNotFail() async throws {
+  func anIgnoredDefaultsFileOrSkippedVirtualDeviceWarnsButDoesNotFail() async throws {
     let support = FileManager.default.temporaryDirectory.appendingPathComponent(
       "ojd-diagnose-\(UUID().uuidString)",
       isDirectory: true
     )
-    let personas = support.appendingPathComponent("VirtualDevices", isDirectory: true)
+    let devices = support.appendingPathComponent("VirtualDevices", isDirectory: true)
     try FileManager.default.createDirectory(
       at: support.appendingPathComponent("Controllers"),
       withIntermediateDirectories: true
     )
-    try FileManager.default.createDirectory(at: personas, withIntermediateDirectories: true)
+    try FileManager.default.createDirectory(at: devices, withIntermediateDirectories: true)
     defer { try? FileManager.default.removeItem(at: support) }
     try Data("{".utf8).write(to: support.appendingPathComponent("Controllers/all.patch.json"))
-    try Data("{".utf8).write(to: personas.appendingPathComponent("broken.json"))
+    try Data("{".utf8).write(to: devices.appendingPathComponent("broken.json"))
 
     let result = await run(
       ["--json"],
@@ -401,5 +401,30 @@ struct DiagnoseCommandTests {
     let clean = await run(["--json"], socketPath: temporarySocketPath())
     let cleanChecks = try #require(try clean.json()["checks"] as? [[String: String]])
     #expect(cleanChecks.first { $0["id"] == "config-files" }?["status"] == "Pass")
+  }
+
+  @Test
+  func aPersonasFolderWarnsButDoesNotFail() async throws {
+    let support = FileManager.default.temporaryDirectory.appendingPathComponent(
+      "ojd-diagnose-\(UUID().uuidString)",
+      isDirectory: true
+    )
+    let unread = support.appendingPathComponent("Personas", isDirectory: true)
+    try FileManager.default.createDirectory(at: unread, withIntermediateDirectories: true)
+    defer { try? FileManager.default.removeItem(at: support) }
+
+    let result = await run(
+      ["--json"],
+      socketPath: temporarySocketPath(),
+      records: support.appendingPathComponent("Controllers")
+    )
+
+    #expect(result.code == 0)
+    let checks = try #require(try result.json()["checks"] as? [[String: String]])
+    let config = try #require(checks.first { $0["id"] == "config-files" })
+    #expect(config["status"] == "Warn")
+    let devices = support.appendingPathComponent("VirtualDevices").path
+    #expect(config["detail"]?.contains("Personas (") == true, "\(config)")
+    #expect(config["detail"]?.contains(devices) == true, "\(config)")
   }
 }

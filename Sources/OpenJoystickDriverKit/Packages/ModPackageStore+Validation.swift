@@ -120,7 +120,7 @@ extension ModPackageStore {
       + manifest.patches.map { ($0, ControllerRecordOperation.patch) }
     for (file, operation) in listed {
       let url = folder.appendingPathComponent("Controllers/\(file)")
-      let validated = try content(url, "Controllers/\(file)") {
+      let validated = try content(url, "Controllers/\(file)", document: "record") {
         try requireKind(of: $0, listedAs: operation)
         return try ControllerRecordSet.validate($0, file: url, layer: .package, packages: own)
       }
@@ -135,7 +135,7 @@ extension ModPackageStore {
     }
     for file in manifest.virtualDevices {
       let url = folder.appendingPathComponent("VirtualDevices/\(file)")
-      let model = try content(url, "VirtualDevices/\(file)") {
+      let model = try content(url, "VirtualDevices/\(file)", document: "virtualDevice") {
         try VirtualHIDProfileOverrideStore.parse($0).0
       }
       guard file == model.fileName else {
@@ -148,7 +148,7 @@ extension ModPackageStore {
     }
     for file in manifest.profiles {
       let url = folder.appendingPathComponent("Profiles/\(file)")
-      let profile = try content(url, "Profiles/\(file)") {
+      let profile = try content(url, "Profiles/\(file)", document: "profile") {
         try RemappingProfileFileStore.load(from: $0)
       }
       guard claims.add(profile) else {
@@ -211,6 +211,7 @@ extension ModPackageStore {
   private static func content<Value>(
     _ url: URL,
     _ label: String,
+    document: String,
     _ check: (Data) throws -> Value
   ) throws -> Value {
     do { return try check(Data(contentsOf: url)) } catch {
@@ -218,7 +219,7 @@ extension ModPackageStore {
         ControllerRecordSet.problemCode(error) == .unsupportedAPIVersion
           ? .unsupportedAPIVersion : .invalidPackageContent,
         label + ": "
-          + ControllerRecordSet.problemDescription(error, includingCode: false, document: "record")
+          + ControllerRecordSet.problemDescription(error, includingCode: false, document: document)
       )
     }
   }

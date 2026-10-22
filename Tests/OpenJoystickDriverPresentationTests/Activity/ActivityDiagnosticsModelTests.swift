@@ -85,7 +85,7 @@ struct ActivityDiagnosticsModelTests {
       snapshot: snapshot,
       extensionStatus: ExtensionStatus(bundle: .present, registration: .active("record")),
       records: ControllerRecordSet.bundled,
-      personas: [],
+      virtualDevices: [],
       usb: .success(2)
     )
 

@@ -52,12 +52,12 @@ struct RepositoryValidationTests {
         }
       }
 
-      let recordProblems = RepositoryValidation.records(in: records)
+      let recordProblems = RepositoryValidation.controllers(in: records)
       #expect(unreadableFiles(recordProblems) == [record.lastPathComponent])
       #expect(recordProblems.count == 1)
 
       let patchProblems = RepositoryValidation.applyPatches(
-        records: records,
+        controllers: records,
         patches: patches,
         output: directory.appendingPathComponent("out")
       )
@@ -79,7 +79,7 @@ struct RepositoryValidationTests {
       let profile = try #require(RepositoryValidation.profile(at: missing))
       #expect(profile.file == missing.path)
       #expect(profile.code == .fileAccessFailed)
-      let persona = try #require(RepositoryValidation.persona(at: missing))
+      let persona = try #require(RepositoryValidation.virtualDevice(at: missing))
       #expect(persona.code == .fileAccessFailed)
 
       let invalid = directory.appendingPathComponent("invalid.json")
@@ -92,7 +92,7 @@ struct RepositoryValidationTests {
   func textThatIsNotJSONIsAnInvalidRecord() throws {
     try Self.scratch { directory in
       try Self.write("{", to: directory.appendingPathComponent("04d2-162e.json"))
-      let problems = RepositoryValidation.records(in: directory)
+      let problems = RepositoryValidation.controllers(in: directory)
       #expect(problems.map(\.code) == [.invalidControllerRecord])
     }
   }

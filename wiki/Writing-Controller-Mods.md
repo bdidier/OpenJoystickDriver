@@ -27,7 +27,7 @@ ojd-sample/
   VirtualDevices/1209-0001.json
 ```
 
-- `Controllers/` holds [controller records](Controller-Records.md). Name a `Controller` file `vvvv-pppp.json` after its model, in lowercase hexadecimal. Name a `ControllerPatch` file `vvvv-pppp.patch.json`, `model-vvvv-pppp.patch.json`, or `all.patch.json`.
+- `Controllers/` holds [controller records](Controller-Records.md). Name a `Controller` file `vvvv-pppp.json` after its model, in lowercase hexadecimal. Name a `ControllerPatch` file `vvvv-pppp.patch.json`, `model-vvvv-pppp.patch.json`, or `all.patch.json`. Both kinds share the folder, as they do in your own `Controllers` folder, because OpenJoystickDriver reads the records and patches of one layer from one folder.
 - `Profiles/` holds [remapping profiles](Profile-File-Reference.md).
 - `VirtualDevices/` holds `VirtualDevice` files, which choose the virtual gamepad that games see. Name each file `vvvv-pppp.json` after the model it matches, or `vvvv-pppp-U-UNIT.json` for one controller, where `UNIT` is the 16-character unit ID that `ojd controller show` prints.
 

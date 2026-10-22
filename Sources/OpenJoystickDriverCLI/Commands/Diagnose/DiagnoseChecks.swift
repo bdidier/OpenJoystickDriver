@@ -63,7 +63,7 @@ enum DiagnoseChecks {
       snapshot: snapshot,
       extensionStatus: extensionStatus,
       records: RecordStore.load(),
-      personas: RecordStore.personaFiles(),
+      virtualDevices: RecordStore.virtualDeviceFiles(),
       usb: usb
     )
     checks.append(await soakCheck(snapshot: snapshot, soak: soak))

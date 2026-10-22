@@ -1,6 +1,7 @@
 """Runs `OJDRepositoryTool`, the Swift executable that checks repository files.
 
-Swift is the only validator of controller records, protocol descriptions, profiles and personas.
+Swift is the only validator of controller records, protocol descriptions, profiles and virtual
+devices.
 The tool prints one JSON line `{file, code, message}` per problem and exits 1 when there is any.
 """
 

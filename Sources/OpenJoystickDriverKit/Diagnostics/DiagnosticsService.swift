@@ -111,7 +111,7 @@ public enum DiagnosticsService {
     snapshot: DiagnoseServiceSnapshot,
     extensionStatus: ExtensionStatus,
     records: ControllerRecordSet,
-    personas: [VirtualPersonaFile],
+    virtualDevices: [VirtualPersonaFile],
     usb: Result<Int, any Error>
   ) -> [DiagnoseCheck] {
     var checks = extensionChecks(extensionStatus)
@@ -119,7 +119,7 @@ public enum DiagnosticsService {
     checks.append(contentsOf: permissionChecks(snapshot))
     checks.append(virtualDeviceCheck(snapshot))
     checks.append(recordCheck(records))
-    checks.append(configFilesCheck(defaults: records.defaults, personas: personas))
+    checks.append(configFilesCheck(defaults: records.defaults, virtualDevices: virtualDevices))
     checks.append(usbCheck(usb))
     return checks
   }
@@ -291,17 +291,17 @@ public enum DiagnosticsService {
     )
   }
 
-  /// The check for `all.patch.json` and the persona files: it warns when OJD ignored the defaults
-  /// file or skipped a persona file, and names each.
+  /// The check for `all.patch.json` and the virtual device files: it warns when OJD ignored the
+  /// defaults file, skipped a virtual device file, or did not read a folder, and names each.
   public static func configFilesCheck(
     defaults: ControllerDefaults?,
-    personas: [VirtualPersonaFile]
+    virtualDevices: [VirtualPersonaFile]
   ) -> DiagnoseCheck {
     var files: [String] = []
     if let defaults, let problem = defaults.problem {
       files.append("\(defaults.url.lastPathComponent) (\(problem))")
     }
-    files += personas.compactMap { file in
+    files += virtualDevices.compactMap { file in
       file.problem.map { "\(file.url.lastPathComponent) (\($0))" }
     }
     guard files.isEmpty else {

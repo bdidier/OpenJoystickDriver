@@ -1,7 +1,7 @@
 import Foundation
 
 extension RepositoryValidation {
-  /// Applies the built-in patches under `patches` to the record files under `records` with
+  /// Applies the built-in patches under `patches` to the Controller files under `controllers` with
   /// ``ControllerPatchMerge`` and writes each effective record to the same relative path under
   /// `output`. Nothing is written when any problem is found.
   ///
@@ -16,13 +16,13 @@ extension RepositoryValidation {
   /// are read at any depth and written at the same relative path. A patch that selects no
   /// record, and one that changes nothing in a record other than the `all` patch, are problems.
   package static func applyPatches(
-    records: URL,
+    controllers: URL,
     patches: URL,
     output: URL
   ) -> [RepositoryProblem] {
     var problems: [RepositoryProblem] = []
     let patchFiles = readPatches(under: patches, problems: &problems)
-    let recordFiles = readRecords(under: records, problems: &problems)
+    let recordFiles = readRecords(under: controllers, problems: &problems)
     var selected: Set<URL> = []
     var effective: [(file: RecordFile, document: OrderedJSON)] = []
     for file in recordFiles {

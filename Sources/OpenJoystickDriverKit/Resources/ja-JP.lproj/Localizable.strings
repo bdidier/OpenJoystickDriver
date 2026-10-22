@@ -2348,7 +2348,7 @@
 /* Error of the 'ojd mod' commands when a package is refused. %1$@ is the package folder or name and %2$@ is the reason. */
 "cli.mod.group.refused" = "%1$@ は拒否されました: %2$@";
 /* Error of 'ojd mod install' when a package of that name exists. %@ is the package name. --force stays as written. */
-"cli.mod.group.alreadyInstalled" = "%@ はすでにインストールされています。置き換えるには--force を使います。";
+"cli.mod.group.alreadyInstalled" = "%@ はすでにインストールされています。置き換えるには --force を使います。";
 /* Error of 'ojd mod remove' when no package of that name exists. %@ is the package name. The command in quotes stays as written. */
 "cli.mod.group.notInstalled" = "%@ はインストールされていません。「ojd mod list」でインストール済みのパッケージを確認できます。";
 /* One-line summary of 'ojd mod validate' in the command list and at the top of its help. */
@@ -2621,8 +2621,10 @@
 "cli.record.validate.valid" = "%1$@ は有効な %2$@ レコードです。対象: %3$@ (%4$@)。「ojd record install」でインストールできます。";
 /* Heading in the output of 'ojd status' above the defaults file that the driver ignores. */
 "cli.status.group.labelIgnoredDefaults" = "無視されたデフォルトファイル";
-/* Heading in the output of 'ojd status' above the list of skipped persona files. %lld is the number of files. */
-"cli.status.group.labelSkippedPersonas" = "スキップされたペルソナファイル (%lld)";
+/* Heading in the output of 'ojd status' above the list of skipped virtual device files. %lld is the number of entries. */
+"cli.status.group.labelSkippedVirtualDevices" = "スキップされた仮想デバイスファイル (%lld)";
+/* Reason beside a folder named Personas in 'ojd status' and 'ojd diagnose': the folder is not read, because virtual device files live in VirtualDevices. %@ is the path of the VirtualDevices folder. OpenJoystickDriver is the product name. */
+"status.virtualDeviceFolderNotRead" = "OpenJoystickDriver はこのフォルダを読み込みません。中のファイルを %@ に移動してから、フォルダを削除してください。";
 /* Heading in the output of 'ojd status' above the list of skipped controller records. %lld is the number of records. */
 "cli.status.group.labelSkippedRecords" = "スキップされたコントローラレコード (%lld)";
 /* One-line summary of 'ojd binding' in the command list and at the top of its help. */

@@ -25,7 +25,7 @@ class RunTests(unittest.TestCase):
                 return_value=completed(status, stdout),
             ),
         ):
-            return repository_tool.problems(["validate", "records", "x"])
+            return repository_tool.problems(["validate", "controllers", "x"])
 
     def test_a_problem_line_is_returned(self) -> None:
         line = '{"file": "a.json", "code": "E5007", "message": "m"}\n'
@@ -62,8 +62,8 @@ class BuildTests(unittest.TestCase):
             patch.object(repository_tool, "build", return_value=Path("tool")) as build,
             patch.object(repository_tool.subprocess, "run", return_value=completed(0)),
         ):
-            repository_tool.check(["validate", "records", "x"])
-            repository_tool.check(["validate", "records", "y"])
+            repository_tool.check(["validate", "controllers", "x"])
+            repository_tool.check(["validate", "controllers", "y"])
         build.assert_called_once_with(repository_tool.PRODUCT)
 
     def test_a_failed_build_raises(self) -> None:

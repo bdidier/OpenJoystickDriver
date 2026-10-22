@@ -195,9 +195,9 @@ package final class ApplicationServiceRuntime {
     )
   }
 
-  /// Re-creates a connected controller's virtual device when a change to the persona files
-  /// changes its identity. The service creates the persona and package folders, which are absent
-  /// until first use; a folder removed later is watched once it exists again.
+  /// Re-creates a connected controller's virtual device when a change to the virtual device
+  /// files changes its identity. The service creates the VirtualDevices and package folders,
+  /// which are absent until first use; a folder removed later is watched once it exists again.
   private func startPersonaWatcher() {
     let applicationServiceServer = applicationServiceServer
     let packages = ModPackageStore.rootDirectory
@@ -205,7 +205,7 @@ package final class ApplicationServiceRuntime {
       do {
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
       } catch {
-        serviceError("[Personas] Cannot create \(folder.path): \(error.localizedDescription)")
+        serviceError("[VirtualDevices] Cannot create \(folder.path): \(error.localizedDescription)")
       }
     }
     let personaWatcher = FileChangeWatcher(
