@@ -31,7 +31,7 @@ def instances() -> dict[str, dict[str, Any]]:
             "selector": {"vendorID": 0x1209, "productID": 1},
             "patch": {"tuning": {"stickDeadzone": 0.02}},
         },
-        "virtual-device": load(SAMPLE / "Personas/1209-0001.json"),
+        "virtual-device": load(SAMPLE / "VirtualDevices/1209-0001.json"),
         "profile": load(SAMPLE / "Profiles/sample-pad.json"),
         "mod-package": load(SAMPLE / "mod.json"),
         "error-codes": load(ROOT / "Resources/ErrorCodes.json"),

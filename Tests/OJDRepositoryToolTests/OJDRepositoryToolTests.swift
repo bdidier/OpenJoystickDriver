@@ -110,7 +110,7 @@ struct OJDRepositoryToolTests {
       try Self.resource(Self.recordPath).write(
         to: directory.appendingPathComponent("045e-028e.json")
       )
-      let result = try Self.run(["validate", "records", directory.path])
+      let result = try Self.run(["validate", "controllers", directory.path])
       #expect(result.status == 0)
       #expect(result.standardOutput.isEmpty)
     }
@@ -119,7 +119,7 @@ struct OJDRepositoryToolTests {
   @Test
   func theBundledRecordsHaveNoProblem() throws {
     let result = try Self.run([
-      "validate", "records", Self.kitResources.appendingPathComponent("Controllers").path,
+      "validate", "controllers", Self.kitResources.appendingPathComponent("Controllers").path,
     ])
     #expect(result.status == 0)
     #expect(result.standardOutput.isEmpty)
@@ -137,7 +137,7 @@ struct OJDRepositoryToolTests {
       let expected = try #require(throws: (any Error).self) {
         try ControllerRecordSet.validate(data)
       }
-      let result = try Self.run(["validate", "records", directory.path])
+      let result = try Self.run(["validate", "controllers", directory.path])
       let problem = try #require(try result.problems().first)
       #expect(result.status == 1)
       #expect(try result.problems().count == 1)
@@ -175,7 +175,7 @@ struct OJDRepositoryToolTests {
         let reason = try #require(throws: OrderedJSON.Problem.self) {
           try OrderedJSON.parse(data)
         }
-        let result = try Self.run(["validate", "records", directory.path])
+        let result = try Self.run(["validate", "controllers", directory.path])
         let problem = try #require(try result.problems().first, "\(name)")
         #expect(result.status == 1, "\(name)")
         #expect(problem["code"] as? String == ErrorCode.invalidControllerRecord.rawValue, "\(name)")
@@ -190,7 +190,7 @@ struct OJDRepositoryToolTests {
       try Self.resource(Self.recordPath).write(
         to: directory.appendingPathComponent("045e-0000.json")
       )
-      let result = try Self.run(["validate", "records", directory.path])
+      let result = try Self.run(["validate", "controllers", directory.path])
       let problem = try #require(try result.problems().first)
       #expect(result.status == 1)
       #expect(problem["code"] as? String == ErrorCode.invalidControllerRecord.rawValue)
@@ -280,7 +280,7 @@ struct OJDRepositoryToolTests {
     }
   }
 
-  // MARK: profiles and personas
+  // MARK: profiles and virtual devices
 
   private static let profile = #"""
     {"apiVersion": "openjoystickdriver/v1alpha1", "kind": "Profile", "name": "Pad"}
@@ -337,12 +337,12 @@ struct OJDRepositoryToolTests {
       let bad = directory.appendingPathComponent("bad.json")
       try document("Generic").write(to: good)
       try document("Nothing").write(to: bad)
-      #expect(try Self.run(["validate", "personas", good.path]).status == 0)
+      #expect(try Self.run(["validate", "virtual-devices", good.path]).status == 0)
 
       let expected = try #require(throws: (any Error).self) {
         try VirtualHIDProfileOverrideStore.parse(document("Nothing"))
       }
-      let result = try Self.run(["validate", "personas", directory.path])
+      let result = try Self.run(["validate", "virtual-devices", directory.path])
       let problem = try #require(try result.problems().first)
       #expect(result.status == 1)
       #expect(try result.problems().count == 1)
@@ -354,7 +354,7 @@ struct OJDRepositoryToolTests {
           == ControllerRecordSet.problemDescription(
             expected,
             includingCode: false,
-            document: "persona"
+            document: "virtualDevice"
           )
       )
     }
@@ -382,7 +382,7 @@ struct OJDRepositoryToolTests {
       ).write(to: patches.appendingPathComponent("057e-2066.patch.json"))
 
       let result = try Self.run([
-        "apply-patches", "--records", directory.appendingPathComponent("records").path,
+        "apply-patches", "--controllers", directory.appendingPathComponent("records").path,
         "--patches", directory.appendingPathComponent("patches").path, "--out", output.path,
       ])
       #expect(result.status == 0)
@@ -398,7 +398,7 @@ struct OJDRepositoryToolTests {
 
       // Over the written record, the same patch changes nothing and writes no output.
       let again = try Self.run([
-        "apply-patches", "--records",
+        "apply-patches", "--controllers",
         output.deletingLastPathComponent().appendingPathComponent("out").path,
         "--patches", directory.appendingPathComponent("patches").path,
         "--out", directory.appendingPathComponent("again").path,
@@ -434,7 +434,7 @@ struct OJDRepositoryToolTests {
         try Data(text.utf8).write(to: file)
       }
       let result = try run([
-        "apply-patches", "--records", directory.appendingPathComponent("records").path,
+        "apply-patches", "--controllers", directory.appendingPathComponent("records").path,
         "--patches", directory.appendingPathComponent("patches").path,
         "--out", directory.appendingPathComponent("out").path,
       ])
@@ -481,7 +481,7 @@ struct OJDRepositoryToolTests {
   }
 
   /// An integer beyond 64 bits is written with its digits. `apply-patches` merges and does not
-  /// check ranges, so a tuning value out of range shows the number text and `validate records`
+  /// check ranges, so a tuning value out of range shows the number text and `validate controllers`
   /// is what refuses it.
   @Test
   func applyPatchesWritesAnIntegerOfTwentyFiveDigitsAsItsPatchFileWritesIt() throws {
@@ -578,7 +578,7 @@ struct OJDRepositoryToolTests {
       (["validate"], "validate needs a kind"),
       (["validate", "widgets", "x"], "unknown validate kind widgets"),
       (
-        ["validate", "records", "/nonexistent-directory"],
+        ["validate", "controllers", "/nonexistent-directory"],
         "/nonexistent-directory is not a directory"
       ),
       (["validate", "profiles"], "no path given"),
@@ -586,7 +586,7 @@ struct OJDRepositoryToolTests {
         ["validate", "profiles", "/nonexistent-profile.json"],
         "/nonexistent-profile.json does not exist"
       ),
-      (["apply-patches", "--records", "a"], "--patches is required"),
+      (["apply-patches", "--controllers", "a"], "--patches is required"),
     ]
     for call in calls {
       let result = try Self.run(call.arguments)

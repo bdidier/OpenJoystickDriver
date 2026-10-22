@@ -32,7 +32,7 @@ struct ControllerRecordWatcherPackageReplaceTests {
     let manifest = """
       {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "\(ModPackageManifest.kind)",
       "name": "arcade-pack", "version": "1.0.0",
-       "author": "Tester", "requires": {"minimum": "0.6.0"}, "records": [\(list)]}
+       "author": "Tester", "requires": {"minimum": "0.6.0"}, "controllers": [\(list)]}
       """
     try Data(manifest.utf8).write(to: folder.appendingPathComponent("mod.json"))
     return folder

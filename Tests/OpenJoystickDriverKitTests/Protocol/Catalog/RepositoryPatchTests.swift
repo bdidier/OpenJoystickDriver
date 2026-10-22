@@ -3,8 +3,9 @@ import Testing
 
 @testable import OpenJoystickDriverKit
 
-/// The members of the records that ``RepositoryValidation/applyPatches(records:patches:output:)``
-/// writes, and the patch files it accepts.
+/// The members of the records that
+/// ``RepositoryValidation/applyPatches(controllers:patches:output:)`` writes, and the patch files
+/// it accepts.
 @Suite
 struct RepositoryPatchTests {
   private static func scratch(_ body: (URL) throws -> Void) throws {
@@ -92,7 +93,7 @@ struct RepositoryPatchTests {
       )
       let output = directory.appendingPathComponent("out")
       let problems = RepositoryValidation.applyPatches(
-        records: directory.appendingPathComponent("records"),
+        controllers: directory.appendingPathComponent("records"),
         patches: directory.appendingPathComponent("patches"),
         output: output
       )
@@ -151,7 +152,7 @@ struct RepositoryPatchTests {
         to: directory.appendingPathComponent("patches/04d2/deeper/04d2-162e.patch.json")
       )
       let problems = RepositoryValidation.applyPatches(
-        records: directory.appendingPathComponent("records"),
+        controllers: directory.appendingPathComponent("records"),
         patches: directory.appendingPathComponent("patches"),
         output: directory.appendingPathComponent("out")
       )
@@ -180,7 +181,7 @@ struct RepositoryPatchTests {
         to: directory.appendingPathComponent("patches/04d2/04d2-162e.patch.json")
       )
       let problems = RepositoryValidation.applyPatches(
-        records: directory.appendingPathComponent("records"),
+        controllers: directory.appendingPathComponent("records"),
         patches: directory.appendingPathComponent("patches"),
         output: directory.appendingPathComponent("out")
       )
@@ -210,7 +211,7 @@ struct RepositoryPatchTests {
       )
       let output = directory.appendingPathComponent("out")
       let problems = RepositoryValidation.applyPatches(
-        records: directory.appendingPathComponent("records"),
+        controllers: directory.appendingPathComponent("records"),
         patches: directory.appendingPathComponent("patches"),
         output: output
       )

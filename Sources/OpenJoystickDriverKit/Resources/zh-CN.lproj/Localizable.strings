@@ -2339,8 +2339,8 @@
 "cli.shared.error.confirmNeedsForce" = "此更改无法撤销。添加 --force 可无需提示直接确认。";
 /* One-line summary of 'ojd mod' in the command list and at the top of its help. A mod package adds controller support. */
 "cli.mod.group.abstract" = "验证、安装、列出或移除模组包。";
-/* Long description in the help of 'ojd mod'. mod.json, the folder names Controllers, Profiles and Personas, and the path stay as written. */
-"cli.mod.group.discussion" = "模组包是一个文件夹，包含 mod.json 清单以及 Controllers、Profiles 和 Personas 文件夹。已安装的包位于 ~/Library/Application Support/OpenJoystickDriver/Packages。该文件夹变化时，运行中的服务会应用更改。这些命令不需要服务。";
+/* Long description in the help of 'ojd mod'. mod.json, the folder names Controllers, Profiles and VirtualDevices, and the path stay as written. */
+"cli.mod.group.discussion" = "模组包是一个文件夹，包含 mod.json 清单以及 Controllers、Profiles 和 VirtualDevices 文件夹。已安装的包位于 ~/Library/Application Support/OpenJoystickDriver/Packages。该文件夹变化时，运行中的服务会应用更改。这些命令不需要服务。";
 /* Help text of the FOLDER argument of 'ojd mod validate' and 'ojd mod install'. mod.json stays as written. */
 "cli.mod.group.folder" = "包含 mod.json 的包文件夹。";
 /* Help text of the NAME argument of 'ojd mod remove'. */
@@ -2621,8 +2621,10 @@
 "cli.record.validate.valid" = "%1$@ 是有效的 %2$@ 记录，适用于 %3$@ (%4$@)。请用“ojd record install”安装。";
 /* Heading in the output of 'ojd status' above the defaults file that the driver ignores. */
 "cli.status.group.labelIgnoredDefaults" = "已忽略的默认值文件";
-/* Heading in the output of 'ojd status' above the list of skipped persona files. %lld is the number of files. */
-"cli.status.group.labelSkippedPersonas" = "已跳过的人设文件 (%lld)";
+/* Heading in the output of 'ojd status' above the list of skipped virtual device files. %lld is the number of entries. */
+"cli.status.group.labelSkippedVirtualDevices" = "已跳过的虚拟设备文件 (%lld)";
+/* Reason beside a folder named Personas in 'ojd status' and 'ojd diagnose': the folder is not read, because virtual device files live in VirtualDevices. %@ is the path of the VirtualDevices folder. OpenJoystickDriver is the product name. */
+"status.virtualDeviceFolderNotRead" = "OpenJoystickDriver 不读取此文件夹。请将其中的文件移到 %@，然后移除该文件夹。";
 /* Heading in the output of 'ojd status' above the list of skipped controller records. %lld is the number of records. */
 "cli.status.group.labelSkippedRecords" = "已跳过的控制器记录 (%lld)";
 /* One-line summary of 'ojd binding' in the command list and at the top of its help. */

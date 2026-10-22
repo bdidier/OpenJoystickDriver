@@ -2,12 +2,23 @@
 
 ### Requirement: Package manifest lists
 
-`mod.json` MUST list the package files in `records` (`Controller` and `ControllerPatch` files in `Controllers/`), `profiles` (`Profile` files in `Profiles/`) and `personas` (`VirtualDevice` files in `Personas/`), and MUST list at least one file.
+`mod.json` MUST list the package files by document kind in `controllers`, `patches`, `profiles` and `virtualDevices`, and MUST list at least one file.
+`controllers` names `Controller` files and `patches` names `ControllerPatch` files, both in `Controllers/`; `profiles` names `Profile` files in `Profiles/`; `virtualDevices` names `VirtualDevice` files in `VirtualDevices/`.
 
 #### Scenario: Sample package lists
 
 - **WHEN** `ojd mod validate docs/sdk/sample --json` runs
-- **THEN** the package is accepted with its `records`, `profiles` and `personas` files
+- **THEN** the package is accepted with its `controllers`, `profiles` and `virtualDevices` files
+
+#### Scenario: Unknown list names
+
+- **WHEN** `ojd mod validate FOLDER` reads a `mod.json` with `records` or `personas`
+- **THEN** the command exits non-zero and names E4001
+
+#### Scenario: File kind does not match the list
+
+- **WHEN** a `Controller` file is listed under `patches`, or a `ControllerPatch` file under `controllers`
+- **THEN** the command exits non-zero, names E4003, and says which kind the file holds and which list names it
 
 ### Requirement: Package files carry a header
 

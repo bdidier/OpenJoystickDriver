@@ -50,7 +50,7 @@ extension ControllerRecordSet {
         )
         continue
       }
-      entries += manifest.records.sorted().map {
+      entries += (manifest.controllers + manifest.patches).sorted().map {
         ControllerLayerEntry(
           url: package.directory.appendingPathComponent("Controllers/\($0)"),
           owner: package.name

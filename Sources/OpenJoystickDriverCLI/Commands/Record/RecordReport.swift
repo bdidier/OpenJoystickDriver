@@ -16,11 +16,12 @@ enum RecordStore {
 
   static func load() -> ControllerRecordSet { ControllerRecordSet.load(userDirectory: directory) }
 
-  /// The persona files OJD reads, beside the record directory as in the user's support folder.
-  static func personaFiles() -> [VirtualPersonaFile] {
+  /// The virtual device files OJD reads, beside the record directory as in the user's support
+  /// folder, with the folder it does not read.
+  static func virtualDeviceFiles() -> [VirtualPersonaFile] {
     VirtualHIDProfileOverrideStore(
       directory: directory.deletingLastPathComponent()
-        .appendingPathComponent("Personas", isDirectory: true)
+        .appendingPathComponent(VirtualHIDProfileOverrideStore.directoryName, isDirectory: true)
     ).files
   }
 

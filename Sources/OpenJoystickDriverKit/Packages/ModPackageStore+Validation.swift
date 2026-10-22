@@ -1,9 +1,9 @@
 import Foundation
 
-/// What a set of package or user files covers: controller identities, personas, and profiles.
+/// What a set of package or user files covers: controller identities, virtual devices, profiles.
 private struct ModPackageClaims {
-  var records: Set<String> = []
-  var personas: Set<String> = []
+  var controllerFiles: Set<String> = []
+  var virtualDevices: Set<String> = []
   var profileIDs: Set<UUID> = []
   var profileNames: Set<String> = []
 
@@ -15,8 +15,12 @@ private struct ModPackageClaims {
 
   /// The first item that both sets cover, or nil.
   func clash(with other: Self) -> String? {
-    if let file = records.intersection(other.records).min() { return "Controllers/\(file)" }
-    if let file = personas.intersection(other.personas).min() { return "Personas/\(file)" }
+    if let file = controllerFiles.intersection(other.controllerFiles).min() {
+      return "Controllers/\(file)"
+    }
+    if let file = virtualDevices.intersection(other.virtualDevices).min() {
+      return "VirtualDevices/\(file)"
+    }
     if let id = profileIDs.intersection(other.profileIDs).min(by: { $0.uuidString < $1.uuidString })
     {
       return "profile \(id.uuidString)"
@@ -91,8 +95,8 @@ extension ModPackageStore {
   ) throws -> ModPackageClaims {
     var claims = ModPackageClaims()
     let kinds = [
-      ("Controllers", manifest.records), ("Profiles", manifest.profiles),
-      ("Personas", manifest.personas),
+      ("Controllers", manifest.controllers + manifest.patches), ("Profiles", manifest.profiles),
+      ("VirtualDevices", manifest.virtualDevices),
     ]
     for (kind, listed) in kinds {
       let present = Set(
@@ -111,11 +115,14 @@ extension ModPackageStore {
     }
     // A patch may apply over a Controller file of the same package, so those are read first.
     var own: [ControllerModelID: ControllerRecord] = [:]
-    let isPatch = { (file: String) in file.hasSuffix(".patch.json") }
-    for file in manifest.records.filter({ !isPatch($0) }) + manifest.records.filter(isPatch) {
+    let listed =
+      manifest.controllers.map { ($0, ControllerRecordOperation.add) }
+      + manifest.patches.map { ($0, ControllerRecordOperation.patch) }
+    for (file, operation) in listed {
       let url = folder.appendingPathComponent("Controllers/\(file)")
-      let validated = try content(url, "Controllers/\(file)") {
-        try ControllerRecordSet.validate($0, file: url, layer: .package, packages: own)
+      let validated = try content(url, "Controllers/\(file)", document: "record") {
+        try requireKind(of: $0, listedAs: operation)
+        return try ControllerRecordSet.validate($0, file: url, layer: .package, packages: own)
       }
       if let record = validated.record, validated.operation == .add { own[record.model] = record }
       guard file == validated.fileName else {
@@ -124,24 +131,24 @@ extension ModPackageStore {
           "Controllers/\(file): the file name must be \(validated.fileName)"
         )
       }
-      claims.records.insert(file)
+      claims.controllerFiles.insert(file)
     }
-    for file in manifest.personas {
-      let url = folder.appendingPathComponent("Personas/\(file)")
-      let model = try content(url, "Personas/\(file)") {
+    for file in manifest.virtualDevices {
+      let url = folder.appendingPathComponent("VirtualDevices/\(file)")
+      let model = try content(url, "VirtualDevices/\(file)", document: "virtualDevice") {
         try VirtualHIDProfileOverrideStore.parse($0).0
       }
       guard file == model.fileName else {
         throw ModPackageError(
           .invalidPackageContent,
-          "Personas/\(file): the file name must be \(model.fileName)"
+          "VirtualDevices/\(file): the file name must be \(model.fileName)"
         )
       }
-      claims.personas.insert(file)
+      claims.virtualDevices.insert(file)
     }
     for file in manifest.profiles {
       let url = folder.appendingPathComponent("Profiles/\(file)")
-      let profile = try content(url, "Profiles/\(file)") {
+      let profile = try content(url, "Profiles/\(file)", document: "profile") {
         try RemappingProfileFileStore.load(from: $0)
       }
       guard claims.add(profile) else {
@@ -154,13 +161,31 @@ extension ModPackageStore {
     return claims
   }
 
+  /// Refuses a Controller file listed under `patches`, and a ControllerPatch file listed under
+  /// `controllers`. A file of any other kind is left to the record validation.
+  private static func requireKind(
+    of data: Data,
+    listedAs operation: ControllerRecordOperation
+  ) throws {
+    let found =
+      (try? JSONSerialization.jsonObject(with: data) as? [String: Any])?["kind"] as? String
+    let kinds = [ControllerRecordDocument.kind, ControllerPatch.kind]
+    let expected = operation == .add ? ControllerRecordDocument.kind : ControllerPatch.kind
+    guard let found, found != expected, kinds.contains(found) else { return }
+    let list = operation == .add ? "controllers" : "patches"
+    throw ControllerRecordProblem(
+      code: .invalidControllerRecord,
+      "a \(found) file is listed under \(list) in mod.json; \(list) lists \(expected) files"
+    )
+  }
+
   /// Refuses a link anywhere in `folder`, and an entry beside `mod.json` that is not one of the
   /// three kind folders. Hidden entries are skipped here, and an install does not copy them.
   private static func checkLayout(of folder: URL) throws {
     guard !isLink(folder) else {
       throw ModPackageError(.invalidPackageContent, "\(folder.lastPathComponent) is a link")
     }
-    let known: Set = [ModPackageManifest.fileName, "Controllers", "Profiles", "Personas"]
+    let known: Set = [ModPackageManifest.fileName, "Controllers", "Profiles", "VirtualDevices"]
     let entries = try? FileManager.default.contentsOfDirectory(
       at: folder,
       includingPropertiesForKeys: nil,
@@ -186,6 +211,7 @@ extension ModPackageStore {
   private static func content<Value>(
     _ url: URL,
     _ label: String,
+    document: String,
     _ check: (Data) throws -> Value
   ) throws -> Value {
     do { return try check(Data(contentsOf: url)) } catch {
@@ -193,7 +219,7 @@ extension ModPackageStore {
         ControllerRecordSet.problemCode(error) == .unsupportedAPIVersion
           ? .unsupportedAPIVersion : .invalidPackageContent,
         label + ": "
-          + ControllerRecordSet.problemDescription(error, includingCode: false, document: "record")
+          + ControllerRecordSet.problemDescription(error, includingCode: false, document: document)
       )
     }
   }
@@ -202,8 +228,8 @@ extension ModPackageStore {
   /// claims nothing.
   private static func claims(of folder: URL, _ manifest: ModPackageManifest) -> ModPackageClaims {
     var claims = ModPackageClaims()
-    claims.records = Set(manifest.records)
-    claims.personas = Set(manifest.personas)
+    claims.controllerFiles = Set(manifest.controllers + manifest.patches)
+    claims.virtualDevices = Set(manifest.virtualDevices)
     for file in manifest.profiles {
       if let profile = try? RemappingProfileFileStore.load(
         from: folder.appendingPathComponent("Profiles/\(file)")
@@ -214,7 +240,7 @@ extension ModPackageStore {
     return claims
   }
 
-  /// The claims of the user's `Controllers`, `Personas`, and `Profiles` folders in `root`.
+  /// The claims of the user's `Controllers`, `VirtualDevices`, and `Profiles` folders in `root`.
   private static func userClaims(_ root: URL) -> ModPackageClaims {
     func files(_ kind: String) -> [URL] {
       let urls = try? FileManager.default.contentsOfDirectory(
@@ -225,10 +251,10 @@ extension ModPackageStore {
       return (urls ?? []).filter { $0.pathExtension == "json" }
     }
     var claims = ModPackageClaims()
-    claims.records = Set(files("Controllers").map(\.lastPathComponent))
-    for url in files("Personas") {
+    claims.controllerFiles = Set(files("Controllers").map(\.lastPathComponent))
+    for url in files("VirtualDevices") {
       if let model = (try? VirtualHIDProfileOverrideStore.parse(Data(contentsOf: url)))?.0 {
-        claims.personas.insert(model.fileName)
+        claims.virtualDevices.insert(model.fileName)
       }
     }
     for url in files("Profiles") {

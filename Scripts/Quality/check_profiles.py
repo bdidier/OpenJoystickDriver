@@ -17,7 +17,7 @@ RECORD_DIR = (
 
 def main() -> int:
     try:
-        repository_tool.check(["validate", "records", str(RECORD_DIR)])
+        repository_tool.check(["validate", "controllers", str(RECORD_DIR)])
     except repository_tool.ToolError as error:
         for line in str(error).splitlines():
             print(f"[FAIL] {line}", file=sys.stderr)

@@ -2,7 +2,7 @@ import Foundation
 
 @testable import OpenJoystickDriverKit
 
-/// A temporary application-support folder with the user's `Controllers`, `Personas`, and
+/// A temporary application-support folder with the user's `Controllers`, `VirtualDevices`, and
 /// `Profiles` folders, the `Packages` store, and a `Staging` folder where packages are built.
 struct ModPackageFixture {
   let root = MacOSDataDirectory().url(for: .temporary).appendingPathComponent(
@@ -11,7 +11,7 @@ struct ModPackageFixture {
   )
 
   var controllers: URL { root.appendingPathComponent("Controllers", isDirectory: true) }
-  var personas: URL { root.appendingPathComponent("Personas", isDirectory: true) }
+  var virtualDevices: URL { root.appendingPathComponent("VirtualDevices", isDirectory: true) }
   var profiles: URL { root.appendingPathComponent("Profiles", isDirectory: true) }
   var packages: URL { root.appendingPathComponent("Packages", isDirectory: true) }
 
@@ -99,22 +99,24 @@ struct ModPackageFixture {
     _ name: String = "arcade-pack",
     version: String = "1.0.0",
     requires: [String: Any] = ["minimum": "0.6.0"],
-    records: [(name: String, data: Data)] = [],
-    personas: [(name: String, data: Data)] = [],
+    controllers: [(name: String, data: Data)] = [],
+    patches: [(name: String, data: Data)] = [],
+    virtualDevices: [(name: String, data: Data)] = [],
     profiles: [(name: String, data: Data)] = [],
     manifest overrides: [String: Any] = [:]
   ) throws -> URL {
     let folder = root.appendingPathComponent("Staging/\(UUID().uuidString)/\(name)")
     try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
-    try write(records, kind: "Controllers", in: folder)
-    try write(personas, kind: "Personas", in: folder)
+    try write(controllers + patches, kind: "Controllers", in: folder)
+    try write(virtualDevices, kind: "VirtualDevices", in: folder)
     try write(profiles, kind: "Profiles", in: folder)
     var manifest: [String: Any] = [
       "apiVersion": OpenJoystickDriverAPI.version, "kind": ModPackageManifest.kind, "name": name,
       "version": version, "author": "Tester", "requires": requires,
     ]
-    if !records.isEmpty { manifest["records"] = records.map(\.name) }
-    if !personas.isEmpty { manifest["personas"] = personas.map(\.name) }
+    if !controllers.isEmpty { manifest["controllers"] = controllers.map(\.name) }
+    if !patches.isEmpty { manifest["patches"] = patches.map(\.name) }
+    if !virtualDevices.isEmpty { manifest["virtualDevices"] = virtualDevices.map(\.name) }
     if !profiles.isEmpty { manifest["profiles"] = profiles.map(\.name) }
     for (key, value) in overrides { manifest[key] = value }
     try JSONSerialization.data(withJSONObject: manifest).write(

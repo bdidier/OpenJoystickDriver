@@ -38,7 +38,7 @@ struct ModCommandTests {
       )
       let manifest: [String: Any] = [
         "apiVersion": OpenJoystickDriverAPI.version, "kind": ModPackageManifest.kind, "name": name,
-        "version": "1.2.3", "author": "Tester", "requires": requires, "records": [file],
+        "version": "1.2.3", "author": "Tester", "requires": requires, "controllers": [file],
       ]
       try JSONSerialization.data(withJSONObject: manifest).write(
         to: folder.appendingPathComponent("mod.json")

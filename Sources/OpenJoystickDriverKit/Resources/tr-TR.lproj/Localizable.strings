@@ -2339,8 +2339,8 @@
 "cli.shared.error.confirmNeedsForce" = "Bu değişiklik geri alınamaz. Onay sormadan onaylamak için --force ekleyin.";
 /* One-line summary of 'ojd mod' in the command list and at the top of its help. A mod package adds controller support. */
 "cli.mod.group.abstract" = "Mod paketlerini doğrula, yükle, listele veya kaldır.";
-/* Long description in the help of 'ojd mod'. mod.json, the folder names Controllers, Profiles and Personas, and the path stay as written. */
-"cli.mod.group.discussion" = "Mod paketi, bir mod.json bildirimi ile Controllers, Profiles ve Personas klasörlerini içeren bir klasördür. Yüklü paketler ~/Library/Application Support/OpenJoystickDriver/Packages içinde durur. Çalışan servis, bu klasör değiştiğinde değişikliği uygular. Bu komutlar servisi gerektirmez.";
+/* Long description in the help of 'ojd mod'. mod.json, the folder names Controllers, Profiles and VirtualDevices, and the path stay as written. */
+"cli.mod.group.discussion" = "Mod paketi, bir mod.json manifest dosyası ile Controllers, Profiles ve VirtualDevices klasörlerini içeren bir klasördür. Yüklü paketler ~/Library/Application Support/OpenJoystickDriver/Packages içinde bulunur. Çalışan servis, bu klasör değiştiğinde değişikliği uygular. Bu komutlar servisi gerektirmez.";
 /* Help text of the FOLDER argument of 'ojd mod validate' and 'ojd mod install'. mod.json stays as written. */
 "cli.mod.group.folder" = "mod.json içeren bir paket klasörü.";
 /* Help text of the NAME argument of 'ojd mod remove'. */
@@ -2621,8 +2621,10 @@
 "cli.record.validate.valid" = "%1$@ geçerli bir %2$@ kaydıdır; kontrolcü: %3$@ (%4$@). “ojd record install” ile yükleyin.";
 /* Heading in the output of 'ojd status' above the defaults file that the driver ignores. */
 "cli.status.group.labelIgnoredDefaults" = "Yok sayılan varsayılanlar dosyası";
-/* Heading in the output of 'ojd status' above the list of skipped persona files. %lld is the number of files. */
-"cli.status.group.labelSkippedPersonas" = "Atlanan persona dosyaları (%lld)";
+/* Heading in the output of 'ojd status' above the list of skipped virtual device files. %lld is the number of entries. */
+"cli.status.group.labelSkippedVirtualDevices" = "Atlanan sanal aygıt dosyaları (%lld)";
+/* Reason beside a folder named Personas in 'ojd status' and 'ojd diagnose': the folder is not read, because virtual device files live in VirtualDevices. %@ is the path of the VirtualDevices folder. OpenJoystickDriver is the product name. */
+"status.virtualDeviceFolderNotRead" = "OpenJoystickDriver bu klasörü okumaz. Dosyalarını %@ klasörüne taşıyın, sonra klasörü kaldırın.";
 /* Heading in the output of 'ojd status' above the list of skipped controller records. %lld is the number of records. */
 "cli.status.group.labelSkippedRecords" = "Atlanan Kontrolcü Kayıtları (%lld)";
 /* One-line summary of 'ojd binding' in the command list and at the top of its help. */
@@ -3646,7 +3648,7 @@
 /* Text of error E3029, returned when a profile that comes from an installed package is edited. */
 "error.E3029.message" = "Yüklü bir paketten gelen profil değiştirilemez. Profili çoğaltın ve kopyayı değiştirin.";
 /* Text of error E4001, printed when the manifest of a mod package is missing or invalid. mod.json stays as written. */
-"error.E4001.message" = "mod.json paket bildirimi eksik veya geçersiz. Bunu mod-package şemasına göre kontrol edin ve komutu yeniden çalıştırın.";
+"error.E4001.message" = "mod.json paket manifest dosyası eksik veya geçersiz. Bunu mod-package şemasına göre kontrol edin ve komutu yeniden çalıştırın.";
 /* Text of error E4002, printed when a mod package requires another version of the app than the one that runs. OpenJoystickDriver is the product name. */
 "error.E4002.message" = "Paket, çalışandan farklı bir OpenJoystickDriver sürümü gerektiriyor. Bu sürümü destekleyen bir paket sürümü yükleyin veya OpenJoystickDriver’ı güncelleyin.";
 /* Text of error E4003, printed when a file of a mod package is invalid, missing or not listed in the manifest. mod.json stays as written. */

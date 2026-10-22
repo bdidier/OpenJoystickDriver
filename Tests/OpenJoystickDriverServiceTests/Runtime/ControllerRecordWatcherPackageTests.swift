@@ -19,7 +19,7 @@ struct ControllerRecordWatcherPackageTests {
     """
     {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "\(ModPackageManifest.kind)",
     "name": "arcade-pack", "version": "1.0.0",
-     "author": "Tester", "requires": {"minimum": "0.6.0"}, "records": ["1234-abcd.json"]}
+     "author": "Tester", "requires": {"minimum": "0.6.0"}, "controllers": ["1234-abcd.json"]}
     """.utf8
   )
 

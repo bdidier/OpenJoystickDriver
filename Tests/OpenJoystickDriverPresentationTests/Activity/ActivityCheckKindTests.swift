@@ -20,7 +20,7 @@ struct ActivityCheckKindTests {
         snapshot: stopped,
         extensionStatus: ExtensionStatus(bundle: .present, registration: .active("record")),
         records: ControllerRecordSet.bundled,
-        personas: [],
+        virtualDevices: [],
         usb: .success(0)
       ).map(\.id)
     )

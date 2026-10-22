@@ -34,7 +34,7 @@ class SchemaAcceptedDocumentTests(unittest.TestCase):
 
     def test_a_controller_record_is_accepted_by_the_schema_and_by_swift(self) -> None:
         self.assert_schema_accepts("controller.schema.json", RECORD)
-        repository_tool.check(["validate", "records", str(RECORD.parents[1])])
+        repository_tool.check(["validate", "controllers", str(RECORD.parents[1])])
 
     def test_a_protocol_description_is_accepted_by_the_schema_and_by_swift(
         self,

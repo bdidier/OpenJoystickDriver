@@ -2339,8 +2339,8 @@
 "cli.shared.error.confirmNeedsForce" = "การเปลี่ยนแปลงนี้ไม่สามารถเลิกทำได้ เพิ่ม --force เพื่อยืนยันโดยไม่ต้องถาม";
 /* One-line summary of 'ojd mod' in the command list and at the top of its help. A mod package adds controller support. */
 "cli.mod.group.abstract" = "ตรวจสอบ ติดตั้ง แสดงรายการ หรือลบแพ็กเกจม็อด";
-/* Long description in the help of 'ojd mod'. mod.json, the folder names Controllers, Profiles and Personas, and the path stay as written. */
-"cli.mod.group.discussion" = "แพ็กเกจม็อดคือโฟลเดอร์ที่มีไฟล์ระบุรายการ mod.json และโฟลเดอร์ Controllers, Profiles และ Personas แพ็กเกจที่ติดตั้งอยู่ใน ~/Library/Application Support/OpenJoystickDriver/Packages บริการที่กำลังทำงานจะใช้การเปลี่ยนแปลงเมื่อโฟลเดอร์นั้นเปลี่ยน คำสั่งเหล่านี้ไม่ต้องใช้บริการ";
+/* Long description in the help of 'ojd mod'. mod.json, the folder names Controllers, Profiles and VirtualDevices, and the path stay as written. */
+"cli.mod.group.discussion" = "แพ็กเกจม็อดคือโฟลเดอร์ที่มีไฟล์ระบุรายการ mod.json และโฟลเดอร์ Controllers, Profiles และ VirtualDevices แพ็กเกจที่ติดตั้งอยู่ใน ~/Library/Application Support/OpenJoystickDriver/Packages บริการที่กำลังทำงานจะใช้การเปลี่ยนแปลงเมื่อโฟลเดอร์นั้นเปลี่ยน คำสั่งเหล่านี้ไม่ต้องใช้บริการ";
 /* Help text of the FOLDER argument of 'ojd mod validate' and 'ojd mod install'. mod.json stays as written. */
 "cli.mod.group.folder" = "โฟลเดอร์แพ็กเกจที่มี mod.json";
 /* Help text of the NAME argument of 'ojd mod remove'. */
@@ -2621,8 +2621,10 @@
 "cli.record.validate.valid" = "%1$@ เป็นระเบียน %2$@ ที่ถูกต้องสำหรับ %3$@ (%4$@) ติดตั้งด้วย “ojd record install”";
 /* Heading in the output of 'ojd status' above the defaults file that the driver ignores. */
 "cli.status.group.labelIgnoredDefaults" = "ไฟล์ค่าเริ่มต้นที่ถูกละเว้น";
-/* Heading in the output of 'ojd status' above the list of skipped persona files. %lld is the number of files. */
-"cli.status.group.labelSkippedPersonas" = "ไฟล์เพอร์โซนาที่ข้าม (%lld)";
+/* Heading in the output of 'ojd status' above the list of skipped virtual device files. %lld is the number of entries. */
+"cli.status.group.labelSkippedVirtualDevices" = "ไฟล์อุปกรณ์เสมือนที่ข้าม (%lld)";
+/* Reason beside a folder named Personas in 'ojd status' and 'ojd diagnose': the folder is not read, because virtual device files live in VirtualDevices. %@ is the path of the VirtualDevices folder. OpenJoystickDriver is the product name. */
+"status.virtualDeviceFolderNotRead" = "OpenJoystickDriver ไม่อ่านโฟลเดอร์นี้ ย้ายไฟล์ในโฟลเดอร์ไปที่ %@ แล้วเอาโฟลเดอร์ออก";
 /* Heading in the output of 'ojd status' above the list of skipped controller records. %lld is the number of records. */
 "cli.status.group.labelSkippedRecords" = "ระเบียนคอนโทรลเลอร์ที่ข้าม (%lld)";
 /* One-line summary of 'ojd binding' in the command list and at the top of its help. */

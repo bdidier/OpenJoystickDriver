@@ -147,8 +147,9 @@ struct StatusReport: Encodable, Equatable {
   let skippedRecords: [SkippedRecord]
   /// The `all.patch.json` OJD ignored whole; absent when it applied the file or there is none.
   let ignoredDefaults: SkippedRecord?
-  /// Persona files OJD skipped. Read from the files, so present while the service is stopped.
-  let skippedPersonas: [SkippedRecord]
+  /// Virtual device files OJD skipped, and a `Personas` folder it does not read. Read from the
+  /// files, so present while the service is stopped.
+  let skippedVirtualDevices: [SkippedRecord]
 
   init(
     payload: ApplicationServiceStatusPayload?,
@@ -156,14 +157,14 @@ struct StatusReport: Encodable, Equatable {
     commandLineTool: CommandLineToolLinkStatus,
     skippedRecords: [SkippedRecord] = [],
     ignoredDefaults: SkippedRecord? = nil,
-    skippedPersonas: [SkippedRecord] = [],
+    skippedVirtualDevices: [SkippedRecord] = [],
     listenerFailure: ServiceListenerFailure.Reading
   ) {
     self.transportExtension = Extension(extensionStatus)
     self.commandLineTool = CommandLineTool(commandLineTool)
     self.skippedRecords = skippedRecords
     self.ignoredDefaults = ignoredDefaults
-    self.skippedPersonas = skippedPersonas
+    self.skippedVirtualDevices = skippedVirtualDevices
     guard let payload else {
       service = Service(state: .stopped, version: nil, listenerFailure: listenerFailure)
       permissions = nil

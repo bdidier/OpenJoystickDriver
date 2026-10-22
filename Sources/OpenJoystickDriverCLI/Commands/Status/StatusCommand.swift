@@ -46,7 +46,7 @@ struct StatusCommand: AsyncParsableCommand {
         commandLineTool: Self.linkProbe(),
         skippedRecords: records.problems.map(SkippedRecord.init),
         ignoredDefaults: SkippedRecord(records.defaults),
-        skippedPersonas: RecordStore.personaFiles().filter { $0.problem != nil }
+        skippedVirtualDevices: RecordStore.virtualDeviceFiles().filter { $0.problem != nil }
           .map(SkippedRecord.init),
         listenerFailure: reading
       )
@@ -135,8 +135,8 @@ struct StatusCommand: AsyncParsableCommand {
     if let ignored = report.ignoredDefaults {
       rows.append(["ignored-defaults", ignored.file, ignored.problem])
     }
-    for skipped in report.skippedPersonas {
-      rows.append(["skipped-persona", skipped.file, skipped.problem])
+    for skipped in report.skippedVirtualDevices {
+      rows.append(["skipped-virtual-device", skipped.file, skipped.problem])
     }
     return rows
   }
@@ -263,15 +263,15 @@ struct StatusCommand: AsyncParsableCommand {
       CLIOutput.stdout(CLILocalized.text("cli.status.group.labelIgnoredDefaults"))
       CLIOutput.stdout("  \(ignored.file)  \(ignored.problem)")
     }
-    if !report.skippedPersonas.isEmpty {
+    if !report.skippedVirtualDevices.isEmpty {
       CLIOutput.stdout("")
       CLIOutput.stdout(
         CLILocalized.format(
-          "cli.status.group.labelSkippedPersonas",
-          report.skippedPersonas.count
+          "cli.status.group.labelSkippedVirtualDevices",
+          report.skippedVirtualDevices.count
         )
       )
-      for skipped in report.skippedPersonas {
+      for skipped in report.skippedVirtualDevices {
         CLIOutput.stdout("  \(skipped.file)  \(skipped.problem)")
       }
     }

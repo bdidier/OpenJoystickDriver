@@ -47,11 +47,11 @@ With `--json`, the output is one `SystemStatus` object with these keys:
 - `passThroughDevices`: devices that OpenJoystickDriver leaves to macOS.
 - `skippedRecords`: your controller record files that OpenJoystickDriver skipped, each with `file` and `problem`.
 - `ignoredDefaults`: your `Controllers/all.patch.json` when OpenJoystickDriver ignored it whole, with `file` and `problem`. The key is absent when the file is valid or does not exist.
-- `skippedPersonas`: your persona files that OpenJoystickDriver skipped, each with `file` and `problem`.
+- `skippedVirtualDevices`: your virtual device files that OpenJoystickDriver skipped, each with `file` and `problem`. A `Personas` folder beside `VirtualDevices` is listed too: OpenJoystickDriver reads virtual device files only from `VirtualDevices`, so move the files there.
 
 Keys that need the service are absent when it is stopped.
 
-With `--plain`, the first field of each line is `service`, `extension`, `command-line-tool`, `permission`, `virtual-device`, `controller`, `unbound`, `pass-through`, `skipped-record`, `ignored-defaults`, or `skipped-persona`.
+With `--plain`, the first field of each line is `service`, `extension`, `command-line-tool`, `permission`, `virtual-device`, `controller`, `unbound`, `pass-through`, `skipped-record`, `ignored-defaults`, or `skipped-virtual-device`.
 
 ## controller
 
@@ -382,7 +382,7 @@ Run every check and report what is wrong.
 ojd diagnose [--output PATH] [--soak SECONDS]
 ```
 
-The checks are `service`, `transport-extension-bundle`, `transport-extension-registration`, `input-read`, `input-inject`, `controller-records`, `config-files`, `usb-access`, `virtual-device`, and `runtime-health`. Each reports `Pass`, `Warn`, `Fail`, or `Skip` with `--json`, and `pass`, `warn`, `fail`, or `skip` with `--plain`. The `controller-records` check warns when OpenJoystickDriver skipped one of your controller record files. The `config-files` check warns when it ignored your `Controllers/all.patch.json` or skipped one of your persona files. Checks that need the service are skipped while it is stopped. While the service cannot be reached and left a record that its request listener stopped, the `service` check fails with `E2034`, its text, the error number and the time; a record whose process has ended only warns that the last listener stopped; a record that cannot be used also fails it, as `E2035` with the file and the reason. The command exits with code 1 when any check fails.
+The checks are `service`, `transport-extension-bundle`, `transport-extension-registration`, `input-read`, `input-inject`, `controller-records`, `config-files`, `usb-access`, `virtual-device`, and `runtime-health`. Each reports `Pass`, `Warn`, `Fail`, or `Skip` with `--json`, and `pass`, `warn`, `fail`, or `skip` with `--plain`. The `controller-records` check warns when OpenJoystickDriver skipped one of your controller record files. The `config-files` check warns when it ignored your `Controllers/all.patch.json` skipped one of your virtual device files, or found a `Personas` folder that it does not read. Checks that need the service are skipped while it is stopped. While the service cannot be reached and left a record that its request listener stopped, the `service` check fails with `E2034`, its text, the error number and the time; a record whose process has ended only warns that the last listener stopped; a record that cannot be used also fails it, as `E2035` with the file and the reason. The command exits with code 1 when any check fails.
 
 - `--output PATH`: Also write a support report to `PATH`. Read it before you share it.
 - `--soak SECONDS`: Run the `runtime-health` check. It samples the service's memory, file descriptors, and CPU for 1 to 86400 seconds. Without `--soak`, that check is skipped. `--interval-ms`, `--rss-limit-mib`, and `--footprint-limit-mib` tune the sampling and set failure limits.

@@ -3501,7 +3501,7 @@
         "ignoredDefaults": {
           "$ref": "#/$defs/sharedSkippedRecord"
         },
-        "skippedPersonas": {
+        "skippedVirtualDevices": {
           "type": "array",
           "items": {
             "$ref": "#/$defs/sharedSkippedRecord"

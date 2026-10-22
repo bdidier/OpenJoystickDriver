@@ -24,12 +24,6 @@ enum ModStore {
   }
 }
 
-/// The files a manifest lists, as paths inside the package.
-private func listedFiles(of manifest: ModPackageManifest) -> [String] {
-  manifest.records.map { "Controllers/\($0)" } + manifest.profiles.map { "Profiles/\($0)" }
-    + manifest.personas.map { "Personas/\($0)" }
-}
-
 /// The `--json` result of `mod validate`, and the `package` of `mod install`.
 struct ModPackageValidation: Encodable, Equatable {
   let valid: Bool
@@ -47,7 +41,7 @@ struct ModPackageValidation: Encodable, Equatable {
     name = manifest.name
     version = manifest.version
     author = manifest.author
-    files = listedFiles(of: manifest)
+    files = manifest.listedFiles
   }
 
   init(_ error: ModPackageError) {
@@ -84,7 +78,7 @@ struct ModPackageEntry: Encodable, Equatable {
     name = package.name
     version = package.manifest?.version
     author = package.manifest?.author
-    files = package.manifest.map(listedFiles(of:)) ?? []
+    files = package.manifest.map(\.listedFiles) ?? []
     problem = package.problem
   }
 }

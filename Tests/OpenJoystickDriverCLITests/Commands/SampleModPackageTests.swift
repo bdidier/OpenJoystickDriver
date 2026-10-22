@@ -52,7 +52,7 @@ struct SampleModPackageTests {
     #expect(json["name"] as? String == "ojd-sample")
     #expect(
       json["files"] as? [String] == [
-        "Controllers/1209-0001.json", "Profiles/sample-pad.json", "Personas/1209-0001.json",
+        "Controllers/1209-0001.json", "Profiles/sample-pad.json", "VirtualDevices/1209-0001.json",
       ]
     )
   }

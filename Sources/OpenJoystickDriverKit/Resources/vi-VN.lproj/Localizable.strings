@@ -2339,8 +2339,8 @@
 "cli.shared.error.confirmNeedsForce" = "Thay đổi này không thể hoàn tác. Thêm --force để xác nhận mà không cần nhắc.";
 /* One-line summary of 'ojd mod' in the command list and at the top of its help. A mod package adds controller support. */
 "cli.mod.group.abstract" = "Xác thực, cài đặt, liệt kê hoặc gỡ các gói mod.";
-/* Long description in the help of 'ojd mod'. mod.json, the folder names Controllers, Profiles and Personas, and the path stay as written. */
-"cli.mod.group.discussion" = "Gói mod là một thư mục có tệp kê khai mod.json cùng các thư mục Controllers, Profiles và Personas. Các gói đã cài nằm trong ~/Library/Application Support/OpenJoystickDriver/Packages. Dịch vụ đang chạy áp dụng thay đổi khi thư mục đó thay đổi. Các lệnh này không cần dịch vụ.";
+/* Long description in the help of 'ojd mod'. mod.json, the folder names Controllers, Profiles and VirtualDevices, and the path stay as written. */
+"cli.mod.group.discussion" = "Gói mod là một thư mục có tệp kê khai mod.json cùng các thư mục Controllers, Profiles và VirtualDevices. Các gói đã cài nằm trong ~/Library/Application Support/OpenJoystickDriver/Packages. Dịch vụ đang chạy áp dụng thay đổi khi thư mục đó thay đổi. Các lệnh này không cần dịch vụ.";
 /* Help text of the FOLDER argument of 'ojd mod validate' and 'ojd mod install'. mod.json stays as written. */
 "cli.mod.group.folder" = "Thư mục gói chứa mod.json.";
 /* Help text of the NAME argument of 'ojd mod remove'. */
@@ -2621,8 +2621,10 @@
 "cli.record.validate.valid" = "%1$@ là bản ghi %2$@ hợp lệ cho %3$@ (%4$@). Hãy cài đặt bằng “ojd record install”.";
 /* Heading in the output of 'ojd status' above the defaults file that the driver ignores. */
 "cli.status.group.labelIgnoredDefaults" = "Tệp mặc định bị bỏ qua";
-/* Heading in the output of 'ojd status' above the list of skipped persona files. %lld is the number of files. */
-"cli.status.group.labelSkippedPersonas" = "Các tệp persona bị bỏ qua (%lld)";
+/* Heading in the output of 'ojd status' above the list of skipped virtual device files. %lld is the number of entries. */
+"cli.status.group.labelSkippedVirtualDevices" = "Các tệp thiết bị ảo bị bỏ qua (%lld)";
+/* Reason beside a folder named Personas in 'ojd status' and 'ojd diagnose': the folder is not read, because virtual device files live in VirtualDevices. %@ is the path of the VirtualDevices folder. OpenJoystickDriver is the product name. */
+"status.virtualDeviceFolderNotRead" = "OpenJoystickDriver không đọc thư mục này. Hãy chuyển các tệp trong đó sang %@, rồi xóa thư mục.";
 /* Heading in the output of 'ojd status' above the list of skipped controller records. %lld is the number of records. */
 "cli.status.group.labelSkippedRecords" = "Bản ghi bộ điều khiển bị bỏ qua (%lld)";
 /* One-line summary of 'ojd binding' in the command list and at the top of its help. */

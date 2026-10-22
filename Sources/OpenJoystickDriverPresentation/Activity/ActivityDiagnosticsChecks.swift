@@ -18,7 +18,7 @@ enum ActivityDiagnosticsChecks {
       snapshot: snapshot,
       extensionStatus: extensionStatus,
       records: ControllerRecordSet.load(userDirectory: ControllerRecordSet.userDirectory),
-      personas: VirtualHIDProfileOverrideStore(
+      virtualDevices: VirtualHIDProfileOverrideStore(
         directory: VirtualHIDProfileOverrideStore.userDirectory
       ).files,
       usb: usb

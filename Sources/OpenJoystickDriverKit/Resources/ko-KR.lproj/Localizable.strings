@@ -2339,8 +2339,8 @@
 "cli.shared.error.confirmNeedsForce" = "이 변경은 되돌릴 수 없습니다. 확인 없이 진행하려면 --force를 추가하세요.";
 /* One-line summary of 'ojd mod' in the command list and at the top of its help. A mod package adds controller support. */
 "cli.mod.group.abstract" = "모드 패키지를 검증, 설치, 나열 또는 제거합니다.";
-/* Long description in the help of 'ojd mod'. mod.json, the folder names Controllers, Profiles and Personas, and the path stay as written. */
-"cli.mod.group.discussion" = "모드 패키지는 mod.json 매니페스트와 Controllers, Profiles, Personas 폴더가 있는 폴더입니다. 설치된 패키지는 ~/Library/Application Support/OpenJoystickDriver/Packages에 있습니다. 실행 중인 서비스는 해당 폴더가 바뀌면 변경 사항을 적용합니다. 이 명령에는 서비스가 필요하지 않습니다.";
+/* Long description in the help of 'ojd mod'. mod.json, the folder names Controllers, Profiles and VirtualDevices, and the path stay as written. */
+"cli.mod.group.discussion" = "모드 패키지는 mod.json 매니페스트와 Controllers, Profiles, VirtualDevices 폴더가 있는 폴더입니다. 설치된 패키지는 ~/Library/Application Support/OpenJoystickDriver/Packages에 있습니다. 실행 중인 서비스는 해당 폴더가 바뀌면 변경 사항을 적용합니다. 이 명령에는 서비스가 필요하지 않습니다.";
 /* Help text of the FOLDER argument of 'ojd mod validate' and 'ojd mod install'. mod.json stays as written. */
 "cli.mod.group.folder" = "mod.json이 들어 있는 패키지 폴더입니다.";
 /* Help text of the NAME argument of 'ojd mod remove'. */
@@ -2621,8 +2621,10 @@
 "cli.record.validate.valid" = "%1$@은(는) 유효한 %2$@ 레코드입니다(대상: %3$@, %4$@). ‘ojd record install’로 설치하세요.";
 /* Heading in the output of 'ojd status' above the defaults file that the driver ignores. */
 "cli.status.group.labelIgnoredDefaults" = "무시된 기본값 파일";
-/* Heading in the output of 'ojd status' above the list of skipped persona files. %lld is the number of files. */
-"cli.status.group.labelSkippedPersonas" = "건너뛴 페르소나 파일 (%lld)";
+/* Heading in the output of 'ojd status' above the list of skipped virtual device files. %lld is the number of entries. */
+"cli.status.group.labelSkippedVirtualDevices" = "건너뛴 가상 기기 파일 (%lld)";
+/* Reason beside a folder named Personas in 'ojd status' and 'ojd diagnose': the folder is not read, because virtual device files live in VirtualDevices. %@ is the path of the VirtualDevices folder. OpenJoystickDriver is the product name. */
+"status.virtualDeviceFolderNotRead" = "OpenJoystickDriver는 이 폴더를 읽지 않습니다. 폴더의 파일을 %@(으)로 옮긴 뒤 폴더를 제거하세요.";
 /* Heading in the output of 'ojd status' above the list of skipped controller records. %lld is the number of records. */
 "cli.status.group.labelSkippedRecords" = "건너뛴 컨트롤러 레코드 (%lld)";
 /* One-line summary of 'ojd binding' in the command list and at the top of its help. */

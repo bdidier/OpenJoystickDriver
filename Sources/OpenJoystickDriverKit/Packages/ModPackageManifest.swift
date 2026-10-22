@@ -30,12 +30,20 @@ public struct ModPackageManifest: Equatable, Sendable {
   public let version: String
   public let author: String
   public let requires: Requires
-  /// Files of the package's `Controllers/` folder.
-  public let records: [String]
+  /// `Controller` files of the package's `Controllers/` folder.
+  public let controllers: [String]
+  /// `ControllerPatch` files of the package's `Controllers/` folder.
+  public let patches: [String]
   /// Files of the package's `Profiles/` folder.
   public let profiles: [String]
-  /// Files of the package's `Personas/` folder.
-  public let personas: [String]
+  /// `VirtualDevice` files of the package's `VirtualDevices/` folder.
+  public let virtualDevices: [String]
+
+  /// The listed files as paths inside the package folder.
+  public var listedFiles: [String] {
+    controllers.map { "Controllers/\($0)" } + patches.map { "Controllers/\($0)" }
+      + profiles.map { "Profiles/\($0)" } + virtualDevices.map { "VirtualDevices/\($0)" }
+  }
 
   /// Decodes and checks one `mod.json`.
   ///
@@ -64,7 +72,7 @@ public struct ModPackageManifest: Equatable, Sendable {
 extension ModPackageManifest: Decodable {
   private enum Key: String, CodingKey, CaseIterable {
     case apiVersion, kind
-    case name, version, author, requires, records, profiles, personas
+    case name, version, author, requires, controllers, patches, profiles, virtualDevices
   }
 
   public init(from decoder: any Decoder) throws {
@@ -91,21 +99,29 @@ extension ModPackageManifest: Decodable {
     author = try container.decode(String.self, forKey: .author)
     guard !author.isEmpty else { throw ModPackageError(.invalidManifest, "author is empty") }
     requires = try container.decode(Requires.self, forKey: .requires)
-    records = try Self.files(container, .records, pattern: Self.recordFilePattern)
+    controllers = try Self.files(container, .controllers, pattern: Self.controllerFilePattern)
+    patches = try Self.files(container, .patches, pattern: Self.patchFilePattern)
     profiles = try Self.files(container, .profiles, pattern: Self.profileFilePattern)
-    personas = try Self.files(container, .personas, pattern: Self.personaFilePattern)
-    guard !(records + profiles + personas).isEmpty else {
-      throw ModPackageError(.invalidManifest, "records, profiles, or personas must list a file")
+    virtualDevices = try Self.files(
+      container,
+      .virtualDevices,
+      pattern: Self.virtualDeviceFilePattern
+    )
+    guard !(controllers + patches + profiles + virtualDevices).isEmpty else {
+      throw ModPackageError(
+        .invalidManifest,
+        "controllers, patches, profiles, or virtualDevices must list a file"
+      )
     }
   }
 
   // The patterns of `mod-package.schema.json`, with `\A` and `\z` for the ECMA `^` and `$`, so
   // that a trailing newline fails. `ModPackageManifestSchemaTests` feeds both the same manifests.
-  private static let recordFilePattern =
-    "\\A(?:[0-9a-f]{4}-[0-9a-f]{4}\\.json|(?:model-)?[0-9a-f]{4}-[0-9a-f]{4}\\.patch\\.json"
-    + "|all\\.patch\\.json)\\z"
+  private static let controllerFilePattern = "\\A[0-9a-f]{4}-[0-9a-f]{4}\\.json\\z"
+  private static let patchFilePattern =
+    "\\A(?:(?:model-)?[0-9a-f]{4}-[0-9a-f]{4}\\.patch\\.json|all\\.patch\\.json)\\z"
   private static let profileFilePattern = "\\A[A-Za-z0-9][A-Za-z0-9._-]*\\.json\\z"
-  private static let personaFilePattern =
+  private static let virtualDeviceFilePattern =
     "\\A[0-9a-f]{4}-[0-9a-f]{4}(-U-[A-Za-z0-9_-]{16})?\\.json\\z"
   private static let semanticVersionPattern =
     "\\A(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)"
