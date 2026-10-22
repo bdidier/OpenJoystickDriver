@@ -38,6 +38,28 @@ struct MainWindowNavigationTests {
 
   @Test
   @MainActor
+  func theAppIsActivatedAfterAWindowSwitchesItToRegular() {
+    var events: [String] = []
+    let dock = DockIconController(
+      setActivationPolicy: { policy in
+        events.append("policy \(policy.rawValue)")
+        return true
+      },
+      activateApplication: { events.append("activate") }
+    )
+
+    dock.setOpen(.workbench, true)
+    dock.setOpen(.settings, true)
+    dock.setOpen(.settings, false)
+    dock.setOpen(.workbench, false)
+    // Show in Dock turning on without a window opens no window to activate for.
+    dock.showsAlways = true
+
+    #expect(events == ["policy 0", "activate", "policy 1", "policy 0"])
+  }
+
+  @Test
+  @MainActor
   func aRefusedPolicyChangeIsRetriedOnTheNextChange() {
     var shouldSucceed = false
     var requestedPolicies: [NSApplication.ActivationPolicy] = []
