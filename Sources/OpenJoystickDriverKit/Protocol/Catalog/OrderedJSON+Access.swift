@@ -58,12 +58,12 @@ extension OrderedJSON {
     }
   }
 
+  private typealias CanonicalNumber = (negative: Bool, digits: String, exponent: Int)
+
   /// The sign, significant digits and power of ten of the JSON number `text`, with no leading or
   /// trailing zero in the digits, so numbers of the same value give the same result. Zero has no
   /// sign and no digits. Nil when the exponent does not fit an `Int`.
-  private static func canonicalNumber(_ text: String) -> (
-    negative: Bool, digits: String, exponent: Int
-  )? {
+  private static func canonicalNumber(_ text: String) -> CanonicalNumber? {
     var rest = Substring(text)
     let negative = rest.hasPrefix("-")
     if negative { rest = rest.dropFirst() }

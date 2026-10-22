@@ -20,7 +20,9 @@ class RunTests(unittest.TestCase):
         with (
             patch.object(repository_tool, "binary", return_value=Path("tool")),
             patch.object(
-                repository_tool.subprocess, "run", return_value=completed(status, stdout)
+                repository_tool.subprocess,
+                "run",
+                return_value=completed(status, stdout),
             ),
         ):
             return repository_tool.problems(["validate", "records", "x"])
@@ -57,12 +59,8 @@ class BuildTests(unittest.TestCase):
         repository_tool.binary.cache_clear()
         self.addCleanup(repository_tool.binary.cache_clear)
         with (
-            patch.object(
-                repository_tool, "build", return_value=Path("tool")
-            ) as build,
-            patch.object(
-                repository_tool.subprocess, "run", return_value=completed(0)
-            ),
+            patch.object(repository_tool, "build", return_value=Path("tool")) as build,
+            patch.object(repository_tool.subprocess, "run", return_value=completed(0)),
         ):
             repository_tool.check(["validate", "records", "x"])
             repository_tool.check(["validate", "records", "y"])
