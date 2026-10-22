@@ -86,7 +86,8 @@ struct SoakCheckLocalizationTests {
     )
     #expect(
       RuntimeHealthSamplingError.tooManySamples(900_000).errorDescription
-        == "Runtime sampling would take \(pluralInteger(900_000)) samples. Raise the sample interval."
+        == "Runtime sampling would take \(pluralInteger(900_000)) samples. "
+        + "Raise the sample interval."
     )
     #expect(
       RuntimeHealthSamplingError.noSamples.errorDescription
