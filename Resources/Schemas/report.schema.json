@@ -680,7 +680,8 @@
         "UnsupportedTransportVariant",
         "RequiredInitializationFailed",
         "CatalogConflict",
-        "VirtualProfileUnavailable"
+        "VirtualProfileUnavailable",
+        "DeviceInUse"
       ]
     },
     "hidGamepad": {

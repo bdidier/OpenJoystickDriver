@@ -177,10 +177,6 @@ struct USBSignatureDiscoveryTests {
   }
 
   @Test(arguments: [
-    (
-      LogicalControllerID(vendorID: 0x1234, productID: 0x5678),
-      USBTransportError?.some(.accessDenied)
-    ),
     (LogicalControllerID(vendorID: 0x1234, productID: 0x5678), USBTransportError?.none),
     (
       LogicalControllerID(vendorID: 0x1532, productID: 0x0A43),

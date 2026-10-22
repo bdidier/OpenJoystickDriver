@@ -178,6 +178,12 @@ public actor OpenJoystickDriverUSBTransportProvider: USBTransportProvider,
     }
   }
 
+  /// Only IOUSBHost devices report an exclusive owner; the DEXT route has none.
+  public func exclusiveOwner(of device: USBTransportDevice) async throws -> String? {
+    guard device.route == .rawUSB else { throw USBTransportError.notSupported }
+    return try await ioUSBHostProvider.exclusiveOwner(of: device)
+  }
+
   public func resetDevice(_ device: USBTransportDevice) async throws {
     switch device.route {
     case .rawUSB: try await ioUSBHostProvider.resetDevice(device)

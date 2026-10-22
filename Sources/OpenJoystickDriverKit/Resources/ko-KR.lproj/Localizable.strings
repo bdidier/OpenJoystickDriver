@@ -148,6 +148,8 @@
 "ui.controllers.emptyTitle" = "연결된 컨트롤러 없음";
 /* Message of the empty state in the Controllers area. It asks the user to connect a controller. */
 "ui.controllers.emptyMessage" = "컨트롤러를 연결하세요.";
+/* Reason shown in the Controllers list and in the output of 'ojd status' for a connected controller that another program holds, so OJD cannot read it. The text tells the person how to free it. */
+"ui.controllers.deviceInUse" = "다른 프로그램이 이 컨트롤러를 사용 중입니다. 해당 프로그램을 닫거나 컨트롤러를 다시 연결하세요.";
 /* Label of the battery fact in the Controllers detail. */
 "ui.controllers.battery" = "배터리";
 /* VoiceOver label of the button that shows the serial number in the Controllers detail. */

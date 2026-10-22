@@ -78,7 +78,11 @@
               retry: refresh
             ).padding(.horizontal, 14)
           }
-          if devices.isEmpty { EmptyView() } else { controllerListRows }
+          if devices.isEmpty && screen.unservedDevices.isEmpty {
+            EmptyView()
+          } else {
+            controllerListRows
+          }
         }
         Spacer(minLength: 0)
       }
@@ -108,6 +112,15 @@
           )
           .ojdAccessibilityValue(device.protocolBinding.displayName)
           .contextMenu { sessionCommands(for: device) }
+        }
+        ForEach(screen.unservedDevices) { unserved in
+          VStack(alignment: .leading, spacing: 2) {
+            Text("\(unserved.identity)  \(unserved.connection)").lineLimit(1)
+            Text(unserved.explanation).font(.caption).foregroundColor(
+              Color(NSColor.secondaryLabelColor)
+            )
+          }.padding(.vertical, 4).ojdAccessibilityLabel(unserved.identity)
+            .ojdAccessibilityValue(unserved.explanation)
         }
       }.listStyle(InsetListStyle()).alert(item: $wirelessDisconnectRequest) { request in
         wirelessDisconnectAlert(for: request)

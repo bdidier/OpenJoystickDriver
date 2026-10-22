@@ -79,7 +79,7 @@ struct USBPinnedRowDiscoveryTests {
       device: device,
       passive: registryOnly(device, row),
       configured: nil,
-      configurationError: .accessDenied
+      configurationError: .inputOutput
     )
     let manager = makeManager(provider)
 

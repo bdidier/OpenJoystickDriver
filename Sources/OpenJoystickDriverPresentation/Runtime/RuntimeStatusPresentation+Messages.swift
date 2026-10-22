@@ -3,41 +3,53 @@ import OpenJoystickDriverKit
 
 extension RuntimeStatusPresentation {
 
+  /// `copy` with this presentation's unserved devices, which a presentation built from parts
+  /// does not take.
+  private func carryingUnservedDevices(to copy: Self) -> Self {
+    var carrying = copy
+    carrying.unservedDevices = unservedDevices
+    return carrying
+  }
+
   func applyingPostEventAccess(_ state: RemappingPostEventAccessState?) -> Self {
-    Self(
-      permissions: permissions,
-      devices: devices,
-      virtualHIDProfileOverrideError: virtualHIDProfileOverrideError,
-      outputState: outputState,
-      outputDetail: outputDetail,
-      postEventAccess: state,
-      requiresPostEventAccess: requiresPostEventAccess,
-      readiness: Self.readiness(
+    carryingUnservedDevices(
+      to: Self(
         permissions: permissions,
+        devices: devices,
+        virtualHIDProfileOverrideError: virtualHIDProfileOverrideError,
         outputState: outputState,
+        outputDetail: outputDetail,
         postEventAccess: state,
         requiresPostEventAccess: requiresPostEventAccess,
-        devices: devices
+        readiness: Self.readiness(
+          permissions: permissions,
+          outputState: outputState,
+          postEventAccess: state,
+          requiresPostEventAccess: requiresPostEventAccess,
+          devices: devices
+        )
       )
     )
   }
 
   func applyingPermissions(_ permissions: RuntimePermissionSummary) -> Self {
 
-    Self(
-      permissions: permissions,
-      devices: devices,
-      virtualHIDProfileOverrideError: virtualHIDProfileOverrideError,
-      outputState: outputState,
-      outputDetail: outputDetail,
-      postEventAccess: postEventAccess,
-      requiresPostEventAccess: requiresPostEventAccess,
-      readiness: Self.readiness(
+    carryingUnservedDevices(
+      to: Self(
         permissions: permissions,
+        devices: devices,
+        virtualHIDProfileOverrideError: virtualHIDProfileOverrideError,
         outputState: outputState,
+        outputDetail: outputDetail,
         postEventAccess: postEventAccess,
         requiresPostEventAccess: requiresPostEventAccess,
-        devices: devices
+        readiness: Self.readiness(
+          permissions: permissions,
+          outputState: outputState,
+          postEventAccess: postEventAccess,
+          requiresPostEventAccess: requiresPostEventAccess,
+          devices: devices
+        )
       )
     )
   }
@@ -47,20 +59,22 @@ extension RuntimeStatusPresentation {
     postEventAccess: RemappingPostEventAccessState?
   ) -> Self {
     let requiresPostEventAccess = snapshot.requiresPostEventAccess
-    return Self(
-      permissions: permissions,
-      devices: devices,
-      virtualHIDProfileOverrideError: virtualHIDProfileOverrideError,
-      outputState: outputState,
-      outputDetail: outputDetail,
-      postEventAccess: postEventAccess,
-      requiresPostEventAccess: requiresPostEventAccess,
-      readiness: Self.readiness(
+    return carryingUnservedDevices(
+      to: Self(
         permissions: permissions,
+        devices: devices,
+        virtualHIDProfileOverrideError: virtualHIDProfileOverrideError,
         outputState: outputState,
+        outputDetail: outputDetail,
         postEventAccess: postEventAccess,
         requiresPostEventAccess: requiresPostEventAccess,
-        devices: devices
+        readiness: Self.readiness(
+          permissions: permissions,
+          outputState: outputState,
+          postEventAccess: postEventAccess,
+          requiresPostEventAccess: requiresPostEventAccess,
+          devices: devices
+        )
       )
     )
   }

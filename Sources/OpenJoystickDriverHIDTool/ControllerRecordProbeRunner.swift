@@ -65,7 +65,17 @@ func runControllerRecordProbe(recordPath: String, seconds: Int, validateOnly: Bo
       if let product = device.productName { print("USB_STRING product=\(product)") }
       // Validate the claimed interface as discovery does, before open can set the configuration.
       let passive = await provider.resolveTransport(for: device, configured: plan.transportProfile)
-      guard let claimed = await provider.resolveUSBConfiguration(device, passive: passive),
+      let resolved: USBTransportResolution?
+      do { resolved = try await provider.resolveUSBConfiguration(device, passive: passive) } catch {
+        refuseProbeDevice(
+          reason: "device-in-use",
+          message: "another owner holds the device, so its USB configuration cannot be read; "
+            + "close the program that uses the controller or reconnect it",
+          exitCode: exitCode
+        )
+        return
+      }
+      guard let claimed = resolved,
         claimed.physicalDevice.map({ $0.serviceAddress == device.serviceAddress }) ?? true
       else {
         refuseProbeDevice(
