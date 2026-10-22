@@ -96,6 +96,48 @@ struct LocalizationTests {
   }
 
   @Test
+  func eachPluralVariableCarriesTheCategoriesItsLanguageNeeds() {
+    func variable(_ categories: [String]) -> [String: Any] {
+      var result: [String: Any] = [
+        "NSStringFormatSpecTypeKey": "NSStringPluralRuleType",
+        "NSStringFormatValueTypeKey": "d",
+      ]
+      for category in categories { result[category] = "%d" }
+      return result
+    }
+    let russian: Set<String> = ["one", "few", "many", "other"]
+    // The categories of the two variables together are complete; neither variable is.
+    let split: [String: Any] = [
+      "files.moved": [
+        "NSStringLocalizedFormatKey": "%#@files@ %#@folders@",
+        "files": variable(["one", "few"]),
+        "folders": variable(["many", "other"]),
+      ]
+    ]
+    #expect(
+      LocalizationCatalogAudit.pluralCategoryProblems(in: split, required: russian)
+        == [
+          "files.moved: files lacks [\"many\", \"other\"]",
+          "files.moved: folders lacks [\"few\", \"one\"]",
+        ]
+    )
+    let complete: [String: Any] = [
+      "files.moved": [
+        "NSStringLocalizedFormatKey": "%#@files@ %#@folders@",
+        "files": variable(["one", "few", "many", "other"]),
+        "folders": variable(["one", "few", "many", "other", "zero"]),
+      ]
+    ]
+    #expect(LocalizationCatalogAudit.pluralCategoryProblems(in: complete, required: russian) == [])
+    #expect(
+      LocalizationCatalogAudit.pluralCategoryProblems(
+        in: ["files.none": ["NSStringLocalizedFormatKey": "none"]],
+        required: russian
+      ) == ["files.none has no plural variable"]
+    )
+  }
+
+  @Test
   func pluralResourcesCarryTheCategoriesEachLanguageNeeds() throws {
     let root = URL(fileURLWithPath: #filePath)
       .deletingLastPathComponent()  // Localization
@@ -106,16 +148,17 @@ struct LocalizationTests {
       contentsOf: root.appendingPathComponent("Resources/Localization/PluralCategories.json")
     )
     let needed = try JSONDecoder().decode([String: Set<String>].self, from: data)
+    let languages = Set(
+      Localization.availableLocalizations().map { String($0.split(separator: "-")[0]) }
+    )
+    #expect(Set(needed.keys) == languages, "PluralCategories.json lists exactly the languages")
     for locale in Localization.availableLocalizations() {
       let language = String(locale.split(separator: "-")[0])
       let required = try #require(needed[language], "no plural categories for \(language)")
-      let categories = LocalizationCatalogAudit.pluralCategories(for: locale)
-      #expect(!categories.isEmpty)
-      for (key, present) in categories {
-        // An entry with no plural variable has no categories at all.
-        #expect(!present.isEmpty, "\(locale) \(key) has no plural variable")
-        #expect(required.isSubset(of: present), "\(locale) \(key)")
-      }
+      #expect(
+        LocalizationCatalogAudit.pluralCategoryProblems(for: locale, required: required) == [],
+        "\(locale)"
+      )
       #expect(
         LocalizationCatalogAudit.countKeysWithoutPluralEntry(for: locale).isEmpty,
         "\(locale) takes a count but has no stringsdict entry"

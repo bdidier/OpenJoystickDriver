@@ -211,8 +211,31 @@ enum LocalizationCatalogAudit {
     return result
   }
 
-  static func pluralCategories(for localization: String) -> [String: Set<String>] {
-    stringsDictionary(for: localization).mapValues(collectPluralCategories)
+  /// The problems of the `.stringsdict` entries of `localization` against the plural categories
+  /// its language needs.
+  static func pluralCategoryProblems(
+    for localization: String,
+    required: Set<String>
+  ) -> [String] {
+    pluralCategoryProblems(in: stringsDictionary(for: localization), required: required)
+  }
+
+  /// The problems of `entries`: an entry with no plural variable, and a plural variable that lacks
+  /// a category of `required`. Each variable needs every category on its own.
+  static func pluralCategoryProblems(in entries: [String: Any], required: Set<String>) -> [String]
+  {
+    var problems: [String] = []
+    for (key, entry) in entries.sorted(by: { $0.key < $1.key }) {
+      let variables = pluralVariables(entry)
+      if variables.isEmpty {
+        problems.append("\(key) has no plural variable")
+      }
+      for (name, present) in variables.sorted(by: { $0.key < $1.key })
+      where !required.isSubset(of: present) {
+        problems.append("\(key): \(name) lacks \(required.subtracting(present).sorted())")
+      }
+    }
+    return problems
   }
 
   /// The keys whose `.strings` value takes a count (`%#@name@`) but that have no `.stringsdict`
@@ -339,14 +362,20 @@ enum LocalizationCatalogAudit {
     }
   }
 
-  private static func collectPluralCategories(_ value: Any) -> Set<String> {
-    guard let dictionary = value as? [String: Any] else { return [] }
-    if dictionary["NSStringFormatSpecTypeKey"] as? String == "NSStringPluralRuleType" {
-      return Set(dictionary.keys.filter { !$0.hasPrefix("NSString") })
+  /// The plural variables inside `value`, each with the categories it defines, by variable path.
+  private static func pluralVariables(_ value: Any, path: String = "") -> [String: Set<String>] {
+    guard let dictionary = value as? [String: Any] else { return [:] }
+    var variables: [String: Set<String>] = [:]
+    for (name, child) in dictionary {
+      guard let variable = child as? [String: Any] else { continue }
+      let variablePath = path.isEmpty ? name : "\(path)/\(name)"
+      if variable["NSStringFormatSpecTypeKey"] as? String == "NSStringPluralRuleType" {
+        variables[variablePath] = Set(variable.keys.filter { !$0.hasPrefix("NSString") })
+      } else {
+        variables.merge(pluralVariables(variable, path: variablePath)) { first, _ in first }
+      }
     }
-    return dictionary.values.reduce(into: Set<String>()) { result, child in
-      result.formUnion(collectPluralCategories(child))
-    }
+    return variables
   }
 
   private static func placeholderSignature(in value: String) -> [String] {
