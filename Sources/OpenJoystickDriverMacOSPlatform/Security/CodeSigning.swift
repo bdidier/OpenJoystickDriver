@@ -4,7 +4,7 @@ import Security
 
 extension CodeSigningIdentity {
   /// The compiled `requirementText`; nil for ad-hoc code or a requirement that does not compile.
-  public var requirement: SecRequirement? {
+  package var requirement: SecRequirement? {
     guard let requirementText else { return nil }
     var requirement: SecRequirement?
     guard
@@ -15,14 +15,14 @@ extension CodeSigningIdentity {
   }
 
   /// The identity of this process; it does not change while the process runs.
-  public static let current: Self? = {
+  package static let current: Self? = {
     var code: SecCode?
     guard SecCodeCopySelf(SecCSFlags(), &code) == errSecSuccess, let code else { return nil }
     return of(code)
   }()
 
   /// The identity of running code.
-  public static func of(_ code: SecCode) -> Self? {
+  package static func of(_ code: SecCode) -> Self? {
     var staticCode: SecStaticCode?
     guard SecCodeCopyStaticCode(code, SecCSFlags(), &staticCode) == errSecSuccess, let staticCode
     else { return nil }
@@ -30,7 +30,7 @@ extension CodeSigningIdentity {
   }
 
   /// The identity of code on disk, such as an app bundle or a tool at a path.
-  public static func of(_ staticCode: SecStaticCode) -> Self? {
+  package static func of(_ staticCode: SecStaticCode) -> Self? {
     var information: CFDictionary?
     let flags = SecCSFlags(rawValue: kSecCSSigningInformation)
     guard SecCodeCopySigningInformation(staticCode, flags, &information) == errSecSuccess,
@@ -54,7 +54,7 @@ extension CodeSigningIdentity {
   }
 
   /// The identity of the code at `url`; nil when the path holds no signed code.
-  public static func of(path url: URL) -> Self? {
+  package static func of(path url: URL) -> Self? {
     var staticCode: SecStaticCode?
     guard SecStaticCodeCreateWithPath(url as CFURL, SecCSFlags(), &staticCode) == errSecSuccess,
       let staticCode
@@ -65,7 +65,7 @@ extension CodeSigningIdentity {
 
 extension LocalSocketPeer {
   /// The running code of the peer, resolved by its audit token.
-  public func code() -> SecCode? {
+  package func code() -> SecCode? {
     let tokenData = withUnsafeBytes(of: auditToken) { Data($0) }
     let attributes = [kSecGuestAttributeAudit as String: tokenData] as CFDictionary
     var code: SecCode?
@@ -75,7 +75,7 @@ extension LocalSocketPeer {
   }
 
   /// True when the peer's code is valid and, if given, satisfies `requirement`.
-  public func satisfies(_ requirement: SecRequirement?) -> Bool {
+  package func satisfies(_ requirement: SecRequirement?) -> Bool {
     guard let code = code() else { return false }
     return SecCodeCheckValidity(code, SecCSFlags(), requirement) == errSecSuccess
   }

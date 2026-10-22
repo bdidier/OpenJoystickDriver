@@ -5,10 +5,16 @@ The neutral targets are the core (`Sources/OpenJoystickDriverKit`), the command-
 They reach macOS only through protocols the core declares, such as `PlatformHost`. Code that
 imports a macOS-only module lives in a platform target (`Sources/OpenJoystickDriverMacOSPlatform`,
 `Sources/OpenJoystickDriverMacOSHost`) or below `Sources/OpenJoystickDriver/platform`.
+
+Neutral means free of macOS device, security and application frameworks (IOKit, GameController,
+CoreBluetooth, Security, AppKit, ServiceManagement, SystemExtensions). The core still uses Darwin
+for POSIX calls and CryptoKit for hashing; both ship on every Apple platform the package declares,
+so the core builds on Apple platforms only.
 """
 
 from __future__ import annotations
 
+import argparse
 import pathlib
 import re
 import sys
@@ -21,8 +27,7 @@ EXECUTABLE = "Sources/OpenJoystickDriver"
 # The executable's host adapter directory: the only place a neutral target may import macOS modules.
 ADAPTER_DIRECTORY = f"{EXECUTABLE}/platform"
 ALLOWED_MODULES: dict[str, frozenset[str]] = {
-    # CryptoKit and Darwin are Apple-only; the core keeps them until its cryptography and POSIX
-    # calls have a portable provider.
+    # Darwin and CryptoKit are Apple system libraries, not macOS frameworks; see the module text.
     KIT: frozenset({"CryptoKit", "Darwin", "Dispatch", "Foundation"}),
     CLI: frozenset(
         {
@@ -177,7 +182,9 @@ def violations(root: pathlib.Path = ROOT) -> list[str]:
 
 
 def main(arguments: Iterable[str] = ()) -> int:
-    del arguments
+    argparse.ArgumentParser(
+        description="Fail when a neutral target imports a module outside its allow-list."
+    ).parse_args(list(arguments))
     found = violations()
     for entry in found:
         print(f"import outside the neutral allow-list: {entry}", file=sys.stderr)

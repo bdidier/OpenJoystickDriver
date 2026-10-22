@@ -113,6 +113,9 @@ jobs:
           swiftlint lint --no-cache --strict
           python3 Scripts/Quality/check_localization_keys.py
 
+      - name: Check the platform split
+        run: python3 Scripts/Quality/check_neutral_core_imports.py
+
       - name: Build package
         run: |
           swift build

@@ -207,7 +207,7 @@ final class UserSpaceReportSender: Sendable {
 
   /// Builds reports in the retained worker only after preceding publication completes.
   ///
-  /// Enqueueing stays synchronous: IOKit's set-report callback acknowledges ordered enqueueing
+  /// Enqueueing stays synchronous: the native set-report callback acknowledges ordered enqueueing
   /// and cannot await. Await `SubmissionReceipt.value()` for the publication outcome. A submission
   /// with `isFrame` may be superseded by a newer one when the queue is full.
   func submit(

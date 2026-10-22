@@ -34,6 +34,9 @@ private actor HoldGate {
 private final class FirstSendHeldBackend: VirtualDeviceBackend,
   @unchecked Sendable
 {
+  /// The test reads only the reports sent; it answers no host request.
+  func activate(hostReports: UserSpaceHostReportHandler) {}
+
   private let gate = HoldGate()
   private let lock = NSLock()
   private var reports: [[UInt8]] = []

@@ -18,6 +18,18 @@ struct HIDDeviceStreamMappingTests {
   }
 
   @Test
+  func theBluetoothLEHubReportsTheIOHIDBluetoothLowEnergyTransport() {
+    #expect(
+      Switch2BluetoothLEProfile.hidTransportProperty == kIOHIDTransportBluetoothLowEnergyValue
+    )
+    #expect(
+      HIDDeviceStream.hostTransport(
+        forTransportProperty: Switch2BluetoothLEProfile.hidTransportProperty
+      ) == .bluetoothLE
+    )
+  }
+
+  @Test
   func onlyDeniedInitialOpensEndTheHIDStream() {
     func failure(_ result: IOReturn) -> PhysicalHIDFailure? {
       guard

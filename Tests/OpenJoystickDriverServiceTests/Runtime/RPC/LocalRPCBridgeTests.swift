@@ -107,7 +107,8 @@ struct LocalRPCBridgeTests {
 
   @Test
   func aStatusNotificationReachesAWaitingClient() async throws {
-    try await withServer { server in
+    let statusCenter = NotificationCenter()
+    try await withServer(statusCenter: statusCenter) { server in
       let socketPath = unregisteredSocketPath()
       let rpcServer = LocalServiceRPCServer(
         socketPath: socketPath,
@@ -122,7 +123,7 @@ struct LocalRPCBridgeTests {
 
       async let next = client.waitForServiceStatusChange(after: baseline)
       try await Task.sleep(nanoseconds: 100_000_000)
-      NotificationCenter.default.post(name: .ojdServiceStatusDidChange, object: nil)
+      statusCenter.post(name: .ojdServiceStatusDidChange, object: nil)
 
       #expect(try await next.revision != baseline)
     }
@@ -381,7 +382,12 @@ struct LocalRPCBridgeTests {
     return await server.handleLocalRPC(request)
   }
 
-  private func withServer(_ body: (ApplicationServiceServer) async throws -> Void) async throws {
+  /// Runs `body` with a server whose status revision moves only on posts to `statusCenter`, so the
+  /// announcements of other tests in the process cannot answer a wait of this one.
+  private func withServer(
+    statusCenter: NotificationCenter = NotificationCenter(),
+    _ body: (ApplicationServiceServer) async throws -> Void
+  ) async throws {
     let directory = FileManager.default.temporaryDirectory.appendingPathComponent(
       UUID().uuidString,
       isDirectory: true
@@ -412,7 +418,11 @@ struct LocalRPCBridgeTests {
         context:
       ),
       settings: settings,
-      personaDirectory: directory.appendingPathComponent("Personas", isDirectory: true)
+      personaDirectory: directory.appendingPathComponent("Personas", isDirectory: true),
+      statusChanges: ServiceStatusChanges(
+        center: statusCenter,
+        workspaceCenter: NotificationCenter()
+      )
     )
     try await body(server)
   }

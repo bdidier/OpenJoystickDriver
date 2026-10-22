@@ -2,11 +2,6 @@ import Foundation
 
 @testable import OpenJoystickDriverKit
 
-extension VirtualDeviceBackend {
-  /// Test backends have no host to answer, so activation does nothing.
-  func activate(hostReports: UserSpaceHostReportHandler) {}
-}
-
 final class UserSpaceDispatcherTestBackend: VirtualDeviceBackend,
   @unchecked Sendable
 {
@@ -16,6 +11,9 @@ final class UserSpaceDispatcherTestBackend: VirtualDeviceBackend,
   private var closed = false
   private(set) var closeCount = 0
   private(set) var sendCount = 0
+  private var activationCount = 0
+  /// Reports sent while the device was not yet activated, which the dispatcher must never do.
+  private var sendsBeforeActivation = 0
   private var reports: [[UInt8]] = []
   let sendGate: UserSpaceDispatcherTestGate?
   let failsSend: Bool
@@ -25,11 +23,16 @@ final class UserSpaceDispatcherTestBackend: VirtualDeviceBackend,
     self.failsSend = failsSend
   }
 
+  func activate(hostReports: UserSpaceHostReportHandler) {
+    lock.withLock { activationCount += 1 }
+  }
+
   func send(_ report: [UInt8]) async throws {
     await sendGate?.wait()
     if failsSend { throw SendFailure() }
     guard lock.withLock({ !closed }) else { return }
     lock.withLock {
+      if activationCount == 0 { sendsBeforeActivation += 1 }
       sendCount += 1
       reports.append(report)
     }
@@ -44,6 +47,9 @@ final class UserSpaceDispatcherTestBackend: VirtualDeviceBackend,
   }
 
   func counts() -> (close: Int, send: Int) { lock.withLock { (closeCount, sendCount) } }
+  func activations() -> (activated: Int, sendsBefore: Int) {
+    lock.withLock { (activationCount, sendsBeforeActivation) }
+  }
   func publishedReports() -> [[UInt8]] { lock.withLock { reports } }
 }
 

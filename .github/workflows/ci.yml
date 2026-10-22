@@ -73,6 +73,9 @@ jobs:
           pyright
           .build/schema-validator/bin/python -m unittest discover -s Tests/RepositoryScripts
 
+      - name: Check the platform split
+        run: python3 Scripts/Quality/check_neutral_core_imports.py
+
       - name: Check shell
         run: find Scripts -type f \( -name '*.sh' -o -name ojd \) -print0 | xargs -0 shellcheck --external-sources --source-path=SCRIPTDIR
 

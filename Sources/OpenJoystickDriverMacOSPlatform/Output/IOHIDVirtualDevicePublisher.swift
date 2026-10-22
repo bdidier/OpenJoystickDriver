@@ -6,14 +6,14 @@ import Security
 
 /// Publishes virtual gamepads as `IOHIDUserDevice`s. Creating one needs the virtual-device
 /// entitlement.
-public struct IOHIDVirtualDevicePublisher: VirtualHIDDevicePublisher {
+package struct IOHIDVirtualDevicePublisher: VirtualHIDDevicePublisher {
   static let requiredVirtualDeviceEntitlement = "com.apple.developer.hid.virtual.device"
 
   /// Explains a failed create by the permission that is missing.
   private let access: any AccessControlSystem
 
   /// Throws `missingEntitlement` when the process lacks the virtual-device entitlement.
-  public init() throws {
+  package init() throws {
     guard Self.hasEntitlement(Self.requiredVirtualDeviceEntitlement) else {
       throw UserSpaceOutputDispatcher.CreationError.missingEntitlement(
         Self.requiredVirtualDeviceEntitlement

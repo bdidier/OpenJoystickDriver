@@ -6,7 +6,6 @@ import Testing
 struct RemappingGamepadTests {
   @Test
   func remappedStateReplacesEveryInputFieldOfTheVirtualState() {
-    let dispatcher = Self.dispatcher()
     var virtual = VirtualGamepadState()
     VirtualGamepadReportMapping.apply(
       RemappingGamepadState(
@@ -28,20 +27,12 @@ struct RemappingGamepadTests {
 
   @Test
   func startBackAndCaptureEachHaveTheirOwnBit() {
-    let dispatcher = Self.dispatcher()
     var virtual = VirtualGamepadState()
     VirtualGamepadReportMapping.apply(
       RemappingGamepadState(buttons: [.start, .back, .capture]),
       to: &virtual
     )
     #expect(virtual.buttons == 1 << 8 | 1 << 9 | 1 << 15)
-  }
-
-  private static func dispatcher() -> UserSpaceOutputDispatcher {
-    UserSpaceOutputDispatcher(
-      testBackendFactory: { _ in UserSpaceDispatcherTestBackend() },
-      format: OJDGenericGamepadFormat()
-    )
   }
 
   @Test

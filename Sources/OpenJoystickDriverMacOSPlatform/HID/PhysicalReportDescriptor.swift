@@ -4,12 +4,12 @@ import IOKit.hid
 import OpenJoystickDriverKit
 
 /// Reads HID report descriptors from the controllers macOS currently sees.
-public enum PhysicalReportDescriptor {
+package enum PhysicalReportDescriptor {
   /// Copies the HID report descriptor from a currently connected physical HID device,
   /// preferring a wired USB device over any other transport.
   ///
   /// This function explicitly filters out OpenJoystickDriver-created virtual devices.
-  public static func copy(
+  package static func copy(
     vendorID: Int,
     productID: Int
   ) -> [UInt8]? {

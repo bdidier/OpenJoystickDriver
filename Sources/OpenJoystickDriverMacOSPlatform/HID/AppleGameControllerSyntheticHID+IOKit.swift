@@ -5,20 +5,20 @@ import OpenJoystickDriverKit
 
 extension AppleGameControllerSyntheticHID {
   /// IOHIDManager / IOService matching fragment that excludes synthetics before create/open.
-  public static var ioHIDMatchingExclusion: [String: Any] { [propertyKey: kCFBooleanFalse as Any] }
+  package static var ioHIDMatchingExclusion: [String: Any] { [propertyKey: kCFBooleanFalse as Any] }
 
   /// Replacement for `IOHIDManagerSetDeviceMatching(nil)` that still skips Apple synthetics.
-  public static var allHIDDevicesExcludingSynthetics: [String: Any] {
+  package static var allHIDDevicesExcludingSynthetics: [String: Any] {
     ioHIDMatchingExcludingSynthetics([kIOProviderClassKey as String: kIOHIDDeviceKey as String])
   }
 
   /// Adds Apple's documented synthetic exclusion to an existing HID matching dictionary.
-  public static func ioHIDMatchingExcludingSynthetics(_ matching: [String: Any]) -> [String: Any] {
+  package static func ioHIDMatchingExcludingSynthetics(_ matching: [String: Any]) -> [String: Any] {
     matching.merging(ioHIDMatchingExclusion) { _, new in new }
   }
 
   /// Reads IORegistry properties on `service`. Does not `IOServiceOpen`.
-  public static func isSynthetic(service: io_service_t) -> Bool {
+  package static func isSynthetic(service: io_service_t) -> Bool {
     guard service != 0 else { return false }
     var className = [CChar](repeating: 0, count: 128)
     let resolvedClass: String?
@@ -36,7 +36,7 @@ extension AppleGameControllerSyntheticHID {
     )
   }
 
-  public static func isSynthetic(device: IOHIDDevice) -> Bool {
+  package static func isSynthetic(device: IOHIDDevice) -> Bool {
     let service = IOHIDDeviceGetService(device)
     if service != 0, isSynthetic(service: service) { return true }
     return isSyntheticDevice(

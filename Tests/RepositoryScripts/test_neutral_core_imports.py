@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import contextlib
+import io
 import tempfile
 import unittest
 from pathlib import Path
@@ -18,8 +20,13 @@ def write(root: Path, target: str, relative: str, text: str) -> None:
 
 
 class NeutralCoreImportTests(unittest.TestCase):
-    def test_neutral_targets_import_no_macos_only_module(self) -> None:
-        self.assertEqual(check.violations(), [])
+    def test_an_argument_is_rejected(self) -> None:
+        with (
+            contextlib.redirect_stderr(io.StringIO()),
+            self.assertRaises(SystemExit) as raised,
+        ):
+            check.main(["Sources"])
+        self.assertEqual(raised.exception.code, 2)
 
     def test_planted_import_in_the_core_is_reported(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

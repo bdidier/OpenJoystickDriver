@@ -32,7 +32,7 @@ public final class ApplicationServiceServer: @unchecked Sendable {
   let userSpaceDispatcherFactory: UserSpaceDispatcherFactory
   let virtualFeeds: VirtualFeedRegistry
   /// Counts status changes for `waitForServiceStatusChange`.
-  let statusChanges = ServiceStatusChanges()
+  let statusChanges: ServiceStatusChanges
   /// Guards `userSpaceDispatcher`, `userSpaceEnabled`, `userSpaceStatus`, `userSpaceCloseSlot`,
   /// and `virtualOutputServerStopped`.
   let userSpaceLock = NSLock()
@@ -59,7 +59,9 @@ public final class ApplicationServiceServer: @unchecked Sendable {
   ///
   /// `userSpaceDispatcherFactory` builds each user-space dispatcher candidate; the composition
   /// root supplies the concrete one. `virtualFeeds` defaults to feeds that publish IOHID-backed
-  /// devices.
+  /// devices. `statusChanges` defaults to counting the process's status announcements and
+  /// workspace activations; a test passes one over its own notification centers so that no other
+  /// test's announcement moves its revision.
   init(
     deviceManager: DeviceManager,
     permissionManager: PermissionManager,
@@ -75,9 +77,11 @@ public final class ApplicationServiceServer: @unchecked Sendable {
     virtualOutputTransitionClock: VirtualOutputTransitionClock = .system,
     settings: SettingsStore = SettingsStore(),
     personaDirectory: URL = VirtualHIDProfileOverrideStore.userDirectory,
-    launchAtLogin: LaunchAtLoginControl? = nil
+    launchAtLogin: LaunchAtLoginControl? = nil,
+    statusChanges: ServiceStatusChanges = ServiceStatusChanges()
   ) {
     self.deviceManager = deviceManager
+    self.statusChanges = statusChanges
     self.permissionManager = permissionManager
     self.dispatcher = dispatcher
     self.remappingProfileLibrary = remappingProfileLibrary

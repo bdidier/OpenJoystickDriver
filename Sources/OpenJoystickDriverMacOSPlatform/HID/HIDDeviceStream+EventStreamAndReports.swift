@@ -119,14 +119,14 @@ extension HIDDeviceStream {
     continuation.finish()
   }
 
-  public func setOutputReport(
+  package func setOutputReport(
     locationID: UInt32,
     report: PhysicalHIDOutputReport
   ) -> PhysicalHIDReportResult<Void> {
     setReport(locationID: locationID, report: report, type: kIOHIDReportTypeOutput, label: "Output")
   }
 
-  public func setOutputReport(
+  package func setOutputReport(
     connection: HIDDeviceConnection,
     report: PhysicalHIDOutputReport
   ) async -> PhysicalHIDReportResult<Void> {
@@ -140,7 +140,7 @@ extension HIDDeviceStream {
     }
   }
 
-  public func setFeatureReport(
+  package func setFeatureReport(
     locationID: UInt32,
     report: PhysicalHIDOutputReport
   ) -> PhysicalHIDReportResult<Void> {
@@ -152,7 +152,7 @@ extension HIDDeviceStream {
     )
   }
 
-  public func setFeatureReport(
+  package func setFeatureReport(
     connection: HIDDeviceConnection,
     report: PhysicalHIDOutputReport
   ) async -> PhysicalHIDReportResult<Void> {
@@ -166,7 +166,7 @@ extension HIDDeviceStream {
     }
   }
 
-  public func getFeatureReport(
+  package func getFeatureReport(
     locationID: UInt32,
 
     request: PhysicalHIDFeatureReadRequest
@@ -200,7 +200,7 @@ extension HIDDeviceStream {
     return .failed(.init(ioReturn: lastResult))
   }
 
-  public func releaseInputClaim(locationID: UInt32) -> PhysicalHIDClaimResult {
+  package func releaseInputClaim(locationID: UInt32) -> PhysicalHIDClaimResult {
     seizeLock.withLock {
       guard let devices = seizedByLocation.removeValue(forKey: locationID), !devices.isEmpty else {
         return .unavailable
@@ -216,7 +216,7 @@ extension HIDDeviceStream {
     }
   }
 
-  public func reacquireInputClaim(locationID: UInt32) -> PhysicalHIDClaimResult {
+  package func reacquireInputClaim(locationID: UInt32) -> PhysicalHIDClaimResult {
     seizeLock.withLock {
       guard let devices = releasedByLocation[locationID], !devices.isEmpty else {
         return .unavailable
@@ -240,7 +240,7 @@ extension HIDDeviceStream {
 
   /// Re-runs the seize of tracked non-native devices at a location whose earlier seize was
   /// refused or failed, and yields `.ownershipChanged` when the location's ownership changes.
-  public func retryInputClaim(locationID: UInt32) {
+  package func retryInputClaim(locationID: UInt32) {
     guard !eventAdapter.hasNativeDevice(locationID: locationID) else { return }
     let candidates: [(deviceID: UInt64, device: IOHIDDevice)] = seizeLock.withLock {
       guard releasedByLocation[locationID]?.isEmpty ?? true else { return [] }
@@ -304,7 +304,7 @@ extension HIDDeviceStream {
 
   /// Reads a feature report only from the exact connection lifetime, never a sibling at its
   /// location. It waits for the device on the main actor, as the startup reads always have.
-  public func getFeatureReport(
+  package func getFeatureReport(
     connection: HIDDeviceConnection,
     request: PhysicalHIDFeatureReadRequest
   ) async -> PhysicalHIDReportResult<Data> {
