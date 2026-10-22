@@ -27,22 +27,21 @@ The catalog itself follows these rules:
   `LocalizationTests` checks the rest of the plural rules: every `%#@name@` value has an entry in
   its bundle, and each entry has the plural categories its language needs.
 
-`GATED_RULES` names each rule that does not fail yet and the task id that lifts it. The keys that
-violate a gated rule are listed per rule in `localization-gated-keys.json`
-(`{"rule": ["key", ...]}`). A gated rule does not fail on the keys listed under it and fails on
-every other key, so a key cannot pick up a violation of a rule it is not listed under. The
-check prints how many violations each gated rule holds back. A key listed under a rule it no longer
-violates fails the check.
+- comment layout: no key has two comments stacked above it;
+- comment specifiers: the comment of an en-US value with format specifiers names each one by its
+  position (`%1$@`), or contains `%` when the value has a single unnumbered specifier, so a
+  translator learns what each argument is;
+- comment copies: every other bundle has the en-US translator comment of each key, character for
+  character, and the same keys;
+- counts: every `NOT_A_COUNT` entry names a key that has an integer count specifier and no
+  `.stringsdict` entry, so an entry cannot outlive its key or its reason.
 
-`--write-gated-keys` only removes entries: the keys that no longer violate their rule and the keys
-that no longer exist. A violation not yet listed makes it fail, naming the key and the rule, and it
-writes nothing; the violation is fixed on the key itself.
-Removing a rule from `GATED_RULES` enforces it everywhere.
+Every rule fails on every key it finds.
 """
 
 from __future__ import annotations
 
-import json
+import itertools
 import plistlib
 import re
 import subprocess
@@ -54,7 +53,7 @@ ROOT = Path(__file__).resolve().parents[2]
 RESOURCES_DIRECTORY = Path("Sources/OpenJoystickDriverKit/Resources")
 CATALOG_DIRECTORY = Path("Sources/OpenJoystickDriverKit/Resources/en-US.lproj")
 CALL = re.compile(
-    r"(?:\b(?:OJDLocalized\.(?:string|formatted|plural)|CLILocalized\.(?:text|format)"
+    r"(?:\b(?:OJDLocalized\.(?:string|formatted|plural)|CLILocalized\.(?:text|format|plural)"
     r"|LocalizedStringResource|(?:Localization\(\)|localization)\.(?:string|formatted|plural))"
     r"|\.key)\("
 )
@@ -69,15 +68,6 @@ EXACT_INTERPOLATIONS = {"error.\\(rawValue).message": r"error\.E\d{4}\.message"}
 STRINGS_KEY = re.compile(r'^"((?:[^"\\]|\\.)*)"\s*=', re.MULTILINE)
 LITERAL = re.compile(r'"((?:[^"\\]|\\.)*)"')
 
-
-# Rules that do not fail on the keys in `GATED_KEYS_PATH`, each with the task that lifts it. Lifting
-# a rule is deleting its entry.
-GATED_RULES: dict[str, str] = {
-    "specifier": "22.3",
-    "comment": "22.3",
-    "pluralCount": "22.3",
-}
-GATED_KEYS_PATH = Path("Scripts/Quality/localization-gated-keys.json")
 
 SEGMENT = r"(?:[a-z][a-zA-Z0-9]*|E\d{4})"
 OPERATING_SYSTEMS = ("macos", "windows", "linux")
@@ -107,12 +97,118 @@ SPECIFIER = re.compile(
 )
 COUNT_SPECIFIER = re.compile(r"%(?:\d+\$)?[-+ 0#]*\d*(?:hh|h|ll|l|q|z|t|j)?[dDiuU]")
 # En-US keys whose integer specifier is not a count, each with the reason.
-NOT_A_COUNT: dict[str, str] = {}
+NOT_A_COUNT: dict[str, str] = {
+    "cli.binding.clear.done": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it"
+    ),
+    "cli.binding.clear.dryRun": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it"
+    ),
+    "cli.diagnose.group.failed": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it"
+    ),
+    "cli.diagnose.group.recordsApplied": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it"
+    ),
+    "cli.diagnose.group.soakErrorInvalidConfiguration": (
+        "the numbers are the bounds of a range of the allowed duration and interval"
+    ),
+    "cli.diagnose.group.soakErrorProcessUnavailable": (
+        "the number is the process ID of the service"
+    ),
+    "cli.diagnose.group.soakVerdictFootprintLimit": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it; the line is a list of measurements"
+    ),
+    "cli.diagnose.group.soakVerdictInsufficientData": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it; the line is a list of measurements"
+    ),
+    "cli.diagnose.group.soakVerdictMemoryGrowth": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it; the line is a list of measurements"
+    ),
+    "cli.diagnose.group.soakVerdictResidentLimit": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it; the line is a list of measurements"
+    ),
+    "cli.diagnose.group.soakVerdictResourceGrowth": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it; the line is a list of measurements"
+    ),
+    "cli.diagnose.group.soakVerdictStable": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it; the line is a list of measurements"
+    ),
+    "cli.diagnose.group.timingsFrame": (
+        "the number is a position in a sequence, not a quantity (the frame number)"
+    ),
+    "cli.diagnose.group.usbOk": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it"
+    ),
+    "cli.profile.edit.editorFailed": (
+        "the number is a process exit status of the editor"
+    ),
+    "cli.record.draft.captured": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it"
+    ),
+    "cli.record.draft.changedByte": (
+        "the numbers are a byte position and two byte values"
+    ),
+    "cli.record.test.parseFailed": (
+        "the number is a position in a sequence, not a quantity (the packet number)"
+    ),
+    "cli.status.group.labelControllers": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it"
+    ),
+    "cli.status.group.labelSkippedPersonas": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it"
+    ),
+    "cli.status.group.labelSkippedRecords": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it"
+    ),
+    "cli.status.group.labelUnbound": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it"
+    ),
+    "cli.transportExtension.group.failed": ("the number is an error code"),
+    "platform.macos.cli.status.group.labelPassThrough": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it"
+    ),
+    "ui.access.web.enable.port": ("the number is a network port"),
+    "ui.access.web.portRange": (
+        "the numbers are the bounds of a range of the allowed ports"
+    ),
+    "ui.capture.touchColumn": (
+        "the number is a position in a sequence, not a quantity (the column of a touch cell)"
+    ),
+    "ui.capture.touchColumns": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it"
+    ),
+    "ui.capture.touchRow": (
+        "the number is a position in a sequence, not a quantity (the row of a touch cell)"
+    ),
+    "ui.capture.touchRows": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it"
+    ),
+    "ui.controllers.launch.exited": (
+        "the number is a process exit status of the launched program"
+    ),
+    "ui.developer.soakOutOfRange": (
+        "the numbers are the bounds of a range of the allowed value"
+    ),
+    "ui.inputTest.durationValue": (
+        "the number is a duration in milliseconds, written with the unit symbol ms"
+    ),
+    "ui.mapping.touchGridCell": (
+        "the numbers are the size of a touch grid and the position of a cell in it"
+    ),
+    "ui.profiles.controlNumber": (
+        "the number is a position in a sequence, not a quantity (the number that names a control)"
+    ),
+}
 STRINGS_ENTRY = re.compile(
     r"(?:/\*(?P<comment>(?:(?!\*/).)*)\*/[ \t]*\n?)?"
     r'"(?P<key>(?:[^"\\]|\\.)*)"\s*=\s*"(?P<value>(?:[^"\\]|\\.)*)"\s*;',
     re.DOTALL,
 )
+STRINGS_COMMENT = re.compile(r"/\*(?:(?!\*/).)*\*/", re.DOTALL)
+STRINGS_KEY_LINE = re.compile(r'"(?P<key>(?:[^"\\]|\\.)*)"\s*=')
+STRINGSDICT_COMMENT = re.compile(r"<!--(?:(?!-->).)*-->", re.DOTALL)
+STRINGSDICT_KEY = re.compile(r"<key>(?P<key>[^<]+)</key>")
 STRINGSDICT_COMMENTED_KEY = re.compile(
     r"(?P<comment><!--(?:(?!-->).)*-->[ \t]*\n)?(?m:^)\t<key>(?P<key>[^<]+)</key>",
     re.DOTALL,
@@ -478,6 +574,73 @@ def comment_problem(entry: StringsEntry) -> str | None:
     return None if entry.comment else f"{entry.key!r}: no translator comment"
 
 
+def comment_specifier_problem(entry: StringsEntry) -> str | None:
+    """Return why the comment of a value with specifiers does not name them, or None."""
+    specifiers = list(SPECIFIER.finditer(entry.value.replace("%%", "")))
+    if not specifiers or entry.comment is None:
+        return None
+    names = [f"%{m['position']}" for m in specifiers if m["position"]] or ["%"]
+    missing = [name for name in names if name not in entry.comment]
+    if not missing:
+        return None
+    return f"{entry.key!r}: the comment does not name {', '.join(missing)}"
+
+
+def comment_copy_problems(
+    entries: list[StringsEntry], english: list[StringsEntry]
+) -> list[tuple[str, str]]:
+    """Return (key, message) for each key whose comment differs from the en-US comment."""
+    expected = {entry.key: entry.comment for entry in english}
+    found = {entry.key: entry.comment for entry in entries}
+    problems = [
+        (key, f"{key!r}: the key is not in the en-US strings")
+        for key in found
+        if key not in expected
+    ]
+    for key, comment in expected.items():
+        if key not in found:
+            problems.append((key, f"{key!r}: the key is missing"))
+        elif found[key] != comment:
+            problems.append(
+                (key, f"{key!r}: the comment differs from the en-US comment")
+            )
+    return problems
+
+
+def stacked_comment_keys(
+    text: str, comment: re.Pattern[str], key: re.Pattern[str]
+) -> list[str]:
+    """Return the keys under a run of two or more comments with only whitespace between them."""
+    spans = [match.span() for match in comment.finditer(text)]
+    found: list[str] = []
+    for (_, end), (start, _) in itertools.pairwise(spans):
+        if text[end:start].strip():
+            continue
+        following = key.search(text, start)
+        name = following["key"] if following else "(end of file)"
+        if name not in found:
+            found.append(name)
+    return found
+
+
+def stacked_comment_problems(directory: Path) -> list[RuleProblem]:
+    """Return a problem for each key that has more than one comment above it in a bundle."""
+    problems: list[RuleProblem] = []
+    for name, comment, key in (
+        ("Localizable.strings", STRINGS_COMMENT, STRINGS_KEY_LINE),
+        ("Localizable.stringsdict", STRINGSDICT_COMMENT, STRINGSDICT_KEY),
+    ):
+        text = (directory / name).read_text(encoding="utf-8")
+        for stacked in stacked_comment_keys(text, comment, key):
+            problems.append(
+                RuleProblem(
+                    stacked,
+                    f"{directory.name}/{name}: {stacked!r} has more than one comment above it",
+                )
+            )
+    return problems
+
+
 def stringsdict_uncommented_keys(root: Path = ROOT) -> set[str]:
     """Return the en-US stringsdict keys without a translator comment above them."""
     text = (root / CATALOG_DIRECTORY / "Localizable.stringsdict").read_text(
@@ -515,11 +678,13 @@ class RuleProblem:
     message: str
 
 
-def count_specifier_problem(entry: StringsEntry, plurals: set[str]) -> str | None:
+def count_specifier_problem(
+    entry: StringsEntry, plurals: set[str], not_a_count: dict[str, str] | None = None
+) -> str | None:
     """Return why an integer specifier has no plural entry, or None."""
     if (
         entry.key in plurals
-        or entry.key in NOT_A_COUNT
+        or entry.key in (NOT_A_COUNT if not_a_count is None else not_a_count)
         or not COUNT_SPECIFIER.search(entry.value.replace("%%", ""))
     ):
         return None
@@ -529,14 +694,34 @@ def count_specifier_problem(entry: StringsEntry, plurals: set[str]) -> str | Non
     )
 
 
-def rule_problems(root: Path = ROOT) -> dict[str, list[RuleProblem]]:
-    """Return the violations of the gateable rules by rule name."""
+def not_a_count_problem(
+    key: str, entries: list[StringsEntry], plurals: set[str]
+) -> str | None:
+    """Return why a `NOT_A_COUNT` entry no longer holds, or None."""
+    entry = next((e for e in entries if e.key == key), None)
+    if entry is None:
+        return f"{key!r}: NOT_A_COUNT names a key that is not in the en-US strings"
+    if key in plurals:
+        return f"{key!r}: NOT_A_COUNT names a key that has a stringsdict entry"
+    if not COUNT_SPECIFIER.search(entry.value.replace("%%", "")):
+        return f"{key!r}: NOT_A_COUNT names a value without an integer specifier"
+    return None
+
+
+def rule_problems(
+    root: Path = ROOT, not_a_count: dict[str, str] | None = None
+) -> dict[str, list[RuleProblem]]:
+    """Return the violations of the catalog rules by rule name."""
+    not_a_count = NOT_A_COUNT if not_a_count is None else not_a_count
     found: dict[str, list[RuleProblem]] = {
         "namespace": [],
         "osWord": [],
         "specifier": [],
         "comment": [],
         "pluralCount": [],
+        "stackedComment": [],
+        "commentSpecifier": [],
+        "commentCopy": [],
     }
 
     def add(rule: str, key: str, message: str | None, prefix: str = "") -> None:
@@ -552,7 +737,14 @@ def rule_problems(root: Path = ROOT) -> dict[str, list[RuleProblem]]:
         add("osWord", entry.key, os_word_problem(entry.key, entry.value))
         add("specifier", entry.key, specifier_problem(entry.key, entry.value))
         add("comment", entry.key, comment_problem(entry))
-        add("pluralCount", entry.key, count_specifier_problem(entry, set(plurals)))
+        add("commentSpecifier", entry.key, comment_specifier_problem(entry))
+        add(
+            "pluralCount",
+            entry.key,
+            count_specifier_problem(entry, set(plurals), not_a_count),
+        )
+    for key in sorted(not_a_count):
+        add("pluralCount", key, not_a_count_problem(key, entries, set(plurals)))
     for key, texts in stringsdict_values(root).items():
         add("namespace", key, key_shape_problem(key))
         for text in texts:
@@ -572,79 +764,26 @@ def rule_problems(root: Path = ROOT) -> dict[str, list[RuleProblem]]:
                 f"{name}.lproj ",
             )
     for locale in locale_directories(root):
+        found["stackedComment"].extend(stacked_comment_problems(locale))
         if locale.name == "en-US.lproj":
             continue
         text = (locale / "Localizable.strings").read_text(encoding="utf-8")
-        for entry in strings_entries(text):
+        locale_entries = strings_entries(text)
+        for entry in locale_entries:
             add(
                 "specifier",
                 entry.key,
                 specifier_problem(entry.key, entry.value),
                 f"{locale.name}: ",
             )
+        for key, message in comment_copy_problems(locale_entries, entries):
+            add("commentCopy", key, message, f"{locale.name}: ")
     return found
 
 
-def gated_keys(root: Path = ROOT) -> dict[str, set[str]]:
-    """Return, per gated rule, the catalog keys the rule does not fail on."""
-    if not GATED_RULES:
-        return {}
-    data = json.loads((root / GATED_KEYS_PATH).read_text(encoding="utf-8"))
-    return {rule: set(data.get(rule, [])) for rule in GATED_RULES}
-
-
-def update_gated_keys(
-    root: Path = ROOT,
-) -> tuple[dict[str, list[str]], list[str]]:
-    """Return (the new gated keys per rule, the reasons the update is refused).
-
-    The update drops the keys that no longer violate their rule or no longer exist. A key that
-    violates a rule without being listed is refused with the key and the rule.
-    """
-    found = rule_problems(root)
-    violating = {rule: {p.key for p in found[rule]} for rule in GATED_RULES}
-    current = gated_keys(root)
-    kept = {rule: current[rule] & violating[rule] for rule in GATED_RULES}
-    refused = [
-        f"{key!r} would need gating for the {rule} rule; fix the key instead"
-        for rule in GATED_RULES
-        for key in sorted(violating[rule] - kept[rule])
-    ]
-    return {rule: sorted(keys) for rule, keys in kept.items()}, refused
-
-
-def write_gated_keys(root: Path = ROOT) -> list[str]:
-    """Write `update_gated_keys` to `GATED_KEYS_PATH` unless it refuses; return the refusals."""
-    data, refused = update_gated_keys(root)
-    if not refused:
-        text = json.dumps(data, indent=2, ensure_ascii=False) + "\n"
-        (root / GATED_KEYS_PATH).write_text(text, encoding="utf-8")
-    return refused
-
-
-def rule_report(
-    found: dict[str, list[RuleProblem]], gated: dict[str, set[str]]
-) -> tuple[list[str], list[str], list[str]]:
-    """Return (failing messages, held-back notes, keys listed under a rule they do not violate)."""
-    failing: list[str] = []
-    held: list[str] = []
-    stale: list[str] = []
-    for rule, problems in found.items():
-        task = GATED_RULES.get(rule)
-        listed = gated.get(rule, set()) if task else set()
-        held_back = [p for p in problems if p.key in listed]
-        failing.extend(p.message for p in problems if p not in held_back)
-        if held_back:
-            held.append(
-                f"gated rule {rule}: {len(held_back)} violation(s) held back until "
-                f"task {task}"
-            )
-        used = {p.key for p in held_back}
-        stale.extend(
-            f"gated key {key!r} violates no {rule} rule; remove it with --write-gated-keys"
-            for key in sorted(listed - used)
-        )
-    return failing, held, stale
+def rule_report(found: dict[str, list[RuleProblem]]) -> list[str]:
+    """Return the message of every violation of every rule."""
+    return [p.message for problems in found.values() for p in problems]
 
 
 def check(root: Path = ROOT) -> tuple[list[tuple[KeyUse, str]], list[KeyUse]]:
@@ -677,25 +816,15 @@ def check(root: Path = ROOT) -> tuple[list[tuple[KeyUse, str]], list[KeyUse]]:
 
 def main(arguments: list[str] | None = None) -> int:
     if arguments:
-        if arguments != ["--write-gated-keys"]:
-            print(
-                "usage: check_localization_keys.py [--write-gated-keys]",
-                file=sys.stderr,
-            )
-            return 2
-        refused = write_gated_keys(ROOT)
-        for reason in refused:
-            print(reason, file=sys.stderr)
-        return 1 if refused else 0
+        print("usage: check_localization_keys.py", file=sys.stderr)
+        return 2
     missing, unscannable = check()
     unread, covered = unread_keys()
     unexplained = [key for key in unread if key not in KEPT_WITHOUT_READER]
     stale = stale_kept(unread, catalog_keys())
-    failing, held, stale_gated = rule_report(rule_problems(), gated_keys())
+    failing = rule_report(rule_problems())
     for problem in failing:
         print(problem)
-    for note in held + stale_gated:
-        print(note)
     for use, reason in missing:
         print(f"{use.path}:{use.line}: {reason} in the en-US catalog")
     for use in unscannable:
@@ -708,12 +837,11 @@ def main(arguments: list[str] | None = None) -> int:
         print(f"kept without reader: {key}: {reason}")
     for text, count in sorted(covered.items()):
         print(f"read by pattern: {text} ({count} keys)")
-    enforced = failing + stale_gated
-    if missing or unexplained or stale or enforced:
+    if missing or unexplained or stale or failing:
         print(
             f"error: {len(missing)} key(s) missing from en-US, {len(unexplained)} "
             f"key(s) with no reader, {len(stale)} stale kept entr(ies), "
-            f"{len(enforced)} catalog rule violation(s)",
+            f"{len(failing)} catalog rule violation(s)",
             file=sys.stderr,
         )
         return 1

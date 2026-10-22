@@ -211,15 +211,18 @@ enum LocalizationCatalogAudit {
     return result
   }
 
+  /// The format specifiers of each key, in sorted order: a translation may reorder its numbered
+  /// specifiers. A `.stringsdict` entry lists each distinct specifier once, because a language
+  /// carries only the plural categories it needs and every category repeats the same specifiers.
   static func placeholderSignatures(for localization: String) -> [String: [String]] {
     var result =
       stringsData(for: localization).map {
-        parseStrings($0).mapValues { placeholderSignature(in: $0) }
+        parseStrings($0).mapValues { placeholderSignature(in: $0).sorted() }
       } ?? [:]
     for (key, value) in stringsDictionary(for: localization) {
       var strings: [String] = []
       collectPluralStrings(value, into: &strings)
-      result[key] = strings.flatMap { placeholderSignature(in: $0) }.sorted()
+      result[key] = Set(strings.flatMap { placeholderSignature(in: $0) }).sorted()
     }
     return result
   }
@@ -400,7 +403,7 @@ enum LocalizationCatalogAudit {
     return variables
   }
 
-  private static func placeholderSignature(in value: String) -> [String] {
+  static func placeholderSignature(in value: String) -> [String] {
     let pattern = #"%(?:[0-9]+\$)?[-+0-9.#]*[@a-zA-Z]"#
     guard let expression = try? NSRegularExpression(pattern: pattern) else { return [] }
     let range = NSRange(value.startIndex..<value.endIndex, in: value)

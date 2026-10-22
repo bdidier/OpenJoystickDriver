@@ -46,7 +46,7 @@ enum SoakTestProblem: Error, Equatable {
         field.range.upperBound
       )
     case .tooManySamples(let count):
-      OJDLocalized.formatted("ui.developer.soakTooManySamples", count)
+      OJDLocalized.plural("ui.developer.soakTooManySamples", count)
     }
   }
 }

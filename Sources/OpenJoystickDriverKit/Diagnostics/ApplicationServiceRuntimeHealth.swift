@@ -290,7 +290,7 @@ public enum RuntimeHealthSamplingError: LocalizedError, Sendable {
         ]
       )
     case .tooManySamples(let count):
-      return localization.formatted(
+      return localization.plural(
         "cli.diagnose.group.soakErrorTooManySamples",
         arguments: [count]
       )

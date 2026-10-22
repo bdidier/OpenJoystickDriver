@@ -136,7 +136,7 @@
       Section(header: Text(OJDLocalized.string("ui.library.section.testResult"))) {
         if run.result.matches {
           Text(
-            OJDLocalized.formatted(
+            OJDLocalized.plural(
               "cli.record.test.matched",
               run.model.description,
               run.result.inputReports
@@ -144,7 +144,7 @@
           )
         } else {
           Text(
-            OJDLocalized.formatted(
+            OJDLocalized.plural(
               "cli.record.test.mismatch",
               run.model.description,
               run.expectation,

@@ -12,4 +12,9 @@ enum OJDLocalized {
   }
 
   static func plural(_ key: String, count: Int) -> String { resolver.plural(key, count: count) }
+
+  /// A `Localizable.stringsdict` plural whose count is one of `arguments`, in the entry's order.
+  static func plural(_ key: String, _ arguments: CVarArg...) -> String {
+    resolver.plural(key, arguments: arguments)
+  }
 }

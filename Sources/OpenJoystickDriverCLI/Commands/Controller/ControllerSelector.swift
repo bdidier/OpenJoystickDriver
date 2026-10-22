@@ -42,7 +42,7 @@ struct ControllerSelector: ExpressibleByArgument, Equatable, Sendable {
         )
     } else {
       listed = matches
-      message = CLILocalized.format(
+      message = CLILocalized.plural(
         "cli.controller.group.selectorAmbiguous",
         text,
         matches.count

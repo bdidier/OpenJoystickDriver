@@ -2,11 +2,11 @@ from __future__ import annotations
 
 import contextlib
 import io
-import json
 import plistlib
 import tempfile
 import unittest
 from pathlib import Path
+from typing import ClassVar
 from unittest import mock
 
 from Scripts.Quality import check_localization_keys as guard
@@ -365,17 +365,17 @@ class StringsdictCommentTests(unittest.TestCase):
 
 
 class RuleTests(unittest.TestCase):
-    def catalog(self, strings: str, c_strings: str = "") -> Path:
+    def catalog(self, strings: str) -> Path:
         scratch = tempfile.TemporaryDirectory()
         self.addCleanup(scratch.cleanup)
         root = Path(scratch.name)
         resources = root / guard.RESOURCES_DIRECTORY
-        for name, text in (("en-US", strings), ("C", c_strings)):
+        for name, text in (("en-US", strings), ("C", strings)):
             (resources / f"{name}.lproj").mkdir(parents=True)
             (resources / f"{name}.lproj" / "Localizable.strings").write_text(text)
-        (resources / "en-US.lproj" / "Localizable.stringsdict").write_bytes(
-            plistlib.dumps({})
-        )
+            (resources / f"{name}.lproj" / "Localizable.stringsdict").write_bytes(
+                plistlib.dumps({})
+            )
         return root
 
     def test_each_rule_reports_its_violation_with_the_key(self) -> None:
@@ -383,193 +383,266 @@ class RuleTests(unittest.TestCase):
             '"bad key" = "Open System Settings %@ %@ %d";\n'
             '/* Label. */\n"ui.fine.title" = "Fine";\n'
         )
-        found = guard.rule_problems(root)
+        found = guard.rule_problems(root, not_a_count={})
         for rule in ("namespace", "osWord", "specifier", "comment", "pluralCount"):
             self.assertEqual({p.key for p in found[rule]}, {"bad key"}, rule)
 
     def test_a_conforming_catalog_has_no_violation(self) -> None:
         root = self.catalog('/* Label. */\n"ui.fine.title" = "Fine";\n')
         self.assertEqual(
-            {rule: p for rule, p in guard.rule_problems(root).items() if p}, {}
-        )
-
-
-class GateTests(unittest.TestCase):
-    def test_each_gated_rule_names_the_task_that_lifts_it(self) -> None:
-        self.assertEqual(
-            guard.GATED_RULES,
-            {"specifier": "22.3", "comment": "22.3", "pluralCount": "22.3"},
-        )
-
-    def found(self, rule: str) -> dict[str, list[guard.RuleProblem]]:
-        found = {name: [] for name in guard.GATED_RULES}
-        found[rule] = [guard.RuleProblem("old.key", "old.key: violation")]
-        return found
-
-    def test_gated_rule_holds_back_a_listed_key_only(self) -> None:
-        failing, held, stale = guard.rule_report(
-            self.found("comment"), {"comment": {"old.key"}}
-        )
-        self.assertEqual((failing, stale), ([], []))
-        self.assertIn("comment: 1 violation(s) held back until task 22.3", held[0])
-        failing, _, _ = guard.rule_report(self.found("comment"), {})
-        self.assertEqual(failing, ["old.key: violation"])
-
-    def test_key_gated_for_another_rule_fails(self) -> None:
-        failing, held, stale = guard.rule_report(
-            self.found("specifier"), {"comment": {"old.key"}}
-        )
-        self.assertEqual(failing, ["old.key: violation"])
-        self.assertEqual(held, [])
-        self.assertIn("violates no comment rule", stale[0])
-
-    def test_lifted_rule_fails_a_listed_key(self) -> None:
-        with mock.patch.dict(guard.GATED_RULES, clear=True):
-            failing, held, _ = guard.rule_report(
-                self.found("comment"), {"comment": {"old.key"}}
-            )
-        self.assertEqual((failing, held), (["old.key: violation"], []))
-
-    def test_listed_key_without_a_gated_violation_is_stale(self) -> None:
-        _, _, stale = guard.rule_report(
-            self.found("comment"), {"comment": {"old.key", "gone.key"}}
-        )
-        self.assertIn("gone.key", stale[0])
-
-    def test_main_fails_when_a_gate_is_off_and_a_violation_exists(self) -> None:
-        violation = {
-            "comment": [guard.RuleProblem("old.key", "old.key: no translator comment")]
-        }
-        for gate in (True, False):
-            with (
-                mock.patch.object(
-                    guard,
-                    "rule_problems",
-                    return_value={name: [] for name in guard.GATED_RULES} | violation,
-                ),
-                mock.patch.object(
-                    guard, "gated_keys", return_value={"comment": {"old.key"}}
-                ),
-                mock.patch.dict(
-                    guard.GATED_RULES,
-                    {"comment": "22.3"} if gate else {},
-                    clear=True,
-                ),
-                contextlib.redirect_stdout(io.StringIO()),
-                contextlib.redirect_stderr(io.StringIO()),
-            ):
-                self.assertEqual(guard.main([]), 0 if gate else 1, gate)
-
-    def test_the_repository_passes_with_the_gates_it_has(self) -> None:
-        with contextlib.redirect_stdout(io.StringIO()):
-            self.assertEqual(guard.main([]), 0)
-
-
-class WriteGatedKeysTests(unittest.TestCase):
-    def update(
-        self,
-        violating: dict[str, set[str]],
-        gated: dict[str, set[str]],
-    ) -> tuple[dict[str, list[str]], list[str]]:
-        found = {
-            rule: [
-                guard.RuleProblem(key, f"{key}: {rule}")
-                for key in violating.get(rule, ())
-            ]
-            for rule in guard.GATED_RULES
-        }
-        with (
-            mock.patch.object(guard, "rule_problems", return_value=found),
-            mock.patch.object(
-                guard,
-                "gated_keys",
-                return_value={
-                    rule: gated.get(rule, set()) for rule in guard.GATED_RULES
-                },
-            ),
-        ):
-            return guard.update_gated_keys(Path("."))
-
-    def test_a_new_violation_is_refused_with_its_key_and_rule(self) -> None:
-        _, refused = self.update(
-            {"comment": {"old.key", "new.key"}}, {"comment": {"old.key"}}
-        )
-        self.assertEqual(len(refused), 1)
-        self.assertIn("'new.key'", refused[0])
-        self.assertIn("comment", refused[0])
-
-    def test_refused_update_writes_nothing(self) -> None:
-        with tempfile.TemporaryDirectory() as scratch:
-            root = Path(scratch)
-            path = root / guard.GATED_KEYS_PATH
-            path.parent.mkdir(parents=True)
-            path.write_text("unchanged")
-            with mock.patch.object(
-                guard, "update_gated_keys", return_value=({}, ["refused"])
-            ):
-                self.assertEqual(guard.write_gated_keys(root), ["refused"])
-            self.assertEqual(path.read_text(), "unchanged")
-
-    def test_stale_and_missing_entries_are_removed(self) -> None:
-        data, refused = self.update(
-            {"comment": {"kept.key"}},
             {
-                "comment": {"kept.key", "fixed.key", "gone.key"},
-                "specifier": {"fixed.key"},
+                rule: p
+                for rule, p in guard.rule_problems(root, not_a_count={}).items()
+                if p
             },
+            {},
         )
-        self.assertEqual(refused, [])
-        self.assertEqual(data["comment"], ["kept.key"])
-        self.assertEqual(data["specifier"], [])
 
 
-class WriteGatedKeysCommandTests(unittest.TestCase):
-    def repository(self, keys: list[str], gated: list[str]) -> Path:
+class StackedCommentTests(unittest.TestCase):
+    def strings_keys(self, text: str) -> list[str]:
+        return guard.stacked_comment_keys(
+            text, guard.STRINGS_COMMENT, guard.STRINGS_KEY_LINE
+        )
+
+    def dict_keys(self, text: str) -> list[str]:
+        return guard.stacked_comment_keys(
+            text, guard.STRINGSDICT_COMMENT, guard.STRINGSDICT_KEY
+        )
+
+    def test_two_comments_above_a_strings_key_fail(self) -> None:
+        self.assertEqual(
+            self.strings_keys('/* One. */\n/* Two. */\n"a.b" = "A";\n'), ["a.b"]
+        )
+
+    def test_a_blank_line_between_the_comments_still_stacks(self) -> None:
+        self.assertEqual(
+            self.strings_keys('/* One. */\n\n/* Two. */\n"a.b" = "A";\n'), ["a.b"]
+        )
+
+    def test_three_comments_report_the_key_once(self) -> None:
+        self.assertEqual(
+            self.strings_keys('/* 1 */\n/* 2 */\n/* 3 */\n"a.b" = "A";\n'), ["a.b"]
+        )
+
+    def test_one_comment_per_key_passes(self) -> None:
+        self.assertEqual(
+            self.strings_keys('/* One. */\n"a.b" = "A";\n/* Two. */\n"c.d" = "C";\n'),
+            [],
+        )
+
+    def test_a_comment_inside_a_value_is_not_a_comment(self) -> None:
+        self.assertEqual(
+            self.strings_keys('/* One. */\n"a.b" = "x /* y */ z";\n"c.d" = "C";\n'), []
+        )
+
+    def test_two_comments_above_a_stringsdict_key_fail(self) -> None:
+        text = "<dict>\n\t<!-- One. -->\n\t<!-- Two. -->\n\t<key>a.b</key>\n</dict>\n"
+        self.assertEqual(self.dict_keys(text), ["a.b"])
+        text = "<dict>\n\t<!-- One. -->\n\t<key>a.b</key>\n</dict>\n"
+        self.assertEqual(self.dict_keys(text), [])
+
+    def test_the_rule_names_the_bundle_and_the_key(self) -> None:
+        with tempfile.TemporaryDirectory() as name:
+            directory = Path(name) / "de-DE.lproj"
+            directory.mkdir()
+            (directory / "Localizable.strings").write_text(
+                '/* One. */\n/* Two. */\n"a.b" = "A";\n'
+            )
+            (directory / "Localizable.stringsdict").write_text(
+                "<dict>\n\t<!-- One. -->\n\t<!-- Two. -->\n\t<key>c.d</key>\n</dict>\n"
+            )
+            self.assertEqual(
+                [p.message for p in guard.stacked_comment_problems(directory)],
+                [
+                    "de-DE.lproj/Localizable.strings: 'a.b' has more than one comment above it",
+                    "de-DE.lproj/Localizable.stringsdict: 'c.d' has more than one comment above it",
+                ],
+            )
+
+    def test_the_repository_stacks_no_comment(self) -> None:
+        self.assertEqual(
+            [
+                p.message
+                for locale in guard.locale_directories()
+                for p in guard.stacked_comment_problems(locale)
+            ],
+            [],
+        )
+
+
+class CommentSpecifierTests(unittest.TestCase):
+    def test_a_comment_must_name_each_numbered_specifier(self) -> None:
+        entry = guard.StringsEntry("ui.a.b", "%1$@ of %2$@", "%1$@ is the name.")
+        self.assertIn("%2$", guard.comment_specifier_problem(entry) or "")
+        self.assertIsNone(
+            guard.comment_specifier_problem(
+                guard.StringsEntry("ui.a.b", "%1$@ of %2$@", "%1$@ is a, %2$@ is b.")
+            )
+        )
+
+    def test_a_single_specifier_needs_a_percent_sign_in_the_comment(self) -> None:
+        self.assertIsNotNone(
+            guard.comment_specifier_problem(
+                guard.StringsEntry("ui.a.b", "Open %@", "Label.")
+            )
+        )
+        self.assertIsNone(
+            guard.comment_specifier_problem(
+                guard.StringsEntry("ui.a.b", "Open %@", "%@ is the name.")
+            )
+        )
+
+    def test_a_value_without_specifiers_passes(self) -> None:
+        self.assertIsNone(
+            guard.comment_specifier_problem(guard.StringsEntry("ui.a.b", "Open", "L."))
+        )
+
+
+class CommentCopyTests(unittest.TestCase):
+    english: ClassVar[list[guard.StringsEntry]] = [
+        guard.StringsEntry("ui.a.b", "A", "Label."),
+        guard.StringsEntry("ui.c.d", "C", "Other."),
+    ]
+
+    def test_equal_comments_pass(self) -> None:
+        entries = [
+            guard.StringsEntry("ui.a.b", "A-de", "Label."),
+            guard.StringsEntry("ui.c.d", "C-de", "Other."),
+        ]
+        self.assertEqual(guard.comment_copy_problems(entries, self.english), [])
+
+    def test_a_different_comment_fails(self) -> None:
+        entries = [
+            guard.StringsEntry("ui.a.b", "A-de", "Beschriftung."),
+            guard.StringsEntry("ui.c.d", "C-de", "Other."),
+        ]
+        self.assertEqual(
+            [key for key, _ in guard.comment_copy_problems(entries, self.english)],
+            ["ui.a.b"],
+        )
+
+    def test_a_missing_comment_fails(self) -> None:
+        entries = [
+            guard.StringsEntry("ui.a.b", "A-de", None),
+            guard.StringsEntry("ui.c.d", "C-de", "Other."),
+        ]
+        self.assertEqual(
+            [key for key, _ in guard.comment_copy_problems(entries, self.english)],
+            ["ui.a.b"],
+        )
+
+    def test_a_missing_or_extra_key_fails(self) -> None:
+        entries = [
+            guard.StringsEntry("ui.a.b", "A-de", "Label."),
+            guard.StringsEntry("ui.x.y", "X", "Label."),
+        ]
+        self.assertEqual(
+            sorted(
+                key for key, _ in guard.comment_copy_problems(entries, self.english)
+            ),
+            ["ui.c.d", "ui.x.y"],
+        )
+
+    def test_rule_problems_reports_a_differing_comment_in_another_bundle(self) -> None:
         scratch = tempfile.TemporaryDirectory()
         self.addCleanup(scratch.cleanup)
         root = Path(scratch.name)
-        directory = root / guard.CATALOG_DIRECTORY
-        directory.mkdir(parents=True)
-        (directory / "Localizable.strings").write_text(
-            "".join(f'"{key}" = "Text";\n' for key in keys)
+        for name, comment in (
+            ("en-US", "Label."),
+            ("C", "Label."),
+            ("de-DE", "Etikett."),
+        ):
+            directory = root / guard.RESOURCES_DIRECTORY / f"{name}.lproj"
+            directory.mkdir(parents=True)
+            (directory / "Localizable.strings").write_text(
+                f'/* {comment} */\n"ui.fine.title" = "Fine";\n'
+            )
+            (directory / "Localizable.stringsdict").write_bytes(plistlib.dumps({}))
+        found = guard.rule_problems(root, not_a_count={})
+        self.assertEqual([p.key for p in found["commentCopy"]], ["ui.fine.title"])
+        self.assertIn("de-DE.lproj", found["commentCopy"][0].message)
+
+    def test_every_bundle_of_the_repository_copies_the_en_us_comments(self) -> None:
+        self.assertEqual([p.message for p in guard.rule_problems()["commentCopy"]], [])
+
+
+class StaleNotACountTests(unittest.TestCase):
+    entries: ClassVar[list[guard.StringsEntry]] = [
+        guard.StringsEntry("ui.a.b", "status %d", "Label.")
+    ]
+
+    def test_a_key_outside_the_catalog_fails(self) -> None:
+        self.assertIn(
+            "not in the en-US strings",
+            guard.not_a_count_problem("ui.gone.key", self.entries, set()) or "",
         )
-        (directory / "Localizable.stringsdict").write_bytes(plistlib.dumps({}))
-        c_directory = root / guard.RESOURCES_DIRECTORY / "C.lproj"
-        c_directory.mkdir(parents=True)
-        (c_directory / "Localizable.strings").write_text("")
-        path = root / guard.GATED_KEYS_PATH
-        path.parent.mkdir(parents=True)
-        path.write_text(json.dumps({"comment": gated}))
-        return root
 
-    def run_main(self, root: Path, *arguments: str) -> tuple[int, str]:
+    def test_a_value_without_an_integer_specifier_fails(self) -> None:
+        entries = [guard.StringsEntry("ui.a.b", "status %@", "Label.")]
+        self.assertIn(
+            "without an integer specifier",
+            guard.not_a_count_problem("ui.a.b", entries, set()) or "",
+        )
+
+    def test_a_key_with_a_plural_entry_fails(self) -> None:
+        self.assertIn(
+            "has a stringsdict entry",
+            guard.not_a_count_problem("ui.a.b", self.entries, {"ui.a.b"}) or "",
+        )
+
+    def test_a_current_entry_passes(self) -> None:
+        self.assertIsNone(guard.not_a_count_problem("ui.a.b", self.entries, set()))
+
+    def test_rule_problems_reports_a_stale_entry_under_the_plural_rule(self) -> None:
+        scratch = tempfile.TemporaryDirectory()
+        self.addCleanup(scratch.cleanup)
+        root = Path(scratch.name)
+        for name in ("en-US", "C"):
+            directory = root / guard.RESOURCES_DIRECTORY / f"{name}.lproj"
+            directory.mkdir(parents=True)
+            (directory / "Localizable.strings").write_text(
+                '/* Label. */\n"ui.fine.title" = "Fine";\n'
+            )
+            (directory / "Localizable.stringsdict").write_bytes(plistlib.dumps({}))
+        found = guard.rule_problems(root, not_a_count={"ui.gone.key": "an exit status"})
+        self.assertEqual([p.key for p in found["pluralCount"]], ["ui.gone.key"])
+
+
+class RuleReportTests(unittest.TestCase):
+    def test_every_violation_of_every_rule_is_reported(self) -> None:
+        found = {
+            "comment": [guard.RuleProblem("a.key", "a.key: no translator comment")],
+            "specifier": [guard.RuleProblem("b.key", "b.key: unnumbered specifiers")],
+            "pluralCount": [],
+        }
+        self.assertEqual(
+            guard.rule_report(found),
+            ["a.key: no translator comment", "b.key: unnumbered specifiers"],
+        )
+
+    def test_main_fails_on_a_violation(self) -> None:
+        violation = {
+            "comment": [guard.RuleProblem("a.key", "a.key: no translator comment")]
+        }
+        output = io.StringIO()
+        with (
+            mock.patch.object(guard, "rule_problems", return_value=violation),
+            contextlib.redirect_stdout(output),
+            contextlib.redirect_stderr(io.StringIO()),
+        ):
+            self.assertEqual(guard.main([]), 1)
+        self.assertIn("a.key: no translator comment", output.getvalue())
+
+    def test_an_argument_is_a_usage_error(self) -> None:
         errors = io.StringIO()
-        with mock.patch.object(guard, "ROOT", root), contextlib.redirect_stderr(errors):
-            code = guard.main(["--write-gated-keys", *arguments])
-        return code, errors.getvalue()
+        with contextlib.redirect_stderr(errors):
+            self.assertEqual(guard.main(["--option"]), 2)
+        self.assertIn("usage:", errors.getvalue())
 
-    def gated(self, root: Path) -> list[str]:
-        data = json.loads((root / guard.GATED_KEYS_PATH).read_text())
-        return data["comment"]
-
-    def test_the_write_keeps_the_listed_violations(self) -> None:
-        root = self.repository(["ui.a.one", "ui.a.two"], ["ui.a.one", "ui.a.two"])
-        code, _ = self.run_main(root)
-        self.assertEqual(code, 0)
-        self.assertEqual(self.gated(root), ["ui.a.one", "ui.a.two"])
-
-    def test_an_unlisted_violation_is_refused(self) -> None:
-        root = self.repository(["ui.a.one", "ui.a.two"], ["ui.a.one"])
-        code, errors = self.run_main(root)
-        self.assertEqual(code, 1)
-        self.assertIn("'ui.a.two'", errors)
-        self.assertEqual(self.gated(root), ["ui.a.one"])
-
-    def test_another_argument_is_a_usage_error(self) -> None:
-        root = self.repository(["ui.a.one"], ["ui.a.one"])
-        code, errors = self.run_main(root, "--gate", "ui.a.one", "comment")
-        self.assertEqual(code, 2)
-        self.assertIn("usage:", errors)
+    def test_the_repository_passes(self) -> None:
+        with contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(guard.main([]), 0)
 
 
 class RepositoryTests(unittest.TestCase):

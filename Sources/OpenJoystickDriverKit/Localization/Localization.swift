@@ -61,7 +61,15 @@ public struct Localization: Sendable {
   /// Formats `count` through a `Localizable.stringsdict` plural (`%#@count@`).
   /// Foundation picks the CLDR category; callers should not branch on `count == 1`.
   public func plural(_ key: String, count: Int) -> String {
-    Self.format(string(key), count: count, locale: formattingLocale)
+    plural(key, arguments: [count])
+  }
+
+  /// Formats a `Localizable.stringsdict` plural whose count is one of `arguments`, in the order
+  /// of the positions in the entry (`%2$#@count@` reads the second argument). Foundation picks the
+  /// CLDR category with the locale of the selected localization, so a Russian entry gets the
+  /// Russian categories whatever the process locale is. Pass the count as an `Int`.
+  public func plural(_ key: String, arguments: [CVarArg]) -> String {
+    String(format: string(key), locale: formattingLocale, arguments: arguments)
   }
 
   /// Formats with the user's locale. Placeholder types stay those in the source catalog.
@@ -127,9 +135,5 @@ public struct Localization: Sendable {
       return candidate
     }
     return nil
-  }
-
-  private static func format(_ value: String, count: Int, locale: Locale) -> String {
-    String(format: value, locale: locale, arguments: [count])
   }
 }

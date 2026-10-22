@@ -38,7 +38,7 @@
         packetList(displayedPackets)
         if model.hiddenIdlePacketCount > 0 {
           Text(
-            OJDLocalized.formatted("ui.developer.hiddenIdlePackets", model.hiddenIdlePacketCount)
+            OJDLocalized.plural("ui.developer.hiddenIdlePackets", model.hiddenIdlePacketCount)
           ).font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor))
         }
         Text(OJDLocalized.string("ui.developer.packetSharingWarning")).font(.caption)
@@ -63,7 +63,7 @@
         )
       case .stopped:
         statusLabel(
-          OJDLocalized.formatted(
+          OJDLocalized.plural(
             "ui.developer.stoppedPackets",
             model.displayedPackets.count
           ),

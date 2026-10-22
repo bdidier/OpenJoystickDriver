@@ -11,6 +11,11 @@ struct SoakCheckLocalizationTests {
     String(format: "%.1f", locale: .current, value)
   }
 
+  /// A count inside a plural entry: formatted with the locale of the selected language.
+  private func pluralInteger(_ value: Int) -> String {
+    String(format: "%d", locale: Locale(identifier: "en_US"), value)
+  }
+
   private func integer(_ value: Int) -> String {
     String(format: "%d", locale: .current, value)
   }
@@ -81,7 +86,8 @@ struct SoakCheckLocalizationTests {
     )
     #expect(
       RuntimeHealthSamplingError.tooManySamples(900_000).errorDescription
-        == "Runtime sampling would take \(integer(900_000)) samples. Raise the sample interval."
+        == "Runtime sampling would take \(pluralInteger(900_000)) samples. "
+        + "Raise the sample interval."
     )
     #expect(
       RuntimeHealthSamplingError.noSamples.errorDescription

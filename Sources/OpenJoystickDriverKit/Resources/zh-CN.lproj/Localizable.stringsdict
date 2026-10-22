@@ -2,6 +2,7 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<!-- Summary of how many controllers are connected, shown in the menu bar menu and in the main window summary. %d is the number of connected controllers. The Chinese (Simplified) plural forms are a first draft that a native speaker reviews. -->
 	<key>status.controllerConnected</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
@@ -26,6 +27,7 @@
 			<string>已连接 %d 个控制器</string>
 		</dict>
 	</dict>
+	<!-- Number of assignments (controller inputs mapped to actions) that a profile holds, shown in the profile list, the profile detail and the profile editor. %d is the number of assignments. The Chinese (Simplified) plural forms are a first draft that a native speaker reviews. -->
 	<key>ui.profiles.assignments</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
@@ -50,6 +52,7 @@
 			<string>%d 个映射</string>
 		</dict>
 	</dict>
+	<!-- Summary in the support diagnostics of how many virtual controller output devices OpenJoystickDriver publishes. %d is that number; the zero form says that none were detected. The Chinese (Simplified) plural forms are a first draft that a native speaker reviews. -->
 	<key>ui.debug.outputDevices</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
@@ -72,6 +75,141 @@
 			<string>已检测到 %d 个控制器输出设备</string>
 			<key>other</key>
 			<string>已检测到 %d 个控制器输出设备</string>
+		</dict>
+	</dict>
+	<!-- Error line of ojd when a controller selector matches more than one controller, and of the automation service when a request names such a selector; the matching IDs follow on the next lines. %1$@ is the selector text that was given, %2$lld is the number of matching controllers. The Chinese (Simplified) plural forms are a first draft that a native speaker reviews. -->
+	<key>cli.controller.group.selectorAmbiguous</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%2$#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>other</key>
+			<string>“%1$@” 匹配 %2$lld 个控制器。请使用以下 ID 之一：</string>
+		</dict>
+	</dict>
+	<!-- Error line of ojd when a profile name or ID matches more than one profile; the matching IDs follow on the next lines. %1$@ is the selector text that was given, %2$lld is the number of matching profiles. The Chinese (Simplified) plural forms are a first draft that a native speaker reviews. -->
+	<key>cli.profile.group.selectorAmbiguous</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%2$#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>other</key>
+			<string>“%1$@”对应 %2$lld 个配置文件。请使用以下某个 ID：</string>
+		</dict>
+	</dict>
+	<!-- Validation error of ojd diagnose when the soak run with the given interval would take too many samples. %lld is the number of samples the run would take. The option names soak and interval-ms are written with two leading hyphens and stay as written. The Chinese (Simplified) plural forms are a first draft that a native speaker reviews. -->
+	<key>cli.diagnose.group.sampleLimit</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>other</key>
+			<string>在此 --interval-ms 下使用 --soak 将采样 %lld 次；请调大 --interval-ms。</string>
+		</dict>
+	</dict>
+	<!-- Error of the runtime sampling in ojd diagnose and in the app when the duration and sample interval would take too many samples. %lld is the number of samples. The Chinese (Simplified) plural forms are a first draft that a native speaker reviews. -->
+	<key>cli.diagnose.group.soakErrorTooManySamples</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>other</key>
+			<string>采样将需要 %lld 个样本。请增大采样间隔。</string>
+		</dict>
+	</dict>
+	<!-- Error in the soak test of the Developer settings when the chosen duration and sample interval would take too many samples. %lld is the number of samples. The Chinese (Simplified) plural forms are a first draft that a native speaker reviews. -->
+	<key>ui.developer.soakTooManySamples</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>other</key>
+			<string>此次运行需要 %lld 个样本。请增大采样间隔。</string>
+		</dict>
+	</dict>
+	<!-- Success line of ojd record test and of the test result in the Library when a controller record parses a packet capture to the expected state. %1$@ is the controller model, %2$lld is the number of input reports that were replayed. The Chinese (Simplified) plural forms are a first draft that a native speaker reviews. -->
+	<key>cli.record.test.matched</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%2$#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>other</key>
+			<string>%1$@ 与期望状态一致：已重放 %2$lld 个输入报告。</string>
+		</dict>
+	</dict>
+	<!-- Failure line of ojd record test and of the test result in the Library when the parsed state differs from the expected state. %1$@ is the controller model, %2$@ is the file with the expected state, %3$lld is the number of fields that differ. The Chinese (Simplified) plural forms are a first draft that a native speaker reviews. -->
+	<key>cli.record.test.mismatch</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%3$#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>other</key>
+			<string>%1$@ 的解析器生成的状态与 %2$@ 在 %3$lld 个字段上不同。</string>
+		</dict>
+	</dict>
+	<!-- Note in the packet capture of the Developer settings that idle packets are left out of the list. %lld is the number of hidden idle packets; Export still includes them. The Chinese (Simplified) plural forms are a first draft that a native speaker reviews. -->
+	<key>ui.developer.hiddenIdlePackets</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>other</key>
+			<string>已隐藏 %lld 个空闲数据包（仍包含在导出中）。</string>
+		</dict>
+	</dict>
+	<!-- Status of the packet capture in the Developer settings after capture stopped. %lld is the number of packets that were captured. The Chinese (Simplified) plural forms are a first draft that a native speaker reviews. -->
+	<key>ui.developer.stoppedPackets</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>other</key>
+			<string>已停止 · %lld 个数据包</string>
 		</dict>
 	</dict>
 </dict>

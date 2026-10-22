@@ -2,6 +2,7 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<!-- Summary of how many controllers are connected, shown in the menu bar menu and in the main window summary. %d is the number of connected controllers. The Russian plural forms are a first draft that a native speaker reviews. -->
 	<key>status.controllerConnected</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
@@ -26,6 +27,7 @@
 			<string>%d контроллеров подключено</string>
 		</dict>
 	</dict>
+	<!-- Number of assignments (controller inputs mapped to actions) that a profile holds, shown in the profile list, the profile detail and the profile editor. %d is the number of assignments. The Russian plural forms are a first draft that a native speaker reviews. -->
 	<key>ui.profiles.assignments</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
@@ -50,6 +52,7 @@
 			<string>%d назначений</string>
 		</dict>
 	</dict>
+	<!-- Summary in the support diagnostics of how many virtual controller output devices OpenJoystickDriver publishes. %d is that number; the zero form says that none were detected. The Russian plural forms are a first draft that a native speaker reviews. -->
 	<key>ui.debug.outputDevices</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
@@ -72,6 +75,195 @@
 			<string>Обнаружено %d устройств вывода контроллера</string>
 			<key>other</key>
 			<string>Обнаружено %d устройств вывода контроллера</string>
+		</dict>
+	</dict>
+	<!-- Error line of ojd when a controller selector matches more than one controller, and of the automation service when a request names such a selector; the matching IDs follow on the next lines. %1$@ is the selector text that was given, %2$lld is the number of matching controllers. The Russian plural forms are a first draft that a native speaker reviews. -->
+	<key>cli.controller.group.selectorAmbiguous</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%2$#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>«%1$@» соответствует %2$lld контроллеру. Используйте один из этих ID:</string>
+			<key>few</key>
+			<string>«%1$@» соответствует %2$lld контроллерам. Используйте один из этих ID:</string>
+			<key>many</key>
+			<string>«%1$@» соответствует %2$lld контроллерам. Используйте один из этих ID:</string>
+			<key>other</key>
+			<string>«%1$@» соответствует %2$lld контроллера. Используйте один из этих ID:</string>
+		</dict>
+	</dict>
+	<!-- Error line of ojd when a profile name or ID matches more than one profile; the matching IDs follow on the next lines. %1$@ is the selector text that was given, %2$lld is the number of matching profiles. The Russian plural forms are a first draft that a native speaker reviews. -->
+	<key>cli.profile.group.selectorAmbiguous</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%2$#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>«%1$@» совпадает с %2$lld профилем. Используйте один из этих ID:</string>
+			<key>few</key>
+			<string>«%1$@» совпадает с %2$lld профилями. Используйте один из этих ID:</string>
+			<key>many</key>
+			<string>«%1$@» совпадает с %2$lld профилями. Используйте один из этих ID:</string>
+			<key>other</key>
+			<string>«%1$@» совпадает с %2$lld профиля. Используйте один из этих ID:</string>
+		</dict>
+	</dict>
+	<!-- Validation error of ojd diagnose when the soak run with the given interval would take too many samples. %lld is the number of samples the run would take. The option names soak and interval-ms are written with two leading hyphens and stay as written. The Russian plural forms are a first draft that a native speaker reviews. -->
+	<key>cli.diagnose.group.sampleLimit</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>--soak с таким --interval-ms потребует %lld замер; увеличьте --interval-ms.</string>
+			<key>few</key>
+			<string>--soak с таким --interval-ms потребует %lld замера; увеличьте --interval-ms.</string>
+			<key>many</key>
+			<string>--soak с таким --interval-ms потребует %lld замеров; увеличьте --interval-ms.</string>
+			<key>other</key>
+			<string>--soak с таким --interval-ms потребует %lld замера; увеличьте --interval-ms.</string>
+		</dict>
+	</dict>
+	<!-- Error of the runtime sampling in ojd diagnose and in the app when the duration and sample interval would take too many samples. %lld is the number of samples. The Russian plural forms are a first draft that a native speaker reviews. -->
+	<key>cli.diagnose.group.soakErrorTooManySamples</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Для измерения понадобилось бы %lld измерение. Увеличьте интервал измерений.</string>
+			<key>few</key>
+			<string>Для измерения понадобилось бы %lld измерения. Увеличьте интервал измерений.</string>
+			<key>many</key>
+			<string>Для измерения понадобилось бы %lld измерений. Увеличьте интервал измерений.</string>
+			<key>other</key>
+			<string>Для измерения понадобилось бы %lld измерения. Увеличьте интервал измерений.</string>
+		</dict>
+	</dict>
+	<!-- Error in the soak test of the Developer settings when the chosen duration and sample interval would take too many samples. %lld is the number of samples. The Russian plural forms are a first draft that a native speaker reviews. -->
+	<key>ui.developer.soakTooManySamples</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Для этого запуска понадобилось бы %lld измерение. Увеличьте интервал измерений.</string>
+			<key>few</key>
+			<string>Для этого запуска понадобилось бы %lld измерения. Увеличьте интервал измерений.</string>
+			<key>many</key>
+			<string>Для этого запуска понадобилось бы %lld измерений. Увеличьте интервал измерений.</string>
+			<key>other</key>
+			<string>Для этого запуска понадобилось бы %lld измерения. Увеличьте интервал измерений.</string>
+		</dict>
+	</dict>
+	<!-- Success line of ojd record test and of the test result in the Library when a controller record parses a packet capture to the expected state. %1$@ is the controller model, %2$lld is the number of input reports that were replayed. The Russian plural forms are a first draft that a native speaker reviews. -->
+	<key>cli.record.test.matched</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%2$#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%1$@ совпадает с ожидаемым состоянием: воспроизведён %2$lld отчёт о вводе.</string>
+			<key>few</key>
+			<string>%1$@ совпадает с ожидаемым состоянием: воспроизведено %2$lld отчёта о вводе.</string>
+			<key>many</key>
+			<string>%1$@ совпадает с ожидаемым состоянием: воспроизведено %2$lld отчётов о вводе.</string>
+			<key>other</key>
+			<string>%1$@ совпадает с ожидаемым состоянием: воспроизведено %2$lld отчёта о вводе.</string>
+		</dict>
+	</dict>
+	<!-- Failure line of ojd record test and of the test result in the Library when the parsed state differs from the expected state. %1$@ is the controller model, %2$@ is the file with the expected state, %3$lld is the number of fields that differ. The Russian plural forms are a first draft that a native speaker reviews. -->
+	<key>cli.record.test.mismatch</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%3$#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Состояние, полученное от парсера %1$@, не совпадает с %2$@ в %3$lld поле.</string>
+			<key>few</key>
+			<string>Состояние, полученное от парсера %1$@, не совпадает с %2$@ в %3$lld полях.</string>
+			<key>many</key>
+			<string>Состояние, полученное от парсера %1$@, не совпадает с %2$@ в %3$lld полях.</string>
+			<key>other</key>
+			<string>Состояние, полученное от парсера %1$@, не совпадает с %2$@ в %3$lld поля.</string>
+		</dict>
+	</dict>
+	<!-- Note in the packet capture of the Developer settings that idle packets are left out of the list. %lld is the number of hidden idle packets; Export still includes them. The Russian plural forms are a first draft that a native speaker reviews. -->
+	<key>ui.developer.hiddenIdlePackets</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Скрыт %lld пакет простоя (по-прежнему входит в экспорт).</string>
+			<key>few</key>
+			<string>Скрыто %lld пакета простоя (по-прежнему входят в экспорт).</string>
+			<key>many</key>
+			<string>Скрыто %lld пакетов простоя (по-прежнему входят в экспорт).</string>
+			<key>other</key>
+			<string>Скрыто %lld пакета простоя (по-прежнему входят в экспорт).</string>
+		</dict>
+	</dict>
+	<!-- Status of the packet capture in the Developer settings after capture stopped. %lld is the number of packets that were captured. The Russian plural forms are a first draft that a native speaker reviews. -->
+	<key>ui.developer.stoppedPackets</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Остановлено · %lld пакет</string>
+			<key>few</key>
+			<string>Остановлено · %lld пакета</string>
+			<key>many</key>
+			<string>Остановлено · %lld пакетов</string>
+			<key>other</key>
+			<string>Остановлено · %lld пакета</string>
 		</dict>
 	</dict>
 </dict>

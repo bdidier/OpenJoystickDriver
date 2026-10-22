@@ -2,6 +2,7 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<!-- Summary of how many controllers are connected, shown in the menu bar menu and in the main window summary. %d is the number of connected controllers. The Indonesian plural forms are a first draft that a native speaker reviews. -->
 	<key>status.controllerConnected</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
@@ -26,6 +27,7 @@
 			<string>%d pengontrol terhubung</string>
 		</dict>
 	</dict>
+	<!-- Number of assignments (controller inputs mapped to actions) that a profile holds, shown in the profile list, the profile detail and the profile editor. %d is the number of assignments. The Indonesian plural forms are a first draft that a native speaker reviews. -->
 	<key>ui.profiles.assignments</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
@@ -50,6 +52,7 @@
 			<string>%d penetapan</string>
 		</dict>
 	</dict>
+	<!-- Summary in the support diagnostics of how many virtual controller output devices OpenJoystickDriver publishes. %d is that number; the zero form says that none were detected. The Indonesian plural forms are a first draft that a native speaker reviews. -->
 	<key>ui.debug.outputDevices</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
@@ -72,6 +75,141 @@
 			<string>%d perangkat output pengontrol terdeteksi</string>
 			<key>other</key>
 			<string>%d perangkat output pengontrol terdeteksi</string>
+		</dict>
+	</dict>
+	<!-- Error line of ojd when a controller selector matches more than one controller, and of the automation service when a request names such a selector; the matching IDs follow on the next lines. %1$@ is the selector text that was given, %2$lld is the number of matching controllers. The Indonesian plural forms are a first draft that a native speaker reviews. -->
+	<key>cli.controller.group.selectorAmbiguous</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%2$#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>other</key>
+			<string>“%1$@” cocok dengan %2$lld pengontrol. Gunakan salah satu ID berikut:</string>
+		</dict>
+	</dict>
+	<!-- Error line of ojd when a profile name or ID matches more than one profile; the matching IDs follow on the next lines. %1$@ is the selector text that was given, %2$lld is the number of matching profiles. The Indonesian plural forms are a first draft that a native speaker reviews. -->
+	<key>cli.profile.group.selectorAmbiguous</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%2$#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>other</key>
+			<string>“%1$@” menamai %2$lld profil. Gunakan salah satu ID berikut:</string>
+		</dict>
+	</dict>
+	<!-- Validation error of ojd diagnose when the soak run with the given interval would take too many samples. %lld is the number of samples the run would take. The option names soak and interval-ms are written with two leading hyphens and stay as written. The Indonesian plural forms are a first draft that a native speaker reviews. -->
+	<key>cli.diagnose.group.sampleLimit</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>other</key>
+			<string>--soak dengan --interval-ms ini akan mengambil %lld sampel; naikkan --interval-ms.</string>
+		</dict>
+	</dict>
+	<!-- Error of the runtime sampling in ojd diagnose and in the app when the duration and sample interval would take too many samples. %lld is the number of samples. The Indonesian plural forms are a first draft that a native speaker reviews. -->
+	<key>cli.diagnose.group.soakErrorTooManySamples</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>other</key>
+			<string>Pengambilan sampel akan membutuhkan %lld sampel. Perbesar interval sampel.</string>
+		</dict>
+	</dict>
+	<!-- Error in the soak test of the Developer settings when the chosen duration and sample interval would take too many samples. %lld is the number of samples. The Indonesian plural forms are a first draft that a native speaker reviews. -->
+	<key>ui.developer.soakTooManySamples</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>other</key>
+			<string>Proses ini akan mengambil %lld sampel. Perbesar interval sampel.</string>
+		</dict>
+	</dict>
+	<!-- Success line of ojd record test and of the test result in the Library when a controller record parses a packet capture to the expected state. %1$@ is the controller model, %2$lld is the number of input reports that were replayed. The Indonesian plural forms are a first draft that a native speaker reviews. -->
+	<key>cli.record.test.matched</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%2$#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>other</key>
+			<string>%1$@ cocok dengan status yang diharapkan: %2$lld laporan input diputar ulang.</string>
+		</dict>
+	</dict>
+	<!-- Failure line of ojd record test and of the test result in the Library when the parsed state differs from the expected state. %1$@ is the controller model, %2$@ is the file with the expected state, %3$lld is the number of fields that differ. The Indonesian plural forms are a first draft that a native speaker reviews. -->
+	<key>cli.record.test.mismatch</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%3$#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>other</key>
+			<string>Status yang dihasilkan parser %1$@ berbeda dari %2$@ pada %3$lld kolom.</string>
+		</dict>
+	</dict>
+	<!-- Note in the packet capture of the Developer settings that idle packets are left out of the list. %lld is the number of hidden idle packets; Export still includes them. The Indonesian plural forms are a first draft that a native speaker reviews. -->
+	<key>ui.developer.hiddenIdlePackets</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>other</key>
+			<string>%lld paket idle disembunyikan (tetap disertakan dalam Ekspor).</string>
+		</dict>
+	</dict>
+	<!-- Status of the packet capture in the Developer settings after capture stopped. %lld is the number of packets that were captured. The Indonesian plural forms are a first draft that a native speaker reviews. -->
+	<key>ui.developer.stoppedPackets</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>other</key>
+			<string>Dihentikan · %lld paket</string>
 		</dict>
 	</dict>
 </dict>
