@@ -1,5 +1,6 @@
 /* Product name in the title of the application menu of the menu bar. It stays OpenJoystickDriver in every language. */
 "term.app.name" = "OpenJoystickDriver";
+/* Button of the problem banner in the Access area that quits and opens the app again so that a granted permission takes effect. OpenJoystickDriver is the product name. */
 "ui.permissions.restartApplication" = "OpenJoystickDriver पुनः आरंभ करें";
 "ui.menu.projectPage" = "GitHub";
 /* Button that dismisses an alert in the activity view and the main window. It only acknowledges the message. */
@@ -156,13 +157,21 @@
 "ui.virtualProfile.failure.serverStopped" = "सेवा रुक गई। ओवरराइड अपरिवर्तित है।";
 "ui.virtualProfile.failure.persistenceFailed" = "ओवरराइड सहेजा नहीं जा सका। कुछ भी सहेजा नहीं गया।";
 "ui.virtualProfile.storeError" = "वर्चुअल HID प्रोफ़ाइल ओवरराइड पढ़े नहीं जा सकते (%@)। कंट्रोलर स्वचालित रूप से चुनते हैं।";
+/* Value of the key field in the capture assignment sheet before the user captures a key. */
 "ui.keyboard.noKey" = "कोई कुंजी चयनित नहीं";
+/* Value of the key field while the app waits for a key press. Keep the three dots. */
 "ui.keyboard.pressKey" = "कोई कुंजी दबाएँ…";
+/* Title of the button that starts the capture of a key in the capture assignment sheet. */
 "ui.keyboard.captureKey" = "कुंजी कैप्चर करें";
+/* VoiceOver announcement when the key capture starts. Escape is the name of the Escape key. */
 "ui.keyboard.captureStarted" = "कीबोर्ड कैप्चर शुरू हुआ। कोई कुंजी दबाएँ; रद्द करने के लिए Escape दबाएँ।";
+/* Instruction under the key field in the capture assignment sheet. Modifiers are keys such as Shift, Control, Option and Command. */
 "ui.keyboard.instructions" = "जिन मॉडिफ़ायर को रखना चाहते हैं उनके साथ कोई कुंजी दबाएँ।";
+/* VoiceOver announcement after a key capture. %@ is the description of the captured key, for example Command-K. */
 "ui.keyboard.captured" = "%@ कैप्चर किया गया।";
+/* VoiceOver announcement when the user cancels the key capture. */
 "ui.keyboard.captureCanceled" = "कीबोर्ड कैप्चर रद्द किया गया।";
+/* VoiceOver label of the area that captures a keyboard key. */
 "ui.keyboard.captureTitle" = "कीबोर्ड कुंजी कैप्चर";
 "ui.capture.adjust" = "%@ समायोजित करें";
 "ui.capture.deadZone" = "डेड ज़ोन";
@@ -289,11 +298,17 @@
 "ui.profiles.turboDuty" = "ड्यूटी साइकिल";
 "ui.profiles.turboRate" = "पुनरावृत्ति दर";
 "ui.profiles.vendorID" = "विक्रेता आईडी";
+/* Title of the save panel for the debug report, a text file that the user can attach to a problem report. */
 "ui.debug.saveReportPanel" = "डिबग रिपोर्ट सहेजें";
+/* Title of the save panel for the debug logs, a text file that the user can attach to a problem report. */
 "ui.debug.saveLogsPanel" = "डिबग लॉग सहेजें";
+/* Line of the debug report that says controller output works. */
 "ui.debug.outputAvailable" = "कंट्रोलर आउटपुट उपलब्ध है।";
+/* Line of the debug report that says the user turned controller output off. */
 "ui.debug.outputOff" = "कंट्रोलर आउटपुट बंद है।";
+/* Line of the debug report that says controller output does not work and needs action. */
 "ui.debug.outputNeedsAttention" = "कंट्रोलर आउटपुट पर ध्यान देने की ज़रूरत है।";
+/* Line of the debug report when the service does not answer, so the report has no diagnostics. */
 "ui.debug.serviceUnavailable" = "सेवा डायग्नोस्टिक्स इस समय उपलब्ध नहीं हैं।";
 "ui.error.profileChanged" = "यह प्रोफ़ाइल कहीं और बदल गई। फिर से लोड करें या संपादन जारी रखें।";
 "ui.error.duplicateProfile" = "उस नाम की प्रोफ़ाइल पहले से मौजूद है।";
@@ -630,38 +645,61 @@
 "term.key.shift" = "शिफ़्ट";
 "ui.mapping.automatic" = "स्वचालित";
 "ui.virtualProfile.automaticSelected" = "स्वचालित (%@)";
+/* Detail line in the Driver section of the settings window when the driver extension for Xbox USB controllers is installed and works. */
 "ui.setup.activeDetail" = "प्रतिबंधित Xbox USB ड्राइवर इंस्टॉल है और तैयार है।";
 /* Detail line of the problem banner when the driver extension waits for approval. System Settings is the name of the macOS app. The extension is needed for supported Microsoft USB controllers. */
 "platform.macos.ui.setup.approvalDetail" = "समर्थित Microsoft USB कंट्रोलर इस्तेमाल करने के लिए सिस्टम सेटिंग्स में ड्राइवर को स्वीकृति दें।";
+/* Detail line in the Driver section of the settings window while the app checks the driver extension for Xbox USB controllers. */
 "ui.setup.checkingDetail" = "इंस्टॉल किए गए Xbox USB ड्राइवर की जाँच हो रही है।";
+/* Title of the problem banner and of the Driver section of the settings window for the driver extension that serves Xbox USB controllers. */
 "ui.setup.driverTitle" = "Xbox USB ड्राइवर";
+/* Detail line of the problem banner when the driver extension inside the app is damaged. The user reinstalls the app. */
 "ui.setup.invalidDetail" = "एम्बेड किया गया Xbox USB ड्राइवर अमान्य है। इस ऐप को फिर से इंस्टॉल करके इसे ठीक करें।";
+/* Detail line of the problem banner when the app has no driver extension. The user reinstalls the signed app. */
 "ui.setup.missingDetail" = "इस ऐप में Xbox USB ड्राइवर नहीं है। हस्ताक्षरित ऐप फिर इंस्टॉल करें।";
 /* Button that opens the System Settings app on the pane where the user can allow the permission or the extension. */
 "platform.macos.ui.setup.openSystemSettings" = "सिस्टम सेटिंग्स खोलें";
 /* Title of the alert shown when the System Settings app could not be opened. */
 "platform.macos.ui.setup.openSystemSettingsFailed" = "सिस्टम सेटिंग्स नहीं खोली जा सकीं।";
+/* Detail line of the problem banner when the driver extension needs activation or replacement. The app repairs it when the user presses the repair button. OpenJoystickDriver is the product name. */
 "ui.setup.repairDetail" = "OpenJoystickDriver डेवलपर टूल के बिना Xbox USB ड्राइवर को ठीक करेगा।";
+/* Message of the confirmation alert that removes the driver extension from the settings window. */
 "ui.setup.uninstallDetail" = "ड्राइवर फिर से इंस्टॉल होने तक Xbox USB कंट्रोलर काम करना बंद कर देते हैं।";
+/* Button of the problem banner that repairs the driver extension for Xbox USB controllers. */
 "ui.setup.repairDriver" = "Xbox USB ड्राइवर ठीक करें";
+/* Title of the problem banner when the app cannot reach its service. OpenJoystickDriver is the product name. */
 "ui.banner.service.title" = "OpenJoystickDriver अपनी सेवा तक नहीं पहुँच पा रहा है";
+/* Title of the problem banner when macOS has not allowed all that the app needs. */
 "ui.banner.access.title" = "अनुमति आवश्यक है";
 /* Detail line of the problem banner when macOS has not allowed all that the driver needs. OpenJoystickDriver is the product name. */
 "platform.macos.ui.banner.access.detail" = "OpenJoystickDriver को कंट्रोलर पढ़ने और उन्हें गेम में प्रकाशित करने के लिए जो कुछ चाहिए, macOS ने उसकी पूरी अनुमति नहीं दी है।";
+/* Title of the problem banner when the app does not get live changes of controllers from the service. */
 "ui.banner.liveUpdates.title" = "लाइव अपडेट उपलब्ध नहीं हैं";
+/* Detail of the live updates banner when the service closed the connection. OpenJoystickDriver is the product name. */
 "ui.banner.liveUpdates.detail.closed" = "सेवा ने कनेक्शन बंद कर दिया। इसके बजाय OpenJoystickDriver हर सेकंड कंट्रोलर में बदलाव जाँचता है।";
+/* Detail of the live updates banner when the service did not answer in time. OpenJoystickDriver is the product name. */
 "ui.banner.liveUpdates.detail.timeout" = "सेवा ने समय पर जवाब नहीं दिया। इसके बजाय OpenJoystickDriver समय-समय पर कंट्रोलर में बदलाव जाँचता है।";
+/* Detail of the live updates banner for any other failure of the live connection. OpenJoystickDriver is the product name. */
 "ui.banner.liveUpdates.detail.other" = "सेवा से लाइव अपडेट काम नहीं कर रहे हैं। इसके बजाय OpenJoystickDriver समय-समय पर कंट्रोलर में बदलाव जाँचता है।";
 /* Button of the Driver Extension section in the settings window that removes the driver extension from the system. */
 "cli.login.group.uninstallAction" = "अनइंस्टॉल करें";
+/* Option of the stream filter in the Activity log that shows all entries. */
 "ui.console.all" = "सभी";
+/* Message in the Activity log when no entry matches. */
 "ui.console.empty" = "कोई लॉग प्रविष्टि नहीं।";
+/* Option of the stream filter in the Activity log that shows only error entries. */
 "ui.console.errors" = "त्रुटियाँ";
+/* Heading of the sheet that explains an error code. */
 "ui.console.explain.title" = "त्रुटि कोड समझाएँ";
+/* Placeholder of the field for an error code in the explain sheet. E2004 is an example code and stays as written. */
 "ui.console.explain.prompt" = "त्रुटि कोड, उदाहरण के लिए E2004";
+/* Button of the explain sheet that looks up the error code. */
 "ui.console.explain.action" = "समझाएँ";
+/* Title of the message in the Activity log when the log cannot be read. */
 "ui.console.loadError" = "लॉग पढ़े नहीं जा सके";
+/* Option of the stream filter in the Activity log that shows only output entries. */
 "ui.console.output" = "आउटपुट";
+/* Column title in the Activity log table. The column tells whether an entry is output or an error. */
 "ui.console.stream" = "स्ट्रीम";
 /* Name of the notification setting for a controller that connects, in the Notifications pane of the settings window. */
 "notify.controllerConnected" = "कंट्रोलर कनेक्ट हुआ";
@@ -2525,10 +2563,15 @@
 "ui.menu.copySupportReport.doneDetail" = "सपोर्ट रिपोर्ट क्लिपबोर्ड पर है।";
 "ui.menu.copySupportReport.failed" = "सपोर्ट रिपोर्ट कॉपी नहीं हो सकी";
 "ui.menu.copySupportReport.failedDetail" = "रिपोर्ट इकट्ठा नहीं की जा सकी। इसके बजाय फ़ाइल में सहेजें।";
+/* Title of the Controllers item in the sidebar of the main window and in the window title when it is selected. */
 "ui.sidebar.controllers.title" = "कंट्रोलर";
+/* Title of the Profiles item in the sidebar of the main window and in the window title when it is selected. */
 "ui.sidebar.profiles.title" = "प्रोफ़ाइल";
+/* Title of the Library item in the sidebar of the main window. The library lists the profiles that can be installed from packages. */
 "ui.sidebar.library.title" = "लाइब्रेरी";
+/* Title of the Access item in the sidebar of the main window. The area lists permissions and clients of the endpoint. */
 "ui.sidebar.access.title" = "ऐक्सेस";
+/* Title of the Activity item in the sidebar of the main window. The area shows the log and the diagnostics. */
 "ui.sidebar.activity.title" = "गतिविधि";
 /* Help text of the showInMenuBar setting in 'ojd setting list'. OpenJoystickDriver is the product name. */
 "cli.setting.group.showInMenuBar" = "मेनू बार में OpenJoystickDriver आइटम दिखाएँ।";
@@ -2552,25 +2595,45 @@
 "platform.macos.ui.settings.commandLine.uninstallMessage" = "इससे %1$@ पर मौजूद लिंक हट जाता है। ऐप इंस्टॉल रहता है, लेकिन टूल दोबारा इंस्टॉल करने तक ojd टर्मिनल में नहीं चलता।";
 "ui.settings.commandLine.uninstallConfirm" = "अनइंस्टॉल करें";
 "ui.settings.advanced.developerToolsOff" = "कंट्रोलर इनपुट और USB पैकेट देखने के लिए डेवलपर टूल चालू करें।";
+/* Status line in the menu bar menu. %1$@ is the runtime state, %2$@ is the controller count text and %3$@ is the active profile text. The dots between them separate the parts and may change. */
 "ui.extra.statusLine" = "%1$@ · %2$@ · %3$@";
+/* Heading of the controllers section in the menu bar menu. */
 "ui.extra.controllers" = "कंट्रोलर";
+/* Menu item in the menu bar menu that stops the service from remapping. */
 "ui.extra.suspend" = "स्थगित करें";
+/* Menu item in the menu bar menu that lets the service remap again. */
 "ui.extra.resume" = "फिर शुरू करें";
+/* Menu item in the menu bar menu that opens the input test of a controller. */
 "ui.extra.testInput" = "इनपुट जाँचें";
+/* Menu item in the menu bar menu that holds the profile that is active for a controller. */
 "ui.extra.activeProfile" = "सक्रिय प्रोफ़ाइल";
+/* Menu item in the menu bar menu that ends the wireless link of a controller. */
 "ui.extra.disconnectWireless" = "वायरलेस लिंक डिस्कनेक्ट करें";
+/* Menu item in the menu bar menu that shows the controller in the main window. */
 "ui.extra.showInWindow" = "विंडो में दिखाएँ";
+/* Menu item in the menu bar menu that holds the profiles of a controller model. */
 "ui.extra.profiles" = "प्रोफ़ाइल";
+/* Menu item in the menu bar menu that turns on a profile. */
 "ui.extra.activate" = "सक्रिय करें";
+/* Menu item in the menu bar menu that turns off the active profile. */
 "ui.extra.deactivate" = "निष्क्रिय करें";
+/* Button of the problem banner that opens the Access area so the user can grant access. */
 "ui.extra.grantAccess" = "ऐक्सेस दें";
+/* Menu item in the menu bar menu that opens the main window. */
 "ui.extra.openWindow" = "विंडो खोलें";
+/* Menu item in the menu bar menu that holds the help items. */
 "ui.extra.help" = "सहायता";
+/* Menu item in the help submenu that opens the Activity log. */
 "ui.extra.activityLog" = "गतिविधि लॉग";
+/* Menu item in the help submenu that opens the sheet that explains an error code. Keep the three dots. */
 "ui.extra.explainErrorCode" = "त्रुटि कोड समझाएँ…";
+/* Menu item in the help submenu that opens the page where the user reports a problem. Keep the three dots. */
 "ui.extra.reportProblem" = "समस्या की रिपोर्ट करें…";
+/* Menu item in the help submenu that opens the project website. */
 "ui.extra.projectWebsite" = "प्रोजेक्ट वेबसाइट";
+/* Title of the alert shown when an action of the menu bar menu fails. */
 "ui.extra.actionFailedTitle" = "कार्रवाई पूरी नहीं हुई";
+/* Message of the alert shown when a profile changed elsewhere before an action of the menu bar menu ran. */
 "ui.extra.profileConflict" = "इस कार्रवाई के चलने से पहले प्रोफ़ाइल बदल गई। फिर कोशिश करें।";
 /* VoiceOver label and accessibility description of the menu bar status item. The product name stays as written. */
 "a11y.menuBar.statusItem" = "OpenJoystickDriver की स्थिति";
@@ -2584,12 +2647,14 @@
 "ui.access.web.enable.savedPort" = "वेब एंडपॉइंट अपना सहेजा हुआ पोर्ट रखता है।";
 "ui.library.record.detail" = "%1$@ · %2$@";
 "ui.library.mod.detail" = "%1$@ · %2$@";
+/* Message of the alert shown when a menu action needs the profile editor and the editor saves a change. */
 "ui.extra.profileEditorBusy" = "प्रोफ़ाइल एडिटर कोई बदलाव सहेज रहा है या लागू कर रहा है। उसके पूरा होने पर फिर कोशिश करें।";
 "ui.library.recordOrMod.pick" = "कंट्रोलर रिकॉर्ड फ़ाइल या मॉड फ़ोल्डर चुनें।";
 "ui.menu.profile.activateFailed" = "प्रोफ़ाइल सक्रिय नहीं की जा सकी";
 "ui.menu.profile.activateConflict" = "सक्रिय किए जाने के दौरान प्रोफ़ाइल बदल गई। फिर कोशिश करें।";
 "ui.profiles.importBlocked" = "प्रोफ़ाइल में बदलाव जारी है। उसके पूरा होने पर “प्रोफ़ाइल इंपोर्ट करें” फिर से चुनें।";
 "ui.settings.general.updateAvailableBody" = "संस्करण %@ उपलब्ध है।";
+/* Title of the message in the main window while a profile change is still running. */
 "ui.mainWindow.profileMutationRunning" = "प्रोफ़ाइल में बदलाव अभी जारी है। उसके पूरा होने पर फिर से कोशिश करें।";
 "ui.access.web.noPort" = "वेब एंडपॉइंट चालू है, पर अभी तक कोई पोर्ट नहीं चुना गया";
 "ui.access.signer.signedUnknownPublisher" = "अज्ञात प्रकाशक द्वारा साइन किया गया";
@@ -2616,25 +2681,45 @@
 "error.E1010.message" = "किसी पंक्ति में ऐसा kind है जिसे सेवा नहीं जानती या इस चरण पर स्वीकार नहीं करती। पहले Hello भेजें, फिर Subscription या FeedRequest, फिर Frame पंक्तियाँ भेजें और फिर से कनेक्ट करें।";
 /* Text of error E1011, sent when a line has no apiVersion or no kind. apiVersion and kind are field names and stay as written. */
 "error.E1011.message" = "किसी पंक्ति में apiVersion या kind नहीं है। हर पंक्ति में दोनों होते हैं। उन्हें जोड़ें और फिर से कनेक्ट करें।";
+/* Description in the Shortcuts app of the action that turns on a remapping profile. */
 "ui.shortcuts.action.activateProfile.description" = "किसी रीमैपिंग प्रोफ़ाइल को उसके कंट्रोलर मॉडल के लिए चालू करता है।";
+/* Name in the Shortcuts app of the action that turns on a remapping profile. */
 "ui.shortcuts.action.activateProfile.title" = "प्रोफ़ाइल सक्रिय करें";
+/* Description in the Shortcuts app of the action that returns the app version. */
 "ui.shortcuts.action.appVersion.description" = "इंस्टॉल किए गए ऐप का संस्करण लौटाता है।";
+/* Name in the Shortcuts app of the action that returns the app version. OpenJoystickDriver is the product name. */
 "ui.shortcuts.action.appVersion.title" = "OpenJoystickDriver संस्करण प्राप्त करें";
+/* Description in the Shortcuts app of the action that returns the battery charge of a controller as a percentage. */
 "ui.shortcuts.action.batteryLevel.description" = "किसी कंट्रोलर की बैटरी का चार्ज प्रतिशत में लौटाता है। जब कंट्रोलर कोई सीमा बताता है, तो सीमा का सबसे कम मान लौटाता है।";
+/* Name in the Shortcuts app of the action that returns the battery level of a controller. */
 "ui.shortcuts.action.batteryLevel.title" = "बैटरी स्तर प्राप्त करें";
+/* Description in the Shortcuts app of the action that turns off a remapping profile. */
 "ui.shortcuts.action.deactivateProfile.description" = "किसी रीमैपिंग प्रोफ़ाइल को बंद करता है।";
+/* Name in the Shortcuts app of the action that turns off a remapping profile. */
 "ui.shortcuts.action.deactivateProfile.title" = "प्रोफ़ाइल निष्क्रिय करें";
+/* Description in the Shortcuts app of the action that returns the connected controllers. */
 "ui.shortcuts.action.getControllers.description" = "कनेक्ट किए गए कंट्रोलर लौटाता है।";
+/* Name in the Shortcuts app of the action that returns the connected controllers. */
 "ui.shortcuts.action.getControllers.title" = "कंट्रोलर प्राप्त करें";
+/* Name of the model property of a controller in the Shortcuts app. */
 "ui.shortcuts.controller.model" = "मॉडल";
+/* Name of the name property of a controller in the Shortcuts app. */
 "ui.shortcuts.controller.name" = "नाम";
+/* Name of the controller type in the Shortcuts app. It is singular and names one connected controller. */
 "ui.shortcuts.controller.type" = "कंट्रोलर";
+/* Error shown in the Shortcuts app when a controller reports no battery level. %@ is the controller name. */
 "ui.shortcuts.error.batteryUnknown" = "%@ अपना बैटरी स्तर नहीं बताता।";
+/* Name of the controller parameter of an action in the Shortcuts app. */
 "ui.shortcuts.parameter.controller" = "कंट्रोलर";
+/* Name of the profile parameter of an action in the Shortcuts app. */
 "ui.shortcuts.parameter.profile" = "प्रोफ़ाइल";
+/* Name of the property in the Shortcuts app that tells whether a profile is active. */
 "ui.shortcuts.profile.active" = "सक्रिय";
+/* Name of the controller model property of a profile in the Shortcuts app. */
 "ui.shortcuts.profile.model" = "कंट्रोलर मॉडल";
+/* Name of the name property of a profile in the Shortcuts app. */
 "ui.shortcuts.profile.name" = "नाम";
+/* Name of the profile type in the Shortcuts app. It is singular and names one remapping profile. */
 "ui.shortcuts.profile.type" = "रीमैपिंग प्रोफ़ाइल";
 /* One-line summary of 'ojd explain' in the command list and at the top of its help. */
 "cli.explain.group.abstract" = "एक त्रुटि कोड समझाता है: उसका अर्थ क्या है और उसे कैसे ठीक करें।";
@@ -2808,27 +2893,45 @@
 "platform.macos.ui.settings.general.entryPointRequired" = "“मेनू बार में दिखाएँ” और “डॉक में दिखाएँ” में से कम से कम एक चालू रखें।";
 /* Help text of the showInDock setting in 'ojd setting list'. OpenJoystickDriver is the product name. */
 "platform.macos.cli.setting.group.showInDock" = "OpenJoystickDriver आइकन को हमेशा डॉक में दिखाएँ; बंद होने पर यह केवल तब दिखता है जब कोई विंडो खुली हो।";
+/* Segment of the mode switch in the Activity area that shows the log. */
 "ui.activity.mode.log" = "लॉग";
+/* Segment of the mode switch in the Activity area that shows the diagnostics. */
 "ui.activity.mode.diagnostics" = "निदान";
+/* Title of the toolbar popup in the Activity area that sets how many log lines show. */
 "ui.activity.lines" = "पंक्तियाँ";
+/* Placeholder of the search field in the toolbar of the Activity area. */
 "ui.activity.search" = "खोजें";
 /* Toolbar button in the Activity area that shows the log file in Finder, the macOS file manager. */
 "platform.macos.ui.activity.showInFinder" = "Finder में दिखाएँ";
+/* Title of the alert shown when the folder of the log cannot be opened. */
 "ui.activity.showInFinder.failed" = "लॉग फ़ोल्डर खोला नहीं जा सका।";
+/* Toolbar button in the Activity area that runs the diagnostic checks. */
 "ui.activity.runChecks" = "जाँचें चलाएँ";
+/* Column title of the Activity log table. The column holds the text of an entry. */
 "ui.activity.column.message" = "संदेश";
+/* Column title of the diagnostics table in the Activity area. The column names the check. */
 "ui.activity.column.check" = "जाँच";
+/* Column title of the diagnostics table in the Activity area. The column holds the details of the result. */
 "ui.activity.column.details" = "विवरण";
+/* Result of a check in the diagnostics table when the check passed. */
 "ui.activity.status.pass" = "सफल";
+/* Result of a check in the diagnostics table when the check found a problem that does not stop the app. */
 "ui.activity.status.warn" = "चेतावनी";
+/* Result of a check in the diagnostics table when the check did not run. */
 "ui.activity.status.skip" = "छोड़ी गई";
 /* Warning shown above exported or displayed service logs, wherever the logs are shown. The logs can hold private data. */
 "cli.log.group.sharingWarning" = "सेवा के लॉग में डिवाइस के नाम, पहचानकर्ता या निदान के पाथ हो सकते हैं। साझा करने से पहले उन्हें देख लें।";
+/* Title of the toolbar popup in the Activity area that filters the log by stream. */
 "ui.activity.filter" = "फ़िल्टर";
+/* Name of the check in the diagnostics table that looks for the driver extension inside the app. */
 "ui.activity.check.transportExtensionBundle" = "ड्राइवर एक्सटेंशन बंडल";
+/* Name of the check in the diagnostics table that asks macOS whether the driver extension is registered. */
 "ui.activity.check.transportExtensionRegistration" = "ड्राइवर एक्सटेंशन पंजीकरण";
+/* Name of the check in the diagnostics table that validates the configuration files. */
 "ui.activity.check.configFiles" = "कॉन्फ़िगरेशन फ़ाइलें";
+/* Name of the check in the diagnostics table that tests whether the app can read USB controllers. */
 "ui.activity.check.usbAccess" = "USB एक्सेस";
+/* Button of a failed check in the diagnostics table that opens the Library area. */
 "ui.activity.fix.showLibrary" = "लाइब्रेरी दिखाएँ";
 "ui.controllers.adaptiveTriggers" = "अडैप्टिव ट्रिगर";
 "ui.controllers.motion" = "मोशन सेंसर";

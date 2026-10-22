@@ -1,5 +1,6 @@
 /* Product name in the title of the application menu of the menu bar. It stays OpenJoystickDriver in every language. */
 "term.app.name" = "OpenJoystickDriver";
+/* Button of the problem banner in the Access area that quits and opens the app again so that a granted permission takes effect. OpenJoystickDriver is the product name. */
 "ui.permissions.restartApplication" = "Reiniciar OpenJoystickDriver";
 "ui.menu.projectPage" = "GitHub";
 /* Button that dismisses an alert in the activity view and the main window. It only acknowledges the message. */
@@ -156,13 +157,21 @@
 "ui.virtualProfile.failure.serverStopped" = "El servicio se detuvo. La anulación no cambió.";
 "ui.virtualProfile.failure.persistenceFailed" = "No se pudo guardar la anulación. No se guardó nada.";
 "ui.virtualProfile.storeError" = "No se pueden leer las anulaciones del perfil HID virtual (%@). Los controles eligen automáticamente.";
+/* Value of the key field in the capture assignment sheet before the user captures a key. */
 "ui.keyboard.noKey" = "Ninguna tecla seleccionada";
+/* Value of the key field while the app waits for a key press. Keep the three dots. */
 "ui.keyboard.pressKey" = "Presiona una tecla…";
+/* Title of the button that starts the capture of a key in the capture assignment sheet. */
 "ui.keyboard.captureKey" = "Capturar tecla";
+/* VoiceOver announcement when the key capture starts. Escape is the name of the Escape key. */
 "ui.keyboard.captureStarted" = "Captura de teclado iniciada. Presiona una tecla; presiona Esc para cancelar.";
+/* Instruction under the key field in the capture assignment sheet. Modifiers are keys such as Shift, Control, Option and Command. */
 "ui.keyboard.instructions" = "Presiona una tecla con los modificadores que quieras conservar.";
+/* VoiceOver announcement after a key capture. %@ is the description of the captured key, for example Command-K. */
 "ui.keyboard.captured" = "Se ha capturado %@.";
+/* VoiceOver announcement when the user cancels the key capture. */
 "ui.keyboard.captureCanceled" = "Captura de teclado cancelada.";
+/* VoiceOver label of the area that captures a keyboard key. */
 "ui.keyboard.captureTitle" = "Captura de tecla del teclado";
 "ui.capture.adjust" = "Ajustar %@";
 "ui.capture.deadZone" = "Zona muerta";
@@ -289,11 +298,17 @@
 "ui.profiles.turboDuty" = "Ciclo de trabajo";
 "ui.profiles.turboRate" = "Frecuencia de repetición";
 "ui.profiles.vendorID" = "ID del fabricante";
+/* Title of the save panel for the debug report, a text file that the user can attach to a problem report. */
 "ui.debug.saveReportPanel" = "Guardar informe de depuración";
+/* Title of the save panel for the debug logs, a text file that the user can attach to a problem report. */
 "ui.debug.saveLogsPanel" = "Guardar registros de depuración";
+/* Line of the debug report that says controller output works. */
 "ui.debug.outputAvailable" = "La salida del control está disponible.";
+/* Line of the debug report that says the user turned controller output off. */
 "ui.debug.outputOff" = "La salida del control está desactivada.";
+/* Line of the debug report that says controller output does not work and needs action. */
 "ui.debug.outputNeedsAttention" = "La salida del control requiere atención.";
+/* Line of the debug report when the service does not answer, so the report has no diagnostics. */
 "ui.debug.serviceUnavailable" = "El diagnóstico del servicio no está disponible ahora.";
 "ui.error.profileChanged" = "Este perfil se ha modificado en otro sitio. Vuelve a cargar o sigue editando.";
 "ui.error.duplicateProfile" = "Ya existe un perfil con ese nombre.";
@@ -630,38 +645,61 @@
 "term.key.shift" = "Mayús";
 "ui.mapping.automatic" = "Automático";
 "ui.virtualProfile.automaticSelected" = "Automático (%@)";
+/* Detail line in the Driver section of the settings window when the driver extension for Xbox USB controllers is installed and works. */
 "ui.setup.activeDetail" = "El controlador USB de Xbox restringido está instalado y listo.";
 /* Detail line of the problem banner when the driver extension waits for approval. System Settings is the name of the macOS app. The extension is needed for supported Microsoft USB controllers. */
 "platform.macos.ui.setup.approvalDetail" = "Aprueba el controlador en Ajustes del Sistema para usar los controles USB de Microsoft compatibles.";
+/* Detail line in the Driver section of the settings window while the app checks the driver extension for Xbox USB controllers. */
 "ui.setup.checkingDetail" = "Comprobando el controlador USB de Xbox instalado.";
+/* Title of the problem banner and of the Driver section of the settings window for the driver extension that serves Xbox USB controllers. */
 "ui.setup.driverTitle" = "Controlador USB de Xbox";
+/* Detail line of the problem banner when the driver extension inside the app is damaged. The user reinstalls the app. */
 "ui.setup.invalidDetail" = "El controlador USB de Xbox integrado no es válido. Reinstala esta app para repararlo.";
+/* Detail line of the problem banner when the app has no driver extension. The user reinstalls the signed app. */
 "ui.setup.missingDetail" = "Esta app no contiene el controlador USB de Xbox. Reinstala la app firmada.";
 /* Button that opens the System Settings app on the pane where the user can allow the permission or the extension. */
 "platform.macos.ui.setup.openSystemSettings" = "Abrir Ajustes del Sistema";
 /* Title of the alert shown when the System Settings app could not be opened. */
 "platform.macos.ui.setup.openSystemSettingsFailed" = "No se pudo abrir Ajustes del Sistema.";
+/* Detail line of the problem banner when the driver extension needs activation or replacement. The app repairs it when the user presses the repair button. OpenJoystickDriver is the product name. */
 "ui.setup.repairDetail" = "OpenJoystickDriver reparará el controlador USB de Xbox sin herramientas de desarrollo.";
+/* Message of the confirmation alert that removes the driver extension from the settings window. */
 "ui.setup.uninstallDetail" = "Los controles USB de Xbox dejan de funcionar hasta que se vuelva a instalar el controlador.";
+/* Button of the problem banner that repairs the driver extension for Xbox USB controllers. */
 "ui.setup.repairDriver" = "Reparar controlador USB de Xbox";
+/* Title of the problem banner when the app cannot reach its service. OpenJoystickDriver is the product name. */
 "ui.banner.service.title" = "OpenJoystickDriver no puede conectarse con su servicio";
+/* Title of the problem banner when macOS has not allowed all that the app needs. */
 "ui.banner.access.title" = "Se necesita un permiso";
 /* Detail line of the problem banner when macOS has not allowed all that the driver needs. OpenJoystickDriver is the product name. */
 "platform.macos.ui.banner.access.detail" = "macOS no ha permitido todo lo que OpenJoystickDriver necesita para leer los controles y publicarlos en los juegos.";
+/* Title of the problem banner when the app does not get live changes of controllers from the service. */
 "ui.banner.liveUpdates.title" = "Actualizaciones en vivo no disponibles";
+/* Detail of the live updates banner when the service closed the connection. OpenJoystickDriver is the product name. */
 "ui.banner.liveUpdates.detail.closed" = "El servicio cerró la conexión. En su lugar, OpenJoystickDriver revisa los cambios en los controles cada segundo.";
+/* Detail of the live updates banner when the service did not answer in time. OpenJoystickDriver is the product name. */
 "ui.banner.liveUpdates.detail.timeout" = "El servicio no respondió a tiempo. En su lugar, OpenJoystickDriver revisa los cambios en los controles periódicamente.";
+/* Detail of the live updates banner for any other failure of the live connection. OpenJoystickDriver is the product name. */
 "ui.banner.liveUpdates.detail.other" = "Las actualizaciones en vivo del servicio no funcionan. En su lugar, OpenJoystickDriver revisa los cambios en los controles periódicamente.";
 /* Button of the Driver Extension section in the settings window that removes the driver extension from the system. */
 "cli.login.group.uninstallAction" = "Desinstalar";
+/* Option of the stream filter in the Activity log that shows all entries. */
 "ui.console.all" = "Todo";
+/* Message in the Activity log when no entry matches. */
 "ui.console.empty" = "No hay entradas de registro.";
+/* Option of the stream filter in the Activity log that shows only error entries. */
 "ui.console.errors" = "Errores";
+/* Heading of the sheet that explains an error code. */
 "ui.console.explain.title" = "Explicar código de error";
+/* Placeholder of the field for an error code in the explain sheet. E2004 is an example code and stays as written. */
 "ui.console.explain.prompt" = "Código de error, por ejemplo E2004";
+/* Button of the explain sheet that looks up the error code. */
 "ui.console.explain.action" = "Explicar";
+/* Title of the message in the Activity log when the log cannot be read. */
 "ui.console.loadError" = "No se han podido leer los registros";
+/* Option of the stream filter in the Activity log that shows only output entries. */
 "ui.console.output" = "Salida";
+/* Column title in the Activity log table. The column tells whether an entry is output or an error. */
 "ui.console.stream" = "Flujo";
 /* Name of the notification setting for a controller that connects, in the Notifications pane of the settings window. */
 "notify.controllerConnected" = "Control conectado";
@@ -2305,25 +2343,45 @@
 "error.E1010.message" = "Una línea tiene un kind que el servicio no conoce o no acepta en este punto. Envía primero Hello, después Subscription o FeedRequest y luego líneas Frame, y vuelve a conectar.";
 /* Text of error E1011, sent when a line has no apiVersion or no kind. apiVersion and kind are field names and stay as written. */
 "error.E1011.message" = "A una línea le falta apiVersion o kind. Cada línea lleva ambos. Agrégalos y vuelve a conectar.";
+/* Description in the Shortcuts app of the action that turns on a remapping profile. */
 "ui.shortcuts.action.activateProfile.description" = "Activa un perfil de reasignación para el modelo de su control.";
+/* Name in the Shortcuts app of the action that turns on a remapping profile. */
 "ui.shortcuts.action.activateProfile.title" = "Activar perfil";
+/* Description in the Shortcuts app of the action that returns the app version. */
 "ui.shortcuts.action.appVersion.description" = "Devuelve la versión de la app instalada.";
+/* Name in the Shortcuts app of the action that returns the app version. OpenJoystickDriver is the product name. */
 "ui.shortcuts.action.appVersion.title" = "Obtener versión de OpenJoystickDriver";
+/* Description in the Shortcuts app of the action that returns the battery charge of a controller as a percentage. */
 "ui.shortcuts.action.batteryLevel.description" = "Devuelve la carga de la batería de un control en porcentaje. Si el control informa un rango, devuelve el valor más bajo del rango.";
+/* Name in the Shortcuts app of the action that returns the battery level of a controller. */
 "ui.shortcuts.action.batteryLevel.title" = "Obtener nivel de batería";
+/* Description in the Shortcuts app of the action that turns off a remapping profile. */
 "ui.shortcuts.action.deactivateProfile.description" = "Desactiva un perfil de reasignación.";
+/* Name in the Shortcuts app of the action that turns off a remapping profile. */
 "ui.shortcuts.action.deactivateProfile.title" = "Desactivar perfil";
+/* Description in the Shortcuts app of the action that returns the connected controllers. */
 "ui.shortcuts.action.getControllers.description" = "Devuelve los controles conectados.";
+/* Name in the Shortcuts app of the action that returns the connected controllers. */
 "ui.shortcuts.action.getControllers.title" = "Obtener controles";
+/* Name of the model property of a controller in the Shortcuts app. */
 "ui.shortcuts.controller.model" = "Modelo";
+/* Name of the name property of a controller in the Shortcuts app. */
 "ui.shortcuts.controller.name" = "Nombre";
+/* Name of the controller type in the Shortcuts app. It is singular and names one connected controller. */
 "ui.shortcuts.controller.type" = "Control";
+/* Error shown in the Shortcuts app when a controller reports no battery level. %@ is the controller name. */
 "ui.shortcuts.error.batteryUnknown" = "%@ no informa su nivel de batería.";
+/* Name of the controller parameter of an action in the Shortcuts app. */
 "ui.shortcuts.parameter.controller" = "Control";
+/* Name of the profile parameter of an action in the Shortcuts app. */
 "ui.shortcuts.parameter.profile" = "Perfil";
+/* Name of the property in the Shortcuts app that tells whether a profile is active. */
 "ui.shortcuts.profile.active" = "Activo";
+/* Name of the controller model property of a profile in the Shortcuts app. */
 "ui.shortcuts.profile.model" = "Modelo de control";
+/* Name of the name property of a profile in the Shortcuts app. */
 "ui.shortcuts.profile.name" = "Nombre";
+/* Name of the profile type in the Shortcuts app. It is singular and names one remapping profile. */
 "ui.shortcuts.profile.type" = "Perfil de reasignación";
 /* One-line summary of 'ojd explain' in the command list and at the top of its help. */
 "cli.explain.group.abstract" = "Explica un código de error: qué significa y cómo solucionarlo.";
@@ -2727,10 +2785,15 @@
 "ui.menu.copySupportReport.doneDetail" = "El informe de soporte está en el portapapeles.";
 "ui.menu.copySupportReport.failed" = "No se ha podido copiar el informe de soporte";
 "ui.menu.copySupportReport.failedDetail" = "No se ha podido recopilar el informe. Guárdalo en un archivo.";
+/* Title of the Controllers item in the sidebar of the main window and in the window title when it is selected. */
 "ui.sidebar.controllers.title" = "Controles";
+/* Title of the Profiles item in the sidebar of the main window and in the window title when it is selected. */
 "ui.sidebar.profiles.title" = "Perfiles";
+/* Title of the Library item in the sidebar of the main window. The library lists the profiles that can be installed from packages. */
 "ui.sidebar.library.title" = "Biblioteca";
+/* Title of the Access item in the sidebar of the main window. The area lists permissions and clients of the endpoint. */
 "ui.sidebar.access.title" = "Acceso";
+/* Title of the Activity item in the sidebar of the main window. The area shows the log and the diagnostics. */
 "ui.sidebar.activity.title" = "Actividad";
 /* Help text of the showInMenuBar setting in 'ojd setting list'. OpenJoystickDriver is the product name. */
 "cli.setting.group.showInMenuBar" = "Mostrar el elemento de OpenJoystickDriver en la barra de menús.";
@@ -2754,25 +2817,45 @@
 "platform.macos.ui.settings.commandLine.uninstallMessage" = "Esto quita el enlace de %1$@. La app sigue instalada, pero ojd deja de ejecutarse en Terminal hasta que vuelvas a instalar la herramienta.";
 "ui.settings.commandLine.uninstallConfirm" = "Desinstalar";
 "ui.settings.advanced.developerToolsOff" = "Activa las herramientas de desarrollo para ver la entrada del control y los paquetes USB.";
+/* Status line in the menu bar menu. %1$@ is the runtime state, %2$@ is the controller count text and %3$@ is the active profile text. The dots between them separate the parts and may change. */
 "ui.extra.statusLine" = "%1$@ · %2$@ · %3$@";
+/* Heading of the controllers section in the menu bar menu. */
 "ui.extra.controllers" = "Controles";
+/* Menu item in the menu bar menu that stops the service from remapping. */
 "ui.extra.suspend" = "Suspender";
+/* Menu item in the menu bar menu that lets the service remap again. */
 "ui.extra.resume" = "Reanudar";
+/* Menu item in the menu bar menu that opens the input test of a controller. */
 "ui.extra.testInput" = "Probar entrada";
+/* Menu item in the menu bar menu that holds the profile that is active for a controller. */
 "ui.extra.activeProfile" = "Perfil activo";
+/* Menu item in the menu bar menu that ends the wireless link of a controller. */
 "ui.extra.disconnectWireless" = "Desconectar enlace inalámbrico";
+/* Menu item in the menu bar menu that shows the controller in the main window. */
 "ui.extra.showInWindow" = "Mostrar en la ventana";
+/* Menu item in the menu bar menu that holds the profiles of a controller model. */
 "ui.extra.profiles" = "Perfiles";
+/* Menu item in the menu bar menu that turns on a profile. */
 "ui.extra.activate" = "Activar";
+/* Menu item in the menu bar menu that turns off the active profile. */
 "ui.extra.deactivate" = "Desactivar";
+/* Button of the problem banner that opens the Access area so the user can grant access. */
 "ui.extra.grantAccess" = "Conceder acceso";
+/* Menu item in the menu bar menu that opens the main window. */
 "ui.extra.openWindow" = "Abrir ventana";
+/* Menu item in the menu bar menu that holds the help items. */
 "ui.extra.help" = "Ayuda";
+/* Menu item in the help submenu that opens the Activity log. */
 "ui.extra.activityLog" = "Registro de actividad";
+/* Menu item in the help submenu that opens the sheet that explains an error code. Keep the three dots. */
 "ui.extra.explainErrorCode" = "Explicar código de error…";
+/* Menu item in the help submenu that opens the page where the user reports a problem. Keep the three dots. */
 "ui.extra.reportProblem" = "Informar un problema…";
+/* Menu item in the help submenu that opens the project website. */
 "ui.extra.projectWebsite" = "Sitio web del proyecto";
+/* Title of the alert shown when an action of the menu bar menu fails. */
 "ui.extra.actionFailedTitle" = "La acción no se ha completado";
+/* Message of the alert shown when a profile changed elsewhere before an action of the menu bar menu ran. */
 "ui.extra.profileConflict" = "El perfil cambió antes de que se ejecutara esta acción. Vuelve a intentarlo.";
 /* VoiceOver label and accessibility description of the menu bar status item. The product name stays as written. */
 "a11y.menuBar.statusItem" = "Estado de OpenJoystickDriver";
@@ -2786,12 +2869,14 @@
 "ui.access.web.enable.savedPort" = "El punto de conexión web conserva su puerto guardado.";
 "ui.library.record.detail" = "%1$@ · %2$@";
 "ui.library.mod.detail" = "%1$@ · %2$@";
+/* Message of the alert shown when a menu action needs the profile editor and the editor saves a change. */
 "ui.extra.profileEditorBusy" = "El editor de perfiles está guardando o aplicando un cambio. Vuelve a intentarlo cuando termine.";
 "ui.library.recordOrMod.pick" = "Elige un archivo de registro de control o una carpeta de mod.";
 "ui.menu.profile.activateFailed" = "No se pudo activar el perfil";
 "ui.menu.profile.activateConflict" = "El perfil cambió mientras se activaba. Vuelve a intentarlo.";
 "ui.profiles.importBlocked" = "Hay un cambio de perfil en curso. Vuelve a elegir “Importar perfil” cuando termine.";
 "ui.settings.general.updateAvailableBody" = "La versión %@ está disponible.";
+/* Title of the message in the main window while a profile change is still running. */
 "ui.mainWindow.profileMutationRunning" = "Un cambio de perfil sigue en curso. Inténtalo de nuevo cuando termine.";
 "ui.access.web.noPort" = "Punto de conexión web activado, pero aún no se ha elegido un puerto";
 "ui.access.signer.signedUnknownPublisher" = "Firmado por un editor desconocido";
@@ -2809,27 +2894,45 @@
 "platform.macos.ui.settings.general.entryPointRequired" = "Deja activada al menos una de las opciones “Mostrar en la barra de menús” y “Mostrar en el Dock”.";
 /* Help text of the showInDock setting in 'ojd setting list'. OpenJoystickDriver is the product name. */
 "platform.macos.cli.setting.group.showInDock" = "Mostrar siempre el ícono de OpenJoystickDriver en el Dock; si está desactivado, solo aparece mientras haya una ventana abierta.";
+/* Segment of the mode switch in the Activity area that shows the log. */
 "ui.activity.mode.log" = "Registro";
+/* Segment of the mode switch in the Activity area that shows the diagnostics. */
 "ui.activity.mode.diagnostics" = "Diagnóstico";
+/* Title of the toolbar popup in the Activity area that sets how many log lines show. */
 "ui.activity.lines" = "Líneas";
+/* Placeholder of the search field in the toolbar of the Activity area. */
 "ui.activity.search" = "Buscar";
 /* Toolbar button in the Activity area that shows the log file in Finder, the macOS file manager. */
 "platform.macos.ui.activity.showInFinder" = "Mostrar en el Finder";
+/* Title of the alert shown when the folder of the log cannot be opened. */
 "ui.activity.showInFinder.failed" = "No se pudo abrir la carpeta de registros.";
+/* Toolbar button in the Activity area that runs the diagnostic checks. */
 "ui.activity.runChecks" = "Ejecutar comprobaciones";
+/* Column title of the Activity log table. The column holds the text of an entry. */
 "ui.activity.column.message" = "Mensaje";
+/* Column title of the diagnostics table in the Activity area. The column names the check. */
 "ui.activity.column.check" = "Comprobación";
+/* Column title of the diagnostics table in the Activity area. The column holds the details of the result. */
 "ui.activity.column.details" = "Detalles";
+/* Result of a check in the diagnostics table when the check passed. */
 "ui.activity.status.pass" = "Correcta";
+/* Result of a check in the diagnostics table when the check found a problem that does not stop the app. */
 "ui.activity.status.warn" = "Advertencia";
+/* Result of a check in the diagnostics table when the check did not run. */
 "ui.activity.status.skip" = "Omitida";
 /* Warning shown above exported or displayed service logs, wherever the logs are shown. The logs can hold private data. */
 "cli.log.group.sharingWarning" = "Los registros del servicio pueden contener nombres de dispositivos, identificadores o rutas de diagnóstico. Revísalos antes de compartirlos.";
+/* Title of the toolbar popup in the Activity area that filters the log by stream. */
 "ui.activity.filter" = "Filtrar";
+/* Name of the check in the diagnostics table that looks for the driver extension inside the app. */
 "ui.activity.check.transportExtensionBundle" = "Paquete de la extensión de controlador";
+/* Name of the check in the diagnostics table that asks macOS whether the driver extension is registered. */
 "ui.activity.check.transportExtensionRegistration" = "Registro de la extensión de controlador";
+/* Name of the check in the diagnostics table that validates the configuration files. */
 "ui.activity.check.configFiles" = "Archivos de configuración";
+/* Name of the check in the diagnostics table that tests whether the app can read USB controllers. */
 "ui.activity.check.usbAccess" = "Acceso USB";
+/* Button of a failed check in the diagnostics table that opens the Library area. */
 "ui.activity.fix.showLibrary" = "Mostrar biblioteca";
 "ui.controllers.adaptiveTriggers" = "Gatillos adaptables";
 "ui.controllers.motion" = "Sensor de movimiento";

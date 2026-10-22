@@ -1,5 +1,6 @@
 /* Product name in the title of the application menu of the menu bar. It stays OpenJoystickDriver in every language. */
 "term.app.name" = "OpenJoystickDriver";
+/* Button of the problem banner in the Access area that quits and opens the app again so that a granted permission takes effect. OpenJoystickDriver is the product name. */
 "ui.permissions.restartApplication" = "OpenJoystickDriver 다시 시작";
 "ui.menu.projectPage" = "GitHub";
 /* Button that dismisses an alert in the activity view and the main window. It only acknowledges the message. */
@@ -156,13 +157,21 @@
 "ui.virtualProfile.failure.serverStopped" = "서비스가 중지되었습니다. 재정의는 변경되지 않았습니다.";
 "ui.virtualProfile.failure.persistenceFailed" = "재정의를 저장할 수 없습니다. 저장된 항목이 없습니다.";
 "ui.virtualProfile.storeError" = "가상 HID 프로파일 재정의를 읽을 수 없습니다(%@). 컨트롤러가 자동으로 선택합니다.";
+/* Value of the key field in the capture assignment sheet before the user captures a key. */
 "ui.keyboard.noKey" = "선택된 키 없음";
+/* Value of the key field while the app waits for a key press. Keep the three dots. */
 "ui.keyboard.pressKey" = "키를 누르십시오…";
+/* Title of the button that starts the capture of a key in the capture assignment sheet. */
 "ui.keyboard.captureKey" = "키 캡처";
+/* VoiceOver announcement when the key capture starts. Escape is the name of the Escape key. */
 "ui.keyboard.captureStarted" = "키보드 캡처가 시작되었습니다. 키를 누르십시오. 취소하려면 Escape를 누르십시오.";
+/* Instruction under the key field in the capture assignment sheet. Modifiers are keys such as Shift, Control, Option and Command. */
 "ui.keyboard.instructions" = "유지하려는 보조 키와 함께 키를 누르십시오.";
+/* VoiceOver announcement after a key capture. %@ is the description of the captured key, for example Command-K. */
 "ui.keyboard.captured" = "%@을(를) 캡처했습니다.";
+/* VoiceOver announcement when the user cancels the key capture. */
 "ui.keyboard.captureCanceled" = "키보드 캡처가 취소되었습니다.";
+/* VoiceOver label of the area that captures a keyboard key. */
 "ui.keyboard.captureTitle" = "키보드 키 캡처";
 "ui.capture.adjust" = "%@ 조정";
 "ui.capture.deadZone" = "데드 존";
@@ -289,11 +298,17 @@
 "ui.profiles.turboDuty" = "듀티비";
 "ui.profiles.turboRate" = "반복 속도";
 "ui.profiles.vendorID" = "공급업체 ID";
+/* Title of the save panel for the debug report, a text file that the user can attach to a problem report. */
 "ui.debug.saveReportPanel" = "디버그 리포트 저장";
+/* Title of the save panel for the debug logs, a text file that the user can attach to a problem report. */
 "ui.debug.saveLogsPanel" = "디버그 로그 저장";
+/* Line of the debug report that says controller output works. */
 "ui.debug.outputAvailable" = "컨트롤러 출력을 사용할 수 있습니다.";
+/* Line of the debug report that says the user turned controller output off. */
 "ui.debug.outputOff" = "컨트롤러 출력이 꺼져 있습니다.";
+/* Line of the debug report that says controller output does not work and needs action. */
 "ui.debug.outputNeedsAttention" = "컨트롤러 출력에 확인이 필요합니다.";
+/* Line of the debug report when the service does not answer, so the report has no diagnostics. */
 "ui.debug.serviceUnavailable" = "지금은 서비스 진단을 사용할 수 없습니다.";
 "ui.error.profileChanged" = "이 프로파일이 다른 곳에서 변경되었습니다. 다시 로드하거나 편집을 계속하십시오.";
 "ui.error.duplicateProfile" = "해당 이름의 프로파일이 이미 있습니다.";
@@ -630,38 +645,61 @@
 "term.key.shift" = "Shift";
 "ui.mapping.automatic" = "자동";
 "ui.virtualProfile.automaticSelected" = "자동(%@)";
+/* Detail line in the Driver section of the settings window when the driver extension for Xbox USB controllers is installed and works. */
 "ui.setup.activeDetail" = "제한된 Xbox USB 드라이버가 설치되어 준비되었습니다.";
 /* Detail line of the problem banner when the driver extension waits for approval. System Settings is the name of the macOS app. The extension is needed for supported Microsoft USB controllers. */
 "platform.macos.ui.setup.approvalDetail" = "지원되는 Microsoft USB 컨트롤러를 사용하려면 시스템 설정에서 드라이버를 승인하십시오.";
+/* Detail line in the Driver section of the settings window while the app checks the driver extension for Xbox USB controllers. */
 "ui.setup.checkingDetail" = "설치된 Xbox USB 드라이버를 확인하는 중입니다.";
+/* Title of the problem banner and of the Driver section of the settings window for the driver extension that serves Xbox USB controllers. */
 "ui.setup.driverTitle" = "Xbox USB 드라이버";
+/* Detail line of the problem banner when the driver extension inside the app is damaged. The user reinstalls the app. */
 "ui.setup.invalidDetail" = "내장된 Xbox USB 드라이버가 유효하지 않습니다. 이 앱을 다시 설치하여 복구하십시오.";
+/* Detail line of the problem banner when the app has no driver extension. The user reinstalls the signed app. */
 "ui.setup.missingDetail" = "이 앱에 Xbox USB 드라이버가 포함되어 있지 않습니다. 서명된 앱을 다시 설치하십시오.";
 /* Button that opens the System Settings app on the pane where the user can allow the permission or the extension. */
 "platform.macos.ui.setup.openSystemSettings" = "시스템 설정 열기";
 /* Title of the alert shown when the System Settings app could not be opened. */
 "platform.macos.ui.setup.openSystemSettingsFailed" = "시스템 설정을 열 수 없습니다.";
+/* Detail line of the problem banner when the driver extension needs activation or replacement. The app repairs it when the user presses the repair button. OpenJoystickDriver is the product name. */
 "ui.setup.repairDetail" = "OpenJoystickDriver는 개발자 도구 없이 Xbox USB 드라이버를 복구합니다.";
+/* Message of the confirmation alert that removes the driver extension from the settings window. */
 "ui.setup.uninstallDetail" = "드라이버를 다시 설치할 때까지 Xbox USB 컨트롤러가 작동하지 않습니다.";
+/* Button of the problem banner that repairs the driver extension for Xbox USB controllers. */
 "ui.setup.repairDriver" = "Xbox USB 드라이버 복구";
+/* Title of the problem banner when the app cannot reach its service. OpenJoystickDriver is the product name. */
 "ui.banner.service.title" = "OpenJoystickDriver가 서비스에 연결할 수 없습니다";
+/* Title of the problem banner when macOS has not allowed all that the app needs. */
 "ui.banner.access.title" = "권한 필요";
 /* Detail line of the problem banner when macOS has not allowed all that the driver needs. OpenJoystickDriver is the product name. */
 "platform.macos.ui.banner.access.detail" = "macOS에서 OpenJoystickDriver가 컨트롤러를 읽고 게임에 게시하는 데 필요한 권한 중 일부를 허용하지 않았습니다.";
+/* Title of the problem banner when the app does not get live changes of controllers from the service. */
 "ui.banner.liveUpdates.title" = "실시간 업데이트를 사용할 수 없음";
+/* Detail of the live updates banner when the service closed the connection. OpenJoystickDriver is the product name. */
 "ui.banner.liveUpdates.detail.closed" = "서비스가 연결을 닫았습니다. 대신 OpenJoystickDriver가 1초마다 컨트롤러 변경 사항을 확인합니다.";
+/* Detail of the live updates banner when the service did not answer in time. OpenJoystickDriver is the product name. */
 "ui.banner.liveUpdates.detail.timeout" = "서비스가 제시간에 응답하지 않았습니다. 대신 OpenJoystickDriver가 주기적으로 컨트롤러 변경 사항을 확인합니다.";
+/* Detail of the live updates banner for any other failure of the live connection. OpenJoystickDriver is the product name. */
 "ui.banner.liveUpdates.detail.other" = "서비스의 실시간 업데이트가 작동하지 않습니다. 대신 OpenJoystickDriver가 주기적으로 컨트롤러 변경 사항을 확인합니다.";
 /* Button of the Driver Extension section in the settings window that removes the driver extension from the system. */
 "cli.login.group.uninstallAction" = "제거";
+/* Option of the stream filter in the Activity log that shows all entries. */
 "ui.console.all" = "모두";
+/* Message in the Activity log when no entry matches. */
 "ui.console.empty" = "로그 항목이 없습니다.";
+/* Option of the stream filter in the Activity log that shows only error entries. */
 "ui.console.errors" = "오류";
+/* Heading of the sheet that explains an error code. */
 "ui.console.explain.title" = "오류 코드 설명";
+/* Placeholder of the field for an error code in the explain sheet. E2004 is an example code and stays as written. */
 "ui.console.explain.prompt" = "오류 코드, 예: E2004";
+/* Button of the explain sheet that looks up the error code. */
 "ui.console.explain.action" = "설명";
+/* Title of the message in the Activity log when the log cannot be read. */
 "ui.console.loadError" = "로그를 읽을 수 없습니다";
+/* Option of the stream filter in the Activity log that shows only output entries. */
 "ui.console.output" = "출력";
+/* Column title in the Activity log table. The column tells whether an entry is output or an error. */
 "ui.console.stream" = "스트림";
 /* Name of the notification setting for a controller that connects, in the Notifications pane of the settings window. */
 "notify.controllerConnected" = "컨트롤러 연결됨";
@@ -2525,10 +2563,15 @@
 "ui.menu.copySupportReport.doneDetail" = "지원 리포트가 클립보드에 있습니다.";
 "ui.menu.copySupportReport.failed" = "지원 리포트를 복사할 수 없습니다";
 "ui.menu.copySupportReport.failedDetail" = "리포트를 수집할 수 없습니다. 대신 파일로 저장하세요.";
+/* Title of the Controllers item in the sidebar of the main window and in the window title when it is selected. */
 "ui.sidebar.controllers.title" = "컨트롤러";
+/* Title of the Profiles item in the sidebar of the main window and in the window title when it is selected. */
 "ui.sidebar.profiles.title" = "프로파일";
+/* Title of the Library item in the sidebar of the main window. The library lists the profiles that can be installed from packages. */
 "ui.sidebar.library.title" = "라이브러리";
+/* Title of the Access item in the sidebar of the main window. The area lists permissions and clients of the endpoint. */
 "ui.sidebar.access.title" = "접근";
+/* Title of the Activity item in the sidebar of the main window. The area shows the log and the diagnostics. */
 "ui.sidebar.activity.title" = "활동";
 /* Help text of the showInMenuBar setting in 'ojd setting list'. OpenJoystickDriver is the product name. */
 "cli.setting.group.showInMenuBar" = "메뉴 막대에 OpenJoystickDriver 항목을 표시합니다.";
@@ -2552,25 +2595,45 @@
 "platform.macos.ui.settings.commandLine.uninstallMessage" = "%1$@의 링크를 제거합니다. 앱은 계속 설치되어 있지만, 도구를 다시 설치하기 전까지 터미널에서 ojd를 실행할 수 없습니다.";
 "ui.settings.commandLine.uninstallConfirm" = "제거";
 "ui.settings.advanced.developerToolsOff" = "컨트롤러 입력과 USB 패킷을 보려면 개발자 도구를 켜세요.";
+/* Status line in the menu bar menu. %1$@ is the runtime state, %2$@ is the controller count text and %3$@ is the active profile text. The dots between them separate the parts and may change. */
 "ui.extra.statusLine" = "%1$@ · %2$@ · %3$@";
+/* Heading of the controllers section in the menu bar menu. */
 "ui.extra.controllers" = "컨트롤러";
+/* Menu item in the menu bar menu that stops the service from remapping. */
 "ui.extra.suspend" = "일시 정지";
+/* Menu item in the menu bar menu that lets the service remap again. */
 "ui.extra.resume" = "재개";
+/* Menu item in the menu bar menu that opens the input test of a controller. */
 "ui.extra.testInput" = "입력 테스트";
+/* Menu item in the menu bar menu that holds the profile that is active for a controller. */
 "ui.extra.activeProfile" = "활성 프로파일";
+/* Menu item in the menu bar menu that ends the wireless link of a controller. */
 "ui.extra.disconnectWireless" = "무선 연결 해제";
+/* Menu item in the menu bar menu that shows the controller in the main window. */
 "ui.extra.showInWindow" = "윈도우에서 보기";
+/* Menu item in the menu bar menu that holds the profiles of a controller model. */
 "ui.extra.profiles" = "프로파일";
+/* Menu item in the menu bar menu that turns on a profile. */
 "ui.extra.activate" = "활성화";
+/* Menu item in the menu bar menu that turns off the active profile. */
 "ui.extra.deactivate" = "비활성화";
+/* Button of the problem banner that opens the Access area so the user can grant access. */
 "ui.extra.grantAccess" = "접근 허용";
+/* Menu item in the menu bar menu that opens the main window. */
 "ui.extra.openWindow" = "윈도우 열기";
+/* Menu item in the menu bar menu that holds the help items. */
 "ui.extra.help" = "도움말";
+/* Menu item in the help submenu that opens the Activity log. */
 "ui.extra.activityLog" = "활동 로그";
+/* Menu item in the help submenu that opens the sheet that explains an error code. Keep the three dots. */
 "ui.extra.explainErrorCode" = "오류 코드 설명…";
+/* Menu item in the help submenu that opens the page where the user reports a problem. Keep the three dots. */
 "ui.extra.reportProblem" = "문제 보고…";
+/* Menu item in the help submenu that opens the project website. */
 "ui.extra.projectWebsite" = "프로젝트 웹 사이트";
+/* Title of the alert shown when an action of the menu bar menu fails. */
 "ui.extra.actionFailedTitle" = "작업이 완료되지 않았습니다";
+/* Message of the alert shown when a profile changed elsewhere before an action of the menu bar menu ran. */
 "ui.extra.profileConflict" = "이 작업이 실행되기 전에 프로파일이 변경되었습니다. 다시 시도하세요.";
 /* VoiceOver label and accessibility description of the menu bar status item. The product name stays as written. */
 "a11y.menuBar.statusItem" = "OpenJoystickDriver 상태";
@@ -2584,12 +2647,14 @@
 "ui.access.web.enable.savedPort" = "웹 엔드포인트는 저장된 포트를 유지합니다.";
 "ui.library.record.detail" = "%1$@ · %2$@";
 "ui.library.mod.detail" = "%1$@ · %2$@";
+/* Message of the alert shown when a menu action needs the profile editor and the editor saves a change. */
 "ui.extra.profileEditorBusy" = "프로파일 편집기가 변경 사항을 저장하거나 적용하고 있습니다. 완료된 후에 다시 시도하세요.";
 "ui.library.recordOrMod.pick" = "컨트롤러 레코드 파일 또는 모드 폴더를 선택하세요.";
 "ui.menu.profile.activateFailed" = "프로파일을 활성화할 수 없습니다";
 "ui.menu.profile.activateConflict" = "활성화하는 동안 프로파일이 변경되었습니다. 다시 시도하세요.";
 "ui.profiles.importBlocked" = "프로파일 변경이 진행 중입니다. 완료된 후에 ‘프로파일 가져오기’를 다시 선택하세요.";
 "ui.settings.general.updateAvailableBody" = "%@ 버전을 사용할 수 있습니다.";
+/* Title of the message in the main window while a profile change is still running. */
 "ui.mainWindow.profileMutationRunning" = "프로파일 변경이 아직 진행 중입니다. 완료된 후에 다시 시도하세요.";
 "ui.access.web.noPort" = "웹 엔드포인트는 켜져 있지만 아직 포트가 선택되지 않음";
 "ui.access.signer.signedUnknownPublisher" = "서명자: 알 수 없는 게시자";
@@ -2616,25 +2681,45 @@
 "error.E1010.message" = "줄의 kind를 서비스가 알지 못하거나 이 시점에서는 받을 수 없습니다. 먼저 Hello를 보내고, 다음에 Subscription 또는 FeedRequest, 그다음 Frame 줄을 보낸 뒤 다시 연결하세요.";
 /* Text of error E1011, sent when a line has no apiVersion or no kind. apiVersion and kind are field names and stay as written. */
 "error.E1011.message" = "줄에 apiVersion 또는 kind가 없습니다. 모든 줄에는 둘 다 있어야 합니다. 추가한 뒤 다시 연결하세요.";
+/* Description in the Shortcuts app of the action that turns on a remapping profile. */
 "ui.shortcuts.action.activateProfile.description" = "리매핑 프로파일을 해당 컨트롤러 모델에 대해 켭니다.";
+/* Name in the Shortcuts app of the action that turns on a remapping profile. */
 "ui.shortcuts.action.activateProfile.title" = "프로파일 활성화";
+/* Description in the Shortcuts app of the action that returns the app version. */
 "ui.shortcuts.action.appVersion.description" = "설치된 앱의 버전을 반환합니다.";
+/* Name in the Shortcuts app of the action that returns the app version. OpenJoystickDriver is the product name. */
 "ui.shortcuts.action.appVersion.title" = "OpenJoystickDriver 버전 가져오기";
+/* Description in the Shortcuts app of the action that returns the battery charge of a controller as a percentage. */
 "ui.shortcuts.action.batteryLevel.description" = "컨트롤러의 배터리 충전량을 퍼센트로 반환합니다. 컨트롤러가 범위를 보고하면 범위의 최솟값을 반환합니다.";
+/* Name in the Shortcuts app of the action that returns the battery level of a controller. */
 "ui.shortcuts.action.batteryLevel.title" = "배터리 수준 가져오기";
+/* Description in the Shortcuts app of the action that turns off a remapping profile. */
 "ui.shortcuts.action.deactivateProfile.description" = "리매핑 프로파일을 끕니다.";
+/* Name in the Shortcuts app of the action that turns off a remapping profile. */
 "ui.shortcuts.action.deactivateProfile.title" = "프로파일 비활성화";
+/* Description in the Shortcuts app of the action that returns the connected controllers. */
 "ui.shortcuts.action.getControllers.description" = "연결된 컨트롤러를 반환합니다.";
+/* Name in the Shortcuts app of the action that returns the connected controllers. */
 "ui.shortcuts.action.getControllers.title" = "컨트롤러 가져오기";
+/* Name of the model property of a controller in the Shortcuts app. */
 "ui.shortcuts.controller.model" = "모델";
+/* Name of the name property of a controller in the Shortcuts app. */
 "ui.shortcuts.controller.name" = "이름";
+/* Name of the controller type in the Shortcuts app. It is singular and names one connected controller. */
 "ui.shortcuts.controller.type" = "컨트롤러";
+/* Error shown in the Shortcuts app when a controller reports no battery level. %@ is the controller name. */
 "ui.shortcuts.error.batteryUnknown" = "%@은(는) 배터리 수준을 보고하지 않습니다.";
+/* Name of the controller parameter of an action in the Shortcuts app. */
 "ui.shortcuts.parameter.controller" = "컨트롤러";
+/* Name of the profile parameter of an action in the Shortcuts app. */
 "ui.shortcuts.parameter.profile" = "프로파일";
+/* Name of the property in the Shortcuts app that tells whether a profile is active. */
 "ui.shortcuts.profile.active" = "활성";
+/* Name of the controller model property of a profile in the Shortcuts app. */
 "ui.shortcuts.profile.model" = "컨트롤러 모델";
+/* Name of the name property of a profile in the Shortcuts app. */
 "ui.shortcuts.profile.name" = "이름";
+/* Name of the profile type in the Shortcuts app. It is singular and names one remapping profile. */
 "ui.shortcuts.profile.type" = "리매핑 프로파일";
 /* One-line summary of 'ojd explain' in the command list and at the top of its help. */
 "cli.explain.group.abstract" = "오류 코드의 의미와 해결 방법을 설명합니다.";
@@ -2808,27 +2893,45 @@
 "platform.macos.ui.settings.general.entryPointRequired" = "‘메뉴 막대에 표시’와 ‘Dock에 표시’ 중 하나 이상을 켜 두세요.";
 /* Help text of the showInDock setting in 'ojd setting list'. OpenJoystickDriver is the product name. */
 "platform.macos.cli.setting.group.showInDock" = "OpenJoystickDriver 아이콘을 항상 Dock에 표시합니다. 끄면 창이 열려 있는 동안에만 표시됩니다.";
+/* Segment of the mode switch in the Activity area that shows the log. */
 "ui.activity.mode.log" = "로그";
+/* Segment of the mode switch in the Activity area that shows the diagnostics. */
 "ui.activity.mode.diagnostics" = "진단";
+/* Title of the toolbar popup in the Activity area that sets how many log lines show. */
 "ui.activity.lines" = "줄 수";
+/* Placeholder of the search field in the toolbar of the Activity area. */
 "ui.activity.search" = "검색";
 /* Toolbar button in the Activity area that shows the log file in Finder, the macOS file manager. */
 "platform.macos.ui.activity.showInFinder" = "Finder에서 보기";
+/* Title of the alert shown when the folder of the log cannot be opened. */
 "ui.activity.showInFinder.failed" = "로그 폴더를 열 수 없습니다.";
+/* Toolbar button in the Activity area that runs the diagnostic checks. */
 "ui.activity.runChecks" = "검사 실행";
+/* Column title of the Activity log table. The column holds the text of an entry. */
 "ui.activity.column.message" = "메시지";
+/* Column title of the diagnostics table in the Activity area. The column names the check. */
 "ui.activity.column.check" = "검사";
+/* Column title of the diagnostics table in the Activity area. The column holds the details of the result. */
 "ui.activity.column.details" = "세부 사항";
+/* Result of a check in the diagnostics table when the check passed. */
 "ui.activity.status.pass" = "통과";
+/* Result of a check in the diagnostics table when the check found a problem that does not stop the app. */
 "ui.activity.status.warn" = "경고";
+/* Result of a check in the diagnostics table when the check did not run. */
 "ui.activity.status.skip" = "건너뜀";
 /* Warning shown above exported or displayed service logs, wherever the logs are shown. The logs can hold private data. */
 "cli.log.group.sharingWarning" = "서비스 로그에는 기기 이름, 식별자 또는 진단 경로가 포함될 수 있습니다. 공유하기 전에 확인하세요.";
+/* Title of the toolbar popup in the Activity area that filters the log by stream. */
 "ui.activity.filter" = "필터";
+/* Name of the check in the diagnostics table that looks for the driver extension inside the app. */
 "ui.activity.check.transportExtensionBundle" = "드라이버 확장 번들";
+/* Name of the check in the diagnostics table that asks macOS whether the driver extension is registered. */
 "ui.activity.check.transportExtensionRegistration" = "드라이버 확장 등록";
+/* Name of the check in the diagnostics table that validates the configuration files. */
 "ui.activity.check.configFiles" = "설정 파일";
+/* Name of the check in the diagnostics table that tests whether the app can read USB controllers. */
 "ui.activity.check.usbAccess" = "USB 접근";
+/* Button of a failed check in the diagnostics table that opens the Library area. */
 "ui.activity.fix.showLibrary" = "라이브러리 보기";
 "ui.controllers.adaptiveTriggers" = "어댑티브 트리거";
 "ui.controllers.motion" = "모션 센서";

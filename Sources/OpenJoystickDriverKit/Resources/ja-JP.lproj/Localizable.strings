@@ -1,5 +1,6 @@
 /* Product name in the title of the application menu of the menu bar. It stays OpenJoystickDriver in every language. */
 "term.app.name" = "OpenJoystickDriver";
+/* Button of the problem banner in the Access area that quits and opens the app again so that a granted permission takes effect. OpenJoystickDriver is the product name. */
 "ui.permissions.restartApplication" = "OpenJoystickDriverを再起動";
 "ui.menu.projectPage" = "GitHub";
 /* Button that dismisses an alert in the activity view and the main window. It only acknowledges the message. */
@@ -156,13 +157,21 @@
 "ui.virtualProfile.failure.serverStopped" = "サービスが停止しました。上書きは変更されていません。";
 "ui.virtualProfile.failure.persistenceFailed" = "上書きを保存できませんでした。何も保存されませんでした。";
 "ui.virtualProfile.storeError" = "仮想HIDプロファイルの上書きを読み取れません（%@）。コントローラは自動で選択します。";
+/* Value of the key field in the capture assignment sheet before the user captures a key. */
 "ui.keyboard.noKey" = "キーが選択されていません";
+/* Value of the key field while the app waits for a key press. Keep the three dots. */
 "ui.keyboard.pressKey" = "キーを押してください…";
+/* Title of the button that starts the capture of a key in the capture assignment sheet. */
 "ui.keyboard.captureKey" = "キーを取得";
+/* VoiceOver announcement when the key capture starts. Escape is the name of the Escape key. */
 "ui.keyboard.captureStarted" = "キーボードの取得を開始しました。キーを押してください。キャンセルするにはEscapeを押します。";
+/* Instruction under the key field in the capture assignment sheet. Modifiers are keys such as Shift, Control, Option and Command. */
 "ui.keyboard.instructions" = "保持したい修飾キーと一緒にキーを押してください。";
+/* VoiceOver announcement after a key capture. %@ is the description of the captured key, for example Command-K. */
 "ui.keyboard.captured" = "%@を取得しました。";
+/* VoiceOver announcement when the user cancels the key capture. */
 "ui.keyboard.captureCanceled" = "キーボードの取得をキャンセルしました。";
+/* VoiceOver label of the area that captures a keyboard key. */
 "ui.keyboard.captureTitle" = "キーボードキーの取得";
 "ui.capture.adjust" = "%@を調整";
 "ui.capture.deadZone" = "デッドゾーン";
@@ -289,11 +298,17 @@
 "ui.profiles.turboDuty" = "デューティ比";
 "ui.profiles.turboRate" = "繰り返し速度";
 "ui.profiles.vendorID" = "製造元ID";
+/* Title of the save panel for the debug report, a text file that the user can attach to a problem report. */
 "ui.debug.saveReportPanel" = "デバッグレポートを保存";
+/* Title of the save panel for the debug logs, a text file that the user can attach to a problem report. */
 "ui.debug.saveLogsPanel" = "デバッグログを保存";
+/* Line of the debug report that says controller output works. */
 "ui.debug.outputAvailable" = "コントローラ出力を利用できます。";
+/* Line of the debug report that says the user turned controller output off. */
 "ui.debug.outputOff" = "コントローラ出力はオフです。";
+/* Line of the debug report that says controller output does not work and needs action. */
 "ui.debug.outputNeedsAttention" = "コントローラ出力に対応が必要です。";
+/* Line of the debug report when the service does not answer, so the report has no diagnostics. */
 "ui.debug.serviceUnavailable" = "サービスの診断は現在利用できません。";
 "ui.error.profileChanged" = "このプロファイルはほかの場所で変更されました。再読み込みするか、編集を続けてください。";
 "ui.error.duplicateProfile" = "その名前のプロファイルはすでに存在します。";
@@ -630,38 +645,61 @@
 "term.key.shift" = "Shift";
 "ui.mapping.automatic" = "自動";
 "ui.virtualProfile.automaticSelected" = "自動（%@）";
+/* Detail line in the Driver section of the settings window when the driver extension for Xbox USB controllers is installed and works. */
 "ui.setup.activeDetail" = "制限付きXbox USBドライバがインストールされ、準備ができています。";
 /* Detail line of the problem banner when the driver extension waits for approval. System Settings is the name of the macOS app. The extension is needed for supported Microsoft USB controllers. */
 "platform.macos.ui.setup.approvalDetail" = "対応するMicrosoft USBコントローラを使うには、システム設定でドライバを承認してください。";
+/* Detail line in the Driver section of the settings window while the app checks the driver extension for Xbox USB controllers. */
 "ui.setup.checkingDetail" = "インストール済みのXbox USBドライバを確認しています。";
+/* Title of the problem banner and of the Driver section of the settings window for the driver extension that serves Xbox USB controllers. */
 "ui.setup.driverTitle" = "Xbox USBドライバ";
+/* Detail line of the problem banner when the driver extension inside the app is damaged. The user reinstalls the app. */
 "ui.setup.invalidDetail" = "埋め込みのXbox USBドライバが無効です。このアプリを再インストールして修復してください。";
+/* Detail line of the problem banner when the app has no driver extension. The user reinstalls the signed app. */
 "ui.setup.missingDetail" = "このアプリにはXbox USBドライバが含まれていません。署名済みアプリを再インストールしてください。";
 /* Button that opens the System Settings app on the pane where the user can allow the permission or the extension. */
 "platform.macos.ui.setup.openSystemSettings" = "システム設定を開く";
 /* Title of the alert shown when the System Settings app could not be opened. */
 "platform.macos.ui.setup.openSystemSettingsFailed" = "システム設定を開けませんでした。";
+/* Detail line of the problem banner when the driver extension needs activation or replacement. The app repairs it when the user presses the repair button. OpenJoystickDriver is the product name. */
 "ui.setup.repairDetail" = "OpenJoystickDriverは開発者ツールなしでXbox USBドライバを修復します。";
+/* Message of the confirmation alert that removes the driver extension from the settings window. */
 "ui.setup.uninstallDetail" = "ドライバを再インストールするまで、Xbox USBコントローラは動作しません。";
+/* Button of the problem banner that repairs the driver extension for Xbox USB controllers. */
 "ui.setup.repairDriver" = "Xbox USBドライバを修復";
+/* Title of the problem banner when the app cannot reach its service. OpenJoystickDriver is the product name. */
 "ui.banner.service.title" = "OpenJoystickDriverがサービスに接続できません";
+/* Title of the problem banner when macOS has not allowed all that the app needs. */
 "ui.banner.access.title" = "権限が必要です";
 /* Detail line of the problem banner when macOS has not allowed all that the driver needs. OpenJoystickDriver is the product name. */
 "platform.macos.ui.banner.access.detail" = "macOSは、OpenJoystickDriverがコントローラを読み取り、ゲームに公開するために必要な権限をすべては許可していません。";
+/* Title of the problem banner when the app does not get live changes of controllers from the service. */
 "ui.banner.liveUpdates.title" = "ライブ更新を利用できません";
+/* Detail of the live updates banner when the service closed the connection. OpenJoystickDriver is the product name. */
 "ui.banner.liveUpdates.detail.closed" = "サービスが接続を閉じました。OpenJoystickDriverは代わりに1秒ごとにコントローラの変更を確認します。";
+/* Detail of the live updates banner when the service did not answer in time. OpenJoystickDriver is the product name. */
 "ui.banner.liveUpdates.detail.timeout" = "サービスが時間内に応答しませんでした。OpenJoystickDriverは代わりに定期的にコントローラの変更を確認します。";
+/* Detail of the live updates banner for any other failure of the live connection. OpenJoystickDriver is the product name. */
 "ui.banner.liveUpdates.detail.other" = "サービスからのライブ更新が機能していません。OpenJoystickDriverは代わりに定期的にコントローラの変更を確認します。";
 /* Button of the Driver Extension section in the settings window that removes the driver extension from the system. */
 "cli.login.group.uninstallAction" = "アンインストール";
+/* Option of the stream filter in the Activity log that shows all entries. */
 "ui.console.all" = "すべて";
+/* Message in the Activity log when no entry matches. */
 "ui.console.empty" = "ログエントリはありません。";
+/* Option of the stream filter in the Activity log that shows only error entries. */
 "ui.console.errors" = "エラー";
+/* Heading of the sheet that explains an error code. */
 "ui.console.explain.title" = "エラーコードを説明";
+/* Placeholder of the field for an error code in the explain sheet. E2004 is an example code and stays as written. */
 "ui.console.explain.prompt" = "エラーコード（例：E2004）";
+/* Button of the explain sheet that looks up the error code. */
 "ui.console.explain.action" = "説明";
+/* Title of the message in the Activity log when the log cannot be read. */
 "ui.console.loadError" = "ログを読み込めませんでした";
+/* Option of the stream filter in the Activity log that shows only output entries. */
 "ui.console.output" = "出力";
+/* Column title in the Activity log table. The column tells whether an entry is output or an error. */
 "ui.console.stream" = "ストリーム";
 /* Name of the notification setting for a controller that connects, in the Notifications pane of the settings window. */
 "notify.controllerConnected" = "コントローラ接続";
@@ -2525,10 +2563,15 @@
 "ui.menu.copySupportReport.doneDetail" = "サポートレポートがクリップボードにあります。";
 "ui.menu.copySupportReport.failed" = "サポートレポートをコピーできませんでした";
 "ui.menu.copySupportReport.failedDetail" = "レポートを収集できませんでした。代わりにファイルに保存してください。";
+/* Title of the Controllers item in the sidebar of the main window and in the window title when it is selected. */
 "ui.sidebar.controllers.title" = "コントローラ";
+/* Title of the Profiles item in the sidebar of the main window and in the window title when it is selected. */
 "ui.sidebar.profiles.title" = "プロファイル";
+/* Title of the Library item in the sidebar of the main window. The library lists the profiles that can be installed from packages. */
 "ui.sidebar.library.title" = "ライブラリ";
+/* Title of the Access item in the sidebar of the main window. The area lists permissions and clients of the endpoint. */
 "ui.sidebar.access.title" = "アクセス";
+/* Title of the Activity item in the sidebar of the main window. The area shows the log and the diagnostics. */
 "ui.sidebar.activity.title" = "アクティビティ";
 /* Help text of the showInMenuBar setting in 'ojd setting list'. OpenJoystickDriver is the product name. */
 "cli.setting.group.showInMenuBar" = "OpenJoystickDriverの項目をメニューバーに表示します。";
@@ -2552,25 +2595,45 @@
 "platform.macos.ui.settings.commandLine.uninstallMessage" = "%1$@のリンクを削除します。Appはインストールされたままですが、ツールを再インストールするまで、ojdはターミナルで実行できなくなります。";
 "ui.settings.commandLine.uninstallConfirm" = "アンインストール";
 "ui.settings.advanced.developerToolsOff" = "コントローラの入力とUSBパケットを表示するには、開発者ツールをオンにしてください。";
+/* Status line in the menu bar menu. %1$@ is the runtime state, %2$@ is the controller count text and %3$@ is the active profile text. The dots between them separate the parts and may change. */
 "ui.extra.statusLine" = "%1$@ · %2$@ · %3$@";
+/* Heading of the controllers section in the menu bar menu. */
 "ui.extra.controllers" = "コントローラ";
+/* Menu item in the menu bar menu that stops the service from remapping. */
 "ui.extra.suspend" = "一時停止";
+/* Menu item in the menu bar menu that lets the service remap again. */
 "ui.extra.resume" = "再開";
+/* Menu item in the menu bar menu that opens the input test of a controller. */
 "ui.extra.testInput" = "入力をテスト";
+/* Menu item in the menu bar menu that holds the profile that is active for a controller. */
 "ui.extra.activeProfile" = "有効なプロファイル";
+/* Menu item in the menu bar menu that ends the wireless link of a controller. */
 "ui.extra.disconnectWireless" = "ワイヤレス接続を切断";
+/* Menu item in the menu bar menu that shows the controller in the main window. */
 "ui.extra.showInWindow" = "ウインドウに表示";
+/* Menu item in the menu bar menu that holds the profiles of a controller model. */
 "ui.extra.profiles" = "プロファイル";
+/* Menu item in the menu bar menu that turns on a profile. */
 "ui.extra.activate" = "有効にする";
+/* Menu item in the menu bar menu that turns off the active profile. */
 "ui.extra.deactivate" = "無効にする";
+/* Button of the problem banner that opens the Access area so the user can grant access. */
 "ui.extra.grantAccess" = "アクセスを許可";
+/* Menu item in the menu bar menu that opens the main window. */
 "ui.extra.openWindow" = "ウインドウを開く";
+/* Menu item in the menu bar menu that holds the help items. */
 "ui.extra.help" = "ヘルプ";
+/* Menu item in the help submenu that opens the Activity log. */
 "ui.extra.activityLog" = "アクティビティログ";
+/* Menu item in the help submenu that opens the sheet that explains an error code. Keep the three dots. */
 "ui.extra.explainErrorCode" = "エラーコードを説明…";
+/* Menu item in the help submenu that opens the page where the user reports a problem. Keep the three dots. */
 "ui.extra.reportProblem" = "問題を報告…";
+/* Menu item in the help submenu that opens the project website. */
 "ui.extra.projectWebsite" = "プロジェクトのWebサイト";
+/* Title of the alert shown when an action of the menu bar menu fails. */
 "ui.extra.actionFailedTitle" = "操作を完了できませんでした";
+/* Message of the alert shown when a profile changed elsewhere before an action of the menu bar menu ran. */
 "ui.extra.profileConflict" = "この操作の実行前にプロファイルが変更されました。もう一度お試しください。";
 /* VoiceOver label and accessibility description of the menu bar status item. The product name stays as written. */
 "a11y.menuBar.statusItem" = "OpenJoystickDriverのステータス";
@@ -2584,12 +2647,14 @@
 "ui.access.web.enable.savedPort" = "Webエンドポイントは保存済みのポートを使い続けます。";
 "ui.library.record.detail" = "%1$@ · %2$@";
 "ui.library.mod.detail" = "%1$@ · %2$@";
+/* Message of the alert shown when a menu action needs the profile editor and the editor saves a change. */
 "ui.extra.profileEditorBusy" = "プロファイルエディタが変更を保存または適用しています。完了してからもう一度お試しください。";
 "ui.library.recordOrMod.pick" = "コントローラのレコードファイルまたはMODフォルダを選択してください。";
 "ui.menu.profile.activateFailed" = "プロファイルを有効にできませんでした";
 "ui.menu.profile.activateConflict" = "有効にしている間にプロファイルが変更されました。もう一度お試しください。";
 "ui.profiles.importBlocked" = "プロファイルの変更を処理中です。完了してから「プロファイルを読み込む」をもう一度選択してください。";
 "ui.settings.general.updateAvailableBody" = "バージョン%@を利用できます。";
+/* Title of the message in the main window while a profile change is still running. */
 "ui.mainWindow.profileMutationRunning" = "プロファイルの変更がまだ処理中です。完了してからもう一度お試しください。";
 "ui.access.web.noPort" = "Webエンドポイントはオンですが、ポートがまだ選択されていません";
 "ui.access.signer.signedUnknownPublisher" = "不明な発行元が署名";
@@ -2616,25 +2681,45 @@
 "error.E1010.message" = "行の kind をサービスが認識しないか、この時点では受け付けられません。最初に Hello を送り、次に Subscription または FeedRequest、続いて Frame の行を送って、もう一度接続してください。";
 /* Text of error E1011, sent when a line has no apiVersion or no kind. apiVersion and kind are field names and stay as written. */
 "error.E1011.message" = "行に apiVersion または kind がありません。すべての行に両方が必要です。追加して、もう一度接続してください。";
+/* Description in the Shortcuts app of the action that turns on a remapping profile. */
 "ui.shortcuts.action.activateProfile.description" = "リマッピングプロファイルを、対象のコントローラモデルに対して有効にします。";
+/* Name in the Shortcuts app of the action that turns on a remapping profile. */
 "ui.shortcuts.action.activateProfile.title" = "プロファイルを有効にする";
+/* Description in the Shortcuts app of the action that returns the app version. */
 "ui.shortcuts.action.appVersion.description" = "インストールされているアプリのバージョンを返します。";
+/* Name in the Shortcuts app of the action that returns the app version. OpenJoystickDriver is the product name. */
 "ui.shortcuts.action.appVersion.title" = "OpenJoystickDriverのバージョンを取得";
+/* Description in the Shortcuts app of the action that returns the battery charge of a controller as a percentage. */
 "ui.shortcuts.action.batteryLevel.description" = "コントローラのバッテリー残量をパーセントで返します。コントローラが範囲を報告する場合は、その範囲の最小値を返します。";
+/* Name in the Shortcuts app of the action that returns the battery level of a controller. */
 "ui.shortcuts.action.batteryLevel.title" = "バッテリー残量を取得";
+/* Description in the Shortcuts app of the action that turns off a remapping profile. */
 "ui.shortcuts.action.deactivateProfile.description" = "リマッピングプロファイルを無効にします。";
+/* Name in the Shortcuts app of the action that turns off a remapping profile. */
 "ui.shortcuts.action.deactivateProfile.title" = "プロファイルを無効にする";
+/* Description in the Shortcuts app of the action that returns the connected controllers. */
 "ui.shortcuts.action.getControllers.description" = "接続されているコントローラを返します。";
+/* Name in the Shortcuts app of the action that returns the connected controllers. */
 "ui.shortcuts.action.getControllers.title" = "コントローラを取得";
+/* Name of the model property of a controller in the Shortcuts app. */
 "ui.shortcuts.controller.model" = "モデル";
+/* Name of the name property of a controller in the Shortcuts app. */
 "ui.shortcuts.controller.name" = "名前";
+/* Name of the controller type in the Shortcuts app. It is singular and names one connected controller. */
 "ui.shortcuts.controller.type" = "コントローラ";
+/* Error shown in the Shortcuts app when a controller reports no battery level. %@ is the controller name. */
 "ui.shortcuts.error.batteryUnknown" = "%@はバッテリー残量を報告しません。";
+/* Name of the controller parameter of an action in the Shortcuts app. */
 "ui.shortcuts.parameter.controller" = "コントローラ";
+/* Name of the profile parameter of an action in the Shortcuts app. */
 "ui.shortcuts.parameter.profile" = "プロファイル";
+/* Name of the property in the Shortcuts app that tells whether a profile is active. */
 "ui.shortcuts.profile.active" = "有効";
+/* Name of the controller model property of a profile in the Shortcuts app. */
 "ui.shortcuts.profile.model" = "コントローラモデル";
+/* Name of the name property of a profile in the Shortcuts app. */
 "ui.shortcuts.profile.name" = "名前";
+/* Name of the profile type in the Shortcuts app. It is singular and names one remapping profile. */
 "ui.shortcuts.profile.type" = "リマッピングプロファイル";
 /* One-line summary of 'ojd explain' in the command list and at the top of its help. */
 "cli.explain.group.abstract" = "エラーコードの意味と対処方法を説明します。";
@@ -2808,27 +2893,45 @@
 "platform.macos.ui.settings.general.entryPointRequired" = "「メニューバーに表示」と「Dockに表示」のうち、少なくとも1つはオンのままにしてください。";
 /* Help text of the showInDock setting in 'ojd setting list'. OpenJoystickDriver is the product name. */
 "platform.macos.cli.setting.group.showInDock" = "OpenJoystickDriverのアイコンを常にDockに表示します。オフの場合は、ウインドウが開いている間だけ表示されます。";
+/* Segment of the mode switch in the Activity area that shows the log. */
 "ui.activity.mode.log" = "ログ";
+/* Segment of the mode switch in the Activity area that shows the diagnostics. */
 "ui.activity.mode.diagnostics" = "診断";
+/* Title of the toolbar popup in the Activity area that sets how many log lines show. */
 "ui.activity.lines" = "行数";
+/* Placeholder of the search field in the toolbar of the Activity area. */
 "ui.activity.search" = "検索";
 /* Toolbar button in the Activity area that shows the log file in Finder, the macOS file manager. */
 "platform.macos.ui.activity.showInFinder" = "Finderで表示";
+/* Title of the alert shown when the folder of the log cannot be opened. */
 "ui.activity.showInFinder.failed" = "ログフォルダを開けませんでした。";
+/* Toolbar button in the Activity area that runs the diagnostic checks. */
 "ui.activity.runChecks" = "チェックを実行";
+/* Column title of the Activity log table. The column holds the text of an entry. */
 "ui.activity.column.message" = "メッセージ";
+/* Column title of the diagnostics table in the Activity area. The column names the check. */
 "ui.activity.column.check" = "チェック";
+/* Column title of the diagnostics table in the Activity area. The column holds the details of the result. */
 "ui.activity.column.details" = "詳細";
+/* Result of a check in the diagnostics table when the check passed. */
 "ui.activity.status.pass" = "合格";
+/* Result of a check in the diagnostics table when the check found a problem that does not stop the app. */
 "ui.activity.status.warn" = "警告";
+/* Result of a check in the diagnostics table when the check did not run. */
 "ui.activity.status.skip" = "スキップ";
 /* Warning shown above exported or displayed service logs, wherever the logs are shown. The logs can hold private data. */
 "cli.log.group.sharingWarning" = "サービスのログには、デバイス名、識別子、診断用のパスが含まれることがあります。共有する前に内容を確認してください。";
+/* Title of the toolbar popup in the Activity area that filters the log by stream. */
 "ui.activity.filter" = "フィルタ";
+/* Name of the check in the diagnostics table that looks for the driver extension inside the app. */
 "ui.activity.check.transportExtensionBundle" = "ドライバ拡張機能のバンドル";
+/* Name of the check in the diagnostics table that asks macOS whether the driver extension is registered. */
 "ui.activity.check.transportExtensionRegistration" = "ドライバ拡張機能の登録";
+/* Name of the check in the diagnostics table that validates the configuration files. */
 "ui.activity.check.configFiles" = "設定ファイル";
+/* Name of the check in the diagnostics table that tests whether the app can read USB controllers. */
 "ui.activity.check.usbAccess" = "USBアクセス";
+/* Button of a failed check in the diagnostics table that opens the Library area. */
 "ui.activity.fix.showLibrary" = "ライブラリを表示";
 "ui.controllers.adaptiveTriggers" = "アダプティブトリガー";
 "ui.controllers.motion" = "モーションセンサー";

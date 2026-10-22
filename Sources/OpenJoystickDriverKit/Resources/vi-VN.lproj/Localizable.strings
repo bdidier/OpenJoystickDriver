@@ -1,5 +1,6 @@
 /* Product name in the title of the application menu of the menu bar. It stays OpenJoystickDriver in every language. */
 "term.app.name" = "OpenJoystickDriver";
+/* Button of the problem banner in the Access area that quits and opens the app again so that a granted permission takes effect. OpenJoystickDriver is the product name. */
 "ui.permissions.restartApplication" = "Khởi động lại OpenJoystickDriver";
 "ui.menu.projectPage" = "GitHub";
 /* Button that dismisses an alert in the activity view and the main window. It only acknowledges the message. */
@@ -156,13 +157,21 @@
 "ui.virtualProfile.failure.serverStopped" = "Dịch vụ đã dừng. Ghi đè không thay đổi.";
 "ui.virtualProfile.failure.persistenceFailed" = "Không thể lưu ghi đè. Không có gì được lưu.";
 "ui.virtualProfile.storeError" = "Không thể đọc các ghi đè cấu hình HID ảo (%@). Bộ điều khiển sẽ tự động chọn.";
+/* Value of the key field in the capture assignment sheet before the user captures a key. */
 "ui.keyboard.noKey" = "Chưa chọn phím";
+/* Value of the key field while the app waits for a key press. Keep the three dots. */
 "ui.keyboard.pressKey" = "Nhấn một phím…";
+/* Title of the button that starts the capture of a key in the capture assignment sheet. */
 "ui.keyboard.captureKey" = "Ghi nhận phím";
+/* VoiceOver announcement when the key capture starts. Escape is the name of the Escape key. */
 "ui.keyboard.captureStarted" = "Đã bắt đầu ghi nhận phím. Nhấn một phím; nhấn Escape để hủy.";
+/* Instruction under the key field in the capture assignment sheet. Modifiers are keys such as Shift, Control, Option and Command. */
 "ui.keyboard.instructions" = "Nhấn một phím cùng với các phím bổ trợ bạn muốn giữ lại.";
+/* VoiceOver announcement after a key capture. %@ is the description of the captured key, for example Command-K. */
 "ui.keyboard.captured" = "Đã ghi nhận %@.";
+/* VoiceOver announcement when the user cancels the key capture. */
 "ui.keyboard.captureCanceled" = "Đã hủy ghi nhận phím.";
+/* VoiceOver label of the area that captures a keyboard key. */
 "ui.keyboard.captureTitle" = "Ghi nhận phím bàn phím";
 "ui.capture.adjust" = "Điều chỉnh %@";
 "ui.capture.deadZone" = "Vùng chết";
@@ -289,11 +298,17 @@
 "ui.profiles.turboDuty" = "Chu kỳ làm việc";
 "ui.profiles.turboRate" = "Tốc độ lặp";
 "ui.profiles.vendorID" = "ID nhà cung cấp";
+/* Title of the save panel for the debug report, a text file that the user can attach to a problem report. */
 "ui.debug.saveReportPanel" = "Lưu báo cáo gỡ lỗi";
+/* Title of the save panel for the debug logs, a text file that the user can attach to a problem report. */
 "ui.debug.saveLogsPanel" = "Lưu nhật ký gỡ lỗi";
+/* Line of the debug report that says controller output works. */
 "ui.debug.outputAvailable" = "Đầu ra bộ điều khiển khả dụng.";
+/* Line of the debug report that says the user turned controller output off. */
 "ui.debug.outputOff" = "Đầu ra bộ điều khiển đã tắt.";
+/* Line of the debug report that says controller output does not work and needs action. */
 "ui.debug.outputNeedsAttention" = "Đầu ra bộ điều khiển cần chú ý.";
+/* Line of the debug report when the service does not answer, so the report has no diagnostics. */
 "ui.debug.serviceUnavailable" = "Chẩn đoán dịch vụ hiện không khả dụng.";
 "ui.error.profileChanged" = "Cấu hình này đã được thay đổi ở nơi khác. Hãy tải lại hoặc tiếp tục sửa.";
 "ui.error.duplicateProfile" = "Đã có cấu hình với tên đó.";
@@ -630,38 +645,61 @@
 "term.key.shift" = "Shift";
 "ui.mapping.automatic" = "Tự động";
 "ui.virtualProfile.automaticSelected" = "Tự động (%@)";
+/* Detail line in the Driver section of the settings window when the driver extension for Xbox USB controllers is installed and works. */
 "ui.setup.activeDetail" = "Trình điều khiển Xbox USB bị hạn chế đã được cài đặt và sẵn sàng.";
 /* Detail line of the problem banner when the driver extension waits for approval. System Settings is the name of the macOS app. The extension is needed for supported Microsoft USB controllers. */
 "platform.macos.ui.setup.approvalDetail" = "Phê duyệt trình điều khiển trong Cài đặt hệ thống để dùng các bộ điều khiển USB Microsoft được hỗ trợ.";
+/* Detail line in the Driver section of the settings window while the app checks the driver extension for Xbox USB controllers. */
 "ui.setup.checkingDetail" = "Đang kiểm tra trình điều khiển Xbox USB đã cài đặt.";
+/* Title of the problem banner and of the Driver section of the settings window for the driver extension that serves Xbox USB controllers. */
 "ui.setup.driverTitle" = "Trình điều khiển Xbox USB";
+/* Detail line of the problem banner when the driver extension inside the app is damaged. The user reinstalls the app. */
 "ui.setup.invalidDetail" = "Trình điều khiển Xbox USB được nhúng không hợp lệ. Hãy sửa chữa bằng cách cài đặt lại ứng dụng này.";
+/* Detail line of the problem banner when the app has no driver extension. The user reinstalls the signed app. */
 "ui.setup.missingDetail" = "Ứng dụng này không chứa trình điều khiển Xbox USB. Hãy cài đặt lại ứng dụng đã ký.";
 /* Button that opens the System Settings app on the pane where the user can allow the permission or the extension. */
 "platform.macos.ui.setup.openSystemSettings" = "Mở Cài đặt hệ thống";
 /* Title of the alert shown when the System Settings app could not be opened. */
 "platform.macos.ui.setup.openSystemSettingsFailed" = "Không thể mở Cài đặt hệ thống.";
+/* Detail line of the problem banner when the driver extension needs activation or replacement. The app repairs it when the user presses the repair button. OpenJoystickDriver is the product name. */
 "ui.setup.repairDetail" = "OpenJoystickDriver sẽ sửa chữa trình điều khiển Xbox USB mà không cần công cụ nhà phát triển.";
+/* Message of the confirmation alert that removes the driver extension from the settings window. */
 "ui.setup.uninstallDetail" = "Các bộ điều khiển Xbox USB ngừng hoạt động cho đến khi trình điều khiển được cài đặt lại.";
+/* Button of the problem banner that repairs the driver extension for Xbox USB controllers. */
 "ui.setup.repairDriver" = "Sửa chữa trình điều khiển Xbox USB";
+/* Title of the problem banner when the app cannot reach its service. OpenJoystickDriver is the product name. */
 "ui.banner.service.title" = "OpenJoystickDriver không thể kết nối với dịch vụ của nó";
+/* Title of the problem banner when macOS has not allowed all that the app needs. */
 "ui.banner.access.title" = "Cần cấp quyền";
 /* Detail line of the problem banner when macOS has not allowed all that the driver needs. OpenJoystickDriver is the product name. */
 "platform.macos.ui.banner.access.detail" = "macOS chưa cho phép mọi thứ OpenJoystickDriver cần để đọc các bộ điều khiển và cung cấp chúng cho trò chơi.";
+/* Title of the problem banner when the app does not get live changes of controllers from the service. */
 "ui.banner.liveUpdates.title" = "Không có cập nhật trực tiếp";
+/* Detail of the live updates banner when the service closed the connection. OpenJoystickDriver is the product name. */
 "ui.banner.liveUpdates.detail.closed" = "Dịch vụ đã đóng kết nối. Thay vào đó, OpenJoystickDriver kiểm tra thay đổi của bộ điều khiển mỗi giây.";
+/* Detail of the live updates banner when the service did not answer in time. OpenJoystickDriver is the product name. */
 "ui.banner.liveUpdates.detail.timeout" = "Dịch vụ không phản hồi kịp thời. Thay vào đó, OpenJoystickDriver kiểm tra thay đổi của bộ điều khiển định kỳ.";
+/* Detail of the live updates banner for any other failure of the live connection. OpenJoystickDriver is the product name. */
 "ui.banner.liveUpdates.detail.other" = "Cập nhật trực tiếp từ dịch vụ không hoạt động. Thay vào đó, OpenJoystickDriver kiểm tra thay đổi của bộ điều khiển định kỳ.";
 /* Button of the Driver Extension section in the settings window that removes the driver extension from the system. */
 "cli.login.group.uninstallAction" = "Gỡ cài đặt";
+/* Option of the stream filter in the Activity log that shows all entries. */
 "ui.console.all" = "Tất cả";
+/* Message in the Activity log when no entry matches. */
 "ui.console.empty" = "Không có mục nhật ký.";
+/* Option of the stream filter in the Activity log that shows only error entries. */
 "ui.console.errors" = "Lỗi";
+/* Heading of the sheet that explains an error code. */
 "ui.console.explain.title" = "Giải thích mã lỗi";
+/* Placeholder of the field for an error code in the explain sheet. E2004 is an example code and stays as written. */
 "ui.console.explain.prompt" = "Mã lỗi, ví dụ E2004";
+/* Button of the explain sheet that looks up the error code. */
 "ui.console.explain.action" = "Giải thích";
+/* Title of the message in the Activity log when the log cannot be read. */
 "ui.console.loadError" = "Không thể đọc nhật ký";
+/* Option of the stream filter in the Activity log that shows only output entries. */
 "ui.console.output" = "Đầu ra";
+/* Column title in the Activity log table. The column tells whether an entry is output or an error. */
 "ui.console.stream" = "Luồng";
 /* Name of the notification setting for a controller that connects, in the Notifications pane of the settings window. */
 "notify.controllerConnected" = "Bộ điều khiển đã kết nối";
@@ -2525,10 +2563,15 @@
 "ui.menu.copySupportReport.doneDetail" = "Báo cáo hỗ trợ đang ở trong bảng nhớ tạm.";
 "ui.menu.copySupportReport.failed" = "Không thể sao chép báo cáo hỗ trợ";
 "ui.menu.copySupportReport.failedDetail" = "Không thể thu thập báo cáo. Hãy lưu vào một tệp.";
+/* Title of the Controllers item in the sidebar of the main window and in the window title when it is selected. */
 "ui.sidebar.controllers.title" = "Bộ điều khiển";
+/* Title of the Profiles item in the sidebar of the main window and in the window title when it is selected. */
 "ui.sidebar.profiles.title" = "Cấu hình";
+/* Title of the Library item in the sidebar of the main window. The library lists the profiles that can be installed from packages. */
 "ui.sidebar.library.title" = "Thư viện";
+/* Title of the Access item in the sidebar of the main window. The area lists permissions and clients of the endpoint. */
 "ui.sidebar.access.title" = "Quyền truy cập";
+/* Title of the Activity item in the sidebar of the main window. The area shows the log and the diagnostics. */
 "ui.sidebar.activity.title" = "Hoạt động";
 /* Help text of the showInMenuBar setting in 'ojd setting list'. OpenJoystickDriver is the product name. */
 "cli.setting.group.showInMenuBar" = "Hiện mục OpenJoystickDriver trên thanh menu.";
@@ -2552,25 +2595,45 @@
 "platform.macos.ui.settings.commandLine.uninstallMessage" = "Thao tác này xóa liên kết tại %1$@. Ứng dụng vẫn được cài, và ojd không còn chạy trong Terminal cho đến khi bạn cài lại công cụ.";
 "ui.settings.commandLine.uninstallConfirm" = "Gỡ cài đặt";
 "ui.settings.advanced.developerToolsOff" = "Hãy bật công cụ nhà phát triển để xem đầu vào bộ điều khiển và gói USB.";
+/* Status line in the menu bar menu. %1$@ is the runtime state, %2$@ is the controller count text and %3$@ is the active profile text. The dots between them separate the parts and may change. */
 "ui.extra.statusLine" = "%1$@ · %2$@ · %3$@";
+/* Heading of the controllers section in the menu bar menu. */
 "ui.extra.controllers" = "Bộ điều khiển";
+/* Menu item in the menu bar menu that stops the service from remapping. */
 "ui.extra.suspend" = "Tạm dừng";
+/* Menu item in the menu bar menu that lets the service remap again. */
 "ui.extra.resume" = "Tiếp tục";
+/* Menu item in the menu bar menu that opens the input test of a controller. */
 "ui.extra.testInput" = "Thử đầu vào";
+/* Menu item in the menu bar menu that holds the profile that is active for a controller. */
 "ui.extra.activeProfile" = "Cấu hình đang dùng";
+/* Menu item in the menu bar menu that ends the wireless link of a controller. */
 "ui.extra.disconnectWireless" = "Ngắt liên kết không dây";
+/* Menu item in the menu bar menu that shows the controller in the main window. */
 "ui.extra.showInWindow" = "Hiện trong cửa sổ";
+/* Menu item in the menu bar menu that holds the profiles of a controller model. */
 "ui.extra.profiles" = "Cấu hình";
+/* Menu item in the menu bar menu that turns on a profile. */
 "ui.extra.activate" = "Kích hoạt";
+/* Menu item in the menu bar menu that turns off the active profile. */
 "ui.extra.deactivate" = "Hủy kích hoạt";
+/* Button of the problem banner that opens the Access area so the user can grant access. */
 "ui.extra.grantAccess" = "Cấp quyền truy cập";
+/* Menu item in the menu bar menu that opens the main window. */
 "ui.extra.openWindow" = "Mở cửa sổ";
+/* Menu item in the menu bar menu that holds the help items. */
 "ui.extra.help" = "Trợ giúp";
+/* Menu item in the help submenu that opens the Activity log. */
 "ui.extra.activityLog" = "Nhật ký hoạt động";
+/* Menu item in the help submenu that opens the sheet that explains an error code. Keep the three dots. */
 "ui.extra.explainErrorCode" = "Giải thích mã lỗi…";
+/* Menu item in the help submenu that opens the page where the user reports a problem. Keep the three dots. */
 "ui.extra.reportProblem" = "Báo cáo sự cố…";
+/* Menu item in the help submenu that opens the project website. */
 "ui.extra.projectWebsite" = "Trang web dự án";
+/* Title of the alert shown when an action of the menu bar menu fails. */
 "ui.extra.actionFailedTitle" = "Hành động chưa hoàn tất";
+/* Message of the alert shown when a profile changed elsewhere before an action of the menu bar menu ran. */
 "ui.extra.profileConflict" = "Cấu hình đã thay đổi trước khi hành động này chạy. Hãy thử lại.";
 /* VoiceOver label and accessibility description of the menu bar status item. The product name stays as written. */
 "a11y.menuBar.statusItem" = "Trạng thái OpenJoystickDriver";
@@ -2584,12 +2647,14 @@
 "ui.access.web.enable.savedPort" = "Điểm cuối web giữ nguyên cổng đã lưu.";
 "ui.library.record.detail" = "%1$@ · %2$@";
 "ui.library.mod.detail" = "%1$@ · %2$@";
+/* Message of the alert shown when a menu action needs the profile editor and the editor saves a change. */
 "ui.extra.profileEditorBusy" = "Trình chỉnh sửa cấu hình đang lưu hoặc áp dụng một thay đổi. Hãy thử lại khi nó hoàn tất.";
 "ui.library.recordOrMod.pick" = "Chọn một tệp bản ghi bộ điều khiển hoặc một thư mục mod.";
 "ui.menu.profile.activateFailed" = "Không thể kích hoạt cấu hình";
 "ui.menu.profile.activateConflict" = "Cấu hình đã thay đổi trong khi đang kích hoạt. Hãy thử lại.";
 "ui.profiles.importBlocked" = "Một thay đổi cấu hình đang diễn ra. Hãy chọn lại “Nhập cấu hình” khi nó hoàn tất.";
 "ui.settings.general.updateAvailableBody" = "Đã có phiên bản %@.";
+/* Title of the message in the main window while a profile change is still running. */
 "ui.mainWindow.profileMutationRunning" = "Một thay đổi cấu hình vẫn đang chạy. Hãy thử lại khi nó hoàn tất.";
 "ui.access.web.noPort" = "Điểm cuối web đã bật, nhưng chưa chọn cổng";
 "ui.access.signer.signedUnknownPublisher" = "Do nhà phát hành không xác định ký";
@@ -2616,25 +2681,45 @@
 "error.E1010.message" = "Một dòng có kind mà dịch vụ không biết hoặc không nhận ở bước này. Hãy gửi Hello trước, rồi Subscription hoặc FeedRequest, rồi các dòng Frame, và kết nối lại.";
 /* Text of error E1011, sent when a line has no apiVersion or no kind. apiVersion and kind are field names and stay as written. */
 "error.E1011.message" = "Một dòng thiếu apiVersion hoặc kind. Mỗi dòng đều mang cả hai. Hãy thêm chúng rồi kết nối lại.";
+/* Description in the Shortcuts app of the action that turns on a remapping profile. */
 "ui.shortcuts.action.activateProfile.description" = "Bật một cấu hình ánh xạ lại cho kiểu máy bộ điều khiển của nó.";
+/* Name in the Shortcuts app of the action that turns on a remapping profile. */
 "ui.shortcuts.action.activateProfile.title" = "Kích hoạt cấu hình";
+/* Description in the Shortcuts app of the action that returns the app version. */
 "ui.shortcuts.action.appVersion.description" = "Trả về phiên bản của ứng dụng đã cài đặt.";
+/* Name in the Shortcuts app of the action that returns the app version. OpenJoystickDriver is the product name. */
 "ui.shortcuts.action.appVersion.title" = "Lấy phiên bản OpenJoystickDriver";
+/* Description in the Shortcuts app of the action that returns the battery charge of a controller as a percentage. */
 "ui.shortcuts.action.batteryLevel.description" = "Trả về mức pin của bộ điều khiển theo phần trăm, là giá trị thấp nhất của một khoảng được báo cáo.";
+/* Name in the Shortcuts app of the action that returns the battery level of a controller. */
 "ui.shortcuts.action.batteryLevel.title" = "Lấy mức pin";
+/* Description in the Shortcuts app of the action that turns off a remapping profile. */
 "ui.shortcuts.action.deactivateProfile.description" = "Tắt một cấu hình ánh xạ lại.";
+/* Name in the Shortcuts app of the action that turns off a remapping profile. */
 "ui.shortcuts.action.deactivateProfile.title" = "Hủy kích hoạt cấu hình";
+/* Description in the Shortcuts app of the action that returns the connected controllers. */
 "ui.shortcuts.action.getControllers.description" = "Trả về các bộ điều khiển đã kết nối.";
+/* Name in the Shortcuts app of the action that returns the connected controllers. */
 "ui.shortcuts.action.getControllers.title" = "Lấy bộ điều khiển";
+/* Name of the model property of a controller in the Shortcuts app. */
 "ui.shortcuts.controller.model" = "Kiểu máy";
+/* Name of the name property of a controller in the Shortcuts app. */
 "ui.shortcuts.controller.name" = "Tên";
+/* Name of the controller type in the Shortcuts app. It is singular and names one connected controller. */
 "ui.shortcuts.controller.type" = "Bộ điều khiển";
+/* Error shown in the Shortcuts app when a controller reports no battery level. %@ is the controller name. */
 "ui.shortcuts.error.batteryUnknown" = "%@ không báo cáo mức pin của nó.";
+/* Name of the controller parameter of an action in the Shortcuts app. */
 "ui.shortcuts.parameter.controller" = "Bộ điều khiển";
+/* Name of the profile parameter of an action in the Shortcuts app. */
 "ui.shortcuts.parameter.profile" = "Cấu hình";
+/* Name of the property in the Shortcuts app that tells whether a profile is active. */
 "ui.shortcuts.profile.active" = "Hoạt động";
+/* Name of the controller model property of a profile in the Shortcuts app. */
 "ui.shortcuts.profile.model" = "Kiểu máy bộ điều khiển";
+/* Name of the name property of a profile in the Shortcuts app. */
 "ui.shortcuts.profile.name" = "Tên";
+/* Name of the profile type in the Shortcuts app. It is singular and names one remapping profile. */
 "ui.shortcuts.profile.type" = "Cấu hình ánh xạ lại";
 /* One-line summary of 'ojd explain' in the command list and at the top of its help. */
 "cli.explain.group.abstract" = "Giải thích một mã lỗi: ý nghĩa của nó và cách khắc phục.";
@@ -2808,27 +2893,45 @@
 "platform.macos.ui.settings.general.entryPointRequired" = "Giữ bật ít nhất một trong hai tùy chọn Hiện trên thanh menu và Hiện trong Dock.";
 /* Help text of the showInDock setting in 'ojd setting list'. OpenJoystickDriver is the product name. */
 "platform.macos.cli.setting.group.showInDock" = "Luôn hiện biểu tượng OpenJoystickDriver trong Dock; khi tắt, biểu tượng chỉ hiện khi có cửa sổ đang mở.";
+/* Segment of the mode switch in the Activity area that shows the log. */
 "ui.activity.mode.log" = "Nhật ký";
+/* Segment of the mode switch in the Activity area that shows the diagnostics. */
 "ui.activity.mode.diagnostics" = "Chẩn đoán";
+/* Title of the toolbar popup in the Activity area that sets how many log lines show. */
 "ui.activity.lines" = "Số dòng";
+/* Placeholder of the search field in the toolbar of the Activity area. */
 "ui.activity.search" = "Tìm kiếm";
 /* Toolbar button in the Activity area that shows the log file in Finder, the macOS file manager. */
 "platform.macos.ui.activity.showInFinder" = "Hiển thị trong Finder";
+/* Title of the alert shown when the folder of the log cannot be opened. */
 "ui.activity.showInFinder.failed" = "Không thể mở thư mục nhật ký.";
+/* Toolbar button in the Activity area that runs the diagnostic checks. */
 "ui.activity.runChecks" = "Chạy kiểm tra";
+/* Column title of the Activity log table. The column holds the text of an entry. */
 "ui.activity.column.message" = "Nội dung";
+/* Column title of the diagnostics table in the Activity area. The column names the check. */
 "ui.activity.column.check" = "Kiểm tra";
+/* Column title of the diagnostics table in the Activity area. The column holds the details of the result. */
 "ui.activity.column.details" = "Chi tiết";
+/* Result of a check in the diagnostics table when the check passed. */
 "ui.activity.status.pass" = "Đạt";
+/* Result of a check in the diagnostics table when the check found a problem that does not stop the app. */
 "ui.activity.status.warn" = "Cảnh báo";
+/* Result of a check in the diagnostics table when the check did not run. */
 "ui.activity.status.skip" = "Đã bỏ qua";
 /* Warning shown above exported or displayed service logs, wherever the logs are shown. The logs can hold private data. */
 "cli.log.group.sharingWarning" = "Nhật ký dịch vụ có thể chứa tên thiết bị, mã định danh hoặc đường dẫn chẩn đoán. Hãy xem lại trước khi chia sẻ.";
+/* Title of the toolbar popup in the Activity area that filters the log by stream. */
 "ui.activity.filter" = "Bộ lọc";
+/* Name of the check in the diagnostics table that looks for the driver extension inside the app. */
 "ui.activity.check.transportExtensionBundle" = "Gói tiện ích mở rộng trình điều khiển";
+/* Name of the check in the diagnostics table that asks macOS whether the driver extension is registered. */
 "ui.activity.check.transportExtensionRegistration" = "Đăng ký tiện ích mở rộng trình điều khiển";
+/* Name of the check in the diagnostics table that validates the configuration files. */
 "ui.activity.check.configFiles" = "Tệp cấu hình";
+/* Name of the check in the diagnostics table that tests whether the app can read USB controllers. */
 "ui.activity.check.usbAccess" = "Quyền truy cập USB";
+/* Button of a failed check in the diagnostics table that opens the Library area. */
 "ui.activity.fix.showLibrary" = "Hiển thị Thư viện";
 "ui.controllers.adaptiveTriggers" = "Nút kích hoạt thích ứng";
 "ui.controllers.motion" = "Cảm biến chuyển động";

@@ -1,5 +1,6 @@
 /* Product name in the title of the application menu of the menu bar. It stays OpenJoystickDriver in every language. */
 "term.app.name" = "OpenJoystickDriver";
+/* Button of the problem banner in the Access area that quits and opens the app again so that a granted permission takes effect. OpenJoystickDriver is the product name. */
 "ui.permissions.restartApplication" = "重新啟動 OpenJoystickDriver";
 "ui.menu.projectPage" = "GitHub";
 /* Button that dismisses an alert in the activity view and the main window. It only acknowledges the message. */
@@ -156,13 +157,21 @@
 "ui.virtualProfile.failure.serverStopped" = "服務已停止。覆寫未變更。";
 "ui.virtualProfile.failure.persistenceFailed" = "無法儲存覆寫。未儲存任何內容。";
 "ui.virtualProfile.storeError" = "無法讀取虛擬 HID 設定檔覆寫（%@）。控制器將自動選擇。";
+/* Value of the key field in the capture assignment sheet before the user captures a key. */
 "ui.keyboard.noKey" = "未選取按鍵";
+/* Value of the key field while the app waits for a key press. Keep the three dots. */
 "ui.keyboard.pressKey" = "請按一個鍵…";
+/* Title of the button that starts the capture of a key in the capture assignment sheet. */
 "ui.keyboard.captureKey" = "擷取按鍵";
+/* VoiceOver announcement when the key capture starts. Escape is the name of the Escape key. */
 "ui.keyboard.captureStarted" = "已開始擷取鍵盤。請按一個鍵；按 Esc 鍵可取消。";
+/* Instruction under the key field in the capture assignment sheet. Modifiers are keys such as Shift, Control, Option and Command. */
 "ui.keyboard.instructions" = "連同要保留的修飾鍵一起按下按鍵。";
+/* VoiceOver announcement after a key capture. %@ is the description of the captured key, for example Command-K. */
 "ui.keyboard.captured" = "已擷取 %@。";
+/* VoiceOver announcement when the user cancels the key capture. */
 "ui.keyboard.captureCanceled" = "已取消鍵盤擷取。";
+/* VoiceOver label of the area that captures a keyboard key. */
 "ui.keyboard.captureTitle" = "擷取鍵盤按鍵";
 "ui.capture.adjust" = "調整 %@";
 "ui.capture.deadZone" = "死區";
@@ -289,11 +298,17 @@
 "ui.profiles.turboDuty" = "工作週期";
 "ui.profiles.turboRate" = "重複率";
 "ui.profiles.vendorID" = "供應商 ID";
+/* Title of the save panel for the debug report, a text file that the user can attach to a problem report. */
 "ui.debug.saveReportPanel" = "儲存除錯報告";
+/* Title of the save panel for the debug logs, a text file that the user can attach to a problem report. */
 "ui.debug.saveLogsPanel" = "儲存除錯記錄";
+/* Line of the debug report that says controller output works. */
 "ui.debug.outputAvailable" = "控制器輸出可以使用。";
+/* Line of the debug report that says the user turned controller output off. */
 "ui.debug.outputOff" = "控制器輸出已關閉。";
+/* Line of the debug report that says controller output does not work and needs action. */
 "ui.debug.outputNeedsAttention" = "控制器輸出需要注意。";
+/* Line of the debug report when the service does not answer, so the report has no diagnostics. */
 "ui.debug.serviceUnavailable" = "目前無法使用服務診斷。";
 "ui.error.profileChanged" = "此設定檔已在其他位置更改。請重新載入或繼續編輯。";
 "ui.error.duplicateProfile" = "已存在相同名稱的設定檔。";
@@ -630,38 +645,61 @@
 "term.key.shift" = "Shift 鍵";
 "ui.mapping.automatic" = "自動";
 "ui.virtualProfile.automaticSelected" = "自動（%@）";
+/* Detail line in the Driver section of the settings window when the driver extension for Xbox USB controllers is installed and works. */
 "ui.setup.activeDetail" = "受限的 Xbox USB 驅動程式已安裝並就緒。";
 /* Detail line of the problem banner when the driver extension waits for approval. System Settings is the name of the macOS app. The extension is needed for supported Microsoft USB controllers. */
 "platform.macos.ui.setup.approvalDetail" = "請在系統設定中核准驅動程式，以使用支援的 Microsoft USB 控制器。";
+/* Detail line in the Driver section of the settings window while the app checks the driver extension for Xbox USB controllers. */
 "ui.setup.checkingDetail" = "正在檢查已安裝的 Xbox USB 驅動程式。";
+/* Title of the problem banner and of the Driver section of the settings window for the driver extension that serves Xbox USB controllers. */
 "ui.setup.driverTitle" = "Xbox USB 驅動程式";
+/* Detail line of the problem banner when the driver extension inside the app is damaged. The user reinstalls the app. */
 "ui.setup.invalidDetail" = "內嵌的 Xbox USB 驅動程式無效。請重新安裝此 App 以修復。";
+/* Detail line of the problem banner when the app has no driver extension. The user reinstalls the signed app. */
 "ui.setup.missingDetail" = "此 App 未包含 Xbox USB 驅動程式。請重新安裝已簽署的 App。";
 /* Button that opens the System Settings app on the pane where the user can allow the permission or the extension. */
 "platform.macos.ui.setup.openSystemSettings" = "打開系統設定";
 /* Title of the alert shown when the System Settings app could not be opened. */
 "platform.macos.ui.setup.openSystemSettingsFailed" = "無法打開系統設定。";
+/* Detail line of the problem banner when the driver extension needs activation or replacement. The app repairs it when the user presses the repair button. OpenJoystickDriver is the product name. */
 "ui.setup.repairDetail" = "OpenJoystickDriver 將在無需開發者工具的情況下修復 Xbox USB 驅動程式。";
+/* Message of the confirmation alert that removes the driver extension from the settings window. */
 "ui.setup.uninstallDetail" = "在重新安裝驅動程式之前，Xbox USB 控制器將無法運作。";
+/* Button of the problem banner that repairs the driver extension for Xbox USB controllers. */
 "ui.setup.repairDriver" = "修復 Xbox USB 驅動程式";
+/* Title of the problem banner when the app cannot reach its service. OpenJoystickDriver is the product name. */
 "ui.banner.service.title" = "OpenJoystickDriver 無法連接其服務";
+/* Title of the problem banner when macOS has not allowed all that the app needs. */
 "ui.banner.access.title" = "需要權限";
 /* Detail line of the problem banner when macOS has not allowed all that the driver needs. OpenJoystickDriver is the product name. */
 "platform.macos.ui.banner.access.detail" = "macOS 尚未授予 OpenJoystickDriver 讀取控制器並將其發佈給遊戲所需的全部權限。";
+/* Title of the problem banner when the app does not get live changes of controllers from the service. */
 "ui.banner.liveUpdates.title" = "即時更新無法使用";
+/* Detail of the live updates banner when the service closed the connection. OpenJoystickDriver is the product name. */
 "ui.banner.liveUpdates.detail.closed" = "服務已關閉連線。OpenJoystickDriver 改為每秒檢查一次控制器變更。";
+/* Detail of the live updates banner when the service did not answer in time. OpenJoystickDriver is the product name. */
 "ui.banner.liveUpdates.detail.timeout" = "服務未及時回應。OpenJoystickDriver 改為定期檢查控制器變更。";
+/* Detail of the live updates banner for any other failure of the live connection. OpenJoystickDriver is the product name. */
 "ui.banner.liveUpdates.detail.other" = "來自服務的即時更新無法使用。OpenJoystickDriver 改為定期檢查控制器變更。";
 /* Button of the Driver Extension section in the settings window that removes the driver extension from the system. */
 "cli.login.group.uninstallAction" = "解除安裝";
+/* Option of the stream filter in the Activity log that shows all entries. */
 "ui.console.all" = "全部";
+/* Message in the Activity log when no entry matches. */
 "ui.console.empty" = "沒有日誌項目。";
+/* Option of the stream filter in the Activity log that shows only error entries. */
 "ui.console.errors" = "錯誤";
+/* Heading of the sheet that explains an error code. */
 "ui.console.explain.title" = "說明錯誤代碼";
+/* Placeholder of the field for an error code in the explain sheet. E2004 is an example code and stays as written. */
 "ui.console.explain.prompt" = "錯誤代碼，例如 E2004";
+/* Button of the explain sheet that looks up the error code. */
 "ui.console.explain.action" = "說明";
+/* Title of the message in the Activity log when the log cannot be read. */
 "ui.console.loadError" = "無法讀取日誌";
+/* Option of the stream filter in the Activity log that shows only output entries. */
 "ui.console.output" = "輸出";
+/* Column title in the Activity log table. The column tells whether an entry is output or an error. */
 "ui.console.stream" = "串流";
 /* Name of the notification setting for a controller that connects, in the Notifications pane of the settings window. */
 "notify.controllerConnected" = "控制器已連接";
@@ -2525,10 +2563,15 @@
 "ui.menu.copySupportReport.doneDetail" = "支援報告已在剪貼簿上。";
 "ui.menu.copySupportReport.failed" = "無法拷貝支援報告";
 "ui.menu.copySupportReport.failedDetail" = "無法收集報告。請改為儲存到檔案。";
+/* Title of the Controllers item in the sidebar of the main window and in the window title when it is selected. */
 "ui.sidebar.controllers.title" = "控制器";
+/* Title of the Profiles item in the sidebar of the main window and in the window title when it is selected. */
 "ui.sidebar.profiles.title" = "設定檔";
+/* Title of the Library item in the sidebar of the main window. The library lists the profiles that can be installed from packages. */
 "ui.sidebar.library.title" = "資源庫";
+/* Title of the Access item in the sidebar of the main window. The area lists permissions and clients of the endpoint. */
 "ui.sidebar.access.title" = "取用權限";
+/* Title of the Activity item in the sidebar of the main window. The area shows the log and the diagnostics. */
 "ui.sidebar.activity.title" = "活動";
 /* Help text of the showInMenuBar setting in 'ojd setting list'. OpenJoystickDriver is the product name. */
 "cli.setting.group.showInMenuBar" = "在選單列中顯示 OpenJoystickDriver 項目。";
@@ -2552,25 +2595,45 @@
 "platform.macos.ui.settings.commandLine.uninstallMessage" = "這會移除位於 %1$@ 的連結。App 仍保持安裝，但在您重新安裝該工具之前，ojd 將無法在「終端機」中執行。";
 "ui.settings.commandLine.uninstallConfirm" = "解除安裝";
 "ui.settings.advanced.developerToolsOff" = "開啟開發者工具以查看控制器輸入和 USB 封包。";
+/* Status line in the menu bar menu. %1$@ is the runtime state, %2$@ is the controller count text and %3$@ is the active profile text. The dots between them separate the parts and may change. */
 "ui.extra.statusLine" = "%1$@ · %2$@ · %3$@";
+/* Heading of the controllers section in the menu bar menu. */
 "ui.extra.controllers" = "控制器";
+/* Menu item in the menu bar menu that stops the service from remapping. */
 "ui.extra.suspend" = "暫停";
+/* Menu item in the menu bar menu that lets the service remap again. */
 "ui.extra.resume" = "繼續";
+/* Menu item in the menu bar menu that opens the input test of a controller. */
 "ui.extra.testInput" = "測試輸入";
+/* Menu item in the menu bar menu that holds the profile that is active for a controller. */
 "ui.extra.activeProfile" = "使用中的設定檔";
+/* Menu item in the menu bar menu that ends the wireless link of a controller. */
 "ui.extra.disconnectWireless" = "中斷無線連結";
+/* Menu item in the menu bar menu that shows the controller in the main window. */
 "ui.extra.showInWindow" = "在視窗中顯示";
+/* Menu item in the menu bar menu that holds the profiles of a controller model. */
 "ui.extra.profiles" = "設定檔";
+/* Menu item in the menu bar menu that turns on a profile. */
 "ui.extra.activate" = "啟用";
+/* Menu item in the menu bar menu that turns off the active profile. */
 "ui.extra.deactivate" = "停用";
+/* Button of the problem banner that opens the Access area so the user can grant access. */
 "ui.extra.grantAccess" = "授予取用權限";
+/* Menu item in the menu bar menu that opens the main window. */
 "ui.extra.openWindow" = "開啟視窗";
+/* Menu item in the menu bar menu that holds the help items. */
 "ui.extra.help" = "輔助說明";
+/* Menu item in the help submenu that opens the Activity log. */
 "ui.extra.activityLog" = "活動記錄檔";
+/* Menu item in the help submenu that opens the sheet that explains an error code. Keep the three dots. */
 "ui.extra.explainErrorCode" = "說明錯誤代碼…";
+/* Menu item in the help submenu that opens the page where the user reports a problem. Keep the three dots. */
 "ui.extra.reportProblem" = "報告問題…";
+/* Menu item in the help submenu that opens the project website. */
 "ui.extra.projectWebsite" = "專案網站";
+/* Title of the alert shown when an action of the menu bar menu fails. */
 "ui.extra.actionFailedTitle" = "操作未完成";
+/* Message of the alert shown when a profile changed elsewhere before an action of the menu bar menu ran. */
 "ui.extra.profileConflict" = "此操作執行前，設定檔發生了變更。請重試。";
 /* VoiceOver label and accessibility description of the menu bar status item. The product name stays as written. */
 "a11y.menuBar.statusItem" = "OpenJoystickDriver 狀態";
@@ -2584,12 +2647,14 @@
 "ui.access.web.enable.savedPort" = "Web 端點保留其已儲存的連接埠。";
 "ui.library.record.detail" = "%1$@ · %2$@";
 "ui.library.mod.detail" = "%1$@ · %2$@";
+/* Message of the alert shown when a menu action needs the profile editor and the editor saves a change. */
 "ui.extra.profileEditorBusy" = "設定檔編輯器正在儲存或套用變更。請在完成後重試。";
 "ui.library.recordOrMod.pick" = "選擇控制器記錄檔案或模組資料夾。";
 "ui.menu.profile.activateFailed" = "無法啟用設定檔";
 "ui.menu.profile.activateConflict" = "設定檔在啟用期間發生了變更。請重試。";
 "ui.profiles.importBlocked" = "設定檔變更正在進行。請在完成後再次選擇「匯入設定檔」。";
 "ui.settings.general.updateAvailableBody" = "版本 %@ 可用。";
+/* Title of the message in the main window while a profile change is still running. */
 "ui.mainWindow.profileMutationRunning" = "設定檔變更仍在進行。請在完成後再試一次。";
 "ui.access.web.noPort" = "Web 端點已開啟，但尚未選擇連接埠";
 "ui.access.signer.signedUnknownPublisher" = "簽署者：不明的發行者";
@@ -2616,25 +2681,45 @@
 "error.E1010.message" = "某一行的 kind 是服務不認得的，或在此時不被接受。請先傳送 Hello，再傳送 Subscription 或 FeedRequest，接著傳送 Frame 行，並重新連線。";
 /* Text of error E1011, sent when a line has no apiVersion or no kind. apiVersion and kind are field names and stay as written. */
 "error.E1011.message" = "某一行缺少 apiVersion 或 kind。每一行都必須同時包含兩者。請補上後重新連線。";
+/* Description in the Shortcuts app of the action that turns on a remapping profile. */
 "ui.shortcuts.action.activateProfile.description" = "為控制器型號啟用重新對應設定檔。";
+/* Name in the Shortcuts app of the action that turns on a remapping profile. */
 "ui.shortcuts.action.activateProfile.title" = "啟用設定檔";
+/* Description in the Shortcuts app of the action that returns the app version. */
 "ui.shortcuts.action.appVersion.description" = "傳回已安裝 App 的版本。";
+/* Name in the Shortcuts app of the action that returns the app version. OpenJoystickDriver is the product name. */
 "ui.shortcuts.action.appVersion.title" = "取得 OpenJoystickDriver 版本";
+/* Description in the Shortcuts app of the action that returns the battery charge of a controller as a percentage. */
 "ui.shortcuts.action.batteryLevel.description" = "以百分比傳回控制器的電池電量。如果控制器回報的是範圍，則傳回該範圍的最小值。";
+/* Name in the Shortcuts app of the action that returns the battery level of a controller. */
 "ui.shortcuts.action.batteryLevel.title" = "取得電池電量";
+/* Description in the Shortcuts app of the action that turns off a remapping profile. */
 "ui.shortcuts.action.deactivateProfile.description" = "停用重新對應設定檔。";
+/* Name in the Shortcuts app of the action that turns off a remapping profile. */
 "ui.shortcuts.action.deactivateProfile.title" = "停用設定檔";
+/* Description in the Shortcuts app of the action that returns the connected controllers. */
 "ui.shortcuts.action.getControllers.description" = "傳回已連接的控制器。";
+/* Name in the Shortcuts app of the action that returns the connected controllers. */
 "ui.shortcuts.action.getControllers.title" = "取得控制器";
+/* Name of the model property of a controller in the Shortcuts app. */
 "ui.shortcuts.controller.model" = "型號";
+/* Name of the name property of a controller in the Shortcuts app. */
 "ui.shortcuts.controller.name" = "名稱";
+/* Name of the controller type in the Shortcuts app. It is singular and names one connected controller. */
 "ui.shortcuts.controller.type" = "控制器";
+/* Error shown in the Shortcuts app when a controller reports no battery level. %@ is the controller name. */
 "ui.shortcuts.error.batteryUnknown" = "%@未回報其電池電量。";
+/* Name of the controller parameter of an action in the Shortcuts app. */
 "ui.shortcuts.parameter.controller" = "控制器";
+/* Name of the profile parameter of an action in the Shortcuts app. */
 "ui.shortcuts.parameter.profile" = "設定檔";
+/* Name of the property in the Shortcuts app that tells whether a profile is active. */
 "ui.shortcuts.profile.active" = "已啟用";
+/* Name of the controller model property of a profile in the Shortcuts app. */
 "ui.shortcuts.profile.model" = "控制器型號";
+/* Name of the name property of a profile in the Shortcuts app. */
 "ui.shortcuts.profile.name" = "名稱";
+/* Name of the profile type in the Shortcuts app. It is singular and names one remapping profile. */
 "ui.shortcuts.profile.type" = "重新對應設定檔";
 /* One-line summary of 'ojd explain' in the command list and at the top of its help. */
 "cli.explain.group.abstract" = "解釋錯誤代碼：它的含義以及如何修復。";
@@ -2808,27 +2893,45 @@
 "platform.macos.ui.settings.general.entryPointRequired" = "「在選單列中顯示」與「在 Dock 中顯示」至少要保持開啟一個。";
 /* Help text of the showInDock setting in 'ojd setting list'. OpenJoystickDriver is the product name. */
 "platform.macos.cli.setting.group.showInDock" = "一律在 Dock 中顯示 OpenJoystickDriver 圖像；關閉後，只會在有視窗開啟時顯示。";
+/* Segment of the mode switch in the Activity area that shows the log. */
 "ui.activity.mode.log" = "記錄檔";
+/* Segment of the mode switch in the Activity area that shows the diagnostics. */
 "ui.activity.mode.diagnostics" = "診斷";
+/* Title of the toolbar popup in the Activity area that sets how many log lines show. */
 "ui.activity.lines" = "行數";
+/* Placeholder of the search field in the toolbar of the Activity area. */
 "ui.activity.search" = "搜尋";
 /* Toolbar button in the Activity area that shows the log file in Finder, the macOS file manager. */
 "platform.macos.ui.activity.showInFinder" = "在 Finder 中顯示";
+/* Title of the alert shown when the folder of the log cannot be opened. */
 "ui.activity.showInFinder.failed" = "無法打開記錄檔資料夾。";
+/* Toolbar button in the Activity area that runs the diagnostic checks. */
 "ui.activity.runChecks" = "執行檢查";
+/* Column title of the Activity log table. The column holds the text of an entry. */
 "ui.activity.column.message" = "訊息";
+/* Column title of the diagnostics table in the Activity area. The column names the check. */
 "ui.activity.column.check" = "檢查";
+/* Column title of the diagnostics table in the Activity area. The column holds the details of the result. */
 "ui.activity.column.details" = "詳細資料";
+/* Result of a check in the diagnostics table when the check passed. */
 "ui.activity.status.pass" = "通過";
+/* Result of a check in the diagnostics table when the check found a problem that does not stop the app. */
 "ui.activity.status.warn" = "警告";
+/* Result of a check in the diagnostics table when the check did not run. */
 "ui.activity.status.skip" = "已略過";
 /* Warning shown above exported or displayed service logs, wherever the logs are shown. The logs can hold private data. */
 "cli.log.group.sharingWarning" = "服務記錄檔可能包含裝置名稱、識別碼或診斷路徑。分享前請先檢查。";
+/* Title of the toolbar popup in the Activity area that filters the log by stream. */
 "ui.activity.filter" = "篩選";
+/* Name of the check in the diagnostics table that looks for the driver extension inside the app. */
 "ui.activity.check.transportExtensionBundle" = "驅動程式擴充功能套件";
+/* Name of the check in the diagnostics table that asks macOS whether the driver extension is registered. */
 "ui.activity.check.transportExtensionRegistration" = "驅動程式擴充功能註冊";
+/* Name of the check in the diagnostics table that validates the configuration files. */
 "ui.activity.check.configFiles" = "組態檔案";
+/* Name of the check in the diagnostics table that tests whether the app can read USB controllers. */
 "ui.activity.check.usbAccess" = "USB 存取";
+/* Button of a failed check in the diagnostics table that opens the Library area. */
 "ui.activity.fix.showLibrary" = "顯示資源庫";
 "ui.controllers.adaptiveTriggers" = "自適應扳機";
 "ui.controllers.motion" = "動作感應器";
