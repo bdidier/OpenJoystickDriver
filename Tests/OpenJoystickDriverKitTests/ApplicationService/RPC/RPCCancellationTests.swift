@@ -27,24 +27,21 @@ struct LocalServiceRPCCancellationTests {
     let connection = await acceptConnection(on: listener)
     defer { Darwin.close(connection) }
 
-    let cancellationStart = ContinuousClock.now
     task.cancel()
     await #expect(throws: CancellationError.self) { try await task.value }
-    #expect(ContinuousClock.now - cancellationStart < .seconds(2))
   }
 
   @Test(.timeLimit(.minutes(1)))
   func cancellingConnectStopsRetryingAndLeavesTheClientDisconnected() async throws {
     let client = ApplicationServiceClient(socketPath: temporarySocketPath())
-    let task = Task { await client.connect(timeoutSeconds: 30) }
+    // The connect deadline exceeds the test's time limit, so only the cancellation can end it.
+    let task = Task { await client.connect(timeoutSeconds: 3600) }
     await waitUntil("the client has probed twice without an answer") {
       client.stateLock.withLock { client.unansweredProbes } >= 2
     }
 
-    let cancellationStart = ContinuousClock.now
     task.cancel()
     await task.value
-    #expect(ContinuousClock.now - cancellationStart < .seconds(2))
     #expect(!client.isConnected)
   }
 

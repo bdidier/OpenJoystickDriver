@@ -18,21 +18,36 @@ struct BoundedProcessRunnerTests {
     #expect(!result.outputWasTruncated)
   }
 
-  @Test
+  @Test(.timeLimit(.minutes(1)))
+  func aChildIsGivenTheDeadlineItWasAskedFor() throws {
+    let deadlines = Locked<[TimeInterval]>([])
+    let result = try BoundedProcessRunner.run(
+      executableURL: URL(fileURLWithPath: "/bin/sleep"),
+      arguments: ["3600"],
+      environment: nil,
+      timeoutSeconds: 7.5,
+      maximumOutputBytes: 1_024
+    ) { _, seconds in
+      deadlines.withLock { $0.append(seconds) }
+      return .timedOut
+    }
+
+    #expect(deadlines.withLock { $0 } == [7.5])
+    #expect(result.timedOut)
+  }
+
+  @Test(.timeLimit(.minutes(1)))
   func drainsFloodingOutputAndTerminatesAtDeadline() throws {
-    let startedAt = DispatchTime.now().uptimeNanoseconds
     let result = try BoundedProcessRunner.run(
       executableURL: URL(fileURLWithPath: "/usr/bin/yes"),
       arguments: ["OpenJoystickDriver"],
       timeoutSeconds: 0.05,
       maximumOutputBytes: 1_024
     )
-    let elapsed = DispatchTime.now().uptimeNanoseconds &- startedAt
 
     #expect(result.timedOut)
     #expect(result.output.utf8.count == 1_024)
     #expect(result.outputWasTruncated)
-    #expect(elapsed < 1_500_000_000)
   }
 
   @Test

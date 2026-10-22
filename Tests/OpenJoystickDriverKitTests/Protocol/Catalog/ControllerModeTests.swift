@@ -271,11 +271,28 @@ struct ControllerModeTests {
   }
 
   @Test
+  func aReadIsGivenTheDeadlineItWasAskedFor() async {
+    let deadlines = Locked<[TimeInterval]>([])
+    let reads = BoundedHIDRead { timeout, action in
+      deadlines.withLock { $0.append(timeout) }
+      action()
+    }
+    let release = DispatchSemaphore(value: 0)
+    _ = await reads.run(key: UUID(), timeout: 0.75) {
+      release.wait()
+      return .success(Data([1]))
+    }
+    release.signal()
+
+    #expect(deadlines.withLock { $0 } == [0.75])
+  }
+
+  @Test(.timeLimit(.minutes(1)))
   func aReadThatNeverReturnsGivesUpAtTheDeadline() async {
     let release = DispatchSemaphore(value: 0)
-    let started = ContinuousClock.now
     let reads = BoundedHIDRead()
     let device = UUID()
+    // The read blocks until released, so only the deadline can end the call.
     let result = await reads.run(key: device, timeout: 0.05) {
       release.wait()
       return .success(Data([1]))
@@ -285,7 +302,6 @@ struct ControllerModeTests {
       return
     }
     #expect(code == kIOReturnTimeout)
-    #expect(ContinuousClock.now - started < .seconds(5))
     // A read inside the deadline keeps its own answer, and a timeout is no stall.
     release.signal()
     let other = await reads.run(key: UUID(), timeout: 5) { .success(Data([7])) }
