@@ -3391,8 +3391,6 @@
 "platform.macos.ui.settings.commandLine.uninstallMessage" = "%1$@의 링크를 제거합니다. 앱은 계속 설치되어 있지만, 도구를 다시 설치하기 전까지 터미널에서 ojd를 실행할 수 없습니다.";
 /* Confirm button of the alert that removes the command-line tool. */
 "ui.settings.commandLine.uninstallConfirm" = "설치 제거";
-/* Hint in the Advanced pane of the settings window while the developer tools are off. */
-"ui.settings.advanced.developerToolsOff" = "컨트롤러 입력과 USB 패킷을 보려면 개발자 도구를 켜세요.";
 /* Status line in the menu bar menu. %1$@ is the runtime state, %2$@ is the controller count text and %3$@ is the active profile text. The dots between them separate the parts and may change. */
 "ui.extra.statusLine" = "%1$@ · %2$@ · %3$@";
 /* Heading of the controllers section in the menu bar menu. */

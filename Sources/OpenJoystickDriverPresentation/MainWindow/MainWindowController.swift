@@ -153,7 +153,7 @@
         [weak self] _ in
         guard let self else { return }
         showToolbarActions(of: navigation.selectedArea)
-        updateLogFollowing()
+        updateLogFollowing(area: navigation.selectedArea)
       }
       summaryObservation = runtime.$statusState.sink { [weak window] status in
         window?.subtitle = MainWindowSummary.text(for: navigation.selectedArea, status: status)
@@ -260,13 +260,13 @@
       visibilityChanged(true)
       window.makeKeyAndOrderFront(nil)
       NSApplication.shared.activate(ignoringOtherApps: true)
-      updateLogFollowing()
+      updateLogFollowing(area: navigation.selectedArea)
     }
 
     func windowShouldClose(_ sender: NSWindow) -> Bool {
       // Hiding keeps the selected area, the screens' state and the window geometry.
       sender.orderOut(nil)
-      updateLogFollowing()
+      updateLogFollowing(area: navigation.selectedArea)
       visibilityChanged(false)
       return false
     }
@@ -278,9 +278,9 @@
       )
     }
 
-    func windowDidMiniaturize(_ notification: Notification) { updateLogFollowing() }
+    func windowDidMiniaturize(_ notification: Notification) { updateLogFollowing(area: navigation.selectedArea) }
 
-    func windowDidDeminiaturize(_ notification: Notification) { updateLogFollowing() }
+    func windowDidDeminiaturize(_ notification: Notification) { updateLogFollowing(area: navigation.selectedArea) }
 
     func windowDidResize(_ notification: Notification) {
       guard !isEnforcingMinimumSize, let window = notification.object as? NSWindow else { return }
@@ -324,7 +324,7 @@
     private func reflect(area: MainWindowArea) {
       listItem.isCollapsed = !area.hasListColumn
       showToolbarActions(of: area)
-      updateLogFollowing()
+      updateLogFollowing(area: area)
       window?.title = area.title
       window?.subtitle = MainWindowSummary.text(for: area, status: screens.runtime.statusState)
     }

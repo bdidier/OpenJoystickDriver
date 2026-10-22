@@ -88,6 +88,8 @@ Do these steps only if you use one of the controllers above.
 
 When the extension is active, the banner disappears, and **Xbox USB Driver** in **Settings** > **Advanced** says that the driver is installed and ready. If the extension needs repair, the banner shows **Repair Xbox USB Driver**. Click it.
 
+![Settings, Advanced pane: the Xbox USB Driver section says that the driver is installed and ready](../docs/screenshots/settings-advanced.png)
+
 ## Further Reading
 
 - [Supported controllers](Supported-Controllers.md)

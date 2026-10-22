@@ -46,6 +46,15 @@ class WikiBuildTests(unittest.TestCase):
             "\n[ref]: Guide#step-two\n",
         )
 
+    def test_points_images_at_the_raw_file(self) -> None:
+        self.write("Home.md", "![Main window](../docs/screenshots/main.png)\n")
+        self.build()
+        self.assertEqual(
+            (self.output / "Home.md").read_text(encoding="utf-8"),
+            "![Main window](https://raw.githubusercontent.com/owner/name/main/"
+            "docs/screenshots/main.png)\n",
+        )
+
     def test_leaves_fenced_code_unchanged(self) -> None:
         text = "```md\n[a](Missing.md)\n```\n"
         self.write("Home.md", text)

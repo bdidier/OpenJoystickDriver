@@ -3391,8 +3391,6 @@
 "platform.macos.ui.settings.commandLine.uninstallMessage" = "這會移除位於 %1$@ 的連結。App 仍保持安裝，但在您重新安裝該工具之前，ojd 將無法在「終端機」中執行。";
 /* Confirm button of the alert that removes the command-line tool. */
 "ui.settings.commandLine.uninstallConfirm" = "解除安裝";
-/* Hint in the Advanced pane of the settings window while the developer tools are off. */
-"ui.settings.advanced.developerToolsOff" = "開啟開發者工具以查看控制器輸入和 USB 封包。";
 /* Status line in the menu bar menu. %1$@ is the runtime state, %2$@ is the controller count text and %3$@ is the active profile text. The dots between them separate the parts and may change. */
 "ui.extra.statusLine" = "%1$@ · %2$@ · %3$@";
 /* Heading of the controllers section in the menu bar menu. */

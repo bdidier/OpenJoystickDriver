@@ -31,11 +31,6 @@
         if preferences.developerToolsEnabled {
           DeveloperToolsView(model: developerTools)
           DeveloperSoakTestSection(model: developerTools.soakTest)
-        } else {
-          Section {
-            Text(OJDLocalized.string("ui.settings.advanced.developerToolsOff"))
-              .foregroundColor(Color(NSColor.secondaryLabelColor))
-          }
         }
       }.ojdGroupedForm()
     }

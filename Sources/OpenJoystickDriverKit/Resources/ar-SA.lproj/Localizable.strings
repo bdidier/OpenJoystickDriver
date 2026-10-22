@@ -3391,8 +3391,6 @@
 "platform.macos.ui.settings.commandLine.uninstallMessage" = "يؤدي هذا إلى إزالة الرابط في %1$@. يبقى التطبيق مثبّتًا، ولن يعمل ojd في الطرفية حتى تثبّت الأداة مرة أخرى.";
 /* Confirm button of the alert that removes the command-line tool. */
 "ui.settings.commandLine.uninstallConfirm" = "إلغاء التثبيت";
-/* Hint in the Advanced pane of the settings window while the developer tools are off. */
-"ui.settings.advanced.developerToolsOff" = "شغّل أدوات المطوّر لرؤية إدخال وحدات التحكم وحزم USB.";
 /* Status line in the menu bar menu. %1$@ is the runtime state, %2$@ is the controller count text and %3$@ is the active profile text. The dots between them separate the parts and may change. */
 "ui.extra.statusLine" = "%1$@‏ · %2$@‏ · %3$@‏";
 /* Heading of the controllers section in the menu bar menu. */

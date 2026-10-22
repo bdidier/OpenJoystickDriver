@@ -3614,8 +3614,6 @@
 "platform.macos.ui.settings.commandLine.uninstallMessage" = "Hiermee wordt de link op %1$@ verwijderd. De app blijft geïnstalleerd, maar ojd werkt niet meer in Terminal totdat je het programma opnieuw installeert.";
 /* Confirm button of the alert that removes the command-line tool. */
 "ui.settings.commandLine.uninstallConfirm" = "Deïnstalleer";
-/* Hint in the Advanced pane of the settings window while the developer tools are off. */
-"ui.settings.advanced.developerToolsOff" = "Zet de ontwikkelaarshulpmiddelen aan om controllerinvoer en USB-pakketten te zien.";
 /* Status line in the menu bar menu. %1$@ is the runtime state, %2$@ is the controller count text and %3$@ is the active profile text. The dots between them separate the parts and may change. */
 "ui.extra.statusLine" = "%1$@ · %2$@ · %3$@";
 /* Heading of the controllers section in the menu bar menu. */

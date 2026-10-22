@@ -34,15 +34,15 @@ OJD reads a physical controller over USB, Bluetooth, or a 2.4 GHz dongle and pub
 
 ## Screenshots
 
-<!-- screenshot: controllers -->
+![The Controllers area with a DualShock 3 that OJD serves as a virtual gamepad](docs/screenshots/main-controllers.png)
 
-<!-- screenshot: input-test -->
+![The menu-bar item menu](docs/screenshots/menu-bar-item.png)
 
-<!-- screenshot: profiles -->
+![The Library area with an installed controller record](docs/screenshots/main-library.png)
 
-<!-- screenshot: library -->
+![The Activity area showing the live log](docs/screenshots/main-activity.png)
 
-<!-- screenshot: menu-bar -->
+![The General pane of the Settings window](docs/screenshots/settings-general.png)
 
 ## Install
 

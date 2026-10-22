@@ -3391,8 +3391,6 @@
 "platform.macos.ui.settings.commandLine.uninstallMessage" = "इससे %1$@ पर मौजूद लिंक हट जाता है। ऐप इंस्टॉल रहता है, लेकिन टूल दोबारा इंस्टॉल करने तक ojd टर्मिनल में नहीं चलता।";
 /* Confirm button of the alert that removes the command-line tool. */
 "ui.settings.commandLine.uninstallConfirm" = "अनइंस्टॉल करें";
-/* Hint in the Advanced pane of the settings window while the developer tools are off. */
-"ui.settings.advanced.developerToolsOff" = "कंट्रोलर इनपुट और USB पैकेट देखने के लिए डेवलपर टूल चालू करें।";
 /* Status line in the menu bar menu. %1$@ is the runtime state, %2$@ is the controller count text and %3$@ is the active profile text. The dots between them separate the parts and may change. */
 "ui.extra.statusLine" = "%1$@ · %2$@ · %3$@";
 /* Heading of the controllers section in the menu bar menu. */

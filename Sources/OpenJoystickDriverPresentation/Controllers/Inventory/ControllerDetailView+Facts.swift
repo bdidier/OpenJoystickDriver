@@ -41,7 +41,7 @@
             if let record {
               OJDLabeledValue(
                 OJDLocalized.string("ui.controllers.server.source"),
-                CommandLineName.kebab(record.serverSource)
+                ControllerDetailFacts.serverSourceText(record)
               )
             }
           }

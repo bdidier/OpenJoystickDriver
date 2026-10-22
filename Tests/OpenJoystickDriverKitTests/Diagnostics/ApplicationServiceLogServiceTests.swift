@@ -80,3 +80,19 @@ struct ApplicationServiceLogServiceTests {
     )
   }
 }
+
+extension ApplicationServiceLogServiceTests {
+  @Test
+  func aSecondProcessCannotClaimTheSessionLogsWhileTheFirstHoldsThem() throws {
+    let directory = temporaryURL()
+    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+    defer { try? FileManager.default.removeItem(at: directory) }
+
+    let first = try ApplicationServiceLogService.claimSessionLogs(in: directory)
+    #expect(throws: (any Error).self) {
+      try ApplicationServiceLogService.claimSessionLogs(in: directory)
+    }
+    close(first)
+    close(try ApplicationServiceLogService.claimSessionLogs(in: directory))
+  }
+}

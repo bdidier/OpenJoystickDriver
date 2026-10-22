@@ -244,6 +244,11 @@ enum ControllerDetailFacts {
     }
   }
 
+  /// The record layer that sets the controller's server, by the name the Library gives it.
+  static func serverSourceText(_ record: ControllerRecord) -> String {
+    (record.fieldLayers["server"] ?? .driver).libraryTitle
+  }
+
   static func publicationText(_ publication: ApplicationServicePublicationStatus) -> String {
     let state = OJDLocalized.string(publicationKey(publication.state))
     let detail: String

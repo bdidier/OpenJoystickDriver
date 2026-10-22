@@ -17,6 +17,8 @@ Learn the menu-bar item, the main menu, the five areas of the app window, and th
 
 ## Menu-Bar Item
 
+![The menu-bar item menu with the status row, Controllers, Profiles, Open Window, Settings, Help, and Quit](../docs/screenshots/menu-bar-item.png)
+
 The menu-bar item shows OpenJoystickDriver status and opens the app window.
 **Show in menu bar** and **Show in Dock** in **Settings** > **General** choose where the app shows its icon.
 At least one of them stays on.
@@ -101,6 +103,8 @@ The main menu follows the macOS layout:
 
 ## Controllers Area
 
+![The Controllers area with a DualShock 3 selected and its details](../docs/screenshots/main-controllers.png)
+
 The **Controllers** area lists connected controllers and shows details for the selected controller.
 The list updates by itself when a controller connects or disconnects.
 If no controller appears, the area shows **No controller connected**.
@@ -165,6 +169,8 @@ For more information, see [Remapping profiles](Remapping-Profiles.md).
 
 ## Library Area
 
+![The Library area with one installed controller record](../docs/screenshots/main-library.png)
+
 The **Library** area lists the **Controller records** and the **Mods** that are installed.
 Select an item to see its fields and files.
 
@@ -179,17 +185,19 @@ For more information, see [Writing controller mods](Writing-Controller-Mods.md) 
 
 ## Access Area
 
+![The Access area with the permission rows and the local endpoint switches](../docs/screenshots/main-access.png)
+
 The **Access** area shows what OJD is allowed to do, and which programs may read your controllers.
 
 ### Permissions
 
-Four rows show **Input Monitoring**, **Accessibility**, **Keyboard & pointer**, and **Notifications**.
+Rows show **Input Monitoring**, **Accessibility**, and **Notifications**.
+A **Keyboard & pointer** row appears between **Accessibility** and **Notifications** while an active profile posts keyboard, pointer, or scroll events.
 Each row shows one value:
 
 - **Allowed**
 - **Needs attention**
 - **Checking...**
-- **Not needed** (only for **Keyboard & pointer**)
 - **Not requested**, **Banners off**, or **Sound off** (only for **Notifications**)
 
 A row that needs attention has a **Request...** button, or **Open System Settings** when macOS already knows the request.
@@ -200,7 +208,7 @@ For more information, see [Permissions](Permissions-and-Security.md#permissions)
 
 The local endpoint lets other programs read controller state.
 It shows the socket path with **Copy Socket Path**, and the **WebSocket** with its **Port** and pages folder.
-**Turn On** asks you to confirm.
+Turning on **Local endpoint** or **WebSocket** asks you to confirm with **Turn On**.
 
 - **Programs with access** lists each granted program with its scopes, **Read** and **Control**, and **Revoke**.
   **Grant a Program...** adds one.
@@ -214,6 +222,8 @@ It shows the socket path with **Copy Socket Path**, and the **WebSocket** with i
 For more information, see [Automating OpenJoystickDriver](Automating-OpenJoystickDriver.md).
 
 ## Activity Area
+
+![The Activity area showing the log with the newest line at the top](../docs/screenshots/main-activity.png)
 
 The **Activity** area has two modes.
 
@@ -232,6 +242,8 @@ Open **Settings** from the app menu or press <kbd>Command</kbd>+<kbd>,</kbd>.
 The window has three panes.
 
 ### General
+
+![The General pane of the Settings window](../docs/screenshots/settings-general.png)
 
 **Start at login** opens OJD in the menu bar when you log in.
 It needs macOS 13 or later.
@@ -255,6 +267,8 @@ Select **Include prerelease updates** to include beta versions.
 
 ### Notifications
 
+![The Notifications pane of the Settings window](../docs/screenshots/settings-notifications.png)
+
 Turn notifications on for these events:
 
 - **Controllers**: **Connected** and **Disconnected**.
@@ -268,12 +282,14 @@ Click **Open Notification Settings** to fix this.
 
 ### Advanced
 
+![The Advanced pane of the Settings window](../docs/screenshots/settings-advanced.png)
+
+- **Command-Line Tool** links `ojd` to this app so that you can run it in Terminal.
+  **Install Command-Line Tool** asks for an administrator password.
 - **Xbox USB Driver** shows the state of the OJD driver extension.
   Only some Xbox One and Xbox Series controllers on USB need it.
   **Uninstall** appears while the driver is active; it asks you to approve and then deactivates the driver.
   For more information, see [Xbox USB driver extension](Connecting-Controllers.md#xbox-usb-driver-extension).
-- **Command-Line Tool** links `ojd` to this app so that you can run it in Terminal.
-  **Install Command-Line Tool** asks for an administrator password.
 - **Enable Developer Tools** shows controller input and USB packet tools in this pane.
   For more information, see [Finding your controller ID](Connecting-Controllers.md).
 

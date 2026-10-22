@@ -309,6 +309,15 @@ extension ControllerDetailFactsTests {
   }
 
   @Test
+  func theServerSourceNamesTheLayerAsTheLibraryDoes() throws {
+    let model = ControllerModelID(vendorID: 0x045E, productID: 0x02FD)
+    let record = try #require(ControllerRecordSet.bundled.records[model])
+    let layer = record.fieldLayers["server"] ?? .driver
+    #expect(ControllerDetailFacts.serverSourceText(record) == layer.libraryTitle)
+    #expect(!ControllerDetailFacts.serverSourceText(record).contains("ui."))
+  }
+
+  @Test
   func publicationAndInputHealthShowLocalizedWords() {
     #expect(
       ControllerDetailFacts.publicationText(ApplicationServicePublicationStatus.published())

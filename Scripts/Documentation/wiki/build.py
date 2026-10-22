@@ -16,6 +16,7 @@ INLINE_LINK = re.compile(r"(\]\()([^)\s]+)")
 REFERENCE_DEFINITION = re.compile(r"^( {0,3}\[[^\]]+\]:[ \t]+)(\S+)", re.MULTILINE)
 FENCE = re.compile(r"^ {0,3}(```|~~~)")
 SCHEME = re.compile(r"^[A-Za-z][A-Za-z0-9+.-]*:")
+IMAGE_SUFFIXES = (".png", ".jpg", ".gif")
 
 
 class WikiBuildError(RuntimeError):
@@ -57,6 +58,9 @@ def rewrite_target(
     if target.startswith("#") or SCHEME.match(target):
         return target
     path, separator, anchor = target.partition("#")
+    if path.startswith("../") and path.endswith(IMAGE_SUFFIXES):
+        # A wiki page shows a repository image only from its raw URL.
+        return f"https://raw.githubusercontent.com/{repository}/{ref}/{path[3:]}"
     if path.startswith("../"):
         return (
             f"https://github.com/{repository}/blob/{ref}/{path[3:]}{separator}{anchor}"

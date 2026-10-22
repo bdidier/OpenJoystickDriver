@@ -57,13 +57,16 @@ public enum ApplicationServiceLogService {
   /// Redirects the host process streams to fresh, user-private files for this session.
   ///
   /// Headless commands deliberately do not call this function so their output remains
-  /// attached to the invoking terminal.
+  /// attached to the invoking terminal. A second app process fails here before it empties the
+  /// logs of the running one.
   public static func beginCurrentSessionCapture() throws {
     try FileManager.default.createDirectory(
       at: directory,
       withIntermediateDirectories: true,
       attributes: [.posixPermissions: 0o700]
     )
+    // The descriptor stays open, so this process holds the lock until it ends.
+    _ = try claimSessionLogs(in: directory)
     for (stream, target) in [
       (ApplicationServiceLogStream.standardOutput, STDOUT_FILENO),
       (ApplicationServiceLogStream.standardError, STDERR_FILENO),
@@ -82,6 +85,29 @@ public enum ApplicationServiceLogService {
     }
     setvbuf(stdout, nil, _IOLBF, 0)
     setvbuf(stderr, nil, _IOLBF, 0)
+  }
+
+  /// Takes the lock that makes this process the one writer of the session logs in `directory`
+  /// and returns its descriptor; closing the descriptor releases the lock. Throws while another
+  /// process holds it.
+  static func claimSessionLogs(in directory: URL) throws -> Int32 {
+    let path = directory.appendingPathComponent("OpenJoystickDriver.log.lock").path
+    let lock = open(path, O_CREAT | O_RDWR | O_CLOEXEC, S_IRUSR | S_IWUSR)
+    guard lock >= 0 else {
+      throw ApplicationServiceLogError("Could not open \(path): errno \(errno).")
+    }
+    while flock(lock, LOCK_EX | LOCK_NB) != 0 {
+      let code = errno
+      guard code == EINTR else {
+        Darwin.close(lock)
+        throw ApplicationServiceLogError(
+          code == EWOULDBLOCK
+            ? "Another OpenJoystickDriver process writes the logs in \(directory.path)."
+            : "Could not lock \(path): errno \(code)."
+        )
+      }
+    }
+    return lock
   }
 
   public static func tail(

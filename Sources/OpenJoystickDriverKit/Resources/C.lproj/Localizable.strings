@@ -3614,8 +3614,6 @@
 "platform.macos.ui.settings.commandLine.uninstallMessage" = "This removes the link at %1$@. The app stays installed, and ojd no longer runs in Terminal until you install the tool again.";
 /* Confirm button of the alert that removes the command-line tool. */
 "ui.settings.commandLine.uninstallConfirm" = "Uninstall";
-/* Hint in the Advanced pane of the settings window while the developer tools are off. */
-"ui.settings.advanced.developerToolsOff" = "Turn on developer tools to see controller input and USB packets.";
 /* Status line in the menu bar menu. %1$@ is the runtime state, %2$@ is the controller count text and %3$@ is the active profile text. The dots between them separate the parts and may change. */
 "ui.extra.statusLine" = "%1$@ · %2$@ · %3$@";
 /* Heading of the controllers section in the menu bar menu. */

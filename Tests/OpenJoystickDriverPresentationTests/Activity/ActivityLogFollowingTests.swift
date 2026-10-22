@@ -103,3 +103,31 @@ struct ActivityLogRowsTests {
     #expect(!model.isFollowing)
   }
 }
+
+extension ActivityLogFollowingTests {
+  @Test
+  @MainActor
+  func theWindowFollowsTheLogOnlyWhileActivityIsSelected() throws {
+    let suiteName = "ActivityLogFollowingTests.\(UUID().uuidString)"
+    let defaults = try #require(UserDefaults(suiteName: suiteName))
+    defer { defaults.removePersistentDomain(forName: suiteName) }
+    let runtime = RuntimeViewModel(gateway: GatewayStub())
+    let controller = MainWindowController(
+      runtime: runtime,
+      supportReport: SupportReportModel(gateway: GatewayStub()),
+      restartApplication: {},
+      openInputTest: { _ in },
+      visibilityChanged: { _ in },
+      persistence: UserDefaultsMainWindowAreaPersistence(defaults: defaults)
+    )
+    let window = try #require(controller.window)
+    window.orderFront(nil)
+    defer { window.orderOut(nil) }
+    let log = controller.screens.activity.log
+
+    controller.navigation.requestArea(.activity)
+    #expect(log.isFollowing)
+    controller.navigation.requestArea(.controllers)
+    #expect(!log.isFollowing)
+  }
+}

@@ -164,12 +164,14 @@
     }
 
     /// Follows the logs while the window is visible and shows the log, and stops otherwise.
-    func updateLogFollowing() {
+    /// `area` is the selected area; the area observer passes the area being selected, because
+    /// `@Published` sends it before `navigation.selectedArea` holds it.
+    func updateLogFollowing(area: MainWindowArea) {
       guard let window else { return }
       screens.activity.log.setFollowing(
         ActivityLogFollowing.shouldFollow(
           windowVisible: window.isVisible && !window.isMiniaturized,
-          area: navigation.selectedArea,
+          area: area,
           mode: screens.activity.mode
         )
       )
