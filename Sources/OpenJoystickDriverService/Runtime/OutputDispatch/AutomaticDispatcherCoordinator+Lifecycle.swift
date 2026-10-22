@@ -113,9 +113,12 @@ extension AutomaticDispatcherCoordinator {
       guard let target = entry.target ?? entry.context?.target else { return nil }
       let attempted = entry.lastAttemptedSend.map(String.init) ?? "none"
       let completed = entry.lastCompletedSend.map(String.init) ?? "none"
+      // The entry outlives a stopped session so a later session gets newer generations.
       let result =
-        entry.lastFailure.map { "failure=\($0)" }
-        ?? "status=\(entry.installed?.backend.status.wireValue ?? "none")"
+        !entry.physicalSessionActive
+        ? "status=ended"
+        : entry.lastFailure.map { "failure=\($0)" }
+          ?? "status=\(entry.installed?.backend.status.wireValue ?? "none")"
       return "controller=\(identifier), session=\(entry.sessionGeneration), "
         + "publication=\(entry.publicationGeneration), target=\(target.rawValue), "
         + "last-attempted=\(attempted), last-completed=\(completed), "

@@ -207,6 +207,10 @@ extension VirtualOutputTests {
     probe.gate?.signal()
     await stop.value
     await task.value
+    // A stopped controller's publication line names the ended session, not a missing device.
+    #expect(
+      await dispatcher.coordinator.publicationDiagnostics().contains { $0.contains("status=ended") }
+    )
     let counts = probe.snapshot().2.first?.counts()
     #expect(counts?.0 == 0)
     #expect(counts?.1 == 1)
