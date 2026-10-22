@@ -11,7 +11,7 @@ Requirement names below are those of the old change (`REQ-n ...`).
 ## mod-localization
 
 - REQ-11 E3029 explained in the user's language: MODIFIED. The key `error.E3029` becomes `error.E3029.message` under the new namespace, and the text must come from the catalog in app, CLI and endpoint.
-- REQ-12 Reviewed mod strings: MODIFIED. Keys `cli.explain.area.mod` and `cli.mod.*` become `cli.explain.area.mod` and `cli.mod.<command>.*` as the re-key maps them; every key has a translator comment and positional specifiers; the checker is the updated `check_localization_keys.py`.
+- REQ-12 Reviewed mod strings: MODIFIED. Key `cli.explain.area.mod` becomes `cli.explain.group.areaMod`, and the `cli.mod.*` keys sit under `cli.mod.<command>.` or `cli.mod.group.`; every key has a translator comment and positional specifiers; the checker is the updated `check_localization_keys.py`.
 
 ## mod-packages
 
