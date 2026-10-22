@@ -1889,6 +1889,10 @@
 "platform.macos.cli.diagnose.group.usbFailed" = "USB scan failed: %@. Grant Input Monitoring to OpenJoystickDriver.";
 /* Detail of the USB check of 'ojd diagnose'. %lld is the number of vendor-specific USB controllers that the system lists. */
 "cli.diagnose.group.usbOk" = "Vendor-specific USB controllers visible: %lld";
+/* Detail of the hid-input-drops check of 'ojd diagnose' when the system dropped no input report of any controller. HID is a term of the USB HID standard. */
+"cli.diagnose.group.hidInputDropsNone" = "No HID input reports were dropped";
+/* Detail of the hid-input-drops check of 'ojd diagnose', one entry per controller that lost input reports. %1$@ is the controller name, or its vendor and product ID when it has no name. %2$lld is the number of input reports the system dropped because the queue between the controller and the service was full. */
+"cli.diagnose.group.hidInputDropsFound" = "Dropped input reports of %1$@: %2$lld";
 /* Detail of the virtual gamepad check of 'ojd diagnose' when the user turned the virtual gamepad off. */
 "cli.diagnose.group.virtualDisabled" = "virtual gamepad disabled";
 /* Detail of the virtual gamepad check of 'ojd diagnose' when the virtual gamepad reports an error. %@ is the error message of the system. */

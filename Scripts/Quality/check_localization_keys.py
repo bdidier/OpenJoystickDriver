@@ -107,6 +107,9 @@ NOT_A_COUNT: dict[str, str] = {
     "cli.diagnose.group.failed": (
         "the number follows its label (after a colon or in parentheses), so no noun agrees with it"
     ),
+    "cli.diagnose.group.hidInputDropsFound": (
+        "the number follows its label (after a colon or in parentheses), so no noun agrees with it"
+    ),
     "cli.diagnose.group.recordsApplied": (
         "the number follows its label (after a colon or in parentheses), so no noun agrees with it"
     ),

@@ -33,6 +33,9 @@ package protocol PlatformHost: Sendable {
   /// The HID report descriptor of a connected controller model, or nil when none is connected.
   func physicalReportDescriptor(vendorID: Int, productID: Int) -> [UInt8]?
 
+  /// The input reports the system dropped for each HID device that process `processID` reads.
+  func droppedHIDInputReports(processID: Int32) -> [HIDInputDropObservation]
+
   /// Runs the application until it exits; the executable calls it when not run as the tool.
   @MainActor
   func runApplication() -> Never

@@ -48,6 +48,10 @@ package struct MacOSPlatformHost: PlatformHost {
     PhysicalReportDescriptor.copy(vendorID: vendorID, productID: productID)
   }
 
+  package func droppedHIDInputReports(processID: Int32) -> [HIDInputDropObservation] {
+    HIDInputReportDrops.observations(processID: processID)
+  }
+
   @MainActor
   package func runApplication() -> Never {
     let host = HeadlessApplicationHost()

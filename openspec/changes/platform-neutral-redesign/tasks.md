@@ -467,6 +467,8 @@ These need the maintainer and a device. Each result is recorded in `wiki` or the
 - [ ] H7 Wine, CrossOver and a browser: confirm the expectations in the SDL consumer table.
 - [ ] H8 SDL3 and Steam with `Generic` and `SDLCompatible`.
 - [ ] H9 `1209:4A4F`: press each button and move each axis to confirm mapping directions (open item 5).
+- [ ] H10 DS3 `054C:0268` over USB, 24.67: with Steam running, the `ioreg -l -w0` client of OJD shows `ClientOptions=1`, and the clients of `WindowServer` and `steam_osx` on the same device show `ClientSeized=Yes`; Steam lists one DS3 pad with analog L2/R2 and Select; the controller detail and `ojd controller list` show `Exclusive`; with another app that seizes first, they show `Owned by another app`.
+- [ ] H11 DS3 `054C:0268` over USB, 24.68: the `EnqueueErrorCount` of OJD's `IOHIDLibUserClient` stays 0 over a 5-minute session with the Controllers page, Input Test and Steam open, `QueueSize` is above 16384, and `ojd diagnose` shows `hid-input-drops` as `PASS`.
 - [ ] H10 Stutter: measure with the 19.3 timestamps, with and without the WebRTC bridge.
 - [ ] H12 Apple's `XboxGamepad.dext` (`com.apple.gamecontroller.driver.XboxGamepad`) matches `045E:028E`, `045E:02EA`, `045E:0B00` and `045E:0B12`; the last three are also in the OJD extension's grant.
   With each of `045E:02EA`, `045E:0B00` and `045E:0B12` attached, record which driver owns interface 0 (`ioreg -p IOUSB -l -w0`) and whether OJD serves the pad.

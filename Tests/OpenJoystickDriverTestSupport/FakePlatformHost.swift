@@ -36,6 +36,8 @@ package struct FakePlatformHost: PlatformHost {
 
   package func physicalReportDescriptor(vendorID: Int, productID: Int) -> [UInt8]? { nil }
 
+  package func droppedHIDInputReports(processID: Int32) -> [HIDInputDropObservation] { [] }
+
   @MainActor
   package func runApplication() -> Never { fatalError("Tests never run the application.") }
 }

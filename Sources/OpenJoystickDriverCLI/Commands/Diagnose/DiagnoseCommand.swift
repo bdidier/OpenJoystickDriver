@@ -19,6 +19,12 @@ struct DiagnoseCommand: AsyncParsableCommand {
     try await PlatformHosts.current.countVendorSpecificUSBControllers()
   }
 
+  /// Reads the input reports the system dropped for the service; tests replace it.
+  @TaskLocal
+  static var hidDropProbe: @Sendable (Int32) -> [HIDInputDropObservation] = {
+    PlatformHosts.current.droppedHIDInputReports(processID: $0)
+  }
+
   /// Samples the service process; tests replace it to avoid sampling for seconds.
   @TaskLocal
   static var soakSampler:

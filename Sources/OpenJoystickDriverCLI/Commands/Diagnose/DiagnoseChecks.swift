@@ -66,8 +66,16 @@ enum DiagnoseChecks {
       virtualDevices: RecordStore.virtualDeviceFiles(),
       usb: usb
     )
+    checks.append(hidInputDropsCheck(snapshot: snapshot))
     checks.append(await soakCheck(snapshot: snapshot, soak: soak))
     return checks
+  }
+
+  private static func hidInputDropsCheck(snapshot: DiagnoseServiceSnapshot) -> DiagnoseCheck {
+    let id = "hid-input-drops"
+    guard snapshot.availability == .running, let processID = ServiceConnection.processIdentifier()
+    else { return DiagnosticsService.skipped(id, snapshot) }
+    return DiagnosticsService.hidInputDropsCheck(DiagnoseCommand.hidDropProbe(processID))
   }
 
   private static func soakCheck(
