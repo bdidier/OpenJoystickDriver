@@ -290,7 +290,7 @@ The virtual controller is a standard gamepad. Each profile has a fixed set of bu
 | Right trackpad click | Right stick click on the classic Steam Controller, otherwise not carried | Right stick click on the classic Steam Controller, otherwise not carried |
 
 - `generic` has 16 buttons and all 16 are in use. Its layout is the published contract for the product ID `1209:4A4F`, so a new button would need a new product ID.
-- `sdl-compatible` follows the Xbox One S Bluetooth report. That 16-byte report has no field for Capture, and SDL reads no other button from it.
+- `sdl-compatible` sends the Xbox One USB packets that SDL's HIDAPI driver reads: an 18-byte input report, and Guide in a second report. They have no field for Capture, and SDL reads no other button from them.
 - The right pad of the classic Steam Controller is its right stick, and the controller has no separate right stick click, so its pad click is the right stick click. The Steam Deck and the Steam Triton have a right stick click of their own, so their right pad click is a different control and is not carried.
 - The D-pad buttons of `sdl-compatible` stay clear. The D-pad is the hat.
 

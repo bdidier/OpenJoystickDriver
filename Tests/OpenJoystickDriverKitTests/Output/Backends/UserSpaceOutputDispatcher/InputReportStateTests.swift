@@ -1,3 +1,4 @@
+import ProtocolPacketFixtures
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -5,10 +6,7 @@ import Testing
 struct UserSpaceInputReportStateTests {
   @Test
   func currentInputReportTracksChangesForHostGetReportRequests() throws {
-    let format = try HIDDescriptorReportFormat(
-      descriptor: XboxOneBluetoothHIDDescriptor.oneSDescriptor
-    )
-    let state = UserSpaceInputReportState(format: format)
+    let state = UserSpaceInputReportState(format: XboxOneGIPHIDReportFormat())
     let neutral = state.currentReport()
 
     let active = state.update {
@@ -27,24 +25,22 @@ struct UserSpaceInputReportStateTests {
 
   @Test
   func xboxOneSIdleReportMatchesInterruptGetReportLayout() throws {
-    let format = try XboxGeckoHIDReportFormat()
+    let format = XboxOneGIPHIDReportFormat()
     let report = UserSpaceInputReportState(format: format).currentReport()
-    #expect(report.count == 16)
-    #expect(report[0] == 1)
-    #expect(Array(report[1...8]) == [0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80])
+    #expect(report == ProtocolPacketFixtures.XboxOneGIP.neutralInputReport)
   }
 
   @Test
   func guideChangesClaimTheSeparateGuideReportOnce() throws {
-    let state = UserSpaceInputReportState(format: try XboxGeckoHIDReportFormat())
+    let state = UserSpaceInputReportState(format: XboxOneGIPHIDReportFormat())
     #expect(state.claimChangedAuxiliaryReports().isEmpty)
 
     _ = state.update { $0.buttons = 1 << GamepadHIDDescriptor.ButtonBit.guide.rawValue }
-    #expect(state.claimChangedAuxiliaryReports() == [[2, 1]])
+    #expect(state.claimChangedAuxiliaryReports() == [[0x07, 0x20, 0x00, 0x02, 1, 0x5B]])
     #expect(state.claimChangedAuxiliaryReports().isEmpty)
 
     _ = state.update { $0 = VirtualGamepadState() }
-    #expect(state.claimChangedAuxiliaryReports() == [[2, 0]])
+    #expect(state.claimChangedAuxiliaryReports() == [[0x07, 0x20, 0x00, 0x02, 0, 0x5B]])
   }
 
   @Test
@@ -71,7 +67,7 @@ struct UserSpaceInputReportStateTests {
 
   @Test
   func xboxOneSNeverSetsShareAndKeepsViewOnItsButton() throws {
-    let format = try XboxGeckoHIDReportFormat()
+    let format = XboxOneGIPHIDReportFormat()
     let state = UserSpaceInputReportState(format: format)
     let neutral = state.currentReport()
 
@@ -79,8 +75,8 @@ struct UserSpaceInputReportStateTests {
     let view = state.update { $0.buttons = 1 << GamepadHIDDescriptor.ButtonBit.back.rawValue }
 
     #expect(share == neutral)
-    #expect(view[14] == 0x40)
-    #expect(view[15] == 0)
+    #expect(view[4] == 0x08)
+    #expect(view[5] == 0)
     #expect(state.update { $0 = VirtualGamepadState() } == neutral)
   }
 

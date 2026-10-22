@@ -14,7 +14,7 @@ public enum VirtualHIDProfileID: String, CaseIterable, Codable, Sendable {
   /// The profile this identifier names.
   public func makeProfile() throws -> any VirtualHIDProfile {
     switch VirtualDevice.definition(of: self).layout {
-    case .xboxOneSBluetooth?: return try XboxOneSBluetoothHIDProfile()
+    case .xboxOneGIP?: return XboxOneGIPHIDProfile()
     case .ojdGenericGamepad?, nil: return OJDGenericHIDProfile()
     }
   }
@@ -40,9 +40,8 @@ public enum VirtualHIDProfileID: String, CaseIterable, Codable, Sendable {
   /// checks a controller's required primary controls against.
   public var representableControls: Set<Control> {
     switch self {
-    // The Xbox layout. Guide stays out until a genuine capture of the Xbox One S Bluetooth pad
-    // shows whether ordinary HID clients see it, although today's report still carries it as
-    // button usage 11.
+    // The Xbox layout. Guide stays out until a genuine capture shows whether ordinary HID clients
+    // see it, although today's report still carries it as button usage 11 of report 0x07.
     case .sdlCompatible: return Control.xboxLayout
     // The generic layout: the frozen 32 buttons, the hat and the six named axes. Today's report
     // carries only its first 16 buttons.
@@ -90,16 +89,16 @@ public protocol VirtualHIDProfile: Sendable {
 
 /// `SDLCompatible` over today's hand-authored approximation, not a verified Microsoft ABI.
 ///
-/// The identity is the `SDLCompatible` `VirtualDevice` record's. The descriptor and
-/// input layout are `XboxGeckoHIDReportFormat`'s: the One S Bluetooth descriptor with its 16-byte
-/// report 1 (no Share field) and Guide also sent alone in report 2, with share and the d-pad
-/// button bits never set. It is an approximation until the descriptor and codec are replaced
-/// byte-exactly from a genuine capture.
-struct XboxOneSBluetoothHIDProfile: VirtualHIDProfile {
+/// The identity is the `SDLCompatible` `VirtualDevice` record's. The descriptor and input layout
+/// are `XboxOneGIPHIDReportFormat`'s: Xbox One GIP packets as numbered reports, the form SDL's
+/// HIDAPI Xbox One driver parses for a device whose IOHID transport is not `Bluetooth`. The d-pad
+/// is four state bits, and share is never set. It is an approximation until the descriptor and
+/// codec are replaced byte-exactly from a genuine capture.
+struct XboxOneGIPHIDProfile: VirtualHIDProfile {
   let id = VirtualHIDProfileID.sdlCompatible
-  private let format: XboxGeckoHIDReportFormat
+  private let format: XboxOneGIPHIDReportFormat
 
-  init() throws { format = try XboxGeckoHIDReportFormat() }
+  init() { format = XboxOneGIPHIDReportFormat() }
 
   var identity: VirtualDeviceProfile { id.identity }
   var descriptor: [UInt8] { format.descriptor }

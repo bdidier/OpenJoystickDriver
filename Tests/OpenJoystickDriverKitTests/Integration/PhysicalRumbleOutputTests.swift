@@ -148,28 +148,39 @@ struct PhysicalRumbleOutputTests {
   }
 
   @Test
-  func testConsumerCodecDecodesXboxOneRumbleReportWithCallbackReportIDPrefix() throws {
+  func testConsumerCodecDecodesGIPRumbleReportWithCallbackReportIDPrefix() throws {
     let command = try consumerOutput(
-      3,
-      [0x03, 0x0F, 10, 20, 30, 40, 5, 0, 0],
-      in: XboxGeckoHIDReportFormat()
+      9,
+      gipRumbleReport(
+        activation: 0x0F,
+        leftTrigger: 10,
+        rightTrigger: 20,
+        left: 30,
+        right: 40,
+        duration: 5
+      ),
+      in: XboxOneGIPHIDReportFormat()
     )
 
     #expect(
       command
         == .consumerRumble(left: 30, right: 40, leftTrigger: 10, rightTrigger: 20, durationMs: 50)
     )
-    // The payload after the report ID is exactly the declared 8 bytes.
+    // The payload after the report ID is exactly the declared 12 bytes.
     #expect(throws: VirtualHostReportError.tooLarge) {
       try consumerOutput(
-        3,
-        [0x03, 0x0F, 10, 20, 30, 40, 5, 0, 0, 0],
-        in: XboxGeckoHIDReportFormat()
+        9,
+        gipRumbleReport(activation: 0x0F, left: 30, right: 40, duration: 5) + [0],
+        in: XboxOneGIPHIDReportFormat()
       )
     }
     // The rumble report is numbered; an unnumbered one is not a report the format declares.
     #expect(throws: VirtualHostReportError.unsupported) {
-      try consumerOutput(0, [0x0F, 10, 20, 30, 40, 5, 0, 0], in: XboxGeckoHIDReportFormat())
+      try consumerOutput(
+        0,
+        Array(gipRumbleReport(activation: 0x0F)[1...]),
+        in: XboxOneGIPHIDReportFormat()
+      )
     }
   }
 

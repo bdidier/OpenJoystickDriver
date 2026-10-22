@@ -3,7 +3,7 @@ import Foundation
 /// The HID report layout a persona publishes.
 enum VirtualDeviceLayout: String, Sendable {
   case ojdGenericGamepad = "OJDGenericGamepad"
-  case xboxOneSBluetooth = "XboxOneSBluetooth"
+  case xboxOneGIP = "XboxOneGIP"
 }
 
 /// One `VirtualDevice` document (`virtual-device.schema.json`): either the definition of a
