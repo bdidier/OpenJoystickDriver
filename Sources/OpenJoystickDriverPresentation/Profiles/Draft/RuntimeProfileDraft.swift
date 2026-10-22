@@ -116,11 +116,11 @@ enum RuntimeProfileDraftError: Error, LocalizedError, Equatable, Sendable {
     switch self {
     case .bindingNotFound, .chordNotFound, .layerNotFound, .sequenceNotFound:
       return OJDLocalized.string(
-        "error.selectedProfileItemMissing"
+        "ui.error.selectedProfileItemMissing"
       )
     case .validation:
       return OJDLocalized.string(
-        "error.reviewAssignmentsBeforeSave"
+        "ui.error.reviewAssignmentsBeforeSave"
       )
     }
   }

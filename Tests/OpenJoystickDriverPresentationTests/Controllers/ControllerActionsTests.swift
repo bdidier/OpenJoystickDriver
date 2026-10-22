@@ -92,7 +92,7 @@ struct ControllerActionsTests {
     await gateway.setResetAllResult(false)
     #expect(
       await viewModel.resetAllVirtualHIDProfileOverrides()
-        == OJDLocalized.string("controllers.virtual.resetAllFailed")
+        == OJDLocalized.string("ui.controllers.virtual.resetAllFailed")
     )
     #expect(await gateway.resetAllRequestCount == 2)
   }
@@ -242,7 +242,7 @@ struct ControllerActionsTests {
     #expect(
       throws: VirtualGamepadLaunch.Failure.cannotStart(
         program: "missing",
-        reason: OJDLocalized.string("cli.virtual.launch.error.not_executable")
+        reason: OJDLocalized.string("cli.virtual.launch.errorNotExecutable")
       )
     ) {
       try VirtualGamepadLaunch.prepare(
@@ -379,7 +379,7 @@ struct ControllerActionsTests {
     }
     #expect(
       actions.timedState
-        == .failed(OJDLocalized.string("cli.controller.capture.no_packets"))
+        == .failed(OJDLocalized.string("cli.controller.capture.noPackets"))
     )
     #expect(actions.pendingSave == nil)
   }

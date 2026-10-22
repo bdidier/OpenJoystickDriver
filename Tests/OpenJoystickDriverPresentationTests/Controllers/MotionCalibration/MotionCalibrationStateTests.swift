@@ -22,7 +22,7 @@
       #expect(
         model.errorMessage
           == OJDLocalized.string(
-            "motion.calibration.motionUnavailable"
+            "ui.motion.calibration.motionUnavailable"
           )
       )
     }
@@ -57,7 +57,7 @@
       )
       await request.value
       #expect(
-        model.errorMessage == OJDLocalized.string("motion.calibration.motionUnavailable")
+        model.errorMessage == OJDLocalized.string("ui.motion.calibration.motionUnavailable")
       )
     }
 
@@ -156,7 +156,7 @@
       model.select(ControllerReference.session(.fixture("first")))
       await model.refreshWhileCalibrating { _ in Issue.record("no retry after a failure") }
       #expect(await gateway.reads == 1)
-      #expect(model.errorMessage == OJDLocalized.string("motion.calibration.motionUnavailable"))
+      #expect(model.errorMessage == OJDLocalized.string("ui.motion.calibration.motionUnavailable"))
     }
   }
 

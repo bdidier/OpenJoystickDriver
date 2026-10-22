@@ -22,17 +22,17 @@
       case .idle, .running: ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity)
       case .finished(let rows):
         Table(rows) {
-          TableColumn(OJDLocalized.string("common.status")) { row in
+          TableColumn(OJDLocalized.string("term.status")) { row in
             Label {
               Text(OJDLocalized.string(row.statusKey))
             } icon: {
               Image(systemName: row.symbolName).foregroundColor(Self.color(of: row.status))
             }
           }.width(min: 90, ideal: 110, max: 140)
-          TableColumn(OJDLocalized.string("activity.column.check")) { row in
+          TableColumn(OJDLocalized.string("ui.activity.column.check")) { row in
             Text(row.nameKey.map { OJDLocalized.string($0) } ?? row.id).help(row.id)
           }.width(min: 140, ideal: 200, max: 240)
-          TableColumn(OJDLocalized.string("activity.column.details")) { row in
+          TableColumn(OJDLocalized.string("ui.activity.column.details")) { row in
             HStack {
               Text(row.detail).lineLimit(1).truncationMode(.tail).textSelection(.enabled)
                 .help(row.detail)

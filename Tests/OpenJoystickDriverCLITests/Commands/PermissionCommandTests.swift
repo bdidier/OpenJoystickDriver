@@ -178,7 +178,7 @@ struct PermissionCommandTests {
     #expect(plain.standardOutput.hasSuffix("post-event\tdenied\trequired\n"))
     let last = try #require(human.standardOutput.split(separator: "\n").last)
     #expect(last.hasPrefix(PermissionID.postEvent.localizedName))
-    #expect(last.hasSuffix("(" + CLILocalized.text("cli.permission.required_by_profile") + ")"))
+    #expect(last.hasSuffix("(" + CLILocalized.text("cli.permission.group.requiredByProfile") + ")"))
   }
 
   @Test

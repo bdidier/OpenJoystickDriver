@@ -46,7 +46,7 @@ struct LogExportCommand: AsyncParsableCommand {
   func validate() throws {
     guard ApplicationServiceLogService.linesRange.contains(lines) else {
       throw ValidationError(
-        CLILocalized.text("cli.log.show.lines_range")
+        CLILocalized.text("cli.log.show.linesRange")
       )
     }
   }
@@ -61,7 +61,7 @@ struct LogExportCommand: AsyncParsableCommand {
         throw CLIFailure(
           .fileAccessFailed,
           CLILocalized.format(
-            "cli.log.show.read_failed",
+            "cli.log.show.readFailed",
             error.localizedDescription
           )
         )

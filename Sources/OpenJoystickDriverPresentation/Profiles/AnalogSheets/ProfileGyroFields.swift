@@ -56,7 +56,7 @@
     }
 
     private func label(_ key: String) -> String {
-      OJDLocalized.string("profiles.gyro." + key)
+      OJDLocalized.string("ui.profiles.gyro." + key)
     }
   }
 #endif

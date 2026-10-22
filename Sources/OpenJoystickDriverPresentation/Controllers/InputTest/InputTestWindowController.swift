@@ -19,7 +19,7 @@
   enum InputTestWindowTitle {
     /// Names the physical controller, as the Controllers list does.
     static func make(for device: ApplicationServiceDeviceDescription) -> String {
-      OJDLocalized.formatted("inputTest.windowTitle", device.name)
+      OJDLocalized.formatted("ui.inputTest.windowTitle", device.name)
     }
   }
 
@@ -127,7 +127,7 @@
         let item = NSToolbarItem(itemIdentifier: itemIdentifier)
         item.target = self
         item.action = #selector(refreshController(_:))
-        item.label = OJDLocalized.string("common.refresh")
+        item.label = OJDLocalized.string("action.refresh")
         item.paletteLabel = item.label
         item.toolTip = item.label
         item.image = NSImage(

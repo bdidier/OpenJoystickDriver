@@ -92,7 +92,7 @@
     }
 
     private func label(_ key: String) -> String {
-      OJDLocalized.string("profiles.stick." + key)
+      OJDLocalized.string("ui.profiles.stick." + key)
     }
   }
 #endif

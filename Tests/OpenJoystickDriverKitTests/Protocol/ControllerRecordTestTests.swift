@@ -101,7 +101,7 @@ struct ControllerRecordTestTests {
     for error in errors {
       let message = error.message(model: model, capture: "c.jsonl", expectation: "s.json")
       #expect(!message.isEmpty)
-      #expect(!message.hasPrefix("cli.record"))
+      #expect(!message.contains("cli.record"))
     }
     #expect(
       errors[0].message(model: model, capture: "c.jsonl", expectation: "s.json").contains("line 2")

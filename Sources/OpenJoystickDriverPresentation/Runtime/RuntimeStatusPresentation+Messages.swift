@@ -77,7 +77,7 @@ extension RuntimeStatusPresentation {
     if let virtualHIDProfileOverrideError {
       messages.append(
         OJDLocalized.formatted(
-          "virtualProfile.storeError",
+          "ui.virtualProfile.storeError",
           virtualHIDProfileOverrideError
         )
       )

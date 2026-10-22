@@ -19,9 +19,9 @@ enum VirtualGamepadLaunch {
     /// The message the user reads.
     var message: String {
       switch self {
-      case .noGamepad: OJDLocalized.string("controllers.launch.noGamepad")
+      case .noGamepad: OJDLocalized.string("ui.controllers.launch.noGamepad")
       case .cannotStart(let program, let reason):
-        OJDLocalized.formatted("cli.virtual.launch.error.failed", program, reason)
+        OJDLocalized.formatted("cli.virtual.launch.errorFailed", program, reason)
       }
     }
   }
@@ -34,9 +34,9 @@ enum VirtualGamepadLaunch {
 
     var message: String {
       switch self {
-      case .started(let program): OJDLocalized.formatted("controllers.launch.started", program)
+      case .started(let program): OJDLocalized.formatted("ui.controllers.launch.started", program)
       case .exited(let program, let status):
-        OJDLocalized.formatted("controllers.launch.exited", program, Int(status))
+        OJDLocalized.formatted("ui.controllers.launch.exited", program, Int(status))
       case .failed(let message): message
       }
     }
@@ -57,9 +57,9 @@ enum VirtualGamepadLaunch {
     } catch {
       let reason: String
       switch error as? ProgramExecutable.Failure {
-      case .noExecutable?: reason = OJDLocalized.string("cli.virtual.launch.error.no_executable")
-      case .notExecutable?: reason = OJDLocalized.string("cli.virtual.launch.error.not_executable")
-      case .notFound?: reason = OJDLocalized.string("cli.virtual.launch.error.not_found")
+      case .noExecutable?: reason = OJDLocalized.string("cli.virtual.launch.errorNoExecutable")
+      case .notExecutable?: reason = OJDLocalized.string("cli.virtual.launch.errorNotExecutable")
+      case .notFound?: reason = OJDLocalized.string("cli.virtual.launch.errorNotFound")
       case nil: throw error
       }
       throw Failure.cannotStart(program: program.lastPathComponent, reason: reason)

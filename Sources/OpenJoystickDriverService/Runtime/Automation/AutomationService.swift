@@ -56,7 +56,7 @@ package struct AutomationAmbiguousModelError: Error, Equatable, LocalizedError, 
 
   package var errorDescription: String? {
     let message = Localization().formatted(
-      "cli.controller.selector.ambiguous",
+      "cli.controller.group.selectorAmbiguous",
       arguments: [model, controllers.count]
     )
     return ([message] + controllers.map { "  \($0.id)  \($0.name)" }).joined(separator: "\n")

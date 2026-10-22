@@ -12,19 +12,22 @@
     private var confirmsUninstall = false
 
     var body: some View {
-      Section(OJDLocalized.string("setup.driverTitle")) {
+      Section(OJDLocalized.string("ui.setup.driverTitle")) {
         HStack(alignment: .firstTextBaseline, spacing: 12) {
           Text(OJDLocalized.string(detailKey)).fixedSize(horizontal: false, vertical: true)
           Spacer(minLength: 12)
           if runtime.systemExtensionSetupState == .active {
-            Button(OJDLocalized.string("cli.login.uninstall_action")) { confirmsUninstall = true }
+            Button(OJDLocalized.string("cli.login.group.uninstallAction")) {
+              confirmsUninstall = true
+            }
           }
         }
       }.alert(isPresented: $confirmsUninstall) {
         Alert(
-          title: Text(OJDLocalized.string("cli.login.uninstall_action")),
-          message: Text(OJDLocalized.string("setup.uninstallDetail")),
-          primaryButton: .destructive(Text(OJDLocalized.string("cli.login.uninstall_action"))) {
+          title: Text(OJDLocalized.string("cli.login.group.uninstallAction")),
+          message: Text(OJDLocalized.string("ui.setup.uninstallDetail")),
+          primaryButton: .destructive(Text(OJDLocalized.string("cli.login.group.uninstallAction")))
+          {
             Task { @MainActor in await runtime.uninstallSystemExtension() }
           },
           secondaryButton: .cancel()
@@ -34,12 +37,12 @@
 
     private var detailKey: String {
       switch runtime.systemExtensionSetupState {
-      case .checking: return "setup.checkingDetail"
-      case .active: return "setup.activeDetail"
-      case .missingEmbedded: return "setup.missingDetail"
-      case .invalid: return "setup.invalidDetail"
-      case .awaitingApproval: return "setup.approvalDetail"
-      case .needsActivation, .replacementNeeded, .failed: return "setup.repairDetail"
+      case .checking: return "ui.setup.checkingDetail"
+      case .active: return "ui.setup.activeDetail"
+      case .missingEmbedded: return "ui.setup.missingDetail"
+      case .invalid: return "ui.setup.invalidDetail"
+      case .awaitingApproval: return "platform.macos.ui.setup.approvalDetail"
+      case .needsActivation, .replacementNeeded, .failed: return "ui.setup.repairDetail"
       }
     }
   }

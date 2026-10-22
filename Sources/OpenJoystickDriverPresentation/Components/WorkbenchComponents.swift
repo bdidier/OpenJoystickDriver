@@ -94,7 +94,7 @@
     @ViewBuilder
     func ojdAccessibilitySelection(_ selected: Bool) -> some View {
       let value = OJDLocalized.string(
-        selected ? "common.selected" : "common.notSelected"
+        selected ? "status.selected" : "status.notSelected"
       )
       accessibilityValue(Text(value)).accessibilityAddTraits(selected ? .isSelected : [])
     }

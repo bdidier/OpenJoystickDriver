@@ -85,14 +85,17 @@ struct LocalizationTests {
   func packagedCatalogIncludesCLIAndInputTestProductKeys() {
     let keys = LocalizationCatalogAudit.keys(for: Localization.sourceLocalization)
     for required in [
-      "cli.root.abstract", "cli.error.service_unavailable", "cli.service.start.abstract",
-      "cli.status.label.controllers", "inputTest.additionalButtons", "inputTest.rumble",
-      "virtualProfile.title", "setup.openSystemSettings", "controllers.battery",
-      "controllers.chargingState", "controllers.cableState", "controllers.discharging",
-      "controllers.charging", "controllers.batteryFull", "controllers.batteryAccessibilityDetails",
-      "profiles.actions", "profiles.editorSection", "profiles.combinations",
+      "platform.macos.cli.root.group.abstract", "cli.shared.error.serviceUnavailable",
+      "cli.service.start.abstract",
+      "cli.status.group.labelControllers", "ui.inputTest.additionalButtons", "ui.inputTest.rumble",
+      "ui.virtualProfile.title", "platform.macos.ui.setup.openSystemSettings",
+      "ui.controllers.battery",
+      "ui.controllers.chargingState", "ui.controllers.cableState", "ui.controllers.discharging",
+      "ui.controllers.charging", "ui.controllers.batteryFull",
+      "ui.controllers.batteryAccessibilityDetails",
+      "ui.profiles.actions", "ui.profiles.editorSection", "ui.profiles.combinations",
     ] { #expect(keys.contains(required)) }
-    #expect(keys.filter { $0.hasPrefix("inputTest.") }.count >= 20)
+    #expect(keys.filter { $0.hasPrefix("ui.inputTest.") }.count >= 20)
   }
 
   @Test
@@ -196,7 +199,7 @@ struct LocalizationTests {
     )
     #expect(
       resolver.plural(
-        "debug.outputDevices",
+        "ui.debug.outputDevices",
         count: 0
       ) == "No controller output devices detected"
     )
@@ -206,7 +209,7 @@ struct LocalizationTests {
   func preferredLanguageSelectionUsesTheLocaleCatalog() {
     let resolver = Localization(preferredLanguages: ["fr-FR", "en-US"])
     #expect(resolver.resolvedLanguage?.lowercased() == "fr-fr")
-    #expect(resolver.string("common.refresh") == "Actualiser")
+    #expect(resolver.string("action.refresh") == "Actualiser")
 
     #expect(resolver.string("test.missing.key") == "test.missing.key")
   }
@@ -299,7 +302,7 @@ struct LocalizationTests {
     #expect(value == "3 controllers connected")
 
     let area = resolver.formatted(
-      "cli.explain.area",
+      "cli.explain.group.area",
       arguments: ["Endpoint" as CVarArg]
     )
     #expect(area == "Area: Endpoint")

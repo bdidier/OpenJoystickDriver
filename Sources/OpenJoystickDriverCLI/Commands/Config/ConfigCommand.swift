@@ -5,8 +5,8 @@ import OpenJoystickDriverKit
 struct ConfigCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "config",
-    abstract: CLILocalized.text("cli.config.abstract"),
-    discussion: CLILocalized.text("cli.config.discussion"),
+    abstract: CLILocalized.text("cli.config.group.abstract"),
+    discussion: CLILocalized.text("cli.config.group.discussion"),
     subcommands: [ConfigShowCommand.self]
   )
 
@@ -73,8 +73,8 @@ struct ConfigShowCommand: AsyncParsableCommand {
           CLIOutput.stderr(
             CLILocalized.text(
               serviceRunning
-                ? "cli.config.show.unread_skipped_no_controller"
-                : "cli.config.show.unread_skipped_no_service"
+                ? "cli.config.show.unreadSkippedNoController"
+                : "cli.config.show.unreadSkippedNoService"
             )
           )
         }
@@ -91,14 +91,14 @@ struct ConfigShowCommand: AsyncParsableCommand {
       case .human:
         if let problem = result.defaultsProblem {
           CLIOutput.stderr(
-            CLILocalized.format("cli.config.show.defaults_ignored", result.defaultsFile, problem)
+            CLILocalized.format("cli.config.show.defaultsIgnored", result.defaultsFile, problem)
           )
         }
         let width = result.values.map(\.key.count).max() ?? 0
         for item in result.values {
           let key = item.key.padding(toLength: width, withPad: " ", startingAt: 0)
           let families = item.families.map {
-            "  " + CLILocalized.format("cli.config.show.read_by", $0.joined(separator: ", "))
+            "  " + CLILocalized.format("cli.config.show.readBy", $0.joined(separator: ", "))
           }
           CLIOutput.stdout(
             "\(key)  \(Self.text(item.value))  (\(CommandLineName.kebab(item.layer)))"
@@ -180,7 +180,7 @@ struct ConfigShowCommand: AsyncParsableCommand {
       guard let record = set.records[model] else {
         throw CLIFailure(
           .notFound,
-          CLILocalized.format("cli.record.show.not_found", model.description)
+          CLILocalized.format("cli.record.show.notFound", model.description)
         )
       }
       effective = record.tuningValues

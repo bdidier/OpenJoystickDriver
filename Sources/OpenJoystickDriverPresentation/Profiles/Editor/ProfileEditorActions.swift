@@ -44,15 +44,15 @@
 
     var activationLabel: String {
       if profile.joyConPair != nil {
-        return OJDLocalized.string("profiles.joyConSessionState")
+        return OJDLocalized.string("ui.profiles.joyConSessionState")
       }
       return OJDLocalized.string(
-        isActive ? "profiles.active" : "profiles.notActive"
+        isActive ? "ui.profiles.active" : "ui.profiles.notActive"
       )
     }
 
     func assignmentCountLabel(_ count: Int) -> String {
-      OJDLocalized.plural("profiles.assignments", count: count)
+      OJDLocalized.plural("ui.profiles.assignments", count: count)
     }
 
     var menuActions: [ProfileEditorMenuAction] {
@@ -278,7 +278,7 @@
       finishSave()
       showingConflict = true
       saveError = OJDLocalized.string(
-        "profiles.changedElsewhere"
+        "ui.profiles.changedElsewhere"
       )
     }
 
@@ -289,7 +289,7 @@
         let latest = snapshot.profiles.first(where: { $0.id == profile.id })
       else {
         localError = OJDLocalized.string(
-          "profiles.savedButUnavailable"
+          "ui.profiles.savedButUnavailable"
         )
         saveError = localError
         return
@@ -314,17 +314,17 @@
 
     var title: String {
       switch self {
-      case .details: return OJDLocalized.string("profiles.details")
+      case .details: return OJDLocalized.string("ui.profiles.details")
       case .restoreDefaultInput:
         return OJDLocalized.string(
-          "profiles.restoreDefaultInput"
+          "ui.profiles.restoreDefaultInput"
         )
       case .clearInputs:
-        return OJDLocalized.string("profiles.clearInputs")
+        return OJDLocalized.string("ui.profiles.clearInputs")
       case .removeAllAssignments:
-        return OJDLocalized.string("profiles.removeAllAssignments")
+        return OJDLocalized.string("ui.profiles.removeAllAssignments")
       case .deactivateAll:
-        return OJDLocalized.string("profiles.deactivateController")
+        return OJDLocalized.string("ui.profiles.deactivateController")
       }
     }
   }

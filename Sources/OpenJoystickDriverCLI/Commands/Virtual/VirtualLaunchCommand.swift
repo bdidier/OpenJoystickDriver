@@ -23,7 +23,9 @@ struct VirtualLaunchCommand: AsyncParsableCommand {
 
   @Flag(
     name: .customLong("sdl-gamecontroller-backend"),
-    help: ArgumentHelp(CLILocalized.text("cli.virtual.launch.sdl_gamecontroller_backend"))
+    help: ArgumentHelp(
+      CLILocalized.text("platform.macos.cli.virtual.launch.sdlGamecontrollerBackend")
+    )
   )
   var sdlGameControllerBackend = false
 
@@ -37,10 +39,10 @@ struct VirtualLaunchCommand: AsyncParsableCommand {
     try await global.run {
       // The program owns standard output, so there is no JSON or plain form.
       guard CLIContext.current.format == .human else {
-        throw CLIFailure.usage(CLILocalized.text("cli.virtual.launch.error.output"))
+        throw CLIFailure.usage(CLILocalized.text("cli.virtual.launch.errorOutput"))
       }
       guard let name = command.first else {
-        throw CLIFailure.usage(CLILocalized.text("cli.virtual.launch.error.no_program"))
+        throw CLIFailure.usage(CLILocalized.text("cli.virtual.launch.errorNoProgram"))
       }
       let executable = try ProgramLauncher.executable(
         for: name,
@@ -60,7 +62,7 @@ struct VirtualLaunchCommand: AsyncParsableCommand {
       } catch SDLLaunchEnvironment.Failure.noProfile {
         throw CLIFailure(
           .controllerRequestFailed,
-          CLILocalized.text("cli.virtual.launch.error.no_gamepad")
+          CLILocalized.text("cli.virtual.launch.errorNoGamepad")
         )
       }
       if !CLIContext.current.quiet, !sdlGameControllerBackend {
@@ -88,9 +90,9 @@ enum ProgramLauncher {
     do { return try ProgramExecutable.url(for: name, searchPath: searchPath) } catch {
       let reason: String
       switch error as? ProgramExecutable.Failure {
-      case .noExecutable?: reason = CLILocalized.text("cli.virtual.launch.error.no_executable")
-      case .notExecutable?: reason = CLILocalized.text("cli.virtual.launch.error.not_executable")
-      case .notFound?: reason = CLILocalized.text("cli.virtual.launch.error.not_found")
+      case .noExecutable?: reason = CLILocalized.text("cli.virtual.launch.errorNoExecutable")
+      case .notExecutable?: reason = CLILocalized.text("cli.virtual.launch.errorNotExecutable")
+      case .notFound?: reason = CLILocalized.text("cli.virtual.launch.errorNotFound")
       case nil: throw error
       }
       throw failure(name, reason)
@@ -132,7 +134,7 @@ enum ProgramLauncher {
   private static func failure(_ program: String, _ reason: String) -> CLIFailure {
     CLIFailure(
       .launchFailed,
-      CLILocalized.format("cli.virtual.launch.error.failed", program, reason)
+      CLILocalized.format("cli.virtual.launch.errorFailed", program, reason)
     )
   }
 }

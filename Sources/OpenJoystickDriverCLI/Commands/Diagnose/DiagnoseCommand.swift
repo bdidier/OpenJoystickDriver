@@ -6,10 +6,10 @@ struct DiagnoseCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "diagnose",
     abstract: CLILocalized.text(
-      "cli.diagnose.abstract"
+      "cli.diagnose.group.abstract"
     ),
     discussion: CLILocalized.text(
-      "cli.diagnose.discussion"
+      "cli.diagnose.group.discussion"
     )
   )
 
@@ -46,7 +46,7 @@ struct DiagnoseCommand: AsyncParsableCommand {
 
   @Option(
     help: ArgumentHelp(
-      CLILocalized.text("cli.diagnose.output"),
+      CLILocalized.text("cli.diagnose.group.output"),
       valueName: "path"
     )
   )
@@ -55,7 +55,7 @@ struct DiagnoseCommand: AsyncParsableCommand {
   @Option(
     help: ArgumentHelp(
       CLILocalized.text(
-        "cli.diagnose.soak"
+        "cli.diagnose.group.soak"
       ),
       valueName: "seconds"
     )
@@ -66,7 +66,7 @@ struct DiagnoseCommand: AsyncParsableCommand {
     name: .customLong("interval-ms"),
     help: ArgumentHelp(
       CLILocalized.text(
-        "cli.diagnose.interval"
+        "cli.diagnose.group.interval"
       ),
       valueName: "ms"
     )
@@ -77,7 +77,7 @@ struct DiagnoseCommand: AsyncParsableCommand {
     name: .customLong("rss-limit-mib"),
     help: ArgumentHelp(
       CLILocalized.text(
-        "cli.diagnose.rss_limit"
+        "cli.diagnose.group.rssLimit"
       ),
       valueName: "mib"
     )
@@ -88,7 +88,7 @@ struct DiagnoseCommand: AsyncParsableCommand {
     name: .customLong("footprint-limit-mib"),
     help: ArgumentHelp(
       CLILocalized.text(
-        "cli.diagnose.footprint_limit"
+        "cli.diagnose.group.footprintLimit"
       ),
       valueName: "mib"
     )
@@ -100,7 +100,7 @@ struct DiagnoseCommand: AsyncParsableCommand {
     guard let soak else { return }
     guard ApplicationServiceRuntimeHealthSampler.secondsRange.contains(soak) else {
       throw ValidationError(
-        CLILocalized.text("cli.diagnose.soak_range")
+        CLILocalized.text("cli.diagnose.group.soakRange")
       )
     }
     guard
@@ -110,7 +110,7 @@ struct DiagnoseCommand: AsyncParsableCommand {
     else {
       throw ValidationError(
         CLILocalized.text(
-          "cli.diagnose.interval_range"
+          "cli.diagnose.group.intervalRange"
         )
       )
     }
@@ -118,7 +118,7 @@ struct DiagnoseCommand: AsyncParsableCommand {
     guard limitRange.contains(residentLimitMiB), limitRange.contains(footprintLimitMiB) else {
       throw ValidationError(
         CLILocalized.text(
-          "cli.diagnose.limit_range"
+          "cli.diagnose.group.limitRange"
         )
       )
     }
@@ -129,7 +129,7 @@ struct DiagnoseCommand: AsyncParsableCommand {
     guard samples <= ApplicationServiceRuntimeHealthSampler.maximumSampleCount else {
       throw ValidationError(
         CLILocalized.format(
-          "cli.diagnose.sample_limit",
+          "cli.diagnose.group.sampleLimit",
           samples
         )
       )
@@ -153,7 +153,7 @@ struct DiagnoseCommand: AsyncParsableCommand {
     else {
       throw ValidationError(
         CLILocalized.format(
-          "cli.diagnose.output_parent",
+          "cli.diagnose.group.outputParent",
           parent
         )
       )
@@ -184,7 +184,7 @@ struct DiagnoseCommand: AsyncParsableCommand {
         do {
           let url = try Self.outputURL(output)
           CLIOutput.stderr(
-            CLILocalized.text("cli.diagnose.output_progress")
+            CLILocalized.text("cli.diagnose.group.outputProgress")
           )
           try Self.writeBundle(to: url, snapshot: snapshot)
           outputURL = url
@@ -204,7 +204,7 @@ struct DiagnoseCommand: AsyncParsableCommand {
       if let outputURL {
         CLIOutput.success(
           CLILocalized.format(
-            "cli.diagnose.output_written",
+            "cli.diagnose.group.outputWritten",
             outputURL.path
           )
         )
@@ -213,7 +213,7 @@ struct DiagnoseCommand: AsyncParsableCommand {
         throw CLIFailure(
           .fileAccessFailed,
           CLILocalized.format(
-            "cli.diagnose.output_failed",
+            "cli.diagnose.group.outputFailed",
             outputError.localizedDescription
           )
         )
@@ -222,7 +222,7 @@ struct DiagnoseCommand: AsyncParsableCommand {
         throw CLIFailure(
           .diagnoseFailed,
           CLILocalized.format(
-            "cli.diagnose.failed",
+            "cli.diagnose.group.failed",
             report.failureCount
           )
         )
@@ -248,7 +248,7 @@ struct DiagnoseCommand: AsyncParsableCommand {
         }
         CLIOutput.stdout(
           CLILocalized.format(
-            "cli.diagnose.timings.frame",
+            "cli.diagnose.group.timingsFrame",
             Int64(frame.sequence),
             controller.controller,
             controller.name,

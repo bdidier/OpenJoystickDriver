@@ -325,7 +325,7 @@
           self.outputState = succeeded ? .succeeded(operation) : .failed(operation)
           if !succeeded {
             self.outputError = OJDLocalized.string(
-              "inputTest.outputRejected"
+              "ui.inputTest.outputRejected"
             )
           }
         } catch is CancellationError {

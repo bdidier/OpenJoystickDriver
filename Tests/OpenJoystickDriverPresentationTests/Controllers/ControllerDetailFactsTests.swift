@@ -130,18 +130,18 @@ struct ControllerDetailFactsTests {
       target: .sdlCompatible
     )
     let failed = ApplicationServicePublicationStatus.failed("send failed", target: .sdlCompatible)
-    let reason = OJDLocalized.string("controllers.publication.reason.noInputYet")
-    let failure = OJDLocalized.formatted("controllers.publication.failedSend", "send failed")
+    let reason = OJDLocalized.string("ui.controllers.publication.reason.noInputYet")
+    let failure = OJDLocalized.formatted("ui.controllers.publication.failedSend", "send failed")
     let withReason = { (state: String, detail: String) in
-      OJDLocalized.formatted("controllers.publication.withReason", state, detail)
+      OJDLocalized.formatted("ui.controllers.publication.withReason", state, detail)
     }
     for (publication, text) in [
-      (published, OJDLocalized.string("controllers.publication.published")),
+      (published, OJDLocalized.string("ui.controllers.publication.published")),
       (
         notPublished,
-        withReason(OJDLocalized.string("controllers.publication.notPublished"), reason)
+        withReason(OJDLocalized.string("ui.controllers.publication.notPublished"), reason)
       ),
-      (failed, withReason(OJDLocalized.string("controllers.publication.failed"), failure)),
+      (failed, withReason(OJDLocalized.string("ui.controllers.publication.failed"), failure)),
     ] {
       let facts = ControllerDetailFacts.general(
         for: device(override: .sdlCompatible, publication: publication)
@@ -155,7 +155,7 @@ struct ControllerDetailFactsTests {
   @Test
   func theProfileIsPublishedOnlyInThePicker() {
     let facts = ControllerDetailFacts.general(for: device(override: .sdlCompatible))
-    #expect(!facts.map(\.label).contains(OJDLocalized.string("cli.controller.show.label.persona")))
+    #expect(!facts.map(\.label).contains(OJDLocalized.string("cli.controller.show.labelPersona")))
   }
 
   @Test
@@ -193,16 +193,16 @@ struct ControllerDetailFactsTests {
       Self.value(.ownership, in: facts)
         == .text(
           OJDLocalized.formatted(
-            "controllers.ownership.value",
-            OJDLocalized.string("controllers.discovery.rawUSB"),
-            OJDLocalized.string("controllers.physicalOwnership.unknown"),
-            OJDLocalized.string("controllers.hidInputOwnership.unknown")
+            "ui.controllers.ownership.value",
+            OJDLocalized.string("ui.controllers.discovery.rawUSB"),
+            OJDLocalized.string("ui.controllers.physicalOwnership.unknown"),
+            OJDLocalized.string("ui.controllers.hidInputOwnership.unknown")
           )
         )
     )
     #expect(
       Self.value(.duplicateExposureRisk, in: facts)
-        == .text(OJDLocalized.string("controllers.physicalOwnership.unknown"))
+        == .text(OJDLocalized.string("ui.controllers.physicalOwnership.unknown"))
     )
     #expect(Self.value(.record, in: facts) == .text("none (no record matches)"))
   }
@@ -221,7 +221,7 @@ struct ControllerDetailFactsTests {
     let facts = ControllerDetailFacts.general(for: device())
     #expect(
       Self.value(.inputHealth, in: facts)
-        == .text(OJDLocalized.string("controllers.inputHealth.healthy"))
+        == .text(OJDLocalized.string("ui.controllers.inputHealth.healthy"))
     )
   }
 
@@ -239,8 +239,8 @@ struct ControllerDetailFactsTests {
     keys += [ControllerInputHealthFailureReason.missingReports, .freshnessNotAdvancing]
       .map(ControllerDetailLabels.inputHealthReasonKey)
     keys += [
-      "controllers.publication.withReason", "controllers.serving.withReason",
-      "controllers.inputHealth.withReason",
+      "ui.controllers.publication.withReason", "ui.controllers.serving.withReason",
+      "ui.controllers.inputHealth.withReason",
     ]
     for key in keys { #expect(OJDLocalized.string(key) != key, "\(key)") }
     for reason in ApplicationServicePublicationStatus.NotPublishedReason.allCases {
@@ -252,9 +252,9 @@ struct ControllerDetailFactsTests {
   @Test
   func closingAWirelessLinkAsksForConfirmationNamingTheController() {
     let confirmation = WirelessDisconnectConfirmation(controllerName: "Pad A")
-    #expect(confirmation.title != "controllers.disconnectWirelessConfirmTitle")
+    #expect(confirmation.title != "ui.controllers.disconnectWirelessConfirmTitle")
     #expect(confirmation.message.contains("Pad A"))
-    #expect(confirmation.confirmTitle != "controllers.disconnectWirelessConfirm")
+    #expect(confirmation.confirmTitle != "ui.controllers.disconnectWirelessConfirm")
     #expect(!confirmation.confirmTitle.isEmpty)
   }
 
@@ -274,7 +274,7 @@ struct ControllerDetailFactsTests {
       .missingAddress, .disconnectFailed, .timedOut,
     ] {
       let text = ControllerDetailLabels.wirelessDisconnectFailureText(failure)
-      #expect(!text.contains("controllers.disconnectWireless"))
+      #expect(!text.contains("ui.controllers.disconnectWireless"))
       #expect(!text.contains(failure.rawValue))
     }
   }
@@ -282,11 +282,11 @@ struct ControllerDetailFactsTests {
   @Test
   func theDuplicateExposureRiskIsNamedForEveryCase() {
     #expect(
-      ControllerDetailFacts.duplicateExposureText(.none) == OJDLocalized.string("common.none")
+      ControllerDetailFacts.duplicateExposureText(.none) == OJDLocalized.string("status.none")
     )
     for risk in [DuplicateExposureRisk.systemHIDVisible, .upstreamVirtualDevice, .unknownOwnership]
     {
-      #expect(!ControllerDetailFacts.duplicateExposureText(risk).contains("controllers."))
+      #expect(!ControllerDetailFacts.duplicateExposureText(risk).contains("ui.controllers."))
     }
   }
 }
@@ -312,21 +312,21 @@ extension ControllerDetailFactsTests {
   func publicationAndInputHealthShowLocalizedWords() {
     #expect(
       ControllerDetailFacts.publicationText(ApplicationServicePublicationStatus.published())
-        == OJDLocalized.string("controllers.publication.published")
+        == OJDLocalized.string("ui.controllers.publication.published")
     )
     #expect(
       ControllerDetailFacts.publicationText(
         ApplicationServicePublicationStatus.notPublished(.noInputYet)
       )
         == OJDLocalized.formatted(
-          "controllers.publication.withReason",
-          OJDLocalized.string("controllers.publication.notPublished"),
-          OJDLocalized.string("controllers.publication.reason.noInputYet")
+          "ui.controllers.publication.withReason",
+          OJDLocalized.string("ui.controllers.publication.notPublished"),
+          OJDLocalized.string("ui.controllers.publication.reason.noInputYet")
         )
     )
     #expect(
       ControllerDetailFacts.inputHealthText(device())
-        == OJDLocalized.string("controllers.inputHealth.healthy")
+        == OJDLocalized.string("ui.controllers.inputHealth.healthy")
     )
   }
 }

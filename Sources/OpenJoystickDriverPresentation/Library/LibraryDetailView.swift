@@ -41,7 +41,7 @@
         ZStack {
           EmptyStateView(
             symbol: "books.vertical",
-            title: OJDLocalized.string("library.detail.empty")
+            title: OJDLocalized.string("ui.library.detail.empty")
           )
           if model.failure != nil || model.notice != nil {
             VStack(spacing: 0) {
@@ -61,9 +61,9 @@
             InlineErrorView(
               message: failure.message,
               code: failure.code,
-              detailsTitle: OJDLocalized.string("library.details"),
+              detailsTitle: OJDLocalized.string("ui.library.details"),
               detailsAccessibilityLabel: OJDLocalized.string("a11y.library.details"),
-              actionTitle: OJDLocalized.string("library.dismiss"),
+              actionTitle: OJDLocalized.string("ui.library.dismiss"),
               actionAccessibilityLabel: OJDLocalized.string("a11y.library.dismissError")
             ) { model.dismissFailure() }
           }
@@ -71,12 +71,12 @@
             HStack(alignment: .firstTextBaseline) {
               OJDSystemSymbol(
                 name: SemanticState.healthy.presentation.symbolName,
-                fallback: OJDLocalized.string("common.status")
+                fallback: OJDLocalized.string("term.status")
               ).foregroundColor(Color(SemanticState.healthy.presentation.tone.color))
                 .accessibilityHidden(true)
               Text(notice).fixedSize(horizontal: false, vertical: true)
               Spacer(minLength: 0)
-              Button(OJDLocalized.string("library.dismiss")) { model.dismissNotice() }
+              Button(OJDLocalized.string("ui.library.dismiss")) { model.dismissNotice() }
                 .ojdAccessibilityLabel(OJDLocalized.string("a11y.library.dismissNotice"))
             }.ojdAccessibilityLabel(notice)
           }
@@ -89,18 +89,21 @@
     @ViewBuilder
     private func recordSections(_ detail: LibraryRecordDetail) -> some View {
       Section {
-        OJDLabeledValue(OJDLocalized.string("library.field.identity"), detail.item.identity)
-        OJDLabeledValue(OJDLocalized.string("library.field.family"), detail.item.family.displayName)
+        OJDLabeledValue(OJDLocalized.string("ui.library.field.identity"), detail.item.identity)
         OJDLabeledValue(
-          OJDLocalized.string("library.field.source"),
+          OJDLocalized.string("ui.library.field.family"),
+          detail.item.family.displayName
+        )
+        OJDLabeledValue(
+          OJDLocalized.string("ui.library.field.source"),
           detail.item.layer.libraryTitle
         )
-        OJDLabeledValue(OJDLocalized.string("library.field.file"), detail.item.file?.path)
-        OJDLabeledValue(OJDLocalized.string("library.field.transport"), detail.transport)
+        OJDLabeledValue(OJDLocalized.string("ui.library.field.file"), detail.item.file?.path)
+        OJDLabeledValue(OJDLocalized.string("ui.library.field.transport"), detail.transport)
         if let claimed = detail.claimedByUSBExtension {
           OJDLabeledValue(
-            OJDLocalized.string("library.field.usbClaim"),
-            OJDLocalized.string(claimed ? "library.claim.claimed" : "library.claim.unclaimed")
+            OJDLocalized.string("ui.library.field.usbClaim"),
+            OJDLocalized.string(claimed ? "ui.library.claim.claimed" : "ui.library.claim.unclaimed")
           )
         }
         ForEach(detail.notes, id: \.self) { note in
@@ -108,12 +111,12 @@
         }
       }
       if let run = model.testRun, run.model == detail.item.model { testSection(run) }
-      Section(header: Text(OJDLocalized.string("library.section.fields"))) {
+      Section(header: Text(OJDLocalized.string("ui.library.section.fields"))) {
         ForEach(detail.fields) { field in
           OJDLabeledValue(field.name, field.layer.libraryTitle)
         }
       }
-      Section(header: Text(OJDLocalized.string("cli.controller.show.label.record"))) {
+      Section(header: Text(OJDLocalized.string("cli.controller.show.labelRecord"))) {
         recordDocument(detail)
       }
     }
@@ -130,7 +133,7 @@
     }
 
     private func testSection(_ run: LibraryTestRun) -> some View {
-      Section(header: Text(OJDLocalized.string("library.section.testResult"))) {
+      Section(header: Text(OJDLocalized.string("ui.library.section.testResult"))) {
         if run.result.matches {
           Text(
             OJDLocalized.formatted(
@@ -167,15 +170,15 @@
     @ViewBuilder
     private func modSections(_ mod: LibraryModItem) -> some View {
       Section {
-        OJDLabeledValue(OJDLocalized.string("cli.controller.show.label.name"), mod.name)
-        OJDLabeledValue(OJDLocalized.string("library.field.version"), mod.version)
-        OJDLabeledValue(OJDLocalized.string("library.field.author"), mod.author)
+        OJDLabeledValue(OJDLocalized.string("cli.controller.show.labelName"), mod.name)
+        OJDLabeledValue(OJDLocalized.string("ui.library.field.version"), mod.version)
+        OJDLabeledValue(OJDLocalized.string("ui.library.field.author"), mod.author)
         if let problem = mod.problem {
-          Text(OJDLocalized.formatted("library.mod.unused", problem))
+          Text(OJDLocalized.formatted("ui.library.mod.unused", problem))
             .foregroundColor(Color(SemanticTone.caution.color))
         }
       }
-      Section(header: Text(OJDLocalized.string("library.section.files"))) {
+      Section(header: Text(OJDLocalized.string("ui.library.section.files"))) {
         if mod.files.isEmpty { OJDValueText(nil) }
         ForEach(mod.files, id: \.self) { file in Text(file).textSelection(.enabled) }
       }

@@ -16,7 +16,14 @@ struct MainWindowAreaTests {
   @Test
   func everyAreaHasATitleKey() {
     for area in MainWindowArea.allCases {
-      #expect(area.titleKey == "area.\(area.rawValue).title")
+      #expect(area.titleKey == "ui.sidebar.\(area.rawValue).title")
+    }
+  }
+
+  @Test
+  func everyAreaTitleKeyIsInTheCatalog() {
+    for area in MainWindowArea.allCases {
+      #expect(OJDLocalized.string(area.titleKey) != area.titleKey, "\(area.titleKey)")
     }
   }
 
@@ -40,7 +47,7 @@ struct MainWindowAreaTests {
     #expect(area == .profiles)
     if let area { #expect(navigation.requestArea(area)) }
     #expect(navigation.selectedArea == .profiles)
-    #expect(navigation.selectedArea.titleKey == "area.profiles.title")
+    #expect(navigation.selectedArea.titleKey == "ui.sidebar.profiles.title")
   }
 
   @Test

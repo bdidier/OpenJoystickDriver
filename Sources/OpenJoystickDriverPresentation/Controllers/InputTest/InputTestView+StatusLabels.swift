@@ -8,19 +8,19 @@
 
     var statusLabel: String {
       switch model.sessionState {
-      case .idle: return OJDLocalized.string("inputTest.idle")
-      case .starting: return OJDLocalized.string("inputTest.starting")
-      case .live: return OJDLocalized.string("inputTest.live")
-      case .stale: return OJDLocalized.string("inputTest.stale")
+      case .idle: return OJDLocalized.string("ui.inputTest.idle")
+      case .starting: return OJDLocalized.string("ui.inputTest.starting")
+      case .live: return OJDLocalized.string("ui.inputTest.live")
+      case .stale: return OJDLocalized.string("ui.inputTest.stale")
       case .disconnected:
-        return OJDLocalized.string("inputTest.disconnected")
+        return OJDLocalized.string("ui.inputTest.disconnected")
       case .permissionRequired:
         return OJDLocalized.string(
-          "inputTest.permissionRequired"
+          "platform.macos.ui.inputTest.permissionRequired"
         )
       case .unavailable:
-        return OJDLocalized.string("inputTest.unavailable")
-      case .error: return OJDLocalized.string("common.failed")
+        return OJDLocalized.string("ui.inputTest.unavailable")
+      case .error: return OJDLocalized.string("status.failed")
       }
     }
 

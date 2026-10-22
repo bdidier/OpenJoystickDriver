@@ -34,7 +34,7 @@ package struct CLI {
         CLIOutput.stderr(
           CLIFailure.prefix(.unknownCommand)
             + CLILocalized.format(
-              "cli.error.unknown_command",
+              "cli.shared.error.unknownCommand",
               match.typed,
               suggestion
             )
@@ -75,7 +75,7 @@ package struct CLI {
       CLIOutput.stderr(
         CLIFailure.prefix(.unexpected)
           + CLILocalized.format(
-            "cli.error.unexpected",
+            "cli.shared.error.unexpected",
             String(describing: error).replacingOccurrences(of: "\n", with: " ")
           )
       )
@@ -97,7 +97,7 @@ package struct CLI {
     // Only the root help lists the global options; subcommand help points to it.
     let isHelp = message.hasPrefix("OVERVIEW: ") || message.hasPrefix("USAGE: ")
     if code == CLIExitCode.success.rawValue, isHelp, message != OJDCommand.helpMessage() {
-      message += "\n" + CLILocalized.text("cli.help.global_options")
+      message += "\n" + CLILocalized.text("cli.shared.help.globalOptions")
     }
     if !message.isEmpty {
       if code == CLIExitCode.success.rawValue {

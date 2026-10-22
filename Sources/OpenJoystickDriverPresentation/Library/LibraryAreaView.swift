@@ -32,7 +32,7 @@
 
     var body: some View {
       VStack(spacing: 0) {
-        Picker(OJDLocalized.string("library.records"), selection: $model.scope) {
+        Picker(OJDLocalized.string("ui.library.records"), selection: $model.scope) {
           ForEach(LibraryScope.allCases) { scope in
             Text(OJDLocalized.string(scope.titleKey)).tag(scope)
           }
@@ -41,7 +41,9 @@
         List(selection: selection) {
           Section(header: recordsHeader) {
             if model.visibleRecords.isEmpty && (isSearching || model.records.skipped.isEmpty) {
-              emptyLine(isSearching ? "library.search.noMatches" : "library.records.empty.title")
+              emptyLine(
+                isSearching ? "ui.library.search.noMatches" : "ui.library.records.empty.title"
+              )
             }
             ForEach(model.visibleRecords) { item in recordRow(item) }
             if model.scope == .installed && !isSearching {
@@ -49,9 +51,11 @@
             }
           }
           if model.scope == .installed {
-            Section(header: Text(OJDLocalized.string("library.mods"))) {
+            Section(header: Text(OJDLocalized.string("ui.library.mods"))) {
               if model.visibleMods.isEmpty {
-                emptyLine(isSearching ? "library.search.noMatches" : "library.mods.empty.title")
+                emptyLine(
+                  isSearching ? "ui.library.search.noMatches" : "ui.library.mods.empty.title"
+                )
               }
               ForEach(model.visibleMods) { mod in modRow(mod) }
             }
@@ -72,10 +76,10 @@
     @ViewBuilder
     private var recordsHeader: some View {
       switch model.scope {
-      case .installed: Text(OJDLocalized.string("library.records"))
+      case .installed: Text(OJDLocalized.string("ui.library.records"))
       case .builtIn:
         HStack {
-          Text(OJDLocalized.string("library.builtIn"))
+          Text(OJDLocalized.string("ui.library.builtIn"))
           Spacer()
           Text(model.records.builtIn.count.formatted())
         }.ojdAccessibilityValue(model.records.builtIn.count.formatted())
@@ -88,7 +92,7 @@
 
     private func recordRow(_ item: LibraryRecordItem) -> some View {
       let summary = OJDLocalized.formatted(
-        "library.record.detail",
+        "ui.library.record.detail",
         item.family.displayName,
         item.layer.libraryTitle
       )
@@ -96,7 +100,7 @@
         Text(item.identity)
         Text(summary).font(.caption).foregroundColor(.secondary)
         if let patch = item.patchedBy {
-          Text(OJDLocalized.formatted("library.record.patchedBy", patch)).font(.caption)
+          Text(OJDLocalized.formatted("ui.library.record.patchedBy", patch)).font(.caption)
             .foregroundColor(.secondary)
         }
       }.tag(LibrarySelection.record(item.model)).ojdAccessibilityLabel(item.identity)
@@ -106,7 +110,7 @@
     private func skippedRow(_ skipped: LibrarySkippedFile) -> some View {
       VStack(alignment: .leading, spacing: 2) {
         Text(skipped.path)
-        Text(OJDLocalized.formatted("library.record.skipped", skipped.problem)).font(.caption)
+        Text(OJDLocalized.formatted("ui.library.record.skipped", skipped.problem)).font(.caption)
           .foregroundColor(.secondary)
       }.ojdAccessibilityLabel(skipped.path).ojdAccessibilityValue(skipped.problem)
     }
@@ -127,7 +131,7 @@
     var summary: String? {
       switch (version, author) {
       case (let version?, let author?):
-        return OJDLocalized.formatted("library.mod.detail", version, author)
+        return OJDLocalized.formatted("ui.library.mod.detail", version, author)
       case (let single?, nil), (nil, let single?): return single
       case (nil, nil): return nil
       }
@@ -138,12 +142,12 @@
     /// The layer's name for the person.
     var libraryTitle: String {
       switch self {
-      case .driver: return OJDLocalized.string("library.layer.driver")
-      case .bundled: return OJDLocalized.string("library.builtIn")
-      case .package: return OJDLocalized.string("library.layer.package")
-      case .global: return OJDLocalized.string("library.layer.global")
-      case .user: return OJDLocalized.string("library.layer.user")
-      case .profile: return OJDLocalized.string("controllers.activeProfile")
+      case .driver: return OJDLocalized.string("ui.library.layer.driver")
+      case .bundled: return OJDLocalized.string("ui.library.builtIn")
+      case .package: return OJDLocalized.string("ui.library.layer.package")
+      case .global: return OJDLocalized.string("ui.library.layer.global")
+      case .user: return OJDLocalized.string("ui.library.layer.user")
+      case .profile: return OJDLocalized.string("ui.controllers.activeProfile")
       }
     }
   }
@@ -160,7 +164,7 @@
           .fixedSize(horizontal: false, vertical: true)
         HStack {
           Spacer()
-          Button(OJDLocalized.string("common.cancel"), action: cancel).keyboardShortcut(
+          Button(OJDLocalized.string("action.cancel"), action: cancel).keyboardShortcut(
             .cancelAction
           ).ojdAccessibilityLabel(OJDLocalized.string("a11y.library.cancel"))
           Button(confirmation.confirmTitle, action: confirm).keyboardShortcut(.defaultAction)
@@ -178,18 +182,18 @@
       panel.allowsMultipleSelection = false
       panel.canChooseDirectories = true
       panel.canChooseFiles = true
-      panel.message = OJDLocalized.string("library.recordOrMod.pick")
-      panel.prompt = OJDLocalized.string("library.choose")
+      panel.message = OJDLocalized.string("ui.library.recordOrMod.pick")
+      panel.prompt = OJDLocalized.string("ui.library.choose")
       return panel.runModal() == .OK ? panel.url : nil
     }
 
     /// The packet capture: JSON lines, which no content type names.
     static func chooseCapture() -> URL? {
-      chooseFile(message: "library.test.packets.pick")
+      chooseFile(message: "ui.library.test.packets.pick")
     }
 
     static func chooseExpectation() -> URL? {
-      chooseFile(message: "library.test.expect.pick", type: .json)
+      chooseFile(message: "ui.library.test.expect.pick", type: .json)
     }
 
     private static func chooseFile(message: String, type: UTType? = nil) -> URL? {
@@ -198,7 +202,7 @@
       panel.allowsMultipleSelection = false
       panel.canChooseDirectories = false
       panel.message = OJDLocalized.string(message)
-      panel.prompt = OJDLocalized.string("library.choose")
+      panel.prompt = OJDLocalized.string("ui.library.choose")
       return panel.runModal() == .OK ? panel.url : nil
     }
   }

@@ -94,7 +94,7 @@ extension DiagnoseServiceSnapshot {
     let detail = error.localizedDescription
     return .failed(
       Localization().formatted(
-        "cli.error.service_request_failed",
+        "cli.shared.error.serviceRequestFailed",
         arguments: [detail.hasSuffix(".") ? String(detail.dropLast()) : detail]
       )
     )
@@ -128,8 +128,8 @@ public enum DiagnosticsService {
   public static func skipped(_ id: String, _ snapshot: DiagnoseServiceSnapshot) -> DiagnoseCheck {
     let reason =
       snapshot.availability == .stopped
-      ? localization.string("cli.diagnose.skip.service_stopped")
-      : localization.string("cli.diagnose.skip.service_failed")
+      ? localization.string("cli.diagnose.group.skipServiceStopped")
+      : localization.string("cli.diagnose.group.skipServiceFailed")
     return DiagnoseCheck(id, .skip, reason)
   }
 
@@ -140,20 +140,20 @@ public enum DiagnosticsService {
       bundle = DiagnoseCheck(
         "transport-extension-bundle",
         .pass,
-        localization.string("cli.diagnose.transport_extension.bundle_present")
+        localization.string("cli.diagnose.group.transportExtensionBundlePresent")
       )
     case .missing:
       bundle = DiagnoseCheck(
         "transport-extension-bundle",
         .fail,
-        localization.string("cli.diagnose.transport_extension.bundle_missing")
+        localization.string("cli.diagnose.group.transportExtensionBundleMissing")
       )
     case .invalid:
       bundle = DiagnoseCheck(
         "transport-extension-bundle",
         .fail,
         localization.formatted(
-          "cli.diagnose.transport_extension.bundle_invalid",
+          "cli.diagnose.group.transportExtensionBundleInvalid",
           arguments: [status.detail ?? ""]
         )
       )
@@ -164,26 +164,26 @@ public enum DiagnosticsService {
       registration = DiagnoseCheck(
         "transport-extension-registration",
         .pass,
-        localization.string("cli.diagnose.transport_extension.active")
+        localization.string("platform.macos.cli.diagnose.group.transportExtensionActive")
       )
     case .inactive:
       registration = DiagnoseCheck(
         "transport-extension-registration",
         .warn,
-        localization.string("cli.diagnose.transport_extension.inactive")
+        localization.string("cli.diagnose.group.transportExtensionInactive")
       )
     case .absent:
       registration = DiagnoseCheck(
         "transport-extension-registration",
         .warn,
-        localization.string("cli.diagnose.transport_extension.absent")
+        localization.string("platform.macos.cli.diagnose.group.transportExtensionAbsent")
       )
     case .unavailable:
       registration = DiagnoseCheck(
         "transport-extension-registration",
         .warn,
         localization.formatted(
-          "cli.diagnose.transport_extension.unavailable",
+          "platform.macos.cli.diagnose.group.transportExtensionUnavailable",
           arguments: [status.detail ?? ""]
         )
       )
@@ -198,12 +198,16 @@ public enum DiagnosticsService {
       return DiagnoseCheck(
         "service",
         .pass,
-        localization.formatted("cli.diagnose.service.running", arguments: [version])
+        localization.formatted("cli.diagnose.group.serviceRunning", arguments: [version])
       )
     case .stopped:
       switch snapshot.listenerFailure {
       case .absent:
-        return DiagnoseCheck("service", .warn, localization.string("cli.diagnose.service.stopped"))
+        return DiagnoseCheck(
+          "service",
+          .warn,
+          localization.string("cli.diagnose.group.serviceStopped")
+        )
       case .stopped(let failure):
         return DiagnoseCheck("service", .fail, failure.localizedSummary)
       case .earlier(let failure):
@@ -234,9 +238,9 @@ public enum DiagnosticsService {
     switch value {
     case .granted: DiagnoseCheck(id, .pass, "granted")
     case .denied:
-      DiagnoseCheck(id, .fail, localization.string("cli.diagnose.permission.denied"))
+      DiagnoseCheck(id, .fail, localization.string("cli.diagnose.group.permissionDenied"))
     case .unknown:
-      DiagnoseCheck(id, .warn, localization.string("cli.diagnose.permission.unknown"))
+      DiagnoseCheck(id, .warn, localization.string("cli.diagnose.group.permissionUnknown"))
     }
   }
 
@@ -248,18 +252,18 @@ public enum DiagnosticsService {
       return DiagnoseCheck(
         id,
         .fail,
-        localization.formatted("cli.diagnose.virtual.error", arguments: [message])
+        localization.formatted("cli.diagnose.group.virtualError", arguments: [message])
       )
     }
     if let error = status.virtualHIDProfileOverrideError {
       return DiagnoseCheck(
         id,
         .warn,
-        localization.formatted("cli.diagnose.virtual.override", arguments: [error])
+        localization.formatted("cli.diagnose.group.virtualOverride", arguments: [error])
       )
     }
     if status.userSpaceVirtualDeviceEnabled == false {
-      return DiagnoseCheck(id, .warn, localization.string("cli.diagnose.virtual.disabled"))
+      return DiagnoseCheck(id, .warn, localization.string("cli.diagnose.group.virtualDisabled"))
     }
     return DiagnoseCheck(id, .pass, backend)
   }
@@ -272,7 +276,7 @@ public enum DiagnosticsService {
         "controller-records",
         .warn,
         localization.formatted(
-          "cli.diagnose.records.skipped",
+          "cli.diagnose.group.recordsSkipped",
           arguments: [files.joined(separator: "; ")]
         )
       )
@@ -280,7 +284,10 @@ public enum DiagnosticsService {
     return DiagnoseCheck(
       "controller-records",
       .pass,
-      localization.formatted("cli.diagnose.records.applied", arguments: [records.userFiles.count])
+      localization.formatted(
+        "cli.diagnose.group.recordsApplied",
+        arguments: [records.userFiles.count]
+      )
     )
   }
 
@@ -302,7 +309,7 @@ public enum DiagnosticsService {
         "config-files",
         .warn,
         localization.formatted(
-          "cli.diagnose.records.config_problems",
+          "cli.diagnose.group.recordsConfigProblems",
           arguments: [files.joined(separator: "; ")]
         )
       )
@@ -310,7 +317,7 @@ public enum DiagnosticsService {
     return DiagnoseCheck(
       "config-files",
       .pass,
-      localization.string("cli.diagnose.records.config_ok")
+      localization.string("cli.diagnose.group.recordsConfigOk")
     )
   }
 
@@ -321,13 +328,16 @@ public enum DiagnosticsService {
       DiagnoseCheck(
         "usb-access",
         .pass,
-        localization.formatted("cli.diagnose.usb.ok", arguments: [count])
+        localization.formatted("cli.diagnose.group.usbOk", arguments: [count])
       )
     case .failure(let error):
       DiagnoseCheck(
         "usb-access",
         .warn,
-        localization.formatted("cli.diagnose.usb.failed", arguments: [error.localizedDescription])
+        localization.formatted(
+          "platform.macos.cli.diagnose.group.usbFailed",
+          arguments: [error.localizedDescription]
+        )
       )
     }
   }
@@ -356,12 +366,12 @@ public enum DiagnosticsService {
   /// The catalog entry that words the verdict and the measurements of one soak run.
   static func verdictKey(_ verdict: RuntimeSoakVerdict) -> String {
     switch verdict {
-    case .insufficientData: "cli.diagnose.soak.verdict.insufficient_data"
-    case .stable: "cli.diagnose.soak.verdict.stable"
-    case .memoryGrowthObserved: "cli.diagnose.soak.verdict.memory_growth"
-    case .resourceGrowthObserved: "cli.diagnose.soak.verdict.resource_growth"
-    case .residentLimitExceeded: "cli.diagnose.soak.verdict.resident_limit"
-    case .physicalFootprintLimitExceeded: "cli.diagnose.soak.verdict.footprint_limit"
+    case .insufficientData: "cli.diagnose.group.soakVerdictInsufficientData"
+    case .stable: "cli.diagnose.group.soakVerdictStable"
+    case .memoryGrowthObserved: "cli.diagnose.group.soakVerdictMemoryGrowth"
+    case .resourceGrowthObserved: "cli.diagnose.group.soakVerdictResourceGrowth"
+    case .residentLimitExceeded: "cli.diagnose.group.soakVerdictResidentLimit"
+    case .physicalFootprintLimitExceeded: "cli.diagnose.group.soakVerdictFootprintLimit"
     }
   }
 }

@@ -69,7 +69,7 @@
             )
           case .approveDriver:
             if !SystemExtensionApproval.openSystemSettings() {
-              return OJDLocalized.string("setup.openSystemSettingsFailed")
+              return OJDLocalized.string("platform.macos.ui.setup.openSystemSettingsFailed")
             }
           case .showLibrary: _ = navigation.requestArea(.library)
           }
@@ -424,7 +424,8 @@
       if action.needsSavedProfile {
         item.toolTip =
           profileToolbarState.hasUnsavedChanges
-          ? OJDLocalized.string("profiles.saveFirst") : OJDLocalized.string(action.descriptionKey)
+          ? OJDLocalized.string("ui.profiles.saveFirst")
+          : OJDLocalized.string(action.descriptionKey)
       }
       return isEnabled(action)
     }

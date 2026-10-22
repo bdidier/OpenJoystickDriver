@@ -64,7 +64,7 @@ enum ServiceConnection {
       CLIFailure(
         rejection.code.errorCode,
         CLILocalized.text(
-          "cli.error.duplicate_profile_name"
+          "cli.shared.error.duplicateProfileName"
         )
       )
     case let rejection as ApplicationServiceRemappingRPCError
@@ -72,7 +72,7 @@ enum ServiceConnection {
       CLIFailure(
         rejection.code.errorCode,
         CLILocalized.text(
-          "error.E3029"
+          "error.E3029.message"
         )
       )
     case let rejection as ApplicationServiceRemappingRPCError:
@@ -88,14 +88,14 @@ extension CLIFailure {
       return Self(
         .serviceTimeout,
         CLILocalized.text(
-          "cli.error.service_timeout"
+          "cli.shared.error.serviceTimeout"
         )
       )
     }
     return Self(
       .serviceTimeout,
       CLILocalized.format(
-        "cli.error.request_timeout",
+        "cli.shared.error.requestTimeout",
         seconds.durationText
       )
     )
@@ -105,7 +105,7 @@ extension CLIFailure {
     Self(
       .peerRejected,
       CLILocalized.text(
-        "cli.error.peer_rejected"
+        "cli.shared.error.peerRejected"
       )
     )
   }

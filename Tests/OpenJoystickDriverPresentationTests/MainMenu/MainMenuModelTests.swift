@@ -69,9 +69,9 @@ struct MainMenuModelTests {
     #expect(item.modifiers == [.command, .option])
     var state = MainMenuState()
     state.isToolbarVisible = true
-    #expect(MainMenuModel.titleKey(of: item, state: state) == "mainMenu.view.hideToolbar")
+    #expect(MainMenuModel.titleKey(of: item, state: state) == "ui.menu.view.hideToolbar")
     state.isToolbarVisible = false
-    #expect(MainMenuModel.titleKey(of: item, state: state) == "mainMenu.view.showToolbar")
+    #expect(MainMenuModel.titleKey(of: item, state: state) == "ui.menu.view.showToolbar")
     let actions = try section("view").items.map(\.action)
     #expect(actions.suffix(3) == [.toggleToolbar, .toggleSidebar, .toggleFullScreen])
   }
@@ -83,9 +83,9 @@ struct MainMenuModelTests {
     #expect(item.modifiers == [.command, .control])
     var state = MainMenuState()
     state.isSidebarVisible = true
-    #expect(MainMenuModel.titleKey(of: item, state: state) == "mainMenu.view.hideSidebar")
+    #expect(MainMenuModel.titleKey(of: item, state: state) == "ui.menu.view.hideSidebar")
     state.isSidebarVisible = false
-    #expect(MainMenuModel.titleKey(of: item, state: state) == "mainMenu.view.showSidebar")
+    #expect(MainMenuModel.titleKey(of: item, state: state) == "ui.menu.view.showSidebar")
   }
 
   @Test
@@ -208,7 +208,7 @@ struct MainMenuModelTests {
     #expect(!MainMenuModel.isEnabled(disconnect, state: state))
     #expect(!MainMenuModel.isEnabled(deactivate, state: state))
     #expect(MainMenuModel.isEnabled(activate, state: state))
-    #expect(MainMenuModel.titleKey(of: suspend, state: state) == "mainMenu.controller.suspend")
+    #expect(MainMenuModel.titleKey(of: suspend, state: state) == "ui.menu.controller.suspend")
 
     state.controllers = [
       MainMenuControllerState(
@@ -221,7 +221,7 @@ struct MainMenuModelTests {
     ]
     #expect(MainMenuModel.isEnabled(disconnect, state: state))
     #expect(MainMenuModel.isEnabled(deactivate, state: state))
-    #expect(MainMenuModel.titleKey(of: suspend, state: state) == "mainMenu.controller.resume")
+    #expect(MainMenuModel.titleKey(of: suspend, state: state) == "ui.menu.controller.resume")
 
     state.selectedControllerID = nil
     #expect(!MainMenuModel.isEnabled(suspend, state: state))
@@ -255,14 +255,14 @@ struct MainMenuModelTests {
     #expect(state.controller == first)
     #expect(MainMenuModel.controllerTargetTitle(state: state) == .verbatim("First"))
     #expect(MainMenuModel.isEnabled(suspend, state: state))
-    #expect(MainMenuModel.titleKey(of: suspend, state: state) == "mainMenu.controller.suspend")
+    #expect(MainMenuModel.titleKey(of: suspend, state: state) == "ui.menu.controller.suspend")
     #expect(!MainMenuModel.isEnabled(disconnect, state: state))
     #expect(!MainMenuModel.isEnabled(deactivate, state: state))
 
     state.selectedControllerID = "b"
     #expect(state.controller == second)
     #expect(MainMenuModel.controllerTargetTitle(state: state) == .verbatim("Second"))
-    #expect(MainMenuModel.titleKey(of: suspend, state: state) == "mainMenu.controller.resume")
+    #expect(MainMenuModel.titleKey(of: suspend, state: state) == "ui.menu.controller.resume")
     #expect(MainMenuModel.isEnabled(disconnect, state: state))
     #expect(MainMenuModel.isEnabled(deactivate, state: state))
   }
@@ -271,7 +271,7 @@ struct MainMenuModelTests {
   func controllerTargetRowSaysWhyTheMenuIsDisabled() throws {
     let target = try #require(MainMenuModel.item(for: .controllerTarget))
     var state = MainMenuState()
-    #expect(MainMenuModel.controllerTargetTitle(state: state) == .key("controllers.emptyTitle"))
+    #expect(MainMenuModel.controllerTargetTitle(state: state) == .key("ui.controllers.emptyTitle"))
     #expect(!MainMenuModel.isEnabled(target, state: state))
     state.controllers = [
       MainMenuControllerState(
@@ -300,22 +300,22 @@ struct MainMenuModelTests {
       ]
     )
     #expect(
-      MainMenuModel.controllerTargetTitle(state: state) == .key("mainMenu.controller.noneSelected")
+      MainMenuModel.controllerTargetTitle(state: state) == .key("ui.menu.controller.noneSelected")
     )
     state.selectedControllerID = "gone"
     #expect(state.controller == nil)
     #expect(
-      MainMenuModel.controllerTargetTitle(state: state) == .key("mainMenu.controller.noneSelected")
+      MainMenuModel.controllerTargetTitle(state: state) == .key("ui.menu.controller.noneSelected")
     )
     state.controllers = []
-    #expect(MainMenuModel.controllerTargetTitle(state: state) == .key("controllers.emptyTitle"))
+    #expect(MainMenuModel.controllerTargetTitle(state: state) == .key("ui.controllers.emptyTitle"))
   }
 
   @Test
   @MainActor
   func controllerTargetRowTextIsTheNameOrLocalizedText() {
     #expect(MainMenuRenderer.text(of: .verbatim("Pad")) == "Pad")
-    for key in ["controllers.emptyTitle", "mainMenu.controller.noneSelected"] {
+    for key in ["ui.controllers.emptyTitle", "ui.menu.controller.noneSelected"] {
       let text = MainMenuRenderer.text(of: .key(key))
       #expect(!text.isEmpty && text != key, "\(key) has no text")
     }

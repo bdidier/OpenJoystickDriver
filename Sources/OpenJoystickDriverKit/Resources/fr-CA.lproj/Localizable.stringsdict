@@ -26,7 +26,7 @@
 			<string>%d manettes connectées</string>
 		</dict>
 	</dict>
-	<key>profiles.assignments</key>
+	<key>ui.profiles.assignments</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@count@</string>
@@ -50,7 +50,7 @@
 			<string>%d attributions</string>
 		</dict>
 	</dict>
-	<key>debug.outputDevices</key>
+	<key>ui.debug.outputDevices</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@count@</string>

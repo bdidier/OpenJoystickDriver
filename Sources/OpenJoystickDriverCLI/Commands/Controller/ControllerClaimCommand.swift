@@ -7,7 +7,7 @@ struct ControllerClaimCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "claim",
     abstract: CLILocalized.text("cli.controller.claim.abstract"),
-    discussion: CLILocalized.text("cli.controller.claim.discussion")
+    discussion: CLILocalized.text("platform.macos.cli.controller.claim.discussion")
   )
 
   @Argument(help: controllerArgumentHelp)
@@ -15,7 +15,7 @@ struct ControllerClaimCommand: AsyncParsableCommand {
 
   @Flag(
     name: [.customShort("n"), .long],
-    help: ArgumentHelp(CLILocalized.text("cli.option.dry_run"))
+    help: ArgumentHelp(CLILocalized.text("cli.shared.option.dryRun"))
   )
   var dryRun = false
 
@@ -37,8 +37,8 @@ struct ControllerClaimCommand: AsyncParsableCommand {
 struct ControllerReleaseCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "release",
-    abstract: CLILocalized.text("cli.controller.release.abstract"),
-    discussion: CLILocalized.text("cli.controller.release.discussion")
+    abstract: CLILocalized.text("platform.macos.cli.controller.release.abstract"),
+    discussion: CLILocalized.text("platform.macos.cli.controller.release.discussion")
   )
 
   @Argument(help: controllerArgumentHelp)
@@ -46,7 +46,7 @@ struct ControllerReleaseCommand: AsyncParsableCommand {
 
   @Flag(
     name: [.customShort("n"), .long],
-    help: ArgumentHelp(CLILocalized.text("cli.option.dry_run"))
+    help: ArgumentHelp(CLILocalized.text("cli.shared.option.dryRun"))
   )
   var dryRun = false
 

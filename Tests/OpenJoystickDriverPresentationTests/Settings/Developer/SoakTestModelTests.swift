@@ -82,7 +82,7 @@ struct SoakTestFormTests {
 
     #expect(
       SoakTestProblem.outOfRange(.interval).message
-        == OJDLocalized.formatted("developer.soakOutOfRange", label, 100, 60_000)
+        == OJDLocalized.formatted("ui.developer.soakOutOfRange", label, 100, 60_000)
     )
     #expect(SoakTestProblem.outOfRange(.interval).message.contains(label))
   }

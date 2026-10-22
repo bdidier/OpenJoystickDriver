@@ -11,7 +11,7 @@ enum ProfileNameValidation {
 /// of the names `profiles` already have.
 func defaultDuplicateName(of source: RemappingProfile, in profiles: [RemappingProfile]) -> String {
   ProfileNaming.availableName(
-    OJDLocalized.formatted("profiles.copyName", source.name),
+    OJDLocalized.formatted("ui.profiles.copyName", source.name),
     in: profiles
   )
 }

@@ -153,7 +153,7 @@
         startAtLogin = launchAtLogin.isEnabled
         if enabled && !startAtLogin {
           errorMessage = OJDLocalized.string(
-            "settings.startAtLoginApprovalRequired"
+            "platform.macos.ui.settings.general.startAtLoginApprovalRequired"
           )
         } else {
           errorMessage = nil
@@ -201,9 +201,9 @@
     static func message(for outcome: TestNotificationOutcome) -> String? {
       switch outcome {
       case .shown: return nil
-      case .denied: return OJDLocalized.string("error.E2037")
+      case .denied: return OJDLocalized.string("error.E2037.message")
       case .failed(let reason): return reason
-      case .noAnswer: return OJDLocalized.string("error.E2036")
+      case .noAnswer: return OJDLocalized.string("error.E2036.message")
       }
     }
 
@@ -242,8 +242,8 @@
       guard state == .allowed else { return .denied }
       do {
         try await notificationDelivery.deliverAwaitingSystem(
-          title: OJDLocalized.string("notifications.testTitle"),
-          body: OJDLocalized.string("notifications.testBody"),
+          title: OJDLocalized.string("notify.testTitle"),
+          body: OJDLocalized.string("notify.testBody"),
           sound: notificationSounds
         )
       } catch { return .failed(error.localizedDescription) }
@@ -297,8 +297,8 @@
         self.updateState = state
         if announcingAvailableUpdate, case .available(let info) = state {
           self.notificationDelivery.deliver(
-            title: OJDLocalized.string("settings.updateAvailable"),
-            body: OJDLocalized.formatted("settings.updateAvailableBody", info.tagName),
+            title: OJDLocalized.string("ui.settings.general.updateAvailable"),
+            body: OJDLocalized.formatted("ui.settings.general.updateAvailableBody", info.tagName),
             sound: self.notificationSounds
           )
         }
@@ -438,7 +438,7 @@
       errorMessage =
         errorDescription
         ?? OJDLocalized.string(
-          "settings.notificationsDenied"
+          "platform.macos.ui.settings.notifications.notificationsDenied"
         )
     }
 

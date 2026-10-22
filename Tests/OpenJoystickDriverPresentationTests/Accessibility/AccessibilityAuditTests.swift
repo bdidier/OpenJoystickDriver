@@ -98,7 +98,7 @@ struct AccessibilityAuditTests {
     let source = """
       struct V: View {
         var body: some View {
-          OJDSystemSymbol(name: "gear", fallback: OJDLocalized.string("common.status"))
+          OJDSystemSymbol(name: "gear", fallback: OJDLocalized.string("term.status"))
           OJDSystemSymbol(name: "gear", fallback: nil)
           OJDSystemSymbol(name: "arrow.right", fallback: "->")
           OJDSystemSymbol(name: "arrow.right", fallback: "->").accessibilityHidden(true)

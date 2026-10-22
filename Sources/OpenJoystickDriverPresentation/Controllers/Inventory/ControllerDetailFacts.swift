@@ -31,41 +31,41 @@ enum ControllerDetailFacts {
   ) -> [ControllerFact] {
     let output = device.physicalOutputCapabilities
     let always = [
-      fact(.publication, "cli.controller.show.label.publication", publication(device)),
-      fact(.serving, "controllers.serving.label", .text(servingText(device))),
+      fact(.publication, "cli.controller.show.labelPublication", publication(device)),
+      fact(.serving, "ui.controllers.serving.label", .text(servingText(device))),
       fact(
         .controllerProtocol,
-        "common.protocol",
+        "term.protocol",
         .text(device.protocolBinding.displayName)
       ),
-      fact(.serialNumber, "common.serialNumber", serialNumber(device)),
-      fact(.inputHealth, "cli.controller.show.label.input", .text(inputHealthText(device))),
+      fact(.serialNumber, "term.serialNumber", serialNumber(device)),
+      fact(.inputHealth, "cli.controller.show.labelInput", .text(inputHealthText(device))),
     ]
     let power = [
-      fact(.battery, "controllers.battery", battery(device)),
-      fact(.chargingState, "controllers.chargingState", chargingState(device)),
-      fact(.cableState, "controllers.cableState", cableState(device)),
+      fact(.battery, "ui.controllers.battery", battery(device)),
+      fact(.chargingState, "ui.controllers.chargingState", chargingState(device)),
+      fact(.cableState, "ui.controllers.cableState", cableState(device)),
     ]
     let capabilities = [
-      fact(.rumble, "cli.controller.show.label.rumble", list(output.rumbleMotors.map(\.title))),
+      fact(.rumble, "cli.controller.show.labelRumble", list(output.rumbleMotors.map(\.title))),
       fact(
         .lighting,
-        "cli.controller.show.label.lighting",
+        "cli.controller.show.labelLighting",
         list(output.lightingFeatures.map(\.title))
       ),
       fact(
         .adaptiveTriggers,
-        "controllers.adaptiveTriggers",
+        "ui.controllers.adaptiveTriggers",
         list(output.adaptiveTriggers.map(\.title))
       ),
       fact(
         .motion,
-        "controllers.motion",
-        device.capabilities.motion ? .text(OJDLocalized.string("common.available")) : .none
+        "ui.controllers.motion",
+        device.capabilities.motion ? .text(OJDLocalized.string("status.available")) : .none
       ),
       fact(
         .touchContacts,
-        "controllers.touchContacts",
+        "ui.controllers.touchContacts",
         device.capabilities.touchContactCount > 0
           ? .text(String(device.capabilities.touchContactCount)) : .none
       ),
@@ -87,13 +87,14 @@ enum ControllerDetailFacts {
     let optional = [
       fact(
         .outputOwner,
-        "cli.controller.show.label.output_owner",
+        "cli.controller.show.labelOutputOwner",
         device.physicalOutputOwner == .system
-          ? .text(OJDLocalized.string("cli.controller.show.output_owner.macos")) : .none
+          ? .text(OJDLocalized.string("platform.macos.cli.controller.show.outputOwnerMacos"))
+          : .none
       ),
       fact(
         .controls,
-        "cli.controller.show.label.controls",
+        "cli.controller.show.labelControls",
         list(
           Control.allCases.filter(device.capabilities.controls.contains).map {
             RuntimePresentation.sourceLabel(.button($0))
@@ -102,40 +103,40 @@ enum ControllerDetailFacts {
       ),
       fact(
         .startupStatus,
-        "controllers.startupStatus",
+        "ui.controllers.startupStatus",
         OJDValue(device.startupCommandStatus)
       ),
-      fact(.inputReportFormat, "controllers.inputReportFormat", OJDValue(health.reportFormat)),
+      fact(.inputReportFormat, "ui.controllers.inputReportFormat", OJDValue(health.reportFormat)),
       fact(
         .inputRecoveries,
-        "controllers.inputRecoveries",
+        "ui.controllers.inputRecoveries",
         health.recoveryCount > 0 ? .text(String(health.recoveryCount)) : .none
       ),
       fact(
         .publicationAttempted,
-        "controllers.publicationAttempted",
+        "ui.controllers.publicationAttempted",
         age(publication?.lastAttemptedNanoseconds, now: now)
       ),
       fact(
         .publicationCompleted,
-        "controllers.publicationCompleted",
+        "ui.controllers.publicationCompleted",
         age(publication?.lastCompletedNanoseconds, now: now)
       ),
     ].filter { $0.value != .none }
     return [
-      fact(.unitID, "cli.controller.show.label.unit", .reported(device.portKey?.rawValue)),
+      fact(.unitID, "cli.controller.show.labelUnit", .reported(device.portKey?.rawValue)),
       fact(.parser, "term.parser", .reported(device.protocolBinding.commandLineName)),
-      fact(.ownership, "cli.controller.show.label.ownership", .text(ownershipText(device))),
+      fact(.ownership, "cli.controller.show.labelOwnership", .text(ownershipText(device))),
       fact(
         .duplicateExposureRisk,
-        "controllers.duplicateExposureRisk",
+        "ui.controllers.duplicateExposureRisk",
         .text(duplicateExposureText(device.duplicateExposureRisk))
       ),
-      fact(.record, "cli.controller.show.label.record", .text(recordText(record))),
+      fact(.record, "cli.controller.show.labelRecord", .text(recordText(record))),
     ] + optional + [
-      fact(.usbIdentifier, "controllers.usbIdentifier", usbIdentifier(device)),
-      fact(.inputEndpoint, "common.inputEndpoint", .endpoint(device.inputEndpoint)),
-      fact(.outputEndpoint, "common.outputEndpoint", .endpoint(device.outputEndpoint)),
+      fact(.usbIdentifier, "ui.controllers.usbIdentifier", usbIdentifier(device)),
+      fact(.inputEndpoint, "term.inputEndpoint", .endpoint(device.inputEndpoint)),
+      fact(.outputEndpoint, "term.outputEndpoint", .endpoint(device.outputEndpoint)),
     ]
   }
 
@@ -143,11 +144,14 @@ enum ControllerDetailFacts {
   /// selected on its own, so the picker is the one place the published profile is shown; it is
   /// plain "Automatic" while an override is the selection or when no profile is selected.
   static func automaticProfileLabel(_ device: ApplicationServiceDeviceDescription) -> String {
-    let automatic = OJDLocalized.string("mapping.automatic")
+    let automatic = OJDLocalized.string("ui.mapping.automatic")
     guard let status = device.virtualHIDProfile, let profile = status.profile,
       status.source != .override
     else { return automatic }
-    return OJDLocalized.formatted("virtualProfile.automaticSelected", profile.identity.productName)
+    return OJDLocalized.formatted(
+      "ui.virtualProfile.automaticSelected",
+      profile.identity.productName
+    )
   }
 
   /// Whether a virtual device publishes the controller, why not, and for a failed send the
@@ -162,7 +166,7 @@ enum ControllerDetailFacts {
       return device.servingRouteLabel
     }
     return OJDLocalized.formatted(
-      "controllers.serving.withReason",
+      "ui.controllers.serving.withReason",
       device.servingRouteLabel,
       OJDLocalized.string(ControllerDetailLabels.servingReasonKey(reason))
     )
@@ -173,7 +177,7 @@ enum ControllerDetailFacts {
     let state = OJDLocalized.string(inputHealthKey(device.inputHealth.state))
     guard let reason = device.inputHealth.failureReason else { return state }
     return OJDLocalized.formatted(
-      "controllers.inputHealth.withReason",
+      "ui.controllers.inputHealth.withReason",
       state,
       OJDLocalized.string(ControllerDetailLabels.inputHealthReasonKey(reason))
     )
@@ -181,7 +185,7 @@ enum ControllerDetailFacts {
 
   static func ownershipText(_ device: ApplicationServiceDeviceDescription) -> String {
     OJDLocalized.formatted(
-      "controllers.ownership.value",
+      "ui.controllers.ownership.value",
       OJDLocalized.string(ControllerDetailLabels.discoveryKey(device.discoverySource)),
       OJDLocalized.string(ControllerDetailLabels.physicalOwnershipKey(device.physicalOwnership)),
       OJDLocalized.string(ControllerDetailLabels.hidInputOwnershipKey(device.hidInputOwnership))
@@ -191,7 +195,7 @@ enum ControllerDetailFacts {
   /// The duplicate-exposure concern of the physical ownership, localized.
   static func duplicateExposureText(_ risk: DuplicateExposureRisk) -> String {
     switch risk {
-    case .none: return OJDLocalized.string("common.none")
+    case .none: return OJDLocalized.string("status.none")
     case .systemHIDVisible:
       return OJDLocalized.string(ControllerDetailLabels.physicalOwnershipKey(.systemHIDVisible))
     case .upstreamVirtualDevice:
@@ -205,26 +209,26 @@ enum ControllerDetailFacts {
 
   /// The record layer, and the file when a user or package file sets the record.
   static func recordText(_ record: ControllerRecord?) -> String {
-    guard let record else { return OJDLocalized.string("cli.controller.show.record.none") }
+    guard let record else { return OJDLocalized.string("cli.controller.show.recordNone") }
     guard let file = record.file else {
-      return OJDLocalized.string("cli.controller.show.record.bundled")
+      return OJDLocalized.string("cli.controller.show.recordBundled")
     }
-    return OJDLocalized.formatted("cli.controller.show.record.user", file.path)
+    return OJDLocalized.formatted("cli.controller.show.recordUser", file.path)
   }
 
   private static func inputHealthKey(_ state: ControllerInputHealthState) -> String {
     switch state {
-    case .healthy: return "controllers.inputHealth.healthy"
-    case .stale: return "controllers.inputHealth.stale"
-    case .waitingForNeutral: return "controllers.inputHealth.waitingForNeutral"
+    case .healthy: return "ui.controllers.inputHealth.healthy"
+    case .stale: return "ui.controllers.inputHealth.stale"
+    case .waitingForNeutral: return "ui.controllers.inputHealth.waitingForNeutral"
     }
   }
 
   private static func publicationKey(_ state: ApplicationServicePublicationStatus.State) -> String {
     switch state {
-    case .published: return "controllers.publication.published"
-    case .notPublished: return "controllers.publication.notPublished"
-    case .failed: return "controllers.publication.failed"
+    case .published: return "ui.controllers.publication.published"
+    case .notPublished: return "ui.controllers.publication.notPublished"
+    case .failed: return "ui.controllers.publication.failed"
     }
   }
 
@@ -238,9 +242,9 @@ enum ControllerDetailFacts {
       detail = OJDLocalized.string(ControllerDetailLabels.notPublishedReasonKey(reason))
     case .failed:
       guard let failure = publication.failure else { return state }
-      detail = OJDLocalized.formatted("controllers.publication.failedSend", failure)
+      detail = OJDLocalized.formatted("ui.controllers.publication.failedSend", failure)
     }
-    return OJDLocalized.formatted("controllers.publication.withReason", state, detail)
+    return OJDLocalized.formatted("ui.controllers.publication.withReason", state, detail)
   }
 
   static func serialNumber(_ device: ApplicationServiceDeviceDescription) -> OJDValue {
@@ -257,18 +261,20 @@ enum ControllerDetailFacts {
 
   static func chargingState(_ device: ApplicationServiceDeviceDescription) -> OJDValue {
     switch device.connectionState?.power.charging ?? .unknown {
-    case .discharging: return .text(OJDLocalized.string("controllers.discharging"))
-    case .charging: return .text(OJDLocalized.string("controllers.charging"))
-    case .full: return .text(OJDLocalized.string("controllers.batteryFull"))
-    case .notChargeable: return .text(OJDLocalized.string("controllers.notChargeable"))
+    case .discharging: return .text(OJDLocalized.string("ui.controllers.discharging"))
+    case .charging: return .text(OJDLocalized.string("ui.controllers.charging"))
+    case .full: return .text(OJDLocalized.string("ui.controllers.batteryFull"))
+    case .notChargeable: return .text(OJDLocalized.string("ui.controllers.notChargeable"))
     case .unknown: return .none
     }
   }
 
   static func cableState(_ device: ApplicationServiceDeviceDescription) -> OJDValue {
     switch device.connectionState?.power.wiredPower {
-    case true?: return .text(OJDLocalized.string("settings.controllerConnectedShort"))
-    case false?: return .text(OJDLocalized.string("settings.controllerDisconnectedShort"))
+    case true?:
+      return .text(OJDLocalized.string("ui.settings.notifications.controllerConnectedShort"))
+    case false?:
+      return .text(OJDLocalized.string("ui.settings.notifications.controllerDisconnectedShort"))
     case nil: return .none
     }
   }

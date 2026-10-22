@@ -17,10 +17,10 @@
       var errorDescription: String? {
         switch self {
         case .cancelled:
-          return OJDLocalized.string("settings.commandLineTool.cancelled")
+          return OJDLocalized.string("ui.settings.commandLine.toolCancelled")
         case .blockedByFile(let path):
           return OJDLocalized.formatted(
-            "settings.commandLineTool.blocked",
+            "ui.settings.commandLine.toolBlocked",
             path
           )
         case .failed(let detail): return detail
@@ -110,7 +110,7 @@
       throw CommandLineToolLink.Failure.failed(
         error[NSAppleScript.errorMessage] as? String
           ?? OJDLocalized.string(
-            "settings.commandLineTool.failed"
+            "platform.macos.ui.settings.commandLine.toolFailed"
           )
       )
     }

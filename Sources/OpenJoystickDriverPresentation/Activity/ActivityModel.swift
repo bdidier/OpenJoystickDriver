@@ -7,8 +7,8 @@ enum ActivityMode: Int, CaseIterable {
 
   var titleKey: String {
     switch self {
-    case .log: return "activity.mode.log"
-    case .diagnostics: return "activity.mode.diagnostics"
+    case .log: return "ui.activity.mode.log"
+    case .diagnostics: return "ui.activity.mode.diagnostics"
     }
   }
 }
@@ -79,7 +79,7 @@ struct ActivityActionFailure: Equatable {
         Alert(
           title: Text(model.failure?.title ?? ""),
           message: model.failure?.message.map { Text($0) },
-          dismissButton: .default(Text(OJDLocalized.string("common.ok")))
+          dismissButton: .default(Text(OJDLocalized.string("action.ok")))
         )
       }
     }

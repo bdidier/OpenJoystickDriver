@@ -22,7 +22,7 @@ struct ServiceTimeoutsTests {
   @Test
   func theTimeoutHelpNamesTheKitDefaults() {
     let help = Localization().formatted(
-      "cli.option.timeout",
+      "cli.shared.option.timeout",
       locale: Locale(identifier: "en_US_POSIX"),
       arguments: [ServiceTimeouts.request, ServiceTimeouts.wait]
     )

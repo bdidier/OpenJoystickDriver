@@ -7,16 +7,16 @@
   @available(macOS 13, *)
   struct ActivateProfileIntent: AppIntent {
     static let title = LocalizedStringResource(
-      "shortcuts.action.activate_profile.title"
+      "ui.shortcuts.action.activateProfile.title"
     )
     static let description = IntentDescription(
       LocalizedStringResource(
-        "shortcuts.action.activate_profile.description"
+        "ui.shortcuts.action.activateProfile.description"
       )
     )
 
     @Parameter(
-      title: LocalizedStringResource("shortcuts.parameter.profile")
+      title: LocalizedStringResource("ui.shortcuts.parameter.profile")
     )
     var profile: ProfileEntity
 
@@ -32,16 +32,16 @@
   @available(macOS 13, *)
   struct DeactivateProfileIntent: AppIntent {
     static let title = LocalizedStringResource(
-      "shortcuts.action.deactivate_profile.title"
+      "ui.shortcuts.action.deactivateProfile.title"
     )
     static let description = IntentDescription(
       LocalizedStringResource(
-        "shortcuts.action.deactivate_profile.description"
+        "ui.shortcuts.action.deactivateProfile.description"
       )
     )
 
     @Parameter(
-      title: LocalizedStringResource("shortcuts.parameter.profile")
+      title: LocalizedStringResource("ui.shortcuts.parameter.profile")
     )
     var profile: ProfileEntity
 

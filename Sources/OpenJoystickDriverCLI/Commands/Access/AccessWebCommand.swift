@@ -21,9 +21,9 @@ struct AccessWebCommand: AsyncParsableCommand {
 struct AccessWebEnableCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "enable",
-    abstract: CLILocalized.text("cli.access.web.enable.abstract"),
+    abstract: CLILocalized.text("cli.access.web.enableAbstract"),
     discussion: CLILocalized.text(
-      "cli.access.web.enable.discussion"
+      "cli.access.web.enableDiscussion"
     )
   )
 
@@ -44,7 +44,7 @@ struct AccessWebEnableCommand: AsyncParsableCommand {
 
   @Flag(
     name: [.short, .long],
-    help: ArgumentHelp(CLILocalized.text("cli.option.force"))
+    help: ArgumentHelp(CLILocalized.text("cli.shared.option.force"))
   )
   var force = false
 
@@ -53,11 +53,11 @@ struct AccessWebEnableCommand: AsyncParsableCommand {
 
   func validate() throws {
     if automatic, port != nil {
-      throw ValidationError(CLILocalized.text("cli.access.web.automatic_conflict"))
+      throw ValidationError(CLILocalized.text("cli.access.web.automaticConflict"))
     }
     if let port, !AccessWebPorts.allowed.contains(port) {
       throw ValidationError(
-        CLILocalized.text("cli.access.web.port_range")
+        CLILocalized.text("cli.access.web.portRange")
       )
     }
   }
@@ -66,7 +66,7 @@ struct AccessWebEnableCommand: AsyncParsableCommand {
     try await global.run {
       try CLITerminal.confirm(
         CLILocalized.text(
-          "cli.access.web.enable.confirm"
+          "cli.access.web.enableConfirm"
         ),
         force: force,
         needsForce: AccessText.needsForce
@@ -84,7 +84,7 @@ struct AccessWebDisableCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "disable",
     abstract: CLILocalized.text(
-      "cli.access.web.disable.abstract"
+      "cli.access.web.disableAbstract"
     )
   )
 
@@ -112,7 +112,7 @@ extension AccessWebCommand {
         web.enabled
           ? AccessText.web(web)
           : CLILocalized.text(
-            "cli.access.web.disable.success"
+            "cli.access.web.disableSuccess"
           )
       )
     }

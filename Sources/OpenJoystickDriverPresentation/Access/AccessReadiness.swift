@@ -30,17 +30,17 @@ struct AccessPermissionRow: Equatable, Identifiable {
 
   var titleKey: String {
     switch kind {
-    case .inputRead: return "common.inputRead"
-    case .inputInject: return "common.inputInject"
-    case .postEvent: return "common.keyboardPointer"
-    case .notification: return "settings.notifications"
+    case .inputRead: return "platform.macos.term.inputRead"
+    case .inputInject: return "platform.macos.term.inputInject"
+    case .postEvent: return "term.keyboardPointer"
+    case .notification: return "ui.settings.notifications.notifications"
     }
   }
 
   /// The button of a missing permission; nil while nothing is missing.
   var actionTitleKey: String? {
     guard status.isMissing else { return nil }
-    return needsRequest ? "common.request" : "setup.openSystemSettings"
+    return needsRequest ? "action.request" : "platform.macos.ui.setup.openSystemSettings"
   }
 }
 
@@ -79,14 +79,14 @@ struct AccessReadiness {
     case .allowed:
       if notificationSettings.alertStyle == .none {
         return AccessReadinessStatus(
-          value: OJDLocalized.string("settings.notificationBannersOff"),
+          value: OJDLocalized.string("ui.settings.notifications.notificationBannersOff"),
           tone: .caution,
           isActionable: true
         )
       }
       if notificationSettings.soundsEnabled == false {
         return AccessReadinessStatus(
-          value: OJDLocalized.string("settings.notificationSoundOff"),
+          value: OJDLocalized.string("ui.settings.notifications.notificationSoundOff"),
           tone: .caution,
           isActionable: true
         )
@@ -94,7 +94,7 @@ struct AccessReadiness {
       return Self.allowed
     case .notDetermined:
       return AccessReadinessStatus(
-        value: OJDLocalized.string("common.notRequested"),
+        value: OJDLocalized.string("status.notRequested"),
         tone: .caution,
         isActionable: true
       )
@@ -205,7 +205,7 @@ struct AccessReadiness {
 
   private static var needsAttention: AccessReadinessStatus {
     AccessReadinessStatus(
-      value: OJDLocalized.string("common.needsAttention"),
+      value: OJDLocalized.string("status.needsAttention"),
       tone: .caution,
       isActionable: true
     )

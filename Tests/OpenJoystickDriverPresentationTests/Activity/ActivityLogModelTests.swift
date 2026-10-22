@@ -32,7 +32,7 @@ struct ActivityLogFilterTests {
     #expect(ActivityLogFilter.allCases.map(\.rawValue) == [0, 1, 2])
     #expect(
       ActivityLogFilter.allCases.map(\.titleKey) == [
-        "console.all", "console.output", "console.errors",
+        "ui.console.all", "ui.console.output", "ui.console.errors",
       ]
     )
   }

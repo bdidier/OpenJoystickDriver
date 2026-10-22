@@ -132,7 +132,7 @@ struct SettingTestNotificationCommandTests {
     #expect(human.code == 69)
     #expect(
       human.standardError
-        == CLIFailure(.noApplicationAnswered, CLILocalized.text("error.E2036")).line + "\n"
+        == CLIFailure(.noApplicationAnswered, CLILocalized.text("error.E2036.message")).line + "\n"
     )
     #expect(human.standardOutput.isEmpty)
     #expect(json.code == 69)
@@ -150,7 +150,7 @@ struct SettingTestNotificationCommandTests {
     #expect(result.code == 77)
     #expect(
       result.standardError
-        == CLIFailure(.notificationsDenied, CLILocalized.text("error.E2037")).line + "\n"
+        == CLIFailure(.notificationsDenied, CLILocalized.text("error.E2037.message")).line + "\n"
     )
     #expect(result.standardOutput.isEmpty)
   }

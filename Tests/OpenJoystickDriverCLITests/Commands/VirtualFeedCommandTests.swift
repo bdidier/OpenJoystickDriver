@@ -205,7 +205,7 @@ struct VirtualFeedCommandTests {
     let failure = VirtualFeedCommand.closeFailure(CancellationError())
 
     #expect(failure.id == .serviceRequestFailed)
-    #expect(failure.message == CLILocalized.text("cli.virtual.feed.error.closeInterrupted"))
+    #expect(failure.message == CLILocalized.text("cli.virtual.feed.errorCloseInterrupted"))
     #expect(!failure.line.contains("CancellationError"))
   }
 

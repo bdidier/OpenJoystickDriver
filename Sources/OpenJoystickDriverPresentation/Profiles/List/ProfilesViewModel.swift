@@ -79,7 +79,7 @@
       panel.allowsMultipleSelection = false
       panel.canChooseDirectories = false
       panel.canChooseFiles = true
-      panel.title = OJDLocalized.string("profiles.import")
+      panel.title = OJDLocalized.string("ui.profiles.import")
       panel.allowedContentTypes = [.json]
       guard panel.runModal() == .OK, let url = panel.url else { return }
       Task { @MainActor in
@@ -124,7 +124,7 @@
       panel.allowsMultipleSelection = false
       panel.canChooseDirectories = false
       panel.canChooseFiles = true
-      panel.title = OJDLocalized.string("profiles.validateFile")
+      panel.title = OJDLocalized.string("ui.profiles.validateFile")
       panel.allowedContentTypes = [.json]
       guard panel.runModal() == .OK, let url = panel.url else { return }
       Task { @MainActor in
@@ -139,7 +139,7 @@
     /// Asks where to save `profile` and writes it there.
     func exportProfile(_ profile: RemappingProfile) {
       let panel = NSSavePanel()
-      panel.title = OJDLocalized.string("profiles.export")
+      panel.title = OJDLocalized.string("ui.profiles.export")
       panel.nameFieldStringValue = "\(profile.name).json"
       panel.allowedContentTypes = [.json]
       guard panel.runModal() == .OK, let url = panel.url else { return }

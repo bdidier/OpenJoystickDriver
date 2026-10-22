@@ -30,19 +30,19 @@ enum PermissionID: String, CaseIterable, Sendable {
 
   var localizedName: String {
     switch self {
-    case .inputRead: CLILocalized.text("cli.permission.name.input_read")
-    case .inputInject: CLILocalized.text("cli.permission.name.input_inject")
-    case .usbTransport: CLILocalized.text("cli.permission.name.usb_transport")
-    case .postEvent: CLILocalized.text("cli.permission.name.post_event")
+    case .inputRead: CLILocalized.text("platform.macos.cli.permission.group.nameInputRead")
+    case .inputInject: CLILocalized.text("platform.macos.cli.permission.group.nameInputInject")
+    case .usbTransport: CLILocalized.text("cli.permission.group.nameUsbTransport")
+    case .postEvent: CLILocalized.text("cli.permission.group.namePostEvent")
     }
   }
 
   var localizedPurpose: String {
     switch self {
-    case .inputRead: CLILocalized.text("cli.permission.purpose.input_read")
-    case .inputInject: CLILocalized.text("cli.permission.purpose.input_inject")
-    case .usbTransport: CLILocalized.text("cli.permission.purpose.usb_transport")
-    case .postEvent: CLILocalized.text("cli.permission.purpose.post_event")
+    case .inputRead: CLILocalized.text("cli.permission.group.purposeInputRead")
+    case .inputInject: CLILocalized.text("cli.permission.group.purposeInputInject")
+    case .usbTransport: CLILocalized.text("platform.macos.cli.permission.group.purposeUsbTransport")
+    case .postEvent: CLILocalized.text("cli.permission.group.purposePostEvent")
     }
   }
 
@@ -51,13 +51,13 @@ enum PermissionID: String, CaseIterable, Sendable {
     switch self {
     case .inputRead:
       CLILocalized.text(
-        "cli.permission.pane.input_read"
+        "platform.macos.cli.permission.group.paneInputRead"
       )
     case .inputInject, .postEvent:
-      CLILocalized.text("cli.permission.pane.input_inject")
+      CLILocalized.text("platform.macos.cli.permission.group.paneInputInject")
     case .usbTransport:
       CLILocalized.text(
-        "cli.permission.pane.usb_transport"
+        "platform.macos.cli.permission.group.paneUsbTransport"
       )
     }
   }

@@ -27,11 +27,11 @@
 
     var body: some View {
       VStack(alignment: .leading, spacing: 16) {
-        Text(OJDLocalized.string("profiles.pairJoyCons"))
+        Text(OJDLocalized.string("ui.profiles.pairJoyCons"))
           .font(.headline.weight(.semibold))
         Text(profile.name).font(.caption).foregroundColor(.secondary)
         Picker(
-          OJDLocalized.string("profiles.joyConLeft"),
+          OJDLocalized.string("ui.profiles.joyConLeft"),
           selection: $leftSessionToken
         ) {
           ForEach(Self.leftDevices(devices), id: \.sessionToken) { device in
@@ -40,7 +40,7 @@
           }
         }
         Picker(
-          OJDLocalized.string("profiles.joyConRight"),
+          OJDLocalized.string("ui.profiles.joyConRight"),
           selection: $rightSessionToken
         ) {
           ForEach(Self.rightDevices(devices), id: \.sessionToken) { device in
@@ -50,13 +50,13 @@
         }
         Text(
           OJDLocalized.string(
-            "profiles.joyConPairSessionHint"
+            "ui.profiles.joyConPairSessionHint"
           )
         ).font(.caption).foregroundColor(.secondary).fixedSize(horizontal: false, vertical: true)
         HStack {
           Spacer()
-          Button(OJDLocalized.string("common.cancel")) { dismiss() }
-          Button(OJDLocalized.string("profiles.pair")) {
+          Button(OJDLocalized.string("action.cancel")) { dismiss() }
+          Button(OJDLocalized.string("ui.profiles.pair")) {
             if let leftSessionToken, let rightSessionToken {
               onPair(leftSessionToken, rightSessionToken)
             }

@@ -136,7 +136,7 @@ final class AccessViewModel: ObservableObject {
   /// "Automatic" when no port is saved or the person chose automatic.
   var portPlaceholder: String {
     if !choosesAutomaticPort, let port = status?.web.port { return String(port) }
-    return OJDLocalized.string("access.web.port.automatic")
+    return OJDLocalized.string("ui.access.web.port.automatic")
   }
 
   /// Whether a port is saved that the person can replace with an automatic one.
@@ -160,7 +160,7 @@ final class AccessViewModel: ObservableObject {
     guard let port = Int(text), AccessWebPorts.allowed.contains(port) else {
       throw AccessFailure(
         message: OJDLocalized.formatted(
-          "access.web.portRange",
+          "ui.access.web.portRange",
           AccessWebPorts.allowed.lowerBound,
           AccessWebPorts.allowed.upperBound
         ),
@@ -197,7 +197,7 @@ final class AccessViewModel: ObservableObject {
   func requestGrant(_ candidate: AccessClientCandidate) {
     guard candidate.identity.kind != .adHoc else {
       failure = AccessFailure(
-        message: OJDLocalized.formatted("access.grant.adHoc", candidate.identity.identifier),
+        message: OJDLocalized.formatted("ui.access.grant.adHoc", candidate.identity.identifier),
         code: .unsignedClient
       )
       return
@@ -211,7 +211,7 @@ final class AccessViewModel: ObservableObject {
     let url = url.standardizedFileURL
     guard let identity = identityAtPath(url) else {
       failure = AccessFailure(
-        message: OJDLocalized.formatted("access.grant.unsigned", url.path),
+        message: OJDLocalized.formatted("ui.access.grant.unsigned", url.path),
         code: .unsignedClient
       )
       return
@@ -224,7 +224,7 @@ final class AccessViewModel: ObservableObject {
   func requestRefusedGrant(_ client: AccessRefusedClient) {
     guard let path = client.path else {
       failure = AccessFailure(
-        message: OJDLocalized.formatted("access.grant.noPath", client.identifier),
+        message: OJDLocalized.formatted("ui.access.grant.noPath", client.identifier),
         code: .unsignedClient
       )
       return
@@ -242,14 +242,14 @@ final class AccessViewModel: ObservableObject {
     let draft = tokenDraft
     guard !draft.name.trimmingCharacters(in: .whitespaces).isEmpty, !draft.scopes.isEmpty else {
       failure = AccessFailure(
-        message: OJDLocalized.string("access.token.incomplete"),
+        message: OJDLocalized.string("ui.access.token.incomplete"),
         code: .invalidTokenName
       )
       return
     }
     guard draft.origins.isEmpty || !draft.scopes.contains(.control) else {
       failure = AccessFailure(
-        message: OJDLocalized.string("access.token.originControl"),
+        message: OJDLocalized.string("ui.access.token.originControl"),
         code: .controlScopeWithOrigins
       )
       return
@@ -315,85 +315,85 @@ final class AccessViewModel: ObservableObject {
     switch pending {
     case .enableEndpoint:
       return AccessConfirmation(
-        title: OJDLocalized.string("access.enable.title"),
-        lines: [OJDLocalized.string("access.enable.message")],
-        confirmTitle: OJDLocalized.string("access.enable"),
+        title: OJDLocalized.string("ui.access.enable.title"),
+        lines: [OJDLocalized.string("ui.access.enable.message")],
+        confirmTitle: OJDLocalized.string("ui.access.enable"),
         isDestructive: false
       )
     case .enableWeb(let port):
       return AccessConfirmation(
-        title: OJDLocalized.string("access.web.enable.title"),
+        title: OJDLocalized.string("ui.access.web.enable.title"),
         lines: [
-          OJDLocalized.string("access.web.enable.message"),
+          OJDLocalized.string("platform.macos.ui.access.web.enable.message"),
           port.map {
             $0 == 0
-              ? OJDLocalized.string("access.web.enable.automatic")
-              : OJDLocalized.formatted("access.web.enable.port", $0)
-          } ?? OJDLocalized.string("access.web.enable.savedPort"),
+              ? OJDLocalized.string("ui.access.web.enable.automatic")
+              : OJDLocalized.formatted("ui.access.web.enable.port", $0)
+          } ?? OJDLocalized.string("ui.access.web.enable.savedPort"),
         ],
-        confirmTitle: OJDLocalized.string("access.enable"),
+        confirmTitle: OJDLocalized.string("ui.access.enable"),
         isDestructive: false
       )
     case .grantClient(let candidate):
       var lines: [String] = []
       if grantScopes.contains(.control) {
-        lines.append(OJDLocalized.string("access.grant.controlWarning"))
+        lines.append(OJDLocalized.string("ui.access.grant.controlWarning"))
       }
       if candidate.identity.kind == .platform {
-        lines.append(OJDLocalized.string("access.grant.platformWarning"))
+        lines.append(OJDLocalized.string("platform.macos.ui.access.grant.platformWarning"))
       }
       lines.append(
         OJDLocalized.formatted(
-          "access.grant.question",
+          "ui.access.grant.question",
           candidate.identity.identifier,
           AccessPresentation.signer(candidate.identity.kind, candidate.identity.publisherID),
           AccessPresentation.scopes(grantScopes.sorted())
         )
       )
       return AccessConfirmation(
-        title: OJDLocalized.formatted("access.grant.title", candidate.identity.identifier),
+        title: OJDLocalized.formatted("ui.access.grant.title", candidate.identity.identifier),
         lines: lines,
-        confirmTitle: OJDLocalized.string("access.grant"),
+        confirmTitle: OJDLocalized.string("ui.access.grant"),
         isDestructive: false
       )
     case .grantToken(let name, let origins):
       var lines: [String] = []
       if tokenDraft.scopes.contains(.control) {
-        lines.append(OJDLocalized.string("access.grant.controlWarning"))
+        lines.append(OJDLocalized.string("ui.access.grant.controlWarning"))
       }
       let scopes = AccessPresentation.scopes(tokenDraft.scopes.sorted())
       lines.append(
         origins.isEmpty
-          ? OJDLocalized.formatted("access.token.question", name, scopes)
+          ? OJDLocalized.formatted("ui.access.token.question", name, scopes)
           : OJDLocalized.formatted(
-            "access.token.webQuestion",
+            "ui.access.token.webQuestion",
             name,
             scopes,
             origins.joined(separator: ", ")
           )
       )
       return AccessConfirmation(
-        title: OJDLocalized.formatted("access.token.title", name),
+        title: OJDLocalized.formatted("ui.access.token.title", name),
         lines: lines,
-        confirmTitle: OJDLocalized.string("access.grant"),
+        confirmTitle: OJDLocalized.string("ui.access.grant"),
         isDestructive: false
       )
     case .revokeGrant(_, let name, let scope?):
-      return partialRevoke(title: "access.revoke.title", name: name, scope: scope)
+      return partialRevoke(title: "ui.access.revoke.title", name: name, scope: scope)
     case .revokeToken(_, let name, let scope?):
-      return partialRevoke(title: "access.revokeToken.title", name: name, scope: scope)
+      return partialRevoke(title: "ui.access.revokeToken.title", name: name, scope: scope)
     case .revokeGrant(_, let name, nil):
       return AccessConfirmation(
-        title: OJDLocalized.formatted("access.revoke.title", name),
-        lines: [OJDLocalized.string("access.revoke.message")],
-        confirmTitle: OJDLocalized.string("access.revoke"),
+        title: OJDLocalized.formatted("ui.access.revoke.title", name),
+        lines: [OJDLocalized.string("ui.access.revoke.message")],
+        confirmTitle: OJDLocalized.string("ui.access.revoke"),
         isDestructive: true
       )
     case .revokeToken(_, let name, nil):
       return AccessConfirmation(
-        title: OJDLocalized.formatted("access.revokeToken.title", name),
-        lines: [OJDLocalized.string("access.revokeToken.message")],
-        confirmTitle: OJDLocalized.string("access.revoke"),
+        title: OJDLocalized.formatted("ui.access.revokeToken.title", name),
+        lines: [OJDLocalized.string("ui.access.revokeToken.message")],
+        confirmTitle: OJDLocalized.string("ui.access.revoke"),
         isDestructive: true
       )
     }
@@ -409,9 +409,9 @@ final class AccessViewModel: ObservableObject {
     AccessConfirmation(
       title: OJDLocalized.formatted(title, name),
       lines: [
-        OJDLocalized.formatted("access.revokeScope.message", AccessPresentation.scope(scope))
+        OJDLocalized.formatted("ui.access.revokeScope.message", AccessPresentation.scope(scope))
       ],
-      confirmTitle: OJDLocalized.string("access.revoke"),
+      confirmTitle: OJDLocalized.string("ui.access.revoke"),
       isDestructive: true
     )
   }

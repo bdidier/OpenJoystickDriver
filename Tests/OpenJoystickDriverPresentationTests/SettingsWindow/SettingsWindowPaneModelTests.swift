@@ -15,9 +15,9 @@ struct SettingsWindowPaneModelTests {
   @Test
   func theTitleKeyFollowsTheSelectedPane() {
     let model = SettingsWindowPaneModel()
-    #expect(model.titleKey == "settingsPane.general.title")
+    #expect(model.titleKey == "ui.settings.general.title")
     model.select(.notifications)
-    #expect(model.titleKey == "settingsPane.notifications.title")
+    #expect(model.titleKey == "ui.settings.notifications.title")
     #expect(model.selectedIndex == 1)
   }
 
@@ -36,6 +36,15 @@ struct SettingsWindowPaneModelTests {
     for pane in SettingsWindowPane.allCases {
       #expect(!pane.symbolName.isEmpty)
       #expect(pane.accessibilityKey == "a11y.settingsPane.\(pane.rawValue)")
+    }
+  }
+
+  @Test
+  func everyPaneKeyIsInTheCatalog() {
+    for pane in SettingsWindowPane.allCases {
+      for key in [pane.titleKey, pane.accessibilityKey] {
+        #expect(OJDLocalized.string(key) != key, "\(key)")
+      }
     }
   }
 

@@ -172,7 +172,7 @@ struct VirtualLaunchCommandTests {
 
     #expect(run.code == 1)
     #expect(run.standardError.contains(CLIFailure.prefix(.controllerRequestFailed)))
-    #expect(run.standardError.contains(CLILocalized.text("cli.virtual.launch.error.no_gamepad")))
+    #expect(run.standardError.contains(CLILocalized.text("cli.virtual.launch.errorNoGamepad")))
     #expect(printed.isEmpty)
   }
 

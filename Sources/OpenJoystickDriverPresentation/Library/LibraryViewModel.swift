@@ -33,44 +33,44 @@ extension LibraryPending {
     case .installRecord(_, let check):
       return LibraryConfirmation(
         title: check.replaces
-          ? OJDLocalized.formatted("library.record.replace.title", check.identity)
-          : OJDLocalized.formatted("library.record.install.title", check.identity),
+          ? OJDLocalized.formatted("ui.library.record.replace.title", check.identity)
+          : OJDLocalized.formatted("ui.library.record.install.title", check.identity),
         message: check.replaces
-          ? OJDLocalized.formatted("library.record.replace.message", check.fileName)
-          : OJDLocalized.formatted("library.record.install.message", check.fileName),
+          ? OJDLocalized.formatted("ui.library.record.replace.message", check.fileName)
+          : OJDLocalized.formatted("ui.library.record.install.message", check.fileName),
         confirmTitle: check.replaces
-          ? OJDLocalized.string("library.replace") : OJDLocalized.string("library.install"),
+          ? OJDLocalized.string("ui.library.replace") : OJDLocalized.string("ui.library.install"),
         isDestructive: check.replaces
       )
     case .installMod(_, let check):
       return LibraryConfirmation(
         title: check.replaces
-          ? OJDLocalized.formatted("library.mod.replace.title", check.name)
-          : OJDLocalized.formatted("library.mod.install.title", check.name),
+          ? OJDLocalized.formatted("ui.library.mod.replace.title", check.name)
+          : OJDLocalized.formatted("ui.library.mod.install.title", check.name),
         message: check.replaces
-          ? OJDLocalized.formatted("library.mod.replace.message", check.name, check.version)
+          ? OJDLocalized.formatted("ui.library.mod.replace.message", check.name, check.version)
           : OJDLocalized.formatted(
-            "library.mod.install.message",
+            "ui.library.mod.install.message",
             check.name,
             check.version,
             check.author
           ),
         confirmTitle: check.replaces
-          ? OJDLocalized.string("library.replace") : OJDLocalized.string("library.install"),
+          ? OJDLocalized.string("ui.library.replace") : OJDLocalized.string("ui.library.install"),
         isDestructive: check.replaces
       )
     case .removeRecord(let item):
       return LibraryConfirmation(
-        title: OJDLocalized.formatted("library.record.remove.title", item.identity),
-        message: OJDLocalized.string("library.record.remove.message"),
-        confirmTitle: OJDLocalized.string("library.remove"),
+        title: OJDLocalized.formatted("ui.library.record.remove.title", item.identity),
+        message: OJDLocalized.string("ui.library.record.remove.message"),
+        confirmTitle: OJDLocalized.string("ui.library.remove"),
         isDestructive: true
       )
     case .removeMod(let item):
       return LibraryConfirmation(
-        title: OJDLocalized.formatted("library.mod.remove.title", item.name),
-        message: OJDLocalized.string("library.mod.remove.message"),
-        confirmTitle: OJDLocalized.string("library.remove"),
+        title: OJDLocalized.formatted("ui.library.mod.remove.title", item.name),
+        message: OJDLocalized.string("ui.library.mod.remove.message"),
+        confirmTitle: OJDLocalized.string("ui.library.remove"),
         isDestructive: true
       )
     }
@@ -85,8 +85,8 @@ enum LibraryScope: String, CaseIterable, Identifiable {
   var id: String { rawValue }
   var titleKey: String {
     switch self {
-    case .installed: return "library.installed"
-    case .builtIn: return "library.builtIn"
+    case .installed: return "ui.library.installed"
+    case .builtIn: return "ui.library.builtIn"
     }
   }
 }
@@ -196,11 +196,11 @@ final class LibraryViewModel: ObservableObject {
     perform {
       if try isFolder(url) {
         let check = try store.checkMod(folder: url)
-        notice = OJDLocalized.formatted("library.mod.valid", url.lastPathComponent, check.name)
+        notice = OJDLocalized.formatted("ui.library.mod.valid", url.lastPathComponent, check.name)
       } else {
         let check = try store.checkRecord(try read(url))
         notice = OJDLocalized.formatted(
-          "library.record.valid",
+          "ui.library.record.valid",
           url.lastPathComponent,
           check.identity
         )
@@ -225,7 +225,11 @@ final class LibraryViewModel: ObservableObject {
   private func isFolder(_ url: URL) throws -> Bool {
     do { return try url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory == true } catch {
       throw LibraryFailure(
-        message: OJDLocalized.formatted("library.unreadable", url.path, error.localizedDescription),
+        message: OJDLocalized.formatted(
+          "ui.library.unreadable",
+          url.path,
+          error.localizedDescription
+        ),
         code: .fileAccessFailed
       )
     }
@@ -276,16 +280,16 @@ final class LibraryViewModel: ObservableObject {
       switch operation {
       case .installRecord(let data, _):
         let check = try store.installRecord(data)
-        notice = OJDLocalized.formatted("library.record.installed", check.identity)
+        notice = OJDLocalized.formatted("ui.library.record.installed", check.identity)
       case .installMod(let folder, let check):
         try store.installMod(folder: folder, replace: check.replaces)
-        notice = OJDLocalized.formatted("library.mod.installed", check.name)
+        notice = OJDLocalized.formatted("ui.library.mod.installed", check.name)
       case .removeRecord(let item):
         try store.removeRecord(item.model)
-        notice = OJDLocalized.formatted("library.record.removed", item.identity)
+        notice = OJDLocalized.formatted("ui.library.record.removed", item.identity)
       case .removeMod(let item):
         try store.removeMod(name: item.name)
-        notice = OJDLocalized.formatted("library.mod.removed", item.name)
+        notice = OJDLocalized.formatted("ui.library.mod.removed", item.name)
       }
       reload()
     }
@@ -295,7 +299,7 @@ final class LibraryViewModel: ObservableObject {
     do { return try readFile(url) } catch {
       throw LibraryFailure(
         message: OJDLocalized.formatted(
-          "library.unreadable",
+          "ui.library.unreadable",
           url.path,
           error.localizedDescription
         ),

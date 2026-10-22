@@ -31,7 +31,7 @@ private func sessionNotFound(_ selector: ControllerSelector) -> CLIFailure {
   CLIFailure(
     .controllerRequestFailed,
     CLILocalized.format(
-      "cli.controller.session.not_found",
+      "cli.controller.group.sessionNotFound",
       selector.text
     )
   )
@@ -128,7 +128,7 @@ struct ControllerDisconnectCommand: AsyncParsableCommand {
       "cli.controller.disconnect.abstract"
     ),
     discussion: CLILocalized.text(
-      "cli.controller.disconnect.discussion"
+      "platform.macos.cli.controller.disconnect.discussion"
     )
   )
 
@@ -174,7 +174,7 @@ struct ControllerDisconnectCommand: AsyncParsableCommand {
       return CLIFailure(
         .controllerRequestFailed,
         CLILocalized.format(
-          "cli.controller.disconnect.not_bluetooth",
+          "cli.controller.disconnect.notBluetooth",
           device.name
         )
       )
@@ -182,7 +182,7 @@ struct ControllerDisconnectCommand: AsyncParsableCommand {
       return CLIFailure(
         .controllerRequestFailed,
         CLILocalized.format(
-          "cli.controller.disconnect.bluetooth_le",
+          "platform.macos.cli.controller.disconnect.bluetoothLe",
           device.name
         )
       )
@@ -190,7 +190,7 @@ struct ControllerDisconnectCommand: AsyncParsableCommand {
       return CLIFailure(
         .controllerRequestFailed,
         CLILocalized.format(
-          "cli.controller.session.not_found",
+          "cli.controller.group.sessionNotFound",
           device.sessionToken.rawValue
         )
       )

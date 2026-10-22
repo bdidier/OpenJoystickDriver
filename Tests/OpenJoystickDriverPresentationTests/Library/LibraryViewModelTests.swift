@@ -131,7 +131,7 @@ struct LibraryViewModelTests {
     model.beginInstallRecord(from: file)
 
     #expect(model.pending?.confirmation.isDestructive == true)
-    #expect(model.pending?.confirmation.confirmTitle == OJDLocalized.string("library.replace"))
+    #expect(model.pending?.confirmation.confirmTitle == OJDLocalized.string("ui.library.replace"))
   }
 
   @Test

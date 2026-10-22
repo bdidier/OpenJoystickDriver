@@ -5,6 +5,15 @@ A key read by `OJDLocalized.*`, `CLILocalized.*`, `LocalizedStringResource(` or
 from a literal prefix needs at least one catalog key with that prefix. A catalog key that no Swift
 source under `Sources` reads also fails, unless `KEPT_WITHOUT_READER` names it and says why.
 
+Two further checks reach the keys a call site does not pass directly:
+
+- a string literal anywhere in Swift that has the shape of a key (a namespace and dotted segments)
+  must name a catalog key or start one, unless `NOT_A_KEY` names it and says why. Keys held in
+  enums, tables and `...Key` properties are literals, so a misspelled one fails here;
+- a helper such as `label(_ key: String)` that returns `OJDLocalized.string("ui.x." + key)` has its
+  literal arguments joined to the prefix and checked, as do the functions of the same file that
+  pass their first parameter on to it.
+
 The catalog itself follows these rules:
 
 - namespace: a key starts with one of the namespaces in `NAMESPACE_PATTERNS` and its segments are
@@ -27,12 +36,7 @@ violates fails the check.
 
 `--write-gated-keys` only removes entries: the keys that no longer violate their rule and the keys
 that no longer exist. A violation not yet listed makes it fail, naming the key and the rule, and it
-writes nothing. `--write-gated-keys --gate KEY RULE` (repeatable) adds exactly the named pairs. It
-accepts only the `namespace` rule, and only for a key that violates it and belongs to a family a
-pattern of `key_readers` reads (such as `error.E####`) whose other keys are all gated for
-`namespace`: that reader builds the key from a code or prefix, so the key cannot take the shape
-before the re-key. Any other addition is refused with the reason; `comment`, `osWord`, `specifier`
-and `pluralCount` violations are fixed on the key itself.
+writes nothing; the violation is fixed on the key itself.
 Removing a rule from `GATED_RULES` enforces it everywhere.
 """
 
@@ -61,7 +65,7 @@ KEY_POSITION = re.compile(
     CALL.pattern + r"\s*$|Key\s*:\s*String\s*\{\s*$",
 )
 # Interpolations whose values are a closed set, so the pattern names that set instead of any text.
-EXACT_INTERPOLATIONS = {"error.\\(rawValue)": r"error\.E\d{4}"}
+EXACT_INTERPOLATIONS = {"error.\\(rawValue).message": r"error\.E\d{4}\.message"}
 STRINGS_KEY = re.compile(r'^"((?:[^"\\]|\\.)*)"\s*=', re.MULTILINE)
 LITERAL = re.compile(r'"((?:[^"\\]|\\.)*)"')
 
@@ -69,8 +73,6 @@ LITERAL = re.compile(r'"((?:[^"\\]|\\.)*)"')
 # Rules that do not fail on the keys in `GATED_KEYS_PATH`, each with the task that lifts it. Lifting
 # a rule is deleting its entry.
 GATED_RULES: dict[str, str] = {
-    "namespace": "22.2",
-    "osWord": "22.2",
     "specifier": "22.3",
     "comment": "22.3",
     "pluralCount": "22.3",
@@ -126,6 +128,21 @@ class StringsEntry:
 
 # Catalog keys no Swift source reads but that stay, each with its reason.
 KEPT_WITHOUT_READER: dict[str, str] = {}
+
+# Key-shaped Swift literals that are not catalog keys, each with the reason.
+NOT_A_KEY: dict[str, str] = {
+    "notify.sounds": "the name of a setting that `ojd setting` reads and writes",
+}
+KEY_SHAPE = re.compile(
+    r"(?:term|action|status|ui|a11y|cli|error|notify|platform)(?:\.[A-Za-z0-9_]+)+\.?"
+)
+FUNCTION_WITH_STRING_PARAMETER = re.compile(
+    r"\bfunc\s+(?P<name>\w+)\(\s*_\s+(?P<parameter>\w+)\s*:\s*String\b"
+)
+PREFIX_HELPER = re.compile(
+    r"\bfunc\s+(?P<name>\w+)\(\s*_\s+(?P<parameter>\w+)\s*:\s*String\s*\)\s*->\s*String\s*"
+    r'\{\s*(?:return\s+)?OJDLocalized\.string\(\s*"(?P<prefix>[^"\\]+)"\s*\+\s*(?P=parameter)\s*\)'
+)
 
 
 @dataclass(frozen=True)
@@ -279,6 +296,43 @@ def problems(expression: str, keys: set[str]) -> str | None:
             return None
         return f"no key starts with {prefix.group(1)!r}"
     return None
+
+
+def key_literal_problems(source: str, keys: set[str]) -> list[tuple[int, str]]:
+    """Return (line, literal) for each key-shaped literal that names no catalog key."""
+    found: list[tuple[int, str]] = []
+    for offset, literal in string_literal_spans(source):
+        if (
+            KEY_SHAPE.fullmatch(literal)
+            and literal not in keys
+            and literal not in NOT_A_KEY
+            and not any(key.startswith(literal) for key in keys)
+        ):
+            found.append((source.count("\n", 0, offset) + 1, literal))
+    return found
+
+
+def helper_key_problems(source: str, keys: set[str]) -> list[tuple[int, str]]:
+    """Return (line, key) for each literal argument of a prefix helper that names no catalog key."""
+    found: list[tuple[int, str]] = []
+    functions = list(FUNCTION_WITH_STRING_PARAMETER.finditer(source))
+    for helper in PREFIX_HELPER.finditer(source):
+        names = {helper["name"]}
+        for index, function in enumerate(functions):
+            end = (
+                functions[index + 1].start()
+                if index + 1 < len(functions)
+                else len(source)
+            )
+            body = source[function.end() : end]
+            if re.search(rf"\b{helper['name']}\(\s*{function['parameter']}\s*\)", body):
+                names.add(function["name"])
+        for name in sorted(names):
+            for call in re.finditer(rf'(?<!func )\b{name}\(\s*"([^"\\]*)"', source):
+                key = helper["prefix"] + call[1]
+                if key not in keys:
+                    found.append((source.count("\n", 0, call.start()) + 1, key))
+    return found
 
 
 def tracked_swift_files(root: Path = ROOT) -> list[Path]:
@@ -539,112 +593,33 @@ def gated_keys(root: Path = ROOT) -> dict[str, set[str]]:
     return {rule: set(data.get(rule, [])) for rule in GATED_RULES}
 
 
-def family_problem(
-    key: str, root: Path, gated: dict[str, set[str]], adding: set[str]
-) -> str | None:
-    """Return why `key` is not in a key family whose reader blocks the namespace shape, or None.
-
-    A family is the keys one pattern of `key_readers` reads. It blocks the shape when every other
-    key of the family is gated for `namespace` and at least one such key already exists outside the
-    keys being added, so a family cannot be invented and gated in one change: the reader builds the key from a code or prefix, so
-    the key cannot take the shape before the re-key without breaking the reader.
-    """
-    _, patterns = key_readers(root)
-    matching = [text for text, pattern in patterns.items() if pattern.fullmatch(key)]
-    if not matching:
-        return f"{key!r} is read by no pattern, so it can take the namespace shape; rename it"
-    keys = catalog_keys(root)
-    namespace = gated.get("namespace", set())
-    for text in matching:
-        pattern = patterns[text]
-        ungated = sorted(
-            member
-            for member in keys
-            if pattern.fullmatch(member)
-            and member not in adding
-            and member not in namespace
-        )
-        if ungated:
-            return (
-                f"{key!r}: the family read by {text!r} has the ungated member "
-                f"{ungated[0]!r}, so the family can take the namespace shape"
-            )
-        if not any(
-            pattern.fullmatch(member) and member not in adding and member in namespace
-            for member in keys
-        ):
-            return (
-                f"{key!r}: the family read by {text!r} has no gated key besides the ones "
-                "added, so it is not an existing family"
-            )
-    return None
-
-
 def update_gated_keys(
-    root: Path = ROOT, additions: list[tuple[str, str]] | None = None
+    root: Path = ROOT,
 ) -> tuple[dict[str, list[str]], list[str]]:
     """Return (the new gated keys per rule, the reasons the update is refused).
 
-    The update drops the keys that no longer violate their rule or no longer exist. It adds only
-    the `additions` that `--gate` names, each a `namespace` key of a fully gated family. A key that
+    The update drops the keys that no longer violate their rule or no longer exist. A key that
     violates a rule without being listed is refused with the key and the rule.
     """
-    additions = additions or []
     found = rule_problems(root)
     violating = {rule: {p.key for p in found[rule]} for rule in GATED_RULES}
     current = gated_keys(root)
-    refused: list[str] = []
-    accepted: set[tuple[str, str]] = set()
-    adding = {key for key, rule in additions if rule == "namespace"}
-    for key, rule in additions:
-        if rule not in GATED_RULES:
-            refused.append(f"--gate {key} {rule}: {rule!r} is not a gated rule")
-        elif rule != "namespace":
-            refused.append(
-                f"--gate {key} {rule}: only namespace can be gated; fix the key's {rule} violation"
-            )
-        elif key not in violating[rule]:
-            refused.append(f"--gate {key} {rule}: the key violates no {rule} rule")
-        else:
-            reason = family_problem(key, root, current, adding)
-            if reason:
-                refused.append(f"--gate {key} {rule}: {reason}")
-            else:
-                accepted.add((key, rule))
     kept = {rule: current[rule] & violating[rule] for rule in GATED_RULES}
-    for key, rule in accepted:
-        kept[rule].add(key)
-    for rule in GATED_RULES:
-        refused.extend(
-            f"{key!r} would need gating for the {rule} rule; fix the key instead"
-            for key in sorted(violating[rule] - kept[rule])
-        )
+    refused = [
+        f"{key!r} would need gating for the {rule} rule; fix the key instead"
+        for rule in GATED_RULES
+        for key in sorted(violating[rule] - kept[rule])
+    ]
     return {rule: sorted(keys) for rule, keys in kept.items()}, refused
 
 
-def write_gated_keys(
-    root: Path = ROOT, additions: list[tuple[str, str]] | None = None
-) -> list[str]:
+def write_gated_keys(root: Path = ROOT) -> list[str]:
     """Write `update_gated_keys` to `GATED_KEYS_PATH` unless it refuses; return the refusals."""
-    data, refused = update_gated_keys(root, additions)
+    data, refused = update_gated_keys(root)
     if not refused:
         text = json.dumps(data, indent=2, ensure_ascii=False) + "\n"
         (root / GATED_KEYS_PATH).write_text(text, encoding="utf-8")
     return refused
-
-
-def parse_gate_arguments(arguments: list[str]) -> list[tuple[str, str]] | None:
-    """Return the (key, rule) pairs of `--write-gated-keys [--gate KEY RULE]...`, or None."""
-    if not arguments or arguments[0] != "--write-gated-keys":
-        return None
-    rest = arguments[1:]
-    pairs: list[tuple[str, str]] = []
-    while rest:
-        if rest[0] != "--gate" or len(rest) < 3:
-            return None
-        pairs.append((rest[1], rest[2]))
-        rest = rest[3:]
-    return pairs
 
 
 def rule_report(
@@ -679,26 +654,36 @@ def check(root: Path = ROOT) -> tuple[list[tuple[KeyUse, str]], list[KeyUse]]:
     unscannable: list[KeyUse] = []
     for path in tracked_swift_files(root):
         relative = path.relative_to(root).as_posix()
-        for line, expression in key_arguments(path.read_text(encoding="utf-8")):
+        source = path.read_text(encoding="utf-8")
+        for line, expression in key_arguments(source):
             use = KeyUse(relative, line, expression)
             reason = problems(expression, keys)
             if reason:
                 missing.append((use, reason))
             elif not LITERAL.search(expression):
                 unscannable.append(use)
+        reported = {
+            (use.line, reason) for use, reason in missing if use.path == relative
+        }
+        for line, key in key_literal_problems(source, keys) + helper_key_problems(
+            source, keys
+        ):
+            reason = f"missing key {key!r}"
+            if (line, reason) not in reported:
+                reported.add((line, reason))
+                missing.append((KeyUse(relative, line, key), reason))
     return missing, unscannable
 
 
 def main(arguments: list[str] | None = None) -> int:
     if arguments:
-        additions = parse_gate_arguments(arguments)
-        if additions is None:
+        if arguments != ["--write-gated-keys"]:
             print(
-                "usage: check_localization_keys.py [--write-gated-keys [--gate KEY RULE]...]",
+                "usage: check_localization_keys.py [--write-gated-keys]",
                 file=sys.stderr,
             )
             return 2
-        refused = write_gated_keys(ROOT, additions)
+        refused = write_gated_keys(ROOT)
         for reason in refused:
             print(reason, file=sys.stderr)
         return 1 if refused else 0

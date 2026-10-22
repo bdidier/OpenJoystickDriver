@@ -46,25 +46,27 @@
           HStack(alignment: .firstTextBaseline, spacing: 8) {
             OJDSystemSymbol(
               name: SemanticState.attention.presentation.symbolName,
-              fallback: OJDLocalized.string("common.needsAttention")
+              fallback: OJDLocalized.string("status.needsAttention")
             ).foregroundColor(Color(SemanticState.attention.presentation.tone.color))
             Text(errorMessage).fixedSize(horizontal: false, vertical: true)
             Spacer(minLength: 12)
             if preferences.notificationAuthorization == .denied {
-              Button(OJDLocalized.string("settings.openSystemSettings")) {
+              Button(OJDLocalized.string("ui.settings.general.openSystemSettings")) {
                 preferences.openNotificationSettings()
               }
             }
             if preferences.settingsFileError != nil {
-              Button(OJDLocalized.string("settings.unreadable.showInFinder")) {
+              Button(
+                OJDLocalized.string("platform.macos.ui.settings.advanced.unreadableShowInFinder")
+              ) {
                 preferences.showSettingsFileInFinder()
               }
-              Button(OJDLocalized.string("settings.unreadable.resetSettings")) {
+              Button(OJDLocalized.string("ui.settings.advanced.unreadableResetSettings")) {
                 preferences.resetSettings()
               }
             }
             if preferences.settingsFileError == nil {
-              Button(OJDLocalized.string("common.dismiss")) { preferences.dismissError() }
+              Button(OJDLocalized.string("action.dismiss")) { preferences.dismissError() }
             }
           }
         }

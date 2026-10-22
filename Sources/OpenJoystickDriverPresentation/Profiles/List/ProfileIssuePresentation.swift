@@ -12,18 +12,18 @@ struct ProfileIssuePresentation: Equatable {
   init(_ issue: ApplicationServiceRemappingProfileIssue) {
     switch issue.kind {
     case .damagedProfile:
-      title = OJDLocalized.string("profiles.damagedProfile")
-      message = OJDLocalized.string("profiles.damagedProfileMessage")
+      title = OJDLocalized.string("ui.profiles.damagedProfile")
+      message = OJDLocalized.string("ui.profiles.damagedProfileMessage")
     case .unusableLibrary:
-      title = OJDLocalized.string("profiles.damagedLibrary")
-      message = OJDLocalized.string("profiles.damagedSelectionsMessage")
+      title = OJDLocalized.string("ui.profiles.damagedLibrary")
+      message = OJDLocalized.string("ui.profiles.damagedSelectionsMessage")
     }
     code = issue.code.rawValue
   }
 
   /// The title with the code, as the detail's section header reads it.
-  var titleWithCode: String { OJDLocalized.formatted("error.withCode", title, code) }
+  var titleWithCode: String { OJDLocalized.formatted("ui.error.withCode", title, code) }
 
   /// What VoiceOver reads after the title: the text and the code.
-  var accessibilityValue: String { OJDLocalized.formatted("error.withCode", message, code) }
+  var accessibilityValue: String { OJDLocalized.formatted("ui.error.withCode", message, code) }
 }

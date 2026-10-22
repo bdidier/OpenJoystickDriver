@@ -46,55 +46,55 @@
 
     var body: some View {
       VStack(alignment: .leading, spacing: 15) {
-        Text(OJDLocalized.string("profiles.details")).font(
+        Text(OJDLocalized.string("ui.profiles.details")).font(
           .headline.weight(.semibold)
         )
-        TextField(OJDLocalized.string("common.profileName"), text: $name)
+        TextField(OJDLocalized.string("term.profileName"), text: $name)
         HStack(spacing: 12) {
           TextField(
-            OJDLocalized.string("profiles.vendorID"),
+            OJDLocalized.string("ui.profiles.vendorID"),
             text: $vendorID
           )
           TextField(
-            OJDLocalized.string("profiles.productID"),
+            OJDLocalized.string("ui.profiles.productID"),
             text: $productID
           )
         }
         Text(
           OJDLocalized.string(
-            "profiles.identifierHint"
+            "ui.profiles.identifierHint"
           )
         ).font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor))
-        Picker(OJDLocalized.string("profiles.target"), selection: $scopeKind) {
-          Text(OJDLocalized.string("profiles.targetGlobal")).tag(
+        Picker(OJDLocalized.string("ui.profiles.target"), selection: $scopeKind) {
+          Text(OJDLocalized.string("ui.profiles.targetGlobal")).tag(
             ProfileScopeKind.global
           )
-          Text(OJDLocalized.string("profiles.targetApplication")).tag(
+          Text(OJDLocalized.string("ui.profiles.targetApplication")).tag(
             ProfileScopeKind.application
           )
         }
         if scopeKind == .application {
           TextField(
-            OJDLocalized.string("profiles.appID"),
+            OJDLocalized.string("ui.profiles.appID"),
             text: $appID
           )
         }
         Toggle(
-          OJDLocalized.string("profiles.joyConPair"),
+          OJDLocalized.string("ui.profiles.joyConPair"),
           isOn: $joyConPairEnabled
         )
         if joyConPairEnabled {
           Picker(
-            OJDLocalized.string("profiles.joyConGyro"),
+            OJDLocalized.string("ui.profiles.joyConGyro"),
             selection: $joyConGyroSelection
           ) {
-            Text(OJDLocalized.string("common.disabled")).tag(
+            Text(OJDLocalized.string("status.disabled")).tag(
               RemappingJoyConGyroSelection.disabled
             )
-            Text(OJDLocalized.string("profiles.joyConLeft")).tag(
+            Text(OJDLocalized.string("ui.profiles.joyConLeft")).tag(
               RemappingJoyConGyroSelection.left
             )
-            Text(OJDLocalized.string("profiles.joyConRight")).tag(
+            Text(OJDLocalized.string("ui.profiles.joyConRight")).tag(
               RemappingJoyConGyroSelection.right
             )
           }
@@ -107,8 +107,8 @@
         }
         HStack {
           Spacer()
-          Button(OJDLocalized.string("common.cancel")) { dismiss() }
-          Button(OJDLocalized.string("common.apply")) { save() }
+          Button(OJDLocalized.string("action.cancel")) { dismiss() }
+          Button(OJDLocalized.string("action.apply")) { save() }
         }
       }.padding(28).frame(width: 440)
     }
@@ -118,7 +118,7 @@
         let productID = ProfileIdentifierInput.parse(productID)
       else {
         errorMessage = OJDLocalized.string(
-          "profiles.invalidIdentifiers"
+          "ui.profiles.invalidIdentifiers"
         )
         return
       }

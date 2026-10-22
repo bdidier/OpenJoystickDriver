@@ -6,13 +6,13 @@ struct ControllerCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "controller",
     abstract: CLILocalized.text(
-      "cli.controller.abstract"
+      "cli.controller.group.abstract"
     ),
     discussion: CLILocalized.text(
-      "cli.controller.discussion"
+      "cli.controller.group.discussion"
     ) + " "
       + CLILocalized.text(
-        "cli.controller.discussion.unit"
+        "cli.controller.group.discussionUnit"
       ),
     subcommands: [
       ControllerListCommand.self, ControllerShowCommand.self, ControllerWatchCommand.self,
@@ -31,7 +31,7 @@ struct ControllerCommand: AsyncParsableCommand {
 /// The shared `CONTROLLER` argument help.
 let controllerArgumentHelp = ArgumentHelp(
   CLILocalized.text(
-    "cli.controller.argument"
+    "cli.controller.group.argument"
   ),
   valueName: "controller"
 )
@@ -204,12 +204,12 @@ struct ControllerShowCommand: AsyncParsableCommand {
   /// The Record row: the layer and the user file, or that no record matches the model.
   private static func recordText(_ record: ControllerShowReport.Record?) -> String {
     guard let record else {
-      return CLILocalized.text("cli.controller.show.record.none")
+      return CLILocalized.text("cli.controller.show.recordNone")
     }
     switch record.file {
     case let file?:
-      return CLILocalized.format("cli.controller.show.record.user", file)
-    case nil: return CLILocalized.text("cli.controller.show.record.bundled")
+      return CLILocalized.format("cli.controller.show.recordUser", file)
+    case nil: return CLILocalized.text("cli.controller.show.recordBundled")
     }
   }
 
@@ -219,20 +219,20 @@ struct ControllerShowCommand: AsyncParsableCommand {
       values.isEmpty ? none : values.joined(separator: ", ")
     }
     var rows: [(String, String)] = [
-      (CLILocalized.text("cli.controller.show.label.name"), detail.name),
-      (CLILocalized.text("cli.controller.show.label.id"), detail.id),
-      (CLILocalized.text("cli.controller.show.label.unit"), detail.unit ?? none),
+      (CLILocalized.text("cli.controller.show.labelName"), detail.name),
+      (CLILocalized.text("cli.controller.show.labelId"), detail.id),
+      (CLILocalized.text("cli.controller.show.labelUnit"), detail.unit ?? none),
       (
-        CLILocalized.text("cli.controller.show.label.identity"),
+        CLILocalized.text("cli.controller.show.labelIdentity"),
         deviceIdentity(vendorID: detail.vendorID, productID: detail.productID)
       ),
-      (CLILocalized.text("cli.controller.show.label.connection"), detail.connection),
+      (CLILocalized.text("cli.controller.show.labelConnection"), detail.connection),
       (
-        CLILocalized.text("cli.controller.show.label.protocol"),
+        CLILocalized.text("cli.controller.show.labelProtocol"),
         detail.protocol.commandLineName
       ),
       (
-        CLILocalized.text("cli.controller.show.label.session"),
+        CLILocalized.text("cli.controller.show.labelSession"),
         CommandLineName.kebab(detail.session)
       ),
     ]
@@ -241,19 +241,19 @@ struct ControllerShowCommand: AsyncParsableCommand {
         power.charging == .unknown ? "" : " (\(CommandLineName.kebab(power.charging.rawValue)))"
       rows.append(
         (
-          CLILocalized.text("cli.controller.show.label.battery"),
+          CLILocalized.text("cli.controller.show.labelBattery"),
           (power.battery.percentageText ?? none) + charging
         )
       )
     }
     rows += [
       (
-        CLILocalized.text("cli.controller.show.label.input"),
+        CLILocalized.text("cli.controller.show.labelInput"),
         CommandLineName.kebab(detail.inputHealth.state)
           + (detail.inputHealth.failureReason.map { " (\(CommandLineName.kebab($0)))" } ?? "")
       ),
       (
-        CLILocalized.text("cli.controller.show.label.ownership"),
+        CLILocalized.text("cli.controller.show.labelOwnership"),
         CLILocalized.format(
           "cli.controller.show.ownership",
           CommandLineName.kebab(detail.ownership.discoverySource),
@@ -262,7 +262,7 @@ struct ControllerShowCommand: AsyncParsableCommand {
         )
       ),
       (
-        CLILocalized.text("cli.controller.show.label.server"),
+        CLILocalized.text("cli.controller.show.labelServer"),
         CLILocalized.format(
           "cli.controller.show.server",
           detail.ownership.server.rawValue,
@@ -270,25 +270,25 @@ struct ControllerShowCommand: AsyncParsableCommand {
         )
       ),
       (
-        CLILocalized.text("cli.controller.show.label.serving"),
+        CLILocalized.text("cli.controller.show.labelServing"),
         CommandLineName.kebab(detail.serving.route)
           + (detail.serving.reason.map { " (\(CommandLineName.kebab($0)))" } ?? "")
       ),
       (
-        CLILocalized.text("cli.controller.show.label.persona"),
+        CLILocalized.text("cli.controller.show.labelPersona"),
         detail.serving.persona.map(CommandLineName.kebab) ?? none
       ),
-      (CLILocalized.text("cli.controller.show.label.record"), recordText(detail.record)),
+      (CLILocalized.text("cli.controller.show.labelRecord"), recordText(detail.record)),
       (
-        CLILocalized.text("cli.controller.show.label.controls"),
+        CLILocalized.text("cli.controller.show.labelControls"),
         list(detail.capabilities.controls.map(CommandLineName.kebab))
       ),
       (
-        CLILocalized.text("cli.controller.show.label.rumble"),
+        CLILocalized.text("cli.controller.show.labelRumble"),
         list(detail.capabilities.rumbleMotors.map(CommandLineName.kebab))
       ),
       (
-        CLILocalized.text("cli.controller.show.label.lighting"),
+        CLILocalized.text("cli.controller.show.labelLighting"),
         list(detail.capabilities.lightingFeatures.map(CommandLineName.kebab))
       ),
     ]
@@ -296,20 +296,20 @@ struct ControllerShowCommand: AsyncParsableCommand {
     if detail.capabilities.outputOwner == ControllerServer.system.rawValue {
       rows.append(
         (
-          CLILocalized.text("cli.controller.show.label.output_owner"),
-          CLILocalized.text("cli.controller.show.output_owner.macos")
+          CLILocalized.text("cli.controller.show.labelOutputOwner"),
+          CLILocalized.text("platform.macos.cli.controller.show.outputOwnerMacos")
         )
       )
     }
     if let tuning = detail.tuning {
       rows.append(
-        (CLILocalized.text("cli.controller.show.label.tuning"), tuning.rows.joined(separator: ", "))
+        (CLILocalized.text("cli.controller.show.labelTuning"), tuning.rows.joined(separator: ", "))
       )
     }
     if let virtual = detail.virtual {
       rows.append(
         (
-          CLILocalized.text("cli.controller.show.label.virtual"),
+          CLILocalized.text("cli.controller.show.labelVirtual"),
           virtual.profile.map { profile in
             let source = virtual.source.map { CommandLineName.kebab($0.rawValue) } ?? ""
             return "\(CommandLineName.kebab(profile)) (\(source))"
@@ -320,7 +320,7 @@ struct ControllerShowCommand: AsyncParsableCommand {
     if let publication = detail.publication {
       rows.append(
         (
-          CLILocalized.text("cli.controller.show.label.publication"),
+          CLILocalized.text("cli.controller.show.labelPublication"),
           CommandLineName.kebab(publication.state)
             + (publication.reason.map { " (\(CommandLineName.kebab($0)))" }
               ?? publication.failure.map { " (\($0))" } ?? "")
@@ -333,7 +333,7 @@ struct ControllerShowCommand: AsyncParsableCommand {
     }
     guard !detail.outputChecks.isEmpty else { return }
     CLIOutput.stdout("")
-    CLIOutput.stdout(CLILocalized.text("cli.controller.show.label.output_checks"))
+    CLIOutput.stdout(CLILocalized.text("cli.controller.show.labelOutputChecks"))
     for check in detail.outputChecks {
       CLIOutput.stdout("  \(check.command)")
       CLIOutput.stdout("    \(check.expected)")

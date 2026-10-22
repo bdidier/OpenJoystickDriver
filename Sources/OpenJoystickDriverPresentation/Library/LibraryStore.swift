@@ -210,7 +210,7 @@ final class DirectoryLibraryStore: LibraryStore {
   ) throws -> ControllerRecordTestResult {
     guard let record = loaded.withLock({ $0 })?.records[model] else {
       throw LibraryFailure(
-        message: OJDLocalized.formatted("cli.record.show.not_found", model.description),
+        message: OJDLocalized.formatted("cli.record.show.notFound", model.description),
         code: .notFound
       )
     }
@@ -233,7 +233,7 @@ final class DirectoryLibraryStore: LibraryStore {
     do { validated = try ControllerRecordSet.validate(data) } catch {
       throw LibraryFailure(
         message: OJDLocalized.formatted(
-          "library.record.invalid",
+          "ui.library.record.invalid",
           ControllerRecordSet.problemDescription(error, includingCode: false, document: "record")
         ),
         code: ControllerRecordSet.problemCode(error) ?? .invalidInputFile
@@ -266,7 +266,7 @@ final class DirectoryLibraryStore: LibraryStore {
     } catch {
       throw LibraryFailure(
         message: OJDLocalized.formatted(
-          "library.record.installFailed",
+          "ui.library.record.installFailed",
           destination.path,
           error.localizedDescription
         ),
@@ -283,7 +283,7 @@ final class DirectoryLibraryStore: LibraryStore {
       .filter { FileManager.default.fileExists(atPath: $0.path) }
     guard !targets.isEmpty else {
       throw LibraryFailure(
-        message: OJDLocalized.formatted("library.record.notFound", model.description),
+        message: OJDLocalized.formatted("ui.library.record.notFound", model.description),
         code: .notFound
       )
     }
@@ -291,7 +291,7 @@ final class DirectoryLibraryStore: LibraryStore {
       do { try FileManager.default.removeItem(at: target) } catch {
         throw LibraryFailure(
           message: OJDLocalized.formatted(
-            "library.record.removeFailed",
+            "ui.library.record.removeFailed",
             target.path,
             error.localizedDescription
           ),
@@ -343,7 +343,7 @@ final class DirectoryLibraryStore: LibraryStore {
 
   private static func failure(_ error: ModPackageError, subject: String) -> LibraryFailure {
     LibraryFailure(
-      message: OJDLocalized.formatted("library.mod.refused", subject, error.detail),
+      message: OJDLocalized.formatted("ui.library.mod.refused", subject, error.detail),
       code: error.code
     )
   }

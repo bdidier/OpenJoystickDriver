@@ -24,7 +24,7 @@
           HStack(alignment: .firstTextBaseline, spacing: 10) {
             OJDSystemSymbol(
               name: SemanticState.failure.presentation.symbolName,
-              fallback: OJDLocalized.string("common.needsAttention")
+              fallback: OJDLocalized.string("status.needsAttention")
             ).foregroundColor(Color(SemanticState.failure.presentation.tone.color))
               .accessibilityHidden(true)
             Text(message).fixedSize(horizontal: false, vertical: true)

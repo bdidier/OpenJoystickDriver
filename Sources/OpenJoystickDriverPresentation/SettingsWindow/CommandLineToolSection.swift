@@ -13,18 +13,18 @@
     private var confirmingUninstall = false
 
     var body: some View {
-      Section(OJDLocalized.string("settings.commandLineTool")) {
+      Section(OJDLocalized.string("ui.settings.commandLine.tool")) {
         HStack(alignment: .firstTextBaseline, spacing: 12) {
           Text(Self.statusText(commandLineTool.status, linkPath: commandLineTool.link.linkURL.path))
             .fixedSize(horizontal: false, vertical: true)
           Spacer(minLength: 12)
           switch commandLineTool.status.state {
           case .installed:
-            Button(OJDLocalized.string("settings.commandLineTool.uninstall")) {
+            Button(OJDLocalized.string("ui.settings.commandLine.toolUninstall")) {
               confirmingUninstall = true
             }
           case .missing, .linkedElsewhere, .broken:
-            Button(OJDLocalized.string("settings.commandLineTool.install")) {
+            Button(OJDLocalized.string("ui.settings.commandLine.toolInstall")) {
               commandLineTool.install()
             }
           case .blockedByFile: EmptyView()
@@ -39,30 +39,36 @@
 
     private func uninstallAlert() -> Alert {
       Alert(
-        title: Text(OJDLocalized.string("settingsPane.commandLine.uninstallTitle")),
+        title: Text(OJDLocalized.string("ui.settings.commandLine.uninstallTitle")),
         message: Text(
           OJDLocalized.formatted(
-            "settingsPane.commandLine.uninstallMessage",
+            "platform.macos.ui.settings.commandLine.uninstallMessage",
             commandLineTool.link.linkURL.path
           )
         ),
         primaryButton: .destructive(
-          Text(OJDLocalized.string("settingsPane.commandLine.uninstallConfirm"))
+          Text(OJDLocalized.string("ui.settings.commandLine.uninstallConfirm"))
         ) { commandLineTool.uninstall() },
-        secondaryButton: .cancel(Text(OJDLocalized.string("common.cancel")))
+        secondaryButton: .cancel(Text(OJDLocalized.string("action.cancel")))
       )
     }
 
     static func statusText(_ status: CommandLineToolLinkStatus, linkPath path: String) -> String {
       switch status.state {
-      case .missing: return OJDLocalized.formatted("settings.commandLineTool.notInstalled", path)
-      case .installed: return OJDLocalized.formatted("settings.commandLineTool.installed", path)
+      case .missing:
+        return OJDLocalized.formatted(
+          "platform.macos.ui.settings.commandLine.toolNotInstalled",
+          path
+        )
+      case .installed:
+        return OJDLocalized.formatted("platform.macos.ui.settings.commandLine.toolInstalled", path)
       case .linkedElsewhere, .broken:
         guard let target = status.target else {
-          return OJDLocalized.formatted("settings.commandLineTool.linkTargetUnreadable", path)
+          return OJDLocalized.formatted("ui.settings.commandLine.toolLinkTargetUnreadable", path)
         }
-        return OJDLocalized.formatted("settings.commandLineTool.linkedElsewhere", path, target)
-      case .blockedByFile: return OJDLocalized.formatted("settings.commandLineTool.blocked", path)
+        return OJDLocalized.formatted("ui.settings.commandLine.toolLinkedElsewhere", path, target)
+      case .blockedByFile:
+        return OJDLocalized.formatted("ui.settings.commandLine.toolBlocked", path)
       }
     }
   }

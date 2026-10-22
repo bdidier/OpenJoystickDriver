@@ -15,8 +15,8 @@ enum VirtualHIDProfileScopeChoice: Hashable, CaseIterable {
 
   var titleKey: String {
     switch self {
-    case .model: "controllers.virtual.scope.model"
-    case .unit: "controllers.virtual.scope.unit"
+    case .model: "ui.controllers.virtual.scope.model"
+    case .unit: "ui.controllers.virtual.scope.unit"
     }
   }
 

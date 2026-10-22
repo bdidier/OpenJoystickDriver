@@ -45,10 +45,10 @@
         Text(
           kind == .chord
             ? OJDLocalized.string(
-              "profiles.chordHelp"
+              "ui.profiles.chordHelp"
             )
             : OJDLocalized.string(
-              "profiles.sequenceHelp"
+              "ui.profiles.sequenceHelp"
             )
         ).foregroundColor(Color(NSColor.secondaryLabelColor)).fixedSize(
           horizontal: false,
@@ -57,7 +57,7 @@
         ForEach(sources.indices, id: \.self) { index in
           HStack {
             Picker(
-              OJDLocalized.formatted("profiles.controlNumber", index + 1),
+              OJDLocalized.formatted("ui.profiles.controlNumber", index + 1),
               selection: sourceBinding(at: index)
             ) {
               ForEach(discreteSources(capabilities: capabilities), id: \.source) { option in
@@ -70,45 +70,45 @@
                 label: {
                   OJDSystemSymbol(
                     name: "minus.circle",
-                    fallback: OJDLocalized.string("common.remove")
+                    fallback: OJDLocalized.string("action.remove")
                   )
                 }
               ).buttonStyle(BorderlessButtonStyle()).ojdAccessibilityLabel(
-                OJDLocalized.string("common.remove")
+                OJDLocalized.string("action.remove")
               )
             }
           }
         }
-        Button(OJDLocalized.string("profiles.addControl")) {
+        Button(OJDLocalized.string("ui.profiles.addControl")) {
           sources.append(nextSource)
         }.disabled(sources.count >= discreteSources(capabilities: capabilities).count)
         if kind == .chord {
           Picker(
-            OJDLocalized.string("profiles.chordMode"),
+            OJDLocalized.string("ui.profiles.chordMode"),
             selection: $chordMode
           ) {
-            Text(OJDLocalized.string("profiles.chordModeModifier")).tag(
+            Text(OJDLocalized.string("ui.profiles.chordModeModifier")).tag(
               RemappingChordMode.modifier
             )
-            Text(OJDLocalized.string("profiles.chordModeSimultaneous"))
+            Text(OJDLocalized.string("ui.profiles.chordModeSimultaneous"))
               .tag(RemappingChordMode.simultaneous)
           }
           if chordMode == .simultaneous {
             valueSlider(
-              title: OJDLocalized.string("profiles.chordWindow"),
+              title: OJDLocalized.string("ui.profiles.chordWindow"),
               value: $windowMs,
               range: RemappingChord.windowRange
             )
           }
         } else {
           valueSlider(
-            title: OJDLocalized.string("profiles.sequenceWindow"),
+            title: OJDLocalized.string("ui.profiles.sequenceWindow"),
             value: $windowMs,
             range: RemappingSequence.windowRange
           )
         }
         Picker(
-          OJDLocalized.string("common.destination"),
+          OJDLocalized.string("term.destination"),
           selection: $destination
         ) {
           ForEach(
@@ -119,8 +119,8 @@
         PhysicalOutputDestinationFields(destination: $destination)
         HStack {
           Spacer()
-          Button(OJDLocalized.string("common.cancel")) { dismiss() }
-          Button(OJDLocalized.string("common.add")) {
+          Button(OJDLocalized.string("action.cancel")) { dismiss() }
+          Button(OJDLocalized.string("action.add")) {
             let window = kind == .chord && chordMode == .modifier ? 50 : windowMs
             onSave(sources, chordMode, window, destination)
             dismiss()
@@ -134,8 +134,8 @@
 
     private var title: String {
       switch kind {
-      case .chord: return OJDLocalized.string("profiles.addChord")
-      case .sequence: return OJDLocalized.string("profiles.addSequence")
+      case .chord: return OJDLocalized.string("ui.profiles.addChord")
+      case .sequence: return OJDLocalized.string("ui.profiles.addSequence")
       }
     }
 
@@ -181,10 +181,10 @@
     private var activationMode = RemappingLayerActivation.hold
 
     var body: some View {
-      ProfileSheetScaffold(title: OJDLocalized.string("profiles.addLayer")) {
-        TextField(OJDLocalized.string("profiles.layerName"), text: $name)
+      ProfileSheetScaffold(title: OJDLocalized.string("ui.profiles.addLayer")) {
+        TextField(OJDLocalized.string("ui.profiles.layerName"), text: $name)
         Picker(
-          OJDLocalized.string("profiles.activator"),
+          OJDLocalized.string("ui.profiles.activator"),
           selection: $activator
         ) {
           ForEach(discreteSources(capabilities: capabilities), id: \.source) { option in
@@ -192,20 +192,20 @@
           }
         }
         Picker(
-          OJDLocalized.string("profiles.activationMode"),
+          OJDLocalized.string("ui.profiles.activationMode"),
           selection: $activationMode
         ) {
-          Text(OJDLocalized.string("profiles.hold")).tag(
+          Text(OJDLocalized.string("ui.profiles.hold")).tag(
             RemappingLayerActivation.hold
           )
-          Text(OJDLocalized.string("profiles.toggle")).tag(
+          Text(OJDLocalized.string("ui.profiles.toggle")).tag(
             RemappingLayerActivation.toggle
           )
         }
       } footer: {
         Spacer()
-        Button(OJDLocalized.string("common.cancel")) { dismiss() }
-        Button(OJDLocalized.string("common.add")) {
+        Button(OJDLocalized.string("action.cancel")) { dismiss() }
+        Button(OJDLocalized.string("action.add")) {
           onSave(name.trimmingCharacters(in: .whitespacesAndNewlines), activator, activationMode)
           dismiss()
         }.disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
@@ -229,19 +229,19 @@
     var body: some View {
       ProfileSheetScaffold(
         title: OJDLocalized.formatted(
-          "profiles.addLayerAssignment",
+          "ui.profiles.addLayerAssignment",
           layer.name
         )
       ) {
         Picker(
-          OJDLocalized.string("capture.controllerControl"),
+          OJDLocalized.string("ui.capture.controllerControl"),
           selection: sourceBinding
         ) {
           ForEach(SourceOption.options(including: source, capabilities: capabilities), id: \.source)
           { option in Text(option.title).tag(option.source).disabled(!option.isSupported) }
         }
         Picker(
-          OJDLocalized.string("common.destination"),
+          OJDLocalized.string("term.destination"),
           selection: $destination
         ) {
           ForEach(
@@ -256,8 +256,8 @@
         PhysicalOutputDestinationFields(destination: $destination)
       } footer: {
         Spacer()
-        Button(OJDLocalized.string("common.cancel")) { dismiss() }
-        Button(OJDLocalized.string("common.add")) {
+        Button(OJDLocalized.string("action.cancel")) { dismiss() }
+        Button(OJDLocalized.string("action.add")) {
           onSave(source, destination)
           dismiss()
         }.disabled(

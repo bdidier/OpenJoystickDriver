@@ -18,10 +18,10 @@
         SettingsErrorSection(preferences: preferences)
         CommandLineToolSection(commandLineTool: commandLineTool)
         DriverExtensionSection(runtime: runtime)
-        Section(OJDLocalized.string("settings.developerTools")) {
+        Section(OJDLocalized.string("ui.settings.advanced.developerTools")) {
           SettingsSwitchRow(
-            title: OJDLocalized.string("settings.enableDeveloperTools"),
-            description: OJDLocalized.string("settings.developerToolsDescription"),
+            title: OJDLocalized.string("ui.settings.advanced.enableDeveloperTools"),
+            description: OJDLocalized.string("ui.settings.advanced.developerToolsDescription"),
             isOn: Binding(
               get: { preferences.developerToolsEnabled },
               set: { preferences.setDeveloperToolsEnabled($0) }
@@ -33,7 +33,7 @@
           DeveloperSoakTestSection(model: developerTools.soakTest)
         } else {
           Section {
-            Text(OJDLocalized.string("settingsPane.advanced.developerToolsOff"))
+            Text(OJDLocalized.string("ui.settings.advanced.developerToolsOff"))
               .foregroundColor(Color(NSColor.secondaryLabelColor))
           }
         }

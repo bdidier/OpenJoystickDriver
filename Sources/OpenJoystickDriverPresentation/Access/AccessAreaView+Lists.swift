@@ -18,12 +18,12 @@
     }
 
     private func grantsSection(_ status: AccessStatusPayload) -> some View {
-      Section(header: Text(OJDLocalized.string("access.grants"))) {
+      Section(header: Text(OJDLocalized.string("ui.access.grants"))) {
         ForEach(status.grants, id: \.id) { grant in
           row(
             title: grant.identifier,
             detail: OJDLocalized.formatted(
-              "access.detail.pair",
+              "ui.access.detail.pair",
               AccessPresentation.signer(grant.publisher.kind, grant.publisher.id),
               AccessPresentation.scopes(grant.scopes)
             ),
@@ -39,14 +39,14 @@
     }
 
     private func tokensSection(_ status: AccessStatusPayload) -> some View {
-      Section(header: Text(OJDLocalized.string("access.tokens"))) {
+      Section(header: Text(OJDLocalized.string("ui.access.tokens"))) {
         ForEach(status.tokens, id: \.id) { token in
           row(
             title: token.name,
             detail: token.origins.isEmpty
               ? AccessPresentation.scopes(token.scopes)
               : OJDLocalized.formatted(
-                "access.detail.pair",
+                "ui.access.detail.pair",
                 AccessPresentation.scopes(token.scopes),
                 token.origins.joined(separator: ", ")
               ),
@@ -63,21 +63,21 @@
 
     private func refusedSection(_ status: AccessStatusPayload) -> some View {
       Section(
-        header: Text(OJDLocalized.string("access.refused")),
-        footer: Text(OJDLocalized.string("access.refused.message"))
+        header: Text(OJDLocalized.string("ui.access.refused")),
+        footer: Text(OJDLocalized.string("ui.access.refused.message"))
       ) {
         ForEach(status.refused, id: \.id) { client in
           row(
             title: client.identifier,
             detail: OJDLocalized.formatted(
-              "access.detail.triple",
+              "ui.access.detail.triple",
               AccessPresentation.signer(client.publisher.kind, client.publisher.id),
               AccessPresentation.scopes(client.scopes),
               client.reason
             ),
             help: client.path
           ) {
-            Button(OJDLocalized.string("access.grant")) { model.requestRefusedGrant(client) }
+            Button(OJDLocalized.string("ui.access.grant")) { model.requestRefusedGrant(client) }
               .disabled(model.busy).ojdAccessibilityLabel(
                 OJDLocalized.formatted("a11y.access.grantRefused", client.identifier)
               )
@@ -85,11 +85,11 @@
         }
         ForEach(Array(status.refusedTokens.enumerated()), id: \.offset) { _, token in
           row(
-            title: token.name.map { OJDLocalized.formatted("access.token.named", $0) }
-              ?? OJDLocalized.string("access.token.unknown"),
+            title: token.name.map { OJDLocalized.formatted("ui.access.token.named", $0) }
+              ?? OJDLocalized.string("ui.access.token.unknown"),
             detail: [
               OJDLocalized.formatted(
-                "access.detail.triple",
+                "ui.access.detail.triple",
                 AccessPresentation.transport(token.transport),
                 AccessPresentation.scopes(token.scopes),
                 token.reason
@@ -102,12 +102,12 @@
     }
 
     private func connectionsSection(_ status: AccessStatusPayload) -> some View {
-      Section(header: Text(OJDLocalized.string("access.connections"))) {
+      Section(header: Text(OJDLocalized.string("ui.access.connections"))) {
         ForEach(status.connections, id: \.id) { connection in
           row(
             title: connection.identifier,
             detail: OJDLocalized.formatted(
-              "access.detail.pair",
+              "ui.access.detail.pair",
               AccessPresentation.transport(connection.transport),
               AccessPresentation.scopes(connection.scopes)
             ),
@@ -146,11 +146,11 @@
     ) -> some View {
       let choices = AccessViewModel.scopeChoices(of: scopes)
       if choices.isEmpty {
-        Button(OJDLocalized.string("access.revoke")) { revoke(nil) }.disabled(model.busy)
+        Button(OJDLocalized.string("ui.access.revoke")) { revoke(nil) }.disabled(model.busy)
           .ojdAccessibilityLabel(label)
       } else {
-        Menu(OJDLocalized.string("access.revoke")) {
-          Button(OJDLocalized.string("access.revoke.all")) { revoke(nil) }
+        Menu(OJDLocalized.string("ui.access.revoke")) {
+          Button(OJDLocalized.string("ui.access.revoke.all")) { revoke(nil) }
           ForEach(choices, id: \.self) { scope in
             Button(AccessPresentation.scope(scope)) { revoke(scope) }
           }

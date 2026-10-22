@@ -31,11 +31,11 @@
             y: 1
           ).offset(x: CGFloat(max(-1, min(1, x))) * 33, y: CGFloat(max(-1, min(1, y))) * 33)
         }.ojdAccessibilityLabel(title).ojdAccessibilityValue(
-          OJDLocalized.formatted("inputTest.axisPair", x, y)
+          OJDLocalized.formatted("ui.inputTest.axisPair", x, y)
         )
         HStack(spacing: 10) {
-          Text(OJDLocalized.formatted("inputTest.axisX", x))
-          Text(OJDLocalized.formatted("inputTest.axisY", y))
+          Text(OJDLocalized.formatted("ui.inputTest.axisX", x))
+          Text(OJDLocalized.formatted("ui.inputTest.axisY", y))
         }.font(.system(.caption, design: .monospaced)).foregroundColor(
           Color(NSColor.secondaryLabelColor)
         )
@@ -103,8 +103,8 @@
         ).ojdAccessibilityLabel(title).ojdAccessibilityValue(
           [
             active
-              ? OJDLocalized.string("inputTest.pressed")
-              : OJDLocalized.string("inputTest.released"),
+              ? OJDLocalized.string("ui.inputTest.pressed")
+              : OJDLocalized.string("ui.inputTest.released"),
             displayedText,
           ].compactMap { $0 }.joined(separator: ", ")
         )

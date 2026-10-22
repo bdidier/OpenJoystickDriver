@@ -38,7 +38,7 @@
         readiness = status.readinessLabel
         controllerSummary = status.deviceCountLabel
       case .unavailable, .error:
-        readiness = OJDLocalized.string("common.needsAttention")
+        readiness = OJDLocalized.string("status.needsAttention")
         controllerSummary = RuntimePresentation.deviceCountLabel(0)
       }
 

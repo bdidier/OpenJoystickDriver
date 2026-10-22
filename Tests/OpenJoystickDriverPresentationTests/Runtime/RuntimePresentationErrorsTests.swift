@@ -17,13 +17,13 @@ struct RuntimePresentationErrorsTests {
     #expect(
       message
         == OJDLocalized.formatted(
-          "error.withCode",
-          OJDLocalized.string("error.E3029"),
+          "ui.error.withCode",
+          OJDLocalized.string("error.E3029.message"),
           "E3029"
         )
     )
-    #expect(message.contains(OJDLocalized.string("error.E3029")))
-    #expect(!message.contains(OJDLocalized.string("error.generic")))
+    #expect(message.contains(OJDLocalized.string("error.E3029.message")))
+    #expect(!message.contains(OJDLocalized.string("ui.error.generic")))
     #expect(!message.contains(error.message))
     #expect(message.contains("E3029"))
   }

@@ -176,9 +176,9 @@ class ErrorCodeTests(unittest.TestCase):
         english = root / errors.ENGLISH_STRINGS
         english.write_text(
             english.read_text(encoding="utf-8")
-            + f'"error.{new_endpoint}" = "A new code. Fix it.";\n'
-            + f'"error.{new_cli}" = "Wrong usage. Read the help.";\n'
-            + f'"error.{new_remapping}" = "Other wire. Fix it.";\n',
+            + f'"error.{new_endpoint}.message" = "A new code. Fix it.";\n'
+            + f'"error.{new_cli}.message" = "Wrong usage. Read the help.";\n'
+            + f'"error.{new_remapping}.message" = "Other wire. Fix it.";\n',
             encoding="utf-8",
         )
         self.assertEqual(
@@ -207,10 +207,12 @@ class ErrorCodeTests(unittest.TestCase):
     def test_escapes_in_the_english_text_are_decoded(self) -> None:
         root = self.copy_repository()
         (root / errors.ENGLISH_STRINGS).write_text(
-            '"error.E1001" = "Run \\"ojd\\" in C:\\\\x.\\tNext.";\n', encoding="utf-8"
+            '"error.E1001.message" = "Run \\"ojd\\" in C:\\\\x.\\tNext.";\n',
+            encoding="utf-8",
         )
         self.assertEqual(
-            errors.english_strings(root), {"error.E1001": 'Run "ojd" in C:\\x.\tNext.'}
+            errors.english_strings(root),
+            {"error.E1001.message": 'Run "ojd" in C:\\x.\tNext.'},
         )
 
     def test_only_the_error_definition_enum_is_rewritten(self) -> None:
@@ -242,11 +244,13 @@ class ErrorCodeTests(unittest.TestCase):
                 for line in english.read_text(encoding="utf-8").splitlines(
                     keepends=True
                 )
-                if not line.startswith('"error.E1001"')
+                if not line.startswith('"error.E1001.message"')
             ),
             encoding="utf-8",
         )
-        with self.assertRaisesRegex(errors.ErrorCodeError, "no key error.E1001"):
+        with self.assertRaisesRegex(
+            errors.ErrorCodeError, "no key error.E1001.message"
+        ):
             errors.outputs(root)
 
     def test_a_hand_edited_wiki_table_is_stale(self) -> None:

@@ -23,7 +23,7 @@
     var body: some View {
       VStack(alignment: .leading, spacing: 10) {
         Picker(
-          OJDLocalized.string("virtualProfile.title"),
+          OJDLocalized.string("ui.virtualProfile.title"),
           selection: overrideBinding
         ) {
           Text(ControllerDetailFacts.automaticProfileLabel(device)).tag(
@@ -36,7 +36,7 @@
           }
         }.disabled(overrideState.inFlight)
         if VirtualHIDProfileScopeChoice.offered(for: device).count > 1 {
-          Picker(OJDLocalized.string("controllers.virtual.scope"), selection: $scope) {
+          Picker(OJDLocalized.string("ui.controllers.virtual.scope"), selection: $scope) {
             ForEach(VirtualHIDProfileScopeChoice.offered(for: device), id: \.self) { choice in
               Text(OJDLocalized.string(choice.titleKey)).tag(choice)
             }
@@ -46,13 +46,13 @@
           {
             Text(
               OJDLocalized.formatted(
-                "controllers.virtual.currentScope",
+                "ui.controllers.virtual.currentScope",
                 OJDLocalized.string(holder.titleKey)
               )
             ).font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor))
           }
         } else {
-          Text(OJDLocalized.string("virtualProfile.modelScope")).font(.caption)
+          Text(OJDLocalized.string("ui.virtualProfile.modelScope")).font(.caption)
             .foregroundColor(Color(NSColor.secondaryLabelColor)).fixedSize(
               horizontal: false,
               vertical: true
@@ -68,14 +68,14 @@
           HStack(alignment: .top, spacing: 8) {
             OJDSystemSymbol(
               name: SemanticState.failure.presentation.symbolName,
-              fallback: OJDLocalized.string("common.needsAttention")
+              fallback: OJDLocalized.string("status.needsAttention")
             ).foregroundColor(Color(SemanticState.failure.presentation.tone.color))
             Text(message).foregroundColor(Color(NSColor.secondaryLabelColor)).fixedSize(
               horizontal: false,
               vertical: true
             )
           }.ojdAccessibilityLabel(
-            OJDLocalized.string("common.needsAttention")
+            OJDLocalized.string("status.needsAttention")
           ).ojdAccessibilityValue(message)
         }
       }
@@ -109,7 +109,7 @@
     }
 
     private var updatingLabel: String {
-      OJDLocalized.string("virtualProfile.updating")
+      OJDLocalized.string("ui.virtualProfile.updating")
     }
 
     private var problems: [String] {

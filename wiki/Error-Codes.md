@@ -43,14 +43,14 @@ The table is generated from the code catalog and the English text of OJD. The ta
 | E2005 | Command line | The service did not answer in time. Check it with 'ojd status', or wait longer with --timeout. Exit code 1. |
 | E2006 | Command line | The service did not complete the request. Check it with 'ojd status' and try again. Exit code 1. |
 | E2007 | Command line | The service rejected this ojd because it is not signed like the app. Run the ojd that ships inside OpenJoystickDriver.app. Exit code 1. |
-| E2008 | Command line | A macOS permission is missing. Grant it with 'ojd permission request'. Exit code 77. |
+| E2008 | Command line | A permission is missing. Grant it with 'ojd permission request'. Exit code 77. |
 | E2009 | Command line | This command changes or deletes data and needs confirmation. Run it again with --force. Exit code 64. |
 | E2010 | Command line | The command stopped before it finished, because you declined, an editor failed, or no input came. Run it again. Exit code 1. |
 | E2011 | Command line | The profile or record file is not valid. Fix it against its schema and try again. Exit code 1. |
 | E2012 | Command line | No controller, profile, binding, or client matches, or more than one does. List them with the matching 'list' command and name one exactly. Exit code 1. |
 | E2013 | Command line | The controller cannot do that now. It may be unsupported, not ready, or disconnected. Check it with 'ojd controller list'. Exit code 1. |
 | E2014 | Command line | OpenJoystickDriver is not fully installed, or its signature is not valid. Reinstall the app and run 'ojd diagnose'. Exit code 1. |
-| E2015 | Command line | macOS did not complete or apply the request. Check System Settings and try again. Exit code 1. |
+| E2015 | Command line | The system did not complete or apply the request. Check the system settings and try again. Exit code 1. |
 | E2016 | Command line | A file could not be read, written, or deleted, or it already exists. Check the path and its permissions. Exit code 1. |
 | E2017 | Command line | That client is unsigned or ad-hoc signed, so it cannot be granted access. Sign it with a Developer ID and try again. Exit code 1. |
 | E2018 | Command line | 'ojd diagnose' found a failed check. Read its output and fix the failed items. Exit code 1. |
@@ -58,7 +58,7 @@ The table is generated from the code catalog and the English text of OJD. The ta
 | E2020 | Command line | The installed OpenJoystickDriver app is older than this ojd. Run './Scripts/ojd build install-fast dev', or set OJD_RUN_REPOSITORY_CLI=1 to run this build. Exit code 1. |
 | E2021 | Command line | A repository build of ojd could not hand the command to the installed app. Reinstall OpenJoystickDriver.app and run the command again. Exit code 127. |
 | E2022 | Command line | The state that the record's parser produced from the captured reports differs from the expected state. Read the fields that the command lists. Exit code 1. |
-| E2023 | Command line | This controller cannot be claimed or released: its protocol family uses raw USB, or macOS does not serve it natively. The message names the reason. Exit code 1. |
+| E2023 | Command line | This controller cannot be claimed or released: its protocol family uses raw USB, or the system does not serve it natively. The message names the reason. Exit code 1. |
 | E2024 | Command line | No endpoint client or token has this ID. Run ojd access to list the IDs, then use one of them. Exit code 1. |
 | E2025 | Command line | A client with this kind of signature cannot be granted, because any local program can claim its signature. Exit code 1. |
 | E2026 | Command line | Choose at least one scope to grant. Exit code 64. |

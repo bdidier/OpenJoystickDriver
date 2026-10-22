@@ -49,7 +49,7 @@ struct ControllerActionFailureTests {
 
     let failure = viewModel.controllerActionFailures[token("pad-b")]
     #expect(
-      failure == OJDLocalized.string("controllers.disconnectWireless.failure.notFound")
+      failure == OJDLocalized.string("ui.controllers.disconnectWireless.failure.notFound")
     )
     #expect(failure?.contains(WirelessControllerDisconnectFailure.notFound.rawValue) == false)
   }

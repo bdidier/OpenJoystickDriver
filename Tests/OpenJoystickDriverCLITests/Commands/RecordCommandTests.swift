@@ -178,7 +178,7 @@ struct RecordCommandTests {
       """.utf8
     )
     try directory.write(switch2, as: "057e-20ff.json")
-    let note = CLILocalized.text("cli.record.usb_only_switch2")
+    let note = CLILocalized.text("cli.record.group.usbOnlySwitch2")
 
     let validate = await run(["validate", "-"], in: directory, stdin: switch2)
     let show = await run(["show", "057E:20FF"], in: directory)

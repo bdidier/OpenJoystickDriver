@@ -38,7 +38,7 @@ struct ProfileListModelTests {
   func theDefaultDuplicateNameIsFreeOfExistingNames() {
     let source = Self.profile(named: "Racing")
     let first = defaultDuplicateName(of: source, in: [source])
-    #expect(first == OJDLocalized.formatted("profiles.copyName", "Racing"))
+    #expect(first == OJDLocalized.formatted("ui.profiles.copyName", "Racing"))
     let taken = Self.profile(named: first)
     #expect(defaultDuplicateName(of: source, in: [source, taken]) == "\(first) 2")
   }
@@ -51,7 +51,7 @@ struct ProfileListModelTests {
       for: .application(appID: "com.apple.Safari"),
       assignments: count
     ) { _ in "Safari" }
-    #expect(safari == OJDLocalized.formatted("profiles.scopedCaption", "Safari", count))
+    #expect(safari == OJDLocalized.formatted("ui.profiles.scopedCaption", "Safari", count))
     #expect(safari.contains("Safari") && safari.contains(count))
     let gone = ProfileScopeCaption.text(
       for: .application(appID: "com.example.Gone"),

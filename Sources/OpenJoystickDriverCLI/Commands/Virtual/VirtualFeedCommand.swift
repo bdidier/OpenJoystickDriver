@@ -41,7 +41,7 @@ struct VirtualFeedCommand: AsyncParsableCommand {
     try await global.run {
       // Feedback is always JSON lines, so there is no plain form.
       if CLIContext.current.format == .plain {
-        throw CLIFailure.usage(CLILocalized.text("cli.virtual.feed.error.plain"))
+        throw CLIFailure.usage(CLILocalized.text("cli.virtual.feed.errorPlain"))
       }
       let client = try await ServiceConnection.open()
       defer { client.disconnect() }
@@ -90,7 +90,7 @@ struct VirtualFeedCommand: AsyncParsableCommand {
     default:
       CLIFailure(
         .serviceRequestFailed,
-        CLILocalized.text("cli.virtual.feed.error.closeInterrupted")
+        CLILocalized.text("cli.virtual.feed.errorCloseInterrupted")
       )
     }
   }
@@ -149,7 +149,7 @@ struct VirtualFeedCommand: AsyncParsableCommand {
       if let line = next.invalidLine {
         throw CLIFailure.usage(
           CLILocalized.format(
-            "cli.virtual.feed.error.frame",
+            "cli.virtual.feed.errorFrame",
             String(line)
           )
         )
@@ -173,7 +173,7 @@ struct VirtualFeedCommand: AsyncParsableCommand {
           throw CLIFailure(
             .serviceRequestFailed,
             CLILocalized.text(
-              "cli.virtual.feed.error.closed"
+              "cli.virtual.feed.errorClosed"
             )
           )
         }

@@ -10,38 +10,38 @@
 
     var body: some View {
       let displayedPackets = model.displayedPackets
-      Section(OJDLocalized.string("developer.packetCapture")) {
+      Section(OJDLocalized.string("ui.developer.packetCapture")) {
         captureStatus
-        Picker(OJDLocalized.string("developer.packetCapture"), selection: $model.packetFilter) {
-          Text(OJDLocalized.string("developer.packetFilterActivity")).tag(
+        Picker(OJDLocalized.string("ui.developer.packetCapture"), selection: $model.packetFilter) {
+          Text(OJDLocalized.string("ui.developer.packetFilterActivity")).tag(
             DeveloperToolsViewModel.PacketFilter.activity
           )
-          Text(OJDLocalized.string("developer.packetFilterAll")).tag(
+          Text(OJDLocalized.string("ui.developer.packetFilterAll")).tag(
             DeveloperToolsViewModel.PacketFilter.all
           )
         }.pickerStyle(.segmented).labelsHidden()
         HStack(spacing: 8) {
           if model.isCapturing {
-            Button(OJDLocalized.string("common.stop"), action: model.stopCapture)
+            Button(OJDLocalized.string("action.stop"), action: model.stopCapture)
           } else {
-            Button(OJDLocalized.string("developer.startCapture"), action: model.startCapture)
+            Button(OJDLocalized.string("ui.developer.startCapture"), action: model.startCapture)
               .disabled(model.selectedDevice == nil)
           }
-          Button(OJDLocalized.string("common.clear"), action: model.clearCapture)
+          Button(OJDLocalized.string("action.clear"), action: model.clearCapture)
             .disabled(model.packets.isEmpty && model.observedExtraInputs.isEmpty)
           Spacer(minLength: 12)
-          Button(OJDLocalized.string("common.copyAll"), action: model.copyPacketCapture)
+          Button(OJDLocalized.string("action.copyAll"), action: model.copyPacketCapture)
             .disabled(model.packets.isEmpty)
-          Button(OJDLocalized.string("common.export"), action: model.exportPacketCapture)
+          Button(OJDLocalized.string("action.export"), action: model.exportPacketCapture)
             .disabled(model.packets.isEmpty)
         }
         packetList(displayedPackets)
         if model.hiddenIdlePacketCount > 0 {
           Text(
-            OJDLocalized.formatted("developer.hiddenIdlePackets", model.hiddenIdlePacketCount)
+            OJDLocalized.formatted("ui.developer.hiddenIdlePackets", model.hiddenIdlePacketCount)
           ).font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor))
         }
-        Text(OJDLocalized.string("developer.packetSharingWarning")).font(.caption)
+        Text(OJDLocalized.string("ui.developer.packetSharingWarning")).font(.caption)
           .foregroundColor(Color(NSColor.secondaryLabelColor))
       }
     }
@@ -50,28 +50,28 @@
     private var captureStatus: some View {
       switch model.captureState {
       case .idle:
-        statusLabel(OJDLocalized.string("developer.ready"), symbol: "circle")
+        statusLabel(OJDLocalized.string("ui.developer.ready"), symbol: "circle")
       case .starting:
         statusLabel(
-          OJDLocalized.string("developer.starting"),
+          OJDLocalized.string("ui.developer.starting"),
           symbol: "clock"
         )
       case .capturing:
         statusLabel(
-          OJDLocalized.string("developer.capturing"),
+          OJDLocalized.string("ui.developer.capturing"),
           symbol: "record.circle"
         )
       case .stopped:
         statusLabel(
           OJDLocalized.formatted(
-            "developer.stoppedPackets",
+            "ui.developer.stoppedPackets",
             model.displayedPackets.count
           ),
           symbol: "stop.circle"
         )
       case .noPackets:
         statusLabel(
-          OJDLocalized.string("developer.noPackets"),
+          OJDLocalized.string("ui.developer.noPackets"),
           symbol: "tray"
         )
       case .failed(let message):
@@ -86,11 +86,11 @@
       if packets.isEmpty {
         Text(
           model.isCapturing
-            ? OJDLocalized.string("developer.waitingForPackets")
-            : OJDLocalized.string("developer.emptyCapture")
+            ? OJDLocalized.string("ui.developer.waitingForPackets")
+            : OJDLocalized.string("ui.developer.emptyCapture")
         ).foregroundColor(Color(NSColor.secondaryLabelColor))
         if model.isCapturing {
-          Text(OJDLocalized.string("developer.keepAliveNote")).font(.caption).foregroundColor(
+          Text(OJDLocalized.string("ui.developer.keepAliveNote")).font(.caption).foregroundColor(
             Color(NSColor.secondaryLabelColor)
           )
         }
@@ -103,7 +103,7 @@
       HStack(spacing: 6) {
         OJDSystemSymbol(
           name: symbol,
-          fallback: OJDLocalized.string("common.status")
+          fallback: OJDLocalized.string("term.status")
         ).accessibilityHidden(true)
         Text(text)
       }.accessibilityElement(children: .combine)
@@ -124,10 +124,10 @@
       table.dataSource = context.coordinator
       table.columnAutoresizingStyle = .lastColumnOnlyAutoresizingStyle
       for (identifier, title, width) in [
-        ("time", OJDLocalized.string("developer.packetColumnTime"), 80.0),
-        ("direction", OJDLocalized.string("developer.packetColumnDirection"), 90.0),
-        ("bytes", OJDLocalized.string("developer.packetColumnBytes"), 60.0),
-        ("data", OJDLocalized.string("developer.packetColumnData"), 300.0),
+        ("time", OJDLocalized.string("ui.developer.packetColumnTime"), 80.0),
+        ("direction", OJDLocalized.string("ui.developer.packetColumnDirection"), 90.0),
+        ("bytes", OJDLocalized.string("ui.developer.packetColumnBytes"), 60.0),
+        ("data", OJDLocalized.string("ui.developer.packetColumnData"), 300.0),
       ] {
         let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier(identifier))
         column.title = title
@@ -142,7 +142,7 @@
       scrollView.autohidesScrollers = true
       scrollView.borderType = .bezelBorder
       scrollView.setAccessibilityLabel(
-        OJDLocalized.string("developer.packetCapture")
+        OJDLocalized.string("ui.developer.packetCapture")
       )
       return scrollView
     }

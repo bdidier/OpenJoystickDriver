@@ -9,9 +9,9 @@
     let onChange: (ControllerColor?) -> Void
 
     var body: some View {
-      Section(header: Text(OJDLocalized.string("inputTest.lighting"))) {
+      Section(header: Text(OJDLocalized.string("ui.inputTest.lighting"))) {
         Toggle(
-          OJDLocalized.string("profiles.useControllerDefaultColor"),
+          OJDLocalized.string("ui.profiles.useControllerDefaultColor"),
           isOn: Binding(
             get: { color == nil },
             set: { useDefault in
@@ -20,7 +20,7 @@
           )
         )
         if color != nil {
-          OJDLabeledRow(OJDLocalized.string("inputTest.color")) {
+          OJDLabeledRow(OJDLocalized.string("ui.inputTest.color")) {
             OJDPhysicalColorWell(color: colorBinding).frame(width: 44, height: 24)
           }
         }

@@ -55,7 +55,7 @@ struct ExplainCommandTests {
     for id in ErrorCode.allCases {
       let json = try await CLIRun.run(["explain", id.rawValue, "--json"]).json()
       let text = try #require(json["explanation"] as? String)
-      #expect(!text.isEmpty && text != "error.\(id.rawValue)", "\(id.rawValue)")
+      #expect(!text.isEmpty && text != "error.\(id.rawValue).message", "\(id.rawValue)")
     }
   }
 

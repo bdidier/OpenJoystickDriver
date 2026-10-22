@@ -9,27 +9,27 @@
     var body: some View {
       Group {
         Picker(
-          OJDLocalized.string("profiles.virtualOutput"),
+          OJDLocalized.string("ui.profiles.virtualOutput"),
           selection: Binding(
             get: { policy.virtualGamepad },
             set: { value in onChange(Self.policy(selecting: value, from: policy)) }
           )
         ) {
-          Text(OJDLocalized.string("profiles.virtualDisabled")).tag(
+          Text(OJDLocalized.string("ui.profiles.virtualDisabled")).tag(
             RemappingVirtualGamepadPolicy.disabled
           )
-          Text(OJDLocalized.string("profiles.virtualMapped")).tag(
+          Text(OJDLocalized.string("ui.profiles.virtualMapped")).tag(
             RemappingVirtualGamepadPolicy.mapped
           )
           Text(
             OJDLocalized.string(
-              "profiles.virtualPassthrough"
+              "ui.profiles.virtualPassthrough"
             )
           ).tag(RemappingVirtualGamepadPolicy.passthrough)
         }
         Toggle(
           OJDLocalized.string(
-            "profiles.exclusiveInput"
+            "ui.profiles.exclusiveInput"
           ),
           isOn: Binding(
             get: { policy.requiresExclusiveInput },

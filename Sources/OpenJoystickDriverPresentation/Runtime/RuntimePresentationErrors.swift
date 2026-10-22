@@ -6,13 +6,13 @@ extension RuntimePresentation {
     guard let enabled else { return nil }
     guard enabled else {
       return OJDLocalized.string(
-        "mapping.outputUnavailable"
+        "ui.mapping.outputUnavailable"
       )
     }
     return status?.isError == true
       ? OJDLocalized.string(
-        "mapping.outputNeedsAttention"
-      ) : OJDLocalized.string("mapping.outputReady")
+        "ui.mapping.outputNeedsAttention"
+      ) : OJDLocalized.string("ui.mapping.outputReady")
   }
 
   /// The message for `error`; a remapping error from the service ends with its code, such as
@@ -21,7 +21,7 @@ extension RuntimePresentation {
     let message = userFacingMessage(error)
     guard let error = error as? ApplicationServiceRemappingRPCError else { return message }
     return OJDLocalized.formatted(
-      "error.withCode",
+      "ui.error.withCode",
       message,
       error.code.errorCode.rawValue
     )
@@ -32,68 +32,68 @@ extension RuntimePresentation {
       switch error.code {
       case .profileUpdateConflict:
         return OJDLocalized.string(
-          "error.profileChanged"
+          "ui.error.profileChanged"
         )
       case .duplicateName:
         return OJDLocalized.string(
-          "error.duplicateProfile"
+          "ui.error.duplicateProfile"
         )
       case .profileNotFound:
         return OJDLocalized.string(
-          "error.profileMissing"
+          "ui.error.profileMissing"
         )
       case .invalidProfile, .invalidArguments:
         return OJDLocalized.string(
-          "error.reviewAssignments"
+          "ui.error.reviewAssignments"
         )
       case .unwritableLibrary, .librarySizeExceeded, .profileCountExceeded:
         return OJDLocalized.string(
-          "error.profileLibrarySave"
+          "ui.error.profileLibrarySave"
         )
       case .corruptLibrary:
         return OJDLocalized.string(
-          "error.profileLibraryCorrupt"
+          "ui.error.profileLibraryCorrupt"
         )
       case .joyConPairUnavailable:
         return OJDLocalized.string(
-          "error.joyConPairUnavailable"
+          "ui.error.joyConPairUnavailable"
         )
       case .packageProfileReadOnly:
         return OJDLocalized.string(
-          "error.E3029"
+          "error.E3029.message"
         )
       case .routerEngineUnavailable, .routerLibraryUnavailable, .routerLibraryAndEngineUnavailable,
         .routerShutDown:
         return OJDLocalized.string(
-          "error.remappingUnavailable"
+          "ui.error.remappingUnavailable"
         )
       default:
         return OJDLocalized.string(
-          "error.generic"
+          "ui.error.generic"
         )
       }
     }
     if error is RuntimeProfileDraftError || error is RemappingValidationError {
       return OJDLocalized.string(
-        "error.reviewAssignments"
+        "ui.error.reviewAssignments"
       )
     }
     switch error {
     case ApplicationServiceClientError.notConnected:
       return OJDLocalized.string(
-        "error.notAvailable"
+        "ui.error.notAvailable"
       )
     case ApplicationServiceClientError.timeout:
       return OJDLocalized.string(
-        "error.timeout"
+        "ui.error.timeout"
       )
     case ApplicationServiceClientError.invalidResponse:
       return OJDLocalized.string(
-        "error.unexpected"
+        "ui.error.unexpected"
       )
     default:
       return OJDLocalized.string(
-        "error.generic"
+        "ui.error.generic"
       )
     }
   }
@@ -117,43 +117,43 @@ extension RuntimePresentation {
   static func buttonLabel(_ button: Control) -> String {
     switch button {
     case .auxiliary1:
-      return OJDLocalized.string("mapping.leftFunctionButton")
+      return OJDLocalized.string("ui.mapping.leftFunctionButton")
     case .auxiliary2:
-      return OJDLocalized.string("mapping.rightFunctionButton")
-    case .leftPaddle1: return OJDLocalized.string("mapping.leftPaddle")
-    case .rightPaddle1: return OJDLocalized.string("mapping.rightPaddle")
-    case .auxiliary3: return OJDLocalized.string("mapping.leftJoyConSL")
-    case .auxiliary4: return OJDLocalized.string("mapping.leftJoyConSR")
-    case .auxiliary5: return OJDLocalized.string("mapping.rightJoyConSL")
-    case .auxiliary6: return OJDLocalized.string("mapping.rightJoyConSR")
-    case .leftPaddle2: return OJDLocalized.string("mapping.leftGrip")
-    case .rightPaddle2: return OJDLocalized.string("mapping.rightGrip")
+      return OJDLocalized.string("ui.mapping.rightFunctionButton")
+    case .leftPaddle1: return OJDLocalized.string("ui.mapping.leftPaddle")
+    case .rightPaddle1: return OJDLocalized.string("ui.mapping.rightPaddle")
+    case .auxiliary3: return OJDLocalized.string("ui.mapping.leftJoyConSL")
+    case .auxiliary4: return OJDLocalized.string("ui.mapping.leftJoyConSR")
+    case .auxiliary5: return OJDLocalized.string("ui.mapping.rightJoyConSL")
+    case .auxiliary6: return OJDLocalized.string("ui.mapping.rightJoyConSR")
+    case .leftPaddle2: return OJDLocalized.string("ui.mapping.leftGrip")
+    case .rightPaddle2: return OJDLocalized.string("ui.mapping.rightGrip")
     case .leftTrackpadClick:
-      return OJDLocalized.string("mapping.leftPadClick")
+      return OJDLocalized.string("ui.mapping.leftPadClick")
     case .rightTrackpadClick:
-      return OJDLocalized.string("mapping.rightPadClick")
-    case .south: return OJDLocalized.string("mapping.buttonSouth")
-    case .east: return OJDLocalized.string("mapping.buttonEast")
-    case .west: return OJDLocalized.string("mapping.buttonWest")
-    case .north: return OJDLocalized.string("mapping.buttonNorth")
+      return OJDLocalized.string("ui.mapping.rightPadClick")
+    case .south: return OJDLocalized.string("ui.mapping.buttonSouth")
+    case .east: return OJDLocalized.string("ui.mapping.buttonEast")
+    case .west: return OJDLocalized.string("ui.mapping.buttonWest")
+    case .north: return OJDLocalized.string("ui.mapping.buttonNorth")
     case .leftShoulder:
-      return OJDLocalized.string("mapping.leftShoulder")
+      return OJDLocalized.string("ui.mapping.leftShoulder")
     case .rightShoulder:
-      return OJDLocalized.string("mapping.rightShoulder")
+      return OJDLocalized.string("ui.mapping.rightShoulder")
     case .leftStickClick:
-      return OJDLocalized.string("mapping.leftStickClick")
+      return OJDLocalized.string("ui.mapping.leftStickClick")
     case .rightStickClick:
-      return OJDLocalized.string("mapping.rightStickClick")
-    case .start: return OJDLocalized.string("mapping.start")
-    case .back: return OJDLocalized.string("mapping.back")
-    case .guide: return OJDLocalized.string("mapping.guide")
-    case .capture: return OJDLocalized.string("mapping.share")
-    case .touchpadClick: return OJDLocalized.string("mapping.touchpadClick")
-    case .microphone: return OJDLocalized.string("mapping.mute")
+      return OJDLocalized.string("ui.mapping.rightStickClick")
+    case .start: return OJDLocalized.string("ui.mapping.start")
+    case .back: return OJDLocalized.string("ui.mapping.back")
+    case .guide: return OJDLocalized.string("ui.mapping.guide")
+    case .capture: return OJDLocalized.string("ui.mapping.share")
+    case .touchpadClick: return OJDLocalized.string("ui.mapping.touchpadClick")
+    case .microphone: return OJDLocalized.string("ui.mapping.mute")
     case .leftTrigger:
-      return OJDLocalized.string("mapping.leftTriggerClick")
+      return OJDLocalized.string("ui.mapping.leftTriggerClick")
     case .rightTrigger:
-      return OJDLocalized.string("mapping.rightTriggerClick")
+      return OJDLocalized.string("ui.mapping.rightTriggerClick")
     case .dpadUp, .dpadDown, .dpadLeft, .dpadRight, .leftStickX, .leftStickY, .rightStickX,
       .rightStickY, .auxiliary7, .auxiliary8, .leftStickTouch, .rightStickTouch,
       .leftTrackpadTouch, .rightTrackpadTouch:
@@ -164,25 +164,25 @@ extension RuntimePresentation {
   static func axisLabel(_ axis: RemappingAxis) -> String {
     switch axis {
     case .leftStickX:
-      return OJDLocalized.string("mapping.leftStickHorizontal")
+      return OJDLocalized.string("ui.mapping.leftStickHorizontal")
     case .leftStickY:
-      return OJDLocalized.string("mapping.leftStickVertical")
+      return OJDLocalized.string("ui.mapping.leftStickVertical")
     case .rightStickX:
-      return OJDLocalized.string("mapping.rightStickHorizontal")
+      return OJDLocalized.string("ui.mapping.rightStickHorizontal")
     case .rightStickY:
-      return OJDLocalized.string("mapping.rightStickVertical")
-    case .leftTrigger: return OJDLocalized.string("mapping.leftTrigger")
+      return OJDLocalized.string("ui.mapping.rightStickVertical")
+    case .leftTrigger: return OJDLocalized.string("ui.mapping.leftTrigger")
     case .rightTrigger:
-      return OJDLocalized.string("mapping.rightTrigger")
+      return OJDLocalized.string("ui.mapping.rightTrigger")
     }
   }
 
   static func modifierLabel(_ modifier: RemappingKeyModifier) -> String {
     switch modifier {
-    case .meta: return OJDLocalized.string("keyboard.meta")
-    case .control: return OJDLocalized.string("keyboard.control")
-    case .alt: return OJDLocalized.string("keyboard.alt")
-    case .shift: return OJDLocalized.string("keyboard.shift")
+    case .meta: return OJDLocalized.string("term.key.meta")
+    case .control: return OJDLocalized.string("term.key.control")
+    case .alt: return OJDLocalized.string("term.key.alt")
+    case .shift: return OJDLocalized.string("term.key.shift")
     }
   }
 
@@ -228,20 +228,20 @@ extension RuntimePresentation {
 
   static func keyboardKeyLabel(_ key: RemappingKeyboardKey) -> String {
     switch key {
-    case .escape: return OJDLocalized.string("keyboard.escape")
-    case .tab: return OJDLocalized.string("keyboard.tab")
-    case .capsLock: return OJDLocalized.string("keyboard.capsLock")
-    case .space: return OJDLocalized.string("keyboard.space")
-    case .returnKey: return OJDLocalized.string("keyboard.return")
-    case .deleteBackward: return OJDLocalized.string("keyboard.delete")
+    case .escape: return OJDLocalized.string("term.key.escape")
+    case .tab: return OJDLocalized.string("term.key.tab")
+    case .capsLock: return OJDLocalized.string("term.key.capsLock")
+    case .space: return OJDLocalized.string("term.key.space")
+    case .returnKey: return OJDLocalized.string("term.key.return")
+    case .deleteBackward: return OJDLocalized.string("term.key.delete")
     case .deleteForward:
-      return OJDLocalized.string("keyboard.forwardDelete")
-    case .arrowUp: return OJDLocalized.string("keyboard.upArrow")
-    case .arrowDown: return OJDLocalized.string("keyboard.downArrow")
-    case .arrowLeft: return OJDLocalized.string("keyboard.leftArrow")
-    case .arrowRight: return OJDLocalized.string("keyboard.rightArrow")
-    case .pageUp: return OJDLocalized.string("keyboard.pageUp")
-    case .pageDown: return OJDLocalized.string("keyboard.pageDown")
+      return OJDLocalized.string("term.key.forwardDelete")
+    case .arrowUp: return OJDLocalized.string("term.key.upArrow")
+    case .arrowDown: return OJDLocalized.string("term.key.downArrow")
+    case .arrowLeft: return OJDLocalized.string("term.key.leftArrow")
+    case .arrowRight: return OJDLocalized.string("term.key.rightArrow")
+    case .pageUp: return OJDLocalized.string("term.key.pageUp")
+    case .pageDown: return OJDLocalized.string("term.key.pageDown")
     default: return humanized(key.rawValue)
     }
   }

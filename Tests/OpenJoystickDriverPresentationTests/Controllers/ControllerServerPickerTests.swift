@@ -82,6 +82,6 @@ struct ControllerServerPickerTests {
     await viewModel.setControllerServer(.ojd, for: device)
 
     let message = viewModel.controllerActionFailures[device.sessionToken.rawValue]
-    #expect(message == OJDLocalized.string("controllers.server.invalidRecord") + " bad record")
+    #expect(message == OJDLocalized.string("ui.controllers.server.invalidRecord") + " bad record")
   }
 }

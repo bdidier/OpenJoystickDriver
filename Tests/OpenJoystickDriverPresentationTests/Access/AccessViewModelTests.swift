@@ -192,7 +192,7 @@ struct AccessViewModelTests {
     model.portText = ""
 
     #expect(model.portPlaceholder == "43210")
-    #expect(model.portPlaceholder != OJDLocalized.string("access.web.port.automatic"))
+    #expect(model.portPlaceholder != OJDLocalized.string("ui.access.web.port.automatic"))
   }
 
   @Test
@@ -207,7 +207,7 @@ struct AccessViewModelTests {
     await model.refresh()
 
     #expect(model.portText.isEmpty)
-    #expect(model.portPlaceholder == OJDLocalized.string("access.web.port.automatic"))
+    #expect(model.portPlaceholder == OJDLocalized.string("ui.access.web.port.automatic"))
     #expect(!model.canChooseAutomaticPort)
     #expect(try model.webPort() == 0)
     model.requestEnableWeb()
@@ -494,6 +494,6 @@ struct AccessViewModelTests {
 
     let lines = model.confirmation(for: .enableWeb(port: 0)).lines
 
-    #expect(lines.last == OJDLocalized.string("access.web.enable.automatic"))
+    #expect(lines.last == OJDLocalized.string("ui.access.web.enable.automatic"))
   }
 }

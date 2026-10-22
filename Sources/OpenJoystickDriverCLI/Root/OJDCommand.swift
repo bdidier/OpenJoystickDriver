@@ -6,10 +6,10 @@ struct OJDCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "ojd",
     abstract: CLILocalized.text(
-      "cli.root.abstract"
+      "platform.macos.cli.root.group.abstract"
     ),
     discussion: CLILocalized.text(
-      "cli.root.discussion"
+      "platform.macos.cli.root.group.discussion"
     ),
     version: ApplicationVersion.current,
     subcommands: [

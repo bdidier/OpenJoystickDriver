@@ -15,9 +15,9 @@
   @MainActor
   enum MainMenuRenderer {
     static func render(target: MenuBarCoordinator) -> RenderedMainMenu {
-      let appName = OJDLocalized.string("app.name")
+      let appName = OJDLocalized.string("term.app.name")
       let menu = NSMenu(title: appName)
-      let servicesMenu = NSMenu(title: OJDLocalized.string("mainMenu.app.services"))
+      let servicesMenu = NSMenu(title: OJDLocalized.string("ui.menu.app.services"))
       var windowMenu: NSMenu?
       var helpMenu: NSMenu?
       for section in MainMenuModel.sections {

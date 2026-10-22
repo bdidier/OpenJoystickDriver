@@ -15,17 +15,17 @@ public enum DocumentProblem {
       return missing(context.codingPath)
     case let .typeMismatch(_, context):
       return localization.formatted(
-        "cli.document.wrong_type",
+        "cli.shared.document.wrongType",
         arguments: [path(context.codingPath)]
       )
     case let .dataCorrupted(context):
       // Only the JSON parser attaches an underlying error at the document root.
       if context.codingPath.isEmpty, context.underlyingError != nil {
-        return localization.string("cli.document.not_json")
+        return localization.string("cli.shared.document.notJson")
       }
       if context.codingPath.isEmpty { return context.debugDescription }
       return localization.formatted(
-        "cli.document.field_problem",
+        "cli.shared.document.fieldProblem",
         arguments: [path(context.codingPath), context.debugDescription]
       )
     @unknown default:
@@ -34,7 +34,7 @@ public enum DocumentProblem {
   }
 
   private static func missing(_ codingPath: [any CodingKey]) -> String {
-    localization.formatted("cli.document.missing_field", arguments: [path(codingPath)])
+    localization.formatted("cli.shared.document.missingField", arguments: [path(codingPath)])
   }
 
   /// A path such as `bindings[0].source`.

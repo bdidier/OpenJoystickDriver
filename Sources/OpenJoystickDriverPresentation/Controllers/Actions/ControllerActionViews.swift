@@ -22,8 +22,8 @@
     var body: some View {
       Group {
         if let profile = VirtualGamepadExport.profile(for: device) {
-          OJDLabeledRow(OJDLocalized.string("controllers.exportMapping")) {
-            Button(OJDLocalized.string("common.export")) { export(profile) }
+          OJDLabeledRow(OJDLocalized.string("ui.controllers.exportMapping")) {
+            Button(OJDLocalized.string("action.export")) { export(profile) }
           }
           launchRows
 
@@ -31,8 +31,8 @@
             ControllerNoticeText(text: outcome.message, isError: isFailure(outcome))
           }
         }
-        OJDLabeledRow(OJDLocalized.string("controllers.virtual.resetAll")) {
-          Button(OJDLocalized.string("common.reset")) { confirmsResetAll = true }
+        OJDLabeledRow(OJDLocalized.string("ui.controllers.virtual.resetAll")) {
+          Button(OJDLocalized.string("action.reset")) { confirmsResetAll = true }
         }
         if let failure = resetAllFailure { ControllerNoticeText(text: failure, isError: true) }
         if let notice = actions.notice, notice.source == .exportMapping {
@@ -40,8 +40,8 @@
         }
       }.alert(isPresented: $confirmsResetAll) {
         Alert(
-          title: Text(OJDLocalized.string("cli.virtual.reset.all.summary")),
-          primaryButton: .destructive(Text(OJDLocalized.string("common.reset"))) {
+          title: Text(OJDLocalized.string("cli.virtual.reset.allSummary")),
+          primaryButton: .destructive(Text(OJDLocalized.string("action.reset"))) {
             Task { @MainActor in
               resetAllFailure = await viewModel.resetAllVirtualHIDProfileOverrides()
             }
@@ -53,11 +53,11 @@
 
     @ViewBuilder
     private var launchRows: some View {
-      OJDLabeledRow(OJDLocalized.string("controllers.launch")) {
+      OJDLabeledRow(OJDLocalized.string("ui.controllers.launch")) {
         if connectedDevices == nil {
-          Text(OJDLocalized.string("common.unavailable"))
+          Text(OJDLocalized.string("status.unavailable"))
         } else {
-          Button(OJDLocalized.string("controllers.launch.prompt")) { launch() }
+          Button(OJDLocalized.string("ui.controllers.launch.prompt")) { launch() }
         }
       }
       if let devices = connectedDevices {
@@ -67,7 +67,7 @@
           ForEach(profiles, id: \.self) { profile in
             Text(
               OJDLocalized.formatted(
-                "cli.virtual.sdl_hints_note",
+                "cli.virtual.group.sdlHintsNote",
                 CommandLineName.kebab(profile.rawValue)
               )
             ).font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor))
@@ -125,11 +125,11 @@
 
     var body: some View {
       Group {
-        Button(OJDLocalized.string("controllers.capturePackets")) {
+        Button(OJDLocalized.string("ui.controllers.capturePackets")) {
           actions.clearNotice()
           actions.timedKind = .capturePackets
         }
-        Button(OJDLocalized.string("controllers.draftRecord")) {
+        Button(OJDLocalized.string("ui.controllers.draftRecord")) {
           actions.clearNotice()
           actions.timedKind = .draftRecord
         }
@@ -163,23 +163,23 @@
         Text(
           OJDLocalized.string(
             kind == .draftRecord
-              ? "controllers.draftRecord.title" : "controllers.capturePackets.title"
+              ? "ui.controllers.draftRecord.title" : "ui.controllers.capturePackets.title"
           )
         ).font(.headline)
         Text(instruction).fixedSize(horizontal: false, vertical: true)
         if kind == .capturePackets {
-          Text(OJDLocalized.string("developer.packetSharingWarning")).font(.caption)
+          Text(OJDLocalized.string("ui.developer.packetSharingWarning")).font(.caption)
             .foregroundColor(Color(NSColor.secondaryLabelColor))
         }
         HStack {
-          Text(OJDLocalized.string("controllers.captureDuration"))
+          Text(OJDLocalized.string("ui.controllers.captureDuration"))
           TextField("", text: $durationText).frame(width: 80).multilineTextAlignment(.trailing)
             .disabled(isCapturing)
-            .ojdAccessibilityLabel(OJDLocalized.string("controllers.captureDuration"))
+            .ojdAccessibilityLabel(OJDLocalized.string("ui.controllers.captureDuration"))
         }
         if seconds == nil {
           ControllerNoticeText(
-            text: OJDLocalized.string("controllers.captureDurationInvalid"),
+            text: OJDLocalized.string("ui.controllers.captureDurationInvalid"),
             isError: true
           )
         }
@@ -189,12 +189,12 @@
         HStack {
           if isCapturing {
             ProgressView().controlSize(.small)
-            Text(OJDLocalized.string("developer.capturing"))
+            Text(OJDLocalized.string("ui.developer.capturing"))
           }
           Spacer()
-          Button(OJDLocalized.string("common.cancel")) { actions.cancelTimed() }
+          Button(OJDLocalized.string("action.cancel")) { actions.cancelTimed() }
             .keyboardShortcut(.cancelAction)
-          Button(OJDLocalized.string("developer.startCapture")) { start() }
+          Button(OJDLocalized.string("ui.developer.startCapture")) { start() }
             .keyboardShortcut(.defaultAction).disabled(seconds == nil || isCapturing)
         }
       }.padding(20).frame(width: 420)

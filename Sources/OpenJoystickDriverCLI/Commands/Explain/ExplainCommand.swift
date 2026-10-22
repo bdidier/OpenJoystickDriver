@@ -6,16 +6,16 @@ struct ExplainCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "explain",
     abstract: CLILocalized.text(
-      "cli.explain.abstract"
+      "cli.explain.group.abstract"
     ),
     discussion: CLILocalized.text(
-      "cli.explain.discussion"
+      "cli.explain.group.discussion"
     )
   )
 
   @Argument(
     help: ArgumentHelp(
-      CLILocalized.text("cli.explain.code"),
+      CLILocalized.text("cli.explain.group.code"),
       valueName: "code"
     )
   )
@@ -52,15 +52,15 @@ struct ExplainCommand: AsyncParsableCommand {
       case .human:
         CLIOutput.stdout(result.code)
         CLIOutput.stdout(
-          CLILocalized.format("cli.explain.area", result.area)
+          CLILocalized.format("cli.explain.group.area", result.area)
         )
         if let exitCode = result.exitCode {
           CLIOutput.stdout(
-            CLILocalized.format("cli.explain.exit_code", String(exitCode))
+            CLILocalized.format("cli.explain.group.exitCode", String(exitCode))
           )
         }
         if let wire = result.wire {
-          CLIOutput.stdout(CLILocalized.format("cli.explain.wire", wire))
+          CLIOutput.stdout(CLILocalized.format("cli.explain.group.wire", wire))
         }
         CLIOutput.stdout()
         CLIOutput.stdout(result.explanation)
@@ -70,7 +70,7 @@ struct ExplainCommand: AsyncParsableCommand {
 
   private static func result(for code: String) throws -> Result {
     guard let id = ErrorCode(typed: code) else {
-      throw CLIFailure.usage(CLILocalized.format("cli.explain.unknown", code))
+      throw CLIFailure.usage(CLILocalized.format("cli.explain.group.unknown", code))
     }
     let facts = id.facts
     return Result(

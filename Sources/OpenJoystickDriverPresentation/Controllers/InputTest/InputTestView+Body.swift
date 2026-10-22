@@ -79,18 +79,18 @@
           switch section {
           case .liveInput: Section { liveInput }
           case .motion:
-            Section(header: Text(OJDLocalized.string("motion.calibration.title"))) {
+            Section(header: Text(OJDLocalized.string("ui.motion.calibration.title"))) {
               MotionCalibrationControls(model: model.motionCalibration)
             }
           case .rumble:
-            Section(header: Text(OJDLocalized.string("inputTest.rumble"))) {
+            Section(header: Text(OJDLocalized.string("ui.inputTest.rumble"))) {
               InputTestOutputControlsView(settings: model.outputSettings) {
                 rumbleContent
                 if outputErrorBelongs(to: [.rumble]) { outputErrorView }
               }
             }
           case .lighting:
-            Section(header: Text(OJDLocalized.string("inputTest.lighting"))) {
+            Section(header: Text(OJDLocalized.string("ui.inputTest.lighting"))) {
               InputTestOutputControlsView(settings: model.outputSettings) {
                 lightingContent
                 if outputErrorBelongs(to: [.playerIndicator, .color, .brightness]) {
@@ -121,7 +121,7 @@
         }
         Spacer()
       }.accessibilityElement(children: .combine).ojdAccessibilityLabel(
-        OJDLocalized.string("inputTest.status")
+        OJDLocalized.string("ui.inputTest.status")
       ).ojdAccessibilityValue(statusLabel)
     }
 
@@ -148,12 +148,12 @@
         Group {
           ForEach(model.capabilities.rumbleMotors, id: \.self) { rumbleControl(for: $0) }
           InputTestSliderRow(
-            title: OJDLocalized.string("inputTest.duration"),
+            title: OJDLocalized.string("ui.inputTest.duration"),
             valueText: OJDLocalized.formatted(
-              "inputTest.durationValue",
+              "ui.inputTest.durationValue",
               Int(model.rumbleDurationMilliseconds)
             ),
-            accessibilityLabel: OJDLocalized.string("inputTest.duration")
+            accessibilityLabel: OJDLocalized.string("ui.inputTest.duration")
           ) {
             Slider(
               value: rumbleDurationBinding,
@@ -167,16 +167,16 @@
           }
         }.disabled(!model.canSendOutput || model.isOutputBusy)
         HStack(spacing: 8) {
-          Button(OJDLocalized.string("inputTest.testRumble")) {
+          Button(OJDLocalized.string("ui.inputTest.testRumble")) {
             model.testRumble()
           }.disabled(!model.canSendOutput || model.isOutputBusy)
-          Button(OJDLocalized.string("common.stop")) { model.stopRumble() }
+          Button(OJDLocalized.string("action.stop")) { model.stopRumble() }
             .disabled(!model.canStopRumble)
           Spacer()
           outputStatus(for: .rumble)
         }
       } else {
-        unavailableOutputLabel(OJDLocalized.string("inputTest.rumbleUnavailable"))
+        unavailableOutputLabel(OJDLocalized.string("ui.inputTest.rumbleUnavailable"))
       }
     }
 
@@ -185,30 +185,30 @@
       Group {
         if model.capabilities.supportsPlayerIndicator {
           VStack(alignment: .leading, spacing: 6) {
-            Text(OJDLocalized.string("inputTest.playerIndicator"))
+            Text(OJDLocalized.string("ui.inputTest.playerIndicator"))
             Picker("", selection: playerIndicatorBinding) {
-              Text(OJDLocalized.string("inputTest.off")).tag(PhysicalPlayerIndicator.off)
+              Text(OJDLocalized.string("ui.inputTest.off")).tag(PhysicalPlayerIndicator.off)
               Text("1").tag(PhysicalPlayerIndicator.player1)
               Text("2").tag(PhysicalPlayerIndicator.player2)
               Text("3").tag(PhysicalPlayerIndicator.player3)
               Text("4").tag(PhysicalPlayerIndicator.player4)
             }.pickerStyle(.segmented).labelsHidden()
-              .ojdAccessibilityLabel(OJDLocalized.string("inputTest.playerIndicator"))
-            Button(OJDLocalized.string("common.apply")) { model.applyPlayerIndicator() }
+              .ojdAccessibilityLabel(OJDLocalized.string("ui.inputTest.playerIndicator"))
+            Button(OJDLocalized.string("action.apply")) { model.applyPlayerIndicator() }
           }
         }
         if model.capabilities.lightingFeatures.contains(.programmableColor) {
-          OJDLabeledRow(OJDLocalized.string("inputTest.color")) {
+          OJDLabeledRow(OJDLocalized.string("ui.inputTest.color")) {
             HStack {
               OJDPhysicalColorWell(color: colorBinding).frame(width: 44, height: 24)
-              Button(OJDLocalized.string("common.apply")) { model.applyColor() }
+              Button(OJDLocalized.string("action.apply")) { model.applyColor() }
             }
           }
         }
         if model.capabilities.supportsProgrammableBrightness {
           VStack(alignment: .leading, spacing: 3) {
             HStack {
-              Text(OJDLocalized.string("inputTest.brightness"))
+              Text(OJDLocalized.string("ui.inputTest.brightness"))
               Spacer()
               Text("\(Int(model.brightness.rounded()))").font(
                 .system(.caption, design: .monospaced)
@@ -216,9 +216,9 @@
             }
             HStack {
               Slider(value: brightnessBinding, in: 0...255)
-                .ojdAccessibilityLabel(OJDLocalized.string("inputTest.brightness"))
+                .ojdAccessibilityLabel(OJDLocalized.string("ui.inputTest.brightness"))
                 .ojdAccessibilityValue("\(Int(model.brightness.rounded()))")
-              Button(OJDLocalized.string("common.apply")) { model.applyBrightness() }
+              Button(OJDLocalized.string("action.apply")) { model.applyBrightness() }
             }
           }
         }
@@ -238,7 +238,7 @@
           horizontal: false,
           vertical: true
         ).ojdAccessibilityLabel(
-          OJDLocalized.string("inputTest.outputError")
+          OJDLocalized.string("ui.inputTest.outputError")
         )
       }
     }
@@ -261,11 +261,11 @@
       switch model.outputState {
       case .running(let current) where current == operation: ProgressView()
       case .succeeded(let current) where current == operation:
-        Text(OJDLocalized.string("common.done")).foregroundColor(
+        Text(OJDLocalized.string("action.done")).foregroundColor(
           Color(SemanticState.healthy.presentation.tone.color)
         )
       case .failed(let current) where current == operation:
-        Text(OJDLocalized.string("common.failed")).foregroundColor(
+        Text(OJDLocalized.string("status.failed")).foregroundColor(
           Color(SemanticState.failure.presentation.tone.color)
         )
       default: EmptyView()

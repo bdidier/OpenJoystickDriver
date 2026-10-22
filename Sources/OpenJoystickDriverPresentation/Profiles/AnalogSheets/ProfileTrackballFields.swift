@@ -40,7 +40,7 @@
     }
 
     private func label(_ key: String) -> String {
-      OJDLocalized.string("profiles.trackball." + key)
+      OJDLocalized.string("ui.profiles.trackball." + key)
     }
   }
 #endif

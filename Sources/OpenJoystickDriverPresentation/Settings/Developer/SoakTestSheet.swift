@@ -13,13 +13,13 @@
     private var showsSheet = false
 
     var body: some View {
-      Section(OJDLocalized.string("developer.soakTest")) {
-        Text(OJDLocalized.string("developer.soakTestDescription")).font(.caption)
+      Section(OJDLocalized.string("ui.developer.soakTest")) {
+        Text(OJDLocalized.string("ui.developer.soakTestDescription")).font(.caption)
           .foregroundColor(Color(NSColor.secondaryLabelColor)).fixedSize(
             horizontal: false,
             vertical: true
           )
-        Button(OJDLocalized.string("developer.soakTestOpen")) { showsSheet = true }
+        Button(OJDLocalized.string("ui.developer.soakTestOpen")) { showsSheet = true }
           .sheet(isPresented: $showsSheet) { SoakTestSheet(model: model) }
       }
     }
@@ -35,7 +35,7 @@
 
     var body: some View {
       VStack(alignment: .leading, spacing: 16) {
-        Text(OJDLocalized.string("developer.soakTest")).font(.headline)
+        Text(OJDLocalized.string("ui.developer.soakTest")).font(.headline)
         content
         HStack {
           Spacer()
@@ -72,7 +72,7 @@
             OJDLocalized.string(SoakTestField.footprintLimit.labelKey),
             text: $model.form.footprintLimit
           )
-          Text(OJDLocalized.string("developer.soakLimitHint")).font(.caption)
+          Text(OJDLocalized.string("ui.developer.soakLimitHint")).font(.caption)
             .foregroundColor(Color(NSColor.secondaryLabelColor))
           if let problem = model.problem {
             Text(problem.message).foregroundColor(Color(NSColor.systemRed)).fixedSize(
@@ -84,7 +84,7 @@
       case .running:
         HStack(spacing: 8) {
           ProgressView().controlSize(.small)
-          Text(OJDLocalized.string("developer.soakRunning"))
+          Text(OJDLocalized.string("ui.developer.soakRunning"))
             .foregroundColor(Color(NSColor.secondaryLabelColor))
         }
       case .finished(let row):
@@ -105,19 +105,19 @@
     private var buttons: some View {
       switch model.state {
       case .idle:
-        Button(OJDLocalized.string("common.cancel")) { presentationMode.wrappedValue.dismiss() }
+        Button(OJDLocalized.string("action.cancel")) { presentationMode.wrappedValue.dismiss() }
           .keyboardShortcut(.cancelAction)
-        Button(OJDLocalized.string("developer.soakStart")) { model.start() }
+        Button(OJDLocalized.string("ui.developer.soakStart")) { model.start() }
           .keyboardShortcut(.defaultAction).disabled(model.problem != nil)
       case .running:
-        Button(OJDLocalized.string("common.stop")) { model.cancel() }
+        Button(OJDLocalized.string("action.stop")) { model.cancel() }
           .keyboardShortcut(.cancelAction)
       case .finished:
-        Button(OJDLocalized.string("developer.soakStart")) {
+        Button(OJDLocalized.string("ui.developer.soakStart")) {
           model.reset()
           model.start()
         }
-        Button(OJDLocalized.string("common.done")) { dismissFinishedResult() }
+        Button(OJDLocalized.string("action.done")) { dismissFinishedResult() }
           .keyboardShortcut(.defaultAction)
         // Escape works without a focused control; the button is for the shortcut only.
         Button("") { dismissFinishedResult() }.keyboardShortcut(.cancelAction).frame(

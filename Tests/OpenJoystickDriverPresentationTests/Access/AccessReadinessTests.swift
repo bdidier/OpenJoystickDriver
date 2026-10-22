@@ -69,7 +69,10 @@ struct AccessReadinessTests {
       )
     )
 
-    #expect(value.notification.value == OJDLocalized.string("settings.notificationBannersOff"))
+    #expect(
+      value.notification.value
+        == OJDLocalized.string("ui.settings.notifications.notificationBannersOff")
+    )
     #expect(value.notification.isActionable)
   }
 
@@ -92,7 +95,7 @@ struct AccessReadinessTests {
   func notificationsNotYetRequestedAreActionable() {
     let value = readiness(permissions: .unavailable, notification: .notDetermined)
 
-    #expect(value.notification.value == OJDLocalized.string("common.notRequested"))
+    #expect(value.notification.value == OJDLocalized.string("status.notRequested"))
     #expect(value.notification.isActionable)
   }
 
@@ -113,11 +116,12 @@ struct AccessReadinessTests {
     let notRequested = readiness(permissions: .unavailable, notification: .notDetermined)
 
     #expect(
-      denied.rows.first { $0.kind == .inputRead }?.actionTitleKey == "setup.openSystemSettings"
+      denied.rows.first { $0.kind == .inputRead }?.actionTitleKey
+        == "platform.macos.ui.setup.openSystemSettings"
     )
     #expect(denied.rows.first { $0.kind == .inputInject }?.actionTitleKey == nil)
     #expect(
-      notRequested.rows.first { $0.kind == .notification }?.actionTitleKey == "common.request"
+      notRequested.rows.first { $0.kind == .notification }?.actionTitleKey == "action.request"
     )
   }
 

@@ -117,7 +117,7 @@ struct ControllerCalibrateCommand: AsyncParsableCommand {
       return CLIFailure(
         id,
         CLILocalized.format(
-          "cli.controller.calibrate.no_motion",
+          "cli.controller.calibrate.noMotion",
           device.name
         )
       )
@@ -261,7 +261,7 @@ struct ControllerUnpairCommand: AsyncParsableCommand {
           throw CLIFailure(
             .notFound,
             CLILocalized.format(
-              "cli.controller.unpair.not_found",
+              "cli.controller.unpair.notFound",
               text
             )
           )

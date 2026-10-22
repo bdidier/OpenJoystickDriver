@@ -125,7 +125,7 @@ struct ProfileKey: ExpressibleByArgument, Equatable, Sendable {
 
 private let profileKeyHelp = ArgumentHelp(
   CLILocalized.text(
-    "cli.profile.key"
+    "cli.profile.group.key"
   ),
   valueName: "key"
 )
@@ -261,7 +261,7 @@ struct ProfileSetCommand: AsyncParsableCommand {
     guard edited.id == profile.id else {
       throw CLIFailure.usage(
         CLILocalized.text(
-          "cli.profile.set.id_changed"
+          "cli.profile.set.idChanged"
         )
       )
     }

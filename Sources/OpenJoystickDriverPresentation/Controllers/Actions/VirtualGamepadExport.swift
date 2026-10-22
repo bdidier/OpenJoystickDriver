@@ -19,7 +19,7 @@ enum VirtualGamepadExport {
   {
     // The file ends with a newline, as the command's standard output does.
     try format.document(for: [profile]) {
-      OJDLocalized.formatted("cli.virtual.sdl_hints_note", CommandLineName.kebab($0.rawValue))
+      OJDLocalized.formatted("cli.virtual.group.sdlHintsNote", CommandLineName.kebab($0.rawValue))
     } + "\n"
   }
 

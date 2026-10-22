@@ -23,7 +23,7 @@ struct ProfileSelector: ExpressibleByArgument, Equatable, Sendable {
     if matches.count == 1, let profile = matches.first { return profile }
     guard matches.isEmpty else {
       let message = CLILocalized.format(
-        "cli.profile.selector.ambiguous",
+        "cli.profile.group.selectorAmbiguous",
         text,
         matches.count
       )
@@ -33,7 +33,7 @@ struct ProfileSelector: ExpressibleByArgument, Equatable, Sendable {
     throw CLIFailure(
       .notFound,
       CLILocalized.format(
-        "cli.profile.selector.not_found",
+        "cli.profile.group.selectorNotFound",
         text
       )
     )
@@ -51,7 +51,7 @@ struct ProfileSelector: ExpressibleByArgument, Equatable, Sendable {
 /// The shared `PROFILE` argument help.
 let profileArgumentHelp = ArgumentHelp(
   CLILocalized.text(
-    "cli.profile.argument"
+    "cli.profile.group.argument"
   ),
   valueName: "profile"
 )
@@ -80,7 +80,7 @@ struct ProfileSummary: Encodable, Equatable {
   var row: [String] { [id, name, controller, scope, String(active)] }
 
   var line: String {
-    let marker = active ? "  " + CLILocalized.text("cli.profile.active_marker") : ""
+    let marker = active ? "  " + CLILocalized.text("cli.profile.group.activeMarker") : ""
     return "\(id)  \(name)  \(controller)  \(scope)\(marker)"
   }
 }
@@ -92,7 +92,7 @@ extension RemappingProfile {
       throw CLIFailure(
         .invalidProfile,
         CLILocalized.format(
-          "cli.profile.invalid",
+          "cli.profile.group.invalid",
           error.localizedDescription
         )
       )

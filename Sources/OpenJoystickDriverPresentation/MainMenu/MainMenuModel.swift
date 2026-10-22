@@ -26,8 +26,8 @@ enum MainMenuModel {
   /// selected one is gone), the key that says no controller is selected.
   static func controllerTargetTitle(state: MainMenuState) -> StatusItemTitle {
     if let controller = state.controller { return .verbatim(controller.name) }
-    if state.controllers.isEmpty { return .key("controllers.emptyTitle") }
-    return .key("mainMenu.controller.noneSelected")
+    if state.controllers.isEmpty { return .key("ui.controllers.emptyTitle") }
+    return .key("ui.menu.controller.noneSelected")
   }
 
   /// The title key to show: the alternate one for Hide Sidebar, Exit Full Screen and Resume.
@@ -71,13 +71,13 @@ enum MainMenuModel {
 
   private static let appSection = MainMenuSection(
     id: "app",
-    titleKey: "app.name",
+    titleKey: "term.app.name",
     entries: [
-      entry("about", "mainMenu.app.about", action: .about, gui: .standardCommand),
+      entry("about", "ui.menu.app.about", action: .about, gui: .standardCommand),
       .separator,
       entry(
         "settings",
-        "mainMenu.app.settings",
+        "ui.menu.app.settings",
         key: ",",
         action: .settings,
         enabled: .requires([.settingsWindow]),
@@ -86,7 +86,7 @@ enum MainMenuModel {
       .separator,
       entry(
         "services",
-        "mainMenu.app.services",
+        "ui.menu.app.services",
         action: .services,
         enabled: .responderChain,
         gui: .standardCommand
@@ -94,7 +94,7 @@ enum MainMenuModel {
       .separator,
       entry(
         "hide",
-        "mainMenu.app.hide",
+        "ui.menu.app.hide",
         key: "h",
         action: .hide,
         enabled: .responderChain,
@@ -102,7 +102,7 @@ enum MainMenuModel {
       ),
       entry(
         "hideOthers",
-        "mainMenu.app.hideOthers",
+        "ui.menu.app.hideOthers",
         key: "h",
         modifiers: [.command, .option],
         action: .hideOthers,
@@ -111,23 +111,23 @@ enum MainMenuModel {
       ),
       entry(
         "showAll",
-        "mainMenu.app.showAll",
+        "ui.menu.app.showAll",
         action: .showAll,
         enabled: .responderChain,
         gui: .standardCommand
       ),
       .separator,
-      entry("quit", "mainMenu.app.quit", key: "q", action: .quit, gui: .standardCommand),
+      entry("quit", "ui.menu.app.quit", key: "q", action: .quit, gui: .standardCommand),
     ]
   )
 
   private static let fileSection = MainMenuSection(
     id: "file",
-    titleKey: "mainMenu.file",
+    titleKey: "ui.menu.file.title",
     entries: [
       entry(
         "importProfile",
-        "mainMenu.file.importProfile",
+        "ui.menu.file.importProfile",
         key: "o",
         action: .importProfile,
         enabled: needsMainWindow,
@@ -135,7 +135,7 @@ enum MainMenuModel {
       ),
       entry(
         "exportProfile",
-        "mainMenu.file.exportProfile",
+        "ui.menu.file.exportProfile",
         key: "e",
         modifiers: [.command, .shift],
         action: .exportProfile,
@@ -145,7 +145,7 @@ enum MainMenuModel {
       .separator,
       entry(
         "installRecordOrMod",
-        "mainMenu.file.installRecordOrMod",
+        "ui.menu.file.installRecordOrMod",
         action: .installRecordOrMod,
         enabled: needsMainWindow,
         gui: .area(.library)
@@ -153,7 +153,7 @@ enum MainMenuModel {
       .separator,
       entry(
         "close",
-        "mainMenu.file.close",
+        "ui.menu.file.close",
         key: "w",
         action: .close,
         enabled: .responderChain,
@@ -162,13 +162,13 @@ enum MainMenuModel {
       .separator,
       entry(
         "saveSupportReport",
-        "mainMenu.file.saveSupportReport",
+        "ui.menu.file.saveSupportReport",
         action: .saveSupportReport,
         gui: .area(.activity)
       ),
       entry(
         "saveActivityLog",
-        "mainMenu.file.saveActivityLog",
+        "ui.menu.file.saveActivityLog",
         action: .saveActivityLog,
         gui: .area(.activity)
       ),
@@ -177,11 +177,11 @@ enum MainMenuModel {
 
   private static let editSection = MainMenuSection(
     id: "edit",
-    titleKey: "mainMenu.edit",
+    titleKey: "ui.menu.edit.title",
     entries: [
       entry(
         "undo",
-        "mainMenu.edit.undo",
+        "ui.menu.edit.undo",
         key: "z",
         action: .undo,
         enabled: .responderChain,
@@ -189,7 +189,7 @@ enum MainMenuModel {
       ),
       entry(
         "redo",
-        "mainMenu.edit.redo",
+        "ui.menu.edit.redo",
         key: "z",
         modifiers: [.command, .shift],
         action: .redo,
@@ -199,7 +199,7 @@ enum MainMenuModel {
       .separator,
       entry(
         "cut",
-        "mainMenu.edit.cut",
+        "ui.menu.edit.cut",
         key: "x",
         action: .cut,
         enabled: .responderChain,
@@ -207,7 +207,7 @@ enum MainMenuModel {
       ),
       entry(
         "copy",
-        "mainMenu.edit.copy",
+        "ui.menu.edit.copy",
         key: "c",
         action: .copy,
         enabled: .responderChain,
@@ -215,7 +215,7 @@ enum MainMenuModel {
       ),
       entry(
         "paste",
-        "mainMenu.edit.paste",
+        "ui.menu.edit.paste",
         key: "v",
         action: .paste,
         enabled: .responderChain,
@@ -223,14 +223,14 @@ enum MainMenuModel {
       ),
       entry(
         "delete",
-        "common.delete",
+        "action.delete",
         action: .delete,
         enabled: .responderChain,
         gui: .standardCommand
       ),
       entry(
         "selectAll",
-        "mainMenu.edit.selectAll",
+        "ui.menu.edit.selectAll",
         key: "a",
         action: .selectAll,
         enabled: .responderChain,
@@ -241,7 +241,7 @@ enum MainMenuModel {
 
   private static let viewSection = MainMenuSection(
     id: "view",
-    titleKey: "mainMenu.view",
+    titleKey: "ui.menu.view.title",
     entries: MainWindowArea.allCases.map { area in
       entry(
         "showArea.\(area.rawValue)",
@@ -255,8 +255,8 @@ enum MainMenuModel {
       .separator,
       entry(
         "toggleToolbar",
-        "mainMenu.view.showToolbar",
-        alternate: "mainMenu.view.hideToolbar",
+        "ui.menu.view.showToolbar",
+        alternate: "ui.menu.view.hideToolbar",
         key: "t",
         modifiers: [.command, .option],
         action: .toggleToolbar,
@@ -265,8 +265,8 @@ enum MainMenuModel {
       ),
       entry(
         "toggleSidebar",
-        "mainMenu.view.showSidebar",
-        alternate: "mainMenu.view.hideSidebar",
+        "ui.menu.view.showSidebar",
+        alternate: "ui.menu.view.hideSidebar",
         key: "s",
         modifiers: [.command, .control],
         action: .toggleSidebar,
@@ -275,8 +275,8 @@ enum MainMenuModel {
       ),
       entry(
         "toggleFullScreen",
-        "mainMenu.view.enterFullScreen",
-        alternate: "mainMenu.view.exitFullScreen",
+        "ui.menu.view.enterFullScreen",
+        alternate: "ui.menu.view.exitFullScreen",
         key: "f",
         modifiers: [.command, .control],
         action: .toggleFullScreen,
@@ -288,11 +288,11 @@ enum MainMenuModel {
 
   private static let controllerSection = MainMenuSection(
     id: "controller",
-    titleKey: "mainMenu.controller",
+    titleKey: "ui.menu.controller.title",
     entries: [
       entry(
         "controllerTarget",
-        "controllers.emptyTitle",
+        "ui.controllers.emptyTitle",
         action: .controllerTarget,
         enabled: .never,
         gui: .area(.controllers)
@@ -300,22 +300,22 @@ enum MainMenuModel {
       .separator,
       entry(
         "suspendOrResume",
-        "mainMenu.controller.suspend",
-        alternate: "mainMenu.controller.resume",
+        "ui.menu.controller.suspend",
+        alternate: "ui.menu.controller.resume",
         action: .suspendOrResumeController,
         enabled: .requires([.controller]),
         gui: .area(.controllers)
       ),
       entry(
         "testInput",
-        "mainMenu.controller.testInput",
+        "ui.menu.controller.testInput",
         action: .testInput,
         enabled: .requires([.controller, .mainWindow]),
         gui: .area(.controllers)
       ),
       entry(
         "disconnectWirelessLink",
-        "mainMenu.controller.disconnectWirelessLink",
+        "ui.menu.controller.disconnectWirelessLink",
         action: .disconnectWirelessLink,
         enabled: .requires([.controller, .wirelessController]),
         gui: .area(.controllers)
@@ -323,7 +323,7 @@ enum MainMenuModel {
       .separator,
       entry(
         "showControllerInWindow",
-        "mainMenu.controller.showInWindow",
+        "ui.menu.controller.showInWindow",
         action: .showControllerInWindow,
         enabled: .requires([.mainWindow]),
         gui: .area(.controllers)
@@ -333,18 +333,18 @@ enum MainMenuModel {
 
   private static let profileSection = MainMenuSection(
     id: "profile",
-    titleKey: "mainMenu.profile",
+    titleKey: "ui.menu.profile.title",
     entries: [
       entry(
         "activateProfile",
-        "mainMenu.profile.activate",
+        "ui.menu.profile.activate",
         action: .activateProfile,
         enabled: .requires([.profileExists]),
         gui: .area(.profiles)
       ),
       entry(
         "deactivateProfile",
-        "mainMenu.profile.deactivate",
+        "ui.menu.profile.deactivate",
         action: .deactivateProfile,
         enabled: .requires([.controller, .controllerHasActiveProfile]),
         gui: .area(.profiles)
@@ -354,11 +354,11 @@ enum MainMenuModel {
 
   private static let windowSection = MainMenuSection(
     id: "window",
-    titleKey: "mainMenu.window",
+    titleKey: "ui.menu.window.title",
     entries: [
       entry(
         "minimize",
-        "mainMenu.window.minimize",
+        "ui.menu.window.minimize",
         key: "m",
         action: .minimize,
         enabled: .responderChain,
@@ -366,7 +366,7 @@ enum MainMenuModel {
       ),
       entry(
         "zoom",
-        "mainMenu.window.zoom",
+        "ui.menu.window.zoom",
         action: .zoom,
         enabled: .responderChain,
         gui: .standardCommand
@@ -374,7 +374,7 @@ enum MainMenuModel {
       .separator,
       entry(
         "bringAllToFront",
-        "mainMenu.window.bringAllToFront",
+        "ui.menu.window.bringAllToFront",
         action: .bringAllToFront,
         enabled: .responderChain,
         gui: .standardCommand
@@ -384,38 +384,38 @@ enum MainMenuModel {
 
   private static let helpSection = MainMenuSection(
     id: "help",
-    titleKey: "mainMenu.help",
+    titleKey: "ui.menu.help.title",
     entries: [
       entry(
         "showActivityLog",
-        "mainMenu.help.activityLog",
+        "ui.menu.help.activityLog",
         action: .showActivityLog,
         enabled: needsMainWindow,
         gui: .area(.activity)
       ),
       entry(
         "explainErrorCode",
-        "mainMenu.help.explainErrorCode",
+        "ui.menu.help.explainErrorCode",
         action: .explainErrorCode,
         enabled: needsMainWindow,
         gui: .area(.activity)
       ),
       entry(
         "copySupportReport",
-        "mainMenu.help.copySupportReport",
+        "ui.menu.help.copySupportReport",
         action: .copySupportReport,
         gui: .area(.activity)
       ),
       entry(
         "reportProblem",
-        "mainMenu.help.reportProblem",
+        "ui.menu.help.reportProblem",
         action: .reportProblem,
         gui: .externalLink
       ),
       .separator,
       entry(
         "openProjectWebsite",
-        "mainMenu.help.projectWebsite",
+        "ui.menu.help.projectWebsite",
         action: .openProjectWebsite,
         gui: .externalLink
       ),

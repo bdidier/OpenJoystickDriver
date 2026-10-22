@@ -275,10 +275,13 @@ public enum RuntimeHealthSamplingError: LocalizedError, Sendable {
     let localization = Localization()
     switch self {
     case .processUnavailable(let pid):
-      return localization.formatted("cli.diagnose.soak.error.process_unavailable", arguments: [pid])
+      return localization.formatted(
+        "cli.diagnose.group.soakErrorProcessUnavailable",
+        arguments: [pid]
+      )
     case .invalidConfiguration:
       return localization.formatted(
-        "cli.diagnose.soak.error.invalid_configuration",
+        "cli.diagnose.group.soakErrorInvalidConfiguration",
         arguments: [
           ApplicationServiceRuntimeHealthSampler.secondsRange.lowerBound,
           ApplicationServiceRuntimeHealthSampler.secondsRange.upperBound,
@@ -287,8 +290,11 @@ public enum RuntimeHealthSamplingError: LocalizedError, Sendable {
         ]
       )
     case .tooManySamples(let count):
-      return localization.formatted("cli.diagnose.soak.error.too_many_samples", arguments: [count])
-    case .noSamples: return localization.string("cli.diagnose.soak.error.no_samples")
+      return localization.formatted(
+        "cli.diagnose.group.soakErrorTooManySamples",
+        arguments: [count]
+      )
+    case .noSamples: return localization.string("cli.diagnose.group.soakErrorNoSamples")
     }
   }
 }

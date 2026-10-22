@@ -17,17 +17,17 @@ struct AccessFailure: Error, Equatable {
     case let failure as Self: self = failure
     case ApplicationServiceClientError.notConnected:
       self.init(
-        message: OJDLocalized.string("access.error.serviceUnavailable"),
+        message: OJDLocalized.string("ui.access.error.serviceUnavailable"),
         code: .serviceUnavailable
       )
     case ApplicationServiceClientError.timeout:
       self.init(
-        message: OJDLocalized.string("access.error.serviceTimeout"),
+        message: OJDLocalized.string("ui.access.error.serviceTimeout"),
         code: .serviceTimeout
       )
     case LocalServiceRPCError.peerRejected:
       self.init(
-        message: OJDLocalized.string("access.error.peerRejected"),
+        message: OJDLocalized.string("ui.access.error.peerRejected"),
         code: .peerRejected
       )
     case let rejection as ApplicationServiceRemappingRPCError:
@@ -35,7 +35,7 @@ struct AccessFailure: Error, Equatable {
     default:
       self.init(
         message: OJDLocalized.formatted(
-          "access.error.requestFailed",
+          "ui.access.error.requestFailed",
           error.localizedDescription
         ),
         code: .serviceRequestFailed

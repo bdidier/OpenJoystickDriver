@@ -19,9 +19,9 @@
 
     var titleKey: String {
       switch self {
-      case .all: return "console.all"
-      case .output: return "console.output"
-      case .errors: return "console.errors"
+      case .all: return "ui.console.all"
+      case .output: return "ui.console.output"
+      case .errors: return "ui.console.errors"
       }
     }
 
@@ -47,8 +47,8 @@
   extension ApplicationServiceLogStream {
     var activityTitleKey: String {
       switch self {
-      case .standardOutput: return "console.output"
-      case .standardError: return "console.errors"
+      case .standardOutput: return "ui.console.output"
+      case .standardError: return "ui.console.errors"
       }
     }
   }

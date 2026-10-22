@@ -10,7 +10,7 @@ extension ControllerWatchCommand {
     if CLIContext.current.format == .human {
       CLIOutput.success(
         CLILocalized.text(
-          "cli.controller.watch.all_started"
+          "cli.controller.watch.allStarted"
         )
       )
     }

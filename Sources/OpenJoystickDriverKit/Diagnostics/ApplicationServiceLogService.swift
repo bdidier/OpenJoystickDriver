@@ -39,7 +39,7 @@ public enum ApplicationServiceLogService {
   /// The line count of `ojd log export` and of the Save Activity Log menu item.
   public static let defaultExportLines = 2_000
   /// The note to read before sharing a log.
-  public static var sharingWarning: String { Localization().string("cli.log.sharing_warning") }
+  public static var sharingWarning: String { Localization().string("cli.log.group.sharingWarning") }
 
   /// The folder that holds the log files, which `ojd log path` prints.
   public static var directory: URL {

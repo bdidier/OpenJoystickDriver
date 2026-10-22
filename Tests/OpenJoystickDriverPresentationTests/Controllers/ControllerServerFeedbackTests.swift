@@ -81,16 +81,16 @@ struct ControllerServerFeedbackTests {
 
   @Test(
     arguments: [
-      (ControllerServerFailure.rawUSB, String?.none, OJDLocalized.string("error.E2023")),
-      (.notNative, nil, OJDLocalized.string("error.E2023")),
-      (.noRecord, nil, OJDLocalized.string("controllers.server.noRecord")),
+      (ControllerServerFailure.rawUSB, String?.none, OJDLocalized.string("error.E2023.message")),
+      (.notNative, nil, OJDLocalized.string("error.E2023.message")),
+      (.noRecord, nil, OJDLocalized.string("ui.controllers.server.noRecord")),
       (
         .invalidRecord, "bad record",
-        OJDLocalized.string("controllers.server.invalidRecord") + " bad record"
+        OJDLocalized.string("ui.controllers.server.invalidRecord") + " bad record"
       ),
       (
         .persistenceFailed, "disk full",
-        OJDLocalized.string("controllers.server.persistenceFailed") + " disk full"
+        OJDLocalized.string("ui.controllers.server.persistenceFailed") + " disk full"
       ),
     ]
   )
@@ -112,14 +112,14 @@ struct ControllerServerFeedbackTests {
 
   @Test(
     arguments: [
-      ("controllers.server.noRecord", OJDLocalized.string("controllers.server.noRecord")),
+      ("ui.controllers.server.noRecord", OJDLocalized.string("ui.controllers.server.noRecord")),
       (
-        "controllers.server.invalidRecord",
-        OJDLocalized.string("controllers.server.invalidRecord")
+        "ui.controllers.server.invalidRecord",
+        OJDLocalized.string("ui.controllers.server.invalidRecord")
       ),
       (
-        "controllers.server.persistenceFailed",
-        OJDLocalized.string("controllers.server.persistenceFailed")
+        "ui.controllers.server.persistenceFailed",
+        OJDLocalized.string("ui.controllers.server.persistenceFailed")
       ),
     ]
   )

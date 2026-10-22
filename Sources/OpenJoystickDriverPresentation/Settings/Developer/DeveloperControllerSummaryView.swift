@@ -8,9 +8,9 @@
     @ObservedObject
     var model: DeveloperToolsViewModel
     var body: some View {
-      Section(OJDLocalized.string("developer.controllerDetails")) {
+      Section(OJDLocalized.string("ui.developer.controllerDetails")) {
         Picker(
-          OJDLocalized.string("developer.controller"),
+          OJDLocalized.string("ui.developer.controller"),
           selection: Binding(
             get: { model.selectedDevice?.sessionToken.rawValue ?? "" },
             set: { model.selectDevice(sessionToken: $0) }
@@ -21,7 +21,7 @@
           }
         }
         if let device = model.selectedDevice { controllerFacts(device) }
-        Button(OJDLocalized.string("common.refresh"), action: model.requestRefresh)
+        Button(OJDLocalized.string("action.refresh"), action: model.requestRefresh)
           .disabled(model.isCapturing)
       }
     }
@@ -29,39 +29,39 @@
     @ViewBuilder
     private func controllerFacts(_ device: ApplicationServiceDeviceDescription) -> some View {
       OJDLabeledValue(
-        OJDLocalized.string("developer.usbID"),
+        OJDLocalized.string("ui.developer.usbID"),
         OJDValue.usbIdentifier(vendorID: device.vendorID, productID: device.productID)
       )
       OJDLabeledValue(
-        OJDLocalized.string("common.protocol"),
+        OJDLocalized.string("term.protocol"),
         "\(device.protocolBinding.protocolID.displayName) "
           + "(\(device.protocolBinding.commandLineName))"
       )
       DeveloperSerialRow(serial: OJDValue.reported(device.serialNumber)).id(
         device.sessionToken.rawValue
       )
-      OJDLabeledValue(OJDLocalized.string("developer.route"), routeName(device.discoverySource))
-      OJDLabeledValue(OJDLocalized.string("developer.connection"), device.connection)
+      OJDLabeledValue(OJDLocalized.string("ui.developer.route"), routeName(device.discoverySource))
+      OJDLabeledValue(OJDLocalized.string("ui.developer.connection"), device.connection)
       OJDLabeledValue(
-        OJDLocalized.string("developer.usbEndpoints"),
+        OJDLocalized.string("ui.developer.usbEndpoints"),
         String(
           format: "%@ 0x%02X · %@ 0x%02X",
-          OJDLocalized.string("common.inputEndpoint"),
+          OJDLocalized.string("term.inputEndpoint"),
           device.inputEndpoint,
-          OJDLocalized.string("common.outputEndpoint"),
+          OJDLocalized.string("term.outputEndpoint"),
           device.outputEndpoint
         )
       )
       OJDLabeledValue(
-        OJDLocalized.string("developer.buttons"),
+        OJDLocalized.string("ui.developer.buttons"),
         buttonValue(model.latestInput?.pressed)
       )
       OJDLabeledValue(
-        OJDLocalized.string("developer.leftStick"),
+        OJDLocalized.string("ui.developer.leftStick"),
         stickValue(model.latestInput?.leftStick)
       )
       OJDLabeledValue(
-        OJDLocalized.string("developer.rightStick"),
+        OJDLocalized.string("ui.developer.rightStick"),
         stickValue(model.latestInput?.rightStick)
       )
     }
@@ -74,15 +74,15 @@
 
     private func buttonValue(_ pressed: Set<Control>?) -> String {
       guard let pressed, !pressed.isEmpty else {
-        return OJDLocalized.string("common.none")
+        return OJDLocalized.string("status.none")
       }
       return Control.allCases.filter(pressed.contains).map(\.rawValue).joined(separator: ", ")
     }
 
     private func routeName(_ value: DeviceDiscoverySource) -> String {
       switch value {
-      case .hid: return OJDLocalized.string("developer.hid")
-      case .rawUSB: return OJDLocalized.string("developer.rawUSB")
+      case .hid: return OJDLocalized.string("ui.developer.hid")
+      case .rawUSB: return OJDLocalized.string("ui.developer.rawUSB")
       }
     }
   }
@@ -95,7 +95,7 @@
 
     var body: some View {
       SerialNumberRow(
-        label: OJDLocalized.string("common.serialNumber"),
+        label: OJDLocalized.string("term.serialNumber"),
         serial: serial,
         visibility: $visibility
       )

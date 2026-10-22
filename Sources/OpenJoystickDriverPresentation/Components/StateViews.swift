@@ -29,7 +29,7 @@
         }
       } else {
         VStack(spacing: 4) {
-          OJDSystemSymbol(name: symbol, fallback: OJDLocalized.string("common.status")).font(
+          OJDSystemSymbol(name: symbol, fallback: OJDLocalized.string("term.status")).font(
             .largeTitle
           ).foregroundColor(Color(NSColor.tertiaryLabelColor)).accessibilityHidden(true)
           Text(title).font(.headline).foregroundColor(Color(NSColor.secondaryLabelColor))
@@ -66,7 +66,7 @@
         HStack(alignment: .top, spacing: 10) {
           OJDSystemSymbol(
             name: SemanticState.failure.presentation.symbolName,
-            fallback: OJDLocalized.string("common.needsAttention")
+            fallback: OJDLocalized.string("status.needsAttention")
           ).foregroundColor(Color(SemanticState.failure.presentation.tone.color))
             .accessibilityHidden(true)
           VStack(alignment: .leading, spacing: 6) {
@@ -75,7 +75,7 @@
               horizontal: false,
               vertical: true
             )
-            Button(OJDLocalized.string("common.tryAgain"), action: retry)
+            Button(OJDLocalized.string("action.tryAgain"), action: retry)
           }
           Spacer(minLength: 0)
         }.padding(4)

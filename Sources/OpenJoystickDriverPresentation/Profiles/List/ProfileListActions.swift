@@ -123,7 +123,7 @@
     func receiveChosenImportProfile(_ profile: RemappingProfile) {
       screen.chosenImportProfile = nil
       guard !isProfileActionBlocked else {
-        profileActionError = OJDLocalized.string("profiles.importBlocked")
+        profileActionError = OJDLocalized.string("ui.profiles.importBlocked")
         return
       }
       requestProfileAction(.importProfile(profile))
@@ -181,7 +181,7 @@
           profileActionError =
             library.lastError
             ?? OJDLocalized.string(
-              "profiles.actionError"
+              "ui.profiles.actionError"
             )
         }
       case .failed(let mutationID, let operation, let message),

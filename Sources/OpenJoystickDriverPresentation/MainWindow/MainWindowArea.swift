@@ -35,7 +35,7 @@ public enum MainWindowArea: String, CaseIterable, Identifiable, Hashable, Sendab
 
   /// Localization key of the area's title: its sidebar row, its View menu item and the window
   /// title while it is selected.
-  public var titleKey: String { "area.\(rawValue).title" }
+  public var titleKey: String { "ui.sidebar.\(rawValue).title" }
 
   /// Whether the area shows a content list column between the sidebar and its detail.
   public var hasListColumn: Bool {
@@ -84,7 +84,7 @@ public enum SettingsWindowPane: String, CaseIterable, Identifiable, Hashable, Se
   case advanced
 
   public var id: String { rawValue }
-  public var titleKey: String { "settingsPane.\(rawValue).title" }
+  public var titleKey: String { "ui.settings.\(rawValue).title" }
 }
 
 @preconcurrency

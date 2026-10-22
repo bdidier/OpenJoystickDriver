@@ -96,7 +96,7 @@
           .fixedSize(horizontal: true, vertical: true)
           .overlay(readings, alignment: .topLeading)
       }.contextMenu {
-        Button(OJDLocalized.string("common.copyAll")) {
+        Button(OJDLocalized.string("action.copyAll")) {
           NSPasteboard.general.clearContents()
           NSPasteboard.general.setString(text.copyText, forType: .string)
         }

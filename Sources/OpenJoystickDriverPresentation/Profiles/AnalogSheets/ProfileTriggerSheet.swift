@@ -36,17 +36,17 @@
 
     var body: some View {
       VStack(alignment: .leading, spacing: 16) {
-        Text(OJDLocalized.string("profiles.trigger.title")).font(
+        Text(OJDLocalized.string("ui.profiles.trigger.title")).font(
           .headline
         )
         Picker(
-          OJDLocalized.string("profiles.trigger.source"),
+          OJDLocalized.string("ui.profiles.trigger.source"),
           selection: $selected
         ) {
-          Text(OJDLocalized.string("profiles.trigger.left")).tag(
+          Text(OJDLocalized.string("ui.profiles.trigger.left")).tag(
             RemappingTriggerSource.left
           )
-          Text(OJDLocalized.string("profiles.trigger.right")).tag(
+          Text(OJDLocalized.string("ui.profiles.trigger.right")).tag(
             RemappingTriggerSource.right
           )
         }.pickerStyle(SegmentedPickerStyle())
@@ -55,7 +55,7 @@
         }
         if let errorMessage { Text(errorMessage).foregroundColor(.red) }
         HStack {
-          Button(OJDLocalized.string("common.reset")) {
+          Button(OJDLocalized.string("action.reset")) {
             if selected == .left {
               left = ProfileTriggerDraft(source: .left, mapping: nil)
             } else {
@@ -64,10 +64,10 @@
             errorMessage = nil
           }
           Spacer()
-          Button(OJDLocalized.string("common.cancel")) {
+          Button(OJDLocalized.string("action.cancel")) {
             presentationMode.wrappedValue.dismiss()
           }
-          Button(OJDLocalized.string("common.save")) {
+          Button(OJDLocalized.string("action.save")) {
             do {
               let separator = Locale.current.decimalSeparator ?? "."
               let mappings = try [left, right].compactMap {

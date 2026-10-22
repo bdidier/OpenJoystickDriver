@@ -195,7 +195,7 @@
     func exportPacketCapture() {
       let panel = NSSavePanel()
       panel.title = OJDLocalized.string(
-        "developer.exportCapture"
+        "ui.developer.exportCapture"
       )
       panel.nameFieldStringValue = defaultExportFilename
       panel.canCreateDirectories = true
@@ -212,10 +212,10 @@
       // The widths match `packetLine`.
       // FSI and PDI (UAX #9) isolate each label, so labels keep column order in any script.
       let header = [
-        (OJDLocalized.string("developer.packetColumnTime"), 9),
-        (OJDLocalized.string("developer.packetColumnDirection"), 9),
-        (OJDLocalized.string("developer.packetColumnBytes"), 5),
-        (OJDLocalized.string("developer.packetColumnData"), 0),
+        (OJDLocalized.string("ui.developer.packetColumnTime"), 9),
+        (OJDLocalized.string("ui.developer.packetColumnDirection"), 9),
+        (OJDLocalized.string("ui.developer.packetColumnBytes"), 5),
+        (OJDLocalized.string("ui.developer.packetColumnData"), 0),
       ].map { label, width in
         "\u{2068}\(label)\u{2069}" + String(repeating: " ", count: max(width - label.count, 0))
       }.joined(separator: "  ")

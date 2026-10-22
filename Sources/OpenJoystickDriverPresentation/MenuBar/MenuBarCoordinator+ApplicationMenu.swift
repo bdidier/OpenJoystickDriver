@@ -62,7 +62,7 @@
         populateActivateProfileMenu(menu)
         return
       }
-      let appName = OJDLocalized.string("app.name")
+      let appName = OJDLocalized.string("term.app.name")
       for menuItem in menu.items {
         guard let id = menuItem.identifier?.rawValue,
           let item = MainMenuModel.allItems.first(where: { $0.id == id })
@@ -184,8 +184,8 @@
         let outcome = await operation.perform(on: mainWindow)
         guard let outcome else {
           showMainMenuAlert(
-            title: OJDLocalized.string("mainMenu.profile.activateFailed"),
-            message: OJDLocalized.string("menuBar.profileEditorBusy"),
+            title: OJDLocalized.string("ui.menu.profile.activateFailed"),
+            message: OJDLocalized.string("ui.extra.profileEditorBusy"),
             style: .warning
           )
           return
@@ -194,13 +194,13 @@
         case .succeeded: break
         case .conflict:
           showMainMenuAlert(
-            title: OJDLocalized.string("mainMenu.profile.activateFailed"),
-            message: outcome.lastError ?? OJDLocalized.string("mainMenu.profile.activateConflict"),
+            title: OJDLocalized.string("ui.menu.profile.activateFailed"),
+            message: outcome.lastError ?? OJDLocalized.string("ui.menu.profile.activateConflict"),
             style: .warning
           )
         case .failed(_, _, let message), .rejected(_, _, let message):
           showMainMenuAlert(
-            title: OJDLocalized.string("mainMenu.profile.activateFailed"),
+            title: OJDLocalized.string("ui.menu.profile.activateFailed"),
             message: message,
             style: .warning
           )
@@ -223,7 +223,7 @@
       alert.alertStyle = style
       alert.messageText = title
       alert.informativeText = message
-      alert.addButton(withTitle: OJDLocalized.string("common.ok"))
+      alert.addButton(withTitle: OJDLocalized.string("action.ok"))
       alert.runActivatingApp()
     }
 
@@ -234,7 +234,7 @@
       alert.messageText = confirmation.title
       alert.informativeText = confirmation.message
       alert.addButton(withTitle: confirmation.confirmTitle).hasDestructiveAction = true
-      alert.addButton(withTitle: OJDLocalized.string("common.cancel"))
+      alert.addButton(withTitle: OJDLocalized.string("action.cancel"))
       guard alert.runActivatingApp() == .alertFirstButtonReturn else { return }
       Task { @MainActor in await viewModel.disconnectWirelessController(device) }
     }
@@ -252,8 +252,8 @@
         }
         guard let outcome else {
           showMainMenuAlert(
-            title: OJDLocalized.string("mainMenu.profile.deactivateFailed"),
-            message: OJDLocalized.string("menuBar.profileEditorBusy"),
+            title: OJDLocalized.string("ui.menu.profile.deactivateFailed"),
+            message: OJDLocalized.string("ui.extra.profileEditorBusy"),
             style: .warning
           )
           return
@@ -262,13 +262,13 @@
         case .succeeded: break
         case .conflict:
           showMainMenuAlert(
-            title: OJDLocalized.string("mainMenu.profile.deactivateFailed"),
-            message: OJDLocalized.string("mainMenu.profile.deactivateConflict"),
+            title: OJDLocalized.string("ui.menu.profile.deactivateFailed"),
+            message: OJDLocalized.string("ui.menu.profile.deactivateConflict"),
             style: .warning
           )
         case .failed(_, _, let message), .rejected(_, _, let message):
           showMainMenuAlert(
-            title: OJDLocalized.string("mainMenu.profile.deactivateFailed"),
+            title: OJDLocalized.string("ui.menu.profile.deactivateFailed"),
             message: message,
             style: .warning
           )
@@ -281,13 +281,13 @@
         let copied = await supportReport.copySupportReport()
         if copied {
           showMainMenuAlert(
-            title: OJDLocalized.string("mainMenu.copySupportReport.done"),
-            message: OJDLocalized.string("mainMenu.copySupportReport.doneDetail")
+            title: OJDLocalized.string("ui.menu.copySupportReport.done"),
+            message: OJDLocalized.string("ui.menu.copySupportReport.doneDetail")
           )
         } else {
           showMainMenuAlert(
-            title: OJDLocalized.string("mainMenu.copySupportReport.failed"),
-            message: OJDLocalized.string("mainMenu.copySupportReport.failedDetail"),
+            title: OJDLocalized.string("ui.menu.copySupportReport.failed"),
+            message: OJDLocalized.string("ui.menu.copySupportReport.failedDetail"),
             style: .warning
           )
         }
@@ -296,7 +296,7 @@
 
     private func beginSaveSupportReport() {
       let panel = NSSavePanel()
-      panel.title = OJDLocalized.string("debug.saveReportPanel")
+      panel.title = OJDLocalized.string("ui.debug.saveReportPanel")
       panel.nameFieldStringValue = supportReport.defaultSupportReportFilename
       panel.canCreateDirectories = true
       panel.begin { [supportReport] response in
@@ -305,7 +305,7 @@
           await supportReport.saveSupportReport(to: outputURL)
           if case .error(let message) = supportReport.supportReportState {
             self.showMainMenuAlert(
-              title: OJDLocalized.string("mainMenu.file.saveFailed"),
+              title: OJDLocalized.string("ui.menu.file.saveFailed"),
               message: message,
               style: .warning
             )
@@ -316,7 +316,7 @@
 
     private func beginSaveActivityLog() {
       let panel = NSSavePanel()
-      panel.title = OJDLocalized.string("debug.saveLogsPanel")
+      panel.title = OJDLocalized.string("ui.debug.saveLogsPanel")
       panel.nameFieldStringValue = supportReport.defaultSupportLogsFilename
       panel.canCreateDirectories = true
       panel.begin { [supportReport] response in
@@ -325,7 +325,7 @@
           await supportReport.saveSupportLogs(to: outputURL)
           if case .error(let message) = supportReport.supportLogsState {
             self.showMainMenuAlert(
-              title: OJDLocalized.string("mainMenu.file.saveFailed"),
+              title: OJDLocalized.string("ui.menu.file.saveFailed"),
               message: message,
               style: .warning
             )
@@ -342,13 +342,13 @@
 
     @objc
     func showAbout(_ sender: Any?) {
-      let repositoryTitle = OJDLocalized.string("menu.projectPage")
+      let repositoryTitle = OJDLocalized.string("ui.menu.projectPage")
       let credits = NSMutableAttributedString(string: repositoryTitle)
       if let url = URL(string: "https://github.com/xsyetopz/OpenJoystickDriver") {
         credits.addAttribute(.link, value: url, range: NSRange(location: 0, length: credits.length))
       }
       var options: [NSApplication.AboutPanelOptionKey: Any] = [
-        .applicationName: OJDLocalized.string("app.name"),
+        .applicationName: OJDLocalized.string("term.app.name"),
         .applicationVersion: ApplicationVersion.display, .credits: credits,
       ]
       if let icon = NSImage(named: NSImage.applicationIconName) { options[.applicationIcon] = icon }

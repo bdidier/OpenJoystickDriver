@@ -9,12 +9,12 @@ struct WirelessDisconnectConfirmation: Equatable {
   let confirmTitle: String
 
   init(controllerName: String) {
-    title = OJDLocalized.string("controllers.disconnectWirelessConfirmTitle")
+    title = OJDLocalized.string("ui.controllers.disconnectWirelessConfirmTitle")
     message = OJDLocalized.formatted(
-      "controllers.disconnectWirelessConfirmMessage",
+      "ui.controllers.disconnectWirelessConfirmMessage",
       controllerName
     )
-    confirmTitle = OJDLocalized.string("controllers.disconnectWirelessConfirm")
+    confirmTitle = OJDLocalized.string("ui.controllers.disconnectWirelessConfirm")
   }
 }
 

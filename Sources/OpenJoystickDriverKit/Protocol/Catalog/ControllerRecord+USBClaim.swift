@@ -16,12 +16,12 @@ extension ControllerRecord {
   /// it can or the family does not use raw USB.
   public var usbNote: String? {
     isClaimedByUSBExtension == false
-      ? Localization().string("cli.record.usb_not_claimed") : nil
+      ? Localization().string("platform.macos.cli.record.group.usbNotClaimed") : nil
   }
 
   /// Why OJD reaches a Switch 2 record without `bluetoothLE` only over USB, in words.
   public var bluetoothLENote: String? {
-    isSwitch2WithoutBluetoothLE ? Localization().string("cli.record.usb_only_switch2") : nil
+    isSwitch2WithoutBluetoothLE ? Localization().string("cli.record.group.usbOnlySwitch2") : nil
   }
 
   /// Every note that explains a limit on how OJD reaches the controller.
