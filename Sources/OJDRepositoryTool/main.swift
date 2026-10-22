@@ -15,11 +15,17 @@ private let usage = """
     OJDRepositoryTool validate profiles <path>...
     OJDRepositoryTool validate personas <path>...
     OJDRepositoryTool apply-patches --records <directory> --patches <directory> --out <directory>
+    OJDRepositoryTool facts
+    OJDRepositoryTool kebab <value>...
   A path is a file, or a directory whose .json files are checked.
   validate records and descriptions read a directory at any depth. apply-patches reads records at
   any depth and writes each to its relative path, and refuses a patch file that is not at the
   path its selector gives: a vendor directory for a vendorID with productID, the top of the
   directory for the others, so a deeper file is refused.
+  facts prints one JSON object of the constants that Swift owns: apiVersion,
+  commandLineExitStatuses (the sorted exit statuses of ojd) and domainCodePrefixes (the start of
+  the codes of each error domain). kebab prints one JSON object that maps
+  each value to its CommandLineName.kebab spelling. Neither prints problems and both exit 0.
   Each problem is one JSON line {"code", "file", "message"} on standard output. The exit status is
   0 without a problem, 1 with one, and 64 for a call that the tool refuses.
   """
@@ -107,8 +113,36 @@ private func line(_ problem: RepositoryProblem) throws -> Data {
   ) + Data("\n".utf8)
 }
 
+/// The JSON object a fact subcommand prints, or nil when `arguments` name a check.
+private func document(_ arguments: [String]) throws -> [String: Any]? {
+  let rest = Array(arguments.dropFirst())
+  switch arguments.first {
+  case "facts":
+    guard rest.isEmpty else { throw UsageError(message: "facts takes no argument") }
+    return [
+      "apiVersion": OpenJoystickDriverAPI.version,
+      "commandLineExitStatuses": ErrorCode.commandLineExitStatuses.sorted(),
+      "domainCodePrefixes": Dictionary(
+        uniqueKeysWithValues: ErrorCode.Domain.allCases.map { ($0.rawValue, $0.codePrefix) }
+      ),
+    ]
+  case "kebab":
+    guard !rest.isEmpty else { throw UsageError(message: "kebab needs a value") }
+    return Dictionary(rest.map { ($0, CommandLineName.kebab($0)) }) { first, _ in first }
+  default: return nil
+  }
+}
+
 do {
-  let problems = try run(Array(CommandLine.arguments.dropFirst()))
+  let arguments = Array(CommandLine.arguments.dropFirst())
+  if let object = try document(arguments) {
+    FileHandle.standardOutput.write(
+      try JSONSerialization.data(withJSONObject: object, options: [.sortedKeys])
+        + Data("\n".utf8)
+    )
+    exit(0)
+  }
+  let problems = try run(arguments)
   for problem in problems { FileHandle.standardOutput.write(try line(problem)) }
   exit(problems.isEmpty ? 0 : 1)
 } catch let error as UsageError {

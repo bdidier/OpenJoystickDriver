@@ -2,19 +2,14 @@ from __future__ import annotations
 
 import copy
 import json
-import re
 import unittest
 from pathlib import Path
 from typing import Any
 
 from Scripts.Catalog import schema_header
-from Scripts.Quality import validate_schemas
+from Scripts.Quality import repository_tool, validate_schemas
 
 ROOT = Path(__file__).resolve().parents[2]
-SWIFT_API = (
-    ROOT
-    / "Sources/OpenJoystickDriverKit/ApplicationService/Payloads/OpenJoystickDriverAPI.swift"
-)
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
 SAMPLE = ROOT / "docs" / "sdk" / "sample"
 WRONG_VERSIONS = ("unsupported.example/v9", "openjoystickdriver/v1", "")
@@ -59,13 +54,6 @@ class SchemaHeaderTests(unittest.TestCase):
             self.documents[f"{stem}.schema.json"], registry=self.registry
         )
 
-    def test_the_swift_constant_is_the_python_constant(self) -> None:
-        source = SWIFT_API.read_text(encoding="utf-8")
-        match = re.search(r'static let version = "([^"]+)"', source)
-        self.assertIsNotNone(match)
-        assert match is not None
-        self.assertEqual(match.group(1), schema_header.API_VERSION)
-
     def test_every_schema_uses_the_constant_and_its_own_id(self) -> None:
         validate_schemas.validate_schema_identity(self.documents)
         for name, document in self.documents.items():
@@ -75,7 +63,7 @@ class SchemaHeaderTests(unittest.TestCase):
                 )
                 consts = validate_schemas.api_version_consts(document)
                 self.assertTrue(
-                    all(const == schema_header.API_VERSION for _, const in consts)
+                    all(const == repository_tool.api_version() for _, const in consts)
                 )
 
     def test_every_header_kind_has_a_schema_and_an_instance(self) -> None:

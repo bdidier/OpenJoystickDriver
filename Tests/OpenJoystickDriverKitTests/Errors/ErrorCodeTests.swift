@@ -10,6 +10,7 @@ struct ErrorCodeTests {
       let domain: String
       let name: String
       let wire: String?
+      let exitCode: Int32?
     }
     let codes: [Entry]
   }
@@ -29,6 +30,39 @@ struct ErrorCodeTests {
     #expect(active.map(\.code) == ErrorCode.allCases.map(\.rawValue))
     #expect(active.map(\.name) == ErrorCode.allCases.map { "\($0)" })
     #expect(active.map(\.domain) == ErrorCode.allCases.map(\.domain.rawValue))
+  }
+
+  @Test
+  func ojdFailsWithTheExitStatusesThatTheCommandLinePageDocuments() throws {
+    #expect(ErrorCode.commandLineExitStatuses == [1, 64, 69, 77, 127])
+    let page = try String(
+      contentsOf: repositoryResource("wiki/Command-Line.md"),
+      encoding: .utf8
+    )
+    for status in ErrorCode.commandLineExitStatuses {
+      #expect(page.contains("| \(status) |"), "\(status)")
+    }
+  }
+
+  @Test
+  func theCatalogListsTheExitStatusOfEachCommandLineCodeAndNoOther() throws {
+    let data = try Data(contentsOf: repositoryResource("Resources/ErrorCodes.json"))
+    let entries = try JSONDecoder().decode(Catalog.self, from: data).codes
+    for (entry, code) in zip(entries, ErrorCode.allCases) {
+      #expect(
+        entry.exitCode == (code.domain == .commandLine ? code.commandLineExitStatus : nil),
+        "\(entry.code)"
+      )
+    }
+  }
+
+  @Test
+  func everyCodeStartsWithThePrefixOfItsDomain() {
+    let prefixes = ErrorCode.Domain.allCases.map(\.codePrefix)
+    #expect(Set(prefixes).count == prefixes.count)
+    for code in ErrorCode.allCases {
+      #expect(code.rawValue.hasPrefix(code.domain.codePrefix), "\(code.rawValue)")
+    }
   }
 
   @Test

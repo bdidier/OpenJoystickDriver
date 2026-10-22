@@ -29,6 +29,12 @@ extension ErrorCode {
     }
   }
 
+  /// The exit statuses `ojd` fails with: the status of each command-line code.
+  /// `wiki/Command-Line.md` documents each of them.
+  public static var commandLineExitStatuses: Set<Int32> {
+    Set(allCases.filter { $0.domain == .commandLine }.map(\.commandLineExitStatus))
+  }
+
   public var facts: ErrorCodeFacts {
     let localization = Localization()
     let area: String

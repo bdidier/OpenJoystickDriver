@@ -6,7 +6,7 @@ import json
 import pathlib
 from typing import Any
 
-from Scripts.Catalog.schema_header import API_VERSION
+from Scripts.Quality.repository_tool import api_version
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 RULES_DIR = ROOT / "Resources" / "CatalogRules"
@@ -30,9 +30,10 @@ def load_rules(
         raise RulesError(f"{path}: {error}") from error
     if not isinstance(document, dict):
         raise RulesError(f"{path}: expected a JSON object")
-    if document.get("apiVersion") != API_VERSION:
+    expected = api_version()
+    if document.get("apiVersion") != expected:
         raise RulesError(
-            f"{path}: apiVersion {document.get('apiVersion')!r}, expected {API_VERSION!r}"
+            f"{path}: apiVersion {document.get('apiVersion')!r}, expected {expected!r}"
         )
     if document.get("kind") != kind:
         raise RulesError(f"{path}: kind {document.get('kind')!r}, expected {kind!r}")

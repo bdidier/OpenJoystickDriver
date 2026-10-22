@@ -15,9 +15,10 @@ from pathlib import Path
 from typing import Any
 from unittest.mock import patch
 
-from Scripts.Quality import validate_schemas
+from Scripts.Quality import repository_tool, validate_schemas
 from Scripts.SDK import reference_client
 
+ROOT = Path(__file__).resolve().parents[2]
 VECTOR = Path(__file__).resolve().parent / "fixtures" / "endpoint_hello_proof.json"
 
 
@@ -43,6 +44,19 @@ class EndpointReferenceClientTests(unittest.TestCase):
 
         self.client_lines = validator("clientLine")
         self.service_lines = validator("serviceLine")
+
+    def test_the_sample_names_the_swift_api_version_and_header_codes(self) -> None:
+        # The sample client is a standalone file for readers of the SDK, so it states these two
+        # facts itself; this test is what keeps them equal to Swift and the error catalog.
+        self.assertEqual(reference_client.API_VERSION, repository_tool.api_version())
+        catalog = json.loads(
+            (ROOT / "Resources/ErrorCodes.json").read_text(encoding="utf-8")
+        )["codes"]
+        header_codes = {"unsupportedEndpointVersion", "unexpectedKind", "missingHeader"}
+        self.assertEqual(
+            set(reference_client.HEADER_ERRORS),
+            {entry["code"] for entry in catalog if entry["name"] in header_codes},
+        )
 
     def client_environment(self) -> Any:
         token = json.loads(VECTOR.read_text(encoding="utf-8"))["token"]
