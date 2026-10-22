@@ -32,7 +32,7 @@ OJD has one driver extension. Its Xbox USB part serves Xbox One and Xbox Series 
 ### What OJD Is Not
 
 - OJD is not a guarantee that every game reads the virtual controller. Some apps that use SDL may not read it. For more information, see [Game and app compatibility](Playing-Games.md).
-- OJD is beta software. Some controllers are not tested on real hardware. For more information, see [Supported controllers](Supported-Controllers.md).
+- OJD is alpha software. Some controllers are not tested on real hardware. For more information, see [Supported controllers](Supported-Controllers.md).
 
 ## Installing OpenJoystickDriver
 
