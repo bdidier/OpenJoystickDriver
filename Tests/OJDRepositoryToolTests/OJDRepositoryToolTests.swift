@@ -414,6 +414,160 @@ struct OJDRepositoryToolTests {
     }
   }
 
+  /// Writes `record` and `patches` (relative path and text) under a scratch directory and runs
+  /// `apply-patches` on them.
+  private static func applyPatches(
+    record: String,
+    patches: [String: String],
+    check: (Result, URL) throws -> Void
+  ) throws {
+    try scratch { directory in
+      let records = directory.appendingPathComponent("records/057e")
+      try FileManager.default.createDirectory(at: records, withIntermediateDirectories: true)
+      try Data(record.utf8).write(to: records.appendingPathComponent("057e-2066.json"))
+      for (path, text) in patches {
+        let file = directory.appendingPathComponent("patches").appendingPathComponent(path)
+        try FileManager.default.createDirectory(
+          at: file.deletingLastPathComponent(),
+          withIntermediateDirectories: true
+        )
+        try Data(text.utf8).write(to: file)
+      }
+      let result = try run([
+        "apply-patches", "--records", directory.appendingPathComponent("records").path,
+        "--patches", directory.appendingPathComponent("patches").path,
+        "--out", directory.appendingPathComponent("out").path,
+      ])
+      try check(result, directory.appendingPathComponent("out"))
+    }
+  }
+
+  private static func patchDocument(selector: String, body: String) -> String {
+    """
+    {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "ControllerPatch",
+     "selector": \(selector), "patch": \(body)}
+    """
+  }
+
+  private static let upstream = """
+    {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "Controller",
+     "vendorID": 1406, "productID": 8294,
+     "modes": [{"id": "default", "protocol": {"family": "HIDDescriptor"}}],
+     "tuning": {"stickDeadzone": 0.10, "frameQueueCapacity": 4}}
+    """
+  private static let identity = #"{"vendorID": 1406, "productID": 8294}"#
+
+  @Test
+  func applyPatchesKeepsTheNumberTextOfTheRecordAndThePatch() throws {
+    try Self.applyPatches(
+      record: Self.upstream,
+      patches: [
+        "057e/057e-2066.patch.json": Self.patchDocument(
+          selector: Self.identity,
+          body: #"{"tuning": {"stickDeadzone": 8E-2, "usbTransferTimeoutMs": 1e3}}"#
+        )
+      ]
+    ) { result, output in
+      #expect(result.status == 0, "\(result.standardOutput)")
+      let text = try String(
+        contentsOf: output.appendingPathComponent("057e/057e-2066.json"),
+        encoding: .utf8
+      )
+      #expect(text.contains(#""stickDeadzone": 8E-2,"#), "\(text)")
+      #expect(text.contains(#""usbTransferTimeoutMs": 1e3"#), "\(text)")
+      #expect(text.contains(#""frameQueueCapacity": 4"#), "\(text)")
+      #expect(!text.contains("0.08"), "\(text)")
+    }
+  }
+
+  /// An integer beyond 64 bits is written with its digits. `apply-patches` merges and does not
+  /// check ranges, so a tuning value out of range shows the number text and `validate records`
+  /// is what refuses it.
+  @Test
+  func applyPatchesWritesAnIntegerOfTwentyFiveDigitsAsItsPatchFileWritesIt() throws {
+    let digits = "1234567890123456789012345"
+    try Self.applyPatches(
+      record: Self.upstream,
+      patches: [
+        "057e/057e-2066.patch.json": Self.patchDocument(
+          selector: Self.identity,
+          body: #"{"tuning": {"usbTransferTimeoutMs": "# + digits + "}}"
+        )
+      ]
+    ) { result, output in
+      #expect(result.status == 0, "\(result.standardOutput)")
+      let text = try String(
+        contentsOf: output.appendingPathComponent("057e/057e-2066.json"),
+        encoding: .utf8
+      )
+      #expect(text.contains(#""usbTransferTimeoutMs": "# + digits), "\(text)")
+    }
+  }
+
+  @Test
+  func applyPatchesKeepsTheNumbersOfARecordNoPatchChanges() throws {
+    try Self.applyPatches(
+      record: Self.upstream,
+      patches: [
+        "057e/057e-2066.patch.json": Self.patchDocument(
+          selector: Self.identity,
+          body: #"{"tuning": {"frameQueueCapacity": 8}}"#
+        )
+      ]
+    ) { result, output in
+      #expect(result.status == 0, "\(result.standardOutput)")
+      let text = try String(
+        contentsOf: output.appendingPathComponent("057e/057e-2066.json"),
+        encoding: .utf8
+      )
+      #expect(text.contains(#""stickDeadzone": 0.10,"#), "\(text)")
+    }
+  }
+
+  @Test
+  func applyPatchesRefusesAPatchDeeperThanTheLayoutAndWritesNothing() throws {
+    let patch = Self.patchDocument(
+      selector: Self.identity,
+      body: #"{"tuning": {"frameQueueCapacity": 8}}"#
+    )
+    try Self.applyPatches(
+      record: Self.upstream,
+      patches: [
+        "057e/more/057e-2066.patch.json": patch,
+        "057e-2066.patch.json": patch,
+      ]
+    ) { result, output in
+      #expect(result.status == 1)
+      let messages = try result.problems().compactMap { $0["message"] as? String }
+      #expect(messages.contains("the patch path must be 057e/057e-2066.patch.json"), "\(messages)")
+      #expect(messages.count == 2, "\(messages)")
+      #expect(!FileManager.default.fileExists(atPath: output.path))
+    }
+  }
+
+  @Test
+  func applyPatchesRefusesAnUnknownFieldAndAPatchOfNoRecord() throws {
+    try Self.applyPatches(
+      record: Self.upstream,
+      patches: [
+        "057e/057e-2066.patch.json": Self.patchDocument(
+          selector: Self.identity,
+          body: #"{"notAField": "hid"}"#
+        ),
+        "057e/057e-2067.patch.json": Self.patchDocument(
+          selector: #"{"vendorID": 1406, "productID": 8295}"#,
+          body: #"{"tuning": {"frameQueueCapacity": 8}}"#
+        ),
+      ]
+    ) { result, output in
+      #expect(result.status == 1)
+      let messages = try result.problems().compactMap { $0["message"] as? String }
+      #expect(messages.contains { $0.contains("patch must hold modes") }, "\(messages)")
+      #expect(messages.contains { $0.contains("is not a known controller") }, "\(messages)")
+      #expect(!FileManager.default.fileExists(atPath: output.path))
+    }
+  }
+
   // MARK: usage
 
   @Test

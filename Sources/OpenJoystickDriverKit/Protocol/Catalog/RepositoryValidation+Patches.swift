@@ -7,7 +7,8 @@ extension RepositoryValidation {
   ///
   /// A record's members are written in the order of its file, then the members that patches add
   /// in the order of the patch that adds them, at every depth. An array or value that a patch
-  /// replaces takes the order of the patch.
+  /// replaces takes the order of the patch, and every number keeps the text of the file that
+  /// wrote it.
   ///
   /// A patch file must hold a valid ``ControllerPatch`` at the path its selector gives: the
   /// vendor directory for a `vendorID` with `productID`, the top of `patches` for the others. A
@@ -23,18 +24,16 @@ extension RepositoryValidation {
     let patchFiles = readPatches(under: patches, problems: &problems)
     let recordFiles = readRecords(under: records, problems: &problems)
     var selected: Set<URL> = []
-    var effective: [(file: RecordFile, document: [String: Any], order: OrderedJSON)] = []
+    var effective: [(file: RecordFile, document: OrderedJSON)] = []
     for file in recordFiles {
       var document = file.document
-      var order = file.order
       let chosen = ControllerPatchMerge.ordered(
         patchFiles.filter { $0.patch.selector.selects(file.model) }
       ) { ($0.patch, nil) }
       for entry in chosen {
         selected.insert(entry.url)
         let merged = ControllerPatchMerge.apply(entry.patch, to: document)
-        order = order.merging(patch: entry.order(appliedTo: document))
-        if entry.patch.selector != .all, !isChanged(merged, from: document) {
+        if entry.patch.selector != .all, merged.hasSameValue(as: document) {
           problems.append(
             RepositoryProblem(
               file: entry.url.path,
@@ -45,7 +44,7 @@ extension RepositoryValidation {
         }
         document = merged
       }
-      effective.append((file, document, order))
+      effective.append((file, document))
     }
     for entry in patchFiles where entry.patch.selector != .all && !selected.contains(entry.url) {
       problems.append(
@@ -58,14 +57,13 @@ extension RepositoryValidation {
     }
     guard problems.isEmpty else { return problems }
     do {
-      for (file, document, order) in effective {
+      for (file, document) in effective {
         let destination = output.appendingPathComponent(file.relativePath)
         try FileManager.default.createDirectory(
           at: destination.deletingLastPathComponent(),
           withIntermediateDirectories: true
         )
-        try OrderedJSON(foundation: document, order: order).formattedData()
-          .write(to: destination, options: .atomic)
+        try document.formattedData().write(to: destination, options: .atomic)
       }
     } catch {
       return [
@@ -78,31 +76,12 @@ extension RepositoryValidation {
   private struct PatchFile {
     let url: URL
     let patch: ControllerPatch
-    /// The members of the file's `patch` object in file order.
-    let body: OrderedJSON
-
-    /// The order that this patch adds to a record when it is applied to `document`: the body in
-    /// file order, and for an `all` patch only the `tuning` keys that the record's family reads.
-    func order(appliedTo document: [String: Any]) -> OrderedJSON {
-      guard patch.selector == .all else { return body }
-      let keys = Set(
-        (ControllerPatchMerge.appliedBody(of: patch, to: document)?["tuning"] as? [String: Any])?
-          .keys ?? [:].keys
-      )
-      guard case .object(let members) = body,
-        case .object(let tuning)? = members.first(where: { $0.key == "tuning" })?.value
-      else { return .object([]) }
-      return .object([
-        .init(key: "tuning", value: .object(tuning.filter { keys.contains($0.key) }))
-      ])
-    }
   }
 
   private struct RecordFile {
     let relativePath: String
     let model: ControllerModelID
-    let document: [String: Any]
-    let order: OrderedJSON
+    let document: OrderedJSON
   }
 
   private static func readRecords(
@@ -121,14 +100,10 @@ extension RepositoryValidation {
       do {
         let data = try RepositoryProblem.read(url)
         try ControllerRecordSet.requireUTF8(data)
-        let document = try ControllerRecordSet.jsonObject(data)
-        guard
-          let vendorID = ControllerPatch.strictInteger(document["vendorID"]).flatMap(
-            UInt16.init(exactly:)
-          ),
-          let productID = ControllerPatch.strictInteger(document["productID"]).flatMap(
-            UInt16.init(exactly:)
-          )
+        _ = try ControllerRecordSet.jsonObject(data)
+        let document = try ControllerRecordSet.ordered(data)
+        guard let vendorID = document["vendorID"]?.integer.flatMap(UInt16.init(exactly:)),
+          let productID = document["productID"]?.integer.flatMap(UInt16.init(exactly:))
         else {
           throw ControllerRecordProblem(
             code: .invalidControllerRecord,
@@ -139,8 +114,7 @@ extension RepositoryValidation {
           RecordFile(
             relativePath: relativePath(of: url, under: directory),
             model: ControllerModelID(vendorID: vendorID, productID: productID),
-            document: document,
-            order: try ControllerRecordSet.ordered(data)
+            document: document
           )
         )
       } catch {
@@ -167,8 +141,8 @@ extension RepositoryValidation {
         let data = try RepositoryProblem.read(url)
         try ControllerRecordSet.requireUTF8(data)
         let order = try ControllerRecordSet.ordered(data)
-        let document = try ControllerRecordSet.jsonObject(data)
-        let patch = try ControllerPatch.parse(document, file: url.lastPathComponent)
+        _ = try ControllerRecordSet.jsonObject(data)
+        let patch = try ControllerPatch.parse(order, file: url.lastPathComponent)
         let expected = patchPath(of: patch.selector)
         guard relativePath(of: url, under: directory) == expected else {
           throw ControllerRecordProblem(
@@ -176,10 +150,7 @@ extension RepositoryValidation {
             "the patch path must be \(expected)"
           )
         }
-        guard case .object(let members) = order,
-          let body = members.first(where: { $0.key == "patch" })?.value
-        else { throw ControllerRecordProblem(code: .invalidControllerRecord, "not a JSON object") }
-        patches.append(PatchFile(url: url, patch: patch, body: body))
+        patches.append(PatchFile(url: url, patch: patch))
       } catch {
         problems.append(RepositoryProblem(file: url.path, error: error, document: "patch"))
       }
@@ -196,15 +167,5 @@ extension RepositoryValidation {
   private static func relativePath(of url: URL, under directory: URL) -> String {
     let root = directory.standardizedFileURL.pathComponents
     return url.standardizedFileURL.pathComponents.dropFirst(root.count).joined(separator: "/")
-  }
-
-  /// Whether `merged` differs from `document` as JSON values. The two are compared by the bytes
-  /// of their sorted JSON text, which `JSONSerialization` writes from the parsed values, so
-  /// numbers that read as the same value, such as `1` and `1.0`, are not a change, as `1 == 1.0`
-  /// holds in the Python generator; the text of a number in a file is not compared.
-  private static func isChanged(_ merged: [String: Any], from document: [String: Any]) -> Bool {
-    let options: JSONSerialization.WritingOptions = .sortedKeys
-    return (try? JSONSerialization.data(withJSONObject: merged, options: options))
-      != (try? JSONSerialization.data(withJSONObject: document, options: options))
   }
 }

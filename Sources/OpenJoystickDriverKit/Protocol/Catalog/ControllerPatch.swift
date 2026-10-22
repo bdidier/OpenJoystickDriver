@@ -5,9 +5,9 @@ import Foundation
 ///
 /// The layers apply in the order catalog record, built-in patch, package patch, user patch. Inside
 /// one layer the selectors apply in the order `all`, `vendorID` with `productID`, `model`, so the
-/// more specific selector wins. A `null` deletes a key and an array replaces the array.
-/// `Scripts/Catalog/controller_patch.py` implements the same rules, and both read the cases in
-/// `Tests/RepositoryScripts/fixtures/controller_patch/cases.json`.
+/// more specific selector wins. A `null` deletes a key and an array replaces the array. The
+/// patch body and the record it changes are ``OrderedJSON``, so a merged record keeps its file's
+/// member order and the text of its numbers.
 public struct ControllerPatch: Equatable, Sendable {
   /// Which records a patch applies to.
   public enum Selector: Equatable, Sendable, CustomStringConvertible {
@@ -64,20 +64,8 @@ public struct ControllerPatch: Equatable, Sendable {
   ]
 
   public let selector: Selector
-  /// The merge patch as JSON with every object's members sorted, in ``OrderedJSON`` text, whose
-  /// numbers read back as the values they were written from (`JSONSerialization` writes `0.08`
-  /// as `0.080000000000000002`).
-  let bodyData: Data
-
-  /// The merge patch.
-  var body: [String: Any] {
-    (try? JSONSerialization.jsonObject(with: bodyData)) as? [String: Any] ?? [:]
-  }
-
-  init(selector: Selector, body: [String: Any]) throws {
-    self.selector = selector
-    bodyData = try OrderedJSON(foundation: body).formattedData()
-  }
+  /// The merge patch, an object, with the member order and the number text of the patch file.
+  let body: OrderedJSON
 
   /// The model id of `model`: `vvvv-pppp` in lowercase hex.
   public static func modelID(of model: ControllerModelID) -> String {
@@ -100,11 +88,13 @@ public struct ControllerPatch: Equatable, Sendable {
   }
 
   /// Checks and reads a patch document. A document of another kind fails the header check.
-  static func parse(_ document: [String: Any], file: String? = nil) throws -> Self {
-    try OpenJoystickDriverAPI.requireHeader(document, kind: kind, file: file)
-    guard Set(document.keys) == ["apiVersion", "kind", "selector", "patch"],
-      let selector = document["selector"] as? [String: Any],
-      let body = document["patch"] as? [String: Any]
+  static func parse(_ document: OrderedJSON, file: String? = nil) throws -> Self {
+    guard let fields = try? document.foundationValue() as? [String: Any] else {
+      throw ControllerRecordProblem(code: .invalidControllerRecord, "the file is not a JSON object")
+    }
+    try OpenJoystickDriverAPI.requireHeader(fields, kind: kind, file: file)
+    guard Set(fields.keys) == ["apiVersion", "kind", "selector", "patch"],
+      let selector = document["selector"], case .object(let body)? = document["patch"]
     else {
       throw ControllerRecordProblem(
         code: .invalidControllerRecord,
@@ -112,50 +102,39 @@ public struct ControllerPatch: Equatable, Sendable {
       )
     }
     let parsed = try parseSelector(selector)
-    guard !body.isEmpty, Set(body.keys).isSubset(of: sections) else {
+    guard !body.isEmpty, Set(body.map(\.key)).isSubset(of: sections) else {
       throw ControllerRecordProblem(
         code: .invalidControllerRecord,
         "patch must hold modes, usb, bluetoothLE, server, "
           + "route, input, or tuning"
       )
     }
-    if parsed == .all, Set(body.keys) != ["tuning"] {
+    if parsed == .all, Set(body.map(\.key)) != ["tuning"] {
       throw ControllerRecordProblem(
         code: .invalidControllerRecord,
         "an all patch may set only tuning"
       )
     }
-    return try Self(selector: parsed, body: body)
+    return Self(selector: parsed, body: .object(body))
   }
 
-  /// A JSON integer: a boolean, a fraction, a number written as a float, and a string are not.
-  static func strictInteger(_ value: Any?) -> Int? {
-    // swiftlint:disable:next legacy_objc_type
-    guard let number = value as? NSNumber, CFGetTypeID(number) != CFBooleanGetTypeID(),
-      !CFNumberIsFloatType(number)
-    else { return nil }
-    return number.intValue
-  }
-
-  private static func parseSelector(_ selector: [String: Any]) throws -> Selector {
-    switch Set(selector.keys) {
+  private static func parseSelector(_ selector: OrderedJSON) throws -> Selector {
+    guard let members = selector.members else {
+      throw ControllerRecordProblem(
+        code: .invalidControllerRecord,
+        "selector must be all, model, or vendorID with productID"
+      )
+    }
+    switch Set(members.map(\.key)) {
     case ["all"]:
-      // swiftlint:disable:next legacy_objc_type
-      guard let flag = selector["all"] as? NSNumber, CFGetTypeID(flag) == CFBooleanGetTypeID(),
-        flag.boolValue
-      else {
+      guard selector["all"] == .bool(true) else {
         throw ControllerRecordProblem(code: .invalidControllerRecord, "selector.all must be true")
       }
       return .all
     case ["vendorID", "productID"]:
-      guard
-        let vendorID = strictInteger(selector["vendorID"]).flatMap(
-          UInt16.init(exactly:)
-        ),
+      guard let vendorID = selector["vendorID"]?.integer.flatMap(UInt16.init(exactly:)),
         vendorID >= 1,
-        let productID = strictInteger(selector["productID"]).flatMap(
-          UInt16.init(exactly:)
-        )
+        let productID = selector["productID"]?.integer.flatMap(UInt16.init(exactly:))
       else {
         throw ControllerRecordProblem(
           code: .invalidControllerRecord,
@@ -164,7 +143,7 @@ public struct ControllerPatch: Equatable, Sendable {
       }
       return .identity(ControllerModelID(vendorID: vendorID, productID: productID))
     case ["model"]:
-      guard let id = selector["model"] as? String, isModelID(id) else {
+      guard let id = selector["model"]?.string, isModelID(id) else {
         throw ControllerRecordProblem(
           code: .invalidControllerRecord,
           "selector.model must be vvvv-pppp in lowercase hex"
@@ -190,19 +169,28 @@ public struct ControllerPatch: Equatable, Sendable {
 
 /// The RFC 7396 merge that layers controller patches over a record.
 enum ControllerPatchMerge {
-  /// RFC 7396 `MergePatch`: `null` deletes, an array or scalar replaces. An object patch over a
-  /// value that is not an object starts from an empty object.
-  static func mergePatch(_ target: Any?, _ patch: Any) -> Any {
-    guard let patch = patch as? [String: Any] else { return patch }
-    var result = target as? [String: Any] ?? [:]
-    for (key, value) in patch {
-      if value is NSNull {
-        result.removeValue(forKey: key)
-      } else {
-        result[key] = mergePatch(result[key], value)
+  /// RFC 7396 `MergePatch` over ``OrderedJSON``: `null` deletes, an array or scalar replaces. An
+  /// object patch over a value that is not an object starts from an empty object.
+  ///
+  /// Where both are objects the members stay in the target's order and the members the target
+  /// lacks come after, in the patch's order, at every depth. A value the patch replaces has the
+  /// patch's order. A number keeps its text.
+  static func mergePatch(_ target: OrderedJSON?, _ patch: OrderedJSON) -> OrderedJSON {
+    guard case .object(let patchMembers) = patch else { return patch }
+    var members = target?.members ?? []
+    for member in patchMembers {
+      let index = members.firstIndex { $0.key == member.key }
+      if case .null = member.value {
+        if let index { members.remove(at: index) }
+        continue
       }
+      let merged = OrderedJSON.Member(
+        key: member.key,
+        value: mergePatch(index.map { members[$0].value }, member.value)
+      )
+      if let index { members[index] = merged } else { members.append(merged) }
     }
-    return result
+    return .object(members)
   }
 
   /// `items` ordered for one layer, least specific first: by selector rank, then file name, then
@@ -235,36 +223,30 @@ enum ControllerPatchMerge {
   /// to apply. A patch with a selector other than `all` gives its whole body. An `all` patch gives
   /// only the `tuning` keys that the record's family reads; a `tuning` that is not an object gives
   /// nothing.
-  static func appliedBody(of patch: ControllerPatch, to document: [String: Any]) -> [String: Any]? {
-    let body = patch.body
-    guard patch.selector == .all else { return body }
+  static func appliedBody(of patch: ControllerPatch, to document: OrderedJSON) -> OrderedJSON? {
+    guard patch.selector == .all else { return patch.body }
     let scope = Set(ControllerTuning.scope(ofDocument: document).map(\.rawValue))
-    let tuning = (body["tuning"] as? [String: Any] ?? [:]).filter { scope.contains($0.key) }
-    return tuning.isEmpty ? nil : ["tuning": tuning]
+    let tuning = (patch.body["tuning"]?.members ?? []).filter { scope.contains($0.key) }
+    return tuning.isEmpty ? nil : .object([.init(key: "tuning", value: .object(tuning))])
   }
 
   /// `document` with `patch` merged in; `document` itself when the patch gives nothing.
-  static func apply(_ patch: ControllerPatch, to document: [String: Any]) -> [String: Any] {
+  static func apply(_ patch: ControllerPatch, to document: OrderedJSON) -> OrderedJSON {
     guard let body = appliedBody(of: patch, to: document) else { return document }
-    return mergePatch(document, body) as? [String: Any] ?? document
+    return mergePatch(document, body)
   }
 
   /// `record` with the built-in, package, and user patches applied in that order. A package layer
   /// entry may name its owner. A record with no valid `vendorID` and `productID` is returned
   /// unchanged.
   static func effective(
-    record: [String: Any],
+    record: OrderedJSON,
     builtin: [ControllerPatch],
     package: [(patch: ControllerPatch, owner: String?)],
     user: [ControllerPatch]
-  ) -> [String: Any] {
-    guard
-      let vendorID = ControllerPatch.strictInteger(record["vendorID"]).flatMap(
-        UInt16.init(exactly:)
-      ),
-      let productID = ControllerPatch.strictInteger(record["productID"]).flatMap(
-        UInt16.init(exactly:)
-      )
+  ) -> OrderedJSON {
+    guard let vendorID = record["vendorID"]?.integer.flatMap(UInt16.init(exactly:)),
+      let productID = record["productID"]?.integer.flatMap(UInt16.init(exactly:))
     else { return record }
     let model = ControllerModelID(vendorID: vendorID, productID: productID)
     let layers: [[(patch: ControllerPatch, owner: String?)]] = [

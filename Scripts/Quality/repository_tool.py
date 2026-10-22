@@ -44,7 +44,10 @@ def build(product: str) -> Path:
     except subprocess.CalledProcessError as error:
         detail = error.stderr.strip() or error.stdout.strip() or str(error)
         raise ToolError(f"cannot build {product}: {detail}") from error
-    return Path(bin_path.stdout.strip()) / product
+    built = Path(bin_path.stdout.strip()) / product
+    if not built.is_file():
+        raise ToolError(f"{product} was not built at {built}")
+    return built
 
 
 @cache
@@ -73,6 +76,9 @@ def problems(arguments: list[str]) -> list[dict[str, str]]:
         raise ToolError(
             f"{PRODUCT} printed a line that is not JSON: {error}"
         ) from error
+    for line in found:
+        if not isinstance(line, dict) or not {"file", "code", "message"} <= line.keys():
+            raise ToolError(f"{PRODUCT} printed a line that is not a problem: {line}")
     if (result.returncode == PROBLEM_STATUS) != bool(found):
         raise ToolError(
             f"{PRODUCT} {' '.join(arguments)} exited {result.returncode} "

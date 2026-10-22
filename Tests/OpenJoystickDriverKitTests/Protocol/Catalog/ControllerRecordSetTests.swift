@@ -477,8 +477,9 @@ struct ControllerRecordSetTests {
     }
   }
 
-  /// The merged record keeps the member order of the bundled record at every depth, whatever
-  /// order the patch uses, and sorts the members the patch adds after them.
+  /// The merged record keeps the member order of the bundled record where the patch merges into
+  /// an object and appends the members the patch adds in the patch's order. An array the patch
+  /// replaces has the patch's order.
   @Test
   func aPatchMergeKeepsTheOrderOfTheBundledRecord() throws {
     let record = try Self.record(
@@ -501,11 +502,11 @@ struct ControllerRecordSetTests {
           "productID": 5,
           "modes": [
             {
-              "id": "default",
               "protocol": {
-                "family": "XboxGIP",
-                "keepAlive": false
-              }
+                "keepAlive": false,
+                "family": "XboxGIP"
+              },
+              "id": "default"
             }
           ],
           "tuning": {

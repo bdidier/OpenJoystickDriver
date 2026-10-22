@@ -161,14 +161,14 @@ extension ControllerRecordSet {
   static func parse(_ data: Data, file: URL?, layer: ControllerRecordLayer) throws -> ParsedFile {
     try requireUTF8(data)
     guard let object = try? JSONSerialization.jsonObject(with: data),
-      let document = object as? [String: Any]
+      let fields = object as? [String: Any]
     else {
       throw ControllerRecordProblem(code: .invalidControllerRecord, "the file is not a JSON object")
     }
-    let order = try ordered(data)
-    if document["kind"] as? String == ControllerRecordDocument.kind {
+    let document = try ordered(data)
+    if document["kind"]?.string == ControllerRecordDocument.kind {
       try OpenJoystickDriverAPI.requireHeader(
-        document,
+        fields,
         kind: ControllerRecordDocument.kind,
         file: file?.lastPathComponent
       )
@@ -185,7 +185,6 @@ extension ControllerRecordSet {
       return .record(
         try makeRecord(
           document,
-          order: order,
           layers: layers,
           userFile: layer == .user ? file : nil,
           packageFile: layer == .package ? file : nil
@@ -242,8 +241,8 @@ extension ControllerRecordSet {
     layer: ControllerRecordLayer,
     file: URL?
   ) throws -> ControllerRecord {
-    guard let base = try JSONSerialization.jsonObject(with: upstream.document) as? [String: Any]
-    else {
+    let base = try ordered(upstream.document)
+    guard base.members != nil else {
       throw ControllerRecordProblem(
         code: .invalidControllerRecord,
         "the record is not a JSON object"
@@ -251,35 +250,30 @@ extension ControllerRecordSet {
     }
     let isAll = patch.selector == .all
     guard let body = ControllerPatchMerge.appliedBody(of: patch, to: base) else { return upstream }
-    let merged = ControllerPatchMerge.apply(patch, to: base)
-    if !isAll {
-      let changed =
-        try JSONSerialization.data(withJSONObject: merged, options: .sortedKeys)
-        != JSONSerialization.data(withJSONObject: base, options: .sortedKeys)
-      guard changed else {
-        throw ControllerRecordProblem(
-          code: .invalidControllerRecord,
-          "the patch changes nothing in the record"
-        )
-      }
+    let merged = ControllerPatchMerge.mergePatch(base, body)
+    if !isAll, merged.hasSameValue(as: base) {
+      throw ControllerRecordProblem(
+        code: .invalidControllerRecord,
+        "the patch changes nothing in the record"
+      )
     }
     var layers = upstream.fieldLayers
     var tuningLayers = upstream.tuningLayers
-    for (key, value) in body {
-      if !isAll { layers[key] = value is NSNull ? nil : layer }
+    for member in body.members ?? [] {
+      let (key, value) = (member.key, member.value)
+      if !isAll { layers[key] = value == .null ? nil : layer }
       if key == "tuning" {
-        if value is NSNull {
+        if value == .null {
           tuningLayers = [:]
         } else {
-          for (name, setting) in value as? [String: Any] ?? [:] {
-            tuningLayers[name] = setting is NSNull ? nil : (isAll ? .global : layer)
+          for setting in value.members ?? [] {
+            tuningLayers[setting.key] = setting.value == .null ? nil : (isAll ? .global : layer)
           }
         }
       }
     }
     return try makeRecord(
       merged,
-      order: ordered(upstream.document),
       layers: layers,
       tuningLayers: tuningLayers,
       userFile: layer == .user && !isAll ? file : upstream.userFile,

@@ -114,8 +114,7 @@ extension ControllerRecord {
 extension ControllerTuning {
   /// Why `key` does not apply to a controller of this family and stored variant, or nil when a
   /// driver reads it. A nil `protocolID` is a record with no known family: it reads only
-  /// `stickDeadzone` and `frameQueueCapacity`. The family's description holds the keys;
-  /// `controller_patch.py` reads the same description.
+  /// `stickDeadzone` and `frameQueueCapacity`. The family's description holds the keys.
   static func scopeViolation(
     _ key: Key,
     protocolID: PhysicalProtocolID?,
@@ -136,12 +135,15 @@ extension ControllerTuning {
 
   /// The keys that a controller of the record `document` reads: those every mode's family and
   /// variant reads.
-  static func scope(ofDocument document: [String: Any]) -> Set<Key> {
-    let modes = (document["modes"] as? [[String: Any]]) ?? []
+  static func scope(ofDocument document: OrderedJSON) -> Set<Key> {
+    var modes: [OrderedJSON] = []
+    if case .array(let items)? = document["modes"], items.allSatisfy({ $0.members != nil }) {
+      modes = items
+    }
     let scopes = modes.map { mode -> Set<Key> in
-      let info = mode["protocol"] as? [String: Any]
-      let protocolID = (info?["family"] as? String).flatMap(PhysicalProtocolID.init(rawValue:))
-      let variant = (info?["variant"] as? String).flatMap(PhysicalProtocolVariantID.init(rawValue:))
+      let info = mode["protocol"]
+      let protocolID = info?["family"]?.string.flatMap(PhysicalProtocolID.init(rawValue:))
+      let variant = info?["variant"]?.string.flatMap(PhysicalProtocolVariantID.init(rawValue:))
       return scope(protocolID: protocolID, variant: variant)
     }
     return scopes.dropFirst().reduce(scopes.first ?? Key.alwaysRead) { $0.intersection($1) }
