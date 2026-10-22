@@ -20,7 +20,7 @@ enum RecordStore {
   static func personaFiles() -> [VirtualPersonaFile] {
     VirtualHIDProfileOverrideStore(
       directory: directory.deletingLastPathComponent()
-        .appendingPathComponent("Personas", isDirectory: true)
+        .appendingPathComponent("VirtualDevices", isDirectory: true)
     ).files
   }
 

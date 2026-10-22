@@ -51,7 +51,7 @@ SERVICE_LISTENER_FAILURE_FIXTURES = (
 # file is a `ControllerPatch` or a `Controller`, which its `kind` tells apart.
 SAMPLE_FOLDER_SCHEMAS = {
     "Controllers": "controller",
-    "Personas": "virtual-device",
+    "VirtualDevices": "virtual-device",
     "Profiles": "profile",
 }
 
@@ -186,12 +186,12 @@ def validate_documents(
 
 def validate_swift_rules(samples: list[tuple[str, Path]]) -> None:
     """Every rule a schema cannot state is Swift's: `OJDRepositoryTool` checks the authored
-    controller records, the protocol descriptions and the sample profiles and personas."""
+    controller records, the protocol descriptions and the sample profiles and virtual devices."""
     repository_tool.check(["validate", "records", str(AUTHORED_CONTROLLERS)])
     repository_tool.check(["validate", "descriptions", str(PROTOCOL_DESCRIPTIONS)])
     for stem, check in (
         ("profile", "profiles"),
-        ("virtual-device", "personas"),
+        ("virtual-device", "virtual-devices"),
     ):
         paths = [str(path) for kind, path in samples if kind == stem]
         if paths:

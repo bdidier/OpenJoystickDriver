@@ -30,8 +30,8 @@ public struct VirtualPersonaFile: Equatable, Sendable {
   public let problem: String?
 }
 
-/// Per-controller-model and per-unit personas, stored as `Personas/<id>.json` files that follow
-/// `virtual-device.schema.json`.
+/// Per-controller-model and per-unit personas, stored as `VirtualDevices/<id>.json` files that
+/// follow `virtual-device.schema.json`.
 ///
 /// A file matches a VID:PID model, or one unit of it (see ``ControllerPortKey``). A unit's persona
 /// wins over its model's. A file that fails validation, or repeats the match of an earlier file in
@@ -42,10 +42,10 @@ public struct VirtualHIDProfileOverrideStore: Sendable {
   /// The `kind` of a persona file.
   public static let kind = VirtualDevice.kind
 
-  /// `~/Library/Application Support/OpenJoystickDriver/Personas`.
+  /// `~/Library/Application Support/OpenJoystickDriver/VirtualDevices`.
   public static var userDirectory: URL {
     ControllerRecordSet.userDirectory.deletingLastPathComponent()
-      .appendingPathComponent("Personas", isDirectory: true)
+      .appendingPathComponent("VirtualDevices", isDirectory: true)
   }
 
   /// A controller model, or one unit of it when `unit` is set.
@@ -228,8 +228,8 @@ public struct VirtualHIDProfileOverrideStore: Sendable {
         )
         continue
       }
-      for file in package.manifest?.personas.sorted() ?? [] {
-        let url = package.directory.appendingPathComponent("Personas/\(file)")
+      for file in package.manifest?.virtualDevices.sorted() ?? [] {
+        let url = package.directory.appendingPathComponent("VirtualDevices/\(file)")
         do {
           let (model, persona) = try Self.parse(Data(contentsOf: url))
           if let first = loaded.personas[model] {

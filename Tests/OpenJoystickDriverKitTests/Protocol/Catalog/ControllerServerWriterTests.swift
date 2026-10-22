@@ -91,7 +91,7 @@ struct ControllerServerWriterTests {
         "modes": [["id": "default", "protocol": ["family": "HIDDescriptor"]]],
       ]
       let package = try fixture.makePackage(
-        records: [("1234-abcd.json", try JSONSerialization.data(withJSONObject: record))]
+        controllers: [("1234-abcd.json", try JSONSerialization.data(withJSONObject: record))]
       )
       try fixture.store().install(package, replace: true)
       let change = try Self.change(Self.unbundled, to: .ojd, in: directory)

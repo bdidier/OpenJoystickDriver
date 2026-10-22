@@ -2339,8 +2339,8 @@
 "cli.shared.error.confirmNeedsForce" = "Deze wijziging kan niet ongedaan worden gemaakt. Voeg --force toe om ze zonder vraag te bevestigen.";
 /* One-line summary of 'ojd mod' in the command list and at the top of its help. A mod package adds controller support. */
 "cli.mod.group.abstract" = "Modpakketten valideren, installeren, tonen of verwijderen.";
-/* Long description in the help of 'ojd mod'. mod.json, the folder names Controllers, Profiles and Personas, and the path stay as written. */
-"cli.mod.group.discussion" = "Een modpakket is een map met een mod.json-manifest en de mappen Controllers, Profiles en Personas. Geïnstalleerde pakketten staan in ~/Library/Application Support/OpenJoystickDriver/Packages. De actieve service past een wijziging toe zodra die map verandert. Deze opdrachten hebben de service niet nodig.";
+/* Long description in the help of 'ojd mod'. mod.json, the folder names Controllers, Profiles and VirtualDevices, and the path stay as written. */
+"cli.mod.group.discussion" = "Een modpakket is een map met een mod.json-manifest en de mappen Controllers, Profiles en VirtualDevices. Geïnstalleerde pakketten staan in ~/Library/Application Support/OpenJoystickDriver/Packages. De actieve service past een wijziging toe zodra die map verandert. Deze opdrachten hebben de service niet nodig.";
 /* Help text of the FOLDER argument of 'ojd mod validate' and 'ojd mod install'. mod.json stays as written. */
 "cli.mod.group.folder" = "Een pakketmap die mod.json bevat.";
 /* Help text of the NAME argument of 'ojd mod remove'. */

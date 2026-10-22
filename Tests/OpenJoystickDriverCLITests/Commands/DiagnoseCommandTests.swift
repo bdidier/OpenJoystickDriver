@@ -376,7 +376,7 @@ struct DiagnoseCommandTests {
       "ojd-diagnose-\(UUID().uuidString)",
       isDirectory: true
     )
-    let personas = support.appendingPathComponent("Personas", isDirectory: true)
+    let personas = support.appendingPathComponent("VirtualDevices", isDirectory: true)
     try FileManager.default.createDirectory(
       at: support.appendingPathComponent("Controllers"),
       withIntermediateDirectories: true

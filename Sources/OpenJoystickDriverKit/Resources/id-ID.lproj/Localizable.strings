@@ -2339,8 +2339,8 @@
 "cli.shared.error.confirmNeedsForce" = "Perubahan ini tidak dapat dibatalkan. Tambahkan --force untuk mengonfirmasinya tanpa prompt.";
 /* One-line summary of 'ojd mod' in the command list and at the top of its help. A mod package adds controller support. */
 "cli.mod.group.abstract" = "Validasi, instal, daftar, atau hapus paket mod.";
-/* Long description in the help of 'ojd mod'. mod.json, the folder names Controllers, Profiles and Personas, and the path stay as written. */
-"cli.mod.group.discussion" = "Paket mod adalah folder dengan manifes mod.json serta folder Controllers, Profiles, dan Personas. Paket terinstal berada di ~/Library/Application Support/OpenJoystickDriver/Packages. Layanan yang berjalan menerapkan perubahan saat folder itu berubah. Perintah ini tidak memerlukan layanan.";
+/* Long description in the help of 'ojd mod'. mod.json, the folder names Controllers, Profiles and VirtualDevices, and the path stay as written. */
+"cli.mod.group.discussion" = "Paket mod adalah folder dengan manifes mod.json serta folder Controllers, Profiles, dan VirtualDevices. Paket terinstal berada di ~/Library/Application Support/OpenJoystickDriver/Packages. Layanan yang berjalan menerapkan perubahan saat folder itu berubah. Perintah ini tidak memerlukan layanan.";
 /* Help text of the FOLDER argument of 'ojd mod validate' and 'ojd mod install'. mod.json stays as written. */
 "cli.mod.group.folder" = "Folder paket yang berisi mod.json.";
 /* Help text of the NAME argument of 'ojd mod remove'. */

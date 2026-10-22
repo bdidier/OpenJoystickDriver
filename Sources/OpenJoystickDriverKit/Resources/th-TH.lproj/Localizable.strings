@@ -2339,8 +2339,8 @@
 "cli.shared.error.confirmNeedsForce" = "การเปลี่ยนแปลงนี้ไม่สามารถเลิกทำได้ เพิ่ม --force เพื่อยืนยันโดยไม่ต้องถาม";
 /* One-line summary of 'ojd mod' in the command list and at the top of its help. A mod package adds controller support. */
 "cli.mod.group.abstract" = "ตรวจสอบ ติดตั้ง แสดงรายการ หรือลบแพ็กเกจม็อด";
-/* Long description in the help of 'ojd mod'. mod.json, the folder names Controllers, Profiles and Personas, and the path stay as written. */
-"cli.mod.group.discussion" = "แพ็กเกจม็อดคือโฟลเดอร์ที่มีไฟล์ระบุรายการ mod.json และโฟลเดอร์ Controllers, Profiles และ Personas แพ็กเกจที่ติดตั้งอยู่ใน ~/Library/Application Support/OpenJoystickDriver/Packages บริการที่กำลังทำงานจะใช้การเปลี่ยนแปลงเมื่อโฟลเดอร์นั้นเปลี่ยน คำสั่งเหล่านี้ไม่ต้องใช้บริการ";
+/* Long description in the help of 'ojd mod'. mod.json, the folder names Controllers, Profiles and VirtualDevices, and the path stay as written. */
+"cli.mod.group.discussion" = "แพ็กเกจม็อดคือโฟลเดอร์ที่มีไฟล์ระบุรายการ mod.json และโฟลเดอร์ Controllers, Profiles และ VirtualDevices แพ็กเกจที่ติดตั้งอยู่ใน ~/Library/Application Support/OpenJoystickDriver/Packages บริการที่กำลังทำงานจะใช้การเปลี่ยนแปลงเมื่อโฟลเดอร์นั้นเปลี่ยน คำสั่งเหล่านี้ไม่ต้องใช้บริการ";
 /* Help text of the FOLDER argument of 'ojd mod validate' and 'ojd mod install'. mod.json stays as written. */
 "cli.mod.group.folder" = "โฟลเดอร์แพ็กเกจที่มี mod.json";
 /* Help text of the NAME argument of 'ojd mod remove'. */

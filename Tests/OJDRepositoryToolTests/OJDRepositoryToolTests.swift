@@ -337,12 +337,12 @@ struct OJDRepositoryToolTests {
       let bad = directory.appendingPathComponent("bad.json")
       try document("Generic").write(to: good)
       try document("Nothing").write(to: bad)
-      #expect(try Self.run(["validate", "personas", good.path]).status == 0)
+      #expect(try Self.run(["validate", "virtual-devices", good.path]).status == 0)
 
       let expected = try #require(throws: (any Error).self) {
         try VirtualHIDProfileOverrideStore.parse(document("Nothing"))
       }
-      let result = try Self.run(["validate", "personas", directory.path])
+      let result = try Self.run(["validate", "virtual-devices", directory.path])
       let problem = try #require(try result.problems().first)
       #expect(result.status == 1)
       #expect(try result.problems().count == 1)

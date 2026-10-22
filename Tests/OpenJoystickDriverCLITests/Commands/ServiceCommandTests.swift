@@ -74,7 +74,7 @@ struct ServiceCommandTests {
       "ojd-status-\(UUID().uuidString)",
       isDirectory: true
     )
-    let personas = support.appendingPathComponent("Personas", isDirectory: true)
+    let personas = support.appendingPathComponent("VirtualDevices", isDirectory: true)
     try FileManager.default.createDirectory(
       at: support.appendingPathComponent("Controllers"),
       withIntermediateDirectories: true
@@ -93,7 +93,7 @@ struct ServiceCommandTests {
     #expect(defaults["file"]?.hasSuffix("/Controllers/all.patch.json") == true)
     #expect(defaults["problem"] == "the file is not a JSON object")
     let skipped = try #require(report["skippedPersonas"] as? [[String: String]])
-    #expect(skipped.map { $0["file"]?.hasSuffix("/Personas/broken.json") } == [true])
+    #expect(skipped.map { $0["file"]?.hasSuffix("/VirtualDevices/broken.json") } == [true])
     #expect(plain.standardOutput.contains("ignored-defaults\t"))
     #expect(plain.standardOutput.contains("skipped-persona\t"))
     let cleanReport = try clean.json()

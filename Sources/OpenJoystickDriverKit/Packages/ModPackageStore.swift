@@ -16,9 +16,9 @@ public struct ModPackage: Equatable, Sendable {
 /// The installed mod packages: `<AppSupport>/OpenJoystickDriver/Packages/<name>/`.
 ///
 /// A package is a folder with a `mod.json` manifest and `Controllers/`, `Profiles/`, and
-/// `Personas/` folders. The store checks a package against the running version, its own files,
-/// and the user's files and the other installed packages before it installs the package. Each
-/// refusal is a ``ModPackageError`` with an E4xxx code.
+/// `VirtualDevices/` folders. The store checks a package against the running version, its own
+/// files, and the user's files and the other installed packages before it installs the package.
+/// Each refusal is a ``ModPackageError`` with an E4xxx code.
 public struct ModPackageStore: Sendable {
   /// `~/Library/Application Support/OpenJoystickDriver/Packages`.
   public static var rootDirectory: URL { directory(besides: ControllerRecordSet.userDirectory) }

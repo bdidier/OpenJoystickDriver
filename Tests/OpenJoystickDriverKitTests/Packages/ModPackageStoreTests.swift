@@ -28,8 +28,8 @@ struct ModPackageStoreTests {
   func aValidPackageInstallsListsAndRemoves() throws {
     try Fixture.with { fixture in
       let folder = try fixture.makePackage(
-        records: [try Fixture.record(0x1234, 0xABCD)],
-        personas: [Fixture.persona(0x1234, 0xABCD)],
+        controllers: [try Fixture.record(0x1234, 0xABCD)],
+        virtualDevices: [Fixture.persona(0x1234, 0xABCD)],
         profiles: [try Fixture.profile(name: "Arcade")]
       )
       let store = fixture.store()
@@ -50,17 +50,17 @@ struct ModPackageStoreTests {
   func installingANameThatIsInstalledNeedsReplace() throws {
     try Fixture.with { fixture in
       let store = fixture.store()
-      try store.install(try fixture.makePackage(records: [try Fixture.record(0x1234, 0xABCD)]))
+      try store.install(try fixture.makePackage(controllers: [try Fixture.record(0x1234, 0xABCD)]))
       let second = try fixture.makePackage(
         version: "2.0.0",
-        records: [try Fixture.record(0x1234, 0xABCE)]
+        controllers: [try Fixture.record(0x1234, 0xABCE)]
       )
       #expect(code { try store.install(second) } == .packageAlreadyInstalled)
       #expect(store.list().first?.manifest?.version == "1.0.0")
       try store.install(second, replace: true)
       let installed = try #require(store.list().first)
       #expect(installed.manifest?.version == "2.0.0")
-      #expect(installed.manifest?.records == ["1234-abce.json"])
+      #expect(installed.manifest?.controllers == ["1234-abce.json"])
       let entries = try FileManager.default.contentsOfDirectory(atPath: fixture.packages.path)
       #expect(entries == ["arcade-pack"])
     }
@@ -71,7 +71,7 @@ struct ModPackageStoreTests {
     try Fixture.with { fixture in
       let folder = try fixture.makePackage(
         requires: ["minimum": "0.6.0-alpha.2", "below": "0.7.0"],
-        records: [try Fixture.record(0x1234, 0xABCD)]
+        controllers: [try Fixture.record(0x1234, 0xABCD)]
       )
       func refusal(_ version: String) -> ErrorCode? {
         code { try fixture.store(running: version).validate(folder) }
@@ -99,18 +99,19 @@ struct ModPackageStoreTests {
         ["requires": ["minimum": "0.6.0", "extra": 1]], ["extra": true],
         ["kind": "Controller"],
         ["$schema": "https://example.com/mod-package.schema.json"],
-        ["records": ["../1234-abcd.json"]], ["records": ["1234-abcd.json", "1234-abcd.json"]],
-        ["records": []],
+        ["controllers": ["../1234-abcd.json"]],
+        ["controllers": ["1234-abcd.json", "1234-abcd.json"]],
+        ["controllers": []],
       ] {
-        let folder = try fixture.makePackage(records: [record], manifest: overrides)
+        let folder = try fixture.makePackage(controllers: [record], manifest: overrides)
         #expect(code { try store.validate(folder) } == .invalidManifest, "\(overrides)")
       }
       let unsupportedVersion = try fixture.makePackage(
-        records: [record],
+        controllers: [record],
         manifest: ["apiVersion": "unsupported.example/v9"]
       )
       #expect(code { try store.validate(unsupportedVersion) } == .unsupportedAPIVersion)
-      let noManifest = try fixture.makePackage(records: [record])
+      let noManifest = try fixture.makePackage(controllers: [record])
       try FileManager.default.removeItem(at: noManifest.appendingPathComponent("mod.json"))
       #expect(code { try store.validate(noManifest) } == .invalidManifest)
       let empty = try fixture.makePackage()
@@ -123,27 +124,27 @@ struct ModPackageStoreTests {
     try Fixture.with { fixture in
       let store = fixture.store()
       let record = try Fixture.record(0x1234, 0xABCD)
-      let missing = try fixture.makePackage(records: [record])
+      let missing = try fixture.makePackage(controllers: [record])
       try FileManager.default.removeItem(
         at: missing.appendingPathComponent("Controllers/\(record.name)")
       )
       #expect(code { try store.validate(missing) } == .invalidPackageContent)
 
-      let unlisted = try fixture.makePackage(records: [record])
-      try fixture.write([Fixture.persona(0x1234, 0xABCD)], kind: "Personas", in: unlisted)
+      let unlisted = try fixture.makePackage(controllers: [record])
+      try fixture.write([Fixture.persona(0x1234, 0xABCD)], kind: "VirtualDevices", in: unlisted)
       #expect(code { try store.validate(unlisted) } == .invalidPackageContent)
 
-      let brokenRecord = try fixture.makePackage(records: [(record.name, Data("{".utf8))])
+      let brokenRecord = try fixture.makePackage(controllers: [(record.name, Data("{".utf8))])
       #expect(code { try store.validate(brokenRecord) } == .invalidPackageContent)
-      let bundled = try fixture.makePackage(records: [try Fixture.record(0x366C, 0x0005)])
+      let bundled = try fixture.makePackage(controllers: [try Fixture.record(0x366C, 0x0005)])
       #expect(code { try store.validate(bundled) } == .invalidPackageContent)
-      let misnamed = try fixture.makePackage(records: [("other.json", record.data)])
+      let misnamed = try fixture.makePackage(controllers: [("other.json", record.data)])
       #expect(code { try store.validate(misnamed) } == .invalidManifest)
 
       let persona = Fixture.persona(0x1234, 0xABCD)
-      let brokenPersona = try fixture.makePackage(personas: [(persona.name, Data("[]".utf8))])
+      let brokenPersona = try fixture.makePackage(virtualDevices: [(persona.name, Data("[]".utf8))])
       #expect(code { try store.validate(brokenPersona) } == .invalidPackageContent)
-      let wrongPersona = try fixture.makePackage(personas: [("x.json", persona.data)])
+      let wrongPersona = try fixture.makePackage(virtualDevices: [("x.json", persona.data)])
       #expect(code { try store.validate(wrongPersona) } == .invalidManifest)
       let brokenProfile = try fixture.makePackage(profiles: [("p.json", Data("{}".utf8))])
       #expect(code { try store.validate(brokenProfile) } == .unsupportedAPIVersion)
@@ -161,14 +162,14 @@ struct ModPackageStoreTests {
       let id = UUID()
 
       try fixture.write([record], kind: "Controllers", in: fixture.root)
-      let clashing = try fixture.makePackage(records: [record])
+      let clashing = try fixture.makePackage(controllers: [record])
       #expect(code { try store.install(clashing, replace: true) } == .packageClash)
       try FileManager.default.removeItem(at: fixture.controllers)
 
-      try fixture.write([("renamed.json", persona.data)], kind: "Personas", in: fixture.root)
-      let samePersona = try fixture.makePackage(personas: [persona])
+      try fixture.write([("renamed.json", persona.data)], kind: "VirtualDevices", in: fixture.root)
+      let samePersona = try fixture.makePackage(virtualDevices: [persona])
       #expect(code { try store.validate(samePersona) } == .packageClash)
-      try FileManager.default.removeItem(at: fixture.personas)
+      try FileManager.default.removeItem(at: fixture.virtualDevices)
 
       let mine = try Fixture.profile(id: id, name: "Mine")
       try fixture.write([mine], kind: "Profiles", in: fixture.root)
@@ -187,21 +188,21 @@ struct ModPackageStoreTests {
       try store.install(
         try fixture.makePackage(
           "first",
-          records: [record],
-          personas: [persona],
+          controllers: [record],
+          virtualDevices: [persona],
           profiles: [profile]
         )
       )
       for other in [
-        try fixture.makePackage("second", records: [record]),
-        try fixture.makePackage("second", personas: [persona]),
+        try fixture.makePackage("second", controllers: [record]),
+        try fixture.makePackage("second", virtualDevices: [persona]),
         try fixture.makePackage("second", profiles: [profile]),
       ] {
         #expect(code { try store.install(other, replace: true) } == .packageClash)
       }
       #expect(store.list().map(\.name) == ["first"])
       // The package that is replaced is not a clash with itself.
-      try store.install(try fixture.makePackage("first", records: [record]), replace: true)
+      try store.install(try fixture.makePackage("first", controllers: [record]), replace: true)
     }
   }
 }

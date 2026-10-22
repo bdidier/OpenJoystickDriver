@@ -2339,8 +2339,8 @@
 "cli.shared.error.confirmNeedsForce" = "Bu değişiklik geri alınamaz. Onay sormadan onaylamak için --force ekleyin.";
 /* One-line summary of 'ojd mod' in the command list and at the top of its help. A mod package adds controller support. */
 "cli.mod.group.abstract" = "Mod paketlerini doğrula, yükle, listele veya kaldır.";
-/* Long description in the help of 'ojd mod'. mod.json, the folder names Controllers, Profiles and Personas, and the path stay as written. */
-"cli.mod.group.discussion" = "Mod paketi, bir mod.json bildirimi ile Controllers, Profiles ve Personas klasörlerini içeren bir klasördür. Yüklü paketler ~/Library/Application Support/OpenJoystickDriver/Packages içinde durur. Çalışan servis, bu klasör değiştiğinde değişikliği uygular. Bu komutlar servisi gerektirmez.";
+/* Long description in the help of 'ojd mod'. mod.json, the folder names Controllers, Profiles and VirtualDevices, and the path stay as written. */
+"cli.mod.group.discussion" = "Mod paketi, bir mod.json bildirimi ile Controllers, Profiles ve VirtualDevices klasörlerini içeren bir klasördür. Yüklü paketler ~/Library/Application Support/OpenJoystickDriver/Packages içinde durur. Çalışan servis, bu klasör değiştiğinde değişikliği uygular. Bu komutlar servisi gerektirmez.";
 /* Help text of the FOLDER argument of 'ojd mod validate' and 'ojd mod install'. mod.json stays as written. */
 "cli.mod.group.folder" = "mod.json içeren bir paket klasörü.";
 /* Help text of the NAME argument of 'ojd mod remove'. */

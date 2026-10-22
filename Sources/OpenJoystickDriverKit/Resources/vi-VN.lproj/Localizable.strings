@@ -2339,8 +2339,8 @@
 "cli.shared.error.confirmNeedsForce" = "Thay đổi này không thể hoàn tác. Thêm --force để xác nhận mà không cần nhắc.";
 /* One-line summary of 'ojd mod' in the command list and at the top of its help. A mod package adds controller support. */
 "cli.mod.group.abstract" = "Xác thực, cài đặt, liệt kê hoặc gỡ các gói mod.";
-/* Long description in the help of 'ojd mod'. mod.json, the folder names Controllers, Profiles and Personas, and the path stay as written. */
-"cli.mod.group.discussion" = "Gói mod là một thư mục có tệp kê khai mod.json cùng các thư mục Controllers, Profiles và Personas. Các gói đã cài nằm trong ~/Library/Application Support/OpenJoystickDriver/Packages. Dịch vụ đang chạy áp dụng thay đổi khi thư mục đó thay đổi. Các lệnh này không cần dịch vụ.";
+/* Long description in the help of 'ojd mod'. mod.json, the folder names Controllers, Profiles and VirtualDevices, and the path stay as written. */
+"cli.mod.group.discussion" = "Gói mod là một thư mục có tệp kê khai mod.json cùng các thư mục Controllers, Profiles và VirtualDevices. Các gói đã cài nằm trong ~/Library/Application Support/OpenJoystickDriver/Packages. Dịch vụ đang chạy áp dụng thay đổi khi thư mục đó thay đổi. Các lệnh này không cần dịch vụ.";
 /* Help text of the FOLDER argument of 'ojd mod validate' and 'ojd mod install'. mod.json stays as written. */
 "cli.mod.group.folder" = "Thư mục gói chứa mod.json.";
 /* Help text of the NAME argument of 'ojd mod remove'. */

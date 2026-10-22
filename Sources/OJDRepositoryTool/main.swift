@@ -13,7 +13,7 @@ private let usage = """
     OJDRepositoryTool validate records <directory>
     OJDRepositoryTool validate descriptions <directory>
     OJDRepositoryTool validate profiles <path>...
-    OJDRepositoryTool validate personas <path>...
+    OJDRepositoryTool validate virtual-devices <path>...
     OJDRepositoryTool apply-patches --records <directory> --patches <directory> --out <directory>
     OJDRepositoryTool facts
     OJDRepositoryTool kebab <value>...
@@ -90,7 +90,7 @@ private func run(_ arguments: [String]) throws -> [RepositoryProblem] {
       return kind == "records"
         ? RepositoryValidation.records(in: root) : RepositoryValidation.descriptions(in: root)
     case "profiles": return try files(paths).compactMap(RepositoryValidation.profile(at:))
-    case "personas": return try files(paths).compactMap(RepositoryValidation.persona(at:))
+    case "virtual-devices": return try files(paths).compactMap(RepositoryValidation.persona(at:))
     default: throw UsageError(message: "unknown validate kind \(kind)")
     }
   case "apply-patches":

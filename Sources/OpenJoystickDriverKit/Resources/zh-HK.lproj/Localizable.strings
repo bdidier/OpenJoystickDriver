@@ -2339,8 +2339,8 @@
 "cli.shared.error.confirmNeedsForce" = "此更改無法復原。加上 --force 即可免提示確認。";
 /* One-line summary of 'ojd mod' in the command list and at the top of its help. A mod package adds controller support. */
 "cli.mod.group.abstract" = "驗證、安裝、列出或移除模組套件。";
-/* Long description in the help of 'ojd mod'. mod.json, the folder names Controllers, Profiles and Personas, and the path stay as written. */
-"cli.mod.group.discussion" = "模組套件是一個資料夾，內含 mod.json 清單以及 Controllers、Profiles 和 Personas 資料夾。已安裝的套件位於 ~/Library/Application Support/OpenJoystickDriver/Packages。該資料夾變更時，執行中的服務會套用變更。這些指令不需要服務。";
+/* Long description in the help of 'ojd mod'. mod.json, the folder names Controllers, Profiles and VirtualDevices, and the path stay as written. */
+"cli.mod.group.discussion" = "模組套件是一個資料夾，內含 mod.json 清單以及 Controllers、Profiles 和 VirtualDevices 資料夾。已安裝的套件位於 ~/Library/Application Support/OpenJoystickDriver/Packages。該資料夾變更時，執行中的服務會套用變更。這些指令不需要服務。";
 /* Help text of the FOLDER argument of 'ojd mod validate' and 'ojd mod install'. mod.json stays as written. */
 "cli.mod.group.folder" = "包含 mod.json 的套件資料夾。";
 /* Help text of the NAME argument of 'ojd mod remove'. */

@@ -2339,8 +2339,8 @@
 "cli.shared.error.confirmNeedsForce" = "Questa modifica non può essere annullata. Aggiungi --force per confermarla senza richiesta.";
 /* One-line summary of 'ojd mod' in the command list and at the top of its help. A mod package adds controller support. */
 "cli.mod.group.abstract" = "Convalidare, installare, elencare o rimuovere pacchetti mod.";
-/* Long description in the help of 'ojd mod'. mod.json, the folder names Controllers, Profiles and Personas, and the path stay as written. */
-"cli.mod.group.discussion" = "Un pacchetto mod è una cartella con un manifesto mod.json e le cartelle Controllers, Profiles e Personas. I pacchetti installati si trovano in ~/Library/Application Support/OpenJoystickDriver/Packages. Il servizio in esecuzione applica una modifica quando quella cartella cambia. Questi comandi non richiedono il servizio.";
+/* Long description in the help of 'ojd mod'. mod.json, the folder names Controllers, Profiles and VirtualDevices, and the path stay as written. */
+"cli.mod.group.discussion" = "Un pacchetto mod è una cartella con un manifesto mod.json e le cartelle Controllers, Profiles e VirtualDevices. I pacchetti installati si trovano in ~/Library/Application Support/OpenJoystickDriver/Packages. Il servizio in esecuzione applica una modifica quando quella cartella cambia. Questi comandi non richiedono il servizio.";
 /* Help text of the FOLDER argument of 'ojd mod validate' and 'ojd mod install'. mod.json stays as written. */
 "cli.mod.group.folder" = "Una cartella di pacchetto che contiene mod.json.";
 /* Help text of the NAME argument of 'ojd mod remove'. */

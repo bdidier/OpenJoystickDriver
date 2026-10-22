@@ -20,7 +20,7 @@ struct ModPackageStoreHardeningTests {
 
   private func plainPackage(_ fixture: Fixture, _ name: String = "arcade-pack") throws -> URL {
     let record = try Fixture.record(0x1234, 0xabcd)
-    return try fixture.makePackage(name, records: [record])
+    return try fixture.makePackage(name, controllers: [record])
   }
 
   @Test
@@ -150,12 +150,12 @@ struct ModPackageStoreHardeningTests {
     try Fixture.with { fixture in
       let store = fixture.store()
       let record = try Fixture.record(0x1234, 0xabcd)
-      let misnamed = try fixture.makePackage(records: [("5678-abcd.json", record.data)])
+      let misnamed = try fixture.makePackage(controllers: [("5678-abcd.json", record.data)])
       #expect(code { try store.validate(misnamed) } == .invalidPackageContent)
       let persona = Fixture.persona(0x1234, 0xabcd)
-      let wrong = try fixture.makePackage(personas: [("5678-abcd.json", persona.data)])
+      let wrong = try fixture.makePackage(virtualDevices: [("5678-abcd.json", persona.data)])
       #expect(code { try store.validate(wrong) } == .invalidPackageContent)
-      let outside = try fixture.makePackage(records: [("other.json", record.data)])
+      let outside = try fixture.makePackage(controllers: [("other.json", record.data)])
       #expect(code { try store.validate(outside) } == .invalidManifest)
     }
   }
@@ -199,7 +199,7 @@ struct ModPackageStoreHardeningTests {
       let document: [String: Any] = [
         "apiVersion": OpenJoystickDriverAPI.version, "kind": ModPackageManifest.kind, "name": name,
         "version": version, "author": "Tester", "requires": ["minimum": "1.0.0"],
-        "records": [file],
+        "controllers": [file],
       ]
       return (try? JSONSerialization.data(withJSONObject: document)) ?? Data()
     }

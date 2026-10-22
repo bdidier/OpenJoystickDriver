@@ -307,7 +307,7 @@ final class DirectoryLibraryStore: LibraryStore {
         name: package.name,
         version: package.manifest?.version,
         author: package.manifest?.author,
-        files: package.manifest.map(Self.listedFiles) ?? [],
+        files: package.manifest.map(\.listedFiles) ?? [],
         problem: package.problem
       )
     }
@@ -321,7 +321,7 @@ final class DirectoryLibraryStore: LibraryStore {
         name: manifest.name,
         version: manifest.version,
         author: manifest.author,
-        files: Self.listedFiles(of: manifest),
+        files: manifest.listedFiles,
         replaces: (try? FileManager.default.attributesOfItem(atPath: installed.path)) != nil
       )
     } catch let error as ModPackageError {
@@ -346,10 +346,5 @@ final class DirectoryLibraryStore: LibraryStore {
       message: OJDLocalized.formatted("ui.library.mod.refused", subject, error.detail),
       code: error.code
     )
-  }
-
-  private static func listedFiles(of manifest: ModPackageManifest) -> [String] {
-    manifest.records.map { "Controllers/\($0)" } + manifest.profiles.map { "Profiles/\($0)" }
-      + manifest.personas.map { "Personas/\($0)" }
   }
 }

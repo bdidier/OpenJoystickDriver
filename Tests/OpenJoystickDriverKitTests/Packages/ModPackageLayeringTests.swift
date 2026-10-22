@@ -17,7 +17,7 @@ struct ModPackageLayeringTests {
   func aPackageRecordLayersBetweenBundledAndUser() throws {
     try Fixture.with { fixture in
       let record = try Fixture.record(0x1234, 0xABCD)
-      try install(try fixture.makePackage(records: [record]), in: fixture)
+      try install(try fixture.makePackage(controllers: [record]), in: fixture)
 
       let set = ControllerRecordSet.load(userDirectory: fixture.controllers)
       let loaded = try #require(set.records[Self.identity])
@@ -42,7 +42,7 @@ struct ModPackageLayeringTests {
   func aUserRecordBeatsAPackageRecordAndTheLoserIsListed() throws {
     try Fixture.with { fixture in
       let record = try Fixture.record(0x1234, 0xABCD)
-      try install(try fixture.makePackage(records: [record]), in: fixture)
+      try install(try fixture.makePackage(controllers: [record]), in: fixture)
       try fixture.write([record], kind: "Controllers", in: fixture.root)
 
       let set = ControllerRecordSet.load(userDirectory: fixture.controllers)
@@ -65,7 +65,7 @@ struct ModPackageLayeringTests {
         withIntermediateDirectories: true
       )
       for name in ["beta-pack", "alpha-pack"] {
-        let folder = try fixture.makePackage(name, records: [record])
+        let folder = try fixture.makePackage(name, controllers: [record])
         let target = fixture.packages.appendingPathComponent(name)
         try FileManager.default.copyItem(at: folder, to: target)
       }
@@ -82,7 +82,7 @@ struct ModPackageLayeringTests {
   func aUserPatchLayersOverAPackageRecord() throws {
     try Fixture.with { fixture in
       let record = try Fixture.record(0x1234, 0xABCD)
-      try install(try fixture.makePackage(records: [record]), in: fixture)
+      try install(try fixture.makePackage(controllers: [record]), in: fixture)
       let patch = try Fixture.patch(0x1234, 0xABCD, ["tuning": ["stickDeadzone": 0.3]])
       try fixture.write([patch], kind: "Controllers", in: fixture.root)
 
@@ -99,7 +99,7 @@ struct ModPackageLayeringTests {
     try Fixture.with { fixture in
       let record = try Fixture.record(0x1234, 0xABCD)
       let packaged = try Fixture.patch(0x1234, 0xABCD, ["tuning": ["stickDeadzone": 0.1]])
-      try install(try fixture.makePackage(records: [record, packaged]), in: fixture)
+      try install(try fixture.makePackage(controllers: [record], patches: [packaged]), in: fixture)
       let packagedSet = ControllerRecordSet.load(userDirectory: fixture.controllers)
       #expect(packagedSet.records[Self.identity]?.tuning.stickDeadzone == 0.1)
       #expect(packagedSet.records[Self.identity]?.tuningLayers["stickDeadzone"] == .package)
@@ -137,17 +137,17 @@ struct ModPackageLayeringTests {
   func aPackagePersonaLayersUnderTheUserPersona() throws {
     try Fixture.with { fixture in
       let fromPackage = Fixture.persona(0x1234, 0xABCD, descriptor: "Generic")
-      try install(try fixture.makePackage(personas: [fromPackage]), in: fixture)
-      let store = VirtualHIDProfileOverrideStore(directory: fixture.personas)
+      try install(try fixture.makePackage(virtualDevices: [fromPackage]), in: fixture)
+      let store = VirtualHIDProfileOverrideStore(directory: fixture.virtualDevices)
       #expect(store.override(vendorID: 0x1234, productID: 0xABCD) == .generic)
       #expect(store.problems.isEmpty)
 
       let user = Fixture.persona(0x1234, 0xABCD, descriptor: "SDLCompatible")
-      try fixture.write([user], kind: "Personas", in: fixture.root)
+      try fixture.write([user], kind: "VirtualDevices", in: fixture.root)
       #expect(store.override(vendorID: 0x1234, productID: 0xABCD) == .sdlCompatible)
       let skipped = try #require(store.problems.first)
       #expect(store.problems.count == 1)
-      #expect(skipped.url.path.contains("Packages/arcade-pack/Personas"))
+      #expect(skipped.url.path.contains("Packages/arcade-pack/VirtualDevices"))
       #expect(skipped.problem == "same match as user file \(user.name)")
     }
   }
@@ -163,12 +163,12 @@ struct ModPackageLayeringTests {
       for (name, descriptor) in descriptors {
         let folder = try fixture.makePackage(
           name,
-          personas: [Fixture.persona(0x1234, 0xABCD, descriptor: descriptor)]
+          virtualDevices: [Fixture.persona(0x1234, 0xABCD, descriptor: descriptor)]
         )
         let target = fixture.packages.appendingPathComponent(name)
         try FileManager.default.copyItem(at: folder, to: target)
       }
-      let store = VirtualHIDProfileOverrideStore(directory: fixture.personas)
+      let store = VirtualHIDProfileOverrideStore(directory: fixture.virtualDevices)
       #expect(store.override(vendorID: 0x1234, productID: 0xABCD) == .generic)
       let skipped = try #require(store.problems.first)
       #expect(store.problems.count == 1)
@@ -181,13 +181,13 @@ struct ModPackageLayeringTests {
   func settingAPackagePersonaWritesAUserFileAndLeavesThePackageFile() throws {
     try Fixture.with { fixture in
       let fromPackage = Fixture.persona(0x1234, 0xABCD, descriptor: "Generic")
-      try install(try fixture.makePackage(personas: [fromPackage]), in: fixture)
-      let store = VirtualHIDProfileOverrideStore(directory: fixture.personas)
+      try install(try fixture.makePackage(virtualDevices: [fromPackage]), in: fixture)
+      let store = VirtualHIDProfileOverrideStore(directory: fixture.virtualDevices)
       try store.set(.sdlCompatible, vendorID: 0x1234, productID: 0xABCD)
-      let written = fixture.personas.appendingPathComponent(fromPackage.name)
+      let written = fixture.virtualDevices.appendingPathComponent(fromPackage.name)
       #expect(FileManager.default.fileExists(atPath: written.path))
       let packaged = fixture.packages.appendingPathComponent(
-        "arcade-pack/Personas/\(fromPackage.name)"
+        "arcade-pack/VirtualDevices/\(fromPackage.name)"
       )
       #expect(try Data(contentsOf: packaged) == fromPackage.data)
       #expect(store.override(vendorID: 0x1234, productID: 0xABCD) == .sdlCompatible)

@@ -19,18 +19,22 @@ struct ModPackageRequiresAtRuntimeTests {
   /// Installs `arcade-pack` for 0.6.0 up to 0.7.0 while the running version is 0.6.0.
   private func installOldPackage(
     in fixture: Fixture,
-    records: [(name: String, data: Data)] = [],
-    personas: [(name: String, data: Data)] = []
+    controllers: [(name: String, data: Data)] = [],
+    virtualDevices: [(name: String, data: Data)] = []
   ) throws {
     try fixture.store().install(
-      try fixture.makePackage(requires: Self.range, records: records, personas: personas)
+      try fixture.makePackage(
+        requires: Self.range,
+        controllers: controllers,
+        virtualDevices: virtualDevices
+      )
     )
   }
 
   @Test
   func listGivesTheRequiresProblemAndKeepsTheManifest() throws {
     try Fixture.with { fixture in
-      try installOldPackage(in: fixture, records: [try Fixture.record(0x1234, 0xABCD)])
+      try installOldPackage(in: fixture, controllers: [try Fixture.record(0x1234, 0xABCD)])
 
       let package = try #require(fixture.store(running: Self.outOfRange).list().first)
       #expect(Self.isRequiresProblem(package.problem))
@@ -43,7 +47,7 @@ struct ModPackageRequiresAtRuntimeTests {
   @Test
   func listAdmitsEveryPackageOnADevelopmentBuild() throws {
     try Fixture.with { fixture in
-      try installOldPackage(in: fixture, records: [try Fixture.record(0x1234, 0xABCD)])
+      try installOldPackage(in: fixture, controllers: [try Fixture.record(0x1234, 0xABCD)])
 
       let package = try #require(fixture.store(running: "unknown").list().first)
       #expect(package.problem == nil)
@@ -54,7 +58,7 @@ struct ModPackageRequiresAtRuntimeTests {
   @Test
   func theRecordLayerSkipsAndListsAnOutOfRangePackage() throws {
     try Fixture.with { fixture in
-      try installOldPackage(in: fixture, records: [try Fixture.record(0x1234, 0xABCD)])
+      try installOldPackage(in: fixture, controllers: [try Fixture.record(0x1234, 0xABCD)])
 
       let packaged = ControllerRecordSet.packageRecords(
         in: fixture.packages,
@@ -69,10 +73,10 @@ struct ModPackageRequiresAtRuntimeTests {
   @Test
   func thePersonaLayerSkipsAndListsAnOutOfRangePackage() throws {
     try Fixture.with { fixture in
-      try installOldPackage(in: fixture, personas: [Fixture.persona(0x1234, 0xABCD)])
+      try installOldPackage(in: fixture, virtualDevices: [Fixture.persona(0x1234, 0xABCD)])
 
       let store = VirtualHIDProfileOverrideStore(
-        directory: fixture.personas,
+        directory: fixture.virtualDevices,
         runningVersion: Self.outOfRange
       )
       #expect(store.override(vendorID: 0x1234, productID: 0xABCD) == nil)
@@ -85,9 +89,9 @@ struct ModPackageRequiresAtRuntimeTests {
   func anOutOfRangePackageDoesNotBlockAnotherWithTheSameIdentity() throws {
     try Fixture.with { fixture in
       let record = try Fixture.record(0x1234, 0xABCD)
-      try installOldPackage(in: fixture, records: [record])
+      try installOldPackage(in: fixture, controllers: [record])
 
-      let replacement = try fixture.makePackage("arcade-pack-next", records: [record])
+      let replacement = try fixture.makePackage("arcade-pack-next", controllers: [record])
       let installed = try fixture.store(running: Self.outOfRange).install(replacement)
       #expect(installed.name == "arcade-pack-next")
 
