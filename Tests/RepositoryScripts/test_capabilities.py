@@ -297,6 +297,7 @@ class CapabilityResolverTests(unittest.TestCase):
             resolver = Resolver(
                 Path(directory),
                 applications_dir=Path(directory),
+                environ={},
                 input_stream=TTYInput(),
                 run=run,
             )
@@ -326,7 +327,9 @@ class CapabilityResolverTests(unittest.TestCase):
                 selected = f"{developer_dirs['Xcode-26.6.0.app']}\n"
                 return subprocess.CompletedProcess(command, 0, selected, "")
 
-            resolver = Resolver(applications, applications_dir=applications, run=run)
+            resolver = Resolver(
+                applications, applications_dir=applications, environ={}, run=run
+            )
             outcome = resolver.ensure(Capability.FULL_XCODE)
         self.assertEqual(outcome.kind, OutcomeKind.AVAILABLE)
         self.assertEqual(
