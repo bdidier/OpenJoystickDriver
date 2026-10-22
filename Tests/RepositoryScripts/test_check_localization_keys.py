@@ -365,12 +365,12 @@ class StringsdictCommentTests(unittest.TestCase):
 
 
 class RuleTests(unittest.TestCase):
-    def catalog(self, strings: str, c_strings: str = "") -> Path:
+    def catalog(self, strings: str) -> Path:
         scratch = tempfile.TemporaryDirectory()
         self.addCleanup(scratch.cleanup)
         root = Path(scratch.name)
         resources = root / guard.RESOURCES_DIRECTORY
-        for name, text in (("en-US", strings), ("C", c_strings)):
+        for name, text in (("en-US", strings), ("C", strings)):
             (resources / f"{name}.lproj").mkdir(parents=True)
             (resources / f"{name}.lproj" / "Localizable.strings").write_text(text)
             (resources / f"{name}.lproj" / "Localizable.stringsdict").write_bytes(
@@ -468,6 +468,98 @@ class StackedCommentTests(unittest.TestCase):
                 for p in guard.stacked_comment_problems(locale)
             ],
             [],
+        )
+
+
+class CommentSpecifierTests(unittest.TestCase):
+    def test_a_comment_must_name_each_numbered_specifier(self) -> None:
+        entry = guard.StringsEntry("ui.a.b", "%1$@ of %2$@", "%1$@ is the name.")
+        self.assertIn("%2$", guard.comment_specifier_problem(entry) or "")
+        self.assertIsNone(
+            guard.comment_specifier_problem(
+                guard.StringsEntry("ui.a.b", "%1$@ of %2$@", "%1$@ is a, %2$@ is b.")
+            )
+        )
+
+    def test_a_single_specifier_needs_a_percent_sign_in_the_comment(self) -> None:
+        self.assertIsNotNone(
+            guard.comment_specifier_problem(
+                guard.StringsEntry("ui.a.b", "Open %@", "Label.")
+            )
+        )
+        self.assertIsNone(
+            guard.comment_specifier_problem(
+                guard.StringsEntry("ui.a.b", "Open %@", "%@ is the name.")
+            )
+        )
+
+    def test_a_value_without_specifiers_passes(self) -> None:
+        self.assertIsNone(
+            guard.comment_specifier_problem(guard.StringsEntry("ui.a.b", "Open", "L."))
+        )
+
+
+class CommentCopyTests(unittest.TestCase):
+    english: ClassVar[list[guard.StringsEntry]] = [
+        guard.StringsEntry("ui.a.b", "A", "Label."),
+        guard.StringsEntry("ui.c.d", "C", "Other."),
+    ]
+
+    def test_equal_comments_pass(self) -> None:
+        entries = [
+            guard.StringsEntry("ui.a.b", "A-de", "Label."),
+            guard.StringsEntry("ui.c.d", "C-de", "Other."),
+        ]
+        self.assertEqual(guard.comment_copy_problems(entries, self.english), [])
+
+    def test_a_different_comment_fails(self) -> None:
+        entries = [
+            guard.StringsEntry("ui.a.b", "A-de", "Beschriftung."),
+            guard.StringsEntry("ui.c.d", "C-de", "Other."),
+        ]
+        self.assertEqual(
+            [key for key, _ in guard.comment_copy_problems(entries, self.english)],
+            ["ui.a.b"],
+        )
+
+    def test_a_missing_comment_fails(self) -> None:
+        entries = [
+            guard.StringsEntry("ui.a.b", "A-de", None),
+            guard.StringsEntry("ui.c.d", "C-de", "Other."),
+        ]
+        self.assertEqual(
+            [key for key, _ in guard.comment_copy_problems(entries, self.english)],
+            ["ui.a.b"],
+        )
+
+    def test_a_missing_or_extra_key_fails(self) -> None:
+        entries = [
+            guard.StringsEntry("ui.a.b", "A-de", "Label."),
+            guard.StringsEntry("ui.x.y", "X", "Label."),
+        ]
+        self.assertEqual(
+            sorted(key for key, _ in guard.comment_copy_problems(entries, self.english)),
+            ["ui.c.d", "ui.x.y"],
+        )
+
+    def test_rule_problems_reports_a_differing_comment_in_another_bundle(self) -> None:
+        scratch = tempfile.TemporaryDirectory()
+        self.addCleanup(scratch.cleanup)
+        root = Path(scratch.name)
+        for name, comment in (("en-US", "Label."), ("C", "Label."), ("de-DE", "Etikett.")):
+            directory = root / guard.RESOURCES_DIRECTORY / f"{name}.lproj"
+            directory.mkdir(parents=True)
+            (directory / "Localizable.strings").write_text(
+                f'/* {comment} */\n"ui.fine.title" = "Fine";\n'
+            )
+            (directory / "Localizable.stringsdict").write_bytes(plistlib.dumps({}))
+        found = guard.rule_problems(root, not_a_count={})
+        self.assertEqual([p.key for p in found["commentCopy"]], ["ui.fine.title"])
+        self.assertIn("de-DE.lproj", found["commentCopy"][0].message)
+
+    def test_every_bundle_of_the_repository_copies_the_en_us_comments(self) -> None:
+        self.assertEqual(
+            [p.message for p in guard.rule_problems()["commentCopy"]], []
         )
 
 

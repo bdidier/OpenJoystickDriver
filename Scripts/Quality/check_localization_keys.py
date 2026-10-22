@@ -28,6 +28,11 @@ The catalog itself follows these rules:
   its bundle, and each entry has the plural categories its language needs.
 
 - comment layout: no key has two comments stacked above it;
+- comment specifiers: the comment of an en-US value with format specifiers names each one by its
+  position (`%1$@`), or contains `%` when the value has a single unnumbered specifier, so a
+  translator learns what each argument is;
+- comment copies: every other bundle has the en-US translator comment of each key, character for
+  character, and the same keys;
 - counts: every `NOT_A_COUNT` entry names a key that has an integer count specifier and no
   `.stringsdict` entry, so an entry cannot outlive its key or its reason.
 
@@ -569,6 +574,37 @@ def comment_problem(entry: StringsEntry) -> str | None:
     return None if entry.comment else f"{entry.key!r}: no translator comment"
 
 
+def comment_specifier_problem(entry: StringsEntry) -> str | None:
+    """Return why the comment of a value with specifiers does not name them, or None."""
+    specifiers = list(SPECIFIER.finditer(entry.value.replace("%%", "")))
+    if not specifiers or entry.comment is None:
+        return None
+    names = [f"%{m['position']}" for m in specifiers if m["position"]] or ["%"]
+    missing = [name for name in names if name not in entry.comment]
+    if not missing:
+        return None
+    return f"{entry.key!r}: the comment does not name {', '.join(missing)}"
+
+
+def comment_copy_problems(
+    entries: list[StringsEntry], english: list[StringsEntry]
+) -> list[tuple[str, str]]:
+    """Return (key, message) for each key whose comment differs from the en-US comment."""
+    expected = {entry.key: entry.comment for entry in english}
+    found = {entry.key: entry.comment for entry in entries}
+    problems = [
+        (key, f"{key!r}: the key is not in the en-US strings")
+        for key in found
+        if key not in expected
+    ]
+    for key, comment in expected.items():
+        if key not in found:
+            problems.append((key, f"{key!r}: the key is missing"))
+        elif found[key] != comment:
+            problems.append((key, f"{key!r}: the comment differs from the en-US comment"))
+    return problems
+
+
 def stacked_comment_keys(
     text: str, comment: re.Pattern[str], key: re.Pattern[str]
 ) -> list[str]:
@@ -682,6 +718,8 @@ def rule_problems(
         "comment": [],
         "pluralCount": [],
         "stackedComment": [],
+        "commentSpecifier": [],
+        "commentCopy": [],
     }
 
     def add(rule: str, key: str, message: str | None, prefix: str = "") -> None:
@@ -697,6 +735,7 @@ def rule_problems(
         add("osWord", entry.key, os_word_problem(entry.key, entry.value))
         add("specifier", entry.key, specifier_problem(entry.key, entry.value))
         add("comment", entry.key, comment_problem(entry))
+        add("commentSpecifier", entry.key, comment_specifier_problem(entry))
         add(
             "pluralCount",
             entry.key,
@@ -727,13 +766,16 @@ def rule_problems(
         if locale.name == "en-US.lproj":
             continue
         text = (locale / "Localizable.strings").read_text(encoding="utf-8")
-        for entry in strings_entries(text):
+        locale_entries = strings_entries(text)
+        for entry in locale_entries:
             add(
                 "specifier",
                 entry.key,
                 specifier_problem(entry.key, entry.value),
                 f"{locale.name}: ",
             )
+        for key, message in comment_copy_problems(locale_entries, entries):
+            add("commentCopy", key, message, f"{locale.name}: ")
     return found
 
 

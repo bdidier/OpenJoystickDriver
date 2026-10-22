@@ -257,6 +257,32 @@ struct LocalizationTests {
   }
 
   @Test
+  func connectedControllerCountsFollowThePluralRulesOfTheSelectedLanguage() {
+    let english = Localization(preferredLanguages: ["en-US"])
+    for (count, expected) in [
+      (0, "0 controllers connected"), (1, "1 controller connected"),
+      (2, "2 controllers connected"), (5, "5 controllers connected"),
+      (21, "21 controllers connected"),
+    ] {
+      #expect(english.plural("status.controllerConnected", count: count) == expected)
+    }
+    let russian = Localization(preferredLanguages: ["ru-RU"])
+    for (count, expected) in [
+      (0, "0 контроллеров подключено"), (1, "1 контроллер подключён"),
+      (2, "2 контроллера подключено"), (5, "5 контроллеров подключено"),
+      (21, "21 контроллер подключён"),
+    ] {
+      #expect(russian.plural("status.controllerConnected", count: count) == expected)
+    }
+  }
+
+  @Test
+  func aPluralKeyWithoutAnEntryRendersTheKeyItself() {
+    let english = Localization(preferredLanguages: ["en-US"])
+    #expect(english.plural("missingPluralEntry", count: 3) == "missingPluralEntry")
+  }
+
+  @Test
   func preferredLanguageSelectionUsesTheLocaleCatalog() {
     let resolver = Localization(preferredLanguages: ["fr-FR", "en-US"])
     #expect(resolver.resolvedLanguage?.lowercased() == "fr-fr")
