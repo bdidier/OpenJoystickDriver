@@ -1,3 +1,4 @@
+/* Product name in the title of the application menu of the menu bar. It stays OpenJoystickDriver in every language. */
 "term.app.name" = "OpenJoystickDriver";
 "ui.permissions.restartApplication" = "Khởi động lại OpenJoystickDriver";
 "ui.menu.projectPage" = "GitHub";
@@ -68,16 +69,20 @@
 "ui.settings.advanced.discardProfileMessage" = "Các thay đổi đối với cấu hình của bạn chưa được lưu.";
 "ui.settings.advanced.discardAction" = "Hủy bỏ thay đổi";
 "ui.settings.advanced.enableDeveloperTools" = "Bật công cụ nhà phát triển";
+/* Note in the Notifications pane of the settings window when macOS has turned off both banners and sounds for the app. System Settings is the name of the macOS app. */
 "platform.macos.ui.settings.notifications.notificationBannersAndSoundOff" = "Biểu ngữ và âm thanh đã tắt trong Cài đặt hệ thống.";
 "ui.settings.notifications.notificationBannersOff" = "Biểu ngữ đã tắt";
+/* Note in the Notifications pane of the settings window when macOS has turned off banners for the app. System Settings is the name of the macOS app. */
 "platform.macos.ui.settings.notifications.notificationBannersOffDetail" = "Biểu ngữ thông báo đã tắt trong Cài đặt hệ thống.";
 "ui.settings.notifications.notificationDeliveryAllowed" = "Cho phép gửi thông báo.";
 "ui.settings.notifications.notificationDeliveryReady" = "Biểu ngữ, Trung tâm thông báo và âm thanh đã bật.";
 "ui.settings.notifications.notificationPermissionRequired" = "Cần có quyền trước khi có thể gửi thông báo.";
 "ui.settings.notifications.notificationSoundOff" = "Âm thanh đã tắt";
+/* Note in the Notifications pane of the settings window when macOS has turned off sounds for the app. System Settings is the name of the macOS app. */
 "platform.macos.ui.settings.notifications.notificationSoundOffDetail" = "Âm thanh thông báo đã tắt trong Cài đặt hệ thống.";
 "ui.settings.notifications.notificationSounds" = "Phát âm thanh";
 "ui.settings.notifications.notifications" = "Thông báo";
+/* Error shown when the user turns on notifications in the app while macOS denies them. System Settings is the name of the macOS app. OpenJoystickDriver is the product name. */
 "platform.macos.ui.settings.notifications.notificationsDenied" = "Thông báo của OpenJoystickDriver đã tắt trong Cài đặt hệ thống.";
 "ui.settings.general.openNotificationSettings" = "Mở Cài đặt thông báo";
 "ui.settings.general.openSystemSettings" = "Mở Cài đặt";
@@ -87,6 +92,7 @@
 "ui.settings.notifications.profileDeactivatedShort" = "Đã hủy kích hoạt";
 "ui.settings.notifications.profileNotifications" = "Cấu hình đã kích hoạt hoặc chuyển đổi";
 "ui.settings.general.startAtLogin" = "Khởi động khi đăng nhập";
+/* Error shown in the General pane of the settings window after the user turns on Start at login and macOS wants approval. System Settings, General and Login Items are names in macOS and are written as macOS shows them. */
 "platform.macos.ui.settings.general.startAtLoginApprovalRequired" = "Cho phép OpenJoystickDriver trong Cài đặt hệ thống > Cài đặt chung > Mục đăng nhập.";
 "ui.settings.general.startAtLoginDescription" = "Mở OpenJoystickDriver trong thanh menu khi bạn đăng nhập.";
 "ui.settings.notifications.testNotification" = "Gửi thông báo thử";
@@ -120,11 +126,14 @@
 "ui.controllers.profileUnavailableSentence" = "Cấu hình đang hoạt động không khả dụng: %@";
 "ui.controllers.profileErrorSentence" = "Lỗi cấu hình đang hoạt động: %@";
 "ui.controllers.accessibilityDetails" = "%1$@. %2$@. Giao thức: %3$@. Trình phân tích: %4$@. Số sê-ri: %5$@. USB VID/PID: %6$@. Điểm cuối đầu vào: %7$@. Điểm cuối đầu ra: %8$@.";
+/* Note on a controller row in the Controllers area when macOS serves the controller natively and the driver does not publish a virtual gamepad for it. */
 "platform.macos.ui.controllers.systemGamepadNotPublished" = "Tay cầm gốc của macOS, không được cung cấp";
 "ui.controllers.server.label" = "Phục vụ bởi";
+/* Entry of the server picker in the Controllers detail: macOS serves the controller itself. */
 "platform.macos.ui.controllers.server.system" = "macOS (gốc)";
 "ui.controllers.server.ojd" = "OpenJoystickDriver (ảo)";
 "ui.controllers.serving.label" = "Tuyến phục vụ";
+/* Value of the serving route in the Controllers area: macOS serves the controller and the driver passes the input through. */
 "platform.macos.ui.controllers.serving.nativePassThrough" = "macOS (chuyển thẳng)";
 "ui.controllers.serving.virtualHID" = "OpenJoystickDriver (tay cầm ảo)";
 "ui.controllers.serving.extensionOwned" = "Tiện ích mở rộng trình điều khiển";
@@ -362,17 +371,29 @@
 "status.unavailable" = "Không khả dụng";
 /* Value of a permission row in the Access area when the user must act, for example because the permission is denied. */
 "status.needsAttention" = "Cần chú ý";
+/* Column title of the diagnostics table in the Activity area. The column lists the result of each check. */
 "term.status" = "Trạng thái";
+/* Label of the protocol fact in the Controllers detail. The value is the protocol family name of the controller. */
 "term.protocol" = "Giao thức";
+/* Label of the serial number fact in the Controllers detail. */
 "term.serialNumber" = "Số sê-ri";
+/* Label of the fact in the Controllers detail that names the USB endpoint where input arrives. */
 "term.inputEndpoint" = "Điểm cuối đầu vào";
+/* Label of the fact in the Controllers detail that names the USB endpoint where output is sent. */
 "term.outputEndpoint" = "Điểm cuối đầu ra";
+/* Label of the destination popup in the capture assignment sheet. The destination is what the assignment sends. */
 "term.destination" = "Đích";
+/* VoiceOver label of one assignment row in the profile editor. An assignment links a controller control to a destination. */
 "term.assignment" = "Phép gán";
+/* Heading of the assignments section in the profile editor. */
 "term.assignments" = "Các phép gán";
+/* Label of the controller popup in the capture assignment sheet. It picks the control source. */
 "term.controller" = "Bộ điều khiển";
+/* Placeholder and label of the name field in the profile creation sheet. */
 "term.profileName" = "Tên cấu hình";
+/* Name of the permission for keyboard and pointer output in the Access area. */
 "term.keyboardPointer" = "Bàn phím & con trỏ";
+/* Name of the macOS Accessibility permission in the Access area. It is written as macOS names it in System Settings. */
 "platform.macos.term.inputInject" = "Trợ năng";
 /* Button of the combination sheets that adds the chosen entry to the combination. */
 "action.add" = "Thêm";
@@ -386,6 +407,7 @@
 "action.export" = "Xuất…";
 /* Result label of a failed check in the diagnostics list of the Activity area. */
 "status.failed" = "Thất bại";
+/* Name of the macOS Input Monitoring permission in the Access area. It is written as macOS names it in System Settings. */
 "platform.macos.term.inputRead" = "Giám sát đầu vào";
 /* Value of a permission row in the Access area when the driver has not asked macOS for the permission yet. */
 "status.notRequested" = "Chưa yêu cầu";
@@ -544,6 +566,7 @@
 "ui.inputTest.open" = "Mở thử nghiệm đầu vào…";
 "ui.inputTest.outputError" = "Lỗi đầu ra vật lý";
 "ui.inputTest.outputRejected" = "Bộ điều khiển đã từ chối lần thử đầu ra này.";
+/* Status shown in the input test window when the Input Monitoring permission is missing. Input Monitoring is written as macOS names it. */
 "platform.macos.ui.inputTest.permissionRequired" = "Cần có quyền Giám sát đầu vào";
 "ui.inputTest.playerIndicator" = "Chỉ báo người chơi";
 "ui.inputTest.pressed" = "Đã nhấn";
@@ -571,38 +594,59 @@
 "ui.inputTest.xboxButton" = "Nút Xbox";
 "ui.inputTest.yButton" = "Nút Y";
 "ui.inputTest.yTriangle" = "Y / Tam giác";
+/* Name of the Caps Lock key in the text that describes a captured key press. */
 "term.key.capsLock" = "Caps Lock";
+/* Name of the Delete key, the one that deletes backward, in the text that describes a captured key press. */
 "term.key.delete" = "Delete";
+/* Name of the Down Arrow key in the text that describes a captured key press. */
 "term.key.downArrow" = "Mũi tên xuống";
+/* Name of the Escape key in the text that describes a captured key press. */
 "term.key.escape" = "Escape";
+/* Name of the Forward Delete key in the text that describes a captured key press. */
 "term.key.forwardDelete" = "Xóa tiến";
+/* Name of the Left Arrow key in the text that describes a captured key press. */
 "term.key.leftArrow" = "Mũi tên trái";
+/* Name of the Page Down key in the text that describes a captured key press. */
 "term.key.pageDown" = "Page Down";
+/* Name of the Page Up key in the text that describes a captured key press. */
 "term.key.pageUp" = "Page Up";
+/* Name of the Return key in the text that describes a captured key press. */
 "term.key.return" = "Return";
+/* Name of the Right Arrow key in the text that describes a captured key press. */
 "term.key.rightArrow" = "Mũi tên phải";
+/* Name of the Space bar in the text that describes a captured key press. */
 "term.key.space" = "Dấu cách";
+/* Name of the Tab key in the text that describes a captured key press. */
 "term.key.tab" = "Tab";
+/* Name of the Up Arrow key in the text that describes a captured key press. */
 "term.key.upArrow" = "Mũi tên lên";
+/* Name of the Command modifier key in the text that describes a captured key press. It is written as the Mac keyboard names it. */
 "term.key.meta" = "Command";
+/* Name of the Control modifier key in the text that describes a captured key press. */
 "term.key.control" = "Control";
+/* Name of the Option modifier key in the text that describes a captured key press. It is written as the Mac keyboard names it. */
 "term.key.alt" = "Option";
+/* Name of the Shift modifier key in the text that describes a captured key press. */
 "term.key.shift" = "Shift";
 "ui.mapping.automatic" = "Tự động";
 "ui.virtualProfile.automaticSelected" = "Tự động (%@)";
 "ui.setup.activeDetail" = "Trình điều khiển Xbox USB bị hạn chế đã được cài đặt và sẵn sàng.";
+/* Detail line of the problem banner when the driver extension waits for approval. System Settings is the name of the macOS app. The extension is needed for supported Microsoft USB controllers. */
 "platform.macos.ui.setup.approvalDetail" = "Phê duyệt trình điều khiển trong Cài đặt hệ thống để dùng các bộ điều khiển USB Microsoft được hỗ trợ.";
 "ui.setup.checkingDetail" = "Đang kiểm tra trình điều khiển Xbox USB đã cài đặt.";
 "ui.setup.driverTitle" = "Trình điều khiển Xbox USB";
 "ui.setup.invalidDetail" = "Trình điều khiển Xbox USB được nhúng không hợp lệ. Hãy sửa chữa bằng cách cài đặt lại ứng dụng này.";
 "ui.setup.missingDetail" = "Ứng dụng này không chứa trình điều khiển Xbox USB. Hãy cài đặt lại ứng dụng đã ký.";
+/* Button that opens the System Settings app on the pane where the user can allow the permission or the extension. */
 "platform.macos.ui.setup.openSystemSettings" = "Mở Cài đặt hệ thống";
+/* Title of the alert shown when the System Settings app could not be opened. */
 "platform.macos.ui.setup.openSystemSettingsFailed" = "Không thể mở Cài đặt hệ thống.";
 "ui.setup.repairDetail" = "OpenJoystickDriver sẽ sửa chữa trình điều khiển Xbox USB mà không cần công cụ nhà phát triển.";
 "ui.setup.uninstallDetail" = "Các bộ điều khiển Xbox USB ngừng hoạt động cho đến khi trình điều khiển được cài đặt lại.";
 "ui.setup.repairDriver" = "Sửa chữa trình điều khiển Xbox USB";
 "ui.banner.service.title" = "OpenJoystickDriver không thể kết nối với dịch vụ của nó";
 "ui.banner.access.title" = "Cần cấp quyền";
+/* Detail line of the problem banner when macOS has not allowed all that the driver needs. OpenJoystickDriver is the product name. */
 "platform.macos.ui.banner.access.detail" = "macOS chưa cho phép mọi thứ OpenJoystickDriver cần để đọc các bộ điều khiển và cung cấp chúng cho trò chơi.";
 "ui.banner.liveUpdates.title" = "Không có cập nhật trực tiếp";
 "ui.banner.liveUpdates.detail.closed" = "Dịch vụ đã đóng kết nối. Thay vào đó, OpenJoystickDriver kiểm tra thay đổi của bộ điều khiển mỗi giây.";
@@ -941,7 +985,9 @@
 "cli.shared.option.quiet" = "Không in thông báo thành công ra stderr.";
 /* Help text of the --timeout option that every command takes. %1$g is the default number of seconds for a service request and %2$g is the default for the service, virtual set and virtual reset commands, which stay as written in quotes. */
 "cli.shared.option.timeout" = "Số giây chờ cho mỗi yêu cầu dịch vụ (mặc định: %1$g), hoặc để các lệnh “service”, “virtual set” và “virtual reset” hoàn tất (mặc định: %2$g).";
+/* One-line summary of ojd, the command line tool, at the top of its help. OpenJoystickDriver is the product name. */
 "platform.macos.cli.root.group.abstract" = "Cấu hình và kiểm tra OpenJoystickDriver, trình điều khiển tay cầm chơi game cho macOS.";
+/* Start of the help of ojd. It lists the first commands to run, in aligned columns; the command names stay as written and the descriptions after them are translated. Keep the alignment spaces. */
 "platform.macos.cli.root.group.discussion" = "Bắt đầu tại đây:\n  ojd status             Kiểm tra dịch vụ, tiện ích mở rộng và quyền.\n  ojd diagnose           Chạy mọi kiểm tra và báo cáo điều gì đang sai.\n  ojd controller list    Liệt kê các tay cầm đang kết nối.\n\nVí dụ:\n  # In đầu vào của một tay cầm khi nó thay đổi\n  ojd controller watch 045E:028E\n  # Liệt kê các tay cầm đang kết nối dưới dạng JSON\n  ojd --json controller list\n\nMôi trường (cờ được ưu tiên hơn biến):\n  OJD_NO_INPUT=1         Giống --no-input.\n  OJD_TIMEOUT=SECONDS    Giống --timeout.\n  OJD_COLOR=WHEN         auto, always (có màu cả ngoài terminal) hoặc never.\n\nHoàn tất lệnh trong shell:\n  ojd --generate-completion-script zsh|bash|fish\n\nMã thoát:\n  0    Thành công.\n  1    Lệnh thất bại.\n  64   Lỗi cách dùng.\n  69   Dịch vụ chưa chạy. Hãy khởi động bằng “ojd service start”.\n  77   Thiếu quyền của macOS.\n  127  Bản build từ kho mã không thể chuyển lệnh cho ứng dụng đã cài.\n  130  Bị ngắt.";
 /* Last line of the help of every command. 'ojd --help' stays as written. */
 "cli.shared.help.globalOptions" = "Mọi lệnh đều nhận các tùy chọn chung; “ojd --help” liệt kê chúng.";
@@ -977,7 +1023,9 @@
 "cli.service.start.abstract" = "Mở ứng dụng ở nền và chờ đến khi dịch vụ của nó nhận yêu cầu.";
 /* Error of 'ojd service start' when the ojd program is not inside the app bundle. ojd and OpenJoystickDriver.app stay as written. */
 "cli.service.start.noBundle" = "ojd này không nằm trong OpenJoystickDriver.app nên không thể khởi động dịch vụ. Hãy mở ứng dụng đã cài đặt, hoặc chạy ojd bên trong nó.";
+/* Error of 'ojd service start' when macOS cannot open the app. %@ is the path of the app. Finder is the macOS file manager. */
 "platform.macos.cli.service.start.openFailed" = "macOS không thể mở %@. Hãy mở nó từ Finder để xem lý do.";
+/* One-line summary of 'ojd service stop' in the command list and at the top of its help. */
 "platform.macos.cli.service.stop.abstract" = "Dừng dịch vụ và chờ đến khi nó thoát. Các bộ điều khiển đã kết nối được trả lại cho macOS.";
 /* Error of 'ojd service stop' when the system refuses to stop the service. %@ is the reason from the system. OpenJoystickDriver is the product name. */
 "cli.service.stop.signalFailed" = "Không thể dừng dịch vụ: %@. Hãy thoát OpenJoystickDriver từ menu của nó.";
@@ -993,6 +1041,7 @@
 "cli.status.group.abstract" = "Hiển thị dịch vụ, phần mở rộng, quyền và các bộ điều khiển đã kết nối.";
 /* Long description in the help of 'ojd status'. */
 "cli.status.group.discussion" = "Hoạt động cả khi dịch vụ đã dừng: báo dịch vụ đã dừng và thoát với mã 0.";
+/* Row label in the output of 'ojd status' for the Accessibility permission. It is written as macOS names it. */
 "platform.macos.cli.status.group.labelInputInject" = "Trợ năng";
 /* Row label in the output of 'ojd status'. The version of this command line tool follows. */
 "cli.status.group.labelCommandLineTool" = "Công cụ dòng lệnh";
@@ -1000,9 +1049,11 @@
 "cli.status.group.labelControllers" = "Bộ điều khiển (%lld)";
 /* Row label in the output of 'ojd status'. The state of the driver extension follows. */
 "cli.status.group.labelTransportExtension" = "Phần mở rộng";
+/* Row label in the output of 'ojd status' for the Input Monitoring permission. It is written as macOS names it. */
 "platform.macos.cli.status.group.labelInputRead" = "Giám sát đầu vào";
 /* Row label in the output of 'ojd status'. The reason why the stored profile overrides could not be read follows. */
 "cli.status.group.labelOverrideError" = "Lỗi ghi đè";
+/* Heading in the output of 'ojd status' above the list of controllers that macOS serves natively. %lld is the number of controllers. */
 "platform.macos.cli.status.group.labelPassThrough" = "Giao cho macOS (%lld)";
 /* Row label in the output of 'ojd status'. The state and version of the service follow. */
 "cli.status.group.labelService" = "Dịch vụ";
@@ -1036,7 +1087,9 @@
 "cli.access.enable.success" = "Điểm cuối đang lắng nghe tại %@.";
 /* One-line summary of 'ojd access grant' in the command list and at the top of its help. A token is a named secret for pages served over the WebSocket. */
 "cli.access.grant.abstract" = "Cho phép một chương trình đã ký, hoặc một token mới, dùng điểm cuối.";
+/* Error of 'ojd access grant' for a program with an ad-hoc signature or none. %@ is the program identifier. Developer ID and Apple Development are names of certificate kinds and stay as written. */
 "platform.macos.cli.access.grant.adHoc" = "%@ được ký ad-hoc hoặc chưa ký, nên bất kỳ chương trình cục bộ nào cũng có thể mạo nhận chữ ký của nó. Hãy ký bằng chứng chỉ Developer ID hoặc Apple Development, rồi cấp quyền.";
+/* Warning of 'ojd access grant' about a program that Apple signed. python3 and osascript are program names and stay as written. */
 "platform.macos.cli.access.grant.platformWarning" = "Chương trình này do Apple ký. Nếu nó chạy các tập lệnh, như python3 hoặc osascript, mọi tập lệnh nó chạy đều có quyền truy cập này.";
 /* Error of 'ojd access grant' when neither CLIENT nor --token is given, or both are. CLIENT and --token NAME stay as written. */
 "cli.access.grant.clientOrToken" = "Đưa CLIENT hoặc --token NAME.";
@@ -1058,9 +1111,11 @@
 "cli.access.grant.success" = "Đã cấp %1$@ cho %2$@ (ID %3$@).";
 /* Help text of the --token option of 'ojd access grant'. It creates a named token instead of granting a program. */
 "cli.access.grant.token" = "Tạo một token với tên này thay vì cấp quyền cho chương trình.";
+/* Yes or no question of 'ojd access grant --token' for a token without origins. %1$@ is the token name and %2$@ is the list of scopes. */
 "platform.macos.cli.access.grant.tokenConfirm" = "Tạo token %1$@ với %2$@, cho các chương trình trên máy Mac này?";
 /* Message printed after 'ojd access grant --token' created a token; the line ends with a colon because the secret value follows on the next line. %1$@ is the list of granted scopes, %2$@ is the token name and %3$@ is the token ID. */
 "cli.access.grant.tokenSuccess" = "Đã cấp %1$@ cho token %2$@ (ID %3$@). Hãy giữ bí mật token; nó sẽ không hiển thị lại:";
+/* Yes or no question of 'ojd access grant --token --origin' for a token with origins. %1$@ is the token name, %2$@ is the list of scopes and %3$@ is the list of origins. */
 "platform.macos.cli.access.grant.tokenWebConfirm" = "Tạo token %1$@ với %2$@, cho các chương trình trên máy Mac này và cho các trang từ %3$@?";
 /* One-line summary of 'ojd access list' in the command list and at the top of its help. */
 "cli.access.list.abstract" = "Liệt kê các máy khách và token đã được cấp quyền, cùng những mục bị từ chối trong 24 giờ qua.";
@@ -1146,7 +1201,9 @@
 "cli.diagnose.group.outputWritten" = "Đã ghi gói hỗ trợ vào %@. Hãy xem lại trước khi chia sẻ; tên thiết bị được bao gồm.";
 /* Long description in the help of 'ojd diagnose'. pass, warn, fail and skip are the check results printed by the command and stay as written, as do --soak and the other option names. */
 "cli.diagnose.group.discussion" = "Mỗi kiểm tra báo pass, warn, fail hoặc skip. Các kiểm tra cần dịch vụ sẽ bị bỏ qua khi dịch vụ đã dừng. Thoát với mã 1 khi có kiểm tra thất bại. --soak thêm một kiểm tra tình trạng khi chạy, lấy mẫu dịch vụ trong khoảng thời gian đã cho; không có nó thì kiểm tra này bị bỏ qua. --output còn ghi một báo cáo hỗ trợ; hãy xem lại trước khi chia sẻ.";
+/* Detail of the transport extension check of 'ojd diagnose' when macOS has no registration of the extension. The command in quotes stays as written. */
 "platform.macos.cli.diagnose.group.transportExtensionAbsent" = "chưa đăng ký với macOS; hãy chạy “ojd transport-extension activate”";
+/* Detail of the transport extension check of 'ojd diagnose' when macOS has the extension active. */
 "platform.macos.cli.diagnose.group.transportExtensionActive" = "đang hoạt động trong macOS";
 /* Detail of the transport extension check of 'ojd diagnose' when the extension bundle has an unexpected identifier. %@ is that identifier. OpenJoystickDriver is the product name. */
 "cli.diagnose.group.transportExtensionBundleInvalid" = "mã định danh gói không mong đợi %@; hãy cài đặt lại OpenJoystickDriver";
@@ -1156,6 +1213,7 @@
 "cli.diagnose.group.transportExtensionBundlePresent" = "đã được nhúng trong ứng dụng";
 /* Detail of the transport extension check of 'ojd diagnose' when the extension is registered but the user has not approved it. The command in quotes stays as written. */
 "cli.diagnose.group.transportExtensionInactive" = "đã đăng ký nhưng chưa hoạt động; hãy phê duyệt bằng “ojd transport-extension activate”";
+/* Detail of the transport extension check of 'ojd diagnose' when macOS does not report the registration. %@ is the reason from macOS. */
 "platform.macos.cli.diagnose.group.transportExtensionUnavailable" = "macOS không báo cáo việc đăng ký: %@";
 /* Last line of 'ojd diagnose' when checks failed. %lld is the number of failed checks. The command with <path> in quotes stays as written. */
 "cli.diagnose.group.failed" = "Kiểm tra thất bại: %lld. Hãy sửa theo chi tiết ở trên, hoặc chạy “ojd diagnose --output <path>” và đính kèm tệp vào báo cáo lỗi.";
@@ -1207,6 +1265,7 @@
 "cli.diagnose.group.soakVerdictStable" = "Ổn định: kích thước thường trú %1$.1f MiB, dấu vết bộ nhớ %2$.1f MiB, bộ mô tả tệp %3$lld, CPU %4$.1f%% trong %5$.0f giây";
 /* Error of 'ojd diagnose' when --soak is out of range. --soak stays as written. The range is fixed. */
 "cli.diagnose.group.soakRange" = "--soak phải nằm trong khoảng 1 đến 86400 giây.";
+/* Detail of the USB check of 'ojd diagnose' when the scan fails. %@ is the reason from macOS. Input Monitoring is written as macOS names it. OpenJoystickDriver is the product name. */
 "platform.macos.cli.diagnose.group.usbFailed" = "Quét USB thất bại: %@. Hãy cấp Giám sát đầu vào cho OpenJoystickDriver.";
 /* Detail of the USB check of 'ojd diagnose'. %lld is the number of vendor-specific USB controllers that the system lists. */
 "cli.diagnose.group.usbOk" = "Bộ điều khiển USB dành riêng cho nhà sản xuất có thể thấy: %lld";
@@ -1218,17 +1277,23 @@
 "cli.diagnose.group.virtualOverride" = "không đọc được các ghi đè cấu hình đã lưu: %@";
 /* Error of the commands that need a macOS permission. %@ is the permission name. The command in quotes stays as written. */
 "cli.shared.error.permissionMissing" = "Thiếu quyền truy cập %@. Hãy cấp bằng “ojd permission request”.";
+/* Error of 'ojd permission request' when a permission is missing after the request. %1$@ is the permission name and %2$@ is the path of the pane in System Settings. The command in quotes stays as written. */
 "platform.macos.cli.shared.error.permissionStillMissing" = "Vẫn thiếu quyền truy cập %1$@. Hãy cho phép OpenJoystickDriver trong Cài đặt hệ thống > %2$@, rồi chạy lại “ojd permission request”.";
+/* One-line summary of 'ojd transport-extension' in the command list and at the top of its help. DriverKit is an Apple framework name. */
 "platform.macos.cli.transportExtension.group.abstract" = "Hiển thị, kích hoạt hoặc hủy kích hoạt phần mở rộng hệ thống DriverKit của OpenJoystickDriver.";
+/* One-line summary of 'ojd transport-extension activate' in the command list and at the top of its help. System Settings is the name of the macOS app. */
 "platform.macos.cli.transportExtension.activate.abstract" = "Yêu cầu macOS kích hoạt phần mở rộng. Có thể cần phê duyệt trong Cài đặt hệ thống.";
 /* Long description in the help of 'ojd transport-extension activate'. The ojd program and the path stay as written. */
 "cli.transportExtension.activate.discussion" = "Hãy chạy ojd bên trong /Applications/OpenJoystickDriver.app. Chờ phê duyệt thì thoát với mã 0.";
 /* Message printed after 'ojd transport-extension activate' when the driver extension is active. */
 "cli.transportExtension.group.activated" = "Phần mở rộng đang hoạt động.";
+/* Message of 'ojd transport-extension activate' when the user must approve the extension. The menu path in System Settings is written as macOS shows it. */
 "platform.macos.cli.transportExtension.group.approval" = "Yêu cầu cần bạn phê duyệt. Hãy cho phép trong Cài đặt hệ thống > Cài đặt chung > Mục đăng nhập & Phần mở rộng > Phần mở rộng trình điều khiển.";
 /* Error of 'ojd transport-extension activate' when the app has no driver extension inside. %@ is the extension name, which stays as written with .dext. The build command stays as written. */
 "cli.transportExtension.group.bundleMissing" = "Ứng dụng không chứa %@.dext. Hãy chạy “./Scripts/ojd build install dev”, rồi thử lại từ /Applications.";
+/* Error of 'ojd transport-extension' commands when the codesign tool cannot run. %@ is the reason from the system. codesign and its path stay as written. */
 "platform.macos.cli.transportExtension.group.codesignFailedToRun" = "Không thể chạy codesign để xác minh ứng dụng: %@. Hãy kiểm tra /usr/bin/codesign có tồn tại không.";
+/* One-line summary of 'ojd transport-extension deactivate' in the command list and at the top of its help. */
 "platform.macos.cli.transportExtension.deactivate.abstract" = "Yêu cầu macOS hủy kích hoạt phần mở rộng. Các bộ điều khiển được trả lại cho macOS.";
 /* Long description in the help of 'ojd transport-extension deactivate'. The ojd program and the path stay as written. */
 "cli.transportExtension.deactivate.discussion" = "Hãy chạy ojd bên trong /Applications/OpenJoystickDriver.app.";
@@ -1238,14 +1303,19 @@
 "cli.transportExtension.group.notInstalled" = "ojd này chạy từ %@, không phải từ /Applications. Hãy chạy ojd bên trong /Applications/OpenJoystickDriver.app.";
 /* Error of 'ojd transport-extension' commands when the app code signature is not valid. %@ is the description of the signature problem. The build command stays as written. */
 "cli.transportExtension.group.signatureInvalid" = "Chữ ký của ứng dụng không hợp lệ (%@). Hãy xây dựng lại bằng “./Scripts/ojd build install-fast dev”, rồi thử lại.";
+/* One-line summary of 'ojd transport-extension status' in the command list and at the top of its help. */
 "platform.macos.cli.transportExtension.status.abstract" = "Hiển thị phần mở rộng có nằm trong ứng dụng và đã đăng ký với macOS hay không.";
 /* Row of 'ojd transport-extension status'. %@ is the state of the extension inside the app: present, missing or invalid. Keep the two spaces after the colon. */
 "cli.transportExtension.status.bundle" = "Phần mở rộng được nhúng:  %@";
 /* Long description in the help of 'ojd transport-extension status'. present, missing, invalid, active, inactive, absent and unavailable are values the command prints and stay as written. */
 "cli.transportExtension.status.discussion" = "Gói có mặt, thiếu hoặc không hợp lệ. Việc đăng ký là active, inactive, absent hoặc unavailable; unavailable thoát với mã 1. Hoạt động cả khi dịch vụ đã dừng.";
+/* Row of 'ojd transport-extension status'. %@ is the registration state: active, inactive, absent or unavailable. Keep the two spaces after the colon. */
 "platform.macos.cli.transportExtension.status.registration" = "Đăng ký macOS:  %@";
+/* Error of 'ojd transport-extension status' when macOS does not report the registration. %@ is the reason from macOS. systemextensionsctl list is a macOS command and stays as written. */
 "platform.macos.cli.transportExtension.status.unavailable" = "macOS không báo cáo việc đăng ký phần mở rộng: %@. Hãy thử lại, hoặc chạy “systemextensionsctl list”.";
+/* Error of 'ojd transport-extension' when macOS rejects the request. Both commands in quotes stay as written. */
 "platform.macos.cli.transportExtension.group.submitFailed" = "macOS đã từ chối yêu cầu. Hãy chạy “ojd transport-extension status” và kiểm tra “systemextensionsctl list”.";
+/* Error of 'ojd transport-extension' when macOS does not finish the request in time. System Settings is the name of the macOS app. The command in quotes stays as written. */
 "platform.macos.cli.transportExtension.group.timeout" = "macOS không hoàn tất yêu cầu kịp thời. Hãy kiểm tra Cài đặt hệ thống xem có lời nhắc phê duyệt không, rồi chạy “ojd transport-extension status”.";
 /* One-line summary of 'ojd log' in the command list and at the top of its help. */
 "cli.log.group.abstract" = "Hiển thị nhật ký dịch vụ hoặc in nơi chúng được lưu.";
@@ -1279,6 +1349,7 @@
 "cli.log.show.readFailed" = "Không thể đọc nhật ký dịch vụ: %@. Hãy kiểm tra thư mục mà “ojd log path” in ra.";
 /* Placeholder line printed above the shown part of a long log file, in the log text that 'ojd log show' prints. Keep the parentheses. */
 "cli.log.show.truncated" = "(đã lược bỏ nội dung nhật ký cũ hơn)";
+/* One-line summary of 'ojd permission' in the command list and at the top of its help. OpenJoystickDriver is the product name. */
 "platform.macos.cli.permission.group.abstract" = "Hiển thị hoặc yêu cầu các quyền macOS mà OpenJoystickDriver cần.";
 /* One-line summary of 'ojd permission list' in the command list and at the top of its help. OpenJoystickDriver is the product name. */
 "cli.permission.list.abstract" = "Liệt kê từng quyền, trạng thái của nó và OpenJoystickDriver dùng nó để làm gì.";
@@ -1286,9 +1357,11 @@
 "cli.permission.list.discussion" = "Các trạng thái là granted, denied hoặc unknown. Khi dịch vụ đã dừng, trạng thái được đọc trong tiến trình này và một ghi chú trên stderr cho biết điều đó; mã thoát vẫn là 0.";
 /* Note that 'ojd permission list' prints on the error stream when the service is stopped. The command in quotes stays as written. */
 "cli.permission.list.localState" = "Dịch vụ chưa chạy, nên các trạng thái này do tiến trình này đọc. Hãy khởi động dịch vụ bằng “ojd service start” để xem trạng thái mà nó thấy.";
+/* Name of the Accessibility permission in the output of 'ojd permission list'. It is written as macOS names it. */
 "platform.macos.cli.permission.group.nameInputInject" = "Trợ năng";
 /* Name of the permission for the approval of the driver extension, in the output of 'ojd permission list' and 'ojd diagnose'. */
 "cli.permission.group.nameUsbTransport" = "Phê duyệt phần mở rộng trình điều khiển";
+/* Name of the Input Monitoring permission in the output of 'ojd permission list'. It is written as macOS names it. */
 "platform.macos.cli.permission.group.nameInputRead" = "Giám sát đầu vào";
 /* Name of the permission to send keyboard and mouse events, in the output of 'ojd permission list' and 'ojd diagnose'. */
 "cli.permission.group.namePostEvent" = "Đầu ra bàn phím và chuột";
@@ -1296,16 +1369,21 @@
 "cli.permission.group.purposePostEvent" = "Gửi sự kiện bàn phím, con trỏ và cuộn đã ánh xạ lại";
 /* Remark added in parentheses to the purpose of a permission in 'ojd permission list' when the active profile needs it. */
 "cli.permission.group.requiredByProfile" = "hồ sơ đang dùng yêu cầu";
+/* Path of the Accessibility pane in System Settings, shown in permission messages. It is written as macOS shows it. */
 "platform.macos.cli.permission.group.paneInputInject" = "Quyền riêng tư & Bảo mật > Trợ năng";
+/* Path of the Driver Extensions pane in System Settings, shown in permission messages. It is written as macOS shows it. */
 "platform.macos.cli.permission.group.paneUsbTransport" = "Cài đặt chung > Mục đăng nhập & Phần mở rộng > Phần mở rộng trình điều khiển";
+/* Path of the Input Monitoring pane in System Settings, shown in permission messages. It is written as macOS shows it. */
 "platform.macos.cli.permission.group.paneInputRead" = "Quyền riêng tư & Bảo mật > Giám sát đầu vào";
 /* Purpose column of the input injection permission in 'ojd permission list'. It says what the driver uses the permission for. */
 "cli.permission.group.purposeInputInject" = "Cung cấp đầu ra bộ điều khiển ảo";
+/* Purpose column of the driver extension row in 'ojd permission list'. TCC is the macOS privacy permission system and stays as written. */
 "platform.macos.cli.permission.group.purposeUsbTransport" = "Sở hữu các giao diện USB thô bị giới hạn bởi entitlement; không phải quyền riêng tư TCC";
 /* Purpose column of the input reading permission in 'ojd permission list'. It says what the driver uses the permission for. */
 "cli.permission.group.purposeInputRead" = "Đọc đầu vào từ các bộ điều khiển vật lý";
 /* One-line summary of 'ojd permission request' in the command list and at the top of its help. */
 "cli.permission.request.abstract" = "Yêu cầu dịch vụ xin các quyền; nó không bao giờ nhắc trong terminal.";
+/* Long description in the help of 'ojd permission request'. Exit code 77, input-read, input-inject and --timeout stay as written. */
 "platform.macos.cli.permission.request.discussion" = "macOS hiển thị lời nhắc riêng cho dịch vụ. Thoát với mã 77 khi một quyền được yêu cầu vẫn chưa được cấp. Không có ids, yêu cầu input-read và input-inject. Ở đây --timeout mặc định là 10 giây.";
 /* Message printed by 'ojd permission request' when macOS granted the permission. */
 "cli.permission.request.granted" = "Quyền truy cập được yêu cầu đã được cấp.";
@@ -1367,9 +1445,11 @@
 "cli.setting.group.notifyProfileDeactivated" = "Thông báo khi cấu hình đang hoạt động bị tắt.";
 /* One-line summary of 'ojd setting set' in the command list and at the top of its help. */
 "cli.setting.set.abstract" = "Thay đổi một cài đặt.";
+/* Long description in the help of 'ojd setting set'. true, false, launchAtLogin and System Settings stay as written. */
 "platform.macos.cli.setting.set.discussion" = "Giá trị là true hoặc false. Thoát với mã 1 khi macOS để launchAtLogin ở trạng thái tắt cho đến khi bạn phê duyệt trong Cài đặt hệ thống.";
 /* Help text of the KEY argument of 'ojd setting set'. launchAtLogin is a setting name and stays as written. */
 "cli.setting.set.key" = "Cài đặt để thay đổi, như launchAtLogin.";
+/* Error of 'ojd setting set' when macOS does not apply a setting that needs approval. %1$@ is the setting name and %2$@ repeats it as the argument of the command in quotes, which stays as written. */
 "platform.macos.cli.setting.set.notApplied" = "macOS không áp dụng %1$@. Hãy cho phép OpenJoystickDriver trong Cài đặt hệ thống > Cài đặt chung > Mục đăng nhập, rồi chạy “ojd setting get %2$@”.";
 /* Message printed after 'ojd setting set'. %1$@ is the setting name, which stays as written, and %2$@ is the value the service applied, true or false. */
 "cli.setting.set.success" = "Đã đặt %1$@ thành %2$@.";
@@ -1398,10 +1478,13 @@
 "ui.settings.commandLine.tool" = "Công cụ dòng lệnh";
 "ui.settings.commandLine.toolBlocked" = "%@ là một tệp, không phải liên kết. Hãy xóa nó, rồi cài đặt lại.";
 "ui.settings.commandLine.toolCancelled" = "Đã hủy.";
+/* Error shown in the Command Line Tool section of the settings window when macOS refuses to install or remove the tool. */
 "platform.macos.ui.settings.commandLine.toolFailed" = "macOS không cho phép thay đổi này.";
 "ui.settings.commandLine.toolInstall" = "Cài đặt công cụ dòng lệnh";
+/* Status in the Command Line Tool section of the settings window when ojd is installed. %@ is the path of the link. Terminal is the macOS app and ojd is the command name. */
 "platform.macos.ui.settings.commandLine.toolInstalled" = "Đã cài đặt. Chạy ojd trong Terminal; gỡ cài đặt sẽ xóa %@.";
 "ui.settings.commandLine.toolLinkedElsewhere" = "%1$@ trỏ đến %2$@. Cài đặt sẽ liên kết nó với ứng dụng này.";
+/* Description in the Command Line Tool section of the settings window before the tool is installed. %@ is the path where the link is created. Terminal is the macOS app and ojd is the command name. */
 "platform.macos.ui.settings.commandLine.toolNotInstalled" = "Liên kết %@ với ứng dụng này để bạn có thể chạy ojd trong Terminal. macOS sẽ yêu cầu mật khẩu quản trị viên.";
 "ui.settings.commandLine.toolUninstall" = "Gỡ cài đặt";
 /* One-line summary of 'ojd controller' in the command list and at the top of its help. */
@@ -1420,9 +1503,11 @@
 "cli.controller.capture.warning" = "Nội dung gói khác nhau tùy bộ điều khiển. Hãy kiểm tra trước khi chia sẻ.";
 /* One-line summary of 'ojd controller disconnect' in the command list and at the top of its help. */
 "cli.controller.disconnect.abstract" = "Ngắt kết nối bộ điều khiển Bluetooth cổ điển.";
+/* Long description in the help of 'ojd controller disconnect'. It explains that classic Bluetooth controllers stay paired and that the wait is at least 6 seconds. */
 "platform.macos.cli.controller.disconnect.discussion" = "Đóng kết nối Bluetooth cổ điển. Bộ điều khiển vẫn được ghép đôi và kết nối lại khi bạn bật nó lên. Chờ ít nhất 6 giây để Bluetooth xác nhận. Dịch vụ không thể ngắt kết nối bộ điều khiển Bluetooth Low Energy. Hãy tắt bộ điều khiển hoặc ngắt kết nối trong Cài đặt hệ thống > Bluetooth.";
 /* Message printed after 'ojd controller disconnect' disconnected the controller. %@ is the controller name. */
 "cli.controller.disconnect.done" = "Đã ngắt kết nối %@.";
+/* Error of 'ojd controller disconnect' for a Bluetooth Low Energy controller. %@ is the controller name. System Settings and Bluetooth are macOS names. */
 "platform.macos.cli.controller.disconnect.bluetoothLe" = "%@ kết nối qua Bluetooth Low Energy và dịch vụ không thể ngắt kết nối. Hãy tắt bộ điều khiển hoặc ngắt kết nối trong Cài đặt hệ thống > Bluetooth.";
 /* Error of 'ojd controller disconnect' when the Bluetooth disconnect fails. %1$@ names the step that failed and %2$@ is the system's reason, which can end with an error code. */
 "cli.controller.disconnect.failed" = "Ngắt kết nối Bluetooth thất bại trong %1$@: %2$@.";
@@ -1470,8 +1555,11 @@
 "cli.controller.group.outputUnsupported" = "%1$@ không có %2$@. Hãy chạy “ojd controller show %3$@” để xem nó hỗ trợ gì.";
 /* One-line summary of 'ojd controller claim' in the command list and at the top of its help. OpenJoystickDriver is the product name. To serve a model means to read its input and publish it as a virtual gamepad. */
 "cli.controller.claim.abstract" = "Để OpenJoystickDriver phục vụ một mẫu bộ điều khiển.";
+/* Long description in the help of 'ojd controller claim'. server, ojd, VVVV-PPPP.json and the record terms stay as written. */
 "platform.macos.cli.controller.claim.discussion" = "Đặt server thành ojd trong bản ghi của bạn cho mẫu đó, VVVV-PPPP.json trong thư mục bản ghi của bạn, và giữ các trường khác của bản ghi. Áp dụng cho mọi bộ điều khiển của mẫu. Dịch vụ đang chạy áp dụng mà không cần cắm lại. Cần dịch vụ để tìm bộ điều khiển. --dry-run không ghi gì. Thoát với mã 1 và E2023 cho bộ điều khiển dùng USB thô, luôn do OpenJoystickDriver phục vụ, hoặc do macOS không phục vụ ở chế độ gốc.";
+/* One-line summary of 'ojd controller release' in the command list and at the top of its help. */
 "platform.macos.cli.controller.release.abstract" = "Trả một mẫu bộ điều khiển về cho macOS.";
+/* Long description in the help of 'ojd controller release'. server, system and VVVV-PPPP.json stay as written. */
 "platform.macos.cli.controller.release.discussion" = "Đặt server thành system trong bản ghi của bạn cho mẫu đó, VVVV-PPPP.json trong thư mục bản ghi của bạn, và giữ các trường khác của bản ghi. Áp dụng cho mọi bộ điều khiển của mẫu. Dịch vụ đang chạy áp dụng mà không cần cắm lại. Cần dịch vụ để tìm bộ điều khiển. --dry-run không ghi gì. Thoát với mã 1 và E2023 cho bộ điều khiển dùng USB thô, luôn do OpenJoystickDriver phục vụ, hoặc do macOS không phục vụ ở chế độ gốc.";
 /* Message printed by 'ojd controller claim' and related commands with --dry-run instead of writing the record. %1$@ is the controller identity, %2$@ is the server name in kebab case and %3$@ is the record file. */
 "cli.controller.group.serverDryRun" = "Nếu chạy, sẽ đặt %1$@ thành %2$@ trong %3$@.";
@@ -1479,6 +1567,7 @@
 "cli.controller.group.serverInvalid" = "Không thể thay đổi %1$@: %2$@";
 /* Error when a controller has no record to change. %1$@ is the controller identity and %2$@ repeats it as the argument of the command in quotes, which stays as written. */
 "cli.controller.group.serverNoRecord" = "%1$@ không có bản ghi bộ điều khiển để thay đổi. Hãy bắt đầu một bản ghi bằng “ojd record draft %2$@”.";
+/* Message when a controller cannot be released to macOS because macOS does not serve it natively. %@ is the controller identity. OpenJoystickDriver is the product name. */
 "platform.macos.cli.controller.group.serverNotNative" = "macOS không phục vụ %@ ở chế độ gốc, nên OpenJoystickDriver luôn phục vụ nó.";
 /* Message when the server of a controller cannot be changed because it uses raw USB. %@ is the controller identity. OpenJoystickDriver is the product name. */
 "cli.controller.group.serverRawUsb" = "%@ dùng USB thô, nên OpenJoystickDriver luôn phục vụ nó.";
@@ -1574,6 +1663,7 @@
 "cli.controller.show.labelPublication" = "Cung cấp";
 /* Row label in the output of 'ojd controller show', present when the system owns the output. The explanation that the system sends rumble and light commands follows. */
 "cli.controller.show.labelOutputOwner" = "Bên phụ trách đầu ra";
+/* Value of the Output owner row of 'ojd controller show'. Rumble and Lighting are the labels of two other rows and are written as in this catalog. */
 "platform.macos.cli.controller.show.outputOwnerMacos" = "macOS (gốc). Rung và Đèn chỉ liệt kê những gì macOS chưa làm.";
 /* Row label in the output of 'ojd controller show', present when tuning values apply. The comma-separated tuning values follow. */
 "cli.controller.show.labelTuning" = "Tinh chỉnh";
@@ -1733,6 +1823,7 @@
 "cli.virtual.launch.errorNotFound" = "không có chương trình nào tên đó trong PATH";
 /* Error of 'ojd virtual launch' when --json or --plain is given. Both option names stay as written. */
 "cli.virtual.launch.errorOutput" = "--json và --plain không áp dụng, vì chương trình ghi ra đầu ra chuẩn.";
+/* Help text of the SDL backend flag of 'ojd virtual launch'. The SDL hint names and values stay as written. */
 "platform.macos.cli.virtual.launch.sdlGamecontrollerBackend" = "Đồng thời đặt các gợi ý SDL khiến SDL chỉ đọc tay cầm qua khung GameController của Apple: SDL_JOYSTICK_MFI=1, SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS=1, SDL_JOYSTICK_IOKIT=0, SDL_JOYSTICK_HIDAPI=0. Chúng chỉ áp dụng cho chương trình và thay thế các giá trị đã đặt.";
 /* One-line summary of 'ojd virtual reset' in the command list and at the top of its help. */
 "cli.virtual.reset.abstract" = "Đưa kiểu máy của một bộ điều khiển, hoặc mọi kiểu máy, về lựa chọn tay cầm ảo tự động.";
@@ -1896,6 +1987,7 @@
 "error.E2036.message" = "Không có ứng dụng OpenJoystickDriver nào trả lời thông báo thử kịp lúc. Hãy kiểm tra ứng dụng đang chạy, rồi thử lại.";
 /* Error E2037, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */
 "error.E2037.message" = "Thông báo không được phép cho OpenJoystickDriver. Hãy cho phép trong cài đặt thông báo của hệ thống, rồi thử lại.";
+/* Note about a controller record whose raw USB family the USB extension cannot claim because Apple signs its product list. OJD is the short product name. */
 "platform.macos.cli.record.group.usbNotClaimed" = "Họ thiết bị này dùng USB thô, và phần mở rộng USB không thể chiếm bộ điều khiển này, vì danh sách sản phẩm của nó do Apple ký. OJD chỉ truy cập được nó qua truy cập USB trực tiếp, khi macOS cho phép.";
 /* Note about a Switch 2 controller record that connects over USB only. bluetoothLE.vibrationCharacteristic is a field of the record and stays as written. */
 "cli.record.group.usbOnlySwitch2" = "Chỉ USB: thêm bluetoothLE.vibrationCharacteristic vào bản ghi Switch 2 này để kết nối bộ điều khiển qua Bluetooth LE.";
@@ -2051,6 +2143,7 @@
 "cli.profile.create.discussion" = "Cấu hình áp dụng trong mọi ứng dụng trừ khi --app chỉ định một ứng dụng. Theo mặc định, tay cầm ảo truyền thẳng mọi thành phần không có liên kết nào dùng. Cấu hình bắt đầu ở trạng thái không hoạt động; hãy kích hoạt bằng “ojd profile activate”.";
 /* Message printed after 'ojd profile create'. %1$@ is the profile name, shown in quotes, and %2$@ is the profile ID. */
 "cli.profile.create.done" = "Đã tạo “%1$@” (%2$@).";
+/* Help text of the physical input option of 'ojd profile create'. shared and exclusive are values the user types and stay as written. */
 "platform.macos.cli.profile.create.physicalInput" = "macOS có còn thấy bộ điều khiển hay không (shared) hoặc OJD chiếm lấy nó (exclusive).";
 /* Help text of the --virtual-gamepad option of 'ojd profile create'. disabled, mapped and passthrough are values the user types and stay as written. */
 "cli.profile.create.virtualGamepad" = "Nội dung tay cầm ảo gửi: không gì cả (disabled), chỉ các thành phần đã liên kết (mapped), hoặc cả mọi thành phần không có liên kết nào dùng (passthrough).";
@@ -2288,6 +2381,7 @@
 "ui.access.web.port.choose" = "Chọn tự động";
 "ui.access.web.portRange" = "Cổng phải nằm trong khoảng từ %1$lld đến %2$lld.";
 "ui.access.web.enable.title" = "Bật WebSocket?";
+/* Message of the confirmation alert that turns on the WebSocket in the Access area. */
 "platform.macos.ui.access.web.enable.message" = "Các trang web từ nguồn gốc của một token sau đó có thể kết nối với điểm cuối trên máy Mac này.";
 "ui.access.web.enable.port" = "Cổng: %lld";
 "ui.access.web.enable.automatic" = "Hệ thống chọn một cổng trống.";
@@ -2300,6 +2394,7 @@
 "ui.access.grant.title" = "Cấp quyền truy cập cho %@?";
 "ui.access.grant.question" = "Cấp cho %1$@ (%2$@) các phạm vi này: %3$@?";
 "ui.access.grant.controlWarning" = "Phạm vi điều khiển cho phép chương trình gửi đầu ra tới bộ điều khiển của bạn, chẳng hạn như rung và đèn.";
+/* Warning line of the confirmation alert that grants access to a program that Apple signed. */
 "platform.macos.ui.access.grant.platformWarning" = "Chương trình này do Apple ký. Bất kỳ chương trình nào Apple ký với cùng mã định danh sẽ có quyền truy cập này.";
 "ui.access.revoke" = "Thu hồi";
 "ui.access.revoke.title" = "Thu hồi quyền truy cập của %@?";
@@ -2330,6 +2425,7 @@
 "ui.access.scope.read" = "Đọc";
 "ui.access.scope.control" = "Điều khiển";
 "ui.access.signer.signed" = "Do %@ ký";
+/* Label for the signer of a program that Apple signed, shown in the Access area. */
 "platform.macos.ui.access.signer.platform" = "Do Apple ký";
 "ui.access.signer.adHoc" = "Chưa ký";
 "ui.access.transport.socket" = "Socket cục bộ";
@@ -2452,6 +2548,7 @@
 "ui.settings.general.checkUpdatesAutomatically" = "Tự động kiểm tra cập nhật";
 "ui.settings.general.checkUpdatesAutomaticallyDescription" = "Kiểm tra phiên bản mới hơn khi ứng dụng khởi động.";
 "ui.settings.commandLine.uninstallTitle" = "Gỡ cài đặt công cụ dòng lệnh?";
+/* Message of the confirmation alert that removes the command line tool. %1$@ is the path of the link. The app stays installed. Terminal is the macOS app and ojd is the command name. */
 "platform.macos.ui.settings.commandLine.uninstallMessage" = "Thao tác này xóa liên kết tại %1$@. Ứng dụng vẫn được cài, và ojd không còn chạy trong Terminal cho đến khi bạn cài lại công cụ.";
 "ui.settings.commandLine.uninstallConfirm" = "Gỡ cài đặt";
 "ui.settings.advanced.developerToolsOff" = "Hãy bật công cụ nhà phát triển để xem đầu vào bộ điều khiển và gói USB.";
@@ -2703,14 +2800,19 @@
 "ui.settings.general.updateAhead" = "Mới hơn bản phát hành mới nhất";
 "ui.settings.general.version" = "Phiên bản";
 "ui.settings.general.latestRelease" = "Bản phát hành mới nhất: %@";
+/* Title of the switch in the General pane of the settings window that shows the app icon in the Dock. Dock is the macOS name. */
 "platform.macos.ui.settings.general.showInDock" = "Hiện trong Dock";
+/* Description under the Show in Dock switch in the General pane of the settings window. OpenJoystickDriver is the product name. */
 "platform.macos.ui.settings.general.showInDockDescription" = "Luôn hiện biểu tượng OpenJoystickDriver trong Dock. Khi tắt, biểu tượng chỉ hiện khi có cửa sổ đang mở.";
+/* Reason shown when the switch for Show in menu bar or Show in Dock cannot be turned off, because at least one stays on. The two switch names are written as in this catalog. */
 "platform.macos.ui.settings.general.entryPointRequired" = "Giữ bật ít nhất một trong hai tùy chọn Hiện trên thanh menu và Hiện trong Dock.";
+/* Help text of the showInDock setting in 'ojd setting list'. OpenJoystickDriver is the product name. */
 "platform.macos.cli.setting.group.showInDock" = "Luôn hiện biểu tượng OpenJoystickDriver trong Dock; khi tắt, biểu tượng chỉ hiện khi có cửa sổ đang mở.";
 "ui.activity.mode.log" = "Nhật ký";
 "ui.activity.mode.diagnostics" = "Chẩn đoán";
 "ui.activity.lines" = "Số dòng";
 "ui.activity.search" = "Tìm kiếm";
+/* Toolbar button in the Activity area that shows the log file in Finder, the macOS file manager. */
 "platform.macos.ui.activity.showInFinder" = "Hiển thị trong Finder";
 "ui.activity.showInFinder.failed" = "Không thể mở thư mục nhật ký.";
 "ui.activity.runChecks" = "Chạy kiểm tra";
@@ -2772,10 +2874,13 @@
 "ui.settings.advanced.errorUnsupported" = "Tệp cài đặt %@ không được hỗ trợ. Hãy viết lại tệp theo apiVersion được hỗ trợ, hoặc chuyển tệp vào Thùng rác bằng `ojd setting reset`.";
 "ui.settings.advanced.errorUnwritable" = "Không thể ghi tệp cài đặt %@.";
 "ui.settings.advanced.errorCannotReset" = "Không thể chuyển tệp cài đặt %@ vào Thùng rác.";
+/* Error shown at startup when the stored settings file turns off both entry points. %@ is the path of the settings file. The two switch names are written as in this catalog, and the command in backticks stays as written. */
 "platform.macos.ui.settings.advanced.errorStoredNoVisibleEntryPoint" = "Tệp cài đặt %@ tắt cả “Hiện trên thanh menu” và “Hiện trong Dock”, nên ứng dụng sẽ không có điểm vào nào hiển thị. Hãy sửa tệp, hoặc chuyển tệp vào Thùng rác bằng `ojd setting reset`.";
+/* Error shown when the user turns off both Show in menu bar and Show in Dock. The two switch names are written as in this catalog. */
 "platform.macos.ui.settings.advanced.errorNoVisibleEntryPoint" = "Không thể tắt cả “Hiện trên thanh menu” và “Hiện trong Dock”: ứng dụng sẽ không có điểm vào nào hiển thị.";
 "ui.settings.advanced.unreadableTitle" = "Không thể đọc cài đặt";
 "ui.settings.advanced.unreadableResetSettings" = "Đặt lại cài đặt";
+/* Button of the alert about an unreadable settings file at startup that shows the file in Finder, the macOS file manager. */
 "platform.macos.ui.settings.advanced.unreadableShowInFinder" = "Hiện trong Finder";
 /* One-line summary of 'ojd setting reset' in the command list and at the top of its help. */
 "cli.setting.reset.abstract" = "Chuyển tệp cài đặt vào Thùng rác.";

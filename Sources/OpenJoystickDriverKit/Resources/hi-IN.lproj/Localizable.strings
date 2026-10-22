@@ -1,3 +1,4 @@
+/* Product name in the title of the application menu of the menu bar. It stays OpenJoystickDriver in every language. */
 "term.app.name" = "OpenJoystickDriver";
 "ui.permissions.restartApplication" = "OpenJoystickDriver पुनः आरंभ करें";
 "ui.menu.projectPage" = "GitHub";
@@ -68,16 +69,20 @@
 "ui.settings.advanced.discardProfileMessage" = "आपके प्रोफ़ाइल के बदलाव सहेजे नहीं गए हैं।";
 "ui.settings.advanced.discardAction" = "बदलाव छोड़ें";
 "ui.settings.advanced.enableDeveloperTools" = "डेवलपर टूल सक्षम करें";
+/* Note in the Notifications pane of the settings window when macOS has turned off both banners and sounds for the app. System Settings is the name of the macOS app. */
 "platform.macos.ui.settings.notifications.notificationBannersAndSoundOff" = "सिस्टम सेटिंग्स में बैनर और ध्वनियाँ बंद हैं।";
 "ui.settings.notifications.notificationBannersOff" = "बैनर बंद";
+/* Note in the Notifications pane of the settings window when macOS has turned off banners for the app. System Settings is the name of the macOS app. */
 "platform.macos.ui.settings.notifications.notificationBannersOffDetail" = "सूचना बैनर सिस्टम सेटिंग्स में बंद हैं।";
 "ui.settings.notifications.notificationDeliveryAllowed" = "सूचनाएँ भेजने की अनुमति है।";
 "ui.settings.notifications.notificationDeliveryReady" = "बैनर, सूचना केंद्र और ध्वनियाँ चालू हैं।";
 "ui.settings.notifications.notificationPermissionRequired" = "सूचनाएँ भेजने से पहले अनुमति ज़रूरी है।";
 "ui.settings.notifications.notificationSoundOff" = "ध्वनि बंद";
+/* Note in the Notifications pane of the settings window when macOS has turned off sounds for the app. System Settings is the name of the macOS app. */
 "platform.macos.ui.settings.notifications.notificationSoundOffDetail" = "सूचना ध्वनियाँ सिस्टम सेटिंग्स में बंद हैं।";
 "ui.settings.notifications.notificationSounds" = "ध्वनि बजाएँ";
 "ui.settings.notifications.notifications" = "सूचनाएँ";
+/* Error shown when the user turns on notifications in the app while macOS denies them. System Settings is the name of the macOS app. OpenJoystickDriver is the product name. */
 "platform.macos.ui.settings.notifications.notificationsDenied" = "OpenJoystickDriver के लिए सूचनाएँ सिस्टम सेटिंग्स में बंद हैं।";
 "ui.settings.general.openNotificationSettings" = "सूचना सेटिंग्स खोलें";
 "ui.settings.general.openSystemSettings" = "सेटिंग्स खोलें";
@@ -87,6 +92,7 @@
 "ui.settings.notifications.profileDeactivatedShort" = "निष्क्रिय किया गया";
 "ui.settings.notifications.profileNotifications" = "प्रोफ़ाइल सक्रिय हुई या बदली गई";
 "ui.settings.general.startAtLogin" = "लॉगिन पर शुरू करें";
+/* Error shown in the General pane of the settings window after the user turns on Start at login and macOS wants approval. System Settings, General and Login Items are names in macOS and are written as macOS shows them. */
 "platform.macos.ui.settings.general.startAtLoginApprovalRequired" = "सिस्टम सेटिंग्स > सामान्य > लॉगिन आइटम में OpenJoystickDriver को अनुमति दें।";
 "ui.settings.general.startAtLoginDescription" = "लॉग इन करने पर OpenJoystickDriver को मेनू बार में खोलें।";
 "ui.settings.notifications.testNotification" = "परीक्षण सूचना भेजें";
@@ -120,11 +126,14 @@
 "ui.controllers.profileUnavailableSentence" = "सक्रिय प्रोफ़ाइल उपलब्ध नहीं: %@";
 "ui.controllers.profileErrorSentence" = "सक्रिय प्रोफ़ाइल त्रुटि: %@";
 "ui.controllers.accessibilityDetails" = "%1$@। %2$@। प्रोटोकॉल: %3$@। पार्सर: %4$@। सीरियल नंबर: %5$@। USB VID/PID: %6$@। इनपुट एंडपॉइंट: %7$@। आउटपुट एंडपॉइंट: %8$@।";
+/* Note on a controller row in the Controllers area when macOS serves the controller natively and the driver does not publish a virtual gamepad for it. */
 "platform.macos.ui.controllers.systemGamepadNotPublished" = "macOS का नेटिव गेमपैड, प्रकाशित नहीं";
 "ui.controllers.server.label" = "चलाने वाला";
+/* Entry of the server picker in the Controllers detail: macOS serves the controller itself. */
 "platform.macos.ui.controllers.server.system" = "macOS (नेटिव)";
 "ui.controllers.server.ojd" = "OpenJoystickDriver (वर्चुअल)";
 "ui.controllers.serving.label" = "सेवा मार्ग";
+/* Value of the serving route in the Controllers area: macOS serves the controller and the driver passes the input through. */
 "platform.macos.ui.controllers.serving.nativePassThrough" = "macOS (सीधे पास किया गया)";
 "ui.controllers.serving.virtualHID" = "OpenJoystickDriver (वर्चुअल गेमपैड)";
 "ui.controllers.serving.extensionOwned" = "ड्राइवर एक्सटेंशन";
@@ -362,17 +371,29 @@
 "status.unavailable" = "अनुपलब्ध";
 /* Value of a permission row in the Access area when the user must act, for example because the permission is denied. */
 "status.needsAttention" = "ध्यान देने की ज़रूरत";
+/* Column title of the diagnostics table in the Activity area. The column lists the result of each check. */
 "term.status" = "स्थिति";
+/* Label of the protocol fact in the Controllers detail. The value is the protocol family name of the controller. */
 "term.protocol" = "प्रोटोकॉल";
+/* Label of the serial number fact in the Controllers detail. */
 "term.serialNumber" = "सीरियल नंबर";
+/* Label of the fact in the Controllers detail that names the USB endpoint where input arrives. */
 "term.inputEndpoint" = "इनपुट एंडपॉइंट";
+/* Label of the fact in the Controllers detail that names the USB endpoint where output is sent. */
 "term.outputEndpoint" = "आउटपुट एंडपॉइंट";
+/* Label of the destination popup in the capture assignment sheet. The destination is what the assignment sends. */
 "term.destination" = "गंतव्य";
+/* VoiceOver label of one assignment row in the profile editor. An assignment links a controller control to a destination. */
 "term.assignment" = "असाइनमेंट";
+/* Heading of the assignments section in the profile editor. */
 "term.assignments" = "असाइनमेंट";
+/* Label of the controller popup in the capture assignment sheet. It picks the control source. */
 "term.controller" = "कंट्रोलर";
+/* Placeholder and label of the name field in the profile creation sheet. */
 "term.profileName" = "प्रोफ़ाइल नाम";
+/* Name of the permission for keyboard and pointer output in the Access area. */
 "term.keyboardPointer" = "कीबोर्ड और पॉइंटर";
+/* Name of the macOS Accessibility permission in the Access area. It is written as macOS names it in System Settings. */
 "platform.macos.term.inputInject" = "ऐक्सेसिबिलिटी";
 /* Button of the combination sheets that adds the chosen entry to the combination. */
 "action.add" = "जोड़ें";
@@ -386,6 +407,7 @@
 "action.export" = "एक्सपोर्ट करें…";
 /* Result label of a failed check in the diagnostics list of the Activity area. */
 "status.failed" = "विफल";
+/* Name of the macOS Input Monitoring permission in the Access area. It is written as macOS names it in System Settings. */
 "platform.macos.term.inputRead" = "इनपुट मॉनिटरिंग";
 /* Value of a permission row in the Access area when the driver has not asked macOS for the permission yet. */
 "status.notRequested" = "अनुरोध नहीं किया गया";
@@ -544,6 +566,7 @@
 "ui.inputTest.open" = "इनपुट परीक्षण खोलें…";
 "ui.inputTest.outputError" = "भौतिक आउटपुट त्रुटि";
 "ui.inputTest.outputRejected" = "कंट्रोलर ने इस आउटपुट परीक्षण को अस्वीकार कर दिया।";
+/* Status shown in the input test window when the Input Monitoring permission is missing. Input Monitoring is written as macOS names it. */
 "platform.macos.ui.inputTest.permissionRequired" = "इनपुट मॉनिटरिंग की अनुमति आवश्यक है";
 "ui.inputTest.playerIndicator" = "प्लेयर इंडिकेटर";
 "ui.inputTest.pressed" = "दबाया गया";
@@ -571,38 +594,59 @@
 "ui.inputTest.xboxButton" = "Xbox बटन";
 "ui.inputTest.yButton" = "Y बटन";
 "ui.inputTest.yTriangle" = "Y / ट्रायंगल";
+/* Name of the Caps Lock key in the text that describes a captured key press. */
 "term.key.capsLock" = "कैप्स लॉक";
+/* Name of the Delete key, the one that deletes backward, in the text that describes a captured key press. */
 "term.key.delete" = "डिलीट";
+/* Name of the Down Arrow key in the text that describes a captured key press. */
 "term.key.downArrow" = "नीचे तीर";
+/* Name of the Escape key in the text that describes a captured key press. */
 "term.key.escape" = "Escape";
+/* Name of the Forward Delete key in the text that describes a captured key press. */
 "term.key.forwardDelete" = "आगे डिलीट";
+/* Name of the Left Arrow key in the text that describes a captured key press. */
 "term.key.leftArrow" = "बायाँ तीर";
+/* Name of the Page Down key in the text that describes a captured key press. */
 "term.key.pageDown" = "पेज डाउन";
+/* Name of the Page Up key in the text that describes a captured key press. */
 "term.key.pageUp" = "पेज अप";
+/* Name of the Return key in the text that describes a captured key press. */
 "term.key.return" = "Return";
+/* Name of the Right Arrow key in the text that describes a captured key press. */
 "term.key.rightArrow" = "दायाँ तीर";
+/* Name of the Space bar in the text that describes a captured key press. */
 "term.key.space" = "स्पेस";
+/* Name of the Tab key in the text that describes a captured key press. */
 "term.key.tab" = "टैब";
+/* Name of the Up Arrow key in the text that describes a captured key press. */
 "term.key.upArrow" = "ऊपर तीर";
+/* Name of the Command modifier key in the text that describes a captured key press. It is written as the Mac keyboard names it. */
 "term.key.meta" = "कमांड";
+/* Name of the Control modifier key in the text that describes a captured key press. */
 "term.key.control" = "कंट्रोल";
+/* Name of the Option modifier key in the text that describes a captured key press. It is written as the Mac keyboard names it. */
 "term.key.alt" = "ऑप्शन";
+/* Name of the Shift modifier key in the text that describes a captured key press. */
 "term.key.shift" = "शिफ़्ट";
 "ui.mapping.automatic" = "स्वचालित";
 "ui.virtualProfile.automaticSelected" = "स्वचालित (%@)";
 "ui.setup.activeDetail" = "प्रतिबंधित Xbox USB ड्राइवर इंस्टॉल है और तैयार है।";
+/* Detail line of the problem banner when the driver extension waits for approval. System Settings is the name of the macOS app. The extension is needed for supported Microsoft USB controllers. */
 "platform.macos.ui.setup.approvalDetail" = "समर्थित Microsoft USB कंट्रोलर इस्तेमाल करने के लिए सिस्टम सेटिंग्स में ड्राइवर को स्वीकृति दें।";
 "ui.setup.checkingDetail" = "इंस्टॉल किए गए Xbox USB ड्राइवर की जाँच हो रही है।";
 "ui.setup.driverTitle" = "Xbox USB ड्राइवर";
 "ui.setup.invalidDetail" = "एम्बेड किया गया Xbox USB ड्राइवर अमान्य है। इस ऐप को फिर से इंस्टॉल करके इसे ठीक करें।";
 "ui.setup.missingDetail" = "इस ऐप में Xbox USB ड्राइवर नहीं है। हस्ताक्षरित ऐप फिर इंस्टॉल करें।";
+/* Button that opens the System Settings app on the pane where the user can allow the permission or the extension. */
 "platform.macos.ui.setup.openSystemSettings" = "सिस्टम सेटिंग्स खोलें";
+/* Title of the alert shown when the System Settings app could not be opened. */
 "platform.macos.ui.setup.openSystemSettingsFailed" = "सिस्टम सेटिंग्स नहीं खोली जा सकीं।";
 "ui.setup.repairDetail" = "OpenJoystickDriver डेवलपर टूल के बिना Xbox USB ड्राइवर को ठीक करेगा।";
 "ui.setup.uninstallDetail" = "ड्राइवर फिर से इंस्टॉल होने तक Xbox USB कंट्रोलर काम करना बंद कर देते हैं।";
 "ui.setup.repairDriver" = "Xbox USB ड्राइवर ठीक करें";
 "ui.banner.service.title" = "OpenJoystickDriver अपनी सेवा तक नहीं पहुँच पा रहा है";
 "ui.banner.access.title" = "अनुमति आवश्यक है";
+/* Detail line of the problem banner when macOS has not allowed all that the driver needs. OpenJoystickDriver is the product name. */
 "platform.macos.ui.banner.access.detail" = "OpenJoystickDriver को कंट्रोलर पढ़ने और उन्हें गेम में प्रकाशित करने के लिए जो कुछ चाहिए, macOS ने उसकी पूरी अनुमति नहीं दी है।";
 "ui.banner.liveUpdates.title" = "लाइव अपडेट उपलब्ध नहीं हैं";
 "ui.banner.liveUpdates.detail.closed" = "सेवा ने कनेक्शन बंद कर दिया। इसके बजाय OpenJoystickDriver हर सेकंड कंट्रोलर में बदलाव जाँचता है।";
@@ -941,7 +985,9 @@
 "cli.shared.option.quiet" = "stderr पर सफलता के संदेश प्रिंट न करें।";
 /* Help text of the --timeout option that every command takes. %1$g is the default number of seconds for a service request and %2$g is the default for the service, virtual set and virtual reset commands, which stay as written in quotes. */
 "cli.shared.option.timeout" = "हर सेवा अनुरोध के लिए प्रतीक्षा के सेकंड (डिफ़ॉल्ट: %1$g), या “service”, “virtual set” और “virtual reset” कमांड पूरे होने तक (डिफ़ॉल्ट: %2$g)।";
+/* One-line summary of ojd, the command line tool, at the top of its help. OpenJoystickDriver is the product name. */
 "platform.macos.cli.root.group.abstract" = "macOS के गेमपैड ड्राइवर OpenJoystickDriver को कॉन्फ़िगर और जाँचें।";
+/* Start of the help of ojd. It lists the first commands to run, in aligned columns; the command names stay as written and the descriptions after them are translated. Keep the alignment spaces. */
 "platform.macos.cli.root.group.discussion" = "यहाँ से शुरू करें:\n  ojd status             सेवा, एक्सटेंशन और अनुमतियाँ जाँचें।\n  ojd diagnose           हर जाँच चलाएँ और गड़बड़ी बताएँ।\n  ojd controller list    जुड़े हुए कंट्रोलर सूचीबद्ध करें।\n\nउदाहरण:\n  # एक कंट्रोलर का इनपुट बदलते ही प्रिंट करें\n  ojd controller watch 045E:028E\n  # जुड़े हुए कंट्रोलर JSON में सूचीबद्ध करें\n  ojd --json controller list\n\nएनवायरनमेंट (फ़्लैग अपने वैरिएबल पर भारी पड़ता है):\n  OJD_NO_INPUT=1         --no-input के समान।\n  OJD_TIMEOUT=SECONDS    --timeout के समान।\n  OJD_COLOR=WHEN         auto, always (टर्मिनल के बाहर भी रंग) या never।\n\nशेल कंप्लीशन:\n  ojd --generate-completion-script zsh|bash|fish\n\nएग्ज़िट कोड:\n  0    सफलता।\n  1    कमांड विफल रही।\n  64   उपयोग त्रुटि।\n  69   सेवा चालू नहीं है। इसे “ojd service start” से शुरू करें।\n  77   macOS की कोई अनुमति नहीं मिली है।\n  127  रिपॉज़िटरी बिल्ड कमांड को इंस्टॉल किए गए ऐप तक नहीं पहुँचा सका।\n  130  बाधित।";
 /* Last line of the help of every command. 'ojd --help' stays as written. */
 "cli.shared.help.globalOptions" = "हर कमांड ग्लोबल विकल्प भी लेती है; “ojd --help” उन्हें सूचीबद्ध करता है।";
@@ -977,7 +1023,9 @@
 "cli.service.start.abstract" = "ऐप को बैकग्राउंड में खोलें और उसकी सेवा के अनुरोध स्वीकार करने तक प्रतीक्षा करें।";
 /* Error of 'ojd service start' when the ojd program is not inside the app bundle. ojd and OpenJoystickDriver.app stay as written. */
 "cli.service.start.noBundle" = "यह ojd OpenJoystickDriver.app के अंदर नहीं है, इसलिए यह सेवा शुरू नहीं कर सकता। इंस्टॉल किया गया ऐप खोलें, या उसके अंदर का ojd चलाएँ।";
+/* Error of 'ojd service start' when macOS cannot open the app. %@ is the path of the app. Finder is the macOS file manager. */
 "platform.macos.cli.service.start.openFailed" = "macOS %@ को नहीं खोल सका। कारण देखने के लिए इसे Finder से खोलें।";
+/* One-line summary of 'ojd service stop' in the command list and at the top of its help. */
 "platform.macos.cli.service.stop.abstract" = "सेवा बंद करें और उसके समाप्त होने तक प्रतीक्षा करें। कनेक्ट किए गए कंट्रोलर macOS को लौट जाते हैं।";
 /* Error of 'ojd service stop' when the system refuses to stop the service. %@ is the reason from the system. OpenJoystickDriver is the product name. */
 "cli.service.stop.signalFailed" = "सेवा बंद नहीं की जा सकी: %@। OpenJoystickDriver को उसके मेनू से बंद करें।";
@@ -993,6 +1041,7 @@
 "cli.status.group.abstract" = "सेवा, एक्सटेंशन, अनुमतियाँ और कनेक्ट किए गए कंट्रोलर दिखाएँ।";
 /* Long description in the help of 'ojd status'. */
 "cli.status.group.discussion" = "सेवा बंद होने पर भी काम करता है: यह सेवा को बंद बताता है और 0 के साथ बाहर निकलता है।";
+/* Row label in the output of 'ojd status' for the Accessibility permission. It is written as macOS names it. */
 "platform.macos.cli.status.group.labelInputInject" = "ऐक्सेसिबिलिटी";
 /* Row label in the output of 'ojd status'. The version of this command line tool follows. */
 "cli.status.group.labelCommandLineTool" = "कमांड-लाइन टूल";
@@ -1000,9 +1049,11 @@
 "cli.status.group.labelControllers" = "कंट्रोलर (%lld)";
 /* Row label in the output of 'ojd status'. The state of the driver extension follows. */
 "cli.status.group.labelTransportExtension" = "एक्सटेंशन";
+/* Row label in the output of 'ojd status' for the Input Monitoring permission. It is written as macOS names it. */
 "platform.macos.cli.status.group.labelInputRead" = "इनपुट मॉनिटरिंग";
 /* Row label in the output of 'ojd status'. The reason why the stored profile overrides could not be read follows. */
 "cli.status.group.labelOverrideError" = "ओवरराइड त्रुटि";
+/* Heading in the output of 'ojd status' above the list of controllers that macOS serves natively. %lld is the number of controllers. */
 "platform.macos.cli.status.group.labelPassThrough" = "macOS के पास छोड़े गए (%lld)";
 /* Row label in the output of 'ojd status'. The state and version of the service follow. */
 "cli.status.group.labelService" = "सेवा";
@@ -1036,7 +1087,9 @@
 "cli.access.enable.success" = "एंडपॉइंट %@ पर सुनता है।";
 /* One-line summary of 'ojd access grant' in the command list and at the top of its help. A token is a named secret for pages served over the WebSocket. */
 "cli.access.grant.abstract" = "किसी हस्ताक्षरित प्रोग्राम या नए टोकन को एंडपॉइंट का उपयोग करने दें।";
+/* Error of 'ojd access grant' for a program with an ad-hoc signature or none. %@ is the program identifier. Developer ID and Apple Development are names of certificate kinds and stay as written. */
 "platform.macos.cli.access.grant.adHoc" = "%@ ad-hoc हस्ताक्षरित है या हस्ताक्षरित नहीं है, इसलिए कोई भी स्थानीय प्रोग्राम उसके हस्ताक्षर का दावा कर सकता है। उसे Developer ID या Apple Development प्रमाणपत्र से हस्ताक्षरित करें, फिर अनुमति दें।";
+/* Warning of 'ojd access grant' about a program that Apple signed. python3 and osascript are program names and stay as written. */
 "platform.macos.cli.access.grant.platformWarning" = "इस प्रोग्राम पर Apple ने हस्ताक्षर किए हैं। अगर यह python3 या osascript जैसी स्क्रिप्ट चलाता है, तो यह जो भी स्क्रिप्ट चलाता है उसे यह पहुँच मिल जाती है।";
 /* Error of 'ojd access grant' when neither CLIENT nor --token is given, or both are. CLIENT and --token NAME stay as written. */
 "cli.access.grant.clientOrToken" = "या तो CLIENT दें या --token NAME।";
@@ -1058,9 +1111,11 @@
 "cli.access.grant.success" = "%1$@ को %2$@ की अनुमति दी गई (ID %3$@)।";
 /* Help text of the --token option of 'ojd access grant'. It creates a named token instead of granting a program. */
 "cli.access.grant.token" = "किसी प्रोग्राम को अनुमति देने के बजाय इस नाम से एक टोकन बनाएँ।";
+/* Yes or no question of 'ojd access grant --token' for a token without origins. %1$@ is the token name and %2$@ is the list of scopes. */
 "platform.macos.cli.access.grant.tokenConfirm" = "क्या टोकन %1$@ को %2$@ के साथ बनाना है, इस Mac के प्रोग्राम के लिए?";
 /* Message printed after 'ojd access grant --token' created a token; the line ends with a colon because the secret value follows on the next line. %1$@ is the list of granted scopes, %2$@ is the token name and %3$@ is the token ID. */
 "cli.access.grant.tokenSuccess" = "%1$@ टोकन %2$@ को दिया गया (ID %3$@)। टोकन को गोपनीय रखें; यह दोबारा नहीं दिखाया जाएगा:";
+/* Yes or no question of 'ojd access grant --token --origin' for a token with origins. %1$@ is the token name, %2$@ is the list of scopes and %3$@ is the list of origins. */
 "platform.macos.cli.access.grant.tokenWebConfirm" = "क्या टोकन %1$@ को %2$@ के साथ बनाना है, इस Mac के प्रोग्राम और %3$@ के पेजों के लिए?";
 /* One-line summary of 'ojd access list' in the command list and at the top of its help. */
 "cli.access.list.abstract" = "अनुमति पाए क्लाइंट और टोकन, तथा पिछले 24 घंटों में अस्वीकृत क्लाइंट और टोकन सूचीबद्ध करता है।";
@@ -1146,7 +1201,9 @@
 "cli.diagnose.group.outputWritten" = "सपोर्ट बंडल %@ में लिखा गया। इसमें डिवाइस के नाम शामिल हैं, इसलिए साझा करने से पहले इसे देख लें।";
 /* Long description in the help of 'ojd diagnose'. pass, warn, fail and skip are the check results printed by the command and stay as written, as do --soak and the other option names. */
 "cli.diagnose.group.discussion" = "हर जाँच pass, warn, fail या skip बताती है। जिन जाँचों के लिए सेवा चाहिए, वे सेवा बंद होने पर छोड़ दी जाती हैं। कोई भी जाँच fail होने पर कोड 1 के साथ बाहर निकलता है। --soak एक रनटाइम-हेल्थ जाँच जोड़ता है, जो दिए गए समय तक सेवा का नमूना लेती है; इसके बिना वह जाँच छोड़ दी जाती है। --output एक सपोर्ट रिपोर्ट भी लिखता है; साझा करने से पहले उसे देख लें।";
+/* Detail of the transport extension check of 'ojd diagnose' when macOS has no registration of the extension. The command in quotes stays as written. */
 "platform.macos.cli.diagnose.group.transportExtensionAbsent" = "macOS में पंजीकृत नहीं है; “ojd transport-extension activate” चलाएँ";
+/* Detail of the transport extension check of 'ojd diagnose' when macOS has the extension active. */
 "platform.macos.cli.diagnose.group.transportExtensionActive" = "macOS में सक्रिय है";
 /* Detail of the transport extension check of 'ojd diagnose' when the extension bundle has an unexpected identifier. %@ is that identifier. OpenJoystickDriver is the product name. */
 "cli.diagnose.group.transportExtensionBundleInvalid" = "अप्रत्याशित बंडल आइडेंटिफ़ायर %@; OpenJoystickDriver दोबारा इंस्टॉल करें";
@@ -1156,6 +1213,7 @@
 "cli.diagnose.group.transportExtensionBundlePresent" = "ऐप में एम्बेड है";
 /* Detail of the transport extension check of 'ojd diagnose' when the extension is registered but the user has not approved it. The command in quotes stays as written. */
 "cli.diagnose.group.transportExtensionInactive" = "पंजीकृत है पर सक्रिय नहीं; “ojd transport-extension activate” से इसे स्वीकृति दें";
+/* Detail of the transport extension check of 'ojd diagnose' when macOS does not report the registration. %@ is the reason from macOS. */
 "platform.macos.cli.diagnose.group.transportExtensionUnavailable" = "macOS ने पंजीकरण की जानकारी नहीं दी: %@";
 /* Last line of 'ojd diagnose' when checks failed. %lld is the number of failed checks. The command with <path> in quotes stays as written. */
 "cli.diagnose.group.failed" = "विफल जाँचें: %lld। ऊपर दिए ब्योरे से इन्हें ठीक करें, या “ojd diagnose --output <path>” चलाएँ और फ़ाइल को बग रिपोर्ट के साथ संलग्न करें।";
@@ -1207,6 +1265,7 @@
 "cli.diagnose.group.soakVerdictStable" = "स्थिर: रेज़िडेंट आकार %1$.1f MiB, फ़ुटप्रिंट %2$.1f MiB, फ़ाइल डिस्क्रिप्टर %3$lld, CPU %4$.1f%%, अवधि %5$.0f सेकंड";
 /* Error of 'ojd diagnose' when --soak is out of range. --soak stays as written. The range is fixed. */
 "cli.diagnose.group.soakRange" = "--soak 1 और 86400 सेकंड के बीच होना चाहिए।";
+/* Detail of the USB check of 'ojd diagnose' when the scan fails. %@ is the reason from macOS. Input Monitoring is written as macOS names it. OpenJoystickDriver is the product name. */
 "platform.macos.cli.diagnose.group.usbFailed" = "USB स्कैन विफल रहा: %@। OpenJoystickDriver को इनपुट मॉनिटरिंग की अनुमति दें।";
 /* Detail of the USB check of 'ojd diagnose'. %lld is the number of vendor-specific USB controllers that the system lists. */
 "cli.diagnose.group.usbOk" = "दिखने वाले वेंडर-स्पेसिफ़िक USB कंट्रोलर: %lld";
@@ -1218,17 +1277,23 @@
 "cli.diagnose.group.virtualOverride" = "सहेजे गए प्रोफ़ाइल ओवरराइड पढ़े नहीं जा सकते: %@";
 /* Error of the commands that need a macOS permission. %@ is the permission name. The command in quotes stays as written. */
 "cli.shared.error.permissionMissing" = "%@ की पहुँच नहीं है। “ojd permission request” से अनुमति दें।";
+/* Error of 'ojd permission request' when a permission is missing after the request. %1$@ is the permission name and %2$@ is the path of the pane in System Settings. The command in quotes stays as written. */
 "platform.macos.cli.shared.error.permissionStillMissing" = "%1$@ की पहुँच अब भी नहीं है। सिस्टम सेटिंग्स > %2$@ में OpenJoystickDriver को अनुमति दें, फिर “ojd permission request” दोबारा चलाएँ।";
+/* One-line summary of 'ojd transport-extension' in the command list and at the top of its help. DriverKit is an Apple framework name. */
 "platform.macos.cli.transportExtension.group.abstract" = "OpenJoystickDriver DriverKit सिस्टम एक्सटेंशन दिखाएँ, सक्रिय करें या निष्क्रिय करें।";
+/* One-line summary of 'ojd transport-extension activate' in the command list and at the top of its help. System Settings is the name of the macOS app. */
 "platform.macos.cli.transportExtension.activate.abstract" = "macOS से एक्सटेंशन सक्रिय करने को कहें। सिस्टम सेटिंग्स में स्वीकृति की ज़रूरत पड़ सकती है।";
 /* Long description in the help of 'ojd transport-extension activate'. The ojd program and the path stay as written. */
 "cli.transportExtension.activate.discussion" = "/Applications/OpenJoystickDriver.app के अंदर का ojd चलाएँ। स्वीकृति का इंतज़ार होने पर कोड 0 के साथ बाहर निकलता है।";
 /* Message printed after 'ojd transport-extension activate' when the driver extension is active. */
 "cli.transportExtension.group.activated" = "एक्सटेंशन सक्रिय है।";
+/* Message of 'ojd transport-extension activate' when the user must approve the extension. The menu path in System Settings is written as macOS shows it. */
 "platform.macos.cli.transportExtension.group.approval" = "अनुरोध के लिए आपकी स्वीकृति चाहिए। इसे सिस्टम सेटिंग्स > सामान्य > लॉगिन आइटम और एक्सटेंशन > ड्राइवर एक्सटेंशन में अनुमति दें।";
 /* Error of 'ojd transport-extension activate' when the app has no driver extension inside. %@ is the extension name, which stays as written with .dext. The build command stays as written. */
 "cli.transportExtension.group.bundleMissing" = "ऐप में %@.dext नहीं है। “./Scripts/ojd build install dev” चलाएँ, फिर /Applications से दोबारा कोशिश करें।";
+/* Error of 'ojd transport-extension' commands when the codesign tool cannot run. %@ is the reason from the system. codesign and its path stay as written. */
 "platform.macos.cli.transportExtension.group.codesignFailedToRun" = "ऐप जाँचने के लिए codesign नहीं चल सका: %@। देखें कि /usr/bin/codesign मौजूद है।";
+/* One-line summary of 'ojd transport-extension deactivate' in the command list and at the top of its help. */
 "platform.macos.cli.transportExtension.deactivate.abstract" = "macOS से एक्सटेंशन निष्क्रिय करने को कहें। कंट्रोलर macOS के पास लौट जाते हैं।";
 /* Long description in the help of 'ojd transport-extension deactivate'. The ojd program and the path stay as written. */
 "cli.transportExtension.deactivate.discussion" = "/Applications/OpenJoystickDriver.app के अंदर का ojd चलाएँ।";
@@ -1238,14 +1303,19 @@
 "cli.transportExtension.group.notInstalled" = "यह ojd /Applications से नहीं, %@ से चल रहा है। /Applications/OpenJoystickDriver.app के अंदर का ojd चलाएँ।";
 /* Error of 'ojd transport-extension' commands when the app code signature is not valid. %@ is the description of the signature problem. The build command stays as written. */
 "cli.transportExtension.group.signatureInvalid" = "ऐप का सिग्नेचर मान्य नहीं है (%@)। इसे “./Scripts/ojd build install-fast dev” से दोबारा बनाएँ, फिर कोशिश करें।";
+/* One-line summary of 'ojd transport-extension status' in the command list and at the top of its help. */
 "platform.macos.cli.transportExtension.status.abstract" = "दिखाएँ कि एक्सटेंशन ऐप में है और macOS में पंजीकृत है या नहीं।";
 /* Row of 'ojd transport-extension status'. %@ is the state of the extension inside the app: present, missing or invalid. Keep the two spaces after the colon. */
 "cli.transportExtension.status.bundle" = "एम्बेडेड एक्सटेंशन:  %@";
 /* Long description in the help of 'ojd transport-extension status'. present, missing, invalid, active, inactive, absent and unavailable are values the command prints and stay as written. */
 "cli.transportExtension.status.discussion" = "बंडल present, missing या invalid होता है। पंजीकरण active, inactive, absent या unavailable होता है; unavailable पर कोड 1 के साथ बाहर निकलता है। सेवा बंद होने पर भी काम करता है।";
+/* Row of 'ojd transport-extension status'. %@ is the registration state: active, inactive, absent or unavailable. Keep the two spaces after the colon. */
 "platform.macos.cli.transportExtension.status.registration" = "macOS पंजीकरण:  %@";
+/* Error of 'ojd transport-extension status' when macOS does not report the registration. %@ is the reason from macOS. systemextensionsctl list is a macOS command and stays as written. */
 "platform.macos.cli.transportExtension.status.unavailable" = "macOS ने एक्सटेंशन के पंजीकरण की जानकारी नहीं दी: %@। दोबारा कोशिश करें, या “systemextensionsctl list” चलाएँ।";
+/* Error of 'ojd transport-extension' when macOS rejects the request. Both commands in quotes stay as written. */
 "platform.macos.cli.transportExtension.group.submitFailed" = "macOS ने अनुरोध अस्वीकार कर दिया। “ojd transport-extension status” चलाएँ और “systemextensionsctl list” देखें।";
+/* Error of 'ojd transport-extension' when macOS does not finish the request in time. System Settings is the name of the macOS app. The command in quotes stays as written. */
 "platform.macos.cli.transportExtension.group.timeout" = "macOS ने अनुरोध समय पर पूरा नहीं किया। सिस्टम सेटिंग्स में स्वीकृति का संकेत देखें, फिर “ojd transport-extension status” चलाएँ।";
 /* One-line summary of 'ojd log' in the command list and at the top of its help. */
 "cli.log.group.abstract" = "सेवा लॉग दिखाएँ या बताएँ कि वे कहाँ हैं।";
@@ -1279,6 +1349,7 @@
 "cli.log.show.readFailed" = "सेवा लॉग पढ़े नहीं जा सके: %@। “ojd log path” जो फ़ोल्डर प्रिंट करता है उसे देखें।";
 /* Placeholder line printed above the shown part of a long log file, in the log text that 'ojd log show' prints. Keep the parentheses. */
 "cli.log.show.truncated" = "(पहले की लॉग सामग्री छोड़ दी गई)";
+/* One-line summary of 'ojd permission' in the command list and at the top of its help. OpenJoystickDriver is the product name. */
 "platform.macos.cli.permission.group.abstract" = "OpenJoystickDriver को चाहिए वाली macOS अनुमतियाँ दिखाएँ या माँगें।";
 /* One-line summary of 'ojd permission list' in the command list and at the top of its help. OpenJoystickDriver is the product name. */
 "cli.permission.list.abstract" = "हर अनुमति, उसकी स्थिति और OpenJoystickDriver उसे किसलिए इस्तेमाल करता है, सूची में दिखाएँ।";
@@ -1286,9 +1357,11 @@
 "cli.permission.list.discussion" = "स्थितियाँ granted, denied या unknown होती हैं। सेवा बंद होने पर स्थिति इसी प्रोसेस में पढ़ी जाती है और stderr पर इसका नोट आता है; एग्ज़िट कोड 0 ही रहता है।";
 /* Note that 'ojd permission list' prints on the error stream when the service is stopped. The command in quotes stays as written. */
 "cli.permission.list.localState" = "सेवा चल नहीं रही, इसलिए ये स्थितियाँ इसी प्रोसेस ने पढ़ीं। सेवा को जो स्थिति दिखती है, उसके लिए “ojd service start” से सेवा शुरू करें।";
+/* Name of the Accessibility permission in the output of 'ojd permission list'. It is written as macOS names it. */
 "platform.macos.cli.permission.group.nameInputInject" = "ऐक्सेसिबिलिटी";
 /* Name of the permission for the approval of the driver extension, in the output of 'ojd permission list' and 'ojd diagnose'. */
 "cli.permission.group.nameUsbTransport" = "ड्राइवर एक्सटेंशन की स्वीकृति";
+/* Name of the Input Monitoring permission in the output of 'ojd permission list'. It is written as macOS names it. */
 "platform.macos.cli.permission.group.nameInputRead" = "इनपुट मॉनिटरिंग";
 /* Name of the permission to send keyboard and mouse events, in the output of 'ojd permission list' and 'ojd diagnose'. */
 "cli.permission.group.namePostEvent" = "कीबोर्ड और माउस आउटपुट";
@@ -1296,16 +1369,21 @@
 "cli.permission.group.purposePostEvent" = "रीमैप किए गए कीबोर्ड, पॉइंटर और स्क्रोल इवेंट भेजें";
 /* Remark added in parentheses to the purpose of a permission in 'ojd permission list' when the active profile needs it. */
 "cli.permission.group.requiredByProfile" = "सक्रिय प्रोफ़ाइल को आवश्यक";
+/* Path of the Accessibility pane in System Settings, shown in permission messages. It is written as macOS shows it. */
 "platform.macos.cli.permission.group.paneInputInject" = "गोपनीयता और सुरक्षा > ऐक्सेसिबिलिटी";
+/* Path of the Driver Extensions pane in System Settings, shown in permission messages. It is written as macOS shows it. */
 "platform.macos.cli.permission.group.paneUsbTransport" = "सामान्य > लॉगिन आइटम और एक्सटेंशन > ड्राइवर एक्सटेंशन";
+/* Path of the Input Monitoring pane in System Settings, shown in permission messages. It is written as macOS shows it. */
 "platform.macos.cli.permission.group.paneInputRead" = "गोपनीयता और सुरक्षा > इनपुट मॉनिटरिंग";
 /* Purpose column of the input injection permission in 'ojd permission list'. It says what the driver uses the permission for. */
 "cli.permission.group.purposeInputInject" = "वर्चुअल कंट्रोलर का आउटपुट प्रकाशित करना";
+/* Purpose column of the driver extension row in 'ojd permission list'. TCC is the macOS privacy permission system and stays as written. */
 "platform.macos.cli.permission.group.purposeUsbTransport" = "एंटाइटलमेंट से सीमित रॉ USB इंटरफ़ेस का स्वामित्व लेना; यह TCC गोपनीयता अनुमति नहीं है";
 /* Purpose column of the input reading permission in 'ojd permission list'. It says what the driver uses the permission for. */
 "cli.permission.group.purposeInputRead" = "फ़िज़िकल कंट्रोलर से इनपुट पढ़ना";
 /* One-line summary of 'ojd permission request' in the command list and at the top of its help. */
 "cli.permission.request.abstract" = "सेवा से अनुमतियाँ माँगने को कहें; यह टर्मिनल में कभी नहीं पूछता।";
+/* Long description in the help of 'ojd permission request'. Exit code 77, input-read, input-inject and --timeout stay as written. */
 "platform.macos.cli.permission.request.discussion" = "macOS सेवा के लिए अपना प्रॉम्प्ट दिखाता है। माँगी गई अनुमति अब भी न मिली हो तो कोड 77 के साथ बाहर निकलता है। आईडी न देने पर input-read और input-inject माँगे जाते हैं। यहाँ --timeout का डिफ़ॉल्ट 10 सेकंड है।";
 /* Message printed by 'ojd permission request' when macOS granted the permission. */
 "cli.permission.request.granted" = "माँगी गई पहुँच दे दी गई है।";
@@ -1367,9 +1445,11 @@
 "cli.setting.group.notifyProfileDeactivated" = "जब सक्रिय प्रोफ़ाइल बंद की जाए, तब सूचना भेजें।";
 /* One-line summary of 'ojd setting set' in the command list and at the top of its help. */
 "cli.setting.set.abstract" = "एक सेटिंग बदलें।";
+/* Long description in the help of 'ojd setting set'. true, false, launchAtLogin and System Settings stay as written. */
 "platform.macos.cli.setting.set.discussion" = "मान true या false होते हैं। जब तक आप सिस्टम सेटिंग्स में स्वीकृति नहीं देते और macOS launchAtLogin को बंद रखता है, तब कोड 1 के साथ बाहर निकलता है।";
 /* Help text of the KEY argument of 'ojd setting set'. launchAtLogin is a setting name and stays as written. */
 "cli.setting.set.key" = "बदलने की सेटिंग, जैसे launchAtLogin।";
+/* Error of 'ojd setting set' when macOS does not apply a setting that needs approval. %1$@ is the setting name and %2$@ repeats it as the argument of the command in quotes, which stays as written. */
 "platform.macos.cli.setting.set.notApplied" = "macOS ने %1$@ लागू नहीं किया। सिस्टम सेटिंग्स > सामान्य > लॉगिन आइटम में OpenJoystickDriver को अनुमति दें, फिर “ojd setting get %2$@” चलाएँ।";
 /* Message printed after 'ojd setting set'. %1$@ is the setting name, which stays as written, and %2$@ is the value the service applied, true or false. */
 "cli.setting.set.success" = "%1$@ को %2$@ पर सेट किया गया।";
@@ -1398,10 +1478,13 @@
 "ui.settings.commandLine.tool" = "कमांड-लाइन टूल";
 "ui.settings.commandLine.toolBlocked" = "%@ एक फ़ाइल है, लिंक नहीं। इसे हटाएँ, फिर दोबारा इंस्टॉल करें।";
 "ui.settings.commandLine.toolCancelled" = "रद्द किया गया।";
+/* Error shown in the Command Line Tool section of the settings window when macOS refuses to install or remove the tool. */
 "platform.macos.ui.settings.commandLine.toolFailed" = "macOS ने बदलाव की अनुमति नहीं दी।";
 "ui.settings.commandLine.toolInstall" = "कमांड-लाइन टूल इंस्टॉल करें";
+/* Status in the Command Line Tool section of the settings window when ojd is installed. %@ is the path of the link. Terminal is the macOS app and ojd is the command name. */
 "platform.macos.ui.settings.commandLine.toolInstalled" = "इंस्टॉल हो गया। Terminal में ojd चलाएँ; अनइंस्टॉल करने पर %@ हट जाता है।";
 "ui.settings.commandLine.toolLinkedElsewhere" = "%1$@ का संकेत %2$@ की ओर है। इंस्टॉल करने पर यह इसके बजाय इस ऐप से जुड़ जाएगा।";
+/* Description in the Command Line Tool section of the settings window before the tool is installed. %@ is the path where the link is created. Terminal is the macOS app and ojd is the command name. */
 "platform.macos.ui.settings.commandLine.toolNotInstalled" = "%@ को इस ऐप से जोड़ता है ताकि आप Terminal में ojd चला सकें। macOS एडमिनिस्ट्रेटर पासवर्ड माँगता है।";
 "ui.settings.commandLine.toolUninstall" = "अनइंस्टॉल करें";
 /* One-line summary of 'ojd controller' in the command list and at the top of its help. */
@@ -1420,9 +1503,11 @@
 "cli.controller.capture.warning" = "पैकेट की सामग्री कंट्रोलर के अनुसार बदलती है। साझा करने से पहले उसे जाँच लें।";
 /* One-line summary of 'ojd controller disconnect' in the command list and at the top of its help. */
 "cli.controller.disconnect.abstract" = "क्लासिक Bluetooth कंट्रोलर डिस्कनेक्ट करें।";
+/* Long description in the help of 'ojd controller disconnect'. It explains that classic Bluetooth controllers stay paired and that the wait is at least 6 seconds. */
 "platform.macos.cli.controller.disconnect.discussion" = "क्लासिक Bluetooth कनेक्शन बंद करता है। कंट्रोलर पेयर रहता है और दोबारा चालू करने पर फिर से कनेक्ट हो जाता है। Bluetooth की पुष्टि के लिए कम से कम 6 सेकंड प्रतीक्षा करता है। सेवा Bluetooth Low Energy कंट्रोलर को डिस्कनेक्ट नहीं कर सकती। उसे बंद करें या सिस्टम सेटिंग्स > Bluetooth में डिस्कनेक्ट करें।";
 /* Message printed after 'ojd controller disconnect' disconnected the controller. %@ is the controller name. */
 "cli.controller.disconnect.done" = "%@ डिस्कनेक्ट हो गया।";
+/* Error of 'ojd controller disconnect' for a Bluetooth Low Energy controller. %@ is the controller name. System Settings and Bluetooth are macOS names. */
 "platform.macos.cli.controller.disconnect.bluetoothLe" = "%@ Bluetooth Low Energy से कनेक्ट है; सेवा इसे डिस्कनेक्ट नहीं कर सकती। कंट्रोलर बंद करें या उसे सिस्टम सेटिंग्स > Bluetooth में डिस्कनेक्ट करें।";
 /* Error of 'ojd controller disconnect' when the Bluetooth disconnect fails. %1$@ names the step that failed and %2$@ is the system's reason, which can end with an error code. */
 "cli.controller.disconnect.failed" = "%1$@ के दौरान Bluetooth डिस्कनेक्ट विफल रहा: %2$@।";
@@ -1470,8 +1555,11 @@
 "cli.controller.group.outputUnsupported" = "%1$@ में %2$@ नहीं है। यह देखने के लिए कि वह क्या सपोर्ट करता है, “ojd controller show %3$@” चलाएँ।";
 /* One-line summary of 'ojd controller claim' in the command list and at the top of its help. OpenJoystickDriver is the product name. To serve a model means to read its input and publish it as a virtual gamepad. */
 "cli.controller.claim.abstract" = "किसी कंट्रोलर मॉडल को OpenJoystickDriver से चलवाएँ।";
+/* Long description in the help of 'ojd controller claim'. server, ojd, VVVV-PPPP.json and the record terms stay as written. */
 "platform.macos.cli.controller.claim.discussion" = "मॉडल के लिए आपके रिकॉर्ड में, यानी रिकॉर्ड निर्देशिका की VVVV-PPPP.json में, server को ojd पर सेट करता है और रिकॉर्ड के अन्य फ़ील्ड बनाए रखता है। यह मॉडल के हर कंट्रोलर पर लागू होता है। चल रही सेवा इसे दोबारा जोड़े बिना लागू करती है। कंट्रोलर खोजने के लिए सेवा चाहिए। --dry-run कुछ नहीं लिखता। रॉ USB इस्तेमाल करने वाले कंट्रोलर के लिए, जिसे OpenJoystickDriver हमेशा चलाता है, या जिसे macOS नेटिव रूप से नहीं चलाता, E2023 के साथ 1 पर समाप्त होता है।";
+/* One-line summary of 'ojd controller release' in the command list and at the top of its help. */
 "platform.macos.cli.controller.release.abstract" = "किसी कंट्रोलर मॉडल को वापस macOS को दें।";
+/* Long description in the help of 'ojd controller release'. server, system and VVVV-PPPP.json stay as written. */
 "platform.macos.cli.controller.release.discussion" = "मॉडल के लिए आपके रिकॉर्ड में, यानी रिकॉर्ड निर्देशिका की VVVV-PPPP.json में, server को system पर सेट करता है और रिकॉर्ड के अन्य फ़ील्ड बनाए रखता है। यह मॉडल के हर कंट्रोलर पर लागू होता है। चल रही सेवा इसे दोबारा जोड़े बिना लागू करती है। कंट्रोलर खोजने के लिए सेवा चाहिए। --dry-run कुछ नहीं लिखता। रॉ USB इस्तेमाल करने वाले कंट्रोलर के लिए, जिसे OpenJoystickDriver हमेशा चलाता है, या जिसे macOS नेटिव रूप से नहीं चलाता, E2023 के साथ 1 पर समाप्त होता है।";
 /* Message printed by 'ojd controller claim' and related commands with --dry-run instead of writing the record. %1$@ is the controller identity, %2$@ is the server name in kebab case and %3$@ is the record file. */
 "cli.controller.group.serverDryRun" = "%1$@ को %2$@ पर सेट कर देता (%3$@)।";
@@ -1479,6 +1567,7 @@
 "cli.controller.group.serverInvalid" = "%1$@ बदला नहीं जा सकता: %2$@";
 /* Error when a controller has no record to change. %1$@ is the controller identity and %2$@ repeats it as the argument of the command in quotes, which stays as written. */
 "cli.controller.group.serverNoRecord" = "%1$@ का बदलने लायक कोई कंट्रोलर रिकॉर्ड नहीं है। “ojd record draft %2$@” से एक बनाएँ।";
+/* Message when a controller cannot be released to macOS because macOS does not serve it natively. %@ is the controller identity. OpenJoystickDriver is the product name. */
 "platform.macos.cli.controller.group.serverNotNative" = "macOS %@ को नेटिव रूप से नहीं चलाता, इसलिए OpenJoystickDriver उसे हमेशा चलाता है।";
 /* Message when the server of a controller cannot be changed because it uses raw USB. %@ is the controller identity. OpenJoystickDriver is the product name. */
 "cli.controller.group.serverRawUsb" = "%@ रॉ USB का उपयोग करता है, इसलिए OpenJoystickDriver उसे हमेशा चलाता है।";
@@ -1574,6 +1663,7 @@
 "cli.controller.show.labelPublication" = "प्रकाशन";
 /* Row label in the output of 'ojd controller show', present when the system owns the output. The explanation that the system sends rumble and light commands follows. */
 "cli.controller.show.labelOutputOwner" = "आउटपुट का स्वामी";
+/* Value of the Output owner row of 'ojd controller show'. Rumble and Lighting are the labels of two other rows and are written as in this catalog. */
 "platform.macos.cli.controller.show.outputOwnerMacos" = "macOS (नेटिव)। रंबल और लाइटिंग में केवल वही दिखता है जो macOS नहीं करता।";
 /* Row label in the output of 'ojd controller show', present when tuning values apply. The comma-separated tuning values follow. */
 "cli.controller.show.labelTuning" = "ट्यूनिंग";
@@ -1733,6 +1823,7 @@
 "cli.virtual.launch.errorNotFound" = "PATH में इस नाम का कोई प्रोग्राम नहीं है";
 /* Error of 'ojd virtual launch' when --json or --plain is given. Both option names stay as written. */
 "cli.virtual.launch.errorOutput" = "--json और --plain लागू नहीं होते, क्योंकि प्रोग्राम स्टैंडर्ड आउटपुट लिखता है।";
+/* Help text of the SDL backend flag of 'ojd virtual launch'. The SDL hint names and values stay as written. */
 "platform.macos.cli.virtual.launch.sdlGamecontrollerBackend" = "SDL के वे संकेत भी सेट करता है जिनसे SDL कंट्रोलरों को केवल Apple के GameController फ़्रेमवर्क से पढ़ता है: SDL_JOYSTICK_MFI=1, SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS=1, SDL_JOYSTICK_IOKIT=0, SDL_JOYSTICK_HIDAPI=0। ये केवल प्रोग्राम पर लागू होते हैं और पहले से सेट मानों को बदल देते हैं।";
 /* One-line summary of 'ojd virtual reset' in the command list and at the top of its help. */
 "cli.virtual.reset.abstract" = "किसी कंट्रोलर मॉडल, या हर मॉडल, को स्वचालित वर्चुअल गेमपैड चयन पर लौटाएँ।";
@@ -1896,6 +1987,7 @@
 "error.E2036.message" = "किसी भी OpenJoystickDriver ऐप ने परीक्षण सूचना का समय पर उत्तर नहीं दिया। जाँचें कि ऐप चल रहा है, फिर दोबारा कोशिश करें।";
 /* Error E2037, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */
 "error.E2037.message" = "OpenJoystickDriver के लिए सूचनाएँ अनुमत नहीं हैं। सिस्टम की सूचना सेटिंग्स में उन्हें अनुमति दें, फिर दोबारा कोशिश करें।";
+/* Note about a controller record whose raw USB family the USB extension cannot claim because Apple signs its product list. OJD is the short product name. */
 "platform.macos.cli.record.group.usbNotClaimed" = "यह परिवार रॉ USB इस्तेमाल करता है, और USB एक्सटेंशन इस कंट्रोलर को क्लेम नहीं कर सकता, क्योंकि उसकी प्रोडक्ट सूची पर Apple के हस्ताक्षर हैं। OJD उस तक केवल सीधे USB एक्सेस से पहुँचता है, जब macOS अनुमति देता है।";
 /* Note about a Switch 2 controller record that connects over USB only. bluetoothLE.vibrationCharacteristic is a field of the record and stays as written. */
 "cli.record.group.usbOnlySwitch2" = "केवल USB: कंट्रोलर को Bluetooth LE से कनेक्ट करने के लिए इस Switch 2 रिकॉर्ड में bluetoothLE.vibrationCharacteristic जोड़ें।";
@@ -2051,6 +2143,7 @@
 "cli.profile.create.discussion" = "प्रोफ़ाइल हर ऐप में लागू होती है, जब तक --app किसी ऐप का नाम न दे। डिफ़ॉल्ट रूप से वर्चुअल गेमपैड हर उस नियंत्रण को आगे भेज देता है जिसका कोई असाइनमेंट उपयोग नहीं करता। प्रोफ़ाइल निष्क्रिय शुरू होती है; इसे “ojd profile activate” से सक्रिय करें।";
 /* Message printed after 'ojd profile create'. %1$@ is the profile name, shown in quotes, and %2$@ is the profile ID. */
 "cli.profile.create.done" = "“%1$@” (%2$@) बनाई गई।";
+/* Help text of the physical input option of 'ojd profile create'. shared and exclusive are values the user types and stay as written. */
 "platform.macos.cli.profile.create.physicalInput" = "macOS को कंट्रोलर अब भी दिखता है (shared), या OJD उसे ले लेता है (exclusive)।";
 /* Help text of the --virtual-gamepad option of 'ojd profile create'. disabled, mapped and passthrough are values the user types and stay as written. */
 "cli.profile.create.virtualGamepad" = "वर्चुअल गेमपैड क्या भेजता है: कुछ नहीं (disabled), केवल असाइन किए गए नियंत्रण (mapped), या वे सभी नियंत्रण भी जिनका कोई असाइनमेंट उपयोग नहीं करता (passthrough)।";
@@ -2288,6 +2381,7 @@
 "ui.access.web.port.choose" = "स्वचालित रूप से चुनें";
 "ui.access.web.portRange" = "पोर्ट %1$lld और %2$lld के बीच होना चाहिए।";
 "ui.access.web.enable.title" = "WebSocket चालू करें?";
+/* Message of the confirmation alert that turns on the WebSocket in the Access area. */
 "platform.macos.ui.access.web.enable.message" = "किसी टोकन के ऑरिजिन के वेब पेज फिर इस Mac के एंडपॉइंट से कनेक्ट हो सकते हैं।";
 "ui.access.web.enable.port" = "पोर्ट: %lld";
 "ui.access.web.enable.automatic" = "सिस्टम एक खाली पोर्ट चुनता है।";
@@ -2300,6 +2394,7 @@
 "ui.access.grant.title" = "%@ को ऐक्सेस दें?";
 "ui.access.grant.question" = "%1$@ (%2$@) को ये स्कोप दें: %3$@?";
 "ui.access.grant.controlWarning" = "कंट्रोल स्कोप प्रोग्राम को आपके कंट्रोलर पर आउटपुट भेजने देता है, जैसे रंबल और लाइटें।";
+/* Warning line of the confirmation alert that grants access to a program that Apple signed. */
 "platform.macos.ui.access.grant.platformWarning" = "यह प्रोग्राम Apple द्वारा साइन किया गया है। Apple जिस भी प्रोग्राम को इसी आइडेंटिफ़ायर से साइन करता है उसे यह ऐक्सेस मिलेगा।";
 "ui.access.revoke" = "वापस लें";
 "ui.access.revoke.title" = "%@ का ऐक्सेस वापस लें?";
@@ -2330,6 +2425,7 @@
 "ui.access.scope.read" = "पढ़ें";
 "ui.access.scope.control" = "कंट्रोल";
 "ui.access.signer.signed" = "%@ द्वारा साइन किया गया";
+/* Label for the signer of a program that Apple signed, shown in the Access area. */
 "platform.macos.ui.access.signer.platform" = "Apple द्वारा साइन किया गया";
 "ui.access.signer.adHoc" = "साइन नहीं है";
 "ui.access.transport.socket" = "सॉकेट";
@@ -2452,6 +2548,7 @@
 "ui.settings.general.checkUpdatesAutomatically" = "अपडेट अपने आप जाँचें";
 "ui.settings.general.checkUpdatesAutomaticallyDescription" = "ऐप शुरू होने पर नए संस्करण की जाँच करें।";
 "ui.settings.commandLine.uninstallTitle" = "कमांड-लाइन टूल अनइंस्टॉल करें?";
+/* Message of the confirmation alert that removes the command line tool. %1$@ is the path of the link. The app stays installed. Terminal is the macOS app and ojd is the command name. */
 "platform.macos.ui.settings.commandLine.uninstallMessage" = "इससे %1$@ पर मौजूद लिंक हट जाता है। ऐप इंस्टॉल रहता है, लेकिन टूल दोबारा इंस्टॉल करने तक ojd टर्मिनल में नहीं चलता।";
 "ui.settings.commandLine.uninstallConfirm" = "अनइंस्टॉल करें";
 "ui.settings.advanced.developerToolsOff" = "कंट्रोलर इनपुट और USB पैकेट देखने के लिए डेवलपर टूल चालू करें।";
@@ -2703,14 +2800,19 @@
 "ui.settings.general.updateAhead" = "नवीनतम रिलीज़ से नया";
 "ui.settings.general.version" = "संस्करण";
 "ui.settings.general.latestRelease" = "नवीनतम रिलीज़: %@";
+/* Title of the switch in the General pane of the settings window that shows the app icon in the Dock. Dock is the macOS name. */
 "platform.macos.ui.settings.general.showInDock" = "डॉक में दिखाएँ";
+/* Description under the Show in Dock switch in the General pane of the settings window. OpenJoystickDriver is the product name. */
 "platform.macos.ui.settings.general.showInDockDescription" = "OpenJoystickDriver आइकन को हमेशा डॉक में दिखाएँ। बंद होने पर यह केवल तब दिखता है जब कोई विंडो खुली हो।";
+/* Reason shown when the switch for Show in menu bar or Show in Dock cannot be turned off, because at least one stays on. The two switch names are written as in this catalog. */
 "platform.macos.ui.settings.general.entryPointRequired" = "“मेनू बार में दिखाएँ” और “डॉक में दिखाएँ” में से कम से कम एक चालू रखें।";
+/* Help text of the showInDock setting in 'ojd setting list'. OpenJoystickDriver is the product name. */
 "platform.macos.cli.setting.group.showInDock" = "OpenJoystickDriver आइकन को हमेशा डॉक में दिखाएँ; बंद होने पर यह केवल तब दिखता है जब कोई विंडो खुली हो।";
 "ui.activity.mode.log" = "लॉग";
 "ui.activity.mode.diagnostics" = "निदान";
 "ui.activity.lines" = "पंक्तियाँ";
 "ui.activity.search" = "खोजें";
+/* Toolbar button in the Activity area that shows the log file in Finder, the macOS file manager. */
 "platform.macos.ui.activity.showInFinder" = "Finder में दिखाएँ";
 "ui.activity.showInFinder.failed" = "लॉग फ़ोल्डर खोला नहीं जा सका।";
 "ui.activity.runChecks" = "जाँचें चलाएँ";
@@ -2772,10 +2874,13 @@
 "ui.settings.advanced.errorUnsupported" = "सेटिंग्स फ़ाइल %@ समर्थित नहीं है। फ़ाइल को समर्थित apiVersion के लिए दोबारा लिखें, या `ojd setting reset` से इसे ट्रैश में भेजें।";
 "ui.settings.advanced.errorUnwritable" = "सेटिंग्स फ़ाइल %@ में लिखा नहीं जा सकता।";
 "ui.settings.advanced.errorCannotReset" = "सेटिंग्स फ़ाइल %@ को ट्रैश में नहीं भेजा जा सकता।";
+/* Error shown at startup when the stored settings file turns off both entry points. %@ is the path of the settings file. The two switch names are written as in this catalog, and the command in backticks stays as written. */
 "platform.macos.ui.settings.advanced.errorStoredNoVisibleEntryPoint" = "सेटिंग्स फ़ाइल %@ “मेनू बार में दिखाएँ” और “डॉक में दिखाएँ” दोनों को बंद करती है, इसलिए ऐप का कोई दिखने वाला प्रवेश बिंदु नहीं रहेगा। इसे ठीक करें, या `ojd setting reset` से इसे ट्रैश में भेजें।";
+/* Error shown when the user turns off both Show in menu bar and Show in Dock. The two switch names are written as in this catalog. */
 "platform.macos.ui.settings.advanced.errorNoVisibleEntryPoint" = "“मेनू बार में दिखाएँ” और “डॉक में दिखाएँ” दोनों बंद नहीं हो सकते: ऐप का कोई दिखने वाला प्रवेश बिंदु नहीं रहेगा।";
 "ui.settings.advanced.unreadableTitle" = "सेटिंग्स पढ़ी नहीं जा सकतीं";
 "ui.settings.advanced.unreadableResetSettings" = "सेटिंग्स रीसेट करें";
+/* Button of the alert about an unreadable settings file at startup that shows the file in Finder, the macOS file manager. */
 "platform.macos.ui.settings.advanced.unreadableShowInFinder" = "Finder में दिखाएँ";
 /* One-line summary of 'ojd setting reset' in the command list and at the top of its help. */
 "cli.setting.reset.abstract" = "सेटिंग्स फ़ाइल को ट्रैश में भेजें।";
