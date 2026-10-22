@@ -4,11 +4,12 @@ import IOKit.hid
 import Testing
 
 @testable import OpenJoystickDriverKit
+@testable import OpenJoystickDriverMacOSPlatform
 
-struct UserSpaceDeviceCreationTests {
+struct IOHIDVirtualDevicePublisherTests {
   @Test
   func failedCreateIsExplainedByMissingPermissionsOrReportedAsCreateFailure() {
-    let classify = UserSpaceOutputDispatcher.creationFailure
+    let classify = IOHIDVirtualDevicePublisher.creationFailure
     #expect(
       "\(classify(.denied, .granted))"
         == "\(UserSpaceOutputDispatcher.CreationError.inputReadDenied)"
@@ -23,26 +24,70 @@ struct UserSpaceDeviceCreationTests {
   }
 
   @Test
-  func retryPolicyPermitsOneAttemptPerDelayWindow() {
-    var policy = UserSpaceDeviceCreationRetryPolicy(delayNanoseconds: 5)
-
-    #expect(policy.permitsAttempt(at: 100))
-    policy.recordFailure(at: 100)
-
-    #expect(!policy.permitsAttempt(at: 100))
-    #expect(!policy.permitsAttempt(at: 104))
-    #expect(policy.permitsAttempt(at: 105))
+  func nativeErrorsPreserveFailureClassification() {
+    #expect(
+      IOHIDVirtualDeviceBackend.ioKitError(VirtualHostReportError.unsupported)
+        == kIOReturnUnsupported
+    )
+    #expect(
+      IOHIDVirtualDeviceBackend.ioKitError(VirtualHostReportError.malformed)
+        == kIOReturnBadArgument
+    )
+    #expect(
+      IOHIDVirtualDeviceBackend.ioKitError(VirtualHostReportError.tooLarge)
+        == kIOReturnMessageTooLarge
+    )
+    #expect(
+      IOHIDVirtualDeviceBackend.ioKitError(VirtualHostReportError.closed) == kIOReturnNotOpen
+    )
   }
 
   @Test
-  func retryPolicyClampsOverflowAtMaximumTimestamp() {
-    var policy = UserSpaceDeviceCreationRetryPolicy(delayNanoseconds: 5)
+  func xboxOneSIdentityAdvertisesNumberedReportSizes() throws {
+    let format = try XboxGeckoHIDReportFormat()
+    let properties = IOHIDVirtualDevicePublisher.deviceProperties(
+      profile: .sdlCompatible,
+      format: format,
+      identifier: LogicalControllerID(vendorID: 13623, productID: 4112)
+    )
 
-    policy.recordFailure(at: UInt64.max - 2)
+    let inputSize = properties[kIOHIDMaxInputReportSizeKey as String] as? Int
+    let outputSize = properties[kIOHIDMaxOutputReportSizeKey as String] as? Int
+    #expect(inputSize == format.inputReportPayloadSize + 1)
+    #expect(outputSize == ConsumerOutputCodec.xboxOneReportPayloadSize + 1)
+  }
 
-    #expect(policy.nextAttemptNanoseconds == UInt64.max)
-    #expect(!policy.permitsAttempt(at: UInt64.max - 1))
-    #expect(policy.permitsAttempt(at: UInt64.max))
+  @Test
+  func propertiesPreserveDescriptorAndIdentity() throws {
+    let format = try XboxGeckoHIDReportFormat()
+    let profile = VirtualDeviceProfile.sdlCompatible
+    let properties = IOHIDVirtualDevicePublisher.deviceProperties(
+      profile: profile,
+      format: format,
+      identifier: LogicalControllerID(vendorID: 13623, productID: 4112)
+    )
+
+    #expect(properties[kIOHIDReportDescriptorKey as String] as? Data == Data(format.descriptor))
+    #expect(properties[kIOHIDVendorIDKey as String] as? Int == Int(profile.vendorID))
+    #expect(properties[kIOHIDProductIDKey as String] as? Int == Int(profile.productID))
+    #expect(properties[kIOHIDVersionNumberKey as String] as? Int == profile.versionNumber)
+    #expect(profile.versionNumber == 0)
+  }
+
+  @Test
+  func publisherFailsFastWithoutVirtualDeviceEntitlement() {
+    guard
+      !IOHIDVirtualDevicePublisher.hasEntitlement(
+        IOHIDVirtualDevicePublisher.requiredVirtualDeviceEntitlement
+      )
+    else { return }
+
+    do {
+      _ = try IOHIDVirtualDevicePublisher()
+      Issue.record("the publisher should require the virtual HID entitlement")
+    } catch UserSpaceOutputDispatcher.CreationError.missingEntitlement(let entitlement) {
+      #expect(entitlement == IOHIDVirtualDevicePublisher.requiredVirtualDeviceEntitlement)
+    } catch { Issue.record("Unexpected error: \(error)") }
   }
 
   @Test(arguments: [
@@ -50,8 +95,8 @@ struct UserSpaceDeviceCreationTests {
     (VirtualDeviceProfile.generic, kIOHIDTransportUSBValue),
   ])
   func ioHIDTransportValueMatchesIdentity(_ profile: VirtualDeviceProfile, _ expected: String) {
-    #expect(UserSpaceOutputDispatcher.ioHIDTransportValue(for: profile) == expected)
-    let properties = UserSpaceOutputDispatcher.deviceProperties(
+    #expect(IOHIDVirtualDevicePublisher.ioHIDTransportValue(for: profile) == expected)
+    let properties = IOHIDVirtualDevicePublisher.deviceProperties(
       profile: profile,
       format: OJDGenericGamepadFormat(),
       identifier: LogicalControllerID(vendorID: 1, productID: 1)
@@ -61,7 +106,7 @@ struct UserSpaceDeviceCreationTests {
 
   @Test
   func creationIsDeferredUntilActivation() {
-    #expect(UserSpaceOutputDispatcher.deviceCreationOptions == IOOptionBits(1 << 0))
+    #expect(IOHIDVirtualDevicePublisher.deviceCreationOptions == IOOptionBits(1 << 0))
   }
 
   /// Consumers key mappings on these exact values (SDL's GUID includes the version), so each
@@ -88,7 +133,7 @@ struct UserSpaceDeviceCreationTests {
     _ maxOutputReportSize: Int?
   ) throws {
     let profile = try profileID.makeProfile()
-    let properties = UserSpaceOutputDispatcher.deviceProperties(
+    let properties = IOHIDVirtualDevicePublisher.deviceProperties(
       profile: profile.identity,
       format: profile.reportFormat,
       identifier: LogicalControllerID(vendorID: 1, productID: 2)
@@ -123,7 +168,7 @@ struct UserSpaceDeviceCreationTests {
     )
     let identifier = LogicalControllerID(vendorID: 1, productID: 2, locationID: 3)
     func properties(_ profile: VirtualDeviceProfile) -> [String: Any] {
-      UserSpaceOutputDispatcher.deviceProperties(
+      IOHIDVirtualDevicePublisher.deviceProperties(
         profile: profile,
         format: builtIn.reportFormat,
         identifier: identifier
@@ -159,7 +204,7 @@ struct UserSpaceDeviceCreationTests {
     let format = profile.reportFormat
     let identifier = LogicalControllerID(vendorID: 1, productID: 2, locationID: 3)
 
-    let properties = UserSpaceOutputDispatcher.deviceProperties(
+    let properties = IOHIDVirtualDevicePublisher.deviceProperties(
       profile: identity,
       format: format,
       identifier: identifier
@@ -172,7 +217,7 @@ struct UserSpaceDeviceCreationTests {
     #expect(properties[kIOHIDManufacturerKey as String] as? String == identity.manufacturer)
     #expect(
       properties[kIOHIDTransportKey as String] as? String
-        == UserSpaceOutputDispatcher.ioHIDTransportValue(for: identity)
+        == IOHIDVirtualDevicePublisher.ioHIDTransportValue(for: identity)
     )
     #expect(
       properties[kIOHIDSerialNumberKey as String] as? String
@@ -195,7 +240,7 @@ struct UserSpaceDeviceCreationTests {
     )
     #expect(
       properties[kIOHIDMaxInputReportSizeKey as String] as? Int
-        == UserSpaceOutputDispatcher.reportBufferSize(
+        == IOHIDVirtualDevicePublisher.reportBufferSize(
           payloadSize: format.inputReportPayloadSize,
           reportID: format.inputReportID
         )
@@ -203,7 +248,7 @@ struct UserSpaceDeviceCreationTests {
     if let outputSize = format.outputReportPayloadSize {
       #expect(
         properties[kIOHIDMaxOutputReportSizeKey as String] as? Int
-          == UserSpaceOutputDispatcher.reportBufferSize(
+          == IOHIDVirtualDevicePublisher.reportBufferSize(
             payloadSize: outputSize,
             reportID: format.outputReportID
           )
@@ -221,12 +266,12 @@ struct UserSpaceDeviceCreationTests {
     let profile = try profileID.makeProfile()
     let identifier = LogicalControllerID(vendorID: 7, productID: 9, locationID: 11)
 
-    let first = UserSpaceOutputDispatcher.deviceProperties(
+    let first = IOHIDVirtualDevicePublisher.deviceProperties(
       profile: profile.identity,
       format: profile.reportFormat,
       identifier: identifier
     )
-    let second = UserSpaceOutputDispatcher.deviceProperties(
+    let second = IOHIDVirtualDevicePublisher.deviceProperties(
       profile: profile.identity,
       format: profile.reportFormat,
       identifier: identifier
@@ -241,12 +286,12 @@ struct UserSpaceDeviceCreationTests {
     let first = LogicalControllerID(vendorID: 7, productID: 9, locationID: 11)
     let second = LogicalControllerID(vendorID: 7, productID: 9, locationID: 12)
 
-    var firstProperties = UserSpaceOutputDispatcher.deviceProperties(
+    var firstProperties = IOHIDVirtualDevicePublisher.deviceProperties(
       profile: profile.identity,
       format: profile.reportFormat,
       identifier: first
     )
-    var secondProperties = UserSpaceOutputDispatcher.deviceProperties(
+    var secondProperties = IOHIDVirtualDevicePublisher.deviceProperties(
       profile: profile.identity,
       format: profile.reportFormat,
       identifier: second

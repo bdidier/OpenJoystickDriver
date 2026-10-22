@@ -1,4 +1,5 @@
 import Foundation
+import OpenJoystickDriverTestSupport
 import ProtocolPacketFixtures
 import Testing
 
@@ -49,7 +50,7 @@ struct DriverLifecycleCharacterizationTests {
   /// rejects that transport.
   func driver(_ subject: Subject, transport: String?) throws -> (any PhysicalProtocolDriver)? {
     let record = try #require(Self.registry.record(for: subject.model))
-    let host = HIDDeviceStream.hostTransport(forTransportProperty: transport)
+    let host = testHostTransport(transport)
     let device = PhysicalDevice(
       vendorID: subject.model.vendorID,
       productID: subject.model.productID,
@@ -179,7 +180,7 @@ struct DriverLifecycleCharacterizationTests {
     -> [PhysicalOutputWrite]
   {
     let record = try #require(Self.registry.record(for: subject.model))
-    let host = HIDDeviceStream.hostTransport(forTransportProperty: transport)
+    let host = testHostTransport(transport)
     let device = PhysicalDevice(
       vendorID: subject.model.vendorID,
       productID: subject.model.productID,

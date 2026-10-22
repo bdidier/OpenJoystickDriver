@@ -17,7 +17,7 @@ struct AccessClient {
   {
     if text.contains("/") || FileManager.default.fileExists(atPath: text) {
       let url = URL(fileURLWithPath: text).standardizedFileURL
-      guard let identity = CodeSigningIdentity.of(path: url) else {
+      guard let identity = PlatformHosts.current.codeSigningIdentity(ofPath: url) else {
         throw CLIFailure(
           .unsignedClient,
           CLILocalized.format(

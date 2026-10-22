@@ -1,5 +1,6 @@
 import Foundation
 import OpenJoystickDriverKit
+import OpenJoystickDriverMacOSPlatform
 import Security
 
 /// The first line on every connection: a random nonce that a token client signs in its `Hello`.

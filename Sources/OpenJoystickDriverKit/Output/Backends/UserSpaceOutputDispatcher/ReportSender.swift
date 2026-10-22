@@ -78,7 +78,7 @@ final class UserSpaceReportSender: Sendable {
 
     func start(
       report: [UInt8],
-      backend: any UserSpaceOutputDispatcher.VirtualDeviceBackend,
+      backend: any VirtualDeviceBackend,
       deadlineNanoseconds: UInt64,
       timer: DeadlineTimer,
       continuation: CheckedContinuation<Void, any Error>
@@ -144,7 +144,7 @@ final class UserSpaceReportSender: Sendable {
   }
 
   private struct State: Sendable {
-    var backend: (any UserSpaceOutputDispatcher.VirtualDeviceBackend)?
+    var backend: (any VirtualDeviceBackend)?
     var worker: Task<Void, Never>?
     var pending: [ObjectIdentifier: SubmissionReceipt] = [:]
     /// The submissions waiting for the worker, oldest first; never longer than the capacity.
@@ -192,7 +192,7 @@ final class UserSpaceReportSender: Sendable {
 
   deinit { _ = beginClose() }
 
-  func attach(_ backend: any UserSpaceOutputDispatcher.VirtualDeviceBackend) {
+  func attach(_ backend: any VirtualDeviceBackend) {
     let rejected = state.withLock { state in
       guard !state.closed, state.backend == nil else { return true }
       state.backend = backend
@@ -207,7 +207,7 @@ final class UserSpaceReportSender: Sendable {
 
   /// Builds reports in the retained worker only after preceding publication completes.
   ///
-  /// Enqueueing stays synchronous: IOKit's set-report callback acknowledges ordered enqueueing
+  /// Enqueueing stays synchronous: the native set-report callback acknowledges ordered enqueueing
   /// and cannot await. Await `SubmissionReceipt.value()` for the publication outcome. A submission
   /// with `isFrame` may be superseded by a newer one when the queue is full.
   func submit(
@@ -280,7 +280,7 @@ final class UserSpaceReportSender: Sendable {
 
   private func send(
     _ report: [UInt8],
-    to backend: any UserSpaceOutputDispatcher.VirtualDeviceBackend
+    to backend: any VirtualDeviceBackend
   ) async throws {
     let operation = NativeSendOperation()
     try await withTaskCancellationHandler {
@@ -302,7 +302,7 @@ final class UserSpaceReportSender: Sendable {
   func beginClose() -> Task<Void, Never> {
     let result = state.withLock {
       state -> (
-        Task<Void, Never>, (any UserSpaceOutputDispatcher.VirtualDeviceBackend)?,
+        Task<Void, Never>, (any VirtualDeviceBackend)?,
         [SubmissionReceipt]
       ) in
       if let closeTask = state.closeTask { return (closeTask, nil, []) }

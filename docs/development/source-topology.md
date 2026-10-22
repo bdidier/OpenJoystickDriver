@@ -7,6 +7,7 @@ OpenJoystickDriver splits the package into SwiftPM targets whose dependencies en
 | Target | Owns |
 | --- | --- |
 | `OpenJoystickDriverKit` | controller domain, HID/USB ports, parsers, profiles, policy, shared RPC contracts |
+| `OpenJoystickDriverMacOSPlatform` | macOS implementations of Kit ports: IOKit HID access and streams, the `IOHIDUserDevice` virtual-device publisher, GameController synthetic HID, access control, login-item registration, code signing identity, physical report descriptors |
 | `OpenJoystickDriverUSB` | IOUSBHost/USBDriverKit facade and restricted DEXT configuration |
 | `OpenJoystickDriverService` | runtime RPC server, output dispatch, remapping library/routing/system events, status, diagnostics |
 | `OpenJoystickDriverCLI` | command grammar and command implementations; neutral, reaches macOS through `PlatformHost` |
@@ -24,20 +25,22 @@ OpenJoystickDriver splits the package into SwiftPM targets whose dependencies en
 
 ```text
 Kit
+MacOSPlatform             -> Kit
 USB                       -> Kit
-Service                   -> Kit, USB
+Service                   -> Kit, MacOSPlatform, USB
 CLI                       -> Kit
 Presentation              -> Kit
-MacOSHost                 -> Kit, USB, Service, Presentation
+MacOSHost                 -> Kit, MacOSPlatform, USB, Service, Presentation
 OpenJoystickDriver        -> Kit, Service, CLI, Presentation, MacOSHost
 DriverKitGenerator        -> USB
 OJDRepositoryTool         -> Kit
-HIDTool                   -> Kit, USB
-GameControllerProbe       -> Kit
+HIDTool                   -> Kit, MacOSPlatform, USB
+GameControllerProbe       -> Kit, MacOSPlatform
 ```
 
 - Presentation depends on Kit only. It reaches the runtime through its `ApplicationServiceGateway` protocol (implemented by `ApplicationServiceClientGateway` over the Kit RPC client) and injected closures, so it never imports Service, CLI, or USB.
-- The CLI depends on Kit only. Kit declares the `PlatformHost` protocol and the `PlatformHosts` registry. The executable installs `MacOSPlatformHost` from `OpenJoystickDriverMacOSHost` at launch, and the CLI calls `PlatformHosts.current` for extension status, activation, USB scanning, and entitlement checks. A command run without an installed host stops on a precondition.
+- The CLI depends on Kit only. Kit declares the `PlatformHost` protocol and the `PlatformHosts` registry. The executable installs `MacOSPlatformHost` from `OpenJoystickDriverMacOSHost` at launch, and the CLI calls `PlatformHosts.current` for extension status, activation, USB scanning, entitlement checks, access state, code signing identities, physical report descriptors, and login-item registration. A command run without an installed host stops on a precondition.
+- Kit declares the ports a host implements: `PlatformHost`, `AccessControlSystem`, `ApplicationServiceRegistration`, `HIDAccessBackend`, `VirtualHIDDevicePublisher` with `VirtualDeviceBackend`, and `Switch2BluetoothLEWriter`. `OpenJoystickDriverMacOSPlatform` implements the IOKit, Security, ServiceManagement, and `IOHIDUserDevice` ones. The composition roots (`ApplicationServiceRuntime` in Service, `MacOSPlatformHost` in MacOSHost, and the two investigation executables) pass the implementations in, so Kit has no macOS-only framework import.
 - Only `OpenJoystickDriverUSB`, `DriverKitGenerator`, and their tests import SwifterKit. Kit owns stable Sendable transport values and protocols; USBDriverKit, IOUSBHost, and SwifterKit lifetimes stay in USB.
 - The headless host in the executable owns one `ApplicationServiceRuntime`, which starts the authenticated RPC server; both types live in Service.
 
@@ -54,9 +57,9 @@ Sources/OpenJoystickDriverKit/
                        Controller state, Manager, Discovery (HID, USB), PhysicalOutput, Pipeline
   Diagnostics/         support reports, probes, health, build identity, and packet logs
   Errors/              the `ErrorCode` catalog
-  HID/                 availability-selected physical HID access
+  HID/                 the `HIDAccessBackend` port, bounded reads, and `HIDManager` over a host backend
   Localization/        string lookup over the bundled locale tables
-  Output/              availability-selected virtual HID, backends, reports, formats, and profiles
+  Output/              the `VirtualHIDDevicePublisher` port, dispatchers, reports, formats, and profiles
   Packages/            mod package manifest, validation, and the installed-package store
   Permissions/         app permission policy
   Process/             bounded external process runner and the command-line tool link status
@@ -69,6 +72,14 @@ Sources/OpenJoystickDriverKit/
   Storage/             DataDirectory port and its macOS implementation; the only path builder
   Streaming/           `InputSource` and `OutputSink`, the frame boundary every path attaches to
   Update/              release version parsing and update checking
+
+Sources/OpenJoystickDriverMacOSPlatform/
+  HID/                 IOHID access backend, device streams, synthetic-device filter, physical
+                       report descriptors, and IOReturn failure mapping
+  Output/              `IOHIDUserDevice` publisher and virtual-device backend
+  Permissions/         `AccessControlSystem` over IOHID access and CoreGraphics post-event access
+  ApplicationService/  main-app login-item registration over `SMAppService`
+  Security/            code signing identity and socket-peer code checks
 
 Sources/OpenJoystickDriverUSB/
   Configuration.swift  restricted DEXT USB configuration
@@ -100,13 +111,15 @@ Sources/OpenJoystickDriver/
   platform/macos/      PlatformHostInstallation.swift and the App Intents (compiled into the app target for discovery)
 ```
 
-The neutral targets are `Sources/OpenJoystickDriverCLI` and the executable's files outside `Sources/OpenJoystickDriver/platform`. The CLI may import ArgumentParser, Darwin, Dispatch, Foundation, Glibc, and Kit; the executable may import Dispatch, Foundation, CLI, and Kit. Kit is macOS-bound and out of scope.
+The neutral targets are `Sources/OpenJoystickDriverKit`, `Sources/OpenJoystickDriverCLI`, and the executable's files outside `Sources/OpenJoystickDriver/platform`.
+Kit may import CryptoKit, Darwin, Dispatch, and Foundation. Neutral means free of macOS device, security, and application frameworks: Darwin (POSIX calls) and CryptoKit (hashing) ship on every Apple platform the package declares, so Kit builds on Apple platforms only.
+The CLI may import ArgumentParser, Darwin, Dispatch, Foundation, Glibc, and Kit; the executable may import Dispatch, Foundation, CLI, and Kit. `Scripts/Quality/check_neutral_core_imports.py` scans these directories in `just check-fast`, CI, and the release workflow, and `Tests/RepositoryScripts/test_neutral_core_imports.py` runs it on planted violations in fixtures.
 
 Kit `Diagnostics/` holds reports and health types that both the CLI and app read.
 
 ## Tests
 
-Each test target mirrors its source target and directory names: `Tests/OpenJoystickDriverKitTests/`, `Tests/OpenJoystickDriverUSBTests/`, `Tests/OpenJoystickDriverServiceTests/`, `Tests/OpenJoystickDriverCLITests/`, and `Tests/OpenJoystickDriverPresentationTests/`. A test for `Sources/<Target>/A/B/File.swift` lives in `Tests/<Target>Tests/A/B/`. Shared fixtures live in `Tests/OpenJoystickDriverTestSupport/` (depends on Kit) and `Tests/ProtocolPacketFixtures/`; `Tests/ParserCompatibilityHarness/` backs `./Scripts/ojd test parsers-macos14`. Add behavior tests, not source-text substring tests.
+Each test target mirrors its source target and directory names: `Tests/OpenJoystickDriverKitTests/`, `Tests/OpenJoystickDriverMacOSPlatformTests/`, `Tests/OpenJoystickDriverUSBTests/`, `Tests/OpenJoystickDriverServiceTests/`, `Tests/OpenJoystickDriverCLITests/`, and `Tests/OpenJoystickDriverPresentationTests/`. A test for `Sources/<Target>/A/B/File.swift` lives in `Tests/<Target>Tests/A/B/`. Shared fixtures live in `Tests/OpenJoystickDriverTestSupport/` (depends on Kit; holds the fake `PlatformHost` and the access, registration, and HID backend fakes) and `Tests/ProtocolPacketFixtures/`; `Tests/ParserCompatibilityHarness/` backs `./Scripts/ojd test parsers-macos14`. Add behavior tests, not source-text substring tests.
 
 ## Naming and Limits
 
@@ -119,7 +132,7 @@ SwiftLint `file_length` fails a Swift file with more than 500 lines under `Sourc
 - Give each capability one canonical owner; retain no aliases, forwarding files, or old entry points.
 - Keep Kit independent of SwifterKit and of app, runtime, and platform composition.
 - Put IOUSBHost/DriverKit adaptation in USB; keep parsing in Kit.
-- Use IOKit HID (`IOHIDManager`, `IOHIDDevice`, `IOHIDUserDevice`) on every supported macOS; HID has no OS-version branch and the package does not link CoreHID.
+- Use IOKit HID (`IOHIDManager`, `IOHIDDevice`, `IOHIDUserDevice`) in `OpenJoystickDriverMacOSPlatform` on every supported macOS; HID has no OS-version branch and the package does not link CoreHID.
 - Never edit or commit `.build/driverkit/generated/`; validate generation with `./Scripts/ojd check driverkit`. `./Scripts/ojd driverkit generate [path]` writes into a missing folder only (default `.build/driverkit/generated/`) and refuses an existing one, so a generated project never mixes with an earlier one; delete the folder first to regenerate it.
 
 ## Rejected Alternatives

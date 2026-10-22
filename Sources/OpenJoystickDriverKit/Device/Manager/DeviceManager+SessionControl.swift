@@ -228,7 +228,7 @@ extension DeviceManager {
     case .released: "released"
     case .reacquired: "reacquired"
     case .unavailable: "the HID claim was unavailable"
-    case .failed(.ioReturn(let code)): "IOKit code \(code)"
+    case .failed(let failure): failure.description
     }
   }
 

@@ -4,6 +4,7 @@ import IOKit.hid
 import Testing
 
 @testable import OpenJoystickDriverKit
+@testable import OpenJoystickDriverMacOSPlatform
 
 struct AppleGameControllerSyntheticHIDTests {
   @Test

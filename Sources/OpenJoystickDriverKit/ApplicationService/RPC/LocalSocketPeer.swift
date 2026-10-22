@@ -1,6 +1,5 @@
 import Darwin
 import Foundation
-import Security
 
 /// The process on the other end of a local socket, identified by its audit token.
 ///
@@ -24,21 +23,5 @@ public struct LocalSocketPeer: Sendable {
     let processIdentifier = pid_t(bitPattern: token.val.5)
     guard processIdentifier > 0 else { return nil }
     return Self(processIdentifier: processIdentifier, auditToken: token)
-  }
-
-  /// The running code of the peer, resolved by its audit token.
-  public func code() -> SecCode? {
-    let tokenData = withUnsafeBytes(of: auditToken) { Data($0) }
-    let attributes = [kSecGuestAttributeAudit as String: tokenData] as CFDictionary
-    var code: SecCode?
-    guard SecCodeCopyGuestWithAttributes(nil, attributes, SecCSFlags(), &code) == errSecSuccess
-    else { return nil }
-    return code
-  }
-
-  /// True when the peer's code is valid and, if given, satisfies `requirement`.
-  public func satisfies(_ requirement: SecRequirement?) -> Bool {
-    guard let code = code() else { return false }
-    return SecCodeCheckValidity(code, SecCSFlags(), requirement) == errSecSuccess
   }
 }

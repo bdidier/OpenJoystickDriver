@@ -149,7 +149,7 @@ struct VirtualOutputTransitionFixture {
         dispatcher: remappingRouter,
         installationKey: testPortKeyInstallationKey
       ),
-      permissionManager: PermissionManager(),
+      permissionManager: .grantingAll(),
       dispatcher: virtualOutputDispatcher,
       remappingProfileLibrary: profileLibrary,
       remappingRouter: remappingRouter,

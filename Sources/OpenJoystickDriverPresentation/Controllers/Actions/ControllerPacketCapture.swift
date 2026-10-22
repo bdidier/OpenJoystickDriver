@@ -89,7 +89,7 @@ enum ControllerRecordDrafting {
 
   /// The report descriptor of the controller model, read from the system.
   static func physicalDescriptor(for device: ApplicationServiceDeviceDescription) -> [UInt8]? {
-    HIDDescriptorReportFormat.copyPhysicalReportDescriptor(
+    PlatformHosts.current.physicalReportDescriptor(
       vendorID: Int(device.vendorID),
       productID: Int(device.productID)
     )

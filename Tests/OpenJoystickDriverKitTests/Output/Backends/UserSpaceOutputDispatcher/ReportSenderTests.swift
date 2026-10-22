@@ -28,9 +28,12 @@ private actor ReportSendGate {
   }
 }
 
-private final class OrderedReportBackend: UserSpaceOutputDispatcher.VirtualDeviceBackend,
+private final class OrderedReportBackend: VirtualDeviceBackend,
   @unchecked Sendable
 {
+  /// The sender under test feeds the device directly; nothing publishes it.
+  func activate(hostReports: UserSpaceHostReportHandler) {}
+
   private let lock = NSLock()
   private var reports: [[UInt8]] = []
   private var activeSends = 0
@@ -71,9 +74,12 @@ private actor CancellableSendState {
   func waitForEntry() async { if !entered { await withCheckedContinuation { waiters.append($0) } } }
 }
 
-private final class CancellableReportBackend: UserSpaceOutputDispatcher.VirtualDeviceBackend,
+private final class CancellableReportBackend: VirtualDeviceBackend,
   @unchecked Sendable
 {
+  /// The sender under test feeds the device directly; nothing publishes it.
+  func activate(hostReports: UserSpaceHostReportHandler) {}
+
   let state = CancellableSendState()
 
   func send(_ report: [UInt8]) async throws {
@@ -108,9 +114,12 @@ private actor NonCooperativeSendGate {
   }
 }
 
-private final class NonCooperativeReportBackend: UserSpaceOutputDispatcher.VirtualDeviceBackend,
+private final class NonCooperativeReportBackend: VirtualDeviceBackend,
   @unchecked Sendable
 {
+  /// The sender under test feeds the device directly; nothing publishes it.
+  func activate(hostReports: UserSpaceHostReportHandler) {}
+
   private let lock = NSLock()
   let gate = NonCooperativeSendGate()
   private var closes = 0
@@ -121,9 +130,12 @@ private final class NonCooperativeReportBackend: UserSpaceOutputDispatcher.Virtu
 }
 
 /// A backend whose native teardown finishes only when its gate opens.
-private final class SlowTeardownBackend: UserSpaceOutputDispatcher.VirtualDeviceBackend,
+private final class SlowTeardownBackend: VirtualDeviceBackend,
   @unchecked Sendable
 {
+  /// The sender under test feeds the device directly; nothing publishes it.
+  func activate(hostReports: UserSpaceHostReportHandler) {}
+
   let gate = ReportSendGate()
   private let lock = NSLock()
   private var closes = 0

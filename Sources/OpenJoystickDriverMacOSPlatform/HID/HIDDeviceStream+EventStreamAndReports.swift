@@ -1,6 +1,7 @@
 import Foundation
 import IOKit
 import IOKit.hid
+import OpenJoystickDriverKit
 
 extension HIDDeviceStream {
 
@@ -83,7 +84,7 @@ extension HIDDeviceStream {
   /// Maps a denied shared open of an already-present device to a stream-level access failure.
   static func accessFailure(forInitialOpenResult result: IOReturn) -> HIDDeviceEvent? {
     guard result == kIOReturnNotPermitted || result == kIOReturnNotPrivileged else { return nil }
-    return .accessFailure(.ioReturn(result))
+    return .accessFailure(.init(ioReturn: result))
   }
 
   /// Unschedules the HID manager from the run loop, closes the devices this stream opened, and
@@ -118,14 +119,14 @@ extension HIDDeviceStream {
     continuation.finish()
   }
 
-  public func setOutputReport(
+  package func setOutputReport(
     locationID: UInt32,
     report: PhysicalHIDOutputReport
   ) -> PhysicalHIDReportResult<Void> {
     setReport(locationID: locationID, report: report, type: kIOHIDReportTypeOutput, label: "Output")
   }
 
-  public func setOutputReport(
+  package func setOutputReport(
     connection: HIDDeviceConnection,
     report: PhysicalHIDOutputReport
   ) async -> PhysicalHIDReportResult<Void> {
@@ -139,7 +140,7 @@ extension HIDDeviceStream {
     }
   }
 
-  public func setFeatureReport(
+  package func setFeatureReport(
     locationID: UInt32,
     report: PhysicalHIDOutputReport
   ) -> PhysicalHIDReportResult<Void> {
@@ -151,7 +152,7 @@ extension HIDDeviceStream {
     )
   }
 
-  public func setFeatureReport(
+  package func setFeatureReport(
     connection: HIDDeviceConnection,
     report: PhysicalHIDOutputReport
   ) async -> PhysicalHIDReportResult<Void> {
@@ -165,7 +166,7 @@ extension HIDDeviceStream {
     }
   }
 
-  public func getFeatureReport(
+  package func getFeatureReport(
     locationID: UInt32,
 
     request: PhysicalHIDFeatureReadRequest
@@ -196,10 +197,10 @@ extension HIDDeviceStream {
       "[HIDDeviceStream] Feature report read failed for loc=\(locationID)"
         + " report=0x\(String(format: "%02X", request.reportID)) kr=\(lastResult)"
     )
-    return .failed(.ioReturn(lastResult))
+    return .failed(.init(ioReturn: lastResult))
   }
 
-  public func releaseInputClaim(locationID: UInt32) -> PhysicalHIDClaimResult {
+  package func releaseInputClaim(locationID: UInt32) -> PhysicalHIDClaimResult {
     seizeLock.withLock {
       guard let devices = seizedByLocation.removeValue(forKey: locationID), !devices.isEmpty else {
         return .unavailable
@@ -209,13 +210,13 @@ extension HIDDeviceStream {
         let result = IOHIDDeviceClose(device, IOOptionBits(kIOHIDOptionsTypeSeizeDevice))
         if result != kIOReturnSuccess { lastFailure = result }
       }
-      if let lastFailure { return .failed(.ioReturn(lastFailure)) }
+      if let lastFailure { return .failed(.init(ioReturn: lastFailure)) }
       releasedByLocation[locationID] = devices
       return .released
     }
   }
 
-  public func reacquireInputClaim(locationID: UInt32) -> PhysicalHIDClaimResult {
+  package func reacquireInputClaim(locationID: UInt32) -> PhysicalHIDClaimResult {
     seizeLock.withLock {
       guard let devices = releasedByLocation[locationID], !devices.isEmpty else {
         return .unavailable
@@ -227,7 +228,7 @@ extension HIDDeviceStream {
           for acquiredDevice in acquired {
             IOHIDDeviceClose(acquiredDevice, IOOptionBits(kIOHIDOptionsTypeSeizeDevice))
           }
-          return .failed(.ioReturn(result))
+          return .failed(.init(ioReturn: result))
         }
         acquired.append(device)
       }
@@ -239,7 +240,7 @@ extension HIDDeviceStream {
 
   /// Re-runs the seize of tracked non-native devices at a location whose earlier seize was
   /// refused or failed, and yields `.ownershipChanged` when the location's ownership changes.
-  public func retryInputClaim(locationID: UInt32) {
+  package func retryInputClaim(locationID: UInt32) {
     guard !eventAdapter.hasNativeDevice(locationID: locationID) else { return }
     let candidates: [(deviceID: UInt64, device: IOHIDDevice)] = seizeLock.withLock {
       guard releasedByLocation[locationID]?.isEmpty ?? true else { return [] }
@@ -298,12 +299,12 @@ extension HIDDeviceStream {
       "[HIDDeviceStream] \(label) report failed for loc=\(locationID)"
         + " report=0x\(String(format: "%02X", report.reportID)) kr=\(lastResult)"
     )
-    return .failed(.ioReturn(lastResult))
+    return .failed(.init(ioReturn: lastResult))
   }
 
   /// Reads a feature report only from the exact connection lifetime, never a sibling at its
   /// location. It waits for the device on the main actor, as the startup reads always have.
-  public func getFeatureReport(
+  package func getFeatureReport(
     connection: HIDDeviceConnection,
     request: PhysicalHIDFeatureReadRequest
   ) async -> PhysicalHIDReportResult<Data> {
@@ -349,7 +350,7 @@ extension HIDDeviceStream {
         &reportLength
       )
     }
-    guard result == kIOReturnSuccess else { return .failed(.ioReturn(result)) }
+    guard result == kIOReturnSuccess else { return .failed(.init(ioReturn: result)) }
     return .success(Data(bytes.prefix(reportLength)))
   }
 
@@ -372,7 +373,7 @@ extension HIDDeviceStream {
         "[HIDDeviceStream] \(label) report failed for exact connection "
           + "report=0x\(String(format: "%02X", report.reportID)) kr=\(result)"
       )
-      return .failed(.ioReturn(result))
+      return .failed(.init(ioReturn: result))
     }
     return .success(())
   }

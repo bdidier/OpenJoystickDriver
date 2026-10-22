@@ -238,7 +238,7 @@ struct NativePassThroughTests {
     await manager.handleHIDEvent(.connected(connection: connection, ownership: .unknown))
     #expect(await manager.passThroughDeviceDescriptions().count == 1)
 
-    await manager.handleHIDEvent(.accessFailure(.ioReturn(kIOReturnNotPermitted)))
+    await manager.handleHIDEvent(.accessFailure(.hostStatus(1)))
 
     #expect(await manager.passThroughDeviceDescriptions().isEmpty)
     await manager.stop()

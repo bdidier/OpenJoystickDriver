@@ -101,23 +101,6 @@ struct ProtocolClassifierTests {
     #expect(bluetooth.variant == .bluetoothClassic)
   }
 
-  @Test
-  func iohidTransportPropertyMapsToTheHostTransport() throws {
-    #expect(HIDDeviceStream.hostTransport(forTransportProperty: "USB") == .usb)
-    #expect(HIDDeviceStream.hostTransport(forTransportProperty: "Bluetooth") == .bluetoothClassic)
-    #expect(
-      HIDDeviceStream.hostTransport(forTransportProperty: "BluetoothLowEnergy") == .bluetoothLE
-    )
-    for unknown in [nil, "", "SPI", "bluetooth"] {
-      #expect(HIDDeviceStream.hostTransport(forTransportProperty: unknown) == nil)
-    }
-    let host = HIDDeviceStream.hostTransport(forTransportProperty: "Bluetooth")
-    let binding = try bound(
-      classify(device(0x054C, 0x09CC, interfaces: [hidInterface(host: host)]), backend: .hid)
-    )
-    #expect(binding.variant == .bluetoothClassic)
-  }
-
   /// Sixaxis, DS4, DualSense and Switch drivers are built for one transport variant, so no
   /// driver exists for an unknown or unimplemented host transport.
   @Test(

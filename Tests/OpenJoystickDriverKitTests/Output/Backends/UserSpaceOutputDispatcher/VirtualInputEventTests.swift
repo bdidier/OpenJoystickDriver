@@ -10,7 +10,7 @@ struct VirtualInputEventTests {
     to state: inout VirtualGamepadState
   ) {
     guard let event else { return }
-    UserSpaceOutputDispatcher.apply(
+    VirtualGamepadReportMapping.apply(
       event.state,
       stickTransfer: .init(deadzone: 0, rescalesDeadzone: false),
       to: &state
@@ -115,9 +115,9 @@ struct VirtualInputEventTests {
     let zd = LogicalControllerID(vendorID: 0x413D, productID: 0x2104)
     for (x, y) in [(Float(0.12), Float(0.12)), (0.14, 0)] {
       var state = VirtualGamepadState()
-      UserSpaceOutputDispatcher.apply(
+      VirtualGamepadReportMapping.apply(
         snapshot(.leftStick(x: x, y: y)),
-        stickTransfer: UserSpaceOutputDispatcher.stickTransfer(for: zd),
+        stickTransfer: VirtualGamepadReportMapping.stickTransfer(for: zd),
         to: &state
       )
       #expect(abs(Int(state.leftStickX) - Int(x * 32_767)) <= 1)
@@ -130,7 +130,7 @@ struct VirtualInputEventTests {
   func recordTuningSetsTheStickDeadZone() {
     let tuned = LogicalControllerID(vendorID: 0x11C1, productID: 0x5600)
     #expect(
-      UserSpaceOutputDispatcher.stickTransfer(for: tuned)
+      VirtualGamepadReportMapping.stickTransfer(for: tuned)
         == .init(deadzone: 0.02, rescalesDeadzone: true)
     )
   }

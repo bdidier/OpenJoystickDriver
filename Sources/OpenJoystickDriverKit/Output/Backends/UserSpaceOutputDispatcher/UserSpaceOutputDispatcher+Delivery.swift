@@ -1,8 +1,4 @@
-import Darwin
 import Foundation
-import IOKit
-import IOKit.hid
-import Security
 
 extension UserSpaceOutputDispatcher {
 
@@ -34,8 +30,9 @@ extension UserSpaceOutputDispatcher {
     if outputSuppressed && !neutralizing { return }
     let stickTransfer =
       remappedState == nil
-      ? Self.stickTransfer(for: identifier) : StickTransfer(deadzone: 0, rescalesDeadzone: false)
-    let rightPadIsRightStick = Self.rightPadIsRightStick(identifier)
+      ? VirtualGamepadReportMapping.stickTransfer(for: identifier)
+      : VirtualGamepadReportMapping.StickTransfer(deadzone: 0, rescalesDeadzone: false)
+    let rightPadIsRightStick = VirtualGamepadReportMapping.rightPadIsRightStick(identifier)
     let isActive: @Sendable () -> Bool = { [self] in
       lifecycle.isOpen && (!isOutputSuppressed(remapped: remapped) || neutralizing)
     }
@@ -45,13 +42,13 @@ extension UserSpaceOutputDispatcher {
         whileActive: isActive,
         requireActive: true
       ) {
-        [self, activeEntry] in
+        [activeEntry] in
         guard isActive() else { throw CancellationError() }
         let primaryReport = activeEntry.inputReportState.update(remapped: remapped) { state in
           if let remappedState {
-            apply(remappedState, to: &state)
+            VirtualGamepadReportMapping.apply(remappedState, to: &state)
           } else if let input {
-            Self.apply(
+            VirtualGamepadReportMapping.apply(
               input,
               stickTransfer: stickTransfer,
               rightPadIsRightStick: rightPadIsRightStick,

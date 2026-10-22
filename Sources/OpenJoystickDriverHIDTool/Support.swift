@@ -3,6 +3,7 @@ import Foundation
 import IOKit
 import IOKit.hid
 import OpenJoystickDriverKit
+import OpenJoystickDriverMacOSPlatform
 
 func parseInt(_ s: String) -> Int? {
   if s.hasPrefix("0x") || s.hasPrefix("0X") { return Int(s.dropFirst(2), radix: 16) }

@@ -1,13 +1,14 @@
 import Foundation
 import IOKit
 import IOKit.hid
+import OpenJoystickDriverKit
 
 /// Watches for HID-class game controllers using Apple's IOKit HID framework.
 ///
 /// Creates an `AsyncStream` of device connect, disconnect, and input report
 /// events. IOKit delivers callbacks on the main run loop, and this class
 /// forwards them into the stream for safe async consumption.
-public final class HIDDeviceStream: @unchecked Sendable {
+package final class HIDDeviceStream: @unchecked Sendable {
 
   // MARK: - Thread safety
   //
@@ -44,7 +45,7 @@ public final class HIDDeviceStream: @unchecked Sendable {
   /// The model providers are read by each `deviceEvents()`, so a stream started again after
   /// the controller records change matches the new records.
   @preconcurrency
-  public init(
+  package init(
     additionalProfileModels: @escaping @Sendable () -> [ControllerModelID] = { [] },
     roleProfileModels: @escaping @Sendable () -> [ControllerModelID] = { [] }
   ) {

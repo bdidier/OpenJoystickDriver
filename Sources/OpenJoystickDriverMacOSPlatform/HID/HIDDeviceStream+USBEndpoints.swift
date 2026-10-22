@@ -1,5 +1,6 @@
 import Foundation
 import IOKit
+import OpenJoystickDriverKit
 
 /// HID discovery reports no endpoint set. The registry publishes only `bNumEndpoints` on the
 /// `IOUSBHostInterface`: it has no `IOUSBHostPipe` children and no endpoint or configuration

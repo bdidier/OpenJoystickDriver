@@ -3,6 +3,7 @@ import Foundation
 import IOKit
 import IOKit.hid
 import OpenJoystickDriverKit
+import OpenJoystickDriverMacOSPlatform
 import OpenJoystickDriverUSB
 
 let parsedArguments: HIDToolArguments

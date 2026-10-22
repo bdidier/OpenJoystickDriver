@@ -90,8 +90,25 @@ extension UserSpaceOutputDispatcherLifecycleTests {
     let counts = backend.counts()
     #expect(counts.send == 0)
     #expect(counts.close == 1)
+    #expect(backend.activations().activated == 0)
     await dispatcher.close()
     #expect(backend.counts().close == 1)
+  }
+
+  @Test
+  func aCreatedDeviceIsActivatedOnceBeforeItsFirstReport() async throws {
+    let backend = UserSpaceDispatcherTestBackend()
+    let dispatcher = UserSpaceOutputDispatcher { _ in backend }
+    let identifier = LogicalControllerID(vendorID: 1, productID: 2)
+
+    try await dispatcher.activate(for: [identifier])
+    await dispatcher.dispatch(changes: [.press(.south)], from: identifier)
+    await dispatcher.close()
+
+    let activations = backend.activations()
+    #expect(activations.activated == 1)
+    #expect(activations.sendsBefore == 0)
+    #expect(backend.counts().send > 0)
   }
 
   @Test

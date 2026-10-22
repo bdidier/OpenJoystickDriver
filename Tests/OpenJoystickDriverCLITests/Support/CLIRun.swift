@@ -3,6 +3,7 @@ import Foundation
 import Testing
 
 import OpenJoystickDriverKit
+import OpenJoystickDriverTestSupport
 
 @testable import OpenJoystickDriverCLI
 

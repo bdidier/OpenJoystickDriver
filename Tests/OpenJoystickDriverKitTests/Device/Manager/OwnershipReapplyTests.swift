@@ -10,27 +10,6 @@ import Testing
 struct OwnershipReapplyTests {
   private static let changedModel = ControllerModelID(vendorID: 0x3537, productID: 0x100B)
 
-  /// Only the locations where a listed model's native flag changed are cycled, siblings included.
-  @Test
-  func reevaluationCyclesEveryDeviceAtALocationWhoseNativeFlagChanged() {
-    let changed = Self.gameSir(productID: 0x100B, locationID: 1, native: true)
-    let sibling = Self.gameSir(productID: 0x100B, locationID: 1, native: true, interface: 1)
-    let unchanged = Self.gameSir(productID: 0x100B, locationID: 2, native: false)
-    let unlisted = Self.gameSir(productID: 0x1053, locationID: 3, native: true)
-    let tracked: [UInt64: HIDDeviceConnection] = [
-      10: changed, 11: sibling, 20: unchanged, 30: unlisted,
-    ]
-
-    let cycled = HIDDeviceStream.ownershipReevaluation(
-      tracked: tracked,
-      models: [Self.changedModel]
-    ) { deviceID, connection in
-      deviceID == 10 ? false : connection.physicalDevice.nativePassThrough
-    }
-
-    #expect(cycled == [10, 11])
-  }
-
   /// A record reload lets the HID backend admit a changed model again with its new native flag,
   /// and `readmitHIDConnections` does not admit it a second time. Other models keep their
   /// sessions.

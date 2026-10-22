@@ -2,6 +2,7 @@ import Foundation
 import GameController
 import IOKit
 import IOKit.hid
+import OpenJoystickDriverKit
 
 extension HIDDeviceStream {
   /// Admits a physical device, opens it, and yields a `.connected` event into the stream. A device

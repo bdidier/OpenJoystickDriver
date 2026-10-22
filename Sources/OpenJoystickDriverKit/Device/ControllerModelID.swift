@@ -19,7 +19,7 @@ public struct ControllerModelID: Hashable, Comparable, Sendable {
 
   /// The model for the vendor ID and product ID a HID API reports, or nil when either is
   /// missing or does not fit in 16 bits.
-  init?(vendorID: UInt64?, productID: UInt64?) {
+  package init?(vendorID: UInt64?, productID: UInt64?) {
     guard let vendorID, let productID, let representableVendorID = UInt16(exactly: vendorID),
       let representableProductID = UInt16(exactly: productID)
     else { return nil }

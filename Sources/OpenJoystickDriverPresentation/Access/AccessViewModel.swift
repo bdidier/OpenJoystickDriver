@@ -121,7 +121,9 @@ final class AccessViewModel: ObservableObject {
 
   init(
     service: any AccessService = ApplicationServiceAccessService(),
-    identityAtPath: @escaping (URL) -> CodeSigningIdentity? = { CodeSigningIdentity.of(path: $0) }
+    identityAtPath: @escaping (URL) -> CodeSigningIdentity? = {
+      PlatformHosts.current.codeSigningIdentity(ofPath: $0)
+    }
   ) {
     self.service = service
     self.identityAtPath = identityAtPath

@@ -21,6 +21,18 @@ package protocol PlatformHost: Sendable {
   /// Whether the signed extension's USB entitlement lists this controller.
   func extensionEntitlementCovers(vendorID: UInt16, productID: UInt16) -> Bool
 
+  /// The host's answer to, and request flow for, the access the driver needs.
+  var accessControl: any AccessControlSystem { get }
+
+  /// The main application's login-item registration.
+  var mainAppRegistration: any ApplicationServiceRegistration { get }
+
+  /// The signing identity of the code at `url`; nil when the path holds no signed code.
+  func codeSigningIdentity(ofPath url: URL) -> CodeSigningIdentity?
+
+  /// The HID report descriptor of a connected controller model, or nil when none is connected.
+  func physicalReportDescriptor(vendorID: Int, productID: Int) -> [UInt8]?
+
   /// Runs the application until it exits; the executable calls it when not run as the tool.
   @MainActor
   func runApplication() -> Never

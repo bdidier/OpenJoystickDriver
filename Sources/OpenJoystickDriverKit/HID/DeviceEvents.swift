@@ -1,5 +1,4 @@
 import Foundation
-import IOKit.hid
 
 public extension Notification.Name {
   /// Posted in-process after anything `getStatus` or the remapping snapshot reports changes.

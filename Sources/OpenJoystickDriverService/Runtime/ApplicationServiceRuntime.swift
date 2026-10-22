@@ -1,6 +1,7 @@
 import Darwin
 import Foundation
 import OpenJoystickDriverKit
+import OpenJoystickDriverMacOSPlatform
 import OpenJoystickDriverUSB
 
 @MainActor
@@ -23,7 +24,7 @@ package final class ApplicationServiceRuntime {
 
   package init() throws {
     let installationKey = try PortKeyInstallationStore(directory: MacOSDataDirectory()).load()
-    let permissionManager = PermissionManager()
+    let permissionManager = PermissionManager(system: MacOSAccessControlSystem())
     let dispatcher = VirtualOutputRouter()
     let remappingProfileLibrary = RemappingProfileLibrary()
     let postEventAccess = CoreGraphicsPostEventAccess()
@@ -47,7 +48,9 @@ package final class ApplicationServiceRuntime {
       installationKey: installationKey,
       usbTransportProvider: OpenJoystickDriverUSBTransportProvider(),
       wirelessControllerDisconnector: BluetoothControllerDisconnector(),
-      bluetoothLEHub: bluetoothLEHub
+      bluetoothLEHub: bluetoothLEHub,
+      permissionManager: permissionManager,
+      hidBackend: makeIOHIDAccessBackend
     )
     bluetoothLECentral = Switch2BluetoothLECentral(hub: bluetoothLEHub)
     physicalOutputBridge.attach(manager)

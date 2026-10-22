@@ -1,7 +1,4 @@
-import CoreGraphics
 import Foundation
-import IOKit
-import IOKit.hid
 
 private let permissionPollNanoseconds: UInt64 = 1_000_000_000
 // TCC needs a short run-loop turn to register the application after the
@@ -49,45 +46,27 @@ public actor PermissionManager {
 
   public private(set) var inputReadState: AccessState = .unknown
   public private(set) var inputInjectState: AccessState = .unknown
-  private(set) var postEventState = PermissionManager.currentPostEventAccessState()
+  private(set) var postEventState: RemappingPostEventAccessState
   private(set) var pollingTask: Task<Void, Never>?
+  private let system: any AccessControlSystem
 
-  public init() {}
-
-  nonisolated public static func currentInputReadAccessState() -> AccessState {
-    accessState(for: kIOHIDRequestTypeListenEvent)
-  }
-
-  /// IOHIDUserDevice creation is authorized through the post-event TCC service.
-  nonisolated public static func currentInputInjectAccessState() -> AccessState {
-    accessState(for: kIOHIDRequestTypePostEvent)
-  }
-
-  /// Whether this process may post keyboard and pointer events. CoreGraphics reports only
-  /// whether access is granted, so a false answer is `notAuthorized`, not a denial.
-  nonisolated public static func currentPostEventAccessState() -> RemappingPostEventAccessState {
-    CGPreflightPostEventAccess() ? .granted : .notAuthorized
-  }
-
-  nonisolated private static func accessState(for requestType: IOHIDRequestType) -> AccessState {
-    switch IOHIDCheckAccess(requestType) {
-    case kIOHIDAccessTypeGranted: return .granted
-    case kIOHIDAccessTypeDenied: return .denied
-    default: return .unknown
-    }
+  /// Reads and requests access through `system`.
+  package init(system: any AccessControlSystem) {
+    self.system = system
+    postEventState = system.postEventAccessState()
   }
 
   public func checkAccess() -> Snapshot {
     Snapshot(
-      inputRead: Self.currentInputReadAccessState(),
-      inputInject: Self.currentInputInjectAccessState()
+      inputRead: system.inputReadAccessState(),
+      inputInject: system.inputInjectAccessState()
     )
   }
 
   @discardableResult
   public func refreshAccessState() -> Snapshot {
     let snapshot = checkAccess()
-    record(snapshot, postEvent: Self.currentPostEventAccessState())
+    record(snapshot, postEvent: system.postEventAccessState())
     return snapshot
   }
 
@@ -117,18 +96,18 @@ public actor PermissionManager {
   /// Input Monitoring is deliberately requested before Accessibility. macOS
   /// registers the caller in the Input Monitoring list asynchronously; a
   /// short delay lets that registration complete before the second request.
-  /// Return values from IOHIDRequestAccess are deliberately ignored. The
-  /// authoritative post-request state comes from IOHIDCheckAccess.
+  /// The system's request results are deliberately ignored. The
+  /// authoritative post-request state is the system's access state.
   @discardableResult
   public func requestRequiredAccess() async -> Snapshot {
     var snapshot = checkAccess()
     if snapshot.inputRead != .granted {
-      await requestAccessOnMainActor(kIOHIDRequestTypeListenEvent)
+      await requestInputReadOnMainActor()
       try? await Task.sleep(nanoseconds: inputReadRegistrationDelayNanoseconds)
       snapshot = checkAccess()
     }
     if snapshot.inputInject != .granted {
-      await requestAccessOnMainActor(kIOHIDRequestTypePostEvent)
+      await requestInputInjectOnMainActor()
     }
     return refreshAccessState()
   }
@@ -136,16 +115,16 @@ public actor PermissionManager {
   /// Requests one permission from the row that owns that permission.
   ///
   /// The request result is never treated as a grant; the returned snapshot is
-  /// read back through `IOHIDCheckAccess`.
+  /// read back through the system's access state.
   @discardableResult
   public func requestAccess(_ requirement: Requirement) async -> Snapshot {
     let snapshot = checkAccess()
     switch requirement {
     case .inputRead where snapshot.inputRead != .granted:
-      await requestAccessOnMainActor(kIOHIDRequestTypeListenEvent)
+      await requestInputReadOnMainActor()
       try? await Task.sleep(nanoseconds: inputReadRegistrationDelayNanoseconds)
     case .inputInject where snapshot.inputInject != .granted:
-      await requestAccessOnMainActor(kIOHIDRequestTypePostEvent)
+      await requestInputInjectOnMainActor()
     default: break
     }
     return refreshAccessState()
@@ -154,8 +133,14 @@ public actor PermissionManager {
   /// TCC request calls are initiated on the app's main actor.  Besides matching
   /// AppKit's user-initiated permission flow, this gives macOS a live run loop
   /// for registering the bundle before the settings deep link is opened.
-  private func requestAccessOnMainActor(_ requestType: IOHIDRequestType) async {
-    await MainActor.run { _ = IOHIDRequestAccess(requestType) }
+  private func requestInputReadOnMainActor() async {
+    let system = system
+    await MainActor.run { system.requestInputReadAccess() }
+  }
+
+  private func requestInputInjectOnMainActor() async {
+    let system = system
+    await MainActor.run { system.requestInputInjectAccess() }
   }
 
   public func startPolling() {

@@ -1,9 +1,9 @@
 import Foundation
-import IOKit
 
 public enum WirelessControllerDisconnectOutcome: Sendable, Equatable {
   case disconnected
-  case failed(IOReturn)
+  /// The host rejected the disconnect with a status code of its Bluetooth stack.
+  case failed(Int32)
   case stillConnected
   case timedOut
 }

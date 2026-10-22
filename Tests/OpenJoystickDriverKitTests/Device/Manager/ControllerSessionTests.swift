@@ -164,7 +164,7 @@ struct ControllerSessionTests {
             transportProperty: connection,
             physicalLocationIdentifier: 72,
             interfaces: [
-              hostHIDInterface(HIDDeviceStream.hostTransport(forTransportProperty: connection))
+              hostHIDInterface(testHostTransport(connection))
             ]
           ),
           routingAddress: .ioKit(locationID: 72, interfaceNumber: nil),

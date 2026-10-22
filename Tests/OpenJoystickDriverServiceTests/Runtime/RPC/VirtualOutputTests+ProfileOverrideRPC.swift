@@ -45,7 +45,7 @@ extension VirtualOutputTests {
         dispatcher: remappingRouter,
         installationKey: testPortKeyInstallationKey
       ),
-      permissionManager: PermissionManager(),
+      permissionManager: .grantingAll(),
       dispatcher: dispatcher,
       remappingProfileLibrary: profileLibrary,
       remappingRouter: remappingRouter,

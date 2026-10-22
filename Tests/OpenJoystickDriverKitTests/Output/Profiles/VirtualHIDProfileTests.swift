@@ -1,5 +1,4 @@
 import Foundation
-import IOKit.hid
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -88,23 +87,23 @@ struct VirtualHIDProfileTests {
       durationMs: 500
     )
     #expect(
-      profile.consumerOutput(type: kIOHIDReportTypeOutput, reportID: 3, bytes: report) == expected
+      profile.consumerOutput(type: .output, reportID: 3, bytes: report) == expected
     )
     #expect(try consumerOutput(3, report, in: XboxGeckoHIDReportFormat()) == expected)
     #expect(
       profile.consumerOutput(
-        type: kIOHIDReportTypeOutput,
+        type: .output,
         reportID: 0,
         bytes: Self.unnumberedVendorReport
       ) == nil
     )
-    #expect(profile.consumerOutput(type: kIOHIDReportTypeInput, reportID: 3, bytes: report) == nil)
+    #expect(profile.consumerOutput(type: .input, reportID: 3, bytes: report) == nil)
     #expect(
-      profile.consumerOutput(type: kIOHIDReportTypeFeature, reportID: 3, bytes: report) == nil
+      profile.consumerOutput(type: .feature, reportID: 3, bytes: report) == nil
     )
     #expect(
       profile.consumerOutput(
-        type: kIOHIDReportTypeOutput,
+        type: .output,
         reportID: 3,
         bytes: [0x03, 0x0F, 0, 0, 0, 0, 50, 0, 0]
       ) == .stopRumble
@@ -112,7 +111,7 @@ struct VirtualHIDProfileTests {
     // The short report the set-report callback rejects is rejected by the profile's codec too.
     #expect(
       profile.consumerOutput(
-        type: kIOHIDReportTypeOutput,
+        type: .output,
         reportID: 3,
         bytes: [0x03, 0x0F, 10, 20, 30, 40]
       ) == nil
@@ -131,7 +130,7 @@ struct VirtualHIDProfileTests {
     ]
     for (reportID, bytes) in reports {
       #expect(
-        profile.consumerOutput(type: kIOHIDReportTypeOutput, reportID: reportID, bytes: bytes)
+        profile.consumerOutput(type: .output, reportID: reportID, bytes: bytes)
           == nil
       )
     }

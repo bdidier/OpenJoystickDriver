@@ -33,7 +33,7 @@ struct RecordDraftCommand: AsyncParsableCommand {
   /// Reads the report descriptor of a connected controller model; tests replace it.
   @TaskLocal
   static var descriptor: @Sendable (_ vendorID: Int, _ productID: Int) -> [UInt8]? = {
-    HIDDescriptorReportFormat.copyPhysicalReportDescriptor(vendorID: $0, productID: $1)
+    PlatformHosts.current.physicalReportDescriptor(vendorID: $0, productID: $1)
   }
 
   @OptionGroup(visibility: GlobalOptions.subcommandVisibility)

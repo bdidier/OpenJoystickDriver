@@ -1,6 +1,7 @@
 import Foundation
 import IOKit
 import IOKit.hid
+import OpenJoystickDriverKit
 
 extension HIDDeviceStream {
   /// Reads an integer property from an IOKit HID device.

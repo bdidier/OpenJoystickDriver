@@ -1,0 +1,62 @@
+import IOKit
+import Testing
+
+@testable import OpenJoystickDriverKit
+@testable import OpenJoystickDriverMacOSPlatform
+
+struct HIDDeviceStreamMappingTests {
+  @Test
+  func iohidTransportPropertyMapsToTheHostTransport() {
+    #expect(HIDDeviceStream.hostTransport(forTransportProperty: "USB") == .usb)
+    #expect(HIDDeviceStream.hostTransport(forTransportProperty: "Bluetooth") == .bluetoothClassic)
+    #expect(
+      HIDDeviceStream.hostTransport(forTransportProperty: "BluetoothLowEnergy") == .bluetoothLE
+    )
+    for unknown in [nil, "", "SPI", "bluetooth"] {
+      #expect(HIDDeviceStream.hostTransport(forTransportProperty: unknown) == nil)
+    }
+  }
+
+  @Test
+  func theBluetoothLEHubReportsTheIOHIDBluetoothLowEnergyTransport() {
+    #expect(
+      Switch2BluetoothLEProfile.hidTransportProperty == kIOHIDTransportBluetoothLowEnergyValue
+    )
+    #expect(
+      HIDDeviceStream.hostTransport(
+        forTransportProperty: Switch2BluetoothLEProfile.hidTransportProperty
+      ) == .bluetoothLE
+    )
+  }
+
+  @Test
+  func onlyDeniedInitialOpensEndTheHIDStream() {
+    func failure(_ result: IOReturn) -> PhysicalHIDFailure? {
+      guard
+        case .accessFailure(let failure) = HIDDeviceStream.accessFailure(
+          forInitialOpenResult: result
+        )
+      else { return nil }
+      return failure
+    }
+    #expect(failure(kIOReturnNotPermitted) == .hostStatus(kIOReturnNotPermitted))
+    #expect(failure(kIOReturnNotPrivileged) == .hostStatus(kIOReturnNotPrivileged))
+    #expect(HIDDeviceStream.accessFailure(forInitialOpenResult: kIOReturnSuccess) == nil)
+    #expect(HIDDeviceStream.accessFailure(forInitialOpenResult: kIOReturnExclusiveAccess) == nil)
+  }
+
+  @Test
+  func iokitStatusCodesMapToTheNamedFailures() {
+    #expect(PhysicalHIDFailure(ioReturn: kIOReturnTimeout) == .timedOut)
+    #expect(PhysicalHIDFailure(ioReturn: kIOReturnBusy) == .busy)
+    #expect(PhysicalHIDFailure(ioReturn: kIOReturnNotResponding) == .notResponding)
+    #expect(PhysicalHIDFailure(ioReturn: kIOReturnUnsupported) == .declined)
+    #expect(PhysicalHIDFailure(ioReturn: IOReturn(bitPattern: 0xE000_404F)) == .declined)
+    for code in [
+      kIOReturnNotOpen, kIOReturnNoDevice, kIOReturnAborted, kIOReturnNotPermitted,
+      kIOReturnExclusiveAccess, kIOReturnError,
+    ] {
+      #expect(PhysicalHIDFailure(ioReturn: code) == .hostStatus(code))
+    }
+  }
+}

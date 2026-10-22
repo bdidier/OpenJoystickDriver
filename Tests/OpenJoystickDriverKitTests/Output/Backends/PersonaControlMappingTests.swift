@@ -4,7 +4,7 @@ import Testing
 
 /// Which controls each virtual persona carries, and the reason each missing one is missing.
 struct PersonaControlMappingTests {
-  private typealias Dispatcher = UserSpaceOutputDispatcher
+  private typealias Dispatcher = VirtualGamepadReportMapping
 
   private static let steamControllerWired = LogicalControllerID(vendorID: 0x28DE, productID: 0x1102)
   private static let steamDeck = LogicalControllerID(vendorID: 0x28DE, productID: 0x1205)
