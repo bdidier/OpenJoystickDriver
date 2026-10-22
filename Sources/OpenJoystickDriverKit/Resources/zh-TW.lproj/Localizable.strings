@@ -3954,3 +3954,11 @@
 "cli.setting.testNotification.discussion" = "要求服務向已開啟的 OpenJoystickDriver App 發出測試通知，並等待 App 顯示。如果通知被拒絕、傳送失敗或沒有 App 及時回應，將以具名錯誤失敗。此處 --timeout 預設為 %@ 秒。";
 /* Printed by ojd setting test-notification after the app reported that it showed the test notification. */
 "cli.setting.testNotification.success" = "App 已顯示測試通知。";
+/* Says which app uses the USB interface of a controller exclusively and that OpenJoystickDriver serves the controller when the app releases it, in the controller detail and the controller list. %1$@ is the process name and %2$@ the process ID. */
+"status.controllerOwner.named" = "由 %1$@（處理程序 %2$@）佔用。該控制器正被直接讀取。釋放後 OpenJoystickDriver 會接管它。";
+/* Says which holder the USB interface of a controller names, such as a driver class that has no process ID, and that OpenJoystickDriver serves the controller when the holder releases it, in the controller detail and the controller list. %@ is the holder name. */
+"status.controllerOwner.nameOnly" = "由 %@ 佔用。該控制器正被直接讀取。釋放後 OpenJoystickDriver 會接管它。";
+/* Says that another app uses the USB interface of a controller exclusively and that OpenJoystickDriver serves the controller when the app releases it, when the interface names no holder, in the controller detail and the controller list. */
+"status.controllerOwner.unnamed" = "由其他 App 佔用。該控制器正被直接讀取。釋放後 OpenJoystickDriver 會接管它。";
+/* Label in the controller detail for who holds the USB interface of the controller exclusively. */
+"ui.controllers.exclusiveOwner" = "獨佔存取";

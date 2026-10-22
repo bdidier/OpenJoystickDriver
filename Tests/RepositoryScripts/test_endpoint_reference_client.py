@@ -137,6 +137,7 @@ class EndpointReferenceClientTests(unittest.TestCase):
                     productID=654,
                     connection="usb",
                     hasSerialNumber=False,
+                    ownedByAnotherClient=False,
                     protocol="XboxXUSB:Wired",
                     session="Active",
                 ),

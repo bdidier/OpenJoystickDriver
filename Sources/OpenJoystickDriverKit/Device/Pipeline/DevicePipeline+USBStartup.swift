@@ -45,15 +45,36 @@ extension DevicePipeline {
       }
       guard case .opened(let handle) = openResult else {
         let ownership: HIDInputOwnership
-        if case .unavailable(.accessDenied) = openResult {
-          ownership = .accessDenied
-        } else {
-          ownership = .acquisitionFailed
+        var holder: USBExclusiveOwner?
+        switch openResult {
+        case .unavailable(.accessDenied): ownership = .accessDenied
+        case .unavailable(.ownedByAnotherClient(let owner)):
+          ownership = .ownedByAnotherClient
+          holder = owner.flatMap(USBExclusiveOwner.init(registryValue:))
+        default: ownership = .acquisitionFailed
         }
+        let wasHeld = usbOwnedByAnotherClient
+        usbExclusiveOwner = holder
+        usbOwnedByAnotherClient = ownership == .ownedByAnotherClient
         await reportUSBInputOwnership(ownership)
         guard isCurrentUSBRun(generation) else { return }
         usbSessionStartFailed = true
         openAttempt += 1
+        if ownership == .ownedByAnotherClient {
+          // Another client reading the pad directly is a valid state: the pipeline does not
+          // request or seize the interface, and opens it when the owner lets go.
+          if !wasHeld {
+            print(
+              "[DevicePipeline] USB interface is used by \(holder?.name ?? "another client"); "
+                + "opening it when it is released: \(identifier)"
+            )
+          }
+          if await waitForUSBRelease(provider: provider, device: device) {
+            guard isCurrentUSBRun(generation) else { return }
+            print("[DevicePipeline] USB interface was released; opening it: \(identifier)")
+            continue
+          }
+        }
         let delay: UInt64
         if case .unavailable(.accessDenied) = openResult {
           if openAttempt == 1 {
@@ -71,6 +92,8 @@ extension DevicePipeline {
         continue
       }
       usbHandle = handle
+      usbOwnedByAnotherClient = false
+      usbExclusiveOwner = nil
       consecutiveUSBIOErrors = 0
       driver.resetProtocolState()
 
@@ -116,6 +139,26 @@ extension DevicePipeline {
       case .accessDenied: delay = usbRecoveryPolicy.accessContentionDelayNanoseconds
       }
       try? await Task.sleep(nanoseconds: delay)
+    }
+  }
+
+  /// Waits for the platform to announce that the exclusive owner let go of the interface. Returns
+  /// false when the wait failed, so the caller retries after its backoff.
+  func waitForUSBRelease(
+    provider: any USBTransportProvider,
+    device: USBTransportDevice
+  ) async -> Bool {
+    do {
+      try await provider.waitForRelease(
+        of: device,
+        interfaceNumber: transportProfile.interfaceNumber
+      )
+      return true
+    } catch {
+      print(
+        "[DevicePipeline] Waiting for the USB owner to release failed for \(identifier): \(error)"
+      )
+      return false
     }
   }
 
@@ -270,6 +313,7 @@ extension DevicePipeline {
       } catch let error as USBTransportError {
         lastError = error
         if error == .accessDenied { return .unavailable(error) }
+        if case .ownedByAnotherClient = error { return .unavailable(error) }
         handleOpenDeviceError(error, attempt: attempt)
         if attempt < usbRecoveryPolicy.openRetryDelays.count - 1 {
           try? await Task.sleep(nanoseconds: usbRecoveryPolicy.openRetryDelays[attempt])

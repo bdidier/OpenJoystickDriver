@@ -22,8 +22,12 @@ public struct ConnectedDeviceSnapshot: Sendable {
   public let discoverySource: DeviceDiscoverySource
   /// Observed physical ownership route used by virtual exposure policy.
   public let physicalOwnership: ControllerOwnershipObservation
-  /// Current HID acquisition result; unknown for non-HID discovery routes.
+  /// Current HID acquisition result; unknown for non-HID discovery routes, except that a raw-USB
+  /// controller whose interface another client holds exclusively reports `ownedByAnotherClient`.
   public let hidInputOwnership: HIDInputOwnership
+  /// The client that holds the controller's USB interface exclusively; nil when none does or the
+  /// interface names none.
+  public let inputOwner: USBExclusiveOwner?
   /// Duplicate-device risk implied by the current physical ownership observation.
   public let duplicateExposureRisk: DuplicateExposureRisk
   /// USB serial number, or nil if not reported.

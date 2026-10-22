@@ -15,6 +15,10 @@ public struct ControllerSummary: Encodable, Equatable, Sendable {
   public let `protocol`: String
   public let session: String
   public let hasSerialNumber: Bool
+  /// Whether another client holds the controller's USB interface exclusively.
+  public let ownedByAnotherClient: Bool
+  /// The client that holds it; absent when none does or the interface names none.
+  public let owner: USBExclusiveOwner?
   /// Absent when the service reports no power state.
   public let power: ControllerConnectionState.Power?
 
@@ -28,6 +32,8 @@ public struct ControllerSummary: Encodable, Equatable, Sendable {
     self.protocol = device.protocolBinding.rawValue
     session = device.sessionState.rawValue
     hasSerialNumber = device.serialNumber.map { !$0.isEmpty } ?? false
+    ownedByAnotherClient = device.hidInputOwnership == .ownedByAnotherClient
+    owner = device.inputOwner
     power = device.connectionState?.power
   }
 }

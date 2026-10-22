@@ -118,6 +118,20 @@ actor DevicePipeline {
   /// stays unresponsive after the reset is not reset again by the same pipeline.
   var usbDeviceResetAttempted = false
   var lastUSBIOErrorLogNs: UInt64 = 0
+  /// Whether another client holds the USB interface open exclusively, and who it is; both reset
+  /// once a session opens.
+  var usbOwnedByAnotherClient = false {
+    didSet {
+      if oldValue != usbOwnedByAnotherClient {
+        NotificationCenter.postServiceStatusChanged(from: self)
+      }
+    }
+  }
+  var usbExclusiveOwner: USBExclusiveOwner? {
+    didSet {
+      if oldValue != usbExclusiveOwner { NotificationCenter.postServiceStatusChanged(from: self) }
+    }
+  }
   /// Ending the connection or the session drops the held input, so it is never replayed later.
   var inputConnectionActive: Bool {
     didSet {

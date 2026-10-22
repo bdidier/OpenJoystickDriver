@@ -11,6 +11,7 @@ struct ControllerFact: Equatable, Identifiable {
     case startupStatus, inputReportFormat, inputRecoveries
     case publicationAttempted, publicationCompleted
     case usbIdentifier, inputEndpoint, outputEndpoint
+    case exclusiveOwner
   }
 
   let kind: Kind
@@ -70,7 +71,18 @@ enum ControllerDetailFacts {
           ? .text(String(device.capabilities.touchContactCount)) : .none
       ),
     ]
-    return always + (power + capabilities).filter { $0.value != .none }
+    let held =
+      device.hidInputOwnership == .ownedByAnotherClient
+      ? [
+        fact(
+          .exclusiveOwner,
+          "ui.controllers.exclusiveOwner",
+          .text(
+            USBExclusiveOwner.heldMessage(for: device.inputOwner, localize: OJDLocalized.string)
+          )
+        )
+      ] : []
+    return always + held + (power + capabilities).filter { $0.value != .none }
   }
 
   /// The technical facts, shown under Advanced: identifiers, the parser (the binding that parses

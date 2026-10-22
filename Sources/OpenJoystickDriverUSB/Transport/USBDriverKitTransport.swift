@@ -106,7 +106,16 @@ public actor USBDriverKitTransportProvider: USBPhysicalDeviceObservationProvider
         await session.close()
         throw Self.transportError(error)
       }
-    } catch { throw Self.transportError(error) }
+    } catch {
+      let mapped = Self.transportError(error)
+      guard case .ownedByAnotherClient(nil) = mapped else { throw mapped }
+      throw USBTransportError.ownedByAnotherClient(
+        owner: IOUSBHostTransportProvider.interfaceExclusiveOwner(
+          of: device,
+          interfaceNumber: options.interfaceNumber
+        )
+      )
+    }
   }
 
   /// The device a DEXT service drives, identified by the parent `IOUSBHostDevice` first and the
@@ -264,8 +273,8 @@ public actor USBDriverKitTransportProvider: USBPhysicalDeviceObservationProvider
       switch code {
       case kIOReturnTimeout: return .timeout
       case kIOReturnNoDevice, kIOReturnNotAttached, kIOReturnNotOpen: return .disconnected
-      case kIOReturnNotPermitted, kIOReturnExclusiveAccess, kIOReturnNotPrivileged:
-        return .accessDenied
+      case kIOReturnExclusiveAccess: return .ownedByAnotherClient(owner: nil)
+      case kIOReturnNotPermitted, kIOReturnNotPrivileged: return .accessDenied
       case kIOReturnNotFound: return .notFound
       case kIOReturnUnsupported: return .notSupported
       case kIOReturnIOError: return .inputOutput

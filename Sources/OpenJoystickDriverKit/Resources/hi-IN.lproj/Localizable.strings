@@ -3954,3 +3954,11 @@
 "cli.setting.testNotification.discussion" = "सेवा से कहता है कि वह खुले OpenJoystickDriver ऐप को परीक्षण सूचना की घोषणा करे और ऐप के उसे दिखाने की प्रतीक्षा करता है। सूचनाएँ अस्वीकृत होने, डिलीवरी विफल होने या किसी ऐप के समय पर उत्तर न देने पर नामित त्रुटि के साथ विफल होता है। यहाँ --timeout का डिफ़ॉल्ट %@ सेकंड है।";
 /* Printed by ojd setting test-notification after the app reported that it showed the test notification. */
 "cli.setting.testNotification.success" = "ऐप ने परीक्षण सूचना दिखाई।";
+/* Says which app uses the USB interface of a controller exclusively and that OpenJoystickDriver serves the controller when the app releases it, in the controller detail and the controller list. %1$@ is the process name and %2$@ the process ID. */
+"status.controllerOwner.named" = "%1$@ (प्रोसेस %2$@) के पास है। इस कंट्रोलर को सीधे पढ़ा जा रहा है। छोड़े जाने पर OpenJoystickDriver इसे संभाल लेगा।";
+/* Says which holder the USB interface of a controller names, such as a driver class that has no process ID, and that OpenJoystickDriver serves the controller when the holder releases it, in the controller detail and the controller list. %@ is the holder name. */
+"status.controllerOwner.nameOnly" = "%@ के पास है। इस कंट्रोलर को सीधे पढ़ा जा रहा है। छोड़े जाने पर OpenJoystickDriver इसे संभाल लेगा।";
+/* Says that another app uses the USB interface of a controller exclusively and that OpenJoystickDriver serves the controller when the app releases it, when the interface names no holder, in the controller detail and the controller list. */
+"status.controllerOwner.unnamed" = "किसी दूसरे ऐप के पास है। इस कंट्रोलर को सीधे पढ़ा जा रहा है। छोड़े जाने पर OpenJoystickDriver इसे संभाल लेगा।";
+/* Label in the controller detail for who holds the USB interface of the controller exclusively. */
+"ui.controllers.exclusiveOwner" = "विशेष एक्सेस";

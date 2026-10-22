@@ -6,6 +6,10 @@ actor RecoveryUSBProvider: USBTransportProvider {
   private var sessions: [RecoveryUSBSession]
   private var listedDevices: [USBTransportDevice]
   private(set) var openCount = 0
+  /// Errors the next opens throw, in order, before sessions are handed out.
+  private var openFailures: [USBTransportError] = []
+  private(set) var releaseWaitCount = 0
+  private var releaseWaiter: CheckedContinuation<Void, Never>?
   private(set) var openedDevices: [USBTransportDevice] = []
   private(set) var resolutionGateReached = false
   private var shouldGateNextResolution = false
@@ -24,6 +28,7 @@ actor RecoveryUSBProvider: USBTransportProvider {
   ) throws -> any USBTransportSession {
     openCount += 1
     openedDevices.append(device)
+    if !openFailures.isEmpty { throw openFailures.removeFirst() }
     guard !sessions.isEmpty else { throw USBTransportError.notFound }
     return sessions.removeFirst()
   }
@@ -38,6 +43,19 @@ actor RecoveryUSBProvider: USBTransportProvider {
       await withCheckedContinuation { resolutionGateContinuation = $0 }
     }
     return USBTransportResolution(profile: configured)
+  }
+
+  func failNextOpens(with errors: [USBTransportError]) { openFailures = errors }
+
+  func waitForRelease(of _: USBTransportDevice, interfaceNumber _: UInt8) async throws {
+    releaseWaitCount += 1
+    await withCheckedContinuation { releaseWaiter = $0 }
+  }
+
+  /// Plays the platform's release announcement.
+  func announceRelease() {
+    releaseWaiter?.resume()
+    releaseWaiter = nil
   }
 
   func gateNextResolution() { shouldGateNextResolution = true }

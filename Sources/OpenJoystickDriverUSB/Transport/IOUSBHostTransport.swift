@@ -42,7 +42,56 @@ public actor IOUSBHostTransportProvider: USBTransportProvider {
         try interface.selectAlternateSetting(Int(options.alternateSetting))
       }
       return IOUSBHostTransportSession(interface: interface)
-    } catch { throw Self.transportError(error) }
+    } catch { throw Self.openError(error, interfaceService: service) }
+  }
+
+  /// Returns when the exclusive owner of the interface lets go, by an IOKit interest notification
+  /// on the interface service.
+  static func waitForRelease(of device: USBTransportDevice, interfaceNumber: UInt8) async throws {
+    guard let service = try interfaceService(for: device, interfaceNumber: interfaceNumber)
+    else { throw USBTransportError.notFound }
+    defer { IOObjectRelease(service) }
+    let watch = InterfaceReleaseWatch()
+    try watch.start(service: service)
+    await withTaskCancellationHandler {
+      await watch.wait()
+    } onCancel: {
+      watch.finish()
+    }
+    watch.stop()
+  }
+
+  /// The owner the interface of `device` names, or nil when it names none or does not exist.
+  static func interfaceExclusiveOwner(
+    of device: USBTransportDevice,
+    interfaceNumber: UInt8
+  ) -> String? {
+    guard let service = try? interfaceService(for: device, interfaceNumber: interfaceNumber)
+    else { return nil }
+    defer { IOObjectRelease(service) }
+    return interfaceExclusiveOwner(of: service)
+  }
+
+  static func interfaceExclusiveOwner(of interfaceService: io_service_t) -> String? {
+    IORegistryEntryCreateCFProperty(
+      interfaceService,
+      exclusiveOwnerKey as CFString,
+      kCFAllocatorDefault,
+      0
+    )?.takeRetainedValue() as? String
+  }
+
+  /// The IORegistry property that names the client holding a USB device or interface open.
+  static let exclusiveOwnerKey = "UsbExclusiveOwner"
+
+  private static func openError(_ error: Error, interfaceService: io_service_t) -> USBTransportError
+  {
+    let code = IOReturn(truncatingIfNeeded: (error as NSError).code)
+    return transportError(
+      code,
+      exclusiveOwner: code == kIOReturnExclusiveAccess
+        ? interfaceExclusiveOwner(of: interfaceService) : nil
+    )
   }
 
   /// The device's own `UsbExclusiveOwner` registry property, such as `pid 11070, steam_osx`. It
@@ -53,7 +102,7 @@ public actor IOUSBHostTransportProvider: USBTransportProvider {
     defer { IOObjectRelease(service) }
     return IORegistryEntryCreateCFProperty(
       service,
-      "UsbExclusiveOwner" as CFString,
+      Self.exclusiveOwnerKey as CFString,
       kCFAllocatorDefault,
       0
     )?.takeRetainedValue() as? String
@@ -300,12 +349,20 @@ public actor IOUSBHostTransportProvider: USBTransportProvider {
   }
 
   static func transportError(_ code: IOReturn) -> USBTransportError {
+    transportError(code, exclusiveOwner: nil)
+  }
+
+  /// `exclusiveOwner` is what the interface names when `code` says another client holds it.
+  static func transportError(
+    _ code: IOReturn,
+    exclusiveOwner: String?
+  ) -> USBTransportError {
     switch code {
     case kIOReturnTimeout, kIOReturnAborted: return .timeout
     case kIOReturnNoDevice, kIOReturnNotAttached, kIOReturnNotOpen, kIOReturnNotResponding:
       return .disconnected
-    case kIOReturnNotPermitted, kIOReturnExclusiveAccess, kIOReturnNotPrivileged:
-      return .accessDenied
+    case kIOReturnExclusiveAccess: return .ownedByAnotherClient(owner: exclusiveOwner)
+    case kIOReturnNotPermitted, kIOReturnNotPrivileged: return .accessDenied
     case kIOReturnNotFound: return .notFound
     case kIOReturnUnsupported, kIOReturnBadArgument: return .notSupported
     case kIOReturnIOError: return .inputOutput

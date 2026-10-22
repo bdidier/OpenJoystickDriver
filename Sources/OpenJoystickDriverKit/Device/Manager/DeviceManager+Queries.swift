@@ -79,6 +79,8 @@ extension DeviceManager {
     let transportProfile =
       info.usbTransportDevice != nil ? pipeline.transportProfile : record?.transportProfile
     let ownership = info.ownershipObservation
+    var usbHeld = false
+    if info.usbTransportDevice != nil { usbHeld = await pipeline.usbOwnedByAnotherClient }
     // A HID key carries an interface only for a protocol role; show the observed one for all.
     let observedInterface: UInt8? =
       if case .hid = info.discoverySource {
@@ -96,7 +98,8 @@ extension DeviceManager {
       interfaceNumber: observedInterface,
       discoverySource: info.discoverySource.kind,
       physicalOwnership: ownership,
-      hidInputOwnership: info.hidInputOwnership,
+      hidInputOwnership: usbHeld ? .ownedByAnotherClient : info.hidInputOwnership,
+      inputOwner: usbHeld ? await pipeline.usbExclusiveOwner : nil,
       duplicateExposureRisk: DuplicateExposureRisk(observation: ownership),
       serialNumber: info.serialNumber,
       parameters: record?.parameters.entries ?? [],
