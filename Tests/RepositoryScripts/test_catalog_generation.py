@@ -453,6 +453,14 @@ class SDLControllerListTests(unittest.TestCase):
         with self.assertRaises(catalog.CatalogError):
             catalog.apply_built_in_patches({(1, 2): record}, {(1, 2): record})
 
+    def test_a_tool_refusal_is_a_catalog_error(self) -> None:
+        refusal = catalog.repository_tool.ToolError("E5007: a.json: refused")
+        with (
+            patch.object(catalog.repository_tool, "check", side_effect=refusal),
+            self.assertRaisesRegex(catalog.CatalogError, "refused"),
+        ):
+            catalog.apply_built_in_patches({}, {})
+
     def test_third_party_dualsense_is_admitted_and_360_product_ids_are_skipped(
         self,
     ) -> None:
