@@ -2,6 +2,7 @@
 "term.app.name" = "OpenJoystickDriver";
 /* Button of the problem banner in the Access area that quits and opens the app again so that a granted permission takes effect. OpenJoystickDriver is the product name. */
 "ui.permissions.restartApplication" = "Mulai Ulang OpenJoystickDriver";
+/* Menu item in the application menu that opens the project page on GitHub. GitHub is a product name and stays as written. */
 "ui.menu.projectPage" = "GitHub";
 /* Button that dismisses an alert in the activity view and the main window. It only acknowledges the message. */
 "action.ok" = "OKE";
@@ -102,45 +103,79 @@
 "ui.settings.general.updateChecking" = "Memeriksa…";
 "ui.settings.general.updates" = "Pembaruan";
 "ui.settings.general.viewUpdate" = "Lihat Pembaruan";
+/* Title of the message in the Controllers area when the service cannot list controllers. */
 "ui.controllers.unavailable" = "Pengontrol tidak tersedia";
+/* Title of the message in the Controllers area when the list of controllers fails to load. */
 "ui.controllers.loadError" = "Tidak dapat memuat pengontrol";
+/* Title of the empty state in the Controllers area when no controller is connected. */
 "ui.controllers.emptyTitle" = "Tidak ada pengontrol yang terhubung";
+/* Message of the empty state in the Controllers area. It asks the user to connect a controller. */
 "ui.controllers.emptyMessage" = "Hubungkan pengontrol.";
+/* Label of the battery fact in the Controllers detail. */
 "ui.controllers.battery" = "Baterai";
+/* VoiceOver label of the button that shows the serial number in the Controllers detail. */
 "ui.controllers.serial.show" = "Tampilkan nomor seri";
+/* VoiceOver label of the button that hides the serial number in the Controllers detail. */
 "ui.controllers.serial.hide" = "Sembunyikan nomor seri";
+/* VoiceOver value of the serial number while it is hidden. */
 "ui.controllers.serial.hidden" = "Tersembunyi";
+/* Label of the charging state fact in the Controllers detail. */
 "ui.controllers.chargingState" = "Status pengisian daya";
+/* Label of the fact in the Controllers detail that tells whether a charging cable is plugged in. */
 "ui.controllers.cableState" = "Status kabel";
+/* Value of the charging state when the battery loses charge. */
 "ui.controllers.discharging" = "Menggunakan baterai";
+/* Value of the charging state when the battery gains charge. */
 "ui.controllers.charging" = "Mengisi daya";
+/* Value of the charging state when the battery is full. */
 "ui.controllers.batteryFull" = "Penuh";
+/* Value of the charging state for a controller that has no rechargeable battery. */
 "ui.controllers.notChargeable" = "Tidak dapat diisi daya";
+/* VoiceOver summary of the battery facts. %1$@ is the battery level, %2$@ is the charging state and %3$@ is the cable state. */
 "ui.controllers.batteryAccessibilityDetails" = "Baterai: %1$@. Status pengisian daya: %2$@. Status kabel: %3$@.";
+/* Label of the active profile fact in the Controllers detail. */
 "ui.controllers.activeProfile" = "Profil aktif";
+/* Value of the active profile fact when the profile cannot be shown. */
 "ui.controllers.profileUnavailable" = "Profil aktif tidak tersedia";
+/* Value of the active profile fact when loading the profile failed. */
 "ui.controllers.profileLoadError" = "Profil aktif tidak dapat dimuat";
+/* Label of the fact in the Controllers detail that shows the USB vendor ID and product ID. VID and PID are the usual short names. */
 "ui.controllers.usbIdentifier" = "VID/PID USB";
+/* VoiceOver sentence while the app checks which profile is active for the controller. */
 "ui.controllers.profileCheckingSentence" = "Profil aktif sedang diperiksa.";
+/* VoiceOver sentence when the controller has no active profile. */
 "ui.controllers.noActiveProfileSentence" = "Tidak ada profil aktif.";
+/* VoiceOver sentence that names the active profile. %@ is the profile name. The sentence ends with a period. */
 "ui.controllers.activeProfileSentence" = "Profil aktif: %@.";
+/* VoiceOver sentence when the active profile cannot be shown. %@ is the reason. */
 "ui.controllers.profileUnavailableSentence" = "Profil aktif tidak tersedia: %@";
+/* VoiceOver sentence when loading the active profile failed. %@ is the reason. */
 "ui.controllers.profileErrorSentence" = "Kesalahan profil aktif: %@";
+/* VoiceOver summary of a controller. %1$@ is the connection summary, %2$@ is the profile sentence, %3$@ is the protocol, %4$@ is the parser, %5$@ is the serial number, %6$@ is the USB vendor and product ID, %7$@ is the input endpoint and %8$@ is the output endpoint. */
 "ui.controllers.accessibilityDetails" = "%1$@. %2$@. Protokol: %3$@. Parser: %4$@. Nomor seri: %5$@. VID/PID USB: %6$@. Endpoint input: %7$@. Endpoint output: %8$@.";
 /* Note on a controller row in the Controllers area when macOS serves the controller natively and the driver does not publish a virtual gamepad for it. */
 "platform.macos.ui.controllers.systemGamepadNotPublished" = "Gamepad macOS native, tidak dipublikasikan";
+/* Label of the popup in the Controllers detail that picks which program serves the controller to games. */
 "ui.controllers.server.label" = "Dilayani oleh";
 /* Entry of the server picker in the Controllers detail: macOS serves the controller itself. */
 "platform.macos.ui.controllers.server.system" = "macOS (bawaan)";
+/* Option of the server popup: OpenJoystickDriver serves the controller as a virtual gamepad. OpenJoystickDriver is the product name. */
 "ui.controllers.server.ojd" = "OpenJoystickDriver (pengontrol virtual)";
+/* Label of the serving route fact in the Controllers detail. The route is the way the input reaches games. */
 "ui.controllers.serving.label" = "Rute layanan";
 /* Value of the serving route in the Controllers area: macOS serves the controller and the driver passes the input through. */
 "platform.macos.ui.controllers.serving.nativePassThrough" = "macOS (diteruskan langsung)";
+/* Value of the serving route when OpenJoystickDriver serves a virtual gamepad. OpenJoystickDriver is the product name. */
 "ui.controllers.serving.virtualHID" = "OpenJoystickDriver (gamepad virtual)";
+/* Value of the serving route when the driver extension owns the controller. */
 "ui.controllers.serving.extensionOwned" = "Ekstensi driver";
+/* Value of the serving route when the user turned the output off. */
 "ui.controllers.serving.outputDisabled" = "Keluaran mati";
+/* Message when the user changes the server of a controller that no controller record describes. */
 "ui.controllers.server.noRecord" = "Tidak ada catatan pengontrol yang menjelaskan pengontrol ini, jadi tidak ada yang perlu diubah.";
+/* Message when the user changes the server of a controller whose record is not valid. */
 "ui.controllers.server.invalidRecord" = "Catatan pengontrol tidak valid. Tidak ada yang berubah.";
+/* Message when the app cannot save the changed controller record. */
 "ui.controllers.server.persistenceFailed" = "Catatan pengontrol tidak dapat disimpan. Tidak ada yang berubah.";
 "ui.virtualProfile.advanced" = "Lanjutan";
 "ui.virtualProfile.title" = "Profil HID virtual";
@@ -648,68 +683,129 @@
 "ui.developer.soakNotANumber" = "%@: masukkan bilangan bulat.";
 /* Error in the soak test sheet when a value is outside its range. %1$@ is the label of the field, %2$lld is the lowest value and %3$lld is the highest value. */
 "ui.developer.soakOutOfRange" = "%1$@: masukkan nilai antara %2$lld dan %3$lld.";
+/* Name of the A button of an Xbox style controller, shown in the input test. */
 "ui.inputTest.aButton" = "Tombol A";
+/* Name of the bottom face button in the input test for a controller with an unknown layout: A on Xbox, Cross on PlayStation. The slash stays. */
 "ui.inputTest.aCross" = "A / Silang";
+/* Heading in the input test of the buttons beyond the standard ones. */
 "ui.inputTest.additionalButtons" = "Tombol tambahan";
+/* Value of a stick in the input test. %1$.3f is the horizontal position and %2$.3f is the vertical position, from -1 to 1. X and Y are the axis names. */
 "ui.inputTest.axisPair" = "X %1$.3f, Y %2$.3f";
+/* Value of a single axis in the input test. %.3f is the position as a number with three decimals. */
 "ui.inputTest.axisValue" = "%.3f";
+/* Value of the horizontal axis in the input test. %.3f is the position. X is the axis name. */
 "ui.inputTest.axisX" = "X %.3f";
+/* Value of the vertical axis in the input test. %.3f is the position. Y is the axis name. */
 "ui.inputTest.axisY" = "Y %.3f";
+/* Name of the B button of an Xbox style controller, shown in the input test. */
 "ui.inputTest.bButton" = "Tombol B";
+/* Name of the right face button in the input test for a controller with an unknown layout: B on Xbox, Circle on PlayStation. The slash stays. */
 "ui.inputTest.bCircle" = "B / Lingkaran";
+/* Label of the brightness slider of the controller light in the input test. */
 "ui.inputTest.brightness" = "Kecerahan";
+/* Label of the color picker of the controller light in the input test. */
 "ui.inputTest.color" = "Warna";
+/* Status of the input test when the controller is disconnected. */
 "ui.inputTest.disconnected" = "Pengontrol terputus";
+/* VoiceOver label of the down direction of the directional pad in the input test. */
 "ui.inputTest.dpadDown" = "D-pad bawah";
+/* VoiceOver label of the left direction of the directional pad in the input test. */
 "ui.inputTest.dpadLeft" = "D-pad kiri";
+/* VoiceOver label of the right direction of the directional pad in the input test. */
 "ui.inputTest.dpadRight" = "D-pad kanan";
+/* VoiceOver label of the up direction of the directional pad in the input test. */
 "ui.inputTest.dpadUp" = "D-pad atas";
+/* Label of the slider that sets how long a rumble test lasts. */
 "ui.inputTest.duration" = "Durasi";
+/* Value of the rumble duration slider. %d is the number of milliseconds. ms is the unit. */
 "ui.inputTest.durationValue" = "%d md";
+/* Name of the home button of a controller, shown in the input test. */
 "ui.inputTest.home" = "Home";
+/* Status of the input test before any input arrives. */
 "ui.inputTest.idle" = "Siap";
+/* Name of the left bumper of an Xbox style controller, shown in the input test. */
 "ui.inputTest.leftBumper" = "Bumper kiri";
+/* Name of the left shoulder button in the input test for a controller with an unknown layout: LB on Xbox, L1 on PlayStation. The slash stays. */
 "ui.inputTest.leftBumperGeneric" = "LB / L1";
+/* Name of the left haptic actuator in the output test of the input test window. */
 "ui.inputTest.leftHaptic" = "Haptik kiri";
+/* Name of the large rumble motor on the left side of the controller, which makes low-frequency vibration. */
 "ui.inputTest.lowFrequency" = "Utama kiri";
+/* Name of the left stick in the input test. */
 "ui.inputTest.leftStick" = "Stik kiri";
+/* Name of the button that the user presses by pushing down the left stick, shown in the input test. */
 "ui.inputTest.leftStickButton" = "Tombol stik kiri";
+/* Name of the left trigger of an Xbox style controller, shown in the input test. */
 "ui.inputTest.leftTrigger" = "Pemicu kiri";
+/* Name of the left trigger in the input test for a controller with an unknown layout: LT on Xbox, L2 on PlayStation. The slash stays. */
 "ui.inputTest.leftTriggerGeneric" = "LT / L2";
+/* Heading of the lighting section in the input test. */
 "ui.inputTest.lighting" = "Pencahayaan";
+/* Status of the input test when input arrives. */
 "ui.inputTest.live" = "Input aktif";
+/* Name of the menu button of a controller, shown in the input test. */
 "ui.inputTest.menu" = "Menu";
+/* Option of the player indicator popup that turns the indicator off. */
 "ui.inputTest.off" = "Mati";
+/* Button in the Controllers detail that opens the input test window. Keep the three dots. */
 "ui.inputTest.open" = "Buka Tes Input…";
+/* Title of the error under the output tests in the input test window. */
 "ui.inputTest.outputError" = "Kesalahan output fisik";
+/* Error in the input test window when the controller refuses a rumble or light test. */
 "ui.inputTest.outputRejected" = "Pengontrol menolak tes output ini.";
 /* Status shown in the input test window when the Input Monitoring permission is missing. Input Monitoring is written as macOS names it. */
 "platform.macos.ui.inputTest.permissionRequired" = "Izin Pengawasan Input diperlukan";
+/* Label of the popup in the input test that sets the player indicator, the lights that show which player a controller is. */
 "ui.inputTest.playerIndicator" = "Indikator pemain";
+/* VoiceOver value of a button in the input test while it is pressed. */
 "ui.inputTest.pressed" = "Ditekan";
+/* VoiceOver value of a button in the input test while it is not pressed. */
 "ui.inputTest.released" = "Dilepas";
+/* Name of the right bumper of an Xbox style controller, shown in the input test. */
 "ui.inputTest.rightBumper" = "Bumper kanan";
+/* Name of the right shoulder button in the input test for a controller with an unknown layout: RB on Xbox, R1 on PlayStation. The slash stays. */
 "ui.inputTest.rightBumperGeneric" = "RB / R1";
+/* Name of the right haptic actuator in the output test of the input test window. */
 "ui.inputTest.rightHaptic" = "Haptik kanan";
+/* Name of the small rumble motor on the right side of the controller, which makes high-frequency vibration. */
 "ui.inputTest.highFrequency" = "Utama kanan";
+/* Name of the right stick in the input test. */
 "ui.inputTest.rightStick" = "Stik kanan";
+/* Name of the button that the user presses by pushing down the right stick, shown in the input test. */
 "ui.inputTest.rightStickButton" = "Tombol stik kanan";
+/* Name of the right trigger of an Xbox style controller, shown in the input test. */
 "ui.inputTest.rightTrigger" = "Pemicu kanan";
+/* Name of the right trigger in the input test for a controller with an unknown layout: RT on Xbox, R2 on PlayStation. The slash stays. */
 "ui.inputTest.rightTriggerGeneric" = "RT / R2";
+/* Heading of the rumble section in the input test. */
 "ui.inputTest.rumble" = "Getaran";
+/* Message in the rumble section of the input test when the controller has no rumble. */
 "ui.inputTest.rumbleUnavailable" = "Getaran tidak didukung oleh pengontrol ini.";
+/* Status of the input test when input stopped arriving. */
 "ui.inputTest.stale" = "Input terganggu";
+/* Status of the input test while it starts. Keep the three dots. */
 "ui.inputTest.starting" = "Memulai…";
+/* VoiceOver label of the status area of the input test. */
 "ui.inputTest.status" = "Status tes input";
+/* Title of the button in the input test that makes the controller rumble. */
 "ui.inputTest.testRumble" = "Tes Getaran";
+/* Label of the row in the Controllers detail that holds the button that opens the input test. */
 "ui.inputTest.title" = "Tes Input";
+/* Status of the input test when the app cannot read input. */
 "ui.inputTest.unavailable" = "Input tidak tersedia";
+/* Name of the view button of a controller, shown in the input test. It is the small button on the left of the Xbox home button. */
 "ui.inputTest.view" = "Lihat";
+/* Title of the input test window. %@ is the controller name. The dash is a separator. */
 "ui.inputTest.windowTitle" = "Tes Input — %@";
+/* Name of the X button of an Xbox style controller, shown in the input test. */
 "ui.inputTest.xButton" = "Tombol X";
+/* Name of the left face button in the input test for a controller with an unknown layout: X on Xbox, Square on PlayStation. The slash stays. */
 "ui.inputTest.xSquare" = "X / Kotak";
+/* Name of the Xbox button, the one with the Xbox logo, shown in the input test. Xbox is a product name. */
 "ui.inputTest.xboxButton" = "Tombol Xbox";
+/* Name of the Y button of an Xbox style controller, shown in the input test. */
 "ui.inputTest.yButton" = "Tombol Y";
+/* Name of the top face button in the input test for a controller with an unknown layout: Y on Xbox, Triangle on PlayStation. The slash stays. */
 "ui.inputTest.yTriangle" = "Y / Segitiga";
 /* Name of the Caps Lock key in the text that describes a captured key press. */
 "term.key.capsLock" = "Caps Lock";
@@ -1082,13 +1178,16 @@
 "ui.profiles.damagedSelectionsMessage" = "Daftar profil aktif tidak dapat dibaca. Atur ulang untuk melanjutkan. Profil Anda tetap disimpan.";
 "ui.profiles.resetLibraryAction" = "Cadangkan & Atur Ulang";
 
-/* Controller session lifecycle */
+/* Label of the row in the Controllers detail that tells that the session of the controller is suspended. The row holds the Resume button. */
 "ui.controllers.suspended" = "Ditangguhkan";
 /* Error shown when the service refuses to change the session of a controller. */
 "ui.error.controllerSessionChangeRejected" = "Sesi pengontrol tidak dapat diubah.";
 
+/* Title of the alert that asks whether to end the wireless link of a controller. */
 "ui.controllers.disconnectWirelessConfirmTitle" = "Putuskan Hubungan Pengontrol Nirkabel?";
+/* Message of the alert that ends the wireless link of a controller. %@ is the controller name. */
 "ui.controllers.disconnectWirelessConfirmMessage" = "%@ akan tetap terputus hingga Anda menghubungkannya lagi secara manual.";
+/* Confirm button of the alert that ends the wireless link of a controller. */
 "ui.controllers.disconnectWirelessConfirm" = "Putuskan Hubungan";
 
 /* Title of the notification shown when a controller stops sending input. */
@@ -2425,69 +2524,131 @@
 "cli.profile.validate.valid" = "%1$@ adalah profil yang valid: “%2$@” untuk %3$@ (%4$@). Tambahkan dengan “ojd profile import”.";
 /* Error when the service accepted a profile and does not list it afterwards. The command in quotes stays as written. */
 "cli.profile.group.vanished" = "Layanan tidak menyimpan profil. Periksa dengan “ojd profile list”.";
-/* Main window, status item, main menu, settings window, library and access. */
+/* Title of the details button of an error message in the Library area. */
 "ui.library.details" = "Detail";
+/* Button of an error message in the Library area that hides the message. */
 "ui.library.dismiss" = "Tutup";
+/* Button of the open panel in which the user picks a record file or a mod folder. It confirms the choice. */
 "ui.library.choose" = "Pilih";
+/* Toolbar button in the Library area that checks a record file or mod folder without installing it. Keep the three dots. */
 "ui.library.validate" = "Validasi…";
+/* Confirm button of the alert that installs a record or a mod. */
 "ui.library.install" = "Instal";
+/* Confirm button of the alert that replaces an installed record or mod. */
 "ui.library.replace" = "Ganti";
+/* Confirm button of the alert that removes a record or mod. */
 "ui.library.remove" = "Hapus";
+/* Error in the Library area. %1$@ is the name of a file or folder and %2$@ is the reason it cannot be read. */
 "ui.library.unreadable" = "%1$@ tidak dapat dibaca: %2$@";
+/* Name of the check in the diagnostics table that validates the controller records. */
 "ui.library.records" = "Catatan pengontrol";
+/* Title of the empty state in the records list of the Library area. */
 "ui.library.records.empty.title" = "Tidak ada catatan terinstal";
+/* Name of the source of a record: a file that the user installed. It is shown next to the record. */
 "ui.library.layer.user" = "Berkas Anda";
+/* Name of the source of a record: a mod package added it. */
 "ui.library.layer.package" = "Dari mod";
+/* Notice after a record check passed. %1$@ is the file name and %2$@ is the controller model. */
 "ui.library.record.valid" = "%1$@ adalah catatan yang valid untuk %2$@.";
+/* Error when a record is not valid. %@ is the reason. */
 "ui.library.record.invalid" = "Catatan tidak valid: %@";
+/* Line in the records list for a record file that the app skipped. %@ is the reason. */
 "ui.library.record.skipped" = "Dilewati: %@";
+/* Error when no installed record matches a controller model. %@ is the controller model. */
 "ui.library.record.notFound" = "Tidak ada catatan terinstal untuk %@.";
+/* Notice after a record is installed. %@ is the controller model. */
 "ui.library.record.installed" = "Catatan untuk %@ telah diinstal.";
+/* Error when a record file cannot be written. %1$@ is the file name and %2$@ is the reason. */
 "ui.library.record.installFailed" = "%1$@ tidak dapat ditulis: %2$@";
+/* Title of the alert that installs a record. %@ is the controller model. */
 "ui.library.record.install.title" = "Instal catatan untuk %@?";
+/* Message of the alert that installs a record. %@ is the file name. OpenJoystickDriver is the product name. */
 "ui.library.record.install.message" = "OpenJoystickDriver menyimpan catatan sebagai %@ di folder catatan pengontrol Anda.";
+/* Title of the alert that replaces an installed record. %@ is the controller model. */
 "ui.library.record.replace.title" = "Ganti catatan untuk %@?";
+/* Message of the alert that replaces an installed record. %@ is the file name. */
 "ui.library.record.replace.message" = "Berkas catatan bernama %@ sudah terinstal. Mengganti akan menimpa berkas tersebut.";
+/* Title of the alert that removes an installed record. %@ is the controller model. */
 "ui.library.record.remove.title" = "Hapus catatan untuk %@?";
+/* Message of the alert that removes an installed record. OpenJoystickDriver is the product name. */
 "ui.library.record.remove.message" = "OpenJoystickDriver menghapus berkas catatan dari folder catatan pengontrol Anda. Pengontrol yang memakai catatan ini tidak lagi dikenali.";
+/* Notice after a record is removed. %@ is the controller model. */
 "ui.library.record.removed" = "Catatan untuk %@ telah dihapus.";
+/* Error when a record file cannot be removed. %1$@ is the file name and %2$@ is the reason. */
 "ui.library.record.removeFailed" = "%1$@ tidak dapat dihapus: %2$@";
+/* Heading of the mods list in the Library area. A mod is a package of records, profiles and personas. */
 "ui.library.mods" = "Mod";
+/* Title of the empty state in the mods list of the Library area. */
 "ui.library.mods.empty.title" = "Tidak ada mod terinstal";
+/* Notice after a mod check passed. %1$@ is the folder name and %2$@ is the mod name. */
 "ui.library.mod.valid" = "%1$@ adalah mod yang valid: %2$@.";
+/* Error when a mod is refused. %1$@ is the folder name or mod name and %2$@ is the reason. */
 "ui.library.mod.refused" = "%1$@ ditolak: %2$@";
+/* Line in the mod detail for a part of a mod that the app does not use. %@ is the reason. */
 "ui.library.mod.unused" = "Tidak digunakan: %@";
+/* Notice after a mod is installed. %@ is the mod name. */
 "ui.library.mod.installed" = "Mod %@ telah diinstal.";
+/* Title of the alert that installs a mod. %@ is the mod name. */
 "ui.library.mod.install.title" = "Instal mod %@?";
+/* Message of the alert that installs a mod. %1$@ is the mod name, %2$@ is its version and %3$@ is its author. OpenJoystickDriver is the product name. */
 "ui.library.mod.install.message" = "OpenJoystickDriver menambahkan %1$@ %2$@ oleh %3$@ ke mod terinstal Anda.";
+/* Title of the alert that replaces an installed mod. %@ is the mod name. */
 "ui.library.mod.replace.title" = "Ganti mod %@?";
+/* Message of the alert that replaces an installed mod. %1$@ is the mod name and %2$@ is the version that will be installed. */
 "ui.library.mod.replace.message" = "%1$@ sudah terinstal. Mengganti akan menghapus berkas terinstal dan menginstal versi %2$@.";
+/* Title of the alert that removes a mod. %@ is the mod name. */
 "ui.library.mod.remove.title" = "Hapus mod %@?";
+/* Message of the alert that removes a mod. OpenJoystickDriver is the product name. Personas are the identities that a virtual gamepad can show. */
 "ui.library.mod.remove.message" = "OpenJoystickDriver menghapus mod beserta catatan, profil, dan persona yang ditambahkannya.";
+/* Notice after a mod is removed. %@ is the mod name. */
 "ui.library.mod.removed" = "Mod %@ telah dihapus.";
+/* Line in the records list for a record that a mod changes. %@ is the name of the mod. */
 "ui.library.record.patchedBy" = "Dimodifikasi oleh %@";
+/* Label of the field in the record detail that tells whether the USB extension claims the controller. */
 "ui.library.field.usbClaim" = "Ekstensi USB";
+/* Value of the USB extension field: the extension claims the controller. */
 "ui.library.claim.claimed" = "Mengklaim pengontrol ini";
+/* Value of the USB extension field: the extension does not claim the controller. */
 "ui.library.claim.unclaimed" = "Tidak mengklaim pengontrol ini";
+/* Placeholder of the search field in the toolbar of the Library area. */
 "ui.library.search" = "Cari";
+/* Title of the empty state in the Library area when the search matches nothing. */
 "ui.library.search.noMatches" = "Tidak ada yang cocok";
+/* Toolbar button in the Library area that runs a record against a packet capture. Keep the three dots. */
 "ui.library.testRecord" = "Uji Catatan…";
+/* Value of the status of a library item that is installed. */
 "ui.library.installed" = "Terpasang";
+/* Badge on a library item that ships with the app. */
 "ui.library.builtIn" = "Bawaan";
+/* Label of the field in the record detail that holds the controller model. */
 "ui.library.field.identity" = "Model pengontrol";
+/* Label of the field in the record detail that holds the protocol family. */
 "ui.library.field.family" = "Keluarga";
+/* Label of the field in the record detail that holds where the record comes from. */
 "ui.library.field.source" = "Sumber";
+/* Label of the field in the record detail that holds the path of the record file. */
 "ui.library.field.file" = "Jalur berkas";
+/* Label of the field in the record detail that holds how the controller connects, for example USB or Bluetooth. */
 "ui.library.field.transport" = "Transpor";
+/* Label of the field in the mod detail that holds the version. */
 "ui.library.field.version" = "Versi";
+/* Label of the field in the mod detail that holds the author. */
 "ui.library.field.author" = "Pembuat";
+/* Heading of the section in the record detail that lists the fields. */
 "ui.library.section.fields" = "Bidang";
+/* Heading of the section in the mod detail that lists the files. */
 "ui.library.section.files" = "Berkas";
+/* Heading of the section in the record detail that shows the result of a test. */
 "ui.library.section.testResult" = "Hasil uji";
+/* Name of the source of a record: the record ships with the app. */
 "ui.library.layer.driver" = "Default";
+/* Name of the source of a record: a global file of the user. */
 "ui.library.layer.global" = "Berkas global Anda";
+/* Message in the detail pane of the Library area before an item is selected. */
 "ui.library.detail.empty" = "Pilih catatan atau mod.";
+/* Message of the open panel in which the user picks a packet capture for a record test. */
 "ui.library.test.packets.pick" = "Pilih tangkapan paket.";
+/* Message of the open panel in which the user picks the file with the expected controller state for a record test. */
 "ui.library.test.expect.pick" = "Pilih status pengontrol yang diharapkan.";
 /* VoiceOver label of the button in the Library error banner that shows the details of the error. */
 "a11y.library.details" = "Tampilkan detail kesalahan";
@@ -2681,60 +2842,115 @@
 "a11y.access.scope" = "Cakupan %@";
 /* VoiceOver label of the cancel button in the access sheets. It leaves the access unchanged. */
 "a11y.access.cancel" = "Batalkan dan biarkan akses apa adanya";
+/* Item of the application menu that opens the About window. %@ is the product name. */
 "ui.menu.app.about" = "Tentang %@";
+/* Item of the application menu that opens the settings window. Keep the three dots. */
 "ui.menu.app.settings" = "Pengaturan…";
+/* Item of the application menu that holds the Services submenu. It is the macOS name. */
 "ui.menu.app.services" = "Layanan";
+/* Item of the application menu that hides the app. %@ is the product name. */
 "ui.menu.app.hide" = "Sembunyikan %@";
+/* Item of the application menu that hides all other apps. It is the macOS name. */
 "ui.menu.app.hideOthers" = "Sembunyikan yang Lain";
+/* Item of the application menu that shows all apps again. It is the macOS name. */
 "ui.menu.app.showAll" = "Tampilkan Semua";
+/* Item of the application menu that quits the app. %@ is the product name. */
 "ui.menu.app.quit" = "Keluar dari %@";
+/* Title of the File menu in the menu bar. */
 "ui.menu.file.title" = "Berkas";
+/* Item of the File menu that imports a profile from a file. Keep the three dots. */
 "ui.menu.file.importProfile" = "Impor Profil…";
+/* Item of the File menu that exports a profile to a file. Keep the three dots. */
 "ui.menu.file.exportProfile" = "Ekspor Profil…";
+/* Item of the File menu that installs a controller record or a mod. Keep the three dots. */
 "ui.menu.file.installRecordOrMod" = "Instal Catatan atau Mod…";
+/* Item of the File menu that closes the window. */
 "ui.menu.file.close" = "Tutup";
+/* Item of the File menu that saves the support report to a file. Keep the three dots. */
 "ui.menu.file.saveSupportReport" = "Simpan Laporan Dukungan…";
+/* Item of the File menu that saves the Activity log to a file. Keep the three dots. */
 "ui.menu.file.saveActivityLog" = "Simpan Log Aktivitas…";
+/* Title of the alert shown when saving a file from the File menu fails. */
 "ui.menu.file.saveFailed" = "Berkas tidak dapat disimpan";
+/* Title of the Edit menu in the menu bar. */
 "ui.menu.edit.title" = "Sunting";
+/* Item of the Edit menu that undoes the last edit. */
 "ui.menu.edit.undo" = "Urung";
+/* Item of the Edit menu that repeats an undone edit. */
 "ui.menu.edit.redo" = "Ulang";
+/* Item of the Edit menu that cuts the selection to the clipboard. */
 "ui.menu.edit.cut" = "Potong";
+/* Item of the Edit menu that copies the selection to the clipboard. */
 "ui.menu.edit.copy" = "Salin";
+/* Item of the Edit menu that pastes the clipboard. */
 "ui.menu.edit.paste" = "Tempel";
+/* Item of the Edit menu that selects everything. */
 "ui.menu.edit.selectAll" = "Pilih Semua";
+/* Title of the View menu in the menu bar. */
 "ui.menu.view.title" = "Tampilan";
+/* Item of the View menu that makes the window full screen. */
 "ui.menu.view.enterFullScreen" = "Masuki Layar Penuh";
+/* Item of the View menu that leaves full screen. It replaces Enter Full Screen while the window is full screen. */
 "ui.menu.view.exitFullScreen" = "Keluar dari Layar Penuh";
+/* Item of the View menu that shows the sidebar. */
 "ui.menu.view.showSidebar" = "Tampilkan Bar Samping";
+/* Item of the View menu that hides the sidebar. It replaces Show Sidebar while the sidebar is visible. */
 "ui.menu.view.hideSidebar" = "Sembunyikan Bar Samping";
+/* Item of the View menu that shows the toolbar. */
 "ui.menu.view.showToolbar" = "Tampilkan Bar Alat";
+/* Item of the View menu that hides the toolbar. It replaces Show Toolbar while the toolbar is visible. */
 "ui.menu.view.hideToolbar" = "Sembunyikan Bar Alat";
+/* Title of the Controller menu in the menu bar. */
 "ui.menu.controller.title" = "Pengontrol";
+/* Button and menu item that stops the remapping of one controller. */
 "ui.menu.controller.suspend" = "Jeda";
+/* Button and menu item that starts the remapping of one controller again. */
 "ui.menu.controller.resume" = "Lanjutkan";
+/* Item of the Controller menu that opens the input test of the selected controller. */
 "ui.menu.controller.testInput" = "Uji Input";
+/* Button and menu item that ends the wireless link of the selected controller. */
 "ui.menu.controller.disconnectWirelessLink" = "Putuskan Tautan Nirkabel";
+/* Item of the Controller menu that shows the selected controller in the main window. */
 "ui.menu.controller.showInWindow" = "Tampilkan di Jendela";
+/* Disabled item of the Controller menu when no controller is selected. */
 "ui.menu.controller.noneSelected" = "Tidak ada pengontrol yang dipilih";
+/* Title of the Profile menu in the menu bar. */
 "ui.menu.profile.title" = "Profil";
+/* Item of the Profile menu that turns on the selected profile. */
 "ui.menu.profile.activate" = "Aktifkan Profil";
+/* Item of the Profile menu that turns off the active profile. */
 "ui.menu.profile.deactivate" = "Nonaktifkan Profil";
+/* Title of the alert shown when turning off a profile from the menu fails. */
 "ui.menu.profile.deactivateFailed" = "Profil tidak dapat dinonaktifkan";
+/* Message of the alert shown when the profile changed elsewhere during the turn off. */
 "ui.menu.profile.deactivateConflict" = "Profil berubah saat dinonaktifkan. Coba lagi.";
+/* Title of the Window menu in the menu bar. */
 "ui.menu.window.title" = "Jendela";
+/* Item of the Window menu that minimizes the window to the Dock. */
 "ui.menu.window.minimize" = "Minikan";
+/* Item of the Window menu that zooms the window. */
 "ui.menu.window.zoom" = "Zoom";
+/* Item of the Window menu that brings all windows of the app to the front. */
 "ui.menu.window.bringAllToFront" = "Pindahkan Semua ke Depan";
+/* Title of the Help menu in the menu bar. */
 "ui.menu.help.title" = "Bantuan";
+/* Item of the Help menu that opens the Activity log. */
 "ui.menu.help.activityLog" = "Log Aktivitas";
+/* Item of the Help menu that copies the support report to the clipboard. */
 "ui.menu.help.copySupportReport" = "Salin Laporan Dukungan";
+/* Item of the Help menu that opens the sheet that explains an error code. Keep the three dots. */
 "ui.menu.help.explainErrorCode" = "Jelaskan Kode Kesalahan…";
+/* Item of the Help menu that opens the page where the user reports a problem. Keep the three dots. */
 "ui.menu.help.reportProblem" = "Laporkan Masalah…";
+/* Item of the Help menu that opens the project website. */
 "ui.menu.help.projectWebsite" = "Situs Web Proyek";
+/* Title of the alert shown after the support report is copied. */
 "ui.menu.copySupportReport.done" = "Laporan dukungan disalin";
+/* Message of the alert shown after the support report is copied. */
 "ui.menu.copySupportReport.doneDetail" = "Laporan dukungan ada di papan klip.";
+/* Title of the alert shown when the support report cannot be copied. */
 "ui.menu.copySupportReport.failed" = "Laporan dukungan tidak dapat disalin";
+/* Message of the alert shown when the support report cannot be copied. The user saves it to a file with the File menu. */
 "ui.menu.copySupportReport.failedDetail" = "Laporan tidak dapat dikumpulkan. Simpan ke berkas sebagai gantinya.";
 /* Title of the Controllers item in the sidebar of the main window and in the window title when it is selected. */
 "ui.sidebar.controllers.title" = "Pengontrol";
@@ -2822,12 +3038,17 @@
 "ui.access.grant.noPath" = "OpenJoystickDriver tidak dapat membaca berkas yang dapat dijalankan milik %@, sehingga tidak dapat memberinya akses.";
 /* Line of the alert that turns on the WebSocket when a port is saved. */
 "ui.access.web.enable.savedPort" = "Titik akhir web mempertahankan port yang tersimpan.";
+/* Detail line of a record in the records list. %1$@ and %2$@ are two facts about the record. The dot between them separates the facts and may change. */
 "ui.library.record.detail" = "%1$@ · %2$@";
+/* Detail line of a mod in the mods list. %1$@ is the version and %2$@ is the author. The dot between them separates the two and may change. */
 "ui.library.mod.detail" = "%1$@ · %2$@";
 /* Message of the alert shown when a menu action needs the profile editor and the editor saves a change. */
 "ui.extra.profileEditorBusy" = "Editor profil sedang menyimpan atau menerapkan perubahan. Coba lagi setelah selesai.";
+/* Message of the open panel in which the user picks a controller record file or a mod folder. */
 "ui.library.recordOrMod.pick" = "Pilih berkas catatan pengontrol atau folder mod.";
+/* Title of the alert shown when turning on a profile from the menu fails. */
 "ui.menu.profile.activateFailed" = "Profil tidak dapat diaktifkan";
+/* Message of the alert shown when the profile changed elsewhere during the turn on. */
 "ui.menu.profile.activateConflict" = "Profil berubah saat sedang diaktifkan. Coba lagi.";
 "ui.profiles.importBlocked" = "Perubahan profil sedang berlangsung. Pilih “Impor Profil” lagi setelah selesai.";
 "ui.settings.general.updateAvailableBody" = "Versi %@ tersedia.";
@@ -3113,45 +3334,85 @@
 "ui.activity.check.usbAccess" = "Akses USB";
 /* Button of a failed check in the diagnostics table that opens the Library area. */
 "ui.activity.fix.showLibrary" = "Tampilkan Pustaka";
+/* Label of the fact in the Controllers detail that tells whether the controller has adaptive triggers, triggers with variable resistance. */
 "ui.controllers.adaptiveTriggers" = "Pemicu adaptif";
+/* Label of the fact in the Controllers detail that tells whether the controller has a motion sensor. */
 "ui.controllers.motion" = "Sensor gerak";
+/* Label of the fact in the Controllers detail that tells how many fingers the touch surface of the controller sees. */
 "ui.controllers.touchContacts" = "Titik sentuh";
+/* Label of the fact in the Controllers detail that tells whether games may see the controller twice, once as the controller and once as the virtual gamepad. */
 "ui.controllers.duplicateExposureRisk" = "Risiko tampil ganda";
+/* Label of the fact in the Controllers detail that tells whether the startup commands of the controller worked. */
 "ui.controllers.startupStatus" = "Perintah startup";
+/* Label of the fact in the Controllers detail that names the format of the input reports of the controller. */
 "ui.controllers.inputReportFormat" = "Format laporan";
+/* Label of the fact in the Controllers detail that counts how often the input of the controller recovered. */
 "ui.controllers.inputRecoveries" = "Pemulihan";
+/* Label of the fact in the Controllers detail that shows the time of the last attempt to send the controller state to the virtual gamepad. */
 "ui.controllers.publicationAttempted" = "Percobaan kirim terakhir";
+/* Label of the fact in the Controllers detail that shows the time of the last send that the virtual gamepad accepted. */
 "ui.controllers.publicationCompleted" = "Pengiriman terakhir yang diterima";
+/* Label of the fact in the Controllers detail that tells what chose the server of the controller: the controller record or the user. */
 "ui.controllers.server.source" = "Ditetapkan oleh";
+/* Label of the popup that sets whether a virtual HID profile choice applies to a controller model or to one controller. */
 "ui.controllers.virtual.scope" = "Terapkan ke";
+/* Option of the scope popup: the choice applies to all controllers of the model. */
 "ui.controllers.virtual.scope.model" = "Model ini";
+/* Option of the scope popup: the choice applies to this controller only. */
 "ui.controllers.virtual.scope.unit" = "Pengontrol ini";
+/* Label of the row in the Controllers detail that holds the button that clears all virtual HID profile choices. */
 "ui.controllers.virtual.resetAll" = "Atur ulang semua penimpaan";
+/* Error when the service cannot clear the virtual HID profile choices. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.controllers.virtual.resetAllFailed" = "Layanan tidak dapat menghapus pilihan profil HID virtual.";
+/* Label of the row in the Controllers detail that holds the button that exports the mapping of the virtual gamepad. */
 "ui.controllers.exportMapping" = "Ekspor pemetaan";
+/* Title of the save panel that exports the mapping of the virtual gamepad. */
 "ui.controllers.exportMapping.title" = "Ekspor pemetaan gamepad virtual";
+/* Label of the format popup in the save panel that exports the mapping. The colon stays. */
 "ui.controllers.exportMapping.format" = "Format file:";
+/* Label of the row in the Controllers detail that holds the button that starts a game with the virtual gamepad. */
 "ui.controllers.launch" = "Jalankan game dengan gamepad virtual";
+/* Title of the open panel in which the user picks a game to start. */
 "ui.controllers.launch.title" = "Pilih Game";
+/* Button that starts the chosen game. It is also the confirm button of the open panel. */
 "ui.controllers.launch.prompt" = "Jalankan";
+/* Title of the checkbox in the open panel for a game. GameController is the name of an Apple framework and stays as written. */
 "ui.controllers.launch.gameControllerBackend" = "Baca pengontrol hanya melalui GameController";
+/* Message when the user starts a game but no connected controller has a virtual gamepad. */
 "ui.controllers.launch.noGamepad" = "Tidak ada pengontrol terhubung yang memiliki gamepad virtual, jadi tidak ada pemetaan untuk ditetapkan.";
+/* Message after a game starts. %@ is the name of the program. */
 "ui.controllers.launch.started" = "%@ dimulai.";
+/* Message after a game ends. %1$@ is the name of the program and %2$lld is its exit status. */
 "ui.controllers.launch.exited" = "%1$@ selesai dengan status %2$lld.";
+/* Button in the Controllers detail that starts a draft of a controller record. Keep the three dots. */
 "ui.controllers.draftRecord" = "Buat draf catatan…";
+/* Title of the sheet that drafts a controller record. */
 "ui.controllers.draftRecord.title" = "Buat draf catatan pengontrol";
+/* Message when a record cannot be drafted. %@ is the controller model. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.controllers.draftRecord.noLayout" = "Tidak ada kontrol %@ yang dapat dibaca dari deskriptor laporan HID-nya, dan catatan bawaannya sudah menyebut familinya.";
+/* Button in the Controllers detail that starts a packet capture of the controller. Keep the three dots. */
 "ui.controllers.capturePackets" = "Tangkap paket…";
+/* Title of the sheet that captures packets of the controller. */
 "ui.controllers.capturePackets.title" = "Tangkap paket pengontrol";
+/* Label of the field in the capture sheet that sets how long the capture runs. The value is in seconds. */
 "ui.controllers.captureDuration" = "Durasi (detik)";
+/* Error under the duration field in the capture sheet when the value is not above 0. */
 "ui.controllers.captureDurationInvalid" = "Masukkan jumlah detik di atas 0.";
+/* Notice after a file is saved. %@ is the file name. */
 "ui.controllers.fileSaved" = "%@ disimpan.";
+/* Line under the scope popup. %@ is the scope of the override that is active. */
 "ui.controllers.virtual.currentScope" = "Cakupan penimpaan saat ini: %@";
+/* Value of the publication fact: the virtual gamepad of the controller is published. */
 "ui.controllers.publication.published" = "Dipublikasikan";
+/* Value of the publication fact: the controller has no published virtual gamepad. */
 "ui.controllers.publication.notPublished" = "Tidak dipublikasikan";
+/* Value of the publication fact: the publication failed. */
 "ui.controllers.publication.failed" = "Gagal";
+/* Value of the input health fact: input arrives as expected. */
 "ui.controllers.inputHealth.healthy" = "Sehat";
+/* Value of the input health fact: input stopped arriving. */
 "ui.controllers.inputHealth.stale" = "Tidak diperbarui";
+/* Value of the input health fact: the app waits until all controls are at rest before it sends input again. */
 "ui.controllers.inputHealth.waitingForNeutral" = "Menunggu posisi netral";
 "ui.settings.advanced.errorDamaged" = "File pengaturan %@ rusak. Perbaiki, atau pindahkan ke Tong Sampah dengan `ojd setting reset`.";
 "ui.settings.advanced.errorUnsupported" = "File pengaturan %@ tidak didukung. Tulis ulang file untuk apiVersion yang didukung, atau pindahkan ke Tong Sampah dengan `ojd setting reset`.";
@@ -3175,51 +3436,77 @@
 "cli.setting.reset.success" = "%@ dipindahkan ke Tong Sampah.";
 /* Message printed by 'ojd setting reset' when there is no settings file. %@ is the path where the file would be. */
 "cli.setting.reset.none" = "Tidak ada file pengaturan di %@.";
-/* Why a controller is not published as a virtual device, and a failed send. */
+/* Reason the controller has no virtual gamepad: the user turned the virtual output off. */
 "ui.controllers.publication.reason.outputDisabled" = "Output virtual mati";
+/* Reason the controller has no virtual gamepad: macOS serves it as a gamepad. */
 "ui.controllers.publication.reason.systemGamepad" = "Sistem melayaninya sebagai gamepad";
+/* Reason the controller has no virtual gamepad: macOS handles its input directly. */
 "ui.controllers.publication.reason.nativeHIDPassThrough" = "Sistem menangani inputnya secara langsung";
+/* Reason the controller has no virtual gamepad: another virtual device stands for it. */
 "ui.controllers.publication.reason.upstreamVirtualDevice" = "Perangkat virtual lain sudah mewakilinya";
+/* Reason the controller has no virtual gamepad: the user suspended the session. */
 "ui.controllers.publication.reason.sessionSuspended" = "Sesi ditangguhkan";
+/* Reason the controller has no virtual gamepad: no virtual profile fits the controller. */
 "ui.controllers.publication.reason.noVirtualProfile" = "Tidak ada profil virtual yang cocok";
+/* Reason the controller has no virtual gamepad: the output is paused. */
 "ui.controllers.publication.reason.suppressed" = "Output dijeda";
+/* Reason the controller has no virtual gamepad: the first input has not arrived. */
 "ui.controllers.publication.reason.noInputYet" = "Menunggu input pertama";
 /* Publication state with its reason or failure, for example "Not published (Waiting for the first input)". %1$@ is the state and %2$@ the reason. */
 "ui.controllers.publication.withReason" = "%1$@ (%2$@)";
+/* Reason shown with a failed publication. %@ is the reason the last send failed. */
 "ui.controllers.publication.failedSend" = "Pengiriman terakhir gagal: %@";
 /* Serving route with why it publishes nothing, for example "Output off (No virtual profile fits it)". %1$@ is the route and %2$@ the reason. */
 "ui.controllers.serving.withReason" = "%1$@ (%2$@)";
-/* Why a controller's input health is failing. */
+/* Reason of failing input health: the controller sends no reports. */
 "ui.controllers.inputHealth.reason.missingReports" = "Tidak ada laporan masuk";
+/* Reason of failing input health: the reports arrive but their content does not change. */
 "ui.controllers.inputHealth.reason.freshnessNotAdvancing" = "Laporan tidak berubah";
 /* Input health state with its failure reason, for example "Stale (No reports arriving)". %1$@ is the state and %2$@ the reason. */
 "ui.controllers.inputHealth.withReason" = "%1$@ (%2$@)";
-/* How a controller was discovered. */
+/* Value of the discovery route: the app found the controller as an HID device. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.controllers.discovery.hid" = "HID";
+/* Value of the discovery route: the app found the controller over raw USB. */
 "ui.controllers.discovery.rawUSB" = "USB mentah";
-/* Who holds the physical controller. */
+/* Value of the owner of the physical controller: the app holds it exclusively as an HID device. */
 "ui.controllers.physicalOwnership.exclusiveHID" = "HID eksklusif";
+/* Value of the owner of the physical controller: the app holds it exclusively over raw USB. */
 "ui.controllers.physicalOwnership.exclusiveRawUSB" = "USB mentah eksklusif";
+/* Value of the owner of the physical controller: the driver extension holds it over USB. */
 "ui.controllers.physicalOwnership.extensionOwnedUSB" = "Ekstensi USB";
+/* Value of the owner of the physical controller: macOS holds it as an HID device that the app can also see. */
 "ui.controllers.physicalOwnership.systemHIDVisible" = "HID sistem";
+/* Value of the owner of the physical controller: macOS serves it as a gamepad. */
 "ui.controllers.physicalOwnership.systemGamepad" = "Gamepad sistem";
+/* Value of the owner of the physical controller: another virtual device holds it before the app sees it. */
 "ui.controllers.physicalOwnership.upstreamVirtualDevice" = "Perangkat virtual hulu";
+/* Value of the owner of the physical controller when the app does not know it. */
 "ui.controllers.physicalOwnership.unknown" = "Tidak diketahui";
-/* Result of acquiring HID input. */
+/* Result of opening the HID input of a controller when the app does not know the result. */
 "ui.controllers.hidInputOwnership.unknown" = "Tidak diketahui";
+/* Result of opening the HID input of a controller: the app holds it exclusively. */
 "ui.controllers.hidInputOwnership.exclusive" = "Eksklusif";
+/* Result of opening the HID input of a controller: the app shares it with other apps. */
 "ui.controllers.hidInputOwnership.shared" = "Dibagikan";
+/* Result of opening the HID input of a controller: macOS denied access. */
 "ui.controllers.hidInputOwnership.accessDenied" = "Akses ditolak";
+/* Result of opening the HID input of a controller: another app holds it. */
 "ui.controllers.hidInputOwnership.ownedByAnotherClient" = "Dimiliki app lain";
+/* Result of opening the HID input of a controller: opening failed. */
 "ui.controllers.hidInputOwnership.acquisitionFailed" = "Gagal mengambil alih";
 /* Ownership summary: %1$@ is the discovery route, %2$@ the owner and %3$@ the HID input result. */
 "ui.controllers.ownership.value" = "Ditemukan melalui %1$@. Pemilik: %2$@. Input HID: %3$@.";
-/* Why closing a controller's Bluetooth link failed. */
+/* Reason that ending the wireless link failed: the controller is not connected any more. */
 "ui.controllers.disconnectWireless.failure.notFound" = "Pengontrol tidak lagi terhubung";
+/* Reason that ending the wireless link failed: the controller does not use Bluetooth. */
 "ui.controllers.disconnectWireless.failure.notBluetooth" = "Pengontrol tidak terhubung melalui Bluetooth";
+/* Reason that ending the wireless link failed: the controller uses Bluetooth Low Energy, which the app cannot end. */
 "ui.controllers.disconnectWireless.failure.bluetoothLEUnsupported" = "Pengontrol Bluetooth LE tidak dapat diputuskan dari sini";
+/* Reason that ending the wireless link failed: the app does not know the Bluetooth address of the controller. */
 "ui.controllers.disconnectWireless.failure.missingAddress" = "Alamat Bluetooth pengontrol tidak diketahui";
+/* Reason that ending the wireless link failed: macOS reported that Bluetooth did not end the link. */
 "ui.controllers.disconnectWireless.failure.disconnectFailed" = "Bluetooth tidak memutuskan pengontrol";
+/* Reason that ending the wireless link failed: the request took too long. */
 "ui.controllers.disconnectWireless.failure.timedOut" = "Waktu pemutusan habis";
 
 /* Status line of a service that cannot be reached because its request listener stopped. %1$@ is the error code, %2$@ its explanation, %3$@ the error number of the failed call, %4$@ the time it stopped. */

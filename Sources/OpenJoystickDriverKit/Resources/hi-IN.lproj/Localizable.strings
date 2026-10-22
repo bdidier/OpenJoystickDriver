@@ -2,6 +2,7 @@
 "term.app.name" = "OpenJoystickDriver";
 /* Button of the problem banner in the Access area that quits and opens the app again so that a granted permission takes effect. OpenJoystickDriver is the product name. */
 "ui.permissions.restartApplication" = "OpenJoystickDriver पुनः आरंभ करें";
+/* Menu item in the application menu that opens the project page on GitHub. GitHub is a product name and stays as written. */
 "ui.menu.projectPage" = "GitHub";
 /* Button that dismisses an alert in the activity view and the main window. It only acknowledges the message. */
 "action.ok" = "ठीक";
@@ -102,45 +103,79 @@
 "ui.settings.general.updateChecking" = "जाँच हो रही है…";
 "ui.settings.general.updates" = "अपडेट";
 "ui.settings.general.viewUpdate" = "अपडेट देखें";
+/* Title of the message in the Controllers area when the service cannot list controllers. */
 "ui.controllers.unavailable" = "कंट्रोलर उपलब्ध नहीं";
+/* Title of the message in the Controllers area when the list of controllers fails to load. */
 "ui.controllers.loadError" = "कंट्रोलर लोड नहीं हो सके";
+/* Title of the empty state in the Controllers area when no controller is connected. */
 "ui.controllers.emptyTitle" = "कोई कंट्रोलर कनेक्ट नहीं है";
+/* Message of the empty state in the Controllers area. It asks the user to connect a controller. */
 "ui.controllers.emptyMessage" = "कंट्रोलर कनेक्ट करें।";
+/* Label of the battery fact in the Controllers detail. */
 "ui.controllers.battery" = "बैटरी";
+/* VoiceOver label of the button that shows the serial number in the Controllers detail. */
 "ui.controllers.serial.show" = "सीरियल नंबर दिखाएँ";
+/* VoiceOver label of the button that hides the serial number in the Controllers detail. */
 "ui.controllers.serial.hide" = "सीरियल नंबर छिपाएँ";
+/* VoiceOver value of the serial number while it is hidden. */
 "ui.controllers.serial.hidden" = "छिपा हुआ";
+/* Label of the charging state fact in the Controllers detail. */
 "ui.controllers.chargingState" = "चार्जिंग स्थिति";
+/* Label of the fact in the Controllers detail that tells whether a charging cable is plugged in. */
 "ui.controllers.cableState" = "केबल स्थिति";
+/* Value of the charging state when the battery loses charge. */
 "ui.controllers.discharging" = "डिस्चार्ज हो रही है";
+/* Value of the charging state when the battery gains charge. */
 "ui.controllers.charging" = "चार्ज हो रही है";
+/* Value of the charging state when the battery is full. */
 "ui.controllers.batteryFull" = "पूरी तरह चार्ज";
+/* Value of the charging state for a controller that has no rechargeable battery. */
 "ui.controllers.notChargeable" = "चार्ज नहीं की जा सकती";
+/* VoiceOver summary of the battery facts. %1$@ is the battery level, %2$@ is the charging state and %3$@ is the cable state. */
 "ui.controllers.batteryAccessibilityDetails" = "बैटरी: %1$@। चार्जिंग स्थिति: %2$@। केबल स्थिति: %3$@।";
+/* Label of the active profile fact in the Controllers detail. */
 "ui.controllers.activeProfile" = "सक्रिय प्रोफ़ाइल";
+/* Value of the active profile fact when the profile cannot be shown. */
 "ui.controllers.profileUnavailable" = "सक्रिय प्रोफ़ाइल उपलब्ध नहीं";
+/* Value of the active profile fact when loading the profile failed. */
 "ui.controllers.profileLoadError" = "सक्रिय प्रोफ़ाइल लोड नहीं हो सकी";
+/* Label of the fact in the Controllers detail that shows the USB vendor ID and product ID. VID and PID are the usual short names. */
 "ui.controllers.usbIdentifier" = "USB VID/PID";
+/* VoiceOver sentence while the app checks which profile is active for the controller. */
 "ui.controllers.profileCheckingSentence" = "सक्रिय प्रोफ़ाइल जाँची जा रही है।";
+/* VoiceOver sentence when the controller has no active profile. */
 "ui.controllers.noActiveProfileSentence" = "कोई सक्रिय प्रोफ़ाइल नहीं।";
+/* VoiceOver sentence that names the active profile. %@ is the profile name. The sentence ends with a period. */
 "ui.controllers.activeProfileSentence" = "सक्रिय प्रोफ़ाइल: %@।";
+/* VoiceOver sentence when the active profile cannot be shown. %@ is the reason. */
 "ui.controllers.profileUnavailableSentence" = "सक्रिय प्रोफ़ाइल उपलब्ध नहीं: %@";
+/* VoiceOver sentence when loading the active profile failed. %@ is the reason. */
 "ui.controllers.profileErrorSentence" = "सक्रिय प्रोफ़ाइल त्रुटि: %@";
+/* VoiceOver summary of a controller. %1$@ is the connection summary, %2$@ is the profile sentence, %3$@ is the protocol, %4$@ is the parser, %5$@ is the serial number, %6$@ is the USB vendor and product ID, %7$@ is the input endpoint and %8$@ is the output endpoint. */
 "ui.controllers.accessibilityDetails" = "%1$@। %2$@। प्रोटोकॉल: %3$@। पार्सर: %4$@। सीरियल नंबर: %5$@। USB VID/PID: %6$@। इनपुट एंडपॉइंट: %7$@। आउटपुट एंडपॉइंट: %8$@।";
 /* Note on a controller row in the Controllers area when macOS serves the controller natively and the driver does not publish a virtual gamepad for it. */
 "platform.macos.ui.controllers.systemGamepadNotPublished" = "macOS का नेटिव गेमपैड, प्रकाशित नहीं";
+/* Label of the popup in the Controllers detail that picks which program serves the controller to games. */
 "ui.controllers.server.label" = "चलाने वाला";
 /* Entry of the server picker in the Controllers detail: macOS serves the controller itself. */
 "platform.macos.ui.controllers.server.system" = "macOS (नेटिव)";
+/* Option of the server popup: OpenJoystickDriver serves the controller as a virtual gamepad. OpenJoystickDriver is the product name. */
 "ui.controllers.server.ojd" = "OpenJoystickDriver (वर्चुअल)";
+/* Label of the serving route fact in the Controllers detail. The route is the way the input reaches games. */
 "ui.controllers.serving.label" = "सेवा मार्ग";
 /* Value of the serving route in the Controllers area: macOS serves the controller and the driver passes the input through. */
 "platform.macos.ui.controllers.serving.nativePassThrough" = "macOS (सीधे पास किया गया)";
+/* Value of the serving route when OpenJoystickDriver serves a virtual gamepad. OpenJoystickDriver is the product name. */
 "ui.controllers.serving.virtualHID" = "OpenJoystickDriver (वर्चुअल गेमपैड)";
+/* Value of the serving route when the driver extension owns the controller. */
 "ui.controllers.serving.extensionOwned" = "ड्राइवर एक्सटेंशन";
+/* Value of the serving route when the user turned the output off. */
 "ui.controllers.serving.outputDisabled" = "आउटपुट बंद";
+/* Message when the user changes the server of a controller that no controller record describes. */
 "ui.controllers.server.noRecord" = "कोई कंट्रोलर रिकॉर्ड इस कंट्रोलर का वर्णन नहीं करता, इसलिए बदलने के लिए कुछ नहीं है।";
+/* Message when the user changes the server of a controller whose record is not valid. */
 "ui.controllers.server.invalidRecord" = "कंट्रोलर रिकॉर्ड मान्य नहीं है। कुछ नहीं बदला।";
+/* Message when the app cannot save the changed controller record. */
 "ui.controllers.server.persistenceFailed" = "कंट्रोलर रिकॉर्ड सहेजा नहीं जा सका। कुछ नहीं बदला।";
 "ui.virtualProfile.advanced" = "उन्नत";
 "ui.virtualProfile.title" = "वर्चुअल HID प्रोफ़ाइल";
@@ -648,68 +683,129 @@
 "ui.developer.soakNotANumber" = "%@: पूर्ण संख्या दर्ज करें।";
 /* Error in the soak test sheet when a value is outside its range. %1$@ is the label of the field, %2$lld is the lowest value and %3$lld is the highest value. */
 "ui.developer.soakOutOfRange" = "%1$@: %2$lld और %3$lld के बीच का मान दर्ज करें।";
+/* Name of the A button of an Xbox style controller, shown in the input test. */
 "ui.inputTest.aButton" = "A बटन";
+/* Name of the bottom face button in the input test for a controller with an unknown layout: A on Xbox, Cross on PlayStation. The slash stays. */
 "ui.inputTest.aCross" = "A / क्रॉस";
+/* Heading in the input test of the buttons beyond the standard ones. */
 "ui.inputTest.additionalButtons" = "अतिरिक्त बटन";
+/* Value of a stick in the input test. %1$.3f is the horizontal position and %2$.3f is the vertical position, from -1 to 1. X and Y are the axis names. */
 "ui.inputTest.axisPair" = "X %1$.3f, Y %2$.3f";
+/* Value of a single axis in the input test. %.3f is the position as a number with three decimals. */
 "ui.inputTest.axisValue" = "%.3f";
+/* Value of the horizontal axis in the input test. %.3f is the position. X is the axis name. */
 "ui.inputTest.axisX" = "X %.3f";
+/* Value of the vertical axis in the input test. %.3f is the position. Y is the axis name. */
 "ui.inputTest.axisY" = "Y %.3f";
+/* Name of the B button of an Xbox style controller, shown in the input test. */
 "ui.inputTest.bButton" = "B बटन";
+/* Name of the right face button in the input test for a controller with an unknown layout: B on Xbox, Circle on PlayStation. The slash stays. */
 "ui.inputTest.bCircle" = "B / सर्कल";
+/* Label of the brightness slider of the controller light in the input test. */
 "ui.inputTest.brightness" = "चमक";
+/* Label of the color picker of the controller light in the input test. */
 "ui.inputTest.color" = "रंग";
+/* Status of the input test when the controller is disconnected. */
 "ui.inputTest.disconnected" = "कंट्रोलर डिस्कनेक्ट हुआ";
+/* VoiceOver label of the down direction of the directional pad in the input test. */
 "ui.inputTest.dpadDown" = "डी-पैड नीचे";
+/* VoiceOver label of the left direction of the directional pad in the input test. */
 "ui.inputTest.dpadLeft" = "डी-पैड बाएँ";
+/* VoiceOver label of the right direction of the directional pad in the input test. */
 "ui.inputTest.dpadRight" = "डी-पैड दाएँ";
+/* VoiceOver label of the up direction of the directional pad in the input test. */
 "ui.inputTest.dpadUp" = "डी-पैड ऊपर";
+/* Label of the slider that sets how long a rumble test lasts. */
 "ui.inputTest.duration" = "अवधि";
+/* Value of the rumble duration slider. %d is the number of milliseconds. ms is the unit. */
 "ui.inputTest.durationValue" = "%d ms";
+/* Name of the home button of a controller, shown in the input test. */
 "ui.inputTest.home" = "होम";
+/* Status of the input test before any input arrives. */
 "ui.inputTest.idle" = "तैयार";
+/* Name of the left bumper of an Xbox style controller, shown in the input test. */
 "ui.inputTest.leftBumper" = "बायाँ बंपर";
+/* Name of the left shoulder button in the input test for a controller with an unknown layout: LB on Xbox, L1 on PlayStation. The slash stays. */
 "ui.inputTest.leftBumperGeneric" = "LB / L1";
+/* Name of the left haptic actuator in the output test of the input test window. */
 "ui.inputTest.leftHaptic" = "बायाँ हैप्टिक";
+/* Name of the large rumble motor on the left side of the controller, which makes low-frequency vibration. */
 "ui.inputTest.lowFrequency" = "बायाँ मुख्य";
+/* Name of the left stick in the input test. */
 "ui.inputTest.leftStick" = "बाएँ स्टिक";
+/* Name of the button that the user presses by pushing down the left stick, shown in the input test. */
 "ui.inputTest.leftStickButton" = "बाएँ स्टिक बटन";
+/* Name of the left trigger of an Xbox style controller, shown in the input test. */
 "ui.inputTest.leftTrigger" = "बायाँ ट्रिगर";
+/* Name of the left trigger in the input test for a controller with an unknown layout: LT on Xbox, L2 on PlayStation. The slash stays. */
 "ui.inputTest.leftTriggerGeneric" = "LT / L2";
+/* Heading of the lighting section in the input test. */
 "ui.inputTest.lighting" = "लाइटिंग";
+/* Status of the input test when input arrives. */
 "ui.inputTest.live" = "इनपुट सक्रिय";
+/* Name of the menu button of a controller, shown in the input test. */
 "ui.inputTest.menu" = "मेनू";
+/* Option of the player indicator popup that turns the indicator off. */
 "ui.inputTest.off" = "बंद";
+/* Button in the Controllers detail that opens the input test window. Keep the three dots. */
 "ui.inputTest.open" = "इनपुट परीक्षण खोलें…";
+/* Title of the error under the output tests in the input test window. */
 "ui.inputTest.outputError" = "भौतिक आउटपुट त्रुटि";
+/* Error in the input test window when the controller refuses a rumble or light test. */
 "ui.inputTest.outputRejected" = "कंट्रोलर ने इस आउटपुट परीक्षण को अस्वीकार कर दिया।";
 /* Status shown in the input test window when the Input Monitoring permission is missing. Input Monitoring is written as macOS names it. */
 "platform.macos.ui.inputTest.permissionRequired" = "इनपुट मॉनिटरिंग की अनुमति आवश्यक है";
+/* Label of the popup in the input test that sets the player indicator, the lights that show which player a controller is. */
 "ui.inputTest.playerIndicator" = "प्लेयर इंडिकेटर";
+/* VoiceOver value of a button in the input test while it is pressed. */
 "ui.inputTest.pressed" = "दबाया गया";
+/* VoiceOver value of a button in the input test while it is not pressed. */
 "ui.inputTest.released" = "छोड़ा गया";
+/* Name of the right bumper of an Xbox style controller, shown in the input test. */
 "ui.inputTest.rightBumper" = "दायाँ बंपर";
+/* Name of the right shoulder button in the input test for a controller with an unknown layout: RB on Xbox, R1 on PlayStation. The slash stays. */
 "ui.inputTest.rightBumperGeneric" = "RB / R1";
+/* Name of the right haptic actuator in the output test of the input test window. */
 "ui.inputTest.rightHaptic" = "दायाँ हैप्टिक";
+/* Name of the small rumble motor on the right side of the controller, which makes high-frequency vibration. */
 "ui.inputTest.highFrequency" = "दायाँ मुख्य";
+/* Name of the right stick in the input test. */
 "ui.inputTest.rightStick" = "दाएँ स्टिक";
+/* Name of the button that the user presses by pushing down the right stick, shown in the input test. */
 "ui.inputTest.rightStickButton" = "दाएँ स्टिक बटन";
+/* Name of the right trigger of an Xbox style controller, shown in the input test. */
 "ui.inputTest.rightTrigger" = "दायाँ ट्रिगर";
+/* Name of the right trigger in the input test for a controller with an unknown layout: RT on Xbox, R2 on PlayStation. The slash stays. */
 "ui.inputTest.rightTriggerGeneric" = "RT / R2";
+/* Heading of the rumble section in the input test. */
 "ui.inputTest.rumble" = "रम्बल";
+/* Message in the rumble section of the input test when the controller has no rumble. */
 "ui.inputTest.rumbleUnavailable" = "इस कंट्रोलर द्वारा रम्बल समर्थित नहीं है।";
+/* Status of the input test when input stopped arriving. */
 "ui.inputTest.stale" = "इनपुट बाधित";
+/* Status of the input test while it starts. Keep the three dots. */
 "ui.inputTest.starting" = "शुरू हो रहा है…";
+/* VoiceOver label of the status area of the input test. */
 "ui.inputTest.status" = "इनपुट परीक्षण की स्थिति";
+/* Title of the button in the input test that makes the controller rumble. */
 "ui.inputTest.testRumble" = "रम्बल परीक्षण";
+/* Label of the row in the Controllers detail that holds the button that opens the input test. */
 "ui.inputTest.title" = "इनपुट परीक्षण";
+/* Status of the input test when the app cannot read input. */
 "ui.inputTest.unavailable" = "इनपुट अनुपलब्ध";
+/* Name of the view button of a controller, shown in the input test. It is the small button on the left of the Xbox home button. */
 "ui.inputTest.view" = "देखें";
+/* Title of the input test window. %@ is the controller name. The dash is a separator. */
 "ui.inputTest.windowTitle" = "इनपुट परीक्षण — %@";
+/* Name of the X button of an Xbox style controller, shown in the input test. */
 "ui.inputTest.xButton" = "X बटन";
+/* Name of the left face button in the input test for a controller with an unknown layout: X on Xbox, Square on PlayStation. The slash stays. */
 "ui.inputTest.xSquare" = "X / स्क्वेयर";
+/* Name of the Xbox button, the one with the Xbox logo, shown in the input test. Xbox is a product name. */
 "ui.inputTest.xboxButton" = "Xbox बटन";
+/* Name of the Y button of an Xbox style controller, shown in the input test. */
 "ui.inputTest.yButton" = "Y बटन";
+/* Name of the top face button in the input test for a controller with an unknown layout: Y on Xbox, Triangle on PlayStation. The slash stays. */
 "ui.inputTest.yTriangle" = "Y / ट्रायंगल";
 /* Name of the Caps Lock key in the text that describes a captured key press. */
 "term.key.capsLock" = "कैप्स लॉक";
@@ -1082,13 +1178,16 @@
 "ui.profiles.damagedSelectionsMessage" = "सक्रिय प्रोफ़ाइल की सूची पढ़ी नहीं जा सकी। जारी रखने के लिए इसे रीसेट करें। आपकी प्रोफ़ाइल सुरक्षित रहती हैं।";
 "ui.profiles.resetLibraryAction" = "बैकअप लें और रीसेट करें";
 
-/* Controller session lifecycle */
+/* Label of the row in the Controllers detail that tells that the session of the controller is suspended. The row holds the Resume button. */
 "ui.controllers.suspended" = "निलंबित";
 /* Error shown when the service refuses to change the session of a controller. */
 "ui.error.controllerSessionChangeRejected" = "कंट्रोलर सत्र बदला नहीं जा सका।";
 
+/* Title of the alert that asks whether to end the wireless link of a controller. */
 "ui.controllers.disconnectWirelessConfirmTitle" = "वायरलेस कंट्रोलर डिस्कनेक्ट करें?";
+/* Message of the alert that ends the wireless link of a controller. %@ is the controller name. */
 "ui.controllers.disconnectWirelessConfirmMessage" = "जब तक आप इसे मैन्युअल रूप से दोबारा कनेक्ट नहीं करते, %@ डिस्कनेक्ट रहेगा।";
+/* Confirm button of the alert that ends the wireless link of a controller. */
 "ui.controllers.disconnectWirelessConfirm" = "डिस्कनेक्ट करें";
 
 /* Title of the notification shown when a controller stops sending input. */
@@ -2425,69 +2524,131 @@
 "cli.profile.validate.valid" = "%1$@ एक मान्य प्रोफ़ाइल है: “%2$@”, %3$@ (%4$@) के लिए। इसे “ojd profile import” से जोड़ें।";
 /* Error when the service accepted a profile and does not list it afterwards. The command in quotes stays as written. */
 "cli.profile.group.vanished" = "सेवा ने प्रोफ़ाइल को नहीं रखा। उसे “ojd profile list” से जाँचें।";
-/* Main window, status item, main menu, settings window, library and access. */
+/* Title of the details button of an error message in the Library area. */
 "ui.library.details" = "ब्योरा";
+/* Button of an error message in the Library area that hides the message. */
 "ui.library.dismiss" = "ख़ारिज करें";
+/* Button of the open panel in which the user picks a record file or a mod folder. It confirms the choice. */
 "ui.library.choose" = "चुनें";
+/* Toolbar button in the Library area that checks a record file or mod folder without installing it. Keep the three dots. */
 "ui.library.validate" = "मान्य करें…";
+/* Confirm button of the alert that installs a record or a mod. */
 "ui.library.install" = "इंस्टॉल करें";
+/* Confirm button of the alert that replaces an installed record or mod. */
 "ui.library.replace" = "बदलें";
+/* Confirm button of the alert that removes a record or mod. */
 "ui.library.remove" = "हटाएँ";
+/* Error in the Library area. %1$@ is the name of a file or folder and %2$@ is the reason it cannot be read. */
 "ui.library.unreadable" = "%1$@ पढ़ा नहीं जा सकता: %2$@";
+/* Name of the check in the diagnostics table that validates the controller records. */
 "ui.library.records" = "कंट्रोलर रिकॉर्ड";
+/* Title of the empty state in the records list of the Library area. */
 "ui.library.records.empty.title" = "कोई इंस्टॉल किया रिकॉर्ड नहीं";
+/* Name of the source of a record: a file that the user installed. It is shown next to the record. */
 "ui.library.layer.user" = "आपकी फ़ाइल";
+/* Name of the source of a record: a mod package added it. */
 "ui.library.layer.package" = "किसी मॉड से";
+/* Notice after a record check passed. %1$@ is the file name and %2$@ is the controller model. */
 "ui.library.record.valid" = "%1$@, %2$@ के लिए मान्य रिकॉर्ड है।";
+/* Error when a record is not valid. %@ is the reason. */
 "ui.library.record.invalid" = "रिकॉर्ड मान्य नहीं है: %@";
+/* Line in the records list for a record file that the app skipped. %@ is the reason. */
 "ui.library.record.skipped" = "छोड़ा गया: %@";
+/* Error when no installed record matches a controller model. %@ is the controller model. */
 "ui.library.record.notFound" = "%@ के लिए कोई इंस्टॉल किया रिकॉर्ड नहीं है।";
+/* Notice after a record is installed. %@ is the controller model. */
 "ui.library.record.installed" = "%@ का रिकॉर्ड इंस्टॉल हो गया।";
+/* Error when a record file cannot be written. %1$@ is the file name and %2$@ is the reason. */
 "ui.library.record.installFailed" = "%1$@ लिखा नहीं जा सकता: %2$@";
+/* Title of the alert that installs a record. %@ is the controller model. */
 "ui.library.record.install.title" = "%@ का रिकॉर्ड इंस्टॉल करें?";
+/* Message of the alert that installs a record. %@ is the file name. OpenJoystickDriver is the product name. */
 "ui.library.record.install.message" = "OpenJoystickDriver रिकॉर्ड को आपके कंट्रोलर रिकॉर्ड फ़ोल्डर में %@ के रूप में सहेजता है।";
+/* Title of the alert that replaces an installed record. %@ is the controller model. */
 "ui.library.record.replace.title" = "%@ का रिकॉर्ड बदलें?";
+/* Message of the alert that replaces an installed record. %@ is the file name. */
 "ui.library.record.replace.message" = "%@ नाम की रिकॉर्ड फ़ाइल पहले से इंस्टॉल है। बदलने पर वह फ़ाइल अधिलेखित हो जाती है।";
+/* Title of the alert that removes an installed record. %@ is the controller model. */
 "ui.library.record.remove.title" = "%@ का रिकॉर्ड हटाएँ?";
+/* Message of the alert that removes an installed record. OpenJoystickDriver is the product name. */
 "ui.library.record.remove.message" = "OpenJoystickDriver आपके कंट्रोलर रिकॉर्ड फ़ोल्डर से रिकॉर्ड फ़ाइल मिटा देता है। इस रिकॉर्ड का उपयोग करने वाले कंट्रोलर फिर पहचाने नहीं जाएँगे।";
+/* Notice after a record is removed. %@ is the controller model. */
 "ui.library.record.removed" = "%@ का रिकॉर्ड हटा दिया गया।";
+/* Error when a record file cannot be removed. %1$@ is the file name and %2$@ is the reason. */
 "ui.library.record.removeFailed" = "%1$@ हटाया नहीं जा सकता: %2$@";
+/* Heading of the mods list in the Library area. A mod is a package of records, profiles and personas. */
 "ui.library.mods" = "मॉड";
+/* Title of the empty state in the mods list of the Library area. */
 "ui.library.mods.empty.title" = "कोई इंस्टॉल किया मॉड नहीं";
+/* Notice after a mod check passed. %1$@ is the folder name and %2$@ is the mod name. */
 "ui.library.mod.valid" = "%1$@ मान्य मॉड है: %2$@।";
+/* Error when a mod is refused. %1$@ is the folder name or mod name and %2$@ is the reason. */
 "ui.library.mod.refused" = "%1$@ अस्वीकार किया गया: %2$@";
+/* Line in the mod detail for a part of a mod that the app does not use. %@ is the reason. */
 "ui.library.mod.unused" = "उपयोग में नहीं: %@";
+/* Notice after a mod is installed. %@ is the mod name. */
 "ui.library.mod.installed" = "मॉड %@ इंस्टॉल हो गया।";
+/* Title of the alert that installs a mod. %@ is the mod name. */
 "ui.library.mod.install.title" = "मॉड %@ इंस्टॉल करें?";
+/* Message of the alert that installs a mod. %1$@ is the mod name, %2$@ is its version and %3$@ is its author. OpenJoystickDriver is the product name. */
 "ui.library.mod.install.message" = "OpenJoystickDriver आपके इंस्टॉल किए मॉड में %1$@ %2$@ (निर्माता: %3$@) जोड़ता है।";
+/* Title of the alert that replaces an installed mod. %@ is the mod name. */
 "ui.library.mod.replace.title" = "मॉड %@ बदलें?";
+/* Message of the alert that replaces an installed mod. %1$@ is the mod name and %2$@ is the version that will be installed. */
 "ui.library.mod.replace.message" = "%1$@ पहले से इंस्टॉल है। बदलने पर इंस्टॉल की गई फ़ाइलें हट जाती हैं और संस्करण %2$@ इंस्टॉल होता है।";
+/* Title of the alert that removes a mod. %@ is the mod name. */
 "ui.library.mod.remove.title" = "मॉड %@ हटाएँ?";
+/* Message of the alert that removes a mod. OpenJoystickDriver is the product name. Personas are the identities that a virtual gamepad can show. */
 "ui.library.mod.remove.message" = "OpenJoystickDriver मॉड और उसके जोड़े रिकॉर्ड, प्रोफ़ाइल और पर्सोना मिटा देता है।";
+/* Notice after a mod is removed. %@ is the mod name. */
 "ui.library.mod.removed" = "मॉड %@ हटा दिया गया।";
+/* Line in the records list for a record that a mod changes. %@ is the name of the mod. */
 "ui.library.record.patchedBy" = "%@ द्वारा संशोधित";
+/* Label of the field in the record detail that tells whether the USB extension claims the controller. */
 "ui.library.field.usbClaim" = "USB एक्सटेंशन";
+/* Value of the USB extension field: the extension claims the controller. */
 "ui.library.claim.claimed" = "इस कंट्रोलर को अपने अधीन लेता है";
+/* Value of the USB extension field: the extension does not claim the controller. */
 "ui.library.claim.unclaimed" = "इस कंट्रोलर को अपने अधीन नहीं लेता";
+/* Placeholder of the search field in the toolbar of the Library area. */
 "ui.library.search" = "खोजें";
+/* Title of the empty state in the Library area when the search matches nothing. */
 "ui.library.search.noMatches" = "कोई मिलान नहीं";
+/* Toolbar button in the Library area that runs a record against a packet capture. Keep the three dots. */
 "ui.library.testRecord" = "रिकॉर्ड का परीक्षण करें…";
+/* Value of the status of a library item that is installed. */
 "ui.library.installed" = "इंस्टॉल किए गए";
+/* Badge on a library item that ships with the app. */
 "ui.library.builtIn" = "अंतर्निहित";
+/* Label of the field in the record detail that holds the controller model. */
 "ui.library.field.identity" = "कंट्रोलर मॉडल";
+/* Label of the field in the record detail that holds the protocol family. */
 "ui.library.field.family" = "परिवार";
+/* Label of the field in the record detail that holds where the record comes from. */
 "ui.library.field.source" = "स्रोत";
+/* Label of the field in the record detail that holds the path of the record file. */
 "ui.library.field.file" = "फ़ाइल पथ";
+/* Label of the field in the record detail that holds how the controller connects, for example USB or Bluetooth. */
 "ui.library.field.transport" = "ट्रांसपोर्ट";
+/* Label of the field in the mod detail that holds the version. */
 "ui.library.field.version" = "संस्करण";
+/* Label of the field in the mod detail that holds the author. */
 "ui.library.field.author" = "लेखक";
+/* Heading of the section in the record detail that lists the fields. */
 "ui.library.section.fields" = "फ़ील्ड";
+/* Heading of the section in the mod detail that lists the files. */
 "ui.library.section.files" = "फ़ाइलें";
+/* Heading of the section in the record detail that shows the result of a test. */
 "ui.library.section.testResult" = "परीक्षण परिणाम";
+/* Name of the source of a record: the record ships with the app. */
 "ui.library.layer.driver" = "डिफ़ॉल्ट";
+/* Name of the source of a record: a global file of the user. */
 "ui.library.layer.global" = "आपकी वैश्विक फ़ाइल";
+/* Message in the detail pane of the Library area before an item is selected. */
 "ui.library.detail.empty" = "कोई रिकॉर्ड या मॉड चुनें।";
+/* Message of the open panel in which the user picks a packet capture for a record test. */
 "ui.library.test.packets.pick" = "कोई पैकेट कैप्चर चुनें।";
+/* Message of the open panel in which the user picks the file with the expected controller state for a record test. */
 "ui.library.test.expect.pick" = "अपेक्षित कंट्रोलर स्थिति चुनें।";
 /* VoiceOver label of the button in the Library error banner that shows the details of the error. */
 "a11y.library.details" = "त्रुटि का ब्योरा दिखाएँ";
@@ -2681,60 +2842,115 @@
 "a11y.access.scope" = "%@ स्कोप";
 /* VoiceOver label of the cancel button in the access sheets. It leaves the access unchanged. */
 "a11y.access.cancel" = "रद्द करें और ऐक्सेस जैसा है वैसा रखें";
+/* Item of the application menu that opens the About window. %@ is the product name. */
 "ui.menu.app.about" = "%@ के बारे में";
+/* Item of the application menu that opens the settings window. Keep the three dots. */
 "ui.menu.app.settings" = "सेटिंग्स…";
+/* Item of the application menu that holds the Services submenu. It is the macOS name. */
 "ui.menu.app.services" = "सेवाएँ";
+/* Item of the application menu that hides the app. %@ is the product name. */
 "ui.menu.app.hide" = "%@ छिपाएँ";
+/* Item of the application menu that hides all other apps. It is the macOS name. */
 "ui.menu.app.hideOthers" = "अन्य छिपाएँ";
+/* Item of the application menu that shows all apps again. It is the macOS name. */
 "ui.menu.app.showAll" = "सभी दिखाएँ";
+/* Item of the application menu that quits the app. %@ is the product name. */
 "ui.menu.app.quit" = "%@ छोड़ें";
+/* Title of the File menu in the menu bar. */
 "ui.menu.file.title" = "फ़ाइल";
+/* Item of the File menu that imports a profile from a file. Keep the three dots. */
 "ui.menu.file.importProfile" = "प्रोफ़ाइल इंपोर्ट करें…";
+/* Item of the File menu that exports a profile to a file. Keep the three dots. */
 "ui.menu.file.exportProfile" = "प्रोफ़ाइल एक्सपोर्ट करें…";
+/* Item of the File menu that installs a controller record or a mod. Keep the three dots. */
 "ui.menu.file.installRecordOrMod" = "रिकॉर्ड या मॉड इंस्टॉल करें…";
+/* Item of the File menu that closes the window. */
 "ui.menu.file.close" = "बंद करें";
+/* Item of the File menu that saves the support report to a file. Keep the three dots. */
 "ui.menu.file.saveSupportReport" = "सपोर्ट रिपोर्ट सहेजें…";
+/* Item of the File menu that saves the Activity log to a file. Keep the three dots. */
 "ui.menu.file.saveActivityLog" = "गतिविधि लॉग सहेजें…";
+/* Title of the alert shown when saving a file from the File menu fails. */
 "ui.menu.file.saveFailed" = "फ़ाइल सहेजी नहीं जा सकी";
+/* Title of the Edit menu in the menu bar. */
 "ui.menu.edit.title" = "संपादित करें";
+/* Item of the Edit menu that undoes the last edit. */
 "ui.menu.edit.undo" = "पहले जैसा करें";
+/* Item of the Edit menu that repeats an undone edit. */
 "ui.menu.edit.redo" = "फिर से करें";
+/* Item of the Edit menu that cuts the selection to the clipboard. */
 "ui.menu.edit.cut" = "कट करें";
+/* Item of the Edit menu that copies the selection to the clipboard. */
 "ui.menu.edit.copy" = "कॉपी करें";
+/* Item of the Edit menu that pastes the clipboard. */
 "ui.menu.edit.paste" = "पेस्ट करें";
+/* Item of the Edit menu that selects everything. */
 "ui.menu.edit.selectAll" = "सभी चुनें";
+/* Title of the View menu in the menu bar. */
 "ui.menu.view.title" = "दृश्य";
+/* Item of the View menu that makes the window full screen. */
 "ui.menu.view.enterFullScreen" = "पूर्ण स्क्रीन में जाएँ";
+/* Item of the View menu that leaves full screen. It replaces Enter Full Screen while the window is full screen. */
 "ui.menu.view.exitFullScreen" = "पूर्ण स्क्रीन से बाहर निकलें";
+/* Item of the View menu that shows the sidebar. */
 "ui.menu.view.showSidebar" = "साइडबार दिखाएँ";
+/* Item of the View menu that hides the sidebar. It replaces Show Sidebar while the sidebar is visible. */
 "ui.menu.view.hideSidebar" = "साइडबार छिपाएँ";
+/* Item of the View menu that shows the toolbar. */
 "ui.menu.view.showToolbar" = "टूलबार दिखाएँ";
+/* Item of the View menu that hides the toolbar. It replaces Show Toolbar while the toolbar is visible. */
 "ui.menu.view.hideToolbar" = "टूलबार छिपाएँ";
+/* Title of the Controller menu in the menu bar. */
 "ui.menu.controller.title" = "कंट्रोलर";
+/* Button and menu item that stops the remapping of one controller. */
 "ui.menu.controller.suspend" = "स्थगित करें";
+/* Button and menu item that starts the remapping of one controller again. */
 "ui.menu.controller.resume" = "फिर शुरू करें";
+/* Item of the Controller menu that opens the input test of the selected controller. */
 "ui.menu.controller.testInput" = "इनपुट जाँचें";
+/* Button and menu item that ends the wireless link of the selected controller. */
 "ui.menu.controller.disconnectWirelessLink" = "वायरलेस लिंक डिस्कनेक्ट करें";
+/* Item of the Controller menu that shows the selected controller in the main window. */
 "ui.menu.controller.showInWindow" = "विंडो में दिखाएँ";
+/* Disabled item of the Controller menu when no controller is selected. */
 "ui.menu.controller.noneSelected" = "कोई कंट्रोलर चयनित नहीं है";
+/* Title of the Profile menu in the menu bar. */
 "ui.menu.profile.title" = "प्रोफ़ाइल";
+/* Item of the Profile menu that turns on the selected profile. */
 "ui.menu.profile.activate" = "प्रोफ़ाइल सक्रिय करें";
+/* Item of the Profile menu that turns off the active profile. */
 "ui.menu.profile.deactivate" = "प्रोफ़ाइल निष्क्रिय करें";
+/* Title of the alert shown when turning off a profile from the menu fails. */
 "ui.menu.profile.deactivateFailed" = "प्रोफ़ाइल निष्क्रिय नहीं की जा सकी";
+/* Message of the alert shown when the profile changed elsewhere during the turn off. */
 "ui.menu.profile.deactivateConflict" = "निष्क्रिय करते समय प्रोफ़ाइल बदल गई। फिर कोशिश करें।";
+/* Title of the Window menu in the menu bar. */
 "ui.menu.window.title" = "विंडो";
+/* Item of the Window menu that minimizes the window to the Dock. */
 "ui.menu.window.minimize" = "मिनिमाइज़ करें";
+/* Item of the Window menu that zooms the window. */
 "ui.menu.window.zoom" = "ज़ूम";
+/* Item of the Window menu that brings all windows of the app to the front. */
 "ui.menu.window.bringAllToFront" = "सभी को आगे लाएँ";
+/* Title of the Help menu in the menu bar. */
 "ui.menu.help.title" = "सहायता";
+/* Item of the Help menu that opens the Activity log. */
 "ui.menu.help.activityLog" = "गतिविधि लॉग";
+/* Item of the Help menu that copies the support report to the clipboard. */
 "ui.menu.help.copySupportReport" = "सपोर्ट रिपोर्ट कॉपी करें";
+/* Item of the Help menu that opens the sheet that explains an error code. Keep the three dots. */
 "ui.menu.help.explainErrorCode" = "त्रुटि कोड समझाएँ…";
+/* Item of the Help menu that opens the page where the user reports a problem. Keep the three dots. */
 "ui.menu.help.reportProblem" = "समस्या की रिपोर्ट करें…";
+/* Item of the Help menu that opens the project website. */
 "ui.menu.help.projectWebsite" = "प्रोजेक्ट वेबसाइट";
+/* Title of the alert shown after the support report is copied. */
 "ui.menu.copySupportReport.done" = "सपोर्ट रिपोर्ट कॉपी हो गई";
+/* Message of the alert shown after the support report is copied. */
 "ui.menu.copySupportReport.doneDetail" = "सपोर्ट रिपोर्ट क्लिपबोर्ड पर है।";
+/* Title of the alert shown when the support report cannot be copied. */
 "ui.menu.copySupportReport.failed" = "सपोर्ट रिपोर्ट कॉपी नहीं हो सकी";
+/* Message of the alert shown when the support report cannot be copied. The user saves it to a file with the File menu. */
 "ui.menu.copySupportReport.failedDetail" = "रिपोर्ट इकट्ठा नहीं की जा सकी। इसके बजाय फ़ाइल में सहेजें।";
 /* Title of the Controllers item in the sidebar of the main window and in the window title when it is selected. */
 "ui.sidebar.controllers.title" = "कंट्रोलर";
@@ -2822,12 +3038,17 @@
 "ui.access.grant.noPath" = "OpenJoystickDriver %@ की निष्पादन योग्य फ़ाइल नहीं पढ़ सका, इसलिए वह उसे ऐक्सेस नहीं दे सकता।";
 /* Line of the alert that turns on the WebSocket when a port is saved. */
 "ui.access.web.enable.savedPort" = "वेब एंडपॉइंट अपना सहेजा हुआ पोर्ट रखता है।";
+/* Detail line of a record in the records list. %1$@ and %2$@ are two facts about the record. The dot between them separates the facts and may change. */
 "ui.library.record.detail" = "%1$@ · %2$@";
+/* Detail line of a mod in the mods list. %1$@ is the version and %2$@ is the author. The dot between them separates the two and may change. */
 "ui.library.mod.detail" = "%1$@ · %2$@";
 /* Message of the alert shown when a menu action needs the profile editor and the editor saves a change. */
 "ui.extra.profileEditorBusy" = "प्रोफ़ाइल एडिटर कोई बदलाव सहेज रहा है या लागू कर रहा है। उसके पूरा होने पर फिर कोशिश करें।";
+/* Message of the open panel in which the user picks a controller record file or a mod folder. */
 "ui.library.recordOrMod.pick" = "कंट्रोलर रिकॉर्ड फ़ाइल या मॉड फ़ोल्डर चुनें।";
+/* Title of the alert shown when turning on a profile from the menu fails. */
 "ui.menu.profile.activateFailed" = "प्रोफ़ाइल सक्रिय नहीं की जा सकी";
+/* Message of the alert shown when the profile changed elsewhere during the turn on. */
 "ui.menu.profile.activateConflict" = "सक्रिय किए जाने के दौरान प्रोफ़ाइल बदल गई। फिर कोशिश करें।";
 "ui.profiles.importBlocked" = "प्रोफ़ाइल में बदलाव जारी है। उसके पूरा होने पर “प्रोफ़ाइल इंपोर्ट करें” फिर से चुनें।";
 "ui.settings.general.updateAvailableBody" = "संस्करण %@ उपलब्ध है।";
@@ -3113,45 +3334,85 @@
 "ui.activity.check.usbAccess" = "USB एक्सेस";
 /* Button of a failed check in the diagnostics table that opens the Library area. */
 "ui.activity.fix.showLibrary" = "लाइब्रेरी दिखाएँ";
+/* Label of the fact in the Controllers detail that tells whether the controller has adaptive triggers, triggers with variable resistance. */
 "ui.controllers.adaptiveTriggers" = "अडैप्टिव ट्रिगर";
+/* Label of the fact in the Controllers detail that tells whether the controller has a motion sensor. */
 "ui.controllers.motion" = "मोशन सेंसर";
+/* Label of the fact in the Controllers detail that tells how many fingers the touch surface of the controller sees. */
 "ui.controllers.touchContacts" = "टच संपर्क";
+/* Label of the fact in the Controllers detail that tells whether games may see the controller twice, once as the controller and once as the virtual gamepad. */
 "ui.controllers.duplicateExposureRisk" = "दोहरे दिखने का जोखिम";
+/* Label of the fact in the Controllers detail that tells whether the startup commands of the controller worked. */
 "ui.controllers.startupStatus" = "स्टार्टअप कमांड";
+/* Label of the fact in the Controllers detail that names the format of the input reports of the controller. */
 "ui.controllers.inputReportFormat" = "रिपोर्ट फ़ॉर्मैट";
+/* Label of the fact in the Controllers detail that counts how often the input of the controller recovered. */
 "ui.controllers.inputRecoveries" = "पुनर्प्राप्तियाँ";
+/* Label of the fact in the Controllers detail that shows the time of the last attempt to send the controller state to the virtual gamepad. */
 "ui.controllers.publicationAttempted" = "अंतिम भेजने का प्रयास";
+/* Label of the fact in the Controllers detail that shows the time of the last send that the virtual gamepad accepted. */
 "ui.controllers.publicationCompleted" = "अंतिम स्वीकृत भेजना";
+/* Label of the fact in the Controllers detail that tells what chose the server of the controller: the controller record or the user. */
 "ui.controllers.server.source" = "इसने सेट किया";
+/* Label of the popup that sets whether a virtual HID profile choice applies to a controller model or to one controller. */
 "ui.controllers.virtual.scope" = "इस पर लागू करें";
+/* Option of the scope popup: the choice applies to all controllers of the model. */
 "ui.controllers.virtual.scope.model" = "यह मॉडल";
+/* Option of the scope popup: the choice applies to this controller only. */
 "ui.controllers.virtual.scope.unit" = "यह कंट्रोलर";
+/* Label of the row in the Controllers detail that holds the button that clears all virtual HID profile choices. */
 "ui.controllers.virtual.resetAll" = "सभी ओवरराइड रीसेट करें";
+/* Error when the service cannot clear the virtual HID profile choices. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.controllers.virtual.resetAllFailed" = "सेवा वर्चुअल HID प्रोफ़ाइल के चयन साफ़ नहीं कर सकी।";
+/* Label of the row in the Controllers detail that holds the button that exports the mapping of the virtual gamepad. */
 "ui.controllers.exportMapping" = "मैपिंग एक्सपोर्ट करें";
+/* Title of the save panel that exports the mapping of the virtual gamepad. */
 "ui.controllers.exportMapping.title" = "वर्चुअल गेमपैड की मैपिंग एक्सपोर्ट करें";
+/* Label of the format popup in the save panel that exports the mapping. The colon stays. */
 "ui.controllers.exportMapping.format" = "फ़ॉर्मैट:";
+/* Label of the row in the Controllers detail that holds the button that starts a game with the virtual gamepad. */
 "ui.controllers.launch" = "वर्चुअल गेमपैड के साथ गेम चलाएँ";
+/* Title of the open panel in which the user picks a game to start. */
 "ui.controllers.launch.title" = "गेम चुनें";
+/* Button that starts the chosen game. It is also the confirm button of the open panel. */
 "ui.controllers.launch.prompt" = "चलाएँ";
+/* Title of the checkbox in the open panel for a game. GameController is the name of an Apple framework and stays as written. */
 "ui.controllers.launch.gameControllerBackend" = "कंट्रोलर केवल GameController के ज़रिए पढ़ें";
+/* Message when the user starts a game but no connected controller has a virtual gamepad. */
 "ui.controllers.launch.noGamepad" = "कनेक्ट किए गए किसी कंट्रोलर में वर्चुअल गेमपैड नहीं है, इसलिए सेट करने के लिए कोई मैपिंग नहीं है।";
+/* Message after a game starts. %@ is the name of the program. */
 "ui.controllers.launch.started" = "%@ शुरू हो गया।";
+/* Message after a game ends. %1$@ is the name of the program and %2$lld is its exit status. */
 "ui.controllers.launch.exited" = "%1$@ स्थिति %2$lld के साथ समाप्त हुआ।";
+/* Button in the Controllers detail that starts a draft of a controller record. Keep the three dots. */
 "ui.controllers.draftRecord" = "रिकॉर्ड का मसौदा बनाएँ…";
+/* Title of the sheet that drafts a controller record. */
 "ui.controllers.draftRecord.title" = "कंट्रोलर रिकॉर्ड का मसौदा बनाएँ";
+/* Message when a record cannot be drafted. %@ is the controller model. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.controllers.draftRecord.noLayout" = "%@ के HID रिपोर्ट डिस्क्रिप्टर से कोई कंट्रोल नहीं पढ़ा जा सका, और उसका शामिल रिकॉर्ड पहले से उसका परिवार बताता है।";
+/* Button in the Controllers detail that starts a packet capture of the controller. Keep the three dots. */
 "ui.controllers.capturePackets" = "पैकेट कैप्चर करें…";
+/* Title of the sheet that captures packets of the controller. */
 "ui.controllers.capturePackets.title" = "कंट्रोलर के पैकेट कैप्चर करें";
+/* Label of the field in the capture sheet that sets how long the capture runs. The value is in seconds. */
 "ui.controllers.captureDuration" = "अवधि (सेकंड)";
+/* Error under the duration field in the capture sheet when the value is not above 0. */
 "ui.controllers.captureDurationInvalid" = "0 से अधिक सेकंड की संख्या दर्ज करें।";
+/* Notice after a file is saved. %@ is the file name. */
 "ui.controllers.fileSaved" = "%@ सहेजा गया।";
+/* Line under the scope popup. %@ is the scope of the override that is active. */
 "ui.controllers.virtual.currentScope" = "मौजूदा ओवरराइड का दायरा: %@";
+/* Value of the publication fact: the virtual gamepad of the controller is published. */
 "ui.controllers.publication.published" = "प्रकाशित";
+/* Value of the publication fact: the controller has no published virtual gamepad. */
 "ui.controllers.publication.notPublished" = "प्रकाशित नहीं";
+/* Value of the publication fact: the publication failed. */
 "ui.controllers.publication.failed" = "विफल";
+/* Value of the input health fact: input arrives as expected. */
 "ui.controllers.inputHealth.healthy" = "सामान्य";
+/* Value of the input health fact: input stopped arriving. */
 "ui.controllers.inputHealth.stale" = "अपडेट नहीं हो रहा";
+/* Value of the input health fact: the app waits until all controls are at rest before it sends input again. */
 "ui.controllers.inputHealth.waitingForNeutral" = "न्यूट्रल की प्रतीक्षा";
 "ui.settings.advanced.errorDamaged" = "सेटिंग्स फ़ाइल %@ क्षतिग्रस्त है। इसे ठीक करें, या `ojd setting reset` से इसे ट्रैश में भेजें।";
 "ui.settings.advanced.errorUnsupported" = "सेटिंग्स फ़ाइल %@ समर्थित नहीं है। फ़ाइल को समर्थित apiVersion के लिए दोबारा लिखें, या `ojd setting reset` से इसे ट्रैश में भेजें।";
@@ -3175,51 +3436,77 @@
 "cli.setting.reset.success" = "%@ को ट्रैश में भेज दिया गया।";
 /* Message printed by 'ojd setting reset' when there is no settings file. %@ is the path where the file would be. */
 "cli.setting.reset.none" = "%@ पर कोई सेटिंग्स फ़ाइल नहीं है।";
-/* Why a controller is not published as a virtual device, and a failed send. */
+/* Reason the controller has no virtual gamepad: the user turned the virtual output off. */
 "ui.controllers.publication.reason.outputDisabled" = "वर्चुअल आउटपुट बंद है";
+/* Reason the controller has no virtual gamepad: macOS serves it as a gamepad. */
 "ui.controllers.publication.reason.systemGamepad" = "सिस्टम इसे गेमपैड के रूप में संभालता है";
+/* Reason the controller has no virtual gamepad: macOS handles its input directly. */
 "ui.controllers.publication.reason.nativeHIDPassThrough" = "सिस्टम इसके इनपुट को सीधे संभालता है";
+/* Reason the controller has no virtual gamepad: another virtual device stands for it. */
 "ui.controllers.publication.reason.upstreamVirtualDevice" = "कोई दूसरा वर्चुअल डिवाइस पहले से इसका प्रतिनिधित्व करता है";
+/* Reason the controller has no virtual gamepad: the user suspended the session. */
 "ui.controllers.publication.reason.sessionSuspended" = "सत्र निलंबित है";
+/* Reason the controller has no virtual gamepad: no virtual profile fits the controller. */
 "ui.controllers.publication.reason.noVirtualProfile" = "कोई वर्चुअल प्रोफ़ाइल इसके अनुरूप नहीं है";
+/* Reason the controller has no virtual gamepad: the output is paused. */
 "ui.controllers.publication.reason.suppressed" = "आउटपुट रुका हुआ है";
+/* Reason the controller has no virtual gamepad: the first input has not arrived. */
 "ui.controllers.publication.reason.noInputYet" = "पहले इनपुट की प्रतीक्षा है";
 /* Publication state with its reason or failure, for example "Not published (Waiting for the first input)". %1$@ is the state and %2$@ the reason. */
 "ui.controllers.publication.withReason" = "%1$@ (%2$@)";
+/* Reason shown with a failed publication. %@ is the reason the last send failed. */
 "ui.controllers.publication.failedSend" = "पिछला भेजना विफल रहा: %@";
 /* Serving route with why it publishes nothing, for example "Output off (No virtual profile fits it)". %1$@ is the route and %2$@ the reason. */
 "ui.controllers.serving.withReason" = "%1$@ (%2$@)";
-/* Why a controller's input health is failing. */
+/* Reason of failing input health: the controller sends no reports. */
 "ui.controllers.inputHealth.reason.missingReports" = "कोई रिपोर्ट नहीं आ रही";
+/* Reason of failing input health: the reports arrive but their content does not change. */
 "ui.controllers.inputHealth.reason.freshnessNotAdvancing" = "रिपोर्ट आगे नहीं बढ़ रही";
 /* Input health state with its failure reason, for example "Stale (No reports arriving)". %1$@ is the state and %2$@ the reason. */
 "ui.controllers.inputHealth.withReason" = "%1$@ (%2$@)";
-/* How a controller was discovered. */
+/* Value of the discovery route: the app found the controller as an HID device. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.controllers.discovery.hid" = "HID";
+/* Value of the discovery route: the app found the controller over raw USB. */
 "ui.controllers.discovery.rawUSB" = "रॉ USB";
-/* Who holds the physical controller. */
+/* Value of the owner of the physical controller: the app holds it exclusively as an HID device. */
 "ui.controllers.physicalOwnership.exclusiveHID" = "विशेष HID";
+/* Value of the owner of the physical controller: the app holds it exclusively over raw USB. */
 "ui.controllers.physicalOwnership.exclusiveRawUSB" = "विशेष रॉ USB";
+/* Value of the owner of the physical controller: the driver extension holds it over USB. */
 "ui.controllers.physicalOwnership.extensionOwnedUSB" = "USB एक्सटेंशन";
+/* Value of the owner of the physical controller: macOS holds it as an HID device that the app can also see. */
 "ui.controllers.physicalOwnership.systemHIDVisible" = "सिस्टम HID";
+/* Value of the owner of the physical controller: macOS serves it as a gamepad. */
 "ui.controllers.physicalOwnership.systemGamepad" = "सिस्टम गेमपैड";
+/* Value of the owner of the physical controller: another virtual device holds it before the app sees it. */
 "ui.controllers.physicalOwnership.upstreamVirtualDevice" = "अपस्ट्रीम वर्चुअल डिवाइस";
+/* Value of the owner of the physical controller when the app does not know it. */
 "ui.controllers.physicalOwnership.unknown" = "अज्ञात";
-/* Result of acquiring HID input. */
+/* Result of opening the HID input of a controller when the app does not know the result. */
 "ui.controllers.hidInputOwnership.unknown" = "अज्ञात";
+/* Result of opening the HID input of a controller: the app holds it exclusively. */
 "ui.controllers.hidInputOwnership.exclusive" = "विशेष";
+/* Result of opening the HID input of a controller: the app shares it with other apps. */
 "ui.controllers.hidInputOwnership.shared" = "साझा";
+/* Result of opening the HID input of a controller: macOS denied access. */
 "ui.controllers.hidInputOwnership.accessDenied" = "एक्सेस अस्वीकृत";
+/* Result of opening the HID input of a controller: another app holds it. */
 "ui.controllers.hidInputOwnership.ownedByAnotherClient" = "किसी दूसरे ऐप के पास है";
+/* Result of opening the HID input of a controller: opening failed. */
 "ui.controllers.hidInputOwnership.acquisitionFailed" = "अधिग्रहण विफल";
 /* Ownership summary: %1$@ is the discovery route, %2$@ the owner and %3$@ the HID input result. */
 "ui.controllers.ownership.value" = "%1$@ से खोजा गया। स्वामी: %2$@। HID इनपुट: %3$@।";
-/* Why closing a controller's Bluetooth link failed. */
+/* Reason that ending the wireless link failed: the controller is not connected any more. */
 "ui.controllers.disconnectWireless.failure.notFound" = "कंट्रोलर अब कनेक्ट नहीं है";
+/* Reason that ending the wireless link failed: the controller does not use Bluetooth. */
 "ui.controllers.disconnectWireless.failure.notBluetooth" = "कंट्रोलर ब्लूटूथ से कनेक्ट नहीं है";
+/* Reason that ending the wireless link failed: the controller uses Bluetooth Low Energy, which the app cannot end. */
 "ui.controllers.disconnectWireless.failure.bluetoothLEUnsupported" = "Bluetooth LE कंट्रोलर को यहाँ से डिस्कनेक्ट नहीं किया जा सकता";
+/* Reason that ending the wireless link failed: the app does not know the Bluetooth address of the controller. */
 "ui.controllers.disconnectWireless.failure.missingAddress" = "कंट्रोलर का ब्लूटूथ पता अज्ञात है";
+/* Reason that ending the wireless link failed: macOS reported that Bluetooth did not end the link. */
 "ui.controllers.disconnectWireless.failure.disconnectFailed" = "ब्लूटूथ ने कंट्रोलर को डिस्कनेक्ट नहीं किया";
+/* Reason that ending the wireless link failed: the request took too long. */
 "ui.controllers.disconnectWireless.failure.timedOut" = "डिस्कनेक्ट करने में समय समाप्त हो गया";
 
 /* Status line of a service that cannot be reached because its request listener stopped. %1$@ is the error code, %2$@ its explanation, %3$@ the error number of the failed call, %4$@ the time it stopped. */

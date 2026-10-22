@@ -2,6 +2,7 @@
 "term.app.name" = "OpenJoystickDriver";
 /* Button of the problem banner in the Access area that quits and opens the app again so that a granted permission takes effect. OpenJoystickDriver is the product name. */
 "ui.permissions.restartApplication" = "Reiniciar OpenJoystickDriver";
+/* Menu item in the application menu that opens the project page on GitHub. GitHub is a product name and stays as written. */
 "ui.menu.projectPage" = "GitHub";
 /* Button that dismisses an alert in the activity view and the main window. It only acknowledges the message. */
 "action.ok" = "OK";
@@ -102,45 +103,79 @@
 "ui.settings.general.updateChecking" = "Buscando…";
 "ui.settings.general.updates" = "Actualizaciones";
 "ui.settings.general.viewUpdate" = "Ver actualización";
+/* Title of the message in the Controllers area when the service cannot list controllers. */
 "ui.controllers.unavailable" = "Mandos no disponibles";
+/* Title of the message in the Controllers area when the list of controllers fails to load. */
 "ui.controllers.loadError" = "No se han podido cargar los mandos";
+/* Title of the empty state in the Controllers area when no controller is connected. */
 "ui.controllers.emptyTitle" = "Ningún mando conectado";
+/* Message of the empty state in the Controllers area. It asks the user to connect a controller. */
 "ui.controllers.emptyMessage" = "Conecta un mando.";
+/* Label of the battery fact in the Controllers detail. */
 "ui.controllers.battery" = "Batería";
+/* VoiceOver label of the button that shows the serial number in the Controllers detail. */
 "ui.controllers.serial.show" = "Mostrar número de serie";
+/* VoiceOver label of the button that hides the serial number in the Controllers detail. */
 "ui.controllers.serial.hide" = "Ocultar número de serie";
+/* VoiceOver value of the serial number while it is hidden. */
 "ui.controllers.serial.hidden" = "Oculto";
+/* Label of the charging state fact in the Controllers detail. */
 "ui.controllers.chargingState" = "Estado de carga";
+/* Label of the fact in the Controllers detail that tells whether a charging cable is plugged in. */
 "ui.controllers.cableState" = "Estado del cable";
+/* Value of the charging state when the battery loses charge. */
 "ui.controllers.discharging" = "Descargando";
+/* Value of the charging state when the battery gains charge. */
 "ui.controllers.charging" = "Cargando";
+/* Value of the charging state when the battery is full. */
 "ui.controllers.batteryFull" = "Completa";
+/* Value of the charging state for a controller that has no rechargeable battery. */
 "ui.controllers.notChargeable" = "No recargable";
+/* VoiceOver summary of the battery facts. %1$@ is the battery level, %2$@ is the charging state and %3$@ is the cable state. */
 "ui.controllers.batteryAccessibilityDetails" = "Batería: %1$@. Estado de carga: %2$@. Estado del cable: %3$@.";
+/* Label of the active profile fact in the Controllers detail. */
 "ui.controllers.activeProfile" = "Perfil activo";
+/* Value of the active profile fact when the profile cannot be shown. */
 "ui.controllers.profileUnavailable" = "Perfil activo no disponible";
+/* Value of the active profile fact when loading the profile failed. */
 "ui.controllers.profileLoadError" = "No se ha podido cargar el perfil activo";
+/* Label of the fact in the Controllers detail that shows the USB vendor ID and product ID. VID and PID are the usual short names. */
 "ui.controllers.usbIdentifier" = "USB VID/PID";
+/* VoiceOver sentence while the app checks which profile is active for the controller. */
 "ui.controllers.profileCheckingSentence" = "Se está comprobando el perfil activo.";
+/* VoiceOver sentence when the controller has no active profile. */
 "ui.controllers.noActiveProfileSentence" = "Ningún perfil activo.";
+/* VoiceOver sentence that names the active profile. %@ is the profile name. The sentence ends with a period. */
 "ui.controllers.activeProfileSentence" = "Perfil activo: %@.";
+/* VoiceOver sentence when the active profile cannot be shown. %@ is the reason. */
 "ui.controllers.profileUnavailableSentence" = "Perfil activo no disponible: %@";
+/* VoiceOver sentence when loading the active profile failed. %@ is the reason. */
 "ui.controllers.profileErrorSentence" = "Error del perfil activo: %@";
+/* VoiceOver summary of a controller. %1$@ is the connection summary, %2$@ is the profile sentence, %3$@ is the protocol, %4$@ is the parser, %5$@ is the serial number, %6$@ is the USB vendor and product ID, %7$@ is the input endpoint and %8$@ is the output endpoint. */
 "ui.controllers.accessibilityDetails" = "%1$@. %2$@. Protocolo: %3$@. Analizador: %4$@. Número de serie: %5$@. USB VID/PID: %6$@. Endpoint de entrada: %7$@. Endpoint de salida: %8$@.";
 /* Note on a controller row in the Controllers area when macOS serves the controller natively and the driver does not publish a virtual gamepad for it. */
 "platform.macos.ui.controllers.systemGamepadNotPublished" = "Mando nativo de macOS, no publicado";
+/* Label of the popup in the Controllers detail that picks which program serves the controller to games. */
 "ui.controllers.server.label" = "Gestionado por";
 /* Entry of the server picker in the Controllers detail: macOS serves the controller itself. */
 "platform.macos.ui.controllers.server.system" = "macOS (nativo)";
+/* Option of the server popup: OpenJoystickDriver serves the controller as a virtual gamepad. OpenJoystickDriver is the product name. */
 "ui.controllers.server.ojd" = "OpenJoystickDriver (mando virtual)";
+/* Label of the serving route fact in the Controllers detail. The route is the way the input reaches games. */
 "ui.controllers.serving.label" = "Ruta de servicio";
 /* Value of the serving route in the Controllers area: macOS serves the controller and the driver passes the input through. */
 "platform.macos.ui.controllers.serving.nativePassThrough" = "macOS (transferido)";
+/* Value of the serving route when OpenJoystickDriver serves a virtual gamepad. OpenJoystickDriver is the product name. */
 "ui.controllers.serving.virtualHID" = "OpenJoystickDriver (mando virtual)";
+/* Value of the serving route when the driver extension owns the controller. */
 "ui.controllers.serving.extensionOwned" = "Extensión de controlador";
+/* Value of the serving route when the user turned the output off. */
 "ui.controllers.serving.outputDisabled" = "Salida desactivada";
+/* Message when the user changes the server of a controller that no controller record describes. */
 "ui.controllers.server.noRecord" = "Ningún registro de mando describe este mando, así que no hay nada que cambiar.";
+/* Message when the user changes the server of a controller whose record is not valid. */
 "ui.controllers.server.invalidRecord" = "El registro del mando no es válido. No se ha cambiado nada.";
+/* Message when the app cannot save the changed controller record. */
 "ui.controllers.server.persistenceFailed" = "No se ha podido guardar el registro del mando. No se ha cambiado nada.";
 "ui.virtualProfile.advanced" = "Avanzado";
 "ui.virtualProfile.title" = "Perfil HID virtual";
@@ -648,68 +683,129 @@
 "ui.developer.soakNotANumber" = "%@: introduzca un número entero.";
 /* Error in the soak test sheet when a value is outside its range. %1$@ is the label of the field, %2$lld is the lowest value and %3$lld is the highest value. */
 "ui.developer.soakOutOfRange" = "%1$@: introduzca un valor entre %2$lld y %3$lld.";
+/* Name of the A button of an Xbox style controller, shown in the input test. */
 "ui.inputTest.aButton" = "Botón A";
+/* Name of the bottom face button in the input test for a controller with an unknown layout: A on Xbox, Cross on PlayStation. The slash stays. */
 "ui.inputTest.aCross" = "A / Cruz";
+/* Heading in the input test of the buttons beyond the standard ones. */
 "ui.inputTest.additionalButtons" = "Botones adicionales";
+/* Value of a stick in the input test. %1$.3f is the horizontal position and %2$.3f is the vertical position, from -1 to 1. X and Y are the axis names. */
 "ui.inputTest.axisPair" = "X %1$.3f, Y %2$.3f";
+/* Value of a single axis in the input test. %.3f is the position as a number with three decimals. */
 "ui.inputTest.axisValue" = "%.3f";
+/* Value of the horizontal axis in the input test. %.3f is the position. X is the axis name. */
 "ui.inputTest.axisX" = "X %.3f";
+/* Value of the vertical axis in the input test. %.3f is the position. Y is the axis name. */
 "ui.inputTest.axisY" = "Y %.3f";
+/* Name of the B button of an Xbox style controller, shown in the input test. */
 "ui.inputTest.bButton" = "Botón B";
+/* Name of the right face button in the input test for a controller with an unknown layout: B on Xbox, Circle on PlayStation. The slash stays. */
 "ui.inputTest.bCircle" = "B / Círculo";
+/* Label of the brightness slider of the controller light in the input test. */
 "ui.inputTest.brightness" = "Brillo";
+/* Label of the color picker of the controller light in the input test. */
 "ui.inputTest.color" = "Color";
+/* Status of the input test when the controller is disconnected. */
 "ui.inputTest.disconnected" = "Mando desconectado";
+/* VoiceOver label of the down direction of the directional pad in the input test. */
 "ui.inputTest.dpadDown" = "Cruceta abajo";
+/* VoiceOver label of the left direction of the directional pad in the input test. */
 "ui.inputTest.dpadLeft" = "Cruceta izquierda";
+/* VoiceOver label of the right direction of the directional pad in the input test. */
 "ui.inputTest.dpadRight" = "Cruceta derecha";
+/* VoiceOver label of the up direction of the directional pad in the input test. */
 "ui.inputTest.dpadUp" = "Cruceta arriba";
+/* Label of the slider that sets how long a rumble test lasts. */
 "ui.inputTest.duration" = "Duración";
+/* Value of the rumble duration slider. %d is the number of milliseconds. ms is the unit. */
 "ui.inputTest.durationValue" = "%d ms";
+/* Name of the home button of a controller, shown in the input test. */
 "ui.inputTest.home" = "Inicio";
+/* Status of the input test before any input arrives. */
 "ui.inputTest.idle" = "Listo";
+/* Name of the left bumper of an Xbox style controller, shown in the input test. */
 "ui.inputTest.leftBumper" = "Botón superior izquierdo";
+/* Name of the left shoulder button in the input test for a controller with an unknown layout: LB on Xbox, L1 on PlayStation. The slash stays. */
 "ui.inputTest.leftBumperGeneric" = "LB / L1";
+/* Name of the left haptic actuator in the output test of the input test window. */
 "ui.inputTest.leftHaptic" = "Háptico izquierdo";
+/* Name of the large rumble motor on the left side of the controller, which makes low-frequency vibration. */
 "ui.inputTest.lowFrequency" = "Principal izquierdo";
+/* Name of the left stick in the input test. */
 "ui.inputTest.leftStick" = "Palanca izquierda";
+/* Name of the button that the user presses by pushing down the left stick, shown in the input test. */
 "ui.inputTest.leftStickButton" = "Botón de palanca izquierda";
+/* Name of the left trigger of an Xbox style controller, shown in the input test. */
 "ui.inputTest.leftTrigger" = "Gatillo izquierdo";
+/* Name of the left trigger in the input test for a controller with an unknown layout: LT on Xbox, L2 on PlayStation. The slash stays. */
 "ui.inputTest.leftTriggerGeneric" = "LT / L2";
+/* Heading of the lighting section in the input test. */
 "ui.inputTest.lighting" = "Iluminación";
+/* Status of the input test when input arrives. */
 "ui.inputTest.live" = "Entrada activa";
+/* Name of the menu button of a controller, shown in the input test. */
 "ui.inputTest.menu" = "Menú";
+/* Option of the player indicator popup that turns the indicator off. */
 "ui.inputTest.off" = "Desactivado";
+/* Button in the Controllers detail that opens the input test window. Keep the three dots. */
 "ui.inputTest.open" = "Abrir prueba de entrada…";
+/* Title of the error under the output tests in the input test window. */
 "ui.inputTest.outputError" = "Error de salida física";
+/* Error in the input test window when the controller refuses a rumble or light test. */
 "ui.inputTest.outputRejected" = "El mando ha rechazado esta prueba de salida.";
 /* Status shown in the input test window when the Input Monitoring permission is missing. Input Monitoring is written as macOS names it. */
 "platform.macos.ui.inputTest.permissionRequired" = "Se requiere el permiso de monitorización de entrada";
+/* Label of the popup in the input test that sets the player indicator, the lights that show which player a controller is. */
 "ui.inputTest.playerIndicator" = "Indicador de jugador";
+/* VoiceOver value of a button in the input test while it is pressed. */
 "ui.inputTest.pressed" = "Pulsado";
+/* VoiceOver value of a button in the input test while it is not pressed. */
 "ui.inputTest.released" = "Soltado";
+/* Name of the right bumper of an Xbox style controller, shown in the input test. */
 "ui.inputTest.rightBumper" = "Botón superior derecho";
+/* Name of the right shoulder button in the input test for a controller with an unknown layout: RB on Xbox, R1 on PlayStation. The slash stays. */
 "ui.inputTest.rightBumperGeneric" = "RB / R1";
+/* Name of the right haptic actuator in the output test of the input test window. */
 "ui.inputTest.rightHaptic" = "Háptico derecho";
+/* Name of the small rumble motor on the right side of the controller, which makes high-frequency vibration. */
 "ui.inputTest.highFrequency" = "Principal derecho";
+/* Name of the right stick in the input test. */
 "ui.inputTest.rightStick" = "Palanca derecha";
+/* Name of the button that the user presses by pushing down the right stick, shown in the input test. */
 "ui.inputTest.rightStickButton" = "Botón de palanca derecha";
+/* Name of the right trigger of an Xbox style controller, shown in the input test. */
 "ui.inputTest.rightTrigger" = "Gatillo derecho";
+/* Name of the right trigger in the input test for a controller with an unknown layout: RT on Xbox, R2 on PlayStation. The slash stays. */
 "ui.inputTest.rightTriggerGeneric" = "RT / R2";
+/* Heading of the rumble section in the input test. */
 "ui.inputTest.rumble" = "Vibración";
+/* Message in the rumble section of the input test when the controller has no rumble. */
 "ui.inputTest.rumbleUnavailable" = "Este mando no admite vibración.";
+/* Status of the input test when input stopped arriving. */
 "ui.inputTest.stale" = "Entrada interrumpida";
+/* Status of the input test while it starts. Keep the three dots. */
 "ui.inputTest.starting" = "Iniciando…";
+/* VoiceOver label of the status area of the input test. */
 "ui.inputTest.status" = "Estado de la prueba de entrada";
+/* Title of the button in the input test that makes the controller rumble. */
 "ui.inputTest.testRumble" = "Probar vibración";
+/* Label of the row in the Controllers detail that holds the button that opens the input test. */
 "ui.inputTest.title" = "Prueba de entrada";
+/* Status of the input test when the app cannot read input. */
 "ui.inputTest.unavailable" = "Entrada no disponible";
+/* Name of the view button of a controller, shown in the input test. It is the small button on the left of the Xbox home button. */
 "ui.inputTest.view" = "Vista";
+/* Title of the input test window. %@ is the controller name. The dash is a separator. */
 "ui.inputTest.windowTitle" = "Prueba de entrada — %@";
+/* Name of the X button of an Xbox style controller, shown in the input test. */
 "ui.inputTest.xButton" = "Botón X";
+/* Name of the left face button in the input test for a controller with an unknown layout: X on Xbox, Square on PlayStation. The slash stays. */
 "ui.inputTest.xSquare" = "X / Cuadrado";
+/* Name of the Xbox button, the one with the Xbox logo, shown in the input test. Xbox is a product name. */
 "ui.inputTest.xboxButton" = "Botón Xbox";
+/* Name of the Y button of an Xbox style controller, shown in the input test. */
 "ui.inputTest.yButton" = "Botón Y";
+/* Name of the top face button in the input test for a controller with an unknown layout: Y on Xbox, Triangle on PlayStation. The slash stays. */
 "ui.inputTest.yTriangle" = "Y / Triángulo";
 /* Name of the Caps Lock key in the text that describes a captured key press. */
 "term.key.capsLock" = "Bloqueo Mayúsculas";
@@ -1082,13 +1178,16 @@
 "ui.profiles.damagedSelectionsMessage" = "No se pudo leer la lista de perfiles activos. Restablécela para continuar. Tus perfiles se conservan.";
 "ui.profiles.resetLibraryAction" = "Copia de seguridad y restablecimiento";
 
-/* Controller session lifecycle */
+/* Label of the row in the Controllers detail that tells that the session of the controller is suspended. The row holds the Resume button. */
 "ui.controllers.suspended" = "Suspendido";
 /* Error shown when the service refuses to change the session of a controller. */
 "ui.error.controllerSessionChangeRejected" = "No se ha podido cambiar la sesión del mando.";
 
+/* Title of the alert that asks whether to end the wireless link of a controller. */
 "ui.controllers.disconnectWirelessConfirmTitle" = "¿Desconectar el mando inalámbrico?";
+/* Message of the alert that ends the wireless link of a controller. %@ is the controller name. */
 "ui.controllers.disconnectWirelessConfirmMessage" = "%@ permanecerá desconectado hasta que lo vuelvas a conectar manualmente.";
+/* Confirm button of the alert that ends the wireless link of a controller. */
 "ui.controllers.disconnectWirelessConfirm" = "Desconectar";
 
 /* Title of the notification shown when a controller stops sending input. */
@@ -2648,69 +2747,131 @@
 /* Error text with the error code. %1$@ is the message and %2$@ is the code, for example E2011. The code is in parentheses. */
 "ui.error.withCode" = "%1$@ (%2$@)";
 
-/* Main window, status item, main menu, settings window, library and access. */
+/* Title of the details button of an error message in the Library area. */
 "ui.library.details" = "Detalles";
+/* Button of an error message in the Library area that hides the message. */
 "ui.library.dismiss" = "Cerrar";
+/* Button of the open panel in which the user picks a record file or a mod folder. It confirms the choice. */
 "ui.library.choose" = "Elegir";
+/* Toolbar button in the Library area that checks a record file or mod folder without installing it. Keep the three dots. */
 "ui.library.validate" = "Validar…";
+/* Confirm button of the alert that installs a record or a mod. */
 "ui.library.install" = "Instalar";
+/* Confirm button of the alert that replaces an installed record or mod. */
 "ui.library.replace" = "Reemplazar";
+/* Confirm button of the alert that removes a record or mod. */
 "ui.library.remove" = "Quitar";
+/* Error in the Library area. %1$@ is the name of a file or folder and %2$@ is the reason it cannot be read. */
 "ui.library.unreadable" = "No se puede leer %1$@: %2$@";
+/* Name of the check in the diagnostics table that validates the controller records. */
 "ui.library.records" = "Registros de mandos";
+/* Title of the empty state in the records list of the Library area. */
 "ui.library.records.empty.title" = "Ningún registro instalado";
+/* Name of the source of a record: a file that the user installed. It is shown next to the record. */
 "ui.library.layer.user" = "Tu archivo";
+/* Name of the source of a record: a mod package added it. */
 "ui.library.layer.package" = "De un mod";
+/* Notice after a record check passed. %1$@ is the file name and %2$@ is the controller model. */
 "ui.library.record.valid" = "%1$@ es un registro válido para %2$@.";
+/* Error when a record is not valid. %@ is the reason. */
 "ui.library.record.invalid" = "El registro no es válido: %@";
+/* Line in the records list for a record file that the app skipped. %@ is the reason. */
 "ui.library.record.skipped" = "Omitido: %@";
+/* Error when no installed record matches a controller model. %@ is the controller model. */
 "ui.library.record.notFound" = "No hay ningún registro instalado para %@.";
+/* Notice after a record is installed. %@ is the controller model. */
 "ui.library.record.installed" = "Se ha instalado el registro de %@.";
+/* Error when a record file cannot be written. %1$@ is the file name and %2$@ is the reason. */
 "ui.library.record.installFailed" = "No se puede escribir %1$@: %2$@";
+/* Title of the alert that installs a record. %@ is the controller model. */
 "ui.library.record.install.title" = "¿Instalar el registro de %@?";
+/* Message of the alert that installs a record. %@ is the file name. OpenJoystickDriver is the product name. */
 "ui.library.record.install.message" = "OpenJoystickDriver guarda el registro como %@ en tu carpeta de registros de mandos.";
+/* Title of the alert that replaces an installed record. %@ is the controller model. */
 "ui.library.record.replace.title" = "¿Reemplazar el registro de %@?";
+/* Message of the alert that replaces an installed record. %@ is the file name. */
 "ui.library.record.replace.message" = "Ya hay instalado un archivo de registro llamado %@. Al reemplazarlo se sobrescribe ese archivo.";
+/* Title of the alert that removes an installed record. %@ is the controller model. */
 "ui.library.record.remove.title" = "¿Quitar el registro de %@?";
+/* Message of the alert that removes an installed record. OpenJoystickDriver is the product name. */
 "ui.library.record.remove.message" = "OpenJoystickDriver elimina el archivo de registro de tu carpeta de registros de mandos. Los mandos que usan el registro dejan de ser reconocidos por él.";
+/* Notice after a record is removed. %@ is the controller model. */
 "ui.library.record.removed" = "Se ha quitado el registro de %@.";
+/* Error when a record file cannot be removed. %1$@ is the file name and %2$@ is the reason. */
 "ui.library.record.removeFailed" = "No se puede quitar %1$@: %2$@";
+/* Heading of the mods list in the Library area. A mod is a package of records, profiles and personas. */
 "ui.library.mods" = "Mods";
+/* Title of the empty state in the mods list of the Library area. */
 "ui.library.mods.empty.title" = "Ningún mod instalado";
+/* Notice after a mod check passed. %1$@ is the folder name and %2$@ is the mod name. */
 "ui.library.mod.valid" = "%1$@ es un mod válido: %2$@.";
+/* Error when a mod is refused. %1$@ is the folder name or mod name and %2$@ is the reason. */
 "ui.library.mod.refused" = "%1$@ se ha rechazado: %2$@";
+/* Line in the mod detail for a part of a mod that the app does not use. %@ is the reason. */
 "ui.library.mod.unused" = "Sin usar: %@";
+/* Notice after a mod is installed. %@ is the mod name. */
 "ui.library.mod.installed" = "Se ha instalado el mod %@.";
+/* Title of the alert that installs a mod. %@ is the mod name. */
 "ui.library.mod.install.title" = "¿Instalar el mod %@?";
+/* Message of the alert that installs a mod. %1$@ is the mod name, %2$@ is its version and %3$@ is its author. OpenJoystickDriver is the product name. */
 "ui.library.mod.install.message" = "OpenJoystickDriver añade %1$@ %2$@ de %3$@ a tus mods instalados.";
+/* Title of the alert that replaces an installed mod. %@ is the mod name. */
 "ui.library.mod.replace.title" = "¿Reemplazar el mod %@?";
+/* Message of the alert that replaces an installed mod. %1$@ is the mod name and %2$@ is the version that will be installed. */
 "ui.library.mod.replace.message" = "%1$@ ya está instalado. Al reemplazarlo se quitan los archivos instalados y se instala la versión %2$@.";
+/* Title of the alert that removes a mod. %@ is the mod name. */
 "ui.library.mod.remove.title" = "¿Quitar el mod %@?";
+/* Message of the alert that removes a mod. OpenJoystickDriver is the product name. Personas are the identities that a virtual gamepad can show. */
 "ui.library.mod.remove.message" = "OpenJoystickDriver elimina el mod y los registros, perfiles y personas que añadió.";
+/* Notice after a mod is removed. %@ is the mod name. */
 "ui.library.mod.removed" = "Se ha quitado el mod %@.";
+/* Line in the records list for a record that a mod changes. %@ is the name of the mod. */
 "ui.library.record.patchedBy" = "Modificado por %@";
+/* Label of the field in the record detail that tells whether the USB extension claims the controller. */
 "ui.library.field.usbClaim" = "Extensión USB";
+/* Value of the USB extension field: the extension claims the controller. */
 "ui.library.claim.claimed" = "Reclama este mando";
+/* Value of the USB extension field: the extension does not claim the controller. */
 "ui.library.claim.unclaimed" = "No reclama este mando";
+/* Placeholder of the search field in the toolbar of the Library area. */
 "ui.library.search" = "Buscar";
+/* Title of the empty state in the Library area when the search matches nothing. */
 "ui.library.search.noMatches" = "Sin coincidencias";
+/* Toolbar button in the Library area that runs a record against a packet capture. Keep the three dots. */
 "ui.library.testRecord" = "Probar registro…";
+/* Value of the status of a library item that is installed. */
 "ui.library.installed" = "Instalados";
+/* Badge on a library item that ships with the app. */
 "ui.library.builtIn" = "Integrados";
+/* Label of the field in the record detail that holds the controller model. */
 "ui.library.field.identity" = "Modelo de mando";
+/* Label of the field in the record detail that holds the protocol family. */
 "ui.library.field.family" = "Familia";
+/* Label of the field in the record detail that holds where the record comes from. */
 "ui.library.field.source" = "Origen";
+/* Label of the field in the record detail that holds the path of the record file. */
 "ui.library.field.file" = "Ruta del archivo";
+/* Label of the field in the record detail that holds how the controller connects, for example USB or Bluetooth. */
 "ui.library.field.transport" = "Transporte";
+/* Label of the field in the mod detail that holds the version. */
 "ui.library.field.version" = "Versión";
+/* Label of the field in the mod detail that holds the author. */
 "ui.library.field.author" = "Autor";
+/* Heading of the section in the record detail that lists the fields. */
 "ui.library.section.fields" = "Campos";
+/* Heading of the section in the mod detail that lists the files. */
 "ui.library.section.files" = "Archivos";
+/* Heading of the section in the record detail that shows the result of a test. */
 "ui.library.section.testResult" = "Resultado de la prueba";
+/* Name of the source of a record: the record ships with the app. */
 "ui.library.layer.driver" = "Predeterminado";
+/* Name of the source of a record: a global file of the user. */
 "ui.library.layer.global" = "Tu archivo global";
+/* Message in the detail pane of the Library area before an item is selected. */
 "ui.library.detail.empty" = "Elige un registro o un mod.";
+/* Message of the open panel in which the user picks a packet capture for a record test. */
 "ui.library.test.packets.pick" = "Elige una captura de paquetes.";
+/* Message of the open panel in which the user picks the file with the expected controller state for a record test. */
 "ui.library.test.expect.pick" = "Elige el estado esperado del mando.";
 /* VoiceOver label of the button in the Library error banner that shows the details of the error. */
 "a11y.library.details" = "Mostrar los detalles del error";
@@ -2904,60 +3065,115 @@
 "a11y.access.scope" = "Ámbito %@";
 /* VoiceOver label of the cancel button in the access sheets. It leaves the access unchanged. */
 "a11y.access.cancel" = "Cancelar y dejar el acceso como está";
+/* Item of the application menu that opens the About window. %@ is the product name. */
 "ui.menu.app.about" = "Acerca de %@";
+/* Item of the application menu that opens the settings window. Keep the three dots. */
 "ui.menu.app.settings" = "Ajustes…";
+/* Item of the application menu that holds the Services submenu. It is the macOS name. */
 "ui.menu.app.services" = "Servicios";
+/* Item of the application menu that hides the app. %@ is the product name. */
 "ui.menu.app.hide" = "Ocultar %@";
+/* Item of the application menu that hides all other apps. It is the macOS name. */
 "ui.menu.app.hideOthers" = "Ocultar otros";
+/* Item of the application menu that shows all apps again. It is the macOS name. */
 "ui.menu.app.showAll" = "Mostrar todo";
+/* Item of the application menu that quits the app. %@ is the product name. */
 "ui.menu.app.quit" = "Salir de %@";
+/* Title of the File menu in the menu bar. */
 "ui.menu.file.title" = "Archivo";
+/* Item of the File menu that imports a profile from a file. Keep the three dots. */
 "ui.menu.file.importProfile" = "Importar perfil…";
+/* Item of the File menu that exports a profile to a file. Keep the three dots. */
 "ui.menu.file.exportProfile" = "Exportar perfil…";
+/* Item of the File menu that installs a controller record or a mod. Keep the three dots. */
 "ui.menu.file.installRecordOrMod" = "Instalar registro o mod…";
+/* Item of the File menu that closes the window. */
 "ui.menu.file.close" = "Cerrar";
+/* Item of the File menu that saves the support report to a file. Keep the three dots. */
 "ui.menu.file.saveSupportReport" = "Guardar informe de soporte…";
+/* Item of the File menu that saves the Activity log to a file. Keep the three dots. */
 "ui.menu.file.saveActivityLog" = "Guardar registro de actividad…";
+/* Title of the alert shown when saving a file from the File menu fails. */
 "ui.menu.file.saveFailed" = "No se ha podido guardar el archivo";
+/* Title of the Edit menu in the menu bar. */
 "ui.menu.edit.title" = "Edición";
+/* Item of the Edit menu that undoes the last edit. */
 "ui.menu.edit.undo" = "Deshacer";
+/* Item of the Edit menu that repeats an undone edit. */
 "ui.menu.edit.redo" = "Rehacer";
+/* Item of the Edit menu that cuts the selection to the clipboard. */
 "ui.menu.edit.cut" = "Cortar";
+/* Item of the Edit menu that copies the selection to the clipboard. */
 "ui.menu.edit.copy" = "Copiar";
+/* Item of the Edit menu that pastes the clipboard. */
 "ui.menu.edit.paste" = "Pegar";
+/* Item of the Edit menu that selects everything. */
 "ui.menu.edit.selectAll" = "Seleccionar todo";
+/* Title of the View menu in the menu bar. */
 "ui.menu.view.title" = "Visualización";
+/* Item of the View menu that makes the window full screen. */
 "ui.menu.view.enterFullScreen" = "Entrar en pantalla completa";
+/* Item of the View menu that leaves full screen. It replaces Enter Full Screen while the window is full screen. */
 "ui.menu.view.exitFullScreen" = "Salir de pantalla completa";
+/* Item of the View menu that shows the sidebar. */
 "ui.menu.view.showSidebar" = "Mostrar barra lateral";
+/* Item of the View menu that hides the sidebar. It replaces Show Sidebar while the sidebar is visible. */
 "ui.menu.view.hideSidebar" = "Ocultar barra lateral";
+/* Item of the View menu that shows the toolbar. */
 "ui.menu.view.showToolbar" = "Mostrar barra de herramientas";
+/* Item of the View menu that hides the toolbar. It replaces Show Toolbar while the toolbar is visible. */
 "ui.menu.view.hideToolbar" = "Ocultar barra de herramientas";
+/* Title of the Controller menu in the menu bar. */
 "ui.menu.controller.title" = "Mando";
+/* Button and menu item that stops the remapping of one controller. */
 "ui.menu.controller.suspend" = "Suspender";
+/* Button and menu item that starts the remapping of one controller again. */
 "ui.menu.controller.resume" = "Reanudar";
+/* Item of the Controller menu that opens the input test of the selected controller. */
 "ui.menu.controller.testInput" = "Probar entrada";
+/* Button and menu item that ends the wireless link of the selected controller. */
 "ui.menu.controller.disconnectWirelessLink" = "Desconectar enlace inalámbrico";
+/* Item of the Controller menu that shows the selected controller in the main window. */
 "ui.menu.controller.showInWindow" = "Mostrar en la ventana";
+/* Disabled item of the Controller menu when no controller is selected. */
 "ui.menu.controller.noneSelected" = "Ningún mando seleccionado";
+/* Title of the Profile menu in the menu bar. */
 "ui.menu.profile.title" = "Perfil";
+/* Item of the Profile menu that turns on the selected profile. */
 "ui.menu.profile.activate" = "Activar perfil";
+/* Item of the Profile menu that turns off the active profile. */
 "ui.menu.profile.deactivate" = "Desactivar perfil";
+/* Title of the alert shown when turning off a profile from the menu fails. */
 "ui.menu.profile.deactivateFailed" = "No se ha podido desactivar el perfil";
+/* Message of the alert shown when the profile changed elsewhere during the turn off. */
 "ui.menu.profile.deactivateConflict" = "El perfil cambió mientras se desactivaba. Vuelve a intentarlo.";
+/* Title of the Window menu in the menu bar. */
 "ui.menu.window.title" = "Ventana";
+/* Item of the Window menu that minimizes the window to the Dock. */
 "ui.menu.window.minimize" = "Minimizar";
+/* Item of the Window menu that zooms the window. */
 "ui.menu.window.zoom" = "Zoom";
+/* Item of the Window menu that brings all windows of the app to the front. */
 "ui.menu.window.bringAllToFront" = "Traer todo al frente";
+/* Title of the Help menu in the menu bar. */
 "ui.menu.help.title" = "Ayuda";
+/* Item of the Help menu that opens the Activity log. */
 "ui.menu.help.activityLog" = "Registro de actividad";
+/* Item of the Help menu that copies the support report to the clipboard. */
 "ui.menu.help.copySupportReport" = "Copiar informe de soporte";
+/* Item of the Help menu that opens the sheet that explains an error code. Keep the three dots. */
 "ui.menu.help.explainErrorCode" = "Explicar código de error…";
+/* Item of the Help menu that opens the page where the user reports a problem. Keep the three dots. */
 "ui.menu.help.reportProblem" = "Informar de un problema…";
+/* Item of the Help menu that opens the project website. */
 "ui.menu.help.projectWebsite" = "Sitio web del proyecto";
+/* Title of the alert shown after the support report is copied. */
 "ui.menu.copySupportReport.done" = "Informe de soporte copiado";
+/* Message of the alert shown after the support report is copied. */
 "ui.menu.copySupportReport.doneDetail" = "El informe de soporte está en el portapapeles.";
+/* Title of the alert shown when the support report cannot be copied. */
 "ui.menu.copySupportReport.failed" = "No se ha podido copiar el informe de soporte";
+/* Message of the alert shown when the support report cannot be copied. The user saves it to a file with the File menu. */
 "ui.menu.copySupportReport.failedDetail" = "No se ha podido recopilar el informe. Guárdalo en un archivo.";
 /* Title of the Controllers item in the sidebar of the main window and in the window title when it is selected. */
 "ui.sidebar.controllers.title" = "Mandos";
@@ -3045,12 +3261,17 @@
 "ui.access.grant.noPath" = "OpenJoystickDriver no ha podido leer el ejecutable de %@, así que no puede concederle acceso.";
 /* Line of the alert that turns on the WebSocket when a port is saved. */
 "ui.access.web.enable.savedPort" = "El punto de conexión web conserva su puerto guardado.";
+/* Detail line of a record in the records list. %1$@ and %2$@ are two facts about the record. The dot between them separates the facts and may change. */
 "ui.library.record.detail" = "%1$@ · %2$@";
+/* Detail line of a mod in the mods list. %1$@ is the version and %2$@ is the author. The dot between them separates the two and may change. */
 "ui.library.mod.detail" = "%1$@ · %2$@";
 /* Message of the alert shown when a menu action needs the profile editor and the editor saves a change. */
 "ui.extra.profileEditorBusy" = "El editor de perfiles está guardando o aplicando un cambio. Vuelve a intentarlo cuando termine.";
+/* Message of the open panel in which the user picks a controller record file or a mod folder. */
 "ui.library.recordOrMod.pick" = "Elige un archivo de registro de mando o una carpeta de mod.";
+/* Title of the alert shown when turning on a profile from the menu fails. */
 "ui.menu.profile.activateFailed" = "No se ha podido activar el perfil";
+/* Message of the alert shown when the profile changed elsewhere during the turn on. */
 "ui.menu.profile.activateConflict" = "El perfil cambió mientras se activaba. Vuelve a intentarlo.";
 "ui.profiles.importBlocked" = "Hay un cambio de perfil en curso. Vuelve a elegir «Importar perfil» cuando termine.";
 "ui.settings.general.updateAvailableBody" = "La versión %@ está disponible.";
@@ -3114,45 +3335,85 @@
 "ui.activity.check.usbAccess" = "Acceso USB";
 /* Button of a failed check in the diagnostics table that opens the Library area. */
 "ui.activity.fix.showLibrary" = "Mostrar biblioteca";
+/* Label of the fact in the Controllers detail that tells whether the controller has adaptive triggers, triggers with variable resistance. */
 "ui.controllers.adaptiveTriggers" = "Gatillos adaptativos";
+/* Label of the fact in the Controllers detail that tells whether the controller has a motion sensor. */
 "ui.controllers.motion" = "Sensor de movimiento";
+/* Label of the fact in the Controllers detail that tells how many fingers the touch surface of the controller sees. */
 "ui.controllers.touchContacts" = "Contactos táctiles";
+/* Label of the fact in the Controllers detail that tells whether games may see the controller twice, once as the controller and once as the virtual gamepad. */
 "ui.controllers.duplicateExposureRisk" = "Riesgo de exposición duplicada";
+/* Label of the fact in the Controllers detail that tells whether the startup commands of the controller worked. */
 "ui.controllers.startupStatus" = "Comandos de arranque";
+/* Label of the fact in the Controllers detail that names the format of the input reports of the controller. */
 "ui.controllers.inputReportFormat" = "Formato de informe";
+/* Label of the fact in the Controllers detail that counts how often the input of the controller recovered. */
 "ui.controllers.inputRecoveries" = "Recuperaciones";
+/* Label of the fact in the Controllers detail that shows the time of the last attempt to send the controller state to the virtual gamepad. */
 "ui.controllers.publicationAttempted" = "Último intento de envío";
+/* Label of the fact in the Controllers detail that shows the time of the last send that the virtual gamepad accepted. */
 "ui.controllers.publicationCompleted" = "Último envío aceptado";
+/* Label of the fact in the Controllers detail that tells what chose the server of the controller: the controller record or the user. */
 "ui.controllers.server.source" = "Definido por";
+/* Label of the popup that sets whether a virtual HID profile choice applies to a controller model or to one controller. */
 "ui.controllers.virtual.scope" = "Aplicar a";
+/* Option of the scope popup: the choice applies to all controllers of the model. */
 "ui.controllers.virtual.scope.model" = "Este modelo";
+/* Option of the scope popup: the choice applies to this controller only. */
 "ui.controllers.virtual.scope.unit" = "Este mando";
+/* Label of the row in the Controllers detail that holds the button that clears all virtual HID profile choices. */
 "ui.controllers.virtual.resetAll" = "Restablecer todas las anulaciones";
+/* Error when the service cannot clear the virtual HID profile choices. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.controllers.virtual.resetAllFailed" = "El servicio no pudo borrar las elecciones de perfil HID virtual.";
+/* Label of the row in the Controllers detail that holds the button that exports the mapping of the virtual gamepad. */
 "ui.controllers.exportMapping" = "Exportar asignación";
+/* Title of the save panel that exports the mapping of the virtual gamepad. */
 "ui.controllers.exportMapping.title" = "Exportar la asignación del mando virtual";
+/* Label of the format popup in the save panel that exports the mapping. The colon stays. */
 "ui.controllers.exportMapping.format" = "Formato:";
+/* Label of the row in the Controllers detail that holds the button that starts a game with the virtual gamepad. */
 "ui.controllers.launch" = "Iniciar juego con mando virtual";
+/* Title of the open panel in which the user picks a game to start. */
 "ui.controllers.launch.title" = "Elegir un juego";
+/* Button that starts the chosen game. It is also the confirm button of the open panel. */
 "ui.controllers.launch.prompt" = "Iniciar";
+/* Title of the checkbox in the open panel for a game. GameController is the name of an Apple framework and stays as written. */
 "ui.controllers.launch.gameControllerBackend" = "Leer los mandos solo a través de GameController";
+/* Message when the user starts a game but no connected controller has a virtual gamepad. */
 "ui.controllers.launch.noGamepad" = "Ningún mando conectado tiene un mando virtual, así que no hay asignación que establecer.";
+/* Message after a game starts. %@ is the name of the program. */
 "ui.controllers.launch.started" = "%@ se ha iniciado.";
+/* Message after a game ends. %1$@ is the name of the program and %2$lld is its exit status. */
 "ui.controllers.launch.exited" = "%1$@ ha terminado con el estado %2$lld.";
+/* Button in the Controllers detail that starts a draft of a controller record. Keep the three dots. */
 "ui.controllers.draftRecord" = "Borrador de registro…";
+/* Title of the sheet that drafts a controller record. */
 "ui.controllers.draftRecord.title" = "Crear el borrador de un registro de mando";
+/* Message when a record cannot be drafted. %@ is the controller model. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.controllers.draftRecord.noLayout" = "No se pudo leer ningún control de %@ a partir de su descriptor de informes HID, y su registro incluido ya indica su familia.";
+/* Button in the Controllers detail that starts a packet capture of the controller. Keep the three dots. */
 "ui.controllers.capturePackets" = "Capturar paquetes…";
+/* Title of the sheet that captures packets of the controller. */
 "ui.controllers.capturePackets.title" = "Capturar los paquetes del mando";
+/* Label of the field in the capture sheet that sets how long the capture runs. The value is in seconds. */
 "ui.controllers.captureDuration" = "Duración (segundos)";
+/* Error under the duration field in the capture sheet when the value is not above 0. */
 "ui.controllers.captureDurationInvalid" = "Introduce un número de segundos mayor que 0.";
+/* Notice after a file is saved. %@ is the file name. */
 "ui.controllers.fileSaved" = "%@ se ha guardado.";
+/* Line under the scope popup. %@ is the scope of the override that is active. */
 "ui.controllers.virtual.currentScope" = "Ámbito de la anulación actual: %@";
+/* Value of the publication fact: the virtual gamepad of the controller is published. */
 "ui.controllers.publication.published" = "Publicado";
+/* Value of the publication fact: the controller has no published virtual gamepad. */
 "ui.controllers.publication.notPublished" = "No publicado";
+/* Value of the publication fact: the publication failed. */
 "ui.controllers.publication.failed" = "Fallido";
+/* Value of the input health fact: input arrives as expected. */
 "ui.controllers.inputHealth.healthy" = "Correcto";
+/* Value of the input health fact: input stopped arriving. */
 "ui.controllers.inputHealth.stale" = "Sin actualizar";
+/* Value of the input health fact: the app waits until all controls are at rest before it sends input again. */
 "ui.controllers.inputHealth.waitingForNeutral" = "Esperando posición neutra";
 "ui.settings.advanced.errorDamaged" = "El archivo de ajustes %@ está dañado. Corrígelo o muévelo a la Papelera con `ojd setting reset`.";
 "ui.settings.advanced.errorUnsupported" = "El archivo de ajustes %@ no es compatible. Reescribe el archivo para la apiVersion compatible o muévelo a la Papelera con `ojd setting reset`.";
@@ -3176,51 +3437,77 @@
 "cli.setting.reset.success" = "%@ se ha movido a la Papelera.";
 /* Message printed by 'ojd setting reset' when there is no settings file. %@ is the path where the file would be. */
 "cli.setting.reset.none" = "No hay ningún archivo de ajustes en %@.";
-/* Why a controller is not published as a virtual device, and a failed send. */
+/* Reason the controller has no virtual gamepad: the user turned the virtual output off. */
 "ui.controllers.publication.reason.outputDisabled" = "La salida virtual está desactivada";
+/* Reason the controller has no virtual gamepad: macOS serves it as a gamepad. */
 "ui.controllers.publication.reason.systemGamepad" = "El sistema lo gestiona como mando de juego";
+/* Reason the controller has no virtual gamepad: macOS handles its input directly. */
 "ui.controllers.publication.reason.nativeHIDPassThrough" = "El sistema gestiona su entrada directamente";
+/* Reason the controller has no virtual gamepad: another virtual device stands for it. */
 "ui.controllers.publication.reason.upstreamVirtualDevice" = "Otro dispositivo virtual ya lo representa";
+/* Reason the controller has no virtual gamepad: the user suspended the session. */
 "ui.controllers.publication.reason.sessionSuspended" = "Sesión suspendida";
+/* Reason the controller has no virtual gamepad: no virtual profile fits the controller. */
 "ui.controllers.publication.reason.noVirtualProfile" = "Ningún perfil virtual le corresponde";
+/* Reason the controller has no virtual gamepad: the output is paused. */
 "ui.controllers.publication.reason.suppressed" = "Salida en pausa";
+/* Reason the controller has no virtual gamepad: the first input has not arrived. */
 "ui.controllers.publication.reason.noInputYet" = "Esperando la primera entrada";
 /* Publication state with its reason or failure, for example "Not published (Waiting for the first input)". %1$@ is the state and %2$@ the reason. */
 "ui.controllers.publication.withReason" = "%1$@ (%2$@)";
+/* Reason shown with a failed publication. %@ is the reason the last send failed. */
 "ui.controllers.publication.failedSend" = "Falló el último envío: %@";
 /* Serving route with why it publishes nothing, for example "Output off (No virtual profile fits it)". %1$@ is the route and %2$@ the reason. */
 "ui.controllers.serving.withReason" = "%1$@ (%2$@)";
-/* Why a controller's input health is failing. */
+/* Reason of failing input health: the controller sends no reports. */
 "ui.controllers.inputHealth.reason.missingReports" = "No llegan informes";
+/* Reason of failing input health: the reports arrive but their content does not change. */
 "ui.controllers.inputHealth.reason.freshnessNotAdvancing" = "Los informes no avanzan";
 /* Input health state with its failure reason, for example "Stale (No reports arriving)". %1$@ is the state and %2$@ the reason. */
 "ui.controllers.inputHealth.withReason" = "%1$@ (%2$@)";
-/* How a controller was discovered. */
+/* Value of the discovery route: the app found the controller as an HID device. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.controllers.discovery.hid" = "HID";
+/* Value of the discovery route: the app found the controller over raw USB. */
 "ui.controllers.discovery.rawUSB" = "USB directo";
-/* Who holds the physical controller. */
+/* Value of the owner of the physical controller: the app holds it exclusively as an HID device. */
 "ui.controllers.physicalOwnership.exclusiveHID" = "HID exclusivo";
+/* Value of the owner of the physical controller: the app holds it exclusively over raw USB. */
 "ui.controllers.physicalOwnership.exclusiveRawUSB" = "USB directo exclusivo";
+/* Value of the owner of the physical controller: the driver extension holds it over USB. */
 "ui.controllers.physicalOwnership.extensionOwnedUSB" = "Extensión USB";
+/* Value of the owner of the physical controller: macOS holds it as an HID device that the app can also see. */
 "ui.controllers.physicalOwnership.systemHIDVisible" = "HID del sistema";
+/* Value of the owner of the physical controller: macOS serves it as a gamepad. */
 "ui.controllers.physicalOwnership.systemGamepad" = "Mando de juego del sistema";
+/* Value of the owner of the physical controller: another virtual device holds it before the app sees it. */
 "ui.controllers.physicalOwnership.upstreamVirtualDevice" = "Dispositivo virtual ascendente";
+/* Value of the owner of the physical controller when the app does not know it. */
 "ui.controllers.physicalOwnership.unknown" = "Desconocido";
-/* Result of acquiring HID input. */
+/* Result of opening the HID input of a controller when the app does not know the result. */
 "ui.controllers.hidInputOwnership.unknown" = "Desconocido";
+/* Result of opening the HID input of a controller: the app holds it exclusively. */
 "ui.controllers.hidInputOwnership.exclusive" = "Exclusivo";
+/* Result of opening the HID input of a controller: the app shares it with other apps. */
 "ui.controllers.hidInputOwnership.shared" = "Compartido";
+/* Result of opening the HID input of a controller: macOS denied access. */
 "ui.controllers.hidInputOwnership.accessDenied" = "Acceso denegado";
+/* Result of opening the HID input of a controller: another app holds it. */
 "ui.controllers.hidInputOwnership.ownedByAnotherClient" = "En uso por otra app";
+/* Result of opening the HID input of a controller: opening failed. */
 "ui.controllers.hidInputOwnership.acquisitionFailed" = "Falló la captura";
 /* Ownership summary: %1$@ is the discovery route, %2$@ the owner and %3$@ the HID input result. */
 "ui.controllers.ownership.value" = "Detectado mediante %1$@. Propietario: %2$@. Entrada HID: %3$@.";
-/* Why closing a controller's Bluetooth link failed. */
+/* Reason that ending the wireless link failed: the controller is not connected any more. */
 "ui.controllers.disconnectWireless.failure.notFound" = "El mando ya no está conectado";
+/* Reason that ending the wireless link failed: the controller does not use Bluetooth. */
 "ui.controllers.disconnectWireless.failure.notBluetooth" = "El mando no está conectado por Bluetooth";
+/* Reason that ending the wireless link failed: the controller uses Bluetooth Low Energy, which the app cannot end. */
 "ui.controllers.disconnectWireless.failure.bluetoothLEUnsupported" = "Los mandos Bluetooth LE no se pueden desconectar desde aquí";
+/* Reason that ending the wireless link failed: the app does not know the Bluetooth address of the controller. */
 "ui.controllers.disconnectWireless.failure.missingAddress" = "Se desconoce la dirección Bluetooth del mando";
+/* Reason that ending the wireless link failed: macOS reported that Bluetooth did not end the link. */
 "ui.controllers.disconnectWireless.failure.disconnectFailed" = "Bluetooth no desconectó el mando";
+/* Reason that ending the wireless link failed: the request took too long. */
 "ui.controllers.disconnectWireless.failure.timedOut" = "Se agotó el tiempo al desconectar";
 
 /* Status line of a service that cannot be reached because its request listener stopped. %1$@ is the error code, %2$@ its explanation, %3$@ the error number of the failed call, %4$@ the time it stopped. */

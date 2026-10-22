@@ -2,6 +2,7 @@
 "term.app.name" = "OpenJoystickDriver";
 /* Button of the problem banner in the Access area that quits and opens the app again so that a granted permission takes effect. OpenJoystickDriver is the product name. */
 "ui.permissions.restartApplication" = "重新啟動 OpenJoystickDriver";
+/* Menu item in the application menu that opens the project page on GitHub. GitHub is a product name and stays as written. */
 "ui.menu.projectPage" = "GitHub";
 /* Button that dismisses an alert in the activity view and the main window. It only acknowledges the message. */
 "action.ok" = "好";
@@ -102,45 +103,79 @@
 "ui.settings.general.updateChecking" = "正在檢查…";
 "ui.settings.general.updates" = "更新";
 "ui.settings.general.viewUpdate" = "檢視更新";
+/* Title of the message in the Controllers area when the service cannot list controllers. */
 "ui.controllers.unavailable" = "無法使用控制器";
+/* Title of the message in the Controllers area when the list of controllers fails to load. */
 "ui.controllers.loadError" = "無法載入控制器";
+/* Title of the empty state in the Controllers area when no controller is connected. */
 "ui.controllers.emptyTitle" = "未連接控制器";
+/* Message of the empty state in the Controllers area. It asks the user to connect a controller. */
 "ui.controllers.emptyMessage" = "連接控制器。";
+/* Label of the battery fact in the Controllers detail. */
 "ui.controllers.battery" = "電池";
+/* VoiceOver label of the button that shows the serial number in the Controllers detail. */
 "ui.controllers.serial.show" = "顯示序號";
+/* VoiceOver label of the button that hides the serial number in the Controllers detail. */
 "ui.controllers.serial.hide" = "隱藏序號";
+/* VoiceOver value of the serial number while it is hidden. */
 "ui.controllers.serial.hidden" = "已隱藏";
+/* Label of the charging state fact in the Controllers detail. */
 "ui.controllers.chargingState" = "充電狀態";
+/* Label of the fact in the Controllers detail that tells whether a charging cable is plugged in. */
 "ui.controllers.cableState" = "連接線狀態";
+/* Value of the charging state when the battery loses charge. */
 "ui.controllers.discharging" = "正在放電";
+/* Value of the charging state when the battery gains charge. */
 "ui.controllers.charging" = "正在充電";
+/* Value of the charging state when the battery is full. */
 "ui.controllers.batteryFull" = "已充滿";
+/* Value of the charging state for a controller that has no rechargeable battery. */
 "ui.controllers.notChargeable" = "不可充電";
+/* VoiceOver summary of the battery facts. %1$@ is the battery level, %2$@ is the charging state and %3$@ is the cable state. */
 "ui.controllers.batteryAccessibilityDetails" = "電池：%1$@。充電狀態：%2$@。連接線狀態：%3$@。";
+/* Label of the active profile fact in the Controllers detail. */
 "ui.controllers.activeProfile" = "使用中的設定檔";
+/* Value of the active profile fact when the profile cannot be shown. */
 "ui.controllers.profileUnavailable" = "使用中的設定檔無法使用";
+/* Value of the active profile fact when loading the profile failed. */
 "ui.controllers.profileLoadError" = "無法載入使用中的設定檔";
+/* Label of the fact in the Controllers detail that shows the USB vendor ID and product ID. VID and PID are the usual short names. */
 "ui.controllers.usbIdentifier" = "USB VID/PID";
+/* VoiceOver sentence while the app checks which profile is active for the controller. */
 "ui.controllers.profileCheckingSentence" = "正在檢查使用中的設定檔。";
+/* VoiceOver sentence when the controller has no active profile. */
 "ui.controllers.noActiveProfileSentence" = "沒有使用中的設定檔。";
+/* VoiceOver sentence that names the active profile. %@ is the profile name. The sentence ends with a period. */
 "ui.controllers.activeProfileSentence" = "使用中的設定檔：%@。";
+/* VoiceOver sentence when the active profile cannot be shown. %@ is the reason. */
 "ui.controllers.profileUnavailableSentence" = "使用中的設定檔無法使用：%@";
+/* VoiceOver sentence when loading the active profile failed. %@ is the reason. */
 "ui.controllers.profileErrorSentence" = "使用中的設定檔發生錯誤：%@";
+/* VoiceOver summary of a controller. %1$@ is the connection summary, %2$@ is the profile sentence, %3$@ is the protocol, %4$@ is the parser, %5$@ is the serial number, %6$@ is the USB vendor and product ID, %7$@ is the input endpoint and %8$@ is the output endpoint. */
 "ui.controllers.accessibilityDetails" = "%1$@。%2$@。協定：%3$@。解析器：%4$@。序號：%5$@。USB VID/PID：%6$@。輸入端點：%7$@。輸出端點：%8$@。";
 /* Note on a controller row in the Controllers area when macOS serves the controller natively and the driver does not publish a virtual gamepad for it. */
 "platform.macos.ui.controllers.systemGamepadNotPublished" = "macOS 原生遊戲控制器，未發佈";
+/* Label of the popup in the Controllers detail that picks which program serves the controller to games. */
 "ui.controllers.server.label" = "處理方";
 /* Entry of the server picker in the Controllers detail: macOS serves the controller itself. */
 "platform.macos.ui.controllers.server.system" = "macOS（原生）";
+/* Option of the server popup: OpenJoystickDriver serves the controller as a virtual gamepad. OpenJoystickDriver is the product name. */
 "ui.controllers.server.ojd" = "OpenJoystickDriver（虛擬）";
+/* Label of the serving route fact in the Controllers detail. The route is the way the input reaches games. */
 "ui.controllers.serving.label" = "處理路徑";
 /* Value of the serving route in the Controllers area: macOS serves the controller and the driver passes the input through. */
 "platform.macos.ui.controllers.serving.nativePassThrough" = "macOS（直接傳遞）";
+/* Value of the serving route when OpenJoystickDriver serves a virtual gamepad. OpenJoystickDriver is the product name. */
 "ui.controllers.serving.virtualHID" = "OpenJoystickDriver（虛擬遊戲控制器）";
+/* Value of the serving route when the driver extension owns the controller. */
 "ui.controllers.serving.extensionOwned" = "驅動程式擴充功能";
+/* Value of the serving route when the user turned the output off. */
 "ui.controllers.serving.outputDisabled" = "輸出已關閉";
+/* Message when the user changes the server of a controller that no controller record describes. */
 "ui.controllers.server.noRecord" = "沒有描述此控制器的控制器記錄，因此沒有可變更的內容。";
+/* Message when the user changes the server of a controller whose record is not valid. */
 "ui.controllers.server.invalidRecord" = "控制器記錄無效。未作任何變更。";
+/* Message when the app cannot save the changed controller record. */
 "ui.controllers.server.persistenceFailed" = "無法儲存控制器記錄。未作任何變更。";
 "ui.virtualProfile.advanced" = "進階";
 "ui.virtualProfile.title" = "虛擬 HID 設定檔";
@@ -648,68 +683,129 @@
 "ui.developer.soakNotANumber" = "%@：請輸入整數。";
 /* Error in the soak test sheet when a value is outside its range. %1$@ is the label of the field, %2$lld is the lowest value and %3$lld is the highest value. */
 "ui.developer.soakOutOfRange" = "%1$@：請輸入介於 %2$lld 與 %3$lld 之間的值。";
+/* Name of the A button of an Xbox style controller, shown in the input test. */
 "ui.inputTest.aButton" = "A 按鈕";
+/* Name of the bottom face button in the input test for a controller with an unknown layout: A on Xbox, Cross on PlayStation. The slash stays. */
 "ui.inputTest.aCross" = "A / 叉";
+/* Heading in the input test of the buttons beyond the standard ones. */
 "ui.inputTest.additionalButtons" = "其他按鈕";
+/* Value of a stick in the input test. %1$.3f is the horizontal position and %2$.3f is the vertical position, from -1 to 1. X and Y are the axis names. */
 "ui.inputTest.axisPair" = "X %1$.3f, Y %2$.3f";
+/* Value of a single axis in the input test. %.3f is the position as a number with three decimals. */
 "ui.inputTest.axisValue" = "%.3f";
+/* Value of the horizontal axis in the input test. %.3f is the position. X is the axis name. */
 "ui.inputTest.axisX" = "X %.3f";
+/* Value of the vertical axis in the input test. %.3f is the position. Y is the axis name. */
 "ui.inputTest.axisY" = "Y %.3f";
+/* Name of the B button of an Xbox style controller, shown in the input test. */
 "ui.inputTest.bButton" = "B 按鈕";
+/* Name of the right face button in the input test for a controller with an unknown layout: B on Xbox, Circle on PlayStation. The slash stays. */
 "ui.inputTest.bCircle" = "B / 圈";
+/* Label of the brightness slider of the controller light in the input test. */
 "ui.inputTest.brightness" = "亮度";
+/* Label of the color picker of the controller light in the input test. */
 "ui.inputTest.color" = "顏色";
+/* Status of the input test when the controller is disconnected. */
 "ui.inputTest.disconnected" = "控制器已斷線";
+/* VoiceOver label of the down direction of the directional pad in the input test. */
 "ui.inputTest.dpadDown" = "方向鍵下";
+/* VoiceOver label of the left direction of the directional pad in the input test. */
 "ui.inputTest.dpadLeft" = "方向鍵左";
+/* VoiceOver label of the right direction of the directional pad in the input test. */
 "ui.inputTest.dpadRight" = "方向鍵右";
+/* VoiceOver label of the up direction of the directional pad in the input test. */
 "ui.inputTest.dpadUp" = "方向鍵上";
+/* Label of the slider that sets how long a rumble test lasts. */
 "ui.inputTest.duration" = "時長";
+/* Value of the rumble duration slider. %d is the number of milliseconds. ms is the unit. */
 "ui.inputTest.durationValue" = "%d ms";
+/* Name of the home button of a controller, shown in the input test. */
 "ui.inputTest.home" = "主畫面";
+/* Status of the input test before any input arrives. */
 "ui.inputTest.idle" = "準備就緒";
+/* Name of the left bumper of an Xbox style controller, shown in the input test. */
 "ui.inputTest.leftBumper" = "左肩鍵";
+/* Name of the left shoulder button in the input test for a controller with an unknown layout: LB on Xbox, L1 on PlayStation. The slash stays. */
 "ui.inputTest.leftBumperGeneric" = "LB / L1";
+/* Name of the left haptic actuator in the output test of the input test window. */
 "ui.inputTest.leftHaptic" = "左觸覺";
+/* Name of the large rumble motor on the left side of the controller, which makes low-frequency vibration. */
 "ui.inputTest.lowFrequency" = "左主馬達";
+/* Name of the left stick in the input test. */
 "ui.inputTest.leftStick" = "左搖桿";
+/* Name of the button that the user presses by pushing down the left stick, shown in the input test. */
 "ui.inputTest.leftStickButton" = "左搖桿按鈕";
+/* Name of the left trigger of an Xbox style controller, shown in the input test. */
 "ui.inputTest.leftTrigger" = "左扳機";
+/* Name of the left trigger in the input test for a controller with an unknown layout: LT on Xbox, L2 on PlayStation. The slash stays. */
 "ui.inputTest.leftTriggerGeneric" = "LT / L2";
+/* Heading of the lighting section in the input test. */
 "ui.inputTest.lighting" = "燈光";
+/* Status of the input test when input arrives. */
 "ui.inputTest.live" = "正在輸入";
+/* Name of the menu button of a controller, shown in the input test. */
 "ui.inputTest.menu" = "選單";
+/* Option of the player indicator popup that turns the indicator off. */
 "ui.inputTest.off" = "關";
+/* Button in the Controllers detail that opens the input test window. Keep the three dots. */
 "ui.inputTest.open" = "打開輸入測試…";
+/* Title of the error under the output tests in the input test window. */
 "ui.inputTest.outputError" = "實體輸出錯誤";
+/* Error in the input test window when the controller refuses a rumble or light test. */
 "ui.inputTest.outputRejected" = "控制器拒絕了此次輸出測試。";
 /* Status shown in the input test window when the Input Monitoring permission is missing. Input Monitoring is written as macOS names it. */
 "platform.macos.ui.inputTest.permissionRequired" = "需要「輸入監控」權限";
+/* Label of the popup in the input test that sets the player indicator, the lights that show which player a controller is. */
 "ui.inputTest.playerIndicator" = "玩家指示燈";
+/* VoiceOver value of a button in the input test while it is pressed. */
 "ui.inputTest.pressed" = "已按下";
+/* VoiceOver value of a button in the input test while it is not pressed. */
 "ui.inputTest.released" = "已放開";
+/* Name of the right bumper of an Xbox style controller, shown in the input test. */
 "ui.inputTest.rightBumper" = "右肩鍵";
+/* Name of the right shoulder button in the input test for a controller with an unknown layout: RB on Xbox, R1 on PlayStation. The slash stays. */
 "ui.inputTest.rightBumperGeneric" = "RB / R1";
+/* Name of the right haptic actuator in the output test of the input test window. */
 "ui.inputTest.rightHaptic" = "右觸覺";
+/* Name of the small rumble motor on the right side of the controller, which makes high-frequency vibration. */
 "ui.inputTest.highFrequency" = "右主馬達";
+/* Name of the right stick in the input test. */
 "ui.inputTest.rightStick" = "右搖桿";
+/* Name of the button that the user presses by pushing down the right stick, shown in the input test. */
 "ui.inputTest.rightStickButton" = "右搖桿按鈕";
+/* Name of the right trigger of an Xbox style controller, shown in the input test. */
 "ui.inputTest.rightTrigger" = "右扳機";
+/* Name of the right trigger in the input test for a controller with an unknown layout: RT on Xbox, R2 on PlayStation. The slash stays. */
 "ui.inputTest.rightTriggerGeneric" = "RT / R2";
+/* Heading of the rumble section in the input test. */
 "ui.inputTest.rumble" = "震動";
+/* Message in the rumble section of the input test when the controller has no rumble. */
 "ui.inputTest.rumbleUnavailable" = "此控制器不支援震動。";
+/* Status of the input test when input stopped arriving. */
 "ui.inputTest.stale" = "輸入已中斷";
+/* Status of the input test while it starts. Keep the three dots. */
 "ui.inputTest.starting" = "正在啟動…";
+/* VoiceOver label of the status area of the input test. */
 "ui.inputTest.status" = "輸入測試狀態";
+/* Title of the button in the input test that makes the controller rumble. */
 "ui.inputTest.testRumble" = "測試震動";
+/* Label of the row in the Controllers detail that holds the button that opens the input test. */
 "ui.inputTest.title" = "輸入測試";
+/* Status of the input test when the app cannot read input. */
 "ui.inputTest.unavailable" = "無法輸入";
+/* Name of the view button of a controller, shown in the input test. It is the small button on the left of the Xbox home button. */
 "ui.inputTest.view" = "檢視";
+/* Title of the input test window. %@ is the controller name. The dash is a separator. */
 "ui.inputTest.windowTitle" = "輸入測試 — %@";
+/* Name of the X button of an Xbox style controller, shown in the input test. */
 "ui.inputTest.xButton" = "X 按鈕";
+/* Name of the left face button in the input test for a controller with an unknown layout: X on Xbox, Square on PlayStation. The slash stays. */
 "ui.inputTest.xSquare" = "X / 方";
+/* Name of the Xbox button, the one with the Xbox logo, shown in the input test. Xbox is a product name. */
 "ui.inputTest.xboxButton" = "Xbox 按鈕";
+/* Name of the Y button of an Xbox style controller, shown in the input test. */
 "ui.inputTest.yButton" = "Y 按鈕";
+/* Name of the top face button in the input test for a controller with an unknown layout: Y on Xbox, Triangle on PlayStation. The slash stays. */
 "ui.inputTest.yTriangle" = "Y / 三角";
 /* Name of the Caps Lock key in the text that describes a captured key press. */
 "term.key.capsLock" = "大寫鎖定";
@@ -1082,13 +1178,16 @@
 "ui.profiles.damagedSelectionsMessage" = "無法讀取使用中的設定檔清單。請重設以繼續。您的設定檔會保留。";
 "ui.profiles.resetLibraryAction" = "備份與重設";
 
-/* Controller session lifecycle */
+/* Label of the row in the Controllers detail that tells that the session of the controller is suspended. The row holds the Resume button. */
 "ui.controllers.suspended" = "已暫停";
 /* Error shown when the service refuses to change the session of a controller. */
 "ui.error.controllerSessionChangeRejected" = "無法變更控制器工作階段。";
 
+/* Title of the alert that asks whether to end the wireless link of a controller. */
 "ui.controllers.disconnectWirelessConfirmTitle" = "要中斷無線控制器連線嗎？";
+/* Message of the alert that ends the wireless link of a controller. %@ is the controller name. */
 "ui.controllers.disconnectWirelessConfirmMessage" = "%@ 會保持中斷連線，直到您手動重新連線。";
+/* Confirm button of the alert that ends the wireless link of a controller. */
 "ui.controllers.disconnectWirelessConfirm" = "中斷連線";
 
 /* Title of the notification shown when a controller stops sending input. */
@@ -2425,69 +2524,131 @@
 "cli.profile.validate.valid" = "%1$@ 是有效的設定檔：「%2$@」，對應 %3$@（%4$@）。可用 「ojd profile import」 新增。";
 /* Error when the service accepted a profile and does not list it afterwards. The command in quotes stays as written. */
 "cli.profile.group.vanished" = "服務未保留該設定檔。請用 「ojd profile list」 檢查。";
-/* Main window, status item, main menu, settings window, library and access. */
+/* Title of the details button of an error message in the Library area. */
 "ui.library.details" = "詳細資訊";
+/* Button of an error message in the Library area that hides the message. */
 "ui.library.dismiss" = "忽略";
+/* Button of the open panel in which the user picks a record file or a mod folder. It confirms the choice. */
 "ui.library.choose" = "選擇";
+/* Toolbar button in the Library area that checks a record file or mod folder without installing it. Keep the three dots. */
 "ui.library.validate" = "驗證…";
+/* Confirm button of the alert that installs a record or a mod. */
 "ui.library.install" = "安裝";
+/* Confirm button of the alert that replaces an installed record or mod. */
 "ui.library.replace" = "取代";
+/* Confirm button of the alert that removes a record or mod. */
 "ui.library.remove" = "移除";
+/* Error in the Library area. %1$@ is the name of a file or folder and %2$@ is the reason it cannot be read. */
 "ui.library.unreadable" = "無法讀取 %1$@：%2$@";
+/* Name of the check in the diagnostics table that validates the controller records. */
 "ui.library.records" = "控制器記錄";
+/* Title of the empty state in the records list of the Library area. */
 "ui.library.records.empty.title" = "沒有已安裝的記錄";
+/* Name of the source of a record: a file that the user installed. It is shown next to the record. */
 "ui.library.layer.user" = "您的檔案";
+/* Name of the source of a record: a mod package added it. */
 "ui.library.layer.package" = "來自模組";
+/* Notice after a record check passed. %1$@ is the file name and %2$@ is the controller model. */
 "ui.library.record.valid" = "%1$@ 是適用於 %2$@ 的有效記錄。";
+/* Error when a record is not valid. %@ is the reason. */
 "ui.library.record.invalid" = "記錄無效：%@";
+/* Line in the records list for a record file that the app skipped. %@ is the reason. */
 "ui.library.record.skipped" = "已略過：%@";
+/* Error when no installed record matches a controller model. %@ is the controller model. */
 "ui.library.record.notFound" = "沒有適用於 %@ 的已安裝記錄。";
+/* Notice after a record is installed. %@ is the controller model. */
 "ui.library.record.installed" = "已安裝 %@ 的記錄。";
+/* Error when a record file cannot be written. %1$@ is the file name and %2$@ is the reason. */
 "ui.library.record.installFailed" = "無法寫入 %1$@：%2$@";
+/* Title of the alert that installs a record. %@ is the controller model. */
 "ui.library.record.install.title" = "要安裝 %@ 的記錄嗎？";
+/* Message of the alert that installs a record. %@ is the file name. OpenJoystickDriver is the product name. */
 "ui.library.record.install.message" = "OpenJoystickDriver 會將記錄以 %@ 為名儲存到您的控制器記錄資料夾。";
+/* Title of the alert that replaces an installed record. %@ is the controller model. */
 "ui.library.record.replace.title" = "要取代 %@ 的記錄嗎？";
+/* Message of the alert that replaces an installed record. %@ is the file name. */
 "ui.library.record.replace.message" = "名為 %@ 的記錄檔案已安裝。取代會覆寫該檔案。";
+/* Title of the alert that removes an installed record. %@ is the controller model. */
 "ui.library.record.remove.title" = "要移除 %@ 的記錄嗎？";
+/* Message of the alert that removes an installed record. OpenJoystickDriver is the product name. */
 "ui.library.record.remove.message" = "OpenJoystickDriver 會從您的控制器記錄資料夾刪除該記錄檔案。使用該記錄的控制器將不再被辨識。";
+/* Notice after a record is removed. %@ is the controller model. */
 "ui.library.record.removed" = "已移除 %@ 的記錄。";
+/* Error when a record file cannot be removed. %1$@ is the file name and %2$@ is the reason. */
 "ui.library.record.removeFailed" = "無法移除 %1$@：%2$@";
+/* Heading of the mods list in the Library area. A mod is a package of records, profiles and personas. */
 "ui.library.mods" = "模組";
+/* Title of the empty state in the mods list of the Library area. */
 "ui.library.mods.empty.title" = "沒有已安裝的模組";
+/* Notice after a mod check passed. %1$@ is the folder name and %2$@ is the mod name. */
 "ui.library.mod.valid" = "%1$@ 是有效的模組：%2$@。";
+/* Error when a mod is refused. %1$@ is the folder name or mod name and %2$@ is the reason. */
 "ui.library.mod.refused" = "%1$@ 被拒絕：%2$@";
+/* Line in the mod detail for a part of a mod that the app does not use. %@ is the reason. */
 "ui.library.mod.unused" = "未使用：%@";
+/* Notice after a mod is installed. %@ is the mod name. */
 "ui.library.mod.installed" = "已安裝模組 %@。";
+/* Title of the alert that installs a mod. %@ is the mod name. */
 "ui.library.mod.install.title" = "要安裝模組 %@ 嗎？";
+/* Message of the alert that installs a mod. %1$@ is the mod name, %2$@ is its version and %3$@ is its author. OpenJoystickDriver is the product name. */
 "ui.library.mod.install.message" = "OpenJoystickDriver 會將 %1$@ %2$@（作者：%3$@）加入您已安裝的模組。";
+/* Title of the alert that replaces an installed mod. %@ is the mod name. */
 "ui.library.mod.replace.title" = "要取代模組 %@ 嗎？";
+/* Message of the alert that replaces an installed mod. %1$@ is the mod name and %2$@ is the version that will be installed. */
 "ui.library.mod.replace.message" = "%1$@ 已安裝。取代會移除已安裝的檔案，並安裝版本 %2$@。";
+/* Title of the alert that removes a mod. %@ is the mod name. */
 "ui.library.mod.remove.title" = "要移除模組 %@ 嗎？";
+/* Message of the alert that removes a mod. OpenJoystickDriver is the product name. Personas are the identities that a virtual gamepad can show. */
 "ui.library.mod.remove.message" = "OpenJoystickDriver 會刪除該模組及其新增的記錄、設定檔和人設。";
+/* Notice after a mod is removed. %@ is the mod name. */
 "ui.library.mod.removed" = "已移除模組 %@。";
+/* Line in the records list for a record that a mod changes. %@ is the name of the mod. */
 "ui.library.record.patchedBy" = "由 %@ 修改";
+/* Label of the field in the record detail that tells whether the USB extension claims the controller. */
 "ui.library.field.usbClaim" = "USB 擴充功能";
+/* Value of the USB extension field: the extension claims the controller. */
 "ui.library.claim.claimed" = "接管此控制器";
+/* Value of the USB extension field: the extension does not claim the controller. */
 "ui.library.claim.unclaimed" = "不會接管此控制器";
+/* Placeholder of the search field in the toolbar of the Library area. */
 "ui.library.search" = "搜尋";
+/* Title of the empty state in the Library area when the search matches nothing. */
 "ui.library.search.noMatches" = "沒有相符項目";
+/* Toolbar button in the Library area that runs a record against a packet capture. Keep the three dots. */
 "ui.library.testRecord" = "測試記錄…";
+/* Value of the status of a library item that is installed. */
 "ui.library.installed" = "已安裝";
+/* Badge on a library item that ships with the app. */
 "ui.library.builtIn" = "內建";
+/* Label of the field in the record detail that holds the controller model. */
 "ui.library.field.identity" = "控制器型號";
+/* Label of the field in the record detail that holds the protocol family. */
 "ui.library.field.family" = "系列";
+/* Label of the field in the record detail that holds where the record comes from. */
 "ui.library.field.source" = "來源";
+/* Label of the field in the record detail that holds the path of the record file. */
 "ui.library.field.file" = "檔案路徑";
+/* Label of the field in the record detail that holds how the controller connects, for example USB or Bluetooth. */
 "ui.library.field.transport" = "傳輸方式";
+/* Label of the field in the mod detail that holds the version. */
 "ui.library.field.version" = "版本";
+/* Label of the field in the mod detail that holds the author. */
 "ui.library.field.author" = "作者";
+/* Heading of the section in the record detail that lists the fields. */
 "ui.library.section.fields" = "欄位";
+/* Heading of the section in the mod detail that lists the files. */
 "ui.library.section.files" = "檔案";
+/* Heading of the section in the record detail that shows the result of a test. */
 "ui.library.section.testResult" = "測試結果";
+/* Name of the source of a record: the record ships with the app. */
 "ui.library.layer.driver" = "預設";
+/* Name of the source of a record: a global file of the user. */
 "ui.library.layer.global" = "您的全域檔案";
+/* Message in the detail pane of the Library area before an item is selected. */
 "ui.library.detail.empty" = "選擇記錄或模組。";
+/* Message of the open panel in which the user picks a packet capture for a record test. */
 "ui.library.test.packets.pick" = "選擇封包擷取檔案。";
+/* Message of the open panel in which the user picks the file with the expected controller state for a record test. */
 "ui.library.test.expect.pick" = "選擇預期的控制器狀態。";
 /* VoiceOver label of the button in the Library error banner that shows the details of the error. */
 "a11y.library.details" = "顯示錯誤詳細資訊";
@@ -2681,60 +2842,115 @@
 "a11y.access.scope" = "%@範圍";
 /* VoiceOver label of the cancel button in the access sheets. It leaves the access unchanged. */
 "a11y.access.cancel" = "取消並維持取用權限不變";
+/* Item of the application menu that opens the About window. %@ is the product name. */
 "ui.menu.app.about" = "關於 %@";
+/* Item of the application menu that opens the settings window. Keep the three dots. */
 "ui.menu.app.settings" = "設定…";
+/* Item of the application menu that holds the Services submenu. It is the macOS name. */
 "ui.menu.app.services" = "服務";
+/* Item of the application menu that hides the app. %@ is the product name. */
 "ui.menu.app.hide" = "隱藏 %@";
+/* Item of the application menu that hides all other apps. It is the macOS name. */
 "ui.menu.app.hideOthers" = "隱藏其他";
+/* Item of the application menu that shows all apps again. It is the macOS name. */
 "ui.menu.app.showAll" = "顯示全部";
+/* Item of the application menu that quits the app. %@ is the product name. */
 "ui.menu.app.quit" = "結束 %@";
+/* Title of the File menu in the menu bar. */
 "ui.menu.file.title" = "檔案";
+/* Item of the File menu that imports a profile from a file. Keep the three dots. */
 "ui.menu.file.importProfile" = "匯入設定檔…";
+/* Item of the File menu that exports a profile to a file. Keep the three dots. */
 "ui.menu.file.exportProfile" = "匯出設定檔…";
+/* Item of the File menu that installs a controller record or a mod. Keep the three dots. */
 "ui.menu.file.installRecordOrMod" = "安裝記錄或模組…";
+/* Item of the File menu that closes the window. */
 "ui.menu.file.close" = "關閉";
+/* Item of the File menu that saves the support report to a file. Keep the three dots. */
 "ui.menu.file.saveSupportReport" = "儲存支援報告…";
+/* Item of the File menu that saves the Activity log to a file. Keep the three dots. */
 "ui.menu.file.saveActivityLog" = "儲存活動記錄檔…";
+/* Title of the alert shown when saving a file from the File menu fails. */
 "ui.menu.file.saveFailed" = "無法儲存該檔案";
+/* Title of the Edit menu in the menu bar. */
 "ui.menu.edit.title" = "編輯";
+/* Item of the Edit menu that undoes the last edit. */
 "ui.menu.edit.undo" = "還原";
+/* Item of the Edit menu that repeats an undone edit. */
 "ui.menu.edit.redo" = "重做";
+/* Item of the Edit menu that cuts the selection to the clipboard. */
 "ui.menu.edit.cut" = "剪下";
+/* Item of the Edit menu that copies the selection to the clipboard. */
 "ui.menu.edit.copy" = "拷貝";
+/* Item of the Edit menu that pastes the clipboard. */
 "ui.menu.edit.paste" = "貼上";
+/* Item of the Edit menu that selects everything. */
 "ui.menu.edit.selectAll" = "全選";
+/* Title of the View menu in the menu bar. */
 "ui.menu.view.title" = "顯示方式";
+/* Item of the View menu that makes the window full screen. */
 "ui.menu.view.enterFullScreen" = "進入全螢幕";
+/* Item of the View menu that leaves full screen. It replaces Enter Full Screen while the window is full screen. */
 "ui.menu.view.exitFullScreen" = "結束全螢幕";
+/* Item of the View menu that shows the sidebar. */
 "ui.menu.view.showSidebar" = "顯示側邊欄";
+/* Item of the View menu that hides the sidebar. It replaces Show Sidebar while the sidebar is visible. */
 "ui.menu.view.hideSidebar" = "隱藏側邊欄";
+/* Item of the View menu that shows the toolbar. */
 "ui.menu.view.showToolbar" = "顯示工具列";
+/* Item of the View menu that hides the toolbar. It replaces Show Toolbar while the toolbar is visible. */
 "ui.menu.view.hideToolbar" = "隱藏工具列";
+/* Title of the Controller menu in the menu bar. */
 "ui.menu.controller.title" = "控制器";
+/* Button and menu item that stops the remapping of one controller. */
 "ui.menu.controller.suspend" = "暫停";
+/* Button and menu item that starts the remapping of one controller again. */
 "ui.menu.controller.resume" = "繼續";
+/* Item of the Controller menu that opens the input test of the selected controller. */
 "ui.menu.controller.testInput" = "測試輸入";
+/* Button and menu item that ends the wireless link of the selected controller. */
 "ui.menu.controller.disconnectWirelessLink" = "中斷無線連結";
+/* Item of the Controller menu that shows the selected controller in the main window. */
 "ui.menu.controller.showInWindow" = "在視窗中顯示";
+/* Disabled item of the Controller menu when no controller is selected. */
 "ui.menu.controller.noneSelected" = "未選取控制器";
+/* Title of the Profile menu in the menu bar. */
 "ui.menu.profile.title" = "設定檔";
+/* Item of the Profile menu that turns on the selected profile. */
 "ui.menu.profile.activate" = "啟用設定檔";
+/* Item of the Profile menu that turns off the active profile. */
 "ui.menu.profile.deactivate" = "停用設定檔";
+/* Title of the alert shown when turning off a profile from the menu fails. */
 "ui.menu.profile.deactivateFailed" = "無法停用該設定檔";
+/* Message of the alert shown when the profile changed elsewhere during the turn off. */
 "ui.menu.profile.deactivateConflict" = "設定檔在停用期間發生了變更。請重試。";
+/* Title of the Window menu in the menu bar. */
 "ui.menu.window.title" = "視窗";
+/* Item of the Window menu that minimizes the window to the Dock. */
 "ui.menu.window.minimize" = "縮到最小";
+/* Item of the Window menu that zooms the window. */
 "ui.menu.window.zoom" = "縮放";
+/* Item of the Window menu that brings all windows of the app to the front. */
 "ui.menu.window.bringAllToFront" = "將所有視窗移至最前";
+/* Title of the Help menu in the menu bar. */
 "ui.menu.help.title" = "輔助說明";
+/* Item of the Help menu that opens the Activity log. */
 "ui.menu.help.activityLog" = "活動記錄檔";
+/* Item of the Help menu that copies the support report to the clipboard. */
 "ui.menu.help.copySupportReport" = "拷貝支援報告";
+/* Item of the Help menu that opens the sheet that explains an error code. Keep the three dots. */
 "ui.menu.help.explainErrorCode" = "說明錯誤代碼…";
+/* Item of the Help menu that opens the page where the user reports a problem. Keep the three dots. */
 "ui.menu.help.reportProblem" = "回報問題…";
+/* Item of the Help menu that opens the project website. */
 "ui.menu.help.projectWebsite" = "專案網站";
+/* Title of the alert shown after the support report is copied. */
 "ui.menu.copySupportReport.done" = "已拷貝支援報告";
+/* Message of the alert shown after the support report is copied. */
 "ui.menu.copySupportReport.doneDetail" = "支援報告已在剪貼簿上。";
+/* Title of the alert shown when the support report cannot be copied. */
 "ui.menu.copySupportReport.failed" = "無法拷貝支援報告";
+/* Message of the alert shown when the support report cannot be copied. The user saves it to a file with the File menu. */
 "ui.menu.copySupportReport.failedDetail" = "無法收集報告。請改為儲存到檔案。";
 /* Title of the Controllers item in the sidebar of the main window and in the window title when it is selected. */
 "ui.sidebar.controllers.title" = "控制器";
@@ -2822,12 +3038,17 @@
 "ui.access.grant.noPath" = "OpenJoystickDriver 無法讀取 %@ 的可執行檔，因此無法授予其取用權限。";
 /* Line of the alert that turns on the WebSocket when a port is saved. */
 "ui.access.web.enable.savedPort" = "Web 端點保留其已儲存的連接埠。";
+/* Detail line of a record in the records list. %1$@ and %2$@ are two facts about the record. The dot between them separates the facts and may change. */
 "ui.library.record.detail" = "%1$@ · %2$@";
+/* Detail line of a mod in the mods list. %1$@ is the version and %2$@ is the author. The dot between them separates the two and may change. */
 "ui.library.mod.detail" = "%1$@ · %2$@";
 /* Message of the alert shown when a menu action needs the profile editor and the editor saves a change. */
 "ui.extra.profileEditorBusy" = "設定檔編輯器正在儲存或套用變更。請在完成後重試。";
+/* Message of the open panel in which the user picks a controller record file or a mod folder. */
 "ui.library.recordOrMod.pick" = "選擇控制器記錄檔案或模組資料夾。";
+/* Title of the alert shown when turning on a profile from the menu fails. */
 "ui.menu.profile.activateFailed" = "無法啟用設定檔";
+/* Message of the alert shown when the profile changed elsewhere during the turn on. */
 "ui.menu.profile.activateConflict" = "設定檔在啟用期間發生了變更。請重試。";
 "ui.profiles.importBlocked" = "設定檔變更正在進行。請在完成後再次選擇「匯入設定檔」。";
 "ui.settings.general.updateAvailableBody" = "版本 %@ 可用。";
@@ -3113,45 +3334,85 @@
 "ui.activity.check.usbAccess" = "USB 存取";
 /* Button of a failed check in the diagnostics table that opens the Library area. */
 "ui.activity.fix.showLibrary" = "顯示資源庫";
+/* Label of the fact in the Controllers detail that tells whether the controller has adaptive triggers, triggers with variable resistance. */
 "ui.controllers.adaptiveTriggers" = "自適應扳機";
+/* Label of the fact in the Controllers detail that tells whether the controller has a motion sensor. */
 "ui.controllers.motion" = "動作感測器";
+/* Label of the fact in the Controllers detail that tells how many fingers the touch surface of the controller sees. */
 "ui.controllers.touchContacts" = "觸控接觸點";
+/* Label of the fact in the Controllers detail that tells whether games may see the controller twice, once as the controller and once as the virtual gamepad. */
 "ui.controllers.duplicateExposureRisk" = "重複曝光風險";
+/* Label of the fact in the Controllers detail that tells whether the startup commands of the controller worked. */
 "ui.controllers.startupStatus" = "啟動指令";
+/* Label of the fact in the Controllers detail that names the format of the input reports of the controller. */
 "ui.controllers.inputReportFormat" = "報告格式";
+/* Label of the fact in the Controllers detail that counts how often the input of the controller recovered. */
 "ui.controllers.inputRecoveries" = "復原次數";
+/* Label of the fact in the Controllers detail that shows the time of the last attempt to send the controller state to the virtual gamepad. */
 "ui.controllers.publicationAttempted" = "上次傳送嘗試";
+/* Label of the fact in the Controllers detail that shows the time of the last send that the virtual gamepad accepted. */
 "ui.controllers.publicationCompleted" = "上次被接受的傳送";
+/* Label of the fact in the Controllers detail that tells what chose the server of the controller: the controller record or the user. */
 "ui.controllers.server.source" = "設定來源";
+/* Label of the popup that sets whether a virtual HID profile choice applies to a controller model or to one controller. */
 "ui.controllers.virtual.scope" = "套用至";
+/* Option of the scope popup: the choice applies to all controllers of the model. */
 "ui.controllers.virtual.scope.model" = "此型號";
+/* Option of the scope popup: the choice applies to this controller only. */
 "ui.controllers.virtual.scope.unit" = "此控制器";
+/* Label of the row in the Controllers detail that holds the button that clears all virtual HID profile choices. */
 "ui.controllers.virtual.resetAll" = "重置所有覆寫";
+/* Error when the service cannot clear the virtual HID profile choices. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.controllers.virtual.resetAllFailed" = "服務無法清除虛擬 HID 設定檔的選擇。";
+/* Label of the row in the Controllers detail that holds the button that exports the mapping of the virtual gamepad. */
 "ui.controllers.exportMapping" = "輸出對應";
+/* Title of the save panel that exports the mapping of the virtual gamepad. */
 "ui.controllers.exportMapping.title" = "輸出虛擬遊戲控制器對應";
+/* Label of the format popup in the save panel that exports the mapping. The colon stays. */
 "ui.controllers.exportMapping.format" = "格式：";
+/* Label of the row in the Controllers detail that holds the button that starts a game with the virtual gamepad. */
 "ui.controllers.launch" = "以虛擬遊戲控制器啟動遊戲";
+/* Title of the open panel in which the user picks a game to start. */
 "ui.controllers.launch.title" = "選擇遊戲";
+/* Button that starts the chosen game. It is also the confirm button of the open panel. */
 "ui.controllers.launch.prompt" = "啟動";
+/* Title of the checkbox in the open panel for a game. GameController is the name of an Apple framework and stays as written. */
 "ui.controllers.launch.gameControllerBackend" = "僅透過 GameController 讀取控制器";
+/* Message when the user starts a game but no connected controller has a virtual gamepad. */
 "ui.controllers.launch.noGamepad" = "沒有已連接的控制器具有虛擬遊戲控制器，因此沒有可設定的對應。";
+/* Message after a game starts. %@ is the name of the program. */
 "ui.controllers.launch.started" = "%@ 已啟動。";
+/* Message after a game ends. %1$@ is the name of the program and %2$lld is its exit status. */
 "ui.controllers.launch.exited" = "%1$@ 已結束，狀態為 %2$lld。";
+/* Button in the Controllers detail that starts a draft of a controller record. Keep the three dots. */
 "ui.controllers.draftRecord" = "草擬記錄…";
+/* Title of the sheet that drafts a controller record. */
 "ui.controllers.draftRecord.title" = "草擬控制器記錄";
+/* Message when a record cannot be drafted. %@ is the controller model. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.controllers.draftRecord.noLayout" = "無法從 %@ 的 HID 報告描述元讀取任何控制項，且其內建記錄已指明其系列。";
+/* Button in the Controllers detail that starts a packet capture of the controller. Keep the three dots. */
 "ui.controllers.capturePackets" = "擷取封包…";
+/* Title of the sheet that captures packets of the controller. */
 "ui.controllers.capturePackets.title" = "擷取控制器封包";
+/* Label of the field in the capture sheet that sets how long the capture runs. The value is in seconds. */
 "ui.controllers.captureDuration" = "時長（秒）";
+/* Error under the duration field in the capture sheet when the value is not above 0. */
 "ui.controllers.captureDurationInvalid" = "請輸入大於 0 的秒數。";
+/* Notice after a file is saved. %@ is the file name. */
 "ui.controllers.fileSaved" = "已儲存 %@。";
+/* Line under the scope popup. %@ is the scope of the override that is active. */
 "ui.controllers.virtual.currentScope" = "目前覆寫的範圍：%@";
+/* Value of the publication fact: the virtual gamepad of the controller is published. */
 "ui.controllers.publication.published" = "已發布";
+/* Value of the publication fact: the controller has no published virtual gamepad. */
 "ui.controllers.publication.notPublished" = "未發布";
+/* Value of the publication fact: the publication failed. */
 "ui.controllers.publication.failed" = "失敗";
+/* Value of the input health fact: input arrives as expected. */
 "ui.controllers.inputHealth.healthy" = "正常";
+/* Value of the input health fact: input stopped arriving. */
 "ui.controllers.inputHealth.stale" = "無更新";
+/* Value of the input health fact: the app waits until all controls are at rest before it sends input again. */
 "ui.controllers.inputHealth.waitingForNeutral" = "等待回中";
 "ui.settings.advanced.errorDamaged" = "設定值檔案 %@ 已損毀。請修復它，或用 `ojd setting reset` 將其移到垃圾桶。";
 "ui.settings.advanced.errorUnsupported" = "設定值檔案 %@ 不受支援。請依支援的 apiVersion 重寫該檔案，或用 `ojd setting reset` 將其移到垃圾桶。";
@@ -3175,51 +3436,77 @@
 "cli.setting.reset.success" = "已將 %@ 移到垃圾桶。";
 /* Message printed by 'ojd setting reset' when there is no settings file. %@ is the path where the file would be. */
 "cli.setting.reset.none" = "%@ 沒有設定值檔案。";
-/* Why a controller is not published as a virtual device, and a failed send. */
+/* Reason the controller has no virtual gamepad: the user turned the virtual output off. */
 "ui.controllers.publication.reason.outputDisabled" = "虛擬輸出已關閉";
+/* Reason the controller has no virtual gamepad: macOS serves it as a gamepad. */
 "ui.controllers.publication.reason.systemGamepad" = "系統將其視為遊戲手把處理";
+/* Reason the controller has no virtual gamepad: macOS handles its input directly. */
 "ui.controllers.publication.reason.nativeHIDPassThrough" = "系統直接處理其輸入";
+/* Reason the controller has no virtual gamepad: another virtual device stands for it. */
 "ui.controllers.publication.reason.upstreamVirtualDevice" = "已有其他虛擬裝置代表它";
+/* Reason the controller has no virtual gamepad: the user suspended the session. */
 "ui.controllers.publication.reason.sessionSuspended" = "工作階段已暫停";
+/* Reason the controller has no virtual gamepad: no virtual profile fits the controller. */
 "ui.controllers.publication.reason.noVirtualProfile" = "沒有適合的虛擬設定檔";
+/* Reason the controller has no virtual gamepad: the output is paused. */
 "ui.controllers.publication.reason.suppressed" = "輸出已暫停";
+/* Reason the controller has no virtual gamepad: the first input has not arrived. */
 "ui.controllers.publication.reason.noInputYet" = "正在等待第一次輸入";
 /* Publication state with its reason or failure, for example "Not published (Waiting for the first input)". %1$@ is the state and %2$@ the reason. */
 "ui.controllers.publication.withReason" = "%1$@（%2$@）";
+/* Reason shown with a failed publication. %@ is the reason the last send failed. */
 "ui.controllers.publication.failedSend" = "最近一次傳送失敗：%@";
 /* Serving route with why it publishes nothing, for example "Output off (No virtual profile fits it)". %1$@ is the route and %2$@ the reason. */
 "ui.controllers.serving.withReason" = "%1$@（%2$@）";
-/* Why a controller's input health is failing. */
+/* Reason of failing input health: the controller sends no reports. */
 "ui.controllers.inputHealth.reason.missingReports" = "沒有收到報告";
+/* Reason of failing input health: the reports arrive but their content does not change. */
 "ui.controllers.inputHealth.reason.freshnessNotAdvancing" = "報告沒有更新";
 /* Input health state with its failure reason, for example "Stale (No reports arriving)". %1$@ is the state and %2$@ the reason. */
 "ui.controllers.inputHealth.withReason" = "%1$@（%2$@）";
-/* How a controller was discovered. */
+/* Value of the discovery route: the app found the controller as an HID device. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.controllers.discovery.hid" = "HID";
+/* Value of the discovery route: the app found the controller over raw USB. */
 "ui.controllers.discovery.rawUSB" = "原始 USB";
-/* Who holds the physical controller. */
+/* Value of the owner of the physical controller: the app holds it exclusively as an HID device. */
 "ui.controllers.physicalOwnership.exclusiveHID" = "獨占 HID";
+/* Value of the owner of the physical controller: the app holds it exclusively over raw USB. */
 "ui.controllers.physicalOwnership.exclusiveRawUSB" = "獨占原始 USB";
+/* Value of the owner of the physical controller: the driver extension holds it over USB. */
 "ui.controllers.physicalOwnership.extensionOwnedUSB" = "USB 擴充功能";
+/* Value of the owner of the physical controller: macOS holds it as an HID device that the app can also see. */
 "ui.controllers.physicalOwnership.systemHIDVisible" = "系統 HID";
+/* Value of the owner of the physical controller: macOS serves it as a gamepad. */
 "ui.controllers.physicalOwnership.systemGamepad" = "系統遊戲手把";
+/* Value of the owner of the physical controller: another virtual device holds it before the app sees it. */
 "ui.controllers.physicalOwnership.upstreamVirtualDevice" = "上游虛擬裝置";
+/* Value of the owner of the physical controller when the app does not know it. */
 "ui.controllers.physicalOwnership.unknown" = "未知";
-/* Result of acquiring HID input. */
+/* Result of opening the HID input of a controller when the app does not know the result. */
 "ui.controllers.hidInputOwnership.unknown" = "未知";
+/* Result of opening the HID input of a controller: the app holds it exclusively. */
 "ui.controllers.hidInputOwnership.exclusive" = "獨占";
+/* Result of opening the HID input of a controller: the app shares it with other apps. */
 "ui.controllers.hidInputOwnership.shared" = "共用";
+/* Result of opening the HID input of a controller: macOS denied access. */
 "ui.controllers.hidInputOwnership.accessDenied" = "存取遭拒";
+/* Result of opening the HID input of a controller: another app holds it. */
 "ui.controllers.hidInputOwnership.ownedByAnotherClient" = "由其他 App 佔用";
+/* Result of opening the HID input of a controller: opening failed. */
 "ui.controllers.hidInputOwnership.acquisitionFailed" = "取得失敗";
 /* Ownership summary: %1$@ is the discovery route, %2$@ the owner and %3$@ the HID input result. */
 "ui.controllers.ownership.value" = "透過 %1$@ 偵測。擁有者：%2$@。HID 輸入：%3$@。";
-/* Why closing a controller's Bluetooth link failed. */
+/* Reason that ending the wireless link failed: the controller is not connected any more. */
 "ui.controllers.disconnectWireless.failure.notFound" = "控制器已不再連接";
+/* Reason that ending the wireless link failed: the controller does not use Bluetooth. */
 "ui.controllers.disconnectWireless.failure.notBluetooth" = "控制器不是透過藍牙連接的";
+/* Reason that ending the wireless link failed: the controller uses Bluetooth Low Energy, which the app cannot end. */
 "ui.controllers.disconnectWireless.failure.bluetoothLEUnsupported" = "無法在此處中斷藍牙 LE 控制器";
+/* Reason that ending the wireless link failed: the app does not know the Bluetooth address of the controller. */
 "ui.controllers.disconnectWireless.failure.missingAddress" = "控制器的藍牙位址未知";
+/* Reason that ending the wireless link failed: macOS reported that Bluetooth did not end the link. */
 "ui.controllers.disconnectWireless.failure.disconnectFailed" = "藍牙未中斷控制器";
+/* Reason that ending the wireless link failed: the request took too long. */
 "ui.controllers.disconnectWireless.failure.timedOut" = "中斷連接逾時";
 
 /* Status line of a service that cannot be reached because its request listener stopped. %1$@ is the error code, %2$@ its explanation, %3$@ the error number of the failed call, %4$@ the time it stopped. */
