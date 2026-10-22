@@ -355,7 +355,7 @@ def dispatch(argv: list[str]) -> int:
             if sub in {"profiles", "schemas"}:
                 require(f"check {sub}", tail, count=0)
                 target = {
-                    "profiles": "Catalog/validate_profiles.py",
+                    "profiles": "Quality/check_profiles.py",
                     "schemas": "Quality/validate_schemas.py",
                 }[sub]
                 exec_target(

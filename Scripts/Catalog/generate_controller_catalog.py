@@ -16,10 +16,11 @@ import urllib.error
 import urllib.request
 from typing import Any
 
-from Scripts.Catalog import protocol_descriptions, repository_tool
+from Scripts.Catalog import protocol_descriptions
 from Scripts.Catalog.catalog_rules import load_rules, parse_id, parse_identity
 from Scripts.Catalog.schema_header import KINDS, header
 from Scripts.Catalog.xpad_io import json_text, run_gh
+from Scripts.Quality import repository_tool
 from Scripts.Quality.biome_format import format_json
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
@@ -469,15 +470,12 @@ def load_lock() -> dict[str, Any]:
 
 
 def load_authored_records(
-    validator: Any,
     controller_dir: pathlib.Path = CONTROLLER_DIR,
 ) -> dict[tuple[int, int], dict[str, Any]]:
     """The authored `Controller` records."""
     adds: dict[tuple[int, int], dict[str, Any]] = {}
     for path in sorted(controller_dir.glob("*/*.json")):
         record = json.loads(path.read_text())
-        if validator is not None:
-            validator.validate_record(path, enforce_path=False)
         key = record_key(record)
         expected = record_path(controller_dir, key)
         if path != expected:
@@ -512,24 +510,23 @@ def apply_built_in_patches(
             path = record_path(unpatched, key)
             path.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(record_path(controller_dir, key), path)
-        problems = repository_tool.run(
-            [
-                "apply-patches",
-                "--records",
-                str(unpatched),
-                "--patches",
-                str(patch_dir),
-                "--out",
-                str(patched),
-            ]
-        )
-        if not problems:
-            problems = repository_tool.run(["validate", "records", str(patched)])
-        if problems:
-            raise CatalogError(
-                "the built-in patches do not give valid records:\n"
-                + "\n".join(str(problem) for problem in problems)
+        try:
+            repository_tool.check(
+                [
+                    "apply-patches",
+                    "--records",
+                    str(unpatched),
+                    "--patches",
+                    str(patch_dir),
+                    "--out",
+                    str(patched),
+                ]
             )
+            repository_tool.check(["validate", "records", str(patched)])
+        except repository_tool.ToolError as error:
+            raise CatalogError(
+                f"the built-in patches do not give valid records:\n{error}"
+            ) from error
         return {
             key: record_path(patched, key).read_text(encoding="utf-8")
             for key in sorted({*records, *adds})
@@ -564,10 +561,6 @@ def build_catalog() -> dict[tuple[int, int], str]:
         "ojd_generate_xpad_records",
         ROOT / "Scripts" / "Catalog" / "generate_xpad_records.py",
     )
-    validator = load_module(
-        "ojd_validate_profiles",
-        ROOT / "Scripts" / "Catalog" / "validate_profiles.py",
-    )
     lock = load_lock()
     linux = lock["linux"]
 
@@ -594,21 +587,13 @@ def build_catalog() -> dict[tuple[int, int], str]:
             raise CatalogError(f"Linux sources produced duplicate identity {key}")
         records[key] = record
 
-    adds = load_authored_records(validator)
+    adds = load_authored_records()
     sdl_rows = parse_sdl_controllers(load_locked_files(lock["sdl"])["controller_list"])
     sdl_counts = merge_sdl_records(records, adds, sdl_rows)
     texts = apply_built_in_patches(records, adds)
 
     if not texts:
         raise CatalogError("generation produced no controller records")
-
-    with tempfile.TemporaryDirectory() as directory:
-        temporary_root = pathlib.Path(directory)
-        for key, text in texts.items():
-            path = record_path(temporary_root, key)
-            path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(text, encoding="utf-8")
-            validator.validate_record(path, enforce_path=False)
 
     if skipped:
         print(f"Linux rows intentionally skipped: {len(skipped)}")
