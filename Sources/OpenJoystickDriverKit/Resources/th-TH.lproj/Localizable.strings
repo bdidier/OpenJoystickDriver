@@ -173,36 +173,67 @@
 "ui.keyboard.captureCanceled" = "ยกเลิกการจับแป้นพิมพ์แล้ว";
 /* VoiceOver label of the area that captures a keyboard key. */
 "ui.keyboard.captureTitle" = "การจับปุ่มแป้นพิมพ์";
+/* Title of the sheet that adjusts one assignment of a profile. %@ is the name of the controller control that the assignment reads. */
 "ui.capture.adjust" = "ปรับ %@";
+/* Label of the slider that sets the dead zone of an axis assignment. The dead zone is the part of the travel near the center that is ignored. */
 "ui.capture.deadZone" = "เดดโซน";
+/* Label of the slider that sets the gain of an axis assignment. The gain multiplies the travel of the axis. */
 "ui.capture.gain" = "เกน";
+/* Label of the switch that reverses the direction of an axis assignment. */
 "ui.capture.invertAxis" = "กลับแกน";
+/* Label of the popup that picks the response curve of an axis assignment. The curve maps the travel of the control to the output. */
 "ui.capture.responseCurve" = "เส้นโค้งการตอบสนอง";
+/* Label of the slider that sets the travel at which an axis counts as a pressed button. */
 "ui.capture.digitalThreshold" = "เกณฑ์ดิจิทัล";
+/* Option of the response curve popup: output grows in proportion to the travel. */
 "ui.capture.linear" = "เชิงเส้น";
+/* Option of the response curve popup: output grows slowly at first and faster later. */
 "ui.capture.easeIn" = "ค่อยๆ เร่ง";
+/* Option of the response curve popup: output grows fast at first and slower later. */
 "ui.capture.easeOut" = "ค่อยๆ ชะลอ";
+/* Option of the response curve popup: output grows slowly at both ends and faster in the middle. */
 "ui.capture.smoothStep" = "ขั้นเรียบ";
+/* Heading of the capture assignment sheet while the app waits for the user to press a control of the controller. */
 "ui.capture.pressControl" = "กดตัวควบคุมของคอนโทรลเลอร์";
+/* Instruction in the capture assignment sheet. The user picks a control from the popup or lets the app wait for the next input. */
 "ui.capture.chooseControl" = "เลือกตัวควบคุมด้านล่าง หรือรับฟังอินพุตถัดไปสักครู่";
+/* Label of the popup in the capture assignment sheet that lists the controls of the controller. */
 "ui.capture.controllerControl" = "ตัวควบคุมของคอนโทรลเลอร์";
+/* Title of the button in the capture assignment sheet that waits for the next controller input. */
 "ui.capture.listen" = "รับฟังตัวควบคุม";
+/* Message in the capture assignment sheet when no controller is connected. Manual selection means the popup of controls. */
 "ui.capture.connectForLive" = "เชื่อมต่อคอนโทรลเลอร์เพื่อเปิดใช้งานการจับแบบสด ยังเลือกเองได้อยู่";
+/* VoiceOver label of the capture assignment sheet. */
 "ui.capture.title" = "การจับตัวควบคุมของคอนโทรลเลอร์";
+/* VoiceOver announcement when the user cancels the controller control capture. */
 "ui.capture.canceled" = "ยกเลิกการจับคอนโทรลเลอร์แล้ว";
+/* VoiceOver label of the status area in the capture assignment sheet. */
 "ui.capture.status" = "สถานะการจับ";
+/* Status in the capture assignment sheet before the capture starts. */
 "ui.capture.ready" = "พร้อมรับฟัง";
+/* Status in the capture assignment sheet while the app waits for a controller control. */
 "ui.capture.listening" = "กำลังรับฟังตัวควบคุมของคอนโทรลเลอร์";
+/* VoiceOver announcement while the app waits for a controller control. Escape is the name of the Escape key. */
 "ui.capture.listeningCancel" = "กำลังรับฟังตัวควบคุมของคอนโทรลเลอร์ กด Escape เพื่อยกเลิก";
+/* Status text in the capture assignment sheet while the app waits for a controller control. Keep the three dots. */
 "ui.capture.listeningEllipsis" = "กำลังรับฟังตัวควบคุมของคอนโทรลเลอร์…";
+/* Status in the capture assignment sheet after a control is detected. %@ is the name of the control. The sentence ends with a period. */
 "ui.capture.detected" = "ตรวจพบ: %@";
+/* Label with the detected control in the capture assignment sheet. %@ is the name of the control. It has no final period because other text follows or the label stands alone. */
 "ui.capture.detectedNoPeriod" = "ตรวจพบ: %@";
+/* Status in the capture assignment sheet. %1$@ is the name of the detected control and %2$@ is the sentence that says the destination is ready for selection. */
 "ui.capture.detectedWithDestination" = "ตรวจพบ: %1$@ %2$@";
+/* Status in the capture assignment sheet when input arrived from a control that the app does not support. */
 "ui.capture.noSupported" = "ได้รับอินพุต แต่ไม่พบตัวควบคุมที่รองรับ";
+/* Status in the capture assignment sheet that tells the user to pick a destination for the detected control. The sentence follows the detected control. */
 "ui.capture.destinationReady" = "ปลายทางพร้อมให้เลือก";
+/* Status in the capture assignment sheet when the capture fails. %@ is the reason. */
 "ui.capture.error" = "ข้อผิดพลาดในการจับ %@";
+/* VoiceOver description of the input test status when no button of the controller is held. */
 "ui.capture.noButton" = "ขณะนี้ไม่มีปุ่มที่กดค้างไว้";
+/* VoiceOver description of the input test status. %@ is the list of the names of the buttons that are held. */
 "ui.capture.buttonsHeld" = "ปุ่มที่กดค้างไว้: %@";
+/* Error under the name field of the profile creation sheet when the name is empty. */
 "ui.capture.profileNameValidation" = "ป้อนชื่อโปรไฟล์";
 "ui.profiles.new" = "โปรไฟล์ใหม่";
 "ui.profiles.deleteTitle" = "ลบโปรไฟล์หรือไม่";
@@ -310,15 +341,25 @@
 "ui.debug.outputNeedsAttention" = "เอาต์พุตของคอนโทรลเลอร์ต้องได้รับการดูแล";
 /* Line of the debug report when the service does not answer, so the report has no diagnostics. */
 "ui.debug.serviceUnavailable" = "การวินิจฉัยบริการไม่พร้อมใช้งานในขณะนี้";
+/* Error shown in the profile editor when the profile changed elsewhere after the editor loaded it. Reload means to discard the edits and load the profile again. */
 "ui.error.profileChanged" = "โปรไฟล์นี้ถูกเปลี่ยนแปลงที่อื่น โหลดใหม่หรือแก้ไขต่อ";
+/* Error under the name field of the profile creation sheet when another profile has the name. */
 "ui.error.duplicateProfile" = "มีโปรไฟล์ที่ใช้ชื่อนั้นอยู่แล้ว";
+/* Error shown when the service has no profile with the requested identifier. */
 "ui.error.profileMissing" = "โปรไฟล์นั้นไม่พร้อมใช้งานอีกต่อไป";
+/* Error shown when the service rejects the assignments of a profile. */
 "ui.error.reviewAssignments" = "ตรวจสอบการกำหนดของโปรไฟล์แล้วลองอีกครั้ง";
+/* Error shown when the service cannot save the profile library. */
 "ui.error.profileLibrarySave" = "ไม่สามารถบันทึกโปรไฟล์ของคุณได้";
+/* Error shown when the remapping engine of the service is not available yet. */
 "ui.error.remappingUnavailable" = "การแมปคอนโทรลเลอร์ใหม่ไม่พร้อมใช้งานชั่วคราว";
+/* Error shown for a failure that has no message of its own. OpenJoystickDriver is the product name. */
 "ui.error.generic" = "OpenJoystickDriver ไม่สามารถดำเนินการนั้นให้เสร็จสิ้นได้";
+/* Error shown when the service cannot be reached. OpenJoystickDriver is the product name. */
 "ui.error.notAvailable" = "OpenJoystickDriver ไม่พร้อมใช้งานในขณะนี้";
+/* Error shown when the service does not answer in time. OpenJoystickDriver is the product name. */
 "ui.error.timeout" = "OpenJoystickDriver ใช้เวลาตอบสนองนานเกินไป";
+/* Error shown when the service answers with a reply that the app does not understand. OpenJoystickDriver is the product name. */
 "ui.error.unexpected" = "OpenJoystickDriver ส่งผลลัพธ์ที่ไม่คาดคิดกลับมา";
 "ui.mapping.allApps" = "ทุกแอพ";
 "ui.mapping.specificApp" = "แอพที่ระบุ";
@@ -360,10 +401,15 @@
 "ui.profiles.touch.pointerSensitivity" = "จุดตัวชี้ต่อพื้นผิว";
 "ui.profiles.touch.stickRadius" = "รัศมีสติ๊กเต็ม (สัดส่วนของพื้นผิว)";
 "ui.profiles.touch.deadzone" = "เดดโซนสติ๊ก";
+/* Label of the stepper that sets the number of columns of a touch grid in the capture assignment sheet. %d is the number of columns. */
 "ui.capture.touchColumns" = "คอลัมน์กริด: %d";
+/* Label of the stepper that sets the number of rows of a touch grid in the capture assignment sheet. %d is the number of rows. */
 "ui.capture.touchRows" = "แถวกริด: %d";
+/* Label of the stepper that picks the column of the touch cell in the capture assignment sheet. %d is the column number, counted from 1. */
 "ui.capture.touchColumn" = "คอลัมน์เซลล์: %d";
+/* Label of the stepper that picks the row of the touch cell in the capture assignment sheet. %d is the row number, counted from 1. */
 "ui.capture.touchRow" = "แถวเซลล์: %d";
+/* Label of the slider that sets the shortest swipe that counts, as a share of the touch surface. %.0f is a percentage; %% is the percent sign. */
 "ui.capture.touchSwipeDistance" = "ระยะปัดขั้นต่ำ: %.0f%%";
 "ui.mapping.mute" = "ปิดเสียง";
 "ui.mapping.leftTriggerClick" = "การกดทริกเกอร์ซ้าย";
@@ -430,13 +476,21 @@
 "action.remove" = "เอาออก";
 /* Button of the input test window that stops the rumble test and button of the developer view that stops the packet capture. */
 "action.stop" = "หยุด";
+/* Error shown when the debug report cannot be written to the chosen file. */
 "ui.error.supportReportSave" = "ไม่สามารถบันทึกรายงานการสนับสนุนได้ เลือกไฟล์อื่นแล้วลองอีกครั้ง";
+/* Error shown when the debug logs cannot be written to the chosen file. The system reason follows on the next line. */
 "ui.error.logsSave" = "ไม่สามารถบันทึกบันทึกการใช้งานได้ เลือกไฟล์อื่นแล้วลองอีกครั้ง";
+/* Error shown in the capture assignment sheet when the listening ends without any control. */
 "ui.error.noDetectedControl" = "ไม่พบตัวควบคุมของคอนโทรลเลอร์ใหม่";
+/* Error shown when the user starts a profile action while another one still runs. */
 "ui.error.actionInProgress" = "กำลังดำเนินการโปรไฟล์อื่นอยู่แล้ว";
+/* Error shown when the list of active profiles is damaged and the service cannot load it. */
 "ui.error.profileLibraryCorrupt" = "รายการโปรไฟล์ที่ใช้งานอยู่เสียหายและไม่สามารถโหลดได้";
+/* Title of the button in the capture assignment sheet while the app waits for a control. Keep the three dots. */
 "ui.capture.listeningButton" = "กำลังรับฟัง…";
+/* Error shown when the user saves a profile whose assignments have problems. */
 "ui.error.reviewAssignmentsBeforeSave" = "ตรวจสอบการกำหนดก่อนบันทึกโปรไฟล์นี้";
+/* Error shown when the profile item that the user selected is gone, for example after a reload. */
 "ui.error.selectedProfileItemMissing" = "รายการโปรไฟล์ที่เลือกไม่พร้อมใช้งานอีกต่อไป";
 /* Message about a request to the system extension manager that ends cancelled. The request installs or removes the driver extension. */
 "cli.transportExtension.group.cancelled" = "คำขอส่วนขยายระบบถูกยกเลิก";
@@ -498,53 +552,101 @@
 "term.protocolVariant.wired" = "แบบมีสาย";
 /* Label of a fact under Advanced in the Controllers detail: the parser that reads the controller, shown as its ojd spelling such as xbox-xusb:receiver. */
 "term.parser" = "ตัวแยกวิเคราะห์";
+/* Label in the controller summary of the developer tools. The value is a list of the pressed buttons. */
 "ui.developer.buttons" = "ปุ่ม";
+/* Status next to the Start Capture button while the packet capture runs. */
 "ui.developer.capturing" = "กำลังจับ";
+/* Label of the connection kind in the controller summary of the developer tools, for example USB or Bluetooth. */
 "ui.developer.connection" = "การเชื่อมต่อ";
+/* Label of the controller name in the controller summary of the developer tools. */
 "ui.developer.controller" = "คอนโทรลเลอร์";
+/* Heading of the controller summary section in the developer tools. */
 "ui.developer.controllerDetails" = "คอนโทรลเลอร์";
+/* Message in the packet capture list of the developer tools before a capture. Start Capture is the title of the button and is written as in this catalog. */
 "ui.developer.emptyCapture" = "กดเริ่มการจับ แล้วกดปุ่มบนคอนโทรลเลอร์";
+/* Title of the save panel that exports the packet capture. */
 "ui.developer.exportCapture" = "ส่งออกการจับแพ็กเก็ต";
+/* Heading of the section in the developer tools that lists buttons beyond the standard ones. */
 "ui.developer.extraInputs" = "ปุ่มเพิ่มเติม";
+/* Description of the extra buttons section in the developer tools. The user presses one button at a time and the detected buttons stay in the list until the user clears the capture. */
 "ui.developer.extraInputsDescription" = "กดทีละปุ่มเพิ่มเติม ปุ่มที่ตรวจพบจะอยู่ในรายการจนกว่าคุณจะล้างการจับ";
+/* Value of the route in the controller summary of the developer tools when the app reads the controller as an HID device. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.developer.hid" = "HID";
+/* Note under the packet list in the developer tools. Keep-alive packets are the routine idle messages of a controller. */
 "ui.developer.keepAliveNote" = "ซ่อนการรับส่งข้อมูลว่างตามปกติเพื่อให้เห็นกิจกรรมของคอนโทรลเลอร์";
+/* Label of the left stick value in the controller summary of the developer tools. */
 "ui.developer.leftStick" = "สติ๊กซ้าย";
+/* Message in the developer tools while the controllers load. Keep the three dots. */
 "ui.developer.loadingControllers" = "กำลังโหลดการวินิจฉัยคอนโทรลเลอร์…";
+/* Message in the developer tools before the controller diagnostics load. */
 "ui.developer.notLoaded" = "ยังไม่ได้โหลดการวินิจฉัยคอนโทรลเลอร์";
+/* Title of the empty state in the developer tools when no controller is connected. */
 "ui.developer.noControllers" = "ไม่มีคอนโทรลเลอร์ที่เชื่อมต่อ";
+/* Detail of the empty state in the developer tools. Refresh is the title of a button and is written as in this catalog. */
 "ui.developer.noControllersDetail" = "เชื่อมต่อคอนโทรลเลอร์ แล้วกดดึงข้อมูลใหม่";
+/* Message in the extra buttons section of the developer tools when the capture detected none. */
 "ui.developer.noExtraInputs" = "ไม่พบปุ่มเพิ่มเติม";
+/* Title of the empty state in the packet list of the developer tools. */
 "ui.developer.noPackets" = "ไม่มีแพ็กเก็ตที่จับได้";
+/* Heading of the raw packet capture section in the developer tools. */
 "ui.developer.packetCapture" = "การจับแพ็กเก็ตดิบ";
+/* Option of the packet filter in the developer tools that shows only packets that carry controller activity. */
 "ui.developer.packetFilterActivity" = "กิจกรรม";
+/* Option of the packet filter in the developer tools that shows all packets. */
 "ui.developer.packetFilterAll" = "ทั้งหมด";
+/* Column title of the packet list in the developer tools. The column shows when the packet arrived. */
 "ui.developer.packetColumnTime" = "เวลา";
+/* Column title of the packet list in the developer tools. The column shows whether the packet came from or went to the controller. */
 "ui.developer.packetColumnDirection" = "ทิศทาง";
+/* Column title of the packet list in the developer tools. The column shows the length of the packet in bytes. */
 "ui.developer.packetColumnBytes" = "ไบต์";
+/* Column title of the packet list in the developer tools. The column shows the bytes of the packet. */
 "ui.developer.packetColumnData" = "ข้อมูล";
+/* Warning under the packet capture export. A capture can hold data that identifies the controller or the user. */
 "ui.developer.packetSharingWarning" = "เนื้อหาแพ็กเก็ตแตกต่างกันไปตามคอนโทรลเลอร์ ตรวจสอบไฟล์ก่อนแชร์";
+/* Value of the route in the controller summary of the developer tools when the app reads the controller over raw USB. */
 "ui.developer.rawUSB" = "USB ดิบ";
+/* Status of the packet capture in the developer tools when it can start. */
 "ui.developer.ready" = "พร้อม";
+/* Label of the right stick value in the controller summary of the developer tools. */
 "ui.developer.rightStick" = "สติ๊กขวา";
+/* Label of the route in the controller summary of the developer tools. The route is how the app found and reads the controller. */
 "ui.developer.route" = "เส้นทาง";
+/* Title of the button that starts the packet capture. */
 "ui.developer.startCapture" = "เริ่มการจับ";
+/* Status of the packet capture in the developer tools while it starts. Keep the three dots. */
 "ui.developer.starting" = "กำลังเริ่มต้น…";
+/* Title of the message in the developer tools when they cannot load. */
 "ui.developer.unavailable" = "เครื่องมือนักพัฒนาไม่พร้อมใช้งาน";
+/* Label of the USB endpoints in the controller summary of the developer tools. */
 "ui.developer.usbEndpoints" = "เอนด์พอยต์ USB";
+/* Label of the USB vendor and product ID in the controller summary of the developer tools. */
 "ui.developer.usbID" = "USB ID";
+/* Message in the packet list of the developer tools while a capture waits for packets. */
 "ui.developer.waitingForPackets" = "กำลังรอแพ็กเก็ต USB กดปุ่มบนคอนโทรลเลอร์";
+/* Heading of the soak test section in the developer tools. A soak test measures the service over a long time. */
 "ui.developer.soakTest" = "การทดสอบความทนทาน";
+/* Description of the soak test section in the developer tools. The test samples memory, file descriptors and CPU of the service. */
 "ui.developer.soakTestDescription" = "วัดหน่วยความจำ ตัวบอกไฟล์ และ CPU ของบริการตลอดเวลาที่เลือก แล้วแสดงผลลัพธ์";
+/* Title of the button in the developer tools that opens the soak test sheet. Keep the three dots. */
 "ui.developer.soakTestOpen" = "เรียกใช้การทดสอบความทนทาน…";
+/* Label of the duration field of the soak test sheet. The value is in seconds. */
 "ui.developer.soakDuration" = "ระยะเวลา (วินาที)";
+/* Label of the sample interval field of the soak test sheet. The value is in milliseconds. */
 "ui.developer.soakInterval" = "ช่วงห่างการสุ่มตัวอย่าง (ms)";
+/* Label of the field of the soak test sheet that limits the resident memory of the service. The value is in MiB, mebibytes. */
 "ui.developer.soakResidentLimit" = "ขีดจำกัดขนาดที่อยู่ในหน่วยความจำ (MiB)";
+/* Label of the field of the soak test sheet that limits the memory footprint of the service. The value is in MiB, mebibytes. */
 "ui.developer.soakFootprintLimit" = "ขีดจำกัดฟุตพริ้นต์ (MiB)";
+/* Hint under the limit fields of the soak test sheet. A limit of 0 means no limit. */
 "ui.developer.soakLimitHint" = "ขีดจำกัด 0 หมายถึงปิด";
+/* Title of the button of the soak test sheet that starts the test. */
 "ui.developer.soakStart" = "เรียกใช้การทดสอบ";
+/* Status in the soak test sheet while the test samples the service. Keep the three dots. */
 "ui.developer.soakRunning" = "กำลังสุ่มตัวอย่างบริการ…";
+/* Error in the soak test sheet when a field does not hold a whole number. %@ is the label of the field. */
 "ui.developer.soakNotANumber" = "%@: ป้อนจำนวนเต็ม";
+/* Error in the soak test sheet when a value is outside its range. %1$@ is the label of the field, %2$lld is the lowest value and %3$lld is the highest value. */
 "ui.developer.soakOutOfRange" = "%1$@: ป้อนค่าระหว่าง %2$lld ถึง %3$lld";
 "ui.inputTest.aButton" = "ปุ่ม A";
 "ui.inputTest.aCross" = "A / กากบาท";
@@ -932,6 +1034,7 @@
 "ui.profiles.unpairJoyCons" = "เลิกจับคู่";
 "ui.profiles.joyConPairSessionHint" = "การจับคู่ใช้คอนโทรลเลอร์เหล่านี้โดยเฉพาะสำหรับเซสชั่นแอพปัจจุบัน";
 "ui.profiles.pair" = "จับคู่";
+/* Error shown when two Joy-Cons cannot be combined into one controller. Joy-Con is a Nintendo product name. */
 "ui.error.joyConPairUnavailable" = "ไม่สามารถจับคู่ Joy-Con ที่เลือกได้ ดึงข้อมูลคอนโทรลเลอร์ที่เชื่อมต่อใหม่แล้วลองอีกครั้ง";
 "ui.profiles.joyConSessionState" = "การจับคู่ที่ระบุชัดเจน";
 
@@ -981,6 +1084,7 @@
 
 /* Controller session lifecycle */
 "ui.controllers.suspended" = "ถูกระงับ";
+/* Error shown when the service refuses to change the session of a controller. */
 "ui.error.controllerSessionChangeRejected" = "ไม่สามารถเปลี่ยนเซสชั่นของคอนโทรลเลอร์ได้";
 
 "ui.controllers.disconnectWirelessConfirmTitle" = "เลิกเชื่อมต่อคอนโทรลเลอร์ไร้สายหรือไม่";
@@ -2397,80 +2501,149 @@
 "a11y.library.recordHexadecimal" = "%1$@ เลขฐานสิบหก %2$@";
 /* Shown in the Record section of a record in the Library when the record text cannot be read for display. %@ is the controller identity, such as 045E:028E. */
 "ui.library.recordUnreadable" = "อ่านข้อความของระเบียน %@ ไม่ได้ จึงแสดงไม่ได้";
+/* Title of the details button of an error message in the Access area. */
 "ui.access.details" = "รายละเอียด";
+/* Button of an error message in the Access area that hides the message. */
 "ui.access.dismiss" = "ปิดทิ้ง";
+/* Button of an error message in the Access area that reads the access settings again. */
 "ui.access.tryAgain" = "ลองอีกครั้ง";
+/* Message in the Access area while it reads the access settings. Keep the three dots. */
 "ui.access.loading" = "กำลังอ่านการตั้งค่าการเข้าถึง…";
+/* Button that closes the sheet that shows the secret of a token. */
 "ui.access.done" = "เสร็จสิ้น";
+/* Button of the open panel in which the user picks a program or app to grant access. It confirms the choice. */
 "ui.access.choose" = "เลือก";
+/* Label of the row in the Access area for the local endpoint. The local endpoint is the socket where programs on this Mac connect. */
 "ui.access.endpoint" = "ปลายทางภายในเครื่อง";
+/* Help text of the endpoint switch. %@ is the path of the socket. */
 "ui.access.socket" = "ซ็อกเก็ต: %@";
+/* Context menu item that copies the path of the socket. */
 "ui.access.socket.copy" = "คัดลอกพาธซ็อกเก็ต";
+/* Confirm button of the alert that turns on the local endpoint. */
 "ui.access.enable" = "เปิด";
+/* Title of the alert that turns on the local endpoint. */
 "ui.access.enable.title" = "เปิดปลายทางภายในเครื่องหรือไม่";
+/* Message of the alert that turns on the local endpoint. The control scope allows a program to change controller state. */
 "ui.access.enable.message" = "โปรแกรมที่คุณให้สิทธิ์การเข้าถึงจะอ่านสถานะคอนโทรลเลอร์ได้ และเปลี่ยนสถานะได้หากมีขอบเขตควบคุม";
+/* Label of the row in the Access area for the WebSocket endpoint, where web pages connect. */
 "ui.access.web" = "WebSocket";
+/* Value of the WebSocket row when it is on. %1$@ is the address of the endpoint and %2$@ is the address where pages are served. */
 "ui.access.web.on" = "เปิดที่ %1$@ หน้าเว็บที่ %2$@";
+/* Value of the WebSocket row when it is off. */
 "ui.access.web.off" = "ปิด";
+/* Value of the WebSocket row when it is on but cannot listen. %@ is the port number. */
 "ui.access.web.closed" = "เปิดอยู่ แต่ไม่ได้รอรับการเชื่อมต่อบนพอร์ต %@";
+/* Help text of the WebSocket row. %@ is the path of the folder from which the endpoint serves pages. */
 "ui.access.web.pages" = "โฟลเดอร์หน้าเว็บ: %@";
+/* Label of the port field of the WebSocket endpoint. */
 "ui.access.web.port" = "พอร์ต";
+/* Value of the port field when the system picks the port. */
 "ui.access.web.port.automatic" = "อัตโนมัติ";
+/* Button that makes the system pick the port of the WebSocket endpoint. */
 "ui.access.web.port.choose" = "เลือกอัตโนมัติ";
+/* Error under the port field. %1$lld is the lowest port and %2$lld is the highest port. */
 "ui.access.web.portRange" = "พอร์ตต้องอยู่ระหว่าง %1$lld ถึง %2$lld";
+/* Title of the alert that turns on the WebSocket. */
 "ui.access.web.enable.title" = "เปิด WebSocket หรือไม่";
 /* Message of the confirmation alert that turns on the WebSocket in the Access area. */
 "platform.macos.ui.access.web.enable.message" = "หน้าเว็บจากต้นทางของโทเค็นจะเชื่อมต่อกับปลายทางบน Mac เครื่องนี้ได้";
+/* Line of the alert that turns on the WebSocket. %lld is the port number. */
 "ui.access.web.enable.port" = "พอร์ต: %lld";
+/* Line of the alert that turns on the WebSocket when the port is automatic. */
 "ui.access.web.enable.automatic" = "ระบบจะเลือกพอร์ตที่ว่าง";
+/* Heading of the list of programs that have access in the Access area. */
 "ui.access.grants" = "โปรแกรมที่มีสิทธิ์การเข้าถึง";
+/* Toolbar button in the Access area that starts the grant of access to a program. Keep the three dots. */
 "ui.access.grantProgram" = "ให้สิทธิ์โปรแกรม…";
+/* Button on a refused program that grants it access. */
 "ui.access.grant" = "ให้สิทธิ์";
+/* Message of the open panel in which the user picks a program or app to grant access. */
 "ui.access.grant.pick" = "เลือกโปรแกรมหรือแอปที่จะให้สิทธิ์การเข้าถึง";
+/* Error shown when the chosen program has no signature. %@ is the path of the program. */
 "ui.access.grant.unsigned" = "%@ ไม่ได้ลงชื่อ จึงไม่สามารถให้สิทธิ์การเข้าถึงได้";
+/* Error shown when the chosen program has an ad-hoc signature. %@ is the identifier of the program. Any local process can claim such an identity. */
 "ui.access.grant.adHoc" = "%@ ไม่ได้ลงชื่อด้วยใบรับรอง กระบวนการภายในเครื่องใดๆ จึงอ้างตัวเป็นโปรแกรมนี้ได้ ไม่สามารถให้สิทธิ์การเข้าถึงได้";
+/* Title of the alert that grants access to a program. %@ is the identifier of the program. */
 "ui.access.grant.title" = "ให้สิทธิ์การเข้าถึงแก่ %@ หรือไม่";
+/* Question of the alert that grants access. %1$@ is the identifier of the program, %2$@ is the description of its signer and %3$@ is the list of scopes. */
 "ui.access.grant.question" = "ให้ขอบเขตเหล่านี้แก่ %1$@ (%2$@) หรือไม่: %3$@";
+/* Warning in the alert that grants access when the control scope is part of the grant. Rumble is vibration of the controller. */
 "ui.access.grant.controlWarning" = "ขอบเขตควบคุมช่วยให้โปรแกรมส่งเอาต์พุตไปยังคอนโทรลเลอร์ของคุณได้ เช่น การสั่นและไฟ";
 /* Warning line of the confirmation alert that grants access to a program that Apple signed. */
 "platform.macos.ui.access.grant.platformWarning" = "โปรแกรมนี้ลงชื่อโดย Apple โปรแกรมใดก็ตามที่ Apple ลงชื่อด้วยตัวระบุเดียวกันจะได้รับสิทธิ์การเข้าถึงนี้";
+/* Button on a program or token that removes its access. */
 "ui.access.revoke" = "เพิกถอน";
+/* Title of the alert that removes all access of a program. %@ is the name of the program. */
 "ui.access.revoke.title" = "เพิกถอนสิทธิ์การเข้าถึงของ %@ หรือไม่";
+/* Message of the alert that removes all access of a program. */
 "ui.access.revoke.message" = "โปรแกรมจะสูญเสียขอบเขตทั้งหมดและการเชื่อมต่อที่เปิดอยู่จะถูกปิด";
+/* Menu item that removes all scopes of a program or token. */
 "ui.access.revoke.all" = "ขอบเขตทั้งหมด";
+/* Message of the alert that removes one scope. %@ is the name of the scope, for example Read or Control. */
 "ui.access.revokeScope.message" = "จะนำออกเฉพาะขอบเขต %@ ขอบเขตอื่นยังคงอยู่ และการเชื่อมต่อที่เปิดอยู่ซึ่งใช้ขอบเขตนี้จะถูกปิด";
+/* Title of the alert that removes a token. %@ is the name of the token. */
 "ui.access.revokeToken.title" = "เพิกถอนโทเค็น %@ หรือไม่";
+/* Message of the alert that removes a token. */
 "ui.access.revokeToken.message" = "หน้าเว็บและโปรแกรมที่ใช้โทเค็นจะสูญเสียสิทธิ์การเข้าถึงและการเชื่อมต่อที่เปิดอยู่จะถูกปิด";
+/* Heading of the list of tokens in the Access area. A token is a secret that a program or web page uses to connect. */
 "ui.access.tokens" = "โทเค็น";
+/* Toolbar button in the Access area that starts the creation of a token. Keep the three dots. */
 "ui.access.grantToken" = "สร้างโทเค็น…";
+/* Heading of the token creation sheet. */
 "ui.access.token.form.title" = "สร้างโทเค็น";
+/* Placeholder of the name field of the token creation sheet. */
 "ui.access.token.name" = "ชื่อ";
+/* Help text under the origins field of the token creation sheet. https://example.com is an example and stays as written. */
 "ui.access.token.origins" = "ต้นทางเว็บที่ใช้โทเค็นได้ บรรทัดละหนึ่งรายการ เช่น https://example.com เว้นว่างไว้สำหรับโทเค็นที่ใช้เฉพาะโปรแกรมภายในเครื่อง";
+/* Button of the token creation sheet that goes on to the confirmation. */
 "ui.access.token.continue" = "ทำต่อ";
+/* Error of the token creation sheet when the name or the scopes are missing. */
 "ui.access.token.incomplete" = "โทเค็นต้องมีชื่อและขอบเขตอย่างน้อยหนึ่งรายการ";
+/* Error of the token creation sheet when the user picks the control scope together with web origins. */
 "ui.access.token.originControl" = "โทเค็นสำหรับหน้าเว็บมีขอบเขตควบคุมไม่ได้";
+/* Title of the alert that creates a token. %@ is the name of the token. */
 "ui.access.token.title" = "สร้างโทเค็น %@ หรือไม่";
+/* Question of the alert that creates a token without origins. %1$@ is the name of the token and %2$@ is the list of scopes. */
 "ui.access.token.question" = "สร้างโทเค็น %1$@ ด้วยขอบเขตเหล่านี้หรือไม่: %2$@";
+/* Question of the alert that creates a token with origins. %1$@ is the name of the token, %2$@ is the list of scopes and %3$@ is the list of web origins. */
 "ui.access.token.webQuestion" = "สร้างโทเค็น %1$@ ด้วยขอบเขตเหล่านี้หรือไม่: %2$@ หน้าเว็บจาก %3$@ ใช้โทเค็นนี้ได้";
+/* Title of the sheet that shows the secret of a token. %@ is the name of the token. */
 "ui.access.token.issued.title" = "โทเค็น %@";
+/* Message of the sheet that shows the secret of a token once. OpenJoystickDriver is the product name. */
 "ui.access.token.issued.message" = "คัดลอกโทเค็นตอนนี้ OpenJoystickDriver ไม่เก็บโทเค็นไว้และไม่สามารถแสดงอีกได้";
+/* Button of the sheet that copies the secret of a token. */
 "ui.access.token.copy" = "คัดลอกโทเค็น";
+/* Title of a token in the list of tokens. %@ is the name of the token. */
 "ui.access.token.named" = "โทเค็น %@";
+/* Title of a token in the list of tokens when its name is not known. */
 "ui.access.token.unknown" = "โทเค็นที่ไม่รู้จัก";
+/* Heading of the list of programs and tokens that the endpoint refused in the last 24 hours. */
 "ui.access.refused" = "ถูกปฏิเสธล่าสุด";
+/* Footer of the list of refused programs and tokens. */
 "ui.access.refused.message" = "โปรแกรมและโทเค็นที่ปลายทางปฏิเสธใน 24 ชั่วโมงที่ผ่านมา";
+/* Heading of the list of connections that are open at the moment in the Access area. */
 "ui.access.connections" = "เชื่อมต่ออยู่ตอนนี้";
+/* Name of the read scope. It lets a program read controller state. */
 "ui.access.scope.read" = "อ่าน";
+/* Name of the control scope. It lets a program change controller state and send output. */
 "ui.access.scope.control" = "ควบคุม";
+/* Description of the signer of a program. %@ is the identifier of the publisher. */
 "ui.access.signer.signed" = "ลงชื่อโดย %@";
 /* Label for the signer of a program that Apple signed, shown in the Access area. */
 "platform.macos.ui.access.signer.platform" = "ลงชื่อโดย Apple";
+/* Description of the signer of a program that has no certificate signature. */
 "ui.access.signer.adHoc" = "ไม่ได้ลงชื่อ";
+/* Name of the connection kind for a local socket. */
 "ui.access.transport.socket" = "ซ็อกเก็ต";
+/* Name of the connection kind for a WebSocket. */
 "ui.access.transport.web" = "WebSocket";
+/* Error of the Access area when the service is not running. OpenJoystickDriver is the product name. */
 "ui.access.error.serviceUnavailable" = "OpenJoystickDriver ไม่ได้ทำงานอยู่ จึงอ่านหรือเปลี่ยนการตั้งค่าการเข้าถึงไม่ได้";
+/* Error of the Access area when the service does not answer in time. OpenJoystickDriver is the product name. */
 "ui.access.error.serviceTimeout" = "OpenJoystickDriver ไม่ตอบกลับภายในเวลาที่กำหนด";
+/* Error of the Access area when the service refuses the request of the app. OpenJoystickDriver is the product name. */
 "ui.access.error.peerRejected" = "OpenJoystickDriver ปฏิเสธคำขอนี้";
+/* Error of the Access area when a request fails. %@ is the reason. */
 "ui.access.error.requestFailed" = "คำขอล้มเหลว: %@";
 /* VoiceOver label of the button in the Access error banner that shows the details of the error. */
 "a11y.access.details" = "แสดงรายละเอียดของข้อผิดพลาด";
@@ -2641,9 +2814,13 @@
 "a11y.mainWindow.sidebar" = "ส่วนต่างๆ";
 /* VoiceOver label of the control in the capture assignment sheet that sets the minimum swipe distance of a touch gesture. */
 "a11y.capture.touchSwipeDistance" = "ระยะปัดขั้นต่ำ";
+/* Detail line of a row in the Access area with two parts. %1$@ and %2$@ are the parts, for example the signer and the scopes. The dot between them separates the parts and may change. */
 "ui.access.detail.pair" = "%1$@ · %2$@";
+/* Detail line of a row in the Access area with three parts. %1$@, %2$@ and %3$@ are the parts, for example the signer, the scopes and the reason of a refusal. The dots between them separate the parts and may change. */
 "ui.access.detail.triple" = "%1$@ · %2$@ · %3$@";
+/* Error shown when the app cannot find the executable of a refused program. %@ is the identifier of the program. */
 "ui.access.grant.noPath" = "OpenJoystickDriver อ่านไฟล์ปฏิบัติการของ %@ ไม่ได้ จึงให้สิทธิ์เข้าถึงไม่ได้";
+/* Line of the alert that turns on the WebSocket when a port is saved. */
 "ui.access.web.enable.savedPort" = "ปลายทางเว็บใช้พอร์ตที่บันทึกไว้ต่อไป";
 "ui.library.record.detail" = "%1$@ · %2$@";
 "ui.library.mod.detail" = "%1$@ · %2$@";
@@ -2656,7 +2833,9 @@
 "ui.settings.general.updateAvailableBody" = "มีเวอร์ชัน %@ พร้อมใช้งาน";
 /* Title of the message in the main window while a profile change is still running. */
 "ui.mainWindow.profileMutationRunning" = "การเปลี่ยนแปลงโปรไฟล์ยังดำเนินการอยู่ ลองอีกครั้งเมื่อเสร็จ";
+/* Value of the WebSocket row when it is on but the port is not set yet. */
 "ui.access.web.noPort" = "ปลายทางเว็บเปิดอยู่ แต่ยังไม่ได้เลือกพอร์ต";
+/* Description of the signer of a program that has a signature without a known publisher. */
 "ui.access.signer.signedUnknownPublisher" = "ลงชื่อโดยผู้เผยแพร่ที่ไม่รู้จัก";
 "ui.settings.commandLine.toolLinkTargetUnreadable" = "%@ เป็นลิงก์ที่ไม่สามารถอ่านเป้าหมายได้ การติดตั้งจะเชื่อมโยงกับแอพนี้แทน";
 /* Text of error E1001, sent to a client that connects to the endpoint while the endpoint is off, and printed by 'ojd explain'. The command in quotes stays as written. */
@@ -2879,6 +3058,7 @@
 "error.E5006.message" = "อ่านไฟล์คีย์ของ ID ยูนิต PortKeyInstallation.key ไม่ได้ หรือไฟล์ไม่ได้มีขนาด 32 ไบต์ กู้คืนไฟล์จากข้อมูลสำรอง หากคุณลบไฟล์แทน OpenJoystickDriver จะสร้างคีย์ใหม่ และ ID ยูนิตทุกรายการจะเปลี่ยน";
 /* Error E5007, shown when a controller record or patch fails its schema; the message names the field. */
 "error.E5007.message" = "ระเบียนคอนโทรลเลอร์หรือ patch ไม่ถูกต้อง ตรวจสอบไฟล์กับสคีมาของไฟล์นั้นแล้วแก้ฟิลด์ที่ข้อความระบุ";
+/* Error text with the error code. %1$@ is the message and %2$@ is the code, for example E2011. The code is in parentheses. */
 "ui.error.withCode" = "%1$@ (%2$@)";
 /* Message printed by 'ojd update check' when the installed version is newer than the latest release. %1$@ is the installed version and %2$@ is the latest release. */
 "cli.update.check.ahead" = "OpenJoystickDriver %1$@ ใหม่กว่ารุ่นล่าสุดที่เผยแพร่ (%2$@)";

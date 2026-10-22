@@ -173,36 +173,67 @@
 "ui.keyboard.captureCanceled" = "已取消鍵盤擷取。";
 /* VoiceOver label of the area that captures a keyboard key. */
 "ui.keyboard.captureTitle" = "擷取鍵盤按鍵";
+/* Title of the sheet that adjusts one assignment of a profile. %@ is the name of the controller control that the assignment reads. */
 "ui.capture.adjust" = "調整 %@";
+/* Label of the slider that sets the dead zone of an axis assignment. The dead zone is the part of the travel near the center that is ignored. */
 "ui.capture.deadZone" = "死區";
+/* Label of the slider that sets the gain of an axis assignment. The gain multiplies the travel of the axis. */
 "ui.capture.gain" = "增益";
+/* Label of the switch that reverses the direction of an axis assignment. */
 "ui.capture.invertAxis" = "反轉軸向";
+/* Label of the popup that picks the response curve of an axis assignment. The curve maps the travel of the control to the output. */
 "ui.capture.responseCurve" = "回應曲線";
+/* Label of the slider that sets the travel at which an axis counts as a pressed button. */
 "ui.capture.digitalThreshold" = "數位臨界值";
+/* Option of the response curve popup: output grows in proportion to the travel. */
 "ui.capture.linear" = "線性";
+/* Option of the response curve popup: output grows slowly at first and faster later. */
 "ui.capture.easeIn" = "緩入";
+/* Option of the response curve popup: output grows fast at first and slower later. */
 "ui.capture.easeOut" = "緩出";
+/* Option of the response curve popup: output grows slowly at both ends and faster in the middle. */
 "ui.capture.smoothStep" = "平滑步階";
+/* Heading of the capture assignment sheet while the app waits for the user to press a control of the controller. */
 "ui.capture.pressControl" = "按下控制器控制項";
+/* Instruction in the capture assignment sheet. The user picks a control from the popup or lets the app wait for the next input. */
 "ui.capture.chooseControl" = "在下方選擇控制項，或短暫聆聽下一次輸入。";
+/* Label of the popup in the capture assignment sheet that lists the controls of the controller. */
 "ui.capture.controllerControl" = "控制器控制項";
+/* Title of the button in the capture assignment sheet that waits for the next controller input. */
 "ui.capture.listen" = "聆聽控制項";
+/* Message in the capture assignment sheet when no controller is connected. Manual selection means the popup of controls. */
 "ui.capture.connectForLive" = "連接控制器以啟用即時擷取。仍可手動選取。";
+/* VoiceOver label of the capture assignment sheet. */
 "ui.capture.title" = "擷取控制器控制項";
+/* VoiceOver announcement when the user cancels the controller control capture. */
 "ui.capture.canceled" = "已取消控制器擷取。";
+/* VoiceOver label of the status area in the capture assignment sheet. */
 "ui.capture.status" = "擷取狀態";
+/* Status in the capture assignment sheet before the capture starts. */
 "ui.capture.ready" = "已準備好聆聽。";
+/* Status in the capture assignment sheet while the app waits for a controller control. */
 "ui.capture.listening" = "正在聆聽控制器控制項。";
+/* VoiceOver announcement while the app waits for a controller control. Escape is the name of the Escape key. */
 "ui.capture.listeningCancel" = "正在聆聽控制器控制項。按 Esc 鍵可取消。";
+/* Status text in the capture assignment sheet while the app waits for a controller control. Keep the three dots. */
 "ui.capture.listeningEllipsis" = "正在聆聽控制器控制項…";
+/* Status in the capture assignment sheet after a control is detected. %@ is the name of the control. The sentence ends with a period. */
 "ui.capture.detected" = "已偵測到：%@。";
+/* Label with the detected control in the capture assignment sheet. %@ is the name of the control. It has no final period because other text follows or the label stands alone. */
 "ui.capture.detectedNoPeriod" = "已偵測到：%@";
+/* Status in the capture assignment sheet. %1$@ is the name of the detected control and %2$@ is the sentence that says the destination is ready for selection. */
 "ui.capture.detectedWithDestination" = "已偵測到：%1$@。%2$@";
+/* Status in the capture assignment sheet when input arrived from a control that the app does not support. */
 "ui.capture.noSupported" = "已收到輸入，但未能識別支援的控制項。";
+/* Status in the capture assignment sheet that tells the user to pick a destination for the detected control. The sentence follows the detected control. */
 "ui.capture.destinationReady" = "目的地已可選取。";
+/* Status in the capture assignment sheet when the capture fails. %@ is the reason. */
 "ui.capture.error" = "擷取發生錯誤。%@";
+/* VoiceOver description of the input test status when no button of the controller is held. */
 "ui.capture.noButton" = "目前沒有按住任何按鈕。";
+/* VoiceOver description of the input test status. %@ is the list of the names of the buttons that are held. */
 "ui.capture.buttonsHeld" = "按住的按鈕：%@";
+/* Error under the name field of the profile creation sheet when the name is empty. */
 "ui.capture.profileNameValidation" = "請輸入設定檔名稱。";
 "ui.profiles.new" = "新增設定檔";
 "ui.profiles.deleteTitle" = "要刪除設定檔嗎？";
@@ -310,15 +341,25 @@
 "ui.debug.outputNeedsAttention" = "控制器輸出需要注意。";
 /* Line of the debug report when the service does not answer, so the report has no diagnostics. */
 "ui.debug.serviceUnavailable" = "目前無法使用服務診斷。";
+/* Error shown in the profile editor when the profile changed elsewhere after the editor loaded it. Reload means to discard the edits and load the profile again. */
 "ui.error.profileChanged" = "此設定檔已在其他位置更改。請重新載入或繼續編輯。";
+/* Error under the name field of the profile creation sheet when another profile has the name. */
 "ui.error.duplicateProfile" = "已存在相同名稱的設定檔。";
+/* Error shown when the service has no profile with the requested identifier. */
 "ui.error.profileMissing" = "該設定檔已無法使用。";
+/* Error shown when the service rejects the assignments of a profile. */
 "ui.error.reviewAssignments" = "請檢查設定檔對應後再試一次。";
+/* Error shown when the service cannot save the profile library. */
 "ui.error.profileLibrarySave" = "無法儲存設定檔。";
+/* Error shown when the remapping engine of the service is not available yet. */
 "ui.error.remappingUnavailable" = "控制器重新對應暫時無法使用。";
+/* Error shown for a failure that has no message of its own. OpenJoystickDriver is the product name. */
 "ui.error.generic" = "OpenJoystickDriver 無法完成該動作。";
+/* Error shown when the service cannot be reached. OpenJoystickDriver is the product name. */
 "ui.error.notAvailable" = "OpenJoystickDriver 目前無法使用。";
+/* Error shown when the service does not answer in time. OpenJoystickDriver is the product name. */
 "ui.error.timeout" = "OpenJoystickDriver 回應時間過長。";
+/* Error shown when the service answers with a reply that the app does not understand. OpenJoystickDriver is the product name. */
 "ui.error.unexpected" = "OpenJoystickDriver 傳回了非預期的結果。";
 "ui.mapping.allApps" = "所有 App";
 "ui.mapping.specificApp" = "特定 App";
@@ -360,10 +401,15 @@
 "ui.profiles.touch.pointerSensitivity" = "每個表面的指標點數";
 "ui.profiles.touch.stickRadius" = "搖桿全幅半徑（表面比例）";
 "ui.profiles.touch.deadzone" = "搖桿死區";
+/* Label of the stepper that sets the number of columns of a touch grid in the capture assignment sheet. %d is the number of columns. */
 "ui.capture.touchColumns" = "網格欄數：%d";
+/* Label of the stepper that sets the number of rows of a touch grid in the capture assignment sheet. %d is the number of rows. */
 "ui.capture.touchRows" = "網格列數：%d";
+/* Label of the stepper that picks the column of the touch cell in the capture assignment sheet. %d is the column number, counted from 1. */
 "ui.capture.touchColumn" = "儲存格欄：%d";
+/* Label of the stepper that picks the row of the touch cell in the capture assignment sheet. %d is the row number, counted from 1. */
 "ui.capture.touchRow" = "儲存格列：%d";
+/* Label of the slider that sets the shortest swipe that counts, as a share of the touch surface. %.0f is a percentage; %% is the percent sign. */
 "ui.capture.touchSwipeDistance" = "最小滑動距離：%.0f%%";
 "ui.mapping.mute" = "靜音";
 "ui.mapping.leftTriggerClick" = "左扳機按下";
@@ -430,13 +476,21 @@
 "action.remove" = "移除";
 /* Button of the input test window that stops the rumble test and button of the developer view that stops the packet capture. */
 "action.stop" = "停止";
+/* Error shown when the debug report cannot be written to the chosen file. */
 "ui.error.supportReportSave" = "無法儲存支援報告。請選擇其他檔案後再試一次。";
+/* Error shown when the debug logs cannot be written to the chosen file. The system reason follows on the next line. */
 "ui.error.logsSave" = "無法儲存記錄。請選擇其他檔案後再試一次。";
+/* Error shown in the capture assignment sheet when the listening ends without any control. */
 "ui.error.noDetectedControl" = "未偵測到新的控制器控制項。";
+/* Error shown when the user starts a profile action while another one still runs. */
 "ui.error.actionInProgress" = "另一項設定檔動作已在進行中。";
+/* Error shown when the list of active profiles is damaged and the service cannot load it. */
 "ui.error.profileLibraryCorrupt" = "使用中的設定檔清單已損壞，無法載入。";
+/* Title of the button in the capture assignment sheet while the app waits for a control. Keep the three dots. */
 "ui.capture.listeningButton" = "正在聆聽…";
+/* Error shown when the user saves a profile whose assignments have problems. */
 "ui.error.reviewAssignmentsBeforeSave" = "儲存此設定檔前請先檢查對應。";
+/* Error shown when the profile item that the user selected is gone, for example after a reload. */
 "ui.error.selectedProfileItemMissing" = "所選的設定檔項目已無法使用。";
 /* Message about a request to the system extension manager that ends cancelled. The request installs or removes the driver extension. */
 "cli.transportExtension.group.cancelled" = "系統延伸功能要求已取消。";
@@ -498,53 +552,101 @@
 "term.protocolVariant.wired" = "有線";
 /* Label of a fact under Advanced in the Controllers detail: the parser that reads the controller, shown as its ojd spelling such as xbox-xusb:receiver. */
 "term.parser" = "解析器";
+/* Label in the controller summary of the developer tools. The value is a list of the pressed buttons. */
 "ui.developer.buttons" = "按鈕";
+/* Status next to the Start Capture button while the packet capture runs. */
 "ui.developer.capturing" = "正在擷取";
+/* Label of the connection kind in the controller summary of the developer tools, for example USB or Bluetooth. */
 "ui.developer.connection" = "連線";
+/* Label of the controller name in the controller summary of the developer tools. */
 "ui.developer.controller" = "控制器";
+/* Heading of the controller summary section in the developer tools. */
 "ui.developer.controllerDetails" = "控制器";
+/* Message in the packet capture list of the developer tools before a capture. Start Capture is the title of the button and is written as in this catalog. */
 "ui.developer.emptyCapture" = "按下「開始擷取」，然後按控制器上的按鈕。";
+/* Title of the save panel that exports the packet capture. */
 "ui.developer.exportCapture" = "匯出封包擷取";
+/* Heading of the section in the developer tools that lists buttons beyond the standard ones. */
 "ui.developer.extraInputs" = "額外按鈕";
+/* Description of the extra buttons section in the developer tools. The user presses one button at a time and the detected buttons stay in the list until the user clears the capture. */
 "ui.developer.extraInputsDescription" = "每次按一個額外按鈕。偵測到的按鈕會一直列出，直到您清除擷取內容。";
+/* Value of the route in the controller summary of the developer tools when the app reads the controller as an HID device. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.developer.hid" = "HID";
+/* Note under the packet list in the developer tools. Keep-alive packets are the routine idle messages of a controller. */
 "ui.developer.keepAliveNote" = "已隱藏例行的閒置封包，讓控制器的活動清楚可見。";
+/* Label of the left stick value in the controller summary of the developer tools. */
 "ui.developer.leftStick" = "左搖桿";
+/* Message in the developer tools while the controllers load. Keep the three dots. */
 "ui.developer.loadingControllers" = "正在載入控制器診斷資訊…";
+/* Message in the developer tools before the controller diagnostics load. */
 "ui.developer.notLoaded" = "尚未載入控制器診斷資訊。";
+/* Title of the empty state in the developer tools when no controller is connected. */
 "ui.developer.noControllers" = "沒有連接控制器";
+/* Detail of the empty state in the developer tools. Refresh is the title of a button and is written as in this catalog. */
 "ui.developer.noControllersDetail" = "連接控制器，然後按「重新整理」。";
+/* Message in the extra buttons section of the developer tools when the capture detected none. */
 "ui.developer.noExtraInputs" = "未偵測到額外按鈕。";
+/* Title of the empty state in the packet list of the developer tools. */
 "ui.developer.noPackets" = "尚未擷取封包";
+/* Heading of the raw packet capture section in the developer tools. */
 "ui.developer.packetCapture" = "原始封包擷取";
+/* Option of the packet filter in the developer tools that shows only packets that carry controller activity. */
 "ui.developer.packetFilterActivity" = "活動";
+/* Option of the packet filter in the developer tools that shows all packets. */
 "ui.developer.packetFilterAll" = "全部";
+/* Column title of the packet list in the developer tools. The column shows when the packet arrived. */
 "ui.developer.packetColumnTime" = "時間";
+/* Column title of the packet list in the developer tools. The column shows whether the packet came from or went to the controller. */
 "ui.developer.packetColumnDirection" = "方向";
+/* Column title of the packet list in the developer tools. The column shows the length of the packet in bytes. */
 "ui.developer.packetColumnBytes" = "位元組";
+/* Column title of the packet list in the developer tools. The column shows the bytes of the packet. */
 "ui.developer.packetColumnData" = "資料";
+/* Warning under the packet capture export. A capture can hold data that identifies the controller or the user. */
 "ui.developer.packetSharingWarning" = "封包內容會因控制器而異。分享前請先檢查檔案。";
+/* Value of the route in the controller summary of the developer tools when the app reads the controller over raw USB. */
 "ui.developer.rawUSB" = "原始 USB";
+/* Status of the packet capture in the developer tools when it can start. */
 "ui.developer.ready" = "準備就緒";
+/* Label of the right stick value in the controller summary of the developer tools. */
 "ui.developer.rightStick" = "右搖桿";
+/* Label of the route in the controller summary of the developer tools. The route is how the app found and reads the controller. */
 "ui.developer.route" = "路徑";
+/* Title of the button that starts the packet capture. */
 "ui.developer.startCapture" = "開始擷取";
+/* Status of the packet capture in the developer tools while it starts. Keep the three dots. */
 "ui.developer.starting" = "正在啟動…";
+/* Title of the message in the developer tools when they cannot load. */
 "ui.developer.unavailable" = "無法使用開發工具";
+/* Label of the USB endpoints in the controller summary of the developer tools. */
 "ui.developer.usbEndpoints" = "USB 端點";
+/* Label of the USB vendor and product ID in the controller summary of the developer tools. */
 "ui.developer.usbID" = "USB ID";
+/* Message in the packet list of the developer tools while a capture waits for packets. */
 "ui.developer.waitingForPackets" = "正在等候 USB 封包。請按控制器上的按鈕。";
+/* Heading of the soak test section in the developer tools. A soak test measures the service over a long time. */
 "ui.developer.soakTest" = "耐久測試";
+/* Description of the soak test section in the developer tools. The test samples memory, file descriptors and CPU of the service. */
 "ui.developer.soakTestDescription" = "在所選時間內取樣服務的記憶體、檔案描述符和 CPU，然後顯示結果。";
+/* Title of the button in the developer tools that opens the soak test sheet. Keep the three dots. */
 "ui.developer.soakTestOpen" = "執行耐久測試…";
+/* Label of the duration field of the soak test sheet. The value is in seconds. */
 "ui.developer.soakDuration" = "時長（秒）";
+/* Label of the sample interval field of the soak test sheet. The value is in milliseconds. */
 "ui.developer.soakInterval" = "取樣間隔（毫秒）";
+/* Label of the field of the soak test sheet that limits the resident memory of the service. The value is in MiB, mebibytes. */
 "ui.developer.soakResidentLimit" = "常駐大小上限（MiB）";
+/* Label of the field of the soak test sheet that limits the memory footprint of the service. The value is in MiB, mebibytes. */
 "ui.developer.soakFootprintLimit" = "記憶體占用上限（MiB）";
+/* Hint under the limit fields of the soak test sheet. A limit of 0 means no limit. */
 "ui.developer.soakLimitHint" = "上限為 0 表示關閉。";
+/* Title of the button of the soak test sheet that starts the test. */
 "ui.developer.soakStart" = "執行測試";
+/* Status in the soak test sheet while the test samples the service. Keep the three dots. */
 "ui.developer.soakRunning" = "正在取樣服務…";
+/* Error in the soak test sheet when a field does not hold a whole number. %@ is the label of the field. */
 "ui.developer.soakNotANumber" = "%@：請輸入整數。";
+/* Error in the soak test sheet when a value is outside its range. %1$@ is the label of the field, %2$lld is the lowest value and %3$lld is the highest value. */
 "ui.developer.soakOutOfRange" = "%1$@：請輸入介於 %2$lld 與 %3$lld 之間的值。";
 "ui.inputTest.aButton" = "A 按鈕";
 "ui.inputTest.aCross" = "A / 叉";
@@ -932,6 +1034,7 @@
 "ui.profiles.unpairJoyCons" = "取消配對";
 "ui.profiles.joyConPairSessionHint" = "配對會在目前的 App 工作階段中使用這些確切的控制器。";
 "ui.profiles.pair" = "配對";
+/* Error shown when two Joy-Cons cannot be combined into one controller. Joy-Con is a Nintendo product name. */
 "ui.error.joyConPairUnavailable" = "無法配對所選的 Joy-Con。請重新整理已連接的控制器後再試一次。";
 "ui.profiles.joyConSessionState" = "明確配對";
 
@@ -981,6 +1084,7 @@
 
 /* Controller session lifecycle */
 "ui.controllers.suspended" = "已暫停";
+/* Error shown when the service refuses to change the session of a controller. */
 "ui.error.controllerSessionChangeRejected" = "無法變更控制器工作階段。";
 
 "ui.controllers.disconnectWirelessConfirmTitle" = "要中斷無線控制器連線嗎？";
@@ -2397,80 +2501,149 @@
 "a11y.library.recordHexadecimal" = "%1$@，十六進位 %2$@";
 /* Shown in the Record section of a record in the Library when the record text cannot be read for display. %@ is the controller identity, such as 045E:028E. */
 "ui.library.recordUnreadable" = "無法讀取記錄 %@ 的文字，因此無法顯示。";
+/* Title of the details button of an error message in the Access area. */
 "ui.access.details" = "詳細資訊";
+/* Button of an error message in the Access area that hides the message. */
 "ui.access.dismiss" = "忽略";
+/* Button of an error message in the Access area that reads the access settings again. */
 "ui.access.tryAgain" = "重試";
+/* Message in the Access area while it reads the access settings. Keep the three dots. */
 "ui.access.loading" = "正在讀取取用權限設定…";
+/* Button that closes the sheet that shows the secret of a token. */
 "ui.access.done" = "完成";
+/* Button of the open panel in which the user picks a program or app to grant access. It confirms the choice. */
 "ui.access.choose" = "選擇";
+/* Label of the row in the Access area for the local endpoint. The local endpoint is the socket where programs on this Mac connect. */
 "ui.access.endpoint" = "本機端點";
+/* Help text of the endpoint switch. %@ is the path of the socket. */
 "ui.access.socket" = "通訊端：%@";
+/* Context menu item that copies the path of the socket. */
 "ui.access.socket.copy" = "拷貝通訊端路徑";
+/* Confirm button of the alert that turns on the local endpoint. */
 "ui.access.enable" = "開啟";
+/* Title of the alert that turns on the local endpoint. */
 "ui.access.enable.title" = "要開啟本機端點嗎？";
+/* Message of the alert that turns on the local endpoint. The control scope allows a program to change controller state. */
 "ui.access.enable.message" = "您授予取用權限的程式隨後可以讀取控制器狀態，若具有控制範圍，還可以更改狀態。";
+/* Label of the row in the Access area for the WebSocket endpoint, where web pages connect. */
 "ui.access.web" = "WebSocket";
+/* Value of the WebSocket row when it is on. %1$@ is the address of the endpoint and %2$@ is the address where pages are served. */
 "ui.access.web.on" = "已開啟，位於 %1$@，頁面位於 %2$@";
+/* Value of the WebSocket row when it is off. */
 "ui.access.web.off" = "關";
+/* Value of the WebSocket row when it is on but cannot listen. %@ is the port number. */
 "ui.access.web.closed" = "已開啟，但未在連接埠 %@ 上監聽";
+/* Help text of the WebSocket row. %@ is the path of the folder from which the endpoint serves pages. */
 "ui.access.web.pages" = "頁面資料夾：%@";
+/* Label of the port field of the WebSocket endpoint. */
 "ui.access.web.port" = "連接埠";
+/* Value of the port field when the system picks the port. */
 "ui.access.web.port.automatic" = "自動";
+/* Button that makes the system pick the port of the WebSocket endpoint. */
 "ui.access.web.port.choose" = "自動選擇";
+/* Error under the port field. %1$lld is the lowest port and %2$lld is the highest port. */
 "ui.access.web.portRange" = "連接埠必須介於 %1$lld 和 %2$lld 之間。";
+/* Title of the alert that turns on the WebSocket. */
 "ui.access.web.enable.title" = "要開啟 WebSocket 嗎？";
 /* Message of the confirmation alert that turns on the WebSocket in the Access area. */
 "platform.macos.ui.access.web.enable.message" = "來自權杖所列來源的網頁隨後可以連接到這部 Mac 上的端點。";
+/* Line of the alert that turns on the WebSocket. %lld is the port number. */
 "ui.access.web.enable.port" = "連接埠：%lld";
+/* Line of the alert that turns on the WebSocket when the port is automatic. */
 "ui.access.web.enable.automatic" = "系統會選擇一個可用的連接埠。";
+/* Heading of the list of programs that have access in the Access area. */
 "ui.access.grants" = "具有取用權限的程式";
+/* Toolbar button in the Access area that starts the grant of access to a program. Keep the three dots. */
 "ui.access.grantProgram" = "授權程式…";
+/* Button on a refused program that grants it access. */
 "ui.access.grant" = "授權";
+/* Message of the open panel in which the user picks a program or app to grant access. */
 "ui.access.grant.pick" = "選擇要授予取用權限的程式或 App。";
+/* Error shown when the chosen program has no signature. %@ is the path of the program. */
 "ui.access.grant.unsigned" = "%@ 未簽署，因此無法授予其取用權限。";
+/* Error shown when the chosen program has an ad-hoc signature. %@ is the identifier of the program. Any local process can claim such an identity. */
 "ui.access.grant.adHoc" = "%@ 未使用憑證簽署，因此任何本機行程都可以冒用它的身分。無法授予其取用權限。";
+/* Title of the alert that grants access to a program. %@ is the identifier of the program. */
 "ui.access.grant.title" = "要授予 %@ 取用權限嗎？";
+/* Question of the alert that grants access. %1$@ is the identifier of the program, %2$@ is the description of its signer and %3$@ is the list of scopes. */
 "ui.access.grant.question" = "要向 %1$@（%2$@）授予這些範圍嗎：%3$@？";
+/* Warning in the alert that grants access when the control scope is part of the grant. Rumble is vibration of the controller. */
 "ui.access.grant.controlWarning" = "控制範圍允許程式向您的控制器傳送輸出，例如震動和燈光。";
 /* Warning line of the confirmation alert that grants access to a program that Apple signed. */
 "platform.macos.ui.access.grant.platformWarning" = "此程式由 Apple 簽署。Apple 使用相同識別碼簽署的任何程式都將獲得此取用權限。";
+/* Button on a program or token that removes its access. */
 "ui.access.revoke" = "撤銷";
+/* Title of the alert that removes all access of a program. %@ is the name of the program. */
 "ui.access.revoke.title" = "要撤銷 %@ 的取用權限嗎？";
+/* Message of the alert that removes all access of a program. */
 "ui.access.revoke.message" = "該程式將失去所有範圍，其已開啟的連線將關閉。";
+/* Menu item that removes all scopes of a program or token. */
 "ui.access.revoke.all" = "所有範圍";
+/* Message of the alert that removes one scope. %@ is the name of the scope, for example Read or Control. */
 "ui.access.revokeScope.message" = "僅移除 %@ 範圍。其他範圍維持不變，使用此範圍的已開啟連線將關閉。";
+/* Title of the alert that removes a token. %@ is the name of the token. */
 "ui.access.revokeToken.title" = "要撤銷權杖 %@ 嗎？";
+/* Message of the alert that removes a token. */
 "ui.access.revokeToken.message" = "使用該權杖的頁面和程式將失去取用權限，其已開啟的連線將關閉。";
+/* Heading of the list of tokens in the Access area. A token is a secret that a program or web page uses to connect. */
 "ui.access.tokens" = "權杖";
+/* Toolbar button in the Access area that starts the creation of a token. Keep the three dots. */
 "ui.access.grantToken" = "建立權杖…";
+/* Heading of the token creation sheet. */
 "ui.access.token.form.title" = "建立權杖";
+/* Placeholder of the name field of the token creation sheet. */
 "ui.access.token.name" = "名稱";
+/* Help text under the origins field of the token creation sheet. https://example.com is an example and stays as written. */
 "ui.access.token.origins" = "可使用該權杖的網頁來源，每行一個，例如 https://example.com。若權杖僅供本機程式使用，請留空。";
+/* Button of the token creation sheet that goes on to the confirmation. */
 "ui.access.token.continue" = "繼續";
+/* Error of the token creation sheet when the name or the scopes are missing. */
 "ui.access.token.incomplete" = "權杖需要名稱和至少一個範圍。";
+/* Error of the token creation sheet when the user picks the control scope together with web origins. */
 "ui.access.token.originControl" = "用於網頁的權杖不能具有控制範圍。";
+/* Title of the alert that creates a token. %@ is the name of the token. */
 "ui.access.token.title" = "要建立權杖 %@ 嗎？";
+/* Question of the alert that creates a token without origins. %1$@ is the name of the token and %2$@ is the list of scopes. */
 "ui.access.token.question" = "要建立具有這些範圍的權杖 %1$@ 嗎：%2$@？";
+/* Question of the alert that creates a token with origins. %1$@ is the name of the token, %2$@ is the list of scopes and %3$@ is the list of web origins. */
 "ui.access.token.webQuestion" = "要建立具有這些範圍的權杖 %1$@ 嗎：%2$@？來自 %3$@ 的頁面可以使用它。";
+/* Title of the sheet that shows the secret of a token. %@ is the name of the token. */
 "ui.access.token.issued.title" = "權杖 %@";
+/* Message of the sheet that shows the secret of a token once. OpenJoystickDriver is the product name. */
 "ui.access.token.issued.message" = "請立即拷貝權杖。OpenJoystickDriver 不會保留權杖，也無法再次顯示。";
+/* Button of the sheet that copies the secret of a token. */
 "ui.access.token.copy" = "拷貝權杖";
+/* Title of a token in the list of tokens. %@ is the name of the token. */
 "ui.access.token.named" = "權杖 %@";
+/* Title of a token in the list of tokens when its name is not known. */
 "ui.access.token.unknown" = "未知的權杖";
+/* Heading of the list of programs and tokens that the endpoint refused in the last 24 hours. */
 "ui.access.refused" = "最近被拒絕";
+/* Footer of the list of refused programs and tokens. */
 "ui.access.refused.message" = "端點在過去 24 小時內拒絕的程式和權杖。";
+/* Heading of the list of connections that are open at the moment in the Access area. */
 "ui.access.connections" = "目前已連線";
+/* Name of the read scope. It lets a program read controller state. */
 "ui.access.scope.read" = "讀取";
+/* Name of the control scope. It lets a program change controller state and send output. */
 "ui.access.scope.control" = "控制";
+/* Description of the signer of a program. %@ is the identifier of the publisher. */
 "ui.access.signer.signed" = "簽署者：%@";
 /* Label for the signer of a program that Apple signed, shown in the Access area. */
 "platform.macos.ui.access.signer.platform" = "由 Apple 簽署";
+/* Description of the signer of a program that has no certificate signature. */
 "ui.access.signer.adHoc" = "未簽署";
+/* Name of the connection kind for a local socket. */
 "ui.access.transport.socket" = "通訊端";
+/* Name of the connection kind for a WebSocket. */
 "ui.access.transport.web" = "WebSocket";
+/* Error of the Access area when the service is not running. OpenJoystickDriver is the product name. */
 "ui.access.error.serviceUnavailable" = "OpenJoystickDriver 未在執行，因此無法讀取或更改取用權限設定。";
+/* Error of the Access area when the service does not answer in time. OpenJoystickDriver is the product name. */
 "ui.access.error.serviceTimeout" = "OpenJoystickDriver 未能及時回應。";
+/* Error of the Access area when the service refuses the request of the app. OpenJoystickDriver is the product name. */
 "ui.access.error.peerRejected" = "OpenJoystickDriver 拒絕了此要求。";
+/* Error of the Access area when a request fails. %@ is the reason. */
 "ui.access.error.requestFailed" = "要求失敗：%@";
 /* VoiceOver label of the button in the Access error banner that shows the details of the error. */
 "a11y.access.details" = "顯示錯誤詳細資訊";
@@ -2641,9 +2814,13 @@
 "a11y.mainWindow.sidebar" = "區域";
 /* VoiceOver label of the control in the capture assignment sheet that sets the minimum swipe distance of a touch gesture. */
 "a11y.capture.touchSwipeDistance" = "最小滑動距離";
+/* Detail line of a row in the Access area with two parts. %1$@ and %2$@ are the parts, for example the signer and the scopes. The dot between them separates the parts and may change. */
 "ui.access.detail.pair" = "%1$@ · %2$@";
+/* Detail line of a row in the Access area with three parts. %1$@, %2$@ and %3$@ are the parts, for example the signer, the scopes and the reason of a refusal. The dots between them separate the parts and may change. */
 "ui.access.detail.triple" = "%1$@ · %2$@ · %3$@";
+/* Error shown when the app cannot find the executable of a refused program. %@ is the identifier of the program. */
 "ui.access.grant.noPath" = "OpenJoystickDriver 無法讀取 %@ 的可執行檔，因此無法授予其取用權限。";
+/* Line of the alert that turns on the WebSocket when a port is saved. */
 "ui.access.web.enable.savedPort" = "Web 端點保留其已儲存的連接埠。";
 "ui.library.record.detail" = "%1$@ · %2$@";
 "ui.library.mod.detail" = "%1$@ · %2$@";
@@ -2656,7 +2833,9 @@
 "ui.settings.general.updateAvailableBody" = "版本 %@ 可用。";
 /* Title of the message in the main window while a profile change is still running. */
 "ui.mainWindow.profileMutationRunning" = "設定檔變更仍在進行。請在完成後再試一次。";
+/* Value of the WebSocket row when it is on but the port is not set yet. */
 "ui.access.web.noPort" = "Web 端點已開啟，但尚未選擇連接埠";
+/* Description of the signer of a program that has a signature without a known publisher. */
 "ui.access.signer.signedUnknownPublisher" = "簽署者：不明的發行者";
 "ui.settings.commandLine.toolLinkTargetUnreadable" = "%@ 是連結，但無法讀取其目標。安裝後將改為連結到此 App。";
 /* Text of error E1001, sent to a client that connects to the endpoint while the endpoint is off, and printed by 'ojd explain'. The command in quotes stays as written. */
@@ -2879,6 +3058,7 @@
 "error.E5006.message" = "無法讀取單元 ID 的金鑰檔案 PortKeyInstallation.key，或其大小不是 32 位元組。請從備份回復該檔案。如果改為刪除它，OpenJoystickDriver 會建立新金鑰，所有單元 ID 都會改變。";
 /* Error E5007, shown when a controller record or patch fails its schema; the message names the field. */
 "error.E5007.message" = "控制器記錄或 patch 無效。請對照其結構描述檢查該檔案，並修正訊息指出的欄位。";
+/* Error text with the error code. %1$@ is the message and %2$@ is the code, for example E2011. The code is in parentheses. */
 "ui.error.withCode" = "%1$@ (%2$@)";
 /* Message printed by 'ojd update check' when the installed version is newer than the latest release. %1$@ is the installed version and %2$@ is the latest release. */
 "cli.update.check.ahead" = "OpenJoystickDriver %1$@ 比已發行的最新版本（%2$@）更新。";

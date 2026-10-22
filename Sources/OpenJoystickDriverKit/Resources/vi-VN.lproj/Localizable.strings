@@ -173,36 +173,67 @@
 "ui.keyboard.captureCanceled" = "Đã hủy ghi nhận phím.";
 /* VoiceOver label of the area that captures a keyboard key. */
 "ui.keyboard.captureTitle" = "Ghi nhận phím bàn phím";
+/* Title of the sheet that adjusts one assignment of a profile. %@ is the name of the controller control that the assignment reads. */
 "ui.capture.adjust" = "Điều chỉnh %@";
+/* Label of the slider that sets the dead zone of an axis assignment. The dead zone is the part of the travel near the center that is ignored. */
 "ui.capture.deadZone" = "Vùng chết";
+/* Label of the slider that sets the gain of an axis assignment. The gain multiplies the travel of the axis. */
 "ui.capture.gain" = "Độ khuếch đại";
+/* Label of the switch that reverses the direction of an axis assignment. */
 "ui.capture.invertAxis" = "Đảo ngược trục";
+/* Label of the popup that picks the response curve of an axis assignment. The curve maps the travel of the control to the output. */
 "ui.capture.responseCurve" = "Đường cong phản hồi";
+/* Label of the slider that sets the travel at which an axis counts as a pressed button. */
 "ui.capture.digitalThreshold" = "Ngưỡng kỹ thuật số";
+/* Option of the response curve popup: output grows in proportion to the travel. */
 "ui.capture.linear" = "Tuyến tính";
+/* Option of the response curve popup: output grows slowly at first and faster later. */
 "ui.capture.easeIn" = "Tăng tốc dần";
+/* Option of the response curve popup: output grows fast at first and slower later. */
 "ui.capture.easeOut" = "Giảm tốc dần";
+/* Option of the response curve popup: output grows slowly at both ends and faster in the middle. */
 "ui.capture.smoothStep" = "Bước mượt";
+/* Heading of the capture assignment sheet while the app waits for the user to press a control of the controller. */
 "ui.capture.pressControl" = "Nhấn một thành phần của bộ điều khiển";
+/* Instruction in the capture assignment sheet. The user picks a control from the popup or lets the app wait for the next input. */
 "ui.capture.chooseControl" = "Chọn một thành phần bên dưới, hoặc lắng nghe trong giây lát để nhận đầu vào tiếp theo.";
+/* Label of the popup in the capture assignment sheet that lists the controls of the controller. */
 "ui.capture.controllerControl" = "Thành phần của bộ điều khiển";
+/* Title of the button in the capture assignment sheet that waits for the next controller input. */
 "ui.capture.listen" = "Lắng nghe thành phần";
+/* Message in the capture assignment sheet when no controller is connected. Manual selection means the popup of controls. */
 "ui.capture.connectForLive" = "Kết nối bộ điều khiển để bật ghi nhận trực tiếp. Vẫn có thể chọn thủ công.";
+/* VoiceOver label of the capture assignment sheet. */
 "ui.capture.title" = "Ghi nhận thành phần của bộ điều khiển";
+/* VoiceOver announcement when the user cancels the controller control capture. */
 "ui.capture.canceled" = "Đã hủy ghi nhận bộ điều khiển.";
+/* VoiceOver label of the status area in the capture assignment sheet. */
 "ui.capture.status" = "Trạng thái ghi nhận";
+/* Status in the capture assignment sheet before the capture starts. */
 "ui.capture.ready" = "Sẵn sàng lắng nghe.";
+/* Status in the capture assignment sheet while the app waits for a controller control. */
 "ui.capture.listening" = "Đang lắng nghe một thành phần của bộ điều khiển.";
+/* VoiceOver announcement while the app waits for a controller control. Escape is the name of the Escape key. */
 "ui.capture.listeningCancel" = "Đang lắng nghe một thành phần của bộ điều khiển. Nhấn Escape để hủy.";
+/* Status text in the capture assignment sheet while the app waits for a controller control. Keep the three dots. */
 "ui.capture.listeningEllipsis" = "Đang lắng nghe một thành phần của bộ điều khiển…";
+/* Status in the capture assignment sheet after a control is detected. %@ is the name of the control. The sentence ends with a period. */
 "ui.capture.detected" = "Đã phát hiện: %@.";
+/* Label with the detected control in the capture assignment sheet. %@ is the name of the control. It has no final period because other text follows or the label stands alone. */
 "ui.capture.detectedNoPeriod" = "Đã phát hiện: %@";
+/* Status in the capture assignment sheet. %1$@ is the name of the detected control and %2$@ is the sentence that says the destination is ready for selection. */
 "ui.capture.detectedWithDestination" = "Đã phát hiện: %1$@. %2$@";
+/* Status in the capture assignment sheet when input arrived from a control that the app does not support. */
 "ui.capture.noSupported" = "Đã nhận đầu vào, nhưng không nhận dạng được thành phần nào được hỗ trợ.";
+/* Status in the capture assignment sheet that tells the user to pick a destination for the detected control. The sentence follows the detected control. */
 "ui.capture.destinationReady" = "Đích đã sẵn sàng để chọn.";
+/* Status in the capture assignment sheet when the capture fails. %@ is the reason. */
 "ui.capture.error" = "Lỗi ghi nhận. %@";
+/* VoiceOver description of the input test status when no button of the controller is held. */
 "ui.capture.noButton" = "Hiện không có nút nào đang được giữ.";
+/* VoiceOver description of the input test status. %@ is the list of the names of the buttons that are held. */
 "ui.capture.buttonsHeld" = "Nút đang giữ: %@";
+/* Error under the name field of the profile creation sheet when the name is empty. */
 "ui.capture.profileNameValidation" = "Nhập tên cấu hình.";
 "ui.profiles.new" = "Cấu hình mới";
 "ui.profiles.deleteTitle" = "Xóa cấu hình?";
@@ -310,15 +341,25 @@
 "ui.debug.outputNeedsAttention" = "Đầu ra bộ điều khiển cần chú ý.";
 /* Line of the debug report when the service does not answer, so the report has no diagnostics. */
 "ui.debug.serviceUnavailable" = "Chẩn đoán dịch vụ hiện không khả dụng.";
+/* Error shown in the profile editor when the profile changed elsewhere after the editor loaded it. Reload means to discard the edits and load the profile again. */
 "ui.error.profileChanged" = "Cấu hình này đã được thay đổi ở nơi khác. Hãy tải lại hoặc tiếp tục sửa.";
+/* Error under the name field of the profile creation sheet when another profile has the name. */
 "ui.error.duplicateProfile" = "Đã có cấu hình với tên đó.";
+/* Error shown when the service has no profile with the requested identifier. */
 "ui.error.profileMissing" = "Cấu hình đó không còn khả dụng.";
+/* Error shown when the service rejects the assignments of a profile. */
 "ui.error.reviewAssignments" = "Hãy xem lại các phép gán của cấu hình rồi thử lại.";
+/* Error shown when the service cannot save the profile library. */
 "ui.error.profileLibrarySave" = "Không thể lưu các cấu hình của bạn.";
+/* Error shown when the remapping engine of the service is not available yet. */
 "ui.error.remappingUnavailable" = "Tính năng ánh xạ lại bộ điều khiển tạm thời không khả dụng.";
+/* Error shown for a failure that has no message of its own. OpenJoystickDriver is the product name. */
 "ui.error.generic" = "OpenJoystickDriver không thể hoàn tất thao tác đó.";
+/* Error shown when the service cannot be reached. OpenJoystickDriver is the product name. */
 "ui.error.notAvailable" = "OpenJoystickDriver hiện không khả dụng.";
+/* Error shown when the service does not answer in time. OpenJoystickDriver is the product name. */
 "ui.error.timeout" = "OpenJoystickDriver phản hồi quá lâu.";
+/* Error shown when the service answers with a reply that the app does not understand. OpenJoystickDriver is the product name. */
 "ui.error.unexpected" = "OpenJoystickDriver trả về một kết quả không mong đợi.";
 "ui.mapping.allApps" = "Tất cả ứng dụng";
 "ui.mapping.specificApp" = "Một ứng dụng cụ thể";
@@ -360,10 +401,15 @@
 "ui.profiles.touch.pointerSensitivity" = "Số điểm con trỏ trên mỗi bề mặt";
 "ui.profiles.touch.stickRadius" = "Bán kính cần tối đa (phần của bề mặt)";
 "ui.profiles.touch.deadzone" = "Vùng chết của cần";
+/* Label of the stepper that sets the number of columns of a touch grid in the capture assignment sheet. %d is the number of columns. */
 "ui.capture.touchColumns" = "Số cột lưới: %d";
+/* Label of the stepper that sets the number of rows of a touch grid in the capture assignment sheet. %d is the number of rows. */
 "ui.capture.touchRows" = "Số hàng lưới: %d";
+/* Label of the stepper that picks the column of the touch cell in the capture assignment sheet. %d is the column number, counted from 1. */
 "ui.capture.touchColumn" = "Cột của ô: %d";
+/* Label of the stepper that picks the row of the touch cell in the capture assignment sheet. %d is the row number, counted from 1. */
 "ui.capture.touchRow" = "Hàng của ô: %d";
+/* Label of the slider that sets the shortest swipe that counts, as a share of the touch surface. %.0f is a percentage; %% is the percent sign. */
 "ui.capture.touchSwipeDistance" = "Khoảng cách vuốt tối thiểu: %.0f%%";
 "ui.mapping.mute" = "Tắt tiếng";
 "ui.mapping.leftTriggerClick" = "Nhấn cò trái";
@@ -430,13 +476,21 @@
 "action.remove" = "Xóa";
 /* Button of the input test window that stops the rumble test and button of the developer view that stops the packet capture. */
 "action.stop" = "Dừng";
+/* Error shown when the debug report cannot be written to the chosen file. */
 "ui.error.supportReportSave" = "Không thể lưu báo cáo hỗ trợ. Hãy chọn tệp khác rồi thử lại.";
+/* Error shown when the debug logs cannot be written to the chosen file. The system reason follows on the next line. */
 "ui.error.logsSave" = "Không thể lưu nhật ký. Hãy chọn tệp khác rồi thử lại.";
+/* Error shown in the capture assignment sheet when the listening ends without any control. */
 "ui.error.noDetectedControl" = "Không phát hiện thành phần mới nào của bộ điều khiển.";
+/* Error shown when the user starts a profile action while another one still runs. */
 "ui.error.actionInProgress" = "Một thao tác cấu hình khác đang được thực hiện.";
+/* Error shown when the list of active profiles is damaged and the service cannot load it. */
 "ui.error.profileLibraryCorrupt" = "Danh sách cấu hình đang hoạt động bị hỏng và không thể tải.";
+/* Title of the button in the capture assignment sheet while the app waits for a control. Keep the three dots. */
 "ui.capture.listeningButton" = "Đang lắng nghe…";
+/* Error shown when the user saves a profile whose assignments have problems. */
 "ui.error.reviewAssignmentsBeforeSave" = "Hãy xem lại các phép gán trước khi lưu cấu hình này.";
+/* Error shown when the profile item that the user selected is gone, for example after a reload. */
 "ui.error.selectedProfileItemMissing" = "Mục cấu hình đã chọn không còn khả dụng.";
 /* Message about a request to the system extension manager that ends cancelled. The request installs or removes the driver extension. */
 "cli.transportExtension.group.cancelled" = "Yêu cầu phần mở rộng hệ thống đã bị hủy.";
@@ -498,53 +552,101 @@
 "term.protocolVariant.wired" = "Có dây";
 /* Label of a fact under Advanced in the Controllers detail: the parser that reads the controller, shown as its ojd spelling such as xbox-xusb:receiver. */
 "term.parser" = "Trình phân tích";
+/* Label in the controller summary of the developer tools. The value is a list of the pressed buttons. */
 "ui.developer.buttons" = "Nút";
+/* Status next to the Start Capture button while the packet capture runs. */
 "ui.developer.capturing" = "Đang ghi";
+/* Label of the connection kind in the controller summary of the developer tools, for example USB or Bluetooth. */
 "ui.developer.connection" = "Kết nối";
+/* Label of the controller name in the controller summary of the developer tools. */
 "ui.developer.controller" = "Bộ điều khiển";
+/* Heading of the controller summary section in the developer tools. */
 "ui.developer.controllerDetails" = "Bộ điều khiển";
+/* Message in the packet capture list of the developer tools before a capture. Start Capture is the title of the button and is written as in this catalog. */
 "ui.developer.emptyCapture" = "Nhấn Bắt đầu ghi, sau đó nhấn các nút của bộ điều khiển.";
+/* Title of the save panel that exports the packet capture. */
 "ui.developer.exportCapture" = "Xuất nội dung ghi gói tin";
+/* Heading of the section in the developer tools that lists buttons beyond the standard ones. */
 "ui.developer.extraInputs" = "Nút bổ sung";
+/* Description of the extra buttons section in the developer tools. The user presses one button at a time and the detected buttons stay in the list until the user clears the capture. */
 "ui.developer.extraInputsDescription" = "Nhấn từng nút bổ sung một. Các nút được phát hiện vẫn hiện trong danh sách cho đến khi bạn xóa bản ghi.";
+/* Value of the route in the controller summary of the developer tools when the app reads the controller as an HID device. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.developer.hid" = "HID";
+/* Note under the packet list in the developer tools. Keep-alive packets are the routine idle messages of a controller. */
 "ui.developer.keepAliveNote" = "Lưu lượng nhàn rỗi thông thường bị ẩn để hoạt động của bộ điều khiển luôn dễ thấy.";
+/* Label of the left stick value in the controller summary of the developer tools. */
 "ui.developer.leftStick" = "Cần trái";
+/* Message in the developer tools while the controllers load. Keep the three dots. */
 "ui.developer.loadingControllers" = "Đang tải chẩn đoán bộ điều khiển…";
+/* Message in the developer tools before the controller diagnostics load. */
 "ui.developer.notLoaded" = "Chưa tải chẩn đoán bộ điều khiển.";
+/* Title of the empty state in the developer tools when no controller is connected. */
 "ui.developer.noControllers" = "Chưa kết nối bộ điều khiển";
+/* Detail of the empty state in the developer tools. Refresh is the title of a button and is written as in this catalog. */
 "ui.developer.noControllersDetail" = "Kết nối bộ điều khiển, sau đó nhấn Làm mới.";
+/* Message in the extra buttons section of the developer tools when the capture detected none. */
 "ui.developer.noExtraInputs" = "Không phát hiện nút bổ sung nào.";
+/* Title of the empty state in the packet list of the developer tools. */
 "ui.developer.noPackets" = "Chưa ghi gói tin nào";
+/* Heading of the raw packet capture section in the developer tools. */
 "ui.developer.packetCapture" = "Ghi gói tin thô";
+/* Option of the packet filter in the developer tools that shows only packets that carry controller activity. */
 "ui.developer.packetFilterActivity" = "Hoạt động";
+/* Option of the packet filter in the developer tools that shows all packets. */
 "ui.developer.packetFilterAll" = "Tất cả";
+/* Column title of the packet list in the developer tools. The column shows when the packet arrived. */
 "ui.developer.packetColumnTime" = "Thời gian";
+/* Column title of the packet list in the developer tools. The column shows whether the packet came from or went to the controller. */
 "ui.developer.packetColumnDirection" = "Hướng";
+/* Column title of the packet list in the developer tools. The column shows the length of the packet in bytes. */
 "ui.developer.packetColumnBytes" = "Byte";
+/* Column title of the packet list in the developer tools. The column shows the bytes of the packet. */
 "ui.developer.packetColumnData" = "Dữ liệu";
+/* Warning under the packet capture export. A capture can hold data that identifies the controller or the user. */
 "ui.developer.packetSharingWarning" = "Nội dung gói tin khác nhau tùy bộ điều khiển. Hãy kiểm tra tệp trước khi chia sẻ.";
+/* Value of the route in the controller summary of the developer tools when the app reads the controller over raw USB. */
 "ui.developer.rawUSB" = "USB thô";
+/* Status of the packet capture in the developer tools when it can start. */
 "ui.developer.ready" = "Sẵn sàng";
+/* Label of the right stick value in the controller summary of the developer tools. */
 "ui.developer.rightStick" = "Cần phải";
+/* Label of the route in the controller summary of the developer tools. The route is how the app found and reads the controller. */
 "ui.developer.route" = "Tuyến";
+/* Title of the button that starts the packet capture. */
 "ui.developer.startCapture" = "Bắt đầu ghi";
+/* Status of the packet capture in the developer tools while it starts. Keep the three dots. */
 "ui.developer.starting" = "Đang bắt đầu…";
+/* Title of the message in the developer tools when they cannot load. */
 "ui.developer.unavailable" = "Công cụ nhà phát triển không khả dụng";
+/* Label of the USB endpoints in the controller summary of the developer tools. */
 "ui.developer.usbEndpoints" = "Điểm cuối USB";
+/* Label of the USB vendor and product ID in the controller summary of the developer tools. */
 "ui.developer.usbID" = "ID USB";
+/* Message in the packet list of the developer tools while a capture waits for packets. */
 "ui.developer.waitingForPackets" = "Đang chờ gói tin USB. Hãy nhấn một nút của bộ điều khiển.";
+/* Heading of the soak test section in the developer tools. A soak test measures the service over a long time. */
 "ui.developer.soakTest" = "Thử nghiệm độ bền";
+/* Description of the soak test section in the developer tools. The test samples memory, file descriptors and CPU of the service. */
 "ui.developer.soakTestDescription" = "Lấy mẫu bộ nhớ, bộ mô tả tệp và CPU của dịch vụ trong khoảng thời gian đã chọn, rồi hiển thị kết quả.";
+/* Title of the button in the developer tools that opens the soak test sheet. Keep the three dots. */
 "ui.developer.soakTestOpen" = "Chạy thử nghiệm độ bền…";
+/* Label of the duration field of the soak test sheet. The value is in seconds. */
 "ui.developer.soakDuration" = "Thời lượng (giây)";
+/* Label of the sample interval field of the soak test sheet. The value is in milliseconds. */
 "ui.developer.soakInterval" = "Khoảng lấy mẫu (ms)";
+/* Label of the field of the soak test sheet that limits the resident memory of the service. The value is in MiB, mebibytes. */
 "ui.developer.soakResidentLimit" = "Giới hạn kích thước thường trú (MiB)";
+/* Label of the field of the soak test sheet that limits the memory footprint of the service. The value is in MiB, mebibytes. */
 "ui.developer.soakFootprintLimit" = "Giới hạn dấu vết bộ nhớ (MiB)";
+/* Hint under the limit fields of the soak test sheet. A limit of 0 means no limit. */
 "ui.developer.soakLimitHint" = "Giới hạn bằng 0 nghĩa là tắt.";
+/* Title of the button of the soak test sheet that starts the test. */
 "ui.developer.soakStart" = "Chạy thử nghiệm";
+/* Status in the soak test sheet while the test samples the service. Keep the three dots. */
 "ui.developer.soakRunning" = "Đang lấy mẫu dịch vụ…";
+/* Error in the soak test sheet when a field does not hold a whole number. %@ is the label of the field. */
 "ui.developer.soakNotANumber" = "%@: nhập một số nguyên.";
+/* Error in the soak test sheet when a value is outside its range. %1$@ is the label of the field, %2$lld is the lowest value and %3$lld is the highest value. */
 "ui.developer.soakOutOfRange" = "%1$@: nhập giá trị từ %2$lld đến %3$lld.";
 "ui.inputTest.aButton" = "Nút A";
 "ui.inputTest.aCross" = "A / Chéo";
@@ -932,6 +1034,7 @@
 "ui.profiles.unpairJoyCons" = "Hủy ghép đôi";
 "ui.profiles.joyConPairSessionHint" = "Việc ghép đôi dùng đúng các bộ điều khiển này trong phiên ứng dụng hiện tại.";
 "ui.profiles.pair" = "Ghép đôi";
+/* Error shown when two Joy-Cons cannot be combined into one controller. Joy-Con is a Nintendo product name. */
 "ui.error.joyConPairUnavailable" = "Không thể ghép đôi các Joy-Con đã chọn. Hãy làm mới các bộ điều khiển đã kết nối và thử lại.";
 "ui.profiles.joyConSessionState" = "Ghép đôi chủ động";
 
@@ -981,6 +1084,7 @@
 
 /* Controller session lifecycle */
 "ui.controllers.suspended" = "Đã tạm ngưng";
+/* Error shown when the service refuses to change the session of a controller. */
 "ui.error.controllerSessionChangeRejected" = "Không thể thay đổi phiên của bộ điều khiển.";
 
 "ui.controllers.disconnectWirelessConfirmTitle" = "Ngắt kết nối bộ điều khiển không dây?";
@@ -2397,80 +2501,149 @@
 "a11y.library.recordHexadecimal" = "%1$@, thập lục phân %2$@";
 /* Shown in the Record section of a record in the Library when the record text cannot be read for display. %@ is the controller identity, such as 045E:028E. */
 "ui.library.recordUnreadable" = "Không thể đọc văn bản của bản ghi %@ nên không thể hiển thị.";
+/* Title of the details button of an error message in the Access area. */
 "ui.access.details" = "Chi tiết";
+/* Button of an error message in the Access area that hides the message. */
 "ui.access.dismiss" = "Bỏ qua";
+/* Button of an error message in the Access area that reads the access settings again. */
 "ui.access.tryAgain" = "Thử lại";
+/* Message in the Access area while it reads the access settings. Keep the three dots. */
 "ui.access.loading" = "Đang đọc cài đặt quyền truy cập…";
+/* Button that closes the sheet that shows the secret of a token. */
 "ui.access.done" = "Xong";
+/* Button of the open panel in which the user picks a program or app to grant access. It confirms the choice. */
 "ui.access.choose" = "Chọn";
+/* Label of the row in the Access area for the local endpoint. The local endpoint is the socket where programs on this Mac connect. */
 "ui.access.endpoint" = "Điểm cuối cục bộ";
+/* Help text of the endpoint switch. %@ is the path of the socket. */
 "ui.access.socket" = "Socket cục bộ: %@";
+/* Context menu item that copies the path of the socket. */
 "ui.access.socket.copy" = "Sao chép đường dẫn socket";
+/* Confirm button of the alert that turns on the local endpoint. */
 "ui.access.enable" = "Bật";
+/* Title of the alert that turns on the local endpoint. */
 "ui.access.enable.title" = "Bật điểm cuối cục bộ?";
+/* Message of the alert that turns on the local endpoint. The control scope allows a program to change controller state. */
 "ui.access.enable.message" = "Các chương trình mà bạn cấp quyền truy cập sau đó có thể đọc trạng thái bộ điều khiển và, nếu có phạm vi điều khiển, thay đổi trạng thái đó.";
+/* Label of the row in the Access area for the WebSocket endpoint, where web pages connect. */
 "ui.access.web" = "WebSocket";
+/* Value of the WebSocket row when it is on. %1$@ is the address of the endpoint and %2$@ is the address where pages are served. */
 "ui.access.web.on" = "Bật tại %1$@, trang tại %2$@";
+/* Value of the WebSocket row when it is off. */
 "ui.access.web.off" = "Đang tắt";
+/* Value of the WebSocket row when it is on but cannot listen. %@ is the port number. */
 "ui.access.web.closed" = "Đã bật, nhưng không lắng nghe trên cổng %@";
+/* Help text of the WebSocket row. %@ is the path of the folder from which the endpoint serves pages. */
 "ui.access.web.pages" = "Thư mục trang: %@";
+/* Label of the port field of the WebSocket endpoint. */
 "ui.access.web.port" = "Cổng";
+/* Value of the port field when the system picks the port. */
 "ui.access.web.port.automatic" = "Tự động";
+/* Button that makes the system pick the port of the WebSocket endpoint. */
 "ui.access.web.port.choose" = "Chọn tự động";
+/* Error under the port field. %1$lld is the lowest port and %2$lld is the highest port. */
 "ui.access.web.portRange" = "Cổng phải nằm trong khoảng từ %1$lld đến %2$lld.";
+/* Title of the alert that turns on the WebSocket. */
 "ui.access.web.enable.title" = "Bật WebSocket?";
 /* Message of the confirmation alert that turns on the WebSocket in the Access area. */
 "platform.macos.ui.access.web.enable.message" = "Các trang web từ nguồn gốc của một token sau đó có thể kết nối với điểm cuối trên máy Mac này.";
+/* Line of the alert that turns on the WebSocket. %lld is the port number. */
 "ui.access.web.enable.port" = "Cổng: %lld";
+/* Line of the alert that turns on the WebSocket when the port is automatic. */
 "ui.access.web.enable.automatic" = "Hệ thống chọn một cổng trống.";
+/* Heading of the list of programs that have access in the Access area. */
 "ui.access.grants" = "Chương trình có quyền truy cập";
+/* Toolbar button in the Access area that starts the grant of access to a program. Keep the three dots. */
 "ui.access.grantProgram" = "Cấp quyền cho chương trình…";
+/* Button on a refused program that grants it access. */
 "ui.access.grant" = "Cấp quyền";
+/* Message of the open panel in which the user picks a program or app to grant access. */
 "ui.access.grant.pick" = "Chọn một chương trình hoặc ứng dụng để cấp quyền truy cập.";
+/* Error shown when the chosen program has no signature. %@ is the path of the program. */
 "ui.access.grant.unsigned" = "%@ chưa được ký, nên không thể cấp quyền truy cập cho nó.";
+/* Error shown when the chosen program has an ad-hoc signature. %@ is the identifier of the program. Any local process can claim such an identity. */
 "ui.access.grant.adHoc" = "%@ chưa được ký bằng chứng chỉ, nên bất kỳ tiến trình cục bộ nào cũng có thể mạo danh nó. Không thể cấp quyền truy cập cho nó.";
+/* Title of the alert that grants access to a program. %@ is the identifier of the program. */
 "ui.access.grant.title" = "Cấp quyền truy cập cho %@?";
+/* Question of the alert that grants access. %1$@ is the identifier of the program, %2$@ is the description of its signer and %3$@ is the list of scopes. */
 "ui.access.grant.question" = "Cấp cho %1$@ (%2$@) các phạm vi này: %3$@?";
+/* Warning in the alert that grants access when the control scope is part of the grant. Rumble is vibration of the controller. */
 "ui.access.grant.controlWarning" = "Phạm vi điều khiển cho phép chương trình gửi đầu ra tới bộ điều khiển của bạn, chẳng hạn như rung và đèn.";
 /* Warning line of the confirmation alert that grants access to a program that Apple signed. */
 "platform.macos.ui.access.grant.platformWarning" = "Chương trình này do Apple ký. Bất kỳ chương trình nào Apple ký với cùng mã định danh sẽ có quyền truy cập này.";
+/* Button on a program or token that removes its access. */
 "ui.access.revoke" = "Thu hồi";
+/* Title of the alert that removes all access of a program. %@ is the name of the program. */
 "ui.access.revoke.title" = "Thu hồi quyền truy cập của %@?";
+/* Message of the alert that removes all access of a program. */
 "ui.access.revoke.message" = "Chương trình mất mọi phạm vi và các kết nối đang mở của nó bị đóng.";
+/* Menu item that removes all scopes of a program or token. */
 "ui.access.revoke.all" = "Mọi phạm vi";
+/* Message of the alert that removes one scope. %@ is the name of the scope, for example Read or Control. */
 "ui.access.revokeScope.message" = "Chỉ phạm vi %@ bị gỡ bỏ. Các phạm vi khác được giữ nguyên và các kết nối đang mở dùng phạm vi này bị đóng.";
+/* Title of the alert that removes a token. %@ is the name of the token. */
 "ui.access.revokeToken.title" = "Thu hồi token %@?";
+/* Message of the alert that removes a token. */
 "ui.access.revokeToken.message" = "Các trang và chương trình dùng token mất quyền truy cập và các kết nối đang mở của chúng bị đóng.";
+/* Heading of the list of tokens in the Access area. A token is a secret that a program or web page uses to connect. */
 "ui.access.tokens" = "Token";
+/* Toolbar button in the Access area that starts the creation of a token. Keep the three dots. */
 "ui.access.grantToken" = "Tạo token…";
+/* Heading of the token creation sheet. */
 "ui.access.token.form.title" = "Tạo token";
+/* Placeholder of the name field of the token creation sheet. */
 "ui.access.token.name" = "Tên";
+/* Help text under the origins field of the token creation sheet. https://example.com is an example and stays as written. */
 "ui.access.token.origins" = "Các nguồn gốc web được dùng token, mỗi dòng một nguồn, chẳng hạn https://example.com. Để trống nếu token chỉ dùng cho chương trình cục bộ.";
+/* Button of the token creation sheet that goes on to the confirmation. */
 "ui.access.token.continue" = "Tiếp tục";
+/* Error of the token creation sheet when the name or the scopes are missing. */
 "ui.access.token.incomplete" = "Token cần có tên và ít nhất một phạm vi.";
+/* Error of the token creation sheet when the user picks the control scope together with web origins. */
 "ui.access.token.originControl" = "Token cho trang web không thể có phạm vi điều khiển.";
+/* Title of the alert that creates a token. %@ is the name of the token. */
 "ui.access.token.title" = "Tạo token %@?";
+/* Question of the alert that creates a token without origins. %1$@ is the name of the token and %2$@ is the list of scopes. */
 "ui.access.token.question" = "Tạo token %1$@ với các phạm vi này: %2$@?";
+/* Question of the alert that creates a token with origins. %1$@ is the name of the token, %2$@ is the list of scopes and %3$@ is the list of web origins. */
 "ui.access.token.webQuestion" = "Tạo token %1$@ với các phạm vi này: %2$@? Các trang từ %3$@ có thể dùng token này.";
+/* Title of the sheet that shows the secret of a token. %@ is the name of the token. */
 "ui.access.token.issued.title" = "Token %@";
+/* Message of the sheet that shows the secret of a token once. OpenJoystickDriver is the product name. */
 "ui.access.token.issued.message" = "Hãy sao chép token ngay. OpenJoystickDriver không giữ token và không thể hiện lại.";
+/* Button of the sheet that copies the secret of a token. */
 "ui.access.token.copy" = "Sao chép token";
+/* Title of a token in the list of tokens. %@ is the name of the token. */
 "ui.access.token.named" = "Token %@";
+/* Title of a token in the list of tokens when its name is not known. */
 "ui.access.token.unknown" = "Token không xác định";
+/* Heading of the list of programs and tokens that the endpoint refused in the last 24 hours. */
 "ui.access.refused" = "Bị từ chối gần đây";
+/* Footer of the list of refused programs and tokens. */
 "ui.access.refused.message" = "Các chương trình và token mà điểm cuối đã từ chối trong 24 giờ qua.";
+/* Heading of the list of connections that are open at the moment in the Access area. */
 "ui.access.connections" = "Đã kết nối";
+/* Name of the read scope. It lets a program read controller state. */
 "ui.access.scope.read" = "Đọc";
+/* Name of the control scope. It lets a program change controller state and send output. */
 "ui.access.scope.control" = "Điều khiển";
+/* Description of the signer of a program. %@ is the identifier of the publisher. */
 "ui.access.signer.signed" = "Do %@ ký";
 /* Label for the signer of a program that Apple signed, shown in the Access area. */
 "platform.macos.ui.access.signer.platform" = "Do Apple ký";
+/* Description of the signer of a program that has no certificate signature. */
 "ui.access.signer.adHoc" = "Chưa ký";
+/* Name of the connection kind for a local socket. */
 "ui.access.transport.socket" = "Socket cục bộ";
+/* Name of the connection kind for a WebSocket. */
 "ui.access.transport.web" = "WebSocket";
+/* Error of the Access area when the service is not running. OpenJoystickDriver is the product name. */
 "ui.access.error.serviceUnavailable" = "OpenJoystickDriver không chạy, nên không thể đọc hoặc thay đổi cài đặt quyền truy cập.";
+/* Error of the Access area when the service does not answer in time. OpenJoystickDriver is the product name. */
 "ui.access.error.serviceTimeout" = "OpenJoystickDriver không phản hồi kịp thời.";
+/* Error of the Access area when the service refuses the request of the app. OpenJoystickDriver is the product name. */
 "ui.access.error.peerRejected" = "OpenJoystickDriver đã từ chối yêu cầu này.";
+/* Error of the Access area when a request fails. %@ is the reason. */
 "ui.access.error.requestFailed" = "Yêu cầu không thành công: %@";
 /* VoiceOver label of the button in the Access error banner that shows the details of the error. */
 "a11y.access.details" = "Hiện chi tiết của lỗi";
@@ -2641,9 +2814,13 @@
 "a11y.mainWindow.sidebar" = "Khu vực";
 /* VoiceOver label of the control in the capture assignment sheet that sets the minimum swipe distance of a touch gesture. */
 "a11y.capture.touchSwipeDistance" = "Khoảng cách vuốt tối thiểu";
+/* Detail line of a row in the Access area with two parts. %1$@ and %2$@ are the parts, for example the signer and the scopes. The dot between them separates the parts and may change. */
 "ui.access.detail.pair" = "%1$@ · %2$@";
+/* Detail line of a row in the Access area with three parts. %1$@, %2$@ and %3$@ are the parts, for example the signer, the scopes and the reason of a refusal. The dots between them separate the parts and may change. */
 "ui.access.detail.triple" = "%1$@ · %2$@ · %3$@";
+/* Error shown when the app cannot find the executable of a refused program. %@ is the identifier of the program. */
 "ui.access.grant.noPath" = "OpenJoystickDriver không đọc được tệp thực thi của %@ nên không thể cấp quyền truy cập cho nó.";
+/* Line of the alert that turns on the WebSocket when a port is saved. */
 "ui.access.web.enable.savedPort" = "Điểm cuối web giữ nguyên cổng đã lưu.";
 "ui.library.record.detail" = "%1$@ · %2$@";
 "ui.library.mod.detail" = "%1$@ · %2$@";
@@ -2656,7 +2833,9 @@
 "ui.settings.general.updateAvailableBody" = "Đã có phiên bản %@.";
 /* Title of the message in the main window while a profile change is still running. */
 "ui.mainWindow.profileMutationRunning" = "Một thay đổi cấu hình vẫn đang chạy. Hãy thử lại khi nó hoàn tất.";
+/* Value of the WebSocket row when it is on but the port is not set yet. */
 "ui.access.web.noPort" = "Điểm cuối web đã bật, nhưng chưa chọn cổng";
+/* Description of the signer of a program that has a signature without a known publisher. */
 "ui.access.signer.signedUnknownPublisher" = "Do nhà phát hành không xác định ký";
 "ui.settings.commandLine.toolLinkTargetUnreadable" = "%@ là một liên kết có đích không đọc được. Cài đặt sẽ liên kết nó với ứng dụng này.";
 /* Text of error E1001, sent to a client that connects to the endpoint while the endpoint is off, and printed by 'ojd explain'. The command in quotes stays as written. */
@@ -2879,6 +3058,7 @@
 "error.E5006.message" = "Không thể đọc tệp khóa của ID thiết bị, PortKeyInstallation.key, hoặc tệp không có kích thước 32 byte. Hãy khôi phục tệp từ bản sao lưu. Nếu bạn xóa tệp, OpenJoystickDriver sẽ tạo khóa mới và mọi ID thiết bị đều thay đổi.";
 /* Error E5007, shown when a controller record or patch fails its schema; the message names the field. */
 "error.E5007.message" = "Bản ghi bộ điều khiển hoặc patch không hợp lệ. Kiểm tra tệp với lược đồ của nó và sửa trường mà thông báo nêu.";
+/* Error text with the error code. %1$@ is the message and %2$@ is the code, for example E2011. The code is in parentheses. */
 "ui.error.withCode" = "%1$@ (%2$@)";
 /* Message printed by 'ojd update check' when the installed version is newer than the latest release. %1$@ is the installed version and %2$@ is the latest release. */
 "cli.update.check.ahead" = "OpenJoystickDriver %1$@ mới hơn bản phát hành mới nhất đã công bố (%2$@).";

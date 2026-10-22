@@ -173,36 +173,67 @@
 "ui.keyboard.captureCanceled" = "Keyboard capture canceled.";
 /* VoiceOver label of the area that captures a keyboard key. */
 "ui.keyboard.captureTitle" = "Keyboard key capture";
+/* Title of the sheet that adjusts one assignment of a profile. %@ is the name of the controller control that the assignment reads. */
 "ui.capture.adjust" = "Adjust %@";
+/* Label of the slider that sets the dead zone of an axis assignment. The dead zone is the part of the travel near the center that is ignored. */
 "ui.capture.deadZone" = "Dead zone";
+/* Label of the slider that sets the gain of an axis assignment. The gain multiplies the travel of the axis. */
 "ui.capture.gain" = "Gain";
+/* Label of the switch that reverses the direction of an axis assignment. */
 "ui.capture.invertAxis" = "Invert axis";
+/* Label of the popup that picks the response curve of an axis assignment. The curve maps the travel of the control to the output. */
 "ui.capture.responseCurve" = "Response curve";
+/* Label of the slider that sets the travel at which an axis counts as a pressed button. */
 "ui.capture.digitalThreshold" = "Digital threshold";
+/* Option of the response curve popup: output grows in proportion to the travel. */
 "ui.capture.linear" = "Linear";
+/* Option of the response curve popup: output grows slowly at first and faster later. */
 "ui.capture.easeIn" = "Ease in";
+/* Option of the response curve popup: output grows fast at first and slower later. */
 "ui.capture.easeOut" = "Ease out";
+/* Option of the response curve popup: output grows slowly at both ends and faster in the middle. */
 "ui.capture.smoothStep" = "Smooth step";
+/* Heading of the capture assignment sheet while the app waits for the user to press a control of the controller. */
 "ui.capture.pressControl" = "Press a controller control";
+/* Instruction in the capture assignment sheet. The user picks a control from the popup or lets the app wait for the next input. */
 "ui.capture.chooseControl" = "Choose a control below, or listen briefly for the next input.";
+/* Label of the popup in the capture assignment sheet that lists the controls of the controller. */
 "ui.capture.controllerControl" = "Controller control";
+/* Title of the button in the capture assignment sheet that waits for the next controller input. */
 "ui.capture.listen" = "Listen for control";
+/* Message in the capture assignment sheet when no controller is connected. Manual selection means the popup of controls. */
 "ui.capture.connectForLive" = "Connect a controller to enable live capture. Manual selection is still available.";
+/* VoiceOver label of the capture assignment sheet. */
 "ui.capture.title" = "Controller control capture";
+/* VoiceOver announcement when the user cancels the controller control capture. */
 "ui.capture.canceled" = "Controller capture canceled.";
+/* VoiceOver label of the status area in the capture assignment sheet. */
 "ui.capture.status" = "Capture status";
+/* Status in the capture assignment sheet before the capture starts. */
 "ui.capture.ready" = "Ready to listen.";
+/* Status in the capture assignment sheet while the app waits for a controller control. */
 "ui.capture.listening" = "Listening for a controller control.";
+/* VoiceOver announcement while the app waits for a controller control. Escape is the name of the Escape key. */
 "ui.capture.listeningCancel" = "Listening for a controller control. Press Escape to cancel.";
+/* Status text in the capture assignment sheet while the app waits for a controller control. Keep the three dots. */
 "ui.capture.listeningEllipsis" = "Listening for a controller control...";
+/* Status in the capture assignment sheet after a control is detected. %@ is the name of the control. The sentence ends with a period. */
 "ui.capture.detected" = "Detected: %@.";
+/* Label with the detected control in the capture assignment sheet. %@ is the name of the control. It has no final period because other text follows or the label stands alone. */
 "ui.capture.detectedNoPeriod" = "Detected: %@";
+/* Status in the capture assignment sheet. %1$@ is the name of the detected control and %2$@ is the sentence that says the destination is ready for selection. */
 "ui.capture.detectedWithDestination" = "Detected: %1$@. %2$@";
+/* Status in the capture assignment sheet when input arrived from a control that the app does not support. */
 "ui.capture.noSupported" = "Input received, but no supported control was identified.";
+/* Status in the capture assignment sheet that tells the user to pick a destination for the detected control. The sentence follows the detected control. */
 "ui.capture.destinationReady" = "Destination is ready for selection.";
+/* Status in the capture assignment sheet when the capture fails. %@ is the reason. */
 "ui.capture.error" = "Capture error. %@";
+/* VoiceOver description of the input test status when no button of the controller is held. */
 "ui.capture.noButton" = "No button is currently held.";
+/* VoiceOver description of the input test status. %@ is the list of the names of the buttons that are held. */
 "ui.capture.buttonsHeld" = "Buttons held: %@";
+/* Error under the name field of the profile creation sheet when the name is empty. */
 "ui.capture.profileNameValidation" = "Enter a profile name.";
 "ui.profiles.new" = "New profile";
 "ui.profiles.deleteTitle" = "Delete profile?";
@@ -310,15 +341,25 @@
 "ui.debug.outputNeedsAttention" = "Controller output needs attention.";
 /* Line of the debug report when the service does not answer, so the report has no diagnostics. */
 "ui.debug.serviceUnavailable" = "Service diagnostics are unavailable right now.";
+/* Error shown in the profile editor when the profile changed elsewhere after the editor loaded it. Reload means to discard the edits and load the profile again. */
 "ui.error.profileChanged" = "This profile changed elsewhere. Reload or keep editing.";
+/* Error under the name field of the profile creation sheet when another profile has the name. */
 "ui.error.duplicateProfile" = "A profile with that name already exists.";
+/* Error shown when the service has no profile with the requested identifier. */
 "ui.error.profileMissing" = "That profile is no longer available.";
+/* Error shown when the service rejects the assignments of a profile. */
 "ui.error.reviewAssignments" = "Review the profile assignments and try again.";
+/* Error shown when the service cannot save the profile library. */
 "ui.error.profileLibrarySave" = "Your profiles could not be saved.";
+/* Error shown when the remapping engine of the service is not available yet. */
 "ui.error.remappingUnavailable" = "Controller remapping is temporarily unavailable.";
+/* Error shown for a failure that has no message of its own. OpenJoystickDriver is the product name. */
 "ui.error.generic" = "OpenJoystickDriver couldn't complete that action.";
+/* Error shown when the service cannot be reached. OpenJoystickDriver is the product name. */
 "ui.error.notAvailable" = "OpenJoystickDriver isn't available right now.";
+/* Error shown when the service does not answer in time. OpenJoystickDriver is the product name. */
 "ui.error.timeout" = "OpenJoystickDriver is taking too long to respond.";
+/* Error shown when the service answers with a reply that the app does not understand. OpenJoystickDriver is the product name. */
 "ui.error.unexpected" = "OpenJoystickDriver returned an unexpected result.";
 "ui.mapping.allApps" = "All apps";
 "ui.mapping.specificApp" = "A specific app";
@@ -360,10 +401,15 @@
 "ui.profiles.touch.pointerSensitivity" = "Pointer points per surface";
 "ui.profiles.touch.stickRadius" = "Full stick radius (surface fraction)";
 "ui.profiles.touch.deadzone" = "Stick deadzone";
+/* Label of the stepper that sets the number of columns of a touch grid in the capture assignment sheet. %d is the number of columns. */
 "ui.capture.touchColumns" = "Grid columns: %d";
+/* Label of the stepper that sets the number of rows of a touch grid in the capture assignment sheet. %d is the number of rows. */
 "ui.capture.touchRows" = "Grid rows: %d";
+/* Label of the stepper that picks the column of the touch cell in the capture assignment sheet. %d is the column number, counted from 1. */
 "ui.capture.touchColumn" = "Cell column: %d";
+/* Label of the stepper that picks the row of the touch cell in the capture assignment sheet. %d is the row number, counted from 1. */
 "ui.capture.touchRow" = "Cell row: %d";
+/* Label of the slider that sets the shortest swipe that counts, as a share of the touch surface. %.0f is a percentage; %% is the percent sign. */
 "ui.capture.touchSwipeDistance" = "Minimum swipe distance: %.0f%%";
 "ui.mapping.mute" = "Mute";
 "ui.mapping.leftTriggerClick" = "Left trigger click";
@@ -430,13 +476,21 @@
 "action.remove" = "Remove";
 /* Button of the input test window that stops the rumble test and button of the developer view that stops the packet capture. */
 "action.stop" = "Stop";
+/* Error shown when the debug report cannot be written to the chosen file. */
 "ui.error.supportReportSave" = "The support report couldn't be saved. Choose another file and try again.";
+/* Error shown when the debug logs cannot be written to the chosen file. The system reason follows on the next line. */
 "ui.error.logsSave" = "The logs couldn't be saved. Choose another file and try again.";
+/* Error shown in the capture assignment sheet when the listening ends without any control. */
 "ui.error.noDetectedControl" = "No new controller control was detected.";
+/* Error shown when the user starts a profile action while another one still runs. */
 "ui.error.actionInProgress" = "Another profile action is already in progress.";
+/* Error shown when the list of active profiles is damaged and the service cannot load it. */
 "ui.error.profileLibraryCorrupt" = "The active profile list is damaged and could not be loaded.";
+/* Title of the button in the capture assignment sheet while the app waits for a control. Keep the three dots. */
 "ui.capture.listeningButton" = "Listening...";
+/* Error shown when the user saves a profile whose assignments have problems. */
 "ui.error.reviewAssignmentsBeforeSave" = "Review the assignments before saving this profile.";
+/* Error shown when the profile item that the user selected is gone, for example after a reload. */
 "ui.error.selectedProfileItemMissing" = "The selected profile item is no longer available.";
 /* Message about a request to the system extension manager that ends cancelled. The request installs or removes the driver extension. */
 "cli.transportExtension.group.cancelled" = "System extension request cancelled.";
@@ -498,53 +552,101 @@
 "term.protocolVariant.wired" = "Wired";
 /* Label of a fact under Advanced in the Controllers detail: the parser that reads the controller, shown as its ojd spelling such as xbox-xusb:receiver. */
 "term.parser" = "Parser";
+/* Label in the controller summary of the developer tools. The value is a list of the pressed buttons. */
 "ui.developer.buttons" = "Buttons";
+/* Status next to the Start Capture button while the packet capture runs. */
 "ui.developer.capturing" = "Capturing";
+/* Label of the connection kind in the controller summary of the developer tools, for example USB or Bluetooth. */
 "ui.developer.connection" = "Connection";
+/* Label of the controller name in the controller summary of the developer tools. */
 "ui.developer.controller" = "Controller";
+/* Heading of the controller summary section in the developer tools. */
 "ui.developer.controllerDetails" = "Controller";
+/* Message in the packet capture list of the developer tools before a capture. Start Capture is the title of the button and is written as in this catalog. */
 "ui.developer.emptyCapture" = "Press Start Capture, then press controller buttons.";
+/* Title of the save panel that exports the packet capture. */
 "ui.developer.exportCapture" = "Export Packet Capture";
+/* Heading of the section in the developer tools that lists buttons beyond the standard ones. */
 "ui.developer.extraInputs" = "Extra Buttons";
+/* Description of the extra buttons section in the developer tools. The user presses one button at a time and the detected buttons stay in the list until the user clears the capture. */
 "ui.developer.extraInputsDescription" = "Press one extra button at a time. Detected buttons stay listed until you clear the capture.";
+/* Value of the route in the controller summary of the developer tools when the app reads the controller as an HID device. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.developer.hid" = "HID";
+/* Note under the packet list in the developer tools. Keep-alive packets are the routine idle messages of a controller. */
 "ui.developer.keepAliveNote" = "Routine idle traffic is hidden so controller activity stays visible.";
+/* Label of the left stick value in the controller summary of the developer tools. */
 "ui.developer.leftStick" = "Left stick";
+/* Message in the developer tools while the controllers load. Keep the three dots. */
 "ui.developer.loadingControllers" = "Loading controller diagnostics...";
+/* Message in the developer tools before the controller diagnostics load. */
 "ui.developer.notLoaded" = "Controller diagnostics are not loaded.";
+/* Title of the empty state in the developer tools when no controller is connected. */
 "ui.developer.noControllers" = "No controllers connected";
+/* Detail of the empty state in the developer tools. Refresh is the title of a button and is written as in this catalog. */
 "ui.developer.noControllersDetail" = "Connect a controller, then press Refresh.";
+/* Message in the extra buttons section of the developer tools when the capture detected none. */
 "ui.developer.noExtraInputs" = "No extra buttons detected.";
+/* Title of the empty state in the packet list of the developer tools. */
 "ui.developer.noPackets" = "No packets captured";
+/* Heading of the raw packet capture section in the developer tools. */
 "ui.developer.packetCapture" = "Raw Packet Capture";
+/* Option of the packet filter in the developer tools that shows only packets that carry controller activity. */
 "ui.developer.packetFilterActivity" = "Activity";
+/* Option of the packet filter in the developer tools that shows all packets. */
 "ui.developer.packetFilterAll" = "All";
+/* Column title of the packet list in the developer tools. The column shows when the packet arrived. */
 "ui.developer.packetColumnTime" = "Time";
+/* Column title of the packet list in the developer tools. The column shows whether the packet came from or went to the controller. */
 "ui.developer.packetColumnDirection" = "Direction";
+/* Column title of the packet list in the developer tools. The column shows the length of the packet in bytes. */
 "ui.developer.packetColumnBytes" = "Bytes";
+/* Column title of the packet list in the developer tools. The column shows the bytes of the packet. */
 "ui.developer.packetColumnData" = "Data";
+/* Warning under the packet capture export. A capture can hold data that identifies the controller or the user. */
 "ui.developer.packetSharingWarning" = "Packet contents vary by controller. Check the file before sharing.";
+/* Value of the route in the controller summary of the developer tools when the app reads the controller over raw USB. */
 "ui.developer.rawUSB" = "Raw USB";
+/* Status of the packet capture in the developer tools when it can start. */
 "ui.developer.ready" = "Ready";
+/* Label of the right stick value in the controller summary of the developer tools. */
 "ui.developer.rightStick" = "Right stick";
+/* Label of the route in the controller summary of the developer tools. The route is how the app found and reads the controller. */
 "ui.developer.route" = "Route";
+/* Title of the button that starts the packet capture. */
 "ui.developer.startCapture" = "Start Capture";
+/* Status of the packet capture in the developer tools while it starts. Keep the three dots. */
 "ui.developer.starting" = "Starting...";
+/* Title of the message in the developer tools when they cannot load. */
 "ui.developer.unavailable" = "Developer tools are unavailable";
+/* Label of the USB endpoints in the controller summary of the developer tools. */
 "ui.developer.usbEndpoints" = "USB endpoints";
+/* Label of the USB vendor and product ID in the controller summary of the developer tools. */
 "ui.developer.usbID" = "USB ID";
+/* Message in the packet list of the developer tools while a capture waits for packets. */
 "ui.developer.waitingForPackets" = "Waiting for USB packets. Press a controller button.";
+/* Heading of the soak test section in the developer tools. A soak test measures the service over a long time. */
 "ui.developer.soakTest" = "Soak Test";
+/* Description of the soak test section in the developer tools. The test samples memory, file descriptors and CPU of the service. */
 "ui.developer.soakTestDescription" = "Samples the service's memory, file descriptors and CPU over the chosen time, then shows the result.";
+/* Title of the button in the developer tools that opens the soak test sheet. Keep the three dots. */
 "ui.developer.soakTestOpen" = "Run Soak Test...";
+/* Label of the duration field of the soak test sheet. The value is in seconds. */
 "ui.developer.soakDuration" = "Duration (seconds)";
+/* Label of the sample interval field of the soak test sheet. The value is in milliseconds. */
 "ui.developer.soakInterval" = "Sample interval (ms)";
+/* Label of the field of the soak test sheet that limits the resident memory of the service. The value is in MiB, mebibytes. */
 "ui.developer.soakResidentLimit" = "Resident size limit (MiB)";
+/* Label of the field of the soak test sheet that limits the memory footprint of the service. The value is in MiB, mebibytes. */
 "ui.developer.soakFootprintLimit" = "Footprint limit (MiB)";
+/* Hint under the limit fields of the soak test sheet. A limit of 0 means no limit. */
 "ui.developer.soakLimitHint" = "A limit of 0 turns it off.";
+/* Title of the button of the soak test sheet that starts the test. */
 "ui.developer.soakStart" = "Run Test";
+/* Status in the soak test sheet while the test samples the service. Keep the three dots. */
 "ui.developer.soakRunning" = "Sampling the service...";
+/* Error in the soak test sheet when a field does not hold a whole number. %@ is the label of the field. */
 "ui.developer.soakNotANumber" = "%@: enter a whole number.";
+/* Error in the soak test sheet when a value is outside its range. %1$@ is the label of the field, %2$lld is the lowest value and %3$lld is the highest value. */
 "ui.developer.soakOutOfRange" = "%1$@: enter a value between %2$lld and %3$lld.";
 "ui.inputTest.aButton" = "A button";
 "ui.inputTest.aCross" = "A / Cross";
@@ -932,6 +1034,7 @@
 "ui.profiles.unpairJoyCons" = "Unpair";
 "ui.profiles.joyConPairSessionHint" = "Pairing uses these exact controllers for the current app session.";
 "ui.profiles.pair" = "Pair";
+/* Error shown when two Joy-Cons cannot be combined into one controller. Joy-Con is a Nintendo product name. */
 "ui.error.joyConPairUnavailable" = "The selected Joy-Cons could not be paired. Refresh connected controllers and try again.";
 "ui.profiles.joyConSessionState" = "Explicit pairing";
 
@@ -981,6 +1084,7 @@
 
 /* Controller session lifecycle */
 "ui.controllers.suspended" = "Suspended";
+/* Error shown when the service refuses to change the session of a controller. */
 "ui.error.controllerSessionChangeRejected" = "The controller session could not be changed.";
 
 "ui.controllers.disconnectWirelessConfirmTitle" = "Disconnect Wireless Controller?";
@@ -2541,6 +2645,7 @@
 "error.E5006.message" = "The key file of the unit IDs, PortKeyInstallation.key, cannot be read or is not 32 bytes. Restore the file from a backup. If you delete it instead, OpenJoystickDriver creates a new key and every unit ID changes.";
 /* Error E5007, shown when a controller record or patch fails its schema; the message names the field. */
 "error.E5007.message" = "A controller record or patch is invalid. Check the file against its schema and fix the field that the message names.";
+/* Error text with the error code. %1$@ is the message and %2$@ is the code, for example E2011. The code is in parentheses. */
 "ui.error.withCode" = "%1$@ (%2$@)";
 
 /* Main window, status item, main menu, settings window, library and access. */
@@ -2619,80 +2724,149 @@
 "a11y.library.recordHexadecimal" = "%1$@, hexadecimal %2$@";
 /* Shown in the Record section of a record in the Library when the record text cannot be read for display. %@ is the controller identity, such as 045E:028E. */
 "ui.library.recordUnreadable" = "The record text of %@ cannot be read, so it cannot be shown.";
+/* Title of the details button of an error message in the Access area. */
 "ui.access.details" = "Details";
+/* Button of an error message in the Access area that hides the message. */
 "ui.access.dismiss" = "Dismiss";
+/* Button of an error message in the Access area that reads the access settings again. */
 "ui.access.tryAgain" = "Try Again";
+/* Message in the Access area while it reads the access settings. Keep the three dots. */
 "ui.access.loading" = "Reading the access settings...";
+/* Button that closes the sheet that shows the secret of a token. */
 "ui.access.done" = "Done";
+/* Button of the open panel in which the user picks a program or app to grant access. It confirms the choice. */
 "ui.access.choose" = "Choose";
+/* Label of the row in the Access area for the local endpoint. The local endpoint is the socket where programs on this Mac connect. */
 "ui.access.endpoint" = "Local endpoint";
+/* Help text of the endpoint switch. %@ is the path of the socket. */
 "ui.access.socket" = "Socket: %@";
+/* Context menu item that copies the path of the socket. */
 "ui.access.socket.copy" = "Copy Socket Path";
+/* Confirm button of the alert that turns on the local endpoint. */
 "ui.access.enable" = "Turn On";
+/* Title of the alert that turns on the local endpoint. */
 "ui.access.enable.title" = "Turn on the local endpoint?";
+/* Message of the alert that turns on the local endpoint. The control scope allows a program to change controller state. */
 "ui.access.enable.message" = "Programs that you grant access can then read controller state and, with the control scope, change it.";
+/* Label of the row in the Access area for the WebSocket endpoint, where web pages connect. */
 "ui.access.web" = "WebSocket";
+/* Value of the WebSocket row when it is on. %1$@ is the address of the endpoint and %2$@ is the address where pages are served. */
 "ui.access.web.on" = "On at %1$@, pages at %2$@";
+/* Value of the WebSocket row when it is off. */
 "ui.access.web.off" = "Off";
+/* Value of the WebSocket row when it is on but cannot listen. %@ is the port number. */
 "ui.access.web.closed" = "On, but not listening on port %@";
+/* Help text of the WebSocket row. %@ is the path of the folder from which the endpoint serves pages. */
 "ui.access.web.pages" = "Pages folder: %@";
+/* Label of the port field of the WebSocket endpoint. */
 "ui.access.web.port" = "Port";
+/* Value of the port field when the system picks the port. */
 "ui.access.web.port.automatic" = "Automatic";
+/* Button that makes the system pick the port of the WebSocket endpoint. */
 "ui.access.web.port.choose" = "Choose Automatically";
+/* Error under the port field. %1$lld is the lowest port and %2$lld is the highest port. */
 "ui.access.web.portRange" = "The port must be between %1$lld and %2$lld.";
+/* Title of the alert that turns on the WebSocket. */
 "ui.access.web.enable.title" = "Turn on the WebSocket?";
 /* Message of the confirmation alert that turns on the WebSocket in the Access area. */
 "platform.macos.ui.access.web.enable.message" = "Web pages from the origins of a token can then connect to the endpoint on this Mac.";
+/* Line of the alert that turns on the WebSocket. %lld is the port number. */
 "ui.access.web.enable.port" = "Port: %lld";
+/* Line of the alert that turns on the WebSocket when the port is automatic. */
 "ui.access.web.enable.automatic" = "The system picks a free port.";
+/* Heading of the list of programs that have access in the Access area. */
 "ui.access.grants" = "Programs with access";
+/* Toolbar button in the Access area that starts the grant of access to a program. Keep the three dots. */
 "ui.access.grantProgram" = "Grant a Program...";
+/* Button on a refused program that grants it access. */
 "ui.access.grant" = "Grant";
+/* Message of the open panel in which the user picks a program or app to grant access. */
 "ui.access.grant.pick" = "Choose a program or app to grant access.";
+/* Error shown when the chosen program has no signature. %@ is the path of the program. */
 "ui.access.grant.unsigned" = "%@ is not signed, so access cannot be granted to it.";
+/* Error shown when the chosen program has an ad-hoc signature. %@ is the identifier of the program. Any local process can claim such an identity. */
 "ui.access.grant.adHoc" = "%@ is not signed with a certificate, so any local process could claim its identity. Access cannot be granted to it.";
+/* Title of the alert that grants access to a program. %@ is the identifier of the program. */
 "ui.access.grant.title" = "Grant access to %@?";
+/* Question of the alert that grants access. %1$@ is the identifier of the program, %2$@ is the description of its signer and %3$@ is the list of scopes. */
 "ui.access.grant.question" = "Grant %1$@ (%2$@) these scopes: %3$@?";
+/* Warning in the alert that grants access when the control scope is part of the grant. Rumble is vibration of the controller. */
 "ui.access.grant.controlWarning" = "The control scope lets the program send output to your controllers, such as rumble and lights.";
 /* Warning line of the confirmation alert that grants access to a program that Apple signed. */
 "platform.macos.ui.access.grant.platformWarning" = "This program is signed by Apple. Any program that Apple signs with the same identifier would get the access.";
+/* Button on a program or token that removes its access. */
 "ui.access.revoke" = "Revoke";
+/* Title of the alert that removes all access of a program. %@ is the name of the program. */
 "ui.access.revoke.title" = "Revoke the access of %@?";
+/* Message of the alert that removes all access of a program. */
 "ui.access.revoke.message" = "The program loses all its scopes and its open connections close.";
+/* Menu item that removes all scopes of a program or token. */
 "ui.access.revoke.all" = "All Scopes";
+/* Message of the alert that removes one scope. %@ is the name of the scope, for example Read or Control. */
 "ui.access.revokeScope.message" = "Only the %@ scope is removed. The other scopes stay, and open connections that use it close.";
+/* Title of the alert that removes a token. %@ is the name of the token. */
 "ui.access.revokeToken.title" = "Revoke the token %@?";
+/* Message of the alert that removes a token. */
 "ui.access.revokeToken.message" = "Pages and programs that use the token lose access and their open connections close.";
+/* Heading of the list of tokens in the Access area. A token is a secret that a program or web page uses to connect. */
 "ui.access.tokens" = "Tokens";
+/* Toolbar button in the Access area that starts the creation of a token. Keep the three dots. */
 "ui.access.grantToken" = "Create a Token...";
+/* Heading of the token creation sheet. */
 "ui.access.token.form.title" = "Create a token";
+/* Placeholder of the name field of the token creation sheet. */
 "ui.access.token.name" = "Name";
+/* Help text under the origins field of the token creation sheet. https://example.com is an example and stays as written. */
 "ui.access.token.origins" = "Web origins that may use the token, one per line, such as https://example.com. Leave empty for a token that only local programs use.";
+/* Button of the token creation sheet that goes on to the confirmation. */
 "ui.access.token.continue" = "Continue";
+/* Error of the token creation sheet when the name or the scopes are missing. */
 "ui.access.token.incomplete" = "A token needs a name and at least one scope.";
+/* Error of the token creation sheet when the user picks the control scope together with web origins. */
 "ui.access.token.originControl" = "A token for web pages cannot have the control scope.";
+/* Title of the alert that creates a token. %@ is the name of the token. */
 "ui.access.token.title" = "Create the token %@?";
+/* Question of the alert that creates a token without origins. %1$@ is the name of the token and %2$@ is the list of scopes. */
 "ui.access.token.question" = "Create the token %1$@ with these scopes: %2$@?";
+/* Question of the alert that creates a token with origins. %1$@ is the name of the token, %2$@ is the list of scopes and %3$@ is the list of web origins. */
 "ui.access.token.webQuestion" = "Create the token %1$@ with these scopes: %2$@? Pages from %3$@ may use it.";
+/* Title of the sheet that shows the secret of a token. %@ is the name of the token. */
 "ui.access.token.issued.title" = "Token %@";
+/* Message of the sheet that shows the secret of a token once. OpenJoystickDriver is the product name. */
 "ui.access.token.issued.message" = "Copy the token now. OpenJoystickDriver does not keep it and cannot show it again.";
+/* Button of the sheet that copies the secret of a token. */
 "ui.access.token.copy" = "Copy Token";
+/* Title of a token in the list of tokens. %@ is the name of the token. */
 "ui.access.token.named" = "Token %@";
+/* Title of a token in the list of tokens when its name is not known. */
 "ui.access.token.unknown" = "Unknown token";
+/* Heading of the list of programs and tokens that the endpoint refused in the last 24 hours. */
 "ui.access.refused" = "Refused recently";
+/* Footer of the list of refused programs and tokens. */
 "ui.access.refused.message" = "Programs and tokens that the endpoint turned away in the last 24 hours.";
+/* Heading of the list of connections that are open at the moment in the Access area. */
 "ui.access.connections" = "Connected now";
+/* Name of the read scope. It lets a program read controller state. */
 "ui.access.scope.read" = "Read";
+/* Name of the control scope. It lets a program change controller state and send output. */
 "ui.access.scope.control" = "Control";
+/* Description of the signer of a program. %@ is the identifier of the publisher. */
 "ui.access.signer.signed" = "Signed by %@";
 /* Label for the signer of a program that Apple signed, shown in the Access area. */
 "platform.macos.ui.access.signer.platform" = "Signed by Apple";
+/* Description of the signer of a program that has no certificate signature. */
 "ui.access.signer.adHoc" = "Not signed";
+/* Name of the connection kind for a local socket. */
 "ui.access.transport.socket" = "Socket";
+/* Name of the connection kind for a WebSocket. */
 "ui.access.transport.web" = "WebSocket";
+/* Error of the Access area when the service is not running. OpenJoystickDriver is the product name. */
 "ui.access.error.serviceUnavailable" = "OpenJoystickDriver is not running, so the access settings cannot be read or changed.";
+/* Error of the Access area when the service does not answer in time. OpenJoystickDriver is the product name. */
 "ui.access.error.serviceTimeout" = "OpenJoystickDriver did not answer in time.";
+/* Error of the Access area when the service refuses the request of the app. OpenJoystickDriver is the product name. */
 "ui.access.error.peerRejected" = "OpenJoystickDriver refused this request.";
+/* Error of the Access area when a request fails. %@ is the reason. */
 "ui.access.error.requestFailed" = "The request failed: %@";
 /* VoiceOver label of the button in the Access error banner that shows the details of the error. */
 "a11y.access.details" = "Show details of the error";
@@ -2863,9 +3037,13 @@
 "a11y.mainWindow.sidebar" = "Areas";
 /* VoiceOver label of the control in the capture assignment sheet that sets the minimum swipe distance of a touch gesture. */
 "a11y.capture.touchSwipeDistance" = "Minimum swipe distance";
+/* Detail line of a row in the Access area with two parts. %1$@ and %2$@ are the parts, for example the signer and the scopes. The dot between them separates the parts and may change. */
 "ui.access.detail.pair" = "%1$@ · %2$@";
+/* Detail line of a row in the Access area with three parts. %1$@, %2$@ and %3$@ are the parts, for example the signer, the scopes and the reason of a refusal. The dots between them separate the parts and may change. */
 "ui.access.detail.triple" = "%1$@ · %2$@ · %3$@";
+/* Error shown when the app cannot find the executable of a refused program. %@ is the identifier of the program. */
 "ui.access.grant.noPath" = "OpenJoystickDriver could not read the executable of %@, so it cannot grant it access.";
+/* Line of the alert that turns on the WebSocket when a port is saved. */
 "ui.access.web.enable.savedPort" = "The web endpoint keeps its saved port.";
 "ui.library.record.detail" = "%1$@ · %2$@";
 "ui.library.mod.detail" = "%1$@ · %2$@";
@@ -2878,7 +3056,9 @@
 "ui.settings.general.updateAvailableBody" = "Version %@ is available.";
 /* Title of the message in the main window while a profile change is still running. */
 "ui.mainWindow.profileMutationRunning" = "A profile change is still running. Try again when it finishes.";
+/* Value of the WebSocket row when it is on but the port is not set yet. */
 "ui.access.web.noPort" = "Web endpoint on, but no port is chosen yet";
+/* Description of the signer of a program that has a signature without a known publisher. */
 "ui.access.signer.signedUnknownPublisher" = "Signed by an unknown publisher";
 "ui.settings.commandLine.toolLinkTargetUnreadable" = "%@ is a link whose target cannot be read. Installing links it to this app instead.";
 /* Message printed by 'ojd update check' when the installed version is newer than the latest release. %1$@ is the installed version and %2$@ is the latest release. */

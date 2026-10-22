@@ -173,36 +173,67 @@
 "ui.keyboard.captureCanceled" = "키보드 캡처가 취소되었습니다.";
 /* VoiceOver label of the area that captures a keyboard key. */
 "ui.keyboard.captureTitle" = "키보드 키 캡처";
+/* Title of the sheet that adjusts one assignment of a profile. %@ is the name of the controller control that the assignment reads. */
 "ui.capture.adjust" = "%@ 조정";
+/* Label of the slider that sets the dead zone of an axis assignment. The dead zone is the part of the travel near the center that is ignored. */
 "ui.capture.deadZone" = "데드 존";
+/* Label of the slider that sets the gain of an axis assignment. The gain multiplies the travel of the axis. */
 "ui.capture.gain" = "게인";
+/* Label of the switch that reverses the direction of an axis assignment. */
 "ui.capture.invertAxis" = "축 반전";
+/* Label of the popup that picks the response curve of an axis assignment. The curve maps the travel of the control to the output. */
 "ui.capture.responseCurve" = "응답 곡선";
+/* Label of the slider that sets the travel at which an axis counts as a pressed button. */
 "ui.capture.digitalThreshold" = "디지털 임계값";
+/* Option of the response curve popup: output grows in proportion to the travel. */
 "ui.capture.linear" = "선형";
+/* Option of the response curve popup: output grows slowly at first and faster later. */
 "ui.capture.easeIn" = "서서히 시작";
+/* Option of the response curve popup: output grows fast at first and slower later. */
 "ui.capture.easeOut" = "서서히 종료";
+/* Option of the response curve popup: output grows slowly at both ends and faster in the middle. */
 "ui.capture.smoothStep" = "부드러운 단계";
+/* Heading of the capture assignment sheet while the app waits for the user to press a control of the controller. */
 "ui.capture.pressControl" = "컨트롤러 조작을 누르십시오";
+/* Instruction in the capture assignment sheet. The user picks a control from the popup or lets the app wait for the next input. */
 "ui.capture.chooseControl" = "아래에서 조작을 선택하거나 다음 입력을 잠시 기다리십시오.";
+/* Label of the popup in the capture assignment sheet that lists the controls of the controller. */
 "ui.capture.controllerControl" = "컨트롤러 조작";
+/* Title of the button in the capture assignment sheet that waits for the next controller input. */
 "ui.capture.listen" = "조작 수신 대기";
+/* Message in the capture assignment sheet when no controller is connected. Manual selection means the popup of controls. */
 "ui.capture.connectForLive" = "실시간 캡처를 사용하려면 컨트롤러를 연결하십시오. 수동 선택은 계속 사용할 수 있습니다.";
+/* VoiceOver label of the capture assignment sheet. */
 "ui.capture.title" = "컨트롤러 조작 캡처";
+/* VoiceOver announcement when the user cancels the controller control capture. */
 "ui.capture.canceled" = "컨트롤러 캡처가 취소되었습니다.";
+/* VoiceOver label of the status area in the capture assignment sheet. */
 "ui.capture.status" = "캡처 상태";
+/* Status in the capture assignment sheet before the capture starts. */
 "ui.capture.ready" = "수신 대기할 준비가 되었습니다.";
+/* Status in the capture assignment sheet while the app waits for a controller control. */
 "ui.capture.listening" = "컨트롤러 조작을 수신 대기하는 중입니다.";
+/* VoiceOver announcement while the app waits for a controller control. Escape is the name of the Escape key. */
 "ui.capture.listeningCancel" = "컨트롤러 조작을 수신 대기하는 중입니다. 취소하려면 Escape를 누르십시오.";
+/* Status text in the capture assignment sheet while the app waits for a controller control. Keep the three dots. */
 "ui.capture.listeningEllipsis" = "컨트롤러 조작을 수신 대기하는 중…";
+/* Status in the capture assignment sheet after a control is detected. %@ is the name of the control. The sentence ends with a period. */
 "ui.capture.detected" = "감지됨: %@.";
+/* Label with the detected control in the capture assignment sheet. %@ is the name of the control. It has no final period because other text follows or the label stands alone. */
 "ui.capture.detectedNoPeriod" = "감지됨: %@";
+/* Status in the capture assignment sheet. %1$@ is the name of the detected control and %2$@ is the sentence that says the destination is ready for selection. */
 "ui.capture.detectedWithDestination" = "감지됨: %1$@. %2$@";
+/* Status in the capture assignment sheet when input arrived from a control that the app does not support. */
 "ui.capture.noSupported" = "입력은 받았지만 지원되는 조작을 식별하지 못했습니다.";
+/* Status in the capture assignment sheet that tells the user to pick a destination for the detected control. The sentence follows the detected control. */
 "ui.capture.destinationReady" = "대상을 선택할 수 있습니다.";
+/* Status in the capture assignment sheet when the capture fails. %@ is the reason. */
 "ui.capture.error" = "캡처 오류. %@";
+/* VoiceOver description of the input test status when no button of the controller is held. */
 "ui.capture.noButton" = "현재 누르고 있는 버튼이 없습니다.";
+/* VoiceOver description of the input test status. %@ is the list of the names of the buttons that are held. */
 "ui.capture.buttonsHeld" = "누르고 있는 버튼: %@";
+/* Error under the name field of the profile creation sheet when the name is empty. */
 "ui.capture.profileNameValidation" = "프로파일 이름을 입력하십시오.";
 "ui.profiles.new" = "새로운 프로파일";
 "ui.profiles.deleteTitle" = "프로파일을 삭제할까요?";
@@ -310,15 +341,25 @@
 "ui.debug.outputNeedsAttention" = "컨트롤러 출력에 확인이 필요합니다.";
 /* Line of the debug report when the service does not answer, so the report has no diagnostics. */
 "ui.debug.serviceUnavailable" = "지금은 서비스 진단을 사용할 수 없습니다.";
+/* Error shown in the profile editor when the profile changed elsewhere after the editor loaded it. Reload means to discard the edits and load the profile again. */
 "ui.error.profileChanged" = "이 프로파일이 다른 곳에서 변경되었습니다. 다시 로드하거나 편집을 계속하십시오.";
+/* Error under the name field of the profile creation sheet when another profile has the name. */
 "ui.error.duplicateProfile" = "해당 이름의 프로파일이 이미 있습니다.";
+/* Error shown when the service has no profile with the requested identifier. */
 "ui.error.profileMissing" = "해당 프로파일을 더 이상 사용할 수 없습니다.";
+/* Error shown when the service rejects the assignments of a profile. */
 "ui.error.reviewAssignments" = "프로파일 할당을 검토한 다음 다시 시도하십시오.";
+/* Error shown when the service cannot save the profile library. */
 "ui.error.profileLibrarySave" = "프로파일을 저장할 수 없습니다.";
+/* Error shown when the remapping engine of the service is not available yet. */
 "ui.error.remappingUnavailable" = "컨트롤러 재할당을 일시적으로 사용할 수 없습니다.";
+/* Error shown for a failure that has no message of its own. OpenJoystickDriver is the product name. */
 "ui.error.generic" = "OpenJoystickDriver가 해당 동작을 완료할 수 없습니다.";
+/* Error shown when the service cannot be reached. OpenJoystickDriver is the product name. */
 "ui.error.notAvailable" = "지금은 OpenJoystickDriver를 사용할 수 없습니다.";
+/* Error shown when the service does not answer in time. OpenJoystickDriver is the product name. */
 "ui.error.timeout" = "OpenJoystickDriver 응답이 너무 오래 걸립니다.";
+/* Error shown when the service answers with a reply that the app does not understand. OpenJoystickDriver is the product name. */
 "ui.error.unexpected" = "OpenJoystickDriver가 예기치 않은 결과를 반환했습니다.";
 "ui.mapping.allApps" = "모든 앱";
 "ui.mapping.specificApp" = "특정 앱";
@@ -360,10 +401,15 @@
 "ui.profiles.touch.pointerSensitivity" = "표면당 포인터 포인트";
 "ui.profiles.touch.stickRadius" = "전체 스틱 반경(표면 비율)";
 "ui.profiles.touch.deadzone" = "스틱 데드존";
+/* Label of the stepper that sets the number of columns of a touch grid in the capture assignment sheet. %d is the number of columns. */
 "ui.capture.touchColumns" = "그리드 열: %d";
+/* Label of the stepper that sets the number of rows of a touch grid in the capture assignment sheet. %d is the number of rows. */
 "ui.capture.touchRows" = "그리드 행: %d";
+/* Label of the stepper that picks the column of the touch cell in the capture assignment sheet. %d is the column number, counted from 1. */
 "ui.capture.touchColumn" = "셀 열: %d";
+/* Label of the stepper that picks the row of the touch cell in the capture assignment sheet. %d is the row number, counted from 1. */
 "ui.capture.touchRow" = "셀 행: %d";
+/* Label of the slider that sets the shortest swipe that counts, as a share of the touch surface. %.0f is a percentage; %% is the percent sign. */
 "ui.capture.touchSwipeDistance" = "최소 스와이프 거리: %.0f%%";
 "ui.mapping.mute" = "소리 끔";
 "ui.mapping.leftTriggerClick" = "왼쪽 트리거 클릭";
@@ -430,13 +476,21 @@
 "action.remove" = "제거";
 /* Button of the input test window that stops the rumble test and button of the developer view that stops the packet capture. */
 "action.stop" = "중단";
+/* Error shown when the debug report cannot be written to the chosen file. */
 "ui.error.supportReportSave" = "지원 리포트를 저장할 수 없습니다. 다른 파일을 선택한 다음 다시 시도하십시오.";
+/* Error shown when the debug logs cannot be written to the chosen file. The system reason follows on the next line. */
 "ui.error.logsSave" = "로그를 저장할 수 없습니다. 다른 파일을 선택한 다음 다시 시도하십시오.";
+/* Error shown in the capture assignment sheet when the listening ends without any control. */
 "ui.error.noDetectedControl" = "새로운 컨트롤러 조작이 감지되지 않았습니다.";
+/* Error shown when the user starts a profile action while another one still runs. */
 "ui.error.actionInProgress" = "다른 프로파일 동작이 이미 진행 중입니다.";
+/* Error shown when the list of active profiles is damaged and the service cannot load it. */
 "ui.error.profileLibraryCorrupt" = "활성 프로파일 목록이 손상되어 불러올 수 없습니다.";
+/* Title of the button in the capture assignment sheet while the app waits for a control. Keep the three dots. */
 "ui.capture.listeningButton" = "수신 대기 중…";
+/* Error shown when the user saves a profile whose assignments have problems. */
 "ui.error.reviewAssignmentsBeforeSave" = "이 프로파일을 저장하기 전에 할당을 검토하십시오.";
+/* Error shown when the profile item that the user selected is gone, for example after a reload. */
 "ui.error.selectedProfileItemMissing" = "선택한 프로파일 항목을 더 이상 사용할 수 없습니다.";
 /* Message about a request to the system extension manager that ends cancelled. The request installs or removes the driver extension. */
 "cli.transportExtension.group.cancelled" = "시스템 확장 요청이 취소되었습니다.";
@@ -498,53 +552,101 @@
 "term.protocolVariant.wired" = "유선";
 /* Label of a fact under Advanced in the Controllers detail: the parser that reads the controller, shown as its ojd spelling such as xbox-xusb:receiver. */
 "term.parser" = "파서";
+/* Label in the controller summary of the developer tools. The value is a list of the pressed buttons. */
 "ui.developer.buttons" = "버튼";
+/* Status next to the Start Capture button while the packet capture runs. */
 "ui.developer.capturing" = "캡처 중";
+/* Label of the connection kind in the controller summary of the developer tools, for example USB or Bluetooth. */
 "ui.developer.connection" = "연결";
+/* Label of the controller name in the controller summary of the developer tools. */
 "ui.developer.controller" = "컨트롤러";
+/* Heading of the controller summary section in the developer tools. */
 "ui.developer.controllerDetails" = "컨트롤러";
+/* Message in the packet capture list of the developer tools before a capture. Start Capture is the title of the button and is written as in this catalog. */
 "ui.developer.emptyCapture" = "“캡처 시작”을 누른 다음 컨트롤러 버튼을 누르세요.";
+/* Title of the save panel that exports the packet capture. */
 "ui.developer.exportCapture" = "패킷 캡처 내보내기";
+/* Heading of the section in the developer tools that lists buttons beyond the standard ones. */
 "ui.developer.extraInputs" = "추가 버튼";
+/* Description of the extra buttons section in the developer tools. The user presses one button at a time and the detected buttons stay in the list until the user clears the capture. */
 "ui.developer.extraInputsDescription" = "한 번씩 추가 버튼을 누르면, 발견된 버튼은 캡처를 제거할 때까지 계속 표시됩니다.";
+/* Value of the route in the controller summary of the developer tools when the app reads the controller as an HID device. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.developer.hid" = "HID";
+/* Note under the packet list in the developer tools. Keep-alive packets are the routine idle messages of a controller. */
 "ui.developer.keepAliveNote" = "컨트롤러 활동이 잘 보이도록 일반적인 유휴 패킷은 숨겨집니다.";
+/* Label of the left stick value in the controller summary of the developer tools. */
 "ui.developer.leftStick" = "왼쪽 스틱";
+/* Message in the developer tools while the controllers load. Keep the three dots. */
 "ui.developer.loadingControllers" = "컨트롤러 진단 정보를 불러오는 중…";
+/* Message in the developer tools before the controller diagnostics load. */
 "ui.developer.notLoaded" = "컨트롤러 진단 정보를 불러오지 않았습니다.";
+/* Title of the empty state in the developer tools when no controller is connected. */
 "ui.developer.noControllers" = "연결된 컨트롤러가 없습니다";
+/* Detail of the empty state in the developer tools. Refresh is the title of a button and is written as in this catalog. */
 "ui.developer.noControllersDetail" = "컨트롤러를 연결한 다음 “새로 고침”을 누르세요.";
+/* Message in the extra buttons section of the developer tools when the capture detected none. */
 "ui.developer.noExtraInputs" = "추가 버튼은 발견되지 않았습니다.";
+/* Title of the empty state in the packet list of the developer tools. */
 "ui.developer.noPackets" = "캡처된 패킷 없음";
+/* Heading of the raw packet capture section in the developer tools. */
 "ui.developer.packetCapture" = "원시 패킷 캡처";
+/* Option of the packet filter in the developer tools that shows only packets that carry controller activity. */
 "ui.developer.packetFilterActivity" = "활동";
+/* Option of the packet filter in the developer tools that shows all packets. */
 "ui.developer.packetFilterAll" = "모두";
+/* Column title of the packet list in the developer tools. The column shows when the packet arrived. */
 "ui.developer.packetColumnTime" = "시간";
+/* Column title of the packet list in the developer tools. The column shows whether the packet came from or went to the controller. */
 "ui.developer.packetColumnDirection" = "방향";
+/* Column title of the packet list in the developer tools. The column shows the length of the packet in bytes. */
 "ui.developer.packetColumnBytes" = "바이트";
+/* Column title of the packet list in the developer tools. The column shows the bytes of the packet. */
 "ui.developer.packetColumnData" = "데이터";
+/* Warning under the packet capture export. A capture can hold data that identifies the controller or the user. */
 "ui.developer.packetSharingWarning" = "패킷 내용은 컨트롤러에 따라 달라집니다. 공유하기 전에 파일을 확인하세요.";
+/* Value of the route in the controller summary of the developer tools when the app reads the controller over raw USB. */
 "ui.developer.rawUSB" = "원시 USB";
+/* Status of the packet capture in the developer tools when it can start. */
 "ui.developer.ready" = "준비됨";
+/* Label of the right stick value in the controller summary of the developer tools. */
 "ui.developer.rightStick" = "오른쪽 스틱";
+/* Label of the route in the controller summary of the developer tools. The route is how the app found and reads the controller. */
 "ui.developer.route" = "경로";
+/* Title of the button that starts the packet capture. */
 "ui.developer.startCapture" = "캡처 시작";
+/* Status of the packet capture in the developer tools while it starts. Keep the three dots. */
 "ui.developer.starting" = "시작하는 중…";
+/* Title of the message in the developer tools when they cannot load. */
 "ui.developer.unavailable" = "개발자 도구를 사용할 수 없습니다";
+/* Label of the USB endpoints in the controller summary of the developer tools. */
 "ui.developer.usbEndpoints" = "USB 엔드포인트";
+/* Label of the USB vendor and product ID in the controller summary of the developer tools. */
 "ui.developer.usbID" = "USB ID";
+/* Message in the packet list of the developer tools while a capture waits for packets. */
 "ui.developer.waitingForPackets" = "USB 패킷을 기다리는 중입니다. 컨트롤러 버튼을 누르세요.";
+/* Heading of the soak test section in the developer tools. A soak test measures the service over a long time. */
 "ui.developer.soakTest" = "장시간 테스트";
+/* Description of the soak test section in the developer tools. The test samples memory, file descriptors and CPU of the service. */
 "ui.developer.soakTestDescription" = "선택한 시간 동안 서비스의 메모리, 파일 디스크립터, CPU를 측정하고 결과를 표시합니다.";
+/* Title of the button in the developer tools that opens the soak test sheet. Keep the three dots. */
 "ui.developer.soakTestOpen" = "장시간 테스트 실행…";
+/* Label of the duration field of the soak test sheet. The value is in seconds. */
 "ui.developer.soakDuration" = "시간(초)";
+/* Label of the sample interval field of the soak test sheet. The value is in milliseconds. */
 "ui.developer.soakInterval" = "샘플링 간격(ms)";
+/* Label of the field of the soak test sheet that limits the resident memory of the service. The value is in MiB, mebibytes. */
 "ui.developer.soakResidentLimit" = "상주 크기 제한(MiB)";
+/* Label of the field of the soak test sheet that limits the memory footprint of the service. The value is in MiB, mebibytes. */
 "ui.developer.soakFootprintLimit" = "풋프린트 제한(MiB)";
+/* Hint under the limit fields of the soak test sheet. A limit of 0 means no limit. */
 "ui.developer.soakLimitHint" = "제한을 0으로 하면 해제됩니다.";
+/* Title of the button of the soak test sheet that starts the test. */
 "ui.developer.soakStart" = "테스트 실행";
+/* Status in the soak test sheet while the test samples the service. Keep the three dots. */
 "ui.developer.soakRunning" = "서비스 샘플링 중…";
+/* Error in the soak test sheet when a field does not hold a whole number. %@ is the label of the field. */
 "ui.developer.soakNotANumber" = "%@: 정수를 입력하세요.";
+/* Error in the soak test sheet when a value is outside its range. %1$@ is the label of the field, %2$lld is the lowest value and %3$lld is the highest value. */
 "ui.developer.soakOutOfRange" = "%1$@: %2$lld에서 %3$lld 사이의 값을 입력하세요.";
 "ui.inputTest.aButton" = "A 버튼";
 "ui.inputTest.aCross" = "A / 크로스";
@@ -932,6 +1034,7 @@
 "ui.profiles.unpairJoyCons" = "페어링 해제";
 "ui.profiles.joyConPairSessionHint" = "페어링은 현재 앱 세션 동안 이 컨트롤러들을 그대로 사용합니다.";
 "ui.profiles.pair" = "페어링";
+/* Error shown when two Joy-Cons cannot be combined into one controller. Joy-Con is a Nintendo product name. */
 "ui.error.joyConPairUnavailable" = "선택한 Joy-Con을 페어링할 수 없습니다. 연결된 컨트롤러를 새로 고친 다음 다시 시도하십시오.";
 "ui.profiles.joyConSessionState" = "명시적 페어링";
 
@@ -981,6 +1084,7 @@
 
 /* Controller session lifecycle */
 "ui.controllers.suspended" = "일시 중지됨";
+/* Error shown when the service refuses to change the session of a controller. */
 "ui.error.controllerSessionChangeRejected" = "컨트롤러 세션을 변경할 수 없습니다.";
 
 "ui.controllers.disconnectWirelessConfirmTitle" = "무선 컨트롤러 연결을 해제할까요?";
@@ -2397,80 +2501,149 @@
 "a11y.library.recordHexadecimal" = "%1$@, 16진수 %2$@";
 /* Shown in the Record section of a record in the Library when the record text cannot be read for display. %@ is the controller identity, such as 045E:028E. */
 "ui.library.recordUnreadable" = "%@ 레코드의 텍스트를 읽을 수 없으므로 표시할 수 없습니다.";
+/* Title of the details button of an error message in the Access area. */
 "ui.access.details" = "세부사항";
+/* Button of an error message in the Access area that hides the message. */
 "ui.access.dismiss" = "닫기";
+/* Button of an error message in the Access area that reads the access settings again. */
 "ui.access.tryAgain" = "다시 시도";
+/* Message in the Access area while it reads the access settings. Keep the three dots. */
 "ui.access.loading" = "접근 설정을 읽는 중…";
+/* Button that closes the sheet that shows the secret of a token. */
 "ui.access.done" = "완료";
+/* Button of the open panel in which the user picks a program or app to grant access. It confirms the choice. */
 "ui.access.choose" = "선택";
+/* Label of the row in the Access area for the local endpoint. The local endpoint is the socket where programs on this Mac connect. */
 "ui.access.endpoint" = "로컬 엔드포인트";
+/* Help text of the endpoint switch. %@ is the path of the socket. */
 "ui.access.socket" = "소켓: %@";
+/* Context menu item that copies the path of the socket. */
 "ui.access.socket.copy" = "소켓 경로 복사";
+/* Confirm button of the alert that turns on the local endpoint. */
 "ui.access.enable" = "켜기";
+/* Title of the alert that turns on the local endpoint. */
 "ui.access.enable.title" = "로컬 엔드포인트를 켜시겠습니까?";
+/* Message of the alert that turns on the local endpoint. The control scope allows a program to change controller state. */
 "ui.access.enable.message" = "접근을 허용한 프로그램은 컨트롤러 상태를 읽을 수 있으며, 제어 범위가 있으면 상태를 변경할 수도 있습니다.";
+/* Label of the row in the Access area for the WebSocket endpoint, where web pages connect. */
 "ui.access.web" = "WebSocket";
+/* Value of the WebSocket row when it is on. %1$@ is the address of the endpoint and %2$@ is the address where pages are served. */
 "ui.access.web.on" = "%1$@에서 켬, 페이지 위치 %2$@";
+/* Value of the WebSocket row when it is off. */
 "ui.access.web.off" = "끔";
+/* Value of the WebSocket row when it is on but cannot listen. %@ is the port number. */
 "ui.access.web.closed" = "켜져 있지만 포트 %@에서 수신하지 않음";
+/* Help text of the WebSocket row. %@ is the path of the folder from which the endpoint serves pages. */
 "ui.access.web.pages" = "페이지 폴더: %@";
+/* Label of the port field of the WebSocket endpoint. */
 "ui.access.web.port" = "포트";
+/* Value of the port field when the system picks the port. */
 "ui.access.web.port.automatic" = "자동";
+/* Button that makes the system pick the port of the WebSocket endpoint. */
 "ui.access.web.port.choose" = "자동으로 선택";
+/* Error under the port field. %1$lld is the lowest port and %2$lld is the highest port. */
 "ui.access.web.portRange" = "포트는 %1$lld에서 %2$lld 사이여야 합니다.";
+/* Title of the alert that turns on the WebSocket. */
 "ui.access.web.enable.title" = "WebSocket을 켜시겠습니까?";
 /* Message of the confirmation alert that turns on the WebSocket in the Access area. */
 "platform.macos.ui.access.web.enable.message" = "토큰의 출처에 해당하는 웹 페이지가 이 Mac의 엔드포인트에 연결할 수 있게 됩니다.";
+/* Line of the alert that turns on the WebSocket. %lld is the port number. */
 "ui.access.web.enable.port" = "포트: %lld";
+/* Line of the alert that turns on the WebSocket when the port is automatic. */
 "ui.access.web.enable.automatic" = "시스템이 사용 가능한 포트를 선택합니다.";
+/* Heading of the list of programs that have access in the Access area. */
 "ui.access.grants" = "접근이 허용된 프로그램";
+/* Toolbar button in the Access area that starts the grant of access to a program. Keep the three dots. */
 "ui.access.grantProgram" = "프로그램 허용…";
+/* Button on a refused program that grants it access. */
 "ui.access.grant" = "허용";
+/* Message of the open panel in which the user picks a program or app to grant access. */
 "ui.access.grant.pick" = "접근을 허용할 프로그램 또는 앱을 선택하세요.";
+/* Error shown when the chosen program has no signature. %@ is the path of the program. */
 "ui.access.grant.unsigned" = "%@은(는) 서명되지 않았으므로 접근을 허용할 수 없습니다.";
+/* Error shown when the chosen program has an ad-hoc signature. %@ is the identifier of the program. Any local process can claim such an identity. */
 "ui.access.grant.adHoc" = "%@은(는) 인증서로 서명되지 않았으므로 어떤 로컬 프로세스든 그 신원을 사칭할 수 있습니다. 접근을 허용할 수 없습니다.";
+/* Title of the alert that grants access to a program. %@ is the identifier of the program. */
 "ui.access.grant.title" = "%@에 접근을 허용하시겠습니까?";
+/* Question of the alert that grants access. %1$@ is the identifier of the program, %2$@ is the description of its signer and %3$@ is the list of scopes. */
 "ui.access.grant.question" = "%1$@(%2$@)에 다음 범위를 허용하시겠습니까: %3$@";
+/* Warning in the alert that grants access when the control scope is part of the grant. Rumble is vibration of the controller. */
 "ui.access.grant.controlWarning" = "제어 범위가 있으면 프로그램이 컨트롤러에 진동이나 조명 같은 출력을 보낼 수 있습니다.";
 /* Warning line of the confirmation alert that grants access to a program that Apple signed. */
 "platform.macos.ui.access.grant.platformWarning" = "이 프로그램은 Apple에서 서명했습니다. Apple이 같은 식별자로 서명한 모든 프로그램이 이 접근 권한을 얻게 됩니다.";
+/* Button on a program or token that removes its access. */
 "ui.access.revoke" = "철회";
+/* Title of the alert that removes all access of a program. %@ is the name of the program. */
 "ui.access.revoke.title" = "%@의 접근 권한을 철회하시겠습니까?";
+/* Message of the alert that removes all access of a program. */
 "ui.access.revoke.message" = "프로그램이 모든 범위를 잃고 열려 있는 연결이 닫힙니다.";
+/* Menu item that removes all scopes of a program or token. */
 "ui.access.revoke.all" = "모든 범위";
+/* Message of the alert that removes one scope. %@ is the name of the scope, for example Read or Control. */
 "ui.access.revokeScope.message" = "%@ 범위만 제거됩니다. 다른 범위는 유지되고, 이 범위를 사용하는 열린 연결은 닫힙니다.";
+/* Title of the alert that removes a token. %@ is the name of the token. */
 "ui.access.revokeToken.title" = "토큰 %@을(를) 철회하시겠습니까?";
+/* Message of the alert that removes a token. */
 "ui.access.revokeToken.message" = "이 토큰을 사용하는 페이지와 프로그램이 접근 권한을 잃고 열려 있는 연결이 닫힙니다.";
+/* Heading of the list of tokens in the Access area. A token is a secret that a program or web page uses to connect. */
 "ui.access.tokens" = "토큰";
+/* Toolbar button in the Access area that starts the creation of a token. Keep the three dots. */
 "ui.access.grantToken" = "토큰 생성…";
+/* Heading of the token creation sheet. */
 "ui.access.token.form.title" = "토큰 생성";
+/* Placeholder of the name field of the token creation sheet. */
 "ui.access.token.name" = "이름";
+/* Help text under the origins field of the token creation sheet. https://example.com is an example and stays as written. */
 "ui.access.token.origins" = "토큰을 사용할 수 있는 웹 출처를 한 줄에 하나씩 입력하세요(예: https://example.com). 로컬 프로그램만 사용하는 토큰은 비워 두세요.";
+/* Button of the token creation sheet that goes on to the confirmation. */
 "ui.access.token.continue" = "계속";
+/* Error of the token creation sheet when the name or the scopes are missing. */
 "ui.access.token.incomplete" = "토큰에는 이름과 하나 이상의 범위가 필요합니다.";
+/* Error of the token creation sheet when the user picks the control scope together with web origins. */
 "ui.access.token.originControl" = "웹 페이지용 토큰에는 제어 범위를 지정할 수 없습니다.";
+/* Title of the alert that creates a token. %@ is the name of the token. */
 "ui.access.token.title" = "토큰 %@을(를) 생성하시겠습니까?";
+/* Question of the alert that creates a token without origins. %1$@ is the name of the token and %2$@ is the list of scopes. */
 "ui.access.token.question" = "다음 범위로 토큰 %1$@을(를) 생성하시겠습니까: %2$@";
+/* Question of the alert that creates a token with origins. %1$@ is the name of the token, %2$@ is the list of scopes and %3$@ is the list of web origins. */
 "ui.access.token.webQuestion" = "다음 범위로 토큰 %1$@을(를) 생성하시겠습니까: %2$@ %3$@의 페이지가 이 토큰을 사용할 수 있습니다.";
+/* Title of the sheet that shows the secret of a token. %@ is the name of the token. */
 "ui.access.token.issued.title" = "토큰 %@";
+/* Message of the sheet that shows the secret of a token once. OpenJoystickDriver is the product name. */
 "ui.access.token.issued.message" = "지금 토큰을 복사하세요. OpenJoystickDriver는 토큰을 보관하지 않으며 다시 표시할 수 없습니다.";
+/* Button of the sheet that copies the secret of a token. */
 "ui.access.token.copy" = "토큰 복사";
+/* Title of a token in the list of tokens. %@ is the name of the token. */
 "ui.access.token.named" = "토큰 %@";
+/* Title of a token in the list of tokens when its name is not known. */
 "ui.access.token.unknown" = "알 수 없는 토큰";
+/* Heading of the list of programs and tokens that the endpoint refused in the last 24 hours. */
 "ui.access.refused" = "최근 거부됨";
+/* Footer of the list of refused programs and tokens. */
 "ui.access.refused.message" = "엔드포인트가 최근 24시간 동안 거부한 프로그램과 토큰입니다.";
+/* Heading of the list of connections that are open at the moment in the Access area. */
 "ui.access.connections" = "현재 연결됨";
+/* Name of the read scope. It lets a program read controller state. */
 "ui.access.scope.read" = "읽기";
+/* Name of the control scope. It lets a program change controller state and send output. */
 "ui.access.scope.control" = "제어";
+/* Description of the signer of a program. %@ is the identifier of the publisher. */
 "ui.access.signer.signed" = "서명자: %@";
 /* Label for the signer of a program that Apple signed, shown in the Access area. */
 "platform.macos.ui.access.signer.platform" = "Apple 서명";
+/* Description of the signer of a program that has no certificate signature. */
 "ui.access.signer.adHoc" = "서명되지 않음";
+/* Name of the connection kind for a local socket. */
 "ui.access.transport.socket" = "소켓";
+/* Name of the connection kind for a WebSocket. */
 "ui.access.transport.web" = "WebSocket";
+/* Error of the Access area when the service is not running. OpenJoystickDriver is the product name. */
 "ui.access.error.serviceUnavailable" = "OpenJoystickDriver가 실행 중이 아니므로 접근 설정을 읽거나 변경할 수 없습니다.";
+/* Error of the Access area when the service does not answer in time. OpenJoystickDriver is the product name. */
 "ui.access.error.serviceTimeout" = "OpenJoystickDriver가 제시간에 응답하지 않았습니다.";
+/* Error of the Access area when the service refuses the request of the app. OpenJoystickDriver is the product name. */
 "ui.access.error.peerRejected" = "OpenJoystickDriver가 이 요청을 거부했습니다.";
+/* Error of the Access area when a request fails. %@ is the reason. */
 "ui.access.error.requestFailed" = "요청 실패: %@";
 /* VoiceOver label of the button in the Access error banner that shows the details of the error. */
 "a11y.access.details" = "오류 세부사항 보기";
@@ -2641,9 +2814,13 @@
 "a11y.mainWindow.sidebar" = "영역";
 /* VoiceOver label of the control in the capture assignment sheet that sets the minimum swipe distance of a touch gesture. */
 "a11y.capture.touchSwipeDistance" = "최소 스와이프 거리";
+/* Detail line of a row in the Access area with two parts. %1$@ and %2$@ are the parts, for example the signer and the scopes. The dot between them separates the parts and may change. */
 "ui.access.detail.pair" = "%1$@ · %2$@";
+/* Detail line of a row in the Access area with three parts. %1$@, %2$@ and %3$@ are the parts, for example the signer, the scopes and the reason of a refusal. The dots between them separate the parts and may change. */
 "ui.access.detail.triple" = "%1$@ · %2$@ · %3$@";
+/* Error shown when the app cannot find the executable of a refused program. %@ is the identifier of the program. */
 "ui.access.grant.noPath" = "OpenJoystickDriver가 %@의 실행 파일을 읽을 수 없어 접근 권한을 부여할 수 없습니다.";
+/* Line of the alert that turns on the WebSocket when a port is saved. */
 "ui.access.web.enable.savedPort" = "웹 엔드포인트는 저장된 포트를 유지합니다.";
 "ui.library.record.detail" = "%1$@ · %2$@";
 "ui.library.mod.detail" = "%1$@ · %2$@";
@@ -2656,7 +2833,9 @@
 "ui.settings.general.updateAvailableBody" = "%@ 버전을 사용할 수 있습니다.";
 /* Title of the message in the main window while a profile change is still running. */
 "ui.mainWindow.profileMutationRunning" = "프로파일 변경이 아직 진행 중입니다. 완료된 후에 다시 시도하세요.";
+/* Value of the WebSocket row when it is on but the port is not set yet. */
 "ui.access.web.noPort" = "웹 엔드포인트는 켜져 있지만 아직 포트가 선택되지 않음";
+/* Description of the signer of a program that has a signature without a known publisher. */
 "ui.access.signer.signedUnknownPublisher" = "서명자: 알 수 없는 게시자";
 "ui.settings.commandLine.toolLinkTargetUnreadable" = "%@은(는) 대상을 읽을 수 없는 링크입니다. 설치하면 대신 이 앱에 연결됩니다.";
 /* Text of error E1001, sent to a client that connects to the endpoint while the endpoint is off, and printed by 'ojd explain'. The command in quotes stays as written. */
@@ -2879,6 +3058,7 @@
 "error.E5006.message" = "유닛 ID의 키 파일 PortKeyInstallation.key를 읽을 수 없거나 크기가 32바이트가 아닙니다. 백업에서 파일을 복원하세요. 대신 삭제하면 OpenJoystickDriver가 새 키를 만들고 모든 유닛 ID가 바뀝니다.";
 /* Error E5007, shown when a controller record or patch fails its schema; the message names the field. */
 "error.E5007.message" = "컨트롤러 레코드 또는 patch가 올바르지 않습니다. 해당 스키마로 파일을 확인하고 메시지가 알려 주는 필드를 고치세요.";
+/* Error text with the error code. %1$@ is the message and %2$@ is the code, for example E2011. The code is in parentheses. */
 "ui.error.withCode" = "%1$@ (%2$@)";
 /* Message printed by 'ojd update check' when the installed version is newer than the latest release. %1$@ is the installed version and %2$@ is the latest release. */
 "cli.update.check.ahead" = "OpenJoystickDriver %1$@은(는) 게시된 최신 릴리스(%2$@)보다 새로운 버전입니다.";

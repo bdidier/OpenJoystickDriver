@@ -173,36 +173,67 @@
 "ui.keyboard.captureCanceled" = "أُلغي التقاط لوحة المفاتيح.";
 /* VoiceOver label of the area that captures a keyboard key. */
 "ui.keyboard.captureTitle" = "التقاط مفتاح لوحة المفاتيح";
+/* Title of the sheet that adjusts one assignment of a profile. %@ is the name of the controller control that the assignment reads. */
 "ui.capture.adjust" = "ضبط %@";
+/* Label of the slider that sets the dead zone of an axis assignment. The dead zone is the part of the travel near the center that is ignored. */
 "ui.capture.deadZone" = "المنطقة الميتة";
+/* Label of the slider that sets the gain of an axis assignment. The gain multiplies the travel of the axis. */
 "ui.capture.gain" = "التكبير";
+/* Label of the switch that reverses the direction of an axis assignment. */
 "ui.capture.invertAxis" = "عكس المحور";
+/* Label of the popup that picks the response curve of an axis assignment. The curve maps the travel of the control to the output. */
 "ui.capture.responseCurve" = "منحنى الاستجابة";
+/* Label of the slider that sets the travel at which an axis counts as a pressed button. */
 "ui.capture.digitalThreshold" = "العتبة الرقمية";
+/* Option of the response curve popup: output grows in proportion to the travel. */
 "ui.capture.linear" = "خطي";
+/* Option of the response curve popup: output grows slowly at first and faster later. */
 "ui.capture.easeIn" = "تسارع تدريجي";
+/* Option of the response curve popup: output grows fast at first and slower later. */
 "ui.capture.easeOut" = "تباطؤ تدريجي";
+/* Option of the response curve popup: output grows slowly at both ends and faster in the middle. */
 "ui.capture.smoothStep" = "خطوة سلسة";
+/* Heading of the capture assignment sheet while the app waits for the user to press a control of the controller. */
 "ui.capture.pressControl" = "اضغط عنصراً في وحدة التحكم";
+/* Instruction in the capture assignment sheet. The user picks a control from the popup or lets the app wait for the next input. */
 "ui.capture.chooseControl" = "اختر عنصراً أدناه، أو استمع لفترة وجيزة إلى الإدخال التالي.";
+/* Label of the popup in the capture assignment sheet that lists the controls of the controller. */
 "ui.capture.controllerControl" = "عنصر وحدة التحكم";
+/* Title of the button in the capture assignment sheet that waits for the next controller input. */
 "ui.capture.listen" = "الاستماع إلى عنصر";
+/* Message in the capture assignment sheet when no controller is connected. Manual selection means the popup of controls. */
 "ui.capture.connectForLive" = "وصّل وحدة تحكم لتمكين الالتقاط المباشر. ما يزال التحديد اليدوي متاحاً.";
+/* VoiceOver label of the capture assignment sheet. */
 "ui.capture.title" = "التقاط عنصر وحدة التحكم";
+/* VoiceOver announcement when the user cancels the controller control capture. */
 "ui.capture.canceled" = "أُلغي التقاط وحدة التحكم.";
+/* VoiceOver label of the status area in the capture assignment sheet. */
 "ui.capture.status" = "حالة الالتقاط";
+/* Status in the capture assignment sheet before the capture starts. */
 "ui.capture.ready" = "جاهز للاستماع.";
+/* Status in the capture assignment sheet while the app waits for a controller control. */
 "ui.capture.listening" = "جارٍ الاستماع إلى عنصر في وحدة التحكم.";
+/* VoiceOver announcement while the app waits for a controller control. Escape is the name of the Escape key. */
 "ui.capture.listeningCancel" = "جارٍ الاستماع إلى عنصر في وحدة التحكم. اضغط Escape للإلغاء.";
+/* Status text in the capture assignment sheet while the app waits for a controller control. Keep the three dots. */
 "ui.capture.listeningEllipsis" = "جارٍ الاستماع إلى عنصر في وحدة التحكم…";
+/* Status in the capture assignment sheet after a control is detected. %@ is the name of the control. The sentence ends with a period. */
 "ui.capture.detected" = "تم الكشف: %@.";
+/* Label with the detected control in the capture assignment sheet. %@ is the name of the control. It has no final period because other text follows or the label stands alone. */
 "ui.capture.detectedNoPeriod" = "تم الكشف: %@";
+/* Status in the capture assignment sheet. %1$@ is the name of the detected control and %2$@ is the sentence that says the destination is ready for selection. */
 "ui.capture.detectedWithDestination" = "تم الكشف: %1$@. %2$@";
+/* Status in the capture assignment sheet when input arrived from a control that the app does not support. */
 "ui.capture.noSupported" = "ورد إدخال، لكن لم يُحدد عنصر مدعوم.";
+/* Status in the capture assignment sheet that tells the user to pick a destination for the detected control. The sentence follows the detected control. */
 "ui.capture.destinationReady" = "الوجهة جاهزة للتحديد.";
+/* Status in the capture assignment sheet when the capture fails. %@ is the reason. */
 "ui.capture.error" = "خطأ في الالتقاط. %@";
+/* VoiceOver description of the input test status when no button of the controller is held. */
 "ui.capture.noButton" = "لا يُضغط أي زر حالياً.";
+/* VoiceOver description of the input test status. %@ is the list of the names of the buttons that are held. */
 "ui.capture.buttonsHeld" = "الأزرار المضغوطة: %@";
+/* Error under the name field of the profile creation sheet when the name is empty. */
 "ui.capture.profileNameValidation" = "أدخل اسم ملف تعريف.";
 "ui.profiles.new" = "ملف تعريف جديد";
 "ui.profiles.deleteTitle" = "هل تريد حذف ملف التعريف؟";
@@ -310,15 +341,25 @@
 "ui.debug.outputNeedsAttention" = "إخراج وحدة التحكم يحتاج إلى انتباه.";
 /* Line of the debug report when the service does not answer, so the report has no diagnostics. */
 "ui.debug.serviceUnavailable" = "تشخيص الخدمة غير متوفر حالياً.";
+/* Error shown in the profile editor when the profile changed elsewhere after the editor loaded it. Reload means to discard the edits and load the profile again. */
 "ui.error.profileChanged" = "غُيّر ملف التعريف هذا في مكان آخر. أعد التحميل أو تابع التحرير.";
+/* Error under the name field of the profile creation sheet when another profile has the name. */
 "ui.error.duplicateProfile" = "يوجد بالفعل ملف تعريف بهذا الاسم.";
+/* Error shown when the service has no profile with the requested identifier. */
 "ui.error.profileMissing" = "ملف التعريف هذا لم يعد متوفراً.";
+/* Error shown when the service rejects the assignments of a profile. */
 "ui.error.reviewAssignments" = "راجع تعيينات ملف التعريف وحاول مرة أخرى.";
+/* Error shown when the service cannot save the profile library. */
 "ui.error.profileLibrarySave" = "تعذر حفظ ملفات التعريف.";
+/* Error shown when the remapping engine of the service is not available yet. */
 "ui.error.remappingUnavailable" = "إعادة تعيين وحدة التحكم غير متوفرة مؤقتاً.";
+/* Error shown for a failure that has no message of its own. OpenJoystickDriver is the product name. */
 "ui.error.generic" = "تعذر على OpenJoystickDriver إكمال هذا الإجراء.";
+/* Error shown when the service cannot be reached. OpenJoystickDriver is the product name. */
 "ui.error.notAvailable" = "OpenJoystickDriver غير متوفر حالياً.";
+/* Error shown when the service does not answer in time. OpenJoystickDriver is the product name. */
 "ui.error.timeout" = "يستغرق OpenJoystickDriver وقتاً طويلاً للرد.";
+/* Error shown when the service answers with a reply that the app does not understand. OpenJoystickDriver is the product name. */
 "ui.error.unexpected" = "أعاد OpenJoystickDriver نتيجة غير متوقعة.";
 "ui.mapping.allApps" = "جميع التطبيقات";
 "ui.mapping.specificApp" = "تطبيق محدد";
@@ -360,10 +401,15 @@
 "ui.profiles.touch.pointerSensitivity" = "نقاط المؤشر لكل سطح";
 "ui.profiles.touch.stickRadius" = "نصف قطر العصا الكامل (كسر من السطح)";
 "ui.profiles.touch.deadzone" = "المنطقة الميتة للعصا";
+/* Label of the stepper that sets the number of columns of a touch grid in the capture assignment sheet. %d is the number of columns. */
 "ui.capture.touchColumns" = "أعمدة الشبكة: %d";
+/* Label of the stepper that sets the number of rows of a touch grid in the capture assignment sheet. %d is the number of rows. */
 "ui.capture.touchRows" = "صفوف الشبكة: %d";
+/* Label of the stepper that picks the column of the touch cell in the capture assignment sheet. %d is the column number, counted from 1. */
 "ui.capture.touchColumn" = "عمود الخلية: %d";
+/* Label of the stepper that picks the row of the touch cell in the capture assignment sheet. %d is the row number, counted from 1. */
 "ui.capture.touchRow" = "صف الخلية: %d";
+/* Label of the slider that sets the shortest swipe that counts, as a share of the touch surface. %.0f is a percentage; %% is the percent sign. */
 "ui.capture.touchSwipeDistance" = "الحد الأدنى لمسافة السحب: %.0f%%";
 "ui.mapping.mute" = "كتم الصوت";
 "ui.mapping.leftTriggerClick" = "نقرة الزناد الأيسر";
@@ -430,13 +476,21 @@
 "action.remove" = "إزالة";
 /* Button of the input test window that stops the rumble test and button of the developer view that stops the packet capture. */
 "action.stop" = "إيقاف";
+/* Error shown when the debug report cannot be written to the chosen file. */
 "ui.error.supportReportSave" = "تعذر حفظ تقرير الدعم. اختر ملفاً آخر وحاول مرة أخرى.";
+/* Error shown when the debug logs cannot be written to the chosen file. The system reason follows on the next line. */
 "ui.error.logsSave" = "تعذر حفظ السجلات. اختر ملفاً آخر وحاول مرة أخرى.";
+/* Error shown in the capture assignment sheet when the listening ends without any control. */
 "ui.error.noDetectedControl" = "لم يُكشف عن عنصر جديد في وحدة التحكم.";
+/* Error shown when the user starts a profile action while another one still runs. */
 "ui.error.actionInProgress" = "إجراء آخر لملف التعريف قيد التنفيذ بالفعل.";
+/* Error shown when the list of active profiles is damaged and the service cannot load it. */
 "ui.error.profileLibraryCorrupt" = "قائمة ملفات التعريف النشطة تالفة وتعذر تحميلها.";
+/* Title of the button in the capture assignment sheet while the app waits for a control. Keep the three dots. */
 "ui.capture.listeningButton" = "جارٍ الاستماع…";
+/* Error shown when the user saves a profile whose assignments have problems. */
 "ui.error.reviewAssignmentsBeforeSave" = "راجع التعيينات قبل حفظ ملف التعريف هذا.";
+/* Error shown when the profile item that the user selected is gone, for example after a reload. */
 "ui.error.selectedProfileItemMissing" = "البند المحدد لم يعد متاحا.";
 /* Message about a request to the system extension manager that ends cancelled. The request installs or removes the driver extension. */
 "cli.transportExtension.group.cancelled" = "أُلغي طلب امتداد النظام.";
@@ -498,53 +552,101 @@
 "term.protocolVariant.wired" = "سلكي";
 /* Label of a fact under Advanced in the Controllers detail: the parser that reads the controller, shown as its ojd spelling such as xbox-xusb:receiver. */
 "term.parser" = "المحلّل";
+/* Label in the controller summary of the developer tools. The value is a list of the pressed buttons. */
 "ui.developer.buttons" = "الأزرار";
+/* Status next to the Start Capture button while the packet capture runs. */
 "ui.developer.capturing" = "جارٍ الالتقاط";
+/* Label of the connection kind in the controller summary of the developer tools, for example USB or Bluetooth. */
 "ui.developer.connection" = "الاتصال";
+/* Label of the controller name in the controller summary of the developer tools. */
 "ui.developer.controller" = "وحدة التحكم";
+/* Heading of the controller summary section in the developer tools. */
 "ui.developer.controllerDetails" = "وحدة التحكم";
+/* Message in the packet capture list of the developer tools before a capture. Start Capture is the title of the button and is written as in this catalog. */
 "ui.developer.emptyCapture" = "اضغط على «بدء الالتقاط» ثم اضغط على أزرار وحدة التحكم.";
+/* Title of the save panel that exports the packet capture. */
 "ui.developer.exportCapture" = "تصدير التقاط الحزم";
+/* Heading of the section in the developer tools that lists buttons beyond the standard ones. */
 "ui.developer.extraInputs" = "أزرار إضافية";
+/* Description of the extra buttons section in the developer tools. The user presses one button at a time and the detected buttons stay in the list until the user clears the capture. */
 "ui.developer.extraInputsDescription" = "اضغط على زر إضافي واحد في كل مرة. تبقى الأزرار المكتشفة في القائمة حتى تمسح الالتقاط.";
+/* Value of the route in the controller summary of the developer tools when the app reads the controller as an HID device. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.developer.hid" = "HID";
+/* Note under the packet list in the developer tools. Keep-alive packets are the routine idle messages of a controller. */
 "ui.developer.keepAliveNote" = "تُخفى حزم البيانات الروتينية الخاملة بحيث يظل نشاط وحدة التحكم مرئيًا.";
+/* Label of the left stick value in the controller summary of the developer tools. */
 "ui.developer.leftStick" = "العصا اليسرى";
+/* Message in the developer tools while the controllers load. Keep the three dots. */
 "ui.developer.loadingControllers" = "جارٍ تحميل تشخيصات وحدات التحكم…";
+/* Message in the developer tools before the controller diagnostics load. */
 "ui.developer.notLoaded" = "لم يتم تحميل تشخيصات وحدات التحكم.";
+/* Title of the empty state in the developer tools when no controller is connected. */
 "ui.developer.noControllers" = "لا توجد وحدات تحكم متصلة";
+/* Detail of the empty state in the developer tools. Refresh is the title of a button and is written as in this catalog. */
 "ui.developer.noControllersDetail" = "وصّل وحدة تحكم ثم اضغط على «تحديث».";
+/* Message in the extra buttons section of the developer tools when the capture detected none. */
 "ui.developer.noExtraInputs" = "لم يتم اكتشاف أزرار إضافية.";
+/* Title of the empty state in the packet list of the developer tools. */
 "ui.developer.noPackets" = "لم تُلتقط أي حزم";
+/* Heading of the raw packet capture section in the developer tools. */
 "ui.developer.packetCapture" = "التقاط الحزم الخام";
+/* Option of the packet filter in the developer tools that shows only packets that carry controller activity. */
 "ui.developer.packetFilterActivity" = "النشاط";
+/* Option of the packet filter in the developer tools that shows all packets. */
 "ui.developer.packetFilterAll" = "الكل";
+/* Column title of the packet list in the developer tools. The column shows when the packet arrived. */
 "ui.developer.packetColumnTime" = "الوقت";
+/* Column title of the packet list in the developer tools. The column shows whether the packet came from or went to the controller. */
 "ui.developer.packetColumnDirection" = "الاتجاه";
+/* Column title of the packet list in the developer tools. The column shows the length of the packet in bytes. */
 "ui.developer.packetColumnBytes" = "البايتات";
+/* Column title of the packet list in the developer tools. The column shows the bytes of the packet. */
 "ui.developer.packetColumnData" = "البيانات";
+/* Warning under the packet capture export. A capture can hold data that identifies the controller or the user. */
 "ui.developer.packetSharingWarning" = "تختلف محتويات الحزم باختلاف وحدة التحكم. تحقق من الملف قبل مشاركته.";
+/* Value of the route in the controller summary of the developer tools when the app reads the controller over raw USB. */
 "ui.developer.rawUSB" = "USB الخام";
+/* Status of the packet capture in the developer tools when it can start. */
 "ui.developer.ready" = "جاهز";
+/* Label of the right stick value in the controller summary of the developer tools. */
 "ui.developer.rightStick" = "العصا اليمنى";
+/* Label of the route in the controller summary of the developer tools. The route is how the app found and reads the controller. */
 "ui.developer.route" = "المسار";
+/* Title of the button that starts the packet capture. */
 "ui.developer.startCapture" = "بدء الالتقاط";
+/* Status of the packet capture in the developer tools while it starts. Keep the three dots. */
 "ui.developer.starting" = "جارٍ البدء…";
+/* Title of the message in the developer tools when they cannot load. */
 "ui.developer.unavailable" = "أدوات المطوّر غير متوفرة";
+/* Label of the USB endpoints in the controller summary of the developer tools. */
 "ui.developer.usbEndpoints" = "نقاط نهاية USB";
+/* Label of the USB vendor and product ID in the controller summary of the developer tools. */
 "ui.developer.usbID" = "USB ID";
+/* Message in the packet list of the developer tools while a capture waits for packets. */
 "ui.developer.waitingForPackets" = "في انتظار حزم USB. اضغط على زر في وحدة التحكم.";
+/* Heading of the soak test section in the developer tools. A soak test measures the service over a long time. */
 "ui.developer.soakTest" = "اختبار التحمل";
+/* Description of the soak test section in the developer tools. The test samples memory, file descriptors and CPU of the service. */
 "ui.developer.soakTestDescription" = "يقيس ذاكرة الخدمة وواصفات الملفات ووحدة المعالجة المركزية خلال المدة المحددة، ثم يعرض النتيجة.";
+/* Title of the button in the developer tools that opens the soak test sheet. Keep the three dots. */
 "ui.developer.soakTestOpen" = "تشغيل اختبار التحمل…";
+/* Label of the duration field of the soak test sheet. The value is in seconds. */
 "ui.developer.soakDuration" = "المدة (بالثواني)";
+/* Label of the sample interval field of the soak test sheet. The value is in milliseconds. */
 "ui.developer.soakInterval" = "الفاصل بين القياسات (مللي ثانية)";
+/* Label of the field of the soak test sheet that limits the resident memory of the service. The value is in MiB, mebibytes. */
 "ui.developer.soakResidentLimit" = "حد الحجم المقيم (MiB)";
+/* Label of the field of the soak test sheet that limits the memory footprint of the service. The value is in MiB, mebibytes. */
 "ui.developer.soakFootprintLimit" = "حد البصمة (MiB)";
+/* Hint under the limit fields of the soak test sheet. A limit of 0 means no limit. */
 "ui.developer.soakLimitHint" = "القيمة 0 تعطّل الحد.";
+/* Title of the button of the soak test sheet that starts the test. */
 "ui.developer.soakStart" = "تشغيل الاختبار";
+/* Status in the soak test sheet while the test samples the service. Keep the three dots. */
 "ui.developer.soakRunning" = "جارٍ قياس الخدمة…";
+/* Error in the soak test sheet when a field does not hold a whole number. %@ is the label of the field. */
 "ui.developer.soakNotANumber" = "%@: أدخل عددًا صحيحًا.";
+/* Error in the soak test sheet when a value is outside its range. %1$@ is the label of the field, %2$lld is the lowest value and %3$lld is the highest value. */
 "ui.developer.soakOutOfRange" = "%1$@: أدخل قيمة بين %2$lld و%3$lld.";
 "ui.inputTest.aButton" = "الزر A";
 "ui.inputTest.aCross" = "A / صليب";
@@ -932,6 +1034,7 @@
 "ui.profiles.unpairJoyCons" = "إلغاء الاقتران";
 "ui.profiles.joyConPairSessionHint" = "يستخدم الاقتران وحدتي التحكم هاتين بالتحديد لجلسة التطبيق الحالية.";
 "ui.profiles.pair" = "اقتران";
+/* Error shown when two Joy-Cons cannot be combined into one controller. Joy-Con is a Nintendo product name. */
 "ui.error.joyConPairUnavailable" = "تعذّر اقتران وحدتي Joy-Con المحددتين. حدّث وحدات التحكم المتصلة وحاول مرة أخرى.";
 "ui.profiles.joyConSessionState" = "اقتران صريح";
 
@@ -981,6 +1084,7 @@
 
 /* Controller session lifecycle */
 "ui.controllers.suspended" = "معلّقة";
+/* Error shown when the service refuses to change the session of a controller. */
 "ui.error.controllerSessionChangeRejected" = "تعذّر تغيير جلسة وحدة التحكم.";
 
 "ui.controllers.disconnectWirelessConfirmTitle" = "هل تريد فصل وحدة التحكم اللاسلكية؟";
@@ -2397,80 +2501,149 @@
 "a11y.library.recordHexadecimal" = "%1$@، سداسي عشري %2$@";
 /* Shown in the Record section of a record in the Library when the record text cannot be read for display. %@ is the controller identity, such as 045E:028E. */
 "ui.library.recordUnreadable" = "لا يمكن قراءة نص سجل %@، ولذلك لا يمكن عرضه.";
+/* Title of the details button of an error message in the Access area. */
 "ui.access.details" = "التفاصيل";
+/* Button of an error message in the Access area that hides the message. */
 "ui.access.dismiss" = "تجاهل";
+/* Button of an error message in the Access area that reads the access settings again. */
 "ui.access.tryAgain" = "حاول مرة أخرى";
+/* Message in the Access area while it reads the access settings. Keep the three dots. */
 "ui.access.loading" = "جارٍ قراءة إعدادات الوصول…";
+/* Button that closes the sheet that shows the secret of a token. */
 "ui.access.done" = "تم";
+/* Button of the open panel in which the user picks a program or app to grant access. It confirms the choice. */
 "ui.access.choose" = "اختيار";
+/* Label of the row in the Access area for the local endpoint. The local endpoint is the socket where programs on this Mac connect. */
 "ui.access.endpoint" = "نقطة النهاية المحلية";
+/* Help text of the endpoint switch. %@ is the path of the socket. */
 "ui.access.socket" = "المقبس: %@";
+/* Context menu item that copies the path of the socket. */
 "ui.access.socket.copy" = "نسخ مسار المقبس";
+/* Confirm button of the alert that turns on the local endpoint. */
 "ui.access.enable" = "تشغيل";
+/* Title of the alert that turns on the local endpoint. */
 "ui.access.enable.title" = "هل تريد تشغيل نقطة النهاية المحلية؟";
+/* Message of the alert that turns on the local endpoint. The control scope allows a program to change controller state. */
 "ui.access.enable.message" = "يمكن للبرامج التي تمنحها الوصول بعد ذلك قراءة حالة وحدات التحكم، وتغييرها إذا كان لديها نطاق التحكم.";
+/* Label of the row in the Access area for the WebSocket endpoint, where web pages connect. */
 "ui.access.web" = "WebSocket";
+/* Value of the WebSocket row when it is on. %1$@ is the address of the endpoint and %2$@ is the address where pages are served. */
 "ui.access.web.on" = "قيد التشغيل على %1$@، والصفحات على %2$@";
+/* Value of the WebSocket row when it is off. */
 "ui.access.web.off" = "متوقف";
+/* Value of the WebSocket row when it is on but cannot listen. %@ is the port number. */
 "ui.access.web.closed" = "قيد التشغيل، لكنه لا يستمع على المنفذ %@";
+/* Help text of the WebSocket row. %@ is the path of the folder from which the endpoint serves pages. */
 "ui.access.web.pages" = "مجلد الصفحات: %@";
+/* Label of the port field of the WebSocket endpoint. */
 "ui.access.web.port" = "المنفذ";
+/* Value of the port field when the system picks the port. */
 "ui.access.web.port.automatic" = "تلقائي";
+/* Button that makes the system pick the port of the WebSocket endpoint. */
 "ui.access.web.port.choose" = "اختيار تلقائي";
+/* Error under the port field. %1$lld is the lowest port and %2$lld is the highest port. */
 "ui.access.web.portRange" = "يجب أن يكون المنفذ بين %1$lld و%2$lld.";
+/* Title of the alert that turns on the WebSocket. */
 "ui.access.web.enable.title" = "هل تريد تشغيل WebSocket؟";
 /* Message of the confirmation alert that turns on the WebSocket in the Access area. */
 "platform.macos.ui.access.web.enable.message" = "يمكن لصفحات الويب من أصول الرمز المميز بعد ذلك الاتصال بنقطة النهاية على هذا الـ Mac.";
+/* Line of the alert that turns on the WebSocket. %lld is the port number. */
 "ui.access.web.enable.port" = "المنفذ: %lld";
+/* Line of the alert that turns on the WebSocket when the port is automatic. */
 "ui.access.web.enable.automatic" = "يختار النظام منفذًا متاحًا.";
+/* Heading of the list of programs that have access in the Access area. */
 "ui.access.grants" = "البرامج التي لديها وصول";
+/* Toolbar button in the Access area that starts the grant of access to a program. Keep the three dots. */
 "ui.access.grantProgram" = "منح برنامج وصولًا…";
+/* Button on a refused program that grants it access. */
 "ui.access.grant" = "منح الوصول";
+/* Message of the open panel in which the user picks a program or app to grant access. */
 "ui.access.grant.pick" = "اختر برنامجًا أو تطبيقًا لمنحه الوصول.";
+/* Error shown when the chosen program has no signature. %@ is the path of the program. */
 "ui.access.grant.unsigned" = "%@ غير موقَّع، لذا لا يمكن منحه الوصول.";
+/* Error shown when the chosen program has an ad-hoc signature. %@ is the identifier of the program. Any local process can claim such an identity. */
 "ui.access.grant.adHoc" = "%@ غير موقَّع بشهادة، لذا يمكن لأي عملية محلية أن تنتحل هويته. لا يمكن منحه الوصول.";
+/* Title of the alert that grants access to a program. %@ is the identifier of the program. */
 "ui.access.grant.title" = "هل تريد منح %@ الوصول؟";
+/* Question of the alert that grants access. %1$@ is the identifier of the program, %2$@ is the description of its signer and %3$@ is the list of scopes. */
 "ui.access.grant.question" = "هل تريد منح %1$@ (%2$@) هذه النطاقات: %3$@؟";
+/* Warning in the alert that grants access when the control scope is part of the grant. Rumble is vibration of the controller. */
 "ui.access.grant.controlWarning" = "يتيح نطاق التحكم للبرنامج إرسال مخرجات إلى وحدات التحكم لديك، مثل الاهتزاز والإضاءة.";
 /* Warning line of the confirmation alert that grants access to a program that Apple signed. */
 "platform.macos.ui.access.grant.platformWarning" = "هذا البرنامج موقَّع من Apple. أي برنامج توقّعه Apple بالمعرّف نفسه سيحصل على هذا الوصول.";
+/* Button on a program or token that removes its access. */
 "ui.access.revoke" = "سحب الوصول";
+/* Title of the alert that removes all access of a program. %@ is the name of the program. */
 "ui.access.revoke.title" = "هل تريد سحب وصول %@؟";
+/* Message of the alert that removes all access of a program. */
 "ui.access.revoke.message" = "يفقد البرنامج جميع نطاقاته وتُغلق اتصالاته المفتوحة.";
+/* Menu item that removes all scopes of a program or token. */
 "ui.access.revoke.all" = "جميع النطاقات";
+/* Message of the alert that removes one scope. %@ is the name of the scope, for example Read or Control. */
 "ui.access.revokeScope.message" = "يُسحب النطاق %@ فقط. تبقى النطاقات الأخرى وتُغلق الاتصالات المفتوحة التي تستخدمه.";
+/* Title of the alert that removes a token. %@ is the name of the token. */
 "ui.access.revokeToken.title" = "هل تريد سحب الرمز المميز %@؟";
+/* Message of the alert that removes a token. */
 "ui.access.revokeToken.message" = "تفقد الصفحات والبرامج التي تستخدم الرمز المميز الوصول وتُغلق اتصالاتها المفتوحة.";
+/* Heading of the list of tokens in the Access area. A token is a secret that a program or web page uses to connect. */
 "ui.access.tokens" = "الرموز المميزة";
+/* Toolbar button in the Access area that starts the creation of a token. Keep the three dots. */
 "ui.access.grantToken" = "إنشاء رمز مميز…";
+/* Heading of the token creation sheet. */
 "ui.access.token.form.title" = "إنشاء رمز مميز";
+/* Placeholder of the name field of the token creation sheet. */
 "ui.access.token.name" = "الاسم";
+/* Help text under the origins field of the token creation sheet. https://example.com is an example and stays as written. */
 "ui.access.token.origins" = "أصول الويب التي يمكنها استخدام الرمز المميز، واحد في كل سطر، مثل https://example.com. اتركه فارغًا لرمز مميز تستخدمه البرامج المحلية فقط.";
+/* Button of the token creation sheet that goes on to the confirmation. */
 "ui.access.token.continue" = "متابعة";
+/* Error of the token creation sheet when the name or the scopes are missing. */
 "ui.access.token.incomplete" = "يحتاج الرمز المميز إلى اسم ونطاق واحد على الأقل.";
+/* Error of the token creation sheet when the user picks the control scope together with web origins. */
 "ui.access.token.originControl" = "لا يمكن أن يحتوي رمز مميز لصفحات الويب على نطاق التحكم.";
+/* Title of the alert that creates a token. %@ is the name of the token. */
 "ui.access.token.title" = "هل تريد إنشاء الرمز المميز %@؟";
+/* Question of the alert that creates a token without origins. %1$@ is the name of the token and %2$@ is the list of scopes. */
 "ui.access.token.question" = "هل تريد إنشاء الرمز المميز %1$@ بهذه النطاقات: %2$@؟";
+/* Question of the alert that creates a token with origins. %1$@ is the name of the token, %2$@ is the list of scopes and %3$@ is the list of web origins. */
 "ui.access.token.webQuestion" = "هل تريد إنشاء الرمز المميز %1$@ بهذه النطاقات: %2$@؟ يمكن للصفحات من %3$@ استخدامه.";
+/* Title of the sheet that shows the secret of a token. %@ is the name of the token. */
 "ui.access.token.issued.title" = "الرمز المميز %@";
+/* Message of the sheet that shows the secret of a token once. OpenJoystickDriver is the product name. */
 "ui.access.token.issued.message" = "انسخ الرمز المميز الآن. لا يحتفظ OpenJoystickDriver به ولا يمكنه عرضه مرة أخرى.";
+/* Button of the sheet that copies the secret of a token. */
 "ui.access.token.copy" = "نسخ الرمز المميز";
+/* Title of a token in the list of tokens. %@ is the name of the token. */
 "ui.access.token.named" = "الرمز المميز %@";
+/* Title of a token in the list of tokens when its name is not known. */
 "ui.access.token.unknown" = "رمز مميز غير معروف";
+/* Heading of the list of programs and tokens that the endpoint refused in the last 24 hours. */
 "ui.access.refused" = "المرفوضة مؤخرًا";
+/* Footer of the list of refused programs and tokens. */
 "ui.access.refused.message" = "البرامج والرموز المميزة التي رفضتها نقطة النهاية خلال آخر 24 ساعة.";
+/* Heading of the list of connections that are open at the moment in the Access area. */
 "ui.access.connections" = "المتصلة الآن";
+/* Name of the read scope. It lets a program read controller state. */
 "ui.access.scope.read" = "قراءة";
+/* Name of the control scope. It lets a program change controller state and send output. */
 "ui.access.scope.control" = "تحكم";
+/* Description of the signer of a program. %@ is the identifier of the publisher. */
 "ui.access.signer.signed" = "موقَّع من %@";
 /* Label for the signer of a program that Apple signed, shown in the Access area. */
 "platform.macos.ui.access.signer.platform" = "موقَّع من Apple";
+/* Description of the signer of a program that has no certificate signature. */
 "ui.access.signer.adHoc" = "غير موقَّع";
+/* Name of the connection kind for a local socket. */
 "ui.access.transport.socket" = "المقبس";
+/* Name of the connection kind for a WebSocket. */
 "ui.access.transport.web" = "WebSocket";
+/* Error of the Access area when the service is not running. OpenJoystickDriver is the product name. */
 "ui.access.error.serviceUnavailable" = "OpenJoystickDriver لا يعمل، لذا لا يمكن قراءة إعدادات الوصول أو تغييرها.";
+/* Error of the Access area when the service does not answer in time. OpenJoystickDriver is the product name. */
 "ui.access.error.serviceTimeout" = "لم يستجب OpenJoystickDriver في الوقت المناسب.";
+/* Error of the Access area when the service refuses the request of the app. OpenJoystickDriver is the product name. */
 "ui.access.error.peerRejected" = "رفض OpenJoystickDriver هذا الطلب.";
+/* Error of the Access area when a request fails. %@ is the reason. */
 "ui.access.error.requestFailed" = "فشل الطلب: %@";
 /* VoiceOver label of the button in the Access error banner that shows the details of the error. */
 "a11y.access.details" = "إظهار تفاصيل الخطأ";
@@ -2641,9 +2814,13 @@
 "a11y.mainWindow.sidebar" = "الأقسام";
 /* VoiceOver label of the control in the capture assignment sheet that sets the minimum swipe distance of a touch gesture. */
 "a11y.capture.touchSwipeDistance" = "الحد الأدنى لمسافة السحب";
+/* Detail line of a row in the Access area with two parts. %1$@ and %2$@ are the parts, for example the signer and the scopes. The dot between them separates the parts and may change. */
 "ui.access.detail.pair" = "%1$@‏ · %2$@‏";
+/* Detail line of a row in the Access area with three parts. %1$@, %2$@ and %3$@ are the parts, for example the signer, the scopes and the reason of a refusal. The dots between them separate the parts and may change. */
 "ui.access.detail.triple" = "%1$@‏ · %2$@‏ · %3$@‏";
+/* Error shown when the app cannot find the executable of a refused program. %@ is the identifier of the program. */
 "ui.access.grant.noPath" = "تعذّرت على OpenJoystickDriver قراءة الملف التنفيذي لـ %@، لذا لا يمكنه منحه حق الوصول.";
+/* Line of the alert that turns on the WebSocket when a port is saved. */
 "ui.access.web.enable.savedPort" = "تحتفظ نقطة نهاية الويب بالمنفذ المحفوظ.";
 "ui.library.record.detail" = "%1$@‏ · %2$@‏";
 "ui.library.mod.detail" = "%1$@‏ · %2$@‏";
@@ -2656,7 +2833,9 @@
 "ui.settings.general.updateAvailableBody" = "الإصدار %@ متاح.";
 /* Title of the message in the main window while a profile change is still running. */
 "ui.mainWindow.profileMutationRunning" = "لا يزال تغيير ملف التعريف قيد التنفيذ. حاول مرة أخرى عند انتهائه.";
+/* Value of the WebSocket row when it is on but the port is not set yet. */
 "ui.access.web.noPort" = "نقطة نهاية الويب قيد التشغيل، لكن لم يتم اختيار منفذ بعد";
+/* Description of the signer of a program that has a signature without a known publisher. */
 "ui.access.signer.signedUnknownPublisher" = "موقَّع من ناشر غير معروف";
 "ui.settings.commandLine.toolLinkTargetUnreadable" = "%@ رابط لا يمكن قراءة هدفه. يؤدي التثبيت إلى ربطه بهذا التطبيق بدلًا من ذلك.";
 /* Text of error E1001, sent to a client that connects to the endpoint while the endpoint is off, and printed by 'ojd explain'. The command in quotes stays as written. */
@@ -2879,6 +3058,7 @@
 "error.E5006.message" = "تعذرت قراءة ملف مفتاح معرّفات الأجهزة PortKeyInstallation.key، أو أن حجمه ليس 32 بايت. استعد الملف من نسخة احتياطية. إذا حذفته بدلاً من ذلك، فسينشئ OpenJoystickDriver مفتاحاً جديداً وسيتغير كل معرّف جهاز.";
 /* Error E5007, shown when a controller record or patch fails its schema; the message names the field. */
 "error.E5007.message" = "سجل وحدة التحكم أو patch غير صالح. تحقق من الملف مقابل مخططه وأصلح الحقل الذي تذكره الرسالة.";
+/* Error text with the error code. %1$@ is the message and %2$@ is the code, for example E2011. The code is in parentheses. */
 "ui.error.withCode" = "%1$@ (%2$@)";
 /* Message printed by 'ojd update check' when the installed version is newer than the latest release. %1$@ is the installed version and %2$@ is the latest release. */
 "cli.update.check.ahead" = "إصدار OpenJoystickDriver %1$@ أحدث من آخر إصدار منشور (%2$@).";

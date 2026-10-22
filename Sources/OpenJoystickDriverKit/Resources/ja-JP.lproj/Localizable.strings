@@ -173,36 +173,67 @@
 "ui.keyboard.captureCanceled" = "キーボードの取得をキャンセルしました。";
 /* VoiceOver label of the area that captures a keyboard key. */
 "ui.keyboard.captureTitle" = "キーボードキーの取得";
+/* Title of the sheet that adjusts one assignment of a profile. %@ is the name of the controller control that the assignment reads. */
 "ui.capture.adjust" = "%@を調整";
+/* Label of the slider that sets the dead zone of an axis assignment. The dead zone is the part of the travel near the center that is ignored. */
 "ui.capture.deadZone" = "デッドゾーン";
+/* Label of the slider that sets the gain of an axis assignment. The gain multiplies the travel of the axis. */
 "ui.capture.gain" = "ゲイン";
+/* Label of the switch that reverses the direction of an axis assignment. */
 "ui.capture.invertAxis" = "軸を反転";
+/* Label of the popup that picks the response curve of an axis assignment. The curve maps the travel of the control to the output. */
 "ui.capture.responseCurve" = "レスポンスカーブ";
+/* Label of the slider that sets the travel at which an axis counts as a pressed button. */
 "ui.capture.digitalThreshold" = "デジタルしきい値";
+/* Option of the response curve popup: output grows in proportion to the travel. */
 "ui.capture.linear" = "リニア";
+/* Option of the response curve popup: output grows slowly at first and faster later. */
 "ui.capture.easeIn" = "イーズイン";
+/* Option of the response curve popup: output grows fast at first and slower later. */
 "ui.capture.easeOut" = "イーズアウト";
+/* Option of the response curve popup: output grows slowly at both ends and faster in the middle. */
 "ui.capture.smoothStep" = "スムーズステップ";
+/* Heading of the capture assignment sheet while the app waits for the user to press a control of the controller. */
 "ui.capture.pressControl" = "コントローラの操作を押す";
+/* Instruction in the capture assignment sheet. The user picks a control from the popup or lets the app wait for the next input. */
 "ui.capture.chooseControl" = "下の操作を選ぶか、次の入力を短時間待機してください。";
+/* Label of the popup in the capture assignment sheet that lists the controls of the controller. */
 "ui.capture.controllerControl" = "コントローラの操作";
+/* Title of the button in the capture assignment sheet that waits for the next controller input. */
 "ui.capture.listen" = "操作を待機";
+/* Message in the capture assignment sheet when no controller is connected. Manual selection means the popup of controls. */
 "ui.capture.connectForLive" = "ライブ取得を有効にするにはコントローラを接続してください。手動選択は引き続き利用できます。";
+/* VoiceOver label of the capture assignment sheet. */
 "ui.capture.title" = "コントローラ操作の取得";
+/* VoiceOver announcement when the user cancels the controller control capture. */
 "ui.capture.canceled" = "コントローラの取得をキャンセルしました。";
+/* VoiceOver label of the status area in the capture assignment sheet. */
 "ui.capture.status" = "取得の状態";
+/* Status in the capture assignment sheet before the capture starts. */
 "ui.capture.ready" = "待機の準備ができました。";
+/* Status in the capture assignment sheet while the app waits for a controller control. */
 "ui.capture.listening" = "コントローラの操作を待機しています。";
+/* VoiceOver announcement while the app waits for a controller control. Escape is the name of the Escape key. */
 "ui.capture.listeningCancel" = "コントローラの操作を待機しています。キャンセルするにはEscapeを押します。";
+/* Status text in the capture assignment sheet while the app waits for a controller control. Keep the three dots. */
 "ui.capture.listeningEllipsis" = "コントローラの操作を待機しています…";
+/* Status in the capture assignment sheet after a control is detected. %@ is the name of the control. The sentence ends with a period. */
 "ui.capture.detected" = "検出: %@。";
+/* Label with the detected control in the capture assignment sheet. %@ is the name of the control. It has no final period because other text follows or the label stands alone. */
 "ui.capture.detectedNoPeriod" = "検出: %@";
+/* Status in the capture assignment sheet. %1$@ is the name of the detected control and %2$@ is the sentence that says the destination is ready for selection. */
 "ui.capture.detectedWithDestination" = "検出: %1$@。%2$@";
+/* Status in the capture assignment sheet when input arrived from a control that the app does not support. */
 "ui.capture.noSupported" = "入力を受け取りましたが、対応する操作は特定できませんでした。";
+/* Status in the capture assignment sheet that tells the user to pick a destination for the detected control. The sentence follows the detected control. */
 "ui.capture.destinationReady" = "割り当て先を選択できます。";
+/* Status in the capture assignment sheet when the capture fails. %@ is the reason. */
 "ui.capture.error" = "取得エラー。%@";
+/* VoiceOver description of the input test status when no button of the controller is held. */
 "ui.capture.noButton" = "現在押されているボタンはありません。";
+/* VoiceOver description of the input test status. %@ is the list of the names of the buttons that are held. */
 "ui.capture.buttonsHeld" = "押されているボタン: %@";
+/* Error under the name field of the profile creation sheet when the name is empty. */
 "ui.capture.profileNameValidation" = "プロファイル名を入力してください。";
 "ui.profiles.new" = "新規プロファイル";
 "ui.profiles.deleteTitle" = "プロファイルを削除しますか？";
@@ -310,15 +341,25 @@
 "ui.debug.outputNeedsAttention" = "コントローラ出力に対応が必要です。";
 /* Line of the debug report when the service does not answer, so the report has no diagnostics. */
 "ui.debug.serviceUnavailable" = "サービスの診断は現在利用できません。";
+/* Error shown in the profile editor when the profile changed elsewhere after the editor loaded it. Reload means to discard the edits and load the profile again. */
 "ui.error.profileChanged" = "このプロファイルはほかの場所で変更されました。再読み込みするか、編集を続けてください。";
+/* Error under the name field of the profile creation sheet when another profile has the name. */
 "ui.error.duplicateProfile" = "その名前のプロファイルはすでに存在します。";
+/* Error shown when the service has no profile with the requested identifier. */
 "ui.error.profileMissing" = "そのプロファイルは利用できなくなりました。";
+/* Error shown when the service rejects the assignments of a profile. */
 "ui.error.reviewAssignments" = "プロファイルの割り当てを確認して再試行してください。";
+/* Error shown when the service cannot save the profile library. */
 "ui.error.profileLibrarySave" = "プロファイルを保存できませんでした。";
+/* Error shown when the remapping engine of the service is not available yet. */
 "ui.error.remappingUnavailable" = "コントローラの再割り当ては一時的に利用できません。";
+/* Error shown for a failure that has no message of its own. OpenJoystickDriver is the product name. */
 "ui.error.generic" = "OpenJoystickDriverはその操作を完了できませんでした。";
+/* Error shown when the service cannot be reached. OpenJoystickDriver is the product name. */
 "ui.error.notAvailable" = "OpenJoystickDriverは現在利用できません。";
+/* Error shown when the service does not answer in time. OpenJoystickDriver is the product name. */
 "ui.error.timeout" = "OpenJoystickDriverの応答に時間がかかりすぎています。";
+/* Error shown when the service answers with a reply that the app does not understand. OpenJoystickDriver is the product name. */
 "ui.error.unexpected" = "OpenJoystickDriverが予期しない結果を返しました。";
 "ui.mapping.allApps" = "すべてのアプリ";
 "ui.mapping.specificApp" = "特定のアプリ";
@@ -360,10 +401,15 @@
 "ui.profiles.touch.pointerSensitivity" = "面全体あたりのポインタ移動量（ポイント）";
 "ui.profiles.touch.stickRadius" = "スティックの最大半径（面に対する割合）";
 "ui.profiles.touch.deadzone" = "スティックのデッドゾーン";
+/* Label of the stepper that sets the number of columns of a touch grid in the capture assignment sheet. %d is the number of columns. */
 "ui.capture.touchColumns" = "グリッドの列数: %d";
+/* Label of the stepper that sets the number of rows of a touch grid in the capture assignment sheet. %d is the number of rows. */
 "ui.capture.touchRows" = "グリッドの行数: %d";
+/* Label of the stepper that picks the column of the touch cell in the capture assignment sheet. %d is the column number, counted from 1. */
 "ui.capture.touchColumn" = "セルの列: %d";
+/* Label of the stepper that picks the row of the touch cell in the capture assignment sheet. %d is the row number, counted from 1. */
 "ui.capture.touchRow" = "セルの行: %d";
+/* Label of the slider that sets the shortest swipe that counts, as a share of the touch surface. %.0f is a percentage; %% is the percent sign. */
 "ui.capture.touchSwipeDistance" = "最小スワイプ距離: %.0f%%";
 "ui.mapping.mute" = "ミュート";
 "ui.mapping.leftTriggerClick" = "左トリガークリック";
@@ -430,13 +476,21 @@
 "action.remove" = "削除";
 /* Button of the input test window that stops the rumble test and button of the developer view that stops the packet capture. */
 "action.stop" = "停止";
+/* Error shown when the debug report cannot be written to the chosen file. */
 "ui.error.supportReportSave" = "サポートレポートを保存できませんでした。別のファイルを選んで再試行してください。";
+/* Error shown when the debug logs cannot be written to the chosen file. The system reason follows on the next line. */
 "ui.error.logsSave" = "ログを保存できませんでした。別のファイルを選んで再試行してください。";
+/* Error shown in the capture assignment sheet when the listening ends without any control. */
 "ui.error.noDetectedControl" = "新しいコントローラ操作は検出されませんでした。";
+/* Error shown when the user starts a profile action while another one still runs. */
 "ui.error.actionInProgress" = "別のプロファイル操作がすでに進行中です。";
+/* Error shown when the list of active profiles is damaged and the service cannot load it. */
 "ui.error.profileLibraryCorrupt" = "アクティブなプロファイルの一覧が破損しているため、読み込めませんでした。";
+/* Title of the button in the capture assignment sheet while the app waits for a control. Keep the three dots. */
 "ui.capture.listeningButton" = "待機中…";
+/* Error shown when the user saves a profile whose assignments have problems. */
 "ui.error.reviewAssignmentsBeforeSave" = "このプロファイルを保存する前に割り当てを確認してください。";
+/* Error shown when the profile item that the user selected is gone, for example after a reload. */
 "ui.error.selectedProfileItemMissing" = "選択したプロファイル項目は利用できなくなりました。";
 /* Message about a request to the system extension manager that ends cancelled. The request installs or removes the driver extension. */
 "cli.transportExtension.group.cancelled" = "システム拡張の要求はキャンセルされました。";
@@ -498,53 +552,101 @@
 "term.protocolVariant.wired" = "有線";
 /* Label of a fact under Advanced in the Controllers detail: the parser that reads the controller, shown as its ojd spelling such as xbox-xusb:receiver. */
 "term.parser" = "パーサー";
+/* Label in the controller summary of the developer tools. The value is a list of the pressed buttons. */
 "ui.developer.buttons" = "ボタン";
+/* Status next to the Start Capture button while the packet capture runs. */
 "ui.developer.capturing" = "キャプチャ中";
+/* Label of the connection kind in the controller summary of the developer tools, for example USB or Bluetooth. */
 "ui.developer.connection" = "接続";
+/* Label of the controller name in the controller summary of the developer tools. */
 "ui.developer.controller" = "コントローラ";
+/* Heading of the controller summary section in the developer tools. */
 "ui.developer.controllerDetails" = "コントローラ";
+/* Message in the packet capture list of the developer tools before a capture. Start Capture is the title of the button and is written as in this catalog. */
 "ui.developer.emptyCapture" = "「キャプチャを開始」を押してから、コントローラのボタンを押してください。";
+/* Title of the save panel that exports the packet capture. */
 "ui.developer.exportCapture" = "パケットキャプチャを書き出す";
+/* Heading of the section in the developer tools that lists buttons beyond the standard ones. */
 "ui.developer.extraInputs" = "追加ボタン";
+/* Description of the extra buttons section in the developer tools. The user presses one button at a time and the detected buttons stay in the list until the user clears the capture. */
 "ui.developer.extraInputsDescription" = "追加ボタンを1つずつ押してください。検出されたボタンは、キャプチャを消去するまで一覧に残ります。";
+/* Value of the route in the controller summary of the developer tools when the app reads the controller as an HID device. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.developer.hid" = "HID";
+/* Note under the packet list in the developer tools. Keep-alive packets are the routine idle messages of a controller. */
 "ui.developer.keepAliveNote" = "コントローラの動作が見えやすいように、通常のアイドル時のパケットは非表示になっています。";
+/* Label of the left stick value in the controller summary of the developer tools. */
 "ui.developer.leftStick" = "左スティック";
+/* Message in the developer tools while the controllers load. Keep the three dots. */
 "ui.developer.loadingControllers" = "コントローラの診断情報を読み込み中…";
+/* Message in the developer tools before the controller diagnostics load. */
 "ui.developer.notLoaded" = "コントローラの診断情報は読み込まれていません。";
+/* Title of the empty state in the developer tools when no controller is connected. */
 "ui.developer.noControllers" = "コントローラが接続されていません";
+/* Detail of the empty state in the developer tools. Refresh is the title of a button and is written as in this catalog. */
 "ui.developer.noControllersDetail" = "コントローラを接続して「更新」を押してください。";
+/* Message in the extra buttons section of the developer tools when the capture detected none. */
 "ui.developer.noExtraInputs" = "追加ボタンは検出されていません。";
+/* Title of the empty state in the packet list of the developer tools. */
 "ui.developer.noPackets" = "キャプチャされたパケットはありません";
+/* Heading of the raw packet capture section in the developer tools. */
 "ui.developer.packetCapture" = "生パケットキャプチャ";
+/* Option of the packet filter in the developer tools that shows only packets that carry controller activity. */
 "ui.developer.packetFilterActivity" = "アクティビティ";
+/* Option of the packet filter in the developer tools that shows all packets. */
 "ui.developer.packetFilterAll" = "すべて";
+/* Column title of the packet list in the developer tools. The column shows when the packet arrived. */
 "ui.developer.packetColumnTime" = "時刻";
+/* Column title of the packet list in the developer tools. The column shows whether the packet came from or went to the controller. */
 "ui.developer.packetColumnDirection" = "方向";
+/* Column title of the packet list in the developer tools. The column shows the length of the packet in bytes. */
 "ui.developer.packetColumnBytes" = "バイト";
+/* Column title of the packet list in the developer tools. The column shows the bytes of the packet. */
 "ui.developer.packetColumnData" = "データ";
+/* Warning under the packet capture export. A capture can hold data that identifies the controller or the user. */
 "ui.developer.packetSharingWarning" = "パケットの内容はコントローラによって異なります。共有する前にファイルを確認してください。";
+/* Value of the route in the controller summary of the developer tools when the app reads the controller over raw USB. */
 "ui.developer.rawUSB" = "生の USB";
+/* Status of the packet capture in the developer tools when it can start. */
 "ui.developer.ready" = "準備完了";
+/* Label of the right stick value in the controller summary of the developer tools. */
 "ui.developer.rightStick" = "右スティック";
+/* Label of the route in the controller summary of the developer tools. The route is how the app found and reads the controller. */
 "ui.developer.route" = "経路";
+/* Title of the button that starts the packet capture. */
 "ui.developer.startCapture" = "キャプチャを開始";
+/* Status of the packet capture in the developer tools while it starts. Keep the three dots. */
 "ui.developer.starting" = "起動中…";
+/* Title of the message in the developer tools when they cannot load. */
 "ui.developer.unavailable" = "開発者ツールは利用できません";
+/* Label of the USB endpoints in the controller summary of the developer tools. */
 "ui.developer.usbEndpoints" = "USBエンドポイント";
+/* Label of the USB vendor and product ID in the controller summary of the developer tools. */
 "ui.developer.usbID" = "USB ID";
+/* Message in the packet list of the developer tools while a capture waits for packets. */
 "ui.developer.waitingForPackets" = "USB パケットを待機中です。コントローラのボタンを押してください。";
+/* Heading of the soak test section in the developer tools. A soak test measures the service over a long time. */
 "ui.developer.soakTest" = "耐久テスト";
+/* Description of the soak test section in the developer tools. The test samples memory, file descriptors and CPU of the service. */
 "ui.developer.soakTestDescription" = "選択した時間にわたってサービスのメモリ、ファイル記述子、CPUを測定し、結果を表示します。";
+/* Title of the button in the developer tools that opens the soak test sheet. Keep the three dots. */
 "ui.developer.soakTestOpen" = "耐久テストを実行…";
+/* Label of the duration field of the soak test sheet. The value is in seconds. */
 "ui.developer.soakDuration" = "時間（秒）";
+/* Label of the sample interval field of the soak test sheet. The value is in milliseconds. */
 "ui.developer.soakInterval" = "サンプリング間隔（ms）";
+/* Label of the field of the soak test sheet that limits the resident memory of the service. The value is in MiB, mebibytes. */
 "ui.developer.soakResidentLimit" = "常駐サイズの上限（MiB）";
+/* Label of the field of the soak test sheet that limits the memory footprint of the service. The value is in MiB, mebibytes. */
 "ui.developer.soakFootprintLimit" = "フットプリントの上限（MiB）";
+/* Hint under the limit fields of the soak test sheet. A limit of 0 means no limit. */
 "ui.developer.soakLimitHint" = "上限を0にすると無効になります。";
+/* Title of the button of the soak test sheet that starts the test. */
 "ui.developer.soakStart" = "テストを実行";
+/* Status in the soak test sheet while the test samples the service. Keep the three dots. */
 "ui.developer.soakRunning" = "サービスをサンプリング中…";
+/* Error in the soak test sheet when a field does not hold a whole number. %@ is the label of the field. */
 "ui.developer.soakNotANumber" = "%@：整数を入力してください。";
+/* Error in the soak test sheet when a value is outside its range. %1$@ is the label of the field, %2$lld is the lowest value and %3$lld is the highest value. */
 "ui.developer.soakOutOfRange" = "%1$@：%2$lldから%3$lldまでの値を入力してください。";
 "ui.inputTest.aButton" = "Aボタン";
 "ui.inputTest.aCross" = "A / ×";
@@ -932,6 +1034,7 @@
 "ui.profiles.unpairJoyCons" = "ペアリング解除";
 "ui.profiles.joyConPairSessionHint" = "ペアリングでは、現在のアプリセッションの間、これらのコントローラをそのまま使用します。";
 "ui.profiles.pair" = "ペアリング";
+/* Error shown when two Joy-Cons cannot be combined into one controller. Joy-Con is a Nintendo product name. */
 "ui.error.joyConPairUnavailable" = "選択したJoy-Conをペアリングできませんでした。接続中のコントローラを更新して、もう一度お試しください。";
 "ui.profiles.joyConSessionState" = "明示的なペアリング";
 
@@ -981,6 +1084,7 @@
 
 /* Controller session lifecycle */
 "ui.controllers.suspended" = "一時停止中";
+/* Error shown when the service refuses to change the session of a controller. */
 "ui.error.controllerSessionChangeRejected" = "コントローラのセッションを変更できませんでした。";
 
 "ui.controllers.disconnectWirelessConfirmTitle" = "ワイヤレスコントローラを切断しますか？";
@@ -2397,80 +2501,149 @@
 "a11y.library.recordHexadecimal" = "%1$@、16進数 %2$@";
 /* Shown in the Record section of a record in the Library when the record text cannot be read for display. %@ is the controller identity, such as 045E:028E. */
 "ui.library.recordUnreadable" = "%@ のレコードのテキストを読み取れないため、表示できません。";
+/* Title of the details button of an error message in the Access area. */
 "ui.access.details" = "詳細";
+/* Button of an error message in the Access area that hides the message. */
 "ui.access.dismiss" = "閉じる";
+/* Button of an error message in the Access area that reads the access settings again. */
 "ui.access.tryAgain" = "再試行";
+/* Message in the Access area while it reads the access settings. Keep the three dots. */
 "ui.access.loading" = "アクセス設定を読み込んでいます…";
+/* Button that closes the sheet that shows the secret of a token. */
 "ui.access.done" = "完了";
+/* Button of the open panel in which the user picks a program or app to grant access. It confirms the choice. */
 "ui.access.choose" = "選択";
+/* Label of the row in the Access area for the local endpoint. The local endpoint is the socket where programs on this Mac connect. */
 "ui.access.endpoint" = "ローカルエンドポイント";
+/* Help text of the endpoint switch. %@ is the path of the socket. */
 "ui.access.socket" = "ソケット: %@";
+/* Context menu item that copies the path of the socket. */
 "ui.access.socket.copy" = "ソケットのパスをコピー";
+/* Confirm button of the alert that turns on the local endpoint. */
 "ui.access.enable" = "オンにする";
+/* Title of the alert that turns on the local endpoint. */
 "ui.access.enable.title" = "ローカルエンドポイントをオンにしますか？";
+/* Message of the alert that turns on the local endpoint. The control scope allows a program to change controller state. */
 "ui.access.enable.message" = "アクセスを許可したプログラムは、コントローラの状態を読み取れるようになり、制御スコープがあれば状態を変更することもできます。";
+/* Label of the row in the Access area for the WebSocket endpoint, where web pages connect. */
 "ui.access.web" = "WebSocket";
+/* Value of the WebSocket row when it is on. %1$@ is the address of the endpoint and %2$@ is the address where pages are served. */
 "ui.access.web.on" = "%1$@でオン、ページは%2$@";
+/* Value of the WebSocket row when it is off. */
 "ui.access.web.off" = "オフ";
+/* Value of the WebSocket row when it is on but cannot listen. %@ is the port number. */
 "ui.access.web.closed" = "オンですが、ポート%@で待ち受けていません";
+/* Help text of the WebSocket row. %@ is the path of the folder from which the endpoint serves pages. */
 "ui.access.web.pages" = "ページフォルダ: %@";
+/* Label of the port field of the WebSocket endpoint. */
 "ui.access.web.port" = "ポート";
+/* Value of the port field when the system picks the port. */
 "ui.access.web.port.automatic" = "自動";
+/* Button that makes the system pick the port of the WebSocket endpoint. */
 "ui.access.web.port.choose" = "自動で選択";
+/* Error under the port field. %1$lld is the lowest port and %2$lld is the highest port. */
 "ui.access.web.portRange" = "ポートは%1$lld〜%2$lldの範囲で指定してください。";
+/* Title of the alert that turns on the WebSocket. */
 "ui.access.web.enable.title" = "WebSocketをオンにしますか？";
 /* Message of the confirmation alert that turns on the WebSocket in the Access area. */
 "platform.macos.ui.access.web.enable.message" = "トークンのオリジンのWebページは、このMac上のエンドポイントに接続できるようになります。";
+/* Line of the alert that turns on the WebSocket. %lld is the port number. */
 "ui.access.web.enable.port" = "ポート: %lld";
+/* Line of the alert that turns on the WebSocket when the port is automatic. */
 "ui.access.web.enable.automatic" = "システムが空いているポートを選びます。";
+/* Heading of the list of programs that have access in the Access area. */
 "ui.access.grants" = "アクセスを許可されたプログラム";
+/* Toolbar button in the Access area that starts the grant of access to a program. Keep the three dots. */
 "ui.access.grantProgram" = "プログラムを許可…";
+/* Button on a refused program that grants it access. */
 "ui.access.grant" = "許可";
+/* Message of the open panel in which the user picks a program or app to grant access. */
 "ui.access.grant.pick" = "アクセスを許可するプログラムまたはAppを選択してください。";
+/* Error shown when the chosen program has no signature. %@ is the path of the program. */
 "ui.access.grant.unsigned" = "%@は署名されていないため、アクセスを許可できません。";
+/* Error shown when the chosen program has an ad-hoc signature. %@ is the identifier of the program. Any local process can claim such an identity. */
 "ui.access.grant.adHoc" = "%@は証明書で署名されていないため、ローカルのどのプロセスでもその身元を名乗れてしまいます。アクセスを許可できません。";
+/* Title of the alert that grants access to a program. %@ is the identifier of the program. */
 "ui.access.grant.title" = "%@にアクセスを許可しますか？";
+/* Question of the alert that grants access. %1$@ is the identifier of the program, %2$@ is the description of its signer and %3$@ is the list of scopes. */
 "ui.access.grant.question" = "%1$@（%2$@）に次のスコープを許可しますか: %3$@";
+/* Warning in the alert that grants access when the control scope is part of the grant. Rumble is vibration of the controller. */
 "ui.access.grant.controlWarning" = "制御スコープがあると、プログラムはコントローラに振動やライトなどの出力を送信できます。";
 /* Warning line of the confirmation alert that grants access to a program that Apple signed. */
 "platform.macos.ui.access.grant.platformWarning" = "このプログラムはAppleによって署名されています。Appleが同じ識別子で署名したプログラムは、すべてこのアクセスを得ます。";
+/* Button on a program or token that removes its access. */
 "ui.access.revoke" = "取り消す";
+/* Title of the alert that removes all access of a program. %@ is the name of the program. */
 "ui.access.revoke.title" = "%@のアクセスを取り消しますか？";
+/* Message of the alert that removes all access of a program. */
 "ui.access.revoke.message" = "プログラムはすべてのスコープを失い、開いている接続は閉じられます。";
+/* Menu item that removes all scopes of a program or token. */
 "ui.access.revoke.all" = "すべてのスコープ";
+/* Message of the alert that removes one scope. %@ is the name of the scope, for example Read or Control. */
 "ui.access.revokeScope.message" = "「%@」スコープのみが削除されます。他のスコープは残り、このスコープを使用している接続は閉じられます。";
+/* Title of the alert that removes a token. %@ is the name of the token. */
 "ui.access.revokeToken.title" = "トークン「%@」を取り消しますか？";
+/* Message of the alert that removes a token. */
 "ui.access.revokeToken.message" = "このトークンを使うページとプログラムはアクセスを失い、開いている接続は閉じられます。";
+/* Heading of the list of tokens in the Access area. A token is a secret that a program or web page uses to connect. */
 "ui.access.tokens" = "トークン";
+/* Toolbar button in the Access area that starts the creation of a token. Keep the three dots. */
 "ui.access.grantToken" = "トークンを作成…";
+/* Heading of the token creation sheet. */
 "ui.access.token.form.title" = "トークンを作成";
+/* Placeholder of the name field of the token creation sheet. */
 "ui.access.token.name" = "名前";
+/* Help text under the origins field of the token creation sheet. https://example.com is an example and stays as written. */
 "ui.access.token.origins" = "トークンを使用できるWebオリジンを1行に1つずつ入力します（例: https://example.com）。ローカルのプログラムだけが使うトークンの場合は空のままにします。";
+/* Button of the token creation sheet that goes on to the confirmation. */
 "ui.access.token.continue" = "続ける";
+/* Error of the token creation sheet when the name or the scopes are missing. */
 "ui.access.token.incomplete" = "トークンには名前と1つ以上のスコープが必要です。";
+/* Error of the token creation sheet when the user picks the control scope together with web origins. */
 "ui.access.token.originControl" = "Webページ用のトークンに制御スコープは付けられません。";
+/* Title of the alert that creates a token. %@ is the name of the token. */
 "ui.access.token.title" = "トークン「%@」を作成しますか？";
+/* Question of the alert that creates a token without origins. %1$@ is the name of the token and %2$@ is the list of scopes. */
 "ui.access.token.question" = "トークン「%1$@」を次のスコープで作成しますか: %2$@";
+/* Question of the alert that creates a token with origins. %1$@ is the name of the token, %2$@ is the list of scopes and %3$@ is the list of web origins. */
 "ui.access.token.webQuestion" = "トークン「%1$@」を次のスコープで作成しますか: %2$@　%3$@のページがこのトークンを使用できます。";
+/* Title of the sheet that shows the secret of a token. %@ is the name of the token. */
 "ui.access.token.issued.title" = "トークン「%@」";
+/* Message of the sheet that shows the secret of a token once. OpenJoystickDriver is the product name. */
 "ui.access.token.issued.message" = "今すぐトークンをコピーしてください。OpenJoystickDriverはトークンを保持せず、再表示もできません。";
+/* Button of the sheet that copies the secret of a token. */
 "ui.access.token.copy" = "トークンをコピー";
+/* Title of a token in the list of tokens. %@ is the name of the token. */
 "ui.access.token.named" = "トークン「%@」";
+/* Title of a token in the list of tokens when its name is not known. */
 "ui.access.token.unknown" = "不明なトークン";
+/* Heading of the list of programs and tokens that the endpoint refused in the last 24 hours. */
 "ui.access.refused" = "最近拒否されたもの";
+/* Footer of the list of refused programs and tokens. */
 "ui.access.refused.message" = "過去24時間にエンドポイントが受け付けなかったプログラムとトークン。";
+/* Heading of the list of connections that are open at the moment in the Access area. */
 "ui.access.connections" = "現在接続中";
+/* Name of the read scope. It lets a program read controller state. */
 "ui.access.scope.read" = "読み取り";
+/* Name of the control scope. It lets a program change controller state and send output. */
 "ui.access.scope.control" = "制御";
+/* Description of the signer of a program. %@ is the identifier of the publisher. */
 "ui.access.signer.signed" = "%@が署名";
 /* Label for the signer of a program that Apple signed, shown in the Access area. */
 "platform.macos.ui.access.signer.platform" = "Appleが署名";
+/* Description of the signer of a program that has no certificate signature. */
 "ui.access.signer.adHoc" = "未署名";
+/* Name of the connection kind for a local socket. */
 "ui.access.transport.socket" = "ソケット";
+/* Name of the connection kind for a WebSocket. */
 "ui.access.transport.web" = "WebSocket";
+/* Error of the Access area when the service is not running. OpenJoystickDriver is the product name. */
 "ui.access.error.serviceUnavailable" = "OpenJoystickDriverが実行されていないため、アクセス設定の読み取りも変更もできません。";
+/* Error of the Access area when the service does not answer in time. OpenJoystickDriver is the product name. */
 "ui.access.error.serviceTimeout" = "OpenJoystickDriverが時間内に応答しませんでした。";
+/* Error of the Access area when the service refuses the request of the app. OpenJoystickDriver is the product name. */
 "ui.access.error.peerRejected" = "OpenJoystickDriverはこのリクエストを拒否しました。";
+/* Error of the Access area when a request fails. %@ is the reason. */
 "ui.access.error.requestFailed" = "リクエストに失敗しました: %@";
 /* VoiceOver label of the button in the Access error banner that shows the details of the error. */
 "a11y.access.details" = "エラーの詳細を表示";
@@ -2641,9 +2814,13 @@
 "a11y.mainWindow.sidebar" = "セクション";
 /* VoiceOver label of the control in the capture assignment sheet that sets the minimum swipe distance of a touch gesture. */
 "a11y.capture.touchSwipeDistance" = "最小スワイプ距離";
+/* Detail line of a row in the Access area with two parts. %1$@ and %2$@ are the parts, for example the signer and the scopes. The dot between them separates the parts and may change. */
 "ui.access.detail.pair" = "%1$@ · %2$@";
+/* Detail line of a row in the Access area with three parts. %1$@, %2$@ and %3$@ are the parts, for example the signer, the scopes and the reason of a refusal. The dots between them separate the parts and may change. */
 "ui.access.detail.triple" = "%1$@ · %2$@ · %3$@";
+/* Error shown when the app cannot find the executable of a refused program. %@ is the identifier of the program. */
 "ui.access.grant.noPath" = "OpenJoystickDriverが%@の実行ファイルを読み取れなかったため、アクセスを許可できません。";
+/* Line of the alert that turns on the WebSocket when a port is saved. */
 "ui.access.web.enable.savedPort" = "Webエンドポイントは保存済みのポートを使い続けます。";
 "ui.library.record.detail" = "%1$@ · %2$@";
 "ui.library.mod.detail" = "%1$@ · %2$@";
@@ -2656,7 +2833,9 @@
 "ui.settings.general.updateAvailableBody" = "バージョン%@を利用できます。";
 /* Title of the message in the main window while a profile change is still running. */
 "ui.mainWindow.profileMutationRunning" = "プロファイルの変更がまだ処理中です。完了してからもう一度お試しください。";
+/* Value of the WebSocket row when it is on but the port is not set yet. */
 "ui.access.web.noPort" = "Webエンドポイントはオンですが、ポートがまだ選択されていません";
+/* Description of the signer of a program that has a signature without a known publisher. */
 "ui.access.signer.signedUnknownPublisher" = "不明な発行元が署名";
 "ui.settings.commandLine.toolLinkTargetUnreadable" = "%@ は、参照先を読み取れないリンクです。インストールすると、代わりにこの App へリンクします。";
 /* Text of error E1001, sent to a client that connects to the endpoint while the endpoint is off, and printed by 'ojd explain'. The command in quotes stays as written. */
@@ -2879,6 +3058,7 @@
 "error.E5006.message" = "ユニット ID の鍵ファイル PortKeyInstallation.key を読み取れないか、サイズが 32 バイトではありません。バックアップからファイルを復元してください。削除すると、OpenJoystickDriver が新しい鍵を作成し、すべてのユニット ID が変わります。";
 /* Error E5007, shown when a controller record or patch fails its schema; the message names the field. */
 "error.E5007.message" = "コントローラレコードまたは patch が無効です。ファイルをそのスキーマで確認し、メッセージが示すフィールドを修正してください。";
+/* Error text with the error code. %1$@ is the message and %2$@ is the code, for example E2011. The code is in parentheses. */
 "ui.error.withCode" = "%1$@（%2$@）";
 /* Message printed by 'ojd update check' when the installed version is newer than the latest release. %1$@ is the installed version and %2$@ is the latest release. */
 "cli.update.check.ahead" = "OpenJoystickDriver %1$@ は公開されている最新リリース (%2$@) より新しいバージョンです。";

@@ -173,36 +173,67 @@
 "ui.keyboard.captureCanceled" = "Penangkapan papan ketik dibatalkan.";
 /* VoiceOver label of the area that captures a keyboard key. */
 "ui.keyboard.captureTitle" = "Penangkapan tombol papan ketik";
+/* Title of the sheet that adjusts one assignment of a profile. %@ is the name of the controller control that the assignment reads. */
 "ui.capture.adjust" = "Sesuaikan %@";
+/* Label of the slider that sets the dead zone of an axis assignment. The dead zone is the part of the travel near the center that is ignored. */
 "ui.capture.deadZone" = "Zona mati";
+/* Label of the slider that sets the gain of an axis assignment. The gain multiplies the travel of the axis. */
 "ui.capture.gain" = "Penguatan";
+/* Label of the switch that reverses the direction of an axis assignment. */
 "ui.capture.invertAxis" = "Balikkan sumbu";
+/* Label of the popup that picks the response curve of an axis assignment. The curve maps the travel of the control to the output. */
 "ui.capture.responseCurve" = "Kurva respons";
+/* Label of the slider that sets the travel at which an axis counts as a pressed button. */
 "ui.capture.digitalThreshold" = "Ambang digital";
+/* Option of the response curve popup: output grows in proportion to the travel. */
 "ui.capture.linear" = "Linier";
+/* Option of the response curve popup: output grows slowly at first and faster later. */
 "ui.capture.easeIn" = "Awal perlahan";
+/* Option of the response curve popup: output grows fast at first and slower later. */
 "ui.capture.easeOut" = "Akhir perlahan";
+/* Option of the response curve popup: output grows slowly at both ends and faster in the middle. */
 "ui.capture.smoothStep" = "Langkah mulus";
+/* Heading of the capture assignment sheet while the app waits for the user to press a control of the controller. */
 "ui.capture.pressControl" = "Tekan kontrol pada pengontrol";
+/* Instruction in the capture assignment sheet. The user picks a control from the popup or lets the app wait for the next input. */
 "ui.capture.chooseControl" = "Pilih kontrol di bawah, atau dengarkan sebentar untuk input berikutnya.";
+/* Label of the popup in the capture assignment sheet that lists the controls of the controller. */
 "ui.capture.controllerControl" = "Kontrol pengontrol";
+/* Title of the button in the capture assignment sheet that waits for the next controller input. */
 "ui.capture.listen" = "Dengarkan kontrol";
+/* Message in the capture assignment sheet when no controller is connected. Manual selection means the popup of controls. */
 "ui.capture.connectForLive" = "Hubungkan pengontrol untuk mengaktifkan penangkapan langsung. Pemilihan manual tetap tersedia.";
+/* VoiceOver label of the capture assignment sheet. */
 "ui.capture.title" = "Penangkapan kontrol pengontrol";
+/* VoiceOver announcement when the user cancels the controller control capture. */
 "ui.capture.canceled" = "Penangkapan pengontrol dibatalkan.";
+/* VoiceOver label of the status area in the capture assignment sheet. */
 "ui.capture.status" = "Status penangkapan";
+/* Status in the capture assignment sheet before the capture starts. */
 "ui.capture.ready" = "Siap mendengarkan.";
+/* Status in the capture assignment sheet while the app waits for a controller control. */
 "ui.capture.listening" = "Mendengarkan kontrol pengontrol.";
+/* VoiceOver announcement while the app waits for a controller control. Escape is the name of the Escape key. */
 "ui.capture.listeningCancel" = "Mendengarkan kontrol pengontrol. Tekan Escape untuk membatalkan.";
+/* Status text in the capture assignment sheet while the app waits for a controller control. Keep the three dots. */
 "ui.capture.listeningEllipsis" = "Mendengarkan kontrol pengontrol…";
+/* Status in the capture assignment sheet after a control is detected. %@ is the name of the control. The sentence ends with a period. */
 "ui.capture.detected" = "Terdeteksi: %@.";
+/* Label with the detected control in the capture assignment sheet. %@ is the name of the control. It has no final period because other text follows or the label stands alone. */
 "ui.capture.detectedNoPeriod" = "Terdeteksi: %@";
+/* Status in the capture assignment sheet. %1$@ is the name of the detected control and %2$@ is the sentence that says the destination is ready for selection. */
 "ui.capture.detectedWithDestination" = "Terdeteksi: %1$@. %2$@";
+/* Status in the capture assignment sheet when input arrived from a control that the app does not support. */
 "ui.capture.noSupported" = "Input diterima, tetapi tidak ada kontrol yang didukung yang teridentifikasi.";
+/* Status in the capture assignment sheet that tells the user to pick a destination for the detected control. The sentence follows the detected control. */
 "ui.capture.destinationReady" = "Tujuan siap dipilih.";
+/* Status in the capture assignment sheet when the capture fails. %@ is the reason. */
 "ui.capture.error" = "Kesalahan penangkapan. %@";
+/* VoiceOver description of the input test status when no button of the controller is held. */
 "ui.capture.noButton" = "Tidak ada tombol yang sedang ditahan.";
+/* VoiceOver description of the input test status. %@ is the list of the names of the buttons that are held. */
 "ui.capture.buttonsHeld" = "Tombol yang ditahan: %@";
+/* Error under the name field of the profile creation sheet when the name is empty. */
 "ui.capture.profileNameValidation" = "Masukkan nama profil.";
 "ui.profiles.new" = "Profil baru";
 "ui.profiles.deleteTitle" = "Hapus profil?";
@@ -310,15 +341,25 @@
 "ui.debug.outputNeedsAttention" = "Output pengontrol perlu perhatian.";
 /* Line of the debug report when the service does not answer, so the report has no diagnostics. */
 "ui.debug.serviceUnavailable" = "Diagnostik layanan tidak tersedia saat ini.";
+/* Error shown in the profile editor when the profile changed elsewhere after the editor loaded it. Reload means to discard the edits and load the profile again. */
 "ui.error.profileChanged" = "Profil ini berubah di tempat lain. Muat ulang atau lanjutkan mengedit.";
+/* Error under the name field of the profile creation sheet when another profile has the name. */
 "ui.error.duplicateProfile" = "Profil dengan nama itu sudah ada.";
+/* Error shown when the service has no profile with the requested identifier. */
 "ui.error.profileMissing" = "Profil itu tidak lagi tersedia.";
+/* Error shown when the service rejects the assignments of a profile. */
 "ui.error.reviewAssignments" = "Periksa penetapan profil dan coba lagi.";
+/* Error shown when the service cannot save the profile library. */
 "ui.error.profileLibrarySave" = "Profil Anda tidak dapat disimpan.";
+/* Error shown when the remapping engine of the service is not available yet. */
 "ui.error.remappingUnavailable" = "Pemetaan ulang pengontrol sementara tidak tersedia.";
+/* Error shown for a failure that has no message of its own. OpenJoystickDriver is the product name. */
 "ui.error.generic" = "OpenJoystickDriver tidak dapat menyelesaikan tindakan itu.";
+/* Error shown when the service cannot be reached. OpenJoystickDriver is the product name. */
 "ui.error.notAvailable" = "OpenJoystickDriver tidak tersedia saat ini.";
+/* Error shown when the service does not answer in time. OpenJoystickDriver is the product name. */
 "ui.error.timeout" = "OpenJoystickDriver terlalu lama merespons.";
+/* Error shown when the service answers with a reply that the app does not understand. OpenJoystickDriver is the product name. */
 "ui.error.unexpected" = "OpenJoystickDriver mengembalikan hasil yang tidak terduga.";
 "ui.mapping.allApps" = "Semua app";
 "ui.mapping.specificApp" = "App tertentu";
@@ -360,10 +401,15 @@
 "ui.profiles.touch.pointerSensitivity" = "Poin penunjuk per permukaan";
 "ui.profiles.touch.stickRadius" = "Radius stik penuh (pecahan permukaan)";
 "ui.profiles.touch.deadzone" = "Zona mati stik";
+/* Label of the stepper that sets the number of columns of a touch grid in the capture assignment sheet. %d is the number of columns. */
 "ui.capture.touchColumns" = "Kolom grid: %d";
+/* Label of the stepper that sets the number of rows of a touch grid in the capture assignment sheet. %d is the number of rows. */
 "ui.capture.touchRows" = "Baris grid: %d";
+/* Label of the stepper that picks the column of the touch cell in the capture assignment sheet. %d is the column number, counted from 1. */
 "ui.capture.touchColumn" = "Kolom sel: %d";
+/* Label of the stepper that picks the row of the touch cell in the capture assignment sheet. %d is the row number, counted from 1. */
 "ui.capture.touchRow" = "Baris sel: %d";
+/* Label of the slider that sets the shortest swipe that counts, as a share of the touch surface. %.0f is a percentage; %% is the percent sign. */
 "ui.capture.touchSwipeDistance" = "Jarak gesek minimum: %.0f%%";
 "ui.mapping.mute" = "Bisukan";
 "ui.mapping.leftTriggerClick" = "Klik pemicu kiri";
@@ -430,13 +476,21 @@
 "action.remove" = "Hapus";
 /* Button of the input test window that stops the rumble test and button of the developer view that stops the packet capture. */
 "action.stop" = "Hentikan";
+/* Error shown when the debug report cannot be written to the chosen file. */
 "ui.error.supportReportSave" = "Laporan dukungan tidak dapat disimpan. Pilih file lain dan coba lagi.";
+/* Error shown when the debug logs cannot be written to the chosen file. The system reason follows on the next line. */
 "ui.error.logsSave" = "Log tidak dapat disimpan. Pilih file lain dan coba lagi.";
+/* Error shown in the capture assignment sheet when the listening ends without any control. */
 "ui.error.noDetectedControl" = "Tidak ada kontrol pengontrol baru yang terdeteksi.";
+/* Error shown when the user starts a profile action while another one still runs. */
 "ui.error.actionInProgress" = "Tindakan profil lain sedang berlangsung.";
+/* Error shown when the list of active profiles is damaged and the service cannot load it. */
 "ui.error.profileLibraryCorrupt" = "Daftar profil aktif rusak dan tidak dapat dimuat.";
+/* Title of the button in the capture assignment sheet while the app waits for a control. Keep the three dots. */
 "ui.capture.listeningButton" = "Mendengarkan…";
+/* Error shown when the user saves a profile whose assignments have problems. */
 "ui.error.reviewAssignmentsBeforeSave" = "Periksa penetapan sebelum menyimpan profil ini.";
+/* Error shown when the profile item that the user selected is gone, for example after a reload. */
 "ui.error.selectedProfileItemMissing" = "Item profil yang dipilih tidak lagi tersedia.";
 /* Message about a request to the system extension manager that ends cancelled. The request installs or removes the driver extension. */
 "cli.transportExtension.group.cancelled" = "Permintaan ekstensi sistem dibatalkan.";
@@ -498,53 +552,101 @@
 "term.protocolVariant.wired" = "Berkabel";
 /* Label of a fact under Advanced in the Controllers detail: the parser that reads the controller, shown as its ojd spelling such as xbox-xusb:receiver. */
 "term.parser" = "Parser";
+/* Label in the controller summary of the developer tools. The value is a list of the pressed buttons. */
 "ui.developer.buttons" = "Tombol";
+/* Status next to the Start Capture button while the packet capture runs. */
 "ui.developer.capturing" = "Menangkap";
+/* Label of the connection kind in the controller summary of the developer tools, for example USB or Bluetooth. */
 "ui.developer.connection" = "Koneksi";
+/* Label of the controller name in the controller summary of the developer tools. */
 "ui.developer.controller" = "Pengontrol";
+/* Heading of the controller summary section in the developer tools. */
 "ui.developer.controllerDetails" = "Pengontrol";
+/* Message in the packet capture list of the developer tools before a capture. Start Capture is the title of the button and is written as in this catalog. */
 "ui.developer.emptyCapture" = "Tekan Mulai Penangkapan, lalu tekan tombol pengontrol.";
+/* Title of the save panel that exports the packet capture. */
 "ui.developer.exportCapture" = "Ekspor Penangkapan Paket";
+/* Heading of the section in the developer tools that lists buttons beyond the standard ones. */
 "ui.developer.extraInputs" = "Tombol Tambahan";
+/* Description of the extra buttons section in the developer tools. The user presses one button at a time and the detected buttons stay in the list until the user clears the capture. */
 "ui.developer.extraInputsDescription" = "Tekan satu tombol tambahan sekali satu. Tombol yang terdeteksi tetap tercantum hingga Anda menghapus penangkapan.";
+/* Value of the route in the controller summary of the developer tools when the app reads the controller as an HID device. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.developer.hid" = "HID";
+/* Note under the packet list in the developer tools. Keep-alive packets are the routine idle messages of a controller. */
 "ui.developer.keepAliveNote" = "Lalu lintas idle rutin disembunyikan agar aktivitas pengontrol tetap terlihat.";
+/* Label of the left stick value in the controller summary of the developer tools. */
 "ui.developer.leftStick" = "Stik kiri";
+/* Message in the developer tools while the controllers load. Keep the three dots. */
 "ui.developer.loadingControllers" = "Memuat diagnostik pengontrol…";
+/* Message in the developer tools before the controller diagnostics load. */
 "ui.developer.notLoaded" = "Diagnostik pengontrol belum dimuat.";
+/* Title of the empty state in the developer tools when no controller is connected. */
 "ui.developer.noControllers" = "Tidak ada pengontrol yang terhubung";
+/* Detail of the empty state in the developer tools. Refresh is the title of a button and is written as in this catalog. */
 "ui.developer.noControllersDetail" = "Hubungkan pengontrol, lalu tekan Segarkan.";
+/* Message in the extra buttons section of the developer tools when the capture detected none. */
 "ui.developer.noExtraInputs" = "Tidak ada tombol tambahan yang terdeteksi.";
+/* Title of the empty state in the packet list of the developer tools. */
 "ui.developer.noPackets" = "Tidak ada paket yang ditangkap";
+/* Heading of the raw packet capture section in the developer tools. */
 "ui.developer.packetCapture" = "Penangkapan Paket Mentah";
+/* Option of the packet filter in the developer tools that shows only packets that carry controller activity. */
 "ui.developer.packetFilterActivity" = "Aktivitas";
+/* Option of the packet filter in the developer tools that shows all packets. */
 "ui.developer.packetFilterAll" = "Semua";
+/* Column title of the packet list in the developer tools. The column shows when the packet arrived. */
 "ui.developer.packetColumnTime" = "Waktu";
+/* Column title of the packet list in the developer tools. The column shows whether the packet came from or went to the controller. */
 "ui.developer.packetColumnDirection" = "Arah";
+/* Column title of the packet list in the developer tools. The column shows the length of the packet in bytes. */
 "ui.developer.packetColumnBytes" = "Bita";
+/* Column title of the packet list in the developer tools. The column shows the bytes of the packet. */
 "ui.developer.packetColumnData" = "Data";
+/* Warning under the packet capture export. A capture can hold data that identifies the controller or the user. */
 "ui.developer.packetSharingWarning" = "Isi paket berbeda pada tiap pengontrol. Periksa file sebelum membagikannya.";
+/* Value of the route in the controller summary of the developer tools when the app reads the controller over raw USB. */
 "ui.developer.rawUSB" = "USB Mentah";
+/* Status of the packet capture in the developer tools when it can start. */
 "ui.developer.ready" = "Siap";
+/* Label of the right stick value in the controller summary of the developer tools. */
 "ui.developer.rightStick" = "Stik kanan";
+/* Label of the route in the controller summary of the developer tools. The route is how the app found and reads the controller. */
 "ui.developer.route" = "Rute";
+/* Title of the button that starts the packet capture. */
 "ui.developer.startCapture" = "Mulai Penangkapan";
+/* Status of the packet capture in the developer tools while it starts. Keep the three dots. */
 "ui.developer.starting" = "Memulai…";
+/* Title of the message in the developer tools when they cannot load. */
 "ui.developer.unavailable" = "Alat pengembang tidak tersedia";
+/* Label of the USB endpoints in the controller summary of the developer tools. */
 "ui.developer.usbEndpoints" = "Endpoint USB";
+/* Label of the USB vendor and product ID in the controller summary of the developer tools. */
 "ui.developer.usbID" = "ID USB";
+/* Message in the packet list of the developer tools while a capture waits for packets. */
 "ui.developer.waitingForPackets" = "Menunggu paket USB. Tekan tombol pengontrol.";
+/* Heading of the soak test section in the developer tools. A soak test measures the service over a long time. */
 "ui.developer.soakTest" = "Uji Ketahanan";
+/* Description of the soak test section in the developer tools. The test samples memory, file descriptors and CPU of the service. */
 "ui.developer.soakTestDescription" = "Mengambil sampel memori, deskriptor berkas, dan CPU layanan selama waktu yang dipilih, lalu menampilkan hasilnya.";
+/* Title of the button in the developer tools that opens the soak test sheet. Keep the three dots. */
 "ui.developer.soakTestOpen" = "Jalankan Uji Ketahanan…";
+/* Label of the duration field of the soak test sheet. The value is in seconds. */
 "ui.developer.soakDuration" = "Durasi (detik)";
+/* Label of the sample interval field of the soak test sheet. The value is in milliseconds. */
 "ui.developer.soakInterval" = "Interval sampel (ms)";
+/* Label of the field of the soak test sheet that limits the resident memory of the service. The value is in MiB, mebibytes. */
 "ui.developer.soakResidentLimit" = "Batas ukuran residen (MiB)";
+/* Label of the field of the soak test sheet that limits the memory footprint of the service. The value is in MiB, mebibytes. */
 "ui.developer.soakFootprintLimit" = "Batas jejak memori (MiB)";
+/* Hint under the limit fields of the soak test sheet. A limit of 0 means no limit. */
 "ui.developer.soakLimitHint" = "Batas 0 menonaktifkannya.";
+/* Title of the button of the soak test sheet that starts the test. */
 "ui.developer.soakStart" = "Jalankan Uji";
+/* Status in the soak test sheet while the test samples the service. Keep the three dots. */
 "ui.developer.soakRunning" = "Mengambil sampel layanan…";
+/* Error in the soak test sheet when a field does not hold a whole number. %@ is the label of the field. */
 "ui.developer.soakNotANumber" = "%@: masukkan bilangan bulat.";
+/* Error in the soak test sheet when a value is outside its range. %1$@ is the label of the field, %2$lld is the lowest value and %3$lld is the highest value. */
 "ui.developer.soakOutOfRange" = "%1$@: masukkan nilai antara %2$lld dan %3$lld.";
 "ui.inputTest.aButton" = "Tombol A";
 "ui.inputTest.aCross" = "A / Silang";
@@ -932,6 +1034,7 @@
 "ui.profiles.unpairJoyCons" = "Lepas pasangan";
 "ui.profiles.joyConPairSessionHint" = "Pemasangan menggunakan pengontrol persis ini untuk sesi app saat ini.";
 "ui.profiles.pair" = "Pasangkan";
+/* Error shown when two Joy-Cons cannot be combined into one controller. Joy-Con is a Nintendo product name. */
 "ui.error.joyConPairUnavailable" = "Joy-Con yang dipilih tidak dapat dipasangkan. Segarkan pengontrol yang terhubung dan coba lagi.";
 "ui.profiles.joyConSessionState" = "Pemasangan eksplisit";
 
@@ -981,6 +1084,7 @@
 
 /* Controller session lifecycle */
 "ui.controllers.suspended" = "Ditangguhkan";
+/* Error shown when the service refuses to change the session of a controller. */
 "ui.error.controllerSessionChangeRejected" = "Sesi pengontrol tidak dapat diubah.";
 
 "ui.controllers.disconnectWirelessConfirmTitle" = "Putuskan Hubungan Pengontrol Nirkabel?";
@@ -2397,80 +2501,149 @@
 "a11y.library.recordHexadecimal" = "%1$@, heksadesimal %2$@";
 /* Shown in the Record section of a record in the Library when the record text cannot be read for display. %@ is the controller identity, such as 045E:028E. */
 "ui.library.recordUnreadable" = "Teks catatan %@ tidak dapat dibaca sehingga tidak dapat ditampilkan.";
+/* Title of the details button of an error message in the Access area. */
 "ui.access.details" = "Detail";
+/* Button of an error message in the Access area that hides the message. */
 "ui.access.dismiss" = "Tutup";
+/* Button of an error message in the Access area that reads the access settings again. */
 "ui.access.tryAgain" = "Coba Lagi";
+/* Message in the Access area while it reads the access settings. Keep the three dots. */
 "ui.access.loading" = "Membaca pengaturan akses…";
+/* Button that closes the sheet that shows the secret of a token. */
 "ui.access.done" = "Selesai";
+/* Button of the open panel in which the user picks a program or app to grant access. It confirms the choice. */
 "ui.access.choose" = "Pilih";
+/* Label of the row in the Access area for the local endpoint. The local endpoint is the socket where programs on this Mac connect. */
 "ui.access.endpoint" = "Titik akhir lokal";
+/* Help text of the endpoint switch. %@ is the path of the socket. */
 "ui.access.socket" = "Soket: %@";
+/* Context menu item that copies the path of the socket. */
 "ui.access.socket.copy" = "Salin Jalur Soket";
+/* Confirm button of the alert that turns on the local endpoint. */
 "ui.access.enable" = "Nyalakan";
+/* Title of the alert that turns on the local endpoint. */
 "ui.access.enable.title" = "Nyalakan titik akhir lokal?";
+/* Message of the alert that turns on the local endpoint. The control scope allows a program to change controller state. */
 "ui.access.enable.message" = "Program yang Anda beri akses kemudian dapat membaca status pengontrol dan, dengan cakupan Kontrol, mengubahnya.";
+/* Label of the row in the Access area for the WebSocket endpoint, where web pages connect. */
 "ui.access.web" = "WebSocket";
+/* Value of the WebSocket row when it is on. %1$@ is the address of the endpoint and %2$@ is the address where pages are served. */
 "ui.access.web.on" = "Nyala di %1$@, laman di %2$@";
+/* Value of the WebSocket row when it is off. */
 "ui.access.web.off" = "Mati";
+/* Value of the WebSocket row when it is on but cannot listen. %@ is the port number. */
 "ui.access.web.closed" = "Nyala, tetapi tidak mendengarkan di port %@";
+/* Help text of the WebSocket row. %@ is the path of the folder from which the endpoint serves pages. */
 "ui.access.web.pages" = "Folder laman: %@";
+/* Label of the port field of the WebSocket endpoint. */
 "ui.access.web.port" = "Port";
+/* Value of the port field when the system picks the port. */
 "ui.access.web.port.automatic" = "Otomatis";
+/* Button that makes the system pick the port of the WebSocket endpoint. */
 "ui.access.web.port.choose" = "Pilih Otomatis";
+/* Error under the port field. %1$lld is the lowest port and %2$lld is the highest port. */
 "ui.access.web.portRange" = "Port harus antara %1$lld dan %2$lld.";
+/* Title of the alert that turns on the WebSocket. */
 "ui.access.web.enable.title" = "Nyalakan WebSocket?";
 /* Message of the confirmation alert that turns on the WebSocket in the Access area. */
 "platform.macos.ui.access.web.enable.message" = "Laman web dari asal sebuah token kemudian dapat tersambung ke titik akhir di Mac ini.";
+/* Line of the alert that turns on the WebSocket. %lld is the port number. */
 "ui.access.web.enable.port" = "Port: %lld";
+/* Line of the alert that turns on the WebSocket when the port is automatic. */
 "ui.access.web.enable.automatic" = "Sistem memilih port yang tersedia.";
+/* Heading of the list of programs that have access in the Access area. */
 "ui.access.grants" = "Program dengan akses";
+/* Toolbar button in the Access area that starts the grant of access to a program. Keep the three dots. */
 "ui.access.grantProgram" = "Beri Akses ke Program…";
+/* Button on a refused program that grants it access. */
 "ui.access.grant" = "Beri Akses";
+/* Message of the open panel in which the user picks a program or app to grant access. */
 "ui.access.grant.pick" = "Pilih program atau app yang akan diberi akses.";
+/* Error shown when the chosen program has no signature. %@ is the path of the program. */
 "ui.access.grant.unsigned" = "%@ tidak ditandatangani, sehingga akses tidak dapat diberikan kepadanya.";
+/* Error shown when the chosen program has an ad-hoc signature. %@ is the identifier of the program. Any local process can claim such an identity. */
 "ui.access.grant.adHoc" = "%@ tidak ditandatangani dengan sertifikat, sehingga proses lokal mana pun dapat mengaku sebagai dirinya. Akses tidak dapat diberikan kepadanya.";
+/* Title of the alert that grants access to a program. %@ is the identifier of the program. */
 "ui.access.grant.title" = "Beri akses ke %@?";
+/* Question of the alert that grants access. %1$@ is the identifier of the program, %2$@ is the description of its signer and %3$@ is the list of scopes. */
 "ui.access.grant.question" = "Beri %1$@ (%2$@) cakupan ini: %3$@?";
+/* Warning in the alert that grants access when the control scope is part of the grant. Rumble is vibration of the controller. */
 "ui.access.grant.controlWarning" = "Cakupan Kontrol memungkinkan program mengirim keluaran ke pengontrol Anda, seperti getaran dan lampu.";
 /* Warning line of the confirmation alert that grants access to a program that Apple signed. */
 "platform.macos.ui.access.grant.platformWarning" = "Program ini ditandatangani oleh Apple. Program apa pun yang ditandatangani Apple dengan pengenal yang sama akan mendapatkan akses ini.";
+/* Button on a program or token that removes its access. */
 "ui.access.revoke" = "Cabut";
+/* Title of the alert that removes all access of a program. %@ is the name of the program. */
 "ui.access.revoke.title" = "Cabut akses %@?";
+/* Message of the alert that removes all access of a program. */
 "ui.access.revoke.message" = "Program kehilangan semua cakupannya dan koneksinya yang terbuka ditutup.";
+/* Menu item that removes all scopes of a program or token. */
 "ui.access.revoke.all" = "Semua Cakupan";
+/* Message of the alert that removes one scope. %@ is the name of the scope, for example Read or Control. */
 "ui.access.revokeScope.message" = "Hanya cakupan %@ yang dihapus. Cakupan lainnya tetap ada dan koneksi terbuka yang memakainya ditutup.";
+/* Title of the alert that removes a token. %@ is the name of the token. */
 "ui.access.revokeToken.title" = "Cabut token %@?";
+/* Message of the alert that removes a token. */
 "ui.access.revokeToken.message" = "Laman dan program yang memakai token kehilangan akses dan koneksinya yang terbuka ditutup.";
+/* Heading of the list of tokens in the Access area. A token is a secret that a program or web page uses to connect. */
 "ui.access.tokens" = "Token";
+/* Toolbar button in the Access area that starts the creation of a token. Keep the three dots. */
 "ui.access.grantToken" = "Buat Token…";
+/* Heading of the token creation sheet. */
 "ui.access.token.form.title" = "Buat token";
+/* Placeholder of the name field of the token creation sheet. */
 "ui.access.token.name" = "Nama";
+/* Help text under the origins field of the token creation sheet. https://example.com is an example and stays as written. */
 "ui.access.token.origins" = "Asal web yang boleh memakai token, satu per baris, misalnya https://example.com. Biarkan kosong untuk token yang hanya dipakai program lokal.";
+/* Button of the token creation sheet that goes on to the confirmation. */
 "ui.access.token.continue" = "Lanjutkan";
+/* Error of the token creation sheet when the name or the scopes are missing. */
 "ui.access.token.incomplete" = "Token memerlukan nama dan setidaknya satu cakupan.";
+/* Error of the token creation sheet when the user picks the control scope together with web origins. */
 "ui.access.token.originControl" = "Token untuk laman web tidak boleh memiliki cakupan Kontrol.";
+/* Title of the alert that creates a token. %@ is the name of the token. */
 "ui.access.token.title" = "Buat token %@?";
+/* Question of the alert that creates a token without origins. %1$@ is the name of the token and %2$@ is the list of scopes. */
 "ui.access.token.question" = "Buat token %1$@ dengan cakupan ini: %2$@?";
+/* Question of the alert that creates a token with origins. %1$@ is the name of the token, %2$@ is the list of scopes and %3$@ is the list of web origins. */
 "ui.access.token.webQuestion" = "Buat token %1$@ dengan cakupan ini: %2$@? Laman dari %3$@ boleh memakainya.";
+/* Title of the sheet that shows the secret of a token. %@ is the name of the token. */
 "ui.access.token.issued.title" = "Token %@";
+/* Message of the sheet that shows the secret of a token once. OpenJoystickDriver is the product name. */
 "ui.access.token.issued.message" = "Salin token sekarang. OpenJoystickDriver tidak menyimpannya dan tidak dapat menampilkannya lagi.";
+/* Button of the sheet that copies the secret of a token. */
 "ui.access.token.copy" = "Salin Token";
+/* Title of a token in the list of tokens. %@ is the name of the token. */
 "ui.access.token.named" = "Token %@";
+/* Title of a token in the list of tokens when its name is not known. */
 "ui.access.token.unknown" = "Token tidak dikenal";
+/* Heading of the list of programs and tokens that the endpoint refused in the last 24 hours. */
 "ui.access.refused" = "Baru saja ditolak";
+/* Footer of the list of refused programs and tokens. */
 "ui.access.refused.message" = "Program dan token yang ditolak titik akhir dalam 24 jam terakhir.";
+/* Heading of the list of connections that are open at the moment in the Access area. */
 "ui.access.connections" = "Tersambung sekarang";
+/* Name of the read scope. It lets a program read controller state. */
 "ui.access.scope.read" = "Baca";
+/* Name of the control scope. It lets a program change controller state and send output. */
 "ui.access.scope.control" = "Kontrol";
+/* Description of the signer of a program. %@ is the identifier of the publisher. */
 "ui.access.signer.signed" = "Ditandatangani oleh %@";
 /* Label for the signer of a program that Apple signed, shown in the Access area. */
 "platform.macos.ui.access.signer.platform" = "Ditandatangani oleh Apple";
+/* Description of the signer of a program that has no certificate signature. */
 "ui.access.signer.adHoc" = "Tidak ditandatangani";
+/* Name of the connection kind for a local socket. */
 "ui.access.transport.socket" = "Soket";
+/* Name of the connection kind for a WebSocket. */
 "ui.access.transport.web" = "WebSocket";
+/* Error of the Access area when the service is not running. OpenJoystickDriver is the product name. */
 "ui.access.error.serviceUnavailable" = "OpenJoystickDriver tidak berjalan, sehingga pengaturan akses tidak dapat dibaca atau diubah.";
+/* Error of the Access area when the service does not answer in time. OpenJoystickDriver is the product name. */
 "ui.access.error.serviceTimeout" = "OpenJoystickDriver tidak menjawab tepat waktu.";
+/* Error of the Access area when the service refuses the request of the app. OpenJoystickDriver is the product name. */
 "ui.access.error.peerRejected" = "OpenJoystickDriver menolak permintaan ini.";
+/* Error of the Access area when a request fails. %@ is the reason. */
 "ui.access.error.requestFailed" = "Permintaan gagal: %@";
 /* VoiceOver label of the button in the Access error banner that shows the details of the error. */
 "a11y.access.details" = "Tampilkan detail kesalahan";
@@ -2641,9 +2814,13 @@
 "a11y.mainWindow.sidebar" = "Bagian";
 /* VoiceOver label of the control in the capture assignment sheet that sets the minimum swipe distance of a touch gesture. */
 "a11y.capture.touchSwipeDistance" = "Jarak gesek minimum";
+/* Detail line of a row in the Access area with two parts. %1$@ and %2$@ are the parts, for example the signer and the scopes. The dot between them separates the parts and may change. */
 "ui.access.detail.pair" = "%1$@ · %2$@";
+/* Detail line of a row in the Access area with three parts. %1$@, %2$@ and %3$@ are the parts, for example the signer, the scopes and the reason of a refusal. The dots between them separate the parts and may change. */
 "ui.access.detail.triple" = "%1$@ · %2$@ · %3$@";
+/* Error shown when the app cannot find the executable of a refused program. %@ is the identifier of the program. */
 "ui.access.grant.noPath" = "OpenJoystickDriver tidak dapat membaca berkas yang dapat dijalankan milik %@, sehingga tidak dapat memberinya akses.";
+/* Line of the alert that turns on the WebSocket when a port is saved. */
 "ui.access.web.enable.savedPort" = "Titik akhir web mempertahankan port yang tersimpan.";
 "ui.library.record.detail" = "%1$@ · %2$@";
 "ui.library.mod.detail" = "%1$@ · %2$@";
@@ -2656,7 +2833,9 @@
 "ui.settings.general.updateAvailableBody" = "Versi %@ tersedia.";
 /* Title of the message in the main window while a profile change is still running. */
 "ui.mainWindow.profileMutationRunning" = "Perubahan profil masih berjalan. Coba lagi setelah selesai.";
+/* Value of the WebSocket row when it is on but the port is not set yet. */
 "ui.access.web.noPort" = "Titik akhir web nyala, tetapi belum ada port yang dipilih";
+/* Description of the signer of a program that has a signature without a known publisher. */
 "ui.access.signer.signedUnknownPublisher" = "Ditandatangani oleh penerbit tidak dikenal";
 "ui.settings.commandLine.toolLinkTargetUnreadable" = "%@ adalah tautan yang tujuannya tidak dapat dibaca. Penginstalan menautkannya ke app ini.";
 /* Text of error E1001, sent to a client that connects to the endpoint while the endpoint is off, and printed by 'ojd explain'. The command in quotes stays as written. */
@@ -2879,6 +3058,7 @@
 "error.E5006.message" = "Berkas kunci ID perangkat, PortKeyInstallation.key, tidak dapat dibaca atau ukurannya bukan 32 byte. Pulihkan berkas dari cadangan. Jika Anda menghapusnya, OpenJoystickDriver membuat kunci baru dan setiap ID perangkat berubah.";
 /* Error E5007, shown when a controller record or patch fails its schema; the message names the field. */
 "error.E5007.message" = "Catatan pengontrol atau patch tidak valid. Periksa berkas dengan skemanya dan perbaiki kolom yang disebut pesan.";
+/* Error text with the error code. %1$@ is the message and %2$@ is the code, for example E2011. The code is in parentheses. */
 "ui.error.withCode" = "%1$@ (%2$@)";
 /* Message printed by 'ojd update check' when the installed version is newer than the latest release. %1$@ is the installed version and %2$@ is the latest release. */
 "cli.update.check.ahead" = "OpenJoystickDriver %1$@ lebih baru daripada rilis terbaru yang dipublikasikan (%2$@).";

@@ -173,36 +173,67 @@
 "ui.keyboard.captureCanceled" = "कीबोर्ड कैप्चर रद्द किया गया।";
 /* VoiceOver label of the area that captures a keyboard key. */
 "ui.keyboard.captureTitle" = "कीबोर्ड कुंजी कैप्चर";
+/* Title of the sheet that adjusts one assignment of a profile. %@ is the name of the controller control that the assignment reads. */
 "ui.capture.adjust" = "%@ समायोजित करें";
+/* Label of the slider that sets the dead zone of an axis assignment. The dead zone is the part of the travel near the center that is ignored. */
 "ui.capture.deadZone" = "डेड ज़ोन";
+/* Label of the slider that sets the gain of an axis assignment. The gain multiplies the travel of the axis. */
 "ui.capture.gain" = "गेन";
+/* Label of the switch that reverses the direction of an axis assignment. */
 "ui.capture.invertAxis" = "अक्ष पलटें";
+/* Label of the popup that picks the response curve of an axis assignment. The curve maps the travel of the control to the output. */
 "ui.capture.responseCurve" = "प्रतिक्रिया वक्र";
+/* Label of the slider that sets the travel at which an axis counts as a pressed button. */
 "ui.capture.digitalThreshold" = "डिजिटल थ्रेशोल्ड";
+/* Option of the response curve popup: output grows in proportion to the travel. */
 "ui.capture.linear" = "रैखिक";
+/* Option of the response curve popup: output grows slowly at first and faster later. */
 "ui.capture.easeIn" = "ईज़ इन";
+/* Option of the response curve popup: output grows fast at first and slower later. */
 "ui.capture.easeOut" = "ईज़ आउट";
+/* Option of the response curve popup: output grows slowly at both ends and faster in the middle. */
 "ui.capture.smoothStep" = "स्मूद स्टेप";
+/* Heading of the capture assignment sheet while the app waits for the user to press a control of the controller. */
 "ui.capture.pressControl" = "कंट्रोलर का कोई नियंत्रण दबाएँ";
+/* Instruction in the capture assignment sheet. The user picks a control from the popup or lets the app wait for the next input. */
 "ui.capture.chooseControl" = "नीचे कोई नियंत्रण चुनें, या अगले इनपुट के लिए थोड़ी देर सुनें।";
+/* Label of the popup in the capture assignment sheet that lists the controls of the controller. */
 "ui.capture.controllerControl" = "कंट्रोलर नियंत्रण";
+/* Title of the button in the capture assignment sheet that waits for the next controller input. */
 "ui.capture.listen" = "नियंत्रण सुनें";
+/* Message in the capture assignment sheet when no controller is connected. Manual selection means the popup of controls. */
 "ui.capture.connectForLive" = "लाइव कैप्चर सक्षम करने के लिए कंट्रोलर कनेक्ट करें। मैन्युअल चयन अभी भी उपलब्ध है।";
+/* VoiceOver label of the capture assignment sheet. */
 "ui.capture.title" = "कंट्रोलर नियंत्रण कैप्चर";
+/* VoiceOver announcement when the user cancels the controller control capture. */
 "ui.capture.canceled" = "कंट्रोलर कैप्चर रद्द किया गया।";
+/* VoiceOver label of the status area in the capture assignment sheet. */
 "ui.capture.status" = "कैप्चर स्थिति";
+/* Status in the capture assignment sheet before the capture starts. */
 "ui.capture.ready" = "सुनने के लिए तैयार।";
+/* Status in the capture assignment sheet while the app waits for a controller control. */
 "ui.capture.listening" = "किसी कंट्रोलर नियंत्रण के लिए सुन रहे हैं।";
+/* VoiceOver announcement while the app waits for a controller control. Escape is the name of the Escape key. */
 "ui.capture.listeningCancel" = "किसी कंट्रोलर नियंत्रण के लिए सुन रहे हैं। रद्द करने के लिए Escape दबाएँ।";
+/* Status text in the capture assignment sheet while the app waits for a controller control. Keep the three dots. */
 "ui.capture.listeningEllipsis" = "किसी कंट्रोलर नियंत्रण के लिए सुन रहे हैं…";
+/* Status in the capture assignment sheet after a control is detected. %@ is the name of the control. The sentence ends with a period. */
 "ui.capture.detected" = "पहचाना गया: %@।";
+/* Label with the detected control in the capture assignment sheet. %@ is the name of the control. It has no final period because other text follows or the label stands alone. */
 "ui.capture.detectedNoPeriod" = "पहचाना गया: %@";
+/* Status in the capture assignment sheet. %1$@ is the name of the detected control and %2$@ is the sentence that says the destination is ready for selection. */
 "ui.capture.detectedWithDestination" = "पहचाना गया: %1$@। %2$@";
+/* Status in the capture assignment sheet when input arrived from a control that the app does not support. */
 "ui.capture.noSupported" = "इनपुट मिला, लेकिन कोई समर्थित नियंत्रण पहचाना नहीं गया।";
+/* Status in the capture assignment sheet that tells the user to pick a destination for the detected control. The sentence follows the detected control. */
 "ui.capture.destinationReady" = "गंतव्य चयन के लिए तैयार है।";
+/* Status in the capture assignment sheet when the capture fails. %@ is the reason. */
 "ui.capture.error" = "कैप्चर त्रुटि। %@";
+/* VoiceOver description of the input test status when no button of the controller is held. */
 "ui.capture.noButton" = "इस समय कोई बटन दबाकर नहीं रखा गया है।";
+/* VoiceOver description of the input test status. %@ is the list of the names of the buttons that are held. */
 "ui.capture.buttonsHeld" = "दबाकर रखे गए बटन: %@";
+/* Error under the name field of the profile creation sheet when the name is empty. */
 "ui.capture.profileNameValidation" = "प्रोफ़ाइल नाम दर्ज करें।";
 "ui.profiles.new" = "नई प्रोफ़ाइल";
 "ui.profiles.deleteTitle" = "प्रोफ़ाइल डिलीट करें?";
@@ -310,15 +341,25 @@
 "ui.debug.outputNeedsAttention" = "कंट्रोलर आउटपुट पर ध्यान देने की ज़रूरत है।";
 /* Line of the debug report when the service does not answer, so the report has no diagnostics. */
 "ui.debug.serviceUnavailable" = "सेवा डायग्नोस्टिक्स इस समय उपलब्ध नहीं हैं।";
+/* Error shown in the profile editor when the profile changed elsewhere after the editor loaded it. Reload means to discard the edits and load the profile again. */
 "ui.error.profileChanged" = "यह प्रोफ़ाइल कहीं और बदल गई। फिर से लोड करें या संपादन जारी रखें।";
+/* Error under the name field of the profile creation sheet when another profile has the name. */
 "ui.error.duplicateProfile" = "उस नाम की प्रोफ़ाइल पहले से मौजूद है।";
+/* Error shown when the service has no profile with the requested identifier. */
 "ui.error.profileMissing" = "वह प्रोफ़ाइल अब उपलब्ध नहीं है।";
+/* Error shown when the service rejects the assignments of a profile. */
 "ui.error.reviewAssignments" = "प्रोफ़ाइल असाइनमेंट की समीक्षा करें और फिर कोशिश करें।";
+/* Error shown when the service cannot save the profile library. */
 "ui.error.profileLibrarySave" = "प्रोफ़ाइलें सहेजी नहीं जा सकीं।";
+/* Error shown when the remapping engine of the service is not available yet. */
 "ui.error.remappingUnavailable" = "कंट्रोलर रीमैपिंग अस्थायी रूप से उपलब्ध नहीं है।";
+/* Error shown for a failure that has no message of its own. OpenJoystickDriver is the product name. */
 "ui.error.generic" = "OpenJoystickDriver वह कार्रवाई पूरी नहीं कर सका।";
+/* Error shown when the service cannot be reached. OpenJoystickDriver is the product name. */
 "ui.error.notAvailable" = "OpenJoystickDriver इस समय उपलब्ध नहीं है।";
+/* Error shown when the service does not answer in time. OpenJoystickDriver is the product name. */
 "ui.error.timeout" = "OpenJoystickDriver को जवाब देने में बहुत समय लग रहा है।";
+/* Error shown when the service answers with a reply that the app does not understand. OpenJoystickDriver is the product name. */
 "ui.error.unexpected" = "OpenJoystickDriver ने अप्रत्याशित परिणाम लौटाया।";
 "ui.mapping.allApps" = "सभी ऐप्स";
 "ui.mapping.specificApp" = "कोई खास ऐप";
@@ -360,10 +401,15 @@
 "ui.profiles.touch.pointerSensitivity" = "प्रति सतह पॉइंटर पॉइंट";
 "ui.profiles.touch.stickRadius" = "पूर्ण स्टिक त्रिज्या (सतह का अंश)";
 "ui.profiles.touch.deadzone" = "स्टिक डेडज़ोन";
+/* Label of the stepper that sets the number of columns of a touch grid in the capture assignment sheet. %d is the number of columns. */
 "ui.capture.touchColumns" = "ग्रिड कॉलम: %d";
+/* Label of the stepper that sets the number of rows of a touch grid in the capture assignment sheet. %d is the number of rows. */
 "ui.capture.touchRows" = "ग्रिड पंक्तियाँ: %d";
+/* Label of the stepper that picks the column of the touch cell in the capture assignment sheet. %d is the column number, counted from 1. */
 "ui.capture.touchColumn" = "सेल कॉलम: %d";
+/* Label of the stepper that picks the row of the touch cell in the capture assignment sheet. %d is the row number, counted from 1. */
 "ui.capture.touchRow" = "सेल पंक्ति: %d";
+/* Label of the slider that sets the shortest swipe that counts, as a share of the touch surface. %.0f is a percentage; %% is the percent sign. */
 "ui.capture.touchSwipeDistance" = "न्यूनतम स्वाइप दूरी: %.0f%%";
 "ui.mapping.mute" = "म्यूट";
 "ui.mapping.leftTriggerClick" = "बाएँ ट्रिगर क्लिक";
@@ -430,13 +476,21 @@
 "action.remove" = "हटाएँ";
 /* Button of the input test window that stops the rumble test and button of the developer view that stops the packet capture. */
 "action.stop" = "रोकें";
+/* Error shown when the debug report cannot be written to the chosen file. */
 "ui.error.supportReportSave" = "सपोर्ट रिपोर्ट सहेजी नहीं जा सकी। कोई अन्य फ़ाइल चुनें और फिर कोशिश करें।";
+/* Error shown when the debug logs cannot be written to the chosen file. The system reason follows on the next line. */
 "ui.error.logsSave" = "लॉग सहेजे नहीं जा सके। कोई अन्य फ़ाइल चुनें और फिर कोशिश करें।";
+/* Error shown in the capture assignment sheet when the listening ends without any control. */
 "ui.error.noDetectedControl" = "कोई नया कंट्रोलर नियंत्रण नहीं पहचाना गया।";
+/* Error shown when the user starts a profile action while another one still runs. */
 "ui.error.actionInProgress" = "कोई अन्य प्रोफ़ाइल कार्रवाई पहले से चल रही है।";
+/* Error shown when the list of active profiles is damaged and the service cannot load it. */
 "ui.error.profileLibraryCorrupt" = "सक्रिय प्रोफ़ाइल सूची क्षतिग्रस्त है और लोड नहीं की जा सकी।";
+/* Title of the button in the capture assignment sheet while the app waits for a control. Keep the three dots. */
 "ui.capture.listeningButton" = "सुना जा रहा है…";
+/* Error shown when the user saves a profile whose assignments have problems. */
 "ui.error.reviewAssignmentsBeforeSave" = "इस प्रोफ़ाइल को सहेजने से पहले असाइनमेंट की समीक्षा करें।";
+/* Error shown when the profile item that the user selected is gone, for example after a reload. */
 "ui.error.selectedProfileItemMissing" = "चयनित प्रोफ़ाइल आइटम अब उपलब्ध नहीं है।";
 /* Message about a request to the system extension manager that ends cancelled. The request installs or removes the driver extension. */
 "cli.transportExtension.group.cancelled" = "सिस्टम एक्सटेंशन अनुरोध रद्द किया गया।";
@@ -498,53 +552,101 @@
 "term.protocolVariant.wired" = "वायर्ड";
 /* Label of a fact under Advanced in the Controllers detail: the parser that reads the controller, shown as its ojd spelling such as xbox-xusb:receiver. */
 "term.parser" = "पार्सर";
+/* Label in the controller summary of the developer tools. The value is a list of the pressed buttons. */
 "ui.developer.buttons" = "बटन";
+/* Status next to the Start Capture button while the packet capture runs. */
 "ui.developer.capturing" = "कैप्चर हो रहा है";
+/* Label of the connection kind in the controller summary of the developer tools, for example USB or Bluetooth. */
 "ui.developer.connection" = "कनेक्शन";
+/* Label of the controller name in the controller summary of the developer tools. */
 "ui.developer.controller" = "कंट्रोलर";
+/* Heading of the controller summary section in the developer tools. */
 "ui.developer.controllerDetails" = "कंट्रोलर";
+/* Message in the packet capture list of the developer tools before a capture. Start Capture is the title of the button and is written as in this catalog. */
 "ui.developer.emptyCapture" = "“कैप्चर शुरू करें” दबाएँ, फिर कंट्रोलर के बटन दबाएँ।";
+/* Title of the save panel that exports the packet capture. */
 "ui.developer.exportCapture" = "पैकेट कैप्चर एक्सपोर्ट करें";
+/* Heading of the section in the developer tools that lists buttons beyond the standard ones. */
 "ui.developer.extraInputs" = "अतिरिक्त बटन";
+/* Description of the extra buttons section in the developer tools. The user presses one button at a time and the detected buttons stay in the list until the user clears the capture. */
 "ui.developer.extraInputsDescription" = "एक बार में एक अतिरिक्त बटन दबाएँ। पता चले बटन तब तक सूची में रहते हैं, जब तक आप कैप्चर साफ़ नहीं करते।";
+/* Value of the route in the controller summary of the developer tools when the app reads the controller as an HID device. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.developer.hid" = "HID";
+/* Note under the packet list in the developer tools. Keep-alive packets are the routine idle messages of a controller. */
 "ui.developer.keepAliveNote" = "सामान्य निष्क्रिय पैकेट छिपाए गए हैं ताकि कंट्रोलर की गतिविधि दिखाई देती रहे।";
+/* Label of the left stick value in the controller summary of the developer tools. */
 "ui.developer.leftStick" = "बाएँ स्टिक";
+/* Message in the developer tools while the controllers load. Keep the three dots. */
 "ui.developer.loadingControllers" = "कंट्रोलर डायग्नोस्टिक लोड हो रहे हैं…";
+/* Message in the developer tools before the controller diagnostics load. */
 "ui.developer.notLoaded" = "कंट्रोलर डायग्नोस्टिक लोड नहीं हैं।";
+/* Title of the empty state in the developer tools when no controller is connected. */
 "ui.developer.noControllers" = "कोई कंट्रोलर कनेक्ट नहीं है";
+/* Detail of the empty state in the developer tools. Refresh is the title of a button and is written as in this catalog. */
 "ui.developer.noControllersDetail" = "कोई कंट्रोलर कनेक्ट करें, फिर “रीफ़्रेश करें” दबाएँ।";
+/* Message in the extra buttons section of the developer tools when the capture detected none. */
 "ui.developer.noExtraInputs" = "कोई अतिरिक्त बटन नहीं मिला।";
+/* Title of the empty state in the packet list of the developer tools. */
 "ui.developer.noPackets" = "कोई पैकेट कैप्चर नहीं हुआ";
+/* Heading of the raw packet capture section in the developer tools. */
 "ui.developer.packetCapture" = "रॉ पैकेट कैप्चर";
+/* Option of the packet filter in the developer tools that shows only packets that carry controller activity. */
 "ui.developer.packetFilterActivity" = "गतिविधि";
+/* Option of the packet filter in the developer tools that shows all packets. */
 "ui.developer.packetFilterAll" = "सभी";
+/* Column title of the packet list in the developer tools. The column shows when the packet arrived. */
 "ui.developer.packetColumnTime" = "समय";
+/* Column title of the packet list in the developer tools. The column shows whether the packet came from or went to the controller. */
 "ui.developer.packetColumnDirection" = "दिशा";
+/* Column title of the packet list in the developer tools. The column shows the length of the packet in bytes. */
 "ui.developer.packetColumnBytes" = "बाइट";
+/* Column title of the packet list in the developer tools. The column shows the bytes of the packet. */
 "ui.developer.packetColumnData" = "डेटा";
+/* Warning under the packet capture export. A capture can hold data that identifies the controller or the user. */
 "ui.developer.packetSharingWarning" = "पैकेट सामग्री कंट्रोलर के अनुसार भिन्न होती है। साझा करने से पहले फ़ाइल की जाँच करें।";
+/* Value of the route in the controller summary of the developer tools when the app reads the controller over raw USB. */
 "ui.developer.rawUSB" = "रॉ USB";
+/* Status of the packet capture in the developer tools when it can start. */
 "ui.developer.ready" = "तैयार";
+/* Label of the right stick value in the controller summary of the developer tools. */
 "ui.developer.rightStick" = "दाएँ स्टिक";
+/* Label of the route in the controller summary of the developer tools. The route is how the app found and reads the controller. */
 "ui.developer.route" = "रूट";
+/* Title of the button that starts the packet capture. */
 "ui.developer.startCapture" = "कैप्चर शुरू करें";
+/* Status of the packet capture in the developer tools while it starts. Keep the three dots. */
 "ui.developer.starting" = "शुरू हो रहा है…";
+/* Title of the message in the developer tools when they cannot load. */
 "ui.developer.unavailable" = "डेवलपर टूल उपलब्ध नहीं हैं";
+/* Label of the USB endpoints in the controller summary of the developer tools. */
 "ui.developer.usbEndpoints" = "USB एंडपॉइंट";
+/* Label of the USB vendor and product ID in the controller summary of the developer tools. */
 "ui.developer.usbID" = "USB ID";
+/* Message in the packet list of the developer tools while a capture waits for packets. */
 "ui.developer.waitingForPackets" = "USB पैकेट की प्रतीक्षा है। कंट्रोलर का कोई बटन दबाएँ।";
+/* Heading of the soak test section in the developer tools. A soak test measures the service over a long time. */
 "ui.developer.soakTest" = "दीर्घकालिक परीक्षण";
+/* Description of the soak test section in the developer tools. The test samples memory, file descriptors and CPU of the service. */
 "ui.developer.soakTestDescription" = "चुने गए समय में सेवा की मेमोरी, फ़ाइल डिस्क्रिप्टर और CPU का नमूना लेता है, फिर परिणाम दिखाता है।";
+/* Title of the button in the developer tools that opens the soak test sheet. Keep the three dots. */
 "ui.developer.soakTestOpen" = "दीर्घकालिक परीक्षण चलाएँ…";
+/* Label of the duration field of the soak test sheet. The value is in seconds. */
 "ui.developer.soakDuration" = "अवधि (सेकंड)";
+/* Label of the sample interval field of the soak test sheet. The value is in milliseconds. */
 "ui.developer.soakInterval" = "नमूना अंतराल (ms)";
+/* Label of the field of the soak test sheet that limits the resident memory of the service. The value is in MiB, mebibytes. */
 "ui.developer.soakResidentLimit" = "रेज़िडेंट आकार सीमा (MiB)";
+/* Label of the field of the soak test sheet that limits the memory footprint of the service. The value is in MiB, mebibytes. */
 "ui.developer.soakFootprintLimit" = "फ़ुटप्रिंट सीमा (MiB)";
+/* Hint under the limit fields of the soak test sheet. A limit of 0 means no limit. */
 "ui.developer.soakLimitHint" = "सीमा 0 होने पर वह बंद रहती है।";
+/* Title of the button of the soak test sheet that starts the test. */
 "ui.developer.soakStart" = "परीक्षण चलाएँ";
+/* Status in the soak test sheet while the test samples the service. Keep the three dots. */
 "ui.developer.soakRunning" = "सेवा का नमूना लिया जा रहा है…";
+/* Error in the soak test sheet when a field does not hold a whole number. %@ is the label of the field. */
 "ui.developer.soakNotANumber" = "%@: पूर्ण संख्या दर्ज करें।";
+/* Error in the soak test sheet when a value is outside its range. %1$@ is the label of the field, %2$lld is the lowest value and %3$lld is the highest value. */
 "ui.developer.soakOutOfRange" = "%1$@: %2$lld और %3$lld के बीच का मान दर्ज करें।";
 "ui.inputTest.aButton" = "A बटन";
 "ui.inputTest.aCross" = "A / क्रॉस";
@@ -932,6 +1034,7 @@
 "ui.profiles.unpairJoyCons" = "जोड़ी हटाएँ";
 "ui.profiles.joyConPairSessionHint" = "जोड़ने पर इस ऐप सत्र के लिए ठीक यही कंट्रोलर इस्तेमाल होते हैं।";
 "ui.profiles.pair" = "जोड़ें";
+/* Error shown when two Joy-Cons cannot be combined into one controller. Joy-Con is a Nintendo product name. */
 "ui.error.joyConPairUnavailable" = "चयनित Joy-Con को जोड़ा नहीं जा सका। कनेक्ट किए गए कंट्रोलर रीफ़्रेश करें और फिर कोशिश करें।";
 "ui.profiles.joyConSessionState" = "स्पष्ट जोड़ी";
 
@@ -981,6 +1084,7 @@
 
 /* Controller session lifecycle */
 "ui.controllers.suspended" = "निलंबित";
+/* Error shown when the service refuses to change the session of a controller. */
 "ui.error.controllerSessionChangeRejected" = "कंट्रोलर सत्र बदला नहीं जा सका।";
 
 "ui.controllers.disconnectWirelessConfirmTitle" = "वायरलेस कंट्रोलर डिस्कनेक्ट करें?";
@@ -2397,80 +2501,149 @@
 "a11y.library.recordHexadecimal" = "%1$@, हेक्साडेसिमल %2$@";
 /* Shown in the Record section of a record in the Library when the record text cannot be read for display. %@ is the controller identity, such as 045E:028E. */
 "ui.library.recordUnreadable" = "%@ का रिकॉर्ड टेक्स्ट पढ़ा नहीं जा सकता, इसलिए दिखाया नहीं जा सकता।";
+/* Title of the details button of an error message in the Access area. */
 "ui.access.details" = "ब्योरा";
+/* Button of an error message in the Access area that hides the message. */
 "ui.access.dismiss" = "ख़ारिज करें";
+/* Button of an error message in the Access area that reads the access settings again. */
 "ui.access.tryAgain" = "फिर कोशिश करें";
+/* Message in the Access area while it reads the access settings. Keep the three dots. */
 "ui.access.loading" = "ऐक्सेस सेटिंग्स पढ़ी जा रही हैं…";
+/* Button that closes the sheet that shows the secret of a token. */
 "ui.access.done" = "पूर्ण";
+/* Button of the open panel in which the user picks a program or app to grant access. It confirms the choice. */
 "ui.access.choose" = "चुनें";
+/* Label of the row in the Access area for the local endpoint. The local endpoint is the socket where programs on this Mac connect. */
 "ui.access.endpoint" = "स्थानीय एंडपॉइंट";
+/* Help text of the endpoint switch. %@ is the path of the socket. */
 "ui.access.socket" = "सॉकेट: %@";
+/* Context menu item that copies the path of the socket. */
 "ui.access.socket.copy" = "सॉकेट पथ कॉपी करें";
+/* Confirm button of the alert that turns on the local endpoint. */
 "ui.access.enable" = "चालू करें";
+/* Title of the alert that turns on the local endpoint. */
 "ui.access.enable.title" = "स्थानीय एंडपॉइंट चालू करें?";
+/* Message of the alert that turns on the local endpoint. The control scope allows a program to change controller state. */
 "ui.access.enable.message" = "जिन प्रोग्राम को आप ऐक्सेस देते हैं वे फिर कंट्रोलर की स्थिति पढ़ सकते हैं और कंट्रोल स्कोप होने पर उसे बदल भी सकते हैं।";
+/* Label of the row in the Access area for the WebSocket endpoint, where web pages connect. */
 "ui.access.web" = "WebSocket";
+/* Value of the WebSocket row when it is on. %1$@ is the address of the endpoint and %2$@ is the address where pages are served. */
 "ui.access.web.on" = "%1$@ पर चालू, पेज %2$@ पर";
+/* Value of the WebSocket row when it is off. */
 "ui.access.web.off" = "बंद";
+/* Value of the WebSocket row when it is on but cannot listen. %@ is the port number. */
 "ui.access.web.closed" = "चालू है, पर पोर्ट %@ पर सुन नहीं रहा";
+/* Help text of the WebSocket row. %@ is the path of the folder from which the endpoint serves pages. */
 "ui.access.web.pages" = "पेज फ़ोल्डर: %@";
+/* Label of the port field of the WebSocket endpoint. */
 "ui.access.web.port" = "पोर्ट";
+/* Value of the port field when the system picks the port. */
 "ui.access.web.port.automatic" = "स्वचालित";
+/* Button that makes the system pick the port of the WebSocket endpoint. */
 "ui.access.web.port.choose" = "स्वचालित रूप से चुनें";
+/* Error under the port field. %1$lld is the lowest port and %2$lld is the highest port. */
 "ui.access.web.portRange" = "पोर्ट %1$lld और %2$lld के बीच होना चाहिए।";
+/* Title of the alert that turns on the WebSocket. */
 "ui.access.web.enable.title" = "WebSocket चालू करें?";
 /* Message of the confirmation alert that turns on the WebSocket in the Access area. */
 "platform.macos.ui.access.web.enable.message" = "किसी टोकन के ऑरिजिन के वेब पेज फिर इस Mac के एंडपॉइंट से कनेक्ट हो सकते हैं।";
+/* Line of the alert that turns on the WebSocket. %lld is the port number. */
 "ui.access.web.enable.port" = "पोर्ट: %lld";
+/* Line of the alert that turns on the WebSocket when the port is automatic. */
 "ui.access.web.enable.automatic" = "सिस्टम एक खाली पोर्ट चुनता है।";
+/* Heading of the list of programs that have access in the Access area. */
 "ui.access.grants" = "ऐक्सेस वाले प्रोग्राम";
+/* Toolbar button in the Access area that starts the grant of access to a program. Keep the three dots. */
 "ui.access.grantProgram" = "प्रोग्राम को ऐक्सेस दें…";
+/* Button on a refused program that grants it access. */
 "ui.access.grant" = "ऐक्सेस दें";
+/* Message of the open panel in which the user picks a program or app to grant access. */
 "ui.access.grant.pick" = "ऐक्सेस देने के लिए प्रोग्राम या ऐप चुनें।";
+/* Error shown when the chosen program has no signature. %@ is the path of the program. */
 "ui.access.grant.unsigned" = "%@ साइन नहीं है, इसलिए उसे ऐक्सेस नहीं दिया जा सकता।";
+/* Error shown when the chosen program has an ad-hoc signature. %@ is the identifier of the program. Any local process can claim such an identity. */
 "ui.access.grant.adHoc" = "%@ प्रमाणपत्र से साइन नहीं है, इसलिए कोई भी स्थानीय प्रोसेस उसकी पहचान का दावा कर सकती है। उसे ऐक्सेस नहीं दिया जा सकता।";
+/* Title of the alert that grants access to a program. %@ is the identifier of the program. */
 "ui.access.grant.title" = "%@ को ऐक्सेस दें?";
+/* Question of the alert that grants access. %1$@ is the identifier of the program, %2$@ is the description of its signer and %3$@ is the list of scopes. */
 "ui.access.grant.question" = "%1$@ (%2$@) को ये स्कोप दें: %3$@?";
+/* Warning in the alert that grants access when the control scope is part of the grant. Rumble is vibration of the controller. */
 "ui.access.grant.controlWarning" = "कंट्रोल स्कोप प्रोग्राम को आपके कंट्रोलर पर आउटपुट भेजने देता है, जैसे रंबल और लाइटें।";
 /* Warning line of the confirmation alert that grants access to a program that Apple signed. */
 "platform.macos.ui.access.grant.platformWarning" = "यह प्रोग्राम Apple द्वारा साइन किया गया है। Apple जिस भी प्रोग्राम को इसी आइडेंटिफ़ायर से साइन करता है उसे यह ऐक्सेस मिलेगा।";
+/* Button on a program or token that removes its access. */
 "ui.access.revoke" = "वापस लें";
+/* Title of the alert that removes all access of a program. %@ is the name of the program. */
 "ui.access.revoke.title" = "%@ का ऐक्सेस वापस लें?";
+/* Message of the alert that removes all access of a program. */
 "ui.access.revoke.message" = "प्रोग्राम अपने सभी स्कोप खो देता है और उसके खुले कनेक्शन बंद हो जाते हैं।";
+/* Menu item that removes all scopes of a program or token. */
 "ui.access.revoke.all" = "सभी स्कोप";
+/* Message of the alert that removes one scope. %@ is the name of the scope, for example Read or Control. */
 "ui.access.revokeScope.message" = "केवल %@ स्कोप हटाया जाता है। अन्य स्कोप बने रहते हैं और इसका उपयोग करने वाले खुले कनेक्शन बंद हो जाते हैं।";
+/* Title of the alert that removes a token. %@ is the name of the token. */
 "ui.access.revokeToken.title" = "टोकन %@ वापस लें?";
+/* Message of the alert that removes a token. */
 "ui.access.revokeToken.message" = "टोकन का उपयोग करने वाले पेज और प्रोग्राम ऐक्सेस खो देते हैं और उनके खुले कनेक्शन बंद हो जाते हैं।";
+/* Heading of the list of tokens in the Access area. A token is a secret that a program or web page uses to connect. */
 "ui.access.tokens" = "टोकन";
+/* Toolbar button in the Access area that starts the creation of a token. Keep the three dots. */
 "ui.access.grantToken" = "टोकन बनाएँ…";
+/* Heading of the token creation sheet. */
 "ui.access.token.form.title" = "टोकन बनाएँ";
+/* Placeholder of the name field of the token creation sheet. */
 "ui.access.token.name" = "नाम";
+/* Help text under the origins field of the token creation sheet. https://example.com is an example and stays as written. */
 "ui.access.token.origins" = "वे वेब ऑरिजिन जो टोकन उपयोग कर सकते हैं, हर पंक्ति में एक, जैसे https://example.com। केवल स्थानीय प्रोग्राम द्वारा उपयोग किए जाने वाले टोकन के लिए खाली छोड़ें।";
+/* Button of the token creation sheet that goes on to the confirmation. */
 "ui.access.token.continue" = "जारी रखें";
+/* Error of the token creation sheet when the name or the scopes are missing. */
 "ui.access.token.incomplete" = "टोकन के लिए नाम और कम से कम एक स्कोप ज़रूरी है।";
+/* Error of the token creation sheet when the user picks the control scope together with web origins. */
 "ui.access.token.originControl" = "वेब पेजों के टोकन में कंट्रोल स्कोप नहीं हो सकता।";
+/* Title of the alert that creates a token. %@ is the name of the token. */
 "ui.access.token.title" = "टोकन %@ बनाएँ?";
+/* Question of the alert that creates a token without origins. %1$@ is the name of the token and %2$@ is the list of scopes. */
 "ui.access.token.question" = "टोकन %1$@ को इन स्कोप के साथ बनाएँ: %2$@?";
+/* Question of the alert that creates a token with origins. %1$@ is the name of the token, %2$@ is the list of scopes and %3$@ is the list of web origins. */
 "ui.access.token.webQuestion" = "टोकन %1$@ को इन स्कोप के साथ बनाएँ: %2$@? %3$@ के पेज इसका उपयोग कर सकते हैं।";
+/* Title of the sheet that shows the secret of a token. %@ is the name of the token. */
 "ui.access.token.issued.title" = "टोकन %@";
+/* Message of the sheet that shows the secret of a token once. OpenJoystickDriver is the product name. */
 "ui.access.token.issued.message" = "टोकन अभी कॉपी करें। OpenJoystickDriver इसे सहेजता नहीं है और दोबारा नहीं दिखा सकता।";
+/* Button of the sheet that copies the secret of a token. */
 "ui.access.token.copy" = "टोकन कॉपी करें";
+/* Title of a token in the list of tokens. %@ is the name of the token. */
 "ui.access.token.named" = "टोकन %@";
+/* Title of a token in the list of tokens when its name is not known. */
 "ui.access.token.unknown" = "अनजान टोकन";
+/* Heading of the list of programs and tokens that the endpoint refused in the last 24 hours. */
 "ui.access.refused" = "हाल में अस्वीकार किए गए";
+/* Footer of the list of refused programs and tokens. */
 "ui.access.refused.message" = "पिछले 24 घंटों में एंडपॉइंट ने ठुकराए प्रोग्राम और टोकन।";
+/* Heading of the list of connections that are open at the moment in the Access area. */
 "ui.access.connections" = "अभी कनेक्ट हैं";
+/* Name of the read scope. It lets a program read controller state. */
 "ui.access.scope.read" = "पढ़ें";
+/* Name of the control scope. It lets a program change controller state and send output. */
 "ui.access.scope.control" = "कंट्रोल";
+/* Description of the signer of a program. %@ is the identifier of the publisher. */
 "ui.access.signer.signed" = "%@ द्वारा साइन किया गया";
 /* Label for the signer of a program that Apple signed, shown in the Access area. */
 "platform.macos.ui.access.signer.platform" = "Apple द्वारा साइन किया गया";
+/* Description of the signer of a program that has no certificate signature. */
 "ui.access.signer.adHoc" = "साइन नहीं है";
+/* Name of the connection kind for a local socket. */
 "ui.access.transport.socket" = "सॉकेट";
+/* Name of the connection kind for a WebSocket. */
 "ui.access.transport.web" = "WebSocket";
+/* Error of the Access area when the service is not running. OpenJoystickDriver is the product name. */
 "ui.access.error.serviceUnavailable" = "OpenJoystickDriver नहीं चल रहा है, इसलिए ऐक्सेस सेटिंग्स पढ़ी या बदली नहीं जा सकतीं।";
+/* Error of the Access area when the service does not answer in time. OpenJoystickDriver is the product name. */
 "ui.access.error.serviceTimeout" = "OpenJoystickDriver ने समय पर जवाब नहीं दिया।";
+/* Error of the Access area when the service refuses the request of the app. OpenJoystickDriver is the product name. */
 "ui.access.error.peerRejected" = "OpenJoystickDriver ने यह अनुरोध अस्वीकार कर दिया।";
+/* Error of the Access area when a request fails. %@ is the reason. */
 "ui.access.error.requestFailed" = "अनुरोध विफल रहा: %@";
 /* VoiceOver label of the button in the Access error banner that shows the details of the error. */
 "a11y.access.details" = "त्रुटि का ब्योरा दिखाएँ";
@@ -2641,9 +2814,13 @@
 "a11y.mainWindow.sidebar" = "क्षेत्र";
 /* VoiceOver label of the control in the capture assignment sheet that sets the minimum swipe distance of a touch gesture. */
 "a11y.capture.touchSwipeDistance" = "न्यूनतम स्वाइप दूरी";
+/* Detail line of a row in the Access area with two parts. %1$@ and %2$@ are the parts, for example the signer and the scopes. The dot between them separates the parts and may change. */
 "ui.access.detail.pair" = "%1$@ · %2$@";
+/* Detail line of a row in the Access area with three parts. %1$@, %2$@ and %3$@ are the parts, for example the signer, the scopes and the reason of a refusal. The dots between them separate the parts and may change. */
 "ui.access.detail.triple" = "%1$@ · %2$@ · %3$@";
+/* Error shown when the app cannot find the executable of a refused program. %@ is the identifier of the program. */
 "ui.access.grant.noPath" = "OpenJoystickDriver %@ की निष्पादन योग्य फ़ाइल नहीं पढ़ सका, इसलिए वह उसे ऐक्सेस नहीं दे सकता।";
+/* Line of the alert that turns on the WebSocket when a port is saved. */
 "ui.access.web.enable.savedPort" = "वेब एंडपॉइंट अपना सहेजा हुआ पोर्ट रखता है।";
 "ui.library.record.detail" = "%1$@ · %2$@";
 "ui.library.mod.detail" = "%1$@ · %2$@";
@@ -2656,7 +2833,9 @@
 "ui.settings.general.updateAvailableBody" = "संस्करण %@ उपलब्ध है।";
 /* Title of the message in the main window while a profile change is still running. */
 "ui.mainWindow.profileMutationRunning" = "प्रोफ़ाइल में बदलाव अभी जारी है। उसके पूरा होने पर फिर से कोशिश करें।";
+/* Value of the WebSocket row when it is on but the port is not set yet. */
 "ui.access.web.noPort" = "वेब एंडपॉइंट चालू है, पर अभी तक कोई पोर्ट नहीं चुना गया";
+/* Description of the signer of a program that has a signature without a known publisher. */
 "ui.access.signer.signedUnknownPublisher" = "अज्ञात प्रकाशक द्वारा साइन किया गया";
 "ui.settings.commandLine.toolLinkTargetUnreadable" = "%@ एक लिंक है जिसका लक्ष्य पढ़ा नहीं जा सकता। इंस्टॉल करने पर यह इसके बजाय इस ऐप से जुड़ जाएगा।";
 /* Text of error E1001, sent to a client that connects to the endpoint while the endpoint is off, and printed by 'ojd explain'. The command in quotes stays as written. */
@@ -2879,6 +3058,7 @@
 "error.E5006.message" = "यूनिट ID की कुंजी फ़ाइल PortKeyInstallation.key पढ़ी नहीं जा सकती, या वह 32 बाइट की नहीं है। फ़ाइल को बैकअप से वापस लाएँ। अगर आप इसे हटा देते हैं, तो OpenJoystickDriver एक नई कुंजी बनाता है और हर यूनिट ID बदल जाती है।";
 /* Error E5007, shown when a controller record or patch fails its schema; the message names the field. */
 "error.E5007.message" = "कंट्रोलर रिकॉर्ड या patch अमान्य है। फ़ाइल को उसके स्कीमा से जाँचें और संदेश में बताए गए फ़ील्ड को ठीक करें।";
+/* Error text with the error code. %1$@ is the message and %2$@ is the code, for example E2011. The code is in parentheses. */
 "ui.error.withCode" = "%1$@ (%2$@)";
 /* Message printed by 'ojd update check' when the installed version is newer than the latest release. %1$@ is the installed version and %2$@ is the latest release. */
 "cli.update.check.ahead" = "OpenJoystickDriver %1$@ प्रकाशित नवीनतम रिलीज़ (%2$@) से नया है।";
