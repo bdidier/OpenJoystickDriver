@@ -100,12 +100,34 @@ public enum ErrorCode: String, Codable, Sendable, CaseIterable {
   case invalidControllerRecord = "E5007"
 
   /// The part of the product that raises a code; the first digit of the number.
-  public enum Domain: String, Sendable {
+  public enum Domain: String, CaseIterable, Sendable {
     case endpoint = "Endpoint"
     case commandLine = "CLI"
     case remapping = "Remapping"
     case mod = "Mod"
     case document = "Document"
+
+    /// The start of every code of the domain: `E` and the domain's digit.
+    public var codePrefix: String {
+      switch self {
+      case .endpoint: "E1"
+      case .commandLine: "E2"
+      case .remapping: "E3"
+      case .mod: "E4"
+      case .document: "E5"
+      }
+    }
+
+    /// The `Localizable.strings` key of the name of the area.
+    public var areaKey: String {
+      switch self {
+      case .endpoint: "cli.explain.area.endpoint"
+      case .commandLine: "cli.explain.area.cli"
+      case .remapping: "cli.explain.area.remapping"
+      case .mod: "cli.explain.area.mod"
+      case .document: "cli.explain.area.document"
+      }
+    }
   }
 
   public var domain: Domain {

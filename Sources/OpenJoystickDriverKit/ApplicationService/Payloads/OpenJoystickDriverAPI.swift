@@ -5,6 +5,9 @@ import Foundation
 public enum OpenJoystickDriverAPI {
   public static let version = "openjoystickdriver/v1alpha1"
 
+  /// The start of the `$id` of every JSON Schema under `Resources/Schemas`; the file name follows.
+  public static let schemaBase = "https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/"
+
   /// Why a document with this `apiVersion` and `kind` is not a supported `expected`, or nil when
   /// it is.
   ///

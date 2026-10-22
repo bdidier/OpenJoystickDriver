@@ -17,9 +17,14 @@ def requirements_for(argv: list[str]) -> tuple[Capability, ...]:
             Capability.FULL_XCODE,
         )
     if route[:2] == ("errors", "regenerate") and len(route) >= 3:
-        return (Capability.SCHEMA_PYTHON, Capability.BIOME)
+        return (
+            Capability.SCHEMA_PYTHON,
+            Capability.BIOME,
+            Capability.SWIFT_TOOLCHAIN,
+            Capability.FULL_XCODE,
+        )
     if route[:2] == ("catalog", "xpad"):
-        return (Capability.BIOME,)
+        return (Capability.BIOME, Capability.SWIFT_TOOLCHAIN, Capability.FULL_XCODE)
     if route == ("check", "profiles"):
         return (
             Capability.SCHEMA_PYTHON,

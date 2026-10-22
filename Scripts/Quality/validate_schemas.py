@@ -8,7 +8,6 @@ import tempfile
 from pathlib import Path
 
 from ..Catalog.schema_header import (
-    API_VERSION,
     KINDS,
     SCHEMA_SUFFIX,
     schema_id,
@@ -86,12 +85,17 @@ def schema_registry(documents: dict[str, dict[str, object]]) -> Registry:
     return Registry().with_resources(resources)
 
 
+def api_version_group() -> str:
+    """The group of the `apiVersion`, the part before the slash."""
+    return repository_tool.api_version().partition("/")[0]
+
+
 def api_version_consts(value: object, where: str = "") -> list[tuple[str, object]]:
     """Every `const` in `value` that names an OJD `apiVersion`, with where it is."""
     found: list[tuple[str, object]] = []
     if isinstance(value, dict):
         const = value.get("const")
-        if isinstance(const, str) and const.startswith("openjoystickdriver"):
+        if isinstance(const, str) and const.startswith(f"{api_version_group()}/"):
             found.append((where, const))
         for key, child in value.items():
             found.extend(api_version_consts(child, f"{where}/{key}"))
@@ -103,6 +107,7 @@ def api_version_consts(value: object, where: str = "") -> list[tuple[str, object
 
 def validate_schema_identity(documents: dict[str, dict[str, object]]) -> None:
     """Check each `$id`, `apiVersion` const, and `kind` const against the one source."""
+    api_version = repository_tool.api_version()
     for name, document in documents.items():
         stem = name[: -len(SCHEMA_SUFFIX)]
         if document.get("$id") != schema_id(stem):
@@ -111,10 +116,10 @@ def validate_schema_identity(documents: dict[str, dict[str, object]]) -> None:
                 f"found {document.get('$id')}"
             )
         for where, const in api_version_consts(document):
-            if const != API_VERSION:
+            if const != api_version:
                 raise SchemaError(
                     f"Resources/Schemas/{name}{where}: apiVersion const must be "
-                    f"{API_VERSION}, found {const}"
+                    f"{api_version}, found {const}"
                 )
         kind = KINDS.get(stem)
         if kind is None:
@@ -129,9 +134,9 @@ def validate_schema_identity(documents: dict[str, dict[str, object]]) -> None:
             member: properties.get(member, {}).get("const")
             for member in ("apiVersion", "kind")
         }
-        if header != {"apiVersion": API_VERSION, "kind": kind}:
+        if header != {"apiVersion": api_version, "kind": kind}:
             raise SchemaError(
-                f"Resources/Schemas/{name}: must require apiVersion {API_VERSION} "
+                f"Resources/Schemas/{name}: must require apiVersion {api_version} "
                 f"and kind {kind}, found {header}"
             )
 

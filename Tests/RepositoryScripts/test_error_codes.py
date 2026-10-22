@@ -9,6 +9,7 @@ from typing import Any
 
 from Scripts.Catalog import generate_error_codes as errors
 from Scripts.Catalog.schema_header import header
+from Scripts.Quality.repository_tool import command_line_exit_statuses
 
 ROOT = Path(__file__).resolve().parents[2]
 COPIED = (
@@ -152,13 +153,8 @@ class ErrorCodeTests(unittest.TestCase):
                 errors.check_invariants(
                     [entry("E2001", "CLI", "a", exitCode=exit_code)]
                 )
-        for exit_code in sorted(errors.CLI_EXIT_CODES):
+        for exit_code in sorted(command_line_exit_statuses()):
             errors.check_invariants([entry("E2001", "CLI", "a", exitCode=exit_code)])
-
-    def test_every_cli_exit_code_is_documented_in_the_command_line_page(self) -> None:
-        page = (ROOT / "wiki/Command-Line.md").read_text(encoding="utf-8")
-        for exit_code in sorted(errors.CLI_EXIT_CODES):
-            self.assertRegex(page, rf"\| {exit_code} \|")
 
     def test_write_then_check_round_trips(self) -> None:
         root = self.copy_repository()

@@ -102,20 +102,20 @@ The table is generated from the code catalog and the English text of OJD. The ta
 | E3027 | Remapping | No remapping profile is active for the controller, so it does not process motion. Activate a profile for it, bring its target app to the front, and try again. Wire value `motion_profile_inactive`. |
 | E3028 | Remapping | The remapping session of the controller changed while the request ran. Try again. Wire value `motion_session_changed`. |
 | E3029 | Remapping | A profile that comes from an installed package cannot be changed. Duplicate the profile and change the copy. Wire value `package_profile_read_only`. |
-| E4001 | Mod | The package manifest mod.json is missing or invalid. Check it against the mod-package schema and run the command again. |
-| E4002 | Mod | The package requires a different version of OpenJoystickDriver than the one that runs. Install a package version that supports this version, or update OpenJoystickDriver. |
-| E4003 | Mod | A file of the package is invalid, missing, or not listed in mod.json. Fix the file that the command names and run it again. |
-| E4004 | Mod | The package covers a controller, persona, or profile that your own files or another installed package already hold. Remove the clashing file or package, or change the package, and run the command again. |
-| E4005 | Mod | A package with this name is already installed. Run the command with --force to replace it. |
-| E4006 | Mod | No installed package has this name. Run 'ojd mod list' to see the installed packages. |
-| E4007 | Mod | The package folder could not be changed. Check the free disk space and the folder permissions. |
-| E5001 | Document | A document has no apiVersion, or its apiVersion is not supported by this version of OpenJoystickDriver. Change the document to the supported apiVersion that the message names, and run the command again. Wire value `unsupported_api_version`. |
-| E5002 | Document | A protocol description is invalid. Check the file against the protocol-description schema and fix the field that the message names. |
-| E5003 | Document | A protocol description names a family that differs from its file name. Name the file after its family. |
-| E5004 | Document | A protocol description lists a variant that its family does not have. Use one of the variants of the family. |
-| E5005 | Document | The access file AccessGrants.json is damaged. Fix the file or delete it, then grant access again. |
-| E5006 | Document | The key file of the unit IDs, PortKeyInstallation.key, cannot be read or is not 32 bytes. Restore the file from a backup. If you delete it instead, OpenJoystickDriver creates a new key and every unit ID changes. |
-| E5007 | Document | A controller record or patch is invalid. Check the file against its schema and fix the field that the message names. |
+| E4001 | Mod packages | The package manifest mod.json is missing or invalid. Check it against the mod-package schema and run the command again. |
+| E4002 | Mod packages | The package requires a different version of OpenJoystickDriver than the one that runs. Install a package version that supports this version, or update OpenJoystickDriver. |
+| E4003 | Mod packages | A file of the package is invalid, missing, or not listed in mod.json. Fix the file that the command names and run it again. |
+| E4004 | Mod packages | The package covers a controller, persona, or profile that your own files or another installed package already hold. Remove the clashing file or package, or change the package, and run the command again. |
+| E4005 | Mod packages | A package with this name is already installed. Run the command with --force to replace it. |
+| E4006 | Mod packages | No installed package has this name. Run 'ojd mod list' to see the installed packages. |
+| E4007 | Mod packages | The package folder could not be changed. Check the free disk space and the folder permissions. |
+| E5001 | Documents | A document has no apiVersion, or its apiVersion is not supported by this version of OpenJoystickDriver. Change the document to the supported apiVersion that the message names, and run the command again. Wire value `unsupported_api_version`. |
+| E5002 | Documents | A protocol description is invalid. Check the file against the protocol-description schema and fix the field that the message names. |
+| E5003 | Documents | A protocol description names a family that differs from its file name. Name the file after its family. |
+| E5004 | Documents | A protocol description lists a variant that its family does not have. Use one of the variants of the family. |
+| E5005 | Documents | The access file AccessGrants.json is damaged. Fix the file or delete it, then grant access again. |
+| E5006 | Documents | The key file of the unit IDs, PortKeyInstallation.key, cannot be read or is not 32 bytes. Restore the file from a backup. If you delete it instead, OpenJoystickDriver creates a new key and every unit ID changes. |
+| E5007 | Documents | A controller record or patch is invalid. Check the file against its schema and fix the field that the message names. |
 <!-- END GENERATED: error-codes -->
 
 ## Further reading

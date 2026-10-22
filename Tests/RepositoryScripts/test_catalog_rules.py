@@ -8,6 +8,7 @@ import unittest
 from Scripts.Catalog import catalog_rules
 from Scripts.Catalog import generate_controller_catalog as catalog
 from Scripts.Catalog import generate_xpad_records as xpad
+from Scripts.Quality import repository_tool
 
 
 class CatalogRulesLoadingTests(unittest.TestCase):
@@ -22,7 +23,7 @@ class CatalogRulesLoadingTests(unittest.TestCase):
 
     def test_load_rules_rejects_wrong_header_and_keys(self) -> None:
         good = {
-            "apiVersion": catalog_rules.API_VERSION,
+            "apiVersion": repository_tool.api_version(),
             "kind": "Example",
             "values": [],
         }

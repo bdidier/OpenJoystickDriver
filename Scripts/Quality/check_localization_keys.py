@@ -13,10 +13,10 @@ The catalog itself follows these rules:
   (`OS_WORDS`) only under `platform.`;
 - specifiers: a value with more than one format specifier numbers every one (`%1$@`);
 - comments: every en-US key has a translator comment directly above it;
-- plurals: every `%#@name@` value has a `.stringsdict` entry in the same bundle, each entry has the
-  plural categories its language needs (`PLURAL_CATEGORIES_PATH`), and an en-US value with an integer
-  count specifier (`%d`, `%lld`, `%1$lld`) has a `.stringsdict` entry unless `NOT_A_COUNT` names
-  its key and says why the number is not a count.
+- plurals: an en-US value with an integer count specifier (`%d`, `%lld`, `%1$lld`) has a
+  `.stringsdict` entry unless `NOT_A_COUNT` names its key and says why the number is not a count.
+  `LocalizationTests` checks the rest of the plural rules: every `%#@name@` value has an entry in
+  its bundle, and each entry has the plural categories its language needs.
 
 `GATED_RULES` names each rule that does not fail yet and the task id that lifts it. The keys that
 violate a gated rule are listed per rule in `localization-gated-keys.json`
@@ -103,13 +103,9 @@ OS_WORDS = re.compile(
 SPECIFIER = re.compile(
     r"%(?P<position>\d+\$)?[-+ 0#]*\d*(?:\.\d+)?(?:hh|h|ll|l|q|L|z|t|j)?[@dDiuUxXoOfeEgGcCsSpaAF]"
 )
-PLURAL_REFERENCE = re.compile(r"%#@[A-Za-z0-9_]+@")
 COUNT_SPECIFIER = re.compile(r"%(?:\d+\$)?[-+ 0#]*\d*(?:hh|h|ll|l|q|z|t|j)?[dDiuU]")
 # En-US keys whose integer specifier is not a count, each with the reason.
 NOT_A_COUNT: dict[str, str] = {}
-# Plural categories each language needs: one statement, read by the Swift LocalizationTests too. A
-# bundle may carry more categories than its language needs.
-PLURAL_CATEGORIES_PATH = Path("Resources/Localization/PluralCategories.json")
 STRINGS_ENTRY = re.compile(
     r"(?:/\*(?P<comment>(?:(?!\*/).)*)\*/[ \t]*\n?)?"
     r'"(?P<key>(?:[^"\\]|\\.)*)"\s*=\s*"(?P<value>(?:[^"\\]|\\.)*)"\s*;',
@@ -428,41 +424,6 @@ def comment_problem(entry: StringsEntry) -> str | None:
     return None if entry.comment else f"{entry.key!r}: no translator comment"
 
 
-def plural_categories(root: Path = ROOT) -> dict[str, frozenset[str]]:
-    """Return the plural categories each language needs, from `PLURAL_CATEGORIES_PATH`."""
-    data = json.loads((root / PLURAL_CATEGORIES_PATH).read_text(encoding="utf-8"))
-    return {name: frozenset(categories) for name, categories in data.items()}
-
-
-def plural_problems(directory: Path) -> list[str]:
-    """Return the plural coverage problems of one bundle."""
-    strings = strings_entries(
-        (directory / "Localizable.strings").read_text(encoding="utf-8")
-    )
-    path = directory / "Localizable.stringsdict"
-    plurals = plistlib.loads(path.read_bytes()) if path.exists() else {}
-    needed = plural_categories()[language(directory)]
-    problems = [
-        f"{directory.name}: {entry.key!r} takes a count but has no stringsdict entry"
-        for entry in strings
-        if PLURAL_REFERENCE.search(entry.value) and entry.key not in plurals
-    ]
-    for key, entry in plurals.items():
-        variables = [item for item in entry.values() if isinstance(item, dict)]
-        if not variables:
-            problems.append(
-                f"{directory.name}: stringsdict {key!r} has no plural variable"
-            )
-            continue
-        for variable in variables:
-            absent = sorted(needed - variable.keys())
-            if absent:
-                problems.append(
-                    f"{directory.name}: stringsdict {key!r} lacks the plural forms {absent}"
-                )
-    return problems
-
-
 def stringsdict_uncommented_keys(root: Path = ROOT) -> set[str]:
     """Return the en-US stringsdict keys without a translator comment above them."""
     text = (root / CATALOG_DIRECTORY / "Localizable.stringsdict").read_text(
@@ -745,13 +706,8 @@ def main(arguments: list[str] | None = None) -> int:
     unread, covered = unread_keys()
     unexplained = [key for key in unread if key not in KEPT_WITHOUT_READER]
     stale = stale_kept(unread, catalog_keys())
-    plurals = [
-        problem
-        for directory in locale_directories()
-        for problem in plural_problems(directory)
-    ]
     failing, held, stale_gated = rule_report(rule_problems(), gated_keys())
-    for problem in plurals + failing:
+    for problem in failing:
         print(problem)
     for note in held + stale_gated:
         print(note)
@@ -767,7 +723,7 @@ def main(arguments: list[str] | None = None) -> int:
         print(f"kept without reader: {key}: {reason}")
     for text, count in sorted(covered.items()):
         print(f"read by pattern: {text} ({count} keys)")
-    enforced = plurals + failing + stale_gated
+    enforced = failing + stale_gated
     if missing or unexplained or stale or enforced:
         print(
             f"error: {len(missing)} key(s) missing from en-US, {len(unexplained)} "
