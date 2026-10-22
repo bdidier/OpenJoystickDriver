@@ -12,4 +12,4 @@
 - A controller record or protocol description that Swift rejects gets a case (`name`, `code`, `document`, `fileName` for descriptions) in `Tests/OpenJoystickDriverKitTests/Protocol/Catalog/SchemaRejections/`; add `"schema": true` only when the JSON Schema alone rejects it.
 - No SVGs, no secrets. Confirm destructive writes and publication first.
 - Swift is canonical. Python tooling calls Swift or reads what Swift generates; it does not re-implement Swift logic. Fix code/spec gaps and any Python copy of Swift logic now; add larger fixes as tasks in the active change.
-- Checks: write all code for a task, build once, test the changed area, run `just check` once; rerun only failures. No polling loops. `just check-fast` lints Swift but skips the Swift build and tests. `./Scripts/ojd repair swiftpm-module-cache` only for module-cache mismatches.
+- Checks: write all code for a task, build once, test the changed area, run `just check` once; rerun only failures. No polling loops. `just check-fast` lints Swift but skips the Swift build and tests.

@@ -18,7 +18,6 @@ public enum PassiveUSBVerificationState: String, Equatable, Sendable, Codable {
 }
 
 public enum PassiveUSBDescriptorProbeError: Error, Equatable, Sendable, LocalizedError {
-  case contributorGateRequired
   case tupleNotAuthorized
   case matchingFailed(Int32)
   case zeroMatches
@@ -26,7 +25,6 @@ public enum PassiveUSBDescriptorProbeError: Error, Equatable, Sendable, Localize
 
   public var errorDescription: String? {
     switch self {
-    case .contributorGateRequired: return "contributor gate required"
     case .tupleNotAuthorized: return "VID/PID tuple is not in the passive descriptor allowlist"
     case .matchingFailed(let code): return "IOKit matching failed with return code \(code)"
     case .zeroMatches: return "passive exact-tuple scan found zero devices"

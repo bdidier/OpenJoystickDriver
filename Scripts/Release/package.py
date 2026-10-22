@@ -123,13 +123,16 @@ def main(argv: list[str]) -> int:
             ]
         )
         print("\n=== Notarize and staple ===")
-        notary_env = env | {
-            "OJD_NOTARIZE_APP": str(app_path),
-            "OJD_NOTARIZE_ZIP": str(notary_zip),
-        }
         run(
-            ["/usr/bin/env", "bash", str(SCRIPT_DIR / "notarize.sh"), "submit"],
-            env=notary_env,
+            [
+                "/usr/bin/env",
+                "bash",
+                str(SCRIPT_DIR / "notarize.sh"),
+                "submit",
+                str(app_path),
+                str(notary_zip),
+            ],
+            env=env,
         )
         print("\n=== Verify notarized app ===")
         run(

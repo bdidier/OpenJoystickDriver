@@ -127,7 +127,7 @@ struct SupportReportBindingTests {
   }
 
   @Test
-  func boundAndUnboundDeviceReportMatchesTheSchemaCheckedFixture() async throws {
+  func boundAndUnboundDeviceReportMatchesItsEquivalenceSnapshot() async throws {
     // A signature-bound raw-USB GIP device whose HID interface, observed at the same location,
     // stays unbound with a non-empty rejected-candidate list (see HIDRawUSBDuplicateTests).
     let device = USBTransportDevice(
@@ -202,7 +202,7 @@ struct SupportReportBindingTests {
       unbound: unbound.map(ApplicationServiceUnboundDevice.init(snapshot:)),
       frameTimings: [Self.timings]
     ).encodedJSON()
-    try assertMatchesFixture(encoded)
+    #expect(try EquivalenceSnapshotStore.verify(rendered(encoded), named: Self.snapshotName) == nil)
   }
 
   @Test
@@ -217,31 +217,21 @@ struct SupportReportBindingTests {
     #expect(frame.stages.map(\.nanoseconds) == [100, 150, 200, 260, 900])
   }
 
-  /// Compares `encoded` against the checked-in fixture, ignoring the CloudEvents `id`, which is
-  /// randomly generated on every encode. Set `OJD_REGENERATE_REPORT_FIXTURE=1` to rewrite it
-  /// after intentionally changing the report shape.
-  private func assertMatchesFixture(_ encoded: Foundation.Data) throws {
-    let fixtureURL = Self.fixtureURL
-    if ProcessInfo.processInfo.environment["OJD_REGENERATE_REPORT_FIXTURE"] == "1" {
-      try encoded.write(to: fixtureURL)
-      return
-    }
-    let fixture = try Data(contentsOf: fixtureURL)
-    #expect(try normalized(encoded) == normalized(fixture))
-  }
+  /// `support-report-binding.json` in `Tests/EquivalenceSnapshots`, which
+  /// `Tests/RepositoryScripts/test_report_schema.py` validates against `report.schema.json`.
+  /// `./Scripts/ojd snapshots write` rewrites it from this test.
+  private static let snapshotName = "support-report-binding.json"
 
-  private func normalized(_ data: Foundation.Data) throws -> Foundation.Data {
+  /// The report as the snapshot stores it: sorted members, two-space indent and the CloudEvents
+  /// `id`, a fresh UUID on every encode, written as `fixture`.
+  private func rendered(_ data: Foundation.Data) throws -> String {
     var object = try #require(JSONSerialization.jsonObject(with: data) as? [String: Any])
-    // The CloudEvents id is a fresh UUID on every encode; the fixture pins everything else.
     object["id"] = "fixture"
-    return try JSONSerialization.data(withJSONObject: object, options: [.sortedKeys])
-  }
-
-  private static var fixtureURL: URL {
-    URL(fileURLWithPath: #filePath).deletingLastPathComponent()  // Diagnostics
-      .deletingLastPathComponent()  // OpenJoystickDriverKitTests
-      .deletingLastPathComponent()  // Tests
-      .appendingPathComponent("RepositoryScripts/fixtures/support_report_binding.json")
+    let text = try JSONSerialization.data(
+      withJSONObject: object,
+      options: [.sortedKeys, .prettyPrinted, .withoutEscapingSlashes]
+    )
+    return try #require(String(data: text, encoding: .utf8)) + "\n"
   }
 
   private func description(

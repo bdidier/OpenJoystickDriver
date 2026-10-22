@@ -23,9 +23,10 @@ shift || true
 if [[ "$cmd" == "-h" || "$cmd" == "--help" || "$cmd" == "help" ]]; then
   cat <<'TXT'
 Usage:
-  ./Scripts/ojd signing install-profiles [~/Documents/Profiles]
+  ./Scripts/ojd signing install-profiles [--mode all|development|release] [~/Documents/Profiles]
   ./Scripts/ojd signing ci-release-setup
-  ./Scripts/ojd signing configure
+  ./Scripts/ojd signing configure [--mode all|development|release]
+      [--development-identity <sha1>] [--release-identity <sha1>]
   ./Scripts/ojd signing audit [paths...]
   ./Scripts/ojd signing cert-info [--full] <cert.cer>
   ./Scripts/ojd signing profile-info [--full] <profile1.provisionprofile> [profile2...]
@@ -34,8 +35,33 @@ TXT
   exit 0
 fi
 
+# `--mode` names the profiles a run requires: `development` the two development profiles,
+# `release` the two Developer ID profiles, `all` (the default) the development profiles and any
+# Developer ID profile that is present.
+signing_mode() {
+  case "$1" in
+    all|development|release) printf '%s\n' "$1" ;;
+    *) die "--mode must be all, development or release (got: $1)" ;;
+  esac
+}
+
 cmd_install_profiles() {
-  local SRC="${1:-}"
+  local mode=all SRC=""
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --mode)
+        [[ $# -ge 2 ]] || die "--mode requires a value"
+        mode="$(signing_mode "$2")"
+        shift 2
+        ;;
+      -*) die "Unknown install-profiles option: $1" ;;
+      *)
+        [[ -z "$SRC" ]] || die "install-profiles accepts one source directory"
+        SRC="$1"
+        shift
+        ;;
+    esac
+  done
   local DST="$HOME/Library/MobileDevice/Provisioning Profiles"
   mkdir -p "$DST"
   local installed=()
@@ -66,7 +92,7 @@ cmd_install_profiles() {
     if [[ -z "$src_path" ]]; then
       if [[ "$required" == "1" ]]; then
         echo "ERROR: Missing Apple provisioning profile: $name" >&2
-        if [[ -t 0 && -z "${CI:-}" && "${OJD_NONINTERACTIVE:-0}" != "1" ]]; then
+        if [[ -t 0 && -z "${CI:-}" ]]; then
           open "https://developer.apple.com/account/resources/profiles/list" >/dev/null 2>&1 || true
           echo "Opened the Apple Developer provisioning profiles page." >&2
         fi
@@ -82,7 +108,6 @@ cmd_install_profiles() {
     installed+=("$name")
   }
 
-  local mode="${OJD_SIGNING_MODE:-all}"
   if [[ "$mode" != "release" ]]; then
     copy_one "OpenJoystickDriver.provisionprofile" 1
     copy_one "OpenJoystickDriver_XboxUSBDevice.provisionprofile" 1
@@ -152,14 +177,12 @@ cmd_ci_release_setup() {
   echo "Generating release signing environment..."
   (
     cd "$PROJECT_DIR"
-    OJD_SIGNING_MODE=release \
-      ./Scripts/ojd signing configure
+    ./Scripts/ojd signing configure --mode release
   )
 
   local release_env_file="$PROJECT_DIR/.env.release"
   if [[ ! -f "$release_env_file" ]] \
-    || ! grep -q '^CODESIGN_IDENTITY=' "$release_env_file" \
-    || ! grep -q '^GUI_CODESIGN_IDENTITY=' "$release_env_file"; then
+    || ! grep -q '^CODESIGN_IDENTITY=' "$release_env_file"; then
     die "Release signing is not configured; fix the certificate/profile mismatch reported above."
   fi
 
@@ -414,44 +437,36 @@ PY
 )
 
 case "$cmd" in
-  install-profiles) cmd_install_profiles "${1:-}"; exit 0 ;;
+  install-profiles) cmd_install_profiles "$@"; exit 0 ;;
   ci-release-setup) cmd_ci_release_setup; exit 0 ;;
   audit) cmd_audit "$@"; exit 0 ;;
   cert-info) cmd_cert_info "$@"; exit 0 ;;
   profile-info) cmd_profile_info "$@"; exit 0 ;;
   import-embedded) cmd_import_embedded "$@"; exit 0 ;;
-  configure) ;; # continue into original implementation
+  configure) ;; # handled below
   *) die "Unknown signing command: $cmd" ;;
 esac
-
-DEV_ENV="${DEV_ENV:-$PROJECT_DIR/.env.dev}"
-REL_ENV="${REL_ENV:-$PROJECT_DIR/.env.release}"
-
-GUI_DEV_PROFILE="${GUI_DEV_PROFILE:-$HOME/Library/MobileDevice/Provisioning Profiles/OpenJoystickDriver.provisionprofile}"
-GUI_DEVID_PROFILE="${GUI_DEVID_PROFILE:-$HOME/Library/MobileDevice/Provisioning Profiles/OpenJoystickDriver_DevID.provisionprofile}"
-DEXT_PROFILE="${DEXT_PROFILE:-$HOME/Library/MobileDevice/Provisioning Profiles/OpenJoystickDriver_XboxUSBDevice.provisionprofile}"
-DEXT_DEVID_PROFILE="${DEXT_DEVID_PROFILE:-$HOME/Library/MobileDevice/Provisioning Profiles/OpenJoystickDriver_XboxUSBDevice_DevID.provisionprofile}"
-APPLE_DEV_IDENTITY="${APPLE_DEV_IDENTITY:-}"
-DEVID_APP_IDENTITY="${DEVID_APP_IDENTITY:-}"
 
 usage() {
   cat <<'TXT'
 Usage:
-  ./Scripts/ojd signing configure
+  ./Scripts/ojd signing configure [--mode all|development|release]
+      [--development-identity <sha1>] [--release-identity <sha1>]
 
 Reads:
   - Apple Development identity and the two development provisioning profiles
   - Optional publisher-only Developer ID Application identity and two profiles
-  - Provisioning profiles from ~/Library/MobileDevice/Provisioning Profiles/
+  - Provisioning profiles from ~/Library/MobileDevice/Provisioning Profiles/, under the file
+    names that `signing install-profiles` writes
 
 Writes:
   - .env.dev
   - .env.release when publisher release assets are installed
 
-Environment overrides (optional):
-  GUI_DEV_PROFILE, GUI_DEVID_PROFILE, DEXT_PROFILE, DEXT_DEVID_PROFILE
-  OJD_SIGNING_MODE (all, development, or release)
-  APPLE_DEV_IDENTITY, DEVID_APP_IDENTITY
+Options:
+  --mode                   all (default), development or release
+  --development-identity   Apple Development identity SHA-1 to use when several qualify
+  --release-identity       Developer ID Application identity SHA-1 to use when several qualify
 TXT
 }
 
@@ -460,15 +475,4 @@ if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
   exit 0
 fi
 
-export PROJECT_DIR
-export SCRIPT_DIR
-export DEV_ENV
-export REL_ENV
-export GUI_DEV_PROFILE
-export GUI_DEVID_PROFILE
-export DEXT_PROFILE
-export DEXT_DEVID_PROFILE
-export APPLE_DEV_IDENTITY
-export DEVID_APP_IDENTITY
-
-python3 "$SCRIPT_DIR/configure.py"
+python3 "$SCRIPT_DIR/configure.py" --project-dir "$PROJECT_DIR" "$@"

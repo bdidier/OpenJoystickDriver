@@ -6,19 +6,13 @@ import Testing
 
 extension PassiveUSBDescriptorProbeTests {
   @Test
-  func exactTupleAuthorizationAndContributorGate() {
+  func exactTupleAuthorization() {
     let tuple = PassiveUSBDescriptorTuple(vendorID: 0x3537, productID: 0x1010)
     #expect(PassiveUSBDescriptorProbe.authorizedTuples.contains(tuple))
     #expect(
       !PassiveUSBDescriptorProbe.authorizedTuples.contains(
         PassiveUSBDescriptorTuple(vendorID: 1, productID: 2)
       )
-    )
-    #expect(PassiveUSBDescriptorProbe.contributorGate(environment: [:]) == false)
-    #expect(
-      PassiveUSBDescriptorProbe.contributorGate(environment: [
-        "OJD_ENABLE_CONTRIBUTOR_USB_PASSIVE": "1"
-      ])
     )
   }
 
@@ -27,16 +21,16 @@ extension PassiveUSBDescriptorProbeTests {
     let source = SpySource(matches: [])
     let unauthorized = PassiveUSBDescriptorTuple(vendorID: 1, productID: 2)
     #expect(throws: PassiveUSBDescriptorProbeError.tupleNotAuthorized) {
-      try PassiveUSBDescriptorProbe.scanWithoutGate(authorizedTuple: unauthorized, source: source)
+      try PassiveUSBDescriptorProbe.scan(authorizedTuple: unauthorized, source: source)
     }
     #expect(source.calls.isEmpty)
     let tuple = PassiveUSBDescriptorTuple(vendorID: 0x3537, productID: 0x1010)
     #expect(throws: PassiveUSBDescriptorProbeError.zeroMatches) {
-      try PassiveUSBDescriptorProbe.scanWithoutGate(authorizedTuple: tuple, source: source)
+      try PassiveUSBDescriptorProbe.scan(authorizedTuple: tuple, source: source)
     }
     source.matches = [fixtureRoot(), fixtureRoot()]
     #expect(throws: PassiveUSBDescriptorProbeError.multipleMatches) {
-      try PassiveUSBDescriptorProbe.scanWithoutGate(authorizedTuple: tuple, source: source)
+      try PassiveUSBDescriptorProbe.scan(authorizedTuple: tuple, source: source)
     }
     #expect(
       source.calls.allSatisfy {

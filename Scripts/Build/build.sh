@@ -25,13 +25,13 @@ TXT
 }
 
 _require_codesign_identity() {
-  if [[ "${GUI_IDENTITY:-"-"}" == "-" ]]; then
+  if [[ "${IDENTITY:-"-"}" == "-" ]]; then
     echo "ERROR: CODESIGN_IDENTITY not set."
     echo "Fix: run: ./Scripts/ojd signing configure"
     exit 1
   fi
-  if ! _codesign_identity_available "$GUI_IDENTITY"; then
-    echo "ERROR: GUI signing identity is not available/trusted in Keychain: $GUI_IDENTITY"
+  if ! _codesign_identity_available "$IDENTITY"; then
+    echo "ERROR: GUI signing identity is not available/trusted in Keychain: $IDENTITY"
     echo "Fix: install the matching signing certificate/private key, then run:"
     echo "  ./Scripts/ojd signing configure"
     exit 1

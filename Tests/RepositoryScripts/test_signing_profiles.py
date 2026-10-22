@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import contextlib
+import io
 import plistlib
 import subprocess
 import sys
@@ -179,7 +181,6 @@ class SharedIdentityTests(unittest.TestCase):
                 side_effect=lambda path: embedded[path],
             ),
             patch.object(profile_certs, "keychain_identities", return_value=keychain),
-            patch.dict("os.environ", {"APPLE_DEV_IDENTITY": ""}),
         ):
             return configure.pick_identity_matching_profiles(
                 "Apple Development", [self.HOST_PATH, self.DEXT_PATH]
@@ -216,6 +217,22 @@ class SharedIdentityTests(unittest.TestCase):
         with self.assertRaises(SystemExit) as raised:
             self.pick(["a" * 40], ["a" * 40], {})
         self.assertIn("NONE", str(raised.exception))
+
+    def test_a_chosen_identity_is_used_without_reading_the_keychain(self) -> None:
+        with patch.object(profile_certs, "keychain_identities") as keychain:
+            chosen = configure.pick_identity_matching_profiles(
+                "Apple Development", [self.HOST_PATH, self.DEXT_PATH], "d" * 40
+            )
+        self.assertEqual(chosen, "d" * 40)
+        keychain.assert_not_called()
+
+    def test_configure_rejects_a_mode_it_does_not_know(self) -> None:
+        with (
+            self.assertRaises(SystemExit) as raised,
+            contextlib.redirect_stderr(io.StringIO()),
+        ):
+            configure.main(["--project-dir", ".", "--mode", "publisher"])
+        self.assertEqual(raised.exception.code, 2)
 
     def test_helper_sorts_qualifying_identities(self) -> None:
         shared = profile_certs.shared_identity_sha1s(
