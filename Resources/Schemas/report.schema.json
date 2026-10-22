@@ -681,7 +681,8 @@
         "RequiredInitializationFailed",
         "CatalogConflict",
         "VirtualProfileUnavailable",
-        "DeviceInUse"
+        "DeviceInUse",
+        "ConfigurationUnreadable"
       ]
     },
     "hidGamepad": {

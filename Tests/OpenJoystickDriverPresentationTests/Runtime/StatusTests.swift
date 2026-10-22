@@ -343,7 +343,7 @@ struct StatusTests {
   }
 
   @Test
-  func controllersPageListsADeviceHeldByAnotherProgramWithItsReason() {
+  func controllersPageListsAnUnservedDeviceWithTheSentenceOfItsReason() {
     func unbound(_ reason: ProtocolBindingReason) -> ApplicationServiceUnboundDevice {
       ApplicationServiceUnboundDevice(
         vendorID: 0x3537,
@@ -372,6 +372,11 @@ struct StatusTests {
     #expect(held.map(\.identity) == ["3537:1010"])
     #expect(held.map(\.explanation) == [OJDLocalized.string("ui.controllers.deviceInUse")])
     #expect(held.first?.explanation.isEmpty == false)
+    #expect(
+      presentation(.configurationUnreadable).unservedDevices.map(\.explanation) == [
+        OJDLocalized.string("ui.controllers.configurationUnreadable")
+      ]
+    )
     // A reason the person cannot act on is not listed.
     #expect(presentation(.noProtocolMatch).unservedDevices.isEmpty)
     // The listing survives the updates that rebuild the presentation.

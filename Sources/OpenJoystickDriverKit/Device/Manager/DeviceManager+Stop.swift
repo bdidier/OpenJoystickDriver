@@ -73,6 +73,7 @@ extension DeviceManager {
     hidRoleConnections.removeAll()
     unboundDevices.removeAll()
     heldUSBServices.removeAll()
+    usbConfigurationReadFailures.removeAll()
     unboundHIDClaims.removeAll()
     yieldedHIDConnections.removeAll()
     passThroughDevices.removeAll()

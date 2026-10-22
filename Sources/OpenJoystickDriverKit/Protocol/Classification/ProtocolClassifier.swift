@@ -212,8 +212,12 @@ public enum ProtocolBindingReason: String, CaseIterable, Codable, Error, Sendabl
   case requiredInitializationFailed = "RequiredInitializationFailed"
   case catalogConflict = "CatalogConflict"
   case virtualProfileUnavailable = "VirtualProfileUnavailable"
-  /// Another owner holds the device exclusively, so OJD cannot read its USB configuration.
+  /// The host refused OJD's read of the device's USB configuration while it reported another
+  /// exclusive owner of the device.
   case deviceInUse = "DeviceInUse"
+  /// The device's USB configuration could not be read, and nothing OJD observes clears the cause
+  /// before the device reconnects.
+  case configurationUnreadable = "ConfigurationUnreadable"
 }
 
 extension ProtocolBindingReason {
@@ -223,6 +227,7 @@ extension ProtocolBindingReason {
   public var explanationKey: String? {
     switch self {
     case .deviceInUse: return "ui.controllers.deviceInUse"
+    case .configurationUnreadable: return "ui.controllers.configurationUnreadable"
     case .noProtocolMatch, .ambiguousProtocolMatch, .interfaceContractMismatch,
       .descriptorContractMismatch, .packetContractMismatch, .unsupportedProtocolVariant,
       .unsupportedTransportVariant, .requiredInitializationFailed, .catalogConflict,
