@@ -106,14 +106,6 @@ class ReaderTests(unittest.TestCase):
             [(1, '"menuBar.typo"')],
         )
 
-    def test_plural_categories_come_from_the_shared_data_file(self) -> None:
-        categories = guard.plural_categories()
-        self.assertEqual(categories["ru"], {"one", "few", "many", "other"})
-        self.assertEqual(categories["ja"], {"other"})
-        self.assertEqual(
-            set(categories), {guard.language(d) for d in guard.locale_directories()}
-        )
-
     def test_kept_entry_must_be_unread_and_in_the_catalog(self) -> None:
         guard.KEPT_WITHOUT_READER["gone.key"] = "test"
         guard.KEPT_WITHOUT_READER["read.key"] = "test"
@@ -231,40 +223,6 @@ class CommentTests(unittest.TestCase):
         self.assertIsNone(
             guard.comment_problem(guard.StringsEntry("a.b", "A", "Label."))
         )
-
-
-class PluralTests(unittest.TestCase):
-    def bundle(self, name: str, strings: str, categories: tuple[str, ...]) -> Path:
-        scratch = tempfile.TemporaryDirectory()
-        self.addCleanup(scratch.cleanup)
-        directory = Path(scratch.name) / name
-        directory.mkdir()
-        (directory / "Localizable.strings").write_text(strings, encoding="utf-8")
-        plurals = {}
-        if categories:
-            plurals["status.count"] = {
-                "NSStringLocalizedFormatKey": "%#@count@",
-                "count": {category: "%d" for category in categories},
-            }
-        (directory / "Localizable.stringsdict").write_bytes(plistlib.dumps(plurals))
-        return directory
-
-    def test_count_value_without_a_stringsdict_entry_fails(self) -> None:
-        directory = self.bundle("en-US.lproj", '"a.b" = "%#@count@";\n', ())
-        self.assertIn(
-            "has no stringsdict entry", "".join(guard.plural_problems(directory))
-        )
-
-    def test_locale_missing_a_category_fails(self) -> None:
-        directory = self.bundle("ru-RU.lproj", "", ("one", "other"))
-        self.assertIn(
-            "lacks the plural forms ['few', 'many']",
-            "".join(guard.plural_problems(directory)),
-        )
-
-    def test_locale_with_its_categories_passes(self) -> None:
-        directory = self.bundle("ja-JP.lproj", "", ("other",))
-        self.assertEqual(guard.plural_problems(directory), [])
 
 
 class AccessibilityAndPermissionWordTests(unittest.TestCase):

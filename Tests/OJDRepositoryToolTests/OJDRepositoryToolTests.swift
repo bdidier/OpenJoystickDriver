@@ -598,4 +598,59 @@ struct OJDRepositoryToolTests {
       )
     }
   }
+
+  // MARK: facts
+
+  @Test
+  func factsPrintTheConstantsThatSwiftOwns() throws {
+    let result = try Self.run(["facts"])
+    #expect(result.status == 0)
+    let object = try #require(
+      JSONSerialization.jsonObject(with: Data(result.standardOutput.utf8)) as? [String: Any]
+    )
+    #expect(object["apiVersion"] as? String == OpenJoystickDriverAPI.version)
+    #expect(
+      object["commandLineExitStatuses"] as? [Int]
+        == ErrorCode.commandLineExitStatuses.sorted().map(Int.init)
+    )
+    #expect(
+      object["domainCodePrefixes"] as? [String: String]
+        == Dictionary(
+          uniqueKeysWithValues: ErrorCode.Domain.allCases.map { ($0.rawValue, $0.codePrefix) }
+        )
+    )
+    #expect(object["schemaBase"] as? String == OpenJoystickDriverAPI.schemaBase)
+    let english = Localization(preferredLanguages: [Localization.sourceLocalization])
+    #expect(
+      object["domainAreas"] as? [String: String]
+        == Dictionary(
+          uniqueKeysWithValues: ErrorCode.Domain.allCases.map {
+            ($0.rawValue, english.string($0.areaKey))
+          }
+        )
+    )
+    #expect(object.count == 5)
+  }
+
+  @Test
+  func kebabPrintsTheSpellingThatCommandLineNameGives() throws {
+    let values = ["SystemHIDVisible", "ExclusiveRawUSB", "NotFound"]
+    let result = try Self.run(["kebab"] + values)
+    #expect(result.status == 0)
+    let object = try #require(
+      JSONSerialization.jsonObject(with: Data(result.standardOutput.utf8)) as? [String: String]
+    )
+    #expect(
+      object == Dictionary(uniqueKeysWithValues: values.map { ($0, CommandLineName.kebab($0)) })
+    )
+  }
+
+  @Test
+  func aFactCallThatTheToolRefusesExitsWith64() throws {
+    for arguments in [["facts", "extra"], ["kebab"]] {
+      let result = try Self.run(arguments)
+      #expect(result.status == 64, "\(arguments)")
+      #expect(result.standardOutput.isEmpty, "\(arguments)")
+    }
+  }
 }

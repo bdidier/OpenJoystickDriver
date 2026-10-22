@@ -10,6 +10,7 @@ import json
 import subprocess
 from functools import cache
 from pathlib import Path
+from typing import Any
 
 from ..Command.execution import swift_command
 
@@ -98,3 +99,64 @@ def check(arguments: list[str]) -> None:
     found = problems(arguments)
     if found:
         raise ToolError("\n".join(describe(problem) for problem in found))
+
+
+def document(arguments: list[str]) -> dict[str, Any]:
+    """The JSON object the tool prints for a fact subcommand (`facts`, `kebab`)."""
+    result = subprocess.run(
+        [str(binary()), *arguments],
+        cwd=ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        raise ToolError(
+            f"{PRODUCT} {' '.join(arguments)} exited {result.returncode}: "
+            f"{result.stderr.strip()}"
+        )
+    try:
+        found = json.loads(result.stdout)
+    except json.JSONDecodeError as error:
+        raise ToolError(f"{PRODUCT} printed text that is not JSON: {error}") from error
+    if not isinstance(found, dict):
+        raise ToolError(f"{PRODUCT} {' '.join(arguments)} did not print an object")
+    return found
+
+
+@cache
+def facts() -> dict[str, Any]:
+    """The constants Swift owns: what `OJDRepositoryTool facts` prints."""
+    return document(["facts"])
+
+
+def api_version() -> str:
+    """The `apiVersion` every OJD document carries: `OpenJoystickDriverAPI.version`."""
+    return str(facts()["apiVersion"])
+
+
+def schema_base() -> str:
+    """The start of the `$id` of every schema: `OpenJoystickDriverAPI.schemaBase`."""
+    return str(facts()["schemaBase"])
+
+
+def command_line_exit_statuses() -> frozenset[int]:
+    """The exit statuses `ojd` fails with: `ErrorCode.commandLineExitStatuses`."""
+    return frozenset(int(status) for status in facts()["commandLineExitStatuses"])
+
+
+def domain_code_prefixes() -> dict[str, str]:
+    """The start of the codes of each error domain: `ErrorCode.Domain.codePrefix`."""
+    prefixes = facts()["domainCodePrefixes"]
+    return {str(name): str(prefix) for name, prefix in prefixes.items()}
+
+
+def domain_areas() -> dict[str, str]:
+    """The en-US name of the area of each error domain: `ErrorCode.Domain.areaKey`."""
+    areas = facts()["domainAreas"]
+    return {str(name): str(area) for name, area in areas.items()}
+
+
+def kebab(values: list[str]) -> dict[str, str]:
+    """The `CommandLineName.kebab` spelling of each value."""
+    return {str(key): str(value) for key, value in document(["kebab", *values]).items()}

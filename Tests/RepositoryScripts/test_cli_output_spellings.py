@@ -1,8 +1,7 @@
-import re
 import unittest
 from typing import Any
 
-from Scripts.Quality import validate_schemas
+from Scripts.Quality import repository_tool, validate_schemas
 
 SCHEMA = "cli-output.schema.json"
 VERSION = "openjoystickdriver/v1alpha1"
@@ -155,11 +154,15 @@ def lower_first(value: str) -> str:
     return value[0].lower() + value[1:]
 
 
-def hyphenated(value: str) -> str:
-    return re.sub(r"(?<=[a-z0-9])(?=[A-Z])", "-", value).lower()
-
-
 class CliOutputSpellingTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        # The kebab-case spelling is what `CommandLineName.kebab` prints for a value, so the
+        # refused spelling is the one `ojd` accepts as an argument.
+        cls.kebab = repository_tool.kebab(
+            sorted({value for values in VALUES.values() for value in values})
+        )
+
     def setUp(self) -> None:
         documents = validate_schemas.validate_schema_documents()
         self.schema: dict[str, Any] = documents[SCHEMA]
@@ -272,7 +275,7 @@ class CliOutputSpellingTests(unittest.TestCase):
                     self.assertTrue(self.accepts(pointer, value))
                     for refused in {
                         lower_first(value),
-                        hyphenated(value),
+                        self.kebab[value],
                         value.lower(),
                     } - {value}:
                         self.assertFalse(self.accepts(pointer, refused), refused)

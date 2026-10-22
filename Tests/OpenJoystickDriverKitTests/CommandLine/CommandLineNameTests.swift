@@ -6,8 +6,9 @@ import Testing
 
 @Suite
 struct CommandLineNameTests {
-  /// `Tests/CommandLineNames/samples.json`: the spellings `CommandLineName.kebab` must produce, and
-  /// document values whose spellings must all differ.
+  /// `Tests/CommandLineNames/samples.json`: test data that only this suite reads. It lists the
+  /// spellings `CommandLineName.kebab` must produce, and document values whose spellings must all
+  /// differ.
   private struct Samples: Decodable {
     let spellings: [String: String]
     let values: [String]
@@ -33,7 +34,7 @@ struct CommandLineNameTests {
   }
 
   @Test
-  func kebabSplitsAcronymRunsAsTheSharedTableSays() throws {
+  func kebabSplitsAcronymRunsAsTheSamplesSay() throws {
     let samples = try Self.samples()
     #expect(!samples.spellings.isEmpty)
     for (value, expected) in samples.spellings {
@@ -42,7 +43,7 @@ struct CommandLineNameTests {
   }
 
   @Test
-  func kebabSpellingsOfTheSharedValuesAreDistinct() throws {
+  func kebabSpellingsOfTheSampleValuesAreDistinct() throws {
     let values = try Self.samples().values
     #expect(Set(values.map(CommandLineName.kebab)).count == values.count)
   }

@@ -17,6 +17,11 @@ from pathlib import Path
 from typing import Any
 
 from Scripts.Quality.biome_format import format_json
+from Scripts.Quality.repository_tool import (
+    command_line_exit_statuses,
+    domain_areas,
+    domain_code_prefixes,
+)
 
 try:
     from jsonschema import Draft202012Validator
@@ -38,23 +43,6 @@ ENGLISH_STRINGS = Path(
 )
 BEGIN = "<!-- BEGIN GENERATED: error-codes -->"
 END = "<!-- END GENERATED: error-codes -->"
-DOMAIN_PREFIX = {
-    "Endpoint": "E1",
-    "CLI": "E2",
-    "Remapping": "E3",
-    "Mod": "E4",
-    "Document": "E5",
-}
-# The failure exit codes of ojd, as the wiki page Command-Line documents them. 0 is success and
-# 130 is an interrupt, which prints nothing and has no code.
-CLI_EXIT_CODES = frozenset({1, 64, 69, 77, 127})
-DOMAIN_AREA = {
-    "Endpoint": "Endpoint",
-    "CLI": "Command line",
-    "Remapping": "Remapping",
-    "Mod": "Mod",
-    "Document": "Document",
-}
 STRING_LINE = re.compile(r'^"([^"]+)" = "(.*)";$')
 STRING_ESCAPE = re.compile(r"\\(.)")
 STRING_ESCAPES = {"n": "\n", "t": "\t"}
@@ -87,6 +75,7 @@ def load_catalog(root: Path) -> list[Entry]:
 
 def check_invariants(entries: list[Entry]) -> None:
     problems: list[str] = []
+    prefixes = domain_code_prefixes()
     codes = [entry["code"] for entry in entries]
     names = [entry["name"] for entry in entries]
     for label, items in (("code", codes), ("name", names)):
@@ -95,25 +84,26 @@ def check_invariants(entries: list[Entry]) -> None:
             for item in sorted({item for item in items if items.count(item) > 1})
         ]
     problems += [
-        f"{entry['code']} is in the {entry['domain']} domain, which uses {DOMAIN_PREFIX[entry['domain']]}xxx"
+        f"{entry['code']} is in the {entry['domain']} domain, which uses {prefixes[entry['domain']]}xxx"
         for entry in entries
-        if not entry["code"].startswith(DOMAIN_PREFIX[entry["domain"]])
+        if not entry["code"].startswith(prefixes[entry["domain"]])
     ]
     wires = [entry["wire"] for entry in entries if "wire" in entry]
     problems += [
         f"wire {wire} is used twice"
         for wire in sorted({wire for wire in wires if wires.count(wire) > 1})
     ]
+    exit_codes = command_line_exit_statuses()
     problems += [
         f"{entry['code']} has exit code {entry['exitCode']}, which ojd does not document "
-        f"(use one of {', '.join(str(code) for code in sorted(CLI_EXIT_CODES))})"
+        f"(use one of {', '.join(str(code) for code in sorted(exit_codes))})"
         for entry in entries
-        if "exitCode" in entry and entry["exitCode"] not in CLI_EXIT_CODES
+        if "exitCode" in entry and entry["exitCode"] not in exit_codes
     ]
     if codes != sorted(codes):
         problems.append("entries are not sorted by code")
     # The codes of an area run from 001 without a gap.
-    for prefix in DOMAIN_PREFIX.values():
+    for prefix in prefixes.values():
         area = sorted(code for code in codes if code.startswith(prefix))
         problems += [
             f"{code} skips {wanted}; a new code is the highest code of its area plus one"
@@ -150,8 +140,9 @@ def meaning(entry: Entry, strings: dict[str, str]) -> str:
 
 
 def wiki_block(entries: list[Entry], strings: dict[str, str]) -> str:
+    areas = domain_areas()
     rows = [
-        f"| {entry['code']} | {DOMAIN_AREA[entry['domain']]} | {meaning(entry, strings)} |"
+        f"| {entry['code']} | {areas[entry['domain']]} | {meaning(entry, strings)} |"
         for entry in entries
     ]
     return "\n".join(
