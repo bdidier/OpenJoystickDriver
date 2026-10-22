@@ -3234,7 +3234,7 @@
           "type": "string"
         },
         "worksWithDefaultSDLHints": {
-          "description": "Whether SDL recognizes the profile with its default hints, as the profile's definition states. False for SDLCompatible.",
+          "description": "Whether SDL recognizes the profile with its default hints, as the profile's definition states.",
           "type": "boolean"
         }
       }

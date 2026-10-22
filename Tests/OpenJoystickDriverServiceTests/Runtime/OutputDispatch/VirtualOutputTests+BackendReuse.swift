@@ -97,7 +97,7 @@ extension VirtualOutputTests {
       ])
     )
     await dispatcher.activateOutput(for: id)
-    #expect(log.profiles() == [.generic])
+    #expect(log.profiles() == [.sdlCompatible])
     await dispatcher.close()
   }
 
@@ -142,7 +142,7 @@ extension VirtualOutputTests {
       ])
     )
     await dispatcher.activateOutput(for: id)
-    #expect(dispatcher.status.wireValue.contains("targets: Generic"))
+    #expect(dispatcher.status.wireValue.contains("targets: SDLCompatible"))
     #expect(!dispatcher.status.wireValue.contains("consumer:"))
     await dispatcher.close()
   }

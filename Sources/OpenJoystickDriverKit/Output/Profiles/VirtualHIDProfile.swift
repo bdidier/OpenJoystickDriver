@@ -2,14 +2,11 @@ import Foundation
 
 /// Identifier of one exact published virtual HID ABI.
 ///
-/// These are the only two personas OJD recognizes: `Generic`, the default, and `SDLCompatible`.
-/// Decoding any other raw value fails.
+/// These are the only two personas OJD recognizes: `SDLCompatible` and `Generic`. Decoding any
+/// other raw value fails.
 public enum VirtualHIDProfileID: String, CaseIterable, Codable, Sendable {
   case sdlCompatible = "SDLCompatible"
   case generic = "Generic"
-
-  /// The persona published unless the user selects another.
-  public static let `default` = Self.generic
 
   /// The id of the persona on the command line: the lowercase kebab-case form of its name.
   public var commandLineName: String { CommandLineName.kebab(rawValue) }

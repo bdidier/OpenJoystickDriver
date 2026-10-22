@@ -27,13 +27,14 @@ struct ServingPolicyTests {
     var input = ServingInput(observation: .systemGamepad)
     #expect(ServingPolicy.route(input) == .nativePassThrough(.none))
     input.server = .ojd
-    #expect(ServingPolicy.route(input) == .virtualHID(.generic))
+    #expect(ServingPolicy.route(input) == .virtualHID(.sdlCompatible))
   }
 
   @Test
-  func theDefaultPersonaIsGeneric() {
-    #expect(VirtualHIDProfileID.default == .generic)
-    #expect(ServingPolicy.route(ServingInput(observation: .exclusiveHID)) == .virtualHID(.generic))
+  func theAutomaticPersonaIsSDLCompatible() {
+    #expect(
+      ServingPolicy.route(ServingInput(observation: .exclusiveHID)) == .virtualHID(.sdlCompatible)
+    )
   }
 
   @Test

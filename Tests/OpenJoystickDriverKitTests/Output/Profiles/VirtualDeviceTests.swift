@@ -17,7 +17,7 @@ struct VirtualDeviceTests {
   @Test
   func theRecordsStateWhichPersonaWorksWithDefaultSDLHints() throws {
     #expect(VirtualDevice.definition(of: .generic).worksWithDefaultSDLHints == true)
-    #expect(VirtualDevice.definition(of: .sdlCompatible).worksWithDefaultSDLHints == false)
+    #expect(VirtualDevice.definition(of: .sdlCompatible).worksWithDefaultSDLHints == true)
   }
 
   @Test
@@ -54,11 +54,6 @@ struct VirtualDeviceTests {
     #expect(throws: ControllerRecordProblem.self) {
       try VirtualDevice.decode(Data(document.utf8), source: .unnamed, requiresMatch: false)
     }
-  }
-
-  @Test
-  func genericIsTheDefaultPersona() {
-    #expect(VirtualHIDProfileID.default == .generic)
   }
 
   @Test(arguments: [

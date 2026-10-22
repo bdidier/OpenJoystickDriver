@@ -91,7 +91,7 @@ struct VirtualGamepadMappingTests {
   @Test
   func thePersonaDefinitionStatesWhetherSDLWorksWithItsDefaultHints() throws {
     #expect(VirtualHIDProfileID.generic.worksWithDefaultSDLHints)
-    #expect(!VirtualHIDProfileID.sdlCompatible.worksWithDefaultSDLHints)
+    #expect(VirtualHIDProfileID.sdlCompatible.worksWithDefaultSDLHints)
     for id in VirtualHIDProfileID.allCases {
       #expect(try id.gamepadMapping().worksWithDefaultSDLHints == id.worksWithDefaultSDLHints)
     }

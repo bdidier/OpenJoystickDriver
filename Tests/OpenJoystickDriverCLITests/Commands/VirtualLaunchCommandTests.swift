@@ -150,19 +150,9 @@ struct VirtualLaunchCommandTests {
       Self.variables(printed)[SDLLaunchEnvironment.variable]
         == (["abc,Mine,a:b0"] + mappings).joined(separator: "\n")
     )
-    #expect(run.standardError.contains(sdlHintsNote("SDLCompatible")))
-  }
-
-  @Test
-  func quietOmitsTheHintsNote() async throws {
-    let service = try FakeService(devices: [Self.device("pad-1", .sdlCompatible)])
-    let (run, _) = try await Self.launch(
-      service,
-      ["virtual", "launch", "--quiet", "/usr/bin/env"]
-    )
-
-    #expect(run.code == 0, "\(run.standardError)")
-    #expect(!run.standardError.contains(sdlHintsNote("SDLCompatible")))
+    for profile in VirtualHIDProfileID.allCases {
+      #expect(!run.standardError.contains(sdlHintsNote(profile.rawValue)), "\(profile)")
+    }
   }
 
   @Test

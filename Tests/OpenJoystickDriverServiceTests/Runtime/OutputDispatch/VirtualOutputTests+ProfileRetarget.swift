@@ -43,15 +43,15 @@ extension VirtualOutputTests {
   func profileOverrideChangesTheBuiltProfile() async throws {
     let id = LogicalControllerID(vendorID: 1, productID: 2)
     let overrides = ProfileOverrideBox()
-    overrides.set(.sdlCompatible, vendorID: 1)
+    overrides.set(.generic, vendorID: 1)
     let log = RetargetEventLog()
     let dispatcher = retargetDispatcher([id], overrides: overrides, log: log)
 
     try await dispatcher.activate(for: [id])
 
-    #expect(log.built().map(\.profile) == [.sdlCompatible])
+    #expect(log.built().map(\.profile) == [.generic])
     #expect(dispatcher.selectionSource(for: id) == .override)
-    #expect(dispatcher.status.wireValue.contains("targets: SDLCompatible"))
+    #expect(dispatcher.status.wireValue.contains("targets: Generic"))
     await dispatcher.close()
   }
 
@@ -65,11 +65,11 @@ extension VirtualOutputTests {
     try await dispatcher.activate(for: [first, second])
     #expect(dispatcher.selectionSource(for: first) == .automatic)
 
-    overrides.set(.sdlCompatible, vendorID: 1)
+    overrides.set(.generic, vendorID: 1)
     try await dispatcher.retarget(controller: first)
 
     let built = log.built()
-    #expect(built.map(\.profile) == [.generic, .generic, .sdlCompatible])
+    #expect(built.map(\.profile) == [.sdlCompatible, .sdlCompatible, .generic])
     #expect(built.map(\.closed) == [true, false, false])
     #expect(dispatcher.selectionSource(for: first) == .override)
     #expect(dispatcher.selectionSource(for: second) == .automatic)
@@ -85,13 +85,13 @@ extension VirtualOutputTests {
     let dispatcher = retargetDispatcher([id], overrides: overrides, log: log)
     try await dispatcher.activate(for: [id])
 
-    overrides.set(.sdlCompatible, vendorID: 1)
+    overrides.set(.generic, vendorID: 1)
     try await dispatcher.retarget(controller: id)
 
     #expect(
       log.snapshot() == [
-        "Generic activate [1]", "SDLCompatible activate [1]", "Generic neutral",
-        "Generic close",
+        "SDLCompatible activate [1]", "Generic activate [1]", "SDLCompatible neutral",
+        "SDLCompatible close",
       ]
     )
     await dispatcher.close()
@@ -106,19 +106,19 @@ extension VirtualOutputTests {
       [id],
       overrides: overrides,
       log: log,
-      failure: (.sdlCompatible, failure)
+      failure: (.generic, failure)
     )
     try await dispatcher.activate(for: [id])
 
-    overrides.set(.sdlCompatible, vendorID: 1)
+    overrides.set(.generic, vendorID: 1)
     await #expect(throws: (any Error).self) { try await dispatcher.retarget(controller: id) }
 
     let built = log.built()
-    #expect(built.first?.profile == .generic)
+    #expect(built.first?.profile == .sdlCompatible)
     #expect(built.first?.closed == false)
     #expect(built.dropFirst().allSatisfy { $0.closed })
-    #expect(!log.snapshot().contains("Generic neutral"))
-    #expect(dispatcher.status.wireValue.contains("targets: Generic"))
+    #expect(!log.snapshot().contains("SDLCompatible neutral"))
+    #expect(dispatcher.status.wireValue.contains("targets: SDLCompatible"))
     #expect(dispatcher.selectionSource(for: id) == .automatic)
 
     // Later reports keep publishing through the prior backend instead of retrying the override.
@@ -137,18 +137,18 @@ extension VirtualOutputTests {
     let dispatcher = retargetDispatcher([id], overrides: overrides, log: log)
     try await dispatcher.activate(for: [id])
 
-    overrides.set(.sdlCompatible, vendorID: 1)
+    overrides.set(.generic, vendorID: 1)
     await dispatcher.activateOutput(for: id)
     try await dispatcher.activate(controller: id)
 
-    #expect(log.built().map(\.profile) == [.generic])
+    #expect(log.built().map(\.profile) == [.sdlCompatible])
     #expect(log.built().first?.closed == false)
     #expect(dispatcher.selectionSource(for: id) == .automatic)
 
     try await dispatcher.retarget(controller: id)
 
-    #expect(log.built().map(\.profile) == [.generic, .sdlCompatible])
-    #expect(log.snapshot().contains("Generic neutral"))
+    #expect(log.built().map(\.profile) == [.sdlCompatible, .generic])
+    #expect(log.snapshot().contains("SDLCompatible neutral"))
     await dispatcher.close()
   }
 
@@ -161,10 +161,10 @@ extension VirtualOutputTests {
     try await dispatcher.activate(for: [id])
     await dispatcher.setRemappingOutputSuppressed(true)
 
-    overrides.set(.sdlCompatible, vendorID: 1)
+    overrides.set(.generic, vendorID: 1)
     try await dispatcher.retarget(controller: id)
 
-    #expect(log.built().last?.profile == .sdlCompatible)
+    #expect(log.built().last?.profile == .generic)
     #expect(log.built().last?.remappingSuppressed == true)
     await dispatcher.close()
   }
@@ -179,18 +179,18 @@ extension VirtualOutputTests {
     await dispatcher.setOutputSuppressed(true)
     #expect(log.built().first?.closed == true)
 
-    overrides.set(.sdlCompatible, vendorID: 1)
+    overrides.set(.generic, vendorID: 1)
     try await dispatcher.retarget(controller: id)
     #expect(log.built().count == 1)
     #expect(dispatcher.selectionSource(for: id) == .override)
 
     await dispatcher.setOutputSuppressed(false)
 
-    #expect(log.built().map(\.profile) == [.generic, .sdlCompatible])
+    #expect(log.built().map(\.profile) == [.sdlCompatible, .generic])
     #expect(log.built().last?.suppressOutput == false)
     await dispatcher.activateOutput(for: id)
     #expect(log.built().count == 2)
-    #expect(dispatcher.status.wireValue.contains("targets: SDLCompatible"))
+    #expect(dispatcher.status.wireValue.contains("targets: Generic"))
     await dispatcher.close()
   }
 
@@ -203,13 +203,13 @@ extension VirtualOutputTests {
     try await dispatcher.activate(for: [id])
     await dispatcher.controllerDidStop(id)
 
-    overrides.set(.sdlCompatible, vendorID: 1)
+    overrides.set(.generic, vendorID: 1)
     try await dispatcher.retarget(controller: id)
     #expect(log.built().count == 1)
 
     try await dispatcher.activate(controller: id)
 
-    #expect(log.built().map(\.profile) == [.generic, .sdlCompatible])
+    #expect(log.built().map(\.profile) == [.sdlCompatible, .generic])
     await dispatcher.close()
   }
 
@@ -223,11 +223,11 @@ extension VirtualOutputTests {
       [id],
       overrides: overrides,
       log: log,
-      gate: (.sdlCompatible, gate)
+      gate: (.generic, gate)
     )
     try await dispatcher.activate(for: [id])
 
-    overrides.set(.sdlCompatible, vendorID: 1)
+    overrides.set(.generic, vendorID: 1)
     let retarget = Task { try await dispatcher.retarget(controller: id) }
     await gate.waitForEntry()
     let stop = Task { await dispatcher.controllerDidStop(id) }
@@ -236,7 +236,7 @@ extension VirtualOutputTests {
     await stop.value
 
     await #expect(throws: (any Error).self) { try await retarget.value }
-    #expect(log.built().map(\.profile) == [.generic, .sdlCompatible])
+    #expect(log.built().map(\.profile) == [.sdlCompatible, .generic])
     #expect(log.built().allSatisfy { $0.closed })
     #expect(dispatcher.selectionSource(for: id) == nil)
     #expect(!dispatcher.status.wireValue.contains("targets"))
@@ -251,30 +251,30 @@ extension VirtualOutputTests {
     let dispatcher = retargetDispatcher([id], overrides: overrides, log: log)
     try await dispatcher.activate(for: [id])
 
-    overrides.set(.generic, vendorID: 1)
+    overrides.set(.sdlCompatible, vendorID: 1)
     try await dispatcher.retarget(controller: id)
 
-    #expect(log.snapshot() == ["Generic activate [1]"])
+    #expect(log.snapshot() == ["SDLCompatible activate [1]"])
     #expect(dispatcher.selectionSource(for: id) == .override)
     await dispatcher.close()
   }
 
-  /// The default persona is `Generic`; opting in to `SDLCompatible` switches the live backend
+  /// The automatic persona is `SDLCompatible`; opting in to `Generic` switches the live backend
   /// without the controller being unplugged or replugged.
   @Test
-  func theDefaultPersonaIsGenericAndOptInSwitchesToSDLCompatibleWithoutReplug() async throws {
+  func theAutomaticPersonaIsSDLCompatibleAndOptInSwitchesToGenericWithoutReplug() async throws {
     let id = LogicalControllerID(vendorID: 1, productID: 2)
     let overrides = ProfileOverrideBox()
     let log = RetargetEventLog()
     let dispatcher = retargetDispatcher([id], overrides: overrides, log: log)
     try await dispatcher.activate(for: [id])
-    #expect(log.built().map(\.profile) == [VirtualHIDProfileID.default])
+    #expect(log.built().map(\.profile) == [VirtualHIDProfileID.sdlCompatible])
     #expect(dispatcher.selectionSource(for: id) == .automatic)
 
-    overrides.set(.sdlCompatible, vendorID: 1)
+    overrides.set(.generic, vendorID: 1)
     try await dispatcher.retarget(controller: id)
 
-    #expect(log.built().map(\.profile) == [.generic, .sdlCompatible])
+    #expect(log.built().map(\.profile) == [.sdlCompatible, .generic])
     #expect(dispatcher.selectionSource(for: id) == .override)
     await dispatcher.close()
   }

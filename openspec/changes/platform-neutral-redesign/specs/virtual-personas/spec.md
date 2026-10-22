@@ -2,17 +2,17 @@
 
 ### Requirement: Two personas
 
-OJD SHALL provide two virtual personas as bundled `VirtualDevice` records: `Generic` (vendor `1209`, product `4A4F`, a standard HID gamepad) and `SDLCompatible` (vendor `045E`, product `02FD`). The default persona SHALL be `Generic` for every model and app unless the user selects otherwise.
+OJD SHALL provide two virtual personas as bundled `VirtualDevice` records: `Generic` (vendor `1209`, product `4A4F`, a standard HID gamepad) and `SDLCompatible` (vendor `045E`, product `02FD`). Automatic selection SHALL publish `SDLCompatible` when the controller's primary controls fit it and `Generic` otherwise, unless the user selects a persona.
 
 #### Scenario: Fresh install
 
 - **WHEN** a controller is served virtually and the user has set no persona
-- **THEN** the virtual device reports `1209:4A4F`
+- **THEN** the virtual device reports `045E:02FD`
 
-#### Scenario: Opt in
+#### Scenario: Choose Generic
 
-- **WHEN** the user runs `ojd virtual set sdl-compatible <ref>`
-- **THEN** the virtual device for that controller reports `045E:02FD`
+- **WHEN** the user runs `ojd virtual set generic <ref>`
+- **THEN** the virtual device for that controller reports `1209:4A4F`
 
 ### Requirement: No Microsoft id outside SDLCompatible
 
@@ -25,12 +25,12 @@ No code, record, sample, test fixture or HIDTool subcommand SHALL use a Microsof
 
 ### Requirement: SDLCompatible status
 
-Until a hardware-evidenced fix exists, documentation SHALL state that `SDLCompatible` is not listed by SDL 3.4.x with default hints. After a fix, the hardware check SHALL show SDL listing it with default hints.
+Documentation SHALL state that PCSX2 2.8.2 (SDL 3.4.12) and DuckStation (SDL 3.4.16) map `SDLCompatible` as an Xbox pad with default hints, and that Steam is untested.
 
 #### Scenario: Documentation
 
 - **WHEN** a reader opens the persona page
-- **THEN** it states the SDL limitation and the version it was observed on
+- **THEN** it states the SDL versions tested and that Steam is untested
 
 ### Requirement: Persona document
 

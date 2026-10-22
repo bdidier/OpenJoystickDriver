@@ -16,18 +16,18 @@ extension VirtualOutputTests {
     }
 
     let set = await fixture.change(
-      .set("SDLCompatible"),
+      .set("Generic"),
       controller: .port(try #require(first.testPortKey)),
       unit: true
     )
 
     #expect(set.failure == nil)
-    #expect(live(first) == .sdlCompatible)
-    #expect(live(second) == .generic)
+    #expect(live(first) == .generic)
+    #expect(live(second) == .sdlCompatible)
     #expect(fixture.store.override(vendorID: 1, productID: 2) == nil)
     #expect(
       fixture.store.override(vendorID: 1, productID: 2, unit: first.testPortKey?.rawValue)
-        == .sdlCompatible
+        == .generic
     )
 
     let reset = await fixture.change(
@@ -37,7 +37,7 @@ extension VirtualOutputTests {
     )
 
     #expect(reset.failure == nil)
-    #expect(live(first) == .generic)
+    #expect(live(first) == .sdlCompatible)
     #expect(fixture.store.files.isEmpty)
     await fixture.tearDown()
   }
@@ -46,7 +46,7 @@ extension VirtualOutputTests {
   func aUnitOverrideForAControllerWithoutAUnitIDIsNotFound() async throws {
     let fixture = try await profileOverrideServer()
 
-    let result = await fixture.change(.set("SDLCompatible"), unit: true)
+    let result = await fixture.change(.set("Generic"), unit: true)
 
     #expect(result.failure == .controllerNotFound)
     #expect(fixture.store.files.isEmpty)
