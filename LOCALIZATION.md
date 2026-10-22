@@ -86,7 +86,8 @@ Capability messages describe the controller or active protocol, not a permanent 
 
 Put the language first in macOS to try it.
 
+A full Xcode is required. `Scripts/Platform/environment.sh` selects the newest installed `/Applications/Xcode*.app` when `xcode-select` points at the Command Line Tools, and an exported `DEVELOPER_DIR` overrides it.
+
 ```bash
-export DEVELOPER_DIR=/Applications/Xcode-27.0.0.app/Contents/Developer
 swift test --filter OpenJoystickDriverKitTests.LocalizationTests
 ```
