@@ -734,37 +734,37 @@
 "term.protocolFamily.hidDescriptor" = "일반 HID";
 /* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker: a generic HID controller whose input report layout comes from its controller record, the file OJD keeps for each controller model. Keep HID as written. */
 "term.protocolFamily.hidReportLayout" = "일반 HID (레코드 레이아웃)";
-/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker: the original Nintendo Switch controller protocol, used by the Pro Controller and the Joy-Con over USB or Bluetooth. Nintendo Switch is a brand and product name: keep it as written. */
 "term.protocolFamily.nintendoSwitch1" = "Nintendo Switch";
-/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker: the Nintendo Switch 2 controller protocol, used by the Switch 2 Pro Controller, the Joy-Con 2 and the NSO GameCube controller over USB or Bluetooth LE. Nintendo Switch 2 is a brand and product name: keep it as written. */
 "term.protocolFamily.nintendoSwitch2" = "Nintendo Switch 2";
 /* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker: a wired Switch controller that sends input reports and takes no commands. Keep Nintendo Switch as written. */
 "term.protocolFamily.nintendoSwitchInputOnly" = "Nintendo Switch (입력 전용)";
-/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker: the controller of the PlayStation 5, which Sony names DualSense. Sony DualSense is a brand and product name: keep it as written. */
 "term.protocolFamily.sonyDualSense" = "Sony DualSense";
-/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker: the controller of the PlayStation 4, which Sony names DualShock 4. Sony DualShock 4 is a brand and product name: keep it as written. */
 "term.protocolFamily.sonyDualShock4" = "Sony DualShock 4";
-/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker: the controller of the PlayStation 3 that Sony names Sixaxis, the one with motion sensors. Sony Sixaxis is a brand and product name: keep it as written. */
 "term.protocolFamily.sonySixaxis" = "Sony Sixaxis";
-/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker: the first Steam Controller by Valve, read wired, through its wireless dongle or over Bluetooth LE. Valve Steam Controller is a brand and product name: keep it as written. */
 "term.protocolFamily.valveSteamController" = "Valve Steam Controller";
-/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker: the built-in controls of the Steam Deck handheld by Valve. Valve Steam Deck is a brand and product name: keep it as written. */
 "term.protocolFamily.valveSteamDeck" = "Valve Steam Deck";
-/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker: the Steam Controller of 2026 by Valve, which has its own protocol and is not the first Steam Controller. The year tells the two apart and stays. Valve Steam Controller is a brand and product name: keep it as written. */
 "term.protocolFamily.valveSteamTriton" = "Valve Steam Controller (2026)";
-/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker: controllers by the maker Flydigi, which use a protocol of their own. Flydigi is a brand and product name: keep it as written. */
 "term.protocolFamily.vendorFlydigi" = "Flydigi";
-/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker: controllers by the maker GameSir, which run either in a plain USB mode or in an enhanced HID mode; the protocol variant names tell the two apart. GameSir is a brand and product name: keep it as written. */
 "term.protocolFamily.vendorGameSir" = "GameSir";
-/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker: the controllers of the NVIDIA SHIELD by NVIDIA. NVIDIA SHIELD is a brand and product name: keep it as written. */
 "term.protocolFamily.vendorNvidiaShield" = "NVIDIA SHIELD";
 /* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker: controllers from other makers that use the PS3 controller protocol. Keep PS3 as written. */
 "term.protocolFamily.vendorPs3ThirdParty" = "타사 PS3 컨트롤러";
-/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker: the Xbox One and Xbox Series controller protocol, which Microsoft calls GIP, read over USB. Xbox One and GIP are brand and product names: keep them as written. */
 "term.protocolFamily.xboxGip" = "Xbox One (GIP)";
-/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker: the controller protocol of the original Xbox, called XID. Xbox and XID are brand and product names: keep them as written. */
 "term.protocolFamily.xboxXid" = "Xbox (XID)";
-/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker: the Xbox 360 controller protocol, called XUSB, read wired or through the wireless receiver. Xbox 360 and XUSB are brand and product names: keep them as written. */
 "term.protocolFamily.xboxXusb" = "Xbox 360 (XUSB)";
 /* Name of a controller's protocol in the Controllers list and detail and in Input Test, also spoken by VoiceOver, for a protocol family that stores its variant in its records, because the connection does not tell every variant apart. %1$@ is the protocol family name, such as Xbox 360 (XUSB); %2$@ is the variant name, such as Receiver. */
 "term.protocolBinding.familyWithVariant" = "%1$@, %2$@";
@@ -1655,7 +1655,7 @@
 "cli.service.wait.timeout" = "서비스가 %@ 안에 요청을 받지 않았습니다. ‘ojd service start’로 시작하거나 --timeout 값을 늘려 다시 시도하세요.";
 /* One-line summary of 'ojd status' in the command list and at the top of its help. */
 "cli.status.group.abstract" = "서비스, 확장 프로그램, 권한, 연결된 컨트롤러를 표시합니다.";
-/* Long description in the help of 'ojd status'. */
+/* Long description in the help of 'ojd status'. It says that the command also works while the service is stopped. The exit status 0 stays as written. */
 "cli.status.group.discussion" = "서비스가 중지된 상태에서도 작동하며, 서비스를 중지됨으로 보고하고 0으로 종료합니다.";
 /* Row label in the output of 'ojd status' for the Accessibility permission. It is written as macOS names it. */
 "platform.macos.cli.status.group.labelInputInject" = "손쉬운 사용";
@@ -2035,7 +2035,7 @@
 "cli.setting.group.badValue" = "‘%1$@’은(는) %2$@의 값이 아닙니다. true 또는 false를 사용하십시오.";
 /* Help text of the developerTools setting in 'ojd setting list'. */
 "cli.setting.group.developerTools" = "설정 윈도우에 개발자 도구를 표시합니다.";
-/* Long description in the help of 'ojd setting'. */
+/* Long description in the help of 'ojd setting'. It says that the running service applies each setting, so every 'ojd setting' command needs the service. */
 "cli.setting.group.discussion" = "실행 중인 서비스가 각 설정을 적용하므로 모든 setting 명령에는 서비스가 필요합니다.";
 /* One-line summary of 'ojd setting get' in the command list and at the top of its help. */
 "cli.setting.get.abstract" = "설정 하나의 값을 출력합니다.";
@@ -2237,7 +2237,7 @@
 "cli.controller.group.sessionNotFound" = "요청이 도달하기 전에 ‘%@’ 연결이 끊어졌습니다. 다시 연결한 후 재시도하세요.";
 /* One-line summary of 'ojd controller show' in the command list and at the top of its help. */
 "cli.controller.show.abstract" = "컨트롤러의 ID, 소유권, 기능, 가상 게임패드를 표시합니다.";
-/* Long description in the help of 'ojd controller show'. */
+/* Long description in the help of 'ojd controller show'. It adds that the command also lists output checks: commands that exercise each rumble motor and light, with what to observe. */
 "cli.controller.show.discussion" = "출력 점검도 나열합니다. 각 진동 모터와 조명을 작동시키는 명령과 관찰할 내용입니다.";
 /* Row label in the output of 'ojd controller show', present when the controller reports power. The charge in percent and the charging state follow. */
 "cli.controller.show.labelBattery" = "배터리";
@@ -2615,7 +2615,7 @@
 "cli.record.group.usbOnlySwitch2" = "USB 전용: 컨트롤러를 Bluetooth LE로 연결하려면 이 Switch 2 레코드에 bluetoothLE.vibrationCharacteristic을 추가하십시오.";
 /* One-line summary of 'ojd record validate' in the command list and at the top of its help. */
 "cli.record.validate.abstract" = "컨트롤러 레코드를 설치하지 않고 확인합니다.";
-/* Long description in the help of 'ojd record validate'. */
+/* Long description in the help of 'ojd record validate'. It lists what the check covers and says that the exit status is 1 for an invalid record. The USB extension is the driver extension that gives raw USB access; the exit status 1 stays as written. */
 "cli.record.validate.discussion" = "레코드의 형식, 필드 간 일치 여부, 번들 카탈로그와의 적합성을 확인하고 컨트롤러에 USB 확장 프로그램이 필요한지 알려 줍니다. 레코드가 올바르지 않으면 종료 코드 1로 끝납니다.";
 /* Message printed by 'ojd record validate' for a correct record. %1$@ is the file path, %2$@ is the operation in kebab case such as install, %3$@ is the controller model and %4$@ is the protocol family. The command in quotes stays as written. */
 "cli.record.validate.valid" = "%1$@은(는) 유효한 %2$@ 레코드입니다(대상: %3$@, %4$@). ‘ojd record install’로 설치하세요.";
@@ -3337,7 +3337,7 @@
 "ui.sidebar.controllers.title" = "컨트롤러";
 /* Title of the Profiles item in the sidebar of the main window and in the window title when it is selected. */
 "ui.sidebar.profiles.title" = "프로파일";
-/* Title of the Library item in the sidebar of the main window. The library lists the profiles that can be installed from packages. */
+/* Title of the Library item in the sidebar of the main window and in the window title when it is selected. The area lists the controller records and the mods that ship with the app or are installed. */
 "ui.sidebar.library.title" = "라이브러리";
 /* Title of the Access item in the sidebar of the main window. The area lists permissions and clients of the endpoint. */
 "ui.sidebar.access.title" = "접근";
@@ -3934,9 +3934,9 @@
 "status.listenerFailure.otherUser" = "기록이 다른 사용자의 것입니다. 해당 사용자로 ojd를 실행하세요";
 /* Reason the listener failure file cannot be used: the system would not say whether the process that wrote it runs. %1$@ is the system's reason, %2$@ the error number. Fills the reason in the error E2035 message. */
 "status.listenerFailure.processCheckFailed" = "서비스 프로세스가 실행 중인지 확인하지 못했습니다: %1$@ (오류 번호 %2$@)";
-/* Abstract of the ojd setting test-notification command, in the command help. */
+/* One-line summary of 'ojd setting test-notification' in the command list and at the top of its help. The notification appears in the OpenJoystickDriver app. */
 "cli.setting.testNotification.abstract" = "앱에 테스트 알림을 표시합니다.";
-/* Discussion of the ojd setting test-notification command, in the command help. */
+/* Long description in the help of 'ojd setting test-notification'. It says what the service is asked to do and when the command fails. --timeout stays as written and %@ is the default timeout in seconds. */
 "cli.setting.testNotification.discussion" = "서비스에 열려 있는 OpenJoystickDriver 앱으로 테스트 알림을 알리도록 요청하고 앱이 알림을 표시할 때까지 기다립니다. 알림이 거부되었거나 전달에 실패했거나 제때 응답하는 앱이 없으면 이름이 있는 오류로 실패합니다. 여기서 --timeout의 기본값은 %@초입니다.";
 /* Printed by ojd setting test-notification after the app reported that it showed the test notification. */
 "cli.setting.testNotification.success" = "앱이 테스트 알림을 표시했습니다.";
