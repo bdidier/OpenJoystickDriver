@@ -3309,6 +3309,8 @@
 "ui.menu.profile.none" = "没有配置文件";
 /* Disabled item of the Profile menu's Activate Profile submenu while the profile list is loading or cannot be read. */
 "ui.menu.profile.unavailable" = "配置文件不可用";
+/* Disabled item of the Profile menu's Deactivate Profile submenu in the status item menu while no profile is active. */
+"ui.menu.profile.noneActive" = "没有活动配置文件";
 /* Title of the alert shown when turning off a profile from the menu fails. */
 "ui.menu.profile.deactivateFailed" = "无法停用该配置文件";
 /* Message of the alert shown when the profile changed elsewhere during the turn off. */

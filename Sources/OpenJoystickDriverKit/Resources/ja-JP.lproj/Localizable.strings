@@ -3309,6 +3309,8 @@
 "ui.menu.profile.none" = "プロファイルなし";
 /* Disabled item of the Profile menu's Activate Profile submenu while the profile list is loading or cannot be read. */
 "ui.menu.profile.unavailable" = "プロファイルを利用できません";
+/* Disabled item of the Profile menu's Deactivate Profile submenu in the status item menu while no profile is active. */
+"ui.menu.profile.noneActive" = "アクティブなプロファイルはありません";
 /* Title of the alert shown when turning off a profile from the menu fails. */
 "ui.menu.profile.deactivateFailed" = "プロファイルを無効にできませんでした";
 /* Message of the alert shown when the profile changed elsewhere during the turn off. */

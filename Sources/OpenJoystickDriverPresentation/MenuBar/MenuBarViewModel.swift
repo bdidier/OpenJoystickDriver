@@ -88,6 +88,7 @@
           )
         },
         profiles: profiles,
+        profileListRead: snapshot != nil,
         statusSymbolName: summarySemanticState.presentation.symbolName
       )
     }

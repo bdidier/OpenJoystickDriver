@@ -113,6 +113,14 @@ struct MainMenuModelTests {
       MainMenuModel.emptyActivateProfileTitleKey(profileListRead: false)
         == "ui.menu.profile.unavailable"
     )
+    #expect(
+      MainMenuModel.emptyDeactivateProfileTitleKey(profileListRead: true)
+        == "ui.menu.profile.noneActive"
+    )
+    #expect(
+      MainMenuModel.emptyDeactivateProfileTitleKey(profileListRead: false)
+        == "ui.menu.profile.unavailable"
+    )
   }
 
   @Test
@@ -256,6 +264,7 @@ struct MainMenuModelTests {
     for key in [
       MainMenuModel.noControllerTitleKey, "ui.menu.controller.noneSelected",
       MainMenuModel.noProfilesTitleKey, MainMenuModel.profilesUnavailableTitleKey,
+      MainMenuModel.noActiveProfileTitleKey,
       "ui.extra.reportProblem",
     ] { checkTitleStyle(key) }
     for item in MainMenuModel.allItems where item.action != .controllerTarget {

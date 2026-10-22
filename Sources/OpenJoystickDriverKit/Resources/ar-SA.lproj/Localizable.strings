@@ -3309,6 +3309,8 @@
 "ui.menu.profile.none" = "لا توجد ملفات تعريف";
 /* Disabled item of the Profile menu's Activate Profile submenu while the profile list is loading or cannot be read. */
 "ui.menu.profile.unavailable" = "ملفات التعريف غير متوفرة";
+/* Disabled item of the Profile menu's Deactivate Profile submenu in the status item menu while no profile is active. */
+"ui.menu.profile.noneActive" = "لا يوجد ملف تعريف نشط";
 /* Title of the alert shown when turning off a profile from the menu fails. */
 "ui.menu.profile.deactivateFailed" = "تعذّر إلغاء تفعيل ملف التعريف";
 /* Message of the alert shown when the profile changed elsewhere during the turn off. */

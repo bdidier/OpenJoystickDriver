@@ -11,7 +11,7 @@ Every status-item and main-menu action SHALL exist in the main window or Setting
 
 ### Requirement: Fixed status-item layout
 
-The status item SHALL show, in order: status line; Controllers submenu; Profiles submenu (Activate, Deactivate); Grant Access; Open Window; Settings; Help submenu (Activity Log, Explain Error Code, Report Problem, Project Website); Quit. Items SHALL be disabled when not applicable and SHALL NOT be hidden, except Grant Access, which SHALL be hidden while every permission is granted.
+The status item SHALL show, in order: status line; Controllers submenu; Profiles submenu (Activate, Deactivate); Grant Access; Open Window; Settings; Help submenu (Activity Log, Explain Error Code, Report Problem, Project Website); Quit. Items SHALL be disabled when not applicable and SHALL NOT be hidden, except Grant Access, which SHALL be hidden while every permission is granted. A submenu SHALL stay enabled when it holds no available item: it holds one disabled row that says why, so people can open it (Apple HIG, Menus: "Make sure a submenu remains available even when its nested menu items are unavailable", <https://developer.apple.com/design/human-interface-guidelines/menus>). The Activate, Deactivate and per-controller Active Profile submenus take their empty row from the same model function and strings as the main menu's Activate Profile submenu.
 
 #### Scenario: Every permission granted
 
@@ -32,6 +32,26 @@ The status item SHALL show, in order: status line; Controllers submenu; Profiles
 
 - **WHEN** no controller is connected
 - **THEN** the Controllers submenu holds one disabled row that says no controller is connected
+
+#### Scenario: No profile
+
+- **WHEN** no profile exists
+- **THEN** Profiles > Activate stays enabled and its submenu holds one disabled No Profiles row, the same row as Profile > Activate Profile in the main menu
+
+#### Scenario: Profile list not read
+
+- **WHEN** the profile list is loading or the service cannot report it
+- **THEN** Profiles > Activate and Profiles > Deactivate stay enabled and each submenu holds one disabled Profiles Unavailable row
+
+#### Scenario: No profile active
+
+- **WHEN** profiles exist and none is active
+- **THEN** Profiles > Deactivate stays enabled and its submenu holds one disabled No Active Profile row, and Profiles > Activate lists every profile
+
+#### Scenario: Profile already active
+
+- **WHEN** a profile is active
+- **THEN** Profiles > Activate lists it with a checkmark and disabled, and Profiles > Deactivate lists it enabled
 
 ### Requirement: Status-item controller submenus
 

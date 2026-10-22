@@ -3309,6 +3309,8 @@
 "ui.menu.profile.none" = "프로파일 없음";
 /* Disabled item of the Profile menu's Activate Profile submenu while the profile list is loading or cannot be read. */
 "ui.menu.profile.unavailable" = "프로파일을 사용할 수 없음";
+/* Disabled item of the Profile menu's Deactivate Profile submenu in the status item menu while no profile is active. */
+"ui.menu.profile.noneActive" = "활성 프로파일 없음";
 /* Title of the alert shown when turning off a profile from the menu fails. */
 "ui.menu.profile.deactivateFailed" = "프로파일을 비활성화할 수 없습니다";
 /* Message of the alert shown when the profile changed elsewhere during the turn off. */

@@ -3532,6 +3532,8 @@
 "ui.menu.profile.none" = "Geen profielen";
 /* Disabled item of the Profile menu's Activate Profile submenu while the profile list is loading or cannot be read. */
 "ui.menu.profile.unavailable" = "Profielen niet beschikbaar";
+/* Disabled item of the Profile menu's Deactivate Profile submenu in the status item menu while no profile is active. */
+"ui.menu.profile.noneActive" = "Geen actief profiel";
 /* Title of the alert shown when turning off a profile from the menu fails. */
 "ui.menu.profile.deactivateFailed" = "Het profiel kon niet worden gedeactiveerd";
 /* Message of the alert shown when the profile changed elsewhere during the turn off. */
