@@ -1,31 +1,57 @@
 "term.app.name" = "OpenJoystickDriver";
 "ui.permissions.restartApplication" = "Khởi động lại OpenJoystickDriver";
 "ui.menu.projectPage" = "GitHub";
+/* Button that dismisses an alert in the activity view and the main window. It only acknowledges the message. */
 "action.ok" = "OK";
+/* Toolbar item of the input test window and button of the developer controller summary that reads the controller state again. */
 "action.refresh" = "Làm mới";
+/* Button of an error state view and of the controller detail facts that repeats the failed load. */
 "action.tryAgain" = "Thử lại";
+/* Button of the access sheets that closes the sheet without changing anything. It is also bound to the Escape key. */
 "action.cancel" = "Hủy";
+/* Button of the motion and stick sheets of the profile editor that stores the edited values in the profile. */
 "action.save" = "Lưu";
+/* Button of the profile creation sheet that creates the profile from the entered name. */
 "action.create" = "Tạo";
+/* Menu item and toolbar button that deletes the selected profile. */
 "action.delete" = "Xóa";
+/* Button that closes an error banner of the profile editor and of the profile list without further action. */
 "action.dismiss" = "Bỏ qua";
+/* Button in the mapping capture banner that discards local edits and loads the stored profile again. It sits beside Keep editing. */
 "action.reload" = "Tải lại";
+/* Button in the mapping capture banner that keeps the local edits when the stored profile changed. It sits beside Reload. */
 "action.keepEditing" = "Tiếp tục sửa";
+/* Button that removes the captured keys in the keyboard capture view and the captured packets in the developer packet capture view. */
 "action.clear" = "Xóa sạch";
+/* Button that asks macOS for the input permission shown on the row. Ends in an ellipsis because a system prompt follows. */
 "action.request" = "Yêu cầu…";
+/* Button of the capture assignment sheet and of the profile editor sections that adds an assignment to the profile. */
 "action.addAssignment" = "Thêm phép gán";
+/* Label and tooltip of the button that removes one assignment from the profile. */
 "action.removeAssignment" = "Xóa phép gán";
+/* Menu item of an assignment that opens the sheet to tune its analog values. Ends in an ellipsis because a sheet follows. */
 "action.adjust" = "Điều chỉnh…";
+/* Toolbar button that creates a copy of the selected profile. */
 "action.duplicate" = "Nhân bản";
+/* Button of the profile editor that turns off the active profile. It swaps with Set active. */
 "action.deactivate" = "Hủy kích hoạt";
+/* Button of the profile editor and of the status menu alert that makes the profile the active one. It swaps with Deactivate. */
 "action.setActive" = "Đặt làm hoạt động";
+/* Status text in the menu bar menu while the app starts. Keep the three dots. */
 "status.starting" = "Đang bắt đầu…";
+/* Value of a permission row in the Access area while macOS is asked for its state. Keep the three dots. */
 "status.checking" = "Đang kiểm tra…";
+/* Runtime state label: the service is up and can serve controllers. */
 "status.ready" = "Sẵn sàng";
+/* Value of a permission row in the Access area when macOS has granted the permission. */
 "status.allowed" = "Đã cho phép";
+/* Value of a permission row in the Access area when the active profiles do not use the permission. */
 "status.notNeeded" = "Không cần";
+/* Placeholder in the profile creation sheet shown instead of a controller model when no controller is connected. */
 "status.connectController" = "Kết nối bộ điều khiển";
+/* Line in the menu bar menu when no profile is active. */
 "status.noActiveProfile" = "Không có cấu hình đang hoạt động";
+/* Message in the Controllers area while the service lists the connected controllers. Keep the three dots. */
 "status.checkingControllers" = "Đang kiểm tra các bộ điều khiển đã kết nối…";
 "ui.settings.general.controllers" = "Bộ điều khiển";
 "ui.settings.general.profiles" = "Cấu hình";
@@ -324,11 +350,17 @@
 "ui.mapping.rightStickVertical" = "Cần phải theo chiều dọc";
 "ui.mapping.leftTrigger" = "Cò trái";
 "ui.mapping.rightTrigger" = "Cò phải";
+/* Accessibility value of a selectable card or row that the user has chosen. */
 "status.selected" = "Đã chọn";
+/* Accessibility value of a selectable card or row that the user has not chosen. */
 "status.notSelected" = "Chưa chọn";
+/* Value shown in a detail row that has nothing to report. */
 "status.none" = "Không có";
+/* Value of a detail row that says a feature, such as motion sensing, is present. */
 "status.available" = "Khả dụng";
+/* Value of the launch row of the controller actions when the list of connected controllers cannot be read. */
 "status.unavailable" = "Không khả dụng";
+/* Value of a permission row in the Access area when the user must act, for example because the permission is denied. */
 "status.needsAttention" = "Cần chú ý";
 "term.status" = "Trạng thái";
 "term.protocol" = "Giao thức";
@@ -342,15 +374,24 @@
 "term.profileName" = "Tên cấu hình";
 "term.keyboardPointer" = "Bàn phím & con trỏ";
 "platform.macos.term.inputInject" = "Trợ năng";
+/* Button of the combination sheets that adds the chosen entry to the combination. */
 "action.add" = "Thêm";
+/* Button of the input test window that sends the chosen player indicator or lightbar color to the controller. */
 "action.apply" = "Áp dụng";
+/* Button of the library record view and toolbar item that copies the whole text or the whole activity log to the pasteboard. */
 "action.copyAll" = "Sao chép tất cả";
+/* Button that closes the error code explainer and the input test sheet after reading. */
 "action.done" = "Xong";
+/* Button that saves a controller profile or the packet capture to a file. Ends in an ellipsis because a save panel follows. */
 "action.export" = "Xuất…";
+/* Result label of a failed check in the diagnostics list of the Activity area. */
 "status.failed" = "Thất bại";
 "platform.macos.term.inputRead" = "Giám sát đầu vào";
+/* Value of a permission row in the Access area when the driver has not asked macOS for the permission yet. */
 "status.notRequested" = "Chưa yêu cầu";
+/* Button of the combination sheets that removes the chosen entry from the combination. */
 "action.remove" = "Xóa";
+/* Button of the input test window that stops the rumble test and button of the developer view that stops the packet capture. */
 "action.stop" = "Dừng";
 "ui.error.supportReportSave" = "Không thể lưu báo cáo hỗ trợ. Hãy chọn tệp khác rồi thử lại.";
 "ui.error.logsSave" = "Không thể lưu nhật ký. Hãy chọn tệp khác rồi thử lại.";
@@ -360,9 +401,13 @@
 "ui.capture.listeningButton" = "Đang lắng nghe…";
 "ui.error.reviewAssignmentsBeforeSave" = "Hãy xem lại các phép gán trước khi lưu cấu hình này.";
 "ui.error.selectedProfileItemMissing" = "Mục cấu hình đã chọn không còn khả dụng.";
+/* Message about a request to the system extension manager that ends cancelled. The request installs or removes the driver extension. */
 "cli.transportExtension.group.cancelled" = "Yêu cầu phần mở rộng hệ thống đã bị hủy.";
+/* Message about a request to the system extension manager that finished. %@ is the result name from the system and stays as written. */
 "cli.transportExtension.group.completed" = "Yêu cầu phần mở rộng hệ thống đã kết thúc với kết quả %@.";
+/* Message about a request to the system extension manager that failed. %1$@ is the error domain, %2$d is the error code and %3$@ is the description from the system. Keep code= as written. */
 "cli.transportExtension.group.failed" = "Yêu cầu phần mở rộng hệ thống thất bại: %1$@ code=%2$d %3$@";
+/* Message when the system extension manager replaces an installed driver extension. %1$@ is the extension bundle identifier, %2$@ is the installed version and %3$@ is the version that replaces it. Keep the v before the numbers. */
 "cli.transportExtension.group.replacing" = "Đang thay thế %1$@ v%2$@ bằng v%3$@.";
 /* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker: a generic HID controller, which OJD reads by the layout its HID report descriptor declares. Keep HID as written. */
 "term.protocolFamily.hidDescriptor" = "HID chung";
@@ -563,6 +608,7 @@
 "ui.banner.liveUpdates.detail.closed" = "Dịch vụ đã đóng kết nối. Thay vào đó, OpenJoystickDriver kiểm tra thay đổi của bộ điều khiển mỗi giây.";
 "ui.banner.liveUpdates.detail.timeout" = "Dịch vụ không phản hồi kịp thời. Thay vào đó, OpenJoystickDriver kiểm tra thay đổi của bộ điều khiển định kỳ.";
 "ui.banner.liveUpdates.detail.other" = "Cập nhật trực tiếp từ dịch vụ không hoạt động. Thay vào đó, OpenJoystickDriver kiểm tra thay đổi của bộ điều khiển định kỳ.";
+/* Button of the Driver Extension section in the settings window that removes the driver extension from the system. */
 "cli.login.group.uninstallAction" = "Gỡ cài đặt";
 "ui.console.all" = "Tất cả";
 "ui.console.empty" = "Không có mục nhật ký.";
@@ -573,15 +619,25 @@
 "ui.console.loadError" = "Không thể đọc nhật ký";
 "ui.console.output" = "Đầu ra";
 "ui.console.stream" = "Luồng";
+/* Name of the notification setting for a controller that connects, in the Notifications pane of the settings window. */
 "notify.controllerConnected" = "Bộ điều khiển đã kết nối";
+/* Body of the notification shown when a controller connects. %@ is the controller name. */
 "notify.controllerConnectedBody" = "%@ đã sẵn sàng để sử dụng.";
+/* Name of the notification setting for a controller that disconnects, in the Notifications pane of the settings window. */
 "notify.controllerDisconnected" = "Bộ điều khiển đã ngắt kết nối";
+/* Body of the notification shown when a controller disconnects. %@ is the controller name. */
 "notify.controllerDisconnectedBody" = "%@ không còn được kết nối.";
+/* Body of the notification shown when a profile becomes active. %@ is the profile name. */
 "notify.profileActivatedBody" = "%@ hiện đang hoạt động.";
+/* Title of the notification shown when the active profile changes, in all three cases: activated, switched and deactivated. */
 "notify.profileChanged" = "Cấu hình đang hoạt động đã thay đổi";
+/* Body of the notification shown when the active profile is turned off. %@ is the profile name. */
 "notify.profileDeactivatedBody" = "%@ không còn hoạt động.";
+/* Body of the notification shown when the active profile changes to another one. %1$@ is the name of the profile that stops being active and %2$@ is the name of the profile that becomes active. The arrow between them stays. */
 "notify.profileSwitchedBody" = "%1$@ → %2$@";
+/* Body of the test notification that the Notifications pane sends. OpenJoystickDriver is the product name. */
 "notify.testBody" = "OpenJoystickDriver có thể thông báo cho bạn về hoạt động của bộ điều khiển và cấu hình.";
+/* Title of the test notification that the Notifications pane sends. */
 "notify.testTitle" = "Thông báo đã sẵn sàng";
 /* Failed outcome of the test notification when the app runs outside an app bundle and has no notification center. The inline error of the Settings window shows it for Send Test Notification and for a notification permission request, and `ojd setting test-notification` prints it as the reason of E2006. */
 "ui.settings.notifications.noNotificationCenter" = "Thông báo không khả dụng vì OpenJoystickDriver không chạy từ gói ứng dụng của nó. Hãy mở ứng dụng OpenJoystickDriver, rồi thử lại.";
@@ -783,6 +839,7 @@
 "ui.profiles.motion.steeringResponseExponent" = "Số mũ phản hồi khi lái";
 "ui.profiles.motion.steeringInverted" = "Đảo chiều lái";
 
+/* Value of a physical output destination field when the output is turned off. */
 "status.disabled" = "Bị vô hiệu";
 "ui.profiles.joyConPair" = "Cấu hình Joy-Con ghép đôi";
 "ui.profiles.joyConGyro" = "Nguồn con quay hồi chuyển của cặp";
@@ -828,6 +885,7 @@
 "ui.profiles.emptyActivationTitle" = "Kích hoạt cấu hình không có đầu vào bộ điều khiển?";
 "ui.profiles.emptyInputWarning" = "Cấu hình này chặn mọi đầu vào của bộ điều khiển.";
 "ui.profiles.restoreDefaultInput" = "Khôi phục đầu vào mặc định";
+/* Button of the controller actions that resets all settings of the controller. A confirmation alert with the same label follows. */
 "action.reset" = "Đặt lại";
 "ui.profiles.useControllerDefaultColor" = "Dùng mặc định của bộ điều khiển";
 "ui.profiles.damagedProfile" = "Cấu hình bị hỏng";
@@ -847,268 +905,495 @@
 "ui.controllers.disconnectWirelessConfirmMessage" = "%@ sẽ vẫn bị ngắt kết nối cho đến khi bạn tự kết nối lại.";
 "ui.controllers.disconnectWirelessConfirm" = "Ngắt kết nối";
 
+/* Title of the notification shown when a controller stops sending input. */
 "notify.controllerNeedsAttention" = "Bộ điều khiển cần được chú ý";
+/* Body of the notification shown when a controller stops sending input. %@ is the controller name. */
 "notify.controllerNeedsAttentionBody" = "Đầu vào của %@ đã ngừng cập nhật. Hãy thả các thành phần điều khiển của nó hoặc ngắt kết nối.";
+/* Error of every command when --json and --plain are both given. Both option names stay as written. */
 "cli.shared.error.jsonPlain" = "Dùng --json hoặc --plain, không dùng cả hai.";
+/* Error of every command that talks to the service when the service refuses this ojd because its code signature differs from the app. ojd and OpenJoystickDriver.app stay as written. */
 "cli.shared.error.peerRejected" = "Dịch vụ đã từ chối ojd này vì nó không được ký giống ứng dụng. Hãy chạy ojd đi kèm trong OpenJoystickDriver.app.";
+/* Error of every command that talks to the service when it does not reply in time. %@ is the waited time, such as 5 seconds. --timeout stays as written. */
 "cli.shared.error.requestTimeout" = "Dịch vụ không phản hồi trong %@. Hãy thử lại với --timeout lớn hơn.";
+/* Error of every command that talks to the service when the service reports a failure. %@ is the reason from the service. The command in quotes stays as written. */
 "cli.shared.error.serviceRequestFailed" = "Dịch vụ không hoàn tất yêu cầu: %@. Hãy kiểm tra bằng “ojd status”.";
+/* Error of the profile commands when another profile has the name. The command in quotes stays as written. */
 "cli.shared.error.duplicateProfileName" = "Đã có một cấu hình với tên đó. “ojd profile list” hiển thị mọi cấu hình.";
+/* Error of every command that talks to the service when it did not reply in time and the wait is not named. The command in quotes stays as written. */
 "cli.shared.error.serviceTimeout" = "Dịch vụ không phản hồi kịp thời. Hãy thử lại, hoặc kiểm tra bằng “ojd status”.";
+/* Error of every command that needs the service when it is not running. OpenJoystickDriver is the product name. The command in quotes stays as written. */
 "cli.shared.error.serviceUnavailable" = "Dịch vụ OpenJoystickDriver chưa chạy. Hãy khởi động bằng “ojd service start”.";
+/* Error of every command when --timeout is not a number above 0. --timeout stays as written. */
 "cli.shared.error.timeoutValue" = "--timeout cần một số giây lớn hơn 0.";
+/* Error printed for a failure that no other message covers. %@ is the description of the failure. The command with PATH in quotes stays as written. */
 "cli.shared.error.unexpected" = "Lỗi không mong đợi: %@. Hãy chạy “ojd diagnose --output PATH” và đính kèm gói vào báo cáo lỗi.";
+/* Error of ojd for a command that does not exist. %1$@ is the text the user typed and %2$@ is the closest command name. */
 "cli.shared.error.unknownCommand" = "Lệnh “%1$@” không xác định. Ý bạn là “%2$@”?";
+/* Help text of the --json flag that every command takes. stdout is the standard output stream and stays as written. */
 "cli.shared.option.json" = "In JSON ra stdout.";
+/* Help text of the --no-color flag that every command takes. */
 "cli.shared.option.noColor" = "Không dùng màu.";
+/* Help text of the --no-input flag that every command takes. */
 "cli.shared.option.noInput" = "Không bao giờ nhắc nhập; báo lỗi khi thiếu giá trị.";
+/* Help text of the --plain flag that every command takes. stdout is the standard output stream and stays as written. */
 "cli.shared.option.plain" = "In các bản ghi phân tách bằng tab ra stdout.";
+/* Help text of the --quiet flag that every command takes. stderr is the standard error stream and stays as written. */
 "cli.shared.option.quiet" = "Không in thông báo thành công ra stderr.";
+/* Help text of the --timeout option that every command takes. %1$g is the default number of seconds for a service request and %2$g is the default for the service, virtual set and virtual reset commands, which stay as written in quotes. */
 "cli.shared.option.timeout" = "Số giây chờ cho mỗi yêu cầu dịch vụ (mặc định: %1$g), hoặc để các lệnh “service”, “virtual set” và “virtual reset” hoàn tất (mặc định: %2$g).";
 "platform.macos.cli.root.group.abstract" = "Cấu hình và kiểm tra OpenJoystickDriver, trình điều khiển tay cầm chơi game cho macOS.";
 "platform.macos.cli.root.group.discussion" = "Bắt đầu tại đây:\n  ojd status             Kiểm tra dịch vụ, tiện ích mở rộng và quyền.\n  ojd diagnose           Chạy mọi kiểm tra và báo cáo điều gì đang sai.\n  ojd controller list    Liệt kê các tay cầm đang kết nối.\n\nVí dụ:\n  # In đầu vào của một tay cầm khi nó thay đổi\n  ojd controller watch 045E:028E\n  # Liệt kê các tay cầm đang kết nối dưới dạng JSON\n  ojd --json controller list\n\nMôi trường (cờ được ưu tiên hơn biến):\n  OJD_NO_INPUT=1         Giống --no-input.\n  OJD_TIMEOUT=SECONDS    Giống --timeout.\n  OJD_COLOR=WHEN         auto, always (có màu cả ngoài terminal) hoặc never.\n\nHoàn tất lệnh trong shell:\n  ojd --generate-completion-script zsh|bash|fish\n\nMã thoát:\n  0    Thành công.\n  1    Lệnh thất bại.\n  64   Lỗi cách dùng.\n  69   Dịch vụ chưa chạy. Hãy khởi động bằng “ojd service start”.\n  77   Thiếu quyền của macOS.\n  127  Bản build từ kho mã không thể chuyển lệnh cho ứng dụng đã cài.\n  130  Bị ngắt.";
+/* Last line of the help of every command. 'ojd --help' stays as written. */
 "cli.shared.help.globalOptions" = "Mọi lệnh đều nhận các tùy chọn chung; “ojd --help” liệt kê chúng.";
+/* Error when the environment variable OJD_TIMEOUT is not a number above 0. OJD_TIMEOUT stays as written. */
 "cli.shared.error.envTimeout" = "OJD_TIMEOUT cần một số giây lớn hơn 0.";
+/* Error when the environment variable OJD_COLOR has another value. OJD_COLOR, auto, always and never stay as written. */
 "cli.shared.error.envColor" = "OJD_COLOR cần là auto, always hoặc never.";
+/* Error when the environment variable OJD_NO_INPUT has another value. OJD_NO_INPUT and all the listed values stay as written. */
 "cli.shared.error.envNoInput" = "OJD_NO_INPUT cần là 1, true, yes, 0, false hoặc no.";
+/* Error of 'ojd virtual feed' when --plain is given. The command in quotes and --plain stay as written. */
 "cli.virtual.feed.errorPlain" = "--plain không áp dụng cho “virtual feed”, lệnh in các dòng JSON. Hãy bỏ --plain.";
+/* Examples block at the end of the help of 'ojd controller watch'. The command lines and option names stay as written; translate only the lines that start with #. */
 "cli.controller.watch.examples" = "Ví dụ:\n  # In đầu vào trong 10 giây\n  ojd controller watch 045E:028E --duration 10\n  # In điều khiển đầu tiên được nhấn, dưới dạng JSON\n  ojd controller watch 045E:028E --first-press --json\n  # Theo dõi mọi tay cầm và những gì tay cầm ảo của chúng gửi\n  ojd controller watch --all --output";
+/* Examples block at the end of the help of 'ojd controller rumble'. The command lines and option names stay as written; translate only the lines that start with #. */
 "cli.controller.rumble.examples" = "Ví dụ:\n  # Chạy cả hai động cơ chính ở mức 180 trong 0,45 giây\n  ojd controller rumble 045E:028E\n  # Chạy cả hai động cơ chính hết công suất trong 2 giây\n  ojd controller rumble 045E:028E --left 255 --right 255 --duration 2";
+/* Examples block at the end of the help of 'ojd controller light'. The command lines and option names stay as written; translate only the lines that start with #. */
 "cli.controller.light.examples" = "Ví dụ:\n  # Đặt thanh đèn sang màu cam\n  ojd controller light 054C:09CC --color FF8000\n  # Đặt màu và độ sáng thấp\n  ojd controller light 054C:09CC --color 0000FF --brightness 40";
+/* Examples block at the end of the help of 'ojd profile create'. The command lines, option names and the app ID stay as written; translate only the lines that start with #. */
 "cli.profile.create.examples" = "Ví dụ:\n  # Tạo hồ sơ cho một mẫu tay cầm\n  ojd profile create Racing --controller 045E:028E\n  # Chỉ áp dụng khi Safari đang ở phía trước\n  ojd profile create Browsing --controller 045E:028E --app com.apple.Safari";
+/* Examples block at the end of the help of 'ojd profile set'. The command lines and the key paths stay as written; translate only the lines that start with #. */
 "cli.profile.set.examples" = "Ví dụ:\n  # Đổi tên hồ sơ\n  ojd profile set Racing name Rally\n  # Đặt vùng chết bên trong của ánh xạ cần analog đầu tiên\n  ojd profile set Racing stickMappings.0.tuning.innerDeadzone 0.2";
+/* Examples block at the end of the help of 'ojd binding set'. The command lines, option names and sources stay as written; translate only the lines that start with #. */
 "cli.binding.set.examples" = "Ví dụ:\n  # Giữ Space trong khi nút phía nam đang được giữ\n  ojd binding set Racing button:south key:space\n  # Bật/tắt J mỗi lần nhấn\n  ojd binding set Racing button:west key:key-j --behavior toggle\n  # Lặp lại J 10 lần mỗi giây khi đang giữ\n  ojd binding set Racing button:west key:key-j --turbo-rate 10 --turbo-duty 0.5";
+/* Examples block at the end of the help of 'ojd record install'. The command lines and file names stay as written; translate only the lines that start with #. */
 "cli.record.install.examples" = "Ví dụ:\n  # Cài đặt một tệp bản ghi\n  ojd record install 045E-028E.json\n  # Đọc bản ghi từ stdin\n  ojd record install - < 045E-028E.json";
+/* Examples block at the end of the help of 'ojd access grant'. The command lines and option names stay as written; translate only the lines that start with #. */
 "cli.access.grant.examples" = "Ví dụ:\n  # Cho phép một chương trình dùng dịch vụ\n  ojd access grant /Applications/Example.app\n  # Tạo token cho các trang được phục vụ từ một origin\n  ojd access grant --token overlay --origin http://127.0.0.1:8080";
+/* One-line summary of 'ojd service' in the command list and at the top of its help. OpenJoystickDriver is the product name. */
 "cli.service.group.abstract" = "Khởi động hoặc dừng dịch vụ OpenJoystickDriver, hoặc chờ đến khi dịch vụ nhận yêu cầu.";
+/* Message printed by 'ojd service' commands when the service runs. */
 "cli.service.group.running" = "Dịch vụ đang chạy.";
+/* One-line summary of 'ojd service start' in the command list and at the top of its help. */
 "cli.service.start.abstract" = "Mở ứng dụng ở nền và chờ đến khi dịch vụ của nó nhận yêu cầu.";
+/* Error of 'ojd service start' when the ojd program is not inside the app bundle. ojd and OpenJoystickDriver.app stay as written. */
 "cli.service.start.noBundle" = "ojd này không nằm trong OpenJoystickDriver.app nên không thể khởi động dịch vụ. Hãy mở ứng dụng đã cài đặt, hoặc chạy ojd bên trong nó.";
 "platform.macos.cli.service.start.openFailed" = "macOS không thể mở %@. Hãy mở nó từ Finder để xem lý do.";
 "platform.macos.cli.service.stop.abstract" = "Dừng dịch vụ và chờ đến khi nó thoát. Các bộ điều khiển đã kết nối được trả lại cho macOS.";
+/* Error of 'ojd service stop' when the system refuses to stop the service. %@ is the reason from the system. OpenJoystickDriver is the product name. */
 "cli.service.stop.signalFailed" = "Không thể dừng dịch vụ: %@. Hãy thoát OpenJoystickDriver từ menu của nó.";
+/* Error of 'ojd service stop' when the service keeps running. %@ is the waited time, such as 5 seconds. --timeout stays as written. */
 "cli.service.stop.timeout" = "Dịch vụ không dừng trong %@. Hãy thử lại với --timeout lớn hơn.";
+/* Message printed by 'ojd service stop' when the service is stopped. */
 "cli.service.group.stopped" = "Dịch vụ đã dừng.";
+/* One-line summary of 'ojd service wait' in the command list and at the top of its help. --timeout stays as written and the default of 5 seconds is fixed. */
 "cli.service.wait.abstract" = "Chờ đến khi dịch vụ nhận yêu cầu. --timeout giới hạn thời gian chờ (mặc định 5 giây).";
+/* Error of 'ojd service wait' when the service does not answer in time. %@ is the waited time, such as 5 seconds. The command in quotes and --timeout stay as written. */
 "cli.service.wait.timeout" = "Dịch vụ không nhận yêu cầu trong %@. Hãy khởi động bằng “ojd service start”, hoặc thử lại với --timeout lớn hơn.";
+/* One-line summary of 'ojd status' in the command list and at the top of its help. */
 "cli.status.group.abstract" = "Hiển thị dịch vụ, phần mở rộng, quyền và các bộ điều khiển đã kết nối.";
+/* Long description in the help of 'ojd status'. */
 "cli.status.group.discussion" = "Hoạt động cả khi dịch vụ đã dừng: báo dịch vụ đã dừng và thoát với mã 0.";
 "platform.macos.cli.status.group.labelInputInject" = "Trợ năng";
+/* Row label in the output of 'ojd status'. The version of this command line tool follows. */
 "cli.status.group.labelCommandLineTool" = "Công cụ dòng lệnh";
+/* Heading in the output of 'ojd status' above the list of connected controllers. %lld is the number of controllers. */
 "cli.status.group.labelControllers" = "Bộ điều khiển (%lld)";
+/* Row label in the output of 'ojd status'. The state of the driver extension follows. */
 "cli.status.group.labelTransportExtension" = "Phần mở rộng";
 "platform.macos.cli.status.group.labelInputRead" = "Giám sát đầu vào";
+/* Row label in the output of 'ojd status'. The reason why the stored profile overrides could not be read follows. */
 "cli.status.group.labelOverrideError" = "Lỗi ghi đè";
 "platform.macos.cli.status.group.labelPassThrough" = "Giao cho macOS (%lld)";
+/* Row label in the output of 'ojd status'. The state and version of the service follow. */
 "cli.status.group.labelService" = "Dịch vụ";
+/* Heading in the output of 'ojd status' above the list of connected devices that the driver does not support. %lld is the number of devices. */
 "cli.status.group.labelUnbound" = "Thiết bị không được hỗ trợ (%lld)";
+/* Row label in the output of 'ojd status'. The state of the virtual gamepad follows. */
 "cli.status.group.labelVirtualDevice" = "Tay cầm ảo";
+/* Hint printed by 'ojd status' when the service is stopped. The command in quotes stays as written. */
 "cli.status.group.startHint" = "Bộ điều khiển và quyền sẽ xuất hiện khi dịch vụ chạy: “ojd service start”.";
+/* One-line summary of 'ojd access' in the command list and at the top of its help. */
 "cli.access.group.abstract" = "Bật điểm cuối và chọn chương trình nào được đọc bộ điều khiển qua nó.";
+/* Help text of the CLIENT argument of 'ojd access grant'. A client ID is the identifier that 'ojd access list' prints. */
 "cli.access.group.client" = "Đường dẫn của chương trình, hoặc ID máy khách.";
+/* Error of 'ojd access grant' when CLIENT is neither a path nor a known client ID. %@ is the text the user typed. Keep the command in quotes as written. */
 "cli.access.group.clientUnknown" = "Không có chương trình tại %@ và không có máy khách với ID đó. Xem các ID bằng “ojd access list”.";
+/* Error of 'ojd access grant' when the program at the path has no code signature to grant. %@ is the path the user gave. */
 "cli.access.group.clientUnsigned" = "%@ không chứa chương trình nào được ký. Hãy cấp quyền cho gói ứng dụng hoặc tệp thực thi của chương trình.";
+/* One-line summary of 'ojd access disable' in the command list and at the top of its help. The endpoint is the local socket that granted programs connect to. */
 "cli.access.disable.abstract" = "Tắt điểm cuối và đóng các kết nối của nó; các quyền đã cấp được giữ lại.";
+/* Message printed after 'ojd access disable' turned the endpoint off. */
 "cli.access.disable.success" = "Điểm cuối đã tắt và các kết nối của nó đã đóng.";
+/* Long description in the help of 'ojd access'. It explains the endpoint, that it is off until enabled and that only granted programs are served. Command names stay as written. */
 "cli.access.group.discussion" = "Điểm cuối là một socket cục bộ mà các chương trình được cấp quyền dùng để đọc sự kiện bộ điều khiển. Nó tắt cho đến khi bạn chạy “ojd access enable”, và dịch vụ chỉ phục vụ các chương trình có chữ ký mà bạn đã cấp quyền, hoặc gửi một token mà bạn đã cấp quyền. “ojd access web enable” thêm một WebSocket trên 127.0.0.1 cho các trang lớp phủ.";
+/* One-line summary of 'ojd access enable' in the command list and at the top of its help. */
 "cli.access.enable.abstract" = "Bật điểm cuối.";
+/* Yes or no question that 'ojd access enable' asks on a terminal before it turns the endpoint on. */
 "cli.access.enable.confirm" = "Bật điểm cuối để các chương trình bạn cấp quyền có thể đọc đầu vào của mọi bộ điều khiển?";
+/* Long description in the help of 'ojd access enable'. It says that a confirmation comes first and that only granted programs can use the endpoint. Command names stay as written. */
 "cli.access.enable.discussion" = "Hỏi xác nhận trước. Chỉ các chương trình được cấp quyền mới dùng được điểm cuối; thêm chúng bằng “ojd access grant”.";
+/* Message printed after 'ojd access enable' turned the endpoint on. %@ is the path of the socket it listens on. */
 "cli.access.enable.success" = "Điểm cuối đang lắng nghe tại %@.";
+/* One-line summary of 'ojd access grant' in the command list and at the top of its help. A token is a named secret for pages served over the WebSocket. */
 "cli.access.grant.abstract" = "Cho phép một chương trình đã ký, hoặc một token mới, dùng điểm cuối.";
 "platform.macos.cli.access.grant.adHoc" = "%@ được ký ad-hoc hoặc chưa ký, nên bất kỳ chương trình cục bộ nào cũng có thể mạo nhận chữ ký của nó. Hãy ký bằng chứng chỉ Developer ID hoặc Apple Development, rồi cấp quyền.";
 "platform.macos.cli.access.grant.platformWarning" = "Chương trình này do Apple ký. Nếu nó chạy các tập lệnh, như python3 hoặc osascript, mọi tập lệnh nó chạy đều có quyền truy cập này.";
+/* Error of 'ojd access grant' when neither CLIENT nor --token is given, or both are. CLIENT and --token NAME stay as written. */
 "cli.access.grant.clientOrToken" = "Đưa CLIENT hoặc --token NAME.";
+/* Yes or no question that 'ojd access grant' asks before it allows a program. %1$@ is the program identifier, %2$@ describes its code signer and %3$@ lists the scopes granted. */
 "cli.access.grant.confirm" = "Cho phép %1$@, được ký %2$@, dùng điểm cuối với %3$@?";
+/* Warning printed before the question of 'ojd access grant' when the control scope is requested. Control lets the program press buttons on a virtual gamepad. */
 "cli.access.grant.controlWarning" = "Phạm vi control cho phép chương trình nhấn nút trên một tay cầm ảo, mà trò chơi và ứng dụng coi là đầu vào của bạn.";
+/* Long description in the help of 'ojd access grant'. It explains that the grant names the signature of the program and which programs cannot be granted. CLIENT and command names stay as written. */
 "cli.access.grant.discussion" = "CLIENT là đường dẫn của chương trình hoặc một ID từ “ojd access list”. Quyền được cấp theo chữ ký của chương trình, nên vẫn hợp lệ khi chương trình được cập nhật hoặc di chuyển. Không thể cấp quyền cho chương trình ký ad-hoc hoặc chưa ký. Với --token thay cho CLIENT, lệnh tạo một token mà máy khách dùng để ký thử thách của dịch vụ trong hello: trên socket, trên WebSocket từ một trang ở một trong các giá trị --origin, hoặc, với token không có --origin, trên WebSocket từ chương trình không gửi tiêu đề Origin, chẳng hạn ứng dụng chạy trong hộp cát. Một trang không thể dùng phạm vi control. Token chỉ hiển thị một lần. Hỏi xác nhận trước.";
+/* Help text of the --origin option of 'ojd access grant'. An origin is a web address such as http://127.0.0.1:8080; PORT in the second example stays as written. */
 "cli.access.grant.origin" = "Một origin web, như http://127.0.0.1:8080, có các trang được phép dùng token trên WebSocket. Lặp lại để thêm. Các trang lớp phủ mà WebSocket phục vụ có origin http://127.0.0.1:PORT, với cổng mà “ojd access status” hiển thị.";
+/* Error of 'ojd access grant' when --origin is combined with the control scope. --origin stays as written. */
 "cli.access.grant.originControl" = "--origin không thể kết hợp với phạm vi control. Một trang không bao giờ điều khiển tay cầm ảo; hãy cấp control cho token không có --origin.";
+/* Error of 'ojd access grant' when --origin is given without --token. Both option names stay as written. */
 "cli.access.grant.originNeedsToken" = "--origin cần --token.";
+/* Help text of the --scope option of 'ojd access grant'. The values read and control stay as written because the user types them. */
 "cli.access.grant.scope" = "Một phạm vi để cấp: read hoặc control. Lặp lại để cấp cả hai.";
+/* Message printed after 'ojd access grant' allowed a program. %1$@ is the list of granted scopes, %2$@ is the program identifier and %3$@ is the client ID. */
 "cli.access.grant.success" = "Đã cấp %1$@ cho %2$@ (ID %3$@).";
+/* Help text of the --token option of 'ojd access grant'. It creates a named token instead of granting a program. */
 "cli.access.grant.token" = "Tạo một token với tên này thay vì cấp quyền cho chương trình.";
 "platform.macos.cli.access.grant.tokenConfirm" = "Tạo token %1$@ với %2$@, cho các chương trình trên máy Mac này?";
+/* Message printed after 'ojd access grant --token' created a token; the line ends with a colon because the secret value follows on the next line. %1$@ is the list of granted scopes, %2$@ is the token name and %3$@ is the token ID. */
 "cli.access.grant.tokenSuccess" = "Đã cấp %1$@ cho token %2$@ (ID %3$@). Hãy giữ bí mật token; nó sẽ không hiển thị lại:";
 "platform.macos.cli.access.grant.tokenWebConfirm" = "Tạo token %1$@ với %2$@, cho các chương trình trên máy Mac này và cho các trang từ %3$@?";
+/* One-line summary of 'ojd access list' in the command list and at the top of its help. */
 "cli.access.list.abstract" = "Liệt kê các máy khách và token đã được cấp quyền, cùng những mục bị từ chối trong 24 giờ qua.";
+/* Long description in the help of 'ojd access list'. It says that the printed IDs work with 'ojd access grant' and 'ojd access revoke'. token:NAME stays as written. */
 "cli.access.list.discussion" = "Mỗi máy khách có một ID mà “ojd access grant” và “ojd access revoke” chấp nhận; ID của token là token:NAME.";
+/* Heading of the list of granted clients printed by 'ojd access list'. */
 "cli.access.list.granted" = "Đã cấp quyền:";
+/* Indented line printed under a heading of 'ojd access list' when the list is empty. Keep the two leading spaces. */
 "cli.access.list.none" = "  Không có";
+/* Heading of the list of clients that connected and were refused in the last 24 hours, printed by 'ojd access list'. */
 "cli.access.list.refused" = "Bị từ chối trong 24 giờ qua:";
+/* Heading of the list of tokens that were refused in the last 24 hours, printed by 'ojd access list'. */
 "cli.access.list.refusedTokens" = "Token bị từ chối trong 24 giờ qua:";
+/* Heading of the list of granted tokens printed by 'ojd access list'. */
 "cli.access.list.tokens" = "Token đã cấp quyền:";
+/* Lowercase placeholder printed in the token list when a refused token has no name. */
 "cli.access.list.unknownToken" = "token không xác định";
+/* Error of 'ojd access' commands that change who may read the controllers, when the input is not a terminal and --force is missing. --force stays as written. */
 "cli.access.group.needsForce" = "Thay đổi này cấp cho các chương trình quyền truy cập vào bộ điều khiển của bạn. Thêm --force để xác nhận mà không cần nhắc.";
+/* One-line summary of 'ojd access revoke' in the command list and at the top of its help. */
 "cli.access.revoke.abstract" = "Gỡ quyền của một chương trình, hoặc một số phạm vi của nó.";
+/* Help text of the CLIENT argument of 'ojd access revoke'. token:NAME stays as written. */
 "cli.access.revoke.client" = "Đường dẫn của chương trình, ID máy khách, hoặc token:NAME.";
+/* Long description in the help of 'ojd access revoke'. CLIENT, --scope, 'ojd access list' and token:NAME stay as written. */
 "cli.access.revoke.discussion" = "CLIENT là đường dẫn của chương trình, một ID từ “ojd access list”, hoặc token:NAME cho một token. Không có --scope, lệnh gỡ toàn bộ quyền. Các kết nối mất một phạm vi sẽ bị đóng.";
+/* Message printed after 'ojd access revoke --scope' removed some scopes. %1$@ is the client ID, %2$@ is the list of scopes it keeps and %3$@ is the number of connections that were closed. */
 "cli.access.revoke.partial" = "Máy khách %1$@ vẫn giữ %2$@. Kết nối đã đóng: %3$@.";
+/* Help text of the --scope option of 'ojd access revoke'. The values read and control stay as written because the user types them. */
 "cli.access.revoke.scope" = "Một phạm vi để gỡ: read hoặc control. Lặp lại để gỡ cả hai.";
+/* Message printed after 'ojd access revoke' removed a whole grant. %1$@ is the client ID and %2$@ is the number of connections that were closed. */
 "cli.access.revoke.success" = "Đã gỡ quyền của máy khách %1$@. Kết nối đã đóng: %2$@.";
+/* One-line summary of 'ojd access status' in the command list and at the top of its help. */
 "cli.access.status.abstract" = "Hiển thị điểm cuối đang bật hay không, socket của nó và các máy khách đang kết nối.";
+/* Line of 'ojd access status' with three counts. %1$@ is the number of connected clients, %2$@ the number of granted clients and %3$@ the number of clients refused in the last 24 hours. */
 "cli.access.status.counts" = "Máy khách đang kết nối: %1$@. Máy khách đã cấp quyền: %2$@. Bị từ chối trong 24 giờ qua: %3$@.";
+/* Line of 'ojd access status' when the endpoint is off. Keep the colon and the space after it. */
 "cli.access.status.off" = "Điểm cuối: tắt";
+/* Line of 'ojd access status' when the endpoint is on. Keep the colon and the space after it. */
 "cli.access.status.on" = "Điểm cuối: bật";
+/* Line of 'ojd access status' that shows where the endpoint listens. %@ is the socket path. */
 "cli.access.status.socket" = "Socket: %@";
+/* Line of 'ojd access status' with two token counts. %1$@ is the number of granted tokens and %2$@ the number of tokens refused in the last 24 hours. */
 "cli.access.status.tokenCounts" = "Token đã cấp quyền: %1$@. Token bị từ chối trong 24 giờ qua: %2$@.";
+/* Line of 'ojd access status' when the WebSocket is turned on but its port could not be opened. %@ is the port number. */
 "cli.access.status.webClosed" = "WebSocket: bật, nhưng không thể mở cổng %@";
+/* Line of 'ojd access status' when the WebSocket is off. Keep the colon and the space after it. */
 "cli.access.status.webOff" = "WebSocket: tắt";
+/* Line of 'ojd access status' when the WebSocket is on. %1$@ is the WebSocket address, %2$@ is the address of the overlay pages and %3$@ is the folder they are served from. */
 "cli.access.status.webOn" = "WebSocket: bật tại %1$@; trang lớp phủ tại %2$@ từ %3$@";
+/* One-line summary of 'ojd access web' in the command list and at the top of its help. The WebSocket serves overlay pages. */
 "cli.access.web.abstract" = "Bật hoặc tắt WebSocket cho các trang lớp phủ.";
+/* One-line summary of 'ojd access web disable' in the command list and at the top of its help. */
 "cli.access.web.disableAbstract" = "Tắt WebSocket và đóng các kết nối của nó; các token được giữ lại.";
+/* Message printed after 'ojd access web disable' turned the WebSocket off. */
 "cli.access.web.disableSuccess" = "WebSocket đã tắt và các kết nối của nó đã đóng.";
+/* Long description in the help of 'ojd access web'. It names the address, the path /endpoint and the Overlays folder, which stay as written, and explains which pages may connect. */
 "cli.access.web.discussion" = "WebSocket chỉ lắng nghe trên 127.0.0.1, tại /endpoint, và phục vụ các tệp trong thư mục Overlays của nó trên cùng cổng. Một trang phải đến từ một origin đã được cấp token, và phải ký thử thách của dịch vụ bằng token đó trong hello; hãy cấp bằng “ojd access grant --token NAME --origin URL”.";
+/* One-line summary of 'ojd access web enable' in the command list and at the top of its help. */
 "cli.access.web.enableAbstract" = "Bật WebSocket.";
+/* Yes or no question that 'ojd access web enable' asks on a terminal before it turns the WebSocket on. */
 "cli.access.web.enableConfirm" = "Bật WebSocket để các trang từ những origin bạn cấp token có thể dùng điểm cuối?";
+/* Long description in the help of 'ojd access web enable'. It says that a confirmation comes first and how the port is chosen. --port stays as written. */
 "cli.access.web.enableDiscussion" = "Hỏi xác nhận trước. Không có --port, dùng cổng đã lưu; lần đầu, hệ thống chọn một cổng trống và dịch vụ lưu lại.";
+/* Help text of the --port option of 'ojd access web enable'. The range is a fixed fact of the command. */
 "cli.access.web.port" = "Cổng trên 127.0.0.1, từ 1024 đến 65535.";
+/* Help text of the --automatic option of 'ojd access web enable'. */
 "cli.access.web.automatic" = "Để hệ thống chọn cổng trống thay vì cổng đã lưu.";
+/* Error of 'ojd access web enable' when --automatic and --port are both given. Both option names stay as written. */
 "cli.access.web.automaticConflict" = "Không thể dùng --automatic cùng với --port.";
+/* Error of 'ojd access web enable' when --port is outside the allowed range. --port stays as written. */
 "cli.access.web.portRange" = "--port phải nằm trong khoảng 1024 đến 65535.";
+/* One-line summary of 'ojd diagnose' in the command list and at the top of its help. */
 "cli.diagnose.group.abstract" = "Chạy mọi kiểm tra và báo cáo điều gì không ổn.";
+/* Help text of the --output option of 'ojd diagnose'. A support bundle is a file with the diagnostic report for a bug report. */
 "cli.diagnose.group.output" = "Đồng thời ghi một gói hỗ trợ vào tệp này.";
+/* Error of 'ojd diagnose --output' when the support bundle could not be written. %@ is the reason from the system. --output stays as written. */
 "cli.diagnose.group.outputFailed" = "Gói hỗ trợ chưa được ghi: %@. Hãy chọn đường dẫn --output khác.";
+/* Error of 'ojd diagnose --output' when the folder of the path is missing. %@ is the folder path. --output stays as written. */
 "cli.diagnose.group.outputParent" = "--output cần một thư mục có sẵn; %@ không tồn tại.";
+/* Progress line of 'ojd diagnose --output' while the support bundle is written. Keep the three dots. */
 "cli.diagnose.group.outputProgress" = "Đang ghi gói hỗ trợ…";
+/* Message printed after 'ojd diagnose --output' wrote the support bundle. %@ is the file path. The bundle lists the names of the devices, so the user should read it first. */
 "cli.diagnose.group.outputWritten" = "Đã ghi gói hỗ trợ vào %@. Hãy xem lại trước khi chia sẻ; tên thiết bị được bao gồm.";
+/* Long description in the help of 'ojd diagnose'. pass, warn, fail and skip are the check results printed by the command and stay as written, as do --soak and the other option names. */
 "cli.diagnose.group.discussion" = "Mỗi kiểm tra báo pass, warn, fail hoặc skip. Các kiểm tra cần dịch vụ sẽ bị bỏ qua khi dịch vụ đã dừng. Thoát với mã 1 khi có kiểm tra thất bại. --soak thêm một kiểm tra tình trạng khi chạy, lấy mẫu dịch vụ trong khoảng thời gian đã cho; không có nó thì kiểm tra này bị bỏ qua. --output còn ghi một báo cáo hỗ trợ; hãy xem lại trước khi chia sẻ.";
 "platform.macos.cli.diagnose.group.transportExtensionAbsent" = "chưa đăng ký với macOS; hãy chạy “ojd transport-extension activate”";
 "platform.macos.cli.diagnose.group.transportExtensionActive" = "đang hoạt động trong macOS";
+/* Detail of the transport extension check of 'ojd diagnose' when the extension bundle has an unexpected identifier. %@ is that identifier. OpenJoystickDriver is the product name. */
 "cli.diagnose.group.transportExtensionBundleInvalid" = "mã định danh gói không mong đợi %@; hãy cài đặt lại OpenJoystickDriver";
+/* Detail of the transport extension check of 'ojd diagnose' when the extension is not inside the app. OpenJoystickDriver is the product name. */
 "cli.diagnose.group.transportExtensionBundleMissing" = "không được nhúng trong ứng dụng; hãy cài đặt lại OpenJoystickDriver";
+/* Detail of the transport extension check of 'ojd diagnose' when the extension is inside the app. */
 "cli.diagnose.group.transportExtensionBundlePresent" = "đã được nhúng trong ứng dụng";
+/* Detail of the transport extension check of 'ojd diagnose' when the extension is registered but the user has not approved it. The command in quotes stays as written. */
 "cli.diagnose.group.transportExtensionInactive" = "đã đăng ký nhưng chưa hoạt động; hãy phê duyệt bằng “ojd transport-extension activate”";
 "platform.macos.cli.diagnose.group.transportExtensionUnavailable" = "macOS không báo cáo việc đăng ký: %@";
+/* Last line of 'ojd diagnose' when checks failed. %lld is the number of failed checks. The command with <path> in quotes stays as written. */
 "cli.diagnose.group.failed" = "Kiểm tra thất bại: %lld. Hãy sửa theo chi tiết ở trên, hoặc chạy “ojd diagnose --output <path>” và đính kèm tệp vào báo cáo lỗi.";
+/* Help text of the --footprint-limit-mib option of 'ojd diagnose'. The physical footprint is the memory charged to the service in MiB, mebibytes. The range 0-65536 is fixed. */
 "cli.diagnose.group.footprintLimit" = "Với --soak, báo lỗi khi vượt mức dấu vết bộ nhớ vật lý này tính bằng MiB; 0 để tắt (0-65536).";
+/* Help text of the --interval-ms option of 'ojd diagnose'. The range 100-60000 is fixed. */
 "cli.diagnose.group.interval" = "Với --soak, số mili giây giữa các lần lấy mẫu (100-60000).";
+/* Error of 'ojd diagnose' when --interval-ms is out of range. --interval-ms stays as written. */
 "cli.diagnose.group.intervalRange" = "--interval-ms phải nằm trong khoảng 100 đến 60000.";
+/* Error of 'ojd diagnose' when a memory limit option is out of range. Both option names stay as written. */
 "cli.diagnose.group.limitRange" = "--rss-limit-mib và --footprint-limit-mib phải nằm trong khoảng 0 đến 65536.";
+/* Detail of a permission check of 'ojd diagnose' when macOS denied the permission. The command in quotes stays as written. */
 "cli.diagnose.group.permissionDenied" = "bị từ chối; hãy cấp bằng “ojd permission request”";
+/* Detail of a permission check of 'ojd diagnose' when the state of the permission cannot be read. */
 "cli.diagnose.group.permissionUnknown" = "trạng thái không xác định";
+/* Help text of the --rss-limit-mib option of 'ojd diagnose'. The resident size is the memory of the service held in RAM, in MiB, mebibytes. The range 0-65536 is fixed. */
 "cli.diagnose.group.rssLimit" = "Với --soak, báo lỗi khi vượt kích thước thường trú này tính bằng MiB; 0 để tắt (0-65536).";
+/* Detail of the service check of 'ojd diagnose' when the service runs. %@ is the version of the service. */
 "cli.diagnose.group.serviceRunning" = "đang chạy %@";
+/* Detail of the service check of 'ojd diagnose' when the service is stopped. The command in quotes stays as written. */
 "cli.diagnose.group.serviceStopped" = "chưa chạy; hãy khởi động bằng “ojd service start”";
+/* Reason shown for a skipped check of 'ojd diagnose' when the service did not answer. */
 "cli.diagnose.group.skipServiceFailed" = "dịch vụ không phản hồi";
+/* Reason shown for a skipped check of 'ojd diagnose' when the service is not running. */
 "cli.diagnose.group.skipServiceStopped" = "dịch vụ chưa chạy";
+/* Help text of the --soak option of 'ojd diagnose'. The number is a count of seconds from 1 to 86400. */
 "cli.diagnose.group.soak" = "Đồng thời lấy mẫu bộ nhớ, bộ mô tả tệp và CPU của dịch vụ trong khoảng thời gian này (1-86400).";
+/* Error of the runtime sampling in 'ojd diagnose --soak' when the settings are out of range. %1$lld and %2$lld are the lowest and highest duration in seconds; %3$lld and %4$lld are the lowest and highest interval in ms, milliseconds. The three dots between two numbers mean a range. */
 "cli.diagnose.group.soakErrorInvalidConfiguration" = "Việc lấy mẫu cần %1$lld...%2$lld giây và khoảng lấy mẫu %3$lld...%4$lld ms.";
+/* Error of the runtime sampling in 'ojd diagnose --soak' when the service returned no sample. */
 "cli.diagnose.group.soakErrorNoSamples" = "Dịch vụ không tạo ra mẫu thời gian chạy nào.";
+/* Error of the runtime sampling in 'ojd diagnose --soak' when the system does not report the service process. %d is the process ID. */
 "cli.diagnose.group.soakErrorProcessUnavailable" = "Không thể đọc thông tin thời gian chạy của tiến trình dịch vụ %d.";
+/* Detail of the runtime health check of 'ojd diagnose' when --soak is not given. --soak SECONDS stays as written. */
 "cli.diagnose.group.soakNotRequested" = "chưa được yêu cầu; hãy dùng --soak SECONDS";
+/* Progress line of 'ojd diagnose --soak'. %@ is the sampling duration, such as 30 seconds. Keep the three dots. */
 "cli.diagnose.group.soakProgress" = "Đang lấy mẫu dịch vụ trong %@…";
+/* Verdict of the runtime health check of 'ojd diagnose --soak' when the physical footprint passed its limit. %1$.1f is the resident size in MiB, %2$.1f is the footprint in MiB, %3$lld is the number of open file descriptors, %4$.1f is the CPU load in percent and %5$.0f is the sampling time in seconds. The double percent sign prints one percent sign. */
 "cli.diagnose.group.soakVerdictFootprintLimit" = "Vượt giới hạn dấu vết bộ nhớ: kích thước thường trú %1$.1f MiB, dấu vết bộ nhớ %2$.1f MiB, bộ mô tả tệp %3$lld, CPU %4$.1f%% trong %5$.0f giây";
+/* Verdict of the runtime health check of 'ojd diagnose --soak' when too few samples were taken. %1$.1f is the resident size in MiB, %2$.1f is the footprint in MiB, %3$lld is the number of open file descriptors, %4$.1f is the CPU load in percent and %5$.0f is the sampling time in seconds. The double percent sign prints one percent sign. */
 "cli.diagnose.group.soakVerdictInsufficientData" = "Không đủ dữ liệu: kích thước thường trú %1$.1f MiB, dấu vết bộ nhớ %2$.1f MiB, bộ mô tả tệp %3$lld, CPU %4$.1f%% trong %5$.0f giây";
+/* Verdict of the runtime health check of 'ojd diagnose --soak' when the memory of the service grew during sampling. %1$.1f is the resident size in MiB, %2$.1f is the footprint in MiB, %3$lld is the number of open file descriptors, %4$.1f is the CPU load in percent and %5$.0f is the sampling time in seconds. The double percent sign prints one percent sign. */
 "cli.diagnose.group.soakVerdictMemoryGrowth" = "Phát hiện bộ nhớ tăng: kích thước thường trú %1$.1f MiB, dấu vết bộ nhớ %2$.1f MiB, bộ mô tả tệp %3$lld, CPU %4$.1f%% trong %5$.0f giây";
+/* Verdict of the runtime health check of 'ojd diagnose --soak' when the resident size passed its limit. %1$.1f is the resident size in MiB, %2$.1f is the footprint in MiB, %3$lld is the number of open file descriptors, %4$.1f is the CPU load in percent and %5$.0f is the sampling time in seconds. The double percent sign prints one percent sign. */
 "cli.diagnose.group.soakVerdictResidentLimit" = "Vượt giới hạn kích thước thường trú: kích thước thường trú %1$.1f MiB, dấu vết bộ nhớ %2$.1f MiB, bộ mô tả tệp %3$lld, CPU %4$.1f%% trong %5$.0f giây";
+/* Verdict of the runtime health check of 'ojd diagnose --soak' when resources such as file descriptors grew during sampling. %1$.1f is the resident size in MiB, %2$.1f is the footprint in MiB, %3$lld is the number of open file descriptors, %4$.1f is the CPU load in percent and %5$.0f is the sampling time in seconds. The double percent sign prints one percent sign. */
 "cli.diagnose.group.soakVerdictResourceGrowth" = "Phát hiện tài nguyên tăng: kích thước thường trú %1$.1f MiB, dấu vết bộ nhớ %2$.1f MiB, bộ mô tả tệp %3$lld, CPU %4$.1f%% trong %5$.0f giây";
+/* Verdict of the runtime health check of 'ojd diagnose --soak' when nothing grew during sampling. %1$.1f is the resident size in MiB, %2$.1f is the footprint in MiB, %3$lld is the number of open file descriptors, %4$.1f is the CPU load in percent and %5$.0f is the sampling time in seconds. The double percent sign prints one percent sign. */
 "cli.diagnose.group.soakVerdictStable" = "Ổn định: kích thước thường trú %1$.1f MiB, dấu vết bộ nhớ %2$.1f MiB, bộ mô tả tệp %3$lld, CPU %4$.1f%% trong %5$.0f giây";
+/* Error of 'ojd diagnose' when --soak is out of range. --soak stays as written. The range is fixed. */
 "cli.diagnose.group.soakRange" = "--soak phải nằm trong khoảng 1 đến 86400 giây.";
 "platform.macos.cli.diagnose.group.usbFailed" = "Quét USB thất bại: %@. Hãy cấp Giám sát đầu vào cho OpenJoystickDriver.";
+/* Detail of the USB check of 'ojd diagnose'. %lld is the number of vendor-specific USB controllers that the system lists. */
 "cli.diagnose.group.usbOk" = "Bộ điều khiển USB dành riêng cho nhà sản xuất có thể thấy: %lld";
+/* Detail of the virtual gamepad check of 'ojd diagnose' when the user turned the virtual gamepad off. */
 "cli.diagnose.group.virtualDisabled" = "tay cầm ảo đã tắt";
+/* Detail of the virtual gamepad check of 'ojd diagnose' when the virtual gamepad reports an error. %@ is the error message of the system. */
 "cli.diagnose.group.virtualError" = "lỗi tay cầm ảo: %@";
+/* Detail of the virtual gamepad check of 'ojd diagnose' when the stored profile overrides cannot be read. %@ is the error message. */
 "cli.diagnose.group.virtualOverride" = "không đọc được các ghi đè cấu hình đã lưu: %@";
+/* Error of the commands that need a macOS permission. %@ is the permission name. The command in quotes stays as written. */
 "cli.shared.error.permissionMissing" = "Thiếu quyền truy cập %@. Hãy cấp bằng “ojd permission request”.";
 "platform.macos.cli.shared.error.permissionStillMissing" = "Vẫn thiếu quyền truy cập %1$@. Hãy cho phép OpenJoystickDriver trong Cài đặt hệ thống > %2$@, rồi chạy lại “ojd permission request”.";
 "platform.macos.cli.transportExtension.group.abstract" = "Hiển thị, kích hoạt hoặc hủy kích hoạt phần mở rộng hệ thống DriverKit của OpenJoystickDriver.";
 "platform.macos.cli.transportExtension.activate.abstract" = "Yêu cầu macOS kích hoạt phần mở rộng. Có thể cần phê duyệt trong Cài đặt hệ thống.";
+/* Long description in the help of 'ojd transport-extension activate'. The ojd program and the path stay as written. */
 "cli.transportExtension.activate.discussion" = "Hãy chạy ojd bên trong /Applications/OpenJoystickDriver.app. Chờ phê duyệt thì thoát với mã 0.";
+/* Message printed after 'ojd transport-extension activate' when the driver extension is active. */
 "cli.transportExtension.group.activated" = "Phần mở rộng đang hoạt động.";
 "platform.macos.cli.transportExtension.group.approval" = "Yêu cầu cần bạn phê duyệt. Hãy cho phép trong Cài đặt hệ thống > Cài đặt chung > Mục đăng nhập & Phần mở rộng > Phần mở rộng trình điều khiển.";
+/* Error of 'ojd transport-extension activate' when the app has no driver extension inside. %@ is the extension name, which stays as written with .dext. The build command stays as written. */
 "cli.transportExtension.group.bundleMissing" = "Ứng dụng không chứa %@.dext. Hãy chạy “./Scripts/ojd build install dev”, rồi thử lại từ /Applications.";
 "platform.macos.cli.transportExtension.group.codesignFailedToRun" = "Không thể chạy codesign để xác minh ứng dụng: %@. Hãy kiểm tra /usr/bin/codesign có tồn tại không.";
 "platform.macos.cli.transportExtension.deactivate.abstract" = "Yêu cầu macOS hủy kích hoạt phần mở rộng. Các bộ điều khiển được trả lại cho macOS.";
+/* Long description in the help of 'ojd transport-extension deactivate'. The ojd program and the path stay as written. */
 "cli.transportExtension.deactivate.discussion" = "Hãy chạy ojd bên trong /Applications/OpenJoystickDriver.app.";
+/* Message printed after 'ojd transport-extension deactivate' when the driver extension is inactive. */
 "cli.transportExtension.group.deactivated" = "Phần mở rộng không hoạt động.";
+/* Error of 'ojd transport-extension' commands when ojd runs from a folder other than Applications. %@ is the path of this ojd. The path of the installed app stays as written. */
 "cli.transportExtension.group.notInstalled" = "ojd này chạy từ %@, không phải từ /Applications. Hãy chạy ojd bên trong /Applications/OpenJoystickDriver.app.";
+/* Error of 'ojd transport-extension' commands when the app code signature is not valid. %@ is the description of the signature problem. The build command stays as written. */
 "cli.transportExtension.group.signatureInvalid" = "Chữ ký của ứng dụng không hợp lệ (%@). Hãy xây dựng lại bằng “./Scripts/ojd build install-fast dev”, rồi thử lại.";
 "platform.macos.cli.transportExtension.status.abstract" = "Hiển thị phần mở rộng có nằm trong ứng dụng và đã đăng ký với macOS hay không.";
+/* Row of 'ojd transport-extension status'. %@ is the state of the extension inside the app: present, missing or invalid. Keep the two spaces after the colon. */
 "cli.transportExtension.status.bundle" = "Phần mở rộng được nhúng:  %@";
+/* Long description in the help of 'ojd transport-extension status'. present, missing, invalid, active, inactive, absent and unavailable are values the command prints and stay as written. */
 "cli.transportExtension.status.discussion" = "Gói có mặt, thiếu hoặc không hợp lệ. Việc đăng ký là active, inactive, absent hoặc unavailable; unavailable thoát với mã 1. Hoạt động cả khi dịch vụ đã dừng.";
 "platform.macos.cli.transportExtension.status.registration" = "Đăng ký macOS:  %@";
 "platform.macos.cli.transportExtension.status.unavailable" = "macOS không báo cáo việc đăng ký phần mở rộng: %@. Hãy thử lại, hoặc chạy “systemextensionsctl list”.";
 "platform.macos.cli.transportExtension.group.submitFailed" = "macOS đã từ chối yêu cầu. Hãy chạy “ojd transport-extension status” và kiểm tra “systemextensionsctl list”.";
 "platform.macos.cli.transportExtension.group.timeout" = "macOS không hoàn tất yêu cầu kịp thời. Hãy kiểm tra Cài đặt hệ thống xem có lời nhắc phê duyệt không, rồi chạy “ojd transport-extension status”.";
+/* One-line summary of 'ojd log' in the command list and at the top of its help. */
 "cli.log.group.abstract" = "Hiển thị nhật ký dịch vụ hoặc in nơi chúng được lưu.";
+/* One-line summary of 'ojd log path' in the command list and at the top of its help. The command line after 'Open it with:' stays as written, including the backslashes before the quotes. */
 "cli.log.path.abstract" = "In thư mục chứa nhật ký dịch vụ. Mở nó bằng: open \"$(ojd log path)\"";
+/* One-line summary of 'ojd log export' in the command list and at the top of its help. The tilde stands for the home folder of the user and stays as written. */
 "cli.log.export.abstract" = "Ghi phần cuối của nhật ký dịch vụ vào một tệp, với thư mục chính của bạn hiển thị là ~.";
+/* Help text of the FILE argument of 'ojd log export'. */
 "cli.log.export.file" = "Tệp để ghi.";
+/* Help text of the --force flag of 'ojd log export'. */
 "cli.log.export.force" = "Thay thế tệp nếu nó đã tồn tại.";
+/* Error of 'ojd log export' when the target file exists. %@ is the file path. --force stays as written. */
 "cli.log.export.exists" = "%@ đã tồn tại. Hãy dùng --force để thay thế.";
+/* Message printed after 'ojd log export' wrote the file. %@ is the file path. */
 "cli.log.export.written" = "Đã ghi nhật ký dịch vụ vào %@.";
+/* One-line summary of 'ojd log show' in the command list and at the top of its help. */
 "cli.log.show.abstract" = "In phần cuối của nhật ký dịch vụ.";
+/* Long description in the help of 'ojd log show'. $PAGER, the default 'less -FRX', --follow, --json and Control-C stay as written. Control-C is the key combination that stops a program in a terminal. */
 "cli.log.show.discussion" = "Trên terminal, đầu ra đi qua $PAGER (mặc định “less -FRX”; đặt PAGER thành giá trị rỗng để tắt phân trang). --follow tiếp tục in các dòng mới cho đến khi bạn nhấn Control-C; với --json, nó in một đối tượng JSON mỗi dòng.";
+/* Placeholder line printed for a log file without content, in the log text that 'ojd log show' prints. Keep the parentheses. */
 "cli.log.show.empty" = "(tệp nhật ký trống)";
+/* Help text of the --follow flag of 'ojd log show'. */
 "cli.log.show.follow" = "Tiếp tục in các dòng khi dịch vụ ghi chúng.";
+/* Help text of the --lines option of 'ojd log show'. The range is fixed. */
 "cli.log.show.lines" = "Số dòng để in từ mỗi nhật ký, từ 1 đến 10000.";
+/* Error of 'ojd log show' when --lines is out of range. --lines stays as written. The range is fixed. */
 "cli.log.show.linesRange" = "--lines phải nằm trong khoảng 1 đến 10000.";
+/* Placeholder line printed for a log file that does not exist, in the log text that 'ojd log show' prints. Keep the parentheses. */
 "cli.log.show.missing" = "(tệp nhật ký không tồn tại)";
+/* Error of 'ojd log show' when the log files cannot be read. %@ is the reason from the system. The command in quotes stays as written. */
 "cli.log.show.readFailed" = "Không thể đọc nhật ký dịch vụ: %@. Hãy kiểm tra thư mục mà “ojd log path” in ra.";
+/* Placeholder line printed above the shown part of a long log file, in the log text that 'ojd log show' prints. Keep the parentheses. */
 "cli.log.show.truncated" = "(đã lược bỏ nội dung nhật ký cũ hơn)";
 "platform.macos.cli.permission.group.abstract" = "Hiển thị hoặc yêu cầu các quyền macOS mà OpenJoystickDriver cần.";
+/* One-line summary of 'ojd permission list' in the command list and at the top of its help. OpenJoystickDriver is the product name. */
 "cli.permission.list.abstract" = "Liệt kê từng quyền, trạng thái của nó và OpenJoystickDriver dùng nó để làm gì.";
+/* Long description in the help of 'ojd permission list'. granted, denied and unknown are the states printed by the command and stay as written, as do stderr and exit code 0. */
 "cli.permission.list.discussion" = "Các trạng thái là granted, denied hoặc unknown. Khi dịch vụ đã dừng, trạng thái được đọc trong tiến trình này và một ghi chú trên stderr cho biết điều đó; mã thoát vẫn là 0.";
+/* Note that 'ojd permission list' prints on the error stream when the service is stopped. The command in quotes stays as written. */
 "cli.permission.list.localState" = "Dịch vụ chưa chạy, nên các trạng thái này do tiến trình này đọc. Hãy khởi động dịch vụ bằng “ojd service start” để xem trạng thái mà nó thấy.";
 "platform.macos.cli.permission.group.nameInputInject" = "Trợ năng";
+/* Name of the permission for the approval of the driver extension, in the output of 'ojd permission list' and 'ojd diagnose'. */
 "cli.permission.group.nameUsbTransport" = "Phê duyệt phần mở rộng trình điều khiển";
 "platform.macos.cli.permission.group.nameInputRead" = "Giám sát đầu vào";
+/* Name of the permission to send keyboard and mouse events, in the output of 'ojd permission list' and 'ojd diagnose'. */
 "cli.permission.group.namePostEvent" = "Đầu ra bàn phím và chuột";
+/* Purpose column of the keyboard and mouse output permission in 'ojd permission list'. It says what the driver uses the permission for. */
 "cli.permission.group.purposePostEvent" = "Gửi sự kiện bàn phím, con trỏ và cuộn đã ánh xạ lại";
+/* Remark added in parentheses to the purpose of a permission in 'ojd permission list' when the active profile needs it. */
 "cli.permission.group.requiredByProfile" = "hồ sơ đang dùng yêu cầu";
 "platform.macos.cli.permission.group.paneInputInject" = "Quyền riêng tư & Bảo mật > Trợ năng";
 "platform.macos.cli.permission.group.paneUsbTransport" = "Cài đặt chung > Mục đăng nhập & Phần mở rộng > Phần mở rộng trình điều khiển";
 "platform.macos.cli.permission.group.paneInputRead" = "Quyền riêng tư & Bảo mật > Giám sát đầu vào";
+/* Purpose column of the input injection permission in 'ojd permission list'. It says what the driver uses the permission for. */
 "cli.permission.group.purposeInputInject" = "Cung cấp đầu ra bộ điều khiển ảo";
 "platform.macos.cli.permission.group.purposeUsbTransport" = "Sở hữu các giao diện USB thô bị giới hạn bởi entitlement; không phải quyền riêng tư TCC";
+/* Purpose column of the input reading permission in 'ojd permission list'. It says what the driver uses the permission for. */
 "cli.permission.group.purposeInputRead" = "Đọc đầu vào từ các bộ điều khiển vật lý";
+/* One-line summary of 'ojd permission request' in the command list and at the top of its help. */
 "cli.permission.request.abstract" = "Yêu cầu dịch vụ xin các quyền; nó không bao giờ nhắc trong terminal.";
 "platform.macos.cli.permission.request.discussion" = "macOS hiển thị lời nhắc riêng cho dịch vụ. Thoát với mã 77 khi một quyền được yêu cầu vẫn chưa được cấp. Không có ids, yêu cầu input-read và input-inject. Ở đây --timeout mặc định là 10 giây.";
+/* Message printed by 'ojd permission request' when macOS granted the permission. */
 "cli.permission.request.granted" = "Quyền truy cập được yêu cầu đã được cấp.";
+/* Help text of the PERMISSION argument of 'ojd permission request'. input-read and input-inject are values the user types and stay as written. */
 "cli.permission.request.ids" = "Các quyền để yêu cầu: input-read hoặc input-inject.";
+/* Error of 'ojd permission request' for an unknown permission. %1$@ is the text the user gave and %2$@ is the comma-separated list of valid values, which stay as written. */
 "cli.permission.request.unknownId" = "Quyền “%1$@” không xác định. Hãy dùng %2$@.";
+/* One-line summary of 'ojd config' in the command list and at the top of its help. */
 "cli.config.group.abstract" = "Hiển thị cấu hình mà OpenJoystickDriver áp dụng và lớp nào đã đặt từng giá trị.";
+/* Long description in the help of 'ojd config'. It lists the configuration layers from lowest to highest priority; all.patch.json is a file name that stays as written. */
 "cli.config.group.discussion" = "Các giá trị xếp thành lớp, từ thấp nhất: mặc định của trình điều khiển, bản ghi đi kèm, bản ghi của gói, all.patch.json, bản ghi của bạn, hồ sơ đang hoạt động. Mỗi khóa tinh chỉnh lấy giá trị của lớp cao nhất đặt khóa đó.";
+/* One-line summary of 'ojd config show' in the command list and at the top of its help. */
 "cli.config.show.abstract" = "In từng giá trị tinh chỉnh và lớp đã đặt giá trị đó.";
+/* Help text of the --controller option of 'ojd config show'. VVVV:PPPP stands for the vendor ID and product ID in hexadecimal and stays as written. */
 "cli.config.show.controller" = "Hiển thị tinh chỉnh hiệu lực của một bộ điều khiển, dạng VVVV:PPPP, thay cho mặc định chung.";
+/* Warning printed by 'ojd config show' when a part of the defaults file is invalid. %1$@ is the file path and %2$@ is the description of the problem. */
 "cli.config.show.defaultsIgnored" = "Đã bỏ qua %1$@: %2$@";
+/* Long description in the help of 'ojd config show'. --controller and all.patch.json stay as written. */
 "cli.config.show.discussion" = "Không có --controller, in mọi khóa tinh chỉnh cùng giá trị của chúng trong all.patch.json, và các họ có bản ghi đọc những khóa đó. Khi có, in bản ghi của bộ điều khiển sau khi bản ghi đi kèm, các bản ghi của gói, all.patch.json và bản ghi của bạn được xếp thành lớp. Khóa mà không lớp nào đặt sẽ hiển thị “mặc định của trình điều khiển”.";
+/* Indented line below a tuning key of 'ojd config show' that lists the controller families whose records read the key. %@ is the comma-separated list of family names. */
 "cli.config.show.readBy" = "được đọc bởi: %@";
+/* Warning of 'ojd config show' about a key in all.patch.json that no connected controller reads. %1$@ is the key and %2$@ lists the families that do read it. */
 "cli.config.show.unread" = "all.patch.json đặt %1$@, nhưng không có bộ điều khiển nào đang kết nối đọc khóa này. Các họ đọc khóa này: %2$@.";
+/* Note printed by 'ojd config show' when it cannot check for unread keys because no controller is connected. all.patch.json stays as written. */
 "cli.config.show.unreadSkippedNoController" = "Không có bộ điều khiển nào được kết nối nên đã bỏ qua bước kiểm tra các khóa all.patch.json mà không bộ điều khiển nào đọc.";
+/* Note printed by 'ojd config show' when it cannot check for unread keys because the service is not running. all.patch.json stays as written. */
 "cli.config.show.unreadSkippedNoService" = "Dịch vụ không chạy nên đã bỏ qua bước kiểm tra các khóa all.patch.json mà không bộ điều khiển nào đang kết nối đọc.";
+/* Value shown by 'ojd config show' for a tuning key that no layer sets, so the driver default applies. */
 "cli.config.show.unset" = "mặc định của trình điều khiển";
+/* One-line summary of 'ojd setting' in the command list and at the top of its help. */
 "cli.setting.group.abstract" = "Liệt kê, đọc hoặc thay đổi cài đặt ứng dụng OpenJoystickDriver.";
+/* Error of 'ojd setting set' when the value is neither true nor false. %1$@ is the text the user gave and %2$@ is the setting name, which stays as written. true and false stay as written. */
 "cli.setting.group.badValue" = "“%1$@” không phải là giá trị của %2$@. Hãy dùng true hoặc false.";
+/* Help text of the developerTools setting in 'ojd setting list'. */
 "cli.setting.group.developerTools" = "Hiển thị công cụ nhà phát triển trong cửa sổ Cài đặt.";
+/* Long description in the help of 'ojd setting'. */
 "cli.setting.group.discussion" = "Dịch vụ đang chạy áp dụng từng cài đặt, nên mọi lệnh setting đều cần nó.";
+/* One-line summary of 'ojd setting get' in the command list and at the top of its help. */
 "cli.setting.get.abstract" = "In giá trị của một cài đặt.";
+/* Long description in the help of 'ojd setting get'. true, false and --json stay as written. */
 "cli.setting.get.discussion" = "Chỉ in true hoặc false, dành cho tập lệnh. Với --json, in khóa và giá trị.";
+/* Help text of the includePrereleaseUpdates setting in 'ojd setting list'. A pre-release version is a test version before a stable release. */
 "cli.setting.group.includePrereleaseUpdates" = "Bao gồm các phiên bản phát hành trước khi kiểm tra cập nhật.";
+/* Help text of the KEY argument of 'ojd setting get'. launchAtLogin is a setting name and stays as written. */
 "cli.setting.group.key" = "Cài đặt để đọc, như launchAtLogin.";
+/* Help text of the launchAtLogin setting in 'ojd setting list'. OpenJoystickDriver is the product name. */
 "cli.setting.group.launchAtLogin" = "Mở OpenJoystickDriver khi bạn đăng nhập.";
+/* One-line summary of 'ojd setting list' in the command list and at the top of its help. */
 "cli.setting.list.abstract" = "Liệt kê mọi cài đặt và giá trị của chúng.";
+/* Help text of the notificationSounds setting in 'ojd setting list'. */
 "cli.setting.group.notificationSounds" = "Phát âm thanh cùng với thông báo.";
+/* Help text of the notifyControllerConnected setting in 'ojd setting list'. */
 "cli.setting.group.notifyControllerConnected" = "Thông báo khi bộ điều khiển kết nối hoặc cần được chú ý.";
+/* Help text of the notifyControllerDisconnected setting in 'ojd setting list'. */
 "cli.setting.group.notifyControllerDisconnected" = "Thông báo khi bộ điều khiển ngắt kết nối.";
+/* Help text of the notifyProfileActivated setting in 'ojd setting list'. */
 "cli.setting.group.notifyProfileActivated" = "Thông báo khi cấu hình được kích hoạt hoặc chuyển đổi.";
+/* Help text of the notifyProfileDeactivated setting in 'ojd setting list'. */
 "cli.setting.group.notifyProfileDeactivated" = "Thông báo khi cấu hình đang hoạt động bị tắt.";
+/* One-line summary of 'ojd setting set' in the command list and at the top of its help. */
 "cli.setting.set.abstract" = "Thay đổi một cài đặt.";
 "platform.macos.cli.setting.set.discussion" = "Giá trị là true hoặc false. Thoát với mã 1 khi macOS để launchAtLogin ở trạng thái tắt cho đến khi bạn phê duyệt trong Cài đặt hệ thống.";
+/* Help text of the KEY argument of 'ojd setting set'. launchAtLogin is a setting name and stays as written. */
 "cli.setting.set.key" = "Cài đặt để thay đổi, như launchAtLogin.";
 "platform.macos.cli.setting.set.notApplied" = "macOS không áp dụng %1$@. Hãy cho phép OpenJoystickDriver trong Cài đặt hệ thống > Cài đặt chung > Mục đăng nhập, rồi chạy “ojd setting get %2$@”.";
+/* Message printed after 'ojd setting set'. %1$@ is the setting name, which stays as written, and %2$@ is the value the service applied, true or false. */
 "cli.setting.set.success" = "Đã đặt %1$@ thành %2$@.";
+/* Help text of the VALUE argument of 'ojd setting set'. true and false stay as written. */
 "cli.setting.set.value" = "Giá trị mới: true hoặc false.";
+/* Error of 'ojd setting' commands for an unknown setting. %1$@ is the text the user gave and %2$@ is the comma-separated list of valid setting names, which stay as written. */
 "cli.setting.group.unknownKey" = "Cài đặt “%1$@” không xác định. Hãy dùng một trong: %2$@.";
+/* One-line summary of 'ojd update' in the command list and at the top of its help. */
 "cli.update.group.abstract" = "Kiểm tra xem có bản phát hành OpenJoystickDriver mới hơn không.";
+/* One-line summary of 'ojd update check' in the command list and at the top of its help. GitHub is a brand name. */
 "cli.update.check.abstract" = "So sánh phiên bản này với thẻ bản phát hành mới nhất trên GitHub.";
+/* Message printed by 'ojd update check' when a newer release exists. %1$@ is the version of the release, %2$@ is the installed version and %3$@ is the address of the release page. */
 "cli.update.check.available" = "OpenJoystickDriver %1$@ đã có sẵn (bạn đang dùng %2$@): %3$@";
+/* Long description in the help of 'ojd update check'. ojd stays as written. */
 "cli.update.check.discussion" = "Chỉ chạy khi bạn yêu cầu; ojd không bao giờ tự kiểm tra. Nó không tải xuống hay cài đặt gì cả. Thoát với mã 0 dù có bản cập nhật hay không, và mã 1 khi kiểm tra thất bại.";
+/* Error of 'ojd update check' when the check fails because of the network. %@ is the reason from the system. */
 "cli.update.check.failed" = "Không thể kiểm tra cập nhật: %@. Hãy kiểm tra kết nối mạng và thử lại.";
+/* Error of 'ojd update check' when the check fails for a reason other than the network. %@ is the reason. */
 "cli.update.check.failedReason" = "Không thể kiểm tra cập nhật: %@.";
+/* Value shown in the structured output of 'ojd update check' when the check did not produce a result. */
 "cli.update.check.incomplete" = "không có kết quả";
+/* Help text of the --prerelease flag of 'ojd update check'. A pre-release version is a test version before a stable release. */
 "cli.update.check.prerelease" = "Bao gồm các phiên bản phát hành trước.";
+/* Message printed by 'ojd update check' when the installed version is the latest. %1$@ is the installed version and %2$@ is the latest release. */
 "cli.update.check.upToDate" = "OpenJoystickDriver %1$@ đã được cập nhật (bản phát hành mới nhất: %2$@).";
 "ui.settings.commandLine.tool" = "Công cụ dòng lệnh";
 "ui.settings.commandLine.toolBlocked" = "%@ là một tệp, không phải liên kết. Hãy xóa nó, rồi cài đặt lại.";
@@ -1119,252 +1404,489 @@
 "ui.settings.commandLine.toolLinkedElsewhere" = "%1$@ trỏ đến %2$@. Cài đặt sẽ liên kết nó với ứng dụng này.";
 "platform.macos.ui.settings.commandLine.toolNotInstalled" = "Liên kết %@ với ứng dụng này để bạn có thể chạy ojd trong Terminal. macOS sẽ yêu cầu mật khẩu quản trị viên.";
 "ui.settings.commandLine.toolUninstall" = "Gỡ cài đặt";
+/* One-line summary of 'ojd controller' in the command list and at the top of its help. */
 "cli.controller.group.abstract" = "Liệt kê, kiểm tra, thử nghiệm và điều khiển các bộ điều khiển đã kết nối.";
+/* Help text of the CONTROLLER argument shared by the 'ojd controller' commands. VVVV:PPPP is the vendor ID and product ID in hexadecimal and stays as written. */
 "cli.controller.group.argument" = "Bộ điều khiển: một ID từ “ojd controller list”, hoặc VVVV:PPPP.";
+/* One-line summary of 'ojd controller capture' in the command list and at the top of its help. */
 "cli.controller.capture.abstract" = "In các gói thô mà bộ điều khiển gửi và nhận.";
+/* Long description in the help of 'ojd controller capture'. rx and tx mark received and transmitted packets and stay as written, as does --json. */
 "cli.controller.capture.discussion" = "In từng gói mới khi nó đến: thời gian, hướng (rx hoặc tx), độ dài và các byte hex. Với --json, in một đối tượng JSON mỗi dòng.";
+/* Message printed by 'ojd controller capture' when the capture ends without a packet. */
 "cli.controller.capture.noPackets" = "Chưa nhận được gói nào.";
+/* First line of 'ojd controller capture'. %1$@ is the controller name and %2$@ is its vendor and product ID. */
 "cli.controller.capture.started" = "Đang ghi các gói từ %1$@ (%2$@). Hãy nhấn các nút của bộ điều khiển.";
+/* Warning printed by 'ojd controller capture' before the packets. Packets can hold data of the user's controller. */
 "cli.controller.capture.warning" = "Nội dung gói khác nhau tùy bộ điều khiển. Hãy kiểm tra trước khi chia sẻ.";
+/* One-line summary of 'ojd controller disconnect' in the command list and at the top of its help. */
 "cli.controller.disconnect.abstract" = "Ngắt kết nối bộ điều khiển Bluetooth cổ điển.";
 "platform.macos.cli.controller.disconnect.discussion" = "Đóng kết nối Bluetooth cổ điển. Bộ điều khiển vẫn được ghép đôi và kết nối lại khi bạn bật nó lên. Chờ ít nhất 6 giây để Bluetooth xác nhận. Dịch vụ không thể ngắt kết nối bộ điều khiển Bluetooth Low Energy. Hãy tắt bộ điều khiển hoặc ngắt kết nối trong Cài đặt hệ thống > Bluetooth.";
+/* Message printed after 'ojd controller disconnect' disconnected the controller. %@ is the controller name. */
 "cli.controller.disconnect.done" = "Đã ngắt kết nối %@.";
 "platform.macos.cli.controller.disconnect.bluetoothLe" = "%@ kết nối qua Bluetooth Low Energy và dịch vụ không thể ngắt kết nối. Hãy tắt bộ điều khiển hoặc ngắt kết nối trong Cài đặt hệ thống > Bluetooth.";
+/* Error of 'ojd controller disconnect' when the Bluetooth disconnect fails. %1$@ names the step that failed and %2$@ is the system's reason, which can end with an error code. */
 "cli.controller.disconnect.failed" = "Ngắt kết nối Bluetooth thất bại trong %1$@: %2$@.";
+/* Error of 'ojd controller disconnect' for a controller on a wire. %@ is the controller name. */
 "cli.controller.disconnect.notBluetooth" = "%@ không kết nối qua Bluetooth. Hãy rút cáp để ngắt kết nối.";
+/* Long description in the help of 'ojd controller'. CONTROLLER, the command in quotes and VVVV:PPPP stay as written. */
 "cli.controller.group.discussion" = "CONTROLLER là một ID từ “ojd controller list”, hoặc VVVV:PPPP (ID nhà sản xuất và sản phẩm dạng hex) khi chỉ có đúng một bộ điều khiển đã kết nối khớp. Mọi lệnh controller đều cần dịch vụ.";
+/* Second paragraph of the help of 'ojd controller'. It explains the unit ID, which starts with U- and stays as written. */
 "cli.controller.group.discussionUnit" = "Một ID thiết bị (U-...) gọi tên một bộ điều khiển theo kiểu máy và cổng USB mà nó dùng. ID này giữ nguyên qua các lần khởi động lại khi bộ điều khiển dùng cùng cổng đó.";
+/* Error of 'ojd controller' commands when --duration is not a number above 0. --duration stays as written. */
 "cli.controller.group.errorDuration" = "--duration cần một số giây lớn hơn 0.";
+/* Noun phrase for a controller capability. It is inserted after 'has no' in the message that a controller lacks a feature, so it must fit there. */
 "cli.controller.group.featureBrightness" = "độ sáng đèn điều chỉnh được";
+/* Noun phrase for a controller capability. It is inserted after 'has no' in the message that a controller lacks a feature, so it must fit there. */
 "cli.controller.group.featureColor" = "màu đèn lập trình được";
+/* Noun phrase for a controller capability. It is inserted after 'has no' in the message that a controller lacks a feature, so it must fit there. */
 "cli.controller.group.featurePlayer" = "đèn chỉ báo người chơi";
+/* Noun phrase for a controller capability. It is inserted after 'has no' in the message that a controller lacks a feature, so it must fit there. */
 "cli.controller.group.featureRumble" = "mô-tơ rung";
+/* One-line summary of 'ojd controller light' in the command list and at the top of its help. */
 "cli.controller.light.abstract" = "Đặt màu hoặc độ sáng đèn của bộ điều khiển.";
+/* Help text of the --brightness option of 'ojd controller light'. LED means light-emitting diode. */
 "cli.controller.light.brightness" = "Độ sáng LED.";
+/* Help text of the --color option of 'ojd controller light'. The value is a hexadecimal RGB color; FF8000 stays as written. */
 "cli.controller.light.color" = "Màu thanh đèn dạng hex, như FF8000.";
+/* Error of 'ojd controller light' when no option is given. --color and --brightness stay as written. */
 "cli.controller.light.errorMissing" = "Hãy đưa --color, --brightness, hoặc cả hai.";
+/* One-line summary of 'ojd controller list' in the command list and at the top of its help. */
 "cli.controller.list.abstract" = "Liệt kê các bộ điều khiển đã kết nối.";
+/* Message printed by 'ojd controller list' when no controller is connected. */
 "cli.controller.list.empty" = "Không có bộ điều khiển nào đang kết nối.";
+/* Marker appended to the line of a suspended controller in 'ojd controller list'. Keep the parentheses. */
 "cli.controller.list.suspended" = "(đã tạm ngưng)";
+/* Help text of the --duration option of 'ojd controller watch' and 'ojd controller capture'. Control-C is the key combination that stops a program in a terminal. */
 "cli.controller.group.optionDuration" = "Dừng sau số giây này. Nếu không có, chạy cho đến khi bạn nhấn Control-C.";
+/* Error of the controller output commands when the controller rejects a command. %1$@ is the controller name, %2$@ is the command name and %3$@ is the outcome in kebab case, which stays as written. The command in quotes stays as written. */
 "cli.controller.group.outputFailed" = "%1$@ không chấp nhận lệnh %2$@ (%3$@). Hãy kiểm tra bằng “ojd log show”.";
+/* Error of the controller output commands when the controller disconnects before the command is sent. %@ is the controller name. */
 "cli.controller.group.outputGone" = "%@ đã ngắt kết nối trước khi lệnh được gửi. Hãy kết nối lại và thử lại.";
+/* Error of the controller output commands when the controller cannot take output yet. %@ is the controller name. */
 "cli.controller.group.outputNotReady" = "%@ chưa sẵn sàng cho đầu ra. Hãy thử lại sau giây lát.";
+/* Message printed after the controller output commands succeeded. %1$@ is the comma-separated list of commands sent and %2$@ is the controller name. */
 "cli.controller.group.outputSent" = "Đã gửi %1$@ đến %2$@.";
+/* Error of the controller output commands when the controller lacks the feature. %1$@ is the controller name, %2$@ is the missing feature as a noun phrase and %3$@ is the session token for 'ojd controller show'. */
 "cli.controller.group.outputUnsupported" = "%1$@ không có %2$@. Hãy chạy “ojd controller show %3$@” để xem nó hỗ trợ gì.";
+/* One-line summary of 'ojd controller claim' in the command list and at the top of its help. OpenJoystickDriver is the product name. To serve a model means to read its input and publish it as a virtual gamepad. */
 "cli.controller.claim.abstract" = "Để OpenJoystickDriver phục vụ một mẫu bộ điều khiển.";
 "platform.macos.cli.controller.claim.discussion" = "Đặt server thành ojd trong bản ghi của bạn cho mẫu đó, VVVV-PPPP.json trong thư mục bản ghi của bạn, và giữ các trường khác của bản ghi. Áp dụng cho mọi bộ điều khiển của mẫu. Dịch vụ đang chạy áp dụng mà không cần cắm lại. Cần dịch vụ để tìm bộ điều khiển. --dry-run không ghi gì. Thoát với mã 1 và E2023 cho bộ điều khiển dùng USB thô, luôn do OpenJoystickDriver phục vụ, hoặc do macOS không phục vụ ở chế độ gốc.";
 "platform.macos.cli.controller.release.abstract" = "Trả một mẫu bộ điều khiển về cho macOS.";
 "platform.macos.cli.controller.release.discussion" = "Đặt server thành system trong bản ghi của bạn cho mẫu đó, VVVV-PPPP.json trong thư mục bản ghi của bạn, và giữ các trường khác của bản ghi. Áp dụng cho mọi bộ điều khiển của mẫu. Dịch vụ đang chạy áp dụng mà không cần cắm lại. Cần dịch vụ để tìm bộ điều khiển. --dry-run không ghi gì. Thoát với mã 1 và E2023 cho bộ điều khiển dùng USB thô, luôn do OpenJoystickDriver phục vụ, hoặc do macOS không phục vụ ở chế độ gốc.";
+/* Message printed by 'ojd controller claim' and related commands with --dry-run instead of writing the record. %1$@ is the controller identity, %2$@ is the server name in kebab case and %3$@ is the record file. */
 "cli.controller.group.serverDryRun" = "Nếu chạy, sẽ đặt %1$@ thành %2$@ trong %3$@.";
+/* Error when the record file of a controller cannot be changed. %1$@ is the path of the record file and %2$@ is the description of the problem. */
 "cli.controller.group.serverInvalid" = "Không thể thay đổi %1$@: %2$@";
+/* Error when a controller has no record to change. %1$@ is the controller identity and %2$@ repeats it as the argument of the command in quotes, which stays as written. */
 "cli.controller.group.serverNoRecord" = "%1$@ không có bản ghi bộ điều khiển để thay đổi. Hãy bắt đầu một bản ghi bằng “ojd record draft %2$@”.";
 "platform.macos.cli.controller.group.serverNotNative" = "macOS không phục vụ %@ ở chế độ gốc, nên OpenJoystickDriver luôn phục vụ nó.";
+/* Message when the server of a controller cannot be changed because it uses raw USB. %@ is the controller identity. OpenJoystickDriver is the product name. */
 "cli.controller.group.serverRawUsb" = "%@ dùng USB thô, nên OpenJoystickDriver luôn phục vụ nó.";
+/* Message printed after the server of a controller is changed. %1$@ is the controller identity, %2$@ is the server name in kebab case and %3$@ is the record file. The service picks the change up without a restart. */
 "cli.controller.group.serverSuccess" = "Đã đặt %1$@ thành %2$@ trong %3$@. Dịch vụ đang chạy áp dụng nó ngay bây giờ.";
+/* One-line summary of 'ojd controller player' in the command list and at the top of its help. */
 "cli.controller.player.abstract" = "Đặt đèn chỉ báo người chơi của bộ điều khiển.";
+/* Help text of the PLAYER argument of 'ojd controller player'. off is a value the user types and stays as written. */
 "cli.controller.player.number" = "Số người chơi, từ 1 đến 4, hoặc off.";
+/* One-line summary of 'ojd controller resume' in the command list and at the top of its help. */
 "cli.controller.resume.abstract" = "Để OpenJoystickDriver điều khiển lại một bộ điều khiển đã tạm ngưng.";
+/* Message of 'ojd controller resume' when the controller is not suspended. %@ is the controller name. */
 "cli.controller.resume.already" = "%@ đã hoạt động.";
+/* Message printed after 'ojd controller resume'. %@ is the controller name. */
 "cli.controller.resume.done" = "Đã tiếp tục %@.";
+/* One-line summary of 'ojd controller rumble' in the command list and at the top of its help. */
 "cli.controller.rumble.abstract" = "Chạy các mô-tơ rung của bộ điều khiển.";
+/* Long description in the help of 'ojd controller rumble'. The numbers are fixed limits of the command. */
 "cli.controller.rumble.discussion" = "Cường độ từ 0 đến 255. Không có tùy chọn cường độ, cả hai mô-tơ chính chạy ở mức 180. Các mô-tơ chính cũng điều khiển phản hồi xúc giác của bàn di chuột. Đặt mọi cường độ về 0 để dừng rung.";
+/* Warning of 'ojd controller rumble' about a requested motor the controller lacks. %1$@ is the controller name and %2$@ is the motor name in kebab case, which stays as written. */
 "cli.controller.rumble.dropped" = "cảnh báo: %1$@ không có mô-tơ %2$@; nó đã không chạy.";
+/* Help text of the --duration option of 'ojd controller rumble'. The limit of 5 seconds is fixed. */
 "cli.controller.rumble.duration" = "Số giây để rung, lớn hơn 0 và tối đa 5.";
+/* Error of 'ojd controller rumble' when --duration is outside the allowed range. --duration stays as written. */
 "cli.controller.rumble.errorDuration" = "--duration cần một số giây lớn hơn 0 và tối đa 5.";
+/* Help text of the --left option of 'ojd controller rumble'. The main motors are the large motors in the grips. */
 "cli.controller.rumble.left" = "Cường độ mô-tơ chính trái.";
+/* Help text of the --left-trigger option of 'ojd controller rumble'. */
 "cli.controller.rumble.leftTrigger" = "Cường độ mô-tơ cò trái.";
+/* Error of 'ojd controller rumble' when the controller has none of the requested motors. %1$@ is the controller name and %2$@ is the session token for 'ojd controller show'. */
 "cli.controller.rumble.noneRan" = "%1$@ không có mô-tơ nào được yêu cầu. Hãy chạy “ojd controller show %2$@” để xem các mô-tơ của nó.";
+/* Help text of the --right option of 'ojd controller rumble'. The main motors are the large motors in the grips. */
 "cli.controller.rumble.right" = "Cường độ mô-tơ chính phải.";
+/* Help text of the --right-trigger option of 'ojd controller rumble'. */
 "cli.controller.rumble.rightTrigger" = "Cường độ mô-tơ cò phải.";
+/* Message printed after 'ojd controller rumble' ran motors. %1$@ is the comma-separated list of motors and %2$@ is the controller name. */
 "cli.controller.rumble.sent" = "Đã rung %1$@ trên %2$@.";
+/* Message printed after 'ojd controller rumble' stopped all motors. %@ is the controller name. */
 "cli.controller.rumble.stopped" = "Đã dừng rung trên %@.";
+/* Error when a CONTROLLER argument cannot match because no controller is connected. %@ is the text the user gave. The command in quotes stays as written. */
 "cli.controller.group.selectorNoneConnected" = "Không có bộ điều khiển nào khớp “%@”, vì chưa có bộ nào được kết nối. Hãy kết nối một bộ và chạy “ojd controller list”.";
+/* Error when a CONTROLLER argument matches no connected controller; the list of valid IDs follows on the next lines, so the text ends with a colon. %@ is the text the user gave. VVVV:PPPP stays as written. */
 "cli.controller.group.selectorNotFound" = "Không có bộ điều khiển đã kết nối nào khớp “%@”. Hãy dùng một ID hoặc VVVV:PPPP từ danh sách này:";
+/* Error when the controller disconnected between choosing it and sending the request. %@ is the controller identifier the user gave. */
 "cli.controller.group.sessionNotFound" = "“%@” đã ngắt kết nối trước khi yêu cầu đến được nó. Hãy kết nối lại và thử lại.";
+/* One-line summary of 'ojd controller show' in the command list and at the top of its help. */
 "cli.controller.show.abstract" = "Hiển thị danh tính, quyền sở hữu, khả năng và tay cầm ảo của bộ điều khiển.";
+/* Long description in the help of 'ojd controller show'. */
 "cli.controller.show.discussion" = "Cũng liệt kê các kiểm tra đầu ra: các lệnh thử từng mô-tơ rung và đèn, kèm điều cần quan sát.";
+/* Row label in the output of 'ojd controller show', present when the controller reports power. The charge in percent and the charging state follow. */
 "cli.controller.show.labelBattery" = "Pin";
+/* Row label in the output of 'ojd controller show'. The connection type follows, such as USB or Bluetooth. */
 "cli.controller.show.labelConnection" = "Kết nối";
+/* Row label in the output of 'ojd controller show'. The list of control kinds the controller has follows, such as buttons and sticks. */
 "cli.controller.show.labelControls" = "Điều khiển";
+/* Row label in the output of 'ojd controller show'. The controller ID that other commands accept follows. ID stays short. */
 "cli.controller.show.labelId" = "ID";
+/* Row label in the output of 'ojd controller show'. The vendor ID and product ID in hexadecimal follow, as VVVV:PPPP. */
 "cli.controller.show.labelIdentity" = "Nhà sản xuất:Sản phẩm";
+/* Row label in the output of 'ojd controller show'. The health of the input stream follows, with the reason in parentheses when it failed. */
 "cli.controller.show.labelInput" = "Đầu vào";
+/* Row label in the output of 'ojd controller show'. The list of light features the controller has follows. */
 "cli.controller.show.labelLighting" = "Đèn";
+/* Row label in the output of 'ojd controller show'. The product name of the controller follows. */
 "cli.controller.show.labelName" = "Tên";
+/* Heading in the output of 'ojd controller show' above the commands that exercise each motor and light. */
 "cli.controller.show.labelOutputChecks" = "Kiểm tra đầu ra";
+/* Row label in the output of 'ojd controller show'. A summary of who discovered, connects and reads the controller follows; the ownership value gives the three parts. */
 "cli.controller.show.labelOwnership" = "Quyền sở hữu";
+/* Value of the Ownership row of 'ojd controller show'. %1$@ is the route that found the controller, %2$@ is the physical connection and %3$@ is the HID input source, all in kebab case, which stays as written. */
 "cli.controller.show.ownership" = "tuyến %1$@, vật lý %2$@, đầu vào HID %3$@";
+/* Row label in the output of 'ojd controller show'. The component that serves the controller follows, with where that choice comes from. */
 "cli.controller.show.labelServer" = "Phục vụ bởi";
+/* Row label in the output of 'ojd controller show'. The route that the input of the controller takes follows, with the reason in parentheses. */
 "cli.controller.show.labelServing" = "Tuyến phục vụ";
+/* Row label in the output of 'ojd controller show'. The gamepad model that the virtual gamepad presents follows. */
 "cli.controller.show.labelPersona" = "Persona được phát hành";
+/* Value of the Served by row of 'ojd controller show'. %1$@ is the server name and %2$@ is where the choice comes from, in kebab case, which stays as written. */
 "cli.controller.show.server" = "%1$@ (từ %2$@)";
+/* Row label in the output of 'ojd controller show'. The protocol family the driver speaks to the controller follows. */
 "cli.controller.show.labelProtocol" = "Giao thức";
+/* Row label in the output of 'ojd controller show'. The controller record that describes the model follows. */
 "cli.controller.show.labelRecord" = "Bản ghi";
+/* Row label in the output of 'ojd controller show'. The list of rumble motors the controller has follows. */
 "cli.controller.show.labelRumble" = "Rung";
+/* Row label in the output of 'ojd controller show'. The state of the session follows, such as active or suspended. */
 "cli.controller.show.labelSession" = "Phiên";
+/* Row label in the output of 'ojd controller show'. The unit ID, which names the controller by model and USB port, follows. */
 "cli.controller.show.labelUnit" = "ID thiết bị";
+/* Row label in the output of 'ojd controller show'. The profile that drives the virtual gamepad follows, with its source in parentheses. */
 "cli.controller.show.labelVirtual" = "Tay cầm ảo";
+/* Row label in the output of 'ojd controller show'. The state of the virtual gamepad publication follows, with the reason in parentheses. */
 "cli.controller.show.labelPublication" = "Cung cấp";
+/* Row label in the output of 'ojd controller show', present when the system owns the output. The explanation that the system sends rumble and light commands follows. */
 "cli.controller.show.labelOutputOwner" = "Bên phụ trách đầu ra";
 "platform.macos.cli.controller.show.outputOwnerMacos" = "macOS (gốc). Rung và Đèn chỉ liệt kê những gì macOS chưa làm.";
+/* Row label in the output of 'ojd controller show', present when tuning values apply. The comma-separated tuning values follow. */
 "cli.controller.show.labelTuning" = "Tinh chỉnh";
+/* Value shown in a row of 'ojd controller show' that has nothing to report. */
 "cli.controller.show.none" = "không có";
+/* Value of the Record row of 'ojd controller show' when the record is part of the driver. */
 "cli.controller.show.recordBundled" = "đi kèm";
+/* Value of the Record row of 'ojd controller show' when no record matches the controller. */
 "cli.controller.show.recordNone" = "không có (không bản ghi nào khớp)";
+/* Value of the Record row of 'ojd controller show' when the record is the user's own file. %@ is the file name. */
 "cli.controller.show.recordUser" = "bản ghi của bạn, %@";
+/* One-line summary of 'ojd controller suspend' in the command list and at the top of its help. OpenJoystickDriver is the product name. */
 "cli.controller.suspend.abstract" = "Không cho OpenJoystickDriver điều khiển một bộ điều khiển cho đến khi bạn tiếp tục.";
+/* Message of 'ojd controller suspend' when the controller is suspended. %@ is the controller name. */
 "cli.controller.suspend.already" = "%@ đã được tạm ngưng.";
+/* Message printed after 'ojd controller suspend'. %@ is the controller name. */
 "cli.controller.suspend.done" = "Đã tạm ngưng %@.";
+/* One-line summary of 'ojd controller watch' in the command list and at the top of its help. */
 "cli.controller.watch.abstract" = "In trạng thái đầu vào của bộ điều khiển mỗi khi nó thay đổi.";
+/* Help text of the --all flag of 'ojd controller watch'. */
 "cli.controller.watch.all" = "Theo dõi mọi bộ điều khiển và báo cáo từng bộ kết nối hoặc ngắt kết nối.";
+/* First line of 'ojd controller watch --all'. */
 "cli.controller.watch.allStarted" = "Đang theo dõi mọi bộ điều khiển. Hãy nhấn các nút của bộ điều khiển.";
+/* Line of 'ojd controller watch --all' when a controller connects. %1$@ is the controller ID, %2$@ is the controller name and %3$@ is its vendor and product ID. */
 "cli.controller.watch.connected" = "%1$@ đã kết nối: %2$@ (%3$@)";
+/* Line of 'ojd controller watch --all' when a controller disconnects. %@ is the controller ID. */
 "cli.controller.watch.disconnected" = "%@ đã ngắt kết nối";
+/* Long description in the help of 'ojd controller watch'. --json, --first-press and --duration stay as written. Y pointing down is the HID report convention. */
 "cli.controller.watch.discussion" = "Với --json, in một đối tượng JSON mỗi dòng. Trục Y của cần hướng xuống. Với --first-press, in thành phần được nhấn đầu tiên rồi thoát; thất bại nếu --duration trôi qua trước.";
+/* Paragraph in the help of 'ojd controller watch' about --all, which stays as written. */
 "cli.controller.watch.discussionAll" = "Với --all, mỗi dòng bắt đầu bằng ID bộ điều khiển, và một dòng báo cáo từng bộ điều khiển kết nối hoặc ngắt kết nối. Các dòng đầu báo cáo những bộ điều khiển đã kết nối sẵn.";
+/* Error of 'ojd controller watch' when --first-press and --all are combined. CONTROLLER and both option names stay as written. */
 "cli.controller.watch.errorFirstPressAll" = "--first-press cần một CONTROLLER; nó không dùng được với --all.";
+/* Error of 'ojd controller watch' when both or neither of CONTROLLER and --all are given. CONTROLLER and --all stay as written. */
 "cli.controller.watch.errorTarget" = "Hãy đưa một CONTROLLER hoặc --all, không đưa cả hai.";
+/* Help text of the --first-press flag of 'ojd controller watch'. */
 "cli.controller.watch.firstPress" = "In thành phần được nhấn đầu tiên, rồi thoát.";
+/* Help text of the --output flag of 'ojd controller watch'. HID is the human interface device report format. */
 "cli.controller.watch.output" = "Đồng thời in những gì tay cầm ảo gửi. Trục Y của cần hướng xuống, như trong báo cáo HID.";
+/* Message printed to the error stream by 'ojd controller watch' when the controller sent no input. */
 "cli.controller.watch.noInput" = "Chưa nhận được đầu vào.";
+/* Error of 'ojd controller watch --first-press' when the time ran out. %@ is the duration, such as 10 seconds. */
 "cli.controller.watch.noPress" = "Không có thành phần nào được nhấn trong %@.";
+/* Prompt of 'ojd controller watch --first-press'. %1$@ is the controller name and %2$@ is its vendor and product ID. */
 "cli.controller.watch.pressPrompt" = "Hãy nhấn một thành phần trên %1$@ (%2$@).";
+/* First line of 'ojd controller watch'. %1$@ is the controller name and %2$@ is its vendor and product ID. */
 "cli.controller.watch.started" = "Đang theo dõi %1$@ (%2$@). Hãy nhấn các nút của bộ điều khiển.";
+/* Message printed when the user answers no to a confirmation question. */
 "cli.shared.error.confirmDeclined" = "Không có gì thay đổi.";
+/* Error of the commands that ask for confirmation when the input is not a terminal. --force stays as written. */
 "cli.shared.error.confirmNeedsForce" = "Thay đổi này không thể hoàn tác. Thêm --force để xác nhận mà không cần nhắc.";
+/* One-line summary of 'ojd mod' in the command list and at the top of its help. A mod package adds controller support. */
 "cli.mod.group.abstract" = "Xác thực, cài đặt, liệt kê hoặc gỡ các gói mod.";
+/* Long description in the help of 'ojd mod'. mod.json, the folder names Controllers, Profiles and Personas, and the path stay as written. */
 "cli.mod.group.discussion" = "Gói mod là một thư mục có tệp kê khai mod.json cùng các thư mục Controllers, Profiles và Personas. Các gói đã cài nằm trong ~/Library/Application Support/OpenJoystickDriver/Packages. Dịch vụ đang chạy áp dụng thay đổi khi thư mục đó thay đổi. Các lệnh này không cần dịch vụ.";
+/* Help text of the FOLDER argument of 'ojd mod validate' and 'ojd mod install'. mod.json stays as written. */
 "cli.mod.group.folder" = "Thư mục gói chứa mod.json.";
+/* Help text of the NAME argument of 'ojd mod remove'. */
 "cli.mod.group.name" = "Tên gói.";
+/* Error of the 'ojd mod' commands when a package is refused. %1$@ is the package folder or name and %2$@ is the reason. */
 "cli.mod.group.refused" = "%1$@ bị từ chối: %2$@";
+/* Error of 'ojd mod install' when a package of that name exists. %@ is the package name. --force stays as written. */
 "cli.mod.group.alreadyInstalled" = "%@ đã được cài. Dùng --force để thay thế.";
+/* Error of 'ojd mod remove' when no package of that name exists. %@ is the package name. The command in quotes stays as written. */
 "cli.mod.group.notInstalled" = "%@ chưa được cài. “ojd mod list” hiển thị các gói đã cài.";
+/* One-line summary of 'ojd mod validate' in the command list and at the top of its help. */
 "cli.mod.validate.abstract" = "Kiểm tra thư mục gói mod mà không cài đặt.";
+/* Long description in the help of 'ojd mod validate'. E4xxx and E5001 are error codes and stay as written. */
 "cli.mod.validate.discussion" = "Kiểm tra tệp kê khai, gói có chạy trên phiên bản này không, các tệp có đúng như đã liệt kê và hợp lệ không, và không tệp nào xung đột với tệp của bạn hoặc gói khác. Thoát với mã 1 và mã E4xxx hoặc E5001 khi gói bị từ chối.";
+/* Message printed by 'ojd mod validate' for a correct package. %1$@ is the folder path, %2$@ is the package name and %3$@ is its version. The command in quotes stays as written. */
 "cli.mod.validate.valid" = "%1$@ là gói hợp lệ: %2$@ %3$@. Cài bằng “ojd mod install”.";
+/* One-line summary of 'ojd mod install' in the command list and at the top of its help. */
 "cli.mod.install.abstract" = "Kiểm tra gói mod và cài cho người dùng của bạn.";
+/* Long description in the help of 'ojd mod install'. Packages/NAME, --force and requires stay as written. */
 "cli.mod.install.discussion" = "Sao chép gói vào Packages/NAME và hoán đổi ngay; dịch vụ đang chạy áp dụng nó. Gói cùng tên đã được cài sẽ bị từ chối trừ khi bạn dùng --force. --force không bao giờ bỏ qua requires, xung đột danh tính, hoặc xung đột id hay tên cấu hình. --dry-run kiểm tra gói và không ghi gì.";
+/* Help text of the --force flag of 'ojd mod install'. */
 "cli.mod.install.force" = "Thay thế gói đã cài có cùng tên.";
+/* Message printed by 'ojd mod install --dry-run' instead of installing. %@ is the target folder. */
 "cli.mod.install.dryRun" = "Nếu chạy, sẽ cài %@.";
+/* Message printed after 'ojd mod install'. %@ is the target folder. The service picks the package up without a restart. */
 "cli.mod.install.success" = "Đã cài %@. Dịch vụ đang chạy áp dụng ngay bây giờ.";
+/* One-line summary of 'ojd mod list' in the command list and at the top of its help. */
 "cli.mod.list.abstract" = "Liệt kê các gói mod đã cài và các tệp của từng gói.";
+/* Long description in the help of 'ojd mod list'. OJD is the short product name; requires and E4xxx and E5001 stay as written. */
 "cli.mod.list.discussion" = "Liệt kê từng gói cùng phiên bản, tác giả và tệp. Gói mà OJD không dùng, chẳng hạn gói có requires loại trừ phiên bản này, hiển thị lý do kèm mã E4xxx hoặc E5001.";
+/* Indented line below a package in 'ojd mod list' that the driver does not use. %@ is the reason with its error code. Keep the two leading spaces. */
 "cli.mod.list.problem" = "  Không dùng: %@";
+/* One-line summary of 'ojd mod remove' in the command list and at the top of its help. */
 "cli.mod.remove.abstract" = "Gỡ một gói mod đã cài.";
+/* Long description in the help of 'ojd mod remove'. Packages/NAME, --force, --dry-run and E4006 stay as written. */
 "cli.mod.remove.discussion" = "Chỉ xóa Packages/NAME. Hỏi xác nhận trong terminal; nếu không thì cần --force. --dry-run kiểm tra gói đã được cài và không thay đổi gì. Thoát với mã 1 và E4006 nếu chưa cài.";
+/* Yes or no question that 'ojd mod remove' asks on a terminal. %@ is the folder to delete. */
 "cli.mod.remove.confirm" = "Xóa %@?";
+/* Message printed by 'ojd mod remove --dry-run' instead of deleting. %@ is the folder. */
 "cli.mod.remove.dryRun" = "Nếu chạy, sẽ xóa %@.";
+/* Message printed after 'ojd mod remove'. %@ is the folder that is deleted. */
 "cli.mod.remove.success" = "Đã xóa %@.";
+/* Help text of the --dry-run flag of the commands that change data. */
 "cli.shared.option.dryRun" = "In những gì sẽ thay đổi, và không thay đổi gì.";
+/* Help text of the --force flag of the commands that ask for confirmation. */
 "cli.shared.option.force" = "Không hỏi xác nhận.";
+/* One-line summary of 'ojd virtual' in the command list and at the top of its help. OpenJoystickDriver is the product name. */
 "cli.virtual.group.abstract" = "Hiển thị và chọn tay cầm ảo mà OpenJoystickDriver cung cấp cho một bộ điều khiển.";
+/* Message printed after 'ojd virtual set' or 'ojd virtual reset' changed the virtual gamepad. %1$@ is the controller name, %2$@ is the profile name and %3$@ is where the choice comes from. */
 "cli.virtual.group.changed" = "%1$@ hiện cung cấp %2$@ (%3$@).";
+/* Message printed after 'ojd virtual set' saved the choice while virtual output is off. %@ is the controller name. */
 "cli.virtual.group.stored" = "Đã lưu lựa chọn cho %@. Lựa chọn áp dụng khi đầu ra ảo được bật.";
+/* Help text of the --unit option of 'ojd virtual set' and 'ojd virtual reset'. A unit ID names one controller by model and USB port. */
 "cli.virtual.group.unit" = "Chỉ áp dụng cho bộ điều khiển này, theo ID thiết bị của nó, thay vì cho cả kiểu máy.";
+/* Long description in the help of 'ojd virtual'. reset stays as written because it is a command name. */
 "cli.virtual.group.discussion" = "Một lựa chọn áp dụng cho mọi bộ điều khiển cùng kiểu máy. “reset” đưa một kiểu máy về lựa chọn tự động.";
+/* Paragraph in the help of 'ojd virtual' about --unit. set and reset are command names and stay as written. */
 "cli.virtual.group.discussionUnit" = "Với --unit, “set” áp dụng cho một bộ điều khiển theo ID thiết bị của nó, và “reset” đưa bộ điều khiển đó về lựa chọn của kiểu máy.";
+/* Error of 'ojd virtual set' when the service could not apply the choice. %1$@ is the controller name and %2$@ is the reason. The command in quotes stays as written. */
 "cli.virtual.group.errorFailed" = "Tay cầm ảo cho %1$@ không thay đổi (%2$@). Hãy kiểm tra bằng “ojd virtual show”.";
+/* Error of 'ojd virtual' commands when --unit is used for a controller without a unit ID. %@ is the controller name. --unit stays as written. */
 "cli.virtual.group.errorNoUnit" = "%@ không có ID thiết bị, nên một lựa chọn chỉ có thể áp dụng cho cả kiểu máy. Hãy chạy lệnh không có --unit.";
+/* One-line summary of 'ojd virtual export-mapping' in the command list and at the top of its help. SDL is a game controller library and W3C names the web standard gamepad layout; both stay as written. */
 "cli.virtual.exportMapping.abstract" = "In ánh xạ SDL hoặc mô tả W3C mà một hồ sơ tay cầm ảo suy ra.";
+/* Long description in the help of 'ojd virtual export-mapping'. SDL, W3C and JSON stay as written. */
 "cli.virtual.exportMapping.discussion" = "SDL in một dòng ánh xạ cho mỗi hồ sơ, đó là một tệp ánh xạ SDL hợp lệ. W3C in mô tả bố cục chuẩn dưới dạng JSON. Cả hai đều được suy ra từ bộ mô tả báo cáo của hồ sơ.";
+/* Help text of the format option of 'ojd virtual export-mapping'. sdl and w3c are values the user types and stay as written. */
 "cli.virtual.exportMapping.format" = "Định dạng cần in: sdl hoặc w3c.";
+/* Help text of the profile argument of 'ojd virtual export-mapping'. */
 "cli.virtual.exportMapping.profile" = "Hồ sơ tay cầm ảo cần in. Bỏ qua để in mọi hồ sơ.";
+/* One-line summary of 'ojd virtual feed' in the command list and at the top of its help. Standard input is the input stream of the program. */
 "cli.virtual.feed.abstract" = "Cung cấp một tay cầm ảo do đầu vào chuẩn điều khiển.";
+/* Long description in the help of 'ojd virtual feed'. The JSON field names buttons, dpad and axes and the control names stay as written. */
 "cli.virtual.feed.discussion" = "Đọc một đối tượng JSON mỗi dòng: “buttons” và “dpad” liệt kê các thành phần được nhấn, như South và up, và “axes” ánh xạ tên trục, như LeftStickX, tới giá trị. Thành phần bị thiếu ở trạng thái trung tính. Các cần chạy từ -1 đến 1 với Y hướng xuống; các cò chạy từ 0 đến 1. Các khung được phát theo thứ tự, mỗi khung ít nhất 8 ms; “holdMilliseconds” giữ một khung lâu hơn, tối đa 60000. In mỗi lệnh đầu ra mà trò chơi gửi đến tay cầm, như rung, thành một đối tượng JSON mỗi dòng. Dừng khi mọi khung đã phát xong sau khi đầu vào kết thúc.";
+/* Error of 'ojd virtual feed' when the service closed the virtual gamepad. The command in quotes stays as written. */
 "cli.virtual.feed.errorClosed" = "Dịch vụ đã đóng tay cầm ảo. Hãy kiểm tra bằng “ojd status”.";
 /* Error from `ojd virtual feed` when the service connection broke while the virtual gamepad was closing. */
 "cli.virtual.feed.errorCloseInterrupted" = "Việc đóng tay cầm ảo đã bị gián đoạn. Hãy kiểm tra bằng “ojd status”.";
+/* Error of 'ojd virtual feed' for an input line that is not a valid frame. %@ is the line number. The command in quotes stays as written. */
 "cli.virtual.feed.errorFrame" = "Dòng %@ không phải là khung hợp lệ. “ojd virtual feed --help” hiển thị định dạng.";
+/* Help text of the profile argument of 'ojd virtual feed'. */
 "cli.virtual.feed.profile" = "Cấu hình tay cầm ảo để cung cấp.";
+/* First line of 'ojd virtual feed'. %@ is the profile name. Control-C is the key combination that stops a program in a terminal. */
 "cli.virtual.feed.started" = "Đang cung cấp tay cầm ảo %@. Hãy ghi các khung vào đầu vào chuẩn; kết thúc đầu vào hoặc nhấn Control-C để dừng.";
+/* One-line summary of 'ojd virtual launch' in the command list and at the top of its help. SDL is a game controller library and stays as written. */
 "cli.virtual.launch.abstract" = "Chạy một chương trình với ánh xạ SDL của các tay cầm ảo đã kết nối.";
+/* Help text of the program argument of 'ojd virtual launch'. PATH is the environment variable, .app is the app bundle extension, and -- stays as written. */
 "cli.virtual.launch.command" = "Chương trình cần chạy và các đối số của nó. Chương trình là một đường dẫn, một tên mà PATH tìm thấy hoặc một .app. Đặt -- trước chương trình khi các đối số của nó cũng là tùy chọn của ojd.";
+/* Long description in the help of 'ojd virtual launch'. SDL_GAMECONTROLLERCONFIG and .app stay as written. */
 "cli.virtual.launch.discussion" = "Đặt SDL_GAMECONTROLLERCONFIG theo ánh xạ tay cầm ảo của từng bộ điều khiển đã kết nối, để SDL trong chương trình liệt kê chúng. Giá trị đã đặt sẵn vẫn đứng đầu và các ánh xạ nối theo sau. Một .app chạy tệp thực thi chính của nó. Chương trình giữ terminal này. Dừng ojd sẽ dừng chương trình, và ojd thoát với trạng thái của chương trình.";
+/* Error of 'ojd virtual launch' when the program does not start. %1$@ is the program the user gave and %2$@ is the reason, one of the short reasons for a missing executable, a path without a file and a name not on PATH. */
 "cli.virtual.launch.errorFailed" = "%1$@ không khởi động (%2$@). Hãy kiểm tra đó là tệp thực thi hoặc một ứng dụng và bạn có quyền chạy nó.";
+/* Short reason inside the failure message of 'ojd virtual launch' when an app bundle holds no executable. It fills %2$@ of that message and starts in lowercase. */
 "cli.virtual.launch.errorNoExecutable" = "ứng dụng không có tệp thực thi";
+/* Error of 'ojd virtual launch' when no connected controller has a virtual gamepad. The command in quotes stays as written. */
 "cli.virtual.launch.errorNoGamepad" = "Không có bộ điều khiển nào đã kết nối có tay cầm ảo, nên không có ánh xạ để đặt. Hãy kết nối một bộ điều khiển và kiểm tra “ojd virtual show”.";
+/* Error of 'ojd virtual launch' when no program is given. The example command in quotes stays as written. */
 "cli.virtual.launch.errorNoProgram" = "Hãy chỉ định một chương trình để chạy, ví dụ “ojd virtual launch ./game”.";
+/* Short reason inside the failure message of 'ojd virtual launch' when the path holds no executable file. It fills %2$@ of that message and starts in lowercase. */
 "cli.virtual.launch.errorNotExecutable" = "không có tệp thực thi ở đường dẫn đó";
+/* Short reason inside the failure message of 'ojd virtual launch' when no program of the name is on PATH. It fills %2$@ of that message and starts in lowercase. PATH stays as written. */
 "cli.virtual.launch.errorNotFound" = "không có chương trình nào tên đó trong PATH";
+/* Error of 'ojd virtual launch' when --json or --plain is given. Both option names stay as written. */
 "cli.virtual.launch.errorOutput" = "--json và --plain không áp dụng, vì chương trình ghi ra đầu ra chuẩn.";
 "platform.macos.cli.virtual.launch.sdlGamecontrollerBackend" = "Đồng thời đặt các gợi ý SDL khiến SDL chỉ đọc tay cầm qua khung GameController của Apple: SDL_JOYSTICK_MFI=1, SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS=1, SDL_JOYSTICK_IOKIT=0, SDL_JOYSTICK_HIDAPI=0. Chúng chỉ áp dụng cho chương trình và thay thế các giá trị đã đặt.";
+/* One-line summary of 'ojd virtual reset' in the command list and at the top of its help. */
 "cli.virtual.reset.abstract" = "Đưa kiểu máy của một bộ điều khiển, hoặc mọi kiểu máy, về lựa chọn tay cầm ảo tự động.";
+/* Help text of the --all flag of 'ojd virtual reset'. */
 "cli.virtual.reset.all" = "Đặt lại mọi kiểu máy bộ điều khiển.";
+/* Message printed after 'ojd virtual reset --all'. */
 "cli.virtual.reset.allDone" = "Mọi kiểu máy bộ điều khiển giờ tự động chọn tay cầm ảo của nó.";
+/* Message printed by 'ojd virtual reset --all --dry-run' instead of resetting. */
 "cli.virtual.reset.allDryRun" = "Sẽ đưa mọi kiểu máy bộ điều khiển về lựa chọn tay cầm ảo tự động.";
+/* Error of 'ojd virtual reset --all' when the service could not clear the choices. The command in quotes stays as written. */
 "cli.virtual.reset.allFailed" = "Dịch vụ không thể xóa các lựa chọn tay cầm ảo. Hãy kiểm tra bằng “ojd status”.";
+/* Yes or no question that 'ojd virtual reset --all' asks on a terminal. */
 "cli.virtual.reset.allSummary" = "Đưa mọi kiểu máy bộ điều khiển về lựa chọn tay cầm ảo tự động?";
+/* Long description in the help of 'ojd virtual reset'. --all and --force stay as written. */
 "cli.virtual.reset.discussion" = "--all cũng xóa các lựa chọn cho những kiểu máy chưa kết nối. Lệnh hỏi trước trên terminal và cần --force trong trường hợp khác.";
+/* Message printed by 'ojd virtual reset --dry-run' instead of resetting. %@ is the controller name. */
 "cli.virtual.reset.dryRun" = "Sẽ đưa %@ về lựa chọn tay cầm ảo tự động.";
+/* Error of 'ojd virtual reset' when neither or both of CONTROLLER and --all are given. CONTROLLER and --all stay as written. */
 "cli.virtual.reset.errorTarget" = "Hãy đưa một CONTROLLER hoặc --all.";
+/* Error of 'ojd virtual reset' when --unit and --all are combined. CONTROLLER, --unit and --all stay as written. */
 "cli.virtual.reset.errorUnitAll" = "--unit cần một CONTROLLER, không phải --all.";
+/* One-line summary of 'ojd virtual set' in the command list and at the top of its help. */
 "cli.virtual.set.abstract" = "Chọn tay cầm ảo cho kiểu máy của một bộ điều khiển.";
+/* Help text of the profile argument of 'ojd virtual set'. */
 "cli.virtual.set.profile" = "Cấu hình tay cầm ảo.";
+/* Note printed by 'ojd virtual export-mapping' for a profile that needs other SDL hints. %@ is the profile name in kebab case, which stays as written. SDL stays as written. */
 "cli.virtual.group.sdlHintsNote" = "Lưu ý: %@ không hoạt động với các gợi ý (hint) mặc định của SDL.";
+/* One-line summary of 'ojd virtual show' in the command list and at the top of its help. */
 "cli.virtual.show.abstract" = "Hiển thị tay cầm ảo của từng bộ điều khiển và các cấu hình bạn có thể chọn.";
+/* Value shown by 'ojd virtual show' for a controller without a virtual gamepad. */
 "cli.virtual.show.none" = "không có tay cầm ảo";
+/* Line of the output of 'ojd virtual show' with the profiles to choose from. %@ is the comma-separated list of profile names. */
 "cli.virtual.show.profiles" = "Cấu hình: %@";
+/* Value shown by 'ojd virtual show' for a controller that no virtual gamepad profile fits. */
 "cli.virtual.show.unavailable" = "không có tay cầm ảo phù hợp";
+/* Detail of the records check of 'ojd diagnose'. %lld is the number of the user's controller records that the driver applies. */
 "cli.diagnose.group.recordsApplied" = "bản ghi người dùng đã áp dụng: %lld";
+/* Detail of the records check of 'ojd diagnose' when the configuration files are valid. all.patch.json is a file name that stays as written. */
 "cli.diagnose.group.recordsConfigOk" = "all.patch.json và các tệp persona hợp lệ";
+/* Detail of the records check of 'ojd diagnose' when parts of the configuration are ignored or skipped. %@ is the list of those parts. The command in quotes stays as written. */
 "cli.diagnose.group.recordsConfigProblems" = "đã bỏ qua hoặc không tải: %@; hãy sửa rồi kiểm tra bằng “ojd status”";
+/* Detail of the records check of 'ojd diagnose' when records are skipped. %@ is the list of skipped records. The command in quotes stays as written. */
 "cli.diagnose.group.recordsSkipped" = "đã bỏ qua %@; hãy kiểm tra bằng “ojd record list”";
+/* One line of the frame timings of 'ojd diagnose'. %1$lld is the frame number, %2$@ is the controller name, %3$@ is the controller ID and %4$@ is the timestamp of the frame from the monotonic clock in nanoseconds. */
 "cli.diagnose.group.timingsFrame" = "Khung hình %1$lld của %2$@ (%3$@), đồng hồ đơn điệu tính bằng nano giây: %4$@";
+/* One-line summary of 'ojd record' in the command list and at the top of its help. */
 "cli.record.group.abstract" = "Soạn thảo, liệt kê, kiểm tra, cài đặt hoặc gỡ các bản ghi bộ điều khiển.";
+/* Long description in the help of 'ojd record'. The folder path stays as written. A controller record describes how the driver talks to one controller model. */
 "cli.record.group.discussion" = "Một bản ghi bộ điều khiển cho OpenJoystickDriver biết cách điều khiển một kiểu máy bộ điều khiển. Các bản ghi của bạn nằm trong ~/Library/Application Support/OpenJoystickDriver/Controllers và thêm một kiểu máy hoặc vá một kiểu máy đi kèm. Dịch vụ đang chạy áp dụng chúng khi thư mục thay đổi. Chỉ “ojd record draft” cần dịch vụ.";
+/* One-line summary of 'ojd record draft' in the command list and at the top of its help. */
 "cli.record.draft.abstract" = "Soạn thảo một bản ghi bộ điều khiển từ một bộ điều khiển đã kết nối.";
+/* Line printed by 'ojd record draft' with the number of input reports it captured. %lld is that number. */
 "cli.record.draft.captured" = "Số báo cáo đầu vào đã ghi: %lld.";
+/* Line printed by 'ojd record draft' for a byte that changed between reports. %1$lld is the byte position, %2$lld is the value before and %3$lld is the value after. */
 "cli.record.draft.changedByte" = "Byte %1$lld đã đổi: %2$lld thành %3$lld.";
+/* Long description in the help of 'ojd record draft'. HID report descriptor and input report are terms of the USB HID standard. */
 "cli.record.draft.discussion" = "Đọc bộ mô tả báo cáo HID của bộ điều khiển và ghi các báo cáo đầu vào của nó trong lúc bạn nhấn từng thành phần, rồi in một bản ghi để bắt đầu. Bản ghi ánh xạ các nút, cần, cò và hat mà bộ mô tả nêu rõ ràng. Các byte thay đổi trong lúc ghi cho thấy vị trí của các thành phần còn lại. Cần dịch vụ.";
+/* Help text of the duration option of 'ojd record draft'. */
 "cli.record.draft.duration" = "Ghi các báo cáo đầu vào trong số giây này.";
+/* Hint printed after 'ojd record draft'. The command in quotes stays as written, including FILE. */
 "cli.record.draft.next" = "Lưu bản ghi vào một tệp, kiểm tra từng thành phần, rồi chạy “ojd record validate FILE”.";
+/* Message of 'ojd record draft' when the descriptor of the controller yields no controls and the bundled record names the family. %1$@ is the controller identity, VVVV:PPPP, and %2$@ repeats it as the argument of the command in quotes, which stays as written. */
 "cli.record.draft.noLayout" = "Không đọc được thành phần nào của %1$@ từ bộ mô tả báo cáo HID của nó, và bản ghi đi kèm của nó đã gọi tên họ thiết bị. “ojd record show %2$@” hiển thị bản ghi đó.";
+/* Prompt of 'ojd record draft' while it captures reports. %1$@ is the controller name and %2$@ is its vendor and product ID. */
 "cli.record.draft.started" = "Hãy nhấn mọi thành phần trên %1$@ (%2$@), và di chuyển từng cần và cò.";
+/* Error of the 'ojd record' commands when a record file cannot be read. %1$@ is the file path and %2$@ is the reason from the system. */
 "cli.record.group.errorUnreadable" = "Không thể đọc %1$@: %2$@";
+/* Help text of the file argument of the 'ojd record' commands. The single hyphen means stdin and stays as written. */
 "cli.record.group.file" = "Một tệp bản ghi, hoặc - để đọc bản ghi từ stdin.";
+/* Help text of the controller model argument of the 'ojd record' commands. VVVV:PPPP is the vendor ID and product ID in hexadecimal and stays as written. */
 "cli.record.group.identity" = "Kiểu máy bộ điều khiển, dạng VVVV:PPPP.";
+/* One-line summary of 'ojd record install' in the command list and at the top of its help. */
 "cli.record.install.abstract" = "Kiểm tra một bản ghi bộ điều khiển và cài đặt cho người dùng của bạn.";
+/* Yes or no question that 'ojd record install' asks on a terminal before it replaces an installed record. %@ is the path of the installed file. */
 "cli.record.install.confirm" = "Thay thế %@?";
+/* Long description in the help of 'ojd record install'. VVVV-PPPP.json and --force stay as written. */
 "cli.record.install.discussion" = "Ghi bản ghi dưới dạng VVVV-PPPP.json trong thư mục bản ghi của bạn. Dịch vụ đang chạy áp dụng nó ngay. Thay thế bản ghi đã cài cho kiểu máy đó sẽ hỏi xác nhận trên terminal; cần --force trong trường hợp khác. --dry-run kiểm tra bản ghi và không ghi gì. Thoát với mã 1 và không ghi gì khi bản ghi không hợp lệ.";
+/* Message printed by 'ojd record install --dry-run' instead of installing. %@ is the target file path. */
 "cli.record.install.dryRun" = "Sẽ cài đặt %@.";
+/* Error when the record file cannot be written. %1$@ is the target file path and %2$@ is the reason from the system. */
 "cli.record.install.failed" = "Không thể ghi %1$@: %2$@";
+/* Message printed after 'ojd record install'. %@ is the target file path. The service picks the record up without a restart. */
 "cli.record.install.success" = "Đã cài đặt %@. Dịch vụ đang chạy áp dụng nó ngay bây giờ.";
+/* Error of the 'ojd record' commands when a record is invalid. %1$@ is the file path or the word stdin and %2$@ is the description of the problem. */
 "cli.record.group.invalid" = "%1$@ không phải là bản ghi hợp lệ: %2$@";
+/* One-line summary of 'ojd record list' in the command list and at the top of its help. */
 "cli.record.list.abstract" = "Liệt kê mọi bản ghi bộ điều khiển và lớp chứa nó.";
+/* Help text of the flag of 'ojd record list' that limits the list to the bundled catalog. The bundled catalog is the set of records inside the app. */
 "cli.record.list.bundled" = "Chỉ liệt kê danh mục đi kèm.";
+/* Long description in the help of 'ojd record list'. OJD is the short product name. */
 "cli.record.list.discussion" = "Liệt kê các bản ghi đi kèm với bản ghi của bạn đã áp dụng, và nêu từng tệp mà OJD bỏ qua cùng lý do.";
+/* One-line summary of 'ojd record remove' in the command list and at the top of its help. */
 "cli.record.remove.abstract" = "Xóa bản ghi bộ điều khiển của bạn cho một kiểu máy bộ điều khiển.";
+/* Yes or no question that 'ojd record remove' asks on a terminal. %@ is the list of files to delete. */
 "cli.record.remove.confirm" = "Xóa %@?";
+/* Long description in the help of 'ojd record remove'. --force stays as written. */
 "cli.record.remove.discussion" = "Một kiểu máy đi kèm sẽ quay về bản ghi đi kèm của nó. Hỏi xác nhận trên terminal; cần --force trong trường hợp khác.";
+/* Message printed by 'ojd record remove --dry-run' instead of deleting. %@ is the list of files. */
 "cli.record.remove.dryRun" = "Sẽ xóa %@.";
+/* Error of 'ojd record remove' when a file cannot be deleted. %1$@ is the file path and %2$@ is the reason from the system. */
 "cli.record.remove.failed" = "Không thể xóa %1$@: %2$@";
+/* Error of 'ojd record remove' when the user has no record for the model. %@ is the model, VVVV:PPPP. The command in quotes stays as written. */
 "cli.record.remove.notFound" = "Bạn không có bản ghi nào cho %@. “ojd record list” hiển thị các bản ghi của bạn.";
+/* Message printed after 'ojd record remove'. %@ is the list of deleted files. */
 "cli.record.remove.success" = "Đã xóa %@.";
+/* One-line summary of 'ojd record show' in the command list and at the top of its help. */
 "cli.record.show.abstract" = "Hiển thị bản ghi hiệu lực của một kiểu máy bộ điều khiển và lớp của từng phần.";
+/* Error of 'ojd record show' and 'ojd config show' when no record matches the model. %@ is the model, VVVV:PPPP. The command in quotes stays as written. */
 "cli.record.show.notFound" = "Không có bản ghi bộ điều khiển nào cho %@. “ojd record list” hiển thị mọi bản ghi.";
+/* Line of the output of 'ojd record list' for a record file the driver skipped. %1$@ is the file name and %2$@ is the reason. */
 "cli.record.group.skipped" = "Đã bỏ qua %1$@: %2$@";
+/* One-line summary of 'ojd record test' in the command list and at the top of its help. A parser turns the packets of a controller into its state. */
 "cli.record.test.abstract" = "Phát lại các báo cáo đã ghi qua trình phân tích của một bản ghi và so sánh trạng thái đã phân tích.";
+/* Error of 'ojd record test' when the capture file is not a packet capture. %1$@ is the file path and %2$@ is the line number and the problem found on that line. */
 "cli.record.test.captureInvalid" = "%1$@ không phải nội dung ghi gói tin: %2$@";
+/* Line of the output of 'ojd record test' for each field of the controller state that differs. %1$@ is the field name, %2$@ is the expected value and %3$@ is the value found. */
 "cli.record.test.difference" = "%1$@: mong đợi %2$@, nhận được %3$@";
+/* Long description in the help of 'ojd record test'. The command in quotes and the JSON terms stay as written. */
 "cli.record.test.discussion" = "Phát lại các gói tin đã nhận trong một nội dung ghi qua trình phân tích của bản ghi, rồi so sánh trạng thái bộ điều khiển sau báo cáo đầu vào cuối cùng với trạng thái mong đợi. Nội dung ghi là các dòng JSON của “ojd controller capture --json”. Trạng thái mong đợi là một đối tượng JSON có dạng một dòng của “ojd controller watch --json”. Lệnh liệt kê từng trường khác nhau và thoát với mã 1 nếu có trường khác. Lệnh so sánh mọi trường trừ connection, do dịch vụ đang chạy đặt. Không cần dịch vụ đang chạy.";
+/* Help text of the expected state argument of 'ojd record test'. The state is a JSON file. */
 "cli.record.test.expect" = "Trạng thái bộ điều khiển mong đợi, dưới dạng tệp JSON.";
+/* Error of 'ojd record test' when the expected state file is invalid. %1$@ is the file path and %2$@ is the description of the problem. */
 "cli.record.test.expectInvalid" = "%1$@ không phải trạng thái bộ điều khiển: %2$@";
+/* Error of 'ojd record test' when the capture holds no input report. %1$@ is the capture file path and %2$@ is the controller model. */
 "cli.record.test.noInput" = "Không có báo cáo nào trong %1$@ chứa đầu vào cho %2$@. Hãy ghi lại trong khi nhấn các nút điều khiển.";
+/* Error of 'ojd record test' when the family of the controller has no parser that can run without the controller. %@ is the controller model. */
 "cli.record.test.noParser" = "Họ của %@ không có trình phân tích chạy được khi không có bộ điều khiển.";
+/* Help text of the packet capture argument of 'ojd record test'. The command in quotes stays as written. */
 "cli.record.test.packets" = "Một nội dung ghi gói tin, dưới dạng các dòng JSON của “ojd controller capture --json”.";
+/* Error of 'ojd record test' when the parser rejects a packet. %1$@ is the controller model, %2$lld is the packet number and %3$@ is the capture file path. */
 "cli.record.test.parseFailed" = "Trình phân tích của %1$@ đã từ chối gói tin đã nhận thứ %2$lld của %3$@.";
+/* Text of error E2022, printed when the controller state that a record parser produces from a capture differs from the expected state. */
 "error.E2022.message" = "Trạng thái mà trình phân tích của bản ghi tạo ra từ các báo cáo đã ghi khác với trạng thái mong đợi. Hãy đọc các trường mà lệnh liệt kê.";
+/* Text of error E2023, printed when a controller cannot be claimed or released because its protocol family uses raw USB or the system does not serve it natively. The settings window shows it too. */
 "error.E2023.message" = "Không thể nhận hoặc trả bộ điều khiển này: họ giao thức của nó dùng USB thô, hoặc hệ thống không phục vụ nó ở chế độ gốc. Thông báo nêu lý do.";
+/* Text of error E2024, printed when no endpoint client or token has the given ID. ojd access is the command that lists the IDs and stays as written. */
 "error.E2024.message" = "Không có ứng dụng khách hay mã thông báo endpoint nào có ID này. Chạy ojd access để liệt kê các ID, rồi dùng một ID trong đó.";
+/* Text of error E2025, printed when a client with a signature that any local program can claim cannot be granted. */
 "error.E2025.message" = "Không thể cấp quyền cho ứng dụng khách có loại chữ ký này, vì bất kỳ chương trình cục bộ nào cũng có thể mạo nhận chữ ký của nó.";
+/* Text of error E2026, printed when a grant names no scope. */
 "error.E2026.message" = "Hãy chọn ít nhất một phạm vi để cấp.";
+/* Text of error E2027, printed when the service is shutting down while the command runs. */
 "error.E2027.message" = "Dịch vụ đang dừng. Hãy khởi động dịch vụ, rồi thử lại.";
+/* Text of error E2028, printed when a token with the chosen name exists. */
 "error.E2028.message" = "Đã có mã thông báo với tên này. Hãy thu hồi nó trước, hoặc chọn tên khác.";
+/* Text of error E2029, printed when a token name has characters that are not allowed. The limit of 64 characters is fixed. */
 "error.E2029.message" = "Đây không phải tên mã thông báo. Dùng từ 1 đến 64 chữ cái, chữ số, dấu chấm, dấu gạch ngang hoặc dấu gạch dưới.";
+/* Text of error E2030, printed when a web origin is not valid. scheme://host[:port], http, https and the example in backticks stay as written. */
 "error.E2030.message" = "Đây không phải nguồn gốc web. Dùng scheme://host[:port] với http hoặc https, chẳng hạn `http://127.0.0.1:8080`.";
+/* Text of error E2031, printed when the WebSocket port on 127.0.0.1 is in use or cannot be opened. 127.0.0.1 and --port stay as written. */
 "error.E2031.message" = "Cổng này trên 127.0.0.1 đang được dùng hoặc không thể mở. Hãy chọn cổng khác bằng --port.";
+/* Text of error E2032, printed when the control scope is granted to a token that has origins. */
 "error.E2032.message" = "Mã thông báo có nguồn gốc không thể có phạm vi control, vì một trang không bao giờ được điều khiển tay cầm ảo. Hãy cấp control cho mã thông báo không có nguồn gốc.";
+/* Text of error E2033, printed when 'ojd virtual launch' cannot start the program. */
 "error.E2033.message" = "Không thể khởi động chương trình. Hãy kiểm tra đường dẫn của nó chỉ tới một tệp thực thi hoặc một ứng dụng và bạn có quyền chạy nó.";
 /* Error E2034, shown in the app or the CLI when the service no longer accepts requests. */
 "error.E2034.message" = "Dịch vụ đã ngừng nhận yêu cầu. Hãy thoát OpenJoystickDriver, mở lại, rồi thử lại.";
@@ -1375,152 +1897,298 @@
 /* Error E2037, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */
 "error.E2037.message" = "Thông báo không được phép cho OpenJoystickDriver. Hãy cho phép trong cài đặt thông báo của hệ thống, rồi thử lại.";
 "platform.macos.cli.record.group.usbNotClaimed" = "Họ thiết bị này dùng USB thô, và phần mở rộng USB không thể chiếm bộ điều khiển này, vì danh sách sản phẩm của nó do Apple ký. OJD chỉ truy cập được nó qua truy cập USB trực tiếp, khi macOS cho phép.";
+/* Note about a Switch 2 controller record that connects over USB only. bluetoothLE.vibrationCharacteristic is a field of the record and stays as written. */
 "cli.record.group.usbOnlySwitch2" = "Chỉ USB: thêm bluetoothLE.vibrationCharacteristic vào bản ghi Switch 2 này để kết nối bộ điều khiển qua Bluetooth LE.";
+/* One-line summary of 'ojd record validate' in the command list and at the top of its help. */
 "cli.record.validate.abstract" = "Kiểm tra một bản ghi bộ điều khiển mà không cài đặt.";
+/* Long description in the help of 'ojd record validate'. */
 "cli.record.validate.discussion" = "Kiểm tra cấu trúc của bản ghi, các trường đối chiếu với nhau, và độ khớp với danh mục đi kèm, đồng thời cho biết bộ điều khiển có cần phần mở rộng USB hay không. Thoát với mã 1 khi bản ghi không hợp lệ.";
+/* Message printed by 'ojd record validate' for a correct record. %1$@ is the file path, %2$@ is the operation in kebab case such as install, %3$@ is the controller model and %4$@ is the protocol family. The command in quotes stays as written. */
 "cli.record.validate.valid" = "%1$@ là bản ghi %2$@ hợp lệ cho %3$@ (%4$@). Hãy cài đặt bằng “ojd record install”.";
+/* Heading in the output of 'ojd status' above the defaults file that the driver ignores. */
 "cli.status.group.labelIgnoredDefaults" = "Tệp mặc định bị bỏ qua";
+/* Heading in the output of 'ojd status' above the list of skipped persona files. %lld is the number of files. */
 "cli.status.group.labelSkippedPersonas" = "Các tệp persona bị bỏ qua (%lld)";
+/* Heading in the output of 'ojd status' above the list of skipped controller records. %lld is the number of records. */
 "cli.status.group.labelSkippedRecords" = "Bản ghi bộ điều khiển bị bỏ qua (%lld)";
+/* One-line summary of 'ojd binding' in the command list and at the top of its help. */
 "cli.binding.group.abstract" = "Liệt kê, đặt và xóa các liên kết của một cấu hình ánh xạ lại.";
+/* Error of 'ojd binding set' when the JSON of --actions-json cannot be read. %@ is the description of the parse problem. --actions-json stays as written. */
 "cli.binding.group.actionsInvalid" = "--actions-json không phải là danh sách thao tác hợp lệ: %@";
+/* Error of 'ojd binding set' when the JSON of --actions-json exceeds the size limit. --actions-json stays as written. */
 "cli.binding.group.actionsTooLarge" = "--actions-json quá lớn.";
+/* Error of 'ojd binding set' when the value of --double-tap or --long-hold does not have the form MS:TARGET. %@ is the option name. MS:TARGET and the example stay as written. */
 "cli.binding.group.alternateFormat" = "%@ nhận MS:TARGET, như 500:key:key-b.";
+/* Error of 'ojd binding set' when an axis option is used with a source that is not an axis. The option names stay as written. */
 "cli.binding.group.axisOptionsSource" = "--deadzone, --gain, --invert, --response-curve và --digital-threshold cần một nguồn trục.";
+/* One-line summary of 'ojd binding clear' in the command list and at the top of its help. */
 "cli.binding.clear.abstract" = "Gỡ các liên kết của các nguồn đã cho, hoặc mọi liên kết.";
+/* Help text of the --all flag of 'ojd binding clear'. */
 "cli.binding.clear.all" = "Gỡ mọi liên kết, tổ hợp, chuỗi và lớp.";
+/* Warning of 'ojd binding clear' when removing the bindings leaves an active profile without any binding, so its controller sends no input. %@ is the profile name. The two commands in quotes stay as written. */
 "cli.binding.clear.blocksInput" = "“%@” đang hoạt động trên một bộ điều khiển đã kết nối và hiện chặn toàn bộ đầu vào của nó. Hãy thêm một liên kết bằng “ojd binding set”, hoặc dừng cấu hình bằng “ojd profile deactivate”.";
+/* Yes or no question that 'ojd binding clear --all' asks on a terminal. %@ is the profile name. */
 "cli.binding.clear.confirm" = "Gỡ mọi liên kết, tổ hợp, chuỗi và lớp khỏi “%@”?";
+/* Long description in the help of 'ojd binding clear'. --all and --force stay as written. */
 "cli.binding.clear.discussion" = "--all cũng gỡ các tổ hợp, chuỗi và lớp của cấu hình, và hỏi xác nhận trên terminal; cần --force trong trường hợp khác. Các cài đặt cần, cò, cảm ứng, chuyển động và đầu ra vẫn được giữ.";
+/* Message printed after 'ojd binding clear' removed bindings. %1$@ is the profile name and %2$lld is the number of removed bindings, shown after a colon. */
 "cli.binding.clear.done" = "Số liên kết đã gỡ khỏi “%1$@”: %2$lld.";
+/* Message printed by 'ojd binding clear --dry-run' instead of changing the profile. %1$@ is the profile name and %2$lld is the number of bindings that would be removed, shown after a colon. */
 "cli.binding.clear.dryRun" = "Số liên kết sẽ bị gỡ khỏi “%1$@”: %2$lld.";
+/* Message of 'ojd binding clear' when a source has no binding. %1$@ is the profile name and %2$@ is the source the user gave. */
 "cli.binding.clear.missing" = "“%1$@” không có liên kết nào cho %2$@. Không có gì thay đổi.";
+/* Help text of the SOURCES argument of 'ojd binding clear'. */
 "cli.binding.clear.sources" = "Các nguồn có liên kết cần gỡ.";
+/* Error of 'ojd binding clear' when neither sources nor --all are given. --all stays as written. */
 "cli.binding.clear.usage" = "Hãy đưa một hoặc nhiều nguồn, hoặc --all.";
+/* Long description in the help of 'ojd binding'. It lists the SOURCE and TARGET forms. Words in capitals, forms such as button:NAME and all option names stay as written. */
 "cli.binding.group.discussion" = "Một liên kết gửi một TARGET khi một SOURCE của bộ điều khiển được dùng.\n\nSOURCE: button:NAME, dpad:DIRECTION, axis:NAME[:negative|positive], trigger:NAME:STAGE, motion:lean:DIRECTION, touch:SURFACE:contact, touch:SURFACE:grid:COLUMNS:ROWS:COLUMN:ROW, hoặc touch:SURFACE:swipe:DIRECTION:DISTANCE.\n\nTARGET: key:KEY[:mods=meta,control,alt,shift], mouse:BUTTON, move:x|y, scroll:x|y, gamepad:button:NAME, gamepad:dpad:DIRECTION, gamepad:axis:NAME, hoặc physical:... cho rung, đèn và cò thích ứng.\n\n“ojd profile show” in các liên kết theo các dạng này. Chỉnh sửa tổ hợp, chuỗi và lớp bằng “ojd profile edit”.";
+/* One-line summary of 'ojd binding list' in the command list and at the top of its help. */
 "cli.binding.list.abstract" = "Liệt kê các liên kết của một cấu hình.";
+/* Message of 'ojd binding list' when the profile has no bindings. %@ is the profile name. The command in quotes stays as written. */
 "cli.binding.list.empty" = "“%@” không có liên kết nào. Hãy thêm một liên kết bằng “ojd binding set”.";
+/* Help text of the --actions-json option of 'ojd binding set'. 'ojd profile export' stays as written. */
 "cli.binding.group.optionActionsJson" = "Các thao tác bổ sung dưới dạng mảng JSON, theo dạng mà “ojd profile export” ghi ra.";
+/* Help text of the --behavior option of 'ojd binding set'. The behavior hold is a value the user types. */
 "cli.binding.group.optionBehavior" = "Khi nào đích được kích hoạt. Mặc định: hành vi của liên kết hiện tại, hoặc hold.";
+/* Help text of the --deadzone option of 'ojd binding set'. The dead zone is the part of an axis travel that is ignored. */
 "cli.binding.group.optionDeadzone" = "Nguồn trục: phần hành trình bị bỏ qua, từ 0 đến 0.95. Mặc định: 0.1.";
+/* Help text of the --digital-threshold option of 'ojd binding set'. It sets the axis travel that counts as a press. */
 "cli.binding.group.optionDigitalThreshold" = "Nguồn trục: hành trình được tính là một lần nhấn đối với đích dạng nút. Mặc định: 0.5.";
+/* Help text of the --double-tap option of 'ojd binding set'. The example 300:key:key-c stays as written. */
 "cli.binding.group.optionDoubleTap" = "Gửi một đích khác khi nguồn được nhấn hai lần trong khoảng thời gian này, như 300:key:key-c.";
+/* Help text of the --gain option of 'ojd binding set'. Gain scales the axis output. */
 "cli.binding.group.optionGain" = "Nguồn trục: hệ số đầu ra, từ 0.1 đến 10. Mặc định: 1.";
+/* Help text of the --invert flag of 'ojd binding set'. */
 "cli.binding.group.optionInvert" = "Nguồn trục: đảo chiều.";
+/* Help text of the --long-hold option of 'ojd binding set'. The example 500:key:key-b stays as written. */
 "cli.binding.group.optionLongHold" = "Gửi một đích khác khi nguồn được giữ lâu như vậy, như 500:key:key-b.";
+/* Help text of the --pulse-ms option of 'ojd binding set'. ms means milliseconds. */
 "cli.binding.group.optionPulseMs" = "Một xung giữ đích trong bao lâu, từ 1 đến 5000 ms. Mặc định: 100.";
+/* Help text of the --response-curve option of 'ojd binding set'. linear is a value the user types. */
 "cli.binding.group.optionResponseCurve" = "Nguồn trục: đầu ra tăng theo hành trình như thế nào. Mặc định: linear.";
+/* Help text of the --turbo-duty option of 'ojd binding set'. The duty is the share of each turbo cycle in which the target is held. */
 "cli.binding.group.optionTurboDuty" = "Phần của mỗi chu kỳ turbo mà đích được giữ, lớn hơn 0 và nhỏ hơn 1.";
+/* Help text of the --turbo-rate option of 'ojd binding set'. --turbo-duty stays as written. */
 "cli.binding.group.optionTurboRate" = "Lặp lại đích số lần này mỗi giây khi đang giữ. Cần --turbo-duty.";
+/* One-line summary of 'ojd binding set' in the command list and at the top of its help. */
 "cli.binding.set.abstract" = "Liên kết một nguồn của bộ điều khiển với một đích, thay thế liên kết hiện tại của nguồn.";
+/* Message printed after 'ojd binding set' stored a binding. %1$@ is the profile name and %2$@ describes the source bound to the target. */
 "cli.binding.set.done" = "“%1$@” hiện liên kết %2$@.";
+/* Help text of the SOURCE argument of 'ojd binding set'. button:south stays as written. */
 "cli.binding.set.source" = "Thành phần của bộ điều khiển, như button:south.";
+/* Help text of the TARGET argument of 'ojd binding set'. key:space stays as written. */
 "cli.binding.set.target" = "Điều nó gửi, như key:space.";
+/* Error of 'ojd binding' commands when a source cannot be parsed. %@ is the text the user gave. The command in quotes stays as written. */
 "cli.binding.group.sourceInvalid" = "“%@” không phải là một nguồn. “ojd binding set --help” liệt kê các dạng nguồn.";
+/* Error of 'ojd binding set' when the target cannot be parsed. %@ is the text the user gave. The command in quotes stays as written. */
 "cli.binding.group.targetInvalid" = "“%@” không phải là một đích. “ojd binding set --help” liệt kê các dạng đích.";
+/* Error of 'ojd binding set' when only one of --turbo-rate and --turbo-duty is given. Both option names stay as written. */
 "cli.binding.group.turboPair" = "--turbo-rate và --turbo-duty phải được đưa cùng nhau.";
+/* Error of 'ojd binding set' when turbo is requested for a pointer movement or scrolling target. */
 "cli.binding.group.turboUnsupported" = "Turbo không dùng được với đích di chuyển con trỏ hoặc cuộn.";
+/* One-line summary of 'ojd controller calibrate' in the command list and at the top of its help. */
 "cli.controller.calibrate.abstract" = "Hiển thị hoặc thay đổi hiệu chỉnh chuyển động của bộ điều khiển.";
+/* Help text of the ACTION argument of 'ojd controller calibrate'. start, pause and reset are values the user types and stay as written. */
 "cli.controller.calibrate.action" = "Việc cần làm: start, pause hoặc reset. Bỏ qua để in hiệu chỉnh.";
+/* State word in the calibration line of 'ojd controller calibrate'. It fills %2$@ of the status line. */
 "cli.controller.calibrate.calibrated" = "đã hiệu chỉnh";
+/* State word in the calibration line of 'ojd controller calibrate'. It fills %2$@ of the status line. */
 "cli.controller.calibrate.collecting" = "đang thu thập";
+/* Long description in the help of 'ojd controller calibrate'. start, pause and reset are values the user types and stay as written. Gyro drift is the constant rotation the motion sensor reports at rest. */
 "cli.controller.calibrate.discussion" = "Không có thao tác, in hiệu chỉnh. start thu thập độ trôi của con quay hồi chuyển khi bộ điều khiển nằm yên, pause dừng thu thập, và reset xóa hiệu chỉnh. Các liên kết nghiêng chuyển động và lái dùng hiệu chỉnh này.";
+/* Error of 'ojd controller calibrate' for a controller without a motion sensor. %@ is the controller name. */
 "cli.controller.calibrate.noMotion" = "%@ không báo cáo chuyển động.";
+/* Calibration line of 'ojd controller calibrate'. %1$@ is the controller name, %2$@ is the state word, and %3$@, %4$@ and %5$@ are the X, Y and Z components of the gyro offset in degrees per second. */
 "cli.controller.calibrate.status" = "%1$@: %2$@, độ lệch con quay hồi chuyển x %3$@ y %4$@ z %5$@ độ mỗi giây";
+/* Error of 'ojd controller calibrate' when no profile is active for the controller. %@ is the controller name. The command in quotes stays as written. */
 "cli.controller.calibrate.unavailable" = "%@ không có phiên ánh xạ lại nào đang hoạt động. Hãy kích hoạt một cấu hình cho nó bằng “ojd profile activate”.";
+/* State word in the calibration line of 'ojd controller calibrate'. It fills %2$@ of the status line. */
 "cli.controller.calibrate.uncalibrated" = "chưa hiệu chỉnh";
+/* One-line summary of 'ojd controller pair' in the command list and at the top of its help. A Joy-Con is a Nintendo Switch controller half and stays as written. */
 "cli.controller.pair.abstract" = "Kết hợp một Joy-Con trái và một Joy-Con phải thành một bộ điều khiển.";
+/* Long description in the help of 'ojd controller pair'. PROFILE and the command in quotes stay as written. */
 "cli.controller.pair.discussion" = "Cặp này dùng PROFILE, phải là một cấu hình Joy-Con ghép đôi. “ojd controller unpair” tách chúng ra lần nữa.";
+/* Message printed after 'ojd controller pair'. %1$@ is the session ID of the pair and %2$@ is the profile name, which is shown in quotes. */
 "cli.controller.pair.done" = "Đã ghép đôi các Joy-Con thành %1$@ với “%2$@”.";
+/* Help text of the LEFT argument of 'ojd controller pair'. */
 "cli.controller.pair.left" = "Joy-Con trái.";
+/* Error of 'ojd controller pair' when the service reports no pair. The command in quotes stays as written. */
 "cli.controller.pair.missing" = "Dịch vụ không ghép đôi các Joy-Con. Hãy kiểm tra chúng bằng “ojd controller list”.";
+/* Help text of the RIGHT argument of 'ojd controller pair'. */
 "cli.controller.pair.right" = "Joy-Con phải.";
+/* One-line summary of 'ojd controller unpair' in the command list and at the top of its help. */
 "cli.controller.unpair.abstract" = "Tách một cặp Joy-Con thành hai bộ điều khiển.";
+/* Message printed after 'ojd controller unpair'. */
 "cli.controller.unpair.done" = "Đã tách các Joy-Con.";
+/* Error of 'ojd controller unpair' when no pair matches. %@ is the text the user gave. */
 "cli.controller.unpair.notFound" = "Không có cặp Joy-Con nào khớp “%@”.";
+/* Help text of the PAIR argument of 'ojd controller unpair'. The command in quotes stays as written. */
 "cli.controller.unpair.pair" = "Cặp: ID phiên của nó từ “ojd controller pair”, hoặc ID của một trong hai Joy-Con.";
+/* One-line summary of 'ojd profile' in the command list and at the top of its help. */
 "cli.profile.group.abstract" = "Tạo, thay đổi và kích hoạt các cấu hình ánh xạ lại.";
+/* One-line summary of 'ojd profile activate' in the command list and at the top of its help. */
 "cli.profile.activate.abstract" = "Áp dụng một cấu hình cho kiểu máy bộ điều khiển của nó.";
+/* Help text of the --allow-empty flag of 'ojd profile activate'. */
 "cli.profile.activate.allowEmpty" = "Kích hoạt cấu hình ngay cả khi nó không tạo ra đầu ra nào.";
+/* Long description in the help of 'ojd profile activate'. It explains the profile that replaces the active one and the profile that produces no output. The words mapped and --allow-empty stay as written. */
 "cli.profile.activate.discussion" = "Cấu hình thay thế cấu hình đang hoạt động của cùng kiểu máy bộ điều khiển và phạm vi ứng dụng. Một cấu hình đặt tay cầm ảo ở mapped mà không gửi gì tới tay cầm, bàn phím, con trỏ hay bộ điều khiển và không đặt màu đèn sẽ không tạo ra đầu ra; kích hoạt nó cần --allow-empty.";
+/* Message printed after 'ojd profile activate'. %1$@ is the profile name, shown in quotes, and %2$@ is the controller model it applies to. */
 "cli.profile.activate.done" = "Đã kích hoạt “%1$@” cho %2$@.";
+/* Error of 'ojd profile activate' for a profile that produces no output. --allow-empty stays as written. */
 "cli.profile.activate.empty" = "Cấu hình này không tạo ra đầu ra. Thêm --allow-empty để kích hoạt.";
+/* Marker appended to the line of the active profile in 'ojd profile list'. Keep the parentheses. */
 "cli.profile.group.activeMarker" = "(đang hoạt động)";
+/* Help text of the PROFILE argument shared by the 'ojd profile' commands. The command in quotes stays as written. */
 "cli.profile.group.argument" = "Cấu hình: ID hoặc tên của nó từ “ojd profile list”.";
+/* One-line summary of 'ojd profile create' in the command list and at the top of its help. */
 "cli.profile.create.abstract" = "Tạo một cấu hình trống cho một kiểu máy bộ điều khiển.";
+/* Help text of the --app option of 'ojd profile create'. An app ID is the bundle identifier of an app, such as com.apple.Safari. */
 "cli.profile.create.app" = "Chỉ áp dụng cấu hình khi ứng dụng này, theo mã định danh ứng dụng, đang ở phía trước.";
+/* Help text of the --controller option of 'ojd profile create'. VVVV:PPPP is the vendor ID and product ID in hexadecimal and stays as written. */
 "cli.profile.create.controller" = "Kiểu máy bộ điều khiển: VVVV:PPPP, hoặc ID của một bộ điều khiển đã kết nối.";
+/* Long description in the help of 'ojd profile create'. --app and the command in quotes stay as written. */
 "cli.profile.create.discussion" = "Cấu hình áp dụng trong mọi ứng dụng trừ khi --app chỉ định một ứng dụng. Theo mặc định, tay cầm ảo truyền thẳng mọi thành phần không có liên kết nào dùng. Cấu hình bắt đầu ở trạng thái không hoạt động; hãy kích hoạt bằng “ojd profile activate”.";
+/* Message printed after 'ojd profile create'. %1$@ is the profile name, shown in quotes, and %2$@ is the profile ID. */
 "cli.profile.create.done" = "Đã tạo “%1$@” (%2$@).";
 "platform.macos.cli.profile.create.physicalInput" = "macOS có còn thấy bộ điều khiển hay không (shared) hoặc OJD chiếm lấy nó (exclusive).";
+/* Help text of the --virtual-gamepad option of 'ojd profile create'. disabled, mapped and passthrough are values the user types and stay as written. */
 "cli.profile.create.virtualGamepad" = "Nội dung tay cầm ảo gửi: không gì cả (disabled), chỉ các thành phần đã liên kết (mapped), hoặc cả mọi thành phần không có liên kết nào dùng (passthrough).";
+/* One-line summary of 'ojd profile deactivate' in the command list and at the top of its help. */
 "cli.profile.deactivate.abstract" = "Ngừng áp dụng một cấu hình. Bộ điều khiển sau đó gửi đầu vào của chính nó.";
+/* Message printed after 'ojd profile deactivate'. %@ is the profile name, shown in quotes. */
 "cli.profile.deactivate.done" = "Đã hủy kích hoạt “%@”.";
+/* One-line summary of 'ojd profile delete' in the command list and at the top of its help. */
 "cli.profile.delete.abstract" = "Xóa một cấu hình.";
+/* Yes or no question that 'ojd profile delete' asks on a terminal. %@ is the profile name, shown in quotes. */
 "cli.profile.delete.confirm" = "Xóa cấu hình “%@”?";
+/* Long description in the help of 'ojd profile delete'. --force stays as written. */
 "cli.profile.delete.discussion" = "Cấu hình đang hoạt động sẽ ngừng được áp dụng. Hỏi xác nhận trên terminal; cần --force trong trường hợp khác. Hãy xuất cấu hình trước để giữ một bản sao.";
+/* Message printed after 'ojd profile delete'. %@ is the profile name, shown in quotes. */
 "cli.profile.delete.done" = "Đã xóa cấu hình “%@”.";
+/* Message printed by 'ojd profile delete --dry-run' instead of deleting. %@ is the profile name, shown in quotes. */
 "cli.profile.delete.dryRun" = "Sẽ xóa cấu hình “%@”.";
+/* Long description in the help of 'ojd profile'. PROFILE and the commands in quotes stay as written. */
 "cli.profile.group.discussion" = "Một cấu hình ánh xạ lại biến các thành phần của một kiểu máy bộ điều khiển thành đầu vào tay cầm, bàn phím và con trỏ. PROFILE là ID hoặc tên cấu hình từ “ojd profile list”. Thay đổi liên kết bằng “ojd binding”, và mọi thứ khác bằng “ojd profile set” hoặc “ojd profile edit”. Mọi lệnh profile trừ “ojd profile validate” đều cần dịch vụ.";
+/* Error of the profile file commands when a profile document is invalid. %1$@ is the file path or the word stdin and %2$@ is the description of the problem. */
 "cli.profile.group.documentInvalid" = "%1$@ không phải là cấu hình hợp lệ: %2$@";
+/* Reason fragment of a document problem: the text is not JSON. It follows a file name in a message and starts in lowercase. */
 "cli.shared.document.notJson" = "không phải JSON hợp lệ";
+/* Reason fragment of a document problem: a required field is absent. %@ is the field path, which stays as written. It starts in lowercase. */
 "cli.shared.document.missingField" = "thiếu trường “%@”";
+/* Reason fragment of a document problem: a field holds the wrong kind of value. %@ is the field path, which stays as written. It starts in lowercase. */
 "cli.shared.document.wrongType" = "trường “%@” có kiểu sai";
+/* Reason fragment of a document problem for one field. %1$@ is the field path, which stays as written and is shown in quotes, and %2$@ is the problem found. */
 "cli.shared.document.fieldProblem" = "“%1$@”: %2$@";
+/* One-line summary of 'ojd profile duplicate' in the command list and at the top of its help. */
 "cli.profile.duplicate.abstract" = "Sao chép một cấu hình với tên mới. Bản sao bắt đầu ở trạng thái không hoạt động.";
+/* Message printed after 'ojd profile duplicate'. %1$@ is the name of the copy, shown in quotes, and %2$@ is its profile ID. */
 "cli.profile.duplicate.done" = "Đã tạo “%1$@” (%2$@).";
+/* Help text of the NAME argument of 'ojd profile duplicate'. */
 "cli.profile.duplicate.name" = "Tên của bản sao.";
+/* One-line summary of 'ojd profile edit' in the command list and at the top of its help. */
 "cli.profile.edit.abstract" = "Thay đổi một cấu hình trong trình soạn thảo của bạn.";
+/* Long description in the help of 'ojd profile edit'. $VISUAL, $EDITOR and vi are environment variables and a program name and stay as written. */
 "cli.profile.edit.discussion" = "Mở tệp cấu hình trong $VISUAL, $EDITOR hoặc vi, rồi xác thực và lưu. Cần một terminal. Nếu không có, hãy xuất cấu hình, sửa tệp và nhập lại.";
+/* Message printed after 'ojd profile edit' saved the profile. %@ is the profile name, shown in quotes. */
 "cli.profile.edit.done" = "Đã lưu “%@”.";
+/* Error of 'ojd profile edit' when the editor ends with a failure. %lld is the exit status number of the editor. */
 "cli.profile.edit.editorFailed" = "Trình soạn thảo thoát với trạng thái %lld. Không có gì thay đổi.";
+/* Error of 'ojd profile edit' when the edit changed the profile ID. The command in quotes stays as written. */
 "cli.profile.edit.idChanged" = "Việc chỉnh sửa đã đổi ID cấu hình. Không có gì thay đổi; hãy dùng “ojd profile duplicate” để tạo bản sao.";
+/* Error of 'ojd profile edit' when the input is not a terminal. The three commands in quotes stay as written. */
 "cli.profile.edit.needsTerminal" = "“ojd profile edit” cần một terminal. Hãy dùng “ojd profile export” và “ojd profile import” thay thế.";
+/* Message printed by 'ojd profile edit' when the file is saved without a change. */
 "cli.profile.edit.unchanged" = "Không có gì thay đổi.";
+/* One-line summary of 'ojd profile export' in the command list and at the top of its help. The command in quotes stays as written. */
 "cli.profile.export.abstract" = "In một cấu hình dưới dạng tệp mà “ojd profile import” đọc được.";
+/* Long description in the help of 'ojd profile export'. --json and --plain stay as written. */
 "cli.profile.export.discussion" = "Cấu hình là JSON, nên --json và --plain không thay đổi đầu ra.";
+/* Message printed after 'ojd profile export --output'. %1$@ is the profile name, shown in quotes, and %2$@ is the file path. */
 "cli.profile.export.done" = "Đã ghi “%1$@” vào %2$@.";
+/* Help text of the --output option of 'ojd profile export'. stdout is the standard output stream and stays as written. */
 "cli.profile.export.output" = "Ghi cấu hình vào tệp này thay vì stdout.";
+/* Error of 'ojd profile export --output' when the file cannot be written. %1$@ is the file path and %2$@ is the reason from the system. */
 "cli.profile.export.writeFailed" = "Không thể ghi %1$@: %2$@";
+/* One-line summary of 'ojd profile get' in the command list and at the top of its help. */
 "cli.profile.get.abstract" = "In một giá trị từ một cấu hình.";
+/* Long description in the help of 'ojd profile get'. KEY, the command in quotes, the example key path and --json stay as written. */
 "cli.profile.get.discussion" = "KEY là một đường dẫn vào tệp cấu hình mà “ojd profile export” in ra, như stickMappings.0.tuning.innerDeadzone. Chỉ in một chuỗi và mọi giá trị khác dưới dạng JSON. Với --json, in khóa và giá trị.";
+/* Error of 'ojd profile get' when the key has no value. %1$@ is the profile name, shown in quotes, and %2$@ is the key path. */
 "cli.profile.get.missing" = "“%1$@” không có giá trị tại %2$@.";
+/* One-line summary of 'ojd profile import' in the command list and at the top of its help. The command in quotes stays as written. */
 "cli.profile.import.abstract" = "Thêm một cấu hình từ tệp mà “ojd profile export” đã ghi.";
+/* Message printed after 'ojd profile import' added a profile. %1$@ is the profile name, shown in quotes, and %2$@ is the profile ID. */
 "cli.profile.import.added" = "Đã nhập “%1$@” (%2$@).";
+/* Long description in the help of 'ojd profile import'. The single hyphen is the argument that means stdin and stays as written. */
 "cli.profile.import.discussion" = "Dùng - để đọc cấu hình từ stdin. Cấu hình có cùng ID với một cấu hình hiện có sẽ thay thế nó.";
+/* Help text of the FILE argument of 'ojd profile import'. The single hyphen means stdin and stays as written. */
 "cli.profile.import.file" = "Tệp cấu hình, hoặc - cho stdin.";
+/* Message printed after 'ojd profile import' replaced a profile with the same ID. %1$@ is the profile name, shown in quotes, and %2$@ is the profile ID. */
 "cli.profile.import.replaced" = "Đã thay thế “%1$@” (%2$@).";
+/* Error when a stored profile fails validation. %@ is the description of the problem. */
 "cli.profile.group.invalid" = "Cấu hình không hợp lệ: %@";
+/* Help text of the KEY argument of 'ojd profile get' and 'ojd profile set'. The example bindings.0.behavior stays as written. */
 "cli.profile.group.key" = "Khóa: các tên và chỉ số mảng nối bằng dấu chấm, như bindings.0.behavior.";
+/* One-line summary of 'ojd profile list' in the command list and at the top of its help. */
 "cli.profile.list.abstract" = "Liệt kê các cấu hình ánh xạ lại.";
+/* Message printed by 'ojd profile list' when no profile exists. The command in quotes stays as written. */
 "cli.profile.list.empty" = "Không có cấu hình nào. Hãy tạo một cấu hình bằng “ojd profile create”.";
+/* Warning printed by 'ojd profile list' for a stored profile that the service could not load. %@ is the description of the problem. */
 "cli.profile.list.issue" = "Dịch vụ không thể tải một cấu hình đã lưu: %@";
+/* Hint printed by 'ojd profile list' after the issue warnings. The command in quotes stays as written. */
 "cli.profile.list.recoverHint" = "Hãy sửa chúng bằng “ojd profile recover”.";
+/* Help text of the NAME argument of 'ojd profile create'. The limit of 80 characters is fixed. */
 "cli.profile.group.name" = "Tên cấu hình, từ 1 đến 80 ký tự.";
+/* One-line summary of 'ojd profile recover' in the command list and at the top of its help. */
 "cli.profile.recover.abstract" = "Xóa các tệp cấu hình bị hỏng và đặt lại danh sách cấu hình đang hoạt động bị hỏng.";
+/* Yes or no question that 'ojd profile recover' asks on a terminal. */
 "cli.profile.recover.confirm" = "Xóa các tệp cấu hình bị hỏng và đặt lại danh sách cấu hình đang hoạt động bị hỏng?";
+/* Long description in the help of 'ojd profile recover'. The command in quotes, .backup- and --force stay as written. */
 "cli.profile.recover.discussion" = "Xử lý từng sự cố mà “ojd profile list” báo cáo. Trước tiên dịch vụ sao lưu từng tệp bên cạnh bản gốc, với tên chứa .backup-. Hỏi xác nhận trên terminal; cần --force trong trường hợp khác.";
+/* Message printed by 'ojd profile recover' when no profile file is damaged. */
 "cli.profile.recover.none" = "Không có tệp cấu hình nào bị hỏng.";
+/* Message printed by 'ojd profile recover' for each damaged profile file it removed. %@ is the ID of the issue that 'ojd profile list' reports. */
 "cli.profile.recover.removeDone" = "Đã xóa tệp cấu hình bị hỏng của sự cố %@.";
+/* Message printed by 'ojd profile recover --dry-run' for each damaged profile file. %@ is the ID of the issue that 'ojd profile list' reports. */
 "cli.profile.recover.removeDryRun" = "Sẽ xóa tệp cấu hình bị hỏng của sự cố %@.";
+/* Message printed by 'ojd profile recover' after it reset the list of active profiles. */
 "cli.profile.recover.resetDone" = "Đã đặt lại danh sách cấu hình đang hoạt động.";
+/* Message printed by 'ojd profile recover --dry-run' instead of resetting the list of active profiles. */
 "cli.profile.recover.resetDryRun" = "Sẽ đặt lại danh sách cấu hình đang hoạt động.";
+/* One-line summary of 'ojd profile rename' in the command list and at the top of its help. */
 "cli.profile.rename.abstract" = "Đổi tên một cấu hình.";
+/* Message printed after 'ojd profile rename'. %@ is the name of the profile after the rename, shown in quotes. */
 "cli.profile.rename.done" = "Đã đổi tên thành “%@”.";
+/* Help text of the NAME argument of 'ojd profile rename'. The limit of 80 characters is fixed. */
 "cli.profile.rename.name" = "Tên mới, từ 1 đến 80 ký tự.";
+/* Error when a PROFILE argument matches no profile. %@ is the text the user gave. The command in quotes stays as written. */
 "cli.profile.group.selectorNotFound" = "Không có cấu hình nào có ID hoặc tên “%@”. “ojd profile list” hiển thị mọi cấu hình.";
+/* One-line summary of 'ojd profile set' in the command list and at the top of its help. */
 "cli.profile.set.abstract" = "Thay đổi một giá trị trong một cấu hình.";
+/* Long description in the help of 'ojd profile set'. KEY, VALUE, null, JSON, the command in quotes and the example values stay as written. */
 "cli.profile.set.discussion" = "KEY là một đường dẫn vào tệp cấu hình, như trong “ojd profile get”. VALUE được đọc dưới dạng JSON, hoặc dưới dạng chuỗi khi không phải JSON, nên 0.2 là một số và space là một chuỗi. null xóa khóa hoặc mục mảng, và chỉ số ngay sau cuối mảng sẽ thêm một mục. Toàn bộ cấu hình được kiểm tra trước khi lưu, và ID không thể thay đổi.";
+/* Message printed after 'ojd profile set'. %1$@ is the key path and %2$@ is the profile name, shown in quotes. */
 "cli.profile.set.done" = "Đã đặt %1$@ trong “%2$@”.";
+/* Error of 'ojd profile set' when the key is the profile ID. The command in quotes stays as written. */
 "cli.profile.set.idChanged" = "ID cấu hình không thể thay đổi. Hãy dùng “ojd profile duplicate” để tạo bản sao.";
+/* Error of 'ojd profile set' when the given value makes the profile invalid. %1$@ is the key path and %2$@ is the description of the problem. */
 "cli.profile.set.invalid" = "Việc đặt %1$@ khiến cấu hình không hợp lệ: %2$@";
+/* Error of 'ojd profile set' when the key has no place in the profile. %1$@ is the profile name, shown in quotes, and %2$@ is the key path. */
 "cli.profile.set.missing" = "“%1$@” không có chỗ cho %2$@. Hãy đặt một khóa có sẵn, hoặc đặt khóa cha của nó thành một giá trị đầy đủ.";
+/* Help text of the VALUE argument of 'ojd profile set'. JSON stays as written. */
 "cli.profile.set.value" = "Giá trị mới, dưới dạng JSON hoặc chuỗi.";
+/* One-line summary of 'ojd profile show' in the command list and at the top of its help. */
 "cli.profile.show.abstract" = "Hiển thị cài đặt và liên kết của một cấu hình.";
+/* One-line summary of 'ojd profile validate' in the command list and at the top of its help. */
 "cli.profile.validate.abstract" = "Kiểm tra một tệp cấu hình mà không nhập.";
+/* Long description in the help of 'ojd profile validate'. The single hyphen means stdin and stays as written. */
 "cli.profile.validate.discussion" = "Kiểm tra tệp theo lược đồ cấu hình và các quy tắc liên quan nhiều trường, như nguồn trùng lặp. Dùng - để đọc cấu hình từ stdin. Không cần dịch vụ đang chạy. Thoát với mã 1 khi cấu hình không hợp lệ.";
+/* Help text of the FILE argument of 'ojd profile validate'. The single hyphen means stdin and stays as written. */
 "cli.profile.validate.file" = "Tệp cấu hình, hoặc - cho stdin.";
+/* Message printed by 'ojd profile validate' for a correct profile. %1$@ is the file path or the word stdin, %2$@ is the profile name, shown in quotes, %3$@ is the controller model and %4$@ is the app scope. The command in quotes stays as written. */
 "cli.profile.validate.valid" = "%1$@ là cấu hình hợp lệ: “%2$@” cho %3$@ (%4$@). Hãy thêm bằng “ojd profile import”.";
+/* Error when the service accepted a profile and does not list it afterwards. The command in quotes stays as written. */
 "cli.profile.group.vanished" = "Dịch vụ không giữ cấu hình. Hãy kiểm tra bằng “ojd profile list”.";
 /* Main window, status item, main menu, settings window, library and access. */
 "ui.library.details" = "Chi tiết";
@@ -1586,9 +2254,13 @@
 "ui.library.detail.empty" = "Chọn một bản ghi hoặc một mod.";
 "ui.library.test.packets.pick" = "Chọn một bản bắt gói tin.";
 "ui.library.test.expect.pick" = "Chọn trạng thái bộ điều khiển mong đợi.";
+/* VoiceOver label of the button in the Library error banner that shows the details of the error. */
 "a11y.library.details" = "Hiện chi tiết của lỗi";
+/* VoiceOver label of the button in the Library error banner that closes the error. */
 "a11y.library.dismissError" = "Bỏ qua lỗi";
+/* VoiceOver label of the button that closes an informational message in the Library detail view. */
 "a11y.library.dismissNotice" = "Bỏ qua thông báo";
+/* VoiceOver label of the Library cancel button. It leaves the library unchanged. */
 "a11y.library.cancel" = "Hủy và giữ nguyên thư viện";
 /* VoiceOver label for the hexadecimal reading shown after the vendorID and productID lines of a record in the Library. %1$@ is the member name, vendorID or productID, which stays as written; %2$@ is the value in hexadecimal, such as 0x353D. */
 "a11y.library.recordHexadecimal" = "%1$@, thập lục phân %2$@";
@@ -1666,23 +2338,41 @@
 "ui.access.error.serviceTimeout" = "OpenJoystickDriver không phản hồi kịp thời.";
 "ui.access.error.peerRejected" = "OpenJoystickDriver đã từ chối yêu cầu này.";
 "ui.access.error.requestFailed" = "Yêu cầu không thành công: %@";
+/* VoiceOver label of the button in the Access error banner that shows the details of the error. */
 "a11y.access.details" = "Hiện chi tiết của lỗi";
+/* VoiceOver label of the Access error banner button when the banner offers to close the error. */
 "a11y.access.dismissError" = "Bỏ qua lỗi";
+/* VoiceOver label of the Access error banner button when the banner offers to read the access settings again. */
 "a11y.access.tryAgain" = "Đọc lại cài đặt quyền truy cập";
+/* VoiceOver label of the button in the Access area that restarts the app so that newly granted permissions take effect. */
 "a11y.access.restart" = "Khởi động lại ứng dụng để áp dụng quyền mới";
+/* VoiceOver label of the WebSocket port field in the Access area. An empty field keeps the saved port; the system chooses a port only when none is saved or Automatic is selected. */
 "a11y.access.webPort" = "Cổng WebSocket; để trống để giữ cổng đã lưu. Hệ thống chỉ chọn cổng khi chưa lưu cổng nào hoặc khi chọn Tự động";
+/* VoiceOver label of the toolbar button that opens a file chooser to grant access to a program. */
 "a11y.access.grantProgram" = "Cấp quyền truy cập cho chương trình bạn chọn";
+/* VoiceOver label of the button in the list of refused clients that grants access to the client. %@ is the identifier of the client, which stays as written. */
 "a11y.access.grantRefused" = "Cấp quyền truy cập cho %@";
+/* VoiceOver label of the button that removes the access of a granted client. %@ is the identifier of the client, which stays as written. */
 "a11y.access.revokeGrant" = "Thu hồi quyền truy cập của %@";
+/* VoiceOver label of the button that revokes an access token. %@ is the name the user gave the token. */
 "a11y.access.revokeToken" = "Thu hồi token %@";
+/* VoiceOver label of the toolbar button that opens the sheet to create an access token. */
 "a11y.access.grantToken" = "Tạo token";
+/* VoiceOver label of the name field in the sheet that creates an access token. */
 "a11y.access.tokenName" = "Tên token";
+/* VoiceOver label of the text field in the token sheet that lists the web origins allowed to use the token, one per line. */
 "a11y.access.tokenOrigins" = "Các nguồn gốc web được dùng token, mỗi dòng một nguồn";
+/* VoiceOver label of the button in the token sheet that moves on to the confirmation step. */
 "a11y.access.tokenContinue" = "Tiếp tục đến bước xác nhận";
+/* VoiceOver label of the field that shows the secret value of the token of the sheet. */
 "a11y.access.tokenValue" = "Token";
+/* VoiceOver label of the button that copies the secret value of the token to the clipboard. */
 "a11y.access.copyToken" = "Sao chép token vào bảng nhớ tạm";
+/* VoiceOver label of the button that closes the token sheet after the token is shown. */
 "a11y.access.done" = "Đóng token";
+/* VoiceOver label of one access scope in the token sheet. %@ is the localized scope name, such as the permission the token carries. */
 "a11y.access.scope" = "Phạm vi %@";
+/* VoiceOver label of the cancel button in the access sheets. It leaves the access unchanged. */
 "a11y.access.cancel" = "Hủy và giữ nguyên quyền truy cập";
 "ui.menu.app.about" = "Giới thiệu về %@";
 "ui.menu.app.settings" = "Cài đặt…";
@@ -1744,13 +2434,18 @@
 "ui.sidebar.library.title" = "Thư viện";
 "ui.sidebar.access.title" = "Quyền truy cập";
 "ui.sidebar.activity.title" = "Hoạt động";
+/* Help text of the showInMenuBar setting in 'ojd setting list'. OpenJoystickDriver is the product name. */
 "cli.setting.group.showInMenuBar" = "Hiện mục OpenJoystickDriver trên thanh menu.";
+/* Help text of the checkUpdatesAutomatically setting in 'ojd setting list'. */
 "cli.setting.group.checkUpdatesAutomatically" = "Kiểm tra cập nhật khi ứng dụng khởi động.";
 "ui.settings.general.title" = "Chung";
 "ui.settings.notifications.title" = "Thông báo";
 "ui.settings.advanced.title" = "Nâng cao";
+/* VoiceOver label of the General pane of the settings window. The key is built from the pane identifier. */
 "a11y.settingsPane.general" = "Cài đặt chung";
+/* VoiceOver label of the Notifications pane of the settings window. The key is built from the pane identifier. */
 "a11y.settingsPane.notifications" = "Cài đặt thông báo";
+/* VoiceOver label of the Advanced pane of the settings window. The key is built from the pane identifier. */
 "a11y.settingsPane.advanced" = "Cài đặt nâng cao";
 "ui.settings.general.showInMenuBar" = "Hiện trên thanh menu";
 "ui.settings.general.showInMenuBarDescription" = "Hiện mục OpenJoystickDriver trên thanh menu.";
@@ -1780,8 +2475,11 @@
 "ui.extra.projectWebsite" = "Trang web dự án";
 "ui.extra.actionFailedTitle" = "Hành động chưa hoàn tất";
 "ui.extra.profileConflict" = "Cấu hình đã thay đổi trước khi hành động này chạy. Hãy thử lại.";
+/* VoiceOver label and accessibility description of the menu bar status item. The product name stays as written. */
 "a11y.menuBar.statusItem" = "Trạng thái OpenJoystickDriver";
+/* VoiceOver label of the sidebar list of the main window, which switches between the areas of the app. */
 "a11y.mainWindow.sidebar" = "Khu vực";
+/* VoiceOver label of the control in the capture assignment sheet that sets the minimum swipe distance of a touch gesture. */
 "a11y.capture.touchSwipeDistance" = "Khoảng cách vuốt tối thiểu";
 "ui.access.detail.pair" = "%1$@ · %2$@";
 "ui.access.detail.triple" = "%1$@ · %2$@ · %3$@";
@@ -1799,16 +2497,27 @@
 "ui.access.web.noPort" = "Điểm cuối web đã bật, nhưng chưa chọn cổng";
 "ui.access.signer.signedUnknownPublisher" = "Do nhà phát hành không xác định ký";
 "ui.settings.commandLine.toolLinkTargetUnreadable" = "%@ là một liên kết có đích không đọc được. Cài đặt sẽ liên kết nó với ứng dụng này.";
+/* Text of error E1001, sent to a client that connects to the endpoint while the endpoint is off, and printed by 'ojd explain'. The command in quotes stays as written. */
 "error.E1001.message" = "Điểm cuối đã tắt. Hãy bật bằng “ojd access enable” và kết nối lại.";
+/* Text of error E1002, sent to an endpoint client that has no grant for the scopes it asked for or whose signature or proof is not valid. The two commands in quotes stay as written. */
 "error.E1002.message" = "Dịch vụ đã từ chối máy khách này. Nó không có quyền cho các phạm vi đã yêu cầu, hoặc chữ ký hay bằng chứng của nó không hợp lệ. Hãy chạy “ojd access list”, cấp quyền cho máy khách bằng “ojd access grant”, và kết nối lại.";
+/* Text of error E1003, sent when a line on the endpoint is invalid or arrives at the wrong time. Hello is the name of the first line kind and stays as written. */
 "error.E1003.message" = "Dịch vụ không thể chấp nhận dòng này. Nó không hợp lệ, hoặc đến sai thời điểm. Hãy gửi hello trước, rồi một yêu cầu, và kiểm tra từng dòng theo lược đồ điểm cuối.";
+/* Text of error E1004, sent when the endpoint refuses a ninth connection on one transport. The number 8 is the fixed limit; the socket and the WebSocket are the two transports. */
 "error.E1004.message" = "Điểm cuối đã phục vụ 8 kết nối cho mỗi phương thức truyền (socket và WebSocket mỗi loại). Hãy đóng một kết nối bạn không cần, và kết nối lại.";
+/* Text of error E1005, sent to an endpoint client whose grant is removed while it is connected. The command in quotes stays as written. */
 "error.E1005.message" = "Quyền của máy khách này đã bị gỡ khi nó đang kết nối. Hãy cấp lại bằng “ojd access grant”, và kết nối lại.";
+/* Text of error E1006, sent to an endpoint client that reads lines too slowly, so that 256 lines wait for it. 256 is the fixed limit. */
 "error.E1006.message" = "Máy khách đọc các dòng quá chậm, và 256 dòng đã phải chờ. Hãy đọc các dòng nhanh như khi chúng đến, và kết nối lại.";
+/* Text of error E1007, sent when the service runs four virtual gamepads and a feed asks for another one. feed is a request kind of the endpoint and stays as written. */
 "error.E1007.message" = "Dịch vụ đã chạy 4 tay cầm ảo. Hãy đóng một feed bạn không cần, và gửi lại feed.";
+/* Text of error E1008, sent when the virtual gamepad of a feed is closed. feed is a request kind of the endpoint and stays as written. */
 "error.E1008.message" = "Tay cầm ảo đã đóng, hoặc dịch vụ không chạy tay cầm nào. Hãy kết nối lại và gửi feed.";
+/* Text of error E1009, sent when a line names an API version that the service does not speak. apiVersion and details.supportedAPIVersions are field names and stay as written. */
 "error.E1009.message" = "Dịch vụ không hỗ trợ apiVersion trong một dòng. Hãy gửi một trong các phiên bản ở details.supportedAPIVersions rồi kết nối lại.";
+/* Text of error E1010, sent when a line has a kind that the service does not know or does not accept at this point. Hello, Subscription, FeedRequest and Frame are kinds of lines and stay as written. */
 "error.E1010.message" = "Một dòng có kind mà dịch vụ không biết hoặc không nhận ở bước này. Hãy gửi Hello trước, rồi Subscription hoặc FeedRequest, rồi các dòng Frame, và kết nối lại.";
+/* Text of error E1011, sent when a line has no apiVersion or no kind. apiVersion and kind are field names and stay as written. */
 "error.E1011.message" = "Một dòng thiếu apiVersion hoặc kind. Mỗi dòng đều mang cả hai. Hãy thêm chúng rồi kết nối lại.";
 "ui.shortcuts.action.activateProfile.description" = "Bật một cấu hình ánh xạ lại cho kiểu máy bộ điều khiển của nó.";
 "ui.shortcuts.action.activateProfile.title" = "Kích hoạt cấu hình";
@@ -1830,87 +2539,166 @@
 "ui.shortcuts.profile.model" = "Kiểu máy bộ điều khiển";
 "ui.shortcuts.profile.name" = "Tên";
 "ui.shortcuts.profile.type" = "Cấu hình ánh xạ lại";
+/* One-line summary of 'ojd explain' in the command list and at the top of its help. */
 "cli.explain.group.abstract" = "Giải thích một mã lỗi: ý nghĩa của nó và cách khắc phục.";
+/* Long description in the help of 'ojd explain'. ojd explain stays as written. The code case does not matter, so E2004 and e2004 are the same. */
 "cli.explain.group.discussion" = "ojd explain giải thích mọi mã lỗi. Nó hoạt động ngoại tuyến, và chữ hoa hay chữ thường của mã không quan trọng.";
+/* Help text of the CODE argument of 'ojd explain'. E2004 is an example of an error code and stays as written. */
 "cli.explain.group.code" = "Mã lỗi, ví dụ E2004.";
+/* Error of 'ojd explain' when the code does not exist. %@ is the text the user gave. Error-Codes is the name of a wiki page and stays as written. */
 "cli.explain.group.unknown" = "%@ không phải là mã lỗi đang dùng. Hãy kiểm tra chính tả; trang wiki Error-Codes liệt kê mọi mã.";
+/* Line of the output of 'ojd explain' that names the area of the error. %@ is the area name, one of the area labels. */
 "cli.explain.group.area" = "Lĩnh vực: %@";
+/* Area label in the output of 'ojd explain' for errors of the endpoint that programs connect to. */
 "cli.explain.group.areaEndpoint" = "Điểm cuối";
+/* Area label in the output of 'ojd explain' for errors of the command line. */
 "cli.explain.group.areaCli" = "Dòng lệnh";
+/* Area label in the output of 'ojd explain' for errors of button remapping. */
 "cli.explain.group.areaRemapping" = "Ánh xạ lại";
+/* Area label in the output of 'ojd explain' for errors of mod packages, the packages that add controller support. */
 "cli.explain.group.areaMod" = "Gói mod";
+/* Area label in the output of 'ojd explain' for errors of the documents that the driver reads, such as profiles and records. */
 "cli.explain.group.areaDocument" = "Tài liệu";
+/* Line of the output of 'ojd explain' with the exit status that the command ends with for this error. %@ is the number. */
 "cli.explain.group.exitCode" ="Mã thoát: %@";
+/* Line of the output of 'ojd explain' with the wire value of the code, which other programs read. %@ is that value and stays as written. */
 "cli.explain.group.wire" = "Giá trị truyền: %@";
+/* Error when the installed app is older than the repository sources that built this ojd. The build command, the environment variable OJD_RUN_REPOSITORY_CLI=1 and OpenJoystickDriver.app stay as written. */
 "cli.shared.error.staleInstallation" = "OpenJoystickDriver.app đã cài đặt cũ hơn các nguồn kho mã này. Hãy chạy “./Scripts/ojd build install-fast dev”, hoặc đặt OJD_RUN_REPOSITORY_CLI=1 để chạy bản dựng này.";
+/* Error when ojd cannot hand the command line to the installed ojd. ojd stays as written. */
 "cli.shared.error.forwarderAllocation" = "Không thể cấp phát đối số cho ojd đã cài đặt. Hãy thử lại lệnh.";
+/* Error when ojd cannot start the installed ojd. %@ is the reason from the system. OpenJoystickDriver.app stays as written. */
 "cli.shared.error.forwarderExec" = "Không thể chạy ojd đã cài đặt: %@. Hãy cài đặt lại OpenJoystickDriver.app.";
+/* Text of error E2001, printed when ojd meets a failure that has no code of its own. ojd and the command in quotes stay as written. */
 "error.E2001.message" = "ojd gặp một lỗi mà nó không nhận ra. Hãy chạy “ojd diagnose” và báo cáo sự cố kèm đầu ra của nó.";
+/* Text of error E2002, printed when the first word after ojd is not a command. ojd and the command in quotes stay as written. */
 "error.E2002.message" = "Đó không phải là lệnh ojd. Hãy chạy “ojd --help” để xem các lệnh.";
+/* Text of error E2003, printed when the options or values of a command are wrong or missing. --help stays as written. */
 "error.E2003.message" = "Dòng lệnh có tùy chọn hoặc giá trị sai hoặc bị thiếu. Hãy chạy lệnh với --help để xem nó nhận gì.";
+/* Text of error E2004, printed when a command needs the service and it is not running. OpenJoystickDriver is the product name. The command in quotes stays as written. */
 "error.E2004.message" = "Dịch vụ OpenJoystickDriver chưa chạy. Hãy khởi động bằng “ojd service start”.";
+/* Text of error E2005, printed when the service does not answer in time. The command in quotes and --timeout stay as written. */
 "error.E2005.message" = "Dịch vụ không phản hồi kịp thời. Hãy kiểm tra bằng “ojd status”, hoặc chờ lâu hơn với --timeout.";
+/* Text of error E2006, printed when the service reports that it could not complete a request. The command in quotes stays as written. */
 "error.E2006.message" = "Dịch vụ không hoàn tất yêu cầu. Hãy kiểm tra bằng “ojd status” và thử lại.";
+/* Text of error E2007, printed when the service refuses this ojd because its code signature differs from the app. ojd and OpenJoystickDriver.app stay as written. */
 "error.E2007.message" = "Dịch vụ đã từ chối ojd này vì nó không được ký giống ứng dụng. Hãy chạy ojd đi kèm trong OpenJoystickDriver.app.";
+/* Text of error E2008, printed when a command needs a macOS permission that is missing. The command in quotes stays as written. */
 "error.E2008.message" = "Thiếu một quyền. Hãy cấp bằng “ojd permission request”.";
+/* Text of error E2009, printed when a command that changes or deletes data runs without a terminal and without --force. --force stays as written. */
 "error.E2009.message" = "Lệnh này thay đổi hoặc xóa dữ liệu và cần xác nhận. Hãy chạy lại với --force.";
+/* Text of error E2010, printed when a command stops before it finishes because the user declined, an editor failed or no input came. */
 "error.E2010.message" = "Lệnh đã dừng trước khi hoàn tất, vì bạn từ chối, trình soạn thảo lỗi, hoặc không có đầu vào. Hãy chạy lại.";
+/* Text of error E2011, printed when a profile file or a record file is not valid against its schema. */
 "error.E2011.message" = "Tệp cấu hình hoặc bản ghi không hợp lệ. Hãy sửa theo lược đồ của nó và thử lại.";
+/* Text of error E2012, printed when a name matches no controller, profile, binding or client, or matches more than one. The word list in quotes is the name of the matching list command and stays as written. */
 "error.E2012.message" = "Không có bộ điều khiển, cấu hình, liên kết hoặc máy khách nào khớp, hoặc có nhiều hơn một. Hãy liệt kê chúng bằng lệnh “list” tương ứng và gọi tên chính xác một mục.";
+/* Text of error E2013, printed when the controller cannot take a requested action. The command in quotes stays as written. */
 "error.E2013.message" = "Bộ điều khiển không thể làm điều đó lúc này. Nó có thể không được hỗ trợ, chưa sẵn sàng hoặc đã ngắt kết nối. Hãy kiểm tra bằng “ojd controller list”.";
+/* Text of error E2014, printed when the app is not fully installed or its signature is not valid. OpenJoystickDriver is the product name. The command in quotes stays as written. */
 "error.E2014.message" = "OpenJoystickDriver chưa được cài đặt đầy đủ, hoặc chữ ký của nó không hợp lệ. Hãy cài đặt lại ứng dụng và chạy “ojd diagnose”.";
+/* Text of error E2015, printed when macOS does not complete or apply a request of the driver. */
 "error.E2015.message" = "Hệ thống không hoàn tất hoặc không áp dụng yêu cầu. Hãy kiểm tra cài đặt hệ thống và thử lại.";
+/* Text of error E2016, printed when a file cannot be read, written or deleted, or is present although it must not be. */
 "error.E2016.message" = "Không thể đọc, ghi hoặc xóa một tệp, hoặc tệp đã tồn tại. Hãy kiểm tra đường dẫn và quyền của nó.";
+/* Text of error E2017, printed when a client is unsigned or signed ad hoc and so cannot be granted access. Developer ID is the name of an Apple signing identity and stays as written. */
 "error.E2017.message" = "Máy khách đó chưa ký hoặc ký ad-hoc, nên không thể được cấp quyền truy cập. Hãy ký bằng Developer ID và thử lại.";
+/* Text of error E2018, printed when 'ojd diagnose' found a failed check. The command in quotes stays as written. */
 "error.E2018.message" = "“ojd diagnose” phát hiện một kiểm tra thất bại. Hãy đọc đầu ra của nó và sửa các mục thất bại.";
+/* Text of error E2019, printed when the check for updates did not finish. */
 "error.E2019.message" = "Việc kiểm tra cập nhật chưa hoàn tất. Hãy kiểm tra kết nối mạng và thử lại.";
+/* Text of error E2020, printed when the installed app is older than the ojd that runs. OpenJoystickDriver is the product name. The build command and OJD_RUN_REPOSITORY_CLI=1 stay as written. */
 "error.E2020.message" = "Ứng dụng OpenJoystickDriver đã cài đặt cũ hơn ojd này. Hãy chạy “./Scripts/ojd build install-fast dev”, hoặc đặt OJD_RUN_REPOSITORY_CLI=1 để chạy bản dựng này.";
+/* Text of error E2021, printed when an ojd built from the repository cannot hand a command to the installed app. OpenJoystickDriver.app stays as written. */
 "error.E2021.message" = "Một bản dựng kho mã của ojd không thể chuyển lệnh cho ứng dụng đã cài đặt. Hãy cài đặt lại OpenJoystickDriver.app và chạy lại lệnh.";
+/* Text of error E3001, returned when a remapping request names a controller that is not connected or not ready. */
 "error.E3001.message" = "Bộ điều khiển chưa kết nối hoặc chưa sẵn sàng để ánh xạ lại. Hãy kết nối lại và thử lại.";
+/* Text of error E3002, returned when two Joy-Cons cannot be paired into one controller. Joy-Con is a Nintendo product name. */
 "error.E3002.message" = "Không thể ghép đôi các Joy-Con đã chọn. Hãy làm mới các bộ điều khiển đã kết nối và thử lại.";
+/* Text of error E3003, returned when a motion request names a controller without a motion sensor. */
 "error.E3003.message" = "Bộ điều khiển không báo cáo dữ liệu chuyển động. Hãy chọn một bộ điều khiển có cảm biến chuyển động, hoặc để tắt các tùy chọn chuyển động.";
+/* Text of error E3004, returned when a value in a request is larger than the service accepts. */
 "error.E3004.message" = "Một giá trị trong yêu cầu lớn hơn mức dịch vụ chấp nhận. Hãy gửi giá trị nhỏ hơn.";
+/* Text of error E3005, returned when the list of active profiles is damaged and cannot be loaded. */
 "error.E3005.message" = "Danh sách cấu hình đang hoạt động bị hỏng và không thể tải. Hãy sửa hoặc xóa tệp bị hỏng, rồi thử lại.";
+/* Text of error E3006, returned when a profile name is in use. The command in quotes stays as written. */
 "error.E3006.message" = "Đã có một cấu hình với tên đó. Hãy chọn tên khác; “ojd profile list” hiển thị các tên đang dùng.";
+/* Text of error E3007, returned when a request has missing or invalid arguments. */
 "error.E3007.message" = "Yêu cầu có đối số bị thiếu hoặc không hợp lệ. Hãy kiểm tra các giá trị và thử lại.";
+/* Text of error E3008, returned when a profile is not valid. */
 "error.E3008.message" = "Cấu hình không hợp lệ. Hãy xem lại các phép gán của nó và thử lại.";
+/* Text of error E3009, returned when saving a profile would make the profile library too large. */
 "error.E3009.message" = "Thư viện cấu hình sẽ trở nên quá lớn. Hãy xóa các cấu hình bạn không cần và thử lại.";
+/* Text of error E3010, returned when a profile with the same identifier exists. */
 "error.E3010.message" = "Đã có một cấu hình với mã định danh đó. Hãy dùng mã định danh mới, hoặc cập nhật cấu hình hiện có.";
+/* Text of error E3011, returned when a profile changed elsewhere after the client loaded it. */
 "error.E3011.message" = "Cấu hình đã thay đổi ở nơi khác sau khi bạn tải nó. Hãy tải lại và thực hiện lại thay đổi của bạn.";
+/* Text of error E3012, returned when the library holds the largest number of profiles it allows. */
 "error.E3012.message" = "Thư viện đã chứa số cấu hình tối đa cho phép. Hãy xóa một cấu hình bạn không cần và thử lại.";
+/* Text of error E3013, returned when no profile has the identifier. The command in quotes stays as written. */
 "error.E3013.message" = "Không có cấu hình nào có mã định danh đó. Hãy liệt kê các cấu hình bằng “ojd profile list”.";
+/* Text of error E3014, returned when the service cannot encode its reply. */
 "error.E3014.message" = "Dịch vụ không thể mã hóa phản hồi của nó. Hãy thử lại, và báo cáo sự cố nếu nó tiếp diễn.";
+/* Text of error E3015, returned when the reply exceeds the largest size the service can send. */
 "error.E3015.message" = "Phản hồi lớn hơn mức dịch vụ có thể gửi. Hãy yêu cầu ít dữ liệu hơn và thử lại.";
+/* Text of error E3016, returned when the remapping engine is not available yet. */
 "error.E3016.message" = "Công cụ ánh xạ lại không khả dụng. Hãy chờ giây lát rồi thử lại, hoặc khởi động lại dịch vụ.";
+/* Text of error E3017, returned when neither the profile library nor the remapping engine is available yet. */
 "error.E3017.message" = "Thư viện cấu hình và công cụ ánh xạ lại không khả dụng. Hãy chờ giây lát rồi thử lại, hoặc khởi động lại dịch vụ.";
+/* Text of error E3018, returned when the profile library is not available yet. */
 "error.E3018.message" = "Thư viện cấu hình không khả dụng. Hãy chờ giây lát rồi thử lại, hoặc khởi động lại dịch vụ.";
+/* Text of error E3019, returned when the remapping router has shut down. */
 "error.E3019.message" = "Bộ định tuyến ánh xạ lại đã tắt. Hãy khởi động lại dịch vụ và thử lại.";
+/* Text of error E3020, returned when the service cannot tell whether the last profile change is saved. */
 "error.E3020.message" = "Dịch vụ không thể xác nhận thay đổi cấu hình gần nhất đã được lưu hay chưa. Hãy tải lại các cấu hình và kiểm tra chúng trước khi thay đổi tiếp.";
+/* Text of error E3021, returned when a profile file cannot be read. */
 "error.E3021.message" = "Không thể đọc một tệp cấu hình. Hãy kiểm tra tệp có tồn tại và dịch vụ có thể đọc nó không.";
+/* Text of error E3022, returned when damaged profile files block every profile change. */
 "error.E3022.message" = "Các tệp cấu hình bị hỏng phải được sửa hoặc xóa trước khi có thể thay đổi cấu hình. Hãy sửa hoặc xóa chúng, rồi thử lại.";
+/* Text of error E3023, returned when a profile file cannot be written. */
 "error.E3023.message" = "Không thể ghi một tệp cấu hình. Hãy kiểm tra dung lượng đĩa trống và quyền của thư mục.";
+/* Text of error E3024, returned when the remapping service meets a failure it does not recognize. The command in quotes stays as written. */
 "error.E3024.message" = "Dịch vụ ánh xạ lại gặp một lỗi mà nó không nhận ra. Hãy chạy “ojd diagnose” và báo cáo sự cố kèm đầu ra của nó.";
+/* Text of error E3025, returned when a profile that produces no output is activated. --allow-empty stays as written. */
 "error.E3025.message" = "Cấu hình không tạo ra đầu ra. Hãy thêm một liên kết hoặc màu đèn vào cấu hình, hoặc kích hoạt bằng --allow-empty.";
+/* Text of error E3026, returned when a Joy-Con pair profile needs a gyro calibration of the other Joy-Con. Joy-Con is a Nintendo product name. */
 "error.E3026.message" = "Cấu hình của cặp Joy-Con lấy con quay hồi chuyển từ Joy-Con còn lại. Hãy hiệu chỉnh chuyển động của bộ điều khiển mà cấu hình chọn cho con quay hồi chuyển.";
+/* Text of error E3027, returned when a motion request names a controller with no active remapping profile. */
 "error.E3027.message" = "Không có cấu hình ánh xạ lại nào đang hoạt động cho bộ điều khiển, nên nó không xử lý chuyển động. Hãy kích hoạt một cấu hình cho nó, đưa ứng dụng đích lên trước, rồi thử lại.";
+/* Text of error E3028, returned when the remapping session of the controller changed while a request ran. */
 "error.E3028.message" = "Phiên ánh xạ lại của bộ điều khiển đã thay đổi khi yêu cầu đang chạy. Hãy thử lại.";
+/* Text of error E3029, returned when a profile that comes from an installed package is edited. */
 "error.E3029.message" = "Không thể thay đổi cấu hình đến từ một gói đã cài. Hãy nhân bản cấu hình rồi sửa bản sao.";
+/* Text of error E4001, printed when the manifest of a mod package is missing or invalid. mod.json stays as written. */
 "error.E4001.message" = "Tệp kê khai gói mod.json bị thiếu hoặc không hợp lệ. Hãy kiểm tra nó theo lược đồ mod-package rồi chạy lại lệnh.";
+/* Text of error E4002, printed when a mod package requires another version of the app than the one that runs. OpenJoystickDriver is the product name. */
 "error.E4002.message" = "Gói yêu cầu phiên bản OpenJoystickDriver khác với phiên bản đang chạy. Hãy cài phiên bản gói hỗ trợ phiên bản này hoặc cập nhật OpenJoystickDriver.";
+/* Text of error E4003, printed when a file of a mod package is invalid, missing or not listed in the manifest. mod.json stays as written. */
 "error.E4003.message" = "Một tệp của gói không hợp lệ, bị thiếu hoặc không được liệt kê trong mod.json. Hãy sửa tệp mà lệnh nêu rồi chạy lại.";
+/* Text of error E4004, printed when a mod package covers a controller, persona or profile that the user's files or another package hold. */
 "error.E4004.message" = "Gói bao gồm một bộ điều khiển, persona hoặc cấu hình mà tệp của chính bạn hoặc một gói đã cài khác đã có. Hãy xóa tệp hoặc gói xung đột, hoặc sửa gói, rồi chạy lại lệnh.";
+/* Text of error E4005, printed when a mod package of the same name is installed. --force stays as written. */
 "error.E4005.message" = "Đã cài một gói có tên này. Hãy chạy lệnh với --force để thay thế.";
+/* Text of error E4006, printed when no installed mod package has the name. The command in quotes stays as written. */
 "error.E4006.message" = "Không có gói đã cài nào có tên này. Hãy chạy ojd mod list để xem các gói đã cài.";
+/* Text of error E4007, printed when the folder of the installed mod packages cannot be changed. */
 "error.E4007.message" = "Không thể thay đổi thư mục gói. Hãy kiểm tra dung lượng đĩa trống và quyền của thư mục.";
+/* Text of error E5001, printed when a document has no apiVersion or an unsupported one. apiVersion stays as written. OpenJoystickDriver is the product name. */
 "error.E5001.message" = "Tài liệu không có apiVersion, hoặc apiVersion của tài liệu không được phiên bản OpenJoystickDriver này hỗ trợ. Hãy đổi tài liệu sang apiVersion được hỗ trợ mà thông báo nêu, rồi chạy lại lệnh.";
+/* Text of error E5002, printed when a protocol description is invalid against its schema. */
 "error.E5002.message" = "Mô tả giao thức không hợp lệ. Kiểm tra tệp với lược đồ protocol-description và sửa trường mà thông báo nêu.";
+/* Text of error E5003, printed when the family in a protocol description differs from its file name. */
 "error.E5003.message" = "Mô tả giao thức nêu một họ khác với tên tệp. Đặt tên tệp theo họ của nó.";
+/* Text of error E5004, printed when a protocol description lists a variant that its family lacks. */
 "error.E5004.message" = "Mô tả giao thức liệt kê một biến thể mà họ của nó không có. Hãy dùng một trong các biến thể của họ.";
+/* Text of error E5005, printed when the access file is damaged. AccessGrants.json is a file name and stays as written. */
 "error.E5005.message" = "Tệp truy cập AccessGrants.json bị hỏng. Hãy sửa hoặc xóa tệp, rồi cấp quyền truy cập lại.";
+/* Text of error E5006, printed when the key file of the unit IDs cannot be read or has the wrong size. PortKeyInstallation.key is a file name and stays as written. OpenJoystickDriver is the product name. */
 "error.E5006.message" = "Không thể đọc tệp khóa của ID thiết bị, PortKeyInstallation.key, hoặc tệp không có kích thước 32 byte. Hãy khôi phục tệp từ bản sao lưu. Nếu bạn xóa tệp, OpenJoystickDriver sẽ tạo khóa mới và mọi ID thiết bị đều thay đổi.";
 /* Error E5007, shown when a controller record or patch fails its schema; the message names the field. */
 "error.E5007.message" = "Bản ghi bộ điều khiển hoặc patch không hợp lệ. Kiểm tra tệp với lược đồ của nó và sửa trường mà thông báo nêu.";
 "ui.error.withCode" = "%1$@ (%2$@)";
+/* Message printed by 'ojd update check' when the installed version is newer than the latest release. %1$@ is the installed version and %2$@ is the latest release. */
 "cli.update.check.ahead" = "OpenJoystickDriver %1$@ mới hơn bản phát hành mới nhất đã công bố (%2$@).";
 "ui.settings.general.updateAhead" = "Mới hơn bản phát hành mới nhất";
 "ui.settings.general.version" = "Phiên bản";
@@ -1932,6 +2720,7 @@
 "ui.activity.status.pass" = "Đạt";
 "ui.activity.status.warn" = "Cảnh báo";
 "ui.activity.status.skip" = "Đã bỏ qua";
+/* Warning shown above exported or displayed service logs, wherever the logs are shown. The logs can hold private data. */
 "cli.log.group.sharingWarning" = "Nhật ký dịch vụ có thể chứa tên thiết bị, mã định danh hoặc đường dẫn chẩn đoán. Hãy xem lại trước khi chia sẻ.";
 "ui.activity.filter" = "Bộ lọc";
 "ui.activity.check.transportExtensionBundle" = "Gói tiện ích mở rộng trình điều khiển";
@@ -1988,10 +2777,15 @@
 "ui.settings.advanced.unreadableTitle" = "Không thể đọc cài đặt";
 "ui.settings.advanced.unreadableResetSettings" = "Đặt lại cài đặt";
 "platform.macos.ui.settings.advanced.unreadableShowInFinder" = "Hiện trong Finder";
+/* One-line summary of 'ojd setting reset' in the command list and at the top of its help. */
 "cli.setting.reset.abstract" = "Chuyển tệp cài đặt vào Thùng rác.";
+/* Long description in the help of 'ojd setting reset'. Settings.json is a file name and stays as written. */
 "cli.setting.reset.discussion" = "Chuyển Settings.json vào Thùng rác để mọi cài đặt trở về mặc định. Dùng khi tệp bị hỏng hoặc bị từ chối.";
+/* Yes or no question that 'ojd setting reset' asks on a terminal. */
 "cli.setting.reset.confirm" = "Chuyển tệp cài đặt vào Thùng rác và đưa mọi cài đặt về mặc định?";
+/* Message printed after 'ojd setting reset'. %@ is the path of the settings file. */
 "cli.setting.reset.success" = "Đã chuyển %@ vào Thùng rác.";
+/* Message printed by 'ojd setting reset' when there is no settings file. %@ is the path where the file would be. */
 "cli.setting.reset.none" = "Không có tệp cài đặt tại %@.";
 /* Why a controller is not published as a virtual device, and a failed send. */
 "ui.controllers.publication.reason.outputDisabled" = "Đầu ra ảo đang tắt";

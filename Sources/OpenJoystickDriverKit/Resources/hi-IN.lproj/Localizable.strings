@@ -1,31 +1,57 @@
 "term.app.name" = "OpenJoystickDriver";
 "ui.permissions.restartApplication" = "OpenJoystickDriver पुनः आरंभ करें";
 "ui.menu.projectPage" = "GitHub";
+/* Button that dismisses an alert in the activity view and the main window. It only acknowledges the message. */
 "action.ok" = "ठीक";
+/* Toolbar item of the input test window and button of the developer controller summary that reads the controller state again. */
 "action.refresh" = "रीफ़्रेश करें";
+/* Button of an error state view and of the controller detail facts that repeats the failed load. */
 "action.tryAgain" = "फिर कोशिश करें";
+/* Button of the access sheets that closes the sheet without changing anything. It is also bound to the Escape key. */
 "action.cancel" = "रद्द करें";
+/* Button of the motion and stick sheets of the profile editor that stores the edited values in the profile. */
 "action.save" = "सहेजें";
+/* Button of the profile creation sheet that creates the profile from the entered name. */
 "action.create" = "बनाएँ";
+/* Menu item and toolbar button that deletes the selected profile. */
 "action.delete" = "डिलीट करें";
+/* Button that closes an error banner of the profile editor and of the profile list without further action. */
 "action.dismiss" = "ख़ारिज करें";
+/* Button in the mapping capture banner that discards local edits and loads the stored profile again. It sits beside Keep editing. */
 "action.reload" = "फिर लोड करें";
+/* Button in the mapping capture banner that keeps the local edits when the stored profile changed. It sits beside Reload. */
 "action.keepEditing" = "संपादन जारी रखें";
+/* Button that removes the captured keys in the keyboard capture view and the captured packets in the developer packet capture view. */
 "action.clear" = "साफ़ करें";
+/* Button that asks macOS for the input permission shown on the row. Ends in an ellipsis because a system prompt follows. */
 "action.request" = "अनुरोध करें…";
+/* Button of the capture assignment sheet and of the profile editor sections that adds an assignment to the profile. */
 "action.addAssignment" = "असाइनमेंट जोड़ें";
+/* Label and tooltip of the button that removes one assignment from the profile. */
 "action.removeAssignment" = "असाइनमेंट हटाएँ";
+/* Menu item of an assignment that opens the sheet to tune its analog values. Ends in an ellipsis because a sheet follows. */
 "action.adjust" = "समायोजित करें…";
+/* Toolbar button that creates a copy of the selected profile. */
 "action.duplicate" = "डुप्लिकेट करें";
+/* Button of the profile editor that turns off the active profile. It swaps with Set active. */
 "action.deactivate" = "निष्क्रिय करें";
+/* Button of the profile editor and of the status menu alert that makes the profile the active one. It swaps with Deactivate. */
 "action.setActive" = "सक्रिय करें";
+/* Status text in the menu bar menu while the app starts. Keep the three dots. */
 "status.starting" = "शुरू हो रहा है…";
+/* Value of a permission row in the Access area while macOS is asked for its state. Keep the three dots. */
 "status.checking" = "जाँच हो रही है…";
+/* Runtime state label: the service is up and can serve controllers. */
 "status.ready" = "तैयार";
+/* Value of a permission row in the Access area when macOS has granted the permission. */
 "status.allowed" = "अनुमति दी गई";
+/* Value of a permission row in the Access area when the active profiles do not use the permission. */
 "status.notNeeded" = "ज़रूरी नहीं";
+/* Placeholder in the profile creation sheet shown instead of a controller model when no controller is connected. */
 "status.connectController" = "कंट्रोलर कनेक्ट करें";
+/* Line in the menu bar menu when no profile is active. */
 "status.noActiveProfile" = "कोई सक्रिय प्रोफ़ाइल नहीं";
+/* Message in the Controllers area while the service lists the connected controllers. Keep the three dots. */
 "status.checkingControllers" = "कनेक्ट किए गए कंट्रोलर जाँचे जा रहे हैं…";
 "ui.settings.general.controllers" = "कंट्रोलर";
 "ui.settings.general.profiles" = "प्रोफ़ाइल";
@@ -324,11 +350,17 @@
 "ui.mapping.rightStickVertical" = "दाएँ स्टिक ऊर्ध्वाधर";
 "ui.mapping.leftTrigger" = "बायाँ ट्रिगर";
 "ui.mapping.rightTrigger" = "दायाँ ट्रिगर";
+/* Accessibility value of a selectable card or row that the user has chosen. */
 "status.selected" = "चयनित";
+/* Accessibility value of a selectable card or row that the user has not chosen. */
 "status.notSelected" = "चयनित नहीं";
+/* Value shown in a detail row that has nothing to report. */
 "status.none" = "कोई नहीं";
+/* Value of a detail row that says a feature, such as motion sensing, is present. */
 "status.available" = "उपलब्ध";
+/* Value of the launch row of the controller actions when the list of connected controllers cannot be read. */
 "status.unavailable" = "अनुपलब्ध";
+/* Value of a permission row in the Access area when the user must act, for example because the permission is denied. */
 "status.needsAttention" = "ध्यान देने की ज़रूरत";
 "term.status" = "स्थिति";
 "term.protocol" = "प्रोटोकॉल";
@@ -342,15 +374,24 @@
 "term.profileName" = "प्रोफ़ाइल नाम";
 "term.keyboardPointer" = "कीबोर्ड और पॉइंटर";
 "platform.macos.term.inputInject" = "ऐक्सेसिबिलिटी";
+/* Button of the combination sheets that adds the chosen entry to the combination. */
 "action.add" = "जोड़ें";
+/* Button of the input test window that sends the chosen player indicator or lightbar color to the controller. */
 "action.apply" = "लागू करें";
+/* Button of the library record view and toolbar item that copies the whole text or the whole activity log to the pasteboard. */
 "action.copyAll" = "सभी कॉपी करें";
+/* Button that closes the error code explainer and the input test sheet after reading. */
 "action.done" = "पूर्ण";
+/* Button that saves a controller profile or the packet capture to a file. Ends in an ellipsis because a save panel follows. */
 "action.export" = "एक्सपोर्ट करें…";
+/* Result label of a failed check in the diagnostics list of the Activity area. */
 "status.failed" = "विफल";
 "platform.macos.term.inputRead" = "इनपुट मॉनिटरिंग";
+/* Value of a permission row in the Access area when the driver has not asked macOS for the permission yet. */
 "status.notRequested" = "अनुरोध नहीं किया गया";
+/* Button of the combination sheets that removes the chosen entry from the combination. */
 "action.remove" = "हटाएँ";
+/* Button of the input test window that stops the rumble test and button of the developer view that stops the packet capture. */
 "action.stop" = "रोकें";
 "ui.error.supportReportSave" = "सपोर्ट रिपोर्ट सहेजी नहीं जा सकी। कोई अन्य फ़ाइल चुनें और फिर कोशिश करें।";
 "ui.error.logsSave" = "लॉग सहेजे नहीं जा सके। कोई अन्य फ़ाइल चुनें और फिर कोशिश करें।";
@@ -360,9 +401,13 @@
 "ui.capture.listeningButton" = "सुना जा रहा है…";
 "ui.error.reviewAssignmentsBeforeSave" = "इस प्रोफ़ाइल को सहेजने से पहले असाइनमेंट की समीक्षा करें।";
 "ui.error.selectedProfileItemMissing" = "चयनित प्रोफ़ाइल आइटम अब उपलब्ध नहीं है।";
+/* Message about a request to the system extension manager that ends cancelled. The request installs or removes the driver extension. */
 "cli.transportExtension.group.cancelled" = "सिस्टम एक्सटेंशन अनुरोध रद्द किया गया।";
+/* Message about a request to the system extension manager that finished. %@ is the result name from the system and stays as written. */
 "cli.transportExtension.group.completed" = "सिस्टम एक्सटेंशन अनुरोध परिणाम %@ के साथ समाप्त हुआ।";
+/* Message about a request to the system extension manager that failed. %1$@ is the error domain, %2$d is the error code and %3$@ is the description from the system. Keep code= as written. */
 "cli.transportExtension.group.failed" = "सिस्टम एक्सटेंशन अनुरोध विफल: %1$@ code=%2$d %3$@";
+/* Message when the system extension manager replaces an installed driver extension. %1$@ is the extension bundle identifier, %2$@ is the installed version and %3$@ is the version that replaces it. Keep the v before the numbers. */
 "cli.transportExtension.group.replacing" = "%1$@ v%2$@ को v%3$@ से बदला जा रहा है।";
 /* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker: a generic HID controller, which OJD reads by the layout its HID report descriptor declares. Keep HID as written. */
 "term.protocolFamily.hidDescriptor" = "सामान्य HID";
@@ -563,6 +608,7 @@
 "ui.banner.liveUpdates.detail.closed" = "सेवा ने कनेक्शन बंद कर दिया। इसके बजाय OpenJoystickDriver हर सेकंड कंट्रोलर में बदलाव जाँचता है।";
 "ui.banner.liveUpdates.detail.timeout" = "सेवा ने समय पर जवाब नहीं दिया। इसके बजाय OpenJoystickDriver समय-समय पर कंट्रोलर में बदलाव जाँचता है।";
 "ui.banner.liveUpdates.detail.other" = "सेवा से लाइव अपडेट काम नहीं कर रहे हैं। इसके बजाय OpenJoystickDriver समय-समय पर कंट्रोलर में बदलाव जाँचता है।";
+/* Button of the Driver Extension section in the settings window that removes the driver extension from the system. */
 "cli.login.group.uninstallAction" = "अनइंस्टॉल करें";
 "ui.console.all" = "सभी";
 "ui.console.empty" = "कोई लॉग प्रविष्टि नहीं।";
@@ -573,15 +619,25 @@
 "ui.console.loadError" = "लॉग पढ़े नहीं जा सके";
 "ui.console.output" = "आउटपुट";
 "ui.console.stream" = "स्ट्रीम";
+/* Name of the notification setting for a controller that connects, in the Notifications pane of the settings window. */
 "notify.controllerConnected" = "कंट्रोलर कनेक्ट हुआ";
+/* Body of the notification shown when a controller connects. %@ is the controller name. */
 "notify.controllerConnectedBody" = "%@ उपयोग के लिए तैयार है।";
+/* Name of the notification setting for a controller that disconnects, in the Notifications pane of the settings window. */
 "notify.controllerDisconnected" = "कंट्रोलर डिस्कनेक्ट हुआ";
+/* Body of the notification shown when a controller disconnects. %@ is the controller name. */
 "notify.controllerDisconnectedBody" = "%@ अब कनेक्ट नहीं है।";
+/* Body of the notification shown when a profile becomes active. %@ is the profile name. */
 "notify.profileActivatedBody" = "%@ अब सक्रिय है।";
+/* Title of the notification shown when the active profile changes, in all three cases: activated, switched and deactivated. */
 "notify.profileChanged" = "सक्रिय प्रोफ़ाइल बदल गई";
+/* Body of the notification shown when the active profile is turned off. %@ is the profile name. */
 "notify.profileDeactivatedBody" = "%@ अब सक्रिय नहीं है।";
+/* Body of the notification shown when the active profile changes to another one. %1$@ is the name of the profile that stops being active and %2$@ is the name of the profile that becomes active. The arrow between them stays. */
 "notify.profileSwitchedBody" = "%1$@ → %2$@";
+/* Body of the test notification that the Notifications pane sends. OpenJoystickDriver is the product name. */
 "notify.testBody" = "OpenJoystickDriver आपको कंट्रोलर और प्रोफ़ाइल गतिविधि के बारे में सूचित कर सकता है।";
+/* Title of the test notification that the Notifications pane sends. */
 "notify.testTitle" = "सूचनाएँ तैयार हैं";
 /* Failed outcome of the test notification when the app runs outside an app bundle and has no notification center. The inline error of the Settings window shows it for Send Test Notification and for a notification permission request, and `ojd setting test-notification` prints it as the reason of E2006. */
 "ui.settings.notifications.noNotificationCenter" = "सूचनाएँ उपलब्ध नहीं हैं, क्योंकि OpenJoystickDriver अपने ऐप बंडल से नहीं चल रहा है। OpenJoystickDriver ऐप खोलें, फिर दोबारा कोशिश करें।";
@@ -783,6 +839,7 @@
 "ui.profiles.motion.steeringResponseExponent" = "स्टीयरिंग प्रतिक्रिया एक्सपोनेंट";
 "ui.profiles.motion.steeringInverted" = "स्टीयरिंग उलटें";
 
+/* Value of a physical output destination field when the output is turned off. */
 "status.disabled" = "अक्षम";
 "ui.profiles.joyConPair" = "जोड़ीदार Joy-Con प्रोफ़ाइल";
 "ui.profiles.joyConGyro" = "जोड़ी का गायरो स्रोत";
@@ -828,6 +885,7 @@
 "ui.profiles.emptyActivationTitle" = "बिना कंट्रोलर इनपुट वाली प्रोफ़ाइल सक्रिय करें?";
 "ui.profiles.emptyInputWarning" = "यह प्रोफ़ाइल सभी कंट्रोलर इनपुट को रोक देती है।";
 "ui.profiles.restoreDefaultInput" = "डिफ़ॉल्ट इनपुट बहाल करें";
+/* Button of the controller actions that resets all settings of the controller. A confirmation alert with the same label follows. */
 "action.reset" = "रीसेट करें";
 "ui.profiles.useControllerDefaultColor" = "कंट्रोलर का डिफ़ॉल्ट इस्तेमाल करें";
 "ui.profiles.damagedProfile" = "क्षतिग्रस्त प्रोफ़ाइल";
@@ -847,268 +905,495 @@
 "ui.controllers.disconnectWirelessConfirmMessage" = "जब तक आप इसे मैन्युअल रूप से दोबारा कनेक्ट नहीं करते, %@ डिस्कनेक्ट रहेगा।";
 "ui.controllers.disconnectWirelessConfirm" = "डिस्कनेक्ट करें";
 
+/* Title of the notification shown when a controller stops sending input. */
 "notify.controllerNeedsAttention" = "कंट्रोलर पर ध्यान देने की ज़रूरत है";
+/* Body of the notification shown when a controller stops sending input. %@ is the controller name. */
 "notify.controllerNeedsAttentionBody" = "%@ का इनपुट अपडेट होना बंद हो गया। इसके नियंत्रण छोड़ें या इसे डिस्कनेक्ट करें।";
+/* Error of every command when --json and --plain are both given. Both option names stay as written. */
 "cli.shared.error.jsonPlain" = "--json या --plain में से किसी एक का उपयोग करें, दोनों का नहीं।";
+/* Error of every command that talks to the service when the service refuses this ojd because its code signature differs from the app. ojd and OpenJoystickDriver.app stay as written. */
 "cli.shared.error.peerRejected" = "सेवा ने इस ojd को अस्वीकार कर दिया, क्योंकि यह ऐप की तरह साइन नहीं किया गया है। OpenJoystickDriver.app के अंदर मौजूद ojd चलाएँ।";
+/* Error of every command that talks to the service when it does not reply in time. %@ is the waited time, such as 5 seconds. --timeout stays as written. */
 "cli.shared.error.requestTimeout" = "सेवा ने %@ में उत्तर नहीं दिया। बड़े --timeout के साथ फिर से प्रयास करें।";
+/* Error of every command that talks to the service when the service reports a failure. %@ is the reason from the service. The command in quotes stays as written. */
 "cli.shared.error.serviceRequestFailed" = "सेवा अनुरोध पूरा नहीं कर सकी: %@। इसे “ojd status” से जाँचें।";
+/* Error of the profile commands when another profile has the name. The command in quotes stays as written. */
 "cli.shared.error.duplicateProfileName" = "उस नाम की प्रोफ़ाइल पहले से मौजूद है। “ojd profile list” सभी प्रोफ़ाइल दिखाता है।";
+/* Error of every command that talks to the service when it did not reply in time and the wait is not named. The command in quotes stays as written. */
 "cli.shared.error.serviceTimeout" = "सेवा ने समय पर उत्तर नहीं दिया। फिर से प्रयास करें, या इसे “ojd status” से जाँचें।";
+/* Error of every command that needs the service when it is not running. OpenJoystickDriver is the product name. The command in quotes stays as written. */
 "cli.shared.error.serviceUnavailable" = "OpenJoystickDriver सेवा चालू नहीं है। इसे “ojd service start” से शुरू करें।";
+/* Error of every command when --timeout is not a number above 0. --timeout stays as written. */
 "cli.shared.error.timeoutValue" = "--timeout के लिए 0 से अधिक सेकंड की संख्या चाहिए।";
+/* Error printed for a failure that no other message covers. %@ is the description of the failure. The command with PATH in quotes stays as written. */
 "cli.shared.error.unexpected" = "अप्रत्याशित त्रुटि: %@। “ojd diagnose --output PATH” चलाएँ और बंडल को बग रिपोर्ट के साथ संलग्न करें।";
+/* Error of ojd for a command that does not exist. %1$@ is the text the user typed and %2$@ is the closest command name. */
 "cli.shared.error.unknownCommand" = "अज्ञात कमांड “%1$@”। क्या आपका मतलब “%2$@” था?";
+/* Help text of the --json flag that every command takes. stdout is the standard output stream and stays as written. */
 "cli.shared.option.json" = "stdout पर JSON प्रिंट करें।";
+/* Help text of the --no-color flag that every command takes. */
 "cli.shared.option.noColor" = "रंग का उपयोग न करें।";
+/* Help text of the --no-input flag that every command takes. */
 "cli.shared.option.noInput" = "कभी प्रॉम्प्ट न करें; कोई मान न होने पर विफल हों।";
+/* Help text of the --plain flag that every command takes. stdout is the standard output stream and stays as written. */
 "cli.shared.option.plain" = "stdout पर टैब से अलग किए गए रिकॉर्ड प्रिंट करें।";
+/* Help text of the --quiet flag that every command takes. stderr is the standard error stream and stays as written. */
 "cli.shared.option.quiet" = "stderr पर सफलता के संदेश प्रिंट न करें।";
+/* Help text of the --timeout option that every command takes. %1$g is the default number of seconds for a service request and %2$g is the default for the service, virtual set and virtual reset commands, which stay as written in quotes. */
 "cli.shared.option.timeout" = "हर सेवा अनुरोध के लिए प्रतीक्षा के सेकंड (डिफ़ॉल्ट: %1$g), या “service”, “virtual set” और “virtual reset” कमांड पूरे होने तक (डिफ़ॉल्ट: %2$g)।";
 "platform.macos.cli.root.group.abstract" = "macOS के गेमपैड ड्राइवर OpenJoystickDriver को कॉन्फ़िगर और जाँचें।";
 "platform.macos.cli.root.group.discussion" = "यहाँ से शुरू करें:\n  ojd status             सेवा, एक्सटेंशन और अनुमतियाँ जाँचें।\n  ojd diagnose           हर जाँच चलाएँ और गड़बड़ी बताएँ।\n  ojd controller list    जुड़े हुए कंट्रोलर सूचीबद्ध करें।\n\nउदाहरण:\n  # एक कंट्रोलर का इनपुट बदलते ही प्रिंट करें\n  ojd controller watch 045E:028E\n  # जुड़े हुए कंट्रोलर JSON में सूचीबद्ध करें\n  ojd --json controller list\n\nएनवायरनमेंट (फ़्लैग अपने वैरिएबल पर भारी पड़ता है):\n  OJD_NO_INPUT=1         --no-input के समान।\n  OJD_TIMEOUT=SECONDS    --timeout के समान।\n  OJD_COLOR=WHEN         auto, always (टर्मिनल के बाहर भी रंग) या never।\n\nशेल कंप्लीशन:\n  ojd --generate-completion-script zsh|bash|fish\n\nएग्ज़िट कोड:\n  0    सफलता।\n  1    कमांड विफल रही।\n  64   उपयोग त्रुटि।\n  69   सेवा चालू नहीं है। इसे “ojd service start” से शुरू करें।\n  77   macOS की कोई अनुमति नहीं मिली है।\n  127  रिपॉज़िटरी बिल्ड कमांड को इंस्टॉल किए गए ऐप तक नहीं पहुँचा सका।\n  130  बाधित।";
+/* Last line of the help of every command. 'ojd --help' stays as written. */
 "cli.shared.help.globalOptions" = "हर कमांड ग्लोबल विकल्प भी लेती है; “ojd --help” उन्हें सूचीबद्ध करता है।";
+/* Error when the environment variable OJD_TIMEOUT is not a number above 0. OJD_TIMEOUT stays as written. */
 "cli.shared.error.envTimeout" = "OJD_TIMEOUT के लिए 0 से अधिक सेकंड की संख्या चाहिए।";
+/* Error when the environment variable OJD_COLOR has another value. OJD_COLOR, auto, always and never stay as written. */
 "cli.shared.error.envColor" = "OJD_COLOR के लिए auto, always या never चाहिए।";
+/* Error when the environment variable OJD_NO_INPUT has another value. OJD_NO_INPUT and all the listed values stay as written. */
 "cli.shared.error.envNoInput" = "OJD_NO_INPUT के लिए 1, true, yes, 0, false या no चाहिए।";
+/* Error of 'ojd virtual feed' when --plain is given. The command in quotes and --plain stay as written. */
 "cli.virtual.feed.errorPlain" = "--plain “virtual feed” पर लागू नहीं होता, जो JSON लाइनें प्रिंट करता है। --plain हटा दें।";
+/* Examples block at the end of the help of 'ojd controller watch'. The command lines and option names stay as written; translate only the lines that start with #. */
 "cli.controller.watch.examples" = "उदाहरण:\n  # 10 सेकंड तक इनपुट प्रिंट करें\n  ojd controller watch 045E:028E --duration 10\n  # सबसे पहले दबाया गया कंट्रोल JSON में प्रिंट करें\n  ojd controller watch 045E:028E --first-press --json\n  # हर कंट्रोलर और उसका वर्चुअल गेमपैड जो भेजता है, देखें\n  ojd controller watch --all --output";
+/* Examples block at the end of the help of 'ojd controller rumble'. The command lines and option names stay as written; translate only the lines that start with #. */
 "cli.controller.rumble.examples" = "उदाहरण:\n  # दोनों मुख्य मोटर 0.45 सेकंड तक 180 पर चलाएँ\n  ojd controller rumble 045E:028E\n  # दोनों मुख्य मोटर 2 सेकंड तक पूरी ताकत से चलाएँ\n  ojd controller rumble 045E:028E --left 255 --right 255 --duration 2";
+/* Examples block at the end of the help of 'ojd controller light'. The command lines and option names stay as written; translate only the lines that start with #. */
 "cli.controller.light.examples" = "उदाहरण:\n  # लाइटबार को नारंगी करें\n  ojd controller light 054C:09CC --color FF8000\n  # रंग और कम ब्राइटनेस सेट करें\n  ojd controller light 054C:09CC --color 0000FF --brightness 40";
+/* Examples block at the end of the help of 'ojd profile create'. The command lines, option names and the app ID stay as written; translate only the lines that start with #. */
 "cli.profile.create.examples" = "उदाहरण:\n  # किसी कंट्रोलर मॉडल के लिए प्रोफ़ाइल बनाएँ\n  ojd profile create Racing --controller 045E:028E\n  # इसे केवल तब लागू करें जब Safari सबसे आगे हो\n  ojd profile create Browsing --controller 045E:028E --app com.apple.Safari";
+/* Examples block at the end of the help of 'ojd profile set'. The command lines and the key paths stay as written; translate only the lines that start with #. */
 "cli.profile.set.examples" = "उदाहरण:\n  # प्रोफ़ाइल का नाम बदलें\n  ojd profile set Racing name Rally\n  # पहले स्टिक मैपिंग का आंतरिक डेडज़ोन सेट करें\n  ojd profile set Racing stickMappings.0.tuning.innerDeadzone 0.2";
+/* Examples block at the end of the help of 'ojd binding set'. The command lines, option names and sources stay as written; translate only the lines that start with #. */
 "cli.binding.set.examples" = "उदाहरण:\n  # साउथ बटन दबाए रखने पर Space दबाए रखें\n  ojd binding set Racing button:south key:space\n  # हर प्रेस पर J टॉगल करें\n  ojd binding set Racing button:west key:key-j --behavior toggle\n  # दबाए रखने पर J को प्रति सेकंड 10 बार दोहराएँ\n  ojd binding set Racing button:west key:key-j --turbo-rate 10 --turbo-duty 0.5";
+/* Examples block at the end of the help of 'ojd record install'. The command lines and file names stay as written; translate only the lines that start with #. */
 "cli.record.install.examples" = "उदाहरण:\n  # रिकॉर्ड फ़ाइल इंस्टॉल करें\n  ojd record install 045E-028E.json\n  # रिकॉर्ड stdin से पढ़ें\n  ojd record install - < 045E-028E.json";
+/* Examples block at the end of the help of 'ojd access grant'. The command lines and option names stay as written; translate only the lines that start with #. */
 "cli.access.grant.examples" = "उदाहरण:\n  # किसी प्रोग्राम को सेवा इस्तेमाल करने दें\n  ojd access grant /Applications/Example.app\n  # एक ऑरिजिन से परोसे गए पेजों के लिए टोकन बनाएँ\n  ojd access grant --token overlay --origin http://127.0.0.1:8080";
+/* One-line summary of 'ojd service' in the command list and at the top of its help. OpenJoystickDriver is the product name. */
 "cli.service.group.abstract" = "OpenJoystickDriver सेवा शुरू या बंद करें, या उसके अनुरोध स्वीकार करने तक प्रतीक्षा करें।";
+/* Message printed by 'ojd service' commands when the service runs. */
 "cli.service.group.running" = "सेवा चालू है।";
+/* One-line summary of 'ojd service start' in the command list and at the top of its help. */
 "cli.service.start.abstract" = "ऐप को बैकग्राउंड में खोलें और उसकी सेवा के अनुरोध स्वीकार करने तक प्रतीक्षा करें।";
+/* Error of 'ojd service start' when the ojd program is not inside the app bundle. ojd and OpenJoystickDriver.app stay as written. */
 "cli.service.start.noBundle" = "यह ojd OpenJoystickDriver.app के अंदर नहीं है, इसलिए यह सेवा शुरू नहीं कर सकता। इंस्टॉल किया गया ऐप खोलें, या उसके अंदर का ojd चलाएँ।";
 "platform.macos.cli.service.start.openFailed" = "macOS %@ को नहीं खोल सका। कारण देखने के लिए इसे Finder से खोलें।";
 "platform.macos.cli.service.stop.abstract" = "सेवा बंद करें और उसके समाप्त होने तक प्रतीक्षा करें। कनेक्ट किए गए कंट्रोलर macOS को लौट जाते हैं।";
+/* Error of 'ojd service stop' when the system refuses to stop the service. %@ is the reason from the system. OpenJoystickDriver is the product name. */
 "cli.service.stop.signalFailed" = "सेवा बंद नहीं की जा सकी: %@। OpenJoystickDriver को उसके मेनू से बंद करें।";
+/* Error of 'ojd service stop' when the service keeps running. %@ is the waited time, such as 5 seconds. --timeout stays as written. */
 "cli.service.stop.timeout" = "सेवा %@ में बंद नहीं हुई। बड़े --timeout के साथ फिर से प्रयास करें।";
+/* Message printed by 'ojd service stop' when the service is stopped. */
 "cli.service.group.stopped" = "सेवा बंद है।";
+/* One-line summary of 'ojd service wait' in the command list and at the top of its help. --timeout stays as written and the default of 5 seconds is fixed. */
 "cli.service.wait.abstract" = "सेवा के अनुरोध स्वीकार करने तक प्रतीक्षा करें। --timeout प्रतीक्षा की सीमा तय करता है (डिफ़ॉल्ट 5 सेकंड)।";
+/* Error of 'ojd service wait' when the service does not answer in time. %@ is the waited time, such as 5 seconds. The command in quotes and --timeout stay as written. */
 "cli.service.wait.timeout" = "सेवा ने %@ में अनुरोध स्वीकार नहीं किए। इसे “ojd service start” से शुरू करें, या बड़े --timeout के साथ फिर से प्रयास करें।";
+/* One-line summary of 'ojd status' in the command list and at the top of its help. */
 "cli.status.group.abstract" = "सेवा, एक्सटेंशन, अनुमतियाँ और कनेक्ट किए गए कंट्रोलर दिखाएँ।";
+/* Long description in the help of 'ojd status'. */
 "cli.status.group.discussion" = "सेवा बंद होने पर भी काम करता है: यह सेवा को बंद बताता है और 0 के साथ बाहर निकलता है।";
 "platform.macos.cli.status.group.labelInputInject" = "ऐक्सेसिबिलिटी";
+/* Row label in the output of 'ojd status'. The version of this command line tool follows. */
 "cli.status.group.labelCommandLineTool" = "कमांड-लाइन टूल";
+/* Heading in the output of 'ojd status' above the list of connected controllers. %lld is the number of controllers. */
 "cli.status.group.labelControllers" = "कंट्रोलर (%lld)";
+/* Row label in the output of 'ojd status'. The state of the driver extension follows. */
 "cli.status.group.labelTransportExtension" = "एक्सटेंशन";
 "platform.macos.cli.status.group.labelInputRead" = "इनपुट मॉनिटरिंग";
+/* Row label in the output of 'ojd status'. The reason why the stored profile overrides could not be read follows. */
 "cli.status.group.labelOverrideError" = "ओवरराइड त्रुटि";
 "platform.macos.cli.status.group.labelPassThrough" = "macOS के पास छोड़े गए (%lld)";
+/* Row label in the output of 'ojd status'. The state and version of the service follow. */
 "cli.status.group.labelService" = "सेवा";
+/* Heading in the output of 'ojd status' above the list of connected devices that the driver does not support. %lld is the number of devices. */
 "cli.status.group.labelUnbound" = "असमर्थित डिवाइस (%lld)";
+/* Row label in the output of 'ojd status'. The state of the virtual gamepad follows. */
 "cli.status.group.labelVirtualDevice" = "वर्चुअल गेमपैड";
+/* Hint printed by 'ojd status' when the service is stopped. The command in quotes stays as written. */
 "cli.status.group.startHint" = "सेवा चलने पर कंट्रोलर और अनुमतियाँ दिखती हैं: “ojd service start”।";
+/* One-line summary of 'ojd access' in the command list and at the top of its help. */
 "cli.access.group.abstract" = "एंडपॉइंट चालू करें और चुनें कि कौन-से प्रोग्राम इसके ज़रिए कंट्रोलर पढ़ सकते हैं।";
+/* Help text of the CLIENT argument of 'ojd access grant'. A client ID is the identifier that 'ojd access list' prints. */
 "cli.access.group.client" = "प्रोग्राम का पथ, या क्लाइंट ID।";
+/* Error of 'ojd access grant' when CLIENT is neither a path nor a known client ID. %@ is the text the user typed. Keep the command in quotes as written. */
 "cli.access.group.clientUnknown" = "%@ पर कोई प्रोग्राम नहीं है और उस ID वाला कोई क्लाइंट भी नहीं है। ID देखने के लिए “ojd access list” चलाएँ।";
+/* Error of 'ojd access grant' when the program at the path has no code signature to grant. %@ is the path the user gave. */
 "cli.access.group.clientUnsigned" = "%@ में कोई हस्ताक्षरित प्रोग्राम नहीं है। प्रोग्राम के ऐप बंडल या निष्पादन योग्य फ़ाइल को अनुमति दें।";
+/* One-line summary of 'ojd access disable' in the command list and at the top of its help. The endpoint is the local socket that granted programs connect to. */
 "cli.access.disable.abstract" = "एंडपॉइंट बंद करें और उसके कनेक्शन बंद करें; दी गई अनुमतियाँ बनी रहती हैं।";
+/* Message printed after 'ojd access disable' turned the endpoint off. */
 "cli.access.disable.success" = "एंडपॉइंट बंद है, और उसके कनेक्शन बंद कर दिए गए हैं।";
+/* Long description in the help of 'ojd access'. It explains the endpoint, that it is off until enabled and that only granted programs are served. Command names stay as written. */
 "cli.access.group.discussion" = "एंडपॉइंट एक स्थानीय सॉकेट है, जिससे अनुमति पाए प्रोग्राम कंट्रोलर इवेंट पढ़ते हैं। यह तब तक बंद रहता है जब तक आप “ojd access enable” नहीं चलाते, और सेवा केवल उन्हीं प्रोग्राम को जवाब देती है जिनके हस्ताक्षर को आपने अनुमति दी है, या जो ऐसा टोकन भेजते हैं जिसे आपने अनुमति दी है। “ojd access web enable” ओवरले पेजों के लिए 127.0.0.1 पर एक WebSocket जोड़ता है।";
+/* One-line summary of 'ojd access enable' in the command list and at the top of its help. */
 "cli.access.enable.abstract" = "एंडपॉइंट चालू करें।";
+/* Yes or no question that 'ojd access enable' asks on a terminal before it turns the endpoint on. */
 "cli.access.enable.confirm" = "क्या एंडपॉइंट चालू करना है, ताकि आपके द्वारा अनुमति दिए गए प्रोग्राम हर कंट्रोलर का इनपुट पढ़ सकें?";
+/* Long description in the help of 'ojd access enable'. It says that a confirmation comes first and that only granted programs can use the endpoint. Command names stay as written. */
 "cli.access.enable.discussion" = "पहले पुष्टि माँगता है। केवल अनुमति पाए प्रोग्राम ही एंडपॉइंट का उपयोग कर सकते हैं; उन्हें “ojd access grant” से जोड़ें।";
+/* Message printed after 'ojd access enable' turned the endpoint on. %@ is the path of the socket it listens on. */
 "cli.access.enable.success" = "एंडपॉइंट %@ पर सुनता है।";
+/* One-line summary of 'ojd access grant' in the command list and at the top of its help. A token is a named secret for pages served over the WebSocket. */
 "cli.access.grant.abstract" = "किसी हस्ताक्षरित प्रोग्राम या नए टोकन को एंडपॉइंट का उपयोग करने दें।";
 "platform.macos.cli.access.grant.adHoc" = "%@ ad-hoc हस्ताक्षरित है या हस्ताक्षरित नहीं है, इसलिए कोई भी स्थानीय प्रोग्राम उसके हस्ताक्षर का दावा कर सकता है। उसे Developer ID या Apple Development प्रमाणपत्र से हस्ताक्षरित करें, फिर अनुमति दें।";
 "platform.macos.cli.access.grant.platformWarning" = "इस प्रोग्राम पर Apple ने हस्ताक्षर किए हैं। अगर यह python3 या osascript जैसी स्क्रिप्ट चलाता है, तो यह जो भी स्क्रिप्ट चलाता है उसे यह पहुँच मिल जाती है।";
+/* Error of 'ojd access grant' when neither CLIENT nor --token is given, or both are. CLIENT and --token NAME stay as written. */
 "cli.access.grant.clientOrToken" = "या तो CLIENT दें या --token NAME।";
+/* Yes or no question that 'ojd access grant' asks before it allows a program. %1$@ is the program identifier, %2$@ describes its code signer and %3$@ lists the scopes granted. */
 "cli.access.grant.confirm" = "क्या %1$@ को, जिस पर %2$@ के रूप में हस्ताक्षर हैं, %3$@ के साथ एंडपॉइंट का उपयोग करने देना है?";
+/* Warning printed before the question of 'ojd access grant' when the control scope is requested. Control lets the program press buttons on a virtual gamepad. */
 "cli.access.grant.controlWarning" = "control स्कोप प्रोग्राम को वर्चुअल गेमपैड के बटन दबाने देता है, जिन्हें गेम और ऐप आपका इनपुट मानते हैं।";
+/* Long description in the help of 'ojd access grant'. It explains that the grant names the signature of the program and which programs cannot be granted. CLIENT and command names stay as written. */
 "cli.access.grant.discussion" = "CLIENT प्रोग्राम का पथ या “ojd access list” से मिली ID है। अनुमति प्रोग्राम के हस्ताक्षर के नाम पर दी जाती है, इसलिए प्रोग्राम अपडेट या स्थानांतरित होने पर भी वह मान्य रहती है। ad-hoc हस्ताक्षरित और हस्ताक्षर-रहित प्रोग्राम को अनुमति नहीं दी जा सकती। CLIENT की जगह --token देने पर यह एक टोकन बनाता है, जिससे क्लाइंट सॉकेट पर, --origin के किसी मान वाले पेज से WebSocket पर, या --origin के बिना बने टोकन के लिए ऐसे प्रोग्राम से WebSocket पर जो Origin हेडर नहीं भेजता, जैसे सैंडबॉक्स वाला ऐप, अपने hello में सेवा की चुनौती पर हस्ताक्षर करता है। कोई पेज control स्कोप का उपयोग नहीं कर सकता। टोकन केवल एक बार दिखाया जाता है। पहले पुष्टि माँगता है।";
+/* Help text of the --origin option of 'ojd access grant'. An origin is a web address such as http://127.0.0.1:8080; PORT in the second example stays as written. */
 "cli.access.grant.origin" = "एक वेब ओरिजिन, जैसे http://127.0.0.1:8080, जिसके पेज WebSocket पर टोकन का उपयोग कर सकते हैं। और जोड़ने के लिए दोहराएँ। WebSocket जिन ओवरले पेजों को परोसता है, उनका ओरिजिन http://127.0.0.1:PORT होता है, जहाँ पोर्ट वही है जो “ojd access status” दिखाता है।";
+/* Error of 'ojd access grant' when --origin is combined with the control scope. --origin stays as written. */
 "cli.access.grant.originControl" = "--origin को control स्कोप के साथ नहीं जोड़ा जा सकता। कोई वेब पेज कभी वर्चुअल गेमपैड नहीं चलाता; control उस टोकन को दें जिसमें --origin न हो।";
+/* Error of 'ojd access grant' when --origin is given without --token. Both option names stay as written. */
 "cli.access.grant.originNeedsToken" = "--origin के लिए --token ज़रूरी है।";
+/* Help text of the --scope option of 'ojd access grant'. The values read and control stay as written because the user types them. */
 "cli.access.grant.scope" = "अनुमति देने के लिए एक स्कोप: read या control। दोनों के लिए दोहराएँ।";
+/* Message printed after 'ojd access grant' allowed a program. %1$@ is the list of granted scopes, %2$@ is the program identifier and %3$@ is the client ID. */
 "cli.access.grant.success" = "%1$@ को %2$@ की अनुमति दी गई (ID %3$@)।";
+/* Help text of the --token option of 'ojd access grant'. It creates a named token instead of granting a program. */
 "cli.access.grant.token" = "किसी प्रोग्राम को अनुमति देने के बजाय इस नाम से एक टोकन बनाएँ।";
 "platform.macos.cli.access.grant.tokenConfirm" = "क्या टोकन %1$@ को %2$@ के साथ बनाना है, इस Mac के प्रोग्राम के लिए?";
+/* Message printed after 'ojd access grant --token' created a token; the line ends with a colon because the secret value follows on the next line. %1$@ is the list of granted scopes, %2$@ is the token name and %3$@ is the token ID. */
 "cli.access.grant.tokenSuccess" = "%1$@ टोकन %2$@ को दिया गया (ID %3$@)। टोकन को गोपनीय रखें; यह दोबारा नहीं दिखाया जाएगा:";
 "platform.macos.cli.access.grant.tokenWebConfirm" = "क्या टोकन %1$@ को %2$@ के साथ बनाना है, इस Mac के प्रोग्राम और %3$@ के पेजों के लिए?";
+/* One-line summary of 'ojd access list' in the command list and at the top of its help. */
 "cli.access.list.abstract" = "अनुमति पाए क्लाइंट और टोकन, तथा पिछले 24 घंटों में अस्वीकृत क्लाइंट और टोकन सूचीबद्ध करता है।";
+/* Long description in the help of 'ojd access list'. It says that the printed IDs work with 'ojd access grant' and 'ojd access revoke'. token:NAME stays as written. */
 "cli.access.list.discussion" = "हर क्लाइंट की एक ID होती है, जिसे “ojd access grant” और “ojd access revoke” स्वीकार करते हैं; टोकन की ID token:NAME होती है।";
+/* Heading of the list of granted clients printed by 'ojd access list'. */
 "cli.access.list.granted" = "अनुमति पाए:";
+/* Indented line printed under a heading of 'ojd access list' when the list is empty. Keep the two leading spaces. */
 "cli.access.list.none" = "  कोई नहीं";
+/* Heading of the list of clients that connected and were refused in the last 24 hours, printed by 'ojd access list'. */
 "cli.access.list.refused" = "पिछले 24 घंटों में अस्वीकृत:";
+/* Heading of the list of tokens that were refused in the last 24 hours, printed by 'ojd access list'. */
 "cli.access.list.refusedTokens" = "पिछले 24 घंटों में अस्वीकृत टोकन:";
+/* Heading of the list of granted tokens printed by 'ojd access list'. */
 "cli.access.list.tokens" = "अनुमति पाए टोकन:";
+/* Lowercase placeholder printed in the token list when a refused token has no name. */
 "cli.access.list.unknownToken" = "अज्ञात टोकन";
+/* Error of 'ojd access' commands that change who may read the controllers, when the input is not a terminal and --force is missing. --force stays as written. */
 "cli.access.group.needsForce" = "यह बदलाव प्रोग्राम को आपके कंट्रोलर तक पहुँच देता है। बिना प्रॉम्प्ट के पुष्टि करने के लिए --force जोड़ें।";
+/* One-line summary of 'ojd access revoke' in the command list and at the top of its help. */
 "cli.access.revoke.abstract" = "किसी प्रोग्राम की अनुमति, या उसके कुछ स्कोप हटाएँ।";
+/* Help text of the CLIENT argument of 'ojd access revoke'. token:NAME stays as written. */
 "cli.access.revoke.client" = "प्रोग्राम का पथ, क्लाइंट ID, या token:NAME।";
+/* Long description in the help of 'ojd access revoke'. CLIENT, --scope, 'ojd access list' and token:NAME stay as written. */
 "cli.access.revoke.discussion" = "CLIENT प्रोग्राम का पथ, “ojd access list” से मिली ID, या टोकन के लिए token:NAME है। --scope के बिना पूरी अनुमति हटा दी जाती है। जो कनेक्शन कोई स्कोप खो देते हैं, वे बंद कर दिए जाते हैं।";
+/* Message printed after 'ojd access revoke --scope' removed some scopes. %1$@ is the client ID, %2$@ is the list of scopes it keeps and %3$@ is the number of connections that were closed. */
 "cli.access.revoke.partial" = "क्लाइंट %1$@ के पास %2$@ बना रहता है। बंद किए गए कनेक्शन: %3$@।";
+/* Help text of the --scope option of 'ojd access revoke'. The values read and control stay as written because the user types them. */
 "cli.access.revoke.scope" = "हटाने के लिए एक स्कोप: read या control। दोनों के लिए दोहराएँ।";
+/* Message printed after 'ojd access revoke' removed a whole grant. %1$@ is the client ID and %2$@ is the number of connections that were closed. */
 "cli.access.revoke.success" = "क्लाइंट %1$@ की अनुमति हटा दी गई। बंद किए गए कनेक्शन: %2$@।";
+/* One-line summary of 'ojd access status' in the command list and at the top of its help. */
 "cli.access.status.abstract" = "दिखाएँ कि एंडपॉइंट चालू है या नहीं, उसका सॉकेट और उससे जुड़े क्लाइंट।";
+/* Line of 'ojd access status' with three counts. %1$@ is the number of connected clients, %2$@ the number of granted clients and %3$@ the number of clients refused in the last 24 hours. */
 "cli.access.status.counts" = "जुड़े क्लाइंट: %1$@। अनुमति पाए क्लाइंट: %2$@। पिछले 24 घंटों में अस्वीकृत: %3$@।";
+/* Line of 'ojd access status' when the endpoint is off. Keep the colon and the space after it. */
 "cli.access.status.off" = "एंडपॉइंट: बंद";
+/* Line of 'ojd access status' when the endpoint is on. Keep the colon and the space after it. */
 "cli.access.status.on" = "एंडपॉइंट: चालू";
+/* Line of 'ojd access status' that shows where the endpoint listens. %@ is the socket path. */
 "cli.access.status.socket" = "सॉकेट: %@";
+/* Line of 'ojd access status' with two token counts. %1$@ is the number of granted tokens and %2$@ the number of tokens refused in the last 24 hours. */
 "cli.access.status.tokenCounts" = "अनुमति पाए टोकन: %1$@। पिछले 24 घंटों में अस्वीकृत टोकन: %2$@।";
+/* Line of 'ojd access status' when the WebSocket is turned on but its port could not be opened. %@ is the port number. */
 "cli.access.status.webClosed" = "WebSocket: चालू, लेकिन पोर्ट %@ खोला नहीं जा सका";
+/* Line of 'ojd access status' when the WebSocket is off. Keep the colon and the space after it. */
 "cli.access.status.webOff" = "WebSocket: बंद";
+/* Line of 'ojd access status' when the WebSocket is on. %1$@ is the WebSocket address, %2$@ is the address of the overlay pages and %3$@ is the folder they are served from. */
 "cli.access.status.webOn" = "WebSocket: %1$@ पर चालू; ओवरले पेज %2$@ पर, %3$@ से";
+/* One-line summary of 'ojd access web' in the command list and at the top of its help. The WebSocket serves overlay pages. */
 "cli.access.web.abstract" = "ओवरले पेजों के लिए WebSocket चालू या बंद करें।";
+/* One-line summary of 'ojd access web disable' in the command list and at the top of its help. */
 "cli.access.web.disableAbstract" = "WebSocket बंद करें और उसके कनेक्शन बंद करें; टोकन बने रहते हैं।";
+/* Message printed after 'ojd access web disable' turned the WebSocket off. */
 "cli.access.web.disableSuccess" = "WebSocket बंद है, और उसके कनेक्शन बंद कर दिए गए हैं।";
+/* Long description in the help of 'ojd access web'. It names the address, the path /endpoint and the Overlays folder, which stay as written, and explains which pages may connect. */
 "cli.access.web.discussion" = "WebSocket केवल 127.0.0.1 पर, /endpoint पर, सुनता है और उसी पोर्ट पर अपने Overlays फ़ोल्डर की फ़ाइलें परोसता है। पेज को ऐसे ओरिजिन से आना होगा जिसके लिए टोकन को अनुमति दी गई है, और उसे उसी टोकन से अपने hello में सेवा की चुनौती पर हस्ताक्षर करने होंगे; एक को अनुमति देने के लिए “ojd access grant --token NAME --origin URL” चलाएँ।";
+/* One-line summary of 'ojd access web enable' in the command list and at the top of its help. */
 "cli.access.web.enableAbstract" = "WebSocket चालू करें।";
+/* Yes or no question that 'ojd access web enable' asks on a terminal before it turns the WebSocket on. */
 "cli.access.web.enableConfirm" = "क्या WebSocket चालू करना है, ताकि जिन ओरिजिन के लिए आप टोकन को अनुमति देते हैं उनके पेज एंडपॉइंट का उपयोग कर सकें?";
+/* Long description in the help of 'ojd access web enable'. It says that a confirmation comes first and how the port is chosen. --port stays as written. */
 "cli.access.web.enableDiscussion" = "पहले पुष्टि माँगता है। --port के बिना सहेजा गया पोर्ट उपयोग करता है; पहली बार सिस्टम एक खाली पोर्ट चुनता है और सेवा उसे सहेज लेती है।";
+/* Help text of the --port option of 'ojd access web enable'. The range is a fixed fact of the command. */
 "cli.access.web.port" = "127.0.0.1 पर पोर्ट, 1024 से 65535 तक।";
+/* Help text of the --automatic option of 'ojd access web enable'. */
 "cli.access.web.automatic" = "सहेजे गए पोर्ट के बजाय सिस्टम को खाली पोर्ट चुनने दें।";
+/* Error of 'ojd access web enable' when --automatic and --port are both given. Both option names stay as written. */
 "cli.access.web.automaticConflict" = "--automatic के साथ --port का उपयोग नहीं किया जा सकता।";
+/* Error of 'ojd access web enable' when --port is outside the allowed range. --port stays as written. */
 "cli.access.web.portRange" = "--port 1024 और 65535 के बीच होना चाहिए।";
+/* One-line summary of 'ojd diagnose' in the command list and at the top of its help. */
 "cli.diagnose.group.abstract" = "सभी जाँचें चलाएँ और बताएँ कि क्या गड़बड़ है।";
+/* Help text of the --output option of 'ojd diagnose'. A support bundle is a file with the diagnostic report for a bug report. */
 "cli.diagnose.group.output" = "सपोर्ट बंडल भी इस फ़ाइल में लिखें।";
+/* Error of 'ojd diagnose --output' when the support bundle could not be written. %@ is the reason from the system. --output stays as written. */
 "cli.diagnose.group.outputFailed" = "सपोर्ट बंडल नहीं लिखा गया: %@। कोई दूसरा --output पथ चुनें।";
+/* Error of 'ojd diagnose --output' when the folder of the path is missing. %@ is the folder path. --output stays as written. */
 "cli.diagnose.group.outputParent" = "--output के लिए मौजूदा डायरेक्टरी ज़रूरी है; %@ मौजूद नहीं है।";
+/* Progress line of 'ojd diagnose --output' while the support bundle is written. Keep the three dots. */
 "cli.diagnose.group.outputProgress" = "सपोर्ट बंडल लिखा जा रहा है…";
+/* Message printed after 'ojd diagnose --output' wrote the support bundle. %@ is the file path. The bundle lists the names of the devices, so the user should read it first. */
 "cli.diagnose.group.outputWritten" = "सपोर्ट बंडल %@ में लिखा गया। इसमें डिवाइस के नाम शामिल हैं, इसलिए साझा करने से पहले इसे देख लें।";
+/* Long description in the help of 'ojd diagnose'. pass, warn, fail and skip are the check results printed by the command and stay as written, as do --soak and the other option names. */
 "cli.diagnose.group.discussion" = "हर जाँच pass, warn, fail या skip बताती है। जिन जाँचों के लिए सेवा चाहिए, वे सेवा बंद होने पर छोड़ दी जाती हैं। कोई भी जाँच fail होने पर कोड 1 के साथ बाहर निकलता है। --soak एक रनटाइम-हेल्थ जाँच जोड़ता है, जो दिए गए समय तक सेवा का नमूना लेती है; इसके बिना वह जाँच छोड़ दी जाती है। --output एक सपोर्ट रिपोर्ट भी लिखता है; साझा करने से पहले उसे देख लें।";
 "platform.macos.cli.diagnose.group.transportExtensionAbsent" = "macOS में पंजीकृत नहीं है; “ojd transport-extension activate” चलाएँ";
 "platform.macos.cli.diagnose.group.transportExtensionActive" = "macOS में सक्रिय है";
+/* Detail of the transport extension check of 'ojd diagnose' when the extension bundle has an unexpected identifier. %@ is that identifier. OpenJoystickDriver is the product name. */
 "cli.diagnose.group.transportExtensionBundleInvalid" = "अप्रत्याशित बंडल आइडेंटिफ़ायर %@; OpenJoystickDriver दोबारा इंस्टॉल करें";
+/* Detail of the transport extension check of 'ojd diagnose' when the extension is not inside the app. OpenJoystickDriver is the product name. */
 "cli.diagnose.group.transportExtensionBundleMissing" = "ऐप में एम्बेड नहीं है; OpenJoystickDriver दोबारा इंस्टॉल करें";
+/* Detail of the transport extension check of 'ojd diagnose' when the extension is inside the app. */
 "cli.diagnose.group.transportExtensionBundlePresent" = "ऐप में एम्बेड है";
+/* Detail of the transport extension check of 'ojd diagnose' when the extension is registered but the user has not approved it. The command in quotes stays as written. */
 "cli.diagnose.group.transportExtensionInactive" = "पंजीकृत है पर सक्रिय नहीं; “ojd transport-extension activate” से इसे स्वीकृति दें";
 "platform.macos.cli.diagnose.group.transportExtensionUnavailable" = "macOS ने पंजीकरण की जानकारी नहीं दी: %@";
+/* Last line of 'ojd diagnose' when checks failed. %lld is the number of failed checks. The command with <path> in quotes stays as written. */
 "cli.diagnose.group.failed" = "विफल जाँचें: %lld। ऊपर दिए ब्योरे से इन्हें ठीक करें, या “ojd diagnose --output <path>” चलाएँ और फ़ाइल को बग रिपोर्ट के साथ संलग्न करें।";
+/* Help text of the --footprint-limit-mib option of 'ojd diagnose'. The physical footprint is the memory charged to the service in MiB, mebibytes. The range 0-65536 is fixed. */
 "cli.diagnose.group.footprintLimit" = "--soak के साथ, इस फ़िज़िकल फ़ुटप्रिंट (MiB) से ऊपर जाने पर विफल करें; 0 बंद करता है (0-65536)।";
+/* Help text of the --interval-ms option of 'ojd diagnose'. The range 100-60000 is fixed. */
 "cli.diagnose.group.interval" = "--soak के साथ, नमूनों के बीच मिलीसेकंड (100-60000)।";
+/* Error of 'ojd diagnose' when --interval-ms is out of range. --interval-ms stays as written. */
 "cli.diagnose.group.intervalRange" = "--interval-ms 100 और 60000 के बीच होना चाहिए।";
+/* Error of 'ojd diagnose' when a memory limit option is out of range. Both option names stay as written. */
 "cli.diagnose.group.limitRange" = "--rss-limit-mib और --footprint-limit-mib 0 और 65536 के बीच होने चाहिए।";
+/* Detail of a permission check of 'ojd diagnose' when macOS denied the permission. The command in quotes stays as written. */
 "cli.diagnose.group.permissionDenied" = "अस्वीकृत; “ojd permission request” से अनुमति दें";
+/* Detail of a permission check of 'ojd diagnose' when the state of the permission cannot be read. */
 "cli.diagnose.group.permissionUnknown" = "स्थिति अज्ञात";
+/* Help text of the --rss-limit-mib option of 'ojd diagnose'. The resident size is the memory of the service held in RAM, in MiB, mebibytes. The range 0-65536 is fixed. */
 "cli.diagnose.group.rssLimit" = "--soak के साथ, इस रेज़िडेंट आकार (MiB) से ऊपर जाने पर विफल करें; 0 बंद करता है (0-65536)।";
+/* Detail of the service check of 'ojd diagnose' when the service runs. %@ is the version of the service. */
 "cli.diagnose.group.serviceRunning" = "चल रही है %@";
+/* Detail of the service check of 'ojd diagnose' when the service is stopped. The command in quotes stays as written. */
 "cli.diagnose.group.serviceStopped" = "चल नहीं रही; “ojd service start” से शुरू करें";
+/* Reason shown for a skipped check of 'ojd diagnose' when the service did not answer. */
 "cli.diagnose.group.skipServiceFailed" = "सेवा ने जवाब नहीं दिया";
+/* Reason shown for a skipped check of 'ojd diagnose' when the service is not running. */
 "cli.diagnose.group.skipServiceStopped" = "सेवा चल नहीं रही";
+/* Help text of the --soak option of 'ojd diagnose'. The number is a count of seconds from 1 to 86400. */
 "cli.diagnose.group.soak" = "इतने समय तक सेवा की मेमोरी, फ़ाइल डिस्क्रिप्टर और CPU का भी नमूना लें (1-86400)।";
+/* Error of the runtime sampling in 'ojd diagnose --soak' when the settings are out of range. %1$lld and %2$lld are the lowest and highest duration in seconds; %3$lld and %4$lld are the lowest and highest interval in ms, milliseconds. The three dots between two numbers mean a range. */
 "cli.diagnose.group.soakErrorInvalidConfiguration" = "नमूना लेने के लिए %1$lld...%2$lld सेकंड और %3$lld...%4$lld ms का नमूना अंतराल चाहिए।";
+/* Error of the runtime sampling in 'ojd diagnose --soak' when the service returned no sample. */
 "cli.diagnose.group.soakErrorNoSamples" = "सेवा ने कोई रनटाइम नमूना नहीं दिया।";
+/* Error of the runtime sampling in 'ojd diagnose --soak' when the system does not report the service process. %d is the process ID. */
 "cli.diagnose.group.soakErrorProcessUnavailable" = "सेवा प्रोसेस %d की रनटाइम जानकारी नहीं पढ़ी जा सकी।";
+/* Detail of the runtime health check of 'ojd diagnose' when --soak is not given. --soak SECONDS stays as written. */
 "cli.diagnose.group.soakNotRequested" = "माँगा नहीं गया; --soak SECONDS इस्तेमाल करें";
+/* Progress line of 'ojd diagnose --soak'. %@ is the sampling duration, such as 30 seconds. Keep the three dots. */
 "cli.diagnose.group.soakProgress" = "%@ तक सेवा का नमूना लिया जा रहा है…";
+/* Verdict of the runtime health check of 'ojd diagnose --soak' when the physical footprint passed its limit. %1$.1f is the resident size in MiB, %2$.1f is the footprint in MiB, %3$lld is the number of open file descriptors, %4$.1f is the CPU load in percent and %5$.0f is the sampling time in seconds. The double percent sign prints one percent sign. */
 "cli.diagnose.group.soakVerdictFootprintLimit" = "फ़ुटप्रिंट सीमा पार हुई: रेज़िडेंट आकार %1$.1f MiB, फ़ुटप्रिंट %2$.1f MiB, फ़ाइल डिस्क्रिप्टर %3$lld, CPU %4$.1f%%, अवधि %5$.0f सेकंड";
+/* Verdict of the runtime health check of 'ojd diagnose --soak' when too few samples were taken. %1$.1f is the resident size in MiB, %2$.1f is the footprint in MiB, %3$lld is the number of open file descriptors, %4$.1f is the CPU load in percent and %5$.0f is the sampling time in seconds. The double percent sign prints one percent sign. */
 "cli.diagnose.group.soakVerdictInsufficientData" = "पर्याप्त डेटा नहीं: रेज़िडेंट आकार %1$.1f MiB, फ़ुटप्रिंट %2$.1f MiB, फ़ाइल डिस्क्रिप्टर %3$lld, CPU %4$.1f%%, अवधि %5$.0f सेकंड";
+/* Verdict of the runtime health check of 'ojd diagnose --soak' when the memory of the service grew during sampling. %1$.1f is the resident size in MiB, %2$.1f is the footprint in MiB, %3$lld is the number of open file descriptors, %4$.1f is the CPU load in percent and %5$.0f is the sampling time in seconds. The double percent sign prints one percent sign. */
 "cli.diagnose.group.soakVerdictMemoryGrowth" = "मेमोरी में वृद्धि दिखी: रेज़िडेंट आकार %1$.1f MiB, फ़ुटप्रिंट %2$.1f MiB, फ़ाइल डिस्क्रिप्टर %3$lld, CPU %4$.1f%%, अवधि %5$.0f सेकंड";
+/* Verdict of the runtime health check of 'ojd diagnose --soak' when the resident size passed its limit. %1$.1f is the resident size in MiB, %2$.1f is the footprint in MiB, %3$lld is the number of open file descriptors, %4$.1f is the CPU load in percent and %5$.0f is the sampling time in seconds. The double percent sign prints one percent sign. */
 "cli.diagnose.group.soakVerdictResidentLimit" = "रेज़िडेंट आकार सीमा पार हुई: रेज़िडेंट आकार %1$.1f MiB, फ़ुटप्रिंट %2$.1f MiB, फ़ाइल डिस्क्रिप्टर %3$lld, CPU %4$.1f%%, अवधि %5$.0f सेकंड";
+/* Verdict of the runtime health check of 'ojd diagnose --soak' when resources such as file descriptors grew during sampling. %1$.1f is the resident size in MiB, %2$.1f is the footprint in MiB, %3$lld is the number of open file descriptors, %4$.1f is the CPU load in percent and %5$.0f is the sampling time in seconds. The double percent sign prints one percent sign. */
 "cli.diagnose.group.soakVerdictResourceGrowth" = "संसाधनों में वृद्धि दिखी: रेज़िडेंट आकार %1$.1f MiB, फ़ुटप्रिंट %2$.1f MiB, फ़ाइल डिस्क्रिप्टर %3$lld, CPU %4$.1f%%, अवधि %5$.0f सेकंड";
+/* Verdict of the runtime health check of 'ojd diagnose --soak' when nothing grew during sampling. %1$.1f is the resident size in MiB, %2$.1f is the footprint in MiB, %3$lld is the number of open file descriptors, %4$.1f is the CPU load in percent and %5$.0f is the sampling time in seconds. The double percent sign prints one percent sign. */
 "cli.diagnose.group.soakVerdictStable" = "स्थिर: रेज़िडेंट आकार %1$.1f MiB, फ़ुटप्रिंट %2$.1f MiB, फ़ाइल डिस्क्रिप्टर %3$lld, CPU %4$.1f%%, अवधि %5$.0f सेकंड";
+/* Error of 'ojd diagnose' when --soak is out of range. --soak stays as written. The range is fixed. */
 "cli.diagnose.group.soakRange" = "--soak 1 और 86400 सेकंड के बीच होना चाहिए।";
 "platform.macos.cli.diagnose.group.usbFailed" = "USB स्कैन विफल रहा: %@। OpenJoystickDriver को इनपुट मॉनिटरिंग की अनुमति दें।";
+/* Detail of the USB check of 'ojd diagnose'. %lld is the number of vendor-specific USB controllers that the system lists. */
 "cli.diagnose.group.usbOk" = "दिखने वाले वेंडर-स्पेसिफ़िक USB कंट्रोलर: %lld";
+/* Detail of the virtual gamepad check of 'ojd diagnose' when the user turned the virtual gamepad off. */
 "cli.diagnose.group.virtualDisabled" = "वर्चुअल गेमपैड अक्षम है";
+/* Detail of the virtual gamepad check of 'ojd diagnose' when the virtual gamepad reports an error. %@ is the error message of the system. */
 "cli.diagnose.group.virtualError" = "वर्चुअल गेमपैड में त्रुटि: %@";
+/* Detail of the virtual gamepad check of 'ojd diagnose' when the stored profile overrides cannot be read. %@ is the error message. */
 "cli.diagnose.group.virtualOverride" = "सहेजे गए प्रोफ़ाइल ओवरराइड पढ़े नहीं जा सकते: %@";
+/* Error of the commands that need a macOS permission. %@ is the permission name. The command in quotes stays as written. */
 "cli.shared.error.permissionMissing" = "%@ की पहुँच नहीं है। “ojd permission request” से अनुमति दें।";
 "platform.macos.cli.shared.error.permissionStillMissing" = "%1$@ की पहुँच अब भी नहीं है। सिस्टम सेटिंग्स > %2$@ में OpenJoystickDriver को अनुमति दें, फिर “ojd permission request” दोबारा चलाएँ।";
 "platform.macos.cli.transportExtension.group.abstract" = "OpenJoystickDriver DriverKit सिस्टम एक्सटेंशन दिखाएँ, सक्रिय करें या निष्क्रिय करें।";
 "platform.macos.cli.transportExtension.activate.abstract" = "macOS से एक्सटेंशन सक्रिय करने को कहें। सिस्टम सेटिंग्स में स्वीकृति की ज़रूरत पड़ सकती है।";
+/* Long description in the help of 'ojd transport-extension activate'. The ojd program and the path stay as written. */
 "cli.transportExtension.activate.discussion" = "/Applications/OpenJoystickDriver.app के अंदर का ojd चलाएँ। स्वीकृति का इंतज़ार होने पर कोड 0 के साथ बाहर निकलता है।";
+/* Message printed after 'ojd transport-extension activate' when the driver extension is active. */
 "cli.transportExtension.group.activated" = "एक्सटेंशन सक्रिय है।";
 "platform.macos.cli.transportExtension.group.approval" = "अनुरोध के लिए आपकी स्वीकृति चाहिए। इसे सिस्टम सेटिंग्स > सामान्य > लॉगिन आइटम और एक्सटेंशन > ड्राइवर एक्सटेंशन में अनुमति दें।";
+/* Error of 'ojd transport-extension activate' when the app has no driver extension inside. %@ is the extension name, which stays as written with .dext. The build command stays as written. */
 "cli.transportExtension.group.bundleMissing" = "ऐप में %@.dext नहीं है। “./Scripts/ojd build install dev” चलाएँ, फिर /Applications से दोबारा कोशिश करें।";
 "platform.macos.cli.transportExtension.group.codesignFailedToRun" = "ऐप जाँचने के लिए codesign नहीं चल सका: %@। देखें कि /usr/bin/codesign मौजूद है।";
 "platform.macos.cli.transportExtension.deactivate.abstract" = "macOS से एक्सटेंशन निष्क्रिय करने को कहें। कंट्रोलर macOS के पास लौट जाते हैं।";
+/* Long description in the help of 'ojd transport-extension deactivate'. The ojd program and the path stay as written. */
 "cli.transportExtension.deactivate.discussion" = "/Applications/OpenJoystickDriver.app के अंदर का ojd चलाएँ।";
+/* Message printed after 'ojd transport-extension deactivate' when the driver extension is inactive. */
 "cli.transportExtension.group.deactivated" = "एक्सटेंशन निष्क्रिय है।";
+/* Error of 'ojd transport-extension' commands when ojd runs from a folder other than Applications. %@ is the path of this ojd. The path of the installed app stays as written. */
 "cli.transportExtension.group.notInstalled" = "यह ojd /Applications से नहीं, %@ से चल रहा है। /Applications/OpenJoystickDriver.app के अंदर का ojd चलाएँ।";
+/* Error of 'ojd transport-extension' commands when the app code signature is not valid. %@ is the description of the signature problem. The build command stays as written. */
 "cli.transportExtension.group.signatureInvalid" = "ऐप का सिग्नेचर मान्य नहीं है (%@)। इसे “./Scripts/ojd build install-fast dev” से दोबारा बनाएँ, फिर कोशिश करें।";
 "platform.macos.cli.transportExtension.status.abstract" = "दिखाएँ कि एक्सटेंशन ऐप में है और macOS में पंजीकृत है या नहीं।";
+/* Row of 'ojd transport-extension status'. %@ is the state of the extension inside the app: present, missing or invalid. Keep the two spaces after the colon. */
 "cli.transportExtension.status.bundle" = "एम्बेडेड एक्सटेंशन:  %@";
+/* Long description in the help of 'ojd transport-extension status'. present, missing, invalid, active, inactive, absent and unavailable are values the command prints and stay as written. */
 "cli.transportExtension.status.discussion" = "बंडल present, missing या invalid होता है। पंजीकरण active, inactive, absent या unavailable होता है; unavailable पर कोड 1 के साथ बाहर निकलता है। सेवा बंद होने पर भी काम करता है।";
 "platform.macos.cli.transportExtension.status.registration" = "macOS पंजीकरण:  %@";
 "platform.macos.cli.transportExtension.status.unavailable" = "macOS ने एक्सटेंशन के पंजीकरण की जानकारी नहीं दी: %@। दोबारा कोशिश करें, या “systemextensionsctl list” चलाएँ।";
 "platform.macos.cli.transportExtension.group.submitFailed" = "macOS ने अनुरोध अस्वीकार कर दिया। “ojd transport-extension status” चलाएँ और “systemextensionsctl list” देखें।";
 "platform.macos.cli.transportExtension.group.timeout" = "macOS ने अनुरोध समय पर पूरा नहीं किया। सिस्टम सेटिंग्स में स्वीकृति का संकेत देखें, फिर “ojd transport-extension status” चलाएँ।";
+/* One-line summary of 'ojd log' in the command list and at the top of its help. */
 "cli.log.group.abstract" = "सेवा लॉग दिखाएँ या बताएँ कि वे कहाँ हैं।";
+/* One-line summary of 'ojd log path' in the command list and at the top of its help. The command line after 'Open it with:' stays as written, including the backslashes before the quotes. */
 "cli.log.path.abstract" = "वह फ़ोल्डर प्रिंट करें जिसमें सेवा लॉग हैं। इसे इस तरह खोलें: open \"$(ojd log path)\"";
+/* One-line summary of 'ojd log export' in the command list and at the top of its help. The tilde stands for the home folder of the user and stays as written. */
 "cli.log.export.abstract" = "सेवा लॉग का अंतिम भाग एक फ़ाइल में लिखें, होम फ़ोल्डर ~ के रूप में दिखेगा।";
+/* Help text of the FILE argument of 'ojd log export'. */
 "cli.log.export.file" = "लिखी जाने वाली फ़ाइल।";
+/* Help text of the --force flag of 'ojd log export'. */
 "cli.log.export.force" = "फ़ाइल मौजूद हो तो उसे बदलें।";
+/* Error of 'ojd log export' when the target file exists. %@ is the file path. --force stays as written. */
 "cli.log.export.exists" = "%@ पहले से मौजूद है। बदलने के लिए --force का उपयोग करें।";
+/* Message printed after 'ojd log export' wrote the file. %@ is the file path. */
 "cli.log.export.written" = "सेवा लॉग %@ में लिखे गए।";
+/* One-line summary of 'ojd log show' in the command list and at the top of its help. */
 "cli.log.show.abstract" = "सेवा लॉग का अंतिम हिस्सा प्रिंट करें।";
+/* Long description in the help of 'ojd log show'. $PAGER, the default 'less -FRX', --follow, --json and Control-C stay as written. Control-C is the key combination that stops a program in a terminal. */
 "cli.log.show.discussion" = "टर्मिनल पर आउटपुट $PAGER से होकर जाता है (डिफ़ॉल्ट “less -FRX”; पेज बंद करने के लिए PAGER को खाली मान पर सेट करें)। --follow नई पंक्तियाँ तब तक प्रिंट करता रहता है जब तक आप Control-C नहीं दबाते; --json के साथ यह हर पंक्ति में एक JSON ऑब्जेक्ट प्रिंट करता है।";
+/* Placeholder line printed for a log file without content, in the log text that 'ojd log show' prints. Keep the parentheses. */
 "cli.log.show.empty" = "(लॉग फ़ाइल खाली है)";
+/* Help text of the --follow flag of 'ojd log show'. */
 "cli.log.show.follow" = "सेवा जैसे-जैसे पंक्तियाँ लिखे, उन्हें प्रिंट करते रहें।";
+/* Help text of the --lines option of 'ojd log show'. The range is fixed. */
 "cli.log.show.lines" = "हर लॉग से प्रिंट करने की पंक्तियाँ, 1 से 10000।";
+/* Error of 'ojd log show' when --lines is out of range. --lines stays as written. The range is fixed. */
 "cli.log.show.linesRange" = "--lines 1 और 10000 के बीच होना चाहिए।";
+/* Placeholder line printed for a log file that does not exist, in the log text that 'ojd log show' prints. Keep the parentheses. */
 "cli.log.show.missing" = "(लॉग फ़ाइल मौजूद नहीं है)";
+/* Error of 'ojd log show' when the log files cannot be read. %@ is the reason from the system. The command in quotes stays as written. */
 "cli.log.show.readFailed" = "सेवा लॉग पढ़े नहीं जा सके: %@। “ojd log path” जो फ़ोल्डर प्रिंट करता है उसे देखें।";
+/* Placeholder line printed above the shown part of a long log file, in the log text that 'ojd log show' prints. Keep the parentheses. */
 "cli.log.show.truncated" = "(पहले की लॉग सामग्री छोड़ दी गई)";
 "platform.macos.cli.permission.group.abstract" = "OpenJoystickDriver को चाहिए वाली macOS अनुमतियाँ दिखाएँ या माँगें।";
+/* One-line summary of 'ojd permission list' in the command list and at the top of its help. OpenJoystickDriver is the product name. */
 "cli.permission.list.abstract" = "हर अनुमति, उसकी स्थिति और OpenJoystickDriver उसे किसलिए इस्तेमाल करता है, सूची में दिखाएँ।";
+/* Long description in the help of 'ojd permission list'. granted, denied and unknown are the states printed by the command and stay as written, as do stderr and exit code 0. */
 "cli.permission.list.discussion" = "स्थितियाँ granted, denied या unknown होती हैं। सेवा बंद होने पर स्थिति इसी प्रोसेस में पढ़ी जाती है और stderr पर इसका नोट आता है; एग्ज़िट कोड 0 ही रहता है।";
+/* Note that 'ojd permission list' prints on the error stream when the service is stopped. The command in quotes stays as written. */
 "cli.permission.list.localState" = "सेवा चल नहीं रही, इसलिए ये स्थितियाँ इसी प्रोसेस ने पढ़ीं। सेवा को जो स्थिति दिखती है, उसके लिए “ojd service start” से सेवा शुरू करें।";
 "platform.macos.cli.permission.group.nameInputInject" = "ऐक्सेसिबिलिटी";
+/* Name of the permission for the approval of the driver extension, in the output of 'ojd permission list' and 'ojd diagnose'. */
 "cli.permission.group.nameUsbTransport" = "ड्राइवर एक्सटेंशन की स्वीकृति";
 "platform.macos.cli.permission.group.nameInputRead" = "इनपुट मॉनिटरिंग";
+/* Name of the permission to send keyboard and mouse events, in the output of 'ojd permission list' and 'ojd diagnose'. */
 "cli.permission.group.namePostEvent" = "कीबोर्ड और माउस आउटपुट";
+/* Purpose column of the keyboard and mouse output permission in 'ojd permission list'. It says what the driver uses the permission for. */
 "cli.permission.group.purposePostEvent" = "रीमैप किए गए कीबोर्ड, पॉइंटर और स्क्रोल इवेंट भेजें";
+/* Remark added in parentheses to the purpose of a permission in 'ojd permission list' when the active profile needs it. */
 "cli.permission.group.requiredByProfile" = "सक्रिय प्रोफ़ाइल को आवश्यक";
 "platform.macos.cli.permission.group.paneInputInject" = "गोपनीयता और सुरक्षा > ऐक्सेसिबिलिटी";
 "platform.macos.cli.permission.group.paneUsbTransport" = "सामान्य > लॉगिन आइटम और एक्सटेंशन > ड्राइवर एक्सटेंशन";
 "platform.macos.cli.permission.group.paneInputRead" = "गोपनीयता और सुरक्षा > इनपुट मॉनिटरिंग";
+/* Purpose column of the input injection permission in 'ojd permission list'. It says what the driver uses the permission for. */
 "cli.permission.group.purposeInputInject" = "वर्चुअल कंट्रोलर का आउटपुट प्रकाशित करना";
 "platform.macos.cli.permission.group.purposeUsbTransport" = "एंटाइटलमेंट से सीमित रॉ USB इंटरफ़ेस का स्वामित्व लेना; यह TCC गोपनीयता अनुमति नहीं है";
+/* Purpose column of the input reading permission in 'ojd permission list'. It says what the driver uses the permission for. */
 "cli.permission.group.purposeInputRead" = "फ़िज़िकल कंट्रोलर से इनपुट पढ़ना";
+/* One-line summary of 'ojd permission request' in the command list and at the top of its help. */
 "cli.permission.request.abstract" = "सेवा से अनुमतियाँ माँगने को कहें; यह टर्मिनल में कभी नहीं पूछता।";
 "platform.macos.cli.permission.request.discussion" = "macOS सेवा के लिए अपना प्रॉम्प्ट दिखाता है। माँगी गई अनुमति अब भी न मिली हो तो कोड 77 के साथ बाहर निकलता है। आईडी न देने पर input-read और input-inject माँगे जाते हैं। यहाँ --timeout का डिफ़ॉल्ट 10 सेकंड है।";
+/* Message printed by 'ojd permission request' when macOS granted the permission. */
 "cli.permission.request.granted" = "माँगी गई पहुँच दे दी गई है।";
+/* Help text of the PERMISSION argument of 'ojd permission request'. input-read and input-inject are values the user types and stay as written. */
 "cli.permission.request.ids" = "माँगी जाने वाली अनुमतियाँ: input-read या input-inject।";
+/* Error of 'ojd permission request' for an unknown permission. %1$@ is the text the user gave and %2$@ is the comma-separated list of valid values, which stay as written. */
 "cli.permission.request.unknownId" = "अज्ञात अनुमति “%1$@”। %2$@ इस्तेमाल करें।";
+/* One-line summary of 'ojd config' in the command list and at the top of its help. */
 "cli.config.group.abstract" = "OpenJoystickDriver जो कॉन्फ़िगरेशन लागू करता है और हर मान किस लेयर ने सेट किया, यह दिखाएँ।";
+/* Long description in the help of 'ojd config'. It lists the configuration layers from lowest to highest priority; all.patch.json is a file name that stays as written. */
 "cli.config.group.discussion" = "मान लेयर में लगते हैं, सबसे निचली से शुरू करके: ड्राइवर डिफ़ॉल्ट, बंडल किया गया रिकॉर्ड, पैकेज रिकॉर्ड, all.patch.json, आपका रिकॉर्ड, सक्रिय प्रोफ़ाइल। हर ट्यूनिंग कुंजी उस सबसे ऊँची लेयर का मान लेती है जो उसे सेट करती है।";
+/* One-line summary of 'ojd config show' in the command list and at the top of its help. */
 "cli.config.show.abstract" = "हर ट्यूनिंग मान और उसे सेट करने वाली लेयर प्रिंट करें।";
+/* Help text of the --controller option of 'ojd config show'. VVVV:PPPP stands for the vendor ID and product ID in hexadecimal and stays as written. */
 "cli.config.show.controller" = "वैश्विक डिफ़ॉल्ट के बजाय एक कंट्रोलर की प्रभावी ट्यूनिंग VVVV:PPPP रूप में दिखाएँ।";
+/* Warning printed by 'ojd config show' when a part of the defaults file is invalid. %1$@ is the file path and %2$@ is the description of the problem. */
 "cli.config.show.defaultsIgnored" = "%1$@ अनदेखा किया गया: %2$@";
+/* Long description in the help of 'ojd config show'. --controller and all.patch.json stay as written. */
 "cli.config.show.discussion" = "--controller के बिना, हर ट्यूनिंग कुंजी को all.patch.json में उसके मान के साथ और उन परिवारों को प्रिंट करता है जिनके रिकॉर्ड उसे पढ़ते हैं। इसके साथ, बंडल किया गया रिकॉर्ड, पैकेज रिकॉर्ड, all.patch.json और आपका रिकॉर्ड लेयर होने के बाद कंट्रोलर का रिकॉर्ड प्रिंट करता है। जिस कुंजी को कोई लेयर सेट नहीं करती, वह “ड्राइवर डिफ़ॉल्ट” दिखाती है।";
+/* Indented line below a tuning key of 'ojd config show' that lists the controller families whose records read the key. %@ is the comma-separated list of family names. */
 "cli.config.show.readBy" = "इन्हें पढ़ते हैं: %@";
+/* Warning of 'ojd config show' about a key in all.patch.json that no connected controller reads. %1$@ is the key and %2$@ lists the families that do read it. */
 "cli.config.show.unread" = "all.patch.json %1$@ सेट करता है, लेकिन कोई जुड़ा हुआ कंट्रोलर इसे नहीं पढ़ता। इसे पढ़ने वाले परिवार: %2$@।";
+/* Note printed by 'ojd config show' when it cannot check for unread keys because no controller is connected. all.patch.json stays as written. */
 "cli.config.show.unreadSkippedNoController" = "कोई कंट्रोलर जुड़ा नहीं है, इसलिए all.patch.json की उन कुंजियों की जाँच छोड़ दी गई जिन्हें कोई कंट्रोलर नहीं पढ़ता।";
+/* Note printed by 'ojd config show' when it cannot check for unread keys because the service is not running. all.patch.json stays as written. */
 "cli.config.show.unreadSkippedNoService" = "सेवा चालू नहीं है, इसलिए all.patch.json की उन कुंजियों की जाँच छोड़ दी गई जिन्हें कोई जुड़ा हुआ कंट्रोलर नहीं पढ़ता।";
+/* Value shown by 'ojd config show' for a tuning key that no layer sets, so the driver default applies. */
 "cli.config.show.unset" = "ड्राइवर डिफ़ॉल्ट";
+/* One-line summary of 'ojd setting' in the command list and at the top of its help. */
 "cli.setting.group.abstract" = "OpenJoystickDriver ऐप की सेटिंग्स की सूची दिखाएँ, पढ़ें या बदलें।";
+/* Error of 'ojd setting set' when the value is neither true nor false. %1$@ is the text the user gave and %2$@ is the setting name, which stays as written. true and false stay as written. */
 "cli.setting.group.badValue" = "“%1$@”, %2$@ के लिए मान्य मान नहीं है। true या false इस्तेमाल करें।";
+/* Help text of the developerTools setting in 'ojd setting list'. */
 "cli.setting.group.developerTools" = "सेटिंग्स विंडो में डेवलपर टूल दिखाएँ।";
+/* Long description in the help of 'ojd setting'. */
 "cli.setting.group.discussion" = "चल रही सेवा हर सेटिंग लागू करती है, इसलिए हर setting कमांड को उसकी ज़रूरत होती है।";
+/* One-line summary of 'ojd setting get' in the command list and at the top of its help. */
 "cli.setting.get.abstract" = "एक सेटिंग का मान प्रिंट करें।";
+/* Long description in the help of 'ojd setting get'. true, false and --json stay as written. */
 "cli.setting.get.discussion" = "स्क्रिप्ट के लिए केवल true या false प्रिंट करता है। --json के साथ कुंजी और मान प्रिंट करता है।";
+/* Help text of the includePrereleaseUpdates setting in 'ojd setting list'. A pre-release version is a test version before a stable release. */
 "cli.setting.group.includePrereleaseUpdates" = "अपडेट जाँचते समय प्री-रिलीज़ वर्शन शामिल करें।";
+/* Help text of the KEY argument of 'ojd setting get'. launchAtLogin is a setting name and stays as written. */
 "cli.setting.group.key" = "पढ़ने की सेटिंग, जैसे launchAtLogin।";
+/* Help text of the launchAtLogin setting in 'ojd setting list'. OpenJoystickDriver is the product name. */
 "cli.setting.group.launchAtLogin" = "लॉग इन करने पर OpenJoystickDriver खोलें।";
+/* One-line summary of 'ojd setting list' in the command list and at the top of its help. */
 "cli.setting.list.abstract" = "हर सेटिंग और उसका मान सूची में दिखाएँ।";
+/* Help text of the notificationSounds setting in 'ojd setting list'. */
 "cli.setting.group.notificationSounds" = "सूचनाओं के साथ ध्वनि बजाएँ।";
+/* Help text of the notifyControllerConnected setting in 'ojd setting list'. */
 "cli.setting.group.notifyControllerConnected" = "जब कोई कंट्रोलर कनेक्ट हो या उस पर ध्यान देने की ज़रूरत हो, तब सूचना भेजें।";
+/* Help text of the notifyControllerDisconnected setting in 'ojd setting list'. */
 "cli.setting.group.notifyControllerDisconnected" = "जब कोई कंट्रोलर डिस्कनेक्ट हो, तब सूचना भेजें।";
+/* Help text of the notifyProfileActivated setting in 'ojd setting list'. */
 "cli.setting.group.notifyProfileActivated" = "जब कोई प्रोफ़ाइल सक्रिय हो या बदली जाए, तब सूचना भेजें।";
+/* Help text of the notifyProfileDeactivated setting in 'ojd setting list'. */
 "cli.setting.group.notifyProfileDeactivated" = "जब सक्रिय प्रोफ़ाइल बंद की जाए, तब सूचना भेजें।";
+/* One-line summary of 'ojd setting set' in the command list and at the top of its help. */
 "cli.setting.set.abstract" = "एक सेटिंग बदलें।";
 "platform.macos.cli.setting.set.discussion" = "मान true या false होते हैं। जब तक आप सिस्टम सेटिंग्स में स्वीकृति नहीं देते और macOS launchAtLogin को बंद रखता है, तब कोड 1 के साथ बाहर निकलता है।";
+/* Help text of the KEY argument of 'ojd setting set'. launchAtLogin is a setting name and stays as written. */
 "cli.setting.set.key" = "बदलने की सेटिंग, जैसे launchAtLogin।";
 "platform.macos.cli.setting.set.notApplied" = "macOS ने %1$@ लागू नहीं किया। सिस्टम सेटिंग्स > सामान्य > लॉगिन आइटम में OpenJoystickDriver को अनुमति दें, फिर “ojd setting get %2$@” चलाएँ।";
+/* Message printed after 'ojd setting set'. %1$@ is the setting name, which stays as written, and %2$@ is the value the service applied, true or false. */
 "cli.setting.set.success" = "%1$@ को %2$@ पर सेट किया गया।";
+/* Help text of the VALUE argument of 'ojd setting set'. true and false stay as written. */
 "cli.setting.set.value" = "नया मान: true या false।";
+/* Error of 'ojd setting' commands for an unknown setting. %1$@ is the text the user gave and %2$@ is the comma-separated list of valid setting names, which stay as written. */
 "cli.setting.group.unknownKey" = "अज्ञात सेटिंग “%1$@”। इनमें से एक इस्तेमाल करें: %2$@।";
+/* One-line summary of 'ojd update' in the command list and at the top of its help. */
 "cli.update.group.abstract" = "जाँचें कि OpenJoystickDriver का नया रिलीज़ उपलब्ध है या नहीं।";
+/* One-line summary of 'ojd update check' in the command list and at the top of its help. GitHub is a brand name. */
 "cli.update.check.abstract" = "इस वर्शन की तुलना GitHub के नवीनतम रिलीज़ टैग से करें।";
+/* Message printed by 'ojd update check' when a newer release exists. %1$@ is the version of the release, %2$@ is the installed version and %3$@ is the address of the release page. */
 "cli.update.check.available" = "OpenJoystickDriver %1$@ उपलब्ध है (आपके पास %2$@ है): %3$@";
+/* Long description in the help of 'ojd update check'. ojd stays as written. */
 "cli.update.check.discussion" = "केवल तब चलता है जब आप कहते हैं; ojd अपने आप कभी नहीं जाँचता। यह कुछ डाउनलोड या इंस्टॉल नहीं करता। अपडेट हो या न हो, कोड 0 के साथ बाहर निकलता है, और जाँच विफल होने पर 1 के साथ।";
+/* Error of 'ojd update check' when the check fails because of the network. %@ is the reason from the system. */
 "cli.update.check.failed" = "अपडेट जाँचे नहीं जा सके: %@। अपना नेटवर्क कनेक्शन जाँचें और दोबारा कोशिश करें।";
+/* Error of 'ojd update check' when the check fails for a reason other than the network. %@ is the reason. */
 "cli.update.check.failedReason" = "अपडेट जाँचे नहीं जा सके: %@।";
+/* Value shown in the structured output of 'ojd update check' when the check did not produce a result. */
 "cli.update.check.incomplete" = "कोई नतीजा नहीं";
+/* Help text of the --prerelease flag of 'ojd update check'. A pre-release version is a test version before a stable release. */
 "cli.update.check.prerelease" = "प्री-रिलीज़ वर्शन शामिल करें।";
+/* Message printed by 'ojd update check' when the installed version is the latest. %1$@ is the installed version and %2$@ is the latest release. */
 "cli.update.check.upToDate" = "OpenJoystickDriver %1$@ अप-टू-डेट है (नवीनतम रिलीज़: %2$@)।";
 "ui.settings.commandLine.tool" = "कमांड-लाइन टूल";
 "ui.settings.commandLine.toolBlocked" = "%@ एक फ़ाइल है, लिंक नहीं। इसे हटाएँ, फिर दोबारा इंस्टॉल करें।";
@@ -1119,252 +1404,489 @@
 "ui.settings.commandLine.toolLinkedElsewhere" = "%1$@ का संकेत %2$@ की ओर है। इंस्टॉल करने पर यह इसके बजाय इस ऐप से जुड़ जाएगा।";
 "platform.macos.ui.settings.commandLine.toolNotInstalled" = "%@ को इस ऐप से जोड़ता है ताकि आप Terminal में ojd चला सकें। macOS एडमिनिस्ट्रेटर पासवर्ड माँगता है।";
 "ui.settings.commandLine.toolUninstall" = "अनइंस्टॉल करें";
+/* One-line summary of 'ojd controller' in the command list and at the top of its help. */
 "cli.controller.group.abstract" = "कनेक्ट किए गए कंट्रोलर की सूची देखें, उनकी जाँच करें, उनका परीक्षण करें और नियंत्रित करें।";
+/* Help text of the CONTROLLER argument shared by the 'ojd controller' commands. VVVV:PPPP is the vendor ID and product ID in hexadecimal and stays as written. */
 "cli.controller.group.argument" = "कंट्रोलर: “ojd controller list” से कोई ID, या VVVV:PPPP।";
+/* One-line summary of 'ojd controller capture' in the command list and at the top of its help. */
 "cli.controller.capture.abstract" = "कंट्रोलर जो रॉ पैकेट भेजता और पाता है, उन्हें प्रिंट करें।";
+/* Long description in the help of 'ojd controller capture'. rx and tx mark received and transmitted packets and stay as written, as does --json. */
 "cli.controller.capture.discussion" = "हर नया पैकेट आते ही प्रिंट करता है: समय, दिशा (rx या tx), लंबाई और हेक्स बाइट। --json के साथ, हर पंक्ति में एक JSON ऑब्जेक्ट प्रिंट करता है।";
+/* Message printed by 'ojd controller capture' when the capture ends without a packet. */
 "cli.controller.capture.noPackets" = "कोई पैकेट नहीं मिला।";
+/* First line of 'ojd controller capture'. %1$@ is the controller name and %2$@ is its vendor and product ID. */
 "cli.controller.capture.started" = "%1$@ (%2$@) से पैकेट कैप्चर किए जा रहे हैं। कंट्रोलर के बटन दबाएँ।";
+/* Warning printed by 'ojd controller capture' before the packets. Packets can hold data of the user's controller. */
 "cli.controller.capture.warning" = "पैकेट की सामग्री कंट्रोलर के अनुसार बदलती है। साझा करने से पहले उसे जाँच लें।";
+/* One-line summary of 'ojd controller disconnect' in the command list and at the top of its help. */
 "cli.controller.disconnect.abstract" = "क्लासिक Bluetooth कंट्रोलर डिस्कनेक्ट करें।";
 "platform.macos.cli.controller.disconnect.discussion" = "क्लासिक Bluetooth कनेक्शन बंद करता है। कंट्रोलर पेयर रहता है और दोबारा चालू करने पर फिर से कनेक्ट हो जाता है। Bluetooth की पुष्टि के लिए कम से कम 6 सेकंड प्रतीक्षा करता है। सेवा Bluetooth Low Energy कंट्रोलर को डिस्कनेक्ट नहीं कर सकती। उसे बंद करें या सिस्टम सेटिंग्स > Bluetooth में डिस्कनेक्ट करें।";
+/* Message printed after 'ojd controller disconnect' disconnected the controller. %@ is the controller name. */
 "cli.controller.disconnect.done" = "%@ डिस्कनेक्ट हो गया।";
 "platform.macos.cli.controller.disconnect.bluetoothLe" = "%@ Bluetooth Low Energy से कनेक्ट है; सेवा इसे डिस्कनेक्ट नहीं कर सकती। कंट्रोलर बंद करें या उसे सिस्टम सेटिंग्स > Bluetooth में डिस्कनेक्ट करें।";
+/* Error of 'ojd controller disconnect' when the Bluetooth disconnect fails. %1$@ names the step that failed and %2$@ is the system's reason, which can end with an error code. */
 "cli.controller.disconnect.failed" = "%1$@ के दौरान Bluetooth डिस्कनेक्ट विफल रहा: %2$@।";
+/* Error of 'ojd controller disconnect' for a controller on a wire. %@ is the controller name. */
 "cli.controller.disconnect.notBluetooth" = "%@ Bluetooth से कनेक्ट नहीं है। इसे डिस्कनेक्ट करने के लिए प्लग निकालें।";
+/* Long description in the help of 'ojd controller'. CONTROLLER, the command in quotes and VVVV:PPPP stay as written. */
 "cli.controller.group.discussion" = "CONTROLLER “ojd controller list” से कोई ID है, या VVVV:PPPP (हेक्स वेंडर और प्रोडक्ट ID) जब ठीक एक कनेक्ट किए गए कंट्रोलर की यही ID हो। हर कंट्रोलर कमांड के लिए सेवा चाहिए।";
+/* Second paragraph of the help of 'ojd controller'. It explains the unit ID, which starts with U- and stays as written. */
 "cli.controller.group.discussionUnit" = "यूनिट ID (U-...) एक कंट्रोलर को उसके मॉडल और उसके उपयोग किए जा रहे USB पोर्ट से पहचानता है। जब तक कंट्रोलर उसी पोर्ट का उपयोग करता है, यह रीस्टार्ट के बाद भी वही रहता है।";
+/* Error of 'ojd controller' commands when --duration is not a number above 0. --duration stays as written. */
 "cli.controller.group.errorDuration" = "--duration के लिए 0 से अधिक सेकंड की संख्या चाहिए।";
+/* Noun phrase for a controller capability. It is inserted after 'has no' in the message that a controller lacks a feature, so it must fit there. */
 "cli.controller.group.featureBrightness" = "समायोज्य लाइट ब्राइटनेस";
+/* Noun phrase for a controller capability. It is inserted after 'has no' in the message that a controller lacks a feature, so it must fit there. */
 "cli.controller.group.featureColor" = "प्रोग्राम करने योग्य लाइट रंग";
+/* Noun phrase for a controller capability. It is inserted after 'has no' in the message that a controller lacks a feature, so it must fit there. */
 "cli.controller.group.featurePlayer" = "प्लेयर इंडिकेटर लाइट";
+/* Noun phrase for a controller capability. It is inserted after 'has no' in the message that a controller lacks a feature, so it must fit there. */
 "cli.controller.group.featureRumble" = "रंबल मोटर";
+/* One-line summary of 'ojd controller light' in the command list and at the top of its help. */
 "cli.controller.light.abstract" = "कंट्रोलर की लाइट का रंग या ब्राइटनेस सेट करें।";
+/* Help text of the --brightness option of 'ojd controller light'. LED means light-emitting diode. */
 "cli.controller.light.brightness" = "LED ब्राइटनेस।";
+/* Help text of the --color option of 'ojd controller light'. The value is a hexadecimal RGB color; FF8000 stays as written. */
 "cli.controller.light.color" = "हेक्स में लाइटबार का रंग, जैसे FF8000।";
+/* Error of 'ojd controller light' when no option is given. --color and --brightness stay as written. */
 "cli.controller.light.errorMissing" = "--color, --brightness, या दोनों दें।";
+/* One-line summary of 'ojd controller list' in the command list and at the top of its help. */
 "cli.controller.list.abstract" = "कनेक्ट किए गए कंट्रोलर की सूची दिखाएँ।";
+/* Message printed by 'ojd controller list' when no controller is connected. */
 "cli.controller.list.empty" = "कोई कंट्रोलर कनेक्ट नहीं है।";
+/* Marker appended to the line of a suspended controller in 'ojd controller list'. Keep the parentheses. */
 "cli.controller.list.suspended" = "(निलंबित)";
+/* Help text of the --duration option of 'ojd controller watch' and 'ojd controller capture'. Control-C is the key combination that stops a program in a terminal. */
 "cli.controller.group.optionDuration" = "इतने सेकंड बाद रुकें। इसके बिना, Control-C दबाने तक चलता रहता है।";
+/* Error of the controller output commands when the controller rejects a command. %1$@ is the controller name, %2$@ is the command name and %3$@ is the outcome in kebab case, which stays as written. The command in quotes stays as written. */
 "cli.controller.group.outputFailed" = "%1$@ ने %2$@ कमांड स्वीकार नहीं किया (%3$@)। “ojd log show” से जाँचें।";
+/* Error of the controller output commands when the controller disconnects before the command is sent. %@ is the controller name. */
 "cli.controller.group.outputGone" = "कमांड भेजे जाने से पहले %@ डिस्कनेक्ट हो गया। दोबारा कनेक्ट करके फिर कोशिश करें।";
+/* Error of the controller output commands when the controller cannot take output yet. %@ is the controller name. */
 "cli.controller.group.outputNotReady" = "%@ अभी आउटपुट के लिए तैयार नहीं है। थोड़ी देर बाद फिर कोशिश करें।";
+/* Message printed after the controller output commands succeeded. %1$@ is the comma-separated list of commands sent and %2$@ is the controller name. */
 "cli.controller.group.outputSent" = "%1$@ को %2$@ भेजा गया।";
+/* Error of the controller output commands when the controller lacks the feature. %1$@ is the controller name, %2$@ is the missing feature as a noun phrase and %3$@ is the session token for 'ojd controller show'. */
 "cli.controller.group.outputUnsupported" = "%1$@ में %2$@ नहीं है। यह देखने के लिए कि वह क्या सपोर्ट करता है, “ojd controller show %3$@” चलाएँ।";
+/* One-line summary of 'ojd controller claim' in the command list and at the top of its help. OpenJoystickDriver is the product name. To serve a model means to read its input and publish it as a virtual gamepad. */
 "cli.controller.claim.abstract" = "किसी कंट्रोलर मॉडल को OpenJoystickDriver से चलवाएँ।";
 "platform.macos.cli.controller.claim.discussion" = "मॉडल के लिए आपके रिकॉर्ड में, यानी रिकॉर्ड निर्देशिका की VVVV-PPPP.json में, server को ojd पर सेट करता है और रिकॉर्ड के अन्य फ़ील्ड बनाए रखता है। यह मॉडल के हर कंट्रोलर पर लागू होता है। चल रही सेवा इसे दोबारा जोड़े बिना लागू करती है। कंट्रोलर खोजने के लिए सेवा चाहिए। --dry-run कुछ नहीं लिखता। रॉ USB इस्तेमाल करने वाले कंट्रोलर के लिए, जिसे OpenJoystickDriver हमेशा चलाता है, या जिसे macOS नेटिव रूप से नहीं चलाता, E2023 के साथ 1 पर समाप्त होता है।";
 "platform.macos.cli.controller.release.abstract" = "किसी कंट्रोलर मॉडल को वापस macOS को दें।";
 "platform.macos.cli.controller.release.discussion" = "मॉडल के लिए आपके रिकॉर्ड में, यानी रिकॉर्ड निर्देशिका की VVVV-PPPP.json में, server को system पर सेट करता है और रिकॉर्ड के अन्य फ़ील्ड बनाए रखता है। यह मॉडल के हर कंट्रोलर पर लागू होता है। चल रही सेवा इसे दोबारा जोड़े बिना लागू करती है। कंट्रोलर खोजने के लिए सेवा चाहिए। --dry-run कुछ नहीं लिखता। रॉ USB इस्तेमाल करने वाले कंट्रोलर के लिए, जिसे OpenJoystickDriver हमेशा चलाता है, या जिसे macOS नेटिव रूप से नहीं चलाता, E2023 के साथ 1 पर समाप्त होता है।";
+/* Message printed by 'ojd controller claim' and related commands with --dry-run instead of writing the record. %1$@ is the controller identity, %2$@ is the server name in kebab case and %3$@ is the record file. */
 "cli.controller.group.serverDryRun" = "%1$@ को %2$@ पर सेट कर देता (%3$@)।";
+/* Error when the record file of a controller cannot be changed. %1$@ is the path of the record file and %2$@ is the description of the problem. */
 "cli.controller.group.serverInvalid" = "%1$@ बदला नहीं जा सकता: %2$@";
+/* Error when a controller has no record to change. %1$@ is the controller identity and %2$@ repeats it as the argument of the command in quotes, which stays as written. */
 "cli.controller.group.serverNoRecord" = "%1$@ का बदलने लायक कोई कंट्रोलर रिकॉर्ड नहीं है। “ojd record draft %2$@” से एक बनाएँ।";
 "platform.macos.cli.controller.group.serverNotNative" = "macOS %@ को नेटिव रूप से नहीं चलाता, इसलिए OpenJoystickDriver उसे हमेशा चलाता है।";
+/* Message when the server of a controller cannot be changed because it uses raw USB. %@ is the controller identity. OpenJoystickDriver is the product name. */
 "cli.controller.group.serverRawUsb" = "%@ रॉ USB का उपयोग करता है, इसलिए OpenJoystickDriver उसे हमेशा चलाता है।";
+/* Message printed after the server of a controller is changed. %1$@ is the controller identity, %2$@ is the server name in kebab case and %3$@ is the record file. The service picks the change up without a restart. */
 "cli.controller.group.serverSuccess" = "%1$@ को %2$@ पर सेट किया गया (%3$@)। चल रही सेवा अब उसे लागू करती है।";
+/* One-line summary of 'ojd controller player' in the command list and at the top of its help. */
 "cli.controller.player.abstract" = "कंट्रोलर की प्लेयर इंडिकेटर लाइट सेट करें।";
+/* Help text of the PLAYER argument of 'ojd controller player'. off is a value the user types and stays as written. */
 "cli.controller.player.number" = "प्लेयर संख्या, 1 से 4, या off।";
+/* One-line summary of 'ojd controller resume' in the command list and at the top of its help. */
 "cli.controller.resume.abstract" = "OpenJoystickDriver को निलंबित कंट्रोलर फिर से चलाने दें।";
+/* Message of 'ojd controller resume' when the controller is not suspended. %@ is the controller name. */
 "cli.controller.resume.already" = "%@ पहले से सक्रिय है।";
+/* Message printed after 'ojd controller resume'. %@ is the controller name. */
 "cli.controller.resume.done" = "%@ फिर से शुरू हो गया।";
+/* One-line summary of 'ojd controller rumble' in the command list and at the top of its help. */
 "cli.controller.rumble.abstract" = "कंट्रोलर की रंबल मोटर चलाएँ।";
+/* Long description in the help of 'ojd controller rumble'. The numbers are fixed limits of the command. */
 "cli.controller.rumble.discussion" = "तीव्रता 0 से 255 तक होती है। तीव्रता का विकल्प न देने पर दोनों मुख्य मोटर 180 पर चलती हैं। मुख्य मोटर ट्रैकपैड हैप्टिक भी चलाती हैं। रंबल रोकने के लिए हर तीव्रता 0 पर रखें।";
+/* Warning of 'ojd controller rumble' about a requested motor the controller lacks. %1$@ is the controller name and %2$@ is the motor name in kebab case, which stays as written. */
 "cli.controller.rumble.dropped" = "warning: %1$@ में %2$@ मोटर नहीं है; वह नहीं चली।";
+/* Help text of the --duration option of 'ojd controller rumble'. The limit of 5 seconds is fixed. */
 "cli.controller.rumble.duration" = "रंबल के सेकंड, 0 से अधिक और अधिकतम 5।";
+/* Error of 'ojd controller rumble' when --duration is outside the allowed range. --duration stays as written. */
 "cli.controller.rumble.errorDuration" = "--duration के लिए 0 से अधिक और अधिकतम 5 सेकंड की संख्या चाहिए।";
+/* Help text of the --left option of 'ojd controller rumble'. The main motors are the large motors in the grips. */
 "cli.controller.rumble.left" = "बायीं मुख्य मोटर की तीव्रता।";
+/* Help text of the --left-trigger option of 'ojd controller rumble'. */
 "cli.controller.rumble.leftTrigger" = "बाएँ ट्रिगर मोटर की तीव्रता।";
+/* Error of 'ojd controller rumble' when the controller has none of the requested motors. %1$@ is the controller name and %2$@ is the session token for 'ojd controller show'. */
 "cli.controller.rumble.noneRan" = "%1$@ में माँगी गई कोई भी मोटर नहीं है। उसकी मोटर देखने के लिए “ojd controller show %2$@” चलाएँ।";
+/* Help text of the --right option of 'ojd controller rumble'. The main motors are the large motors in the grips. */
 "cli.controller.rumble.right" = "दायीं मुख्य मोटर की तीव्रता।";
+/* Help text of the --right-trigger option of 'ojd controller rumble'. */
 "cli.controller.rumble.rightTrigger" = "दाएँ ट्रिगर मोटर की तीव्रता।";
+/* Message printed after 'ojd controller rumble' ran motors. %1$@ is the comma-separated list of motors and %2$@ is the controller name. */
 "cli.controller.rumble.sent" = "%1$@ पर %2$@ को रंबल किया गया।";
+/* Message printed after 'ojd controller rumble' stopped all motors. %@ is the controller name. */
 "cli.controller.rumble.stopped" = "%@ पर रंबल रोका गया।";
+/* Error when a CONTROLLER argument cannot match because no controller is connected. %@ is the text the user gave. The command in quotes stays as written. */
 "cli.controller.group.selectorNoneConnected" = "“%@” से कोई कंट्रोलर मेल नहीं खाता, क्योंकि कोई कनेक्ट नहीं है। एक कनेक्ट करें और “ojd controller list” चलाएँ।";
+/* Error when a CONTROLLER argument matches no connected controller; the list of valid IDs follows on the next lines, so the text ends with a colon. %@ is the text the user gave. VVVV:PPPP stays as written. */
 "cli.controller.group.selectorNotFound" = "“%@” से कोई कनेक्टेड कंट्रोलर मेल नहीं खाता। इस सूची से कोई ID या VVVV:PPPP इस्तेमाल करें:";
+/* Error when the controller disconnected between choosing it and sending the request. %@ is the controller identifier the user gave. */
 "cli.controller.group.sessionNotFound" = "अनुरोध पहुँचने से पहले “%@” डिस्कनेक्ट हो गया। दोबारा कनेक्ट करके फिर कोशिश करें।";
+/* One-line summary of 'ojd controller show' in the command list and at the top of its help. */
 "cli.controller.show.abstract" = "कंट्रोलर की पहचान, स्वामित्व, क्षमताएँ और वर्चुअल गेमपैड दिखाएँ।";
+/* Long description in the help of 'ojd controller show'. */
 "cli.controller.show.discussion" = "आउटपुट जाँच भी सूचीबद्ध करता है: ऐसे कमांड जो हर रंबल मोटर और लाइट को चलाकर देखते हैं, साथ में यह कि क्या देखना है।";
+/* Row label in the output of 'ojd controller show', present when the controller reports power. The charge in percent and the charging state follow. */
 "cli.controller.show.labelBattery" = "बैटरी";
+/* Row label in the output of 'ojd controller show'. The connection type follows, such as USB or Bluetooth. */
 "cli.controller.show.labelConnection" = "कनेक्शन";
+/* Row label in the output of 'ojd controller show'. The list of control kinds the controller has follows, such as buttons and sticks. */
 "cli.controller.show.labelControls" = "कंट्रोल";
+/* Row label in the output of 'ojd controller show'. The controller ID that other commands accept follows. ID stays short. */
 "cli.controller.show.labelId" = "ID";
+/* Row label in the output of 'ojd controller show'. The vendor ID and product ID in hexadecimal follow, as VVVV:PPPP. */
 "cli.controller.show.labelIdentity" = "वेंडर:प्रोडक्ट";
+/* Row label in the output of 'ojd controller show'. The health of the input stream follows, with the reason in parentheses when it failed. */
 "cli.controller.show.labelInput" = "इनपुट";
+/* Row label in the output of 'ojd controller show'. The list of light features the controller has follows. */
 "cli.controller.show.labelLighting" = "लाइटिंग";
+/* Row label in the output of 'ojd controller show'. The product name of the controller follows. */
 "cli.controller.show.labelName" = "नाम";
+/* Heading in the output of 'ojd controller show' above the commands that exercise each motor and light. */
 "cli.controller.show.labelOutputChecks" = "आउटपुट जाँच";
+/* Row label in the output of 'ojd controller show'. A summary of who discovered, connects and reads the controller follows; the ownership value gives the three parts. */
 "cli.controller.show.labelOwnership" = "स्वामित्व";
+/* Value of the Ownership row of 'ojd controller show'. %1$@ is the route that found the controller, %2$@ is the physical connection and %3$@ is the HID input source, all in kebab case, which stays as written. */
 "cli.controller.show.ownership" = "रूट %1$@, भौतिक %2$@, HID इनपुट %3$@";
+/* Row label in the output of 'ojd controller show'. The component that serves the controller follows, with where that choice comes from. */
 "cli.controller.show.labelServer" = "चलाने वाला";
+/* Row label in the output of 'ojd controller show'. The route that the input of the controller takes follows, with the reason in parentheses. */
 "cli.controller.show.labelServing" = "सेवा मार्ग";
+/* Row label in the output of 'ojd controller show'. The gamepad model that the virtual gamepad presents follows. */
 "cli.controller.show.labelPersona" = "पर्सोना";
+/* Value of the Served by row of 'ojd controller show'. %1$@ is the server name and %2$@ is where the choice comes from, in kebab case, which stays as written. */
 "cli.controller.show.server" = "%1$@ (%2$@ से)";
+/* Row label in the output of 'ojd controller show'. The protocol family the driver speaks to the controller follows. */
 "cli.controller.show.labelProtocol" = "प्रोटोकॉल";
+/* Row label in the output of 'ojd controller show'. The controller record that describes the model follows. */
 "cli.controller.show.labelRecord" = "रिकॉर्ड";
+/* Row label in the output of 'ojd controller show'. The list of rumble motors the controller has follows. */
 "cli.controller.show.labelRumble" = "रंबल";
+/* Row label in the output of 'ojd controller show'. The state of the session follows, such as active or suspended. */
 "cli.controller.show.labelSession" = "सेशन";
+/* Row label in the output of 'ojd controller show'. The unit ID, which names the controller by model and USB port, follows. */
 "cli.controller.show.labelUnit" = "यूनिट ID";
+/* Row label in the output of 'ojd controller show'. The profile that drives the virtual gamepad follows, with its source in parentheses. */
 "cli.controller.show.labelVirtual" = "वर्चुअल गेमपैड";
+/* Row label in the output of 'ojd controller show'. The state of the virtual gamepad publication follows, with the reason in parentheses. */
 "cli.controller.show.labelPublication" = "प्रकाशन";
+/* Row label in the output of 'ojd controller show', present when the system owns the output. The explanation that the system sends rumble and light commands follows. */
 "cli.controller.show.labelOutputOwner" = "आउटपुट का स्वामी";
 "platform.macos.cli.controller.show.outputOwnerMacos" = "macOS (नेटिव)। रंबल और लाइटिंग में केवल वही दिखता है जो macOS नहीं करता।";
+/* Row label in the output of 'ojd controller show', present when tuning values apply. The comma-separated tuning values follow. */
 "cli.controller.show.labelTuning" = "ट्यूनिंग";
+/* Value shown in a row of 'ojd controller show' that has nothing to report. */
 "cli.controller.show.none" = "कोई नहीं";
+/* Value of the Record row of 'ojd controller show' when the record is part of the driver. */
 "cli.controller.show.recordBundled" = "बंडल किया गया";
+/* Value of the Record row of 'ojd controller show' when no record matches the controller. */
 "cli.controller.show.recordNone" = "कोई नहीं (कोई रिकॉर्ड मेल नहीं खाता)";
+/* Value of the Record row of 'ojd controller show' when the record is the user's own file. %@ is the file name. */
 "cli.controller.show.recordUser" = "आपका रिकॉर्ड, %@";
+/* One-line summary of 'ojd controller suspend' in the command list and at the top of its help. OpenJoystickDriver is the product name. */
 "cli.controller.suspend.abstract" = "फिर से शुरू करने तक OpenJoystickDriver को कंट्रोलर चलाने से रोकें।";
+/* Message of 'ojd controller suspend' when the controller is suspended. %@ is the controller name. */
 "cli.controller.suspend.already" = "%@ पहले से निलंबित है।";
+/* Message printed after 'ojd controller suspend'. %@ is the controller name. */
 "cli.controller.suspend.done" = "%@ निलंबित हो गया।";
+/* One-line summary of 'ojd controller watch' in the command list and at the top of its help. */
 "cli.controller.watch.abstract" = "कंट्रोलर की इनपुट स्थिति हर बार बदलने पर प्रिंट करें।";
+/* Help text of the --all flag of 'ojd controller watch'. */
 "cli.controller.watch.all" = "हर कंट्रोलर को देखें, और जो कंट्रोलर कनेक्ट या डिस्कनेक्ट हो उसकी रिपोर्ट करें।";
+/* First line of 'ojd controller watch --all'. */
 "cli.controller.watch.allStarted" = "हर कंट्रोलर को देखा जा रहा है। कंट्रोलर के बटन दबाएँ।";
+/* Line of 'ojd controller watch --all' when a controller connects. %1$@ is the controller ID, %2$@ is the controller name and %3$@ is its vendor and product ID. */
 "cli.controller.watch.connected" = "%1$@ कनेक्ट हुआ: %2$@ (%3$@)";
+/* Line of 'ojd controller watch --all' when a controller disconnects. %@ is the controller ID. */
 "cli.controller.watch.disconnected" = "%@ डिस्कनेक्ट हुआ";
+/* Long description in the help of 'ojd controller watch'. --json, --first-press and --duration stay as written. Y pointing down is the HID report convention. */
 "cli.controller.watch.discussion" = "--json के साथ, हर पंक्ति में एक JSON ऑब्जेक्ट प्रिंट करता है। स्टिक का Y नीचे की ओर है। --first-press के साथ, दबाया गया पहला कंट्रोल प्रिंट करके बाहर निकल जाता है; अगर --duration पहले पूरी हो जाए तो विफल होता है।";
+/* Paragraph in the help of 'ojd controller watch' about --all, which stays as written. */
 "cli.controller.watch.discussionAll" = "--all के साथ, हर पंक्ति कंट्रोलर ID से शुरू होती है, और एक पंक्ति हर उस कंट्रोलर की रिपोर्ट करती है जो कनेक्ट या डिस्कनेक्ट होता है। पहली पंक्तियाँ पहले से कनेक्ट कंट्रोलरों की रिपोर्ट करती हैं।";
+/* Error of 'ojd controller watch' when --first-press and --all are combined. CONTROLLER and both option names stay as written. */
 "cli.controller.watch.errorFirstPressAll" = "--first-press को एक CONTROLLER चाहिए; यह --all के साथ काम नहीं करता।";
+/* Error of 'ojd controller watch' when both or neither of CONTROLLER and --all are given. CONTROLLER and --all stay as written. */
 "cli.controller.watch.errorTarget" = "एक CONTROLLER या --all दें, दोनों नहीं।";
+/* Help text of the --first-press flag of 'ojd controller watch'. */
 "cli.controller.watch.firstPress" = "दबाया गया पहला कंट्रोल प्रिंट करें, फिर बाहर निकलें।";
+/* Help text of the --output flag of 'ojd controller watch'. HID is the human interface device report format. */
 "cli.controller.watch.output" = "वर्चुअल गेमपैड जो भेजता है, उसे भी प्रिंट करें। उसकी स्टिक का Y अक्ष HID रिपोर्ट की तरह नीचे की ओर है।";
+/* Message printed to the error stream by 'ojd controller watch' when the controller sent no input. */
 "cli.controller.watch.noInput" = "कोई इनपुट नहीं मिला।";
+/* Error of 'ojd controller watch --first-press' when the time ran out. %@ is the duration, such as 10 seconds. */
 "cli.controller.watch.noPress" = "%@ में कोई कंट्रोल नहीं दबाया गया।";
+/* Prompt of 'ojd controller watch --first-press'. %1$@ is the controller name and %2$@ is its vendor and product ID. */
 "cli.controller.watch.pressPrompt" = "%1$@ (%2$@) पर कोई कंट्रोल दबाएँ।";
+/* First line of 'ojd controller watch'. %1$@ is the controller name and %2$@ is its vendor and product ID. */
 "cli.controller.watch.started" = "%1$@ (%2$@) देखा जा रहा है। कंट्रोलर के बटन दबाएँ।";
+/* Message printed when the user answers no to a confirmation question. */
 "cli.shared.error.confirmDeclined" = "कुछ नहीं बदला।";
+/* Error of the commands that ask for confirmation when the input is not a terminal. --force stays as written. */
 "cli.shared.error.confirmNeedsForce" = "यह बदलाव पूर्ववत नहीं किया जा सकता। बिना पूछे पुष्टि करने के लिए --force जोड़ें।";
+/* One-line summary of 'ojd mod' in the command list and at the top of its help. A mod package adds controller support. */
 "cli.mod.group.abstract" = "मॉड पैकेज को सत्यापित, इंस्टॉल, सूचीबद्ध या हटाएँ।";
+/* Long description in the help of 'ojd mod'. mod.json, the folder names Controllers, Profiles and Personas, and the path stay as written. */
 "cli.mod.group.discussion" = "मॉड पैकेज एक फ़ोल्डर है जिसमें mod.json मैनिफ़ेस्ट और Controllers, Profiles व Personas फ़ोल्डर होते हैं। इंस्टॉल किए गए पैकेज ~/Library/Application Support/OpenJoystickDriver/Packages में रहते हैं। वह फ़ोल्डर बदलने पर चालू सेवा बदलाव लागू करती है। इन आदेशों को सेवा की ज़रूरत नहीं है।";
+/* Help text of the FOLDER argument of 'ojd mod validate' and 'ojd mod install'. mod.json stays as written. */
 "cli.mod.group.folder" = "mod.json वाला पैकेज फ़ोल्डर।";
+/* Help text of the NAME argument of 'ojd mod remove'. */
 "cli.mod.group.name" = "पैकेज का नाम।";
+/* Error of the 'ojd mod' commands when a package is refused. %1$@ is the package folder or name and %2$@ is the reason. */
 "cli.mod.group.refused" = "%1$@ अस्वीकार किया गया: %2$@";
+/* Error of 'ojd mod install' when a package of that name exists. %@ is the package name. --force stays as written. */
 "cli.mod.group.alreadyInstalled" = "%@ पहले से इंस्टॉल है। बदलने के लिए --force का उपयोग करें।";
+/* Error of 'ojd mod remove' when no package of that name exists. %@ is the package name. The command in quotes stays as written. */
 "cli.mod.group.notInstalled" = "%@ इंस्टॉल नहीं है। “ojd mod list” इंस्टॉल किए गए पैकेज दिखाता है।";
+/* One-line summary of 'ojd mod validate' in the command list and at the top of its help. */
 "cli.mod.validate.abstract" = "मॉड पैकेज फ़ोल्डर को इंस्टॉल किए बिना जाँचें।";
+/* Long description in the help of 'ojd mod validate'. E4xxx and E5001 are error codes and stay as written. */
 "cli.mod.validate.discussion" = "मैनिफ़ेस्ट, पैकेज इस संस्करण पर चलता है या नहीं, उसकी फ़ाइलें सूचीबद्ध और मान्य हैं या नहीं, और कोई फ़ाइल आपकी फ़ाइलों या किसी दूसरे पैकेज से टकराती है या नहीं, यह जाँचता है। पैकेज अस्वीकार होने पर कोड 1 और E4xxx या E5001 कोड के साथ समाप्त होता है।";
+/* Message printed by 'ojd mod validate' for a correct package. %1$@ is the folder path, %2$@ is the package name and %3$@ is its version. The command in quotes stays as written. */
 "cli.mod.validate.valid" = "%1$@ मान्य पैकेज है: %2$@ %3$@। इसे “ojd mod install” से इंस्टॉल करें।";
+/* One-line summary of 'ojd mod install' in the command list and at the top of its help. */
 "cli.mod.install.abstract" = "मॉड पैकेज जाँचें और अपने उपयोगकर्ता के लिए इंस्टॉल करें।";
+/* Long description in the help of 'ojd mod install'. Packages/NAME, --force and requires stay as written. */
 "cli.mod.install.discussion" = "पैकेज को Packages/NAME में कॉपी करता है और एक साथ बदल देता है; चालू सेवा उसे लागू करती है। उसी नाम का पहले से इंस्टॉल पैकेज --force के बिना अस्वीकार होता है। --force कभी requires, पहचान के टकराव, या प्रोफ़ाइल id या नाम के टकराव को नहीं लाँघता। --dry-run पैकेज जाँचता है और कुछ नहीं लिखता।";
+/* Help text of the --force flag of 'ojd mod install'. */
 "cli.mod.install.force" = "उसी नाम का इंस्टॉल किया पैकेज बदलें।";
+/* Message printed by 'ojd mod install --dry-run' instead of installing. %@ is the target folder. */
 "cli.mod.install.dryRun" = "%@ इंस्टॉल होता।";
+/* Message printed after 'ojd mod install'. %@ is the target folder. The service picks the package up without a restart. */
 "cli.mod.install.success" = "%@ इंस्टॉल हुआ। चालू सेवा इसे अभी लागू करती है।";
+/* One-line summary of 'ojd mod list' in the command list and at the top of its help. */
 "cli.mod.list.abstract" = "इंस्टॉल किए गए मॉड पैकेज और हर एक की फ़ाइलें सूचीबद्ध करें।";
+/* Long description in the help of 'ojd mod list'. OJD is the short product name; requires and E4xxx and E5001 stay as written. */
 "cli.mod.list.discussion" = "हर पैकेज को उसके संस्करण, लेखक और फ़ाइलों के साथ सूचीबद्ध करता है। जिस पैकेज को OJD उपयोग नहीं करता, जैसे जिसका requires इस संस्करण को छोड़ता है, वह E4xxx या E5001 कोड के साथ कारण दिखाता है।";
+/* Indented line below a package in 'ojd mod list' that the driver does not use. %@ is the reason with its error code. Keep the two leading spaces. */
 "cli.mod.list.problem" = "  उपयोग में नहीं: %@";
+/* One-line summary of 'ojd mod remove' in the command list and at the top of its help. */
 "cli.mod.remove.abstract" = "इंस्टॉल किया एक मॉड पैकेज हटाएँ।";
+/* Long description in the help of 'ojd mod remove'. Packages/NAME, --force, --dry-run and E4006 stay as written. */
 "cli.mod.remove.discussion" = "केवल Packages/NAME हटाता है। टर्मिनल पर पुष्टि माँगता है; अन्यथा --force चाहिए। --dry-run जाँचता है कि पैकेज इंस्टॉल है और कुछ नहीं बदलता। इंस्टॉल न होने पर कोड 1 और E4006 के साथ समाप्त होता है।";
+/* Yes or no question that 'ojd mod remove' asks on a terminal. %@ is the folder to delete. */
 "cli.mod.remove.confirm" = "%@ हटाएँ?";
+/* Message printed by 'ojd mod remove --dry-run' instead of deleting. %@ is the folder. */
 "cli.mod.remove.dryRun" = "%@ हटाया जाता।";
+/* Message printed after 'ojd mod remove'. %@ is the folder that is deleted. */
 "cli.mod.remove.success" = "%@ हटाया गया।";
+/* Help text of the --dry-run flag of the commands that change data. */
 "cli.shared.option.dryRun" = "प्रिंट करें कि क्या बदलता, और कुछ न बदलें।";
+/* Help text of the --force flag of the commands that ask for confirmation. */
 "cli.shared.option.force" = "पुष्टि के लिए न पूछें।";
+/* One-line summary of 'ojd virtual' in the command list and at the top of its help. OpenJoystickDriver is the product name. */
 "cli.virtual.group.abstract" = "OpenJoystickDriver किसी कंट्रोलर के लिए जो वर्चुअल गेमपैड प्रकाशित करता है, उसे दिखाएँ और चुनें।";
+/* Message printed after 'ojd virtual set' or 'ojd virtual reset' changed the virtual gamepad. %1$@ is the controller name, %2$@ is the profile name and %3$@ is where the choice comes from. */
 "cli.virtual.group.changed" = "%1$@ अब %2$@ (%3$@) प्रकाशित करता है।";
+/* Message printed after 'ojd virtual set' saved the choice while virtual output is off. %@ is the controller name. */
 "cli.virtual.group.stored" = "%@ के लिए चयन सहेजा गया है। यह वर्चुअल आउटपुट सक्षम होने पर लागू होगा।";
+/* Help text of the --unit option of 'ojd virtual set' and 'ojd virtual reset'. A unit ID names one controller by model and USB port. */
 "cli.virtual.group.unit" = "पूरे मॉडल के बजाय केवल इस कंट्रोलर पर, उसकी यूनिट ID से, लागू करें।";
+/* Long description in the help of 'ojd virtual'. reset stays as written because it is a command name. */
 "cli.virtual.group.discussion" = "चुनाव एक ही मॉडल के हर कंट्रोलर पर लागू होता है। “reset” किसी मॉडल को स्वचालित चयन पर लौटाता है।";
+/* Paragraph in the help of 'ojd virtual' about --unit. set and reset are command names and stay as written. */
 "cli.virtual.group.discussionUnit" = "--unit के साथ, “set” एक कंट्रोलर पर उसकी यूनिट ID से लागू होता है, और “reset” उस कंट्रोलर को उसके मॉडल के चुनाव पर लौटाता है।";
+/* Error of 'ojd virtual set' when the service could not apply the choice. %1$@ is the controller name and %2$@ is the reason. The command in quotes stays as written. */
 "cli.virtual.group.errorFailed" = "%1$@ का वर्चुअल गेमपैड नहीं बदला (%2$@)। “ojd virtual show” से जाँचें।";
+/* Error of 'ojd virtual' commands when --unit is used for a controller without a unit ID. %@ is the controller name. --unit stays as written. */
 "cli.virtual.group.errorNoUnit" = "%@ की कोई यूनिट ID नहीं है, इसलिए चुनाव केवल उसके पूरे मॉडल पर लागू हो सकता है। कमांड को --unit के बिना चलाएँ।";
+/* One-line summary of 'ojd virtual export-mapping' in the command list and at the top of its help. SDL is a game controller library and W3C names the web standard gamepad layout; both stay as written. */
 "cli.virtual.exportMapping.abstract" = "किसी वर्चुअल गेमपैड प्रोफ़ाइल से निकला SDL मैपिंग या W3C विवरण प्रिंट करें।";
+/* Long description in the help of 'ojd virtual export-mapping'. SDL, W3C and JSON stay as written. */
 "cli.virtual.exportMapping.discussion" = "SDL हर प्रोफ़ाइल के लिए मैपिंग की एक पंक्ति प्रिंट करता है, जो मान्य SDL मैपिंग फ़ाइल होती है। W3C मानक लेआउट का विवरण JSON में प्रिंट करता है। दोनों प्रोफ़ाइल के रिपोर्ट डिस्क्रिप्टर से निकाले जाते हैं।";
+/* Help text of the format option of 'ojd virtual export-mapping'. sdl and w3c are values the user types and stay as written. */
 "cli.virtual.exportMapping.format" = "प्रिंट करने का फ़ॉर्मेट: sdl या w3c।";
+/* Help text of the profile argument of 'ojd virtual export-mapping'. */
 "cli.virtual.exportMapping.profile" = "प्रिंट करने के लिए वर्चुअल गेमपैड प्रोफ़ाइल। सभी प्रोफ़ाइल प्रिंट करने के लिए इसे छोड़ दें।";
+/* One-line summary of 'ojd virtual feed' in the command list and at the top of its help. Standard input is the input stream of the program. */
 "cli.virtual.feed.abstract" = "stdin से चलने वाला वर्चुअल गेमपैड प्रकाशित करें।";
+/* Long description in the help of 'ojd virtual feed'. The JSON field names buttons, dpad and axes and the control names stay as written. */
 "cli.virtual.feed.discussion" = "हर पंक्ति में एक JSON ऑब्जेक्ट पढ़ता है: “buttons” और “dpad” दबाए गए कंट्रोल की सूची देते हैं, जैसे South और up, और “axes” अक्ष के नामों, जैसे LeftStickX, को मानों से जोड़ता है। जो कंट्रोल नहीं दिए गए हैं, वे न्यूट्रल रहते हैं। स्टिक -1 से 1 तक चलते हैं और Y नीचे की ओर होता है; ट्रिगर 0 से 1 तक चलते हैं। फ़्रेम क्रम से चलते हैं, हर फ़्रेम कम से कम 8 ms के लिए; “holdMilliseconds” किसी फ़्रेम को ज़्यादा देर तक रोकता है, 60000 तक। गेम गेमपैड को जो भी आउटपुट कमांड भेजते हैं, जैसे वाइब्रेशन, उसे हर पंक्ति में एक JSON ऑब्जेक्ट के रूप में प्रिंट करता है। इनपुट खत्म होने के बाद सभी फ़्रेम चल जाने पर रुक जाता है।";
+/* Error of 'ojd virtual feed' when the service closed the virtual gamepad. The command in quotes stays as written. */
 "cli.virtual.feed.errorClosed" = "सेवा ने वर्चुअल गेमपैड बंद कर दिया। “ojd status” से जाँचें।";
 /* Error from `ojd virtual feed` when the service connection broke while the virtual gamepad was closing. */
 "cli.virtual.feed.errorCloseInterrupted" = "वर्चुअल गेमपैड को बंद करने की प्रक्रिया बीच में रुक गई। “ojd status” से जाँचें।";
+/* Error of 'ojd virtual feed' for an input line that is not a valid frame. %@ is the line number. The command in quotes stays as written. */
 "cli.virtual.feed.errorFrame" = "पंक्ति %@ मान्य फ़्रेम नहीं है। “ojd virtual feed --help” प्रारूप दिखाता है।";
+/* Help text of the profile argument of 'ojd virtual feed'. */
 "cli.virtual.feed.profile" = "प्रकाशित किया जाने वाला वर्चुअल गेमपैड प्रोफ़ाइल।";
+/* First line of 'ojd virtual feed'. %@ is the profile name. Control-C is the key combination that stops a program in a terminal. */
 "cli.virtual.feed.started" = "%@ वर्चुअल गेमपैड प्रकाशित हो रहा है। फ़्रेम stdin पर लिखें; रोकने के लिए इनपुट खत्म करें या Control-C दबाएँ।";
+/* One-line summary of 'ojd virtual launch' in the command list and at the top of its help. SDL is a game controller library and stays as written. */
 "cli.virtual.launch.abstract" = "कनेक्ट किए गए वर्चुअल गेमपैड के SDL मैपिंग के साथ एक प्रोग्राम चलाता है।";
+/* Help text of the program argument of 'ojd virtual launch'. PATH is the environment variable, .app is the app bundle extension, and -- stays as written. */
 "cli.virtual.launch.command" = "चलाया जाने वाला प्रोग्राम और उसके आर्गुमेंट। प्रोग्राम एक पाथ, PATH को मिलने वाला नाम या एक .app होता है। जब प्रोग्राम के आर्गुमेंट ojd के विकल्प भी हों, तो प्रोग्राम से पहले -- लगाएँ।";
+/* Long description in the help of 'ojd virtual launch'. SDL_GAMECONTROLLERCONFIG and .app stay as written. */
 "cli.virtual.launch.discussion" = "SDL_GAMECONTROLLERCONFIG को हर कनेक्टेड कंट्रोलर के वर्चुअल गेमपैड की मैपिंग पर सेट करता है, ताकि प्रोग्राम में SDL उन्हें सूचीबद्ध करे। पहले से सेट मान सबसे आगे रहता है और मैपिंग उसके बाद आती हैं। .app अपनी मुख्य एक्ज़ीक्यूटेबल चलाता है। प्रोग्राम इसी टर्मिनल का उपयोग करता रहता है। ojd को रोकने से प्रोग्राम रुकता है, और ojd प्रोग्राम की स्थिति के साथ बाहर निकलता है।";
+/* Error of 'ojd virtual launch' when the program does not start. %1$@ is the program the user gave and %2$@ is the reason, one of the short reasons for a missing executable, a path without a file and a name not on PATH. */
 "cli.virtual.launch.errorFailed" = "%1$@ शुरू नहीं हुआ (%2$@)। जाँचें कि यह एक्ज़ीक्यूटेबल फ़ाइल या ऐप है और आपको इसे चलाने की अनुमति है।";
+/* Short reason inside the failure message of 'ojd virtual launch' when an app bundle holds no executable. It fills %2$@ of that message and starts in lowercase. */
 "cli.virtual.launch.errorNoExecutable" = "ऐप में कोई एक्ज़ीक्यूटेबल नहीं है";
+/* Error of 'ojd virtual launch' when no connected controller has a virtual gamepad. The command in quotes stays as written. */
 "cli.virtual.launch.errorNoGamepad" = "किसी भी कनेक्टेड कंट्रोलर में वर्चुअल गेमपैड नहीं है, इसलिए सेट करने के लिए कोई मैपिंग नहीं है। कंट्रोलर कनेक्ट करें और “ojd virtual show” जाँचें।";
+/* Error of 'ojd virtual launch' when no program is given. The example command in quotes stays as written. */
 "cli.virtual.launch.errorNoProgram" = "चलाने के लिए कोई प्रोग्राम दें, जैसे “ojd virtual launch ./game”।";
+/* Short reason inside the failure message of 'ojd virtual launch' when the path holds no executable file. It fills %2$@ of that message and starts in lowercase. */
 "cli.virtual.launch.errorNotExecutable" = "उस पाथ पर कोई एक्ज़ीक्यूटेबल फ़ाइल नहीं है";
+/* Short reason inside the failure message of 'ojd virtual launch' when no program of the name is on PATH. It fills %2$@ of that message and starts in lowercase. PATH stays as written. */
 "cli.virtual.launch.errorNotFound" = "PATH में इस नाम का कोई प्रोग्राम नहीं है";
+/* Error of 'ojd virtual launch' when --json or --plain is given. Both option names stay as written. */
 "cli.virtual.launch.errorOutput" = "--json और --plain लागू नहीं होते, क्योंकि प्रोग्राम स्टैंडर्ड आउटपुट लिखता है।";
 "platform.macos.cli.virtual.launch.sdlGamecontrollerBackend" = "SDL के वे संकेत भी सेट करता है जिनसे SDL कंट्रोलरों को केवल Apple के GameController फ़्रेमवर्क से पढ़ता है: SDL_JOYSTICK_MFI=1, SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS=1, SDL_JOYSTICK_IOKIT=0, SDL_JOYSTICK_HIDAPI=0। ये केवल प्रोग्राम पर लागू होते हैं और पहले से सेट मानों को बदल देते हैं।";
+/* One-line summary of 'ojd virtual reset' in the command list and at the top of its help. */
 "cli.virtual.reset.abstract" = "किसी कंट्रोलर मॉडल, या हर मॉडल, को स्वचालित वर्चुअल गेमपैड चयन पर लौटाएँ।";
+/* Help text of the --all flag of 'ojd virtual reset'. */
 "cli.virtual.reset.all" = "हर कंट्रोलर मॉडल रीसेट करें।";
+/* Message printed after 'ojd virtual reset --all'. */
 "cli.virtual.reset.allDone" = "अब हर कंट्रोलर मॉडल अपना वर्चुअल गेमपैड स्वचालित रूप से चुनता है।";
+/* Message printed by 'ojd virtual reset --all --dry-run' instead of resetting. */
 "cli.virtual.reset.allDryRun" = "हर कंट्रोलर मॉडल को स्वचालित वर्चुअल गेमपैड चयन पर लौटा देता।";
+/* Error of 'ojd virtual reset --all' when the service could not clear the choices. The command in quotes stays as written. */
 "cli.virtual.reset.allFailed" = "सेवा वर्चुअल गेमपैड के चुनाव साफ़ नहीं कर सकी। “ojd status” से जाँचें।";
+/* Yes or no question that 'ojd virtual reset --all' asks on a terminal. */
 "cli.virtual.reset.allSummary" = "हर कंट्रोलर मॉडल को स्वचालित वर्चुअल गेमपैड चयन पर लौटाएँ?";
+/* Long description in the help of 'ojd virtual reset'. --all and --force stay as written. */
 "cli.virtual.reset.discussion" = "--all उन मॉडल के चुनाव भी साफ़ करता है जो कनेक्ट नहीं हैं। टर्मिनल पर पहले पूछता है, अन्यथा --force चाहिए।";
+/* Message printed by 'ojd virtual reset --dry-run' instead of resetting. %@ is the controller name. */
 "cli.virtual.reset.dryRun" = "%@ को स्वचालित वर्चुअल गेमपैड चयन पर लौटा देता।";
+/* Error of 'ojd virtual reset' when neither or both of CONTROLLER and --all are given. CONTROLLER and --all stay as written. */
 "cli.virtual.reset.errorTarget" = "CONTROLLER या --all में से एक दें।";
+/* Error of 'ojd virtual reset' when --unit and --all are combined. CONTROLLER, --unit and --all stay as written. */
 "cli.virtual.reset.errorUnitAll" = "--unit के लिए CONTROLLER चाहिए, --all नहीं।";
+/* One-line summary of 'ojd virtual set' in the command list and at the top of its help. */
 "cli.virtual.set.abstract" = "कंट्रोलर के मॉडल के लिए वर्चुअल गेमपैड चुनें।";
+/* Help text of the profile argument of 'ojd virtual set'. */
 "cli.virtual.set.profile" = "वर्चुअल गेमपैड प्रोफ़ाइल।";
+/* Note printed by 'ojd virtual export-mapping' for a profile that needs other SDL hints. %@ is the profile name in kebab case, which stays as written. SDL stays as written. */
 "cli.virtual.group.sdlHintsNote" = "नोट: %@ SDL के डिफ़ॉल्ट संकेतों (हिंट्स) के साथ काम नहीं करता।";
+/* One-line summary of 'ojd virtual show' in the command list and at the top of its help. */
 "cli.virtual.show.abstract" = "हर कंट्रोलर का वर्चुअल गेमपैड और वे प्रोफ़ाइल दिखाएँ जिन्हें आप चुन सकते हैं।";
+/* Value shown by 'ojd virtual show' for a controller without a virtual gamepad. */
 "cli.virtual.show.none" = "कोई वर्चुअल गेमपैड नहीं";
+/* Line of the output of 'ojd virtual show' with the profiles to choose from. %@ is the comma-separated list of profile names. */
 "cli.virtual.show.profiles" = "प्रोफ़ाइल: %@";
+/* Value shown by 'ojd virtual show' for a controller that no virtual gamepad profile fits. */
 "cli.virtual.show.unavailable" = "कोई वर्चुअल गेमपैड फ़िट नहीं बैठता";
+/* Detail of the records check of 'ojd diagnose'. %lld is the number of the user's controller records that the driver applies. */
 "cli.diagnose.group.recordsApplied" = "लागू किए गए उपयोगकर्ता रिकॉर्ड: %lld";
+/* Detail of the records check of 'ojd diagnose' when the configuration files are valid. all.patch.json is a file name that stays as written. */
 "cli.diagnose.group.recordsConfigOk" = "all.patch.json और persona फ़ाइलें मान्य हैं";
+/* Detail of the records check of 'ojd diagnose' when parts of the configuration are ignored or skipped. %@ is the list of those parts. The command in quotes stays as written. */
 "cli.diagnose.group.recordsConfigProblems" = "अनदेखा या छोड़ा गया: %@; इन्हें ठीक करें और “ojd status” से जाँचें";
+/* Detail of the records check of 'ojd diagnose' when records are skipped. %@ is the list of skipped records. The command in quotes stays as written. */
 "cli.diagnose.group.recordsSkipped" = "छोड़े गए: %@; उन्हें “ojd record list” से जाँचें";
+/* One line of the frame timings of 'ojd diagnose'. %1$lld is the frame number, %2$@ is the controller name, %3$@ is the controller ID and %4$@ is the timestamp of the frame from the monotonic clock in nanoseconds. */
 "cli.diagnose.group.timingsFrame" = "फ़्रेम %1$lld, कंट्रोलर %2$@ (%3$@), नैनोसेकंड में मोनोटोनिक घड़ी: %4$@";
+/* One-line summary of 'ojd record' in the command list and at the top of its help. */
 "cli.record.group.abstract" = "कंट्रोलर रिकॉर्ड का मसौदा बनाएँ, सूचीबद्ध करें, जाँचें, इंस्टॉल करें या हटाएँ।";
+/* Long description in the help of 'ojd record'. The folder path stays as written. A controller record describes how the driver talks to one controller model. */
 "cli.record.group.discussion" = "कंट्रोलर रिकॉर्ड OpenJoystickDriver को बताता है कि एक कंट्रोलर मॉडल को कैसे चलाना है। आपके रिकॉर्ड ~/Library/Application Support/OpenJoystickDriver/Controllers में रहते हैं और कोई मॉडल जोड़ते हैं या बंडल किए गए मॉडल को बदलते हैं। डायरेक्टरी बदलने पर चल रही सेवा उन्हें लागू करती है। सेवा की ज़रूरत केवल “ojd record draft” को है।";
+/* One-line summary of 'ojd record draft' in the command list and at the top of its help. */
 "cli.record.draft.abstract" = "जुड़े हुए कंट्रोलर से कंट्रोलर रिकॉर्ड का मसौदा बनाएँ।";
+/* Line printed by 'ojd record draft' with the number of input reports it captured. %lld is that number. */
 "cli.record.draft.captured" = "कैप्चर की गई इनपुट रिपोर्ट: %lld।";
+/* Line printed by 'ojd record draft' for a byte that changed between reports. %1$lld is the byte position, %2$lld is the value before and %3$lld is the value after. */
 "cli.record.draft.changedByte" = "बाइट %1$lld बदला: %2$lld से %3$lld।";
+/* Long description in the help of 'ojd record draft'. HID report descriptor and input report are terms of the USB HID standard. */
 "cli.record.draft.discussion" = "कंट्रोलर का HID रिपोर्ट डिस्क्रिप्टर पढ़ता है और हर नियंत्रण दबाने के दौरान उसकी इनपुट रिपोर्ट कैप्चर करता है, फिर शुरुआत के लिए एक रिकॉर्ड प्रिंट करता है। रिकॉर्ड उन बटनों, स्टिक, ट्रिगर और दिशा-पैड को मैप करता है जिन्हें डिस्क्रिप्टर स्पष्ट रूप से बताता है। कैप्चर के दौरान जो बाइट बदले, वे दिखाते हैं कि बाकी नियंत्रण कहाँ हैं। सेवा की ज़रूरत होती है।";
+/* Help text of the duration option of 'ojd record draft'. */
 "cli.record.draft.duration" = "इतने सेकंड तक इनपुट रिपोर्ट कैप्चर करें।";
+/* Hint printed after 'ojd record draft'. The command in quotes stays as written, including FILE. */
 "cli.record.draft.next" = "रिकॉर्ड को फ़ाइल में सहेजें, हर नियंत्रण जाँचें, फिर “ojd record validate FILE” चलाएँ।";
+/* Message of 'ojd record draft' when the descriptor of the controller yields no controls and the bundled record names the family. %1$@ is the controller identity, VVVV:PPPP, and %2$@ repeats it as the argument of the command in quotes, which stays as written. */
 "cli.record.draft.noLayout" = "%1$@ का कोई भी नियंत्रण उसके HID रिपोर्ट डिस्क्रिप्टर से पढ़ा नहीं जा सका, और उसका बंडल किया गया रिकॉर्ड पहले से उसका परिवार बताता है। “ojd record show %2$@” वह रिकॉर्ड दिखाता है।";
+/* Prompt of 'ojd record draft' while it captures reports. %1$@ is the controller name and %2$@ is its vendor and product ID. */
 "cli.record.draft.started" = "%1$@ (%2$@) के हर नियंत्रण को दबाएँ, और हर स्टिक व ट्रिगर को घुमाएँ।";
+/* Error of the 'ojd record' commands when a record file cannot be read. %1$@ is the file path and %2$@ is the reason from the system. */
 "cli.record.group.errorUnreadable" = "%1$@ नहीं पढ़ा जा सकता: %2$@";
+/* Help text of the file argument of the 'ojd record' commands. The single hyphen means stdin and stays as written. */
 "cli.record.group.file" = "एक रिकॉर्ड फ़ाइल, या - (मानक इनपुट से रिकॉर्ड पढ़ने के लिए)।";
+/* Help text of the controller model argument of the 'ojd record' commands. VVVV:PPPP is the vendor ID and product ID in hexadecimal and stays as written. */
 "cli.record.group.identity" = "कंट्रोलर मॉडल, VVVV:PPPP रूप में।";
+/* One-line summary of 'ojd record install' in the command list and at the top of its help. */
 "cli.record.install.abstract" = "कंट्रोलर रिकॉर्ड जाँचें और उसे आपके उपयोगकर्ता के लिए इंस्टॉल करें।";
+/* Yes or no question that 'ojd record install' asks on a terminal before it replaces an installed record. %@ is the path of the installed file. */
 "cli.record.install.confirm" = "%@ बदलें?";
+/* Long description in the help of 'ojd record install'. VVVV-PPPP.json and --force stay as written. */
 "cli.record.install.discussion" = "रिकॉर्ड को आपकी रिकॉर्ड डायरेक्टरी में VVVV-PPPP.json के रूप में लिखता है। चल रही सेवा उसे तुरंत लागू करती है। उस मॉडल के लिए पहले से इंस्टॉल रिकॉर्ड को बदलने पर टर्मिनल में पुष्टि माँगता है; अन्यथा --force चाहिए। --dry-run रिकॉर्ड जाँचता है और कुछ नहीं लिखता। रिकॉर्ड अमान्य होने पर कोड 1 के साथ बाहर निकलता है और कुछ नहीं लिखता।";
+/* Message printed by 'ojd record install --dry-run' instead of installing. %@ is the target file path. */
 "cli.record.install.dryRun" = "%@ को इंस्टॉल कर देता।";
+/* Error when the record file cannot be written. %1$@ is the target file path and %2$@ is the reason from the system. */
 "cli.record.install.failed" = "%1$@ नहीं लिखा जा सकता: %2$@";
+/* Message printed after 'ojd record install'. %@ is the target file path. The service picks the record up without a restart. */
 "cli.record.install.success" = "%@ इंस्टॉल हो गया। चल रही सेवा अब उसे लागू करती है।";
+/* Error of the 'ojd record' commands when a record is invalid. %1$@ is the file path or the word stdin and %2$@ is the description of the problem. */
 "cli.record.group.invalid" = "%1$@ मान्य रिकॉर्ड नहीं है: %2$@";
+/* One-line summary of 'ojd record list' in the command list and at the top of its help. */
 "cli.record.list.abstract" = "हर कंट्रोलर रिकॉर्ड और वह परत सूचीबद्ध करें जिससे वह आता है।";
+/* Help text of the flag of 'ojd record list' that limits the list to the bundled catalog. The bundled catalog is the set of records inside the app. */
 "cli.record.list.bundled" = "केवल बंडल किया गया कैटलॉग सूचीबद्ध करें।";
+/* Long description in the help of 'ojd record list'. OJD is the short product name. */
 "cli.record.list.discussion" = "बंडल किए गए रिकॉर्ड आपके लागू रिकॉर्ड के साथ सूचीबद्ध करता है, और OJD ने जो फ़ाइल छोड़ी उसका नाम और कारण बताता है।";
+/* One-line summary of 'ojd record remove' in the command list and at the top of its help. */
 "cli.record.remove.abstract" = "एक कंट्रोलर मॉडल के लिए अपना कंट्रोलर रिकॉर्ड हटाएँ।";
+/* Yes or no question that 'ojd record remove' asks on a terminal. %@ is the list of files to delete. */
 "cli.record.remove.confirm" = "%@ हटाएँ?";
+/* Long description in the help of 'ojd record remove'. --force stays as written. */
 "cli.record.remove.discussion" = "बंडल किया गया मॉडल अपने बंडल किए गए रिकॉर्ड पर लौट जाता है। टर्मिनल में पुष्टि माँगता है; अन्यथा --force चाहिए।";
+/* Message printed by 'ojd record remove --dry-run' instead of deleting. %@ is the list of files. */
 "cli.record.remove.dryRun" = "%@ को हटा देता।";
+/* Error of 'ojd record remove' when a file cannot be deleted. %1$@ is the file path and %2$@ is the reason from the system. */
 "cli.record.remove.failed" = "%1$@ नहीं हटाया जा सका: %2$@";
+/* Error of 'ojd record remove' when the user has no record for the model. %@ is the model, VVVV:PPPP. The command in quotes stays as written. */
 "cli.record.remove.notFound" = "%@ के लिए आपके पास कोई रिकॉर्ड नहीं है। “ojd record list” आपके रिकॉर्ड दिखाता है।";
+/* Message printed after 'ojd record remove'. %@ is the list of deleted files. */
 "cli.record.remove.success" = "%@ हटा दिया गया।";
+/* One-line summary of 'ojd record show' in the command list and at the top of its help. */
 "cli.record.show.abstract" = "एक कंट्रोलर मॉडल का प्रभावी रिकॉर्ड और हर हिस्से की परत दिखाएँ।";
+/* Error of 'ojd record show' and 'ojd config show' when no record matches the model. %@ is the model, VVVV:PPPP. The command in quotes stays as written. */
 "cli.record.show.notFound" = "%@ के लिए कोई कंट्रोलर रिकॉर्ड नहीं है। “ojd record list” हर रिकॉर्ड दिखाता है।";
+/* Line of the output of 'ojd record list' for a record file the driver skipped. %1$@ is the file name and %2$@ is the reason. */
 "cli.record.group.skipped" = "%1$@ छोड़ा गया: %2$@";
+/* One-line summary of 'ojd record test' in the command list and at the top of its help. A parser turns the packets of a controller into its state. */
 "cli.record.test.abstract" = "कैप्चर की गई रिपोर्टों को रिकॉर्ड के पार्सर से दोबारा चलाएँ और पार्स की गई स्थिति की तुलना करें।";
+/* Error of 'ojd record test' when the capture file is not a packet capture. %1$@ is the file path and %2$@ is the line number and the problem found on that line. */
 "cli.record.test.captureInvalid" = "%1$@ पैकेट कैप्चर नहीं है: %2$@";
+/* Line of the output of 'ojd record test' for each field of the controller state that differs. %1$@ is the field name, %2$@ is the expected value and %3$@ is the value found. */
 "cli.record.test.difference" = "%1$@: अपेक्षित %2$@, मिला %3$@";
+/* Long description in the help of 'ojd record test'. The command in quotes and the JSON terms stay as written. */
 "cli.record.test.discussion" = "कैप्चर के प्राप्त पैकेटों को रिकॉर्ड के पार्सर से दोबारा चलाता है, फिर आख़िरी इनपुट रिपोर्ट के बाद की कंट्रोलर स्थिति की तुलना अपेक्षित स्थिति से करता है। कैप्चर “ojd controller capture --json” की JSON पंक्तियाँ है। अपेक्षित स्थिति “ojd controller watch --json” की एक पंक्ति के रूप वाला एक JSON ऑब्जेक्ट है। कमांड हर अलग फ़ील्ड सूचीबद्ध करता है और कोई भी अलग हो तो कोड 1 के साथ बाहर निकलता है। यह connection को छोड़कर हर फ़ील्ड की तुलना करता है, जिसे चल रही सेवा सेट करती है। इसके लिए चलती हुई सेवा ज़रूरी नहीं है।";
+/* Help text of the expected state argument of 'ojd record test'. The state is a JSON file. */
 "cli.record.test.expect" = "अपेक्षित कंट्रोलर स्थिति, JSON फ़ाइल के रूप में।";
+/* Error of 'ojd record test' when the expected state file is invalid. %1$@ is the file path and %2$@ is the description of the problem. */
 "cli.record.test.expectInvalid" = "%1$@ कंट्रोलर स्थिति नहीं है: %2$@";
+/* Error of 'ojd record test' when the capture holds no input report. %1$@ is the capture file path and %2$@ is the controller model. */
 "cli.record.test.noInput" = "%1$@ की किसी भी रिपोर्ट में %2$@ के लिए इनपुट नहीं था। कंट्रोल दबाते हुए दोबारा कैप्चर करें।";
+/* Error of 'ojd record test' when the family of the controller has no parser that can run without the controller. %@ is the controller model. */
 "cli.record.test.noParser" = "%@ के परिवार में ऐसा पार्सर नहीं है जो कंट्रोलर के बिना चले।";
+/* Help text of the packet capture argument of 'ojd record test'. The command in quotes stays as written. */
 "cli.record.test.packets" = "पैकेट कैप्चर, “ojd controller capture --json” की JSON पंक्तियों के रूप में।";
+/* Error of 'ojd record test' when the parser rejects a packet. %1$@ is the controller model, %2$lld is the packet number and %3$@ is the capture file path. */
 "cli.record.test.parseFailed" = "%1$@ के पार्सर ने प्राप्त पैकेट %2$lld (%3$@ का) अस्वीकार कर दिया।";
+/* Text of error E2022, printed when the controller state that a record parser produces from a capture differs from the expected state. */
 "error.E2022.message" = "रिकॉर्ड के पार्सर ने कैप्चर की गई रिपोर्टों से जो स्थिति बनाई, वह अपेक्षित स्थिति से अलग है। कमांड द्वारा सूचीबद्ध फ़ील्ड पढ़ें।";
+/* Text of error E2023, printed when a controller cannot be claimed or released because its protocol family uses raw USB or the system does not serve it natively. The settings window shows it too. */
 "error.E2023.message" = "यह कंट्रोलर लिया या लौटाया नहीं जा सकता: इसका प्रोटोकॉल परिवार रॉ USB का उपयोग करता है, या सिस्टम इसे नेटिव रूप से नहीं चलाता। संदेश कारण बताता है।";
+/* Text of error E2024, printed when no endpoint client or token has the given ID. ojd access is the command that lists the IDs and stays as written. */
 "error.E2024.message" = "किसी एंडपॉइंट क्लाइंट या टोकन की यह ID नहीं है। ID देखने के लिए ojd access चलाएँ, फिर उनमें से एक उपयोग करें।";
+/* Text of error E2025, printed when a client with a signature that any local program can claim cannot be granted. */
 "error.E2025.message" = "इस प्रकार के हस्ताक्षर वाले क्लाइंट को एक्सेस नहीं दिया जा सकता, क्योंकि कोई भी स्थानीय प्रोग्राम उसका हस्ताक्षर होने का दावा कर सकता है।";
+/* Text of error E2026, printed when a grant names no scope. */
 "error.E2026.message" = "देने के लिए कम से कम एक स्कोप चुनें।";
+/* Text of error E2027, printed when the service is shutting down while the command runs. */
 "error.E2027.message" = "सेवा बंद हो रही है। उसे शुरू करें, फिर दोबारा कोशिश करें।";
+/* Text of error E2028, printed when a token with the chosen name exists. */
 "error.E2028.message" = "इस नाम का टोकन पहले से है। पहले उसे रद्द करें, या दूसरा नाम चुनें।";
+/* Text of error E2029, printed when a token name has characters that are not allowed. The limit of 64 characters is fixed. */
 "error.E2029.message" = "यह टोकन का नाम नहीं है। 1 से 64 अक्षर, अंक, बिंदु, हाइफ़न या अंडरस्कोर उपयोग करें।";
+/* Text of error E2030, printed when a web origin is not valid. scheme://host[:port], http, https and the example in backticks stay as written. */
 "error.E2030.message" = "यह वेब ऑरिजिन नहीं है। http या https के साथ scheme://host[:port] उपयोग करें, जैसे `http://127.0.0.1:8080`।";
+/* Text of error E2031, printed when the WebSocket port on 127.0.0.1 is in use or cannot be opened. 127.0.0.1 and --port stay as written. */
 "error.E2031.message" = "127.0.0.1 पर यह पोर्ट उपयोग में है या खोला नहीं जा सकता। --port से दूसरा चुनें।";
+/* Text of error E2032, printed when the control scope is granted to a token that has origins. */
 "error.E2032.message" = "ऑरिजिन वाले टोकन के पास control स्कोप नहीं हो सकता, क्योंकि कोई पेज कभी वर्चुअल गेमपैड नहीं चला सकता। control ऐसे टोकन को दें जिसमें ऑरिजिन न हों।";
+/* Text of error E2033, printed when 'ojd virtual launch' cannot start the program. */
 "error.E2033.message" = "प्रोग्राम शुरू नहीं किया जा सका। जाँचें कि उसका पाथ किसी एक्ज़ीक्यूटेबल फ़ाइल या ऐप को दर्शाता है और आपको उसे चलाने की अनुमति है।";
 /* Error E2034, shown in the app or the CLI when the service no longer accepts requests. */
 "error.E2034.message" = "सेवा ने अनुरोध स्वीकार करना बंद कर दिया है। OpenJoystickDriver को बंद करके दोबारा खोलें, फिर दोबारा कोशिश करें।";
@@ -1375,152 +1897,298 @@
 /* Error E2037, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */
 "error.E2037.message" = "OpenJoystickDriver के लिए सूचनाएँ अनुमत नहीं हैं। सिस्टम की सूचना सेटिंग्स में उन्हें अनुमति दें, फिर दोबारा कोशिश करें।";
 "platform.macos.cli.record.group.usbNotClaimed" = "यह परिवार रॉ USB इस्तेमाल करता है, और USB एक्सटेंशन इस कंट्रोलर को क्लेम नहीं कर सकता, क्योंकि उसकी प्रोडक्ट सूची पर Apple के हस्ताक्षर हैं। OJD उस तक केवल सीधे USB एक्सेस से पहुँचता है, जब macOS अनुमति देता है।";
+/* Note about a Switch 2 controller record that connects over USB only. bluetoothLE.vibrationCharacteristic is a field of the record and stays as written. */
 "cli.record.group.usbOnlySwitch2" = "केवल USB: कंट्रोलर को Bluetooth LE से कनेक्ट करने के लिए इस Switch 2 रिकॉर्ड में bluetoothLE.vibrationCharacteristic जोड़ें।";
+/* One-line summary of 'ojd record validate' in the command list and at the top of its help. */
 "cli.record.validate.abstract" = "इंस्टॉल किए बिना कंट्रोलर रिकॉर्ड जाँचें।";
+/* Long description in the help of 'ojd record validate'. */
 "cli.record.validate.discussion" = "रिकॉर्ड का ढाँचा, उसके फ़ील्ड का आपसी मेल और बंडल किए गए कैटलॉग से उसकी संगति जाँचता है, और बताता है कि कंट्रोलर को USB एक्सटेंशन चाहिए या नहीं। रिकॉर्ड अमान्य होने पर कोड 1 के साथ बाहर निकलता है।";
+/* Message printed by 'ojd record validate' for a correct record. %1$@ is the file path, %2$@ is the operation in kebab case such as install, %3$@ is the controller model and %4$@ is the protocol family. The command in quotes stays as written. */
 "cli.record.validate.valid" = "%1$@ एक मान्य %2$@ रिकॉर्ड है, %3$@ (%4$@) के लिए। इसे “ojd record install” से इंस्टॉल करें।";
+/* Heading in the output of 'ojd status' above the defaults file that the driver ignores. */
 "cli.status.group.labelIgnoredDefaults" = "अनदेखी की गई डिफ़ॉल्ट फ़ाइल";
+/* Heading in the output of 'ojd status' above the list of skipped persona files. %lld is the number of files. */
 "cli.status.group.labelSkippedPersonas" = "छोड़ी गई persona फ़ाइलें (%lld)";
+/* Heading in the output of 'ojd status' above the list of skipped controller records. %lld is the number of records. */
 "cli.status.group.labelSkippedRecords" = "छोड़े गए कंट्रोलर रिकॉर्ड (%lld)";
+/* One-line summary of 'ojd binding' in the command list and at the top of its help. */
 "cli.binding.group.abstract" = "रीमैपिंग प्रोफ़ाइल के असाइनमेंट की सूची दिखाएँ, उन्हें सेट करें और साफ़ करें।";
+/* Error of 'ojd binding set' when the JSON of --actions-json cannot be read. %@ is the description of the parse problem. --actions-json stays as written. */
 "cli.binding.group.actionsInvalid" = "--actions-json मान्य कार्रवाई सूची नहीं है: %@";
+/* Error of 'ojd binding set' when the JSON of --actions-json exceeds the size limit. --actions-json stays as written. */
 "cli.binding.group.actionsTooLarge" = "--actions-json बहुत बड़ा है।";
+/* Error of 'ojd binding set' when the value of --double-tap or --long-hold does not have the form MS:TARGET. %@ is the option name. MS:TARGET and the example stay as written. */
 "cli.binding.group.alternateFormat" = "%@ को MS:TARGET चाहिए, जैसे 500:key:key-b।";
+/* Error of 'ojd binding set' when an axis option is used with a source that is not an axis. The option names stay as written. */
 "cli.binding.group.axisOptionsSource" = "--deadzone, --gain, --invert, --response-curve और --digital-threshold के लिए एक्सिस स्रोत चाहिए।";
+/* One-line summary of 'ojd binding clear' in the command list and at the top of its help. */
 "cli.binding.clear.abstract" = "दिए गए स्रोतों के असाइनमेंट, या सभी असाइनमेंट हटाएँ।";
+/* Help text of the --all flag of 'ojd binding clear'. */
 "cli.binding.clear.all" = "सभी असाइनमेंट, कॉर्ड, सीक्वेंस और लेयर हटाएँ।";
+/* Warning of 'ojd binding clear' when removing the bindings leaves an active profile without any binding, so its controller sends no input. %@ is the profile name. The two commands in quotes stay as written. */
 "cli.binding.clear.blocksInput" = "“%@” एक कनेक्टेड कंट्रोलर पर सक्रिय है और अब उसका सारा इनपुट रोकती है। “ojd binding set” से एक असाइनमेंट जोड़ें, या “ojd profile deactivate” से प्रोफ़ाइल रोकें।";
+/* Yes or no question that 'ojd binding clear --all' asks on a terminal. %@ is the profile name. */
 "cli.binding.clear.confirm" = "“%@” से सभी असाइनमेंट, कॉर्ड, सीक्वेंस और लेयर हटाएँ?";
+/* Long description in the help of 'ojd binding clear'. --all and --force stay as written. */
 "cli.binding.clear.discussion" = "--all प्रोफ़ाइल के कॉर्ड, सीक्वेंस और लेयर भी हटाता है, और टर्मिनल पर पुष्टि माँगता है; अन्यथा इसे --force चाहिए। स्टिक, ट्रिगर, टच, मोशन और आउटपुट सेटिंग बनी रहती हैं।";
+/* Message printed after 'ojd binding clear' removed bindings. %1$@ is the profile name and %2$lld is the number of removed bindings, shown after a colon. */
 "cli.binding.clear.done" = "“%1$@” से हटाए गए असाइनमेंट: %2$lld।";
+/* Message printed by 'ojd binding clear --dry-run' instead of changing the profile. %1$@ is the profile name and %2$lld is the number of bindings that would be removed, shown after a colon. */
 "cli.binding.clear.dryRun" = "“%1$@” से हटाए जाने वाले असाइनमेंट: %2$lld।";
+/* Message of 'ojd binding clear' when a source has no binding. %1$@ is the profile name and %2$@ is the source the user gave. */
 "cli.binding.clear.missing" = "“%1$@” में %2$@ के लिए कोई असाइनमेंट नहीं है। कुछ नहीं बदला।";
+/* Help text of the SOURCES argument of 'ojd binding clear'. */
 "cli.binding.clear.sources" = "वे स्रोत जिनके असाइनमेंट हटाने हैं।";
+/* Error of 'ojd binding clear' when neither sources nor --all are given. --all stays as written. */
 "cli.binding.clear.usage" = "एक या अधिक स्रोत दें, या --all दें।";
+/* Long description in the help of 'ojd binding'. It lists the SOURCE and TARGET forms. Words in capitals, forms such as button:NAME and all option names stay as written. */
 "cli.binding.group.discussion" = "असाइनमेंट तब TARGET भेजता है जब कंट्रोलर का कोई SOURCE इस्तेमाल होता है।\n\nSOURCE: button:NAME, dpad:DIRECTION, axis:NAME[:negative|positive], trigger:NAME:STAGE, motion:lean:DIRECTION, touch:SURFACE:contact, touch:SURFACE:grid:COLUMNS:ROWS:COLUMN:ROW, या touch:SURFACE:swipe:DIRECTION:DISTANCE।\n\nTARGET: key:KEY[:mods=meta,control,alt,shift], mouse:BUTTON, move:x|y, scroll:x|y, gamepad:button:NAME, gamepad:dpad:DIRECTION, gamepad:axis:NAME, या रंबल, लाइट और एडैप्टिव ट्रिगर के लिए physical:...।\n\n“ojd profile show” असाइनमेंट को इन्हीं रूपों में प्रिंट करता है। कॉर्ड, सीक्वेंस और लेयर को “ojd profile edit” से बदलें।";
+/* One-line summary of 'ojd binding list' in the command list and at the top of its help. */
 "cli.binding.list.abstract" = "प्रोफ़ाइल के असाइनमेंट की सूची दिखाएँ।";
+/* Message of 'ojd binding list' when the profile has no bindings. %@ is the profile name. The command in quotes stays as written. */
 "cli.binding.list.empty" = "“%@” में कोई असाइनमेंट नहीं है। “ojd binding set” से जोड़ें।";
+/* Help text of the --actions-json option of 'ojd binding set'. 'ojd profile export' stays as written. */
 "cli.binding.group.optionActionsJson" = "अतिरिक्त कार्रवाइयाँ JSON ऐरे के रूप में, उसी रूप में जिसमें “ojd profile export” उन्हें लिखता है।";
+/* Help text of the --behavior option of 'ojd binding set'. The behavior hold is a value the user types. */
 "cli.binding.group.optionBehavior" = "लक्ष्य कब सक्रिय हो। डिफ़ॉल्ट: मौजूदा असाइनमेंट का व्यवहार, या hold।";
+/* Help text of the --deadzone option of 'ojd binding set'. The dead zone is the part of an axis travel that is ignored. */
 "cli.binding.group.optionDeadzone" = "एक्सिस स्रोत: गति का वह हिस्सा जिसे अनदेखा किया जाता है, 0 से 0.95। डिफ़ॉल्ट: 0.1।";
+/* Help text of the --digital-threshold option of 'ojd binding set'. It sets the axis travel that counts as a press. */
 "cli.binding.group.optionDigitalThreshold" = "एक्सिस स्रोत: गति की वह मात्रा जो बटन लक्ष्यों के लिए दबाना मानी जाती है। डिफ़ॉल्ट: 0.5।";
+/* Help text of the --double-tap option of 'ojd binding set'. The example 300:key:key-c stays as written. */
 "cli.binding.group.optionDoubleTap" = "स्रोत को इतने समय में दो बार दबाने पर एक और लक्ष्य भेजें, जैसे 300:key:key-c।";
+/* Help text of the --gain option of 'ojd binding set'. Gain scales the axis output. */
 "cli.binding.group.optionGain" = "एक्सिस स्रोत: आउटपुट का स्केल, 0.1 से 10। डिफ़ॉल्ट: 1।";
+/* Help text of the --invert flag of 'ojd binding set'. */
 "cli.binding.group.optionInvert" = "एक्सिस स्रोत: दिशा उलटें।";
+/* Help text of the --long-hold option of 'ojd binding set'. The example 500:key:key-b stays as written. */
 "cli.binding.group.optionLongHold" = "स्रोत को इतनी देर दबाए रखने पर एक और लक्ष्य भेजें, जैसे 500:key:key-b।";
+/* Help text of the --pulse-ms option of 'ojd binding set'. ms means milliseconds. */
 "cli.binding.group.optionPulseMs" = "पल्स लक्ष्य को कितनी देर थामे रखता है, 1 से 5000 ms। डिफ़ॉल्ट: 100।";
+/* Help text of the --response-curve option of 'ojd binding set'. linear is a value the user types. */
 "cli.binding.group.optionResponseCurve" = "एक्सिस स्रोत: गति के साथ आउटपुट कैसे बढ़ता है। डिफ़ॉल्ट: linear।";
+/* Help text of the --turbo-duty option of 'ojd binding set'. The duty is the share of each turbo cycle in which the target is held. */
 "cli.binding.group.optionTurboDuty" = "हर टर्बो चक्र का वह हिस्सा जिसमें लक्ष्य थामा जाता है, 0 से अधिक और 1 से कम।";
+/* Help text of the --turbo-rate option of 'ojd binding set'. --turbo-duty stays as written. */
 "cli.binding.group.optionTurboRate" = "दबाए रखने के दौरान लक्ष्य को प्रति सेकंड इतनी बार दोहराएँ। --turbo-duty चाहिए।";
+/* One-line summary of 'ojd binding set' in the command list and at the top of its help. */
 "cli.binding.set.abstract" = "कंट्रोलर के स्रोत को किसी लक्ष्य से असाइन करें, और उस स्रोत का मौजूदा असाइनमेंट बदल दें।";
+/* Message printed after 'ojd binding set' stored a binding. %1$@ is the profile name and %2$@ describes the source bound to the target. */
 "cli.binding.set.done" = "“%1$@” अब %2$@ से असाइन है।";
+/* Help text of the SOURCE argument of 'ojd binding set'. button:south stays as written. */
 "cli.binding.set.source" = "कंट्रोलर का नियंत्रण, जैसे button:south।";
+/* Help text of the TARGET argument of 'ojd binding set'. key:space stays as written. */
 "cli.binding.set.target" = "वह जो यह भेजता है, जैसे key:space।";
+/* Error of 'ojd binding' commands when a source cannot be parsed. %@ is the text the user gave. The command in quotes stays as written. */
 "cli.binding.group.sourceInvalid" = "“%@” कोई स्रोत नहीं है। “ojd binding set --help” स्रोत के रूप दिखाता है।";
+/* Error of 'ojd binding set' when the target cannot be parsed. %@ is the text the user gave. The command in quotes stays as written. */
 "cli.binding.group.targetInvalid" = "“%@” कोई लक्ष्य नहीं है। “ojd binding set --help” लक्ष्य के रूप दिखाता है।";
+/* Error of 'ojd binding set' when only one of --turbo-rate and --turbo-duty is given. Both option names stay as written. */
 "cli.binding.group.turboPair" = "--turbo-rate और --turbo-duty साथ में देने होंगे।";
+/* Error of 'ojd binding set' when turbo is requested for a pointer movement or scrolling target. */
 "cli.binding.group.turboUnsupported" = "टर्बो पॉइंटर मूवमेंट या स्क्रोल लक्ष्यों के साथ काम नहीं करता।";
+/* One-line summary of 'ojd controller calibrate' in the command list and at the top of its help. */
 "cli.controller.calibrate.abstract" = "कंट्रोलर का मोशन कैलिब्रेशन दिखाएँ या बदलें।";
+/* Help text of the ACTION argument of 'ojd controller calibrate'. start, pause and reset are values the user types and stay as written. */
 "cli.controller.calibrate.action" = "क्या करना है: start, pause या reset। कैलिब्रेशन प्रिंट करने के लिए इसे छोड़ दें।";
+/* State word in the calibration line of 'ojd controller calibrate'. It fills %2$@ of the status line. */
 "cli.controller.calibrate.calibrated" = "कैलिब्रेटेड";
+/* State word in the calibration line of 'ojd controller calibrate'. It fills %2$@ of the status line. */
 "cli.controller.calibrate.collecting" = "डेटा जुटाया जा रहा है";
+/* Long description in the help of 'ojd controller calibrate'. start, pause and reset are values the user types and stay as written. Gyro drift is the constant rotation the motion sensor reports at rest. */
 "cli.controller.calibrate.discussion" = "कार्रवाई के बिना यह कैलिब्रेशन प्रिंट करता है। start कंट्रोलर के स्थिर रखे होने पर जाइरो ड्रिफ़्ट जुटाता है, pause जुटाना रोकता है, और reset कैलिब्रेशन को भुला देता है। मोशन लीन और स्टीयरिंग असाइनमेंट इसी कैलिब्रेशन का उपयोग करते हैं।";
+/* Error of 'ojd controller calibrate' for a controller without a motion sensor. %@ is the controller name. */
 "cli.controller.calibrate.noMotion" = "%@ मोशन की रिपोर्ट नहीं करता।";
+/* Calibration line of 'ojd controller calibrate'. %1$@ is the controller name, %2$@ is the state word, and %3$@, %4$@ and %5$@ are the X, Y and Z components of the gyro offset in degrees per second. */
 "cli.controller.calibrate.status" = "%1$@: %2$@, जाइरो ऑफ़सेट x %3$@ y %4$@ z %5$@ डिग्री प्रति सेकंड";
+/* Error of 'ojd controller calibrate' when no profile is active for the controller. %@ is the controller name. The command in quotes stays as written. */
 "cli.controller.calibrate.unavailable" = "%@ का कोई सक्रिय रीमैपिंग सत्र नहीं है। उसके लिए “ojd profile activate” से प्रोफ़ाइल सक्रिय करें।";
+/* State word in the calibration line of 'ojd controller calibrate'. It fills %2$@ of the status line. */
 "cli.controller.calibrate.uncalibrated" = "कैलिब्रेट नहीं है";
+/* One-line summary of 'ojd controller pair' in the command list and at the top of its help. A Joy-Con is a Nintendo Switch controller half and stays as written. */
 "cli.controller.pair.abstract" = "बाएँ और दाएँ Joy-Con को एक कंट्रोलर में जोड़ें।";
+/* Long description in the help of 'ojd controller pair'. PROFILE and the command in quotes stay as written. */
 "cli.controller.pair.discussion" = "जोड़ी PROFILE का उपयोग करती है, जो जोड़ी गई Joy-Con की प्रोफ़ाइल होनी चाहिए। “ojd controller unpair” उन्हें फिर अलग करता है।";
+/* Message printed after 'ojd controller pair'. %1$@ is the session ID of the pair and %2$@ is the profile name, which is shown in quotes. */
 "cli.controller.pair.done" = "Joy-Con को “%1$@” के रूप में, “%2$@” के साथ जोड़ा गया।";
+/* Help text of the LEFT argument of 'ojd controller pair'. */
 "cli.controller.pair.left" = "बायाँ Joy-Con।";
+/* Error of 'ojd controller pair' when the service reports no pair. The command in quotes stays as written. */
 "cli.controller.pair.missing" = "सेवा ने Joy-Con को नहीं जोड़ा। उन्हें “ojd controller list” से जाँचें।";
+/* Help text of the RIGHT argument of 'ojd controller pair'. */
 "cli.controller.pair.right" = "दायाँ Joy-Con।";
+/* One-line summary of 'ojd controller unpair' in the command list and at the top of its help. */
 "cli.controller.unpair.abstract" = "Joy-Con की जोड़ी को दो कंट्रोलर में अलग करें।";
+/* Message printed after 'ojd controller unpair'. */
 "cli.controller.unpair.done" = "Joy-Con को अलग किया गया।";
+/* Error of 'ojd controller unpair' when no pair matches. %@ is the text the user gave. */
 "cli.controller.unpair.notFound" = "“%@” से मेल खाती कोई Joy-Con जोड़ी नहीं है।";
+/* Help text of the PAIR argument of 'ojd controller unpair'. The command in quotes stays as written. */
 "cli.controller.unpair.pair" = "जोड़ी: “ojd controller pair” से मिली उसकी सत्र ID, या किसी एक Joy-Con की ID।";
+/* One-line summary of 'ojd profile' in the command list and at the top of its help. */
 "cli.profile.group.abstract" = "रीमैपिंग प्रोफ़ाइल बनाएँ, बदलें और सक्रिय करें।";
+/* One-line summary of 'ojd profile activate' in the command list and at the top of its help. */
 "cli.profile.activate.abstract" = "प्रोफ़ाइल को उसके कंट्रोलर मॉडल पर लागू करें।";
+/* Help text of the --allow-empty flag of 'ojd profile activate'. */
 "cli.profile.activate.allowEmpty" = "प्रोफ़ाइल कोई आउटपुट न देती हो, तब भी उसे सक्रिय करें।";
+/* Long description in the help of 'ojd profile activate'. It explains the profile that replaces the active one and the profile that produces no output. The words mapped and --allow-empty stay as written. */
 "cli.profile.activate.discussion" = "प्रोफ़ाइल उसी कंट्रोलर मॉडल और ऐप दायरे की सक्रिय प्रोफ़ाइल की जगह ले लेती है। जिस प्रोफ़ाइल में वर्चुअल गेमपैड mapped पर सेट है और जो गेमपैड, कीबोर्ड, पॉइंटर या कंट्रोलर को कुछ नहीं भेजती और कोई लाइट का रंग भी सेट नहीं करती, वह कोई आउटपुट नहीं देती; ऐसी प्रोफ़ाइल सक्रिय करने के लिए --allow-empty चाहिए।";
+/* Message printed after 'ojd profile activate'. %1$@ is the profile name, shown in quotes, and %2$@ is the controller model it applies to. */
 "cli.profile.activate.done" = "“%1$@” को %2$@ के लिए सक्रिय किया गया।";
+/* Error of 'ojd profile activate' for a profile that produces no output. --allow-empty stays as written. */
 "cli.profile.activate.empty" = "यह प्रोफ़ाइल कोई आउटपुट नहीं देती। इसे सक्रिय करने के लिए --allow-empty जोड़ें।";
+/* Marker appended to the line of the active profile in 'ojd profile list'. Keep the parentheses. */
 "cli.profile.group.activeMarker" = "(सक्रिय)";
+/* Help text of the PROFILE argument shared by the 'ojd profile' commands. The command in quotes stays as written. */
 "cli.profile.group.argument" = "प्रोफ़ाइल: उसकी ID, या “ojd profile list” से उसका नाम।";
+/* One-line summary of 'ojd profile create' in the command list and at the top of its help. */
 "cli.profile.create.abstract" = "एक कंट्रोलर मॉडल के लिए खाली प्रोफ़ाइल बनाएँ।";
+/* Help text of the --app option of 'ojd profile create'. An app ID is the bundle identifier of an app, such as com.apple.Safari. */
 "cli.profile.create.app" = "प्रोफ़ाइल तभी लागू करें जब यह ऐप, ऐप ID के अनुसार, सबसे आगे हो।";
+/* Help text of the --controller option of 'ojd profile create'. VVVV:PPPP is the vendor ID and product ID in hexadecimal and stays as written. */
 "cli.profile.create.controller" = "कंट्रोलर मॉडल: VVVV:PPPP, या कनेक्ट किए गए कंट्रोलर की ID।";
+/* Long description in the help of 'ojd profile create'. --app and the command in quotes stay as written. */
 "cli.profile.create.discussion" = "प्रोफ़ाइल हर ऐप में लागू होती है, जब तक --app किसी ऐप का नाम न दे। डिफ़ॉल्ट रूप से वर्चुअल गेमपैड हर उस नियंत्रण को आगे भेज देता है जिसका कोई असाइनमेंट उपयोग नहीं करता। प्रोफ़ाइल निष्क्रिय शुरू होती है; इसे “ojd profile activate” से सक्रिय करें।";
+/* Message printed after 'ojd profile create'. %1$@ is the profile name, shown in quotes, and %2$@ is the profile ID. */
 "cli.profile.create.done" = "“%1$@” (%2$@) बनाई गई।";
 "platform.macos.cli.profile.create.physicalInput" = "macOS को कंट्रोलर अब भी दिखता है (shared), या OJD उसे ले लेता है (exclusive)।";
+/* Help text of the --virtual-gamepad option of 'ojd profile create'. disabled, mapped and passthrough are values the user types and stay as written. */
 "cli.profile.create.virtualGamepad" = "वर्चुअल गेमपैड क्या भेजता है: कुछ नहीं (disabled), केवल असाइन किए गए नियंत्रण (mapped), या वे सभी नियंत्रण भी जिनका कोई असाइनमेंट उपयोग नहीं करता (passthrough)।";
+/* One-line summary of 'ojd profile deactivate' in the command list and at the top of its help. */
 "cli.profile.deactivate.abstract" = "प्रोफ़ाइल लागू करना रोकें। इसके बाद कंट्रोलर अपना ही इनपुट भेजता है।";
+/* Message printed after 'ojd profile deactivate'. %@ is the profile name, shown in quotes. */
 "cli.profile.deactivate.done" = "“%@” निष्क्रिय की गई।";
+/* One-line summary of 'ojd profile delete' in the command list and at the top of its help. */
 "cli.profile.delete.abstract" = "प्रोफ़ाइल हटाएँ।";
+/* Yes or no question that 'ojd profile delete' asks on a terminal. %@ is the profile name, shown in quotes. */
 "cli.profile.delete.confirm" = "प्रोफ़ाइल “%@” हटाएँ?";
+/* Long description in the help of 'ojd profile delete'. --force stays as written. */
 "cli.profile.delete.discussion" = "सक्रिय प्रोफ़ाइल लागू होना बंद कर देती है। टर्मिनल पर पुष्टि माँगता है; अन्यथा --force चाहिए। प्रति रखने के लिए पहले प्रोफ़ाइल एक्सपोर्ट करें।";
+/* Message printed after 'ojd profile delete'. %@ is the profile name, shown in quotes. */
 "cli.profile.delete.done" = "प्रोफ़ाइल “%@” हटाई गई।";
+/* Message printed by 'ojd profile delete --dry-run' instead of deleting. %@ is the profile name, shown in quotes. */
 "cli.profile.delete.dryRun" = "प्रोफ़ाइल “%@” हटाई जाएगी।";
+/* Long description in the help of 'ojd profile'. PROFILE and the commands in quotes stay as written. */
 "cli.profile.group.discussion" = "रीमैपिंग प्रोफ़ाइल एक कंट्रोलर मॉडल के नियंत्रणों को गेमपैड, कीबोर्ड और पॉइंटर इनपुट में बदलती है। PROFILE “ojd profile list” से प्रोफ़ाइल की ID या नाम है। असाइनमेंट “ojd binding” से बदलें, और बाकी सब कुछ “ojd profile set” या “ojd profile edit” से। “ojd profile validate” को छोड़कर हर प्रोफ़ाइल कमांड को सेवा चाहिए।";
+/* Error of the profile file commands when a profile document is invalid. %1$@ is the file path or the word stdin and %2$@ is the description of the problem. */
 "cli.profile.group.documentInvalid" = "%1$@ मान्य प्रोफ़ाइल नहीं है: %2$@";
+/* Reason fragment of a document problem: the text is not JSON. It follows a file name in a message and starts in lowercase. */
 "cli.shared.document.notJson" = "यह मान्य JSON नहीं है";
+/* Reason fragment of a document problem: a required field is absent. %@ is the field path, which stays as written. It starts in lowercase. */
 "cli.shared.document.missingField" = "फ़ील्ड “%@” मौजूद नहीं है";
+/* Reason fragment of a document problem: a field holds the wrong kind of value. %@ is the field path, which stays as written. It starts in lowercase. */
 "cli.shared.document.wrongType" = "फ़ील्ड “%@” का प्रकार गलत है";
+/* Reason fragment of a document problem for one field. %1$@ is the field path, which stays as written and is shown in quotes, and %2$@ is the problem found. */
 "cli.shared.document.fieldProblem" = "“%1$@”: %2$@";
+/* One-line summary of 'ojd profile duplicate' in the command list and at the top of its help. */
 "cli.profile.duplicate.abstract" = "प्रोफ़ाइल को नए नाम से कॉपी करें। कॉपी निष्क्रिय शुरू होती है।";
+/* Message printed after 'ojd profile duplicate'. %1$@ is the name of the copy, shown in quotes, and %2$@ is its profile ID. */
 "cli.profile.duplicate.done" = "“%1$@” (%2$@) बनाई गई।";
+/* Help text of the NAME argument of 'ojd profile duplicate'. */
 "cli.profile.duplicate.name" = "कॉपी का नाम।";
+/* One-line summary of 'ojd profile edit' in the command list and at the top of its help. */
 "cli.profile.edit.abstract" = "प्रोफ़ाइल को अपने एडिटर में बदलें।";
+/* Long description in the help of 'ojd profile edit'. $VISUAL, $EDITOR and vi are environment variables and a program name and stay as written. */
 "cli.profile.edit.discussion" = "प्रोफ़ाइल फ़ाइल को $VISUAL, $EDITOR या vi में खोलता है, फिर उसे जाँचकर सहेजता है। टर्मिनल चाहिए। टर्मिनल न हो तो प्रोफ़ाइल एक्सपोर्ट करें, फ़ाइल बदलें और इंपोर्ट करें।";
+/* Message printed after 'ojd profile edit' saved the profile. %@ is the profile name, shown in quotes. */
 "cli.profile.edit.done" = "“%@” सहेजी गई।";
+/* Error of 'ojd profile edit' when the editor ends with a failure. %lld is the exit status number of the editor. */
 "cli.profile.edit.editorFailed" = "एडिटर स्थिति %lld के साथ बंद हुआ। कुछ नहीं बदला।";
+/* Error of 'ojd profile edit' when the edit changed the profile ID. The command in quotes stays as written. */
 "cli.profile.edit.idChanged" = "संपादन से प्रोफ़ाइल की ID बदल गई। कुछ नहीं बदला; कॉपी बनाने के लिए “ojd profile duplicate” का उपयोग करें।";
+/* Error of 'ojd profile edit' when the input is not a terminal. The three commands in quotes stay as written. */
 "cli.profile.edit.needsTerminal" = "“ojd profile edit” को टर्मिनल चाहिए। इसके बजाय “ojd profile export” और “ojd profile import” का उपयोग करें।";
+/* Message printed by 'ojd profile edit' when the file is saved without a change. */
 "cli.profile.edit.unchanged" = "कुछ नहीं बदला।";
+/* One-line summary of 'ojd profile export' in the command list and at the top of its help. The command in quotes stays as written. */
 "cli.profile.export.abstract" = "प्रोफ़ाइल को ऐसी फ़ाइल के रूप में प्रिंट करें जिसे “ojd profile import” पढ़ता है।";
+/* Long description in the help of 'ojd profile export'. --json and --plain stay as written. */
 "cli.profile.export.discussion" = "प्रोफ़ाइल JSON है, इसलिए --json और --plain आउटपुट नहीं बदलते।";
+/* Message printed after 'ojd profile export --output'. %1$@ is the profile name, shown in quotes, and %2$@ is the file path. */
 "cli.profile.export.done" = "“%1$@” को %2$@ में लिखा गया।";
+/* Help text of the --output option of 'ojd profile export'. stdout is the standard output stream and stays as written. */
 "cli.profile.export.output" = "प्रोफ़ाइल को stdout के बजाय इस फ़ाइल में लिखें।";
+/* Error of 'ojd profile export --output' when the file cannot be written. %1$@ is the file path and %2$@ is the reason from the system. */
 "cli.profile.export.writeFailed" = "%1$@ नहीं लिखा जा सका: %2$@";
+/* One-line summary of 'ojd profile get' in the command list and at the top of its help. */
 "cli.profile.get.abstract" = "प्रोफ़ाइल से एक मान प्रिंट करें।";
+/* Long description in the help of 'ojd profile get'. KEY, the command in quotes, the example key path and --json stay as written. */
 "cli.profile.get.discussion" = "KEY प्रोफ़ाइल फ़ाइल के भीतर का वह पाथ है जिसे “ojd profile export” प्रिंट करता है, जैसे stickMappings.0.tuning.innerDeadzone। स्ट्रिंग अकेली प्रिंट होती है और कोई भी अन्य मान JSON के रूप में। --json के साथ यह कुंजी और मान प्रिंट करता है।";
+/* Error of 'ojd profile get' when the key has no value. %1$@ is the profile name, shown in quotes, and %2$@ is the key path. */
 "cli.profile.get.missing" = "“%1$@” का %2$@ पर कोई मान नहीं है।";
+/* One-line summary of 'ojd profile import' in the command list and at the top of its help. The command in quotes stays as written. */
 "cli.profile.import.abstract" = "“ojd profile export” से लिखी गई फ़ाइल से प्रोफ़ाइल जोड़ें।";
+/* Message printed after 'ojd profile import' added a profile. %1$@ is the profile name, shown in quotes, and %2$@ is the profile ID. */
 "cli.profile.import.added" = "“%1$@” (%2$@) इंपोर्ट की गई।";
+/* Long description in the help of 'ojd profile import'. The single hyphen is the argument that means stdin and stays as written. */
 "cli.profile.import.discussion" = "प्रोफ़ाइल को stdin से पढ़ने के लिए - का उपयोग करें। किसी मौजूदा प्रोफ़ाइल जैसी ही ID वाली प्रोफ़ाइल उसकी जगह ले लेती है।";
+/* Help text of the FILE argument of 'ojd profile import'. The single hyphen means stdin and stays as written. */
 "cli.profile.import.file" = "प्रोफ़ाइल फ़ाइल, या stdin के लिए -।";
+/* Message printed after 'ojd profile import' replaced a profile with the same ID. %1$@ is the profile name, shown in quotes, and %2$@ is the profile ID. */
 "cli.profile.import.replaced" = "“%1$@” (%2$@) बदली गई।";
+/* Error when a stored profile fails validation. %@ is the description of the problem. */
 "cli.profile.group.invalid" = "प्रोफ़ाइल मान्य नहीं है: %@";
+/* Help text of the KEY argument of 'ojd profile get' and 'ojd profile set'. The example bindings.0.behavior stays as written. */
 "cli.profile.group.key" = "कुंजी: नाम और ऐरे इंडेक्स बिंदुओं से जुड़े हुए, जैसे bindings.0.behavior।";
+/* One-line summary of 'ojd profile list' in the command list and at the top of its help. */
 "cli.profile.list.abstract" = "रीमैपिंग प्रोफ़ाइल की सूची दिखाएँ।";
+/* Message printed by 'ojd profile list' when no profile exists. The command in quotes stays as written. */
 "cli.profile.list.empty" = "कोई प्रोफ़ाइल नहीं है। “ojd profile create” से बनाएँ।";
+/* Warning printed by 'ojd profile list' for a stored profile that the service could not load. %@ is the description of the problem. */
 "cli.profile.list.issue" = "सेवा सहेजी गई प्रोफ़ाइल लोड नहीं कर सकी: %@";
+/* Hint printed by 'ojd profile list' after the issue warnings. The command in quotes stays as written. */
 "cli.profile.list.recoverHint" = "इन्हें “ojd profile recover” से ठीक करें।";
+/* Help text of the NAME argument of 'ojd profile create'. The limit of 80 characters is fixed. */
 "cli.profile.group.name" = "प्रोफ़ाइल का नाम, 1 से 80 वर्ण।";
+/* One-line summary of 'ojd profile recover' in the command list and at the top of its help. */
 "cli.profile.recover.abstract" = "क्षतिग्रस्त प्रोफ़ाइल फ़ाइलें हटाएँ और क्षतिग्रस्त सक्रिय प्रोफ़ाइल सूची रीसेट करें।";
+/* Yes or no question that 'ojd profile recover' asks on a terminal. */
 "cli.profile.recover.confirm" = "क्या क्षतिग्रस्त प्रोफ़ाइल फ़ाइलें हटानी हैं और क्षतिग्रस्त सक्रिय प्रोफ़ाइल सूची रीसेट करनी है?";
+/* Long description in the help of 'ojd profile recover'. The command in quotes, .backup- and --force stay as written. */
 "cli.profile.recover.discussion" = "“ojd profile list” द्वारा रिपोर्ट की गई हर समस्या पर कार्रवाई करता है। सेवा पहले हर फ़ाइल का बैकअप मूल फ़ाइल के पास ऐसे नाम से बनाती है जिसमें .backup- हो। टर्मिनल पर पुष्टि माँगता है; अन्यथा --force चाहिए।";
+/* Message printed by 'ojd profile recover' when no profile file is damaged. */
 "cli.profile.recover.none" = "कोई क्षतिग्रस्त प्रोफ़ाइल फ़ाइल नहीं है।";
+/* Message printed by 'ojd profile recover' for each damaged profile file it removed. %@ is the ID of the issue that 'ojd profile list' reports. */
 "cli.profile.recover.removeDone" = "समस्या %@ की क्षतिग्रस्त प्रोफ़ाइल फ़ाइल हटा दी गई।";
+/* Message printed by 'ojd profile recover --dry-run' for each damaged profile file. %@ is the ID of the issue that 'ojd profile list' reports. */
 "cli.profile.recover.removeDryRun" = "समस्या %@ की क्षतिग्रस्त प्रोफ़ाइल फ़ाइल हटाई जाएगी।";
+/* Message printed by 'ojd profile recover' after it reset the list of active profiles. */
 "cli.profile.recover.resetDone" = "सक्रिय प्रोफ़ाइल सूची रीसेट कर दी गई।";
+/* Message printed by 'ojd profile recover --dry-run' instead of resetting the list of active profiles. */
 "cli.profile.recover.resetDryRun" = "सक्रिय प्रोफ़ाइल सूची रीसेट की जाएगी।";
+/* One-line summary of 'ojd profile rename' in the command list and at the top of its help. */
 "cli.profile.rename.abstract" = "प्रोफ़ाइल का नाम बदलें।";
+/* Message printed after 'ojd profile rename'. %@ is the name of the profile after the rename, shown in quotes. */
 "cli.profile.rename.done" = "नाम बदलकर “%@” किया गया।";
+/* Help text of the NAME argument of 'ojd profile rename'. The limit of 80 characters is fixed. */
 "cli.profile.rename.name" = "नया नाम, 1 से 80 वर्ण।";
+/* Error when a PROFILE argument matches no profile. %@ is the text the user gave. The command in quotes stays as written. */
 "cli.profile.group.selectorNotFound" = "किसी प्रोफ़ाइल की ID या नाम “%@” नहीं है। “ojd profile list” सभी प्रोफ़ाइल दिखाता है।";
+/* One-line summary of 'ojd profile set' in the command list and at the top of its help. */
 "cli.profile.set.abstract" = "प्रोफ़ाइल में एक मान बदलें।";
+/* Long description in the help of 'ojd profile set'. KEY, VALUE, null, JSON, the command in quotes and the example values stay as written. */
 "cli.profile.set.discussion" = "KEY प्रोफ़ाइल फ़ाइल के भीतर का पाथ है, जैसा “ojd profile get” में होता है। VALUE को JSON के रूप में पढ़ा जाता है, या JSON न होने पर स्ट्रिंग के रूप में, इसलिए 0.2 संख्या है और space स्ट्रिंग है। null कुंजी या ऐरे आइटम हटाता है, और ऐरे के अंत से एक आगे का इंडेक्स एक आइटम जोड़ता है। सहेजने से पहले पूरी प्रोफ़ाइल जाँची जाती है, और ID नहीं बदल सकती।";
+/* Message printed after 'ojd profile set'. %1$@ is the key path and %2$@ is the profile name, shown in quotes. */
 "cli.profile.set.done" = "“%1$@” में %2$@ सेट किया गया।";
+/* Error of 'ojd profile set' when the key is the profile ID. The command in quotes stays as written. */
 "cli.profile.set.idChanged" = "प्रोफ़ाइल की ID नहीं बदल सकती। कॉपी बनाने के लिए “ojd profile duplicate” का उपयोग करें।";
+/* Error of 'ojd profile set' when the given value makes the profile invalid. %1$@ is the key path and %2$@ is the description of the problem. */
 "cli.profile.set.invalid" = "%1$@ सेट करने से प्रोफ़ाइल अमान्य हो जाती है: %2$@";
+/* Error of 'ojd profile set' when the key has no place in the profile. %1$@ is the profile name, shown in quotes, and %2$@ is the key path. */
 "cli.profile.set.missing" = "“%1$@” में %2$@ के लिए जगह नहीं है। कोई मौजूद कुंजी सेट करें, या उसके पैरेंट को पूरा मान सेट करें।";
+/* Help text of the VALUE argument of 'ojd profile set'. JSON stays as written. */
 "cli.profile.set.value" = "नया मान, JSON या स्ट्रिंग के रूप में।";
+/* One-line summary of 'ojd profile show' in the command list and at the top of its help. */
 "cli.profile.show.abstract" = "प्रोफ़ाइल की सेटिंग और असाइनमेंट दिखाएँ।";
+/* One-line summary of 'ojd profile validate' in the command list and at the top of its help. */
 "cli.profile.validate.abstract" = "प्रोफ़ाइल फ़ाइल को इंपोर्ट किए बिना जाँचें।";
+/* Long description in the help of 'ojd profile validate'. The single hyphen means stdin and stays as written. */
 "cli.profile.validate.discussion" = "फ़ाइल को प्रोफ़ाइल स्कीमा और कई फ़ील्ड में लागू होने वाले नियमों, जैसे डुप्लिकेट स्रोतों, के अनुसार जाँचता है। प्रोफ़ाइल को stdin से पढ़ने के लिए - का उपयोग करें। इसके लिए चालू सेवा की ज़रूरत नहीं होती। प्रोफ़ाइल अमान्य होने पर यह 1 कोड के साथ बाहर निकलता है।";
+/* Help text of the FILE argument of 'ojd profile validate'. The single hyphen means stdin and stays as written. */
 "cli.profile.validate.file" = "प्रोफ़ाइल फ़ाइल, या stdin के लिए -।";
+/* Message printed by 'ojd profile validate' for a correct profile. %1$@ is the file path or the word stdin, %2$@ is the profile name, shown in quotes, %3$@ is the controller model and %4$@ is the app scope. The command in quotes stays as written. */
 "cli.profile.validate.valid" = "%1$@ एक मान्य प्रोफ़ाइल है: “%2$@”, %3$@ (%4$@) के लिए। इसे “ojd profile import” से जोड़ें।";
+/* Error when the service accepted a profile and does not list it afterwards. The command in quotes stays as written. */
 "cli.profile.group.vanished" = "सेवा ने प्रोफ़ाइल को नहीं रखा। उसे “ojd profile list” से जाँचें।";
 /* Main window, status item, main menu, settings window, library and access. */
 "ui.library.details" = "ब्योरा";
@@ -1586,9 +2254,13 @@
 "ui.library.detail.empty" = "कोई रिकॉर्ड या मॉड चुनें।";
 "ui.library.test.packets.pick" = "कोई पैकेट कैप्चर चुनें।";
 "ui.library.test.expect.pick" = "अपेक्षित कंट्रोलर स्थिति चुनें।";
+/* VoiceOver label of the button in the Library error banner that shows the details of the error. */
 "a11y.library.details" = "त्रुटि का ब्योरा दिखाएँ";
+/* VoiceOver label of the button in the Library error banner that closes the error. */
 "a11y.library.dismissError" = "त्रुटि ख़ारिज करें";
+/* VoiceOver label of the button that closes an informational message in the Library detail view. */
 "a11y.library.dismissNotice" = "संदेश ख़ारिज करें";
+/* VoiceOver label of the Library cancel button. It leaves the library unchanged. */
 "a11y.library.cancel" = "रद्द करें और लाइब्रेरी जैसी है वैसी रखें";
 /* VoiceOver label for the hexadecimal reading shown after the vendorID and productID lines of a record in the Library. %1$@ is the member name, vendorID or productID, which stays as written; %2$@ is the value in hexadecimal, such as 0x353D. */
 "a11y.library.recordHexadecimal" = "%1$@, हेक्साडेसिमल %2$@";
@@ -1666,23 +2338,41 @@
 "ui.access.error.serviceTimeout" = "OpenJoystickDriver ने समय पर जवाब नहीं दिया।";
 "ui.access.error.peerRejected" = "OpenJoystickDriver ने यह अनुरोध अस्वीकार कर दिया।";
 "ui.access.error.requestFailed" = "अनुरोध विफल रहा: %@";
+/* VoiceOver label of the button in the Access error banner that shows the details of the error. */
 "a11y.access.details" = "त्रुटि का ब्योरा दिखाएँ";
+/* VoiceOver label of the Access error banner button when the banner offers to close the error. */
 "a11y.access.dismissError" = "त्रुटि ख़ारिज करें";
+/* VoiceOver label of the Access error banner button when the banner offers to read the access settings again. */
 "a11y.access.tryAgain" = "ऐक्सेस सेटिंग्स फिर से पढ़ें";
+/* VoiceOver label of the button in the Access area that restarts the app so that newly granted permissions take effect. */
 "a11y.access.restart" = "नई अनुमतियाँ लागू करने के लिए ऐप फिर से शुरू करें";
+/* VoiceOver label of the WebSocket port field in the Access area. An empty field keeps the saved port; the system chooses a port only when none is saved or Automatic is selected. */
 "a11y.access.webPort" = "WebSocket पोर्ट; सहेजा गया पोर्ट रखने के लिए खाली छोड़ें। सिस्टम पोर्ट तभी चुनता है जब कोई पोर्ट सहेजा न गया हो या स्वचालित चुना गया हो";
+/* VoiceOver label of the toolbar button that opens a file chooser to grant access to a program. */
 "a11y.access.grantProgram" = "आपके चुने प्रोग्राम को ऐक्सेस दें";
+/* VoiceOver label of the button in the list of refused clients that grants access to the client. %@ is the identifier of the client, which stays as written. */
 "a11y.access.grantRefused" = "%@ को ऐक्सेस दें";
+/* VoiceOver label of the button that removes the access of a granted client. %@ is the identifier of the client, which stays as written. */
 "a11y.access.revokeGrant" = "%@ का ऐक्सेस वापस लें";
+/* VoiceOver label of the button that revokes an access token. %@ is the name the user gave the token. */
 "a11y.access.revokeToken" = "टोकन %@ वापस लें";
+/* VoiceOver label of the toolbar button that opens the sheet to create an access token. */
 "a11y.access.grantToken" = "टोकन बनाएँ";
+/* VoiceOver label of the name field in the sheet that creates an access token. */
 "a11y.access.tokenName" = "टोकन का नाम";
+/* VoiceOver label of the text field in the token sheet that lists the web origins allowed to use the token, one per line. */
 "a11y.access.tokenOrigins" = "वे वेब ऑरिजिन जो टोकन उपयोग कर सकते हैं, हर पंक्ति में एक";
+/* VoiceOver label of the button in the token sheet that moves on to the confirmation step. */
 "a11y.access.tokenContinue" = "पुष्टि पर आगे बढ़ें";
+/* VoiceOver label of the field that shows the secret value of the token of the sheet. */
 "a11y.access.tokenValue" = "टोकन";
+/* VoiceOver label of the button that copies the secret value of the token to the clipboard. */
 "a11y.access.copyToken" = "टोकन को क्लिपबोर्ड पर कॉपी करें";
+/* VoiceOver label of the button that closes the token sheet after the token is shown. */
 "a11y.access.done" = "टोकन बंद करें";
+/* VoiceOver label of one access scope in the token sheet. %@ is the localized scope name, such as the permission the token carries. */
 "a11y.access.scope" = "%@ स्कोप";
+/* VoiceOver label of the cancel button in the access sheets. It leaves the access unchanged. */
 "a11y.access.cancel" = "रद्द करें और ऐक्सेस जैसा है वैसा रखें";
 "ui.menu.app.about" = "%@ के बारे में";
 "ui.menu.app.settings" = "सेटिंग्स…";
@@ -1744,13 +2434,18 @@
 "ui.sidebar.library.title" = "लाइब्रेरी";
 "ui.sidebar.access.title" = "ऐक्सेस";
 "ui.sidebar.activity.title" = "गतिविधि";
+/* Help text of the showInMenuBar setting in 'ojd setting list'. OpenJoystickDriver is the product name. */
 "cli.setting.group.showInMenuBar" = "मेनू बार में OpenJoystickDriver आइटम दिखाएँ।";
+/* Help text of the checkUpdatesAutomatically setting in 'ojd setting list'. */
 "cli.setting.group.checkUpdatesAutomatically" = "ऐप शुरू होने पर अपडेट जाँचें।";
 "ui.settings.general.title" = "सामान्य";
 "ui.settings.notifications.title" = "सूचनाएँ";
 "ui.settings.advanced.title" = "उन्नत";
+/* VoiceOver label of the General pane of the settings window. The key is built from the pane identifier. */
 "a11y.settingsPane.general" = "सामान्य सेटिंग्स";
+/* VoiceOver label of the Notifications pane of the settings window. The key is built from the pane identifier. */
 "a11y.settingsPane.notifications" = "सूचना सेटिंग्स";
+/* VoiceOver label of the Advanced pane of the settings window. The key is built from the pane identifier. */
 "a11y.settingsPane.advanced" = "उन्नत सेटिंग्स";
 "ui.settings.general.showInMenuBar" = "मेनू बार में दिखाएँ";
 "ui.settings.general.showInMenuBarDescription" = "मेनू बार में OpenJoystickDriver आइटम दिखाएँ।";
@@ -1780,8 +2475,11 @@
 "ui.extra.projectWebsite" = "प्रोजेक्ट वेबसाइट";
 "ui.extra.actionFailedTitle" = "कार्रवाई पूरी नहीं हुई";
 "ui.extra.profileConflict" = "इस कार्रवाई के चलने से पहले प्रोफ़ाइल बदल गई। फिर कोशिश करें।";
+/* VoiceOver label and accessibility description of the menu bar status item. The product name stays as written. */
 "a11y.menuBar.statusItem" = "OpenJoystickDriver की स्थिति";
+/* VoiceOver label of the sidebar list of the main window, which switches between the areas of the app. */
 "a11y.mainWindow.sidebar" = "क्षेत्र";
+/* VoiceOver label of the control in the capture assignment sheet that sets the minimum swipe distance of a touch gesture. */
 "a11y.capture.touchSwipeDistance" = "न्यूनतम स्वाइप दूरी";
 "ui.access.detail.pair" = "%1$@ · %2$@";
 "ui.access.detail.triple" = "%1$@ · %2$@ · %3$@";
@@ -1799,16 +2497,27 @@
 "ui.access.web.noPort" = "वेब एंडपॉइंट चालू है, पर अभी तक कोई पोर्ट नहीं चुना गया";
 "ui.access.signer.signedUnknownPublisher" = "अज्ञात प्रकाशक द्वारा साइन किया गया";
 "ui.settings.commandLine.toolLinkTargetUnreadable" = "%@ एक लिंक है जिसका लक्ष्य पढ़ा नहीं जा सकता। इंस्टॉल करने पर यह इसके बजाय इस ऐप से जुड़ जाएगा।";
+/* Text of error E1001, sent to a client that connects to the endpoint while the endpoint is off, and printed by 'ojd explain'. The command in quotes stays as written. */
 "error.E1001.message" = "एंडपॉइंट बंद है। इसे “ojd access enable” से चालू करें और फिर से कनेक्ट करें।";
+/* Text of error E1002, sent to an endpoint client that has no grant for the scopes it asked for or whose signature or proof is not valid. The two commands in quotes stay as written. */
 "error.E1002.message" = "सेवा ने इस क्लाइंट को अस्वीकार कर दिया। उसे माँगे गए स्कोप की अनुमति नहीं है, या उसका हस्ताक्षर या प्रमाण मान्य नहीं है। “ojd access list” चलाएँ, “ojd access grant” से क्लाइंट को अनुमति दें और फिर से कनेक्ट करें।";
+/* Text of error E1003, sent when a line on the endpoint is invalid or arrives at the wrong time. Hello is the name of the first line kind and stays as written. */
 "error.E1003.message" = "सेवा यह पंक्ति स्वीकार नहीं कर सकी। यह मान्य नहीं है या गलत समय पर आई। पहले hello भेजें, फिर एक अनुरोध, और हर पंक्ति को एंडपॉइंट स्कीमा से जाँचें।";
+/* Text of error E1004, sent when the endpoint refuses a ninth connection on one transport. The number 8 is the fixed limit; the socket and the WebSocket are the two transports. */
 "error.E1004.message" = "एंडपॉइंट पहले से 8 कनेक्शन प्रति ट्रांसपोर्ट (socket और WebSocket प्रत्येक) सँभाल रहा है। जिस कनेक्शन की ज़रूरत नहीं है उसे बंद करें और फिर से कनेक्ट करें।";
+/* Text of error E1005, sent to an endpoint client whose grant is removed while it is connected. The command in quotes stays as written. */
 "error.E1005.message" = "इस क्लाइंट की अनुमति कनेक्ट रहते हुए हटा दी गई। “ojd access grant” से उसे फिर से अनुमति दें और फिर से कनेक्ट करें।";
+/* Text of error E1006, sent to an endpoint client that reads lines too slowly, so that 256 lines wait for it. 256 is the fixed limit. */
 "error.E1006.message" = "क्लाइंट ने पंक्तियाँ बहुत धीरे पढ़ीं और 256 पंक्तियाँ प्रतीक्षा में रहीं। पंक्तियाँ जितनी तेज़ी से आएँ उतनी तेज़ी से पढ़ें और फिर से कनेक्ट करें।";
+/* Text of error E1007, sent when the service runs four virtual gamepads and a feed asks for another one. feed is a request kind of the endpoint and stays as written. */
 "error.E1007.message" = "सेवा पहले से 4 वर्चुअल गेमपैड चला रही है। जिस feed की ज़रूरत नहीं है उसे बंद करें और फिर से feed भेजें।";
+/* Text of error E1008, sent when the virtual gamepad of a feed is closed. feed is a request kind of the endpoint and stays as written. */
 "error.E1008.message" = "वर्चुअल गेमपैड बंद हो गया, या सेवा कोई गेमपैड नहीं चला रही। फिर से कनेक्ट करें और feed भेजें।";
+/* Text of error E1009, sent when a line names an API version that the service does not speak. apiVersion and details.supportedAPIVersions are field names and stay as written. */
 "error.E1009.message" = "सेवा किसी पंक्ति में दिए गए apiVersion को नहीं समझती। details.supportedAPIVersions में दिए गए किसी एक संस्करण को भेजें और फिर से कनेक्ट करें।";
+/* Text of error E1010, sent when a line has a kind that the service does not know or does not accept at this point. Hello, Subscription, FeedRequest and Frame are kinds of lines and stay as written. */
 "error.E1010.message" = "किसी पंक्ति में ऐसा kind है जिसे सेवा नहीं जानती या इस चरण पर स्वीकार नहीं करती। पहले Hello भेजें, फिर Subscription या FeedRequest, फिर Frame पंक्तियाँ भेजें और फिर से कनेक्ट करें।";
+/* Text of error E1011, sent when a line has no apiVersion or no kind. apiVersion and kind are field names and stay as written. */
 "error.E1011.message" = "किसी पंक्ति में apiVersion या kind नहीं है। हर पंक्ति में दोनों होते हैं। उन्हें जोड़ें और फिर से कनेक्ट करें।";
 "ui.shortcuts.action.activateProfile.description" = "किसी रीमैपिंग प्रोफ़ाइल को उसके कंट्रोलर मॉडल के लिए चालू करता है।";
 "ui.shortcuts.action.activateProfile.title" = "प्रोफ़ाइल सक्रिय करें";
@@ -1830,87 +2539,166 @@
 "ui.shortcuts.profile.model" = "कंट्रोलर मॉडल";
 "ui.shortcuts.profile.name" = "नाम";
 "ui.shortcuts.profile.type" = "रीमैपिंग प्रोफ़ाइल";
+/* One-line summary of 'ojd explain' in the command list and at the top of its help. */
 "cli.explain.group.abstract" = "एक त्रुटि कोड समझाता है: उसका अर्थ क्या है और उसे कैसे ठीक करें।";
+/* Long description in the help of 'ojd explain'. ojd explain stays as written. The code case does not matter, so E2004 and e2004 are the same. */
 "cli.explain.group.discussion" = "ojd explain हर त्रुटि कोड को समझाता है। यह ऑफ़लाइन काम करता है, और कोड के अक्षर बड़े हों या छोटे, इससे फ़र्क़ नहीं पड़ता।";
+/* Help text of the CODE argument of 'ojd explain'. E2004 is an example of an error code and stays as written. */
 "cli.explain.group.code" = "त्रुटि कोड, उदाहरण के लिए E2004।";
+/* Error of 'ojd explain' when the code does not exist. %@ is the text the user gave. Error-Codes is the name of a wiki page and stays as written. */
 "cli.explain.group.unknown" = "%@ कोई सक्रिय त्रुटि कोड नहीं है। वर्तनी जाँचें; विकी का Error-Codes पृष्ठ सभी कोड सूचीबद्ध करता है।";
+/* Line of the output of 'ojd explain' that names the area of the error. %@ is the area name, one of the area labels. */
 "cli.explain.group.area" = "क्षेत्र: %@";
+/* Area label in the output of 'ojd explain' for errors of the endpoint that programs connect to. */
 "cli.explain.group.areaEndpoint" = "एंडपॉइंट";
+/* Area label in the output of 'ojd explain' for errors of the command line. */
 "cli.explain.group.areaCli" = "कमांड लाइन";
+/* Area label in the output of 'ojd explain' for errors of button remapping. */
 "cli.explain.group.areaRemapping" = "रीमैपिंग";
+/* Area label in the output of 'ojd explain' for errors of mod packages, the packages that add controller support. */
 "cli.explain.group.areaMod" = "मॉड पैकेज";
+/* Area label in the output of 'ojd explain' for errors of the documents that the driver reads, such as profiles and records. */
 "cli.explain.group.areaDocument" = "दस्तावेज़";
+/* Line of the output of 'ojd explain' with the exit status that the command ends with for this error. %@ is the number. */
 "cli.explain.group.exitCode" ="एग्ज़िट कोड: %@";
+/* Line of the output of 'ojd explain' with the wire value of the code, which other programs read. %@ is that value and stays as written. */
 "cli.explain.group.wire" = "वायर मान: %@";
+/* Error when the installed app is older than the repository sources that built this ojd. The build command, the environment variable OJD_RUN_REPOSITORY_CLI=1 and OpenJoystickDriver.app stay as written. */
 "cli.shared.error.staleInstallation" = "इंस्टॉल किया गया OpenJoystickDriver.app इन रिपॉज़िटरी स्रोतों से पुराना है। इस बिल्ड को चलाने के लिए “./Scripts/ojd build install-fast dev” चलाएँ या OJD_RUN_REPOSITORY_CLI=1 सेट करें।";
+/* Error when ojd cannot hand the command line to the installed ojd. ojd stays as written. */
 "cli.shared.error.forwarderAllocation" = "इंस्टॉल किए गए ojd के लिए तर्क आरक्षित नहीं किए जा सके। कमांड फिर से चलाएँ।";
+/* Error when ojd cannot start the installed ojd. %@ is the reason from the system. OpenJoystickDriver.app stays as written. */
 "cli.shared.error.forwarderExec" = "इंस्टॉल किया गया ojd नहीं चलाया जा सका: %@। OpenJoystickDriver.app को फिर से इंस्टॉल करें।";
+/* Text of error E2001, printed when ojd meets a failure that has no code of its own. ojd and the command in quotes stay as written. */
 "error.E2001.message" = "ojd को एक ऐसी त्रुटि मिली जिसे वह पहचानता नहीं। “ojd diagnose” चलाएँ और उसके आउटपुट के साथ समस्या की रिपोर्ट करें।";
+/* Text of error E2002, printed when the first word after ojd is not a command. ojd and the command in quotes stay as written. */
 "error.E2002.message" = "यह ojd का कमांड नहीं है। कमांड देखने के लिए “ojd --help” चलाएँ।";
+/* Text of error E2003, printed when the options or values of a command are wrong or missing. --help stays as written. */
 "error.E2003.message" = "कमांड लाइन में कोई विकल्प या मान ग़लत है या ग़ायब है। यह देखने के लिए कि कमांड क्या अपेक्षा करता है, उसे --help के साथ चलाएँ।";
+/* Text of error E2004, printed when a command needs the service and it is not running. OpenJoystickDriver is the product name. The command in quotes stays as written. */
 "error.E2004.message" = "OpenJoystickDriver सेवा नहीं चल रही है। उसे “ojd service start” से शुरू करें।";
+/* Text of error E2005, printed when the service does not answer in time. The command in quotes and --timeout stay as written. */
 "error.E2005.message" = "सेवा ने समय पर जवाब नहीं दिया। उसे “ojd status” से जाँचें या --timeout के साथ अधिक प्रतीक्षा करें।";
+/* Text of error E2006, printed when the service reports that it could not complete a request. The command in quotes stays as written. */
 "error.E2006.message" = "सेवा ने अनुरोध पूरा नहीं किया। उसे “ojd status” से जाँचें और फिर कोशिश करें।";
+/* Text of error E2007, printed when the service refuses this ojd because its code signature differs from the app. ojd and OpenJoystickDriver.app stay as written. */
 "error.E2007.message" = "सेवा ने इस ojd को अस्वीकार कर दिया क्योंकि यह ऐप की तरह हस्ताक्षरित नहीं है। OpenJoystickDriver.app के अंदर आने वाला ojd चलाएँ।";
+/* Text of error E2008, printed when a command needs a macOS permission that is missing. The command in quotes stays as written. */
 "error.E2008.message" = "एक अनुमति ग़ायब है। उसे “ojd permission request” से दें।";
+/* Text of error E2009, printed when a command that changes or deletes data runs without a terminal and without --force. --force stays as written. */
 "error.E2009.message" = "यह कमांड डेटा बदलता या हटाता है और इसे पुष्टि चाहिए। इसे --force के साथ फिर चलाएँ।";
+/* Text of error E2010, printed when a command stops before it finishes because the user declined, an editor failed or no input came. */
 "error.E2010.message" = "कमांड पूरा होने से पहले रुक गया क्योंकि आपने मना किया, कोई एडिटर विफल हुआ या कोई इनपुट नहीं आया। इसे फिर चलाएँ।";
+/* Text of error E2011, printed when a profile file or a record file is not valid against its schema. */
 "error.E2011.message" = "प्रोफ़ाइल या रिकॉर्ड फ़ाइल मान्य नहीं है। उसे उसके स्कीमा के अनुसार ठीक करें और फिर कोशिश करें।";
+/* Text of error E2012, printed when a name matches no controller, profile, binding or client, or matches more than one. The word list in quotes is the name of the matching list command and stays as written. */
 "error.E2012.message" = "कोई कंट्रोलर, प्रोफ़ाइल, असाइनमेंट या क्लाइंट मेल नहीं खाता, या एक से अधिक मेल खाते हैं। उन्हें संबंधित “list” कमांड से सूचीबद्ध करें और ठीक एक का नाम दें।";
+/* Text of error E2013, printed when the controller cannot take a requested action. The command in quotes stays as written. */
 "error.E2013.message" = "कंट्रोलर अभी यह नहीं कर सकता। हो सकता है वह समर्थित न हो, तैयार न हो या डिस्कनेक्ट हो। उसे “ojd controller list” से जाँचें।";
+/* Text of error E2014, printed when the app is not fully installed or its signature is not valid. OpenJoystickDriver is the product name. The command in quotes stays as written. */
 "error.E2014.message" = "OpenJoystickDriver पूरी तरह इंस्टॉल नहीं है या उसका हस्ताक्षर मान्य नहीं है। ऐप को फिर से इंस्टॉल करें और “ojd diagnose” चलाएँ।";
+/* Text of error E2015, printed when macOS does not complete or apply a request of the driver. */
 "error.E2015.message" = "सिस्टम ने अनुरोध पूरा नहीं किया या लागू नहीं किया। सिस्टम सेटिंग्स जाँचें और फिर कोशिश करें।";
+/* Text of error E2016, printed when a file cannot be read, written or deleted, or is present although it must not be. */
 "error.E2016.message" = "कोई फ़ाइल पढ़ी, लिखी या हटाई नहीं जा सकी, या वह पहले से मौजूद है। पथ और उसकी अनुमतियाँ जाँचें।";
+/* Text of error E2017, printed when a client is unsigned or signed ad hoc and so cannot be granted access. Developer ID is the name of an Apple signing identity and stays as written. */
 "error.E2017.message" = "वह क्लाइंट हस्ताक्षरित नहीं है या ad hoc हस्ताक्षरित है, इसलिए उसे पहुँच नहीं दी जा सकती। उसे Developer ID से हस्ताक्षरित करें और फिर कोशिश करें।";
+/* Text of error E2018, printed when 'ojd diagnose' found a failed check. The command in quotes stays as written. */
 "error.E2018.message" = "“ojd diagnose” को एक विफल जाँच मिली। उसका आउटपुट पढ़ें और विफल मदों को ठीक करें।";
+/* Text of error E2019, printed when the check for updates did not finish. */
 "error.E2019.message" = "अपडेट की जाँच पूरी नहीं हुई। अपना नेटवर्क कनेक्शन जाँचें और फिर कोशिश करें।";
+/* Text of error E2020, printed when the installed app is older than the ojd that runs. OpenJoystickDriver is the product name. The build command and OJD_RUN_REPOSITORY_CLI=1 stay as written. */
 "error.E2020.message" = "इंस्टॉल किया गया OpenJoystickDriver ऐप इस ojd से पुराना है। इस बिल्ड को चलाने के लिए “./Scripts/ojd build install-fast dev” चलाएँ या OJD_RUN_REPOSITORY_CLI=1 सेट करें।";
+/* Text of error E2021, printed when an ojd built from the repository cannot hand a command to the installed app. OpenJoystickDriver.app stays as written. */
 "error.E2021.message" = "रिपॉज़िटरी से बना ojd कमांड को इंस्टॉल किए गए ऐप को नहीं सौंप सका। OpenJoystickDriver.app को फिर से इंस्टॉल करें और कमांड फिर चलाएँ।";
+/* Text of error E3001, returned when a remapping request names a controller that is not connected or not ready. */
 "error.E3001.message" = "कंट्रोलर कनेक्ट नहीं है या रीमैपिंग के लिए तैयार नहीं है। उसे फिर कनेक्ट करें और फिर कोशिश करें।";
+/* Text of error E3002, returned when two Joy-Cons cannot be paired into one controller. Joy-Con is a Nintendo product name. */
 "error.E3002.message" = "चुने गए Joy-Con जोड़े नहीं जा सके। कनेक्टेड कंट्रोलर रीफ़्रेश करें और फिर कोशिश करें।";
+/* Text of error E3003, returned when a motion request names a controller without a motion sensor. */
 "error.E3003.message" = "कंट्रोलर गति का डेटा नहीं बताता। गति सेंसर वाला कंट्रोलर चुनें या गति विकल्प बंद रखें।";
+/* Text of error E3004, returned when a value in a request is larger than the service accepts. */
 "error.E3004.message" = "अनुरोध का कोई मान उससे बड़ा है जितना सेवा स्वीकार करती है। छोटा मान भेजें।";
+/* Text of error E3005, returned when the list of active profiles is damaged and cannot be loaded. */
 "error.E3005.message" = "सक्रिय प्रोफ़ाइलों की सूची क्षतिग्रस्त है और लोड नहीं हो सकी। क्षतिग्रस्त फ़ाइल की मरम्मत करें या उसे हटाएँ और फिर कोशिश करें।";
+/* Text of error E3006, returned when a profile name is in use. The command in quotes stays as written. */
 "error.E3006.message" = "इस नाम की प्रोफ़ाइल पहले से मौजूद है। कोई दूसरा नाम चुनें; “ojd profile list” उपयोग में आ रहे नाम दिखाता है।";
+/* Text of error E3007, returned when a request has missing or invalid arguments. */
 "error.E3007.message" = "अनुरोध में तर्क ग़ायब या अमान्य हैं। मान जाँचें और फिर कोशिश करें।";
+/* Text of error E3008, returned when a profile is not valid. */
 "error.E3008.message" = "प्रोफ़ाइल मान्य नहीं है। असाइनमेंट जाँचें और फिर कोशिश करें।";
+/* Text of error E3009, returned when saving a profile would make the profile library too large. */
 "error.E3009.message" = "प्रोफ़ाइल लाइब्रेरी बहुत बड़ी हो जाएगी। जो प्रोफ़ाइलें आपको नहीं चाहिए उन्हें हटाएँ और फिर कोशिश करें।";
+/* Text of error E3010, returned when a profile with the same identifier exists. */
 "error.E3010.message" = "इस पहचानकर्ता की प्रोफ़ाइल पहले से मौजूद है। नया पहचानकर्ता इस्तेमाल करें या मौजूदा प्रोफ़ाइल अपडेट करें।";
+/* Text of error E3011, returned when a profile changed elsewhere after the client loaded it. */
 "error.E3011.message" = "लोड करने के बाद प्रोफ़ाइल कहीं और बदल गई। उसे फिर लोड करें और अपना बदलाव फिर करें।";
+/* Text of error E3012, returned when the library holds the largest number of profiles it allows. */
 "error.E3012.message" = "लाइब्रेरी में पहले से अनुमत प्रोफ़ाइलों की अधिकतम संख्या है। जो प्रोफ़ाइल आपको नहीं चाहिए उसे हटाएँ और फिर कोशिश करें।";
+/* Text of error E3013, returned when no profile has the identifier. The command in quotes stays as written. */
 "error.E3013.message" = "किसी प्रोफ़ाइल का यह पहचानकर्ता नहीं है। प्रोफ़ाइलें “ojd profile list” से सूचीबद्ध करें।";
+/* Text of error E3014, returned when the service cannot encode its reply. */
 "error.E3014.message" = "सेवा अपना उत्तर एन्कोड नहीं कर सकी। फिर कोशिश करें और समस्या बनी रहे तो रिपोर्ट करें।";
+/* Text of error E3015, returned when the reply exceeds the largest size the service can send. */
 "error.E3015.message" = "उत्तर उससे बड़ा है जितना सेवा भेज सकती है। कम डेटा माँगें और फिर कोशिश करें।";
+/* Text of error E3016, returned when the remapping engine is not available yet. */
 "error.E3016.message" = "रीमैपिंग इंजन उपलब्ध नहीं है। थोड़ी देर प्रतीक्षा करें और फिर कोशिश करें, या सेवा को फिर शुरू करें।";
+/* Text of error E3017, returned when neither the profile library nor the remapping engine is available yet. */
 "error.E3017.message" = "प्रोफ़ाइल लाइब्रेरी और रीमैपिंग इंजन उपलब्ध नहीं हैं। थोड़ी देर प्रतीक्षा करें और फिर कोशिश करें, या सेवा को फिर शुरू करें।";
+/* Text of error E3018, returned when the profile library is not available yet. */
 "error.E3018.message" = "प्रोफ़ाइल लाइब्रेरी उपलब्ध नहीं है। थोड़ी देर प्रतीक्षा करें और फिर कोशिश करें, या सेवा को फिर शुरू करें।";
+/* Text of error E3019, returned when the remapping router has shut down. */
 "error.E3019.message" = "रीमैपिंग राउटर बंद हो चुका है। सेवा को फिर शुरू करें और फिर कोशिश करें।";
+/* Text of error E3020, returned when the service cannot tell whether the last profile change is saved. */
 "error.E3020.message" = "सेवा पुष्टि नहीं कर सकी कि अंतिम प्रोफ़ाइल बदलाव सहेजा गया या नहीं। प्रोफ़ाइलें फिर लोड करें और उन्हें दोबारा बदलने से पहले जाँच लें।";
+/* Text of error E3021, returned when a profile file cannot be read. */
 "error.E3021.message" = "कोई प्रोफ़ाइल फ़ाइल पढ़ी नहीं जा सकी। जाँचें कि फ़ाइल मौजूद है और सेवा उसे पढ़ सकती है।";
+/* Text of error E3022, returned when damaged profile files block every profile change. */
 "error.E3022.message" = "प्रोफ़ाइलें बदलने से पहले क्षतिग्रस्त प्रोफ़ाइल फ़ाइलों की मरम्मत करनी या उन्हें हटाना होगा। उनकी मरम्मत करें या उन्हें हटाएँ और फिर कोशिश करें।";
+/* Text of error E3023, returned when a profile file cannot be written. */
 "error.E3023.message" = "कोई प्रोफ़ाइल फ़ाइल लिखी नहीं जा सकी। डिस्क की खाली जगह और फ़ोल्डर की अनुमतियाँ जाँचें।";
+/* Text of error E3024, returned when the remapping service meets a failure it does not recognize. The command in quotes stays as written. */
 "error.E3024.message" = "रीमैपिंग सेवा को एक ऐसी त्रुटि मिली जिसे वह पहचानती नहीं। “ojd diagnose” चलाएँ और उसके आउटपुट के साथ समस्या की रिपोर्ट करें।";
+/* Text of error E3025, returned when a profile that produces no output is activated. --allow-empty stays as written. */
 "error.E3025.message" = "यह प्रोफ़ाइल कोई आउटपुट नहीं देती। इसमें कोई असाइनमेंट या लाइट का रंग जोड़ें, या --allow-empty के साथ इसे सक्रिय करें।";
+/* Text of error E3026, returned when a Joy-Con pair profile needs a gyro calibration of the other Joy-Con. Joy-Con is a Nintendo product name. */
 "error.E3026.message" = "Joy-Con जोड़ी की प्रोफ़ाइल जायरो दूसरे Joy-Con से लेती है। उस कंट्रोलर की गति कैलिब्रेट करें जिसे प्रोफ़ाइल जायरो के लिए चुनती है।";
+/* Text of error E3027, returned when a motion request names a controller with no active remapping profile. */
 "error.E3027.message" = "इस कंट्रोलर के लिए कोई रीमैपिंग प्रोफ़ाइल सक्रिय नहीं है, इसलिए वह गति को प्रोसेस नहीं करता। उसके लिए कोई प्रोफ़ाइल सक्रिय करें, लक्षित ऐप को सामने लाएँ और फिर कोशिश करें।";
+/* Text of error E3028, returned when the remapping session of the controller changed while a request ran. */
 "error.E3028.message" = "अनुरोध चलने के दौरान कंट्रोलर का रीमैपिंग सत्र बदल गया। फिर कोशिश करें।";
+/* Text of error E3029, returned when a profile that comes from an installed package is edited. */
 "error.E3029.message" = "इंस्टॉल किए गए पैकेज से आई प्रोफ़ाइल बदली नहीं जा सकती। प्रोफ़ाइल की प्रतिलिपि बनाएँ और प्रतिलिपि बदलें।";
+/* Text of error E4001, printed when the manifest of a mod package is missing or invalid. mod.json stays as written. */
 "error.E4001.message" = "पैकेज मैनिफ़ेस्ट mod.json मौजूद नहीं है या अमान्य है। इसे mod-package स्कीमा से जाँचें और कमांड दोबारा चलाएँ।";
+/* Text of error E4002, printed when a mod package requires another version of the app than the one that runs. OpenJoystickDriver is the product name. */
 "error.E4002.message" = "पैकेज को चल रहे संस्करण से अलग OpenJoystickDriver संस्करण चाहिए। ऐसा पैकेज संस्करण इंस्टॉल करें जो इस संस्करण को सपोर्ट करता हो, या OpenJoystickDriver अपडेट करें।";
+/* Text of error E4003, printed when a file of a mod package is invalid, missing or not listed in the manifest. mod.json stays as written. */
 "error.E4003.message" = "पैकेज की कोई फ़ाइल अमान्य है, गायब है, या mod.json में सूचीबद्ध नहीं है। कमांड में बताई गई फ़ाइल ठीक करें और उसे दोबारा चलाएँ।";
+/* Text of error E4004, printed when a mod package covers a controller, persona or profile that the user's files or another package hold. */
 "error.E4004.message" = "पैकेज ऐसे कंट्रोलर, पर्सोना या प्रोफ़ाइल को कवर करता है जो आपकी अपनी फ़ाइलों या इंस्टॉल किए गए किसी दूसरे पैकेज में पहले से है। टकराने वाली फ़ाइल या पैकेज हटाएँ, या पैकेज बदलें, और कमांड दोबारा चलाएँ।";
+/* Text of error E4005, printed when a mod package of the same name is installed. --force stays as written. */
 "error.E4005.message" = "इस नाम का पैकेज पहले से इंस्टॉल है। उसे बदलने के लिए कमांड को --force के साथ चलाएँ।";
+/* Text of error E4006, printed when no installed mod package has the name. The command in quotes stays as written. */
 "error.E4006.message" = "इस नाम का कोई इंस्टॉल किया हुआ पैकेज नहीं है। इंस्टॉल किए गए पैकेज देखने के लिए ojd mod list चलाएँ।";
+/* Text of error E4007, printed when the folder of the installed mod packages cannot be changed. */
 "error.E4007.message" = "पैकेज फ़ोल्डर बदला नहीं जा सका। डिस्क की खाली जगह और फ़ोल्डर की अनुमतियाँ जाँचें।";
+/* Text of error E5001, printed when a document has no apiVersion or an unsupported one. apiVersion stays as written. OpenJoystickDriver is the product name. */
 "error.E5001.message" = "किसी दस्तावेज़ में apiVersion नहीं है, या उसका apiVersion OpenJoystickDriver के इस संस्करण में समर्थित नहीं है। दस्तावेज़ को संदेश में बताए गए समर्थित apiVersion पर बदलें और कमांड फिर से चलाएँ।";
+/* Text of error E5002, printed when a protocol description is invalid against its schema. */
 "error.E5002.message" = "प्रोटोकॉल विवरण अमान्य है। फ़ाइल को protocol-description स्कीमा से जाँचें और संदेश में बताए गए फ़ील्ड को ठीक करें।";
+/* Text of error E5003, printed when the family in a protocol description differs from its file name. */
 "error.E5003.message" = "प्रोटोकॉल विवरण ऐसा परिवार बताता है जो उसकी फ़ाइल के नाम से अलग है। फ़ाइल का नाम उसके परिवार के नाम पर रखें।";
+/* Text of error E5004, printed when a protocol description lists a variant that its family lacks. */
 "error.E5004.message" = "प्रोटोकॉल विवरण ऐसा वेरिएंट सूचीबद्ध करता है जो उसके परिवार में नहीं है। परिवार के वेरिएंट में से एक चुनें।";
+/* Text of error E5005, printed when the access file is damaged. AccessGrants.json is a file name and stays as written. */
 "error.E5005.message" = "एक्सेस फ़ाइल AccessGrants.json क्षतिग्रस्त है। फ़ाइल को ठीक करें या हटाएँ, फिर एक्सेस दोबारा दें।";
+/* Text of error E5006, printed when the key file of the unit IDs cannot be read or has the wrong size. PortKeyInstallation.key is a file name and stays as written. OpenJoystickDriver is the product name. */
 "error.E5006.message" = "यूनिट ID की कुंजी फ़ाइल PortKeyInstallation.key पढ़ी नहीं जा सकती, या वह 32 बाइट की नहीं है। फ़ाइल को बैकअप से वापस लाएँ। अगर आप इसे हटा देते हैं, तो OpenJoystickDriver एक नई कुंजी बनाता है और हर यूनिट ID बदल जाती है।";
 /* Error E5007, shown when a controller record or patch fails its schema; the message names the field. */
 "error.E5007.message" = "कंट्रोलर रिकॉर्ड या patch अमान्य है। फ़ाइल को उसके स्कीमा से जाँचें और संदेश में बताए गए फ़ील्ड को ठीक करें।";
 "ui.error.withCode" = "%1$@ (%2$@)";
+/* Message printed by 'ojd update check' when the installed version is newer than the latest release. %1$@ is the installed version and %2$@ is the latest release. */
 "cli.update.check.ahead" = "OpenJoystickDriver %1$@ प्रकाशित नवीनतम रिलीज़ (%2$@) से नया है।";
 "ui.settings.general.updateAhead" = "नवीनतम रिलीज़ से नया";
 "ui.settings.general.version" = "संस्करण";
@@ -1932,6 +2720,7 @@
 "ui.activity.status.pass" = "सफल";
 "ui.activity.status.warn" = "चेतावनी";
 "ui.activity.status.skip" = "छोड़ी गई";
+/* Warning shown above exported or displayed service logs, wherever the logs are shown. The logs can hold private data. */
 "cli.log.group.sharingWarning" = "सेवा के लॉग में डिवाइस के नाम, पहचानकर्ता या निदान के पाथ हो सकते हैं। साझा करने से पहले उन्हें देख लें।";
 "ui.activity.filter" = "फ़िल्टर";
 "ui.activity.check.transportExtensionBundle" = "ड्राइवर एक्सटेंशन बंडल";
@@ -1988,10 +2777,15 @@
 "ui.settings.advanced.unreadableTitle" = "सेटिंग्स पढ़ी नहीं जा सकतीं";
 "ui.settings.advanced.unreadableResetSettings" = "सेटिंग्स रीसेट करें";
 "platform.macos.ui.settings.advanced.unreadableShowInFinder" = "Finder में दिखाएँ";
+/* One-line summary of 'ojd setting reset' in the command list and at the top of its help. */
 "cli.setting.reset.abstract" = "सेटिंग्स फ़ाइल को ट्रैश में भेजें।";
+/* Long description in the help of 'ojd setting reset'. Settings.json is a file name and stays as written. */
 "cli.setting.reset.discussion" = "Settings.json को ट्रैश में भेजता है, ताकि हर सेटिंग अपने डिफ़ॉल्ट मान पर लौट आए। फ़ाइल क्षतिग्रस्त हो या अस्वीकार की गई हो, तो इसका उपयोग करें।";
+/* Yes or no question that 'ojd setting reset' asks on a terminal. */
 "cli.setting.reset.confirm" = "क्या सेटिंग्स फ़ाइल को ट्रैश में भेजना है और हर सेटिंग को डिफ़ॉल्ट पर लौटाना है?";
+/* Message printed after 'ojd setting reset'. %@ is the path of the settings file. */
 "cli.setting.reset.success" = "%@ को ट्रैश में भेज दिया गया।";
+/* Message printed by 'ojd setting reset' when there is no settings file. %@ is the path where the file would be. */
 "cli.setting.reset.none" = "%@ पर कोई सेटिंग्स फ़ाइल नहीं है।";
 /* Why a controller is not published as a virtual device, and a failed send. */
 "ui.controllers.publication.reason.outputDisabled" = "वर्चुअल आउटपुट बंद है";
