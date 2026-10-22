@@ -1,5 +1,6 @@
 /// Chooses the one virtual HID profile a logical controller publishes: the Advanced override when
-/// the controller fits it, else `Generic`.
+/// the controller fits it, else `SDLCompatible` when the controller's primary controls fit it,
+/// else `Generic`.
 ///
 /// Selection reads only the controller's declared controls and the user's Advanced override.
 /// Protocol, manufacturer, consumer, macOS version, and access backend never participate, and a
@@ -25,6 +26,9 @@ public enum VirtualHIDProfileSelector {
     .leftTrigger, .rightTrigger,
   ])
 
+  /// The profiles automatic selection tries, in order.
+  static let automaticOrder: [VirtualHIDProfileID] = [.sdlCompatible, .generic]
+
   /// Selects the profile for a controller that declares `controls`.
   ///
   /// - Throws: `ProtocolBindingReason.virtualProfileUnavailable` when the selected profile cannot
@@ -46,8 +50,11 @@ public enum VirtualHIDProfileSelector {
     let required = controls.intersection(primaryControls)
     func fits(_ profile: VirtualHIDProfileID) -> Bool { represents(required, in: slots(profile)) }
     if let override, fits(override) { return Selection(profileID: override, source: .override) }
-    let automatic = VirtualHIDProfileID.default
-    guard fits(automatic) else { throw .virtualProfileUnavailable }
+    // SDL 3.4.12 and 3.4.16 map `SDLCompatible` as an Xbox pad and give `Generic` no gamepad
+    // mapping, and GameController takes `045E:02FD` as an Xbox pad, so `SDLCompatible` leads.
+    guard let automatic = automaticOrder.first(where: fits) else {
+      throw .virtualProfileUnavailable
+    }
     return Selection(
       profileID: automatic,
       source: override.map(Selection.Source.automaticAfterRejecting) ?? .automatic

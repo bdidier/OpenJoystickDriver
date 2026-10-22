@@ -148,18 +148,18 @@ The 0.5.0-beta.4 audit shows `v1beta1` never shipped, so rewriting the layout br
 
 ### D5 Serving routes and personas
 
-`ServingRoute` is `NativePassThrough(allowance)`, `VirtualHID(persona)`, `ExtensionOwned`, or `OutputDisabled`, decided once by a pure `ServingPolicy` from record, link, user setting and the controller's allowance (`PhysicalControllerOutputCapabilities`). There is no per-app input: a virtual HID device is a system-wide `IOHIDUserDevice`, and macOS gives the service no way to know which app reads it. The current automatic profile default (`VirtualHIDProfileSelector.swift:50`, spoof `045E:02FD`) becomes `Generic`.
+`ServingRoute` is `NativePassThrough(allowance)`, `VirtualHID(persona)`, `ExtensionOwned`, or `OutputDisabled`, decided once by a pure `ServingPolicy` from record, link, user setting and the controller's allowance (`PhysicalControllerOutputCapabilities`). There is no per-app input: a virtual HID device is a system-wide `IOHIDUserDevice`, and macOS gives the service no way to know which app reads it. Automatic selection in `VirtualHIDProfileSelector` picks `SDLCompatible` (`045E:02FD`) when the controller's primary controls fit it and `Generic` otherwise.
 
-Assumed (veto-able): default persona is `Generic` everywhere; `SDLCompatible` is opt-in per model or by user setting. Reason: SDL 3.4.18 does not list the `045E:02FD` persona with default hints, nor with `SDL_JOYSTICK_HIDAPI_XBOX(_ONE)=1`, `SDL_JOYSTICK_MFI=1` or `--gc-prewarm`; it appears only with `SDL_JOYSTICK_HIDAPI=0` (through MFi, as `045E:02E0`). The reading is that SDL's HIDAPI Xbox driver claims the device and then fails to open it, which matches the wiki's Steam and SDL failure reports. The `1209:4A4F` persona enumerates and, with the mapping line below, SDL reports `is_gamepad=yes` with axes at 0 at rest. Button and axis directions are not yet confirmed by presses.
+Decided from hardware evidence (maintainer, 2026-10-22, macOS 27): automatic selection publishes `SDLCompatible` when the controller's primary controls fit it, else `Generic`; `Generic` is the persona a user chooses, per model or per controller. PCSX2 2.8.2 (bundled SDL 3.4.12) and DuckStation (bundled SDL 3.4.16) map every control of `SDLCompatible` as an Xbox pad (A/B/X/Y, LB/RB, View/Menu, sticks, triggers, D-pad, Xbox, both motors) and report "No generic bindings were generated for device 'SDL-0'" for `Generic`. Apple's `AppleGameControllerPersonality.kext` lists `045E:02FD` with `GCIOMatchVirtual` true, so GameController takes the virtual device as an Xbox pad. A run of SDL 3.4.18 did not list the persona with default hints, nor with `SDL_JOYSTICK_HIDAPI_XBOX(_ONE)=1`, `SDL_JOYSTICK_MFI=1` or `--gc-prewarm`; it appeared only with `SDL_JOYSTICK_HIDAPI=0`. The apps above are the evidence for the default; that run is not reproduced by them. Steam is untested with this persona (the wiki's Steam failure used `045E:02FD` on macOS 26.7.1; tasks 24.65 and H8).
 
-The `SDLCompatible` persona needs a hardware-evidenced fix so SDL's HIDAPI Xbox driver opens it. Until the fix lands it is documented as not working with default SDL hints. No Microsoft ID appears outside this persona: `1209:0001` (SDK sample), `4F4A:4449` (retired) and the 045E values in the HIDTool subcommands are reconciled (the sample uses `1209:0001`, the pid.codes test ID; retired ID removed; HIDTool takes IDs from records).
+No Microsoft ID appears outside this persona: `1209:0001` (SDK sample), `4F4A:4449` (retired) and the 045E values in the HIDTool subcommands are reconciled (the sample uses `1209:0001`, the pid.codes test ID; retired ID removed; HIDTool takes IDs from records).
 
 ### D6 SDL, Wine/CrossOver and browsers
 
 | Consumer | `Generic` `1209:4A4F` | `SDLCompatible` `045E:02FD` |
 | --- | --- | --- |
-| SDL3 app (Steam, games) | Enumerated; gamepad only with OJD's mapping (CRC-less GUID `03000000091200004f4a000008040000`). Supplied by environment variable for apps OJD launches and by a mapping file the CLI prints or exports. | Not listed with default hints (live evidence); needs the hardware-evidenced fix. |
-| GameController framework | Seen as a generic HID gamepad. | `supportsHIDDevice` yes, "Xbox Wireless Controller", category "Xbox One", haptics yes. |
+| SDL3 app (games, emulators) | Enumerated; gamepad only with OJD's mapping (CRC-less GUID `03000000091200004f4a000008040000`). Supplied by environment variable for apps OJD launches and by a mapping file the CLI prints or exports. PCSX2 2.8.2 (SDL 3.4.12) and DuckStation (SDL 3.4.16) report "No generic bindings were generated for device 'SDL-0'" without it. | Mapped as an Xbox pad with default hints by PCSX2 2.8.2 (SDL 3.4.12) and DuckStation (SDL 3.4.16). Steam is untested (24.65). |
+| GameController framework | Seen as a generic HID gamepad. | `supportsHIDDevice` yes, "Xbox Wireless Controller", category "Xbox One", haptics yes; the kext lists `045E:02FD` with `GCIOMatchVirtual` true. |
 | Wine and CrossOver | Seen as a generic HID joystick (task: hardware check, not claimed here). | Seen as Xbox-class where Wine's SDL path lists it. |
 | Browsers | W3C Gamepad API non-standard mapping unless the browser has a rule for the ID; OJD publishes a W3C-style description. | Standard mapping expected through the Xbox ID. |
 
@@ -316,8 +316,8 @@ Issues the data model must make expressible: #38 (ShanWan vendor control reads, 
 - [The release is very large and touches nearly every file] -> ordered task groups, each with a Verify line; the equivalence harness comes first.
 - [Data-driven records cannot express some protocol] -> keep that protocol as code and give it a typed-parameter record; list it in `protocol-descriptions`.
 - [Probe-based clone detection misfires on a firmware revision nobody tested] -> probes are read-only, a failed probe falls back to the model's default mode, and the hardware check covers the two DS3 units.
-- [`SDLCompatible` still not opened by SDL] -> it is opt-in and documented as not working with default hints until a hardware-evidenced fix exists.
-- [Default persona change surprises users of 0.5.x] -> it is a breaking release; release notes say so.
+- [Steam may not read `SDLCompatible`] -> Steam is untested with it (24.65); a user switches to `Generic` per model.
+- [Persona change surprises users of 0.5.x] -> it is a breaking release; release notes say so.
 - [GUI visual quality cannot be machine-checked] -> user approval gates per screen group.
 - [Machine-translated strings drift while keys move] -> re-keying is a mechanical rename first; translation review is a separate task.
 - [Apple grants only seven USB IDs] -> the generator refuses extension records outside the set.

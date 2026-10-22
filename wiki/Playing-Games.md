@@ -30,7 +30,7 @@ OJD picks a profile for each controller model in this order:
 2. The `SDLCompatible` profile, if it fits the main controls of the controller.
 3. The `Generic` profile.
 
-The choice does not depend on the game, the macOS version, or the vendor. In current builds, the code suggests that OJD chooses the Xbox profile for most controllers. Not verified for every model.
+The choice does not depend on the game, the macOS version, or the vendor. Both profiles carry every main control, so OJD chooses the Xbox profile for every controller unless you set an override. PCSX2 2.8.2 (SDL 3.4.12) and DuckStation (SDL 3.4.16) map every control of the Xbox profile as an Xbox pad: A, B, X, Y, LB, RB, View, Menu, both sticks, both triggers, the D-pad, Xbox, and both rumble motors. With the `Generic` profile, they report "No generic bindings were generated for device 'SDL-0'". The maintainer tested this on macOS 27. Steam is not tested with the Xbox profile.
 
 OJD does not publish a virtual controller if macOS already handles the controller natively. The controller detail shows this state as **Left to macOS**.
 
@@ -79,7 +79,7 @@ OJD is designed to make one automatic choice work across these interfaces. The f
 
 ### Start an App With the SDL Mapping
 
-`ojd virtual launch PROGRAM` runs a program and sets `SDL_GAMECONTROLLERCONFIG` for it to the SDL mapping of each virtual controller that OJD publishes, so SDL in that program lists them. The `SDLCompatible` profile does not work with the default SDL hints, and the command prints a note when it serves that profile. `ojd virtual launch --sdl-gamecontroller-backend PROGRAM` also sets the SDL hints that make SDL read controllers only through Apple's GameController framework, the one SDL route that lists that profile. OJD sets the variable only for programs that it starts. The maintainer has not verified on hardware that a game lists a controller this way. For more information, see [Command reference](Command-Reference.md).
+`ojd virtual launch PROGRAM` runs a program and sets `SDL_GAMECONTROLLERCONFIG` for it to the SDL mapping of each virtual controller that OJD publishes, so SDL in that program lists them. PCSX2 2.8.2 (SDL 3.4.12) and DuckStation (SDL 3.4.16) map the `SDLCompatible` profile as an Xbox pad without this command, but a `Generic` controller gets no gamepad mapping in them without it. `ojd virtual launch --sdl-gamecontroller-backend PROGRAM` also sets the SDL hints that make SDL read controllers only through Apple's GameController framework. OJD sets the variable only for programs that it starts. The maintainer has not verified on hardware that a game lists a controller this way. For more information, see [Command reference](Command-Reference.md).
 
 ### Workaround For One Controller
 

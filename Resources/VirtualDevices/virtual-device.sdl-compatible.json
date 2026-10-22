@@ -4,7 +4,7 @@
   "persona": "SDLCompatible",
   "layout": "XboxOneSBluetooth",
   "transport": "Bluetooth",
-  "worksWithDefaultSDLHints": false,
+  "worksWithDefaultSDLHints": true,
   "labels": "Xbox",
   "identity": {
     "vendorID": 1118,

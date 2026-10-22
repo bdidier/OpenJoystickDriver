@@ -86,22 +86,22 @@ package struct ServingFixture: Sendable {
       "native claimed by OJD",
       .systemGamepad,
       .ojd,
-      route: .virtualHID(.generic),
+      route: .virtualHID(.sdlCompatible),
       offersServerChoice: true
     ),
     Self(
       "seized HID",
       .exclusiveHID,
       .system,
-      route: .virtualHID(.generic),
+      route: .virtualHID(.sdlCompatible),
       offersServerChoice: false
     ),
     Self(
       "seized HID with override",
       .exclusiveHID,
       .system,
-      override: .sdlCompatible,
-      route: .virtualHID(.sdlCompatible),
+      override: .generic,
+      route: .virtualHID(.generic),
       offersServerChoice: false
     ),
     Self(
@@ -110,7 +110,7 @@ package struct ServingFixture: Sendable {
       .ojd,
       source: .rawUSB,
       accessRoute: .rawAccess,
-      route: .virtualHID(.generic),
+      route: .virtualHID(.sdlCompatible),
       offersServerChoice: false
     ),
     Self(

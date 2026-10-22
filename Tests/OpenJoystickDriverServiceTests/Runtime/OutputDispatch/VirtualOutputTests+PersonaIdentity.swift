@@ -82,7 +82,7 @@ extension VirtualOutputTests {
     try await dispatcher.activate(for: [custom, plain])
 
     let builds = log.snapshot().filter { $0.hasPrefix("built") }
-    #expect(builds == ["built Generic as 4660:22136 Custom Pad", "built Generic"])
+    #expect(builds == ["built Generic as 4660:22136 Custom Pad", "built SDLCompatible"])
     await dispatcher.close()
   }
 
@@ -141,7 +141,7 @@ extension VirtualOutputTests {
     try FileManager.default.removeItem(at: directory.appendingPathComponent("0001-0002.json"))
     try await dispatcher.retarget(controller: custom)
     #expect(builds().count == 4)
-    #expect(builds().last == "built Generic")
+    #expect(builds().last == "built SDLCompatible")
     await dispatcher.close()
   }
 }

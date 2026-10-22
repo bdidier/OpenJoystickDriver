@@ -6,15 +6,15 @@ struct VirtualHIDProfileSelectorTests {
   private typealias Selector = VirtualHIDProfileSelector
 
   @Test
-  func aFullXboxLayoutSelectsTheDefaultProfile() throws {
+  func aFullXboxLayoutSelectsSDLCompatible() throws {
     let selection = try Selector.select(controls: Control.xboxLayout, override: nil)
-    #expect(selection == .init(profileID: .generic, source: .automatic))
+    #expect(selection == .init(profileID: .sdlCompatible, source: .automatic))
   }
 
   @Test
-  func everyDeclaredControlTogetherStillSelectsTheDefaultProfile() throws {
+  func everyDeclaredControlTogetherStillSelectsTheXboxProfile() throws {
     let selection = try Selector.select(controls: Set(Control.allCases), override: nil)
-    #expect(selection == .init(profileID: .generic, source: .automatic))
+    #expect(selection == .init(profileID: .sdlCompatible, source: .automatic))
   }
 
   @Test
@@ -23,7 +23,7 @@ struct VirtualHIDProfileSelectorTests {
       .guide, .capture, .capture, .touchpadClick, .microphone, .leftPaddle1, .rightPaddle2,
       .auxiliary8, .leftTrackpadClick, .rightTrackpadTouch,
     ])
-    #expect(try Selector.select(controls: controls, override: nil).profileID == .generic)
+    #expect(try Selector.select(controls: controls, override: nil).profileID == .sdlCompatible)
   }
 
   @Test
@@ -31,13 +31,13 @@ struct VirtualHIDProfileSelectorTests {
     let controls = Control.xboxLayout.subtracting([.leftTrigger, .rightTrigger]).union([
       .leftTrigger, .rightTrigger,
     ])
-    #expect(try Selector.select(controls: controls, override: nil).profileID == .generic)
+    #expect(try Selector.select(controls: controls, override: nil).profileID == .sdlCompatible)
   }
 
   @Test
-  func aSubsetOfTheXboxLayoutSelectsTheDefaultProfile() throws {
+  func aSubsetOfTheXboxLayoutSelectsTheXboxProfile() throws {
     let controls = Control.dpad.union([.south, .east, .back, .start])
-    #expect(try Selector.select(controls: controls, override: nil).profileID == .generic)
+    #expect(try Selector.select(controls: controls, override: nil).profileID == .sdlCompatible)
   }
 
   @Test(arguments: VirtualHIDProfileID.allCases)
@@ -58,8 +58,8 @@ struct VirtualHIDProfileSelectorTests {
     #expect(Set(Control.allCases).subtracting(Selector.primaryControls) == nonPrimary)
   }
 
-  /// Both profiles carry every primary control today, so automatic selection never needs
-  /// anything but `Generic`, an override is always satisfiable, and
+  /// Both profiles carry every primary control today, so automatic selection always takes
+  /// `SDLCompatible`, an override is always satisfiable, and
   /// `virtual-profile-unavailable` cannot occur with the real profiles. The synthetic-slot tests
   /// below cover those branches.
   @Test(arguments: VirtualHIDProfileID.allCases)
@@ -75,15 +75,45 @@ struct VirtualHIDProfileSelectorTests {
   }
 
   @Test
-  func automaticSelectionNeverFallsBackToTheOtherPersona() {
+  func automaticSelectionFallsToGenericWhenSDLCompatibleCannotCarryTheControls() throws {
     let slots: [VirtualHIDProfileID: Set<Control>] = [
-      .sdlCompatible: [.south, .east], .generic: [.south],
+      .sdlCompatible: [.south], .generic: [.south, .east],
+    ]
+    let selection = try Selector.select(controls: [.south, .east], override: nil) {
+      slots[$0, default: []]
+    }
+    #expect(selection == .init(profileID: .generic, source: .automatic))
+  }
+
+  @Test
+  func automaticSelectionFailsWhenNeitherPersonaCarriesTheControls() {
+    let slots: [VirtualHIDProfileID: Set<Control>] = [
+      .sdlCompatible: [.south], .generic: [.south],
     ]
     #expect(throws: ProtocolBindingReason.virtualProfileUnavailable) {
       try Selector.select(controls: [.south, .east], override: nil) {
         slots[$0, default: []]
       }
     }
+  }
+
+  @Test
+  func aGenericOverrideKeepsGenericForAControllerSDLCompatibleFits() throws {
+    let selection = try Selector.select(controls: Control.xboxLayout, override: .generic)
+    #expect(selection == .init(profileID: .generic, source: .override))
+  }
+
+  @Test
+  func anUnsatisfiableGenericOverrideFallsBackToSDLCompatible() throws {
+    let slots: [VirtualHIDProfileID: Set<Control>] = [
+      .sdlCompatible: [.south, .east], .generic: [.south],
+    ]
+    let selection = try Selector.select(controls: [.south, .east], override: .generic) {
+      slots[$0, default: []]
+    }
+    #expect(
+      selection == .init(profileID: .sdlCompatible, source: .automaticAfterRejecting(.generic))
+    )
   }
 
   @Test

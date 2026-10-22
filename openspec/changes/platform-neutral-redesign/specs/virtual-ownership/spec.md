@@ -25,7 +25,7 @@ The app MUST show the current server of each connected controller that the syste
 
 ### Requirement: REQ-20 Virtual ownership publishes a virtual gamepad
 
-A controller served by OJD MUST get a published virtual gamepad that games see, with the persona the user chose and `Generic` by default, also when its active profile has `virtualGamepad: passthrough` and no bindings, and the controller's pipeline MUST dispatch each changed report to the virtual device without a remapping route, where the same controller left to the system dispatches none.
+A controller served by OJD MUST get a published virtual gamepad that games see, with the persona the user chose and the automatic persona otherwise, also when its active profile has `virtualGamepad: passthrough` and no bindings, and the controller's pipeline MUST dispatch each changed report to the virtual device without a remapping route, where the same controller left to the system dispatches none.
 
 #### Scenario: Passthrough profile
 

@@ -226,32 +226,23 @@ struct VirtualCommandTests {
   }
 
   @Test
-  func exportMappingTellsWhenSDLNeedsItsHints() async throws {
+  func exportMappingPrintsNoNoteForProfilesThatWorkWithDefaultSDLHints() async throws {
     let service = try FakeService(devices: [])
     let human = await service.run(["virtual", "export-mapping"])
-    let note = "# \(sdlHintsNote("SDLCompatible"))"
     let lines = human.standardOutput.split(separator: "\n").map(String.init)
-    #expect(lines.filter { $0.hasPrefix("#") } == [note])
-    // The note is a comment, so every other line is still a mapping.
-    #expect(lines.filter { !$0.hasPrefix("#") }.count == VirtualHIDProfileID.allCases.count)
-    let sdlCompatible = try VirtualHIDProfileID.sdlCompatible.gamepadMapping().sdlMapping
-    let noteIndex = try #require(lines.firstIndex(of: note))
-    #expect(lines[noteIndex + 1] == sdlCompatible)
+    #expect(!lines.contains { $0.hasPrefix("#") })
+    #expect(lines.count == VirtualHIDProfileID.allCases.count)
 
     let json = try await service.run(["virtual", "export-mapping", "--json"]).json()
     let mappings = try #require(json["mappings"] as? [[String: Any]])
     for entry in mappings {
       let sdl = try #require(entry["sdl"] as? [String: Any])
-      #expect(
-        sdl["worksWithDefaultSDLHints"] as? Bool
-          == (entry["profile"] as? String != "SDLCompatible"),
-        "\(entry)"
-      )
+      #expect(sdl["worksWithDefaultSDLHints"] as? Bool == true, "\(entry)")
     }
   }
 
   @Test
-  func showStatesInHumanAndJSONOutputWhenSDLNeedsItsHints() async throws {
+  func showStatesInHumanAndJSONOutputThatSDLNeedsNoHints() async throws {
     var device = ApplicationServiceDeviceDescription.fixture(id: "pad-1")
     device.virtualHIDProfile = ApplicationServiceVirtualHIDProfileStatus(
       profile: .sdlCompatible,
@@ -262,12 +253,12 @@ struct VirtualCommandTests {
     let service = try FakeService(devices: [device])
     let human = await service.run(["virtual", "show"])
     #expect(human.code == 0, "\(human.standardError)")
-    #expect(human.standardOutput.contains(sdlHintsNote("SDLCompatible")))
+    #expect(!human.standardOutput.contains(sdlHintsNote("SDLCompatible")))
 
     let json = try await service.run(["virtual", "show", "--json"]).json()
     let controllers = try #require(json["controllers"] as? [[String: Any]])
     let sdl = try #require(controllers.first?["sdl"] as? [String: Any])
-    #expect(sdl["worksWithDefaultSDLHints"] as? Bool == false)
+    #expect(sdl["worksWithDefaultSDLHints"] as? Bool == true)
 
     var generic = ApplicationServiceDeviceDescription.fixture(id: "pad-2")
     generic.virtualHIDProfile = ApplicationServiceVirtualHIDProfileStatus(
