@@ -70,7 +70,12 @@ final class InterfaceReleaseWatch: @unchecked Sendable {
     continuation?.resume()
   }
 
+  /// Runs on the notification queue, so no callback reads `service` while it is released.
   func stop() {
+    queue.sync(execute: release)
+  }
+
+  private func release() {
     if notification != 0 {
       IOObjectRelease(notification)
       notification = 0

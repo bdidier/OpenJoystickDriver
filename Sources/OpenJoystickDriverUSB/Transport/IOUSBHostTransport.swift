@@ -108,20 +108,6 @@ public actor IOUSBHostTransportProvider: USBTransportProvider {
     )?.takeRetainedValue() as? String
   }
 
-  /// The device's own `UsbExclusiveOwner` registry property, such as `pid 11070, steam_osx`. It
-  /// is read without a parent search, because a hub's owner is not the device's.
-  public func exclusiveOwner(of device: USBTransportDevice) throws -> String? {
-    guard device.route == .rawUSB else { throw USBTransportError.notSupported }
-    let service = try Self.deviceService(for: device)
-    defer { IOObjectRelease(service) }
-    return IORegistryEntryCreateCFProperty(
-      service,
-      "UsbExclusiveOwner" as CFString,
-      kCFAllocatorDefault,
-      0
-    )?.takeRetainedValue() as? String
-  }
-
   public func resetDevice(_ device: USBTransportDevice) throws {
     guard device.route == .rawUSB else { throw USBTransportError.notSupported }
     let service = try Self.deviceService(for: device)

@@ -37,6 +37,8 @@ extension ApplicationServiceDeviceDescription {
     unit: String? = nil,
     power: ControllerConnectionState.Power? = nil,
     inputHealth: ControllerInputHealth = ControllerInputHealth(state: .healthy),
+    hidInputOwnership: HIDInputOwnership = .unknown,
+    inputOwner: USBExclusiveOwner? = nil,
     physicalOutputOwner: ControllerServer = .ojd,
     tuning: ControllerTuning = .none,
     protocolBinding: ProtocolBindingID = ProtocolBindingID(.hidDescriptor)
@@ -48,6 +50,8 @@ extension ApplicationServiceDeviceDescription {
       protocolBinding: protocolBinding,
       connection: "USB",
       discoverySource: .rawUSB,
+      hidInputOwnership: hidInputOwnership,
+      inputOwner: inputOwner,
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
       physicalOutputCapabilities: outputs,
