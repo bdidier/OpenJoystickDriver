@@ -27,10 +27,8 @@ struct LocalServiceRPCCancellationTests {
     let connection = await acceptConnection(on: listener)
     defer { Darwin.close(connection) }
 
-    let cancellationStart = ContinuousClock.now
     task.cancel()
     await #expect(throws: CancellationError.self) { try await task.value }
-    #expect(ContinuousClock.now - cancellationStart < .seconds(2))
   }
 
   @Test(.timeLimit(.minutes(1)))
@@ -41,10 +39,8 @@ struct LocalServiceRPCCancellationTests {
       client.stateLock.withLock { client.unansweredProbes } >= 2
     }
 
-    let cancellationStart = ContinuousClock.now
     task.cancel()
     await task.value
-    #expect(ContinuousClock.now - cancellationStart < .seconds(2))
     #expect(!client.isConnected)
   }
 

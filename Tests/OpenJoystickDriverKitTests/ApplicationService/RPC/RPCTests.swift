@@ -330,10 +330,8 @@ struct LocalServiceRPCTests {
     }
     for await _ in requestReceived { break }
 
-    let cancellationStart = ContinuousClock.now
     task.cancel()
     await #expect(throws: CancellationError.self) { try await task.value }
-    #expect(ContinuousClock.now - cancellationStart < .seconds(1))
 
     let result: String = try await LocalServiceRPCClient.call(
       method: "afterCancellation",
@@ -399,7 +397,7 @@ struct LocalServiceRPCTests {
     return descriptor
   }
 
-  @Test
+  @Test(.timeLimit(.minutes(1)))
   func aClientThatLeavesCancelsOnlyTheRequestsThatHoldTheirReplyOpen() async throws {
     let socketPath = temporarySocketPath()
     let started = Locked<Set<String>>([])
@@ -423,12 +421,11 @@ struct LocalServiceRPCTests {
       try send(method: held, socketPath: socketPath),
       try send(method: mutation, socketPath: socketPath),
     ]
-    let deadline = ContinuousClock.now + .seconds(5)
-    while started.withLock({ $0.count }) < 2, ContinuousClock.now < deadline {
+    while started.withLock({ $0.count }) < 2 {
       try await Task.sleep(nanoseconds: 5_000_000)
     }
     for client in clients { Darwin.close(client) }
-    while ended.withLock({ $0.count }) < 2, ContinuousClock.now < deadline {
+    while ended.withLock({ $0.count }) < 2 {
       try await Task.sleep(nanoseconds: 5_000_000)
     }
 

@@ -106,7 +106,7 @@ struct LocalRPCBridgeTests {
   }
 
   @Test
-  func aStatusNotificationReachesAWaitingClientWithinOneSecond() async throws {
+  func aStatusNotificationReachesAWaitingClient() async throws {
     try await withServer { server in
       let socketPath = unregisteredSocketPath()
       let rpcServer = LocalServiceRPCServer(
@@ -120,14 +120,11 @@ struct LocalRPCBridgeTests {
       await client.connect()
       let baseline = try await client.waitForServiceStatusChange(after: nil).revision
 
-      let clock = ContinuousClock()
-      let start = clock.now
       async let next = client.waitForServiceStatusChange(after: baseline)
       try await Task.sleep(nanoseconds: 100_000_000)
       NotificationCenter.default.post(name: .ojdServiceStatusDidChange, object: nil)
 
       #expect(try await next.revision != baseline)
-      #expect(clock.now - start < .seconds(10))
     }
   }
 

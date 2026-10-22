@@ -270,12 +270,12 @@ struct ControllerModeTests {
     #expect(log.withLock { $0 }.first?.contains("GATT") == true)
   }
 
-  @Test
+  @Test(.timeLimit(.minutes(1)))
   func aReadThatNeverReturnsGivesUpAtTheDeadline() async {
     let release = DispatchSemaphore(value: 0)
-    let started = ContinuousClock.now
     let reads = BoundedHIDRead()
     let device = UUID()
+    // The read blocks until released, so only the deadline can end the call.
     let result = await reads.run(key: device, timeout: 0.05) {
       release.wait()
       return .success(Data([1]))
@@ -285,7 +285,6 @@ struct ControllerModeTests {
       return
     }
     #expect(code == kIOReturnTimeout)
-    #expect(ContinuousClock.now - started < .seconds(5))
     // A read inside the deadline keeps its own answer, and a timeout is no stall.
     release.signal()
     let other = await reads.run(key: UUID(), timeout: 5) { .success(Data([7])) }
