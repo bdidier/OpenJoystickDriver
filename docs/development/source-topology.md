@@ -50,10 +50,11 @@ GameControllerProbe       -> Kit, MacOSPlatform
 Sources/OpenJoystickDriverKit/
   ApplicationService/  shared client, RPC, payload, lifecycle, and remapping contracts
   Bluetooth/           Switch 2 Bluetooth LE routing
+  CommandLine/         kebab-case spellings of enum values for command-line output
   Concurrency/         locking and blocking-work helpers
   Platform/            `PlatformHost` protocol and `PlatformHosts` registry
-  Device/              controller identity, Manager, Discovery (HID, USB), input state,
-                       PhysicalOutput, Pipeline
+  Device/              identity types (model, hardware, port key, session token, reference),
+                       Controller state, Manager, Discovery (HID, USB), PhysicalOutput, Pipeline
   Diagnostics/         support reports, probes, health, build identity, and packet logs
   Errors/              the `ErrorCode` catalog
   HID/                 availability-selected physical HID access
@@ -65,7 +66,8 @@ Sources/OpenJoystickDriverKit/
   Protocol/            catalog, GIP, parsers, drivers, classification, and physical-output
                        capabilities
   Remapping/           reusable profile and mapping engine
-  Resources/           generated controller records (Controllers/) and localization tables
+  Resources/           generated controller records (Controllers/), protocol descriptions
+                       (Protocols/), virtual devices (VirtualDevices/), and localization tables
   Settings/            the `Settings.json` store, document, and watcher (defaults, then the user file)
   Storage/             DataDirectory port and its macOS implementation; the only path builder
   Streaming/           `InputSource` and `OutputSink`, the frame boundary every path attaches to
@@ -89,19 +91,20 @@ Sources/OpenJoystickDriverService/
                        (CoreGraphics adaptation)
   Runtime/             runtime composition, Automation, Endpoint, OutputDispatch, RPC, file
                        watchers, and virtual device diagnostics
-  Status/              SystemExtension status
+  Status/              SystemExtension submission, probe, and setup client
 
 Sources/OpenJoystickDriverCLI/
   Commands/            one directory per command group: Access, Binding, Config, Controller,
-                       Diagnose, Explain, Extension, Log, Mod, Permission, Profile, Record,
-                       Service, Setting, Status, Update, Virtual
+                       Diagnose, Explain, Log, Mod, Permission, Profile, Record,
+                       Service, Setting, Status, TransportExtension, Update, Virtual
   Root/                global options, failure and terminal handling, service connection
 
 Sources/OpenJoystickDriverMacOSHost/
   MacOSPlatformHost.swift, HeadlessApplicationHost.swift
 
 Sources/OpenJoystickDriverPresentation/
-  Components/  Controllers/  InputCapture/  MenuBar/  Profiles/  Runtime/  Settings/
+  Access/  Activity/  Components/  Controllers/  InputCapture/  Library/  MainMenu/  MainWindow/
+  MenuBar/  Profiles/  Runtime/  Settings/  SettingsWindow/
 
 Sources/OpenJoystickDriver/
   main.swift, App/ (Info.plist, Host.entitlements), Resources/

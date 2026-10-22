@@ -1,164 +1,254 @@
 # Using the App
 
-Learn the menu-bar item, the app window, and the tools in each pane.
+Learn the menu-bar item, the main menu, the five areas of the app window, and the Settings window.
 
 ## Contents
 
-- [Menu-Bar Item](#menu-bar-item)
-- [Overview Pane](#overview-pane)
-- [Controllers Pane](#controllers-pane)
-- [Console and Settings](#console-and-settings)
-- [Testing a Controller](#testing-a-controller)
-- [Further Reading](#further-reading)
+- [Menu-bar item](#menu-bar-item)
+- [Main window](#main-window)
+- [Controllers area](#controllers-area)
+- [Profiles area](#profiles-area)
+- [Library area](#library-area)
+- [Access area](#access-area)
+- [Activity area](#activity-area)
+- [Settings window](#settings-window)
+- [Testing a controller](#testing-a-controller)
+- [Further reading](#further-reading)
 
 ## Menu-Bar Item
 
 The menu-bar item shows OpenJoystickDriver status and opens the app window.
-
-### About the Icon
-
-OJD has no Dock icon. The app runs from the menu bar. The icon does not change with status. To read status, open the menu. Click the icon to open it.
+**Show in menu bar** and **Show in Dock** in **Settings** > **General** choose where the app shows its icon.
+At least one of them stays on.
 
 ### Menu Items
 
 The menu contains these items, from top to bottom:
 
-- A summary row that you cannot click. It shows readiness, the number of controllers, and the active profile, for example `Ready · 1 controller connected · My controller`. If no profile is active, it shows **No active profile**.
-- **Request Access...** appears only when a permission is missing. It starts the macOS permission requests and opens the matching **System Settings** pane.
-- **Controllers** lists each connected controller. **No controller connected** appears when the list is empty.
-- **Show OpenJoystickDriver** opens the app window on the last pane you used.
-- **Settings...** (<kbd>Command</kbd>+<kbd>,</kbd>) opens the **Settings** pane.
-- **Help** contains **Open Console...** and **GitHub**.
-- **About OpenJoystickDriver** shows the version.
-- **Quit OpenJoystickDriver** (<kbd>Command</kbd>+<kbd>Q</kbd>) stops OJD.
+- A status row that you cannot click.
+  It shows readiness, the number of controllers, and the active profile.
+- **Controllers** lists each connected controller as a submenu.
+  **No controller connected** appears when the list is empty.
+- **Profiles** has **Activate** and **Deactivate** submenus with the profiles that apply.
+- **Grant Access** appears only when a permission is missing.
+  It opens the **Access** area.
+- **Open Window** opens the app window on the area you used last.
+- **Settings...** opens the **Settings** window.
+- **Help** contains **Activity Log**, **Explain Error Code...**, **Report a Problem...**, and **Project Website**.
+- **Quit OpenJoystickDriver** stops OJD.
 
 ### Controller Entries
 
 Each controller in the **Controllers** submenu has its own submenu:
 
-- **Controllers...** opens the **Controllers** pane.
-- **Disconnect Wireless Link** appears only for classic Bluetooth controllers. OJD shows a **Disconnect Wireless Controller?** alert to confirm. The controller stays disconnected until you connect it again by hand. OJD cannot disconnect a Bluetooth Low Energy controller: turn it off or disconnect it in System Settings > Bluetooth.
+- **Suspend** pauses input, physical effects, and virtual output for this controller.
+  While the controller is suspended, the item reads **Resume**.
+- **Test Input** opens the Input Test window.
+- **Active Profile** lists the profiles that apply to this controller and checks the active one.
+- **Disconnect Wireless Link** is on only for a controller that connects by Bluetooth.
+  OJD shows a **Disconnect Wireless Controller?** alert to confirm.
+  The controller stays disconnected until you connect it again by hand.
+  OJD cannot disconnect a Bluetooth Low Energy controller: turn it off or disconnect it in **System Settings** > **Bluetooth**.
+- **Show in Window** opens the controller in the **Controllers** area.
 
 ### Quit and Reopen
 
-Quit stops the runtime. OJD does not start again by itself. Start it from the Applications folder. Opening the app again while it runs shows the window on the **Overview** pane. Closing the window with the red button only hides it.
+Quit stops the runtime.
+OJD does not start again by itself unless **Start at login** is on.
+Start it from the Applications folder.
+Closing the window with the red button only hides it.
 
-## Overview Pane
+## Main Window
 
-The **Overview** pane shows the Xbox USB driver state, the access that OpenJoystickDriver has, and the overall status.
+The app window has a sidebar with five areas.
+Press <kbd>Command</kbd>+<kbd>1</kbd> to <kbd>Command</kbd>+<kbd>5</kbd> to select them in this order:
 
-### Open the Pane
-
-The app window has a sidebar with these panes: **Overview**, **Controllers**, **Profiles**, **Console**, **Developer Tools**, and **Settings**. **Developer Tools** appears only when you turn it on in **Settings**. Click the sidebar button in the toolbar to hide or show the sidebar.
-
-### Xbox USB Driver Card
-
-This card is about the OJD driver extension. Only some Xbox One and Xbox Series controllers on USB need its Xbox USB part. For more information, see [Xbox USB driver extension](Connecting-Controllers.md).
-
-| Badge | Meaning |
+| Area | Use it to |
 | --- | --- |
-| Checking... | OJD reads the driver state. |
-| Activating... | The driver needs activation or replacement. OJD submits a request. |
-| Approval needed | macOS waits for your approval. |
-| Ready | OJD installed the driver and it runs. |
-| Needs attention | The driver is missing, invalid, or failed. |
+| **Controllers** | See each connected controller, choose who serves it, and test it. |
+| **Profiles** | Edit remapping profiles. |
+| **Library** | Install, test, and remove controller records and mods. |
+| **Access** | Check permissions, and manage the local endpoint for other programs. |
+| **Activity** | Read the log, run checks, and explain an error code. |
 
-The card has these buttons:
+The window opens on **Controllers** until you choose another area.
+**View** > **Hide Sidebar** hides the sidebar.
 
-- **Refresh** reads the state again.
-- **Open System Settings** appears when macOS waits for approval.
-- **Repair Xbox USB Driver** appears when the driver needs activation, failed, or is invalid.
-- **Controller Test** opens the **Controllers** pane.
-- **Copy Support Report** copies a report to the clipboard. No message tells you that the copy worked. For more information, see [Reporting a bug](Reporting-a-Bug.md).
-- **Uninstall** appears when the driver is active. It asks you to approve and then deactivates the driver.
+A banner below the toolbar shows a problem that stops OJD from working:
 
-### Access & Readiness
+- **OpenJoystickDriver cannot reach its service**.
+- **Xbox USB Driver**, when the driver extension needs approval, repair, or reinstalling.
+- **Permission needed**, with a button that opens **Access**.
+- **Live updates unavailable**, when the app cannot receive changes from the service.
+  The app then reads the controller list from the service instead, and tries to receive changes again.
+  The banner disappears when live updates work again.
 
-Four cards show **Input Monitoring**, **Accessibility**, **Keyboard & pointer**, and **Notifications**. Each card shows one value:
+### Main Menu
 
-- **Allowed**
-- **Needs attention**
-- **Checking...**
-- **Not needed** (only for **Keyboard & pointer**)
-- **Unavailable**
-- **Not requested**, **Banners off**, or **Sound off** (only for **Notifications**)
+The main menu follows the macOS layout:
 
-Click **Request...** on a card to ask for that access. If **Input Monitoring** or **Accessibility** is not allowed, **Restart OpenJoystickDriver** appears. For more information, see [Permissions](Permissions-and-Security.md#permissions).
+- **File** has **Import Profile...**, **Export Profile...**, **Install Record or Mod...**, **Save Support Report...**, and **Save Activity Log...**.
+- **View** selects the five areas and shows or hides the sidebar and the toolbar.
+- **Controller** has **Suspend**, **Resume**, **Test Input**, **Disconnect Wireless Link**, and **Show in Window** for the selected controller.
+- **Profile** has **Activate Profile** and **Deactivate Profile**.
+- **Help** has **Activity Log**, **Copy Support Report**, **Explain Error Code...**, **Report a Problem...**, and **Project Website**.
+  For more information, see [Reporting a bug](Reporting-a-Bug.md).
 
-### Status Card
+## Controllers Area
 
-The status card shows one status, such as **Ready**, **Connect a controller**, **Needs attention**, or **Starting...**. **Needs attention** also appears when a connected controller stops sending input. Click **Refresh** to read the status again.
-
-## Controllers Pane
-
-The **Controllers** pane lists connected controllers and shows details and actions for the selected controller.
-
-### The List
-
-The list shows each connected controller and updates by itself when the service reports a change, such as a controller you connect or disconnect. If no controller appears, the pane shows **No controller connected**. For more information, see [Controller not detected](Troubleshooting.md).
-
-If the app cannot receive changes from the service, a **Live updates unavailable** banner appears below the toolbar after three failed attempts in a row. It says why: the service closed the connection, the service did not answer in time, or live updates are not working. The app then reads the controller list from the service instead, and tries to receive changes again on each read. The reads are one second apart after the service closes the connection, about 26 seconds apart after a timeout, and between one and six seconds apart for other failures. The banner disappears when live updates work again. A short service restart does not show the banner.
+The **Controllers** area lists connected controllers and shows details for the selected controller.
+The list updates by itself when a controller connects or disconnects.
+If no controller appears, the area shows **No controller connected**.
+For more information, see [Controller not detected](Troubleshooting.md).
 
 ### Controller Details
 
-Select a controller to see its details. The details include these fields when the controller reports them:
+The details include these fields when the controller reports them:
 
-- **Published as**: the virtual controller identity that OJD shows to games. A controller that macOS handles itself shows **Native macOS gamepad, not published**.
-- **Protocol**
-- **Serial number**
-- **Battery**, **Charging state**, and **Cable state**
-- **USB VID/PID**: the vendor and product IDs. For more information, see [Finding your controller ID](Connecting-Controllers.md).
-- **Input endpoint** and **Output endpoint**
-- **Active profile**
+- **Active profile**.
+- **Publication**: whether OJD publishes a virtual gamepad for the controller.
+  A controller that macOS serves itself shows **Native macOS gamepad, not published**.
+- **Serving route**: how the input reaches games, for example **OpenJoystickDriver, virtual gamepad** or **macOS, passed through**.
+- **Protocol**.
+- **Serial number**, blurred until you click its eye button.
+- **Battery**, **Charging state**, and **Cable state**.
 
-A field that the controller does not report shows **Not reported**.
+A **Suspended** row with a **Resume** button appears while the controller is suspended.
+**Open Input Test...** opens the test window.
+For more information, see [Testing a controller](Testing-a-Controller.md).
 
-### Session Commands
+### Who Serves the Controller
 
-The Controller menu and the status menu hold the commands for the selected controller. The controller's context menu in the list holds **Suspend** or **Resume**, and **Disconnect Wireless Link** for a wireless controller:
+The **Served by** picker appears for a controller that macOS serves natively, or whose record gives it to OpenJoystickDriver.
+It never appears for a controller that uses raw USB or the driver extension.
+The choices are **macOS (native)** and **OpenJoystickDriver (virtual)**.
+**Set by** names the record layer that holds the choice.
+The change takes effect at once and stays after a restart.
+The command line does the same with `ojd controller claim` and `ojd controller release`.
+For more information, see [Choose who drives the controller](Controller-Records.md#choose-who-drives-the-controller).
 
-- **Test Input** opens the test window. For more information, see [Testing a controller](Testing-a-Controller.md).
-- **Suspend** pauses input, physical effects, and virtual output for this controller. The controller then shows **Suspended**. **Resume** continues. **Test Input** is off while the controller shows **Suspended**.
-- **Disconnect Wireless Link** appears only for classic Bluetooth controllers. It closes the Bluetooth link after you confirm. The controller stays disconnected until you connect it again by hand. OJD never reconnects Bluetooth by itself. OJD cannot disconnect a Bluetooth Low Energy controller: turn it off or disconnect it in System Settings > Bluetooth.
+### Virtual HID Profile
 
-### Advanced Section
-
-The **Advanced** section appears for controllers that macOS does not handle itself. It contains the **Virtual HID profile** menu:
+The **Virtual HID profile** menu appears for controllers that macOS does not serve itself:
 
 - **Automatic (<profile name>)** lets OJD choose the virtual controller profile and names the profile it chose.
 - **Xbox Wireless Controller (SDLCompatible)** forces the Xbox profile.
 - **OpenJoystickDriver Generic HID Gamepad (Generic)** forces the generic profile.
 
-> [!NOTE]
-> **Apply to** chooses whether the override applies to every connected controller of the same model or to this controller only. It appears for controllers that have a unit ID. **Reset all overrides** clears every override.
+**Apply to** chooses whether the override applies to every connected controller of the same model or to this controller only.
+**Reset all overrides** clears every override.
 
-The change takes effect at once. **Updating virtual HID profile...** shows while it applies. If activation fails, OJD restores the previous profile and shows a message. For more information, see [How games see your controller](Playing-Games.md).
+The change takes effect at once.
+**Updating virtual HID profile...** shows while it applies.
+If activation fails, OJD restores the previous profile and shows a message.
+For more information, see [How games see your controller](Playing-Games.md).
 
-## Console and Settings
+### Virtual Gamepad Actions
 
-The **Console** pane shows OpenJoystickDriver logs. The **Settings** pane controls login, notifications, updates, and developer tools.
+The detail also has **Export mapping**, which saves the SDL mapping or the W3C Gamepad description of the virtual gamepad, and **Launch game with virtual gamepad**, which starts a program with the mapping set.
 
-### Console Pane
+### Advanced Section
 
-Open **Console** from the sidebar or from **Help** > **Open Console...** in the menu-bar menu.
+The **Advanced** section holds the identifiers, the input and output endpoints, **Draft Record...**, and **Capture Packets...**.
+**USB VID/PID** is the vendor and product ID.
+For more information, see [Finding your controller ID](Connecting-Controllers.md).
 
-- **Stream** selects **All**, **Output**, or **Errors**.
-- **Refresh** reads the logs again.
-- **Copy All** copies the shown lines.
+## Profiles Area
 
-If there are no lines, the pane shows **No log entries.** Each start of OJD clears the logs. For more information, see [Reporting a bug](Reporting-a-Bug.md).
+The **Profiles** area lists the remapping profiles and opens the editor for the selected profile.
+For more information, see [Remapping profiles](Remapping-Profiles.md).
 
-### Settings Pane
+## Library Area
 
-Open **Settings** from the sidebar or press <kbd>Command</kbd>+<kbd>,</kbd>.
+The **Library** area lists the **Controller records** and the **Mods** that are installed.
+Select an item to see its fields and files.
 
-#### General
+- **Install** adds a controller record file or a mod folder.
+  **Validate...** checks it first.
+  **Replace** overwrites an installed item with the same name.
+  **Remove** deletes it after you confirm.
+- **Test Record...** replays a packet capture through a record and compares the result with the state you expect.
+- **Search** filters the list.
 
-**Start at login** opens OJD in the menu bar when you log in. It needs macOS 13 or later. If macOS needs approval, allow OJD in **System Settings** > **General** > **Login Items**.
+For more information, see [Writing controller mods](Writing-Controller-Mods.md) and [Controller records](Controller-Records.md).
 
-The switch shows what macOS reports, so a change made in **System Settings** appears here. Turning the switch off here, or running `ojd setting set launchAtLogin false`, also records that you opted out, so OJD does not register itself again at the next start. A change made only in **System Settings** records nothing. For more information, see [Command reference](Command-Reference.md).
+## Access Area
 
-#### Notifications
+The **Access** area shows what OJD is allowed to do, and which programs may read your controllers.
+
+### Permissions
+
+Four rows show **Input Monitoring**, **Accessibility**, **Keyboard & pointer**, and **Notifications**.
+Each row shows one value:
+
+- **Allowed**
+- **Needs attention**
+- **Checking...**
+- **Not needed** (only for **Keyboard & pointer**)
+- **Not requested**, **Banners off**, or **Sound off** (only for **Notifications**)
+
+A row that needs attention has a **Request...** button, or **Open System Settings** when macOS already knows the request.
+If **Input Monitoring** or **Accessibility** is not allowed, **Restart OpenJoystickDriver** appears.
+For more information, see [Permissions](Permissions-and-Security.md#permissions).
+
+### Local Endpoint
+
+The local endpoint lets other programs read controller state.
+It shows the socket path with **Copy Socket Path**, and the **WebSocket** with its **Port** and pages folder.
+**Turn On** asks you to confirm.
+
+- **Programs with access** lists each granted program with its scopes, **Read** and **Control**, and **Revoke**.
+  **Grant a Program...** adds one.
+  OJD refuses a program that is not signed.
+- **Tokens** lists the tokens.
+  **Create a Token...** asks for a name, the scopes, and the web origins that may use the token.
+  OJD shows the token once; copy it then.
+- **Refused recently** lists the programs and tokens that the endpoint turned away in the last 24 hours.
+- **Connected now** lists the open connections.
+
+For more information, see [Automating OpenJoystickDriver](Automating-OpenJoystickDriver.md).
+
+## Activity Area
+
+The **Activity** area has two modes.
+
+- **Log** shows the OpenJoystickDriver log.
+  **Stream** selects **All**, **Output**, or **Errors**.
+  **Lines** sets how many lines show, **Search** and **Filter** narrow them, and **Show in Finder** opens the log folder.
+  If there are no lines, the area shows **No log entries.**
+- **Diagnostics** shows the result of **Run Checks**: one row per check with **Passed**, **Warning**, or **Skipped**, and its details.
+
+**Explain Error Code...** in the **Help** menu shows what an error code means.
+For more information, see [Reporting a bug](Reporting-a-Bug.md).
+
+## Settings Window
+
+Open **Settings** from the app menu or press <kbd>Command</kbd>+<kbd>,</kbd>.
+The window has three panes.
+
+### General
+
+**Start at login** opens OJD in the menu bar when you log in.
+It needs macOS 13 or later.
+If macOS needs approval, allow OJD in **System Settings** > **General** > **Login Items**.
+
+The switch shows what macOS reports, so a change made in **System Settings** appears here.
+Turning the switch off here, or running `ojd setting set launchAtLogin false`, also records that you opted out, so OJD does not register itself again at the next start.
+A change made only in **System Settings** records nothing.
+For more information, see [Command reference](Command-Reference.md).
+
+**Show in menu bar** and **Show in Dock** choose where the icon shows.
+When **Show in Dock** is off, the Dock icon shows only while a window is open.
+
+Under **Updates**, **Check for updates automatically** looks for a newer version when the app starts.
+Click **Check Now** to look at once.
+OJD contacts GitHub only for these checks.
+The result is **Up to date**, **Update available**, or **Newer than the latest release**.
+Click **View Update** to open the release page.
+OJD does not download or install anything.
+Select **Include prerelease updates** to include beta versions.
+
+### Notifications
 
 Turn notifications on for these events:
 
@@ -166,19 +256,28 @@ Turn notifications on for these events:
 - **Profiles**: **Activated or switched** and **Deactivated**.
 - **Play a sound**.
 
-Click **Send Test Notification** to test delivery. The app asks the service, which announces the test notification back to the app, and shows the result in the window: a denied permission, a failed delivery or no answer. `ojd setting test-notification` does the same from a terminal. If macOS denies notifications, OJD turns the toggles off. Click **Open Notification Settings** to fix this.
+Click **Send Test Notification** to test delivery.
+The app asks the service, which announces the test notification back to the app, and shows the result in the window: a denied permission, a failed delivery or no answer. `ojd setting test-notification` does the same from a terminal.
+If macOS denies notifications, OJD turns the toggles off.
+Click **Open Notification Settings** to fix this.
 
-#### Updates
+### Advanced
 
-Click **Check Now** to look for a newer version. OJD contacts GitHub only when you click it. The result is **Up to date**, **Update available**, or **Update check failed**. Click **View Update** to open the release page. OJD does not download or install anything. Select **Include prerelease updates** to include beta versions.
+- **Xbox USB Driver** shows the state of the OJD driver extension.
+  Only some Xbox One and Xbox Series controllers on USB need it.
+  **Uninstall** appears while the driver is active; it asks you to approve and then deactivates the driver.
+  For more information, see [Xbox USB driver extension](Connecting-Controllers.md#xbox-usb-driver-extension).
+- **Command-Line Tool** links `ojd` to this app so that you can run it in Terminal.
+  **Install Command-Line Tool** asks for an administrator password.
+- **Enable Developer Tools** shows controller input and USB packet tools in this pane.
+  For more information, see [Finding your controller ID](Connecting-Controllers.md).
 
-#### Developer Tools
-
-Select **Enable Developer Tools** to add the **Developer Tools** pane. It shows controller input and USB packet tools. For more information, see [Finding your controller ID](Connecting-Controllers.md).
+If the settings file cannot be read, the app shows **Settings can't be read** with **Reset Settings**. `ojd setting reset` does the same from a terminal.
 
 ## Testing a Controller
 
-The Input Test window shows live input, rumble, and lighting. For more information, see [Testing a controller](Testing-a-Controller.md).
+The Input Test window shows live input, rumble, and lighting.
+For more information, see [Testing a controller](Testing-a-Controller.md).
 
 ## Further Reading
 

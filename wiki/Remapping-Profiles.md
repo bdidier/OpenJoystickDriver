@@ -77,11 +77,11 @@ This section explains how to create, activate, rename, duplicate, and delete a p
 ### Before You Begin
 
 - Connect the controller that the profile is for. The **Controller** list in the new profile sheet shows connected controllers. You can also select **Manual identifiers** and enter a vendor ID and product ID.
-- Open the **Profiles** pane in the OpenJoystickDriver settings window.
+- Open the **Profiles** area of the app window.
 
 ### Create a Profile In the App
 
-1. In the **Profiles** pane, click the **New profile** button.
+1. In the **Profiles** area, click the **New profile** button.
 2. In the **New profile** sheet, enter a name. The default name is `My controller`.
 3. Select the controller from the **Controller** list.
 4. Select the application scope. For more information, see [About profiles](#about-profiles).
@@ -167,7 +167,7 @@ Use export and import to keep a copy of a profile, to share it, or to move it to
 
 ### Export a Profile
 
-1. Open the **Profiles** pane.
+1. Open the **Profiles** area.
 2. Select the profile.
 3. Click **Profile actions**, then select **Export**.
 4. Select a folder and a file name. The default name is `PROFILE-NAME.json`.
@@ -181,7 +181,7 @@ ojd profile export PROFILE --output FILE.json
 
 ### Import a Profile
 
-1. Open the **Profiles** pane.
+1. Open the **Profiles** area.
 2. Click **Import profile**.
 3. Select a JSON file.
 4. Click **Open**.

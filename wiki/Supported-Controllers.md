@@ -52,7 +52,7 @@ An unverified controller may work, may partly work, or may not work. The tier do
 To find out whether your controller is in the catalog:
 
 1. Connect the controller.
-2. Open the **Controllers** pane in the OJD settings window.
+2. Open the **Controllers** area of the app window.
 3. Look for your controller in the list.
 
 You can also run this command:

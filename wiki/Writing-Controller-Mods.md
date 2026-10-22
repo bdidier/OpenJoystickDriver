@@ -31,7 +31,7 @@ ojd-sample/
 - `Profiles/` holds [remapping profiles](Profile-File-Reference.md).
 - `Personas/` holds virtual gamepad personas. Name each file `vvvv-pppp.json` after the model it matches, or `vvvv-pppp-U-UNIT.json` for one controller, where `UNIT` is the 16-character unit ID that `ojd controller show` prints.
 
-The sample package, `ojd-sample`, is in the [`docs/sdk/sample`](../docs/sdk/sample) folder of the repository. It adds a generic HID pad (`1209:0001`), a profile that maps Start to the space key, and a persona.
+The sample package, `ojd-sample`, is in the [`docs/sdk/sample`](../docs/sdk/sample) folder of the repository. It adds a generic HID pad (`1209:0001`), a profile that maps Start to the space key, and a persona. `1209:0001` is a pid.codes test ID: it is not unique to one product, so use it only for testing, and use the real VID and PID of your controller in a package you share.
 
 A package folder holds nothing else. OJD refuses a package with a file or folder that is not in the layout, and a package with a link. It skips hidden files.
 

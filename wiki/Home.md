@@ -5,7 +5,7 @@ OpenJoystickDriver (OJD) lets you use game controllers on macOS that macOS does 
 ## Start Here
 
 - [Getting started](Getting-Started.md): Learn what OJD is, install it, and use your first controller.
-- [Using the app](Using-the-App.md): Learn the menu-bar item, the app window, and the tools in each pane.
+- [Using the app](Using-the-App.md): Learn the menu-bar item, the five areas of the app window, and the Settings window.
 - [Testing a controller](Testing-a-Controller.md): Show live input from a controller, and test rumble and lighting.
 
 ## Controllers
