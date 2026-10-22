@@ -85,7 +85,7 @@
 /* Destructive button of the alert that throws away the unsaved changes of a profile. */
 "ui.settings.advanced.discardAction" = "変更内容を破棄";
 /* Title of the switch that turns on the developer tools in the Advanced pane of the settings window. */
-"ui.settings.advanced.enableDeveloperTools" = "開発者ツールを有効にする";
+"ui.settings.advanced.enableDeveloperTools" = "デベロッパツールを有効にする";
 /* Note in the Notifications pane of the settings window when macOS has turned off both banners and sounds for the app. System Settings is the name of the macOS app. */
 "platform.macos.ui.settings.notifications.notificationBannersAndSoundOff" = "システム設定でバナーとサウンドがオフになっています。";
 /* Value of the notification row in the Access area when macOS has turned off banners for the app. */
@@ -2984,7 +2984,7 @@
 /* Notice after a mod is removed. %@ is the mod name. */
 "ui.library.mod.removed" = "MOD「%@」を削除しました。";
 /* Line in the records list for a record that a mod changes. %@ is the name of the mod. */
-"ui.library.record.patchedBy" = "%@ が変更";
+"ui.library.record.patchedBy" = "%@ によるパッチ";
 /* Label of the field in the record detail that tells whether the USB extension claims the controller. */
 "ui.library.field.usbClaim" = "USB拡張機能";
 /* Value of the USB extension field: the extension claims the controller. */
@@ -3374,7 +3374,7 @@
 /* Confirm button of the alert that removes the command-line tool. */
 "ui.settings.commandLine.uninstallConfirm" = "アンインストール";
 /* Hint in the Advanced pane of the settings window while the developer tools are off. */
-"ui.settings.advanced.developerToolsOff" = "コントローラの入力とUSBパケットを表示するには、開発者ツールをオンにしてください。";
+"ui.settings.advanced.developerToolsOff" = "コントローラの入力とUSBパケットを表示するには、デベロッパツールをオンにしてください。";
 /* Status line in the menu bar menu. %1$@ is the runtime state, %2$@ is the controller count text and %3$@ is the active profile text. The dots between them separate the parts and may change. */
 "ui.extra.statusLine" = "%1$@ · %2$@ · %3$@";
 /* Heading of the controllers section in the menu bar menu. */
@@ -3860,7 +3860,7 @@
 /* Reason shown with a failed publication. %@ is the reason the last send failed. */
 "ui.controllers.publication.failedSend" = "直前の送信に失敗しました: %@";
 /* Serving route with why it publishes nothing, for example "Output off (No virtual profile fits it)". %1$@ is the route and %2$@ the reason. */
-"ui.controllers.serving.withReason" = "%1$@ (%2$@)";
+"ui.controllers.serving.withReason" = "%1$@（%2$@）";
 /* Reason of failing input health: the controller sends no reports. */
 "ui.controllers.inputHealth.reason.missingReports" = "レポートが届いていません";
 /* Reason of failing input health: the reports arrive but their content does not change. */

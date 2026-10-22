@@ -2176,7 +2176,7 @@
 /* Error of the controller output commands when the controller lacks the feature. %1$@ is the controller name, %2$@ is the missing feature as a noun phrase and %3$@ is the session token for 'ojd controller show'. */
 "cli.controller.group.outputUnsupported" = "%1$@ में %2$@ नहीं है। यह देखने के लिए कि वह क्या सपोर्ट करता है, “ojd controller show %3$@” चलाएँ।";
 /* One-line summary of 'ojd controller claim' in the command list and at the top of its help. OpenJoystickDriver is the product name. To serve a model means to read its input and publish it as a virtual gamepad. */
-"cli.controller.claim.abstract" = "किसी कंट्रोलर मॉडल को OpenJoystickDriver से चलवाएँ।";
+"cli.controller.claim.abstract" = "किसी कंट्रोलर मॉडल को संभालने का काम OpenJoystickDriver को सौंपें।";
 /* Long description in the help of 'ojd controller claim'. server, ojd, VVVV-PPPP.json and the record terms stay as written. */
 "platform.macos.cli.controller.claim.discussion" = "मॉडल के लिए आपके रिकॉर्ड में, यानी रिकॉर्ड निर्देशिका की VVVV-PPPP.json में, server को ojd पर सेट करता है और रिकॉर्ड के अन्य फ़ील्ड बनाए रखता है। यह मॉडल के हर कंट्रोलर पर लागू होता है। चल रही सेवा इसे दोबारा जोड़े बिना लागू करती है। कंट्रोलर खोजने के लिए सेवा चाहिए। --dry-run कुछ नहीं लिखता। रॉ USB इस्तेमाल करने वाले कंट्रोलर के लिए, जिसे OpenJoystickDriver हमेशा चलाता है, या जिसे macOS नेटिव रूप से नहीं चलाता, E2023 के साथ 1 पर समाप्त होता है।";
 /* One-line summary of 'ojd controller release' in the command list and at the top of its help. */
@@ -2972,7 +2972,7 @@
 /* Title of the alert that installs a mod. %@ is the mod name. */
 "ui.library.mod.install.title" = "मॉड %@ इंस्टॉल करें?";
 /* Message of the alert that installs a mod. %1$@ is the mod name, %2$@ is its version and %3$@ is its author. OpenJoystickDriver is the product name. */
-"ui.library.mod.install.message" = "OpenJoystickDriver आपके इंस्टॉल किए मॉड में %1$@ %2$@ (निर्माता: %3$@) जोड़ता है।";
+"ui.library.mod.install.message" = "OpenJoystickDriver आपके इंस्टॉल किए मॉड में %3$@ द्वारा बनाया गया %1$@ %2$@ जोड़ता है।";
 /* Title of the alert that replaces an installed mod. %@ is the mod name. */
 "ui.library.mod.replace.title" = "मॉड %@ बदलें?";
 /* Message of the alert that replaces an installed mod. %1$@ is the mod name and %2$@ is the version that will be installed. */
@@ -3710,7 +3710,7 @@
 /* Column title of the diagnostics table in the Activity area. The column names the check. */
 "ui.activity.column.check" = "जाँच";
 /* Column title of the diagnostics table in the Activity area. The column holds the details of the result. */
-"ui.activity.column.details" = "विवरण";
+"ui.activity.column.details" = "ब्योरा";
 /* Result of a check in the diagnostics table when the check passed. */
 "ui.activity.status.pass" = "सफल";
 /* Result of a check in the diagnostics table when the check found a problem that does not stop the app. */

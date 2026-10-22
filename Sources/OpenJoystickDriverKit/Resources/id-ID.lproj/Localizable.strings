@@ -91,25 +91,25 @@
 /* Value of the notification row in the Access area when macOS has turned off banners for the app. */
 "ui.settings.notifications.notificationBannersOff" = "Spanduk mati";
 /* Note in the Notifications pane of the settings window when macOS has turned off banners for the app. System Settings is the name of the macOS app. */
-"platform.macos.ui.settings.notifications.notificationBannersOffDetail" = "Spanduk pemberitahuan dinonaktifkan di Pengaturan Sistem.";
+"platform.macos.ui.settings.notifications.notificationBannersOffDetail" = "Spanduk notifikasi dinonaktifkan di Pengaturan Sistem.";
 /* Status text in the Notifications pane of the settings window when macOS allows notifications. */
-"ui.settings.notifications.notificationDeliveryAllowed" = "Pengiriman pemberitahuan diizinkan.";
+"ui.settings.notifications.notificationDeliveryAllowed" = "Pengiriman notifikasi diizinkan.";
 /* Status text in the Notifications pane of the settings window when macOS allows banners, Notification Center and sounds. Notification Center is the macOS name. */
-"ui.settings.notifications.notificationDeliveryReady" = "Spanduk, Pusat Pemberitahuan, dan bunyi diaktifkan.";
+"ui.settings.notifications.notificationDeliveryReady" = "Spanduk, Pusat Notifikasi, dan bunyi diaktifkan.";
 /* Status text in the Notifications pane of the settings window when the user has not allowed notifications in macOS. */
-"ui.settings.notifications.notificationPermissionRequired" = "Izin diperlukan sebelum pemberitahuan dapat dikirim.";
+"ui.settings.notifications.notificationPermissionRequired" = "Izin diperlukan sebelum notifikasi dapat dikirim.";
 /* Value of the notification row in the Access area when macOS has turned off sounds for the app. */
 "ui.settings.notifications.notificationSoundOff" = "Bunyi mati";
 /* Note in the Notifications pane of the settings window when macOS has turned off sounds for the app. System Settings is the name of the macOS app. */
-"platform.macos.ui.settings.notifications.notificationSoundOffDetail" = "Bunyi pemberitahuan dinonaktifkan di Pengaturan Sistem.";
+"platform.macos.ui.settings.notifications.notificationSoundOffDetail" = "Bunyi notifikasi dinonaktifkan di Pengaturan Sistem.";
 /* Title of the switch in the Notifications pane of the settings window that plays a sound with a notification. */
 "ui.settings.notifications.notificationSounds" = "Putar bunyi";
 /* Name of the notification permission in the Access area. */
-"ui.settings.notifications.notifications" = "Pemberitahuan";
+"ui.settings.notifications.notifications" = "Notifikasi";
 /* Error shown when the user turns on notifications in the app while macOS denies them. System Settings is the name of the macOS app. OpenJoystickDriver is the product name. */
-"platform.macos.ui.settings.notifications.notificationsDenied" = "Pemberitahuan dinonaktifkan untuk OpenJoystickDriver di Pengaturan Sistem.";
+"platform.macos.ui.settings.notifications.notificationsDenied" = "Notifikasi dinonaktifkan untuk OpenJoystickDriver di Pengaturan Sistem.";
 /* Button in the Notifications pane of the settings window that opens the notification settings of macOS. */
-"ui.settings.general.openNotificationSettings" = "Buka Pengaturan Pemberitahuan";
+"ui.settings.general.openNotificationSettings" = "Buka Pengaturan Notifikasi";
 /* Button in a pane of the settings window that opens System Settings, the macOS app. */
 "ui.settings.general.openSystemSettings" = "Buka Pengaturan";
 /* Title of the switch in the Updates section of the settings window that includes prerelease versions in the update check. */
@@ -129,7 +129,7 @@
 /* Description under the Start at login switch in the General pane of the settings window. OpenJoystickDriver is the product name. */
 "ui.settings.general.startAtLoginDescription" = "Buka OpenJoystickDriver di bar menu saat Anda login.";
 /* Button in the Notifications pane of the settings window that sends a test notification. */
-"ui.settings.notifications.testNotification" = "Kirim Pemberitahuan Tes";
+"ui.settings.notifications.testNotification" = "Kirim Notifikasi Tes";
 /* Result of the update check: the installed version is the latest. */
 "ui.settings.general.upToDate" = "Sudah terbaru";
 /* Result of the update check: a newer version exists. */
@@ -197,7 +197,7 @@
 /* Entry of the server picker in the Controllers detail: macOS serves the controller itself. */
 "platform.macos.ui.controllers.server.system" = "macOS (bawaan)";
 /* Option of the server popup: OpenJoystickDriver serves the controller as a virtual gamepad. OpenJoystickDriver is the product name. */
-"ui.controllers.server.ojd" = "OpenJoystickDriver (pengontrol virtual)";
+"ui.controllers.server.ojd" = "OpenJoystickDriver (virtual)";
 /* Label of the serving route fact in the Controllers detail. The route is the way the input reaches games. */
 "ui.controllers.serving.label" = "Rute layanan";
 /* Value of the serving route in the Controllers area: macOS serves the controller and the driver passes the input through. */
@@ -1115,13 +1115,13 @@
 /* Body of the test notification that the Notifications pane sends. OpenJoystickDriver is the product name. */
 "notify.testBody" = "OpenJoystickDriver dapat memberi tahu Anda tentang aktivitas pengontrol dan profil.";
 /* Title of the test notification that the Notifications pane sends. */
-"notify.testTitle" = "Pemberitahuan siap";
+"notify.testTitle" = "Notifikasi siap";
 /* Failed outcome of the test notification when the app runs outside an app bundle and has no notification center. The inline error of the Settings window shows it for Send Test Notification and for a notification permission request, and `ojd setting test-notification` prints it as the reason of E2006. */
-"ui.settings.notifications.noNotificationCenter" = "Pemberitahuan tidak tersedia karena OpenJoystickDriver tidak berjalan dari bundel app-nya. Buka app OpenJoystickDriver, lalu coba lagi.";
+"ui.settings.notifications.noNotificationCenter" = "Notifikasi tidak tersedia karena OpenJoystickDriver tidak berjalan dari bundel app-nya. Buka app OpenJoystickDriver, lalu coba lagi.";
 /* Error message in the inline error of the Settings window when the service no longer waits for the app's report on a test notification: the ojd request that asked for it ended, or its answer time ran out. */
-"ui.settings.notifications.testReportLost" = "Permintaan ojd berakhir atau waktu jawabnya habis sebelum laporan tentang pemberitahuan tes tiba.";
+"ui.settings.notifications.testReportLost" = "Permintaan ojd berakhir atau waktu jawabnya habis sebelum laporan tentang notifikasi tes tiba.";
 /* Error text the service returns to an app that reports the outcome noAnswer for a test notification, which only the service decides. The inline error of the Settings window shows it. shown, denied, failed and noAnswer are outcome names and stay as written. */
-"ui.settings.notifications.testReportNoAnswer" = "Laporan pemberitahuan tes harus shown, denied, atau failed; hanya layanan yang menentukan noAnswer.";
+"ui.settings.notifications.testReportNoAnswer" = "Laporan notifikasi tes harus shown, denied, atau failed; hanya layanan yang menentukan noAnswer.";
 /* Label of the popup in the profile editor that sets what the virtual gamepad of the profile publishes. */
 "ui.profiles.virtualOutput" = "Gamepad virtual";
 /* Option of the virtual output popup: the profile publishes no virtual gamepad. */
@@ -2050,15 +2050,15 @@
 /* One-line summary of 'ojd setting list' in the command list and at the top of its help. */
 "cli.setting.list.abstract" = "Tampilkan daftar setiap pengaturan dan nilainya.";
 /* Help text of the notificationSounds setting in 'ojd setting list'. */
-"cli.setting.group.notificationSounds" = "Putar bunyi dengan pemberitahuan.";
+"cli.setting.group.notificationSounds" = "Putar bunyi dengan notifikasi.";
 /* Help text of the notifyControllerConnected setting in 'ojd setting list'. */
-"cli.setting.group.notifyControllerConnected" = "Beri pemberitahuan saat pengontrol terhubung atau perlu perhatian.";
+"cli.setting.group.notifyControllerConnected" = "Beri notifikasi saat pengontrol terhubung atau perlu perhatian.";
 /* Help text of the notifyControllerDisconnected setting in 'ojd setting list'. */
-"cli.setting.group.notifyControllerDisconnected" = "Beri pemberitahuan saat pengontrol terputus.";
+"cli.setting.group.notifyControllerDisconnected" = "Beri notifikasi saat pengontrol terputus.";
 /* Help text of the notifyProfileActivated setting in 'ojd setting list'. */
-"cli.setting.group.notifyProfileActivated" = "Beri pemberitahuan saat profil diaktifkan atau dialihkan.";
+"cli.setting.group.notifyProfileActivated" = "Beri notifikasi saat profil diaktifkan atau dialihkan.";
 /* Help text of the notifyProfileDeactivated setting in 'ojd setting list'. */
-"cli.setting.group.notifyProfileDeactivated" = "Beri pemberitahuan saat profil aktif dimatikan.";
+"cli.setting.group.notifyProfileDeactivated" = "Beri notifikasi saat profil aktif dimatikan.";
 /* One-line summary of 'ojd setting set' in the command list and at the top of its help. */
 "cli.setting.set.abstract" = "Ubah satu pengaturan.";
 /* Long description in the help of 'ojd setting set'. true, false, launchAtLogin and System Settings stay as written. */
@@ -2094,7 +2094,7 @@
 /* Heading of the Command-Line Tool section in the settings window. */
 "ui.settings.commandLine.tool" = "Alat Baris Perintah";
 /* Error in the Command-Line Tool section when a regular file is in the place of the link. %@ is the path. */
-"ui.settings.commandLine.toolBlocked" = "%@ adalah file, bukan tautan. Hapus, lalu instal lagi.";
+"ui.settings.commandLine.toolBlocked" = "%@ adalah berkas, bukan tautan. Hapus, lalu instal lagi.";
 /* Status in the Command-Line Tool section after the user cancels the installation. */
 "ui.settings.commandLine.toolCancelled" = "Dibatalkan.";
 /* Error shown in the Command Line Tool section of the settings window when macOS refuses to install or remove the tool. */
@@ -2108,7 +2108,7 @@
 /* Description in the Command Line Tool section of the settings window before the tool is installed. %@ is the path where the link is created. Terminal is the macOS app and ojd is the command name. */
 "platform.macos.ui.settings.commandLine.toolNotInstalled" = "Menautkan %@ ke app ini agar Anda dapat menjalankan ojd di Terminal. macOS meminta kata sandi administrator.";
 /* Button in the Command-Line Tool section that removes the ojd link. */
-"ui.settings.commandLine.toolUninstall" = "Copot";
+"ui.settings.commandLine.toolUninstall" = "Copot Pemasangan";
 /* One-line summary of 'ojd controller' in the command list and at the top of its help. */
 "cli.controller.group.abstract" = "Tampilkan daftar, periksa, tes, dan kendalikan pengontrol yang terhubung.";
 /* Help text of the CONTROLLER argument shared by the 'ojd controller' commands. VVVV:PPPP is the vendor ID and product ID in hexadecimal and stays as written. */
@@ -2606,9 +2606,9 @@
 /* Error E2035, shown in the app or the CLI when the file that records why the request listener stopped is unusable. */
 "error.E2035.message" = "File yang mencatat alasan pendengar permintaan berhenti tidak dapat digunakan. Hapus file itu, lalu buka OpenJoystickDriver lagi.";
 /* Error E2036, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
-"error.E2036.message" = "Tidak ada app OpenJoystickDriver yang menjawab pemberitahuan tes tepat waktu. Pastikan app berjalan, lalu coba lagi.";
+"error.E2036.message" = "Tidak ada app OpenJoystickDriver yang menjawab notifikasi tes tepat waktu. Pastikan app berjalan, lalu coba lagi.";
 /* Error E2037, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */
-"error.E2037.message" = "Pemberitahuan tidak diizinkan untuk OpenJoystickDriver. Izinkan di pengaturan pemberitahuan sistem, lalu coba lagi.";
+"error.E2037.message" = "Notifikasi tidak diizinkan untuk OpenJoystickDriver. Izinkan di pengaturan notifikasi sistem, lalu coba lagi.";
 /* Note about a controller record whose raw USB family the USB extension cannot claim because Apple signs its product list. OJD is the short product name. */
 "platform.macos.cli.record.group.usbNotClaimed" = "Famili ini menggunakan USB mentah, dan ekstensi USB tidak dapat mengklaim pengontrol ini, karena daftar produknya ditandatangani Apple. OJD hanya menjangkaunya melalui akses USB langsung, jika macOS mengizinkan.";
 /* Note about a Switch 2 controller record that connects over USB only. bluetoothLE.vibrationCharacteristic is a field of the record and stays as written. */
@@ -2998,7 +2998,7 @@
 /* Toolbar button in the Library area that runs a record against a packet capture. Keep the three dots. */
 "ui.library.testRecord" = "Uji Catatan…";
 /* Value of the status of a library item that is installed. */
-"ui.library.installed" = "Terpasang";
+"ui.library.installed" = "Terinstal";
 /* Badge on a library item that ships with the app. */
 "ui.library.builtIn" = "Bawaan";
 /* Label of the field in the record detail that holds the controller model. */
@@ -3726,7 +3726,7 @@
 /* Name of the check in the diagnostics table that asks macOS whether the driver extension is registered. */
 "ui.activity.check.transportExtensionRegistration" = "Pendaftaran ekstensi driver";
 /* Name of the check in the diagnostics table that validates the configuration files. */
-"ui.activity.check.configFiles" = "File konfigurasi";
+"ui.activity.check.configFiles" = "Berkas konfigurasi";
 /* Name of the check in the diagnostics table that tests whether the app can read USB controllers. */
 "ui.activity.check.usbAccess" = "Akses USB";
 /* Button of a failed check in the diagnostics table that opens the Library area. */
@@ -3812,13 +3812,13 @@
 /* Value of the input health fact: the app waits until all controls are at rest before it sends input again. */
 "ui.controllers.inputHealth.waitingForNeutral" = "Menunggu posisi netral";
 /* Error shown when the settings file is damaged. %@ is the path of the file. The command in backticks stays as written, and Trash is the macOS name. */
-"ui.settings.advanced.errorDamaged" = "File pengaturan %@ rusak. Perbaiki, atau pindahkan ke Tong Sampah dengan `ojd setting reset`.";
+"ui.settings.advanced.errorDamaged" = "Berkas pengaturan %@ rusak. Perbaiki, atau pindahkan ke Tong Sampah dengan `ojd setting reset`.";
 /* Error shown when the settings file has an unsupported version. %@ is the path of the file. apiVersion and the command in backticks stay as written, and Trash is the macOS name. */
-"ui.settings.advanced.errorUnsupported" = "File pengaturan %@ tidak didukung. Tulis ulang file untuk apiVersion yang didukung, atau pindahkan ke Tong Sampah dengan `ojd setting reset`.";
+"ui.settings.advanced.errorUnsupported" = "Berkas pengaturan %@ tidak didukung. Tulis ulang berkas untuk apiVersion yang didukung, atau pindahkan ke Tong Sampah dengan `ojd setting reset`.";
 /* Error shown when the settings file cannot be written. %@ is the path of the file. */
-"ui.settings.advanced.errorUnwritable" = "File pengaturan %@ tidak dapat ditulis.";
+"ui.settings.advanced.errorUnwritable" = "Berkas pengaturan %@ tidak dapat ditulis.";
 /* Error shown when the settings file cannot be moved to the Trash. %@ is the path of the file. Trash is the macOS name. */
-"ui.settings.advanced.errorCannotReset" = "File pengaturan %@ tidak dapat dipindahkan ke Tong Sampah.";
+"ui.settings.advanced.errorCannotReset" = "Berkas pengaturan %@ tidak dapat dipindahkan ke Tong Sampah.";
 /* Error shown at startup when the stored settings file turns off both entry points. %@ is the path of the settings file. The two switch names are written as in this catalog, and the command in backticks stays as written. */
 "platform.macos.ui.settings.advanced.errorStoredNoVisibleEntryPoint" = "File pengaturan %@ menonaktifkan “Tampilkan di bar menu” dan “Tampilkan di Dock”, sehingga app tidak memiliki titik masuk yang terlihat. Perbaiki, atau pindahkan ke Tong Sampah dengan `ojd setting reset`.";
 /* Error shown when the user turns off both Show in menu bar and Show in Dock. The two switch names are written as in this catalog. */
@@ -3935,8 +3935,8 @@
 /* Reason the listener failure file cannot be used: the system would not say whether the process that wrote it runs. %1$@ is the system's reason, %2$@ the error number. Fills the reason in the error E2035 message. */
 "status.listenerFailure.processCheckFailed" = "tidak dapat memeriksa apakah proses layanan berjalan: %1$@ (nomor kesalahan %2$@)";
 /* One-line summary of 'ojd setting test-notification' in the command list and at the top of its help. The notification appears in the OpenJoystickDriver app. */
-"cli.setting.testNotification.abstract" = "Tampilkan pemberitahuan tes di app.";
+"cli.setting.testNotification.abstract" = "Tampilkan notifikasi tes di app.";
 /* Long description in the help of 'ojd setting test-notification'. It says what the service is asked to do and when the command fails. --timeout stays as written and %@ is the default timeout in seconds. */
-"cli.setting.testNotification.discussion" = "Meminta layanan mengumumkan pemberitahuan tes ke app OpenJoystickDriver yang terbuka dan menunggu app menampilkannya. Gagal dengan galat bernama jika pemberitahuan ditolak, pengiriman gagal, atau tidak ada app yang menjawab tepat waktu. Default --timeout di sini adalah %@ detik.";
+"cli.setting.testNotification.discussion" = "Meminta layanan mengumumkan notifikasi tes ke app OpenJoystickDriver yang terbuka dan menunggu app menampilkannya. Gagal dengan galat bernama jika notifikasi ditolak, pengiriman gagal, atau tidak ada app yang menjawab tepat waktu. Default --timeout di sini adalah %@ detik.";
 /* Printed by ojd setting test-notification after the app reported that it showed the test notification. */
-"cli.setting.testNotification.success" = "App menampilkan pemberitahuan tes.";
+"cli.setting.testNotification.success" = "App menampilkan notifikasi tes.";

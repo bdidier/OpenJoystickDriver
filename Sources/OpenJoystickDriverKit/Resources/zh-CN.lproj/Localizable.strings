@@ -3428,7 +3428,7 @@
 /* Error shown when the app cannot find the executable of a refused program. %@ is the identifier of the program. */
 "ui.access.grant.noPath" = "OpenJoystickDriver 无法读取 %@ 的可执行文件，因此无法授予其访问权限。";
 /* Line of the alert that turns on the WebSocket when a port is saved. */
-"ui.access.web.enable.savedPort" = "Web 端点保留其已保存的端口。";
+"ui.access.web.enable.savedPort" = "Web 端点保留其已存储的端口。";
 /* Detail line of a record in the records list. %1$@ and %2$@ are two facts about the record. The dot between them separates the facts and may change. */
 "ui.library.record.detail" = "%1$@ · %2$@";
 /* Detail line of a mod in the mods list. %1$@ is the version and %2$@ is the author. The dot between them separates the two and may change. */

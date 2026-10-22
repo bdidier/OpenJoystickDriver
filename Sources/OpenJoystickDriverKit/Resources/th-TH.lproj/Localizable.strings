@@ -113,7 +113,7 @@
 /* Button in a pane of the settings window that opens System Settings, the macOS app. */
 "ui.settings.general.openSystemSettings" = "เปิดการตั้งค่า";
 /* Title of the switch in the Updates section of the settings window that includes prerelease versions in the update check. */
-"ui.settings.general.prereleaseUpdates" = "รวมการอัพเดทรุ่นก่อนเผยแพร่";
+"ui.settings.general.prereleaseUpdates" = "รวมการอัปเดตรุ่นก่อนเผยแพร่";
 /* Title of the switch for notifications about a profile that is activated or switched. */
 "ui.settings.notifications.profileActivatedShort" = "เปิดใช้งานหรือสลับ";
 /* VoiceOver label of the switch for notifications about a profile that is deactivated. */
@@ -133,13 +133,13 @@
 /* Result of the update check: the installed version is the latest. */
 "ui.settings.general.upToDate" = "เป็นรุ่นล่าสุดแล้ว";
 /* Result of the update check: a newer version exists. */
-"ui.settings.general.updateAvailable" = "มีรายการที่พร้อมให้อัพเดท";
+"ui.settings.general.updateAvailable" = "มีรายการที่พร้อมให้อัปเดต";
 /* Status of the update check while it runs. Keep the three dots. */
 "ui.settings.general.updateChecking" = "กำลังตรวจสอบ…";
 /* Heading of the updates section in the General pane of the settings window. */
-"ui.settings.general.updates" = "รายการอัพเดท";
+"ui.settings.general.updates" = "รายการอัปเดต";
 /* Button in the Updates section of the settings window that opens the page of the available update. */
-"ui.settings.general.viewUpdate" = "ดูรายการอัพเดท";
+"ui.settings.general.viewUpdate" = "ดูรายการอัปเดต";
 /* Title of the message in the Controllers area when the service cannot list controllers. */
 "ui.controllers.unavailable" = "คอนโทรลเลอร์ไม่พร้อมใช้งาน";
 /* Title of the message in the Controllers area when the list of controllers fails to load. */
@@ -227,7 +227,7 @@
 /* Value of the virtual HID profile when the controller has none. */
 "ui.virtualProfile.none" = "ไม่มีโปรไฟล์ HID เสมือน";
 /* Status shown while the app changes the virtual HID profile. Keep the three dots. */
-"ui.virtualProfile.updating" = "กำลังอัพเดทโปรไฟล์ HID เสมือน…";
+"ui.virtualProfile.updating" = "กำลังอัปเดตโปรไฟล์ HID เสมือน…";
 /* Error when the user picks a virtual HID profile that the service does not know. The service stored nothing. */
 "ui.virtualProfile.failure.unknownProfile" = "ไม่รู้จักโปรไฟล์ HID เสมือนนี้ ไม่มีการจัดเก็บใดๆ";
 /* Error when the controller is gone while the user changes its virtual HID profile. The stored override stays unchanged. */
@@ -417,7 +417,7 @@
 /* Title of the behavior sheet of an assignment. The sheet sets turbo, hold and double tap. */
 "ui.profiles.bindingBehavior" = "พฤติกรรมของการกำหนด";
 /* Placeholder of the field in the profile creation sheet for the identifier of the app that the profile applies to, for example com.apple.Safari. */
-"ui.profiles.appID" = "รหัสแอพ";
+"ui.profiles.appID" = "รหัสแอป";
 /* Help text of the chord sheet. The destination fires while all chosen controls are held down. */
 "ui.profiles.chordHelp" = "ปลายทางจะทำงานขณะที่กดตัวควบคุมที่เลือกทั้งหมดอยู่";
 /* Label of the popup in the chord sheet that picks how the chord works. */
@@ -433,7 +433,7 @@
 /* Label of a control picker in the combination sheet. %d is the number of the control, counted from 1. */
 "ui.profiles.controlNumber" = "ตัวควบคุม %d";
 /* Error under the form of the profile creation sheet when the name or the app target is not valid. */
-"ui.profiles.creationValidation" = "ตรวจสอบชื่อโปรไฟล์และเป้าหมายแอพพลิเคชัน";
+"ui.profiles.creationValidation" = "ตรวจสอบชื่อโปรไฟล์และเป้าหมายแอปพลิเคชัน";
 /* Heading of the group in the controller popup of the profile creation sheet that lists models used by existing profiles. */
 "ui.profiles.controllersOfProfiles" = "ใช้ในโปรไฟล์ของคุณ";
 /* Placeholder of the controller popup in the profile creation sheet. */
@@ -497,9 +497,9 @@
 /* Label of the popup in the profile creation sheet that picks which apps the profile applies to. */
 "ui.profiles.target" = "เป้าหมาย";
 /* Option of the target popup: the profile applies to one app. */
-"ui.profiles.targetApplication" = "หนึ่งแอพพลิเคชัน";
+"ui.profiles.targetApplication" = "หนึ่งแอปพลิเคชัน";
 /* Option of the target popup: the profile applies to all apps. */
-"ui.profiles.targetGlobal" = "ทุกแอพพลิเคชัน";
+"ui.profiles.targetGlobal" = "ทุกแอปพลิเคชัน";
 /* Option of the activation popup in the layer sheet: pressing the control turns the layer on or off. */
 "ui.profiles.toggle" = "สลับ";
 /* Title of the switch in the behavior sheet that repeats the destination while the control is held. */
@@ -543,9 +543,9 @@
 /* Error shown when the service answers with a reply that the app does not understand. OpenJoystickDriver is the product name. */
 "ui.error.unexpected" = "OpenJoystickDriver ส่งผลลัพธ์ที่ไม่คาดคิดกลับมา";
 /* Value of the app scope of a profile: it applies to all apps. */
-"ui.mapping.allApps" = "ทุกแอพ";
+"ui.mapping.allApps" = "ทุกแอป";
 /* Value of the app scope of a profile: it applies to one app. */
-"ui.mapping.specificApp" = "แอพที่ระบุ";
+"ui.mapping.specificApp" = "แอปที่ระบุ";
 /* Status of the controller output in the profile editor: the output cannot work. */
 "ui.mapping.outputUnavailable" = "เอาต์พุตของคอนโทรลเลอร์ไม่พร้อมใช้งาน";
 /* Status of the controller output in the profile editor: the output works. */
@@ -1049,9 +1049,9 @@
 /* Title of the problem banner and of the Driver section of the settings window for the driver extension that serves Xbox USB controllers. */
 "ui.setup.driverTitle" = "ไดรเวอร์ Xbox USB";
 /* Detail line of the problem banner when the driver extension inside the app is damaged. The user reinstalls the app. */
-"ui.setup.invalidDetail" = "ไดรเวอร์ Xbox USB ที่ฝังอยู่ไม่ถูกต้อง ซ่อมแซมโดยติดตั้งแอพนี้ใหม่";
+"ui.setup.invalidDetail" = "ไดรเวอร์ Xbox USB ที่ฝังอยู่ไม่ถูกต้อง ซ่อมแซมโดยติดตั้งแอปนี้ใหม่";
 /* Detail line of the problem banner when the app has no driver extension. The user reinstalls the signed app. */
-"ui.setup.missingDetail" = "แอพนี้ไม่มีไดรเวอร์ Xbox USB ติดตั้งแอพที่ลงนามแล้วใหม่";
+"ui.setup.missingDetail" = "แอปนี้ไม่มีไดรเวอร์ Xbox USB ติดตั้งแอปที่ลงนามแล้วใหม่";
 /* Button that opens the System Settings app on the pane where the user can allow the permission or the extension. */
 "platform.macos.ui.setup.openSystemSettings" = "เปิดการตั้งค่าระบบ";
 /* Title of the alert shown when the System Settings app could not be opened. */
@@ -1466,7 +1466,7 @@
 /* Button in the Profiles area that ends the pairing of two Joy-Cons. */
 "ui.profiles.unpairJoyCons" = "เลิกจับคู่";
 /* Hint in the Joy-Con pairing sheet. The pairing lasts until the user quits the app. */
-"ui.profiles.joyConPairSessionHint" = "การจับคู่ใช้คอนโทรลเลอร์เหล่านี้โดยเฉพาะสำหรับเซสชั่นแอพปัจจุบัน";
+"ui.profiles.joyConPairSessionHint" = "การจับคู่ใช้คอนโทรลเลอร์เหล่านี้โดยเฉพาะสำหรับเซสชั่นแอปปัจจุบัน";
 /* Confirm button of the Joy-Con pairing sheet. */
 "ui.profiles.pair" = "จับคู่";
 /* Error shown when two Joy-Cons cannot be combined into one controller. Joy-Con is a Nintendo product name. */
@@ -1568,11 +1568,11 @@
 /* Title of the notification shown when a controller stops sending input. */
 "notify.controllerNeedsAttention" = "คอนโทรลเลอร์ต้องดำเนินการ";
 /* Body of the notification shown when a controller stops sending input. %@ is the controller name. */
-"notify.controllerNeedsAttentionBody" = "อินพุตของ %@ หยุดอัพเดท ปล่อยตัวควบคุมของมัน หรือเลิกเชื่อมต่อ";
+"notify.controllerNeedsAttentionBody" = "อินพุตของ %@ หยุดอัปเดต ปล่อยตัวควบคุมของมัน หรือเลิกเชื่อมต่อ";
 /* Error of every command when --json and --plain are both given. Both option names stay as written. */
 "cli.shared.error.jsonPlain" = "ใช้ --json หรือ --plain อย่างใดอย่างหนึ่ง ไม่ใช่ทั้งสองอย่าง";
 /* Error of every command that talks to the service when the service refuses this ojd because its code signature differs from the app. ojd and OpenJoystickDriver.app stay as written. */
-"cli.shared.error.peerRejected" = "บริการปฏิเสธ ojd นี้ เพราะไม่ได้ลงนามเหมือนแอพ ให้เรียกใช้ ojd ที่มาพร้อมกับ OpenJoystickDriver.app";
+"cli.shared.error.peerRejected" = "บริการปฏิเสธ ojd นี้ เพราะไม่ได้ลงนามเหมือนแอป ให้เรียกใช้ ojd ที่มาพร้อมกับ OpenJoystickDriver.app";
 /* Error of every command that talks to the service when it does not reply in time. %@ is the waited time, such as 5 seconds. --timeout stays as written. */
 "cli.shared.error.requestTimeout" = "บริการไม่ตอบกลับภายใน %@ ลองอีกครั้งด้วย --timeout ที่มากขึ้น";
 /* Error of every command that talks to the service when the service reports a failure. %@ is the reason from the service. The command in quotes stays as written. */
@@ -1636,15 +1636,15 @@
 /* Message printed by 'ojd service' commands when the service runs. */
 "cli.service.group.running" = "บริการกำลังทำงานอยู่";
 /* One-line summary of 'ojd service start' in the command list and at the top of its help. */
-"cli.service.start.abstract" = "เปิดแอพในพื้นหลังและรอจนกว่าบริการของแอพจะรับคำขอ";
+"cli.service.start.abstract" = "เปิดแอปในพื้นหลังและรอจนกว่าบริการของแอปจะรับคำขอ";
 /* Error of 'ojd service start' when the ojd program is not inside the app bundle. ojd and OpenJoystickDriver.app stay as written. */
-"cli.service.start.noBundle" = "ojd นี้ไม่ได้อยู่ใน OpenJoystickDriver.app จึงไม่สามารถเริ่มบริการได้ เปิดแอพที่ติดตั้งไว้ หรือเรียกใช้ ojd ที่อยู่ในแอพนั้น";
+"cli.service.start.noBundle" = "ojd นี้ไม่ได้อยู่ใน OpenJoystickDriver.app จึงไม่สามารถเริ่มบริการได้ เปิดแอปที่ติดตั้งไว้ หรือเรียกใช้ ojd ที่อยู่ในแอปนั้น";
 /* Error of 'ojd service start' when macOS cannot open the app. %@ is the path of the app. Finder is the macOS file manager. */
 "platform.macos.cli.service.start.openFailed" = "macOS ไม่สามารถเปิด %@ ได้ เปิดจาก Finder เพื่อดูสาเหตุ";
 /* One-line summary of 'ojd service stop' in the command list and at the top of its help. */
 "platform.macos.cli.service.stop.abstract" = "หยุดบริการและรอจนกว่าจะออก คอนโทรลเลอร์ที่เชื่อมต่อจะกลับไปที่ macOS";
 /* Error of 'ojd service stop' when the system refuses to stop the service. %@ is the reason from the system. OpenJoystickDriver is the product name. */
-"cli.service.stop.signalFailed" = "ไม่สามารถหยุดบริการได้: %@ ออกจาก OpenJoystickDriver จากเมนูของแอพ";
+"cli.service.stop.signalFailed" = "ไม่สามารถหยุดบริการได้: %@ ออกจาก OpenJoystickDriver จากเมนูของแอป";
 /* Error of 'ojd service stop' when the service keeps running. %@ is the waited time, such as 5 seconds. --timeout stays as written. */
 "cli.service.stop.timeout" = "บริการไม่หยุดภายใน %@ ลองอีกครั้งด้วย --timeout ที่มากขึ้น";
 /* Message printed by 'ojd service stop' when the service is stopped. */
@@ -1686,7 +1686,7 @@
 /* Error of 'ojd access grant' when CLIENT is neither a path nor a known client ID. %@ is the text the user typed. Keep the command in quotes as written. */
 "cli.access.group.clientUnknown" = "ไม่มีโปรแกรมที่ %@ และไม่มีไคลเอนต์ที่มี ID นั้น ดู ID ด้วย “ojd access list”";
 /* Error of 'ojd access grant' when the program at the path has no code signature to grant. %@ is the path the user gave. */
-"cli.access.group.clientUnsigned" = "%@ ไม่มีโปรแกรมที่ลงนาม ให้สิทธิ์แก่บันเดิลแอพหรือไฟล์ที่เรียกใช้งานได้ของโปรแกรม";
+"cli.access.group.clientUnsigned" = "%@ ไม่มีโปรแกรมที่ลงนาม ให้สิทธิ์แก่บันเดิลแอปหรือไฟล์ที่เรียกใช้งานได้ของโปรแกรม";
 /* One-line summary of 'ojd access disable' in the command list and at the top of its help. The endpoint is the local socket that granted programs connect to. */
 "cli.access.disable.abstract" = "ปิดเอนด์พอยต์และปิดการเชื่อมต่อ สิทธิ์ที่ให้ไว้ยังคงอยู่";
 /* Message printed after 'ojd access disable' turned the endpoint off. */
@@ -1712,9 +1712,9 @@
 /* Yes or no question that 'ojd access grant' asks before it allows a program. %1$@ is the program identifier, %2$@ describes its code signer and %3$@ lists the scopes granted. */
 "cli.access.grant.confirm" = "อนุญาตให้ %1$@ ที่ลงนามโดย %2$@ ใช้เอนด์พอยต์ด้วย %3$@ หรือไม่";
 /* Warning printed before the question of 'ojd access grant' when the control scope is requested. Control lets the program press buttons on a virtual gamepad. */
-"cli.access.grant.controlWarning" = "ขอบเขต control ให้โปรแกรมกดปุ่มบนเกมแพดเสมือนได้ ซึ่งเกมและแอพจะถือเป็นอินพุตของคุณ";
+"cli.access.grant.controlWarning" = "ขอบเขต control ให้โปรแกรมกดปุ่มบนเกมแพดเสมือนได้ ซึ่งเกมและแอปจะถือเป็นอินพุตของคุณ";
 /* Long description in the help of 'ojd access grant'. It explains that the grant names the signature of the program and which programs cannot be granted. CLIENT and command names stay as written. */
-"cli.access.grant.discussion" = "CLIENT คือพาธของโปรแกรม หรือ ID จาก “ojd access list” สิทธิ์ที่ให้ระบุลายเซ็นของโปรแกรม จึงยังใช้ได้เมื่อโปรแกรมถูกอัพเดทหรือย้าย โปรแกรมที่ลงนามแบบ ad-hoc และที่ไม่ได้ลงนามจะให้สิทธิ์ไม่ได้ เมื่อใช้ --token แทน CLIENT จะสร้างโทเค็นที่ไคลเอนต์ใช้ลงนามความท้าทายของบริการใน hello ของตน ทั้งบนซ็อกเก็ต บน WebSocket จากหน้าเว็บที่อยู่ในค่า --origin ค่าใดค่าหนึ่ง หรือสำหรับโทเค็นที่ไม่มี --origin บน WebSocket จากโปรแกรมที่ไม่ส่งส่วนหัว Origin เช่นแอพที่อยู่ในแซนด์บ็อกซ์ หน้าเว็บใช้ขอบเขต control ไม่ได้ โทเค็นจะแสดงเพียงครั้งเดียว ขอการยืนยันก่อน";
+"cli.access.grant.discussion" = "CLIENT คือพาธของโปรแกรม หรือ ID จาก “ojd access list” สิทธิ์ที่ให้ระบุลายเซ็นของโปรแกรม จึงยังใช้ได้เมื่อโปรแกรมถูกอัปเดตหรือย้าย โปรแกรมที่ลงนามแบบ ad-hoc และที่ไม่ได้ลงนามจะให้สิทธิ์ไม่ได้ เมื่อใช้ --token แทน CLIENT จะสร้างโทเค็นที่ไคลเอนต์ใช้ลงนามความท้าทายของบริการใน hello ของตน ทั้งบนซ็อกเก็ต บน WebSocket จากหน้าเว็บที่อยู่ในค่า --origin ค่าใดค่าหนึ่ง หรือสำหรับโทเค็นที่ไม่มี --origin บน WebSocket จากโปรแกรมที่ไม่ส่งส่วนหัว Origin เช่นแอปที่อยู่ในแซนด์บ็อกซ์ หน้าเว็บใช้ขอบเขต control ไม่ได้ โทเค็นจะแสดงเพียงครั้งเดียว ขอการยืนยันก่อน";
 /* Help text of the --origin option of 'ojd access grant'. An origin is a web address such as http://127.0.0.1:8080; PORT in the second example stays as written. */
 "cli.access.grant.origin" = "ต้นทางเว็บ เช่น http://127.0.0.1:8080 ซึ่งหน้าเว็บของต้นทางนั้นใช้โทเค็นบน WebSocket ได้ ระบุซ้ำเพื่อเพิ่ม หน้าโอเวอร์เลย์ที่ WebSocket ให้บริการมีต้นทางเป็น http://127.0.0.1:PORT โดยใช้พอร์ตที่ “ojd access status” แสดง";
 /* Error of 'ojd access grant' when --origin is combined with the control scope. --origin stays as written. */
@@ -1824,9 +1824,9 @@
 /* Detail of the transport extension check of 'ojd diagnose' when the extension bundle has an unexpected identifier. %@ is that identifier. OpenJoystickDriver is the product name. */
 "cli.diagnose.group.transportExtensionBundleInvalid" = "ตัวระบุบันเดิลที่ไม่คาดคิด %@ ติดตั้ง OpenJoystickDriver ใหม่";
 /* Detail of the transport extension check of 'ojd diagnose' when the extension is not inside the app. OpenJoystickDriver is the product name. */
-"cli.diagnose.group.transportExtensionBundleMissing" = "ไม่ได้ฝังไว้ในแอพ ติดตั้ง OpenJoystickDriver ใหม่";
+"cli.diagnose.group.transportExtensionBundleMissing" = "ไม่ได้ฝังไว้ในแอป ติดตั้ง OpenJoystickDriver ใหม่";
 /* Detail of the transport extension check of 'ojd diagnose' when the extension is inside the app. */
-"cli.diagnose.group.transportExtensionBundlePresent" = "ฝังไว้ในแอพ";
+"cli.diagnose.group.transportExtensionBundlePresent" = "ฝังไว้ในแอป";
 /* Detail of the transport extension check of 'ojd diagnose' when the extension is registered but the user has not approved it. The command in quotes stays as written. */
 "cli.diagnose.group.transportExtensionInactive" = "ลงทะเบียนแล้วแต่ไม่ได้ทำงาน อนุญาตด้วย “ojd transport-extension activate”";
 /* Detail of the transport extension check of 'ojd diagnose' when macOS does not report the registration. %@ is the reason from macOS. */
@@ -1906,9 +1906,9 @@
 /* Message of 'ojd transport-extension activate' when the user must approve the extension. The menu path in System Settings is written as macOS shows it. */
 "platform.macos.cli.transportExtension.group.approval" = "คำขอต้องได้รับอนุญาตจากคุณ อนุญาตในการตั้งค่าระบบ > ทั่วไป > รายการเข้าสู่ระบบและส่วนขยาย > ส่วนขยายไดรเวอร์";
 /* Error of 'ojd transport-extension activate' when the app has no driver extension inside. %@ is the extension name, which stays as written with .dext. The build command stays as written. */
-"cli.transportExtension.group.bundleMissing" = "แอพไม่มี %@.dext เรียกใช้ “./Scripts/ojd build install dev” แล้วลองอีกครั้งจาก /Applications";
+"cli.transportExtension.group.bundleMissing" = "แอปไม่มี %@.dext เรียกใช้ “./Scripts/ojd build install dev” แล้วลองอีกครั้งจาก /Applications";
 /* Error of 'ojd transport-extension' commands when the codesign tool cannot run. %@ is the reason from the system. codesign and its path stay as written. */
-"platform.macos.cli.transportExtension.group.codesignFailedToRun" = "ไม่สามารถเรียกใช้ codesign เพื่อตรวจสอบแอพได้: %@ ตรวจสอบว่ามี /usr/bin/codesign อยู่";
+"platform.macos.cli.transportExtension.group.codesignFailedToRun" = "ไม่สามารถเรียกใช้ codesign เพื่อตรวจสอบแอปได้: %@ ตรวจสอบว่ามี /usr/bin/codesign อยู่";
 /* One-line summary of 'ojd transport-extension deactivate' in the command list and at the top of its help. */
 "platform.macos.cli.transportExtension.deactivate.abstract" = "ขอให้ macOS ปิดใช้งานส่วนขยาย คอนโทรลเลอร์จะกลับไปที่ macOS";
 /* Long description in the help of 'ojd transport-extension deactivate'. The ojd program and the path stay as written. */
@@ -1918,9 +1918,9 @@
 /* Error of 'ojd transport-extension' commands when ojd runs from a folder other than Applications. %@ is the path of this ojd. The path of the installed app stays as written. */
 "cli.transportExtension.group.notInstalled" = "ojd นี้ทำงานจาก %@ ไม่ใช่จาก /Applications เรียกใช้ ojd ที่อยู่ใน /Applications/OpenJoystickDriver.app";
 /* Error of 'ojd transport-extension' commands when the app code signature is not valid. %@ is the description of the signature problem. The build command stays as written. */
-"cli.transportExtension.group.signatureInvalid" = "ลายเซ็นของแอพไม่ถูกต้อง (%@) สร้างใหม่ด้วย “./Scripts/ojd build install-fast dev” แล้วลองอีกครั้ง";
+"cli.transportExtension.group.signatureInvalid" = "ลายเซ็นของแอปไม่ถูกต้อง (%@) สร้างใหม่ด้วย “./Scripts/ojd build install-fast dev” แล้วลองอีกครั้ง";
 /* One-line summary of 'ojd transport-extension status' in the command list and at the top of its help. */
-"platform.macos.cli.transportExtension.status.abstract" = "แสดงว่าส่วนขยายอยู่ในแอพและลงทะเบียนกับ macOS หรือไม่";
+"platform.macos.cli.transportExtension.status.abstract" = "แสดงว่าส่วนขยายอยู่ในแอปและลงทะเบียนกับ macOS หรือไม่";
 /* Row of 'ojd transport-extension status'. %@ is the state of the extension inside the app: present, missing or invalid. Keep the two spaces after the colon. */
 "cli.transportExtension.status.bundle" = "ส่วนขยายที่ฝังไว้:  %@";
 /* Long description in the help of 'ojd transport-extension status'. present, missing, invalid, active, inactive, absent and unavailable are values the command prints and stay as written. */
@@ -2030,7 +2030,7 @@
 /* Value shown by 'ojd config show' for a tuning key that no layer sets, so the driver default applies. */
 "cli.config.show.unset" = "ค่าเริ่มต้นของไดรเวอร์";
 /* One-line summary of 'ojd setting' in the command list and at the top of its help. */
-"cli.setting.group.abstract" = "แสดงรายการ อ่าน หรือเปลี่ยนการตั้งค่าแอพ OpenJoystickDriver";
+"cli.setting.group.abstract" = "แสดงรายการ อ่าน หรือเปลี่ยนการตั้งค่าแอป OpenJoystickDriver";
 /* Error of 'ojd setting set' when the value is neither true nor false. %1$@ is the text the user gave and %2$@ is the setting name, which stays as written. true and false stay as written. */
 "cli.setting.group.badValue" = "“%1$@” ไม่ใช่ค่าของ %2$@ ใช้ true หรือ false";
 /* Help text of the developerTools setting in 'ojd setting list'. */
@@ -2042,7 +2042,7 @@
 /* Long description in the help of 'ojd setting get'. true, false and --json stay as written. */
 "cli.setting.get.discussion" = "พิมพ์ true หรือ false เพียงอย่างเดียว สำหรับสคริปต์ เมื่อใช้ --json จะพิมพ์คีย์และค่า";
 /* Help text of the includePrereleaseUpdates setting in 'ojd setting list'. A pre-release version is a test version before a stable release. */
-"cli.setting.group.includePrereleaseUpdates" = "รวมเวอร์ชั่นรุ่นก่อนเผยแพร่เมื่อตรวจสอบรายการอัพเดท";
+"cli.setting.group.includePrereleaseUpdates" = "รวมเวอร์ชั่นรุ่นก่อนเผยแพร่เมื่อตรวจสอบรายการอัปเดต";
 /* Help text of the KEY argument of 'ojd setting get'. launchAtLogin is a setting name and stays as written. */
 "cli.setting.group.key" = "การตั้งค่าที่จะอ่าน เช่น launchAtLogin";
 /* Help text of the launchAtLogin setting in 'ojd setting list'. OpenJoystickDriver is the product name. */
@@ -2080,11 +2080,11 @@
 /* Message printed by 'ojd update check' when a newer release exists. %1$@ is the version of the release, %2$@ is the installed version and %3$@ is the address of the release page. */
 "cli.update.check.available" = "มี OpenJoystickDriver %1$@ พร้อมใช้งาน (คุณมี %2$@): %3$@";
 /* Long description in the help of 'ojd update check'. ojd stays as written. */
-"cli.update.check.discussion" = "ทำงานเมื่อคุณสั่งเท่านั้น ojd จะไม่ตรวจสอบเอง และไม่ดาวน์โหลดหรือติดตั้งสิ่งใด ออกด้วยรหัส 0 ไม่ว่าจะมีรายการอัพเดทหรือไม่ และรหัส 1 เมื่อการตรวจสอบล้มเหลว";
+"cli.update.check.discussion" = "ทำงานเมื่อคุณสั่งเท่านั้น ojd จะไม่ตรวจสอบเอง และไม่ดาวน์โหลดหรือติดตั้งสิ่งใด ออกด้วยรหัส 0 ไม่ว่าจะมีรายการอัปเดตหรือไม่ และรหัส 1 เมื่อการตรวจสอบล้มเหลว";
 /* Error of 'ojd update check' when the check fails because of the network. %@ is the reason from the system. */
-"cli.update.check.failed" = "ไม่สามารถตรวจสอบรายการอัพเดทได้: %@ ตรวจสอบการเชื่อมต่อเครือข่ายแล้วลองอีกครั้ง";
+"cli.update.check.failed" = "ไม่สามารถตรวจสอบรายการอัปเดตได้: %@ ตรวจสอบการเชื่อมต่อเครือข่ายแล้วลองอีกครั้ง";
 /* Error of 'ojd update check' when the check fails for a reason other than the network. %@ is the reason. */
-"cli.update.check.failedReason" = "ไม่สามารถตรวจสอบรายการอัพเดทได้: %@";
+"cli.update.check.failedReason" = "ไม่สามารถตรวจสอบรายการอัปเดตได้: %@";
 /* Value shown in the structured output of 'ojd update check' when the check did not produce a result. */
 "cli.update.check.incomplete" = "ไม่มีผลลัพธ์";
 /* Help text of the --prerelease flag of 'ojd update check'. A pre-release version is a test version before a stable release. */
@@ -2104,9 +2104,9 @@
 /* Status in the Command Line Tool section of the settings window when ojd is installed. %@ is the path of the link. Terminal is the macOS app and ojd is the command name. */
 "platform.macos.ui.settings.commandLine.toolInstalled" = "ติดตั้งแล้ว เรียกใช้ ojd ในเทอร์มินัล การถอนการติดตั้งจะเอา %@ ออก";
 /* Note in the Command-Line Tool section when the link points to another program. %1$@ is the path of the link and %2$@ is the path it points to. Installing changes the link to point to this app. */
-"ui.settings.commandLine.toolLinkedElsewhere" = "%1$@ ชี้ไปที่ %2$@ การติดตั้งจะเชื่อมโยงกับแอพนี้แทน";
+"ui.settings.commandLine.toolLinkedElsewhere" = "%1$@ ชี้ไปที่ %2$@ การติดตั้งจะเชื่อมโยงกับแอปนี้แทน";
 /* Description in the Command Line Tool section of the settings window before the tool is installed. %@ is the path where the link is created. Terminal is the macOS app and ojd is the command name. */
-"platform.macos.ui.settings.commandLine.toolNotInstalled" = "เชื่อมโยง %@ กับแอพนี้เพื่อให้คุณเรียกใช้ ojd ในเทอร์มินัลได้ macOS จะขอรหัสผ่านผู้ดูแลระบบ";
+"platform.macos.ui.settings.commandLine.toolNotInstalled" = "เชื่อมโยง %@ กับแอปนี้เพื่อให้คุณเรียกใช้ ojd ในเทอร์มินัลได้ macOS จะขอรหัสผ่านผู้ดูแลระบบ";
 /* Button in the Command-Line Tool section that removes the ojd link. */
 "ui.settings.commandLine.toolUninstall" = "ถอนการติดตั้ง";
 /* One-line summary of 'ojd controller' in the command list and at the top of its help. */
@@ -2746,7 +2746,7 @@
 /* Help text of the --allow-empty flag of 'ojd profile activate'. */
 "cli.profile.activate.allowEmpty" = "เปิดใช้งานโปรไฟล์แม้ว่าจะไม่มีเอาต์พุตใดเลย";
 /* Long description in the help of 'ojd profile activate'. It explains the profile that replaces the active one and the profile that produces no output. The words mapped and --allow-empty stay as written. */
-"cli.profile.activate.discussion" = "โปรไฟล์จะแทนที่โปรไฟล์ที่ใช้งานอยู่ของรุ่นคอนโทรลเลอร์และขอบเขตแอพเดียวกัน โปรไฟล์ที่ตั้งเกมแพดเสมือนเป็น mapped และไม่ส่งสิ่งใดไปยังเกมแพด คีย์บอร์ด ตัวชี้ หรือคอนโทรลเลอร์ และไม่ตั้งสีของไฟ จะไม่มีเอาต์พุต การเปิดใช้งานโปรไฟล์เช่นนั้นต้องใช้ --allow-empty";
+"cli.profile.activate.discussion" = "โปรไฟล์จะแทนที่โปรไฟล์ที่ใช้งานอยู่ของรุ่นคอนโทรลเลอร์และขอบเขตแอปเดียวกัน โปรไฟล์ที่ตั้งเกมแพดเสมือนเป็น mapped และไม่ส่งสิ่งใดไปยังเกมแพด คีย์บอร์ด ตัวชี้ หรือคอนโทรลเลอร์ และไม่ตั้งสีของไฟ จะไม่มีเอาต์พุต การเปิดใช้งานโปรไฟล์เช่นนั้นต้องใช้ --allow-empty";
 /* Message printed after 'ojd profile activate'. %1$@ is the profile name, shown in quotes, and %2$@ is the controller model it applies to. */
 "cli.profile.activate.done" = "เปิดใช้งาน “%1$@” สำหรับ %2$@ แล้ว";
 /* Error of 'ojd profile activate' for a profile that produces no output. --allow-empty stays as written. */
@@ -2758,11 +2758,11 @@
 /* One-line summary of 'ojd profile create' in the command list and at the top of its help. */
 "cli.profile.create.abstract" = "สร้างโปรไฟล์ว่างสำหรับคอนโทรลเลอร์หนึ่งรุ่น";
 /* Help text of the --app option of 'ojd profile create'. An app ID is the bundle identifier of an app, such as com.apple.Safari. */
-"cli.profile.create.app" = "ใช้โปรไฟล์เฉพาะขณะที่แอพนี้ ตามรหัสแอพ อยู่ด้านหน้า";
+"cli.profile.create.app" = "ใช้โปรไฟล์เฉพาะขณะที่แอปนี้ ตามรหัสแอป อยู่ด้านหน้า";
 /* Help text of the --controller option of 'ojd profile create'. VVVV:PPPP is the vendor ID and product ID in hexadecimal and stays as written. */
 "cli.profile.create.controller" = "รุ่นคอนโทรลเลอร์: VVVV:PPPP หรือ ID ของคอนโทรลเลอร์ที่เชื่อมต่ออยู่";
 /* Long description in the help of 'ojd profile create'. --app and the command in quotes stay as written. */
-"cli.profile.create.discussion" = "โปรไฟล์ใช้ได้ในทุกแอพ เว้นแต่ --app ระบุแอพหนึ่ง โดยค่าเริ่มต้น เกมแพดเสมือนจะส่งผ่านตัวควบคุมทุกตัวที่ไม่มีการกำหนดใช้ โปรไฟล์เริ่มต้นเป็นไม่ใช้งาน เปิดใช้งานด้วย “ojd profile activate”";
+"cli.profile.create.discussion" = "โปรไฟล์ใช้ได้ในทุกแอป เว้นแต่ --app ระบุแอปหนึ่ง โดยค่าเริ่มต้น เกมแพดเสมือนจะส่งผ่านตัวควบคุมทุกตัวที่ไม่มีการกำหนดใช้ โปรไฟล์เริ่มต้นเป็นไม่ใช้งาน เปิดใช้งานด้วย “ojd profile activate”";
 /* Message printed after 'ojd profile create'. %1$@ is the profile name, shown in quotes, and %2$@ is the profile ID. */
 "cli.profile.create.done" = "สร้าง “%1$@” (%2$@) แล้ว";
 /* Help text of the physical input option of 'ojd profile create'. shared and exclusive are values the user types and stay as written. */
@@ -3122,7 +3122,7 @@
 /* Menu item that removes all scopes of a program or token. */
 "ui.access.revoke.all" = "ขอบเขตทั้งหมด";
 /* Message of the alert that removes one scope. %@ is the name of the scope, for example Read or Control. */
-"ui.access.revokeScope.message" = "จะนำออกเฉพาะขอบเขต %@ ขอบเขตอื่นยังคงอยู่ และการเชื่อมต่อที่เปิดอยู่ซึ่งใช้ขอบเขตนี้จะถูกปิด";
+"ui.access.revokeScope.message" = "จะเอาออกเฉพาะขอบเขต %@ ขอบเขตอื่นยังคงอยู่ และการเชื่อมต่อที่เปิดอยู่ซึ่งใช้ขอบเขตนี้จะถูกปิด";
 /* Title of the alert that removes a token. %@ is the name of the token. */
 "ui.access.revokeToken.title" = "เพิกถอนโทเค็น %@ หรือไม่";
 /* Message of the alert that removes a token. */
@@ -3250,7 +3250,7 @@
 /* Item of the File menu that saves the support report to a file. Keep the three dots. */
 "ui.menu.file.saveSupportReport" = "บันทึกรายงานการสนับสนุน…";
 /* Item of the File menu that saves the Activity log to a file. Keep the three dots. */
-"ui.menu.file.saveActivityLog" = "บันทึกบันทึกกิจกรรมลงไฟล์…";
+"ui.menu.file.saveActivityLog" = "บันทึกกิจกรรมเป็นไฟล์…";
 /* Title of the alert shown when saving a file from the File menu fails. */
 "ui.menu.file.saveFailed" = "ไม่สามารถบันทึกไฟล์ได้";
 /* Title of the Edit menu in the menu bar. */
@@ -3374,7 +3374,7 @@
 /* Confirm button of the alert that removes the command-line tool. */
 "ui.settings.commandLine.uninstallConfirm" = "ถอนการติดตั้ง";
 /* Hint in the Advanced pane of the settings window while the developer tools are off. */
-"ui.settings.advanced.developerToolsOff" = "เปิดเครื่องมือสำหรับนักพัฒนาเพื่อดูอินพุตของคอนโทรลเลอร์และแพ็กเก็ต USB";
+"ui.settings.advanced.developerToolsOff" = "เปิดเครื่องมือนักพัฒนาเพื่อดูอินพุตของคอนโทรลเลอร์และแพ็กเก็ต USB";
 /* Status line in the menu bar menu. %1$@ is the runtime state, %2$@ is the controller count text and %3$@ is the active profile text. The dots between them separate the parts and may change. */
 "ui.extra.statusLine" = "%1$@ · %2$@ · %3$@";
 /* Heading of the controllers section in the menu bar menu. */
@@ -3452,7 +3452,7 @@
 /* Description of the signer of a program that has a signature without a known publisher. */
 "ui.access.signer.signedUnknownPublisher" = "ลงชื่อโดยผู้เผยแพร่ที่ไม่รู้จัก";
 /* Note in the Command-Line Tool section when the target of the link cannot be read. %@ is the path of the link. Installing changes the link to point to this app. */
-"ui.settings.commandLine.toolLinkTargetUnreadable" = "%@ เป็นลิงก์ที่ไม่สามารถอ่านเป้าหมายได้ การติดตั้งจะเชื่อมโยงกับแอพนี้แทน";
+"ui.settings.commandLine.toolLinkTargetUnreadable" = "%@ เป็นลิงก์ที่ไม่สามารถอ่านเป้าหมายได้ การติดตั้งจะเชื่อมโยงกับแอปนี้แทน";
 /* Text of error E1001, sent to a client that connects to the endpoint while the endpoint is off, and printed by 'ojd explain'. The command in quotes stays as written. */
 "error.E1001.message" = "เอนด์พอยต์ปิดอยู่ เปิดด้วย “ojd access enable” แล้วเชื่อมต่ออีกครั้ง";
 /* Text of error E1002, sent to an endpoint client that has no grant for the scopes it asked for or whose signature or proof is not valid. The two commands in quotes stay as written. */
@@ -3480,7 +3480,7 @@
 /* Name in the Shortcuts app of the action that turns on a remapping profile. */
 "ui.shortcuts.action.activateProfile.title" = "เปิดใช้งานโปรไฟล์";
 /* Description in the Shortcuts app of the action that returns the app version. */
-"ui.shortcuts.action.appVersion.description" = "ส่งคืนเวอร์ชั่นของแอพที่ติดตั้ง";
+"ui.shortcuts.action.appVersion.description" = "ส่งคืนเวอร์ชั่นของแอปที่ติดตั้ง";
 /* Name in the Shortcuts app of the action that returns the app version. OpenJoystickDriver is the product name. */
 "ui.shortcuts.action.appVersion.title" = "รับเวอร์ชั่น OpenJoystickDriver";
 /* Description in the Shortcuts app of the action that returns the battery charge of a controller as a percentage. */
@@ -3558,7 +3558,7 @@
 /* Text of error E2006, printed when the service reports that it could not complete a request. The command in quotes stays as written. */
 "error.E2006.message" = "บริการดำเนินการตามคำขอไม่เสร็จ ตรวจสอบด้วย “ojd status” แล้วลองอีกครั้ง";
 /* Text of error E2007, printed when the service refuses this ojd because its code signature differs from the app. ojd and OpenJoystickDriver.app stay as written. */
-"error.E2007.message" = "บริการปฏิเสธ ojd นี้ เพราะไม่ได้ลงนามเหมือนแอพ เรียกใช้ ojd ที่อยู่ใน OpenJoystickDriver.app";
+"error.E2007.message" = "บริการปฏิเสธ ojd นี้ เพราะไม่ได้ลงนามเหมือนแอป เรียกใช้ ojd ที่อยู่ใน OpenJoystickDriver.app";
 /* Text of error E2008, printed when a command needs a macOS permission that is missing. The command in quotes stays as written. */
 "error.E2008.message" = "ไม่มีสิทธิ์ ให้สิทธิ์ด้วย “ojd permission request”";
 /* Text of error E2009, printed when a command that changes or deletes data runs without a terminal and without --force. --force stays as written. */
@@ -3572,7 +3572,7 @@
 /* Text of error E2013, printed when the controller cannot take a requested action. The command in quotes stays as written. */
 "error.E2013.message" = "ตอนนี้คอนโทรลเลอร์ทำสิ่งนั้นไม่ได้ อาจไม่รองรับ ยังไม่พร้อม หรือเลิกเชื่อมต่อ ตรวจสอบด้วย “ojd controller list”";
 /* Text of error E2014, printed when the app is not fully installed or its signature is not valid. OpenJoystickDriver is the product name. The command in quotes stays as written. */
-"error.E2014.message" = "OpenJoystickDriver ติดตั้งไม่สมบูรณ์ หรือลายเซ็นไม่ถูกต้อง ติดตั้งแอพใหม่แล้วเรียกใช้ “ojd diagnose”";
+"error.E2014.message" = "OpenJoystickDriver ติดตั้งไม่สมบูรณ์ หรือลายเซ็นไม่ถูกต้อง ติดตั้งแอปใหม่แล้วเรียกใช้ “ojd diagnose”";
 /* Text of error E2015, printed when macOS does not complete or apply a request of the driver. */
 "error.E2015.message" = "ระบบดำเนินการหรือใช้คำขอไม่เสร็จ ตรวจสอบการตั้งค่าระบบแล้วลองอีกครั้ง";
 /* Text of error E2016, printed when a file cannot be read, written or deleted, or is present although it must not be. */
@@ -3582,11 +3582,11 @@
 /* Text of error E2018, printed when 'ojd diagnose' found a failed check. The command in quotes stays as written. */
 "error.E2018.message" = "“ojd diagnose” พบการตรวจสอบที่ล้มเหลว อ่านเอาต์พุตและแก้ไขรายการที่ล้มเหลว";
 /* Text of error E2019, printed when the check for updates did not finish. */
-"error.E2019.message" = "การตรวจสอบรายการอัพเดทไม่เสร็จ ตรวจสอบการเชื่อมต่อเครือข่ายแล้วลองอีกครั้ง";
+"error.E2019.message" = "การตรวจสอบรายการอัปเดตไม่เสร็จ ตรวจสอบการเชื่อมต่อเครือข่ายแล้วลองอีกครั้ง";
 /* Text of error E2020, printed when the installed app is older than the ojd that runs. OpenJoystickDriver is the product name. The build command and OJD_RUN_REPOSITORY_CLI=1 stay as written. */
-"error.E2020.message" = "แอพ OpenJoystickDriver ที่ติดตั้งเก่ากว่า ojd นี้ เรียกใช้ “./Scripts/ojd build install-fast dev” หรือตั้ง OJD_RUN_REPOSITORY_CLI=1 เพื่อเรียกใช้บิลด์นี้";
+"error.E2020.message" = "แอป OpenJoystickDriver ที่ติดตั้งเก่ากว่า ojd นี้ เรียกใช้ “./Scripts/ojd build install-fast dev” หรือตั้ง OJD_RUN_REPOSITORY_CLI=1 เพื่อเรียกใช้บิลด์นี้";
 /* Text of error E2021, printed when an ojd built from the repository cannot hand a command to the installed app. OpenJoystickDriver.app stays as written. */
-"error.E2021.message" = "ojd ที่บิลด์จากที่เก็บส่งคำสั่งให้แอพที่ติดตั้งไม่ได้ ติดตั้ง OpenJoystickDriver.app ใหม่แล้วเรียกใช้คำสั่งอีกครั้ง";
+"error.E2021.message" = "ojd ที่บิลด์จากที่เก็บส่งคำสั่งให้แอปที่ติดตั้งไม่ได้ ติดตั้ง OpenJoystickDriver.app ใหม่แล้วเรียกใช้คำสั่งอีกครั้ง";
 /* Text of error E3001, returned when a remapping request names a controller that is not connected or not ready. */
 "error.E3001.message" = "คอนโทรลเลอร์ไม่ได้เชื่อมต่อหรือยังไม่พร้อมสำหรับการแมปใหม่ เชื่อมต่ออีกครั้งแล้วลองอีกครั้ง";
 /* Text of error E3002, returned when two Joy-Cons cannot be paired into one controller. Joy-Con is a Nintendo product name. */
@@ -3606,7 +3606,7 @@
 /* Text of error E3009, returned when saving a profile would make the profile library too large. */
 "error.E3009.message" = "ไลบรารีโปรไฟล์จะใหญ่เกินไป ลบโปรไฟล์ที่ไม่ต้องใช้แล้วลองอีกครั้ง";
 /* Text of error E3010, returned when a profile with the same identifier exists. */
-"error.E3010.message" = "มีโปรไฟล์ที่ใช้ตัวระบุนั้นอยู่แล้ว ใช้ตัวระบุใหม่ หรืออัพเดทโปรไฟล์ที่มีอยู่";
+"error.E3010.message" = "มีโปรไฟล์ที่ใช้ตัวระบุนั้นอยู่แล้ว ใช้ตัวระบุใหม่ หรืออัปเดตโปรไฟล์ที่มีอยู่";
 /* Text of error E3011, returned when a profile changed elsewhere after the client loaded it. */
 "error.E3011.message" = "โปรไฟล์เปลี่ยนแปลงที่อื่นหลังจากที่คุณโหลด โหลดใหม่แล้วเปลี่ยนอีกครั้ง";
 /* Text of error E3012, returned when the library holds the largest number of profiles it allows. */
@@ -3680,7 +3680,7 @@
 /* Result of the update check: the installed version is newer than the latest release. */
 "ui.settings.general.updateAhead" = "ใหม่กว่ารุ่นล่าสุด";
 /* Label of the installed version in the General pane of the settings window. */
-"ui.settings.general.version" = "รุ่น";
+"ui.settings.general.version" = "เวอร์ชัน";
 /* Line in the Updates section of the settings window. %@ is the version of the latest release. */
 "ui.settings.general.latestRelease" = "รุ่นล่าสุด: %@";
 /* Title of the switch in the General pane of the settings window that shows the app icon in the Dock. Dock is the macOS name. */

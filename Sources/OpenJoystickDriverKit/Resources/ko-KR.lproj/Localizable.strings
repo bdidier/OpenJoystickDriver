@@ -2094,7 +2094,7 @@
 /* Heading of the Command-Line Tool section in the settings window. */
 "ui.settings.commandLine.tool" = "명령줄 도구";
 /* Error in the Command-Line Tool section when a regular file is in the place of the link. %@ is the path. */
-"ui.settings.commandLine.toolBlocked" = "%@은(는) 링크가 아니라 파일입니다. 삭제한 다음 다시 설치하십시오.";
+"ui.settings.commandLine.toolBlocked" = "%@은(는) 링크가 아니라 파일입니다. 삭제한 다음 다시 설치하세요.";
 /* Status in the Command-Line Tool section after the user cancels the installation. */
 "ui.settings.commandLine.toolCancelled" = "취소되었습니다.";
 /* Error shown in the Command Line Tool section of the settings window when macOS refuses to install or remove the tool. */
@@ -2984,7 +2984,7 @@
 /* Notice after a mod is removed. %@ is the mod name. */
 "ui.library.mod.removed" = "모드 %@을(를) 제거했습니다.";
 /* Line in the records list for a record that a mod changes. %@ is the name of the mod. */
-"ui.library.record.patchedBy" = "%@에서 수정함";
+"ui.library.record.patchedBy" = "%@이(가) 패치함";
 /* Label of the field in the record detail that tells whether the USB extension claims the controller. */
 "ui.library.field.usbClaim" = "USB 확장";
 /* Value of the USB extension field: the extension claims the controller. */
@@ -3368,7 +3368,7 @@
 /* Description under the automatic update check switch in the Updates section of the settings window. */
 "ui.settings.general.checkUpdatesAutomaticallyDescription" = "앱이 시작될 때 최신 버전을 확인합니다.";
 /* Title of the alert that removes the command-line tool. */
-"ui.settings.commandLine.uninstallTitle" = "명령 행 도구를 제거하시겠습니까?";
+"ui.settings.commandLine.uninstallTitle" = "명령줄 도구를 제거하시겠습니까?";
 /* Message of the confirmation alert that removes the command line tool. %1$@ is the path of the link. The app stays installed. Terminal is the macOS app and ojd is the command name. */
 "platform.macos.ui.settings.commandLine.uninstallMessage" = "%1$@의 링크를 제거합니다. 앱은 계속 설치되어 있지만, 도구를 다시 설치하기 전까지 터미널에서 ojd를 실행할 수 없습니다.";
 /* Confirm button of the alert that removes the command-line tool. */
@@ -3710,7 +3710,7 @@
 /* Column title of the diagnostics table in the Activity area. The column names the check. */
 "ui.activity.column.check" = "검사";
 /* Column title of the diagnostics table in the Activity area. The column holds the details of the result. */
-"ui.activity.column.details" = "세부 사항";
+"ui.activity.column.details" = "세부사항";
 /* Result of a check in the diagnostics table when the check passed. */
 "ui.activity.status.pass" = "통과";
 /* Result of a check in the diagnostics table when the check found a problem that does not stop the app. */

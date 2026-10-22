@@ -2176,7 +2176,7 @@
 /* Error of the controller output commands when the controller lacks the feature. %1$@ is the controller name, %2$@ is the missing feature as a noun phrase and %3$@ is the session token for 'ojd controller show'. */
 "cli.controller.group.outputUnsupported" = "%1$@ không có %2$@. Hãy chạy “ojd controller show %3$@” để xem nó hỗ trợ gì.";
 /* One-line summary of 'ojd controller claim' in the command list and at the top of its help. OpenJoystickDriver is the product name. To serve a model means to read its input and publish it as a virtual gamepad. */
-"cli.controller.claim.abstract" = "Để OpenJoystickDriver phục vụ một mẫu bộ điều khiển.";
+"cli.controller.claim.abstract" = "Yêu cầu OpenJoystickDriver phục vụ một mẫu bộ điều khiển.";
 /* Long description in the help of 'ojd controller claim'. server, ojd, VVVV-PPPP.json and the record terms stay as written. */
 "platform.macos.cli.controller.claim.discussion" = "Đặt server thành ojd trong bản ghi của bạn cho mẫu đó, VVVV-PPPP.json trong thư mục bản ghi của bạn, và giữ các trường khác của bản ghi. Áp dụng cho mọi bộ điều khiển của mẫu. Dịch vụ đang chạy áp dụng mà không cần cắm lại. Cần dịch vụ để tìm bộ điều khiển. --dry-run không ghi gì. Thoát với mã 1 và E2023 cho bộ điều khiển dùng USB thô, luôn do OpenJoystickDriver phục vụ, hoặc do macOS không phục vụ ở chế độ gốc.";
 /* One-line summary of 'ojd controller release' in the command list and at the top of its help. */
@@ -2972,7 +2972,7 @@
 /* Title of the alert that installs a mod. %@ is the mod name. */
 "ui.library.mod.install.title" = "Cài mod %@?";
 /* Message of the alert that installs a mod. %1$@ is the mod name, %2$@ is its version and %3$@ is its author. OpenJoystickDriver is the product name. */
-"ui.library.mod.install.message" = "OpenJoystickDriver thêm %1$@ %2$@ của %3$@ vào các mod đã cài của bạn.";
+"ui.library.mod.install.message" = "OpenJoystickDriver thêm %1$@ %2$@ do %3$@ tạo vào các mod đã cài của bạn.";
 /* Title of the alert that replaces an installed mod. %@ is the mod name. */
 "ui.library.mod.replace.title" = "Thay thế mod %@?";
 /* Message of the alert that replaces an installed mod. %1$@ is the mod name and %2$@ is the version that will be installed. */
@@ -3058,7 +3058,7 @@
 /* Label of the row in the Access area for the local endpoint. The local endpoint is the socket where programs on this Mac connect. */
 "ui.access.endpoint" = "Điểm cuối cục bộ";
 /* Help text of the endpoint switch. %@ is the path of the socket. */
-"ui.access.socket" = "Socket cục bộ: %@";
+"ui.access.socket" = "Socket: %@";
 /* Context menu item that copies the path of the socket. */
 "ui.access.socket.copy" = "Sao chép đường dẫn socket";
 /* Confirm button of the alert that turns on the local endpoint. */
@@ -3072,7 +3072,7 @@
 /* Value of the WebSocket row when it is on. %1$@ is the address of the endpoint and %2$@ is the address where pages are served. */
 "ui.access.web.on" = "Bật tại %1$@, trang tại %2$@";
 /* Value of the WebSocket row when it is off. */
-"ui.access.web.off" = "Đang tắt";
+"ui.access.web.off" = "Tắt";
 /* Value of the WebSocket row when it is on but cannot listen. %@ is the port number. */
 "ui.access.web.closed" = "Đã bật, nhưng không lắng nghe trên cổng %@";
 /* Help text of the WebSocket row. %@ is the path of the folder from which the endpoint serves pages. */
@@ -3176,7 +3176,7 @@
 /* Description of the signer of a program that has no certificate signature. */
 "ui.access.signer.adHoc" = "Chưa ký";
 /* Name of the connection kind for a local socket. */
-"ui.access.transport.socket" = "Socket cục bộ";
+"ui.access.transport.socket" = "Socket";
 /* Name of the connection kind for a WebSocket. */
 "ui.access.transport.web" = "WebSocket";
 /* Error of the Access area when the service is not running. OpenJoystickDriver is the product name. */
@@ -3726,11 +3726,11 @@
 /* Name of the check in the diagnostics table that asks macOS whether the driver extension is registered. */
 "ui.activity.check.transportExtensionRegistration" = "Đăng ký tiện ích mở rộng trình điều khiển";
 /* Name of the check in the diagnostics table that validates the configuration files. */
-"ui.activity.check.configFiles" = "Tệp cấu hình";
+"ui.activity.check.configFiles" = "Tệp thiết lập";
 /* Name of the check in the diagnostics table that tests whether the app can read USB controllers. */
 "ui.activity.check.usbAccess" = "Quyền truy cập USB";
 /* Button of a failed check in the diagnostics table that opens the Library area. */
-"ui.activity.fix.showLibrary" = "Hiển thị Thư viện";
+"ui.activity.fix.showLibrary" = "Hiện thư viện";
 /* Label of the fact in the Controllers detail that tells whether the controller has adaptive triggers, triggers with variable resistance. */
 "ui.controllers.adaptiveTriggers" = "Nút kích hoạt thích ứng";
 /* Label of the fact in the Controllers detail that tells whether the controller has a motion sensor. */

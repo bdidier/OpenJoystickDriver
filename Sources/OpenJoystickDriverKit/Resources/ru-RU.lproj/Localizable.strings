@@ -2988,9 +2988,9 @@
 /* Label of the field in the record detail that tells whether the USB extension claims the controller. */
 "ui.library.field.usbClaim" = "Расширение USB";
 /* Value of the USB extension field: the extension claims the controller. */
-"ui.library.claim.claimed" = "Берёт этот контроллер";
+"ui.library.claim.claimed" = "Обслуживает этот контроллер";
 /* Value of the USB extension field: the extension does not claim the controller. */
-"ui.library.claim.unclaimed" = "Не берёт этот контроллер";
+"ui.library.claim.unclaimed" = "Не обслуживает этот контроллер";
 /* Placeholder of the search field in the toolbar of the Library area. */
 "ui.library.search" = "Поиск";
 /* Title of the empty state in the Library area when the search matches nothing. */
@@ -3042,7 +3042,7 @@
 /* VoiceOver label for the hexadecimal reading shown after the vendorID and productID lines of a record in the Library. %1$@ is the member name, vendorID or productID, which stays as written; %2$@ is the value in hexadecimal, such as 0x353D. */
 "a11y.library.recordHexadecimal" = "%1$@, шестнадцатеричное значение %2$@";
 /* Shown in the Record section of a record in the Library when the record text cannot be read for display. %@ is the controller identity, such as 045E:028E. */
-"ui.library.recordUnreadable" = "Текст записи %@ невозможно прочитать, поэтому его нельзя показать.";
+"ui.library.recordUnreadable" = "Текст записи «%@» невозможно прочитать, поэтому его нельзя показать.";
 /* Title of the details button of an error message in the Access area. */
 "ui.access.details" = "Подробнее";
 /* Button of an error message in the Access area that hides the message. */

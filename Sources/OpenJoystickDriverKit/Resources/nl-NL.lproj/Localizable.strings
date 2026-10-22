@@ -3281,7 +3281,7 @@
 /* Label of the row in the Access area for the local endpoint. The local endpoint is the socket where programs on this Mac connect. */
 "ui.access.endpoint" = "Lokaal eindpunt";
 /* Help text of the endpoint switch. %@ is the path of the socket. */
-"ui.access.socket" = "Lokale socket: %@";
+"ui.access.socket" = "Socket: %@";
 /* Context menu item that copies the path of the socket. */
 "ui.access.socket.copy" = "Kopieer socketpad";
 /* Confirm button of the alert that turns on the local endpoint. */
@@ -3399,7 +3399,7 @@
 /* Description of the signer of a program that has no certificate signature. */
 "ui.access.signer.adHoc" = "Niet ondertekend";
 /* Name of the connection kind for a local socket. */
-"ui.access.transport.socket" = "Lokale socket";
+"ui.access.transport.socket" = "Socket";
 /* Name of the connection kind for a WebSocket. */
 "ui.access.transport.web" = "WebSocket";
 /* Error of the Access area when the service is not running. OpenJoystickDriver is the product name. */
@@ -3595,7 +3595,7 @@
 /* Message of the confirmation alert that removes the command line tool. %1$@ is the path of the link. The app stays installed. Terminal is the macOS app and ojd is the command name. */
 "platform.macos.ui.settings.commandLine.uninstallMessage" = "Hiermee wordt de link op %1$@ verwijderd. De app blijft geïnstalleerd, maar ojd werkt niet meer in Terminal totdat je het programma opnieuw installeert.";
 /* Confirm button of the alert that removes the command-line tool. */
-"ui.settings.commandLine.uninstallConfirm" = "Verwijder";
+"ui.settings.commandLine.uninstallConfirm" = "Verwijder installatie";
 /* Hint in the Advanced pane of the settings window while the developer tools are off. */
 "ui.settings.advanced.developerToolsOff" = "Zet de ontwikkelaarsgereedschappen aan om controllerinvoer en USB-pakketten te zien.";
 /* Status line in the menu bar menu. %1$@ is the runtime state, %2$@ is the controller count text and %3$@ is the active profile text. The dots between them separate the parts and may change. */
@@ -3699,7 +3699,7 @@
 /* Title of the toolbar popup in the Activity area that sets how many log lines show. */
 "ui.activity.lines" = "Regels";
 /* Placeholder of the search field in the toolbar of the Activity area. */
-"ui.activity.search" = "Zoek";
+"ui.activity.search" = "Zoeken";
 /* Toolbar button in the Activity area that shows the log file in Finder, the macOS file manager. */
 "platform.macos.ui.activity.showInFinder" = "Toon in Finder";
 /* Title of the alert shown when the folder of the log cannot be opened. */

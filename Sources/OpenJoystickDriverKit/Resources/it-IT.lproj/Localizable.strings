@@ -3203,7 +3203,7 @@
 /* Title of the alert that removes a mod. %@ is the mod name. */
 "ui.library.mod.remove.title" = "Rimuovere il mod %@?";
 /* Message of the alert that removes a mod. OpenJoystickDriver is the product name. Personas are the identities that a virtual gamepad can show. */
-"ui.library.mod.remove.message" = "OpenJoystickDriver elimina il mod insieme ai record, ai profili e alle persona che ha aggiunto.";
+"ui.library.mod.remove.message" = "OpenJoystickDriver elimina il mod insieme ai record, ai profili e alle persone che ha aggiunto.";
 /* Notice after a mod is removed. %@ is the mod name. */
 "ui.library.mod.removed" = "Mod %@ rimosso.";
 /* Line in the records list for a record that a mod changes. %@ is the name of the mod. */
@@ -3211,9 +3211,9 @@
 /* Label of the field in the record detail that tells whether the USB extension claims the controller. */
 "ui.library.field.usbClaim" = "Estensione USB";
 /* Value of the USB extension field: the extension claims the controller. */
-"ui.library.claim.claimed" = "Rileva questo controller";
+"ui.library.claim.claimed" = "Gestisce questo controller";
 /* Value of the USB extension field: the extension does not claim the controller. */
-"ui.library.claim.unclaimed" = "Non rileva questo controller";
+"ui.library.claim.unclaimed" = "Non gestisce questo controller";
 /* Placeholder of the search field in the toolbar of the Library area. */
 "ui.library.search" = "Cerca";
 /* Title of the empty state in the Library area when the search matches nothing. */
@@ -3249,7 +3249,7 @@
 /* Name of the source of a record: a global file of the user. */
 "ui.library.layer.global" = "Il tuo file globale";
 /* Message in the detail pane of the Library area before an item is selected. */
-"ui.library.detail.empty" = "Scegli un record o una mod.";
+"ui.library.detail.empty" = "Scegli un record o un mod.";
 /* Message of the open panel in which the user picks a packet capture for a record test. */
 "ui.library.test.packets.pick" = "Scegli un’acquisizione di pacchetti.";
 /* Message of the open panel in which the user picks the file with the expected controller state for a record test. */
@@ -3281,7 +3281,7 @@
 /* Label of the row in the Access area for the local endpoint. The local endpoint is the socket where programs on this Mac connect. */
 "ui.access.endpoint" = "Endpoint locale";
 /* Help text of the endpoint switch. %@ is the path of the socket. */
-"ui.access.socket" = "Socket locale: %@";
+"ui.access.socket" = "Socket: %@";
 /* Context menu item that copies the path of the socket. */
 "ui.access.socket.copy" = "Copia percorso del socket";
 /* Confirm button of the alert that turns on the local endpoint. */
@@ -3399,7 +3399,7 @@
 /* Description of the signer of a program that has no certificate signature. */
 "ui.access.signer.adHoc" = "Non firmato";
 /* Name of the connection kind for a local socket. */
-"ui.access.transport.socket" = "Socket locale";
+"ui.access.transport.socket" = "Socket";
 /* Name of the connection kind for a WebSocket. */
 "ui.access.transport.web" = "WebSocket";
 /* Error of the Access area when the service is not running. OpenJoystickDriver is the product name. */
@@ -3679,7 +3679,7 @@
 /* Message printed by 'ojd update check' when the installed version is newer than the latest release. %1$@ is the installed version and %2$@ is the latest release. */
 "cli.update.check.ahead" = "OpenJoystickDriver %1$@ è più recente dell'ultima release pubblicata (%2$@).";
 /* Result of the update check: the installed version is newer than the latest release. */
-"ui.settings.general.updateAhead" = "Più recente dell'ultima release";
+"ui.settings.general.updateAhead" = "Più recente dell’ultima release";
 /* Label of the installed version in the General pane of the settings window. */
 "ui.settings.general.version" = "Versione";
 /* Line in the Updates section of the settings window. %@ is the version of the latest release. */

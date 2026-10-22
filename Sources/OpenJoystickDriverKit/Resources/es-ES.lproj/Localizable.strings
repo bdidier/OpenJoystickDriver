@@ -83,9 +83,9 @@
 /* Message of the alert shown when the user leaves the profile editor with unsaved changes. */
 "ui.settings.advanced.discardProfileMessage" = "Los cambios de tu perfil no se han guardado.";
 /* Destructive button of the alert that throws away the unsaved changes of a profile. */
-"ui.settings.advanced.discardAction" = "No guardar cambios";
+"ui.settings.advanced.discardAction" = "Descartar cambios";
 /* Title of the switch that turns on the developer tools in the Advanced pane of the settings window. */
-"ui.settings.advanced.enableDeveloperTools" = "Activar herramientas de desarrollo";
+"ui.settings.advanced.enableDeveloperTools" = "Activar herramientas para desarrolladores";
 /* Note in the Notifications pane of the settings window when macOS has turned off both banners and sounds for the app. System Settings is the name of the macOS app. */
 "platform.macos.ui.settings.notifications.notificationBannersAndSoundOff" = "Los banners y los sonidos están desactivados en Ajustes del Sistema.";
 /* Value of the notification row in the Access area when macOS has turned off banners for the app. */
@@ -197,7 +197,7 @@
 /* Entry of the server picker in the Controllers detail: macOS serves the controller itself. */
 "platform.macos.ui.controllers.server.system" = "macOS (nativo)";
 /* Option of the server popup: OpenJoystickDriver serves the controller as a virtual gamepad. OpenJoystickDriver is the product name. */
-"ui.controllers.server.ojd" = "OpenJoystickDriver (mando virtual)";
+"ui.controllers.server.ojd" = "OpenJoystickDriver (virtual)";
 /* Label of the serving route fact in the Controllers detail. The route is the way the input reaches games. */
 "ui.controllers.serving.label" = "Ruta de servicio";
 /* Value of the serving route in the Controllers area: macOS serves the controller and the driver passes the input through. */
@@ -3597,7 +3597,7 @@
 /* Confirm button of the alert that removes the command-line tool. */
 "ui.settings.commandLine.uninstallConfirm" = "Desinstalar";
 /* Hint in the Advanced pane of the settings window while the developer tools are off. */
-"ui.settings.advanced.developerToolsOff" = "Activa las herramientas de desarrollo para ver la entrada del mando y los paquetes USB.";
+"ui.settings.advanced.developerToolsOff" = "Activa las herramientas para desarrolladores para ver la entrada del mando y los paquetes USB.";
 /* Status line in the menu bar menu. %1$@ is the runtime state, %2$@ is the controller count text and %3$@ is the active profile text. The dots between them separate the parts and may change. */
 "ui.extra.statusLine" = "%1$@ · %2$@ · %3$@";
 /* Heading of the controllers section in the menu bar menu. */
@@ -3703,7 +3703,7 @@
 /* Toolbar button in the Activity area that shows the log file in Finder, the macOS file manager. */
 "platform.macos.ui.activity.showInFinder" = "Mostrar en el Finder";
 /* Title of the alert shown when the folder of the log cannot be opened. */
-"ui.activity.showInFinder.failed" = "No se pudo abrir la carpeta de registros.";
+"ui.activity.showInFinder.failed" = "No se ha podido abrir la carpeta de registros.";
 /* Toolbar button in the Activity area that runs the diagnostic checks. */
 "ui.activity.runChecks" = "Ejecutar comprobaciones";
 /* Column title of the Activity log table. The column holds the text of an entry. */

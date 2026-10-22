@@ -1063,7 +1063,7 @@
 /* Button of the problem banner that repairs the driver extension for Xbox USB controllers. */
 "ui.setup.repairDriver" = "Xbox USB Sürücüsünü Onar";
 /* Title of the problem banner when the app cannot reach its service. OpenJoystickDriver is the product name. */
-"ui.banner.service.title" = "OpenJoystickDriver servisine ulaşamıyor";
+"ui.banner.service.title" = "OpenJoystickDriver hizmetine ulaşamıyor";
 /* Title of the problem banner when macOS has not allowed all that the app needs. */
 "ui.banner.access.title" = "İzin gerekli";
 /* Detail line of the problem banner when macOS has not allowed all that the driver needs. OpenJoystickDriver is the product name. */
@@ -1121,7 +1121,7 @@
 /* Error message in the inline error of the Settings window when the service no longer waits for the app's report on a test notification: the ojd request that asked for it ended, or its answer time ran out. */
 "ui.settings.notifications.testReportLost" = "Test bildirimine ilişkin rapor gelmeden önce ojd isteği sona erdi veya yanıt süresi doldu.";
 /* Error text the service returns to an app that reports the outcome noAnswer for a test notification, which only the service decides. The inline error of the Settings window shows it. shown, denied, failed and noAnswer are outcome names and stay as written. */
-"ui.settings.notifications.testReportNoAnswer" = "Test bildirimi raporu shown, denied veya failed olmalıdır; noAnswer yalnızca servis tarafından belirlenir.";
+"ui.settings.notifications.testReportNoAnswer" = "Test bildirimi raporu shown, denied veya failed olmalıdır; noAnswer yalnızca hizmet tarafından belirlenir.";
 /* Label of the popup in the profile editor that sets what the virtual gamepad of the profile publishes. */
 "ui.profiles.virtualOutput" = "Sanal Oyun Kontrolcüsü";
 /* Option of the virtual output popup: the profile publishes no virtual gamepad. */
@@ -3420,7 +3420,7 @@
 /* VoiceOver label of the sidebar list of the main window, which switches between the areas of the app. */
 "a11y.mainWindow.sidebar" = "Alanlar";
 /* VoiceOver label of the control in the capture assignment sheet that sets the minimum swipe distance of a touch gesture. */
-"a11y.capture.touchSwipeDistance" = "En Kısa Kaydırma Mesafesi";
+"a11y.capture.touchSwipeDistance" = "Asgari kaydırma mesafesi";
 /* Detail line of a row in the Access area with two parts. %1$@ and %2$@ are the parts, for example the signer and the scopes. The dot between them separates the parts and may change. */
 "ui.access.detail.pair" = "%1$@ · %2$@";
 /* Detail line of a row in the Access area with three parts. %1$@, %2$@ and %3$@ are the parts, for example the signer, the scopes and the reason of a refusal. The dots between them separate the parts and may change. */
@@ -3720,7 +3720,7 @@
 /* Warning shown above exported or displayed service logs, wherever the logs are shown. The logs can hold private data. */
 "cli.log.group.sharingWarning" = "Hizmet günlükleri aygıt adları, tanımlayıcılar veya tanılama yolları içerebilir. Paylaşmadan önce gözden geçirin.";
 /* Title of the toolbar popup in the Activity area that filters the log by stream. */
-"ui.activity.filter" = "Süz";
+"ui.activity.filter" = "Filtre";
 /* Name of the check in the diagnostics table that looks for the driver extension inside the app. */
 "ui.activity.check.transportExtensionBundle" = "Sürücü uzantısı paketi";
 /* Name of the check in the diagnostics table that asks macOS whether the driver extension is registered. */

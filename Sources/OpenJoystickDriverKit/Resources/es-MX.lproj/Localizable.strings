@@ -83,9 +83,9 @@
 /* Message of the alert shown when the user leaves the profile editor with unsaved changes. */
 "ui.settings.advanced.discardProfileMessage" = "Los cambios de tu perfil no se han guardado.";
 /* Destructive button of the alert that throws away the unsaved changes of a profile. */
-"ui.settings.advanced.discardAction" = "No guardar cambios";
+"ui.settings.advanced.discardAction" = "Descartar cambios";
 /* Title of the switch that turns on the developer tools in the Advanced pane of the settings window. */
-"ui.settings.advanced.enableDeveloperTools" = "Activar herramientas de desarrollo";
+"ui.settings.advanced.enableDeveloperTools" = "Activar herramientas para desarrolladores";
 /* Note in the Notifications pane of the settings window when macOS has turned off both banners and sounds for the app. System Settings is the name of the macOS app. */
 "platform.macos.ui.settings.notifications.notificationBannersAndSoundOff" = "Los banners y los sonidos están desactivados en Ajustes del Sistema.";
 /* Value of the notification row in the Access area when macOS has turned off banners for the app. */
@@ -109,7 +109,7 @@
 /* Error shown when the user turns on notifications in the app while macOS denies them. System Settings is the name of the macOS app. OpenJoystickDriver is the product name. */
 "platform.macos.ui.settings.notifications.notificationsDenied" = "Las notificaciones de OpenJoystickDriver están desactivadas en Ajustes del Sistema.";
 /* Button in the Notifications pane of the settings window that opens the notification settings of macOS. */
-"ui.settings.general.openNotificationSettings" = "Abrir ajustes de notificaciones";
+"ui.settings.general.openNotificationSettings" = "Abrir configuración de notificaciones";
 /* Button in a pane of the settings window that opens System Settings, the macOS app. */
 "ui.settings.general.openSystemSettings" = "Abrir Configuración";
 /* Title of the switch in the Updates section of the settings window that includes prerelease versions in the update check. */
@@ -197,7 +197,7 @@
 /* Entry of the server picker in the Controllers detail: macOS serves the controller itself. */
 "platform.macos.ui.controllers.server.system" = "macOS (nativo)";
 /* Option of the server popup: OpenJoystickDriver serves the controller as a virtual gamepad. OpenJoystickDriver is the product name. */
-"ui.controllers.server.ojd" = "OpenJoystickDriver (control virtual)";
+"ui.controllers.server.ojd" = "OpenJoystickDriver (virtual)";
 /* Label of the serving route fact in the Controllers detail. The route is the way the input reaches games. */
 "ui.controllers.serving.label" = "Ruta de servicio";
 /* Value of the serving route in the Controllers area: macOS serves the controller and the driver passes the input through. */
@@ -3273,7 +3273,7 @@
 /* Button of an error message in the Access area that reads the access settings again. */
 "ui.access.tryAgain" = "Volver a intentarlo";
 /* Message in the Access area while it reads the access settings. Keep the three dots. */
-"ui.access.loading" = "Leyendo los ajustes de acceso…";
+"ui.access.loading" = "Leyendo la configuración de acceso…";
 /* Button that closes the sheet that shows the secret of a token. */
 "ui.access.done" = "Hecho";
 /* Button of the open panel in which the user picks a program or app to grant access. It confirms the choice. */
@@ -3403,7 +3403,7 @@
 /* Name of the connection kind for a WebSocket. */
 "ui.access.transport.web" = "WebSocket";
 /* Error of the Access area when the service is not running. OpenJoystickDriver is the product name. */
-"ui.access.error.serviceUnavailable" = "OpenJoystickDriver no se está ejecutando, así que no se pueden leer ni cambiar los ajustes de acceso.";
+"ui.access.error.serviceUnavailable" = "OpenJoystickDriver no se está ejecutando, así que no se puede leer ni cambiar la configuración de acceso.";
 /* Error of the Access area when the service does not answer in time. OpenJoystickDriver is the product name. */
 "ui.access.error.serviceTimeout" = "OpenJoystickDriver no ha respondido a tiempo.";
 /* Error of the Access area when the service refuses the request of the app. OpenJoystickDriver is the product name. */
@@ -3415,7 +3415,7 @@
 /* VoiceOver label of the Access error banner button when the banner offers to close the error. */
 "a11y.access.dismissError" = "Cerrar el error";
 /* VoiceOver label of the Access error banner button when the banner offers to read the access settings again. */
-"a11y.access.tryAgain" = "Leer de nuevo los ajustes de acceso";
+"a11y.access.tryAgain" = "Leer de nuevo la configuración de acceso";
 /* VoiceOver label of the button in the Access area that restarts the app so that newly granted permissions take effect. */
 "a11y.access.restart" = "Reiniciar la app para que se apliquen los nuevos permisos";
 /* VoiceOver label of the WebSocket port field in the Access area. An empty field keeps the saved port; the system chooses a port only when none is saved or Automatic is selected. */
@@ -3449,7 +3449,7 @@
 /* Item of the application menu that opens the About window. %@ is the product name. */
 "ui.menu.app.about" = "Acerca de %@";
 /* Item of the application menu that opens the settings window. Keep the three dots. */
-"ui.menu.app.settings" = "Ajustes…";
+"ui.menu.app.settings" = "Configuración…";
 /* Item of the application menu that holds the Services submenu. It is the macOS name. */
 "ui.menu.app.services" = "Servicios";
 /* Item of the application menu that hides the app. %@ is the product name. */
@@ -3577,11 +3577,11 @@
 /* Title of the Advanced pane and of its toolbar item in the settings window. */
 "ui.settings.advanced.title" = "Avanzado";
 /* VoiceOver label of the General pane of the settings window. The key is built from the pane identifier. */
-"a11y.settingsPane.general" = "Ajustes generales";
+"a11y.settingsPane.general" = "Configuración general";
 /* VoiceOver label of the Notifications pane of the settings window. The key is built from the pane identifier. */
-"a11y.settingsPane.notifications" = "Ajustes de notificaciones";
+"a11y.settingsPane.notifications" = "Configuración de notificaciones";
 /* VoiceOver label of the Advanced pane of the settings window. The key is built from the pane identifier. */
-"a11y.settingsPane.advanced" = "Ajustes avanzados";
+"a11y.settingsPane.advanced" = "Configuración avanzada";
 /* Title of the switch in the General pane of the settings window that shows the app item in the menu bar. */
 "ui.settings.general.showInMenuBar" = "Mostrar en la barra de menús";
 /* Description under the Show in menu bar switch in the General pane of the settings window. OpenJoystickDriver is the product name. */
@@ -3597,7 +3597,7 @@
 /* Confirm button of the alert that removes the command-line tool. */
 "ui.settings.commandLine.uninstallConfirm" = "Desinstalar";
 /* Hint in the Advanced pane of the settings window while the developer tools are off. */
-"ui.settings.advanced.developerToolsOff" = "Activa las herramientas de desarrollo para ver la entrada del control y los paquetes USB.";
+"ui.settings.advanced.developerToolsOff" = "Activa las herramientas para desarrolladores para ver la entrada del control y los paquetes USB.";
 /* Status line in the menu bar menu. %1$@ is the runtime state, %2$@ is the controller count text and %3$@ is the active profile text. The dots between them separate the parts and may change. */
 "ui.extra.statusLine" = "%1$@ · %2$@ · %3$@";
 /* Heading of the controllers section in the menu bar menu. */
@@ -3813,21 +3813,21 @@
 /* Value of the input health fact: the app waits until all controls are at rest before it sends input again. */
 "ui.controllers.inputHealth.waitingForNeutral" = "Esperando posición neutral";
 /* Error shown when the settings file is damaged. %@ is the path of the file. The command in backticks stays as written, and Trash is the macOS name. */
-"ui.settings.advanced.errorDamaged" = "El archivo de ajustes %@ está dañado. Corrígelo o muévelo a la Papelera con `ojd setting reset`.";
+"ui.settings.advanced.errorDamaged" = "El archivo de configuración %@ está dañado. Corrígelo o muévelo a la Papelera con `ojd setting reset`.";
 /* Error shown when the settings file has an unsupported version. %@ is the path of the file. apiVersion and the command in backticks stay as written, and Trash is the macOS name. */
-"ui.settings.advanced.errorUnsupported" = "El archivo de ajustes %@ no es compatible. Reescribe el archivo para la apiVersion compatible o muévelo a la Papelera con `ojd setting reset`.";
+"ui.settings.advanced.errorUnsupported" = "El archivo de configuración %@ no es compatible. Reescribe el archivo para la apiVersion compatible o muévelo a la Papelera con `ojd setting reset`.";
 /* Error shown when the settings file cannot be written. %@ is the path of the file. */
-"ui.settings.advanced.errorUnwritable" = "No se puede escribir el archivo de ajustes %@.";
+"ui.settings.advanced.errorUnwritable" = "No se puede escribir el archivo de configuración %@.";
 /* Error shown when the settings file cannot be moved to the Trash. %@ is the path of the file. Trash is the macOS name. */
-"ui.settings.advanced.errorCannotReset" = "No se puede mover el archivo de ajustes %@ a la Papelera.";
+"ui.settings.advanced.errorCannotReset" = "No se puede mover el archivo de configuración %@ a la Papelera.";
 /* Error shown at startup when the stored settings file turns off both entry points. %@ is the path of the settings file. The two switch names are written as in this catalog, and the command in backticks stays as written. */
 "platform.macos.ui.settings.advanced.errorStoredNoVisibleEntryPoint" = "El archivo de ajustes %@ desactiva “Mostrar en la barra de menús” y “Mostrar en el Dock”, así que la app no tendría ningún punto de acceso visible. Corrígelo o muévelo a la Papelera con `ojd setting reset`.";
 /* Error shown when the user turns off both Show in menu bar and Show in Dock. The two switch names are written as in this catalog. */
 "platform.macos.ui.settings.advanced.errorNoVisibleEntryPoint" = "“Mostrar en la barra de menús” y “Mostrar en el Dock” no pueden estar desactivados a la vez: la app no tendría ningún punto de acceso visible.";
 /* Title of the alert at startup when the settings file cannot be read. */
-"ui.settings.advanced.unreadableTitle" = "No se pueden leer los ajustes";
+"ui.settings.advanced.unreadableTitle" = "No se puede leer la configuración";
 /* Destructive button of the alert at startup that resets the settings, which discards the unreadable settings file. */
-"ui.settings.advanced.unreadableResetSettings" = "Restablecer ajustes";
+"ui.settings.advanced.unreadableResetSettings" = "Restablecer configuración";
 /* Button of the alert about an unreadable settings file at startup that shows the file in Finder, the macOS file manager. */
 "platform.macos.ui.settings.advanced.unreadableShowInFinder" = "Mostrar en el Finder";
 /* One-line summary of 'ojd setting reset' in the command list and at the top of its help. */

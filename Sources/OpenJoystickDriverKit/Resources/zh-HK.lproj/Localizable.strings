@@ -65,7 +65,7 @@
 /* Button in the Updates section of the settings window that checks for an update. */
 "ui.settings.general.checkUpdates" = "立即檢查";
 /* Value of the connection state of a controller in the Controllers detail: the controller is connected. */
-"ui.settings.notifications.controllerConnectedShort" = "已連接";
+"ui.settings.notifications.controllerConnectedShort" = "已連線";
 /* Button of a permission row in the Access area that asks macOS for the permission. %@ is the name of the permission. */
 "ui.settings.notifications.requestAccess" = "要求「%@」取用權限";
 /* VoiceOver label of the switch for notifications about a controller that disconnects. */
@@ -73,7 +73,7 @@
 /* Title of the switch for notifications about a controller that disconnects, and value of the connection state of a controller that is not connected. */
 "ui.settings.notifications.controllerDisconnectedShort" = "已斷線";
 /* VoiceOver label of the switch for notifications about a controller that connects. */
-"ui.settings.notifications.controllerNotifications" = "控制器已連接";
+"ui.settings.notifications.controllerNotifications" = "控制器已連線";
 /* Heading of the developer tools section in the Advanced pane of the settings window. */
 "ui.settings.advanced.developerTools" = "開發者工具";
 /* Description of the switch that turns on the developer tools in the Advanced pane of the settings window. */
@@ -109,7 +109,7 @@
 /* Error shown when the user turns on notifications in the app while macOS denies them. System Settings is the name of the macOS app. OpenJoystickDriver is the product name. */
 "platform.macos.ui.settings.notifications.notificationsDenied" = "系統設定中已關閉 OpenJoystickDriver 的通知。";
 /* Button in the Notifications pane of the settings window that opens the notification settings of macOS. */
-"ui.settings.general.openNotificationSettings" = "打開通知設定";
+"ui.settings.general.openNotificationSettings" = "開啟通知設定";
 /* Button in a pane of the settings window that opens System Settings, the macOS app. */
 "ui.settings.general.openSystemSettings" = "開啟設定";
 /* Title of the switch in the Updates section of the settings window that includes prerelease versions in the update check. */
@@ -123,11 +123,11 @@
 /* VoiceOver label of the switch for notifications about a profile that is activated or switched. */
 "ui.settings.notifications.profileNotifications" = "設定檔已啟用或已切換";
 /* Title of the switch in the General pane of the settings window that opens the app when the user logs in. */
-"ui.settings.general.startAtLogin" = "登入時打開";
+"ui.settings.general.startAtLogin" = "登入時開啟";
 /* Error shown in the General pane of the settings window after the user turns on Start at login and macOS wants approval. System Settings, General and Login Items are names in macOS and are written as macOS shows them. */
 "platform.macos.ui.settings.general.startAtLoginApprovalRequired" = "請在「系統設定」>「一般」>「登入項目」中允許 OpenJoystickDriver。";
 /* Description under the Start at login switch in the General pane of the settings window. OpenJoystickDriver is the product name. */
-"ui.settings.general.startAtLoginDescription" = "登入時在選單列打開 OpenJoystickDriver。";
+"ui.settings.general.startAtLoginDescription" = "登入時在選單列開啟 OpenJoystickDriver。";
 /* Button in the Notifications pane of the settings window that sends a test notification. */
 "ui.settings.notifications.testNotification" = "傳送測試通知";
 /* Result of the update check: the installed version is the latest. */
@@ -1063,7 +1063,7 @@
 /* Button of the problem banner that repairs the driver extension for Xbox USB controllers. */
 "ui.setup.repairDriver" = "修復 Xbox USB 驅動程式";
 /* Title of the problem banner when the app cannot reach its service. OpenJoystickDriver is the product name. */
-"ui.banner.service.title" = "OpenJoystickDriver 無法連接其服務";
+"ui.banner.service.title" = "OpenJoystickDriver 無法連線至其服務";
 /* Title of the problem banner when macOS has not allowed all that the app needs. */
 "ui.banner.access.title" = "需要權限";
 /* Detail line of the problem banner when macOS has not allowed all that the driver needs. OpenJoystickDriver is the product name. */
@@ -3118,15 +3118,15 @@
 /* Title of the alert that removes all access of a program. %@ is the name of the program. */
 "ui.access.revoke.title" = "要撤銷 %@ 的取用權限嗎？";
 /* Message of the alert that removes all access of a program. */
-"ui.access.revoke.message" = "該程式將失去所有範圍，其已開啟的連接將關閉。";
+"ui.access.revoke.message" = "該程式將失去所有範圍，其已開啟的連線將關閉。";
 /* Menu item that removes all scopes of a program or token. */
 "ui.access.revoke.all" = "所有範圍";
 /* Message of the alert that removes one scope. %@ is the name of the scope, for example Read or Control. */
-"ui.access.revokeScope.message" = "僅移除 %@ 範圍。其他範圍維持不變，使用此範圍的已開啟連接將關閉。";
+"ui.access.revokeScope.message" = "僅移除 %@ 範圍。其他範圍維持不變，使用此範圍的已開啟連線將關閉。";
 /* Title of the alert that removes a token. %@ is the name of the token. */
 "ui.access.revokeToken.title" = "要撤銷權杖 %@ 嗎？";
 /* Message of the alert that removes a token. */
-"ui.access.revokeToken.message" = "使用該權杖的頁面和程式將失去取用權限，其已開啟的連接將關閉。";
+"ui.access.revokeToken.message" = "使用該權杖的頁面和程式將失去取用權限，其已開啟的連線將關閉。";
 /* Heading of the list of tokens in the Access area. A token is a secret that a program or web page uses to connect. */
 "ui.access.tokens" = "權杖";
 /* Toolbar button in the Access area that starts the creation of a token. Keep the three dots. */
@@ -3164,7 +3164,7 @@
 /* Footer of the list of refused programs and tokens. */
 "ui.access.refused.message" = "端點在過去 24 小時內拒絕的程式和權杖。";
 /* Heading of the list of connections that are open at the moment in the Access area. */
-"ui.access.connections" = "目前已連接";
+"ui.access.connections" = "目前已連線";
 /* Name of the read scope. It lets a program read controller state. */
 "ui.access.scope.read" = "讀取";
 /* Name of the control scope. It lets a program change controller state and send output. */
@@ -3702,7 +3702,7 @@
 /* Toolbar button in the Activity area that shows the log file in Finder, the macOS file manager. */
 "platform.macos.ui.activity.showInFinder" = "在 Finder 中顯示";
 /* Title of the alert shown when the folder of the log cannot be opened. */
-"ui.activity.showInFinder.failed" = "無法打開記錄檔資料夾。";
+"ui.activity.showInFinder.failed" = "無法開啟記錄檔資料夾。";
 /* Toolbar button in the Activity area that runs the diagnostic checks. */
 "ui.activity.runChecks" = "執行檢查";
 /* Column title of the Activity log table. The column holds the text of an entry. */
@@ -3728,7 +3728,7 @@
 /* Name of the check in the diagnostics table that validates the configuration files. */
 "ui.activity.check.configFiles" = "組態檔案";
 /* Name of the check in the diagnostics table that tests whether the app can read USB controllers. */
-"ui.activity.check.usbAccess" = "USB 存取";
+"ui.activity.check.usbAccess" = "USB 取用";
 /* Button of a failed check in the diagnostics table that opens the Library area. */
 "ui.activity.fix.showLibrary" = "顯示資源庫";
 /* Label of the fact in the Controllers detail that tells whether the controller has adaptive triggers, triggers with variable resistance. */

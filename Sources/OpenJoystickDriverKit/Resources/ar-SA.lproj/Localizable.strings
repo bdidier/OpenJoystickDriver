@@ -193,7 +193,7 @@
 /* Note on a controller row in the Controllers area when macOS serves the controller natively and the driver does not publish a virtual gamepad for it. */
 "platform.macos.ui.controllers.systemGamepadNotPublished" = "وحدة تحكم macOS أصلية، غير منشورة";
 /* Label of the popup in the Controllers detail that picks which program serves the controller to games. */
-"ui.controllers.server.label" = "يخدمه";
+"ui.controllers.server.label" = "يُخدَم بواسطة";
 /* Entry of the server picker in the Controllers detail: macOS serves the controller itself. */
 "platform.macos.ui.controllers.server.system" = "macOS (أصلي)";
 /* Option of the server popup: OpenJoystickDriver serves the controller as a virtual gamepad. OpenJoystickDriver is the product name. */
@@ -2912,7 +2912,7 @@
 /* Button of the open panel in which the user picks a record file or a mod folder. It confirms the choice. */
 "ui.library.choose" = "اختيار";
 /* Toolbar button in the Library area that checks a record file or mod folder without installing it. Keep the three dots. */
-"ui.library.validate" = "تحقق…";
+"ui.library.validate" = "تحقّق من الصحة…";
 /* Confirm button of the alert that installs a record or a mod. */
 "ui.library.install" = "تثبيت";
 /* Confirm button of the alert that replaces an installed record or mod. */

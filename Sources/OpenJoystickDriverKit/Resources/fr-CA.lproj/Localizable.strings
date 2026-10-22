@@ -83,9 +83,9 @@
 /* Message of the alert shown when the user leaves the profile editor with unsaved changes. */
 "ui.settings.advanced.discardProfileMessage" = "Les modifications de votre profil n’ont pas été enregistrées.";
 /* Destructive button of the alert that throws away the unsaved changes of a profile. */
-"ui.settings.advanced.discardAction" = "Annuler les modifications";
+"ui.settings.advanced.discardAction" = "Ignorer les modifications";
 /* Title of the switch that turns on the developer tools in the Advanced pane of the settings window. */
-"ui.settings.advanced.enableDeveloperTools" = "Activer les outils développeur";
+"ui.settings.advanced.enableDeveloperTools" = "Activer les outils de développement";
 /* Note in the Notifications pane of the settings window when macOS has turned off both banners and sounds for the app. System Settings is the name of the macOS app. */
 "platform.macos.ui.settings.notifications.notificationBannersAndSoundOff" = "Les bannières et les sons sont désactivés dans Réglages Système.";
 /* Value of the notification row in the Access area when macOS has turned off banners for the app. */
@@ -3289,7 +3289,7 @@
 /* Title of the alert that turns on the local endpoint. */
 "ui.access.enable.title" = "Activer le point d’accès local?";
 /* Message of the alert that turns on the local endpoint. The control scope allows a program to change controller state. */
-"ui.access.enable.message" = "Les programmes auxquels vous accordez l’accès peuvent alors lire l’état des manettes et, avec la portée control, le modifier.";
+"ui.access.enable.message" = "Les programmes auxquels vous accordez l’accès peuvent alors lire l’état des manettes et, avec la portée « Contrôle », le modifier.";
 /* Label of the row in the Access area for the WebSocket endpoint, where web pages connect. */
 "ui.access.web" = "WebSocket";
 /* Value of the WebSocket row when it is on. %1$@ is the address of the endpoint and %2$@ is the address where pages are served. */
@@ -3333,7 +3333,7 @@
 /* Question of the alert that grants access. %1$@ is the identifier of the program, %2$@ is the description of its signer and %3$@ is the list of scopes. */
 "ui.access.grant.question" = "Accorder à %1$@ (%2$@) ces portées : %3$@?";
 /* Warning in the alert that grants access when the control scope is part of the grant. Rumble is vibration of the controller. */
-"ui.access.grant.controlWarning" = "La portée control permet au programme d’envoyer des sorties à vos manettes, comme les vibrations et les lumières.";
+"ui.access.grant.controlWarning" = "La portée « Contrôle » permet au programme d’envoyer des sorties à vos manettes, comme les vibrations et les lumières.";
 /* Warning line of the confirmation alert that grants access to a program that Apple signed. */
 "platform.macos.ui.access.grant.platformWarning" = "Ce programme est signé par Apple. Tout programme qu’Apple signe avec le même identifiant obtiendrait l’accès.";
 /* Button on a program or token that removes its access. */
@@ -3365,7 +3365,7 @@
 /* Error of the token creation sheet when the name or the scopes are missing. */
 "ui.access.token.incomplete" = "Un jeton a besoin d’un nom et d’au moins une portée.";
 /* Error of the token creation sheet when the user picks the control scope together with web origins. */
-"ui.access.token.originControl" = "Un jeton pour des pages web ne peut pas avoir la portée control.";
+"ui.access.token.originControl" = "Un jeton pour des pages web ne peut pas avoir la portée « Contrôle ».";
 /* Title of the alert that creates a token. %@ is the name of the token. */
 "ui.access.token.title" = "Créer le jeton %@?";
 /* Question of the alert that creates a token without origins. %1$@ is the name of the token and %2$@ is the list of scopes. */
