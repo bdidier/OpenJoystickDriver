@@ -150,20 +150,30 @@ extension DriverLifecycleCharacterizationTests {
 
   @Test
   func sixaxisBluetoothStartupStepOrder() async {
+    let steps = await sixaxisBluetoothStartupSteps()
     #expect(
-      await sixaxisBluetoothStartupSteps() == [
-        "outputs=0", "features=1", "  id=0xf4 n=5", "    f442030000",
+      steps == [
+        "outputs=1", "  id=0x01 n=49",
+        "    0101ff00ff000000000002ff27100032ff27100032ff27100032ff2710003200",
+        "    0000000000000000000000000000000000", "features=1", "  id=0xf4 n=5", "    f442030000",
       ]
     )
   }
 
-  /// The record limits the Bluetooth enable report to Bluetooth, so USB startup writes nothing.
+  /// The record limits the Bluetooth enable report to Bluetooth, so USB startup writes only the
+  /// assigned player slot.
   @Test
-  func sixaxisUSBStartupWritesNothing() async {
+  func sixaxisUSBStartupWritesOnlyThePlayerSlot() async {
     let recording = await startHIDController(Self.sixaxisUSB, transport: "USB", locationID: 206)
     let steps = await recordedSteps(recording)
     await recording.manager.stop()
-    #expect(steps == ["outputs=0", "features=0"])
+    #expect(
+      steps == [
+        "outputs=1", "  id=0x01 n=49",
+        "    0101ff00ff000000000002ff27100032ff27100032ff27100032ff2710003200",
+        "    0000000000000000000000000000000000", "features=0",
+      ]
+    )
   }
 
   @Test

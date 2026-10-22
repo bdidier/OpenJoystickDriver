@@ -72,12 +72,12 @@ extension DevicePipeline {
   func handleInputConnectionStateChangeIfNeeded() async -> [PhysicalOutputWrite] {
     guard let state = driver.consumeInputConnectionStateChange() else { return [] }
     var hidWrites: [PhysicalOutputWrite] = []
+    let slotWrites = state == .connected ? assignedPlayerIndicatorWrites() : []
     switch transport {
-    case .hid: hidWrites = driver.inputConnectionWrites(for: state)
+    case .hid: hidWrites = driver.inputConnectionWrites(for: state) + slotWrites
     case .usb:
       // A handle change stops the writes but not the state change, which is already consumed.
       guard let handle = usbHandle else { break }
-      let slotWrites = state == .connected ? assignedPlayerIndicatorWrites() : []
       for write in driver.inputConnectionWrites(for: state) + slotWrites {
         guard usbHandle === handle else { break }
         do {

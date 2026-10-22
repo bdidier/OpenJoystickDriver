@@ -119,7 +119,7 @@ struct ReceiverPresencePipelineTests {
       driver: XUSBDriver(isWirelessReceiver: true),
       dispatcher: dispatcher,
       // The manager's slot pool assigns the LED; the pipeline lights it when the pad connects.
-      usbStartupPlayerIndicator: .player1,
+      startupPlayerIndicator: .player1,
       usbTransportProvider: RecoveryUSBProvider(sessions: sessions),
       usbRecoveryPolicy: USBPipelineRecoveryPolicy(
         openRetryDelays: [1],

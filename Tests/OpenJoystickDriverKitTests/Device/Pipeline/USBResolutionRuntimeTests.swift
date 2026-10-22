@@ -249,7 +249,7 @@ struct USBResolutionRuntimeTests {
       dispatcher: LoggingOutputDispatcher(),
       // A wired XUSB pad sends no driver startup output; the manager's slot LED is its only
       // startup write, so assign one as DeviceManager does.
-      usbStartupPlayerIndicator: .player1,
+      startupPlayerIndicator: .player1,
       usbTransportProvider: provider,
       transportProfile: resolved
     )

@@ -120,7 +120,8 @@ extension DevicePipeline {
   /// startup writes: the ones that depend on state only the driver holds.
   func hidStartupWrites() -> [PhysicalOutputWrite] {
     guard isActive else { return [] }
-    return resolvedStartupWrites(phase: .startup) + driver.startupWrites()
+    let slot = plan.requiresInputConnectionBeforeOutput ? [] : assignedPlayerIndicatorWrites()
+    return resolvedStartupWrites(phase: .startup) + driver.startupWrites() + slot
   }
 
   func hidStartupRecoveryWrites() -> [PhysicalOutputWrite] {

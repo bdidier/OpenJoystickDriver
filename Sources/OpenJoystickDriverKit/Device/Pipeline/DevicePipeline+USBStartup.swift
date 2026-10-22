@@ -247,7 +247,7 @@ extension DevicePipeline {
   /// The write lighting the manager-assigned player slot. A pad that rejects only its ring LED
   /// still starts, so the write tolerates rejection.
   func assignedPlayerIndicatorWrites() -> [PhysicalOutputWrite] {
-    guard let indicator = usbStartupPlayerIndicator,
+    guard let indicator = startupPlayerIndicator,
       let plan = try? driver.encode(.setPlayerIndicator(indicator))
     else { return [] }
     return plan.writes.map { write in

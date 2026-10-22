@@ -67,7 +67,7 @@ extension DeviceManager {
         dispatcher: dispatcher,
         binding: binding,
         interface: role.resolution.physicalDevice?.interfaces?.first,
-        usbStartupPlayerIndicator: startupIndicator,
+        startupPlayerIndicator: startupIndicator,
         usbTransportProvider: provider,
         transportProfile: role.resolution.profile,
         externalOutputAllowed: externalOutputAllowed,

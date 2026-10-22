@@ -166,8 +166,8 @@ actor DevicePipeline {
   }
   /// Whether the native startup player indicator still waits for the first input report.
   var startupPlayerIndicatorPending: Bool
-  /// The player slot a USB pipeline writes with its startup writes; nil sets none.
-  let usbStartupPlayerIndicator: PhysicalPlayerIndicator?
+  /// The player slot the manager assigned, written with the startup writes; nil sets none.
+  let startupPlayerIndicator: PhysicalPlayerIndicator?
 
   init(
     identifier: LogicalControllerID,
@@ -177,7 +177,7 @@ actor DevicePipeline {
     binding: ProtocolBinding? = nil,
     interface: PhysicalInterfaceSignature? = nil,
     macOSOwnedOutput: MacOSOwnedOutput? = nil,
-    usbStartupPlayerIndicator: PhysicalPlayerIndicator? = nil,
+    startupPlayerIndicator: PhysicalPlayerIndicator? = nil,
     usbTransportProvider: (any USBTransportProvider)? = nil,
     transportProfile: DeviceTransportProfile = .gipDefault,
     usbRecoveryPolicy: USBPipelineRecoveryPolicy = .standard,
@@ -196,7 +196,7 @@ actor DevicePipeline {
     self.interface = interface
     self.macOSOwnedOutput = macOSOwnedOutput
     self.observesOnly = macOSOwnedOutput != nil
-    self.usbStartupPlayerIndicator = usbStartupPlayerIndicator
+    self.startupPlayerIndicator = startupPlayerIndicator
     self.startupPlayerIndicatorPending = macOSOwnedOutput?.setsStartupPlayerIndicator == true
     self.observedInputDemand =
       macOSOwnedOutput == nil ? nil : dispatcher as? any ObservedInputDemand

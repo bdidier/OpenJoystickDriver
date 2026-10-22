@@ -208,11 +208,15 @@ struct DriverLifecycleCharacterizationTests {
   ) -> [String] {
     let reports = (declared + driver.startupWrites()).hidOutputs
     let plan = driver.sessionPlan
+    // As over USB, the pipeline appends the manager-assigned player-slot write.
+    let slot =
+      plan.assignsStartupPlayerIndicator && !plan.requiresInputConnectionBeforeOutput
+      ? ["hid.startup playerSlot"] : []
     return [
       "hid.startupOutput[\(label(transport))] interval=\(plan.hidStartupIntervalNanoseconds)"
         + " required=\(plan.requiresStartupOutput) beforeReads=\(plan.outputPrecedesFeatureReads)"
         + " reports=\(reports.count)"
-    ] + reports.flatMap(render)
+    ] + reports.flatMap(render) + slot
   }
 
   func hidStartupFeatureReads(_ driver: any PhysicalProtocolDriver, transport: String?) -> [String]

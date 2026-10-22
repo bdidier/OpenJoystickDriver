@@ -58,7 +58,10 @@ public final class SixaxisDriver: PhysicalProtocolDriver {
   /// A new transport session starts from neutral input.
   public func resetProtocolState() { state = .neutral }
 
-  public var sessionPlan: DriverSessionPlan { DriverSessionPlan() }
+  /// A Sixaxis lights no player LED until the host sets one.
+  public var sessionPlan: DriverSessionPlan {
+    DriverSessionPlan(assignsStartupPlayerIndicator: true)
+  }
 
   public func consumeInputConnectionStateChange() -> ControllerInputConnectionState? { nil }
 

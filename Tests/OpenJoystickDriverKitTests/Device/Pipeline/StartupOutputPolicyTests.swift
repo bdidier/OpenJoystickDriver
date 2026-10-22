@@ -12,7 +12,7 @@ struct USBStartupOutputPolicyTests {
       transport: .usb(device: Self.device),
       driver: XUSBDriver(),
       dispatcher: LoggingOutputDispatcher(),
-      usbStartupPlayerIndicator: .player1
+      startupPlayerIndicator: .player1
     )
     return try #require(await pipeline.usbStartupWrites().first)
   }
@@ -328,5 +328,25 @@ private final class StartupRecordingOutputDispatcher: OutputDispatcher,
       recordedActivations += 1
       dispatchedOwnership.append(recordedOwnership.last ?? .unknown)
     }
+  }
+}
+
+struct HIDStartupPlayerIndicatorTests {
+  /// A Sixaxis lights no player LED on its own, and macOS sets none on a controller OJD serves.
+  @Test
+  func sixaxisLightsTheAssignedPlayerSlotAtHIDStartup() async throws {
+    #expect(SixaxisDriver().sessionPlan.assignsStartupPlayerIndicator)
+    let pipeline = DevicePipeline(
+      identifier: LogicalControllerID(vendorID: 0x054C, productID: 0x0268),
+      transport: .hid(address: .ioKit(locationID: 1, interfaceNumber: nil)),
+      driver: SixaxisDriver(),
+      dispatcher: LoggingOutputDispatcher(),
+      startupPlayerIndicator: .player2
+    )
+    await pipeline.start()
+    let report = try #require(await pipeline.hidStartupWrites().hidOutputs.last)
+    await pipeline.stop()
+    #expect(report.reportID == 0x01)
+    #expect(report.bytes[10] == 0x04)
   }
 }

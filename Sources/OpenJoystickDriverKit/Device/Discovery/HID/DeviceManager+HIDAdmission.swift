@@ -208,6 +208,9 @@ extension DeviceManager {
       interface: physicalDevice.interfaces?.first,
       macOSOwnedOutput: physicalDevice.nativePassThrough
         ? MacOSOwnedOutput.allowance(for: binding.protocolID, record: binding.record) : nil,
+      startupPlayerIndicator: plan.assignsStartupPlayerIndicator
+        && !physicalDevice.nativePassThrough
+        ? claimStartupPlayerSlot(for: identifier) : nil,
       usbTransportProvider: usbTransportProvider,
       externalOutputAllowed: false,
       frameTimings: frameTimings,
