@@ -38,26 +38,13 @@ case "$OJD_ENV" in
 esac
 OJD_ENV_FILE="$PROJECT_DIR/.env.$OJD_ENV"
 if [[ -f "$OJD_ENV_FILE" ]]; then
+  # env_file.py stops on a key that no script reads; the first run reports it, because the exit
+  # status of the process substitution below is lost.
+  python3 "$LIB_DIR/env_file.py" read "$OJD_ENV_FILE" >/dev/null || exit 2
   while IFS= read -r -d '' key && IFS= read -r -d '' value; do
     export "$key=$value"
-  done < <(python3 - "$OJD_ENV_FILE" <<'PY'
-import os
-import shlex
-import sys
-
-with open(sys.argv[1], encoding="utf-8") as source:
-    for raw_line in source:
-        line = raw_line.strip()
-        if not line or line.startswith("#") or "=" not in line:
-            continue
-        key, raw_value = line.split("=", 1)
-        values = shlex.split(raw_value, comments=True, posix=True)
-        value = os.path.expandvars(values[0]) if values else ""
-        sys.stdout.buffer.write(key.strip().encode() + b"\0" + value.encode() + b"\0")
-PY
-  )
+  done < <(python3 "$LIB_DIR/env_file.py" read "$OJD_ENV_FILE")
 fi
-export OJD_ENV_FILE
 
 # Prefer full Xcode toolchain when installed, even if `xcode-select` still
 # points at Command Line Tools (avoids requiring sudo for local builds).
@@ -80,32 +67,29 @@ if [[ -n "${DEVELOPER_DIR:-}" ]]; then
   XCODE_SELECT_PATH="$DEVELOPER_DIR"
 fi
 
-SWIFT_BIN="${SWIFT_BIN:-}"
-if [[ -z "$SWIFT_BIN" ]]; then
-  SWIFT_BIN="$(xcrun --find swift 2>/dev/null || command -v swift)"
-fi
+# Every Swift command runs the `swift` found on PATH, so one compiler writes `.build`.
+# DEVELOPER_DIR and SDKROOT only select the Xcode SDK and Xcode tools such as xcodebuild.
+SWIFT_PATH="$(command -v swift)" || die "swift is not on PATH"
 
 # Export SDKROOT so swift build, xcodebuild, and clang skip the xcrun lookup, which can hang, and
 # so swiftly-installed toolchains use the selected Xcode SDK instead of the CommandLineTools SDK.
-# The SDK must be one SWIFT_BIN can read: a TOOLCHAINS compiler older than the selected Xcode
-# gets the newest installed SDK it reads; an explicit SDKROOT it cannot read is an error.
+# The SDK must be one that swift can read: a swift older than the selected Xcode's gets the
+# newest installed SDK it reads, with a note; an explicit SDKROOT it cannot read is an error.
 _DEFAULT_SDKROOT="$XCODE_SELECT_PATH/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
 if [[ ! -d "$_DEFAULT_SDKROOT" && -d "$XCODE_SELECT_PATH/SDKs/MacOSX.sdk" ]]; then
   _DEFAULT_SDKROOT="$XCODE_SELECT_PATH/SDKs/MacOSX.sdk"
 fi
 _SDKROOT_EXPLICIT=0
 [[ -n "${SDKROOT:-}" ]] && _SDKROOT_EXPLICIT=1
-SDKROOT="$(python3 "$LIB_DIR/swift_sdk.py" "$SWIFT_BIN" "${SDKROOT:-$_DEFAULT_SDKROOT}" \
-  "$_SDKROOT_EXPLICIT")" || die "no macOS SDK fits $SWIFT_BIN"
+SDKROOT="$(python3 "$LIB_DIR/swift_sdk.py" "$SWIFT_PATH" "${SDKROOT:-$_DEFAULT_SDKROOT}" \
+  "$_SDKROOT_EXPLICIT")" || die "no macOS SDK fits $SWIFT_PATH"
 export SDKROOT
 unset _DEFAULT_SDKROOT _SDKROOT_EXPLICIT
 unset XCODE_SELECT_PATH
-SWIFT_BUILD_BIN="${SWIFT_BUILD_BIN:-$(xcrun --find swift-build 2>/dev/null || command -v swift-build)}"
-SWIFT_PACKAGE_BIN="${SWIFT_PACKAGE_BIN:-$(xcrun --find swift-package 2>/dev/null || command -v swift-package)}"
 
+# One identity signs the app, its resource bundles and the DEXT: `signing configure` picks the
+# identity that every profile of the mode embeds. Unset, the app is signed ad hoc (`-`).
 IDENTITY="${CODESIGN_IDENTITY:--}"
-GUI_IDENTITY="${GUI_CODESIGN_IDENTITY:-$IDENTITY}"
-export GUI_IDENTITY
 export GUI_PROJECT="$PROJECT_DIR/OpenJoystickDriver.xcodeproj"
 export GUI_SCHEME="OpenJoystickDriverApp"
 export GUI_DERIVED_DATA="$PROJECT_DIR/.build/xcode"
@@ -268,7 +252,7 @@ ojd_host_designated_requirement() {
 # rebuilds keep TCC grants. Release keeps codesign's Developer ID default DR.
 ojd_sign() {
   local binary="$1"
-  local identity="${OJD_ACTIVE_SIGN_IDENTITY:-$IDENTITY}"
+  local identity="$IDENTITY"
   local extra_args=()
   if [[ "${2:-}" == "--entitlements" && -n "${3:-}" ]]; then
     extra_args=(--entitlements "$3")
@@ -283,7 +267,7 @@ ojd_sign() {
 
 ojd_sign_resource_bundle() {
   local bundle="$1"
-  local identity="${OJD_ACTIVE_SIGN_IDENTITY:-$IDENTITY}"
+  local identity="$IDENTITY"
   local extra_args=()
   if [[ "$OJD_ENV" == "release" ]]; then
     extra_args+=(--timestamp)

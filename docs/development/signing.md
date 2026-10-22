@@ -48,7 +48,7 @@ Use Apple Development signing and separate profiles for the app and DEXT. Defaul
 ~/Library/MobileDevice/Provisioning Profiles/OpenJoystickDriver_XboxUSBDevice.provisionprofile
 ```
 
-`DEXT_PROVISIONING_PROFILE` overrides the DEXT profile path, and `DEXT_BUILD_PROFILE` overrides the Xcode profile specifier (default `OpenJoystickDriver (XboxUSBDevice)`).
+`signing configure` writes the paths of these profiles to `GUI_PROVISIONING_PROFILE` and `DEXT_PROVISIONING_PROFILE` in `.env.dev`, and the SHA-1 of the one Apple Development identity that both embed to `CODESIGN_IDENTITY`; that identity signs the app and the DEXT. The build passes the `Name` inside the DEXT profile to Xcode as the profile specifier. When several identities qualify, `signing configure --development-identity <sha1>` (or `--release-identity <sha1>` for Developer ID) picks one; otherwise it takes the lowest SHA-1.
 
 The host development profile's device list must include this Mac. Otherwise AMFI ignores `com.apple.developer.hid.virtual.device` and virtual `IOHIDUserDevice` creation fails. Regenerate the profile after adding the Mac, then `./Scripts/ojd signing install-profiles`.
 

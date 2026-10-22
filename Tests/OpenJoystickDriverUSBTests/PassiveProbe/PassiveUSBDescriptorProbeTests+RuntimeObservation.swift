@@ -142,7 +142,7 @@ extension PassiveUSBDescriptorProbeTests {
   func matchingFailuresRemainTypedAndInterpolated() {
     let source = SpySource(error: .matchingFailed(-536_870_181))
     #expect(throws: PassiveUSBDescriptorProbeError.matchingFailed(-536_870_181)) {
-      try PassiveUSBDescriptorProbe.scanWithoutGate(
+      try PassiveUSBDescriptorProbe.scan(
         authorizedTuple: PassiveUSBDescriptorTuple(vendorID: 0x3537, productID: 0x1010),
         source: source
       )

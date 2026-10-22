@@ -339,7 +339,7 @@ class DispatcherTests(unittest.TestCase):
             call.kwargs["cwd"], dispatcher.PROJECT_DIR / "Tools/WebRTCBridge"
         )
         command = call.args[0]
-        self.assertIn('exec "$SWIFT_BIN"', command[2])
+        self.assertIn("exec swift ", command[2])
         self.assertEqual(command[5:], ["test"])
 
     def test_check_tools_fails_when_the_bridge_tests_fail(self) -> None:

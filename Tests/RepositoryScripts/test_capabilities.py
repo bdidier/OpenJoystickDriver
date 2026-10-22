@@ -296,7 +296,7 @@ class CapabilityResolverTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             resolver = Resolver(
                 Path(directory),
-                environ={"OJD_APPLICATIONS_DIR": directory},
+                applications_dir=Path(directory),
                 input_stream=TTYInput(),
                 run=run,
             )
@@ -326,8 +326,7 @@ class CapabilityResolverTests(unittest.TestCase):
                 selected = f"{developer_dirs['Xcode-26.6.0.app']}\n"
                 return subprocess.CompletedProcess(command, 0, selected, "")
 
-            environ = {"OJD_APPLICATIONS_DIR": directory}
-            resolver = Resolver(applications, environ=environ, run=run)
+            resolver = Resolver(applications, applications_dir=applications, run=run)
             outcome = resolver.ensure(Capability.FULL_XCODE)
         self.assertEqual(outcome.kind, OutcomeKind.AVAILABLE)
         self.assertEqual(

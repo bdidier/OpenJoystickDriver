@@ -30,13 +30,17 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
+      - name: Swift toolchain
+        uses: ./.github/actions/swift-toolchain
+
       - name: Toolchain
         run: |
           sw_vers
-          xcrun --find swiftc
+          xcodebuild -version
+          command -v swift
           swift --version
-          xcodebuild -version || true
-          swift --version | grep -F "Swift version 6.3.3"
+          test "$(command -v swift)" = "$HOME/.swiftly/bin/swift"
+          swift --version | grep -F "Swift version $(cat .swift-version) ("
 
       - name: Remove unused untrusted Homebrew taps
         run: |

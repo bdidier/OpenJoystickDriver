@@ -49,8 +49,11 @@ COMMAND_HELP = """Commands:
   docs build-wiki <dir>       Convert wiki/ into GitHub wiki pages in an empty directory
   docs publish-wiki [--dry-run] Publish wiki/ to the GitHub wiki (--dry-run shows the diff only)
   github ensure-auth          Install and authenticate GitHub CLI when needed
-  signing install-profiles    Copy profiles from ~/Documents/Profiles into MobileDevice
-  signing configure            Generate .env.dev + .env.release from Keychain + profiles
+  signing install-profiles [--mode all|development|release] [dir]
+                               Copy profiles from ~/Documents/Profiles into MobileDevice
+  signing configure [--mode all|development|release] [--development-identity <sha1>]
+                    [--release-identity <sha1>]
+                               Generate .env.dev + .env.release from Keychain + profiles
   signing audit [paths...]     Audit profiles without leaking identifiers
   signing cert-info <cer>      Show safe-ish .cer info (Team ID = Subject OU)
   signing profile-info <pp>    Show safe-ish profile embedded cert info
@@ -73,7 +76,6 @@ COMMAND_HELP = """Commands:
   diagnose rumble-motors <vid> <pid> [intensity] [duration-ms]
                               Identify physical rumble actuators interactively
   repair stale-dext           Kill stale DriverKit process copies after upgrade
-  repair swiftpm-module-cache Clean SwiftPM build products after toolchain/target changes
   catalog regenerate --check Verify the runtime catalog against pinned sources and overrides
   catalog regenerate --write Rebuild the runtime catalog from pinned sources and overrides
   errors regenerate --check   Verify the error code schema enum and wiki table against the catalog
@@ -212,7 +214,6 @@ def exec_python_with_environment(relative: str, args: list[str]) -> NoReturn:
 
 from .execution import (
     install_hooks,
-    repair_swiftpm_cache,
     run_record,
     run_usb_passive,
     swift_command,
@@ -291,10 +292,8 @@ def dispatch(argv: list[str]) -> int:
                 "import-embedded",
                 "ci-release-setup",
             }:
-                if sub in {"configure", "ci-release-setup"}:
+                if sub == "ci-release-setup":
                     require(f"signing {sub}", tail, count=0)
-                if sub == "install-profiles":
-                    require(f"signing {sub}", tail, maximum=1)
                 exec_target("Signing/signing.sh", [sub, *tail])
             die(
                 f"Unknown: signing {sub} (expected: install-profiles | configure | audit | cert-info | profile-info | import-embedded | ci-release-setup | export-github-secrets)"
@@ -411,10 +410,7 @@ def dispatch(argv: list[str]) -> int:
             if sub == "stale-dext":
                 require("repair stale-dext", tail, count=0)
                 exec_target("Diagnostics/dext/repair.py", [], python=True)
-            if sub == "swiftpm-module-cache":
-                require("repair swiftpm-module-cache", tail, count=0)
-                return repair_swiftpm_cache()
-            die(f"Unknown: repair {sub} (expected: stale-dext | swiftpm-module-cache)")
+            die(f"Unknown: repair {sub} (expected: stale-dext)")
         case "shots":
             if not rest or rest[0] != "capture":
                 found = f" {rest[0]}" if rest else ""

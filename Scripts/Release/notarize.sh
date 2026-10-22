@@ -8,11 +8,8 @@
 #   1. Developer ID signing (.env.release)
 #   2. NOTARIZE_APPLE_ID and NOTARIZE_PASSWORD set in .env.release
 #
-# Environment variables:
-#   NOTARIZE_TIMEOUT_MINUTES  — overall timeout (default: 180, i.e. 3 hours)
-#                               First-ever submissions can take hours; subsequent ones ~5 min.
-#   NOTARIZE_POLL_INTERVAL    — seconds between polls (default: 30)
-#   NOTARIZE_MAX_RETRIES      — consecutive transient failures before abort (default: 5)
+# Waiting: the script polls every 30 seconds, stops after 3 hours (a first-ever submission can
+# take hours, later ones about 5 minutes) and aborts after 5 consecutive transient poll failures.
 #
 # USAGE:
 #   ./Scripts/ojd release notarize submit
@@ -44,7 +41,7 @@ fi
 if [[ "$subcmd" == "store-credentials" ]]; then
   profile="${1:-${NOTARIZE_KEYCHAIN_PROFILE:-OpenJoystickDriver}}"
   if [[ -z "${NOTARIZE_APPLE_ID:-}" ]]; then
-    if [[ ! -t 0 || -n "${CI:-}" || "${OJD_NONINTERACTIVE:-0}" == "1" ]]; then
+    if [[ ! -t 0 || -n "${CI:-}" ]]; then
       die "NOTARIZE_APPLE_ID is required in noninteractive mode"
     fi
     read -r -p "Apple ID for notarization: " NOTARIZE_APPLE_ID
@@ -53,15 +50,8 @@ if [[ "$subcmd" == "store-credentials" ]]; then
   args=(store-credentials "$profile" --apple-id "$NOTARIZE_APPLE_ID" --team-id "$DEVELOPMENT_TEAM")
   echo "notarytool will securely prompt for the app-specific password."
   xcrun notarytool "${args[@]}"
-  PYTHONPATH="$SCRIPT_DIR/../platform" python3 - "$OJD_ENV_FILE" "$NOTARIZE_APPLE_ID" "$profile" <<'PY'
-import sys
-from pathlib import Path
-from capabilities import update_env_value
-
-path = Path(sys.argv[1])
-update_env_value(path, "NOTARIZE_APPLE_ID", sys.argv[2])
-update_env_value(path, "NOTARIZE_KEYCHAIN_PROFILE", sys.argv[3])
-PY
+  python3 "$LIB_DIR/env_file.py" update "$OJD_ENV_FILE" NOTARIZE_APPLE_ID "$NOTARIZE_APPLE_ID"
+  python3 "$LIB_DIR/env_file.py" update "$OJD_ENV_FILE" NOTARIZE_KEYCHAIN_PROFILE "$profile"
   echo "Stored notarytool profile: $profile"
   echo "Updated NOTARIZE_KEYCHAIN_PROFILE in $OJD_ENV_FILE"
   exit 0
@@ -76,12 +66,19 @@ if [[ -z "${NOTARIZE_KEYCHAIN_PROFILE:-}" && ( -z "${NOTARIZE_APPLE_ID:-}" || -z
   exit 1
 fi
 
-APP="${OJD_NOTARIZE_APP:-/Applications/OpenJoystickDriver.app}"
-ZIP_PATH="${OJD_NOTARIZE_ZIP:-$PROJECT_DIR/.build/OpenJoystickDriver-notarize.zip}"
+# `submit` notarizes the installed app; the package routes pass the app they built and the
+# archive to upload: `notarize.sh submit <app> <zip>`.
+APP="/Applications/OpenJoystickDriver.app"
+ZIP_PATH="$PROJECT_DIR/.build/OpenJoystickDriver-notarize.zip"
+if [[ "$subcmd" == "submit" && $# -gt 0 ]]; then
+  [[ $# -eq 2 ]] || die "submit takes no arguments, or the app and the archive: submit <app> <zip>"
+  APP="$1"
+  ZIP_PATH="$2"
+fi
 
-TIMEOUT_MINUTES="${NOTARIZE_TIMEOUT_MINUTES:-180}"
-POLL_INTERVAL="${NOTARIZE_POLL_INTERVAL:-30}"
-MAX_RETRIES="${NOTARIZE_MAX_RETRIES:-5}"
+readonly TIMEOUT_MINUTES=180
+readonly POLL_INTERVAL=30
+readonly MAX_RETRIES=5
 
 if [[ ! -d "$APP" ]]; then
   echo "ERROR: App not found at $APP"
@@ -91,9 +88,6 @@ fi
 
 if [[ -n "${NOTARIZE_KEYCHAIN_PROFILE:-}" ]]; then
   AUTH_ARGS=(--keychain-profile "$NOTARIZE_KEYCHAIN_PROFILE")
-  if [[ -n "${NOTARIZE_KEYCHAIN:-}" ]]; then
-    AUTH_ARGS+=(--keychain "$NOTARIZE_KEYCHAIN")
-  fi
 else
   AUTH_ARGS=(
     --apple-id "$NOTARIZE_APPLE_ID"

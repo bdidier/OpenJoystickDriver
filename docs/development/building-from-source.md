@@ -4,7 +4,8 @@ Everything is driven through `./Scripts/ojd`. Run `./Scripts/ojd help` for the r
 
 ## Prerequisites
 
-- macOS with Xcode installed and launched once. `Package.swift` declares `swift-tools-version:6.4.0` and a macOS 12 deployment floor. CI pins Xcode 27.0 and Swift 6.4 on the `xcode-27` runner image.
+- macOS with Xcode installed and launched once, for the macOS SDK and `xcodebuild`. `Package.swift` declares `swift-tools-version:6.4.0` and a macOS 12 deployment floor.
+- [swiftly](https://www.swift.org/install/macos/), with `~/.swiftly/bin` first on `PATH`. `.swift-version` names the Swift toolchain (6.4.1); run `swiftly install` in the checkout to install it. Every Swift command of the repository runs that `swift`, so one compiler writes `.build`. CI installs swiftly and the same toolchain on the `xcode-27` runner, with Xcode 27.0 for the SDK.
 - Homebrew, for the helper tools. In an interactive terminal, each `./Scripts/ojd` route offers to install only the formulas it is missing. `./Scripts/ojd setup` installs `just`, `bun`, `ruff`, `pyright`, `shellcheck`, and `swiftlint`, plus the Git hooks and the pinned Biome (`@biomejs/biome` in `package.json`; husky, commitlint and Biome are all installed through `bun install`).
 - Python 3. The dispatcher creates its own schema-validation environment.
 

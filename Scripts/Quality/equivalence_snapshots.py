@@ -57,21 +57,41 @@ def diff_sections(expected: str, actual: str) -> list[str]:
             lines.append(f"  added   {title}")
         elif before[title] != after[title]:
             lines.append(f"  changed {title}")
-            old = before[title].splitlines()
-            new = after[title].splitlines()
-            matcher = difflib.SequenceMatcher(a=old, b=new, autojunk=False)
-            for tag, i1, i2, j1, j2 in matcher.get_opcodes():
-                if tag == "equal":
-                    continue
-                lines.extend(f"    - {line}" for line in old[i1:i2])
-                lines.extend(f"    + {line}" for line in new[j1:j2])
+            lines.extend(changed_lines(before[title], after[title]))
     return lines
+
+
+def changed_lines(expected: str, actual: str) -> list[str]:
+    """The removed (`-`) and added (`+`) lines between two texts."""
+    old = expected.splitlines()
+    new = actual.splitlines()
+    lines: list[str] = []
+    matcher = difflib.SequenceMatcher(a=old, b=new, autojunk=False)
+    for tag, i1, i2, j1, j2 in matcher.get_opcodes():
+        if tag == "equal":
+            continue
+        lines.extend(f"    - {line}" for line in old[i1:i2])
+        lines.extend(f"    + {line}" for line in new[j1:j2])
+    return lines
+
+
+def diff_document(expected: str, actual: str) -> list[str]:
+    """Describe the lines that changed in a JSON snapshot, which has no `## ` sections."""
+    if expected == actual:
+        return []
+    return ["  changed document", *changed_lines(expected, actual)]
+
+
+SNAPSHOT_PATTERNS = ("*.txt", "*.json")
 
 
 def compare(snapshots: Path, actual: Path) -> dict[str, list[str]]:
     """Return the diff lines per snapshot file name; empty when nothing differs."""
-    names = {path.name for path in snapshots.glob("*.txt")} | {
-        path.name for path in actual.glob("*.txt")
+    names = {
+        path.name
+        for directory in (snapshots, actual)
+        for pattern in SNAPSHOT_PATTERNS
+        for path in directory.glob(pattern)
     }
     result: dict[str, list[str]] = {}
     for name in sorted(names):
@@ -81,7 +101,8 @@ def compare(snapshots: Path, actual: Path) -> dict[str, list[str]]:
             result[name] = ["  no longer produced by the tree"]
             continue
         expected_text = recorded.read_text() if recorded.is_file() else ""
-        difference = diff_sections(expected_text, current.read_text())
+        differ = diff_document if name.endswith(".json") else diff_sections
+        difference = differ(expected_text, current.read_text())
         if not recorded.is_file():
             difference = ["  snapshot file is missing", *difference]
         if difference:

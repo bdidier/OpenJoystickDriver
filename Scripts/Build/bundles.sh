@@ -129,11 +129,11 @@ build_app_bundle() {
   /usr/bin/plutil -replace OJDSourceCommit -string "$source_commit" "$GUI_CONTENTS/Info.plist"
   /usr/bin/plutil -replace OJDSourceState -string "$source_state" "$GUI_CONTENTS/Info.plist"
 
-  echo "Signing GUI using:    $GUI_IDENTITY"
+  echo "Signing GUI using:    $IDENTITY"
   for bundle in "$GUI_RESOURCES"/*.bundle; do
-    [[ -d "$bundle" ]] && OJD_ACTIVE_SIGN_IDENTITY="$GUI_IDENTITY" ojd_sign_resource_bundle "$bundle"
+    [[ -d "$bundle" ]] && ojd_sign_resource_bundle "$bundle"
   done
-  OJD_ACTIVE_SIGN_IDENTITY="$GUI_IDENTITY" ojd_sign "$GUI_APP" --entitlements "$GUI_ENTITLEMENTS"
+  ojd_sign "$GUI_APP" --entitlements "$GUI_ENTITLEMENTS"
 
   _require_signed_entitlement_value \
     "$GUI_APP" \
@@ -149,10 +149,10 @@ build_app_bundle() {
     "Fix: enable com.apple.developer.hid.virtual.device on the GUI profile, then rebuild."
   _require_signed_host_access "$GUI_APP" "$GUI_PROFILE"
   if [[ "$OJD_ENV" == "release" ]]; then
-    verify_profile_cert "$GUI_PROFILE" "$GUI_IDENTITY"
+    verify_profile_cert "$GUI_PROFILE" "$IDENTITY"
   fi
 
   echo ""
-  echo "Signed GUI with:    $GUI_IDENTITY"
+  echo "Signed GUI with:    $IDENTITY"
   echo "  GUI app:        $GUI_APP"
 }

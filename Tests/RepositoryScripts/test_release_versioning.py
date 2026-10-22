@@ -100,8 +100,8 @@ def validate_tester_packaging_flow(*, fail_after_dmg: bool) -> None:
                 shutil.copytree(command[1], command[2])
             elif "notarize.sh" in " ".join(command):
                 events.append("notarize")
-                assert env is not None
-                Path(env["OJD_NOTARIZE_ZIP"]).write_text("temporary upload")
+                assert command[-3] == "submit"
+                Path(command[-1]).write_text("temporary upload")
             elif command[:3] == ["/usr/bin/xcrun", "stapler", "validate"]:
                 events.append("stapler")
             elif command[0] == "/usr/sbin/spctl":
@@ -146,7 +146,6 @@ def validate_tester_packaging_flow(*, fail_after_dmg: bool) -> None:
             )
             assert captured_env["OJD_BUNDLE_SHORT_VERSION"] == "0.5.0-beta.4"
             assert captured_env["OJD_BUNDLE_VERSION"] == "1.0.42"
-            assert "DEXT_BUNDLE_VERSION" not in captured_env
             assert (
                 "version: 0.5.0-beta.4+build.1.0.42.sha.aaaaaaaaaaaa\n"
                 in captured_build_info

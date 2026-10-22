@@ -7,7 +7,12 @@
     "defaultBranch": "main"
   },
   "files": {
-    "includes": ["**/*.{json,jsonc}", "!!**/.agents", "!!**/node_modules"],
+    "includes": [
+      "**/*.{json,jsonc}",
+      "!!**/.agents",
+      "!!**/node_modules",
+      "!Tests/EquivalenceSnapshots"
+    ],
     "ignoreUnknown": true
   },
   "formatter": {
