@@ -41,12 +41,12 @@ ojd update check
 
 | Runtime CLI workflow | GUI destination or classification |
 | --- | --- |
-| `status` | Overview |
+| `status` | Menu-bar status row and the banner of the main window |
 | `service start/stop/wait` | Menu-bar Quit and app launch |
-| `permission list/request` | Overview permission cards |
-| `transport-extension status/activate/deactivate` | Overview Xbox USB Driver card |
+| `permission list/request` | Access area permission rows |
+| `transport-extension status/activate/deactivate` | Settings, Advanced pane, Xbox USB Driver |
 | `setting list/get/set` | Settings |
-| `log show/path` | Console pane |
+| `log show/path` | Activity area, Log mode |
 | `diagnose --output` | Copy Support Report |
 | `update check` | Settings update check |
 | JSON/JSONL output, scripting, soak tests, catalog diagnostics, packaging, catalog generation, and DriverKit generation | Automation-only |

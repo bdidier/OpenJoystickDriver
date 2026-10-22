@@ -9,8 +9,8 @@
 The UI lives in the `OpenJoystickDriverPresentation` library, which depends on `OpenJoystickDriverKit` only. The `OpenJoystickDriver` executable composes it with the runtime.
 
 - `NSStatusItem` and a shallow `NSMenu` provide the menu-bar surface.
-- One `NSWindowController` owns the settings window, activation, pane restoration, and close/reopen behavior.
-- SwiftUI renders the settings content. AppKit remains the lifecycle and 10.15 compatibility shell.
+- `MainWindowController` owns the main window, its sidebar areas, the last area and the window geometry across launches, and close/reopen behavior; `SettingsWindowController` owns the Settings window and its panes.
+- SwiftUI renders the settings content. AppKit remains the lifecycle shell.
 - `ApplicationServiceRuntime` starts once. The shell receives an injected `ApplicationServiceGateway` backed by `ApplicationServiceClient`.
 - The UI never starts a CLI subprocess, creates another runtime, or opens another RPC server.
 - macOS 12 is the deployment floor. Newer APIs require an availability check and an older path.
@@ -29,6 +29,7 @@ main.swift
                       ├─ ApplicationServiceRuntime
                       └─ AppKit shell
                            ├─ NSStatusItem / NSMenu
+                           ├─ MainWindowController / SwiftUI
                            ├─ SettingsWindowController / SwiftUI
                            └─ ApplicationServiceGateway
                                 └─ ApplicationServiceClient / local RPC
@@ -44,13 +45,14 @@ Feature and screen ViewModels are `@MainActor` and own asynchronous workflow sta
 
 `RuntimeViewModel` is the single controller-inventory refresh coordinator for settings and the menu bar. Overlapping callers merge their requested scopes into one trailing refresh rather than dropping work, and only one gateway request executes at a time. A transient background failure preserves the last authoritative inventory. Controllers selection is reconciled only when that inventory changes.
 
-Developer snapshot and capture requests use one replaceable operation. Switching controllers, refreshing, stopping capture, and closing the window cancel and await the predecessor; publication also requires both the current operation generation and session token. Device I/O, parsing, packet differencing, classification, and bulk row formatting remain outside `@MainActor`. The main actor publishes observable snapshots and owns the Catalina-compatible SwiftUI/AppKit lifecycle only.
+Developer snapshot and capture requests use one replaceable operation. Switching controllers, refreshing, stopping capture, and closing the window cancel and await the predecessor; publication also requires both the current operation generation and session token. Device I/O, parsing, packet differencing, classification, and bulk row formatting remain outside `@MainActor`. The main actor publishes observable snapshots and owns the SwiftUI/AppKit lifecycle only.
 
 | Area | Owner | Boundary |
 | --- | --- | --- |
 | App lifecycle and status item | `Sources/OpenJoystickDriverPresentation/MenuBar/MenuBarCoordinator.swift` | AppKit activation, status menu, and termination only |
-| Settings window lifecycle | `Sources/OpenJoystickDriverPresentation/Settings/Shell/WindowController.swift` | One reusable window, toolbar selection, geometry persistence, and pane activation |
-| Settings panes and access summary | `Sources/OpenJoystickDriverPresentation/Settings/Shell/SettingsNavigation.swift` | Pane navigation, native toolbar symbols, permission presentation, and shared accessibility compatibility |
+| Main window | `Sources/OpenJoystickDriverPresentation/MainWindow/` | One reusable window, sidebar areas, toolbar, problem banner, and the last area and geometry across launches |
+| Main menu | `Sources/OpenJoystickDriverPresentation/MainMenu/` | Menu model and its AppKit rendering |
+| Settings window | `Sources/OpenJoystickDriverPresentation/SettingsWindow/` | General, Notifications, and Advanced panes and toolbar selection |
 | Developer diagnostics | `Sources/OpenJoystickDriverPresentation/Settings/Developer/` | Replaceable diagnostic operation, compact controller facts, bounded capture presentation, and virtualized packet rows |
 | Shared settings primitives | `Sources/OpenJoystickDriverPresentation/Components/{SettingsRows,StateViews}.swift` | Headers, rows, loading, empty, and error states |
 | Controller details and identity | `Sources/OpenJoystickDriverPresentation/Controllers/Inventory/ControllersView.swift` | Connected devices, identity selection, loading, failure, and retry |
@@ -68,20 +70,24 @@ Add files only for focused, independently testable capabilities. Group related h
 Menu items:
 
 - one readiness, controller-count, and active-profile summary;
-- `Request access...` only when permissions need attention;
-- connected-controller shortcuts;
-- Open Workbench, Settings, Help/About, and Quit.
+- a Controllers submenu with Suspend or Resume, Test Input, Active Profile, Disconnect Wireless Link and Show in Window per controller;
+- a Profiles submenu with Activate and Deactivate;
+- `Grant Access` only when a permission is missing;
+- Open Window, Settings, Help, and Quit.
 
 Do not put refresh, profile editing, logs, reports, packet streams, raw identifiers, catalog audits, support tests, contributor diagnostics, or metrics dashboards in the menu.
 
-### Settings Window
+### Main Window
 
-Use one visible native `NSToolbarItemGroup` for the four panes. The selected pane and window geometry persist across launches. Dirty profile edits intercept pane changes and offer Cancel or Discard.
+The main window has a sidebar with five areas, selected with Command-1 to Command-5: Controllers, Profiles, Library, Access and Activity. Dirty profile edits intercept an area change and offer Cancel or Discard.
 
-1. **Overview:** readiness, controller count, and the Access & readiness summary. Input Monitoring, controller publication, and Keyboard & pointer each have an explicit request action.
-2. **Controllers:** friendly names, connection state, selected profile, controller identity, and technical identifiers in the selected-device detail.
-3. **Profiles:** profile list and the selected profile's Assignments editor.
-4. **Debug:** typed runtime/controller details, diagnostics collection, Save report, and Save logs. Raw packet, watch, and catalog workflows remain CLI-only.
+1. **Controllers:** the connected controllers and the selected controller's detail: facts, Input Test, the Served by picker, the virtual HID profile, Draft Record and Capture Packets.
+2. **Profiles:** profile list and the selected profile's Assignments editor.
+3. **Library:** controller records and mods, with Validate, Install, Replace, Remove and Test Record.
+4. **Access:** permission rows with a request action each, the local endpoint, programs with access, tokens, refused requests and open connections.
+5. **Activity:** the log and the diagnostics checks.
+
+The Settings window has three panes: General, Notifications and Advanced. Raw packet, watch, and catalog workflows remain CLI-only except for the Developer Tools in the Advanced pane.
 
 The resizable window opens at its initial size and reuses one controller. Profile rows use native list/table controls, not a bitmap or coordinate hit map.
 
@@ -93,8 +99,8 @@ The resizable window opens at its initial size and reuses one controller. Profil
 - Saves go through `updateRemappingProfile(_:expectedCurrent:)`.
 - A conflict preserves the draft and offers Reload or Keep editing. It never overwrites silently.
 - Profile mutation controls are disabled while a save or other mutation is active.
-- Delete uses destructive button semantics where available and a macOS 10.15 fallback.
-- Profile alerts use one `alert(item:)`; capture and adjustment use one `sheet(item:)` for the 10.15 presentation path.
+- Delete uses destructive button semantics.
+- Profile alerts use one `alert(item:)`; capture and adjustment use one `sheet(item:)`.
 
 ## Gateway Contract
 

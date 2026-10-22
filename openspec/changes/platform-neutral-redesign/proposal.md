@@ -44,7 +44,7 @@ Out of scope: submitting the mapping to SDL_GameControllerDB or SDL upstream; en
 
 ### Modified Capabilities
 
-None as deltas. Requirements in the old capabilities `driverkit-signing`, `mod-localization`, `mod-packages`, `mod-sdk`, `release-readiness`, `usb-device-detection`, `virtual-input-delivery` and `virtual-ownership` change; they are listed in `pending-deltas.md` because `openspec/specs/` is empty until `release-0-6-0-alpha-1` is archived. Turn that file into deltas after the archive.
+- `mod-localization`, `mod-packages`, `mod-sdk`, `release-readiness`, `usb-device-detection`, `virtual-input-delivery`, `virtual-ownership`: requirements change to match the localization keys, document headers, schema paths, serving words and check list of this change. `driverkit-signing` is unchanged.
 
 ## Impact
 
