@@ -128,7 +128,7 @@ One physical device can expose several protocol roles, each its own pipeline and
 
 `DeviceManager.isSamePhysicalController` decides whether two keys reached through different services are one controller: the same `ControllerHardwareIdentity`, and either a serial number or the same location. A raw-USB admission conflicts when its exact key already runs, or when the same physical controller runs through another service (another route, location, or HID). Roles of one service never conflict with each other.
 
-Stored files are not migrated. A stored file either keeps working as written, or OJD drops it: it skips the file, reports the file and the reason, and leaves the bytes unchanged. A change to an identity type does not change what a stored file holds. User records name a model by `vendorID` and `productID` and are named `vvvv-pppp.json`, which is the `ControllerModelID`, so a record written before the type existed keeps working. A record whose `apiVersion` OJD does not support, such as `openjoystickdriver/v0`, is dropped. `ControllerRecordSetTests.aStoredFileKeepsWorkingOrIsDroppedUnchanged` checks both results.
+Stored files are not migrated. A stored file either keeps working as written, or OJD drops it: it skips the file, reports the file and the reason, and leaves the bytes unchanged. A change to an identity type does not change what a stored file holds. User records name a model by `vendorID` and `productID` and are named `vvvv-pppp.json`, which is the `ControllerModelID`, so a record written before the type existed keeps working. A record whose `apiVersion` OJD does not support, such as `unsupported.example/v9`, is dropped. `ControllerRecordSetTests.aStoredFileKeepsWorkingOrIsDroppedUnchanged` checks both results.
 
 ### Raw-USB Roles
 

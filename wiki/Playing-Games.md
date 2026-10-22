@@ -38,12 +38,12 @@ OJD does not publish a virtual controller if macOS already handles the controlle
 
 OJD is designed to choose the profile for you. You do not need a different setting for each game. Change the profile only to test a problem, and report the result so that the automatic choice can improve. For more information, see [Reporting a bug](Reporting-a-Bug.md).
 
-1. Open the **Controllers** pane.
+1. Open the **Controllers** area.
 2. Select your controller.
 3. Expand **Advanced**.
 4. In **Virtual HID profile**, select a profile.
 
-Select **Automatic** to remove the override. The override applies to every connected controller of the same model. For more information, see [Controllers pane](Using-the-App.md).
+Select **Automatic** to remove the override. The override applies to every connected controller of the same model. For more information, see [Controllers area](Using-the-App.md#controllers-area).
 
 ## Game and App Compatibility
 

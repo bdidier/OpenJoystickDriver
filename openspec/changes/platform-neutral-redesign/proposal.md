@@ -44,7 +44,7 @@ Out of scope: submitting the mapping to SDL_GameControllerDB or SDL upstream; en
 
 ### Modified Capabilities
 
-- `mod-localization`, `mod-packages`, `mod-sdk`, `release-readiness`, `usb-device-detection`, `virtual-input-delivery`, `virtual-ownership`: requirements change to match the new keys, document headers, schema paths, serving words and check list. `driverkit-signing` is unchanged.
+- `mod-localization`, `mod-packages`, `mod-sdk`, `release-readiness`, `usb-device-detection`, `virtual-input-delivery`, `virtual-ownership`: requirements change to match the localization keys, document headers, schema paths, serving words and check list of this change. `driverkit-signing` is unchanged.
 
 ## Impact
 

@@ -150,7 +150,7 @@ The 0.5.0-beta.4 audit shows `v1beta1` never shipped, so rewriting the layout br
 
 Assumed (veto-able): default persona is `Generic` everywhere; `SDLCompatible` is opt-in per model or by user setting. Reason: SDL 3.4.18 does not list the `045E:02FD` persona with default hints, nor with `SDL_JOYSTICK_HIDAPI_XBOX(_ONE)=1`, `SDL_JOYSTICK_MFI=1` or `--gc-prewarm`; it appears only with `SDL_JOYSTICK_HIDAPI=0` (through MFi, as `045E:02E0`). The reading is that SDL's HIDAPI Xbox driver claims the device and then fails to open it, which matches the wiki's Steam and SDL failure reports. The `1209:4A4F` persona enumerates and, with the mapping line below, SDL reports `is_gamepad=yes` with axes at 0 at rest. Button and axis directions are not yet confirmed by presses.
 
-The `SDLCompatible` persona needs a hardware-evidenced fix so SDL's HIDAPI Xbox driver opens it. Until the fix lands it is documented as not working with default SDL hints. No Microsoft ID appears outside this persona: `1209:0001` (SDK sample), `4F4A:4449` (retired) and the 045E values in the HIDTool subcommands are reconciled (sample uses a documented sample ID; retired ID removed; HIDTool takes IDs from records).
+The `SDLCompatible` persona needs a hardware-evidenced fix so SDL's HIDAPI Xbox driver opens it. Until the fix lands it is documented as not working with default SDL hints. No Microsoft ID appears outside this persona: `1209:0001` (SDK sample), `4F4A:4449` (retired) and the 045E values in the HIDTool subcommands are reconciled (the sample uses `1209:0001`, the pid.codes test ID; retired ID removed; HIDTool takes IDs from records).
 
 ### D6 SDL, Wine/CrossOver and browsers
 

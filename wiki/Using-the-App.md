@@ -42,7 +42,7 @@ The menu contains these items, from top to bottom:
 Each controller in the **Controllers** submenu has its own submenu:
 
 - **Suspend** pauses input, physical effects, and virtual output for this controller.
-  **Resume** replaces it while the controller is suspended.
+  While the controller is suspended, the item reads **Resume**.
 - **Test Input** opens the Input Test window.
 - **Active Profile** lists the profiles that apply to this controller and checks the active one.
 - **Disconnect Wireless Link** is on only for a controller that connects by Bluetooth.
@@ -215,8 +215,7 @@ The **Activity** area has two modes.
 - **Log** shows the OpenJoystickDriver log.
   **Stream** selects **All**, **Output**, or **Errors**.
   **Lines** sets how many lines show, **Search** and **Filter** narrow them, and **Show in Finder** opens the log folder.
-  If there are no lines, the area shows **No log entries.
-  **
+  If there are no lines, the area shows **No log entries.**
 - **Diagnostics** shows the result of **Run Checks**: one row per check with **Passed**, **Warning**, or **Skipped**, and its details.
 
 **Explain Error Code...** in the **Help** menu shows what an error code means.

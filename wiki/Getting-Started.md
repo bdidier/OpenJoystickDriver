@@ -88,10 +88,10 @@ Install the app first. For more information, see [Installing OpenJoystickDriver]
    3. Open the app window. In the **Access** area, click **Restart OpenJoystickDriver** if it appears.
 3. Connect your controller with USB, Bluetooth, or a 2.4 GHz dongle.
 4. Check the controller.
-   1. Open the **Controllers** pane.
+   1. Open the **Controllers** area.
    2. Select your controller.
    3. Click **Open Input Test...**.
-   4. Press buttons and move sticks. The **Live input** group shows each control.
+   4. Press buttons and move sticks. The Input Test window shows each control.
 5. Play a game. The game reads the virtual controller that OJD publishes.
 
 If step 4 shows no input, see [Controller not detected](Troubleshooting.md). If the game shows no input, see [Game does not see the controller](Troubleshooting.md).

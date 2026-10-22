@@ -80,6 +80,7 @@ Sources/OpenJoystickDriverService/
                        (CoreGraphics adaptation)
   Runtime/             runtime composition, Automation, Endpoint, OutputDispatch, RPC, file
                        watchers, and virtual device diagnostics
+  Status/              SystemExtension submission, probe, and setup client
 
 Sources/OpenJoystickDriverCLI/
   Commands/            one directory per command group: Access, Binding, Config, Controller,

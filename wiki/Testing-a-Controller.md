@@ -4,11 +4,11 @@ The Input Test window shows live input from a controller and lets you test rumbl
 
 ## Open the Window
 
-1. Open the **Controllers** pane.
+1. Open the **Controllers** area.
 2. Select a controller.
 3. Click **Open Input Test...**.
 
-OJD uses one Input Test window. The title is "Input Test" followed by the controller name. Closing the window stops sampling and any running output test. The toolbar has **Refresh Controller**.
+OJD uses one Input Test window. The title is "Input Test" followed by the controller name. Closing the window stops sampling and any running output test. The toolbar has **Refresh**.
 
 ## Status
 
@@ -31,11 +31,7 @@ The window has no tabs. It shows one scrolling page with these groups.
 
 ### Live Input
 
-Shows sticks, the D-pad, face buttons, bumpers, triggers, stick buttons, and extra buttons. Each control shows **Pressed** or **Released**. Button names follow the virtual controller profile.
-
-### Axis Values
-
-Shows **Left X**, **Left Y**, **Right X**, and **Right Y**, plus the triggers.
+Shows sticks, the D-pad, face buttons, bumpers, triggers, stick buttons, and extra buttons. Each control shows **Pressed** or **Released**. Button names follow the virtual controller profile. **Left stick** and **Right stick** show the X and Y value of each stick, and each trigger shows its value.
 
 ### Motion Calibration
 

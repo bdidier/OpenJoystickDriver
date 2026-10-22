@@ -64,7 +64,7 @@ OJD reads the permission state every second. A request result is not treated as 
 | Keyboard & pointer | Send keyboard, mouse, or scroll events from a profile | Only when a profile does so |
 | Notifications | Show notifications | Optional |
 
-Not verified on hardware: the **Keyboard & pointer** card and the **Accessibility** card may use the same switch in **System Settings**.
+Not verified on hardware: the **Keyboard & pointer** row and the **Accessibility** row may use the same switch in **System Settings**.
 
 OJD does not use camera, microphone, or Full Disk Access permissions. It reads Bluetooth controllers as HID devices, so they need **Input Monitoring**. OJD uses Bluetooth only to disconnect a wireless controller. Whether macOS asks for Bluetooth permission for this is not verified.
 
@@ -83,7 +83,7 @@ Without **Input Monitoring**, Input Test shows **Input Monitoring permission req
 1. Open **Settings** and turn on a notification toggle, or click **Send Test Notification**.
 2. Allow the macOS prompt.
 
-If you denied notifications before, click **Open Notification Settings**. The **Notifications** card shows **Banners off** or **Sound off** when macOS turns those parts off.
+If you denied notifications before, click **Open Notification Settings**. The **Notifications** row in the **Access** area shows **Banners off** or **Sound off** when macOS turns those parts off.
 
 ### Xbox USB Driver Approval
 

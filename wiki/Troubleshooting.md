@@ -45,7 +45,7 @@ The built-in catalog has 696 records. A record without a physical test is unveri
 
 ### Special Cases
 
-- **Xbox One or Xbox Series controller on USB:** These controllers need the OJD driver extension. Check the banner at the top of the window, or **Xbox USB Driver** in **Settings** > **Advanced**. If it shows **Approval needed**, click **Open System Settings** and approve it. If it shows **Needs attention**, click **Repair Xbox USB Driver**. For more information, see [Xbox USB driver extension](Connecting-Controllers.md).
+- **Xbox One or Xbox Series controller on USB:** These controllers need the OJD driver extension. Check the **Xbox USB Driver** banner below the toolbar of the app window. If it shows **Open System Settings**, click it and approve the extension. If it shows **Repair Xbox USB Driver**, click it. **Xbox USB Driver** in **Settings** > **Advanced** shows the state of the extension. For more information, see [Xbox USB driver extension](Connecting-Controllers.md).
 - **Clone or fake controller:** It may report itself in a way the catalog does not cover. For more information, see [Clone and fake controllers](Supported-Controllers.md).
 - **Dongle:** A dongle problem is separate from a controller problem. Test the controller in another connection mode if it has one.
 - **Runtime disconnected:** Run `ojd service start`, then run `ojd status`.
@@ -140,7 +140,7 @@ Unplugging a USB controller or dongle may crash OJD. Open OJD again. Restart OJD
 
 OJD reads each profile file in `Profiles/` and the list of active profiles in `ActiveProfiles.json`. It does not change a file when it finds damage. While damage exists, OJD blocks every change to your profiles until you repair it.
 
-OJD shows two kinds of damage in the **Profiles** pane. To repair both from the command line, run `ojd profile recover`.
+OJD shows two kinds of damage in the **Profiles** area. To repair both from the command line, run `ojd profile recover`.
 
 #### One Damaged Profile
 
@@ -154,7 +154,7 @@ OJD saves a backup before it changes the file.
 
 #### Damaged Active Profile List
 
-If OJD cannot read `ActiveProfiles.json`, the pane shows **Damaged active profile list**, and no profile is active.
+If OJD cannot read `ActiveProfiles.json`, the area shows **Damaged active profile list**, and no profile is active.
 
 1. Click **Back Up & Reset Active Profiles...**.
 2. In the alert, click **Back Up & Reset**.

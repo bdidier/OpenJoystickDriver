@@ -82,13 +82,11 @@ A build whose app profile has no `userclient-access` grant for the extension has
 
 Do these steps only if you use one of the controllers above.
 
-1. Open **Settings**.
-2. Open the **Advanced** pane.
-3. Find **Xbox USB Driver**. It shows **Approval needed** until you approve the extension.
-4. Click **Open System Settings**. OJD opens the **Login Items & Extensions** settings.
-5. Approve the OpenJoystickDriver extension in **System Settings** > **General** > **Login Items & Extensions** > **Driver Extensions**.
+1. Open the app window. Until you approve the extension, the banner below the toolbar shows **Xbox USB Driver** and **Open System Settings**.
+2. Click **Open System Settings**. OJD opens the **Login Items & Extensions** settings.
+3. Approve the OpenJoystickDriver extension in **System Settings** > **General** > **Login Items & Extensions** > **Driver Extensions**.
 
-When the card shows **Ready**, the extension is active. If the card shows **Needs attention**, click **Repair Xbox USB Driver** when that button appears.
+When the extension is active, the banner disappears, and **Xbox USB Driver** in **Settings** > **Advanced** says that the driver is installed and ready. If the extension needs repair, the banner shows **Repair Xbox USB Driver**. Click it.
 
 ## Further Reading
 

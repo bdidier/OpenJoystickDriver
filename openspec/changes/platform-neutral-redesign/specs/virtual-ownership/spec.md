@@ -51,7 +51,7 @@ A server choice MUST persist across service and app restarts, MUST apply to a co
 #### Scenario: Show the source
 
 - **WHEN** the user runs `ojd controller show CONTROLLER`
-- **THEN** the output reports the `server` (`System` or `OJD` with `--json`, `system` or `ojd` otherwise) and its `serverSource` (the record layer that set `server`: `Bundled`, `Package`, `Global` or `User`, or `Default` when no record sets it)
+- **THEN** the output reports the `server` (`System` or `OJD` with `--json`, `system` or `ojd` otherwise) and its `serverSource` (the record layer that set `server`: `Bundled`, `Package` or `User`, or `Default` when no record sets it)
 
 ### Requirement: REQ-22 Raw-USB families refuse the toggle
 
