@@ -203,7 +203,7 @@
 /* Value of the serving route in the Controllers area: macOS serves the controller and the driver passes the input through. */
 "platform.macos.ui.controllers.serving.nativePassThrough" = "macOS (doğrudan aktarılır)";
 /* Value of the serving route when OpenJoystickDriver serves a virtual gamepad. OpenJoystickDriver is the product name. */
-"ui.controllers.serving.virtualHID" = "OpenJoystickDriver (sanal oyun kontrolcüsü)";
+"ui.controllers.serving.virtualHID" = "OpenJoystickDriver, sanal oyun kontrolcüsü";
 /* Value of the serving route when the driver extension owns the controller. */
 "ui.controllers.serving.extensionOwned" = "Sürücü uzantısı";
 /* Value of the serving route when the user turned the output off. */
@@ -1063,7 +1063,7 @@
 /* Button of the problem banner that repairs the driver extension for Xbox USB controllers. */
 "ui.setup.repairDriver" = "Xbox USB Sürücüsünü Onar";
 /* Title of the problem banner when the app cannot reach its service. OpenJoystickDriver is the product name. */
-"ui.banner.service.title" = "OpenJoystickDriver servisine ulaşamıyor";
+"ui.banner.service.title" = "OpenJoystickDriver hizmetine ulaşamıyor";
 /* Title of the problem banner when macOS has not allowed all that the app needs. */
 "ui.banner.access.title" = "İzin gerekli";
 /* Detail line of the problem banner when macOS has not allowed all that the driver needs. OpenJoystickDriver is the product name. */
@@ -1121,7 +1121,7 @@
 /* Error message in the inline error of the Settings window when the service no longer waits for the app's report on a test notification: the ojd request that asked for it ended, or its answer time ran out. */
 "ui.settings.notifications.testReportLost" = "Test bildirimine ilişkin rapor gelmeden önce ojd isteği sona erdi veya yanıt süresi doldu.";
 /* Error text the service returns to an app that reports the outcome noAnswer for a test notification, which only the service decides. The inline error of the Settings window shows it. shown, denied, failed and noAnswer are outcome names and stay as written. */
-"ui.settings.notifications.testReportNoAnswer" = "Test bildirimi raporu shown, denied veya failed olmalıdır; noAnswer yalnızca servis tarafından belirlenir.";
+"ui.settings.notifications.testReportNoAnswer" = "Test bildirimi raporu shown, denied veya failed olmalıdır; noAnswer yalnızca hizmet tarafından belirlenir.";
 /* Label of the popup in the profile editor that sets what the virtual gamepad of the profile publishes. */
 "ui.profiles.virtualOutput" = "Sanal Oyun Kontrolcüsü";
 /* Option of the virtual output popup: the profile publishes no virtual gamepad. */
@@ -1702,7 +1702,7 @@
 /* Message printed after 'ojd access enable' turned the endpoint on. %@ is the path of the socket it listens on. */
 "cli.access.enable.success" = "Uç nokta %@ üzerinde dinliyor.";
 /* One-line summary of 'ojd access grant' in the command list and at the top of its help. A token is a named secret for pages served over the WebSocket. */
-"cli.access.grant.abstract" = "İmzalı bir programın veya yeni bir token'ın uç noktayı kullanmasına izin verir.";
+"cli.access.grant.abstract" = "İmzalı bir programın veya yeni bir token’ın uç noktayı kullanmasına izin verir.";
 /* Error of 'ojd access grant' for a program with an ad-hoc signature or none. %@ is the program identifier. Developer ID and Apple Development are names of certificate kinds and stay as written. */
 "platform.macos.cli.access.grant.adHoc" = "%@ ad-hoc imzalı veya imzasız, bu yüzden herhangi bir yerel program imzasını üstlenebilir. Onu bir Developer ID veya Apple Development sertifikasıyla imzalayın, ardından erişim verin.";
 /* Warning of 'ojd access grant' about a program that Apple signed. python3 and osascript are program names and stay as written. */
@@ -1716,9 +1716,9 @@
 /* Long description in the help of 'ojd access grant'. It explains that the grant names the signature of the program and which programs cannot be granted. CLIENT and command names stay as written. */
 "cli.access.grant.discussion" = "CLIENT, programın yoludur veya “ojd access list” çıktısındaki bir kimliktir. Erişim programın imzasına verilir, bu yüzden program güncellendiğinde veya taşındığında da geçerli kalır. ad-hoc imzalı ve imzasız programlara erişim verilemez. CLIENT yerine --token kullanılırsa, bir istemcinin soket üzerinden, --origin değerlerinden birine ait bir sayfadan WebSocket üzerinden veya --origin içermeyen bir token için Origin üstbilgisi göndermeyen bir programdan (örneğin korumalı alandaki bir uygulamadan) WebSocket üzerinden hello iletisinde servisin sınama isteğini imzalamak için kullandığı bir token oluşturur. Bir sayfa control kapsamını kullanamaz. Token yalnızca bir kez gösterilir. Önce onay ister.";
 /* Help text of the --origin option of 'ojd access grant'. An origin is a web address such as http://127.0.0.1:8080; PORT in the second example stays as written. */
-"cli.access.grant.origin" = "Sayfalarının WebSocket üzerinde token'ı kullanabileceği bir web kaynağı, örneğin http://127.0.0.1:8080. Daha fazlasını eklemek için tekrarlayın. WebSocket'in sunduğu kaplama sayfalarının kaynağı http://127.0.0.1:PORT olup bağlantı noktası “ojd access status” komutunun gösterdiği noktadır.";
+"cli.access.grant.origin" = "Sayfalarının WebSocket üzerinde token’ı kullanabileceği bir web kaynağı, örneğin http://127.0.0.1:8080. Daha fazlasını eklemek için tekrarlayın. WebSocket’in sunduğu kaplama sayfalarının kaynağı http://127.0.0.1:PORT olup bağlantı noktası “ojd access status” komutunun gösterdiği noktadır.";
 /* Error of 'ojd access grant' when --origin is combined with the control scope. --origin stays as written. */
-"cli.access.grant.originControl" = "--origin, control kapsamıyla birleştirilemez. Bir sayfa asla sanal bir oyun kontrolcüsünü yönetmez; control kapsamını --origin içermeyen bir token'a verin.";
+"cli.access.grant.originControl" = "--origin, control kapsamıyla birleştirilemez. Bir sayfa asla sanal bir oyun kontrolcüsünü yönetmez; control kapsamını --origin içermeyen bir token’a verin.";
 /* Error of 'ojd access grant' when --origin is given without --token. Both option names stay as written. */
 "cli.access.grant.originNeedsToken" = "--origin için --token gerekir.";
 /* Help text of the --scope option of 'ojd access grant'. The values read and control stay as written because the user types them. */
@@ -1728,15 +1728,15 @@
 /* Help text of the --token option of 'ojd access grant'. It creates a named token instead of granting a program. */
 "cli.access.grant.token" = "Bir programa erişim vermek yerine bu adla bir token oluşturur.";
 /* Yes or no question of 'ojd access grant --token' for a token without origins. %1$@ is the token name and %2$@ is the list of scopes. */
-"platform.macos.cli.access.grant.tokenConfirm" = "%1$@ token'ı, bu Mac'teki programlar için %2$@ ile oluşturulsun mu?";
+"platform.macos.cli.access.grant.tokenConfirm" = "%1$@ token’ı, bu Mac’teki programlar için %2$@ ile oluşturulsun mu?";
 /* Message printed after 'ojd access grant --token' created a token; the line ends with a colon because the secret value follows on the next line. %1$@ is the list of granted scopes, %2$@ is the token name and %3$@ is the token ID. */
-"cli.access.grant.tokenSuccess" = "%1$@ kapsamı %2$@ token'ına verildi (kimlik %3$@). Token'ı gizli tutun; bir daha gösterilmeyecek:";
+"cli.access.grant.tokenSuccess" = "%1$@ kapsamı %2$@ token’ına verildi (kimlik %3$@). Token’ı gizli tutun; bir daha gösterilmeyecek:";
 /* Yes or no question of 'ojd access grant --token --origin' for a token with origins. %1$@ is the token name, %2$@ is the list of scopes and %3$@ is the list of origins. */
-"platform.macos.cli.access.grant.tokenWebConfirm" = "%1$@ token'ı, bu Mac'teki programlar ve %2$@ sayfaları için %3$@ ile oluşturulsun mu?";
+"platform.macos.cli.access.grant.tokenWebConfirm" = "%1$@ token’ı, bu Mac’teki programlar ve %2$@ sayfaları için %3$@ ile oluşturulsun mu?";
 /* One-line summary of 'ojd access list' in the command list and at the top of its help. */
-"cli.access.list.abstract" = "Erişim verilen istemcileri ve token'ları, ayrıca son 24 saatte reddedilenleri listeler.";
+"cli.access.list.abstract" = "Erişim verilen istemcileri ve token’ları, ayrıca son 24 saatte reddedilenleri listeler.";
 /* Long description in the help of 'ojd access list'. It says that the printed IDs work with 'ojd access grant' and 'ojd access revoke'. token:NAME stays as written. */
-"cli.access.list.discussion" = "Her istemcinin “ojd access grant” ve “ojd access revoke” tarafından kabul edilen bir kimliği vardır; bir token'ın kimliği token:NAME'dir.";
+"cli.access.list.discussion" = "Her istemcinin “ojd access grant” ve “ojd access revoke” tarafından kabul edilen bir kimliği vardır; bir token’ın kimliği token:NAME’dir.";
 /* Heading of the list of granted clients printed by 'ojd access list'. */
 "cli.access.list.granted" = "Erişim verilenler:";
 /* Indented line printed under a heading of 'ojd access list' when the list is empty. Keep the two leading spaces. */
@@ -1744,9 +1744,9 @@
 /* Heading of the list of clients that connected and were refused in the last 24 hours, printed by 'ojd access list'. */
 "cli.access.list.refused" = "Son 24 saatte reddedilenler:";
 /* Heading of the list of tokens that were refused in the last 24 hours, printed by 'ojd access list'. */
-"cli.access.list.refusedTokens" = "Son 24 saatte reddedilen token'lar:";
+"cli.access.list.refusedTokens" = "Son 24 saatte reddedilen token’lar:";
 /* Heading of the list of granted tokens printed by 'ojd access list'. */
-"cli.access.list.tokens" = "Erişim verilen token'lar:";
+"cli.access.list.tokens" = "Erişim verilen token’lar:";
 /* Lowercase placeholder printed in the token list when a refused token has no name. */
 "cli.access.list.unknownToken" = "bilinmeyen token";
 /* Error of 'ojd access' commands that change who may read the controllers, when the input is not a terminal and --force is missing. --force stays as written. */
@@ -1756,7 +1756,7 @@
 /* Help text of the CLIENT argument of 'ojd access revoke'. token:NAME stays as written. */
 "cli.access.revoke.client" = "Programın yolu, bir istemci kimliği veya token:NAME.";
 /* Long description in the help of 'ojd access revoke'. CLIENT, --scope, 'ojd access list' and token:NAME stay as written. */
-"cli.access.revoke.discussion" = "CLIENT, programın yolu, “ojd access list” çıktısındaki bir kimlik veya bir token için token:NAME'dir. --scope olmadan erişimin tamamı kaldırılır. Bir kapsamı kaybeden bağlantılar kapatılır.";
+"cli.access.revoke.discussion" = "CLIENT, programın yolu, “ojd access list” çıktısındaki bir kimlik veya bir token için token:NAME’dir. --scope olmadan erişimin tamamı kaldırılır. Bir kapsamı kaybeden bağlantılar kapatılır.";
 /* Message printed after 'ojd access revoke --scope' removed some scopes. %1$@ is the client ID, %2$@ is the list of scopes it keeps and %3$@ is the number of connections that were closed. */
 "cli.access.revoke.partial" = "%1$@ istemcisi %2$@ kapsamını koruyor. Sonlandırılan bağlantılar: %3$@.";
 /* Help text of the --scope option of 'ojd access revoke'. The values read and control stay as written because the user types them. */
@@ -1774,7 +1774,7 @@
 /* Line of 'ojd access status' that shows where the endpoint listens. %@ is the socket path. */
 "cli.access.status.socket" = "Soket: %@";
 /* Line of 'ojd access status' with two token counts. %1$@ is the number of granted tokens and %2$@ the number of tokens refused in the last 24 hours. */
-"cli.access.status.tokenCounts" = "Erişim verilen token'lar: %1$@. Son 24 saatte reddedilen token'lar: %2$@.";
+"cli.access.status.tokenCounts" = "Erişim verilen token’lar: %1$@. Son 24 saatte reddedilen token’lar: %2$@.";
 /* Line of 'ojd access status' when the WebSocket is turned on but its port could not be opened. %@ is the port number. */
 "cli.access.status.webClosed" = "WebSocket: açık, ancak %@ bağlantı noktası açılamadı";
 /* Line of 'ojd access status' when the WebSocket is off. Keep the colon and the space after it. */
@@ -1782,15 +1782,15 @@
 /* Line of 'ojd access status' when the WebSocket is on. %1$@ is the WebSocket address, %2$@ is the address of the overlay pages and %3$@ is the folder they are served from. */
 "cli.access.status.webOn" = "WebSocket: %1$@ üzerinde açık; overlay sayfaları %2$@ üzerinde, kaynak %3$@";
 /* One-line summary of 'ojd access web' in the command list and at the top of its help. The WebSocket serves overlay pages. */
-"cli.access.web.abstract" = "Overlay sayfaları için WebSocket'i açar veya kapatır.";
+"cli.access.web.abstract" = "Overlay sayfaları için WebSocket’i açar veya kapatır.";
 /* One-line summary of 'ojd access web disable' in the command list and at the top of its help. */
-"cli.access.web.disableAbstract" = "WebSocket'i kapatır ve bağlantılarını sonlandırır; token'lar korunur.";
+"cli.access.web.disableAbstract" = "WebSocket’i kapatır ve bağlantılarını sonlandırır; token’lar korunur.";
 /* Message printed after 'ojd access web disable' turned the WebSocket off. */
 "cli.access.web.disableSuccess" = "WebSocket kapalı ve bağlantıları kapatıldı.";
 /* Long description in the help of 'ojd access web'. It names the address, the path /endpoint and the Overlays folder, which stay as written, and explains which pages may connect. */
 "cli.access.web.discussion" = "WebSocket yalnızca 127.0.0.1 üzerinde, /endpoint adresinde dinler ve aynı bağlantı noktasında Overlays klasörünün dosyalarını sunar. Bir sayfa, token verilmiş bir kaynaktan gelmeli ve hello iletisinde servisin sınama isteğini bu token ile imzalamalıdır; birine erişim vermek için “ojd access grant --token NAME --origin URL” kullanın.";
 /* One-line summary of 'ojd access web enable' in the command list and at the top of its help. */
-"cli.access.web.enableAbstract" = "WebSocket'i açar.";
+"cli.access.web.enableAbstract" = "WebSocket’i açar.";
 /* Yes or no question that 'ojd access web enable' asks on a terminal before it turns the WebSocket on. */
 "cli.access.web.enableConfirm" = "Token verdiğiniz kaynaklardaki sayfaların uç noktayı kullanabilmesi için WebSocket açılsın mı?";
 /* Long description in the help of 'ojd access web enable'. It says that a confirmation comes first and how the port is chosen. --port stays as written. */
@@ -1812,7 +1812,7 @@
 /* Error of 'ojd diagnose --output' when the folder of the path is missing. %@ is the folder path. --output stays as written. */
 "cli.diagnose.group.outputParent" = "--output için var olan bir dizin gerekir; %@ yok.";
 /* Progress line of 'ojd diagnose --output' while the support bundle is written. Keep the three dots. */
-"cli.diagnose.group.outputProgress" = "Destek paketi yazılıyor...";
+"cli.diagnose.group.outputProgress" = "Destek paketi yazılıyor…";
 /* Message printed after 'ojd diagnose --output' wrote the support bundle. %@ is the file path. The bundle lists the names of the devices, so the user should read it first. */
 "cli.diagnose.group.outputWritten" = "Destek paketi %@ konumuna yazıldı. Aygıt adlarını içerir; paylaşmadan önce gözden geçirin.";
 /* Long description in the help of 'ojd diagnose'. pass, warn, fail and skip are the check results printed by the command and stay as written, as do --soak and the other option names. */
@@ -1866,7 +1866,7 @@
 /* Detail of the runtime health check of 'ojd diagnose' when --soak is not given. --soak SECONDS stays as written. */
 "cli.diagnose.group.soakNotRequested" = "istenmedi; --soak SECONDS kullanın";
 /* Progress line of 'ojd diagnose --soak'. %@ is the sampling duration, such as 30 seconds. Keep the three dots. */
-"cli.diagnose.group.soakProgress" = "Servisten %@ boyunca örnek alınıyor...";
+"cli.diagnose.group.soakProgress" = "Servisten %@ boyunca örnek alınıyor…";
 /* Verdict of the runtime health check of 'ojd diagnose --soak' when the physical footprint passed its limit. %1$.1f is the resident size in MiB, %2$.1f is the footprint in MiB, %3$lld is the number of open file descriptors, %4$.1f is the CPU load in percent and %5$.0f is the sampling time in seconds. The double percent sign prints one percent sign. */
 "cli.diagnose.group.soakVerdictFootprintLimit" = "Bellek ayak izi sınırı aşıldı: yerleşik boyut %1$.1f MiB, bellek ayak izi %2$.1f MiB, dosya tanımlayıcıları %3$lld, CPU %4$.1f%%, süre %5$.0f sn";
 /* Verdict of the runtime health check of 'ojd diagnose --soak' when too few samples were taken. %1$.1f is the resident size in MiB, %2$.1f is the footprint in MiB, %3$lld is the number of open file descriptors, %4$.1f is the CPU load in percent and %5$.0f is the sampling time in seconds. The double percent sign prints one percent sign. */
@@ -2102,13 +2102,13 @@
 /* Button in the Command-Line Tool section that installs the ojd link. ojd is the command name and stays as written. */
 "ui.settings.commandLine.toolInstall" = "Komut Satırı Aracını Yükle";
 /* Status in the Command Line Tool section of the settings window when ojd is installed. %@ is the path of the link. Terminal is the macOS app and ojd is the command name. */
-"platform.macos.ui.settings.commandLine.toolInstalled" = "Yüklendi. Terminal'de ojd'yi çalıştırın; kaldırma %@ öğesini siler.";
+"platform.macos.ui.settings.commandLine.toolInstalled" = "Yüklendi. Terminal’de ojd’yi çalıştırın; kaldırma %@ öğesini siler.";
 /* Note in the Command-Line Tool section when the link points to another program. %1$@ is the path of the link and %2$@ is the path it points to. Installing changes the link to point to this app. */
 "ui.settings.commandLine.toolLinkedElsewhere" = "%1$@, %2$@ öğesine işaret ediyor. Yükleme, onu bunun yerine bu uygulamaya bağlar.";
 /* Description in the Command Line Tool section of the settings window before the tool is installed. %@ is the path where the link is created. Terminal is the macOS app and ojd is the command name. */
-"platform.macos.ui.settings.commandLine.toolNotInstalled" = "%@ öğesini bu uygulamaya bağlar; böylece Terminal'de ojd'yi çalıştırabilirsiniz. macOS bir yönetici parolası ister.";
+"platform.macos.ui.settings.commandLine.toolNotInstalled" = "%@ öğesini bu uygulamaya bağlar; böylece Terminal’de ojd’yi çalıştırabilirsiniz. macOS bir yönetici parolası ister.";
 /* Button in the Command-Line Tool section that removes the ojd link. */
-"ui.settings.commandLine.toolUninstall" = "Kaldır";
+"ui.settings.commandLine.toolUninstall" = "Yüklemeyi Kaldır";
 /* One-line summary of 'ojd controller' in the command list and at the top of its help. */
 "cli.controller.group.abstract" = "Bağlı kontrolcüleri listeler, inceler, test eder ve yönetir.";
 /* Help text of the CONTROLLER argument shared by the 'ojd controller' commands. VVVV:PPPP is the vendor ID and product ID in hexadecimal and stays as written. */
@@ -2404,13 +2404,13 @@
 /* Error of 'ojd virtual' commands when --unit is used for a controller without a unit ID. %@ is the controller name. --unit stays as written. */
 "cli.virtual.group.errorNoUnit" = "%@ için cihaz kimliği yok, bu yüzden bir seçim yalnızca modelin tamamına uygulanabilir. Komutu --unit olmadan çalıştırın.";
 /* One-line summary of 'ojd virtual export-mapping' in the command list and at the top of its help. SDL is a game controller library and W3C names the web standard gamepad layout; both stay as written. */
-"cli.virtual.exportMapping.abstract" = "Sanal bir oyun kumandası profilinin türettiği SDL eşlemesini veya W3C açıklamasını yazdırır.";
+"cli.virtual.exportMapping.abstract" = "Sanal bir oyun kontrolcüsü profilinin türettiği SDL eşlemesini veya W3C açıklamasını yazdırır.";
 /* Long description in the help of 'ojd virtual export-mapping'. SDL, W3C and JSON stay as written. */
 "cli.virtual.exportMapping.discussion" = "SDL, her profil için bir eşleme satırı yazdırır; bu satırlar geçerli bir SDL eşleme dosyasıdır. W3C, standart yerleşimin açıklamasını JSON olarak yazdırır. İkisi de profilin rapor tanımlayıcısından türetilir.";
 /* Help text of the format option of 'ojd virtual export-mapping'. sdl and w3c are values the user types and stay as written. */
 "cli.virtual.exportMapping.format" = "Yazdırılacak biçim: sdl veya w3c.";
 /* Help text of the profile argument of 'ojd virtual export-mapping'. */
-"cli.virtual.exportMapping.profile" = "Yazdırılacak sanal oyun kumandası profili. Tüm profilleri yazdırmak için belirtmeyin.";
+"cli.virtual.exportMapping.profile" = "Yazdırılacak sanal oyun kontrolcüsü profili. Tüm profilleri yazdırmak için belirtmeyin.";
 /* One-line summary of 'ojd virtual feed' in the command list and at the top of its help. Standard input is the input stream of the program. */
 "cli.virtual.feed.abstract" = "stdin ile yönetilen sanal bir oyun kontrolcüsü yayımlar.";
 /* Long description in the help of 'ojd virtual feed'. The JSON field names buttons, dpad and axes and the control names stay as written. */
@@ -2426,19 +2426,19 @@
 /* First line of 'ojd virtual feed'. %@ is the profile name. Control-C is the key combination that stops a program in a terminal. */
 "cli.virtual.feed.started" = "Sanal bir oyun kontrolcüsü (%@) yayımlanıyor. Kareleri stdin’e yazın; durdurmak için girdiyi bitirin veya Control-C tuşlarına basın.";
 /* One-line summary of 'ojd virtual launch' in the command list and at the top of its help. SDL is a game controller library and stays as written. */
-"cli.virtual.launch.abstract" = "Bağlı sanal oyun kollarının SDL eşlemesiyle bir program çalıştırır.";
+"cli.virtual.launch.abstract" = "Bağlı sanal oyun kontrolcülerinin SDL eşlemesiyle bir program çalıştırır.";
 /* Help text of the program argument of 'ojd virtual launch'. PATH is the environment variable, .app is the app bundle extension, and -- stays as written. */
-"cli.virtual.launch.command" = "Çalıştırılacak program ve bağımsız değişkenleri. Program bir yol, PATH'in bulduğu bir ad veya bir .app olabilir. Programın bağımsız değişkenleri aynı zamanda ojd seçenekleriyse programdan önce -- yazın.";
+"cli.virtual.launch.command" = "Çalıştırılacak program ve bağımsız değişkenleri. Program bir yol, PATH’in bulduğu bir ad veya bir .app olabilir. Programın bağımsız değişkenleri aynı zamanda ojd seçenekleriyse programdan önce -- yazın.";
 /* Long description in the help of 'ojd virtual launch'. SDL_GAMECONTROLLERCONFIG and .app stay as written. */
-"cli.virtual.launch.discussion" = "SDL_GAMECONTROLLERCONFIG değerini bağlı her denetleyicinin sanal oyun kolu eşlemesine ayarlar; böylece programdaki SDL onları listeler. Önceden ayarlı bir değer başta kalır, eşlemeler onu izler. Bir .app ana yürütülebilir dosyasını çalıştırır. Program bu terminali korur. ojd'yi durdurmak programı durdurur ve ojd programın durumuyla çıkar.";
+"cli.virtual.launch.discussion" = "SDL_GAMECONTROLLERCONFIG değerini bağlı her kontrolcünün sanal oyun kontrolcüsü eşlemesine ayarlar; böylece programdaki SDL onları listeler. Önceden ayarlı bir değer başta kalır, eşlemeler onu izler. Bir .app ana yürütülebilir dosyasını çalıştırır. Program bu terminali korur. ojd’yi durdurmak programı durdurur ve ojd programın durumuyla çıkar.";
 /* Error of 'ojd virtual launch' when the program does not start. %1$@ is the program the user gave and %2$@ is the reason, one of the short reasons for a missing executable, a path without a file and a name not on PATH. */
 "cli.virtual.launch.errorFailed" = "%1$@ başlamadı (%2$@). Yürütülebilir bir dosya veya uygulama olduğunu ve çalıştırma izniniz olduğunu kontrol edin.";
 /* Short reason inside the failure message of 'ojd virtual launch' when an app bundle holds no executable. It fills %2$@ of that message and starts in lowercase. */
 "cli.virtual.launch.errorNoExecutable" = "uygulamanın yürütülebilir dosyası yok";
 /* Error of 'ojd virtual launch' when no connected controller has a virtual gamepad. The command in quotes stays as written. */
-"cli.virtual.launch.errorNoGamepad" = "Bağlı hiçbir denetleyicinin sanal oyun kolu yok, bu yüzden ayarlanacak eşleme yok. Bir denetleyici bağlayın ve 'ojd virtual show' komutunu kontrol edin.";
+"cli.virtual.launch.errorNoGamepad" = "Bağlı hiçbir kontrolcünün sanal oyun kontrolcüsü yok, bu yüzden ayarlanacak eşleme yok. Bir kontrolcü bağlayın ve “ojd virtual show” komutunu kontrol edin.";
 /* Error of 'ojd virtual launch' when no program is given. The example command in quotes stays as written. */
-"cli.virtual.launch.errorNoProgram" = "Çalıştırılacak bir program verin, örneğin 'ojd virtual launch ./game'.";
+"cli.virtual.launch.errorNoProgram" = "Çalıştırılacak bir program verin, örneğin “ojd virtual launch ./game”.";
 /* Short reason inside the failure message of 'ojd virtual launch' when the path holds no executable file. It fills %2$@ of that message and starts in lowercase. */
 "cli.virtual.launch.errorNotExecutable" = "bu yolda yürütülebilir dosya yok";
 /* Short reason inside the failure message of 'ojd virtual launch' when no program of the name is on PATH. It fills %2$@ of that message and starts in lowercase. PATH stays as written. */
@@ -2446,7 +2446,7 @@
 /* Error of 'ojd virtual launch' when --json or --plain is given. Both option names stay as written. */
 "cli.virtual.launch.errorOutput" = "--json ve --plain geçerli değildir, çünkü program standart çıktıyı yazar.";
 /* Help text of the SDL backend flag of 'ojd virtual launch'. The SDL hint names and values stay as written. */
-"platform.macos.cli.virtual.launch.sdlGamecontrollerBackend" = "SDL’in denetleyicileri yalnızca Apple’ın GameController çerçevesi üzerinden okumasını sağlayan SDL ipuçlarını da ayarlar: SDL_JOYSTICK_MFI=1, SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS=1, SDL_JOYSTICK_IOKIT=0, SDL_JOYSTICK_HIDAPI=0. Yalnızca programa uygulanır ve önceden ayarlanmış değerlerin yerine geçer.";
+"platform.macos.cli.virtual.launch.sdlGamecontrollerBackend" = "SDL’in kontrolcüleri yalnızca Apple’ın GameController çerçevesi üzerinden okumasını sağlayan SDL ipuçlarını da ayarlar: SDL_JOYSTICK_MFI=1, SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS=1, SDL_JOYSTICK_IOKIT=0, SDL_JOYSTICK_HIDAPI=0. Yalnızca programa uygulanır ve önceden ayarlanmış değerlerin yerine geçer.";
 /* One-line summary of 'ojd virtual reset' in the command list and at the top of its help. */
 "cli.virtual.reset.abstract" = "Bir kontrolcünün modelini veya tüm modelleri sanal oyun kontrolcüsünün otomatik seçimine döndürür.";
 /* Help text of the --all flag of 'ojd virtual reset'. */
@@ -2472,7 +2472,7 @@
 /* Help text of the profile argument of 'ojd virtual set'. */
 "cli.virtual.set.profile" = "Sanal oyun kontrolcüsü profili.";
 /* Note printed by 'ojd virtual export-mapping' for a profile that needs other SDL hints. %@ is the profile name in kebab case, which stays as written. SDL stays as written. */
-"cli.virtual.group.sdlHintsNote" = "Not: %@, SDL'in varsayılan ipuçlarıyla çalışmaz.";
+"cli.virtual.group.sdlHintsNote" = "Not: %@, SDL’in varsayılan ipuçlarıyla çalışmaz.";
 /* One-line summary of 'ojd virtual show' in the command list and at the top of its help. */
 "cli.virtual.show.abstract" = "Her kontrolcünün sanal oyun kontrolcüsünü ve seçebileceğiniz profilleri gösterir.";
 /* Value shown by 'ojd virtual show' for a controller without a virtual gamepad. */
@@ -2598,7 +2598,7 @@
 /* Text of error E2031, printed when the WebSocket port on 127.0.0.1 is in use or cannot be opened. 127.0.0.1 and --port stay as written. */
 "error.E2031.message" = "127.0.0.1 üzerindeki bu bağlantı noktası kullanımda veya açılamıyor. --port ile başka birini seçin.";
 /* Text of error E2032, printed when the control scope is granted to a token that has origins. */
-"error.E2032.message" = "Kaynakları olan bir belirteç control kapsamına sahip olamaz, çünkü bir sayfa asla sanal bir oyun kumandasını sürmemelidir. control kapsamını kaynağı olmayan bir belirtece verin.";
+"error.E2032.message" = "Kaynakları olan bir belirteç control kapsamına sahip olamaz, çünkü bir sayfa asla sanal bir oyun kontrolcüsünü sürmemelidir. control kapsamını kaynağı olmayan bir belirtece verin.";
 /* Text of error E2033, printed when 'ojd virtual launch' cannot start the program. */
 "error.E2033.message" = "Program başlatılamadı. Yolunun yürütülebilir bir dosyayı veya uygulamayı gösterdiğini ve çalıştırma izniniz olduğunu kontrol edin.";
 /* Error E2034, shown in the app or the CLI when the service no longer accepts requests. */
@@ -3268,7 +3268,7 @@
 /* Item of the Edit menu that selects everything. */
 "ui.menu.edit.selectAll" = "Tümünü Seç";
 /* Title of the View menu in the menu bar. */
-"ui.menu.view.title" = "Görünüm";
+"ui.menu.view.title" = "Görüntü";
 /* Item of the View menu that makes the window full screen. */
 "ui.menu.view.enterFullScreen" = "Tam Ekrana Gir";
 /* Item of the View menu that leaves full screen. It replaces Enter Full Screen while the window is full screen. */
@@ -3308,7 +3308,7 @@
 /* Title of the Window menu in the menu bar. */
 "ui.menu.window.title" = "Pencere";
 /* Item of the Window menu that minimizes the window to the Dock. */
-"ui.menu.window.minimize" = "Simge Durumuna Küçült";
+"ui.menu.window.minimize" = "Küçült";
 /* Item of the Window menu that zooms the window. */
 "ui.menu.window.zoom" = "Büyüt/Küçült";
 /* Item of the Window menu that brings all windows of the app to the front. */
@@ -3372,7 +3372,7 @@
 /* Message of the confirmation alert that removes the command line tool. %1$@ is the path of the link. The app stays installed. Terminal is the macOS app and ojd is the command name. */
 "platform.macos.ui.settings.commandLine.uninstallMessage" = "Bu, %1$@ konumundaki bağlantıyı kaldırır. Uygulama yüklü kalır, ancak aracı yeniden yükleyene kadar ojd Terminal’de çalışmaz.";
 /* Confirm button of the alert that removes the command-line tool. */
-"ui.settings.commandLine.uninstallConfirm" = "Kaldır";
+"ui.settings.commandLine.uninstallConfirm" = "Yüklemeyi Kaldır";
 /* Hint in the Advanced pane of the settings window while the developer tools are off. */
 "ui.settings.advanced.developerToolsOff" = "Kontrolcü girişini ve USB paketlerini görmek için geliştirici araçlarını açın.";
 /* Status line in the menu bar menu. %1$@ is the runtime state, %2$@ is the controller count text and %3$@ is the active profile text. The dots between them separate the parts and may change. */
@@ -3418,15 +3418,15 @@
 /* VoiceOver label and accessibility description of the menu bar status item. The product name stays as written. */
 "a11y.menuBar.statusItem" = "OpenJoystickDriver durumu";
 /* VoiceOver label of the sidebar list of the main window, which switches between the areas of the app. */
-"a11y.mainWindow.sidebar" = "Alanlar";
+"a11y.mainWindow.sidebar" = "Bölümler";
 /* VoiceOver label of the control in the capture assignment sheet that sets the minimum swipe distance of a touch gesture. */
-"a11y.capture.touchSwipeDistance" = "En Kısa Kaydırma Mesafesi";
+"a11y.capture.touchSwipeDistance" = "Asgari kaydırma mesafesi";
 /* Detail line of a row in the Access area with two parts. %1$@ and %2$@ are the parts, for example the signer and the scopes. The dot between them separates the parts and may change. */
 "ui.access.detail.pair" = "%1$@ · %2$@";
 /* Detail line of a row in the Access area with three parts. %1$@, %2$@ and %3$@ are the parts, for example the signer, the scopes and the reason of a refusal. The dots between them separate the parts and may change. */
 "ui.access.detail.triple" = "%1$@ · %2$@ · %3$@";
 /* Error shown when the app cannot find the executable of a refused program. %@ is the identifier of the program. */
-"ui.access.grant.noPath" = "OpenJoystickDriver, %@ uygulamasının çalıştırılabilir dosyasını okuyamadı, bu yüzden ona erişim veremez.";
+"ui.access.grant.noPath" = "OpenJoystickDriver, %@ programının çalıştırılabilir dosyasını okuyamadı, bu yüzden ona erişim veremez.";
 /* Line of the alert that turns on the WebSocket when a port is saved. */
 "ui.access.web.enable.savedPort" = "Web uç noktası kayıtlı bağlantı noktasını korur.";
 /* Detail line of a record in the records list. %1$@ and %2$@ are two facts about the record. The dot between them separates the facts and may change. */
@@ -3720,7 +3720,7 @@
 /* Warning shown above exported or displayed service logs, wherever the logs are shown. The logs can hold private data. */
 "cli.log.group.sharingWarning" = "Hizmet günlükleri aygıt adları, tanımlayıcılar veya tanılama yolları içerebilir. Paylaşmadan önce gözden geçirin.";
 /* Title of the toolbar popup in the Activity area that filters the log by stream. */
-"ui.activity.filter" = "Süz";
+"ui.activity.filter" = "Filtre";
 /* Name of the check in the diagnostics table that looks for the driver extension inside the app. */
 "ui.activity.check.transportExtensionBundle" = "Sürücü uzantısı paketi";
 /* Name of the check in the diagnostics table that asks macOS whether the driver extension is registered. */
@@ -3764,11 +3764,11 @@
 /* Label of the row in the Controllers detail that holds the button that exports the mapping of the virtual gamepad. */
 "ui.controllers.exportMapping" = "Eşlemeyi dışa aktar";
 /* Title of the save panel that exports the mapping of the virtual gamepad. */
-"ui.controllers.exportMapping.title" = "Sanal oyun kumandası eşlemesini dışa aktar";
+"ui.controllers.exportMapping.title" = "Sanal oyun kontrolcüsü eşlemesini dışa aktar";
 /* Label of the format popup in the save panel that exports the mapping. The colon stays. */
 "ui.controllers.exportMapping.format" = "Biçim:";
 /* Label of the row in the Controllers detail that holds the button that starts a game with the virtual gamepad. */
-"ui.controllers.launch" = "Oyunu sanal oyun kumandasıyla başlat";
+"ui.controllers.launch" = "Oyunu sanal oyun kontrolcüsüyle başlat";
 /* Title of the open panel in which the user picks a game to start. */
 "ui.controllers.launch.title" = "Bir oyun seçin";
 /* Button that starts the chosen game. It is also the confirm button of the open panel. */
@@ -3776,7 +3776,7 @@
 /* Title of the checkbox in the open panel for a game. GameController is the name of an Apple framework and stays as written. */
 "ui.controllers.launch.gameControllerBackend" = "Kontrolcüleri yalnızca GameController üzerinden oku";
 /* Message when the user starts a game but no connected controller has a virtual gamepad. */
-"ui.controllers.launch.noGamepad" = "Bağlı hiçbir kontrolcünün sanal oyun kumandası yok, bu yüzden ayarlanacak eşleme yok.";
+"ui.controllers.launch.noGamepad" = "Bağlı hiçbir kontrolcünün sanal oyun kontrolcüsü yok, bu yüzden ayarlanacak eşleme yok.";
 /* Message after a game starts. %@ is the name of the program. */
 "ui.controllers.launch.started" = "%@ başlatıldı.";
 /* Message after a game ends. %1$@ is the name of the program and %2$lld is its exit status. */
@@ -3842,7 +3842,7 @@
 /* Reason the controller has no virtual gamepad: the user turned the virtual output off. */
 "ui.controllers.publication.reason.outputDisabled" = "Sanal çıkış kapalı";
 /* Reason the controller has no virtual gamepad: macOS serves it as a gamepad. */
-"ui.controllers.publication.reason.systemGamepad" = "Sistem bunu oyun kumandası olarak yönetiyor";
+"ui.controllers.publication.reason.systemGamepad" = "Sistem bunu oyun kontrolcüsü olarak yönetiyor";
 /* Reason the controller has no virtual gamepad: macOS handles its input directly. */
 "ui.controllers.publication.reason.nativeHIDPassThrough" = "Sistem girdisini doğrudan işliyor";
 /* Reason the controller has no virtual gamepad: another virtual device stands for it. */
@@ -3880,7 +3880,7 @@
 /* Value of the owner of the physical controller: macOS holds it as an HID device that the app can also see. */
 "ui.controllers.physicalOwnership.systemHIDVisible" = "Sistem HID";
 /* Value of the owner of the physical controller: macOS serves it as a gamepad. */
-"ui.controllers.physicalOwnership.systemGamepad" = "Sistem oyun kumandası";
+"ui.controllers.physicalOwnership.systemGamepad" = "Sistem oyun kontrolcüsü";
 /* Value of the owner of the physical controller: another virtual device holds it before the app sees it. */
 "ui.controllers.physicalOwnership.upstreamVirtualDevice" = "Üst akış sanal aygıtı";
 /* Value of the owner of the physical controller when the app does not know it. */

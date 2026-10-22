@@ -63,7 +63,7 @@
 /* Heading of the section in the Access area that lists the readiness of permissions and notifications. */
 "ui.settings.notifications.accessReadiness" = "الوصول والجاهزية";
 /* Button in the Updates section of the settings window that checks for an update. */
-"ui.settings.general.checkUpdates" = "تحقق الآن";
+"ui.settings.general.checkUpdates" = "التحقق الآن";
 /* Value of the connection state of a controller in the Controllers detail: the controller is connected. */
 "ui.settings.notifications.controllerConnectedShort" = "متصل";
 /* Button of a permission row in the Access area that asks macOS for the permission. %@ is the name of the permission. */
@@ -127,7 +127,7 @@
 /* Error shown in the General pane of the settings window after the user turns on Start at login and macOS wants approval. System Settings, General and Login Items are names in macOS and are written as macOS shows them. */
 "platform.macos.ui.settings.general.startAtLoginApprovalRequired" = "اسمح لـ OpenJoystickDriver في إعدادات النظام > عام > عناصر تسجيل الدخول.";
 /* Description under the Start at login switch in the General pane of the settings window. OpenJoystickDriver is the product name. */
-"ui.settings.general.startAtLoginDescription" = "افتح OpenJoystickDriver في شريط القائمة عند تسجيل الدخول.";
+"ui.settings.general.startAtLoginDescription" = "فتح OpenJoystickDriver في شريط القوائم عند تسجيل الدخول.";
 /* Button in the Notifications pane of the settings window that sends a test notification. */
 "ui.settings.notifications.testNotification" = "إرسال إشعار تجريبي";
 /* Result of the update check: the installed version is the latest. */
@@ -193,17 +193,17 @@
 /* Note on a controller row in the Controllers area when macOS serves the controller natively and the driver does not publish a virtual gamepad for it. */
 "platform.macos.ui.controllers.systemGamepadNotPublished" = "وحدة تحكم macOS أصلية، غير منشورة";
 /* Label of the popup in the Controllers detail that picks which program serves the controller to games. */
-"ui.controllers.server.label" = "يخدمه";
+"ui.controllers.server.label" = "يُخدَم بواسطة";
 /* Entry of the server picker in the Controllers detail: macOS serves the controller itself. */
 "platform.macos.ui.controllers.server.system" = "macOS (أصلي)";
 /* Option of the server popup: OpenJoystickDriver serves the controller as a virtual gamepad. OpenJoystickDriver is the product name. */
-"ui.controllers.server.ojd" = "OpenJoystickDriver (افتراضي)";
+"ui.controllers.server.ojd" = "OpenJoystickDriver (وحدة تحكم افتراضية)";
 /* Label of the serving route fact in the Controllers detail. The route is the way the input reaches games. */
 "ui.controllers.serving.label" = "مسار الخدمة";
 /* Value of the serving route in the Controllers area: macOS serves the controller and the driver passes the input through. */
 "platform.macos.ui.controllers.serving.nativePassThrough" = "macOS (تمرير مباشر)";
 /* Value of the serving route when OpenJoystickDriver serves a virtual gamepad. OpenJoystickDriver is the product name. */
-"ui.controllers.serving.virtualHID" = "OpenJoystickDriver (وحدة تحكم افتراضية)";
+"ui.controllers.serving.virtualHID" = "OpenJoystickDriver، وحدة تحكم افتراضية";
 /* Value of the serving route when the driver extension owns the controller. */
 "ui.controllers.serving.extensionOwned" = "امتداد برنامج التشغيل";
 /* Value of the serving route when the user turned the output off. */
@@ -1554,7 +1554,7 @@
 "ui.profiles.resetLibraryAction" = "نسخ احتياطي وإعادة ضبط";
 
 /* Label of the row in the Controllers detail that tells that the session of the controller is suspended. The row holds the Resume button. */
-"ui.controllers.suspended" = "معلّقة";
+"ui.controllers.suspended" = "متوقفة مؤقتًا";
 /* Error shown when the service refuses to change the session of a controller. */
 "ui.error.controllerSessionChangeRejected" = "تعذّر تغيير جلسة وحدة التحكم.";
 
@@ -2162,7 +2162,7 @@
 /* Message printed by 'ojd controller list' when no controller is connected. */
 "cli.controller.list.empty" = "لا توجد وحدات تحكم متصلة.";
 /* Marker appended to the line of a suspended controller in 'ojd controller list'. Keep the parentheses. */
-"cli.controller.list.suspended" = "(معلّقة)";
+"cli.controller.list.suspended" = "(متوقفة مؤقتًا)";
 /* Help text of the --duration option of 'ojd controller watch' and 'ojd controller capture'. Control-C is the key combination that stops a program in a terminal. */
 "cli.controller.group.optionDuration" = "توقف بعد هذا العدد من الثواني. من دونه يستمر حتى تضغط Control-C.";
 /* Error of the controller output commands when the controller rejects a command. %1$@ is the controller name, %2$@ is the command name and %3$@ is the outcome in kebab case, which stays as written. The command in quotes stays as written. */
@@ -2912,7 +2912,7 @@
 /* Button of the open panel in which the user picks a record file or a mod folder. It confirms the choice. */
 "ui.library.choose" = "اختيار";
 /* Toolbar button in the Library area that checks a record file or mod folder without installing it. Keep the three dots. */
-"ui.library.validate" = "تحقق…";
+"ui.library.validate" = "تحقّق من الصحة…";
 /* Confirm button of the alert that installs a record or a mod. */
 "ui.library.install" = "تثبيت";
 /* Confirm button of the alert that replaces an installed record or mod. */
@@ -2988,9 +2988,9 @@
 /* Label of the field in the record detail that tells whether the USB extension claims the controller. */
 "ui.library.field.usbClaim" = "امتداد USB";
 /* Value of the USB extension field: the extension claims the controller. */
-"ui.library.claim.claimed" = "يطالب بوحدة التحكم هذه";
+"ui.library.claim.claimed" = "يتولّى وحدة التحكم هذه";
 /* Value of the USB extension field: the extension does not claim the controller. */
-"ui.library.claim.unclaimed" = "لا يطالب بوحدة التحكم هذه";
+"ui.library.claim.unclaimed" = "لا يتولّى وحدة التحكم هذه";
 /* Placeholder of the search field in the toolbar of the Library area. */
 "ui.library.search" = "بحث";
 /* Title of the empty state in the Library area when the search matches nothing. */
@@ -3194,7 +3194,7 @@
 /* VoiceOver label of the Access error banner button when the banner offers to read the access settings again. */
 "a11y.access.tryAgain" = "قراءة إعدادات الوصول مرة أخرى";
 /* VoiceOver label of the button in the Access area that restarts the app so that newly granted permissions take effect. */
-"a11y.access.restart" = "أعد تشغيل التطبيق لتسري الأذونات الجديدة";
+"a11y.access.restart" = "إعادة تشغيل التطبيق لتسري الأذونات الجديدة";
 /* VoiceOver label of the WebSocket port field in the Access area. An empty field keeps the saved port; the system chooses a port only when none is saved or Automatic is selected. */
 "a11y.access.webPort" = "منفذ WebSocket؛ اتركه فارغًا للاحتفاظ بالمنفذ المحفوظ. يختار النظام منفذًا فقط عندما لا يوجد منفذ محفوظ أو عند اختيار تلقائي";
 /* VoiceOver label of the toolbar button that opens a file chooser to grant access to a program. */
@@ -3298,7 +3298,7 @@
 /* Title of the Profile menu in the menu bar. */
 "ui.menu.profile.title" = "ملف التعريف";
 /* Item of the Profile menu that turns on the selected profile. */
-"ui.menu.profile.activate" = "تفعيل ملف تعريف";
+"ui.menu.profile.activate" = "تفعيل ملف التعريف";
 /* Item of the Profile menu that turns off the active profile. */
 "ui.menu.profile.deactivate" = "إلغاء تفعيل ملف التعريف";
 /* Title of the alert shown when turning off a profile from the menu fails. */

@@ -83,9 +83,9 @@
 /* Message of the alert shown when the user leaves the profile editor with unsaved changes. */
 "ui.settings.advanced.discardProfileMessage" = "Les modifications de votre profil n’ont pas été enregistrées.";
 /* Destructive button of the alert that throws away the unsaved changes of a profile. */
-"ui.settings.advanced.discardAction" = "Annuler les modifications";
+"ui.settings.advanced.discardAction" = "Ignorer les modifications";
 /* Title of the switch that turns on the developer tools in the Advanced pane of the settings window. */
-"ui.settings.advanced.enableDeveloperTools" = "Activer les outils développeur";
+"ui.settings.advanced.enableDeveloperTools" = "Activer les outils de développement";
 /* Note in the Notifications pane of the settings window when macOS has turned off both banners and sounds for the app. System Settings is the name of the macOS app. */
 "platform.macos.ui.settings.notifications.notificationBannersAndSoundOff" = "Les bannières et les sons sont désactivés dans Réglages Système.";
 /* Value of the notification row in the Access area when macOS has turned off banners for the app. */
@@ -103,7 +103,7 @@
 /* Note in the Notifications pane of the settings window when macOS has turned off sounds for the app. System Settings is the name of the macOS app. */
 "platform.macos.ui.settings.notifications.notificationSoundOffDetail" = "Les sons de notification sont désactivés dans Réglages Système.";
 /* Title of the switch in the Notifications pane of the settings window that plays a sound with a notification. */
-"ui.settings.notifications.notificationSounds" = "Lire un son";
+"ui.settings.notifications.notificationSounds" = "Émettre un son";
 /* Name of the notification permission in the Access area. */
 "ui.settings.notifications.notifications" = "Notifications";
 /* Error shown when the user turns on notifications in the app while macOS denies them. System Settings is the name of the macOS app. OpenJoystickDriver is the product name. */
@@ -129,7 +129,7 @@
 /* Description under the Start at login switch in the General pane of the settings window. OpenJoystickDriver is the product name. */
 "ui.settings.general.startAtLoginDescription" = "Ouvrir OpenJoystickDriver dans la barre des menus à la connexion.";
 /* Button in the Notifications pane of the settings window that sends a test notification. */
-"ui.settings.notifications.testNotification" = "Envoyer une notification test";
+"ui.settings.notifications.testNotification" = "Envoyer une notification de test";
 /* Result of the update check: the installed version is the latest. */
 "ui.settings.general.upToDate" = "À jour";
 /* Result of the update check: a newer version exists. */
@@ -203,7 +203,7 @@
 /* Value of the serving route in the Controllers area: macOS serves the controller and the driver passes the input through. */
 "platform.macos.ui.controllers.serving.nativePassThrough" = "macOS (transmise telle quelle)";
 /* Value of the serving route when OpenJoystickDriver serves a virtual gamepad. OpenJoystickDriver is the product name. */
-"ui.controllers.serving.virtualHID" = "OpenJoystickDriver (manette virtuelle)";
+"ui.controllers.serving.virtualHID" = "OpenJoystickDriver, manette virtuelle";
 /* Value of the serving route when the driver extension owns the controller. */
 "ui.controllers.serving.extensionOwned" = "Extension de pilote";
 /* Value of the serving route when the user turned the output off. */
@@ -1119,9 +1119,9 @@
 /* Failed outcome of the test notification when the app runs outside an app bundle and has no notification center. The inline error of the Settings window shows it for Send Test Notification and for a notification permission request, and `ojd setting test-notification` prints it as the reason of E2006. */
 "ui.settings.notifications.noNotificationCenter" = "Les notifications ne sont pas disponibles, car OpenJoystickDriver ne s’exécute pas depuis son bundle d’app. Ouvrez l’app OpenJoystickDriver, puis réessayez.";
 /* Error message in the inline error of the Settings window when the service no longer waits for the app's report on a test notification: the ojd request that asked for it ended, or its answer time ran out. */
-"ui.settings.notifications.testReportLost" = "La requête ojd s’est terminée ou son délai de réponse a expiré avant l’arrivée du rapport sur la notification test.";
+"ui.settings.notifications.testReportLost" = "La requête ojd s’est terminée ou son délai de réponse a expiré avant l’arrivée du rapport sur la notification de test.";
 /* Error text the service returns to an app that reports the outcome noAnswer for a test notification, which only the service decides. The inline error of the Settings window shows it. shown, denied, failed and noAnswer are outcome names and stay as written. */
-"ui.settings.notifications.testReportNoAnswer" = "Un rapport sur la notification test doit valoir shown, denied ou failed; seul le service décide de noAnswer.";
+"ui.settings.notifications.testReportNoAnswer" = "Un rapport sur la notification de test doit valoir shown, denied ou failed; seul le service décide de noAnswer.";
 /* Label of the popup in the profile editor that sets what the virtual gamepad of the profile publishes. */
 "ui.profiles.virtualOutput" = "Manette virtuelle";
 /* Option of the virtual output popup: the profile publishes no virtual gamepad. */
@@ -1884,7 +1884,7 @@
 /* Detail of the USB check of 'ojd diagnose' when the scan fails. %@ is the reason from macOS. Input Monitoring is written as macOS names it. OpenJoystickDriver is the product name. */
 "platform.macos.cli.diagnose.group.usbFailed" = "L’analyse USB a échoué : %@. Accordez la surveillance des entrées à OpenJoystickDriver.";
 /* Detail of the USB check of 'ojd diagnose'. %lld is the number of vendor-specific USB controllers that the system lists. */
-"cli.diagnose.group.usbOk" = "Contrôleurs USB propriétaires visibles : %lld";
+"cli.diagnose.group.usbOk" = "Manettes USB propriétaires visibles : %lld";
 /* Detail of the virtual gamepad check of 'ojd diagnose' when the user turned the virtual gamepad off. */
 "cli.diagnose.group.virtualDisabled" = "manette virtuelle désactivée";
 /* Detail of the virtual gamepad check of 'ojd diagnose' when the virtual gamepad reports an error. %@ is the error message of the system. */
@@ -2428,23 +2428,23 @@
 /* One-line summary of 'ojd virtual launch' in the command list and at the top of its help. SDL is a game controller library and stays as written. */
 "cli.virtual.launch.abstract" = "Exécute un programme avec le mappage SDL des manettes virtuelles connectées.";
 /* Help text of the program argument of 'ojd virtual launch'. PATH is the environment variable, .app is the app bundle extension, and -- stays as written. */
-"cli.virtual.launch.command" = "Le programme à exécuter et ses arguments. Un programme est un chemin, un nom que PATH trouve ou une .app. Mettez -- avant le programme si ses arguments sont aussi des options d'ojd.";
+"cli.virtual.launch.command" = "Le programme à exécuter et ses arguments. Un programme est un chemin, un nom que PATH trouve ou une .app. Mettez -- avant le programme si ses arguments sont aussi des options d’ojd.";
 /* Long description in the help of 'ojd virtual launch'. SDL_GAMECONTROLLERCONFIG and .app stay as written. */
-"cli.virtual.launch.discussion" = "Définit SDL_GAMECONTROLLERCONFIG avec le mappage de la manette virtuelle de chaque contrôleur connecté, afin que SDL dans le programme les liste. Une valeur déjà définie reste en premier et les mappages la suivent. Une .app exécute son exécutable principal. Le programme garde ce terminal. Arrêter ojd arrête le programme, et ojd se termine avec l'état du programme.";
+"cli.virtual.launch.discussion" = "Définit SDL_GAMECONTROLLERCONFIG avec le mappage de la manette virtuelle de chaque manette connectée, afin que SDL dans le programme les liste. Une valeur déjà définie reste en premier et les mappages la suivent. Une .app exécute son exécutable principal. Le programme garde ce terminal. Arrêter ojd arrête le programme, et ojd se termine avec l’état du programme.";
 /* Error of 'ojd virtual launch' when the program does not start. %1$@ is the program the user gave and %2$@ is the reason, one of the short reasons for a missing executable, a path without a file and a name not on PATH. */
-"cli.virtual.launch.errorFailed" = "%1$@ ne s'est pas lancé (%2$@). Vérifiez que c'est un fichier exécutable ou une app, et que vous avez le droit de l'exécuter.";
+"cli.virtual.launch.errorFailed" = "%1$@ ne s’est pas lancé (%2$@). Vérifiez que c’est un fichier exécutable ou une app, et que vous avez le droit de l’exécuter.";
 /* Short reason inside the failure message of 'ojd virtual launch' when an app bundle holds no executable. It fills %2$@ of that message and starts in lowercase. */
-"cli.virtual.launch.errorNoExecutable" = "l'app n'a pas d'exécutable";
+"cli.virtual.launch.errorNoExecutable" = "l’app n’a pas d’exécutable";
 /* Error of 'ojd virtual launch' when no connected controller has a virtual gamepad. The command in quotes stays as written. */
-"cli.virtual.launch.errorNoGamepad" = "Aucun contrôleur connecté n'a de manette virtuelle, donc il n'y a aucun mappage à définir. Connectez un contrôleur et vérifiez « ojd virtual show ».";
+"cli.virtual.launch.errorNoGamepad" = "Aucune manette connectée n’a de manette virtuelle, donc il n’y a aucun mappage à définir. Connectez une manette et vérifiez « ojd virtual show ».";
 /* Error of 'ojd virtual launch' when no program is given. The example command in quotes stays as written. */
-"cli.virtual.launch.errorNoProgram" = "Indiquez un programme à exécuter, par exemple « ojd virtual launch ./game ».";
+"cli.virtual.launch.errorNoProgram" = "Indiquez un programme à exécuter, par exemple « ojd virtual launch ./game ».";
 /* Short reason inside the failure message of 'ojd virtual launch' when the path holds no executable file. It fills %2$@ of that message and starts in lowercase. */
 "cli.virtual.launch.errorNotExecutable" = "aucun fichier exécutable à ce chemin";
 /* Short reason inside the failure message of 'ojd virtual launch' when no program of the name is on PATH. It fills %2$@ of that message and starts in lowercase. PATH stays as written. */
 "cli.virtual.launch.errorNotFound" = "aucun programme de ce nom dans PATH";
 /* Error of 'ojd virtual launch' when --json or --plain is given. Both option names stay as written. */
-"cli.virtual.launch.errorOutput" = "--json et --plain ne s'appliquent pas, car le programme écrit la sortie standard.";
+"cli.virtual.launch.errorOutput" = "--json et --plain ne s’appliquent pas, car le programme écrit la sortie standard.";
 /* Help text of the SDL backend flag of 'ojd virtual launch'. The SDL hint names and values stay as written. */
 "platform.macos.cli.virtual.launch.sdlGamecontrollerBackend" = "Définit aussi les indications SDL qui font lire les manettes à SDL uniquement par le framework GameController d’Apple : SDL_JOYSTICK_MFI=1, SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS=1, SDL_JOYSTICK_IOKIT=0, SDL_JOYSTICK_HIDAPI=0. Elles s’appliquent au programme seul et remplacent les valeurs déjà définies.";
 /* One-line summary of 'ojd virtual reset' in the command list and at the top of its help. */
@@ -2600,13 +2600,13 @@
 /* Text of error E2032, printed when the control scope is granted to a token that has origins. */
 "error.E2032.message" = "Un jeton avec des origines ne peut pas avoir la portée control, car une page ne doit jamais piloter une manette virtuelle. Accordez control à un jeton sans origines.";
 /* Text of error E2033, printed when 'ojd virtual launch' cannot start the program. */
-"error.E2033.message" = "Le programme n'a pas pu être lancé. Vérifiez que son chemin désigne un fichier exécutable ou une app, et que vous avez le droit de l'exécuter.";
+"error.E2033.message" = "Le programme n’a pas pu être lancé. Vérifiez que son chemin désigne un fichier exécutable ou une app, et que vous avez le droit de l’exécuter.";
 /* Error E2034, shown in the app or the CLI when the service no longer accepts requests. */
 "error.E2034.message" = "Le service n’accepte plus de requêtes. Quittez OpenJoystickDriver, rouvrez-le, puis réessayez.";
 /* Error E2035, shown in the app or the CLI when the file that records why the request listener stopped is unusable. */
 "error.E2035.message" = "Le fichier qui indique pourquoi l’écoute des requêtes s’est arrêtée est inutilisable. Supprimez le fichier, puis rouvrez OpenJoystickDriver.";
 /* Error E2036, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
-"error.E2036.message" = "Aucune app OpenJoystickDriver n’a répondu à temps à la notification test. Vérifiez que l’app est en cours d’exécution, puis réessayez.";
+"error.E2036.message" = "Aucune app OpenJoystickDriver n’a répondu à temps à la notification de test. Vérifiez que l’app est en cours d’exécution, puis réessayez.";
 /* Error E2037, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */
 "error.E2037.message" = "Les notifications ne sont pas autorisées pour OpenJoystickDriver. Autorisez-les dans les réglages de notifications du système, puis réessayez.";
 /* Note about a controller record whose raw USB family the USB extension cannot claim because Apple signs its product list. OJD is the short product name. */
@@ -3289,7 +3289,7 @@
 /* Title of the alert that turns on the local endpoint. */
 "ui.access.enable.title" = "Activer le point d’accès local?";
 /* Message of the alert that turns on the local endpoint. The control scope allows a program to change controller state. */
-"ui.access.enable.message" = "Les programmes auxquels vous accordez l’accès peuvent alors lire l’état des manettes et, avec la portée control, le modifier.";
+"ui.access.enable.message" = "Les programmes auxquels vous accordez l’accès peuvent alors lire l’état des manettes et, avec la portée « Contrôle », le modifier.";
 /* Label of the row in the Access area for the WebSocket endpoint, where web pages connect. */
 "ui.access.web" = "WebSocket";
 /* Value of the WebSocket row when it is on. %1$@ is the address of the endpoint and %2$@ is the address where pages are served. */
@@ -3333,7 +3333,7 @@
 /* Question of the alert that grants access. %1$@ is the identifier of the program, %2$@ is the description of its signer and %3$@ is the list of scopes. */
 "ui.access.grant.question" = "Accorder à %1$@ (%2$@) ces portées : %3$@?";
 /* Warning in the alert that grants access when the control scope is part of the grant. Rumble is vibration of the controller. */
-"ui.access.grant.controlWarning" = "La portée control permet au programme d’envoyer des sorties à vos manettes, comme les vibrations et les lumières.";
+"ui.access.grant.controlWarning" = "La portée « Contrôle » permet au programme d’envoyer des sorties à vos manettes, comme les vibrations et les lumières.";
 /* Warning line of the confirmation alert that grants access to a program that Apple signed. */
 "platform.macos.ui.access.grant.platformWarning" = "Ce programme est signé par Apple. Tout programme qu’Apple signe avec le même identifiant obtiendrait l’accès.";
 /* Button on a program or token that removes its access. */
@@ -3365,7 +3365,7 @@
 /* Error of the token creation sheet when the name or the scopes are missing. */
 "ui.access.token.incomplete" = "Un jeton a besoin d’un nom et d’au moins une portée.";
 /* Error of the token creation sheet when the user picks the control scope together with web origins. */
-"ui.access.token.originControl" = "Un jeton pour des pages web ne peut pas avoir la portée control.";
+"ui.access.token.originControl" = "Un jeton pour des pages web ne peut pas avoir la portée « Contrôle ».";
 /* Title of the alert that creates a token. %@ is the name of the token. */
 "ui.access.token.title" = "Créer le jeton %@?";
 /* Question of the alert that creates a token without origins. %1$@ is the name of the token and %2$@ is the list of scopes. */
@@ -3813,15 +3813,15 @@
 /* Value of the input health fact: the app waits until all controls are at rest before it sends input again. */
 "ui.controllers.inputHealth.waitingForNeutral" = "En attente de la position neutre";
 /* Error shown when the settings file is damaged. %@ is the path of the file. The command in backticks stays as written, and Trash is the macOS name. */
-"ui.settings.advanced.errorDamaged" = "Le fichier de réglages %@ est endommagé. Corrigez-le ou placez-le dans la corbeille avec `ojd setting reset`.";
+"ui.settings.advanced.errorDamaged" = "Le fichier de réglages %@ est endommagé. Corrigez-le ou placez-le dans la Corbeille avec `ojd setting reset`.";
 /* Error shown when the settings file has an unsupported version. %@ is the path of the file. apiVersion and the command in backticks stay as written, and Trash is the macOS name. */
-"ui.settings.advanced.errorUnsupported" = "Le fichier de réglages %@ n’est pas pris en charge. Réécrivez le fichier pour l’apiVersion prise en charge ou placez-le dans la corbeille avec `ojd setting reset`.";
+"ui.settings.advanced.errorUnsupported" = "Le fichier de réglages %@ n’est pas pris en charge. Réécrivez le fichier pour l’apiVersion prise en charge ou placez-le dans la Corbeille avec `ojd setting reset`.";
 /* Error shown when the settings file cannot be written. %@ is the path of the file. */
 "ui.settings.advanced.errorUnwritable" = "Impossible d’écrire dans le fichier de réglages %@.";
 /* Error shown when the settings file cannot be moved to the Trash. %@ is the path of the file. Trash is the macOS name. */
-"ui.settings.advanced.errorCannotReset" = "Impossible de placer le fichier de réglages %@ dans la corbeille.";
+"ui.settings.advanced.errorCannotReset" = "Impossible de placer le fichier de réglages %@ dans la Corbeille.";
 /* Error shown at startup when the stored settings file turns off both entry points. %@ is the path of the settings file. The two switch names are written as in this catalog, and the command in backticks stays as written. */
-"platform.macos.ui.settings.advanced.errorStoredNoVisibleEntryPoint" = "Le fichier de réglages %@ désactive à la fois « Afficher dans la barre des menus » et « Afficher dans le Dock », si bien que l’app n’aurait aucun point d’entrée visible. Corrigez-le ou placez-le dans la corbeille avec `ojd setting reset`.";
+"platform.macos.ui.settings.advanced.errorStoredNoVisibleEntryPoint" = "Le fichier de réglages %@ désactive à la fois « Afficher dans la barre des menus » et « Afficher dans le Dock », si bien que l’app n’aurait aucun point d’entrée visible. Corrigez-le ou placez-le dans la Corbeille avec `ojd setting reset`.";
 /* Error shown when the user turns off both Show in menu bar and Show in Dock. The two switch names are written as in this catalog. */
 "platform.macos.ui.settings.advanced.errorNoVisibleEntryPoint" = "« Afficher dans la barre des menus » et « Afficher dans le Dock » ne peuvent pas être désactivés tous les deux : l’app n’aurait aucun point d’entrée visible.";
 /* Title of the alert at startup when the settings file cannot be read. */
@@ -3831,13 +3831,13 @@
 /* Button of the alert about an unreadable settings file at startup that shows the file in Finder, the macOS file manager. */
 "platform.macos.ui.settings.advanced.unreadableShowInFinder" = "Afficher dans le Finder";
 /* One-line summary of 'ojd setting reset' in the command list and at the top of its help. */
-"cli.setting.reset.abstract" = "Place le fichier de réglages dans la corbeille.";
+"cli.setting.reset.abstract" = "Place le fichier de réglages dans la Corbeille.";
 /* Long description in the help of 'ojd setting reset'. Settings.json is a file name and stays as written. */
-"cli.setting.reset.discussion" = "Place Settings.json dans la corbeille pour que chaque réglage revienne à sa valeur par défaut. À utiliser lorsque le fichier est endommagé ou refusé.";
+"cli.setting.reset.discussion" = "Place Settings.json dans la Corbeille pour que chaque réglage revienne à sa valeur par défaut. À utiliser lorsque le fichier est endommagé ou refusé.";
 /* Yes or no question that 'ojd setting reset' asks on a terminal. */
-"cli.setting.reset.confirm" = "Placer le fichier de réglages dans la corbeille et rétablir chaque réglage à sa valeur par défaut?";
+"cli.setting.reset.confirm" = "Placer le fichier de réglages dans la Corbeille et rétablir chaque réglage à sa valeur par défaut?";
 /* Message printed after 'ojd setting reset'. %@ is the path of the settings file. */
-"cli.setting.reset.success" = "%@ a été placé dans la corbeille.";
+"cli.setting.reset.success" = "%@ a été placé dans la Corbeille.";
 /* Message printed by 'ojd setting reset' when there is no settings file. %@ is the path where the file would be. */
 "cli.setting.reset.none" = "Il n’y a aucun fichier de réglages à l’emplacement %@.";
 /* Reason the controller has no virtual gamepad: the user turned the virtual output off. */
@@ -3936,8 +3936,8 @@
 /* Reason the listener failure file cannot be used: the system would not say whether the process that wrote it runs. %1$@ is the system's reason, %2$@ the error number. Fills the reason in the error E2035 message. */
 "status.listenerFailure.processCheckFailed" = "impossible de vérifier si le processus du service est en cours d’exécution : %1$@ (numéro d’erreur %2$@)";
 /* One-line summary of 'ojd setting test-notification' in the command list and at the top of its help. The notification appears in the OpenJoystickDriver app. */
-"cli.setting.testNotification.abstract" = "Affiche une notification test dans l’app.";
+"cli.setting.testNotification.abstract" = "Affiche une notification de test dans l’app.";
 /* Long description in the help of 'ojd setting test-notification'. It says what the service is asked to do and when the command fails. --timeout stays as written and %@ is the default timeout in seconds. */
-"cli.setting.testNotification.discussion" = "Demande au service d’annoncer une notification test à l’app OpenJoystickDriver ouverte et attend que l’app l’affiche. Échoue avec une erreur nommée si les notifications sont refusées, si la remise échoue ou si aucune app ne répond à temps. Valeur par défaut de --timeout ici, en secondes : %@.";
+"cli.setting.testNotification.discussion" = "Demande au service d’annoncer une notification de test à l’app OpenJoystickDriver ouverte et attend que l’app l’affiche. Échoue avec une erreur nommée si les notifications sont refusées, si la remise échoue ou si aucune app ne répond à temps. Valeur par défaut de --timeout ici, en secondes : %@.";
 /* Printed by ojd setting test-notification after the app reported that it showed the test notification. */
-"cli.setting.testNotification.success" = "L’app a affiché la notification test.";
+"cli.setting.testNotification.success" = "L’app a affiché la notification de test.";

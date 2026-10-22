@@ -77,7 +77,7 @@
 /* Heading of the developer tools section in the Advanced pane of the settings window. */
 "ui.settings.advanced.developerTools" = "Entwicklerwerkzeuge";
 /* Description of the switch that turns on the developer tools in the Advanced pane of the settings window. */
-"ui.settings.advanced.developerToolsDescription" = "Controller-Eingabe und USB-Paketwerkzeuge anzeigen.";
+"ui.settings.advanced.developerToolsDescription" = "Werkzeuge für Controller-Eingaben und USB-Pakete anzeigen.";
 /* Title of the alert shown when the user leaves the profile editor with unsaved changes. */
 "ui.settings.advanced.discardTitle" = "Ungesicherte Änderungen verwerfen?";
 /* Message of the alert shown when the user leaves the profile editor with unsaved changes. */
@@ -203,7 +203,7 @@
 /* Value of the serving route in the Controllers area: macOS serves the controller and the driver passes the input through. */
 "platform.macos.ui.controllers.serving.nativePassThrough" = "macOS (durchgereicht)";
 /* Value of the serving route when OpenJoystickDriver serves a virtual gamepad. OpenJoystickDriver is the product name. */
-"ui.controllers.serving.virtualHID" = "OpenJoystickDriver (virtuelles Gamepad)";
+"ui.controllers.serving.virtualHID" = "OpenJoystickDriver, virtuelles Gamepad";
 /* Value of the serving route when the driver extension owns the controller. */
 "ui.controllers.serving.extensionOwned" = "Treibererweiterung";
 /* Value of the serving route when the user turned the output off. */
@@ -1554,7 +1554,7 @@
 "ui.profiles.resetLibraryAction" = "Sichern & Zurücksetzen";
 
 /* Label of the row in the Controllers detail that tells that the session of the controller is suspended. The row holds the Resume button. */
-"ui.controllers.suspended" = "Angehalten";
+"ui.controllers.suspended" = "Pausiert";
 /* Error shown when the service refuses to change the session of a controller. */
 "ui.error.controllerSessionChangeRejected" = "Die Controller-Sitzung konnte nicht geändert werden.";
 
@@ -1812,7 +1812,7 @@
 /* Error of 'ojd diagnose --output' when the folder of the path is missing. %@ is the folder path. --output stays as written. */
 "cli.diagnose.group.outputParent" = "--output benötigt einen vorhandenen Ordner; %@ existiert nicht.";
 /* Progress line of 'ojd diagnose --output' while the support bundle is written. Keep the three dots. */
-"cli.diagnose.group.outputProgress" = "Support-Paket wird geschrieben...";
+"cli.diagnose.group.outputProgress" = "Support-Paket wird geschrieben…";
 /* Message printed after 'ojd diagnose --output' wrote the support bundle. %@ is the file path. The bundle lists the names of the devices, so the user should read it first. */
 "cli.diagnose.group.outputWritten" = "Support-Paket nach %@ geschrieben. Prüfe es vor dem Teilen; Gerätenamen sind enthalten.";
 /* Long description in the help of 'ojd diagnose'. pass, warn, fail and skip are the check results printed by the command and stay as written, as do --soak and the other option names. */
@@ -1866,7 +1866,7 @@
 /* Detail of the runtime health check of 'ojd diagnose' when --soak is not given. --soak SECONDS stays as written. */
 "cli.diagnose.group.soakNotRequested" = "nicht angefordert; verwende --soak SECONDS";
 /* Progress line of 'ojd diagnose --soak'. %@ is the sampling duration, such as 30 seconds. Keep the three dots. */
-"cli.diagnose.group.soakProgress" = "Dienst wird %@ lang gemessen...";
+"cli.diagnose.group.soakProgress" = "Dienst wird %@ lang gemessen…";
 /* Verdict of the runtime health check of 'ojd diagnose --soak' when the physical footprint passed its limit. %1$.1f is the resident size in MiB, %2$.1f is the footprint in MiB, %3$lld is the number of open file descriptors, %4$.1f is the CPU load in percent and %5$.0f is the sampling time in seconds. The double percent sign prints one percent sign. */
 "cli.diagnose.group.soakVerdictFootprintLimit" = "Grenzwert für Speicherfußabdruck überschritten: residenter Speicher %1$.1f MiB, Speicherfußabdruck %2$.1f MiB, Dateideskriptoren %3$lld, CPU-Last %4$.1f %% in %5$.0f s";
 /* Verdict of the runtime health check of 'ojd diagnose --soak' when too few samples were taken. %1$.1f is the resident size in MiB, %2$.1f is the footprint in MiB, %3$lld is the number of open file descriptors, %4$.1f is the CPU load in percent and %5$.0f is the sampling time in seconds. The double percent sign prints one percent sign. */
@@ -3289,7 +3289,7 @@
 /* Title of the alert that turns on the local endpoint. */
 "ui.access.enable.title" = "Lokalen Endpunkt einschalten?";
 /* Message of the alert that turns on the local endpoint. The control scope allows a program to change controller state. */
-"ui.access.enable.message" = "Programme, denen du Zugriff erteilst, können dann den Controller-Status lesen und ihn mit dem Bereich control ändern.";
+"ui.access.enable.message" = "Programme, denen du Zugriff erteilst, können dann den Controller-Status lesen und ihn mit dem Bereich „Steuern“ ändern.";
 /* Label of the row in the Access area for the WebSocket endpoint, where web pages connect. */
 "ui.access.web" = "WebSocket";
 /* Value of the WebSocket row when it is on. %1$@ is the address of the endpoint and %2$@ is the address where pages are served. */
@@ -3333,11 +3333,11 @@
 /* Question of the alert that grants access. %1$@ is the identifier of the program, %2$@ is the description of its signer and %3$@ is the list of scopes. */
 "ui.access.grant.question" = "%1$@ (%2$@) diese Bereiche erteilen: %3$@?";
 /* Warning in the alert that grants access when the control scope is part of the grant. Rumble is vibration of the controller. */
-"ui.access.grant.controlWarning" = "Mit dem Bereich control kann das Programm Ausgaben an deine Controller senden, etwa Vibration und Lichter.";
+"ui.access.grant.controlWarning" = "Mit dem Bereich „Steuern“ kann das Programm Ausgaben an deine Controller senden, etwa Vibration und Lichter.";
 /* Warning line of the confirmation alert that grants access to a program that Apple signed. */
 "platform.macos.ui.access.grant.platformWarning" = "Dieses Programm ist von Apple signiert. Jedes Programm, das Apple mit derselben Kennung signiert, bekäme den Zugriff.";
 /* Button on a program or token that removes its access. */
-"ui.access.revoke" = "Widerrufen";
+"ui.access.revoke" = "Entziehen";
 /* Title of the alert that removes all access of a program. %@ is the name of the program. */
 "ui.access.revoke.title" = "Zugriff von %@ widerrufen?";
 /* Message of the alert that removes all access of a program. */
@@ -3365,7 +3365,7 @@
 /* Error of the token creation sheet when the name or the scopes are missing. */
 "ui.access.token.incomplete" = "Ein Token braucht einen Namen und mindestens einen Bereich.";
 /* Error of the token creation sheet when the user picks the control scope together with web origins. */
-"ui.access.token.originControl" = "Ein Token für Webseiten darf den Bereich control nicht haben.";
+"ui.access.token.originControl" = "Ein Token für Webseiten darf den Bereich „Steuern“ nicht haben.";
 /* Title of the alert that creates a token. %@ is the name of the token. */
 "ui.access.token.title" = "Token %@ erstellen?";
 /* Question of the alert that creates a token without origins. %1$@ is the name of the token and %2$@ is the list of scopes. */

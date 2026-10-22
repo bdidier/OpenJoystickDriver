@@ -36,7 +36,7 @@ enum LocalizationCatalogAudit {
     "ui.profiles.trackball.enabled", "ui.profiles.turbo",
     "ui.library.mods", "ui.access.scope.control", "ui.access.socket", "ui.access.transport.socket",
     "ui.access.tokens", "ui.access.token.issued.title", "ui.access.token.named",
-    "ui.settings.general.title",
+    "ui.settings.general.title", "ui.controllers.server.ojd",
   ]
   private static let frenchTerms: Set<String> = [
     "ui.library.field.source", "ui.library.field.transport", "ui.library.field.version",
@@ -95,6 +95,7 @@ enum LocalizationCatalogAudit {
       "ui.library.layer.driver", "ui.access.token.issued.title", "ui.access.token.named",
       "ui.activity.filter", "ui.activity.mode.log",
       "ui.access.web.port", "ui.access.web.enable.port", "ui.menu.window.zoom",
+      "ui.controllers.server.ojd",
       "cli.controller.show.labelInput", "cli.explain.group.area", "cli.explain.group.areaEndpoint",
       "term.status", "ui.console.output", "ui.console.stream", "ui.developer.packetColumnData",
       "ui.inputTest.home", "ui.inputTest.menu",
@@ -104,12 +105,13 @@ enum LocalizationCatalogAudit {
       "ui.profiles.physical.motor",
       "ui.profiles.stick.horizontal",
       "ui.profiles.target", "ui.profiles.trackball.enabled", "ui.profiles.turbo",
-      "ui.shortcuts.controller.model",
+      "ui.shortcuts.controller.model", "ui.menu.file.title", "ui.menu.edit.title",
     ],
     "it-IT": [
       "term.parser", "term.protocolVariant.dongle",
       "ui.access.token.issued.title", "ui.access.token.named",
       "ui.menu.controller.title", "ui.menu.file.title", "ui.menu.window.zoom",
+      "ui.access.socket", "ui.access.transport.socket",
       "cli.access.status.socket", "cli.controller.show.labelInput",
       "cli.controller.show.labelRecord", "term.controller", "ui.console.output",
       "ui.developer.controller", "ui.developer.controllerDetails",
@@ -120,7 +122,7 @@ enum LocalizationCatalogAudit {
     ],
     "ja-JP": [
       "term.key.capsLock", "term.key.escape", "term.key.alt", "term.key.return",
-      "term.key.shift",
+      "term.key.shift", "ui.profiles.appID",
     ],
     "ko-KR": [
       "term.key.capsLock", "term.key.meta", "term.key.control", "term.key.escape",
@@ -135,6 +137,7 @@ enum LocalizationCatalogAudit {
       "ui.menu.window.zoom",
       "ui.sidebar.controllers.title", "ui.extra.controllers",
       "ui.menu.controller.title", "ui.menu.help.title", "ui.extra.help",
+      "ui.access.socket", "ui.access.transport.socket",
       "cli.access.status.socket", "cli.controller.show.labelProtocol",
       "cli.controller.show.labelRecord", "cli.controller.show.labelRumble",
       "cli.status.group.labelControllers", "cli.status.group.labelService", "term.controller",
@@ -163,6 +166,7 @@ enum LocalizationCatalogAudit {
       "ui.inputTest.menu", "term.key.control",
       "ui.profiles.motion.local", "ui.profiles.physical.motor", "ui.profiles.stick.horizontal",
       "ui.profiles.stick.vertical", "ui.profiles.trackball.enabled", "ui.profiles.turbo",
+      "ui.controllers.server.ojd",
     ],
     "ru-RU": [
       "term.key.capsLock", "term.key.meta", "term.key.control", "term.key.delete",
@@ -182,14 +186,16 @@ enum LocalizationCatalogAudit {
       "ui.shortcuts.controller.model",
     ],
     "vi-VN": [
+      "ui.access.socket", "ui.access.transport.socket",
       "cli.access.status.socket", "ui.inputTest.home", "ui.inputTest.menu", "term.key.capsLock",
       "term.key.meta", "term.key.control", "term.key.delete", "term.key.escape",
       "term.key.alt", "term.key.pageDown", "term.key.pageUp", "term.key.return",
       "term.key.shift", "term.key.tab", "ui.mapping.guide", "ui.profiles.trackball.enabled",
       "ui.profiles.turbo", "ui.access.token.issued.title", "ui.access.token.named",
     ],
-    "zh-CN": ["term.key.alt", "term.key.shift"],
-    "zh-TW": ["term.key.escape", "term.key.alt"],
+    "zh-CN": ["term.key.alt", "term.key.shift", "ui.profiles.appID"],
+    "zh-HK": ["ui.profiles.appID"],
+    "zh-TW": ["term.key.escape", "term.key.alt", "ui.profiles.appID"],
   ]
 
   static func allowedSourceIdenticalEnglishProseKeys(for localization: String) -> Set<String> {
