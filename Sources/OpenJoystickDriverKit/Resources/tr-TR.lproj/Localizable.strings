@@ -193,13 +193,13 @@
 /* Note on a controller row in the Controllers area when macOS serves the controller natively and the driver does not publish a virtual gamepad for it. */
 "platform.macos.ui.controllers.systemGamepadNotPublished" = "Yerel macOS Oyun Kontrolcüsü Yayımlanmadı";
 /* Label of the popup in the Controllers detail that picks which program serves the controller to games. */
-"ui.controllers.server.label" = "Hizmet veren";
+"ui.controllers.server.label" = "Sunan";
 /* Entry of the server picker in the Controllers detail: macOS serves the controller itself. */
 "platform.macos.ui.controllers.server.system" = "macOS (yerel)";
 /* Option of the server popup: OpenJoystickDriver serves the controller as a virtual gamepad. OpenJoystickDriver is the product name. */
 "ui.controllers.server.ojd" = "OpenJoystickDriver (sanal)";
 /* Label of the serving route fact in the Controllers detail. The route is the way the input reaches games. */
-"ui.controllers.serving.label" = "Hizmet yolu";
+"ui.controllers.serving.label" = "Sunma yolu";
 /* Value of the serving route in the Controllers area: macOS serves the controller and the driver passes the input through. */
 "platform.macos.ui.controllers.serving.nativePassThrough" = "macOS (doğrudan aktarılır)";
 /* Value of the serving route when OpenJoystickDriver serves a virtual gamepad. OpenJoystickDriver is the product name. */
@@ -1063,7 +1063,7 @@
 /* Button of the problem banner that repairs the driver extension for Xbox USB controllers. */
 "ui.setup.repairDriver" = "Xbox USB Sürücüsünü Onar";
 /* Title of the problem banner when the app cannot reach its service. OpenJoystickDriver is the product name. */
-"ui.banner.service.title" = "OpenJoystickDriver hizmetine ulaşamıyor";
+"ui.banner.service.title" = "OpenJoystickDriver servisine ulaşamıyor";
 /* Title of the problem banner when macOS has not allowed all that the app needs. */
 "ui.banner.access.title" = "İzin gerekli";
 /* Detail line of the problem banner when macOS has not allowed all that the driver needs. OpenJoystickDriver is the product name. */
@@ -1071,11 +1071,11 @@
 /* Title of the problem banner when the app does not get live changes of controllers from the service. */
 "ui.banner.liveUpdates.title" = "Canlı güncellemeler kullanılamıyor";
 /* Detail of the live updates banner when the service closed the connection. OpenJoystickDriver is the product name. */
-"ui.banner.liveUpdates.detail.closed" = "Hizmet bağlantıyı kapattı. OpenJoystickDriver bunun yerine kontrolcü değişikliklerini her saniye denetler.";
+"ui.banner.liveUpdates.detail.closed" = "Servis bağlantıyı kapattı. OpenJoystickDriver bunun yerine kontrolcü değişikliklerini her saniye denetler.";
 /* Detail of the live updates banner when the service did not answer in time. OpenJoystickDriver is the product name. */
-"ui.banner.liveUpdates.detail.timeout" = "Hizmet zamanında yanıt vermedi. OpenJoystickDriver bunun yerine kontrolcü değişikliklerini düzenli aralıklarla denetler.";
+"ui.banner.liveUpdates.detail.timeout" = "Servis zamanında yanıt vermedi. OpenJoystickDriver bunun yerine kontrolcü değişikliklerini düzenli aralıklarla denetler.";
 /* Detail of the live updates banner for any other failure of the live connection. OpenJoystickDriver is the product name. */
-"ui.banner.liveUpdates.detail.other" = "Hizmetten canlı güncellemeler çalışmıyor. OpenJoystickDriver bunun yerine kontrolcü değişikliklerini düzenli aralıklarla denetler.";
+"ui.banner.liveUpdates.detail.other" = "Servisten canlı güncellemeler çalışmıyor. OpenJoystickDriver bunun yerine kontrolcü değişikliklerini düzenli aralıklarla denetler.";
 /* Button of the Driver Extension section in the settings window that removes the driver extension from the system. */
 "cli.login.group.uninstallAction" = "Kaldır";
 /* Option of the stream filter in the Activity log that shows all entries. */
@@ -1121,7 +1121,7 @@
 /* Error message in the inline error of the Settings window when the service no longer waits for the app's report on a test notification: the ojd request that asked for it ended, or its answer time ran out. */
 "ui.settings.notifications.testReportLost" = "Test bildirimine ilişkin rapor gelmeden önce ojd isteği sona erdi veya yanıt süresi doldu.";
 /* Error text the service returns to an app that reports the outcome noAnswer for a test notification, which only the service decides. The inline error of the Settings window shows it. shown, denied, failed and noAnswer are outcome names and stay as written. */
-"ui.settings.notifications.testReportNoAnswer" = "Test bildirimi raporu shown, denied veya failed olmalıdır; noAnswer yalnızca hizmet tarafından belirlenir.";
+"ui.settings.notifications.testReportNoAnswer" = "Test bildirimi raporu shown, denied veya failed olmalıdır; noAnswer yalnızca servis tarafından belirlenir.";
 /* Label of the popup in the profile editor that sets what the virtual gamepad of the profile publishes. */
 "ui.profiles.virtualOutput" = "Sanal Oyun Kontrolcüsü";
 /* Option of the virtual output popup: the profile publishes no virtual gamepad. */
@@ -1692,7 +1692,7 @@
 /* Message printed after 'ojd access disable' turned the endpoint off. */
 "cli.access.disable.success" = "Uç nokta kapalı ve bağlantıları sonlandırıldı.";
 /* Long description in the help of 'ojd access'. It explains the endpoint, that it is off until enabled and that only granted programs are served. Command names stay as written. */
-"cli.access.group.discussion" = "Uç nokta, erişim verilen programların kontrolcü olaylarını okuduğu yerel bir sokettir. “ojd access enable” komutunu çalıştırana kadar kapalıdır ve servis yalnızca imzasına erişim verdiğiniz programlara ya da erişim verdiğiniz bir token gönderen programlara hizmet eder. “ojd access web enable”, overlay sayfaları için 127.0.0.1 üzerine bir WebSocket ekler.";
+"cli.access.group.discussion" = "Uç nokta, erişim verilen programların kontrolcü olaylarını okuduğu yerel bir sokettir. “ojd access enable” komutunu çalıştırana kadar kapalıdır ve servis yalnızca imzasına erişim verdiğiniz programlara ya da erişim verdiğiniz bir token gönderen programlara yanıt verir. “ojd access web enable”, overlay sayfaları için 127.0.0.1 üzerine bir WebSocket ekler.";
 /* One-line summary of 'ojd access enable' in the command list and at the top of its help. */
 "cli.access.enable.abstract" = "Uç noktayı açar.";
 /* Yes or no question that 'ojd access enable' asks on a terminal before it turns the endpoint on. */
@@ -2126,11 +2126,11 @@
 /* One-line summary of 'ojd controller disconnect' in the command list and at the top of its help. */
 "cli.controller.disconnect.abstract" = "Bir klasik Bluetooth kontrolcüsünün bağlantısını keser.";
 /* Long description in the help of 'ojd controller disconnect'. It explains that classic Bluetooth controllers stay paired and that the wait is at least 6 seconds. */
-"platform.macos.cli.controller.disconnect.discussion" = "Klasik Bluetooth bağlantısını kapatır. Kontrolcü eşleşmiş kalır ve yeniden açtığınızda tekrar bağlanır. Bluetooth’un onaylaması için en az 6 saniye bekler. Hizmet, Bluetooth Low Energy kontrolcüsünün bağlantısını kesemez. Kontrolcüyü kapatın veya Sistem Ayarları > Bluetooth içinde bağlantısını kesin.";
+"platform.macos.cli.controller.disconnect.discussion" = "Klasik Bluetooth bağlantısını kapatır. Kontrolcü eşleşmiş kalır ve yeniden açtığınızda tekrar bağlanır. Bluetooth’un onaylaması için en az 6 saniye bekler. Servis, Bluetooth Low Energy kontrolcüsünün bağlantısını kesemez. Kontrolcüyü kapatın veya Sistem Ayarları > Bluetooth içinde bağlantısını kesin.";
 /* Message printed after 'ojd controller disconnect' disconnected the controller. %@ is the controller name. */
 "cli.controller.disconnect.done" = "%@ bağlantısı kesildi.";
 /* Error of 'ojd controller disconnect' for a Bluetooth Low Energy controller. %@ is the controller name. System Settings and Bluetooth are macOS names. */
-"platform.macos.cli.controller.disconnect.bluetoothLe" = "%@ Bluetooth Low Energy ile bağlı ve hizmet bağlantısını kesemez. Kontrolcüyü kapatın veya Sistem Ayarları > Bluetooth içinde bağlantısını kesin.";
+"platform.macos.cli.controller.disconnect.bluetoothLe" = "%@ Bluetooth Low Energy ile bağlı ve servis bağlantısını kesemez. Kontrolcüyü kapatın veya Sistem Ayarları > Bluetooth içinde bağlantısını kesin.";
 /* Error of 'ojd controller disconnect' when the Bluetooth disconnect fails. %1$@ names the step that failed and %2$@ is the system's reason, which can end with an error code. */
 "cli.controller.disconnect.failed" = "%1$@ için Bluetooth bağlantısı kesilemedi: %2$@.";
 /* Error of 'ojd controller disconnect' for a controller on a wire. %@ is the controller name. */
@@ -2176,13 +2176,13 @@
 /* Error of the controller output commands when the controller lacks the feature. %1$@ is the controller name, %2$@ is the missing feature as a noun phrase and %3$@ is the session token for 'ojd controller show'. */
 "cli.controller.group.outputUnsupported" = "%1$@ kontrolcüsünde %2$@ yok. Nelerin desteklendiğini görmek için “ojd controller show %3$@” komutunu çalıştırın.";
 /* One-line summary of 'ojd controller claim' in the command list and at the top of its help. OpenJoystickDriver is the product name. To serve a model means to read its input and publish it as a virtual gamepad. */
-"cli.controller.claim.abstract" = "Bir kontrolcü modeline OpenJoystickDriver’ın hizmet vermesini sağlayın.";
+"cli.controller.claim.abstract" = "Bir kontrolcü modelinin OpenJoystickDriver tarafından sunulmasını sağlayın.";
 /* Long description in the help of 'ojd controller claim'. server, ojd, VVVV-PPPP.json and the record terms stay as written. */
-"platform.macos.cli.controller.claim.discussion" = "Model için kaydınızda, yani kayıt dizininizdeki VVVV-PPPP.json dosyasında server değerini ojd yapar ve kaydın diğer alanlarını korur. Modelin her kontrolcüsü için geçerlidir. Çalışan hizmet bunu yeniden takmadan uygular. Kontrolcüyü bulmak için hizmet gerekir. --dry-run hiçbir şey yazmaz. OpenJoystickDriver’ın her zaman hizmet verdiği ham USB kullanan ya da macOS’un yerel olarak hizmet vermediği bir kontrolcü için E2023 ile 1 koduyla çıkar.";
+"platform.macos.cli.controller.claim.discussion" = "Model için kaydınızda, yani kayıt dizininizdeki VVVV-PPPP.json dosyasında server değerini ojd yapar ve kaydın diğer alanlarını korur. Modelin her kontrolcüsü için geçerlidir. Çalışan servis bunu yeniden takmadan uygular. Kontrolcüyü bulmak için servis gerekir. --dry-run hiçbir şey yazmaz. OpenJoystickDriver’ın her zaman sunduğu ham USB kullanan ya da macOS’un yerel olarak sunmadığı bir kontrolcü için E2023 ile 1 koduyla çıkar.";
 /* One-line summary of 'ojd controller release' in the command list and at the top of its help. */
 "platform.macos.cli.controller.release.abstract" = "Bir kontrolcü modelini macOS’a geri verin.";
 /* Long description in the help of 'ojd controller release'. server, system and VVVV-PPPP.json stay as written. */
-"platform.macos.cli.controller.release.discussion" = "Model için kaydınızda, yani kayıt dizininizdeki VVVV-PPPP.json dosyasında server değerini system yapar ve kaydın diğer alanlarını korur. Modelin her kontrolcüsü için geçerlidir. Çalışan hizmet bunu yeniden takmadan uygular. Kontrolcüyü bulmak için hizmet gerekir. --dry-run hiçbir şey yazmaz. OpenJoystickDriver’ın her zaman hizmet verdiği ham USB kullanan ya da macOS’un yerel olarak hizmet vermediği bir kontrolcü için E2023 ile 1 koduyla çıkar.";
+"platform.macos.cli.controller.release.discussion" = "Model için kaydınızda, yani kayıt dizininizdeki VVVV-PPPP.json dosyasında server değerini system yapar ve kaydın diğer alanlarını korur. Modelin her kontrolcüsü için geçerlidir. Çalışan servis bunu yeniden takmadan uygular. Kontrolcüyü bulmak için servis gerekir. --dry-run hiçbir şey yazmaz. OpenJoystickDriver’ın her zaman sunduğu ham USB kullanan ya da macOS’un yerel olarak sunmadığı bir kontrolcü için E2023 ile 1 koduyla çıkar.";
 /* Message printed by 'ojd controller claim' and related commands with --dry-run instead of writing the record. %1$@ is the controller identity, %2$@ is the server name in kebab case and %3$@ is the record file. */
 "cli.controller.group.serverDryRun" = "%1$@, %2$@ olarak ayarlanırdı (%3$@).";
 /* Error when the record file of a controller cannot be changed. %1$@ is the path of the record file and %2$@ is the description of the problem. */
@@ -2190,9 +2190,9 @@
 /* Error when a controller has no record to change. %1$@ is the controller identity and %2$@ repeats it as the argument of the command in quotes, which stays as written. */
 "cli.controller.group.serverNoRecord" = "%1$@ için değiştirilecek bir kontrolcü kaydı yok. “ojd record draft %2$@” ile bir tane oluşturun.";
 /* Message when a controller cannot be released to macOS because macOS does not serve it natively. %@ is the controller identity. OpenJoystickDriver is the product name. */
-"platform.macos.cli.controller.group.serverNotNative" = "macOS %@ için yerel olarak hizmet vermez, bu yüzden ona her zaman OpenJoystickDriver hizmet verir.";
+"platform.macos.cli.controller.group.serverNotNative" = "macOS %@ kontrolcüsünü yerel olarak sunmaz, bu yüzden onu her zaman OpenJoystickDriver sunar.";
 /* Message when the server of a controller cannot be changed because it uses raw USB. %@ is the controller identity. OpenJoystickDriver is the product name. */
-"cli.controller.group.serverRawUsb" = "%@ ham USB kullanır, bu yüzden ona her zaman OpenJoystickDriver hizmet verir.";
+"cli.controller.group.serverRawUsb" = "%@ ham USB kullanır, bu yüzden onu her zaman OpenJoystickDriver sunar.";
 /* Message printed after the server of a controller is changed. %1$@ is the controller identity, %2$@ is the server name in kebab case and %3$@ is the record file. The service picks the change up without a restart. */
 "cli.controller.group.serverSuccess" = "%1$@, %2$@ olarak ayarlandı (%3$@). Çalışan servis bunu şimdi uygular.";
 /* One-line summary of 'ojd controller player' in the command list and at the top of its help. */
@@ -2262,9 +2262,9 @@
 /* Value of the Ownership row of 'ojd controller show'. %1$@ is the route that found the controller, %2$@ is the physical connection and %3$@ is the HID input source, all in kebab case, which stays as written. */
 "cli.controller.show.ownership" = "yol %1$@, fiziksel %2$@, HID girdisi %3$@";
 /* Row label in the output of 'ojd controller show'. The component that serves the controller follows, with where that choice comes from. */
-"cli.controller.show.labelServer" = "Hizmet veren";
+"cli.controller.show.labelServer" = "Sunan";
 /* Row label in the output of 'ojd controller show'. The route that the input of the controller takes follows, with the reason in parentheses. */
-"cli.controller.show.labelServing" = "Hizmet yolu";
+"cli.controller.show.labelServing" = "Sunma yolu";
 /* Row label in the output of 'ojd controller show'. The gamepad model that the virtual gamepad presents follows. */
 "cli.controller.show.labelPersona" = "Yayınlanan persona";
 /* Value of the Served by row of 'ojd controller show'. %1$@ is the server name and %2$@ is where the choice comes from, in kebab case, which stays as written. */
@@ -2580,7 +2580,7 @@
 /* Text of error E2022, printed when the controller state that a record parser produces from a capture differs from the expected state. */
 "error.E2022.message" = "Kaydın ayrıştırıcısının yakalanan raporlardan ürettiği durum beklenen durumdan farklı. Komutun listelediği alanları okuyun.";
 /* Text of error E2023, printed when a controller cannot be claimed or released because its protocol family uses raw USB or the system does not serve it natively. The settings window shows it too. */
-"error.E2023.message" = "Bu kontrolcü üstlenilemez veya geri verilemez: protokol ailesi ham USB kullanıyor ya da sistem ona yerel olarak hizmet vermiyor. İleti nedenini belirtir.";
+"error.E2023.message" = "Bu kontrolcü üstlenilemez veya geri verilemez: protokol ailesi ham USB kullanıyor ya da sistem onu yerel olarak sunmuyor. İleti nedenini belirtir.";
 /* Text of error E2024, printed when no endpoint client or token has the given ID. ojd access is the command that lists the IDs and stays as written. */
 "error.E2024.message" = "Bu kimliğe sahip bir uç nokta istemcisi veya belirteci yok. Kimlikleri listelemek için ojd access çalıştırın, sonra birini kullanın.";
 /* Text of error E2025, printed when a client with a signature that any local program can claim cannot be granted. */
@@ -2588,7 +2588,7 @@
 /* Text of error E2026, printed when a grant names no scope. */
 "error.E2026.message" = "Vermek için en az bir kapsam seçin.";
 /* Text of error E2027, printed when the service is shutting down while the command runs. */
-"error.E2027.message" = "Hizmet duruyor. Hizmeti başlatın, sonra yeniden deneyin.";
+"error.E2027.message" = "Servis duruyor. Servisi başlatın, sonra yeniden deneyin.";
 /* Text of error E2028, printed when a token with the chosen name exists. */
 "error.E2028.message" = "Bu adda bir belirteç var. Önce onu iptal edin veya başka bir ad seçin.";
 /* Text of error E2029, printed when a token name has characters that are not allowed. The limit of 64 characters is fixed. */
@@ -3468,7 +3468,7 @@
 /* Text of error E1003, sent when a line on the endpoint is invalid or arrives at the wrong time. Hello is the name of the first line kind and stays as written. */
 "error.E1003.message" = "Servis satırı kabul edemedi. Satır geçersiz ya da yanlış zamanda geldi. Önce hello, sonra bir istek gönderin ve her satırı uç noktanın şemasıyla denetleyin.";
 /* Text of error E1004, sent when the endpoint refuses a ninth connection on one transport. The number 8 is the fixed limit; the socket and the WebSocket are the two transports. */
-"error.E1004.message" = "Uç nokta, taşıma başına (soket ve WebSocket ayrı ayrı) zaten 8 bağlantıya hizmet ediyor. İhtiyacınız olmayan bir bağlantıyı kapatın ve yeniden bağlanın.";
+"error.E1004.message" = "Uç nokta, taşıma başına (soket ve WebSocket ayrı ayrı) zaten 8 bağlantıyı yönetiyor. İhtiyacınız olmayan bir bağlantıyı kapatın ve yeniden bağlanın.";
 /* Text of error E1005, sent to an endpoint client whose grant is removed while it is connected. The command in quotes stays as written. */
 "error.E1005.message" = "Bu istemcinin izni, bağlıyken kaldırıldı. Ona “ojd access grant” komutuyla yeniden izin verin ve yeniden bağlanın.";
 /* Text of error E1006, sent to an endpoint client that reads lines too slowly, so that 256 lines wait for it. 256 is the fixed limit. */
@@ -3478,9 +3478,9 @@
 /* Text of error E1008, sent when the virtual gamepad of a feed is closed. feed is a request kind of the endpoint and stays as written. */
 "error.E1008.message" = "Sanal oyun kontrolcüsü kapandı ya da servis hiç sanal oyun kontrolcüsü çalıştırmıyor. Yeniden bağlanın ve feed gönderin.";
 /* Text of error E1009, sent when a line names an API version that the service does not speak. apiVersion and details.supportedAPIVersions are field names and stay as written. */
-"error.E1009.message" = "Hizmet bir satırdaki apiVersion değerini desteklemiyor. details.supportedAPIVersions içindeki sürümlerden birini gönderin ve yeniden bağlanın.";
+"error.E1009.message" = "Servis bir satırdaki apiVersion değerini desteklemiyor. details.supportedAPIVersions içindeki sürümlerden birini gönderin ve yeniden bağlanın.";
 /* Text of error E1010, sent when a line has a kind that the service does not know or does not accept at this point. Hello, Subscription, FeedRequest and Frame are kinds of lines and stay as written. */
-"error.E1010.message" = "Bir satırda hizmetin tanımadığı ya da bu adımda kabul etmediği bir kind var. Önce Hello, sonra Subscription veya FeedRequest, sonra Frame satırlarını gönderin ve yeniden bağlanın.";
+"error.E1010.message" = "Bir satırda servisin tanımadığı ya da bu adımda kabul etmediği bir kind var. Önce Hello, sonra Subscription veya FeedRequest, sonra Frame satırlarını gönderin ve yeniden bağlanın.";
 /* Text of error E1011, sent when a line has no apiVersion or no kind. apiVersion and kind are field names and stay as written. */
 "error.E1011.message" = "Bir satırda apiVersion veya kind yok. Her satır ikisini de taşır. Bunları ekleyin ve yeniden bağlanın.";
 /* Description in the Shortcuts app of the action that turns on a remapping profile. */
@@ -3726,7 +3726,7 @@
 /* Result of a check in the diagnostics table when the check did not run. */
 "ui.activity.status.skip" = "Atlandı";
 /* Warning shown above exported or displayed service logs, wherever the logs are shown. The logs can hold private data. */
-"cli.log.group.sharingWarning" = "Hizmet günlükleri aygıt adları, tanımlayıcılar veya tanılama yolları içerebilir. Paylaşmadan önce gözden geçirin.";
+"cli.log.group.sharingWarning" = "Servis günlükleri aygıt adları, tanımlayıcılar veya tanılama yolları içerebilir. Paylaşmadan önce gözden geçirin.";
 /* Title of the toolbar popup in the Activity area that filters the log by stream. */
 "ui.activity.filter" = "Filtre";
 /* Name of the check in the diagnostics table that looks for the driver extension inside the app. */
@@ -3768,7 +3768,7 @@
 /* Label of the row in the Controllers detail that holds the button that clears all virtual HID profile choices. */
 "ui.controllers.virtual.resetAll" = "Tüm geçersiz kılmaları sıfırla";
 /* Error when the service cannot clear the virtual HID profile choices. HID is the abbreviation of Human Interface Device and stays as written. */
-"ui.controllers.virtual.resetAllFailed" = "Hizmet sanal HID profili seçimlerini temizleyemedi.";
+"ui.controllers.virtual.resetAllFailed" = "Servis sanal HID profili seçimlerini temizleyemedi.";
 /* Label of the row in the Controllers detail that holds the button that exports the mapping of the virtual gamepad. */
 "ui.controllers.exportMapping" = "Eşlemeyi dışa aktar";
 /* Title of the save panel that exports the mapping of the virtual gamepad. */
