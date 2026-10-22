@@ -22,8 +22,9 @@ BUNDLE_ID = "com.openjoystickdriver"
 AREAS = ("Controllers", "Profiles", "Library", "Access", "Activity")
 SETTINGS_PANES = ("General", "Notifications", "Advanced")
 BOUNDS_TOLERANCE = 2.0
-# kCGDockWindowLevel and kCGMainMenuWindowLevel: the Dock and the menu bar.
-SCREEN_CHROME_LAYERS = (20, 24)
+# kCGDockWindowLevel and kCGMainMenuWindowLevel: the Dock and the menu bar. kCGCursorWindowLevel:
+# the pointer, which screencapture leaves out of the image without -C.
+SCREEN_CHROME_LAYERS = (20, 24, 2147483630)
 ACCESSIBILITY_GRANTED = "0"
 ACCESSIBILITY_NOT_TRUSTED = "-25211"
 ACCESSIBILITY_CANNOT_COMPLETE = "-25204"
@@ -286,7 +287,8 @@ def covering_windows(target: dict, windows: list[dict]) -> list[str]:
     """Owners of the windows in front of `target` that overlap it.
 
     `windows` is front to back. The Dock and the menu bar are transparent windows over the
-    whole screen in front of every app window, so their layers are not counted.
+    whole screen in front of every app window, and the pointer is not in the image, so their
+    layers are not counted.
     """
     front = windows[: next(i for i, w in enumerate(windows) if w["id"] == target["id"])]
     return [

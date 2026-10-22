@@ -155,6 +155,14 @@ class GuiCaptureTests(unittest.TestCase):
         self.assertEqual(capture.covering_windows(target, windows), ["Code"])
         self.assertEqual(capture.covering_windows(target, [target]), [])
 
+    def test_the_pointer_does_not_cover_a_window(self) -> None:
+        # screencapture leaves the pointer out of the image unless it is given -C.
+        target = self.window()
+        pointer = self.window(
+            id=6, pid=10, owner="Window Server", layer=2147483630, width=28, height=40
+        )
+        self.assertEqual(capture.covering_windows(target, [pointer, target]), [])
+
     def fake_time(self) -> tuple[Callable[[], float], Callable[[float], None]]:
         now = [0.0]
 
