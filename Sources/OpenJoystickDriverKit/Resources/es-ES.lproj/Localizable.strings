@@ -83,9 +83,9 @@
 /* Message of the alert shown when the user leaves the profile editor with unsaved changes. */
 "ui.settings.advanced.discardProfileMessage" = "Los cambios de tu perfil no se han guardado.";
 /* Destructive button of the alert that throws away the unsaved changes of a profile. */
-"ui.settings.advanced.discardAction" = "No guardar cambios";
+"ui.settings.advanced.discardAction" = "Descartar cambios";
 /* Title of the switch that turns on the developer tools in the Advanced pane of the settings window. */
-"ui.settings.advanced.enableDeveloperTools" = "Activar herramientas de desarrollo";
+"ui.settings.advanced.enableDeveloperTools" = "Activar herramientas para desarrolladores";
 /* Note in the Notifications pane of the settings window when macOS has turned off both banners and sounds for the app. System Settings is the name of the macOS app. */
 "platform.macos.ui.settings.notifications.notificationBannersAndSoundOff" = "Los banners y los sonidos están desactivados en Ajustes del Sistema.";
 /* Value of the notification row in the Access area when macOS has turned off banners for the app. */
@@ -197,13 +197,13 @@
 /* Entry of the server picker in the Controllers detail: macOS serves the controller itself. */
 "platform.macos.ui.controllers.server.system" = "macOS (nativo)";
 /* Option of the server popup: OpenJoystickDriver serves the controller as a virtual gamepad. OpenJoystickDriver is the product name. */
-"ui.controllers.server.ojd" = "OpenJoystickDriver (mando virtual)";
+"ui.controllers.server.ojd" = "OpenJoystickDriver (virtual)";
 /* Label of the serving route fact in the Controllers detail. The route is the way the input reaches games. */
 "ui.controllers.serving.label" = "Ruta de servicio";
 /* Value of the serving route in the Controllers area: macOS serves the controller and the driver passes the input through. */
 "platform.macos.ui.controllers.serving.nativePassThrough" = "macOS (transferido)";
 /* Value of the serving route when OpenJoystickDriver serves a virtual gamepad. OpenJoystickDriver is the product name. */
-"ui.controllers.serving.virtualHID" = "OpenJoystickDriver (mando virtual)";
+"ui.controllers.serving.virtualHID" = "OpenJoystickDriver, mando virtual";
 /* Value of the serving route when the driver extension owns the controller. */
 "ui.controllers.serving.extensionOwned" = "Extensión de controlador";
 /* Value of the serving route when the user turned the output off. */
@@ -2034,7 +2034,7 @@
 /* Error of 'ojd setting set' when the value is neither true nor false. %1$@ is the text the user gave and %2$@ is the setting name, which stays as written. true and false stay as written. */
 "cli.setting.group.badValue" = "«%1$@» no es un valor válido para %2$@. Usa true o false.";
 /* Help text of the developerTools setting in 'ojd setting list'. */
-"cli.setting.group.developerTools" = "Muestra las herramientas de desarrollo en la ventana de Ajustes.";
+"cli.setting.group.developerTools" = "Muestra las herramientas para desarrolladores en la ventana de Ajustes.";
 /* Long description in the help of 'ojd setting'. It says that the running service applies each setting, so every 'ojd setting' command needs the service. */
 "cli.setting.group.discussion" = "El servicio en ejecución aplica cada ajuste, así que todos los comandos de ajustes lo necesitan.";
 /* One-line summary of 'ojd setting get' in the command list and at the top of its help. */
@@ -3211,9 +3211,9 @@
 /* Label of the field in the record detail that tells whether the USB extension claims the controller. */
 "ui.library.field.usbClaim" = "Extensión USB";
 /* Value of the USB extension field: the extension claims the controller. */
-"ui.library.claim.claimed" = "Reclama este mando";
+"ui.library.claim.claimed" = "Gestiona este mando";
 /* Value of the USB extension field: the extension does not claim the controller. */
-"ui.library.claim.unclaimed" = "No reclama este mando";
+"ui.library.claim.unclaimed" = "No gestiona este mando";
 /* Placeholder of the search field in the toolbar of the Library area. */
 "ui.library.search" = "Buscar";
 /* Title of the empty state in the Library area when the search matches nothing. */
@@ -3289,7 +3289,7 @@
 /* Title of the alert that turns on the local endpoint. */
 "ui.access.enable.title" = "¿Activar el punto de conexión local?";
 /* Message of the alert that turns on the local endpoint. The control scope allows a program to change controller state. */
-"ui.access.enable.message" = "Los programas a los que concedas acceso podrán leer el estado de los mandos y, con el ámbito control, cambiarlo.";
+"ui.access.enable.message" = "Los programas a los que concedas acceso podrán leer el estado de los mandos y, con el ámbito «Control», cambiarlo.";
 /* Label of the row in the Access area for the WebSocket endpoint, where web pages connect. */
 "ui.access.web" = "WebSocket";
 /* Value of the WebSocket row when it is on. %1$@ is the address of the endpoint and %2$@ is the address where pages are served. */
@@ -3333,7 +3333,7 @@
 /* Question of the alert that grants access. %1$@ is the identifier of the program, %2$@ is the description of its signer and %3$@ is the list of scopes. */
 "ui.access.grant.question" = "¿Conceder a %1$@ (%2$@) estos ámbitos: %3$@?";
 /* Warning in the alert that grants access when the control scope is part of the grant. Rumble is vibration of the controller. */
-"ui.access.grant.controlWarning" = "El ámbito control permite que el programa envíe salida a tus mandos, como vibración y luces.";
+"ui.access.grant.controlWarning" = "El ámbito «Control» permite que el programa envíe salida a tus mandos, como vibración y luces.";
 /* Warning line of the confirmation alert that grants access to a program that Apple signed. */
 "platform.macos.ui.access.grant.platformWarning" = "Este programa está firmado por Apple. Cualquier programa que Apple firme con el mismo identificador obtendría el acceso.";
 /* Button on a program or token that removes its access. */
@@ -3365,7 +3365,7 @@
 /* Error of the token creation sheet when the name or the scopes are missing. */
 "ui.access.token.incomplete" = "Un token necesita un nombre y al menos un ámbito.";
 /* Error of the token creation sheet when the user picks the control scope together with web origins. */
-"ui.access.token.originControl" = "Un token para páginas web no puede tener el ámbito control.";
+"ui.access.token.originControl" = "Un token para páginas web no puede tener el ámbito «Control».";
 /* Title of the alert that creates a token. %@ is the name of the token. */
 "ui.access.token.title" = "¿Crear el token %@?";
 /* Question of the alert that creates a token without origins. %1$@ is the name of the token and %2$@ is the list of scopes. */
@@ -3597,7 +3597,7 @@
 /* Confirm button of the alert that removes the command-line tool. */
 "ui.settings.commandLine.uninstallConfirm" = "Desinstalar";
 /* Hint in the Advanced pane of the settings window while the developer tools are off. */
-"ui.settings.advanced.developerToolsOff" = "Activa las herramientas de desarrollo para ver la entrada del mando y los paquetes USB.";
+"ui.settings.advanced.developerToolsOff" = "Activa las herramientas para desarrolladores para ver la entrada del mando y los paquetes USB.";
 /* Status line in the menu bar menu. %1$@ is the runtime state, %2$@ is the controller count text and %3$@ is the active profile text. The dots between them separate the parts and may change. */
 "ui.extra.statusLine" = "%1$@ · %2$@ · %3$@";
 /* Heading of the controllers section in the menu bar menu. */
@@ -3703,7 +3703,7 @@
 /* Toolbar button in the Activity area that shows the log file in Finder, the macOS file manager. */
 "platform.macos.ui.activity.showInFinder" = "Mostrar en el Finder";
 /* Title of the alert shown when the folder of the log cannot be opened. */
-"ui.activity.showInFinder.failed" = "No se pudo abrir la carpeta de registros.";
+"ui.activity.showInFinder.failed" = "No se ha podido abrir la carpeta de registros.";
 /* Toolbar button in the Activity area that runs the diagnostic checks. */
 "ui.activity.runChecks" = "Ejecutar comprobaciones";
 /* Column title of the Activity log table. The column holds the text of an entry. */

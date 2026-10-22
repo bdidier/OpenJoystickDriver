@@ -197,13 +197,13 @@
 /* Entry of the server picker in the Controllers detail: macOS serves the controller itself. */
 "platform.macos.ui.controllers.server.system" = "macOS (nativo)";
 /* Option of the server popup: OpenJoystickDriver serves the controller as a virtual gamepad. OpenJoystickDriver is the product name. */
-"ui.controllers.server.ojd" = "OpenJoystickDriver (controle virtual)";
+"ui.controllers.server.ojd" = "OpenJoystickDriver (virtual)";
 /* Label of the serving route fact in the Controllers detail. The route is the way the input reaches games. */
 "ui.controllers.serving.label" = "Rota de atendimento";
 /* Value of the serving route in the Controllers area: macOS serves the controller and the driver passes the input through. */
 "platform.macos.ui.controllers.serving.nativePassThrough" = "macOS (repassado)";
 /* Value of the serving route when OpenJoystickDriver serves a virtual gamepad. OpenJoystickDriver is the product name. */
-"ui.controllers.serving.virtualHID" = "OpenJoystickDriver (controle virtual)";
+"ui.controllers.serving.virtualHID" = "OpenJoystickDriver, controle virtual";
 /* Value of the serving route when the driver extension owns the controller. */
 "ui.controllers.serving.extensionOwned" = "Extensão de driver";
 /* Value of the serving route when the user turned the output off. */
@@ -3289,7 +3289,7 @@
 /* Title of the alert that turns on the local endpoint. */
 "ui.access.enable.title" = "Ativar o endpoint local?";
 /* Message of the alert that turns on the local endpoint. The control scope allows a program to change controller state. */
-"ui.access.enable.message" = "Os programas aos quais você conceder acesso poderão ler o estado dos controles e, com o escopo Controle, alterá-lo.";
+"ui.access.enable.message" = "Os programas aos quais você conceder acesso poderão ler o estado dos controles e, com o escopo “Controle”, alterá-lo.";
 /* Label of the row in the Access area for the WebSocket endpoint, where web pages connect. */
 "ui.access.web" = "WebSocket";
 /* Value of the WebSocket row when it is on. %1$@ is the address of the endpoint and %2$@ is the address where pages are served. */
@@ -3333,7 +3333,7 @@
 /* Question of the alert that grants access. %1$@ is the identifier of the program, %2$@ is the description of its signer and %3$@ is the list of scopes. */
 "ui.access.grant.question" = "Conceder a %1$@ (%2$@) estes escopos: %3$@?";
 /* Warning in the alert that grants access when the control scope is part of the grant. Rumble is vibration of the controller. */
-"ui.access.grant.controlWarning" = "O escopo Controle permite que o programa envie saída para os seus controles, como vibração e luzes.";
+"ui.access.grant.controlWarning" = "O escopo “Controle” permite que o programa envie saída para os seus controles, como vibração e luzes.";
 /* Warning line of the confirmation alert that grants access to a program that Apple signed. */
 "platform.macos.ui.access.grant.platformWarning" = "Este programa é assinado pela Apple. Qualquer programa que a Apple assine com o mesmo identificador obteria o acesso.";
 /* Button on a program or token that removes its access. */
@@ -3365,7 +3365,7 @@
 /* Error of the token creation sheet when the name or the scopes are missing. */
 "ui.access.token.incomplete" = "Um token precisa de um nome e de pelo menos um escopo.";
 /* Error of the token creation sheet when the user picks the control scope together with web origins. */
-"ui.access.token.originControl" = "Um token para páginas web não pode ter o escopo Controle.";
+"ui.access.token.originControl" = "Um token para páginas web não pode ter o escopo “Controle”.";
 /* Title of the alert that creates a token. %@ is the name of the token. */
 "ui.access.token.title" = "Criar o token %@?";
 /* Question of the alert that creates a token without origins. %1$@ is the name of the token and %2$@ is the list of scopes. */

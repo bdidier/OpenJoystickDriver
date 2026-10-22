@@ -203,7 +203,7 @@
 /* Value of the serving route in the Controllers area: macOS serves the controller and the driver passes the input through. */
 "platform.macos.ui.controllers.serving.nativePassThrough" = "macOS (passato così com’è)";
 /* Value of the serving route when OpenJoystickDriver serves a virtual gamepad. OpenJoystickDriver is the product name. */
-"ui.controllers.serving.virtualHID" = "OpenJoystickDriver (gamepad virtuale)";
+"ui.controllers.serving.virtualHID" = "OpenJoystickDriver, gamepad virtuale";
 /* Value of the serving route when the driver extension owns the controller. */
 "ui.controllers.serving.extensionOwned" = "Estensione driver";
 /* Value of the serving route when the user turned the output off. */
@@ -2432,11 +2432,11 @@
 /* Long description in the help of 'ojd virtual launch'. SDL_GAMECONTROLLERCONFIG and .app stay as written. */
 "cli.virtual.launch.discussion" = "Imposta SDL_GAMECONTROLLERCONFIG con la mappatura del gamepad virtuale di ogni controller connesso, così SDL nel programma li elenca. Un valore già impostato resta per primo e le mappature lo seguono. Una .app esegue il suo eseguibile principale. Il programma mantiene questo terminale. Fermare ojd ferma il programma, e ojd termina con lo stato del programma.";
 /* Error of 'ojd virtual launch' when the program does not start. %1$@ is the program the user gave and %2$@ is the reason, one of the short reasons for a missing executable, a path without a file and a name not on PATH. */
-"cli.virtual.launch.errorFailed" = "%1$@ non è stato avviato (%2$@). Controlla che sia un file eseguibile o un'app e che tu possa eseguirlo.";
+"cli.virtual.launch.errorFailed" = "%1$@ non è stato avviato (%2$@). Controlla che sia un file eseguibile o un’app e che tu possa eseguirlo.";
 /* Short reason inside the failure message of 'ojd virtual launch' when an app bundle holds no executable. It fills %2$@ of that message and starts in lowercase. */
-"cli.virtual.launch.errorNoExecutable" = "l'app non ha un eseguibile";
+"cli.virtual.launch.errorNoExecutable" = "l’app non ha un eseguibile";
 /* Error of 'ojd virtual launch' when no connected controller has a virtual gamepad. The command in quotes stays as written. */
-"cli.virtual.launch.errorNoGamepad" = "Nessun controller connesso ha un gamepad virtuale, quindi non c'è nessuna mappatura da impostare. Connetti un controller e controlla «ojd virtual show».";
+"cli.virtual.launch.errorNoGamepad" = "Nessun controller connesso ha un gamepad virtuale, quindi non c’è nessuna mappatura da impostare. Connetti un controller e controlla «ojd virtual show».";
 /* Error of 'ojd virtual launch' when no program is given. The example command in quotes stays as written. */
 "cli.virtual.launch.errorNoProgram" = "Indica un programma da eseguire, ad esempio «ojd virtual launch ./game».";
 /* Short reason inside the failure message of 'ojd virtual launch' when the path holds no executable file. It fills %2$@ of that message and starts in lowercase. */
@@ -2600,7 +2600,7 @@
 /* Text of error E2032, printed when the control scope is granted to a token that has origins. */
 "error.E2032.message" = "Un token con origini non può avere l’ambito control, perché una pagina non deve mai pilotare un gamepad virtuale. Concedi control a un token senza origini.";
 /* Text of error E2033, printed when 'ojd virtual launch' cannot start the program. */
-"error.E2033.message" = "Il programma non può essere avviato. Controlla che il suo percorso indichi un file eseguibile o un'app e che tu possa eseguirlo.";
+"error.E2033.message" = "Il programma non può essere avviato. Controlla che il suo percorso indichi un file eseguibile o un’app e che tu possa eseguirlo.";
 /* Error E2034, shown in the app or the CLI when the service no longer accepts requests. */
 "error.E2034.message" = "Il servizio non accetta più richieste. Chiudi OpenJoystickDriver, riaprilo e riprova.";
 /* Error E2035, shown in the app or the CLI when the file that records why the request listener stopped is unusable. */
@@ -3203,7 +3203,7 @@
 /* Title of the alert that removes a mod. %@ is the mod name. */
 "ui.library.mod.remove.title" = "Rimuovere il mod %@?";
 /* Message of the alert that removes a mod. OpenJoystickDriver is the product name. Personas are the identities that a virtual gamepad can show. */
-"ui.library.mod.remove.message" = "OpenJoystickDriver elimina il mod insieme ai record, ai profili e alle persona che ha aggiunto.";
+"ui.library.mod.remove.message" = "OpenJoystickDriver elimina il mod insieme ai record, ai profili e alle persone che ha aggiunto.";
 /* Notice after a mod is removed. %@ is the mod name. */
 "ui.library.mod.removed" = "Mod %@ rimosso.";
 /* Line in the records list for a record that a mod changes. %@ is the name of the mod. */
@@ -3211,9 +3211,9 @@
 /* Label of the field in the record detail that tells whether the USB extension claims the controller. */
 "ui.library.field.usbClaim" = "Estensione USB";
 /* Value of the USB extension field: the extension claims the controller. */
-"ui.library.claim.claimed" = "Rileva questo controller";
+"ui.library.claim.claimed" = "Gestisce questo controller";
 /* Value of the USB extension field: the extension does not claim the controller. */
-"ui.library.claim.unclaimed" = "Non rileva questo controller";
+"ui.library.claim.unclaimed" = "Non gestisce questo controller";
 /* Placeholder of the search field in the toolbar of the Library area. */
 "ui.library.search" = "Cerca";
 /* Title of the empty state in the Library area when the search matches nothing. */
@@ -3249,7 +3249,7 @@
 /* Name of the source of a record: a global file of the user. */
 "ui.library.layer.global" = "Il tuo file globale";
 /* Message in the detail pane of the Library area before an item is selected. */
-"ui.library.detail.empty" = "Scegli un record o una mod.";
+"ui.library.detail.empty" = "Scegli un record o un mod.";
 /* Message of the open panel in which the user picks a packet capture for a record test. */
 "ui.library.test.packets.pick" = "Scegli un’acquisizione di pacchetti.";
 /* Message of the open panel in which the user picks the file with the expected controller state for a record test. */
@@ -3281,7 +3281,7 @@
 /* Label of the row in the Access area for the local endpoint. The local endpoint is the socket where programs on this Mac connect. */
 "ui.access.endpoint" = "Endpoint locale";
 /* Help text of the endpoint switch. %@ is the path of the socket. */
-"ui.access.socket" = "Socket locale: %@";
+"ui.access.socket" = "Socket: %@";
 /* Context menu item that copies the path of the socket. */
 "ui.access.socket.copy" = "Copia percorso del socket";
 /* Confirm button of the alert that turns on the local endpoint. */
@@ -3289,7 +3289,7 @@
 /* Title of the alert that turns on the local endpoint. */
 "ui.access.enable.title" = "Attivare l’endpoint locale?";
 /* Message of the alert that turns on the local endpoint. The control scope allows a program to change controller state. */
-"ui.access.enable.message" = "I programmi a cui concedi l’accesso possono quindi leggere lo stato dei controller e, con l’ambito Controllo, modificarlo.";
+"ui.access.enable.message" = "I programmi a cui concedi l’accesso possono quindi leggere lo stato dei controller e, con l’ambito «Controllo», modificarlo.";
 /* Label of the row in the Access area for the WebSocket endpoint, where web pages connect. */
 "ui.access.web" = "WebSocket";
 /* Value of the WebSocket row when it is on. %1$@ is the address of the endpoint and %2$@ is the address where pages are served. */
@@ -3319,7 +3319,7 @@
 /* Heading of the list of programs that have access in the Access area. */
 "ui.access.grants" = "Programmi con accesso";
 /* Toolbar button in the Access area that starts the grant of access to a program. Keep the three dots. */
-"ui.access.grantProgram" = "Concedi a un programma…";
+"ui.access.grantProgram" = "Concedi l’accesso a un programma…";
 /* Button on a refused program that grants it access. */
 "ui.access.grant" = "Concedi";
 /* Message of the open panel in which the user picks a program or app to grant access. */
@@ -3333,7 +3333,7 @@
 /* Question of the alert that grants access. %1$@ is the identifier of the program, %2$@ is the description of its signer and %3$@ is the list of scopes. */
 "ui.access.grant.question" = "Concedere a %1$@ (%2$@) questi ambiti: %3$@?";
 /* Warning in the alert that grants access when the control scope is part of the grant. Rumble is vibration of the controller. */
-"ui.access.grant.controlWarning" = "L’ambito Controllo consente al programma di inviare output ai tuoi controller, come vibrazione e luci.";
+"ui.access.grant.controlWarning" = "L’ambito «Controllo» consente al programma di inviare output ai tuoi controller, come vibrazione e luci.";
 /* Warning line of the confirmation alert that grants access to a program that Apple signed. */
 "platform.macos.ui.access.grant.platformWarning" = "Questo programma è firmato da Apple. Qualsiasi programma che Apple firma con lo stesso identificatore otterrebbe l’accesso.";
 /* Button on a program or token that removes its access. */
@@ -3365,7 +3365,7 @@
 /* Error of the token creation sheet when the name or the scopes are missing. */
 "ui.access.token.incomplete" = "Un token richiede un nome e almeno un ambito.";
 /* Error of the token creation sheet when the user picks the control scope together with web origins. */
-"ui.access.token.originControl" = "Un token per pagine web non può avere l’ambito Controllo.";
+"ui.access.token.originControl" = "Un token per pagine web non può avere l’ambito «Controllo».";
 /* Title of the alert that creates a token. %@ is the name of the token. */
 "ui.access.token.title" = "Creare il token %@?";
 /* Question of the alert that creates a token without origins. %1$@ is the name of the token and %2$@ is the list of scopes. */
@@ -3399,7 +3399,7 @@
 /* Description of the signer of a program that has no certificate signature. */
 "ui.access.signer.adHoc" = "Non firmato";
 /* Name of the connection kind for a local socket. */
-"ui.access.transport.socket" = "Socket locale";
+"ui.access.transport.socket" = "Socket";
 /* Name of the connection kind for a WebSocket. */
 "ui.access.transport.web" = "WebSocket";
 /* Error of the Access area when the service is not running. OpenJoystickDriver is the product name. */
@@ -3591,7 +3591,7 @@
 /* Description under the automatic update check switch in the Updates section of the settings window. */
 "ui.settings.general.checkUpdatesAutomaticallyDescription" = "Cerca una versione più recente all’avvio dell’app.";
 /* Title of the alert that removes the command-line tool. */
-"ui.settings.commandLine.uninstallTitle" = "Disinstallare lo strumento a riga di comando?";
+"ui.settings.commandLine.uninstallTitle" = "Disinstallare lo strumento da riga di comando?";
 /* Message of the confirmation alert that removes the command line tool. %1$@ is the path of the link. The app stays installed. Terminal is the macOS app and ojd is the command name. */
 "platform.macos.ui.settings.commandLine.uninstallMessage" = "Questa operazione rimuove il collegamento in %1$@. L’app resta installata, ma ojd non viene più eseguito in Terminale finché non reinstalli lo strumento.";
 /* Confirm button of the alert that removes the command-line tool. */
@@ -3677,9 +3677,9 @@
 /* Note in the Command-Line Tool section when the target of the link cannot be read. %@ is the path of the link. Installing changes the link to point to this app. */
 "ui.settings.commandLine.toolLinkTargetUnreadable" = "%@ è un link la cui destinazione non può essere letta. L’installazione lo collega invece a questa app.";
 /* Message printed by 'ojd update check' when the installed version is newer than the latest release. %1$@ is the installed version and %2$@ is the latest release. */
-"cli.update.check.ahead" = "OpenJoystickDriver %1$@ è più recente dell'ultima release pubblicata (%2$@).";
+"cli.update.check.ahead" = "OpenJoystickDriver %1$@ è più recente dell’ultima release pubblicata (%2$@).";
 /* Result of the update check: the installed version is newer than the latest release. */
-"ui.settings.general.updateAhead" = "Più recente dell'ultima release";
+"ui.settings.general.updateAhead" = "Più recente dell’ultima release";
 /* Label of the installed version in the General pane of the settings window. */
 "ui.settings.general.version" = "Versione";
 /* Line in the Updates section of the settings window. %@ is the version of the latest release. */
@@ -3841,7 +3841,7 @@
 /* Message printed by 'ojd setting reset' when there is no settings file. %@ is the path where the file would be. */
 "cli.setting.reset.none" = "Non c’è alcun file delle impostazioni in %@.";
 /* Reason the controller has no virtual gamepad: the user turned the virtual output off. */
-"ui.controllers.publication.reason.outputDisabled" = "L'output virtuale è disattivato";
+"ui.controllers.publication.reason.outputDisabled" = "L’output virtuale è disattivato";
 /* Reason the controller has no virtual gamepad: macOS serves it as a gamepad. */
 "ui.controllers.publication.reason.systemGamepad" = "Il sistema lo gestisce come gamepad";
 /* Reason the controller has no virtual gamepad: macOS handles its input directly. */
@@ -3859,7 +3859,7 @@
 /* Publication state with its reason or failure, for example "Not published (Waiting for the first input)". %1$@ is the state and %2$@ the reason. */
 "ui.controllers.publication.withReason" = "%1$@ (%2$@)";
 /* Reason shown with a failed publication. %@ is the reason the last send failed. */
-"ui.controllers.publication.failedSend" = "L'ultimo invio non è riuscito: %@";
+"ui.controllers.publication.failedSend" = "L’ultimo invio non è riuscito: %@";
 /* Serving route with why it publishes nothing, for example "Output off (No virtual profile fits it)". %1$@ is the route and %2$@ the reason. */
 "ui.controllers.serving.withReason" = "%1$@ (%2$@)";
 /* Reason of failing input health: the controller sends no reports. */
@@ -3895,7 +3895,7 @@
 /* Result of opening the HID input of a controller: macOS denied access. */
 "ui.controllers.hidInputOwnership.accessDenied" = "Accesso negato";
 /* Result of opening the HID input of a controller: another app holds it. */
-"ui.controllers.hidInputOwnership.ownedByAnotherClient" = "In uso da un'altra app";
+"ui.controllers.hidInputOwnership.ownedByAnotherClient" = "In uso da un’altra app";
 /* Result of opening the HID input of a controller: opening failed. */
 "ui.controllers.hidInputOwnership.acquisitionFailed" = "Acquisizione non riuscita";
 /* Ownership summary: %1$@ is the discovery route, %2$@ the owner and %3$@ the HID input result. */

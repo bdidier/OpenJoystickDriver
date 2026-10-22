@@ -14,17 +14,17 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>d</string>
 			<key>one</key>
-			<string>コントローラが%d台接続されています</string>
+			<string>コントローラが %d 台接続されています</string>
 			<key>zero</key>
-			<string>コントローラが%d台接続されています</string>
+			<string>コントローラが %d 台接続されています</string>
 			<key>two</key>
-			<string>コントローラが%d台接続されています</string>
+			<string>コントローラが %d 台接続されています</string>
 			<key>few</key>
-			<string>コントローラが%d台接続されています</string>
+			<string>コントローラが %d 台接続されています</string>
 			<key>many</key>
-			<string>コントローラが%d台接続されています</string>
+			<string>コントローラが %d 台接続されています</string>
 			<key>other</key>
-			<string>コントローラが%d台接続されています</string>
+			<string>コントローラが %d 台接続されています</string>
 		</dict>
 	</dict>
 	<!-- Number of assignments (controller inputs mapped to actions) that a profile holds, shown in the profile list, the profile detail and the profile editor. %d is the number of assignments. The Japanese plural forms are a first draft that a native speaker reviews. -->
@@ -39,17 +39,17 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>d</string>
 			<key>one</key>
-			<string>割り当て %d件</string>
+			<string>割り当て %d 件</string>
 			<key>zero</key>
-			<string>割り当て %d件</string>
+			<string>割り当て %d 件</string>
 			<key>two</key>
-			<string>割り当て %d件</string>
+			<string>割り当て %d 件</string>
 			<key>few</key>
-			<string>割り当て %d件</string>
+			<string>割り当て %d 件</string>
 			<key>many</key>
-			<string>割り当て %d件</string>
+			<string>割り当て %d 件</string>
 			<key>other</key>
-			<string>割り当て %d件</string>
+			<string>割り当て %d 件</string>
 		</dict>
 	</dict>
 	<!-- Summary in the support diagnostics of how many virtual controller output devices OpenJoystickDriver publishes. %d is that number; the zero form says that none were detected. The Japanese plural forms are a first draft that a native speaker reviews. -->
@@ -66,15 +66,15 @@
 			<key>zero</key>
 			<string>コントローラ出力デバイスは検出されませんでした</string>
 			<key>one</key>
-			<string>コントローラ出力デバイスが%d台検出されました</string>
+			<string>コントローラ出力デバイスが %d 台検出されました</string>
 			<key>two</key>
-			<string>コントローラ出力デバイスが%d台検出されました</string>
+			<string>コントローラ出力デバイスが %d 台検出されました</string>
 			<key>few</key>
-			<string>コントローラ出力デバイスが%d台検出されました</string>
+			<string>コントローラ出力デバイスが %d 台検出されました</string>
 			<key>many</key>
-			<string>コントローラ出力デバイスが%d台検出されました</string>
+			<string>コントローラ出力デバイスが %d 台検出されました</string>
 			<key>other</key>
-			<string>コントローラ出力デバイスが%d台検出されました</string>
+			<string>コントローラ出力デバイスが %d 台検出されました</string>
 		</dict>
 	</dict>
 	<!-- Error line of ojd when a controller selector matches more than one controller, and of the automation service when a request names such a selector; the matching IDs follow on the next lines. %1$@ is the selector text that was given, %2$lld is the number of matching controllers. The Japanese plural forms are a first draft that a native speaker reviews. -->
@@ -134,7 +134,7 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>lld</string>
 			<key>other</key>
-			<string>サンプリングでは%lld個のサンプルが必要になります。サンプリング間隔を大きくしてください。</string>
+			<string>サンプリングでは %lld 個のサンプルが必要になります。サンプリング間隔を大きくしてください。</string>
 		</dict>
 	</dict>
 	<!-- Error in the soak test of the Developer settings when the chosen duration and sample interval would take too many samples. %lld is the number of samples. The Japanese plural forms are a first draft that a native speaker reviews. -->
@@ -149,7 +149,7 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>lld</string>
 			<key>other</key>
-			<string>この実行では%lld個のサンプルが必要になります。サンプリング間隔を大きくしてください。</string>
+			<string>この実行では %lld 個のサンプルが必要になります。サンプリング間隔を大きくしてください。</string>
 		</dict>
 	</dict>
 	<!-- Success line of ojd record test and of the test result in the Library when a controller record parses a packet capture to the expected state. %1$@ is the controller model, %2$lld is the number of input reports that were replayed. The Japanese plural forms are a first draft that a native speaker reviews. -->
@@ -209,7 +209,7 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>lld</string>
 			<key>other</key>
-			<string>停止 · %lldパケット</string>
+			<string>停止 · %lld パケット</string>
 		</dict>
 	</dict>
 </dict>

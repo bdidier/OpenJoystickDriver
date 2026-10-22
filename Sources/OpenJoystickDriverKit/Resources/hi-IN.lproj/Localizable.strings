@@ -203,7 +203,7 @@
 /* Value of the serving route in the Controllers area: macOS serves the controller and the driver passes the input through. */
 "platform.macos.ui.controllers.serving.nativePassThrough" = "macOS (सीधे पास किया गया)";
 /* Value of the serving route when OpenJoystickDriver serves a virtual gamepad. OpenJoystickDriver is the product name. */
-"ui.controllers.serving.virtualHID" = "OpenJoystickDriver (वर्चुअल गेमपैड)";
+"ui.controllers.serving.virtualHID" = "OpenJoystickDriver, वर्चुअल गेमपैड";
 /* Value of the serving route when the driver extension owns the controller. */
 "ui.controllers.serving.extensionOwned" = "ड्राइवर एक्सटेंशन";
 /* Value of the serving route when the user turned the output off. */
@@ -2102,11 +2102,11 @@
 /* Button in the Command-Line Tool section that installs the ojd link. ojd is the command name and stays as written. */
 "ui.settings.commandLine.toolInstall" = "कमांड-लाइन टूल इंस्टॉल करें";
 /* Status in the Command Line Tool section of the settings window when ojd is installed. %@ is the path of the link. Terminal is the macOS app and ojd is the command name. */
-"platform.macos.ui.settings.commandLine.toolInstalled" = "इंस्टॉल हो गया। Terminal में ojd चलाएँ; अनइंस्टॉल करने पर %@ हट जाता है।";
+"platform.macos.ui.settings.commandLine.toolInstalled" = "इंस्टॉल हो गया। टर्मिनल में ojd चलाएँ; अनइंस्टॉल करने पर %@ हट जाता है।";
 /* Note in the Command-Line Tool section when the link points to another program. %1$@ is the path of the link and %2$@ is the path it points to. Installing changes the link to point to this app. */
 "ui.settings.commandLine.toolLinkedElsewhere" = "%1$@ का संकेत %2$@ की ओर है। इंस्टॉल करने पर यह इसके बजाय इस ऐप से जुड़ जाएगा।";
 /* Description in the Command Line Tool section of the settings window before the tool is installed. %@ is the path where the link is created. Terminal is the macOS app and ojd is the command name. */
-"platform.macos.ui.settings.commandLine.toolNotInstalled" = "%@ को इस ऐप से जोड़ता है ताकि आप Terminal में ojd चला सकें। macOS एडमिनिस्ट्रेटर पासवर्ड माँगता है।";
+"platform.macos.ui.settings.commandLine.toolNotInstalled" = "%@ को इस ऐप से जोड़ता है ताकि आप टर्मिनल में ojd चला सकें। macOS एडमिनिस्ट्रेटर पासवर्ड माँगता है।";
 /* Button in the Command-Line Tool section that removes the ojd link. */
 "ui.settings.commandLine.toolUninstall" = "अनइंस्टॉल करें";
 /* One-line summary of 'ojd controller' in the command list and at the top of its help. */
@@ -2176,7 +2176,7 @@
 /* Error of the controller output commands when the controller lacks the feature. %1$@ is the controller name, %2$@ is the missing feature as a noun phrase and %3$@ is the session token for 'ojd controller show'. */
 "cli.controller.group.outputUnsupported" = "%1$@ में %2$@ नहीं है। यह देखने के लिए कि वह क्या सपोर्ट करता है, “ojd controller show %3$@” चलाएँ।";
 /* One-line summary of 'ojd controller claim' in the command list and at the top of its help. OpenJoystickDriver is the product name. To serve a model means to read its input and publish it as a virtual gamepad. */
-"cli.controller.claim.abstract" = "किसी कंट्रोलर मॉडल को OpenJoystickDriver से चलवाएँ।";
+"cli.controller.claim.abstract" = "किसी कंट्रोलर मॉडल को संभालने का काम OpenJoystickDriver को सौंपें।";
 /* Long description in the help of 'ojd controller claim'. server, ojd, VVVV-PPPP.json and the record terms stay as written. */
 "platform.macos.cli.controller.claim.discussion" = "मॉडल के लिए आपके रिकॉर्ड में, यानी रिकॉर्ड निर्देशिका की VVVV-PPPP.json में, server को ojd पर सेट करता है और रिकॉर्ड के अन्य फ़ील्ड बनाए रखता है। यह मॉडल के हर कंट्रोलर पर लागू होता है। चल रही सेवा इसे दोबारा जोड़े बिना लागू करती है। कंट्रोलर खोजने के लिए सेवा चाहिए। --dry-run कुछ नहीं लिखता। रॉ USB इस्तेमाल करने वाले कंट्रोलर के लिए, जिसे OpenJoystickDriver हमेशा चलाता है, या जिसे macOS नेटिव रूप से नहीं चलाता, E2023 के साथ 1 पर समाप्त होता है।";
 /* One-line summary of 'ojd controller release' in the command list and at the top of its help. */
@@ -2972,7 +2972,7 @@
 /* Title of the alert that installs a mod. %@ is the mod name. */
 "ui.library.mod.install.title" = "मॉड %@ इंस्टॉल करें?";
 /* Message of the alert that installs a mod. %1$@ is the mod name, %2$@ is its version and %3$@ is its author. OpenJoystickDriver is the product name. */
-"ui.library.mod.install.message" = "OpenJoystickDriver आपके इंस्टॉल किए मॉड में %1$@ %2$@ (निर्माता: %3$@) जोड़ता है।";
+"ui.library.mod.install.message" = "OpenJoystickDriver आपके इंस्टॉल किए मॉड में %3$@ द्वारा बनाया गया %1$@ %2$@ जोड़ता है।";
 /* Title of the alert that replaces an installed mod. %@ is the mod name. */
 "ui.library.mod.replace.title" = "मॉड %@ बदलें?";
 /* Message of the alert that replaces an installed mod. %1$@ is the mod name and %2$@ is the version that will be installed. */
@@ -3236,7 +3236,7 @@
 /* Item of the application menu that shows all apps again. It is the macOS name. */
 "ui.menu.app.showAll" = "सभी दिखाएँ";
 /* Item of the application menu that quits the app. %@ is the product name. */
-"ui.menu.app.quit" = "%@ छोड़ें";
+"ui.menu.app.quit" = "%@ से बाहर निकलें";
 /* Title of the File menu in the menu bar. */
 "ui.menu.file.title" = "फ़ाइल";
 /* Item of the File menu that imports a profile from a file. Keep the three dots. */
@@ -3256,7 +3256,7 @@
 /* Title of the Edit menu in the menu bar. */
 "ui.menu.edit.title" = "संपादित करें";
 /* Item of the Edit menu that undoes the last edit. */
-"ui.menu.edit.undo" = "पहले जैसा करें";
+"ui.menu.edit.undo" = "पूर्ववत करें";
 /* Item of the Edit menu that repeats an undone edit. */
 "ui.menu.edit.redo" = "फिर से करें";
 /* Item of the Edit menu that cuts the selection to the clipboard. */
@@ -3284,7 +3284,7 @@
 /* Title of the Controller menu in the menu bar. */
 "ui.menu.controller.title" = "कंट्रोलर";
 /* Button and menu item that stops the remapping of one controller. */
-"ui.menu.controller.suspend" = "स्थगित करें";
+"ui.menu.controller.suspend" = "निलंबित करें";
 /* Button and menu item that starts the remapping of one controller again. */
 "ui.menu.controller.resume" = "फिर शुरू करें";
 /* Item of the Controller menu that opens the input test of the selected controller. */
@@ -3380,7 +3380,7 @@
 /* Heading of the controllers section in the menu bar menu. */
 "ui.extra.controllers" = "कंट्रोलर";
 /* Menu item in the menu bar menu that stops the service from remapping. */
-"ui.extra.suspend" = "स्थगित करें";
+"ui.extra.suspend" = "निलंबित करें";
 /* Menu item in the menu bar menu that lets the service remap again. */
 "ui.extra.resume" = "फिर शुरू करें";
 /* Menu item in the menu bar menu that opens the input test of a controller. */
@@ -3710,7 +3710,7 @@
 /* Column title of the diagnostics table in the Activity area. The column names the check. */
 "ui.activity.column.check" = "जाँच";
 /* Column title of the diagnostics table in the Activity area. The column holds the details of the result. */
-"ui.activity.column.details" = "विवरण";
+"ui.activity.column.details" = "ब्योरा";
 /* Result of a check in the diagnostics table when the check passed. */
 "ui.activity.status.pass" = "सफल";
 /* Result of a check in the diagnostics table when the check found a problem that does not stop the app. */

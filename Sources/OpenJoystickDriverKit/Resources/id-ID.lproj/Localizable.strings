@@ -91,25 +91,25 @@
 /* Value of the notification row in the Access area when macOS has turned off banners for the app. */
 "ui.settings.notifications.notificationBannersOff" = "Spanduk mati";
 /* Note in the Notifications pane of the settings window when macOS has turned off banners for the app. System Settings is the name of the macOS app. */
-"platform.macos.ui.settings.notifications.notificationBannersOffDetail" = "Spanduk pemberitahuan dinonaktifkan di Pengaturan Sistem.";
+"platform.macos.ui.settings.notifications.notificationBannersOffDetail" = "Spanduk notifikasi dinonaktifkan di Pengaturan Sistem.";
 /* Status text in the Notifications pane of the settings window when macOS allows notifications. */
-"ui.settings.notifications.notificationDeliveryAllowed" = "Pengiriman pemberitahuan diizinkan.";
+"ui.settings.notifications.notificationDeliveryAllowed" = "Pengiriman notifikasi diizinkan.";
 /* Status text in the Notifications pane of the settings window when macOS allows banners, Notification Center and sounds. Notification Center is the macOS name. */
-"ui.settings.notifications.notificationDeliveryReady" = "Spanduk, Pusat Pemberitahuan, dan bunyi diaktifkan.";
+"ui.settings.notifications.notificationDeliveryReady" = "Spanduk, Pusat Notifikasi, dan bunyi diaktifkan.";
 /* Status text in the Notifications pane of the settings window when the user has not allowed notifications in macOS. */
-"ui.settings.notifications.notificationPermissionRequired" = "Izin diperlukan sebelum pemberitahuan dapat dikirim.";
+"ui.settings.notifications.notificationPermissionRequired" = "Izin diperlukan sebelum notifikasi dapat dikirim.";
 /* Value of the notification row in the Access area when macOS has turned off sounds for the app. */
 "ui.settings.notifications.notificationSoundOff" = "Bunyi mati";
 /* Note in the Notifications pane of the settings window when macOS has turned off sounds for the app. System Settings is the name of the macOS app. */
-"platform.macos.ui.settings.notifications.notificationSoundOffDetail" = "Bunyi pemberitahuan dinonaktifkan di Pengaturan Sistem.";
+"platform.macos.ui.settings.notifications.notificationSoundOffDetail" = "Bunyi notifikasi dinonaktifkan di Pengaturan Sistem.";
 /* Title of the switch in the Notifications pane of the settings window that plays a sound with a notification. */
 "ui.settings.notifications.notificationSounds" = "Putar bunyi";
 /* Name of the notification permission in the Access area. */
-"ui.settings.notifications.notifications" = "Pemberitahuan";
+"ui.settings.notifications.notifications" = "Notifikasi";
 /* Error shown when the user turns on notifications in the app while macOS denies them. System Settings is the name of the macOS app. OpenJoystickDriver is the product name. */
-"platform.macos.ui.settings.notifications.notificationsDenied" = "Pemberitahuan dinonaktifkan untuk OpenJoystickDriver di Pengaturan Sistem.";
+"platform.macos.ui.settings.notifications.notificationsDenied" = "Notifikasi dinonaktifkan untuk OpenJoystickDriver di Pengaturan Sistem.";
 /* Button in the Notifications pane of the settings window that opens the notification settings of macOS. */
-"ui.settings.general.openNotificationSettings" = "Buka Pengaturan Pemberitahuan";
+"ui.settings.general.openNotificationSettings" = "Buka Pengaturan Notifikasi";
 /* Button in a pane of the settings window that opens System Settings, the macOS app. */
 "ui.settings.general.openSystemSettings" = "Buka Pengaturan";
 /* Title of the switch in the Updates section of the settings window that includes prerelease versions in the update check. */
@@ -129,7 +129,7 @@
 /* Description under the Start at login switch in the General pane of the settings window. OpenJoystickDriver is the product name. */
 "ui.settings.general.startAtLoginDescription" = "Buka OpenJoystickDriver di bar menu saat Anda login.";
 /* Button in the Notifications pane of the settings window that sends a test notification. */
-"ui.settings.notifications.testNotification" = "Kirim Pemberitahuan Tes";
+"ui.settings.notifications.testNotification" = "Kirim Notifikasi Tes";
 /* Result of the update check: the installed version is the latest. */
 "ui.settings.general.upToDate" = "Sudah terbaru";
 /* Result of the update check: a newer version exists. */
@@ -197,13 +197,13 @@
 /* Entry of the server picker in the Controllers detail: macOS serves the controller itself. */
 "platform.macos.ui.controllers.server.system" = "macOS (bawaan)";
 /* Option of the server popup: OpenJoystickDriver serves the controller as a virtual gamepad. OpenJoystickDriver is the product name. */
-"ui.controllers.server.ojd" = "OpenJoystickDriver (pengontrol virtual)";
+"ui.controllers.server.ojd" = "OpenJoystickDriver (virtual)";
 /* Label of the serving route fact in the Controllers detail. The route is the way the input reaches games. */
 "ui.controllers.serving.label" = "Rute layanan";
 /* Value of the serving route in the Controllers area: macOS serves the controller and the driver passes the input through. */
 "platform.macos.ui.controllers.serving.nativePassThrough" = "macOS (diteruskan langsung)";
 /* Value of the serving route when OpenJoystickDriver serves a virtual gamepad. OpenJoystickDriver is the product name. */
-"ui.controllers.serving.virtualHID" = "OpenJoystickDriver (gamepad virtual)";
+"ui.controllers.serving.virtualHID" = "OpenJoystickDriver, gamepad virtual";
 /* Value of the serving route when the driver extension owns the controller. */
 "ui.controllers.serving.extensionOwned" = "Ekstensi driver";
 /* Value of the serving route when the user turned the output off. */
@@ -857,7 +857,7 @@
 /* Heading of the soak test section in the developer tools. A soak test measures the service over a long time. */
 "ui.developer.soakTest" = "Uji Ketahanan";
 /* Description of the soak test section in the developer tools. The test samples memory, file descriptors and CPU of the service. */
-"ui.developer.soakTestDescription" = "Mengambil sampel memori, deskriptor berkas, dan CPU layanan selama waktu yang dipilih, lalu menampilkan hasilnya.";
+"ui.developer.soakTestDescription" = "Mengambil sampel memori, deskriptor file, dan CPU layanan selama waktu yang dipilih, lalu menampilkan hasilnya.";
 /* Title of the button in the developer tools that opens the soak test sheet. Keep the three dots. */
 "ui.developer.soakTestOpen" = "Jalankan Uji Ketahanan…";
 /* Label of the duration field of the soak test sheet. The value is in seconds. */
@@ -1115,13 +1115,13 @@
 /* Body of the test notification that the Notifications pane sends. OpenJoystickDriver is the product name. */
 "notify.testBody" = "OpenJoystickDriver dapat memberi tahu Anda tentang aktivitas pengontrol dan profil.";
 /* Title of the test notification that the Notifications pane sends. */
-"notify.testTitle" = "Pemberitahuan siap";
+"notify.testTitle" = "Notifikasi siap";
 /* Failed outcome of the test notification when the app runs outside an app bundle and has no notification center. The inline error of the Settings window shows it for Send Test Notification and for a notification permission request, and `ojd setting test-notification` prints it as the reason of E2006. */
-"ui.settings.notifications.noNotificationCenter" = "Pemberitahuan tidak tersedia karena OpenJoystickDriver tidak berjalan dari bundel app-nya. Buka app OpenJoystickDriver, lalu coba lagi.";
+"ui.settings.notifications.noNotificationCenter" = "Notifikasi tidak tersedia karena OpenJoystickDriver tidak berjalan dari bundel app-nya. Buka app OpenJoystickDriver, lalu coba lagi.";
 /* Error message in the inline error of the Settings window when the service no longer waits for the app's report on a test notification: the ojd request that asked for it ended, or its answer time ran out. */
-"ui.settings.notifications.testReportLost" = "Permintaan ojd berakhir atau waktu jawabnya habis sebelum laporan tentang pemberitahuan tes tiba.";
+"ui.settings.notifications.testReportLost" = "Permintaan ojd berakhir atau waktu jawabnya habis sebelum laporan tentang notifikasi tes tiba.";
 /* Error text the service returns to an app that reports the outcome noAnswer for a test notification, which only the service decides. The inline error of the Settings window shows it. shown, denied, failed and noAnswer are outcome names and stay as written. */
-"ui.settings.notifications.testReportNoAnswer" = "Laporan pemberitahuan tes harus shown, denied, atau failed; hanya layanan yang menentukan noAnswer.";
+"ui.settings.notifications.testReportNoAnswer" = "Laporan notifikasi tes harus shown, denied, atau failed; hanya layanan yang menentukan noAnswer.";
 /* Label of the popup in the profile editor that sets what the virtual gamepad of the profile publishes. */
 "ui.profiles.virtualOutput" = "Gamepad virtual";
 /* Option of the virtual output popup: the profile publishes no virtual gamepad. */
@@ -1554,7 +1554,7 @@
 "ui.profiles.resetLibraryAction" = "Cadangkan & Atur Ulang";
 
 /* Label of the row in the Controllers detail that tells that the session of the controller is suspended. The row holds the Resume button. */
-"ui.controllers.suspended" = "Ditangguhkan";
+"ui.controllers.suspended" = "Dijeda";
 /* Error shown when the service refuses to change the session of a controller. */
 "ui.error.controllerSessionChangeRejected" = "Sesi pengontrol tidak dapat diubah.";
 
@@ -1868,17 +1868,17 @@
 /* Progress line of 'ojd diagnose --soak'. %@ is the sampling duration, such as 30 seconds. Keep the three dots. */
 "cli.diagnose.group.soakProgress" = "Mengambil sampel layanan selama %@…";
 /* Verdict of the runtime health check of 'ojd diagnose --soak' when the physical footprint passed its limit. %1$.1f is the resident size in MiB, %2$.1f is the footprint in MiB, %3$lld is the number of open file descriptors, %4$.1f is the CPU load in percent and %5$.0f is the sampling time in seconds. The double percent sign prints one percent sign. */
-"cli.diagnose.group.soakVerdictFootprintLimit" = "Batas jejak memori terlampaui: ukuran residen %1$.1f MiB, jejak memori %2$.1f MiB, deskriptor berkas %3$lld, CPU %4$.1f%% selama %5$.0f detik";
+"cli.diagnose.group.soakVerdictFootprintLimit" = "Batas jejak memori terlampaui: ukuran residen %1$.1f MiB, jejak memori %2$.1f MiB, deskriptor file %3$lld, CPU %4$.1f%% selama %5$.0f detik";
 /* Verdict of the runtime health check of 'ojd diagnose --soak' when too few samples were taken. %1$.1f is the resident size in MiB, %2$.1f is the footprint in MiB, %3$lld is the number of open file descriptors, %4$.1f is the CPU load in percent and %5$.0f is the sampling time in seconds. The double percent sign prints one percent sign. */
-"cli.diagnose.group.soakVerdictInsufficientData" = "Data tidak cukup: ukuran residen %1$.1f MiB, jejak memori %2$.1f MiB, deskriptor berkas %3$lld, CPU %4$.1f%% selama %5$.0f detik";
+"cli.diagnose.group.soakVerdictInsufficientData" = "Data tidak cukup: ukuran residen %1$.1f MiB, jejak memori %2$.1f MiB, deskriptor file %3$lld, CPU %4$.1f%% selama %5$.0f detik";
 /* Verdict of the runtime health check of 'ojd diagnose --soak' when the memory of the service grew during sampling. %1$.1f is the resident size in MiB, %2$.1f is the footprint in MiB, %3$lld is the number of open file descriptors, %4$.1f is the CPU load in percent and %5$.0f is the sampling time in seconds. The double percent sign prints one percent sign. */
-"cli.diagnose.group.soakVerdictMemoryGrowth" = "Pertumbuhan memori terdeteksi: ukuran residen %1$.1f MiB, jejak memori %2$.1f MiB, deskriptor berkas %3$lld, CPU %4$.1f%% selama %5$.0f detik";
+"cli.diagnose.group.soakVerdictMemoryGrowth" = "Pertumbuhan memori terdeteksi: ukuran residen %1$.1f MiB, jejak memori %2$.1f MiB, deskriptor file %3$lld, CPU %4$.1f%% selama %5$.0f detik";
 /* Verdict of the runtime health check of 'ojd diagnose --soak' when the resident size passed its limit. %1$.1f is the resident size in MiB, %2$.1f is the footprint in MiB, %3$lld is the number of open file descriptors, %4$.1f is the CPU load in percent and %5$.0f is the sampling time in seconds. The double percent sign prints one percent sign. */
-"cli.diagnose.group.soakVerdictResidentLimit" = "Batas ukuran residen terlampaui: ukuran residen %1$.1f MiB, jejak memori %2$.1f MiB, deskriptor berkas %3$lld, CPU %4$.1f%% selama %5$.0f detik";
+"cli.diagnose.group.soakVerdictResidentLimit" = "Batas ukuran residen terlampaui: ukuran residen %1$.1f MiB, jejak memori %2$.1f MiB, deskriptor file %3$lld, CPU %4$.1f%% selama %5$.0f detik";
 /* Verdict of the runtime health check of 'ojd diagnose --soak' when resources such as file descriptors grew during sampling. %1$.1f is the resident size in MiB, %2$.1f is the footprint in MiB, %3$lld is the number of open file descriptors, %4$.1f is the CPU load in percent and %5$.0f is the sampling time in seconds. The double percent sign prints one percent sign. */
-"cli.diagnose.group.soakVerdictResourceGrowth" = "Pertumbuhan sumber daya terdeteksi: ukuran residen %1$.1f MiB, jejak memori %2$.1f MiB, deskriptor berkas %3$lld, CPU %4$.1f%% selama %5$.0f detik";
+"cli.diagnose.group.soakVerdictResourceGrowth" = "Pertumbuhan sumber daya terdeteksi: ukuran residen %1$.1f MiB, jejak memori %2$.1f MiB, deskriptor file %3$lld, CPU %4$.1f%% selama %5$.0f detik";
 /* Verdict of the runtime health check of 'ojd diagnose --soak' when nothing grew during sampling. %1$.1f is the resident size in MiB, %2$.1f is the footprint in MiB, %3$lld is the number of open file descriptors, %4$.1f is the CPU load in percent and %5$.0f is the sampling time in seconds. The double percent sign prints one percent sign. */
-"cli.diagnose.group.soakVerdictStable" = "Stabil: ukuran residen %1$.1f MiB, jejak memori %2$.1f MiB, deskriptor berkas %3$lld, CPU %4$.1f%% selama %5$.0f detik";
+"cli.diagnose.group.soakVerdictStable" = "Stabil: ukuran residen %1$.1f MiB, jejak memori %2$.1f MiB, deskriptor file %3$lld, CPU %4$.1f%% selama %5$.0f detik";
 /* Error of 'ojd diagnose' when --soak is out of range. --soak stays as written. The range is fixed. */
 "cli.diagnose.group.soakRange" = "--soak harus antara 1 dan 86400 detik.";
 /* Detail of the USB check of 'ojd diagnose' when the scan fails. %@ is the reason from macOS. Input Monitoring is written as macOS names it. OpenJoystickDriver is the product name. */
@@ -2050,15 +2050,15 @@
 /* One-line summary of 'ojd setting list' in the command list and at the top of its help. */
 "cli.setting.list.abstract" = "Tampilkan daftar setiap pengaturan dan nilainya.";
 /* Help text of the notificationSounds setting in 'ojd setting list'. */
-"cli.setting.group.notificationSounds" = "Putar bunyi dengan pemberitahuan.";
+"cli.setting.group.notificationSounds" = "Putar bunyi dengan notifikasi.";
 /* Help text of the notifyControllerConnected setting in 'ojd setting list'. */
-"cli.setting.group.notifyControllerConnected" = "Beri pemberitahuan saat pengontrol terhubung atau perlu perhatian.";
+"cli.setting.group.notifyControllerConnected" = "Beri notifikasi saat pengontrol terhubung atau perlu perhatian.";
 /* Help text of the notifyControllerDisconnected setting in 'ojd setting list'. */
-"cli.setting.group.notifyControllerDisconnected" = "Beri pemberitahuan saat pengontrol terputus.";
+"cli.setting.group.notifyControllerDisconnected" = "Beri notifikasi saat pengontrol terputus.";
 /* Help text of the notifyProfileActivated setting in 'ojd setting list'. */
-"cli.setting.group.notifyProfileActivated" = "Beri pemberitahuan saat profil diaktifkan atau dialihkan.";
+"cli.setting.group.notifyProfileActivated" = "Beri notifikasi saat profil diaktifkan atau dialihkan.";
 /* Help text of the notifyProfileDeactivated setting in 'ojd setting list'. */
-"cli.setting.group.notifyProfileDeactivated" = "Beri pemberitahuan saat profil aktif dimatikan.";
+"cli.setting.group.notifyProfileDeactivated" = "Beri notifikasi saat profil aktif dimatikan.";
 /* One-line summary of 'ojd setting set' in the command list and at the top of its help. */
 "cli.setting.set.abstract" = "Ubah satu pengaturan.";
 /* Long description in the help of 'ojd setting set'. true, false, launchAtLogin and System Settings stay as written. */
@@ -2108,7 +2108,7 @@
 /* Description in the Command Line Tool section of the settings window before the tool is installed. %@ is the path where the link is created. Terminal is the macOS app and ojd is the command name. */
 "platform.macos.ui.settings.commandLine.toolNotInstalled" = "Menautkan %@ ke app ini agar Anda dapat menjalankan ojd di Terminal. macOS meminta kata sandi administrator.";
 /* Button in the Command-Line Tool section that removes the ojd link. */
-"ui.settings.commandLine.toolUninstall" = "Copot";
+"ui.settings.commandLine.toolUninstall" = "Copot Pemasangan";
 /* One-line summary of 'ojd controller' in the command list and at the top of its help. */
 "cli.controller.group.abstract" = "Tampilkan daftar, periksa, tes, dan kendalikan pengontrol yang terhubung.";
 /* Help text of the CONTROLLER argument shared by the 'ojd controller' commands. VVVV:PPPP is the vendor ID and product ID in hexadecimal and stays as written. */
@@ -2162,7 +2162,7 @@
 /* Message printed by 'ojd controller list' when no controller is connected. */
 "cli.controller.list.empty" = "Tidak ada pengontrol yang terhubung.";
 /* Marker appended to the line of a suspended controller in 'ojd controller list'. Keep the parentheses. */
-"cli.controller.list.suspended" = "(ditangguhkan)";
+"cli.controller.list.suspended" = "(dijeda)";
 /* Help text of the --duration option of 'ojd controller watch' and 'ojd controller capture'. Control-C is the key combination that stops a program in a terminal. */
 "cli.controller.group.optionDuration" = "Berhenti setelah sekian detik ini. Tanpa ini, berjalan hingga Anda menekan Control-C.";
 /* Error of the controller output commands when the controller rejects a command. %1$@ is the controller name, %2$@ is the command name and %3$@ is the outcome in kebab case, which stays as written. The command in quotes stays as written. */
@@ -2406,7 +2406,7 @@
 /* One-line summary of 'ojd virtual export-mapping' in the command list and at the top of its help. SDL is a game controller library and W3C names the web standard gamepad layout; both stay as written. */
 "cli.virtual.exportMapping.abstract" = "Cetak pemetaan SDL atau deskripsi W3C yang diturunkan oleh profil gamepad virtual.";
 /* Long description in the help of 'ojd virtual export-mapping'. SDL, W3C and JSON stay as written. */
-"cli.virtual.exportMapping.discussion" = "SDL mencetak satu baris pemetaan per profil, yang merupakan berkas pemetaan SDL yang valid. W3C mencetak deskripsi tata letak standar sebagai JSON. Keduanya diturunkan dari deskriptor laporan profil.";
+"cli.virtual.exportMapping.discussion" = "SDL mencetak satu baris pemetaan per profil, yang merupakan file pemetaan SDL yang valid. W3C mencetak deskripsi tata letak standar sebagai JSON. Keduanya diturunkan dari deskriptor laporan profil.";
 /* Help text of the format option of 'ojd virtual export-mapping'. sdl and w3c are values the user types and stay as written. */
 "cli.virtual.exportMapping.format" = "Format yang dicetak: sdl atau w3c.";
 /* Help text of the profile argument of 'ojd virtual export-mapping'. */
@@ -2432,15 +2432,15 @@
 /* Long description in the help of 'ojd virtual launch'. SDL_GAMECONTROLLERCONFIG and .app stay as written. */
 "cli.virtual.launch.discussion" = "Menetapkan SDL_GAMECONTROLLERCONFIG ke pemetaan gamepad virtual dari setiap pengontrol yang terhubung, sehingga SDL di dalam program mencantumkannya. Nilai yang sudah ditetapkan tetap di awal dan pemetaan mengikutinya. Sebuah .app menjalankan eksekutabel utamanya. Program tetap memakai terminal ini. Menghentikan ojd menghentikan program, dan ojd keluar dengan status program.";
 /* Error of 'ojd virtual launch' when the program does not start. %1$@ is the program the user gave and %2$@ is the reason, one of the short reasons for a missing executable, a path without a file and a name not on PATH. */
-"cli.virtual.launch.errorFailed" = "%1$@ tidak dimulai (%2$@). Periksa bahwa itu berkas yang dapat dieksekusi atau sebuah app, dan Anda boleh menjalankannya.";
+"cli.virtual.launch.errorFailed" = "%1$@ tidak dimulai (%2$@). Periksa bahwa itu file yang dapat dieksekusi atau sebuah app, dan Anda boleh menjalankannya.";
 /* Short reason inside the failure message of 'ojd virtual launch' when an app bundle holds no executable. It fills %2$@ of that message and starts in lowercase. */
 "cli.virtual.launch.errorNoExecutable" = "app tidak memiliki eksekutabel";
 /* Error of 'ojd virtual launch' when no connected controller has a virtual gamepad. The command in quotes stays as written. */
-"cli.virtual.launch.errorNoGamepad" = "Tidak ada pengontrol terhubung yang memiliki gamepad virtual, jadi tidak ada pemetaan yang ditetapkan. Hubungkan pengontrol dan periksa 'ojd virtual show'.";
+"cli.virtual.launch.errorNoGamepad" = "Tidak ada pengontrol terhubung yang memiliki gamepad virtual, jadi tidak ada pemetaan yang ditetapkan. Hubungkan pengontrol dan periksa “ojd virtual show”.";
 /* Error of 'ojd virtual launch' when no program is given. The example command in quotes stays as written. */
-"cli.virtual.launch.errorNoProgram" = "Berikan program yang dijalankan, misalnya 'ojd virtual launch ./game'.";
+"cli.virtual.launch.errorNoProgram" = "Berikan program yang dijalankan, misalnya “ojd virtual launch ./game”.";
 /* Short reason inside the failure message of 'ojd virtual launch' when the path holds no executable file. It fills %2$@ of that message and starts in lowercase. */
-"cli.virtual.launch.errorNotExecutable" = "tidak ada berkas eksekutabel di jalur itu";
+"cli.virtual.launch.errorNotExecutable" = "tidak ada file eksekutabel di jalur itu";
 /* Short reason inside the failure message of 'ojd virtual launch' when no program of the name is on PATH. It fills %2$@ of that message and starts in lowercase. PATH stays as written. */
 "cli.virtual.launch.errorNotFound" = "tidak ada program dengan nama itu di PATH";
 /* Error of 'ojd virtual launch' when --json or --plain is given. Both option names stay as written. */
@@ -2600,15 +2600,15 @@
 /* Text of error E2032, printed when the control scope is granted to a token that has origins. */
 "error.E2032.message" = "Token dengan origin tidak boleh punya cakupan control, karena halaman tidak boleh menggerakkan gamepad virtual. Berikan control ke token tanpa origin.";
 /* Text of error E2033, printed when 'ojd virtual launch' cannot start the program. */
-"error.E2033.message" = "Program tidak dapat dimulai. Periksa bahwa jalurnya menunjuk berkas yang dapat dieksekusi atau sebuah app, dan Anda boleh menjalankannya.";
+"error.E2033.message" = "Program tidak dapat dimulai. Periksa bahwa jalurnya menunjuk file yang dapat dieksekusi atau sebuah app, dan Anda boleh menjalankannya.";
 /* Error E2034, shown in the app or the CLI when the service no longer accepts requests. */
 "error.E2034.message" = "Layanan berhenti menerima permintaan. Tutup OpenJoystickDriver, buka lagi, lalu coba lagi.";
 /* Error E2035, shown in the app or the CLI when the file that records why the request listener stopped is unusable. */
 "error.E2035.message" = "File yang mencatat alasan pendengar permintaan berhenti tidak dapat digunakan. Hapus file itu, lalu buka OpenJoystickDriver lagi.";
 /* Error E2036, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
-"error.E2036.message" = "Tidak ada app OpenJoystickDriver yang menjawab pemberitahuan tes tepat waktu. Pastikan app berjalan, lalu coba lagi.";
+"error.E2036.message" = "Tidak ada app OpenJoystickDriver yang menjawab notifikasi tes tepat waktu. Pastikan app berjalan, lalu coba lagi.";
 /* Error E2037, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */
-"error.E2037.message" = "Pemberitahuan tidak diizinkan untuk OpenJoystickDriver. Izinkan di pengaturan pemberitahuan sistem, lalu coba lagi.";
+"error.E2037.message" = "Notifikasi tidak diizinkan untuk OpenJoystickDriver. Izinkan di pengaturan notifikasi sistem, lalu coba lagi.";
 /* Note about a controller record whose raw USB family the USB extension cannot claim because Apple signs its product list. OJD is the short product name. */
 "platform.macos.cli.record.group.usbNotClaimed" = "Famili ini menggunakan USB mentah, dan ekstensi USB tidak dapat mengklaim pengontrol ini, karena daftar produknya ditandatangani Apple. OJD hanya menjangkaunya melalui akses USB langsung, jika macOS mengizinkan.";
 /* Note about a Switch 2 controller record that connects over USB only. bluetoothLE.vibrationCharacteristic is a field of the record and stays as written. */
@@ -2926,7 +2926,7 @@
 /* Title of the empty state in the records list of the Library area. */
 "ui.library.records.empty.title" = "Tidak ada catatan terinstal";
 /* Name of the source of a record: a file that the user installed. It is shown next to the record. */
-"ui.library.layer.user" = "Berkas Anda";
+"ui.library.layer.user" = "File Anda";
 /* Name of the source of a record: a mod package added it. */
 "ui.library.layer.package" = "Dari mod";
 /* Notice after a record check passed. %1$@ is the file name and %2$@ is the controller model. */
@@ -2948,11 +2948,11 @@
 /* Title of the alert that replaces an installed record. %@ is the controller model. */
 "ui.library.record.replace.title" = "Ganti catatan untuk %@?";
 /* Message of the alert that replaces an installed record. %@ is the file name. */
-"ui.library.record.replace.message" = "Berkas catatan bernama %@ sudah terinstal. Mengganti akan menimpa berkas tersebut.";
+"ui.library.record.replace.message" = "File catatan bernama %@ sudah terinstal. Mengganti akan menimpa file tersebut.";
 /* Title of the alert that removes an installed record. %@ is the controller model. */
 "ui.library.record.remove.title" = "Hapus catatan untuk %@?";
 /* Message of the alert that removes an installed record. OpenJoystickDriver is the product name. */
-"ui.library.record.remove.message" = "OpenJoystickDriver menghapus berkas catatan dari folder catatan pengontrol Anda. Pengontrol yang memakai catatan ini tidak lagi dikenali.";
+"ui.library.record.remove.message" = "OpenJoystickDriver menghapus file catatan dari folder catatan pengontrol Anda. Pengontrol yang memakai catatan ini tidak lagi dikenali.";
 /* Notice after a record is removed. %@ is the controller model. */
 "ui.library.record.removed" = "Catatan untuk %@ telah dihapus.";
 /* Error when a record file cannot be removed. %1$@ is the file name and %2$@ is the reason. */
@@ -2976,7 +2976,7 @@
 /* Title of the alert that replaces an installed mod. %@ is the mod name. */
 "ui.library.mod.replace.title" = "Ganti mod %@?";
 /* Message of the alert that replaces an installed mod. %1$@ is the mod name and %2$@ is the version that will be installed. */
-"ui.library.mod.replace.message" = "%1$@ sudah terinstal. Mengganti akan menghapus berkas terinstal dan menginstal versi %2$@.";
+"ui.library.mod.replace.message" = "%1$@ sudah terinstal. Mengganti akan menghapus file terinstal dan menginstal versi %2$@.";
 /* Title of the alert that removes a mod. %@ is the mod name. */
 "ui.library.mod.remove.title" = "Hapus mod %@?";
 /* Message of the alert that removes a mod. OpenJoystickDriver is the product name. Personas are the identities that a virtual gamepad can show. */
@@ -2998,7 +2998,7 @@
 /* Toolbar button in the Library area that runs a record against a packet capture. Keep the three dots. */
 "ui.library.testRecord" = "Uji Catatan…";
 /* Value of the status of a library item that is installed. */
-"ui.library.installed" = "Terpasang";
+"ui.library.installed" = "Terinstal";
 /* Badge on a library item that ships with the app. */
 "ui.library.builtIn" = "Bawaan";
 /* Label of the field in the record detail that holds the controller model. */
@@ -3008,7 +3008,7 @@
 /* Label of the field in the record detail that holds where the record comes from. */
 "ui.library.field.source" = "Sumber";
 /* Label of the field in the record detail that holds the path of the record file. */
-"ui.library.field.file" = "Jalur berkas";
+"ui.library.field.file" = "Jalur file";
 /* Label of the field in the record detail that holds how the controller connects, for example USB or Bluetooth. */
 "ui.library.field.transport" = "Transpor";
 /* Label of the field in the mod detail that holds the version. */
@@ -3018,13 +3018,13 @@
 /* Heading of the section in the record detail that lists the fields. */
 "ui.library.section.fields" = "Bidang";
 /* Heading of the section in the mod detail that lists the files. */
-"ui.library.section.files" = "Berkas";
+"ui.library.section.files" = "File";
 /* Heading of the section in the record detail that shows the result of a test. */
 "ui.library.section.testResult" = "Hasil uji";
 /* Name of the source of a record: the record ships with the app. */
 "ui.library.layer.driver" = "Default";
 /* Name of the source of a record: a global file of the user. */
-"ui.library.layer.global" = "Berkas global Anda";
+"ui.library.layer.global" = "File global Anda";
 /* Message in the detail pane of the Library area before an item is selected. */
 "ui.library.detail.empty" = "Pilih catatan atau mod.";
 /* Message of the open panel in which the user picks a packet capture for a record test. */
@@ -3238,7 +3238,7 @@
 /* Item of the application menu that quits the app. %@ is the product name. */
 "ui.menu.app.quit" = "Keluar dari %@";
 /* Title of the File menu in the menu bar. */
-"ui.menu.file.title" = "Berkas";
+"ui.menu.file.title" = "File";
 /* Item of the File menu that imports a profile from a file. Keep the three dots. */
 "ui.menu.file.importProfile" = "Impor Profil…";
 /* Item of the File menu that exports a profile to a file. Keep the three dots. */
@@ -3252,13 +3252,13 @@
 /* Item of the File menu that saves the Activity log to a file. Keep the three dots. */
 "ui.menu.file.saveActivityLog" = "Simpan Log Aktivitas…";
 /* Title of the alert shown when saving a file from the File menu fails. */
-"ui.menu.file.saveFailed" = "Berkas tidak dapat disimpan";
+"ui.menu.file.saveFailed" = "File tidak dapat disimpan";
 /* Title of the Edit menu in the menu bar. */
-"ui.menu.edit.title" = "Sunting";
+"ui.menu.edit.title" = "Edit";
 /* Item of the Edit menu that undoes the last edit. */
-"ui.menu.edit.undo" = "Urung";
+"ui.menu.edit.undo" = "Urungkan";
 /* Item of the Edit menu that repeats an undone edit. */
-"ui.menu.edit.redo" = "Ulang";
+"ui.menu.edit.redo" = "Ulangi";
 /* Item of the Edit menu that cuts the selection to the clipboard. */
 "ui.menu.edit.cut" = "Potong";
 /* Item of the Edit menu that copies the selection to the clipboard. */
@@ -3270,7 +3270,7 @@
 /* Title of the View menu in the menu bar. */
 "ui.menu.view.title" = "Tampilan";
 /* Item of the View menu that makes the window full screen. */
-"ui.menu.view.enterFullScreen" = "Masuki Layar Penuh";
+"ui.menu.view.enterFullScreen" = "Masuk ke Layar Penuh";
 /* Item of the View menu that leaves full screen. It replaces Enter Full Screen while the window is full screen. */
 "ui.menu.view.exitFullScreen" = "Keluar dari Layar Penuh";
 /* Item of the View menu that shows the sidebar. */
@@ -3332,7 +3332,7 @@
 /* Title of the alert shown when the support report cannot be copied. */
 "ui.menu.copySupportReport.failed" = "Laporan dukungan tidak dapat disalin";
 /* Message of the alert shown when the support report cannot be copied. The user saves it to a file with the File menu. */
-"ui.menu.copySupportReport.failedDetail" = "Laporan tidak dapat dikumpulkan. Simpan ke berkas sebagai gantinya.";
+"ui.menu.copySupportReport.failedDetail" = "Laporan tidak dapat dikumpulkan. Simpan ke file sebagai gantinya.";
 /* Title of the Controllers item in the sidebar of the main window and in the window title when it is selected. */
 "ui.sidebar.controllers.title" = "Pengontrol";
 /* Title of the Profiles item in the sidebar of the main window and in the window title when it is selected. */
@@ -3426,7 +3426,7 @@
 /* Detail line of a row in the Access area with three parts. %1$@, %2$@ and %3$@ are the parts, for example the signer, the scopes and the reason of a refusal. The dots between them separate the parts and may change. */
 "ui.access.detail.triple" = "%1$@ · %2$@ · %3$@";
 /* Error shown when the app cannot find the executable of a refused program. %@ is the identifier of the program. */
-"ui.access.grant.noPath" = "OpenJoystickDriver tidak dapat membaca berkas yang dapat dijalankan milik %@, sehingga tidak dapat memberinya akses.";
+"ui.access.grant.noPath" = "OpenJoystickDriver tidak dapat membaca file yang dapat dijalankan milik %@, sehingga tidak dapat memberinya akses.";
 /* Line of the alert that turns on the WebSocket when a port is saved. */
 "ui.access.web.enable.savedPort" = "Titik akhir web mempertahankan port yang tersimpan.";
 /* Detail line of a record in the records list. %1$@ and %2$@ are two facts about the record. The dot between them separates the facts and may change. */
@@ -3436,7 +3436,7 @@
 /* Message of the alert shown when a menu action needs the profile editor and the editor saves a change. */
 "ui.extra.profileEditorBusy" = "Editor profil sedang menyimpan atau menerapkan perubahan. Coba lagi setelah selesai.";
 /* Message of the open panel in which the user picks a controller record file or a mod folder. */
-"ui.library.recordOrMod.pick" = "Pilih berkas catatan pengontrol atau folder mod.";
+"ui.library.recordOrMod.pick" = "Pilih file catatan pengontrol atau folder mod.";
 /* Title of the alert shown when turning on a profile from the menu fails. */
 "ui.menu.profile.activateFailed" = "Profil tidak dapat diaktifkan";
 /* Message of the alert shown when the profile changed elsewhere during the turn on. */
@@ -3662,17 +3662,17 @@
 /* Text of error E5001, printed when a document has no apiVersion or an unsupported one. apiVersion stays as written. OpenJoystickDriver is the product name. */
 "error.E5001.message" = "Dokumen tidak memiliki apiVersion, atau apiVersion-nya tidak didukung oleh versi OpenJoystickDriver ini. Ubah dokumen ke apiVersion yang didukung seperti yang disebutkan pesan, lalu jalankan perintah lagi.";
 /* Text of error E5002, printed when a protocol description is invalid against its schema. */
-"error.E5002.message" = "Deskripsi protokol tidak valid. Periksa berkas dengan skema protocol-description dan perbaiki kolom yang disebut pesan.";
+"error.E5002.message" = "Deskripsi protokol tidak valid. Periksa file dengan skema protocol-description dan perbaiki kolom yang disebut pesan.";
 /* Text of error E5003, printed when the family in a protocol description differs from its file name. */
-"error.E5003.message" = "Deskripsi protokol menyebut keluarga yang berbeda dari nama berkasnya. Beri nama berkas sesuai keluarganya.";
+"error.E5003.message" = "Deskripsi protokol menyebut keluarga yang berbeda dari nama berkasnya. Beri nama file sesuai keluarganya.";
 /* Text of error E5004, printed when a protocol description lists a variant that its family lacks. */
 "error.E5004.message" = "Deskripsi protokol mencantumkan varian yang tidak dimiliki keluarganya. Gunakan salah satu varian keluarga tersebut.";
 /* Text of error E5005, printed when the access file is damaged. AccessGrants.json is a file name and stays as written. */
 "error.E5005.message" = "File akses AccessGrants.json rusak. Perbaiki atau hapus file itu, lalu berikan akses lagi.";
 /* Text of error E5006, printed when the key file of the unit IDs cannot be read or has the wrong size. PortKeyInstallation.key is a file name and stays as written. OpenJoystickDriver is the product name. */
-"error.E5006.message" = "Berkas kunci ID perangkat, PortKeyInstallation.key, tidak dapat dibaca atau ukurannya bukan 32 byte. Pulihkan berkas dari cadangan. Jika Anda menghapusnya, OpenJoystickDriver membuat kunci baru dan setiap ID perangkat berubah.";
+"error.E5006.message" = "File kunci ID perangkat, PortKeyInstallation.key, tidak dapat dibaca atau ukurannya bukan 32 byte. Pulihkan file dari cadangan. Jika Anda menghapusnya, OpenJoystickDriver membuat kunci baru dan setiap ID perangkat berubah.";
 /* Error E5007, shown when a controller record or patch fails its schema; the message names the field. */
-"error.E5007.message" = "Catatan pengontrol atau patch tidak valid. Periksa berkas dengan skemanya dan perbaiki kolom yang disebut pesan.";
+"error.E5007.message" = "Catatan pengontrol atau patch tidak valid. Periksa file dengan skemanya dan perbaiki kolom yang disebut pesan.";
 /* Error text with the error code. %1$@ is the message and %2$@ is the code, for example E2011. The code is in parentheses. */
 "ui.error.withCode" = "%1$@ (%2$@)";
 /* Message printed by 'ojd update check' when the installed version is newer than the latest release. %1$@ is the installed version and %2$@ is the latest release. */
@@ -3935,8 +3935,8 @@
 /* Reason the listener failure file cannot be used: the system would not say whether the process that wrote it runs. %1$@ is the system's reason, %2$@ the error number. Fills the reason in the error E2035 message. */
 "status.listenerFailure.processCheckFailed" = "tidak dapat memeriksa apakah proses layanan berjalan: %1$@ (nomor kesalahan %2$@)";
 /* One-line summary of 'ojd setting test-notification' in the command list and at the top of its help. The notification appears in the OpenJoystickDriver app. */
-"cli.setting.testNotification.abstract" = "Tampilkan pemberitahuan tes di app.";
+"cli.setting.testNotification.abstract" = "Tampilkan notifikasi tes di app.";
 /* Long description in the help of 'ojd setting test-notification'. It says what the service is asked to do and when the command fails. --timeout stays as written and %@ is the default timeout in seconds. */
-"cli.setting.testNotification.discussion" = "Meminta layanan mengumumkan pemberitahuan tes ke app OpenJoystickDriver yang terbuka dan menunggu app menampilkannya. Gagal dengan galat bernama jika pemberitahuan ditolak, pengiriman gagal, atau tidak ada app yang menjawab tepat waktu. Default --timeout di sini adalah %@ detik.";
+"cli.setting.testNotification.discussion" = "Meminta layanan mengumumkan notifikasi tes ke app OpenJoystickDriver yang terbuka dan menunggu app menampilkannya. Gagal dengan galat bernama jika notifikasi ditolak, pengiriman gagal, atau tidak ada app yang menjawab tepat waktu. Default --timeout di sini adalah %@ detik.";
 /* Printed by ojd setting test-notification after the app reported that it showed the test notification. */
-"cli.setting.testNotification.success" = "App menampilkan pemberitahuan tes.";
+"cli.setting.testNotification.success" = "App menampilkan notifikasi tes.";

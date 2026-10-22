@@ -22,7 +22,7 @@
 			<key>few</key>
 			<string>%d controller collegati</string>
 			<key>many</key>
-			<string>%d controller collegati</string>
+			<string>%d di controller collegati</string>
 			<key>other</key>
 			<string>%d controller collegati</string>
 		</dict>
@@ -47,7 +47,7 @@
 			<key>few</key>
 			<string>%d assegnazioni</string>
 			<key>many</key>
-			<string>%d assegnazioni</string>
+			<string>%d di assegnazioni</string>
 			<key>other</key>
 			<string>%d assegnazioni</string>
 		</dict>
@@ -72,7 +72,7 @@
 			<key>few</key>
 			<string>%d dispositivi di output del controller rilevati</string>
 			<key>many</key>
-			<string>%d dispositivi di output del controller rilevati</string>
+			<string>%d di dispositivi di output del controller rilevati</string>
 			<key>other</key>
 			<string>%d dispositivi di output del controller rilevati</string>
 		</dict>

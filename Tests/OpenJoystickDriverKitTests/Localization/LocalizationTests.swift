@@ -245,7 +245,7 @@ struct LocalizationTests {
     ] {
       #expect(text("ar-SA", "ui.developer.stoppedPackets", count) == expected)
     }
-    #expect(text("ja-JP", "ui.developer.stoppedPackets", 1) == "停止 · 1パケット")
+    #expect(text("ja-JP", "ui.developer.stoppedPackets", 1) == "停止 · 1 パケット")
     // French and Spanish write a million with "de": the `many` category.
     #expect(
       text("fr-FR", "cli.diagnose.group.sampleLimit", 1_000_000).contains("000 d’échantillons")
