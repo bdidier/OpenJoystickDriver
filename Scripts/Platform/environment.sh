@@ -80,14 +80,13 @@ if [[ -n "${DEVELOPER_DIR:-}" ]]; then
   XCODE_SELECT_PATH="$DEVELOPER_DIR"
 fi
 
-SWIFT_BIN="${SWIFT_BIN:-}"
-if [[ -z "$SWIFT_BIN" ]]; then
-  SWIFT_BIN="$(xcrun --find swift 2>/dev/null || command -v swift)"
-fi
+# Every Swift command runs the `swift` found on PATH, so one compiler writes `.build`.
+# DEVELOPER_DIR and SDKROOT only select the Xcode SDK and Xcode tools such as xcodebuild.
+SWIFT_PATH="$(command -v swift)" || die "swift is not on PATH"
 
 # Export SDKROOT so swift build, xcodebuild, and clang skip the xcrun lookup, which can hang, and
 # so swiftly-installed toolchains use the selected Xcode SDK instead of the CommandLineTools SDK.
-# The SDK must be one SWIFT_BIN can read: a TOOLCHAINS compiler older than the selected Xcode
+# The SDK must be one that swift can read: a TOOLCHAINS compiler older than the selected Xcode
 # gets the newest installed SDK it reads; an explicit SDKROOT it cannot read is an error.
 _DEFAULT_SDKROOT="$XCODE_SELECT_PATH/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
 if [[ ! -d "$_DEFAULT_SDKROOT" && -d "$XCODE_SELECT_PATH/SDKs/MacOSX.sdk" ]]; then
@@ -95,13 +94,11 @@ if [[ ! -d "$_DEFAULT_SDKROOT" && -d "$XCODE_SELECT_PATH/SDKs/MacOSX.sdk" ]]; th
 fi
 _SDKROOT_EXPLICIT=0
 [[ -n "${SDKROOT:-}" ]] && _SDKROOT_EXPLICIT=1
-SDKROOT="$(python3 "$LIB_DIR/swift_sdk.py" "$SWIFT_BIN" "${SDKROOT:-$_DEFAULT_SDKROOT}" \
-  "$_SDKROOT_EXPLICIT")" || die "no macOS SDK fits $SWIFT_BIN"
+SDKROOT="$(python3 "$LIB_DIR/swift_sdk.py" "$SWIFT_PATH" "${SDKROOT:-$_DEFAULT_SDKROOT}" \
+  "$_SDKROOT_EXPLICIT")" || die "no macOS SDK fits $SWIFT_PATH"
 export SDKROOT
 unset _DEFAULT_SDKROOT _SDKROOT_EXPLICIT
 unset XCODE_SELECT_PATH
-SWIFT_BUILD_BIN="${SWIFT_BUILD_BIN:-$(xcrun --find swift-build 2>/dev/null || command -v swift-build)}"
-SWIFT_PACKAGE_BIN="${SWIFT_PACKAGE_BIN:-$(xcrun --find swift-package 2>/dev/null || command -v swift-package)}"
 
 IDENTITY="${CODESIGN_IDENTITY:--}"
 GUI_IDENTITY="${GUI_CODESIGN_IDENTITY:-$IDENTITY}"

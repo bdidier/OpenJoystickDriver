@@ -54,7 +54,7 @@ generate_driverkit_project() {
   _driverkit_versions
   (
     cd "$PROJECT_DIR" || exit
-    local swift_build=("$SWIFT_BUILD_BIN" --scratch-path "$DRIVERKIT_ROOT/swiftpm")
+    local swift_build=(swift build --scratch-path "$DRIVERKIT_ROOT/swiftpm")
     "${swift_build[@]}" --product DriverKitGenerator
     local generator_bin
     generator_bin="$("${swift_build[@]}" --show-bin-path)/DriverKitGenerator"
@@ -457,7 +457,7 @@ PY
   fi
   _validate_host_entitlement_source
   local package_dump="$DRIVERKIT_ROOT/package.json"
-  "$SWIFT_PACKAGE_BIN" --package-path "$PROJECT_DIR" dump-package > "$package_dump"
+  swift package --package-path "$PROJECT_DIR" dump-package > "$package_dump"
   local swifterkit_source=pinned
   _swifterkit_is_local && swifterkit_source=local
   python3 - "$package_dump" "$swifterkit_source" <<'PY'

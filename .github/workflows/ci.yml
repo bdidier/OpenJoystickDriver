@@ -33,6 +33,7 @@ jobs:
       - name: Toolchain
         run: |
           sw_vers
+          command -v swift
           xcrun --find swiftc
           swift --version
           xcodebuild -version || true

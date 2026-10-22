@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import os
 import re
-import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -27,11 +26,11 @@ def env_with(overrides: dict[str, str] | None = None) -> dict[str, str]:
 
 
 def swift_command(args: list[str]) -> list[str]:
-    """`swift <args>` run with environment.sh's SWIFT_BIN and the SDKROOT it can read."""
+    """`swift <args>` run with the `swift` on PATH and the SDKROOT environment.sh selects for it."""
     return [
         "/bin/bash",
         "-c",
-        'source "$1"; exec "$SWIFT_BIN" "${@:2}"',
+        'source "$1"; exec swift "${@:2}"',
         "ojd",
         str(ENVIRONMENT),
         *args,
@@ -77,7 +76,7 @@ def run_record(args: list[str]) -> int:
     command = [
         "/bin/bash",
         "-c",
-        'source "$1"; cd "$2"; exec "$SWIFT_BIN" run OpenJoystickDriverHIDTool --record-probe "$3" "${@:4}"',
+        'source "$1"; cd "$2"; exec swift run OpenJoystickDriverHIDTool --record-probe "$3" "${@:4}"',
         "ojd",
         str(ENVIRONMENT),
         str(PROJECT_DIR),
@@ -93,14 +92,13 @@ def run_usb_passive(args: list[str]) -> int:
     command = [
         "/bin/bash",
         "-c",
-        'source "$1"; cd "$2"; exec "$SWIFT_BIN" run OpenJoystickDriverHIDTool --usb-passive --vid "$3" --pid "$4"',
+        'source "$1"; cd "$2"; exec swift run OpenJoystickDriverHIDTool --usb-passive --vid "$3" --pid "$4"',
         "ojd",
         str(ENVIRONMENT),
         str(PROJECT_DIR),
         *args,
     ]
-    overrides = {"OJD_ENABLE_CONTRIBUTOR_USB_PASSIVE": "1"}
-    return subprocess.run(command, env=env_with(overrides), check=False).returncode
+    return subprocess.run(command, env=env_with(), check=False).returncode
 
 
 def run_commands(commands: list[list[str]]) -> int:
@@ -109,25 +107,6 @@ def run_commands(commands: list[list[str]]) -> int:
         if result.returncode:
             return result.returncode
     return 0
-
-
-def repair_swiftpm_cache() -> int:
-    if not (PROJECT_DIR / ".build").is_dir():
-        return 0
-    swift_package = os.environ.get("SWIFT_PACKAGE_BIN") or shutil.which("swift-package")
-    if not swift_package:
-        result = subprocess.run(
-            ["xcrun", "--find", "swift-package"],
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        swift_package = result.stdout.strip() if result.returncode == 0 else ""
-    if not swift_package:
-        die("swift-package not found")
-    return subprocess.run(
-        [swift_package, "clean"], cwd=PROJECT_DIR, check=False
-    ).returncode
 
 
 HOOKS_PATH = ".husky/_"

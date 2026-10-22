@@ -73,7 +73,6 @@ COMMAND_HELP = """Commands:
   diagnose rumble-motors <vid> <pid> [intensity] [duration-ms]
                               Identify physical rumble actuators interactively
   repair stale-dext           Kill stale DriverKit process copies after upgrade
-  repair swiftpm-module-cache Clean SwiftPM build products after toolchain/target changes
   catalog regenerate --check Verify the runtime catalog against pinned sources and overrides
   catalog regenerate --write Rebuild the runtime catalog from pinned sources and overrides
   errors regenerate --check   Verify the error code schema enum and wiki table against the catalog
@@ -212,7 +211,6 @@ def exec_python_with_environment(relative: str, args: list[str]) -> NoReturn:
 
 from .execution import (
     install_hooks,
-    repair_swiftpm_cache,
     run_record,
     run_usb_passive,
     swift_command,
@@ -411,10 +409,7 @@ def dispatch(argv: list[str]) -> int:
             if sub == "stale-dext":
                 require("repair stale-dext", tail, count=0)
                 exec_target("Diagnostics/dext/repair.py", [], python=True)
-            if sub == "swiftpm-module-cache":
-                require("repair swiftpm-module-cache", tail, count=0)
-                return repair_swiftpm_cache()
-            die(f"Unknown: repair {sub} (expected: stale-dext | swiftpm-module-cache)")
+            die(f"Unknown: repair {sub} (expected: stale-dext)")
         case "shots":
             if not rest or rest[0] != "capture":
                 found = f" {rest[0]}" if rest else ""

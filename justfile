@@ -217,10 +217,6 @@ diagnose-rumble-motors vid pid intensity="160" duration_ms="500":
 repair-stale-dext:
     ./Scripts/ojd repair stale-dext
 
-# Clean SwiftPM build products after toolchain/target changes
-repair-swiftpm-module-cache:
-    ./Scripts/ojd repair swiftpm-module-cache
-
 # =========================================================================
 # Release
 # =========================================================================
