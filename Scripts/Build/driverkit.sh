@@ -37,9 +37,9 @@ _driverkit_versions() {
   DRIVERKIT_SHORT_VERSION="${OJD_BUNDLE_SHORT_VERSION:-$OJD_DEFAULT_BUNDLE_SHORT_VERSION}"
   python3 "$PROJECT_DIR/Scripts/Release/bundle_version.py" \
     --check-release "$DRIVERKIT_SHORT_VERSION" >/dev/null || exit 2
-  # The DEXT shares the app's build number; install flows may pass a
-  # development-stage DEXT_BUNDLE_VERSION so a rebuilt tree replaces it.
-  DRIVERKIT_BUILD_VERSION="${DEXT_BUNDLE_VERSION:-${OJD_BUNDLE_VERSION:-}}"
+  # The DEXT shares the app's build number; install flows pass a development-stage
+  # OJD_BUNDLE_VERSION so a rebuilt tree replaces it.
+  DRIVERKIT_BUILD_VERSION="${OJD_BUNDLE_VERSION:-}"
   if [[ -z "$DRIVERKIT_BUILD_VERSION" ]]; then
     DRIVERKIT_BUILD_VERSION="$(python3 "$PROJECT_DIR/Scripts/Release/bundle_version.py" \
       "$PROJECT_DIR")" || exit 2

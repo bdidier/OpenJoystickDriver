@@ -146,7 +146,6 @@ def validate_tester_packaging_flow(*, fail_after_dmg: bool) -> None:
             )
             assert captured_env["OJD_BUNDLE_SHORT_VERSION"] == "0.5.0-beta.4"
             assert captured_env["OJD_BUNDLE_VERSION"] == "1.0.42"
-            assert "DEXT_BUNDLE_VERSION" not in captured_env
             assert (
                 "version: 0.5.0-beta.4+build.1.0.42.sha.aaaaaaaaaaaa\n"
                 in captured_build_info

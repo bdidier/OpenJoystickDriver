@@ -7,10 +7,9 @@ public enum PassiveUSBDescriptorProbe {
     PassiveUSBDescriptorTuple(vendorID: 0x3537, productID: 0x1010)
   ]
 
-  public static func contributorGate(
-    environment: [String: String] = ProcessInfo.processInfo.environment
-  ) -> Bool {
-    _isDebugAssertConfiguration() && environment["OJD_ENABLE_CONTRIBUTOR_USB_PASSIVE"] == "1"
+  /// The passive probe runs in debug builds only.
+  public static func contributorGate() -> Bool {
+    _isDebugAssertConfiguration()
   }
 
   #if DEBUG

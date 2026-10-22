@@ -218,14 +218,10 @@ struct SupportReportBindingTests {
   }
 
   /// Compares `encoded` against the checked-in fixture, ignoring the CloudEvents `id`, which is
-  /// randomly generated on every encode. Set `OJD_REGENERATE_REPORT_FIXTURE=1` to rewrite it
-  /// after intentionally changing the report shape.
+  /// randomly generated on every encode. After an intended change of the report shape, update
+  /// the fixture file by hand.
   private func assertMatchesFixture(_ encoded: Foundation.Data) throws {
     let fixtureURL = Self.fixtureURL
-    if ProcessInfo.processInfo.environment["OJD_REGENERATE_REPORT_FIXTURE"] == "1" {
-      try encoded.write(to: fixtureURL)
-      return
-    }
     let fixture = try Data(contentsOf: fixtureURL)
     #expect(try normalized(encoded) == normalized(fixture))
   }

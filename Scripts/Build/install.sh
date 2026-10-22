@@ -93,7 +93,7 @@ install_full() {
   local DEXT_VER
   DEXT_VER="$(next_dext_bundle_version)"
   echo "  Using CFBundleVersion=$DEXT_VER"
-  DEXT_BUNDLE_VERSION="$DEXT_VER" build_dext_bundle
+  OJD_BUNDLE_VERSION="$DEXT_VER" build_dext_bundle
 
   if [[ "$OJD_HOST_USERCLIENT" != "1" ]]; then
     echo ""

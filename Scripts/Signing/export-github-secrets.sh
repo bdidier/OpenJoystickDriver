@@ -20,7 +20,6 @@ Options:
                                         include both profile-selected identities)
 
 Environment overrides:
-  DEVELOPER_ID_APPLICATION_IDENTITY_EXPORT
   CERTIFICATE_SECRET
   KEYCHAIN_SECRET
   NOTARIZE_APPLE_ID
@@ -35,7 +34,7 @@ TXT
 repo_arg=()
 apply=0
 out_dir="$PROJECT_DIR/.build/github-actions-secrets"
-developer_id_identity="${DEVELOPER_ID_APPLICATION_IDENTITY_EXPORT:-}"
+developer_id_identity=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -105,8 +104,8 @@ display_path() {
   fi
 }
 
-gui_devid_profile="${OPENJOYSTICKDRIVER_GUI_DEVID_PROFILE:-$HOME/Library/MobileDevice/Provisioning Profiles/OpenJoystickDriver_DevID.provisionprofile}"
-dext_profile="${OPENJOYSTICKDRIVER_DEXT_DEVID_PROFILE:-$HOME/Library/MobileDevice/Provisioning Profiles/OpenJoystickDriver_XboxUSBDevice_DevID.provisionprofile}"
+gui_devid_profile="$HOME/Library/MobileDevice/Provisioning Profiles/OpenJoystickDriver_DevID.provisionprofile"
+dext_profile="$HOME/Library/MobileDevice/Provisioning Profiles/OpenJoystickDriver_XboxUSBDevice_DevID.provisionprofile"
 
 [[ -f "$gui_devid_profile" ]] || die "Missing GUI Developer ID profile: $gui_devid_profile"
 [[ -f "$dext_profile" ]] || die "Missing DriverKit profile: $dext_profile"

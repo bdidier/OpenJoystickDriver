@@ -7,10 +7,9 @@ import sys
 import profile_certs
 
 project_dir = pathlib.Path(os.environ.get("PROJECT_DIR", "."))
-script_dir = pathlib.Path(os.environ.get("SCRIPT_DIR", "Scripts"))
 
-dev_env = pathlib.Path(os.environ.get("DEV_ENV", str(script_dir / ".env.dev")))
-rel_env = pathlib.Path(os.environ.get("REL_ENV", str(script_dir / ".env.release")))
+dev_env = project_dir / ".env.dev"
+rel_env = project_dir / ".env.release"
 
 gui_dev_profile = os.path.expanduser(os.environ.get("GUI_DEV_PROFILE", ""))
 gui_devid_profile = os.path.expanduser(os.environ.get("GUI_DEVID_PROFILE", ""))

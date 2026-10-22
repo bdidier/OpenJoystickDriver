@@ -14,11 +14,9 @@ extension PassiveUSBDescriptorProbeTests {
         PassiveUSBDescriptorTuple(vendorID: 1, productID: 2)
       )
     )
-    #expect(PassiveUSBDescriptorProbe.contributorGate(environment: [:]) == false)
     #expect(
-      PassiveUSBDescriptorProbe.contributorGate(environment: [
-        "OJD_ENABLE_CONTRIBUTOR_USB_PASSIVE": "1"
-      ])
+      PassiveUSBDescriptorProbe.contributorGate()
+        == (PassiveUSBDescriptorProbe.buildMode == "DEBUG")
     )
   }
 

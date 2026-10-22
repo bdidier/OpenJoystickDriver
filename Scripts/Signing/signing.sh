@@ -66,7 +66,7 @@ cmd_install_profiles() {
     if [[ -z "$src_path" ]]; then
       if [[ "$required" == "1" ]]; then
         echo "ERROR: Missing Apple provisioning profile: $name" >&2
-        if [[ -t 0 && -z "${CI:-}" && "${OJD_NONINTERACTIVE:-0}" != "1" ]]; then
+        if [[ -t 0 && -z "${CI:-}" ]]; then
           open "https://developer.apple.com/account/resources/profiles/list" >/dev/null 2>&1 || true
           echo "Opened the Apple Developer provisioning profiles page." >&2
         fi
@@ -424,9 +424,6 @@ case "$cmd" in
   *) die "Unknown signing command: $cmd" ;;
 esac
 
-DEV_ENV="${DEV_ENV:-$PROJECT_DIR/.env.dev}"
-REL_ENV="${REL_ENV:-$PROJECT_DIR/.env.release}"
-
 GUI_DEV_PROFILE="${GUI_DEV_PROFILE:-$HOME/Library/MobileDevice/Provisioning Profiles/OpenJoystickDriver.provisionprofile}"
 GUI_DEVID_PROFILE="${GUI_DEVID_PROFILE:-$HOME/Library/MobileDevice/Provisioning Profiles/OpenJoystickDriver_DevID.provisionprofile}"
 DEXT_PROFILE="${DEXT_PROFILE:-$HOME/Library/MobileDevice/Provisioning Profiles/OpenJoystickDriver_XboxUSBDevice.provisionprofile}"
@@ -461,9 +458,6 @@ if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
 fi
 
 export PROJECT_DIR
-export SCRIPT_DIR
-export DEV_ENV
-export REL_ENV
 export GUI_DEV_PROFILE
 export GUI_DEVID_PROFILE
 export DEXT_PROFILE

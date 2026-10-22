@@ -29,12 +29,16 @@ def _truthy(value: str | None) -> bool:
     return value is not None and value.lower() not in {"", "0", "false", "no"}
 
 
+NOTARIZE_KEYCHAIN_PROFILE_NAME = "OpenJoystickDriver"
+
+
 class Resolver:
     def __init__(
         self,
         project_dir: Path,
         *,
         environ: Mapping[str, str] | None = None,
+        applications_dir: Path = Path("/Applications"),
         input_stream: TextIO = sys.stdin,
         output: TextIO = sys.stderr,
         which: Callable[[str, str | None], str | None] | None = None,
@@ -42,6 +46,7 @@ class Resolver:
     ) -> None:
         self.project_dir = project_dir
         self.environ = dict(os.environ if environ is None else environ)
+        self.applications_dir = applications_dir
         self.input = input_stream
         self.output = output
         self.which = which or (
@@ -51,11 +56,7 @@ class Resolver:
 
     @property
     def interactive(self) -> bool:
-        return (
-            not _truthy(self.environ.get("CI"))
-            and not _truthy(self.environ.get("OJD_NONINTERACTIVE"))
-            and self.input.isatty()
-        )
+        return not _truthy(self.environ.get("CI")) and self.input.isatty()
 
     def resolve(self, capabilities: Iterable[Capability]) -> list[RepairOutcome]:
         outcomes: list[RepairOutcome] = []
@@ -212,10 +213,9 @@ class Resolver:
         )
         if selected.returncode == 0 and selected.stdout.strip():
             candidates.append(Path(selected.stdout.strip()))
-        applications = Path(self.environ.get("OJD_APPLICATIONS_DIR", "/Applications"))
         candidates.extend(
             path / "Contents/Developer"
-            for path in sorted(applications.glob("Xcode*.app"), reverse=True)
+            for path in sorted(self.applications_dir.glob("Xcode*.app"), reverse=True)
         )
         for candidate in candidates:
             if (candidate / "usr/bin/xcodebuild").is_file():
@@ -378,7 +378,7 @@ class Resolver:
                 OutcomeKind.UNSUPPORTED,
                 "Release signing team is missing.",
             )
-        profile = self.environ.get("OJD_NOTARIZE_PROFILE", "OpenJoystickDriver")
+        profile = NOTARIZE_KEYCHAIN_PROFILE_NAME
         result = self._run(
             [
                 "xcrun",

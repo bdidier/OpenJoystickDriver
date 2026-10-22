@@ -267,7 +267,7 @@ func printUsageAndExit(_ code: Int32) -> Never {
       --record-probe  Validate and exercise one controller record through the USB facade.
       --validate-only  Validate --record-probe input without opening physical hardware.
       --usb-passive    Print one authorized device's USB descriptor facts as JSON without
-                       opening it. Debug builds only; needs OJD_ENABLE_CONTRIBUTOR_USB_PASSIVE=1.
+                       opening it. Debug builds only.
       --vid <int>      Vendor ID (decimal or 0x... hex).
       --pid <int>      Product ID (decimal or 0x... hex).
       --endpoint <n>   Interrupt IN endpoint for --usb-monitor; omitted sweeps 0x81...0x8f.

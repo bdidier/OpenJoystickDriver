@@ -57,7 +57,6 @@ with open(sys.argv[1], encoding="utf-8") as source:
 PY
   )
 fi
-export OJD_ENV_FILE
 
 # Prefer full Xcode toolchain when installed, even if `xcode-select` still
 # points at Command Line Tools (avoids requiring sudo for local builds).

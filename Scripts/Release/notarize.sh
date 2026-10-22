@@ -8,11 +8,8 @@
 #   1. Developer ID signing (.env.release)
 #   2. NOTARIZE_APPLE_ID and NOTARIZE_PASSWORD set in .env.release
 #
-# Environment variables:
-#   NOTARIZE_TIMEOUT_MINUTES  — overall timeout (default: 180, i.e. 3 hours)
-#                               First-ever submissions can take hours; subsequent ones ~5 min.
-#   NOTARIZE_POLL_INTERVAL    — seconds between polls (default: 30)
-#   NOTARIZE_MAX_RETRIES      — consecutive transient failures before abort (default: 5)
+# Waiting: the script polls every 30 seconds, stops after 3 hours (a first-ever submission can
+# take hours, later ones about 5 minutes) and aborts after 5 consecutive transient poll failures.
 #
 # USAGE:
 #   ./Scripts/ojd release notarize submit
@@ -44,7 +41,7 @@ fi
 if [[ "$subcmd" == "store-credentials" ]]; then
   profile="${1:-${NOTARIZE_KEYCHAIN_PROFILE:-OpenJoystickDriver}}"
   if [[ -z "${NOTARIZE_APPLE_ID:-}" ]]; then
-    if [[ ! -t 0 || -n "${CI:-}" || "${OJD_NONINTERACTIVE:-0}" == "1" ]]; then
+    if [[ ! -t 0 || -n "${CI:-}" ]]; then
       die "NOTARIZE_APPLE_ID is required in noninteractive mode"
     fi
     read -r -p "Apple ID for notarization: " NOTARIZE_APPLE_ID
@@ -79,9 +76,9 @@ fi
 APP="${OJD_NOTARIZE_APP:-/Applications/OpenJoystickDriver.app}"
 ZIP_PATH="${OJD_NOTARIZE_ZIP:-$PROJECT_DIR/.build/OpenJoystickDriver-notarize.zip}"
 
-TIMEOUT_MINUTES="${NOTARIZE_TIMEOUT_MINUTES:-180}"
-POLL_INTERVAL="${NOTARIZE_POLL_INTERVAL:-30}"
-MAX_RETRIES="${NOTARIZE_MAX_RETRIES:-5}"
+readonly TIMEOUT_MINUTES=180
+readonly POLL_INTERVAL=30
+readonly MAX_RETRIES=5
 
 if [[ ! -d "$APP" ]]; then
   echo "ERROR: App not found at $APP"
@@ -91,9 +88,6 @@ fi
 
 if [[ -n "${NOTARIZE_KEYCHAIN_PROFILE:-}" ]]; then
   AUTH_ARGS=(--keychain-profile "$NOTARIZE_KEYCHAIN_PROFILE")
-  if [[ -n "${NOTARIZE_KEYCHAIN:-}" ]]; then
-    AUTH_ARGS+=(--keychain "$NOTARIZE_KEYCHAIN")
-  fi
 else
   AUTH_ARGS=(
     --apple-id "$NOTARIZE_APPLE_ID"
