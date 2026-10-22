@@ -3310,7 +3310,7 @@
 /* Disabled item of the Profile menu's Activate Profile submenu and of the status item's Profiles > Activate, Profiles > Deactivate and controller Active Profile submenus while the profile list is loading or cannot be read. */
 "ui.menu.profile.unavailable" = "Cấu hình không khả dụng";
 /* Disabled item of the status item's Profiles > Deactivate submenu while no profile is active. */
-"ui.menu.profile.noneActive" = "Không có cấu hình đang hoạt động";
+"ui.menu.profile.noneActive" = "Không có cấu hình đang dùng";
 /* Title of the alert shown when turning off a profile from the menu fails. */
 "ui.menu.profile.deactivateFailed" = "Không thể hủy kích hoạt cấu hình";
 /* Message of the alert shown when the profile changed elsewhere during the turn off. */

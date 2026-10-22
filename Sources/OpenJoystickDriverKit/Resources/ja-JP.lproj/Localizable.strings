@@ -3310,7 +3310,7 @@
 /* Disabled item of the Profile menu's Activate Profile submenu and of the status item's Profiles > Activate, Profiles > Deactivate and controller Active Profile submenus while the profile list is loading or cannot be read. */
 "ui.menu.profile.unavailable" = "プロファイルを利用できません";
 /* Disabled item of the status item's Profiles > Deactivate submenu while no profile is active. */
-"ui.menu.profile.noneActive" = "アクティブなプロファイルなし";
+"ui.menu.profile.noneActive" = "有効なプロファイルなし";
 /* Title of the alert shown when turning off a profile from the menu fails. */
 "ui.menu.profile.deactivateFailed" = "プロファイルを無効にできませんでした";
 /* Message of the alert shown when the profile changed elsewhere during the turn off. */
