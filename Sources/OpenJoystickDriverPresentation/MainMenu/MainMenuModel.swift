@@ -273,6 +273,7 @@ enum MainMenuModel {
         enabled: .responderChain,
         gui: .sidebarToolbarButton
       ),
+      .separator,
       entry(
         "toggleFullScreen",
         "ui.menu.view.enterFullScreen",
@@ -339,7 +340,7 @@ enum MainMenuModel {
         "activateProfile",
         "ui.menu.profile.activate",
         action: .activateProfile,
-        enabled: .requires([.profileExists]),
+        enabled: .always,
         gui: .area(.profiles)
       ),
       entry(
@@ -406,13 +407,13 @@ enum MainMenuModel {
         action: .copySupportReport,
         gui: .area(.activity)
       ),
+      .separator,
       entry(
         "reportProblem",
         "ui.menu.help.reportProblem",
         action: .reportProblem,
         gui: .externalLink
       ),
-      .separator,
       entry(
         "openProjectWebsite",
         "ui.menu.help.projectWebsite",

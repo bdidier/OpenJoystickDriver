@@ -26,7 +26,6 @@
       } else {
         snapshot = nil
       }
-      state.profileCount = snapshot?.profiles.count ?? 0
       state.controllers = menuBarViewModel.devices.map { device in
         MainMenuControllerState(
           id: device.sessionToken.rawValue,
@@ -158,7 +157,17 @@
 
     private func populateActivateProfileMenu(_ menu: NSMenu) {
       menu.removeAllItems()
-      guard case .available(let snapshot) = viewModel.remappingState else { return }
+      guard case .available(let snapshot) = viewModel.remappingState, !snapshot.profiles.isEmpty
+      else {
+        let placeholder = NSMenuItem(
+          title: OJDLocalized.string("ui.profiles.none"),
+          action: nil,
+          keyEquivalent: ""
+        )
+        placeholder.isEnabled = false
+        menu.addItem(placeholder)
+        return
+      }
       let activeIDs = Set(snapshot.activeProfiles.map(\.profileID))
       for profile in snapshot.profiles {
         let item = NSMenuItem(title: profile.name, action: nil, keyEquivalent: "")

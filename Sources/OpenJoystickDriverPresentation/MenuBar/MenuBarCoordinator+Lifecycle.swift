@@ -14,6 +14,9 @@
       let application = NSApplication.shared
       application.setActivationPolicy(.accessory)
       application.delegate = self
+      // The app has no tabbed windows, so AppKit adds no Show Tab Bar or Show All Tabs items to
+      // the View menu.
+      NSWindow.allowsAutomaticWindowTabbing = false
       makeWindows()
       application.mainMenu = makeApplicationMenu()
       application.run()

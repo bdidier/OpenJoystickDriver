@@ -82,7 +82,6 @@ enum MainMenuRequirement: Hashable, Sendable {
   case controller
   case wirelessController
   case controllerHasActiveProfile
-  case profileExists
   /// A profile is selected in the Profiles screen.
   case profileSelected
   /// Never holds; keeps an informational item disabled.
@@ -159,7 +158,6 @@ struct MainMenuState: Equatable, Sendable {
   var controllers: [MainMenuControllerState] = []
   /// The session token of the controller selected in the Controllers area.
   var selectedControllerID: String?
-  var profileCount = 0
   var hasSelectedProfile = false
   var hasMainWindow = false
   var hasSettingsWindow = false
@@ -182,7 +180,6 @@ struct MainMenuState: Equatable, Sendable {
     case .controller: return controller != nil
     case .wirelessController: return controller?.isWireless == true
     case .controllerHasActiveProfile: return controller?.hasActiveProfile == true
-    case .profileExists: return profileCount > 0
     case .profileSelected: return hasSelectedProfile
     case .unavailable: return false
     }

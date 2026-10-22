@@ -98,13 +98,13 @@ struct MainMenuModelTests {
     }
     #expect(!MainMenuAction.showArea(.profiles).performsFlow)
     let export = try #require(MainMenuModel.item(for: .exportProfile))
-    var exportState = MainMenuState(profileCount: 1, hasMainWindow: true)
+    var exportState = MainMenuState(hasMainWindow: true)
     #expect(!MainMenuModel.isEnabled(export, state: exportState))
     exportState.hasSelectedProfile = true
     #expect(MainMenuModel.isEnabled(export, state: exportState))
     let activate = try #require(MainMenuModel.item(for: .activateProfile))
-    #expect(!MainMenuModel.isEnabled(activate, state: MainMenuState()))
-    #expect(MainMenuModel.isEnabled(activate, state: MainMenuState(profileCount: 1)))
+    // The submenu parent stays available so people can open it and see there are no profiles.
+    #expect(MainMenuModel.isEnabled(activate, state: MainMenuState()))
   }
 
   @Test
@@ -150,6 +150,88 @@ struct MainMenuModelTests {
   }
 
   @Test
+  func keyEquivalentsAreUniqueAndFollowTheStandardShortcuts() {
+    struct Shortcut: Hashable {
+      let key: String
+      let modifiers: MainMenuModifiers
+    }
+    let shortcuts = MainMenuModel.allItems.filter { !$0.keyEquivalent.isEmpty }
+    let keys = shortcuts.map { Shortcut(key: $0.keyEquivalent, modifiers: $0.modifiers) }
+    #expect(Set(keys).count == keys.count, "two items share a key equivalent")
+    // Shortcuts that the system or Apple's keyboard guidance reserve for another action.
+    let reserved: Set<Shortcut> = [
+      Shortcut(key: "n", modifiers: [.command]), Shortcut(key: "p", modifiers: [.command]),
+      Shortcut(key: "s", modifiers: [.command]), Shortcut(key: "i", modifiers: [.command]),
+      Shortcut(key: "f", modifiers: [.command]), Shortcut(key: " ", modifiers: [.command]),
+      Shortcut(key: "\t", modifiers: [.command]), Shortcut(key: "`", modifiers: [.command]),
+      Shortcut(key: ".", modifiers: [.command]), Shortcut(key: "?", modifiers: [.command]),
+    ]
+    for item in shortcuts {
+      let shortcut = Shortcut(key: item.keyEquivalent, modifiers: item.modifiers)
+      #expect(!reserved.contains(shortcut), "\(item.id) takes a reserved shortcut")
+      #expect(item.modifiers.contains(.command), "\(item.id) has no Command modifier")
+    }
+    let standard: [(MainMenuAction, String, MainMenuModifiers)] = [
+      (.settings, ",", [.command]), (.hide, "h", [.command]),
+      (.hideOthers, "h", [.command, .option]), (.quit, "q", [.command]),
+      (.close, "w", [.command]), (.undo, "z", [.command]), (.redo, "z", [.command, .shift]),
+      (.cut, "x", [.command]), (.copy, "c", [.command]), (.paste, "v", [.command]),
+      (.selectAll, "a", [.command]), (.minimize, "m", [.command]),
+      (.toggleToolbar, "t", [.command, .option]), (.toggleSidebar, "s", [.command, .control]),
+      (.toggleFullScreen, "f", [.command, .control]),
+    ]
+    for (action, key, modifiers) in standard {
+      let item = MainMenuModel.item(for: action)
+      #expect(item?.keyEquivalent == key && item?.modifiers == modifiers, "\(action)")
+    }
+  }
+
+  @Test
+  func titlesUseTitleStyleCapitalizationAndEllipsisOnlyWhenMoreInputFollows() {
+    let small: Set<String> = ["a", "an", "the", "and", "or", "but", "in", "of", "to", "on", "for"]
+    let moreInput: Set<MainMenuAction> = [
+      .settings, .importProfile, .exportProfile, .installRecordOrMod, .saveSupportReport,
+      .saveActivityLog, .explainErrorCode, .reportProblem,
+    ]
+    for item in MainMenuModel.allItems where item.action != .controllerTarget {
+      for key in [item.titleKey, item.alternateTitleKey].compactMap({ $0 }) {
+        let title = OJDLocalized.string(key)
+        let words = title.replacingOccurrences(of: "...", with: "").split(separator: " ")
+        for (index, word) in words.enumerated() {
+          let isEdge = index == 0 || index == words.count - 1
+          let expected = isEdge || !small.contains(String(word))
+          let isCapitalized = word.first.map { !$0.isLetter || $0.isUppercase } ?? true
+          if expected { #expect(isCapitalized, "\(key) is not title-style: \(title)") }
+        }
+      }
+      let title = OJDLocalized.string(item.titleKey)
+      #expect(
+        title.hasSuffix("...") == moreInput.contains(item.action),
+        "\(item.titleKey) ellipsis does not match whether more input follows"
+      )
+    }
+  }
+
+  @Test
+  func separatorsNeverLeadTrailOrRepeat() {
+    for section in MainMenuModel.sections {
+      let entries = section.entries
+      #expect(entries.first != .separator, "\(section.id) starts with a separator")
+      #expect(entries.last != .separator, "\(section.id) ends with a separator")
+      for pair in zip(entries, entries.dropFirst()) {
+        #expect(!(pair.0 == .separator && pair.1 == .separator), "\(section.id) repeats one")
+      }
+    }
+  }
+
+  @Test
+  func fullScreenIsSeparatedFromTheShowHideItems() throws {
+    let entries = try section("view").entries
+    let index = try #require(entries.firstIndex { $0.item?.action == .toggleFullScreen })
+    #expect(entries[index - 1] == .separator)
+  }
+
+  @Test
   func submenuParentsAndAreaOpeningItemsCarryNoEllipsis() throws {
     let withoutMoreInput: [MainMenuAction] = [
       .activateProfile, .testInput, .disconnectWirelessLink, .showActivityLog,
@@ -162,7 +244,7 @@ struct MainMenuModelTests {
   }
 
   @Test
-  func viewMenuHasSixAreasWithCommandDigits() throws {
+  func viewMenuHasFiveAreasWithCommandDigits() throws {
     let items = try section("view").items
     let areaItems = items.filter {
       if case .showArea = $0.action { return true }
@@ -180,7 +262,8 @@ struct MainMenuModelTests {
     let state = MainMenuState()
     for id in ["controller", "profile"] {
       for item in try section(id).items {
-        if item.action == .showControllerInWindow { continue }
+        // Activate Profile opens a submenu that lists profiles; it stays available.
+        if item.action == .showControllerInWindow || item.action == .activateProfile { continue }
         #expect(!MainMenuModel.isEnabled(item, state: state), "\(item.id) enabled without target")
       }
     }
@@ -198,7 +281,6 @@ struct MainMenuModelTests {
     var state = MainMenuState(
       controllers: [wired],
       selectedControllerID: "a",
-      profileCount: 1,
       hasMainWindow: true
     )
     let disconnect = try #require(MainMenuModel.item(for: .disconnectWirelessLink))
@@ -246,7 +328,6 @@ struct MainMenuModelTests {
     var state = MainMenuState(
       controllers: [first, second],
       selectedControllerID: "a",
-      profileCount: 1,
       hasMainWindow: true
     )
     let suspend = try #require(MainMenuModel.item(for: .suspendOrResumeController))
