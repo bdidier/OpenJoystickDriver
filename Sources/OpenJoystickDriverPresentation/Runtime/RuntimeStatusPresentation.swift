@@ -75,6 +75,9 @@ struct RuntimeStatusPresentation: Sendable, Equatable {
   let postEventAccess: RemappingPostEventAccessState?
   let requiresPostEventAccess: Bool?
   let readiness: RuntimeReadiness
+  /// Connected devices that OJD does not serve and whose reason a person can act on. Set by
+  /// `init(payload:)`; a presentation built from parts lists none.
+  var unservedDevices: [RuntimeUnservedDevice] = []
 
   init(
     payload: ApplicationServiceStatusPayload,
@@ -95,6 +98,7 @@ struct RuntimeStatusPresentation: Sendable, Equatable {
 
     self.permissions = permissions
     self.devices = payload.connectedDevices
+    self.unservedDevices = payload.unboundDevices.compactMap(RuntimeUnservedDevice.init)
     self.virtualHIDProfileOverrideError = payload.virtualHIDProfileOverrideError
     self.outputState = outputState
     self.outputDetail = RuntimePresentation.outputDetail(
@@ -130,6 +134,24 @@ struct RuntimeStatusPresentation: Sendable, Equatable {
     self.postEventAccess = postEventAccess
     self.requiresPostEventAccess = requiresPostEventAccess
     self.readiness = readiness
+  }
+}
+
+/// A connected device that OJD does not serve, with the sentence that says why and how to free it.
+struct RuntimeUnservedDevice: Sendable, Equatable, Identifiable {
+  /// `VVVV:PPPP`, the identity `ojd` prints.
+  let identity: String
+  let connection: String
+  let explanation: String
+
+  var id: String { "\(identity) \(connection)" }
+
+  /// Nil when the device's reason has no sentence a person can act on.
+  init?(_ device: ApplicationServiceUnboundDevice) {
+    guard let key = device.reason.explanationKey else { return nil }
+    identity = String(format: "%04x:%04x", device.vendorID, device.productID)
+    connection = device.connection
+    explanation = OJDLocalized.string(key)
   }
 }
 

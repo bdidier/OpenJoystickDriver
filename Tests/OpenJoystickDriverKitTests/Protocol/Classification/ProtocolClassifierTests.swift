@@ -15,7 +15,7 @@ struct ProtocolClassifierTests {
         "NoProtocolMatch", "AmbiguousProtocolMatch", "InterfaceContractMismatch",
         "DescriptorContractMismatch", "PacketContractMismatch", "UnsupportedProtocolVariant",
         "UnsupportedTransportVariant", "RequiredInitializationFailed", "CatalogConflict",
-        "VirtualProfileUnavailable",
+        "VirtualProfileUnavailable", "DeviceInUse", "ConfigurationUnreadable",
       ]
     )
   }

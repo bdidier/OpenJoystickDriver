@@ -27,6 +27,12 @@
       return status.devices
     }
 
+    /// Connected devices OJD does not serve, each with the reason and how to free it.
+    var unservedDevices: [RuntimeUnservedDevice] {
+      guard case .available(let status) = runtime.statusState else { return [] }
+      return status.unservedDevices
+    }
+
     var isRefreshing: Bool { runtime.isScopedRefreshInFlight }
 
     var selectedDevice: ApplicationServiceDeviceDescription? {

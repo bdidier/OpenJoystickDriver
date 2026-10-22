@@ -11,12 +11,15 @@ extension USBTransportProvider {
   /// before the claim already request it, and a device observed unconfigured gets it too, since
   /// none of its interfaces can be claimed otherwise. Explicit catalog endpoint pins stay
   /// authoritative, but a pinned device is read too, so validation can confirm its interface class
-  /// and that the pinned endpoints exist. Returns nil when the descriptor cannot be read, so a
-  /// later poll retries instead of running on unvalidated or family-default endpoints.
+  /// and that the pinned endpoints exist.
+  ///
+  /// - Throws: ``USBConfigurationReadFailure`` when the descriptor cannot be read, so the caller
+  ///   decides whether to read it again instead of running on unvalidated or family-default
+  ///   endpoints.
   public func resolveUSBConfiguration(
     _ device: USBTransportDevice,
     passive: USBTransportResolution
-  ) async -> USBTransportResolution? {
+  ) async throws(USBConfigurationReadFailure) -> USBTransportResolution {
     let configured = settingConfigurationIfUnconfigured(
       passive.profile,
       observed: passive.physicalDevice
@@ -31,24 +34,40 @@ extension USBTransportProvider {
         observed: passive.physicalDevice
       ) == nil
     else { return passiveResolution }
+    let observed: PhysicalDevice?
     do {
-      guard let observed = try await configurationObservation(for: device, configurationValue: 1)
-      else {
-        print("[USBTransport] USB configuration descriptor unavailable for \(device.serviceID)")
-        return nil
-      }
-      return USBTransportResolution(
-        profile: USBDescriptorTransportResolver.resolve(configured: configured, observed: observed),
-        physicalDevice: observed
-      )
+      observed = try await configurationObservation(for: device, configurationValue: 1)
     } catch USBTransportError.notSupported {
       // The provider has no descriptor source; the passive facts are all there is.
       return passiveResolution
+    } catch USBTransportError.accessDenied {
+      throw .refused
     } catch {
-      print(
-        "[USBTransport] USB configuration descriptor read failed for \(device.serviceID): \(error)"
-      )
-      return nil
+      throw .failed(String(describing: error))
+    }
+    guard let observed else { throw .unavailable }
+    return USBTransportResolution(
+      profile: USBDescriptorTransportResolver.resolve(configured: configured, observed: observed),
+      physicalDevice: observed
+    )
+  }
+}
+
+/// Why the configuration descriptor of a raw-USB device could not be read.
+public enum USBConfigurationReadFailure: Error, Equatable, Sendable, CustomStringConvertible {
+  /// The host refused the read (``USBTransportError/accessDenied``): another owner holds the
+  /// device exclusively, or the host denies OJD access to it.
+  case refused
+  /// The host reports no descriptor of configuration 1 for the device's service.
+  case unavailable
+  /// The read failed with another error, described as the provider reported it.
+  case failed(String)
+
+  public var description: String {
+    switch self {
+    case .refused: return "accessDenied"
+    case .unavailable: return "descriptor unavailable"
+    case .failed(let error): return error
     }
   }
 }

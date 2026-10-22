@@ -148,6 +148,10 @@
 "ui.controllers.emptyTitle" = "No controller connected";
 /* Message of the empty state in the Controllers area. It asks the user to connect a controller. */
 "ui.controllers.emptyMessage" = "Connect a controller.";
+/* Reason shown in the Controllers list and in the output of 'ojd status' for a connected controller that another program holds, so OJD cannot read it. The text tells the person how to free it. */
+"ui.controllers.deviceInUse" = "Another program is using this controller. Close it or reconnect the controller.";
+/* Reason shown in the Controllers list and in the output of 'ojd status' for a connected controller whose USB configuration OJD could not read. OJD tries again only when the controller reconnects, so the text asks for that. USB stays as written. */
+"ui.controllers.configurationUnreadable" = "This controller's USB configuration could not be read. Reconnect the controller.";
 /* Label of the battery fact in the Controllers detail. */
 "ui.controllers.battery" = "Battery";
 /* VoiceOver label of the button that shows the serial number in the Controllers detail. */

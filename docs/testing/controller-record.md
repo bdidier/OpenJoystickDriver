@@ -59,7 +59,7 @@ During the capture, press one control at a time and return it to neutral. The pr
 
 - `RECORD`: the exact identity, the endpoints and configuration resolved for the matched device, and startup names. With `--validate-only` it shows the record's own values.
 - `USB_DEVICE` and `USB_CLAIM`: the matched physical USB path.
-- `RECORD_BINDING result=refused`: the observed interface violates the record's interface contract, or (`reason=configuration-unobserved`) the device's configuration descriptor could not be read; retry that case. The probe exits with code 4 before it opens or writes to the device.
+- `RECORD_BINDING result=refused`: the observed interface violates the record's interface contract; or the device's configuration descriptor could not be read: `reason=device-in-use` when the host refused the read and names the program that holds the device (close it), `reason=configuration-unreadable` for any other read failure (reconnect the controller and retry), and `reason=configuration-unobserved` when the facts read belong to another service (retry). The probe exits with code 4 before it opens or writes to the device.
 - `RECORD_HANDSHAKE`: whether the protocol startup completed.
 - `USB_TX`: additional Xbox 360 startup output.
 - `USB_RX`: every received input packet.

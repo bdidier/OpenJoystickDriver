@@ -15,3 +15,47 @@ The route of the controller is `ExtensionOwned`, set by its record, and the exte
 
 - **WHEN** an extension service has no parent `IOUSBHostDevice` and no scalar `idVendor` and `idProduct` of its own
 - **THEN** the transport lists no device for it (`dextServiceWithoutParentYieldsNoDevice`)
+
+## ADDED Requirements
+
+### Requirement: REQ-25 A configuration descriptor that cannot be read is named, not retried without bound
+
+When the configuration descriptor read of a raw-USB device fails, `DeviceManager` MUST give the failure one named outcome and log it once:
+
+- The host refuses the read with `accessDenied` and reports an exclusive owner (`UsbExclusiveOwner`): the service is acknowledged and left unclaimed with the unbound reason `DeviceInUse`. Each detection poll reads the owner, not the descriptor; the service is admitted again when the host reports no owner. An owner that can no longer be read changes the reason to `ConfigurationUnreadable` and ends the watch.
+- The host refuses the read and reports no owner, or the owner cannot be read: the service is acknowledged and left unclaimed with the reason `ConfigurationUnreadable`.
+- Any other failure: the descriptor is read again on the next poll, for at most `usbConfigurationReadAttempts` polls in a row, each attempt logged with its number; then the service is left unclaimed with the reason `ConfigurationUnreadable`.
+
+A service left unclaimed this way is read again only when it re-enumerates or, for `DeviceInUse`, when its owner goes away. The Controllers page and `ojd status` MUST show the sentence of the reason: `ui.controllers.deviceInUse` (close the program or reconnect) or `ui.controllers.configurationUnreadable` (reconnect).
+
+#### Scenario: Another program holds the controller
+
+- **WHEN** a raw-USB controller's descriptor read is refused with `accessDenied` and the host reports an exclusive owner
+- **THEN** the descriptor is read once across later polls and the device is recorded with `DeviceInUse` (`deniedDescriptorReadIsAcknowledgedAndReadOnce`, `theDetectionLoopReadsAHeldDeviceOnceAcrossPolls`)
+- **AND** the device is listed with the reason's sentence (`controllersPageListsAnUnservedDeviceWithTheSentenceOfItsReason`, `aDeviceHeldByAnotherProgramIsExplainedInHumanOutputOnly`)
+
+#### Scenario: The owner releases the device
+
+- **WHEN** the host reports no owner for a held service
+- **THEN** the service is admitted again on the next poll, and a changed owner keeps it held (`heldServiceIsAdmittedAgainOnlyWhenItsHolderGoesAway`)
+
+#### Scenario: The owner can no longer be read
+
+- **WHEN** the owner read of a held service fails
+- **THEN** the reason changes to `ConfigurationUnreadable` and the owner is not read again (`anUnreadableOwnerEndsTheWatchWithTheUnreadableReason`)
+
+#### Scenario: A refusal with no owner
+
+- **WHEN** the read is refused and the host reports no owner
+- **THEN** the device is recorded with `ConfigurationUnreadable` and stays acknowledged (`deniedReadWithoutAnOwnerIsUnreadableUntilReenumeration`)
+
+#### Scenario: Another read failure
+
+- **WHEN** the read fails with another error on every poll
+- **THEN** it is read `usbConfigurationReadAttempts` times, then the device is recorded with `ConfigurationUnreadable` and not read again (`otherReadFailuresAreBoundedThenNamed`)
+- **AND** a later successful read resets the count (`aSuccessfulReadResetsTheFailedReadCount`)
+
+#### Scenario: Stop during the owner read
+
+- **WHEN** the manager stops while the owner read of a refused device is in flight
+- **THEN** no held service or unbound record is left behind (`stopDuringTheOwnerReadLeavesNoHold`)

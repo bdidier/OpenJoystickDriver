@@ -177,10 +177,6 @@ struct USBSignatureDiscoveryTests {
   }
 
   @Test(arguments: [
-    (
-      LogicalControllerID(vendorID: 0x1234, productID: 0x5678),
-      USBTransportError?.some(.accessDenied)
-    ),
     (LogicalControllerID(vendorID: 0x1234, productID: 0x5678), USBTransportError?.none),
     (
       LogicalControllerID(vendorID: 0x1532, productID: 0x0A43),
@@ -191,7 +187,7 @@ struct USBSignatureDiscoveryTests {
     model: LogicalControllerID,
     error: USBTransportError?
   ) async {
-    // Never family-default endpoints and never a permanent unbound state for a failed read.
+    // A first failed read is read again on the next poll, never run on family-default endpoints.
     let device = usbDevice(
       vendorID: model.model.vendorID,
       productID: model.model.productID,

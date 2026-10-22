@@ -65,12 +65,35 @@ func runControllerRecordProbe(recordPath: String, seconds: Int, validateOnly: Bo
       if let product = device.productName { print("USB_STRING product=\(product)") }
       // Validate the claimed interface as discovery does, before open can set the configuration.
       let passive = await provider.resolveTransport(for: device, configured: plan.transportProfile)
-      guard let claimed = await provider.resolveUSBConfiguration(device, passive: passive),
-        claimed.physicalDevice.map({ $0.serviceAddress == device.serviceAddress }) ?? true
+      let claimed: USBTransportResolution
+      do {
+        claimed = try await provider.resolveUSBConfiguration(device, passive: passive)
+      } catch USBConfigurationReadFailure.refused {
+        let owner = try? await provider.exclusiveOwner(of: device)
+        refuseProbeDevice(
+          reason: owner == nil ? "configuration-unreadable" : "device-in-use",
+          message: owner.map {
+            "the host refused the USB configuration read because \($0) holds the device; "
+              + "close that program or reconnect the controller"
+          } ?? "the host refused the USB configuration read and reports no exclusive owner; "
+            + "reconnect the controller",
+          exitCode: exitCode
+        )
+        return
+      } catch {
+        refuseProbeDevice(
+          reason: "configuration-unreadable",
+          message: "the device's USB configuration descriptor could not be read (\(error)); "
+            + "try again",
+          exitCode: exitCode
+        )
+        return
+      }
+      guard claimed.physicalDevice.map({ $0.serviceAddress == device.serviceAddress }) ?? true
       else {
         refuseProbeDevice(
           reason: "configuration-unobserved",
-          message: "the device's USB configuration descriptor could not be read; try again",
+          message: "the USB configuration that was read belongs to another service; try again",
           exitCode: exitCode
         )
         return

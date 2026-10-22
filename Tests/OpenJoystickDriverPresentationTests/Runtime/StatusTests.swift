@@ -342,6 +342,51 @@ struct StatusTests {
     #expect(presentation.readiness == .needsAttention)
   }
 
+  @Test
+  func controllersPageListsAnUnservedDeviceWithTheSentenceOfItsReason() {
+    func unbound(_ reason: ProtocolBindingReason) -> ApplicationServiceUnboundDevice {
+      ApplicationServiceUnboundDevice(
+        vendorID: 0x3537,
+        productID: 0x1010,
+        connection: "USB",
+        accessBackend: .rawUSB,
+        reason: reason,
+        rejectedCandidates: [],
+        interfaces: []
+      )
+    }
+    func presentation(_ reason: ProtocolBindingReason) -> RuntimeStatusPresentation {
+      RuntimeStatusPresentation(
+        payload: ApplicationServiceStatusPayload(
+          inputRead: .granted,
+          inputInject: .granted,
+          connectedDevices: [],
+          unboundDevices: [unbound(reason)],
+          userSpaceVirtualDeviceEnabled: true,
+          userSpaceVirtualDeviceStatus: .backend("ready")
+        )
+      )
+    }
+
+    let held = presentation(.deviceInUse).unservedDevices
+    #expect(held.map(\.identity) == ["3537:1010"])
+    #expect(held.map(\.explanation) == [OJDLocalized.string("ui.controllers.deviceInUse")])
+    #expect(held.first?.explanation.isEmpty == false)
+    #expect(
+      presentation(.configurationUnreadable).unservedDevices.map(\.explanation) == [
+        OJDLocalized.string("ui.controllers.configurationUnreadable")
+      ]
+    )
+    // A reason the person cannot act on is not listed.
+    #expect(presentation(.noProtocolMatch).unservedDevices.isEmpty)
+    // The listing survives the updates that rebuild the presentation.
+    #expect(
+      presentation(.deviceInUse).applyingPermissions(
+        RuntimePermissionSummary(inputRead: .granted, inputInject: .granted)
+      ).unservedDevices == held
+    )
+  }
+
   private func testPad(sessionToken: String) -> ApplicationServiceDeviceDescription {
     ApplicationServiceDeviceDescription(
       name: "Test Pad",
