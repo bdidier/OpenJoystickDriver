@@ -112,8 +112,14 @@ struct LocalizationTests {
       let categories = LocalizationCatalogAudit.pluralCategories(for: locale)
       #expect(!categories.isEmpty)
       for (key, present) in categories {
+        // An entry with no plural variable has no categories at all.
+        #expect(!present.isEmpty, "\(locale) \(key) has no plural variable")
         #expect(required.isSubset(of: present), "\(locale) \(key)")
       }
+      #expect(
+        LocalizationCatalogAudit.countKeysWithoutPluralEntry(for: locale).isEmpty,
+        "\(locale) takes a count but has no stringsdict entry"
+      )
     }
 
     let resolver = Localization(preferredLanguages: ["en-US"])

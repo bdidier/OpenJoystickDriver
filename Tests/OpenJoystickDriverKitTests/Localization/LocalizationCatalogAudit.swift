@@ -215,6 +215,17 @@ enum LocalizationCatalogAudit {
     stringsDictionary(for: localization).mapValues(collectPluralCategories)
   }
 
+  /// The keys whose `.strings` value takes a count (`%#@name@`) but that have no `.stringsdict`
+  /// entry in the same bundle.
+  static func countKeysWithoutPluralEntry(for localization: String) -> [String] {
+    let entries = stringsDictionary(for: localization)
+    return (stringsData(for: localization).map(parseStrings) ?? [:])
+      .filter { key, value in
+        value.range(of: #"%#@[A-Za-z0-9_]+@"#, options: .regularExpression) != nil
+          && entries[key] == nil
+      }.keys.sorted()
+  }
+
   static func sourceIdenticalEnglishProseKeys(for localization: String) -> Set<String> {
     let sourceStrings = stringsData(for: Localization.sourceLocalization).map(parseStrings) ?? [:]
     let localizedStrings = stringsData(for: localization).map(parseStrings) ?? [:]
