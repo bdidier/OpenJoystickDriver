@@ -40,6 +40,15 @@ struct SettingsWindowPaneModelTests {
   }
 
   @Test
+  func everyPaneKeyIsInTheCatalog() {
+    for pane in SettingsWindowPane.allCases {
+      for key in [pane.titleKey, pane.accessibilityKey] {
+        #expect(OJDLocalized.string(key) != key, "\(key)")
+      }
+    }
+  }
+
+  @Test
   func everyPaneSharesOneWidthAndTheHeightFollowsTheContent() {
     let short = SettingsWindowPane.contentSize(fittingHeight: 300, availableHeight: 900)
     let tall = SettingsWindowPane.contentSize(fittingHeight: 600, availableHeight: 900)

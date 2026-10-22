@@ -21,6 +21,13 @@ struct MainWindowAreaTests {
   }
 
   @Test
+  func everyAreaTitleKeyIsInTheCatalog() {
+    for area in MainWindowArea.allCases {
+      #expect(OJDLocalized.string(area.titleKey) != area.titleKey, "\(area.titleKey)")
+    }
+  }
+
+  @Test
   func onlyControllersProfilesAndLibraryHaveAListColumn() {
     #expect(MainWindowArea.allCases.filter(\.hasListColumn) == [.controllers, .profiles, .library])
   }

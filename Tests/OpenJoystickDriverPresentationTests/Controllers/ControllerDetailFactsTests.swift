@@ -274,7 +274,7 @@ struct ControllerDetailFactsTests {
       .missingAddress, .disconnectFailed, .timedOut,
     ] {
       let text = ControllerDetailLabels.wirelessDisconnectFailureText(failure)
-      #expect(!text.contains("controllers.disconnectWireless"))
+      #expect(!text.contains("ui.controllers.disconnectWireless"))
       #expect(!text.contains(failure.rawValue))
     }
   }
@@ -286,7 +286,7 @@ struct ControllerDetailFactsTests {
     )
     for risk in [DuplicateExposureRisk.systemHIDVisible, .upstreamVirtualDevice, .unknownOwnership]
     {
-      #expect(!ControllerDetailFacts.duplicateExposureText(risk).contains("controllers."))
+      #expect(!ControllerDetailFacts.duplicateExposureText(risk).contains("ui.controllers."))
     }
   }
 }
