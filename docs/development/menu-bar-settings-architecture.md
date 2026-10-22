@@ -68,20 +68,24 @@ Add files only for focused, independently testable capabilities. Group related h
 Menu items:
 
 - one readiness, controller-count, and active-profile summary;
-- `Request access...` only when permissions need attention;
-- connected-controller shortcuts;
-- Open Workbench, Settings, Help/About, and Quit.
+- a Controllers submenu with Suspend or Resume, Test Input, Active Profile, Disconnect Wireless Link and Show in Window per controller;
+- a Profiles submenu with Activate and Deactivate;
+- `Grant Access` only when a permission is missing;
+- Open Window, Settings, Help, and Quit.
 
 Do not put refresh, profile editing, logs, reports, packet streams, raw identifiers, catalog audits, support tests, contributor diagnostics, or metrics dashboards in the menu.
 
-### Settings Window
+### Main Window
 
-Use one visible native `NSToolbarItemGroup` for the four panes. The selected pane and window geometry persist across launches. Dirty profile edits intercept pane changes and offer Cancel or Discard.
+The main window has a sidebar with five areas, selected with Command-1 to Command-5: Controllers, Profiles, Library, Access and Activity. Dirty profile edits intercept an area change and offer Cancel or Discard.
 
-1. **Overview:** readiness, controller count, and the Access & readiness summary. Input Monitoring, controller publication, and Keyboard & pointer each have an explicit request action.
-2. **Controllers:** friendly names, connection state, selected profile, controller identity, and technical identifiers in the selected-device detail.
-3. **Profiles:** profile list and the selected profile's Assignments editor.
-4. **Debug:** typed runtime/controller details, diagnostics collection, Save report, and Save logs. Raw packet, watch, and catalog workflows remain CLI-only.
+1. **Controllers:** the connected controllers and the selected controller's detail: facts, Input Test, the Served by picker, the virtual HID profile, Draft Record and Capture Packets.
+2. **Profiles:** profile list and the selected profile's Assignments editor.
+3. **Library:** controller records and mods, with Validate, Install, Replace, Remove and Test Record.
+4. **Access:** permission rows with a request action each, the local endpoint, programs with access, tokens, refused requests and open connections.
+5. **Activity:** the log and the diagnostics checks.
+
+The Settings window has three panes: General, Notifications and Advanced. Raw packet, watch, and catalog workflows remain CLI-only except for the Developer Tools in the Advanced pane.
 
 The resizable window opens at its initial size and reuses one controller. Profile rows use native list/table controls, not a bitmap or coordinate hit map.
 

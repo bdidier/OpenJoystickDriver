@@ -55,13 +55,12 @@ system_profiler SPUSBDataType
 
 Use this method for a Bluetooth controller. Bluetooth controllers do not appear in the USB list.
 
-1. Open the OJD settings window.
-2. Open **Settings**.
+1. Open **Settings**.
+2. Open the **Advanced** pane.
 3. Turn on **Enable Developer Tools**.
-4. Open the **Developer Tools** pane.
-5. Select your controller.
+4. Select your controller in the developer tools below it.
 
-The pane shows the controller details, including its USB ID, connection type, and endpoints.
+The developer tools show the controller details, including its USB ID, connection type, and endpoints.
 
 ## Xbox USB Driver Extension
 
@@ -83,9 +82,9 @@ A build whose app profile has no `userclient-access` grant for the extension has
 
 Do these steps only if you use one of the controllers above.
 
-1. Open the OJD settings window.
-2. Open the **Overview** pane.
-3. Find the **Xbox USB Driver** card. It shows **Approval needed** until you approve the extension.
+1. Open **Settings**.
+2. Open the **Advanced** pane.
+3. Find **Xbox USB Driver**. It shows **Approval needed** until you approve the extension.
 4. Click **Open System Settings**. OJD opens the **Login Items & Extensions** settings.
 5. Approve the OpenJoystickDriver extension in **System Settings** > **General** > **Login Items & Extensions** > **Driver Extensions**.
 
@@ -98,5 +97,5 @@ When the card shows **Ready**, the extension is active. If the card shows **Need
 - [Controller not detected](Troubleshooting.md)
 - [Reporting a bug](Reporting-a-Bug.md)
 - [Build options and limits](Building-from-Source.md)
-- [Overview pane](Using-the-App.md)
+- [Using the app](Using-the-App.md)
 - [Security model](Permissions-and-Security.md)

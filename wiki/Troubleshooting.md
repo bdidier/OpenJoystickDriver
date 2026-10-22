@@ -28,7 +28,7 @@ This section explains what to check when OJD does not list your controller or sh
 ### Check the Basics
 
 1. Make sure OJD runs. Look for the menu bar item.
-2. Open **Overview** and check **Input Monitoring**. OJD cannot read a controller without it. For more information, see [Permissions](Permissions-and-Security.md).
+2. Open the **Access** area and check **Input Monitoring**. OJD cannot read a controller without it. For more information, see [Permissions](Permissions-and-Security.md).
 3. If **Input Monitoring** needs attention, click **Request...**.
 4. Allow it in **System Settings**.
 5. Click **Restart OpenJoystickDriver**.
@@ -45,7 +45,7 @@ The built-in catalog has 696 records. A record without a physical test is unveri
 
 ### Special Cases
 
-- **Xbox One or Xbox Series controller on USB:** These controllers need the OJD driver extension. In **Overview**, check the **Xbox USB Driver** card. If it shows **Approval needed**, click **Open System Settings** and approve it. If it shows **Needs attention**, click **Repair Xbox USB Driver**. For more information, see [Xbox USB driver extension](Connecting-Controllers.md).
+- **Xbox One or Xbox Series controller on USB:** These controllers need the OJD driver extension. Check the banner at the top of the window, or **Xbox USB Driver** in **Settings** > **Advanced**. If it shows **Approval needed**, click **Open System Settings** and approve it. If it shows **Needs attention**, click **Repair Xbox USB Driver**. For more information, see [Xbox USB driver extension](Connecting-Controllers.md).
 - **Clone or fake controller:** It may report itself in a way the catalog does not cover. For more information, see [Clone and fake controllers](Supported-Controllers.md).
 - **Dongle:** A dongle problem is separate from a controller problem. Test the controller in another connection mode if it has one.
 - **Runtime disconnected:** Run `ojd service start`, then run `ojd status`.
@@ -73,7 +73,7 @@ This section explains what to check when a controller works in OJD but not in a 
 
 1. Open the **Input Test** window for the controller. For more information, see [Testing a controller](Testing-a-Controller.md).
 2. Press buttons. If **Input Test** shows no input, see [Controller is not detected](#controller-is-not-detected).
-3. In **Overview**, check **Accessibility**. OJD needs it to publish the virtual controller.
+3. In the **Access** area, check **Accessibility**. OJD needs it to publish the virtual controller.
 
 ### Understand Why Apps Differ
 
@@ -113,7 +113,7 @@ This section explains what to do when OJD crashes, does not start, or reports a 
 
 ### Collect Information
 
-1. Open the Console pane, or run the following command.
+1. Open the **Activity** area, or run the following command.
 
    ```shell
    ojd log show --lines 200

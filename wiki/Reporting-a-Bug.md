@@ -22,7 +22,7 @@ Run the following command. It runs every check and writes the report to the file
 ojd diagnose --output support-report.json
 ```
 
-You can also click **Copy Support Report** on the **Xbox USB Driver** card in **Overview**. The app copies the report to the clipboard and shows no confirmation.
+You can also choose **Help** > **Copy Support Report**. The app copies the report to the clipboard and shows no confirmation.
 
 The report leaves out serial numbers, file paths, packet payloads, and HID location IDs. It includes controller product names. Read the report before you share it.
 
@@ -30,7 +30,7 @@ The support report, from `ojd diagnose --output` or the app, also lists `frameTi
 
 ## Get the Logs
 
-Open the Console pane and click **Copy All**. To open the pane, use the **Help** submenu of the menu bar item. Or run the following command.
+Open the **Activity** area and choose **Log**, or choose **Help** > **Activity Log**. Or run the following command.
 
 ```shell
 ojd log show --lines 200

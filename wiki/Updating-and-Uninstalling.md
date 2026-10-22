@@ -81,7 +81,7 @@ Removing the app alone leaves a login item, privacy entries, a system extension,
    ojd setting set launchAtLogin false
    ```
 
-2. If you approved the OJD driver extension, remove it. In **Overview**, on the **Xbox USB Driver** card, click **Uninstall**. Or run the following command.
+2. If you approved the OJD driver extension, remove it. In **Settings** > **Advanced**, under **Xbox USB Driver**, click **Uninstall**. Or run the following command.
 
    ```shell
    ojd transport-extension deactivate

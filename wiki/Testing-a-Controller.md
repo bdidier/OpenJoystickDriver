@@ -58,5 +58,5 @@ Shows only the controls that the controller supports. Otherwise it shows **Light
 ## Further Reading
 
 - [Rumble and lighting](Playing-Games.md)
-- [Controllers pane](Using-the-App.md#controllers-pane)
+- [Controllers area](Using-the-App.md#controllers-area)
 - [Controller not detected](Troubleshooting.md)

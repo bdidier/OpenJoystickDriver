@@ -11,15 +11,15 @@ OJD classifies physical pads by host wire protocol, not by consumer API. XInput,
 
 Xbox One S 1708+ Bluetooth is HID, not USB GIP. DualShock 1/2 used the PlayStation controller-port serial bus, not USB HID.
 
-Every family publishes through `VirtualHIDProfileSelector`, which picks one of exactly two virtual profiles per controller: `SDLCompatible` (`045E:02FD`, the Bluetooth-style Xbox One S layout) when the controller's primary controls fit it, else `Generic` (`1209:4A4F`, input-only). A per-model Advanced override can pin either profile; selection falls back to automatic when the controller can't satisfy the override. Catalog membership still comes from pinned Linux sources, HID tables, and local overrides. Apple GameController MobileAsset is diagnostic evidence, not the support catalog.
+Every family publishes through `VirtualHIDProfileSelector`, which picks one of exactly two virtual profiles per controller: `Generic` (`1209:4A4F`, input-only, the default) or `SDLCompatible` (`045E:02FD`, the Bluetooth-style Xbox One S layout) when a per-model Advanced override pins it and the controller's controls fit it. Selection falls back to `Generic` when the controller cannot satisfy the override. Catalog membership comes from the controller records that `./Scripts/ojd catalog regenerate --write` builds from pinned Linux and SDL sources and from the authored controllers and patches. Apple GameController MobileAsset is diagnostic evidence, not the support catalog.
 
-Each published device owns a host-report handler. Event reports and host-protocol replies use one ordered sender (a 64-entry queue and a two-second native send deadline). Suppression neutralizes the published input; closing rejects queued work and drains the current native send before releasing the device.
+Each published device owns a host-report handler. Event reports and host-protocol replies use one ordered sender (a queue of `tuning.frameQueueCapacity` entries, 64 by default, where the newest frame wins, and a two-second native send deadline). Suppression neutralizes the published input; closing rejects queued work and drains the current native send before releasing the device.
 
 Native SetReport buffers follow IOKit/HIDAPI framing: numbered reports include the report ID at byte zero; unnumbered reports contain only data. The internal request type also accepts explicitly marked ID-less payloads, never guessing framing from contents. GetReport returns a complete report bounded by the caller's positive capacity. Unsupported type/ID combinations and malformed requests fail with native IOKit errors.
 
 GetReport answers only the input report that the virtual format declares, bounded by the caller's capacity. SetReport decodes one output report: the Xbox One rumble report (ID `03`, eight payload bytes) of `SDLCompatible`. `Generic` is input-only. Any other type or ID is unsupported and an incorrectly sized payload is malformed. No virtual session answers Sony or Nintendo feature reports or commands; the Sony and Nintendo drivers speak those protocols to the physical controller only. Report IDs in this paragraph are hexadecimal.
 
-Codec and concurrency tests cover these contracts. They do not establish signed SDL/GameController binding, TCC reopen behavior, or physical output delivery.
+Codec and concurrency tests cover these contracts. `SDLCompatible` is not listed by SDL 3.4.x with default hints (`worksWithDefaultSDLHints: false`), and `Generic` is, with the SDL mapping that `ojd virtual export-mapping` prints. The tests do not establish SDL button and axis directions, TCC reopen behavior, or physical output delivery.
 
 Build with SwiftPM; neither Xcode.app nor disabling SIP is required.
 
