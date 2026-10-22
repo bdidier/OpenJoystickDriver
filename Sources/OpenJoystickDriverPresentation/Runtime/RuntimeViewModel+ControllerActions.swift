@@ -140,6 +140,9 @@ extension RuntimeViewModel {
     _ server: ControllerServer,
     for device: ApplicationServiceDeviceDescription
   ) async {
+    let model = RuntimeControllerModel(device)
+    pendingControllerServers[model] = server
+    defer { pendingControllerServers[model] = nil }
     var accepted = false
     await performControllerAction(device) {
       let result = try await gateway.setControllerServer(
@@ -153,7 +156,12 @@ extension RuntimeViewModel {
       return RuntimePresentation.controllerServerFailure(failure, detail: result.detail)
     }
     guard accepted else { return }
-    await waitForRecordServer(server, of: RuntimeControllerModel(device))
+    await waitForRecordServer(server, of: model)
+  }
+
+  /// The server the picker shows for `device`: the pending choice, or the record's server.
+  func shownControllerServer(for device: ApplicationServiceDeviceDescription) -> ControllerServer {
+    pendingControllerServers[RuntimeControllerModel(device)] ?? device.recordServer
   }
 
   /// Refreshes the inventory every 200 ms, for at most 2 seconds, until a controller of `model`

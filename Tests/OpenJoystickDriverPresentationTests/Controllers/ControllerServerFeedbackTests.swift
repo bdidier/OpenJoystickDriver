@@ -58,6 +58,42 @@ struct ControllerServerFeedbackTests {
   }
 
   @Test
+  func thePickerShowsTheChosenServerUntilTheServiceConfirmsIt() async {
+    let gateway = GatewayStub(statusPayload: Self.status([Self.device()]))
+    let viewModel = RuntimeViewModel(gateway: gateway)
+
+    let toggle = Task { await viewModel.setControllerServer(.ojd, for: Self.device()) }
+    await gateway.waitForStatusCall(count: 2)
+    #expect(viewModel.shownControllerServer(for: Self.device()) == .ojd)
+    await gateway.setStatusPayload(Self.status([Self.device(recordServer: .ojd)]))
+    await toggle.value
+
+    #expect(viewModel.shownControllerServer(for: Self.device(recordServer: .ojd)) == .ojd)
+    #expect(viewModel.pendingControllerServers.isEmpty)
+  }
+
+  @Test
+  func thePickerReturnsToTheRecordWhenTheChangeIsNotConfirmed() async {
+    let gateway = GatewayStub(statusPayload: Self.status([Self.device()]))
+    let viewModel = RuntimeViewModel(gateway: gateway)
+
+    await viewModel.setControllerServer(.ojd, for: Self.device())
+
+    #expect(viewModel.shownControllerServer(for: Self.device()) == .system)
+  }
+
+  @Test
+  func thePickerReturnsToTheRecordWhenTheServiceRefuses() async {
+    let gateway = GatewayStub(statusPayload: Self.status([Self.device()]))
+    await gateway.setServerFailure(.noRecord)
+    let viewModel = RuntimeViewModel(gateway: gateway)
+
+    await viewModel.setControllerServer(.ojd, for: Self.device())
+
+    #expect(viewModel.shownControllerServer(for: Self.device()) == .system)
+  }
+
+  @Test
   func anAcceptedToggleStopsRefreshingAfterTwoSeconds() async {
     let gateway = GatewayStub(statusPayload: Self.status([Self.device()]))
     let viewModel = RuntimeViewModel(gateway: gateway)

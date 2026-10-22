@@ -37,6 +37,10 @@ final class RuntimeViewModel: ObservableObject {
   /// identifier; cleared when the controller's next action starts.
   @Published
   var controllerActionFailures: [String: String] = [:]
+  /// The server chosen for each controller model while the service applies it, so the picker
+  /// keeps the choice instead of showing the record's value until the record changes.
+  @Published
+  var pendingControllerServers: [RuntimeControllerModel: ControllerServer] = [:]
   /// Why the latest background status read failed while the last controller list stays visible.
   @Published
   var liveStatusError: String?

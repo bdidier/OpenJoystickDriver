@@ -30,9 +30,9 @@
 
     private var serverBinding: Binding<ControllerServer> {
       Binding(
-        get: { device.recordServer },
+        get: { viewModel.shownControllerServer(for: device) },
         set: { server in
-          guard server != device.recordServer else { return }
+          guard server != viewModel.shownControllerServer(for: device) else { return }
           let device = device
           Task { @MainActor in await viewModel.setControllerServer(server, for: device) }
         }
