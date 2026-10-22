@@ -22,9 +22,10 @@ private let usage = """
   any depth and writes each to its relative path, and refuses a patch file that is not at the
   path its selector gives: a vendor directory for a vendorID with productID, the top of the
   directory for the others, so a deeper file is refused.
-  facts prints one JSON object of the constants that Swift owns: apiVersion,
-  commandLineExitStatuses (the sorted exit statuses of ojd) and domainCodePrefixes (the start of
-  the codes of each error domain). kebab prints one JSON object that maps
+  facts prints one JSON object of the constants that Swift owns: apiVersion, schemaBase (the start
+  of the $id of every schema), commandLineExitStatuses (the sorted exit statuses of ojd),
+  domainCodePrefixes (the start of the codes of each error domain) and domainAreas (the en-US name
+  of the area of each error domain). kebab prints one JSON object that maps
   each value to its CommandLineName.kebab spelling. Neither prints problems and both exit 0.
   Each problem is one JSON line {"code", "file", "message"} on standard output. The exit status is
   0 without a problem, 1 with one, and 64 for a call that the tool refuses.
@@ -119,8 +120,15 @@ private func document(_ arguments: [String]) throws -> [String: Any]? {
   switch arguments.first {
   case "facts":
     guard rest.isEmpty else { throw UsageError(message: "facts takes no argument") }
+    let english = Localization(preferredLanguages: [Localization.sourceLocalization])
     return [
       "apiVersion": OpenJoystickDriverAPI.version,
+      "schemaBase": OpenJoystickDriverAPI.schemaBase,
+      "domainAreas": Dictionary(
+        uniqueKeysWithValues: ErrorCode.Domain.allCases.map {
+          ($0.rawValue, english.string($0.areaKey))
+        }
+      ),
       "commandLineExitStatuses": ErrorCode.commandLineExitStatuses.sorted(),
       "domainCodePrefixes": Dictionary(
         uniqueKeysWithValues: ErrorCode.Domain.allCases.map { ($0.rawValue, $0.codePrefix) }

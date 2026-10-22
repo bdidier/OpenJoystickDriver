@@ -120,13 +120,18 @@ def document(arguments: list[str]) -> dict[str, Any]:
 
 @cache
 def facts() -> dict[str, Any]:
-    """The constants Swift owns: `apiVersion`, `commandLineExitStatuses` and `domainCodePrefixes`."""
+    """The constants Swift owns: what `OJDRepositoryTool facts` prints."""
     return document(["facts"])
 
 
 def api_version() -> str:
     """The `apiVersion` every OJD document carries: `OpenJoystickDriverAPI.version`."""
     return str(facts()["apiVersion"])
+
+
+def schema_base() -> str:
+    """The start of the `$id` of every schema: `OpenJoystickDriverAPI.schemaBase`."""
+    return str(facts()["schemaBase"])
 
 
 def command_line_exit_statuses() -> frozenset[int]:
@@ -138,6 +143,12 @@ def domain_code_prefixes() -> dict[str, str]:
     """The start of the codes of each error domain: `ErrorCode.Domain.codePrefix`."""
     prefixes = facts()["domainCodePrefixes"]
     return {str(name): str(prefix) for name, prefix in prefixes.items()}
+
+
+def domain_areas() -> dict[str, str]:
+    """The en-US name of the area of each error domain: `ErrorCode.Domain.areaKey`."""
+    areas = facts()["domainAreas"]
+    return {str(name): str(area) for name, area in areas.items()}
 
 
 def kebab(values: list[str]) -> dict[str, str]:

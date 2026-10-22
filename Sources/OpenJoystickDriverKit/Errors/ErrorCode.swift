@@ -117,6 +117,17 @@ public enum ErrorCode: String, Codable, Sendable, CaseIterable {
       case .document: "E5"
       }
     }
+
+    /// The `Localizable.strings` key of the name of the area.
+    public var areaKey: String {
+      switch self {
+      case .endpoint: "cli.explain.area.endpoint"
+      case .commandLine: "cli.explain.area.cli"
+      case .remapping: "cli.explain.area.remapping"
+      case .mod: "cli.explain.area.mod"
+      case .document: "cli.explain.area.document"
+      }
+    }
   }
 
   public var domain: Domain {

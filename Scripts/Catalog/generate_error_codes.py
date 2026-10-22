@@ -19,6 +19,7 @@ from typing import Any
 from Scripts.Quality.biome_format import format_json
 from Scripts.Quality.repository_tool import (
     command_line_exit_statuses,
+    domain_areas,
     domain_code_prefixes,
 )
 
@@ -42,14 +43,6 @@ ENGLISH_STRINGS = Path(
 )
 BEGIN = "<!-- BEGIN GENERATED: error-codes -->"
 END = "<!-- END GENERATED: error-codes -->"
-# The area column of the wiki page. It is page text, not the localized area `ojd explain` prints.
-DOMAIN_AREA = {
-    "Endpoint": "Endpoint",
-    "CLI": "Command line",
-    "Remapping": "Remapping",
-    "Mod": "Mod",
-    "Document": "Document",
-}
 STRING_LINE = re.compile(r'^"([^"]+)" = "(.*)";$')
 STRING_ESCAPE = re.compile(r"\\(.)")
 STRING_ESCAPES = {"n": "\n", "t": "\t"}
@@ -147,8 +140,9 @@ def meaning(entry: Entry, strings: dict[str, str]) -> str:
 
 
 def wiki_block(entries: list[Entry], strings: dict[str, str]) -> str:
+    areas = domain_areas()
     rows = [
-        f"| {entry['code']} | {DOMAIN_AREA[entry['domain']]} | {meaning(entry, strings)} |"
+        f"| {entry['code']} | {areas[entry['domain']]} | {meaning(entry, strings)} |"
         for entry in entries
     ]
     return "\n".join(

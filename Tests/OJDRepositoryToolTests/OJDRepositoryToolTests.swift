@@ -465,7 +465,17 @@ struct OJDRepositoryToolTests {
           uniqueKeysWithValues: ErrorCode.Domain.allCases.map { ($0.rawValue, $0.codePrefix) }
         )
     )
-    #expect(object.count == 3)
+    #expect(object["schemaBase"] as? String == OpenJoystickDriverAPI.schemaBase)
+    let english = Localization(preferredLanguages: [Localization.sourceLocalization])
+    #expect(
+      object["domainAreas"] as? [String: String]
+        == Dictionary(
+          uniqueKeysWithValues: ErrorCode.Domain.allCases.map {
+            ($0.rawValue, english.string($0.areaKey))
+          }
+        )
+    )
+    #expect(object.count == 5)
   }
 
   @Test

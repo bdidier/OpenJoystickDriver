@@ -37,18 +37,10 @@ extension ErrorCode {
 
   public var facts: ErrorCodeFacts {
     let localization = Localization()
-    let area: String
-    switch domain {
-    case .endpoint: area = localization.string("cli.explain.area.endpoint")
-    case .commandLine: area = localization.string("cli.explain.area.cli")
-    case .remapping: area = localization.string("cli.explain.area.remapping")
-    case .mod: area = localization.string("cli.explain.area.mod")
-    case .document: area = localization.string("cli.explain.area.document")
-    }
     return ErrorCodeFacts(
       code: rawValue,
       domain: domain.rawValue,
-      area: area,
+      area: localization.string(domain.areaKey),
       explanation: localizedExplanation,
       exitCode: domain == .commandLine ? commandLineExitStatus : nil,
       wire: domain == .remapping
