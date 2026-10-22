@@ -3518,6 +3518,8 @@
 "ui.menu.controller.disconnectWirelessLink" = "Disconnetti collegamento wireless";
 /* Item of the Controller menu that shows the selected controller in the main window. */
 "ui.menu.controller.showInWindow" = "Mostra nella finestra";
+/* Disabled item of the Controller menu and of the status item's Controllers submenu when no controller is connected. */
+"ui.menu.controller.noneConnected" = "Nessun controller collegato";
 /* Disabled item of the Controller menu when no controller is selected. */
 "ui.menu.controller.noneSelected" = "Nessun controller selezionato";
 /* Title of the Profile menu in the menu bar. */
@@ -3526,6 +3528,10 @@
 "ui.menu.profile.activate" = "Attiva profilo";
 /* Item of the Profile menu that turns off the active profile. */
 "ui.menu.profile.deactivate" = "Disattiva profilo";
+/* Disabled item of the Profile menu's Activate Profile submenu when no profile exists. */
+"ui.menu.profile.none" = "Nessun profilo";
+/* Disabled item of the Profile menu's Activate Profile submenu while the profile list is loading or cannot be read. */
+"ui.menu.profile.unavailable" = "Profili non disponibili";
 /* Title of the alert shown when turning off a profile from the menu fails. */
 "ui.menu.profile.deactivateFailed" = "Impossibile disattivare il profilo";
 /* Message of the alert shown when the profile changed elsewhere during the turn off. */

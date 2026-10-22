@@ -28,13 +28,13 @@ The menu contains these items, from top to bottom:
 - A status row that you cannot click.
   It shows readiness, the number of controllers, and the active profile.
 - **Controllers** lists each connected controller as a submenu.
-  **No controller connected** appears when the list is empty.
+  **No Controller Connected** appears when the list is empty.
 - **Profiles** has **Activate** and **Deactivate** submenus with the profiles that apply.
 - **Grant Access** appears only when a permission is missing.
   It opens the **Access** area.
 - **Open Window** opens the app window on the area you used last.
 - **Settings...** opens the **Settings** window.
-- **Help** contains **Activity Log**, **Explain Error Code...**, **Report a Problem...**, and **Project Website**.
+- **Help** contains **Activity Log**, **Explain Error Code...**, **Report Problem...**, and **Project Website**.
 - **Quit OpenJoystickDriver** stops OJD.
 
 ### Controller Entries
@@ -87,11 +87,12 @@ A banner below the toolbar shows a problem that stops OJD from working:
 
 The main menu follows the macOS layout:
 
-- **File** has **Import Profile...**, **Export Profile...**, **Install Record or Mod...**, **Save Support Report...**, and **Save Activity Log...**.
+- **File** has **Import Profile...**, **Install Record or Mod...**, **Close**, **Export Profile...**, **Save Support Report...**, and **Save Activity Log...**.
 - **View** selects the five areas and shows or hides the sidebar and the toolbar.
 - **Controller** has **Suspend**, **Resume**, **Test Input**, **Disconnect Wireless Link**, and **Show in Window** for the selected controller.
 - **Profile** has **Activate Profile** and **Deactivate Profile**.
-- **Help** has **Activity Log**, **Copy Support Report**, **Explain Error Code...**, **Report a Problem...**, and **Project Website**.
+  While no profile exists, the **Activate Profile** submenu shows **No Profiles**; while the profile list is loading or cannot be read, it shows **Profiles Unavailable**.
+- **Help** has **Activity Log**, **Explain Error Code...**, **Copy Support Report**, **Report Problem...**, and **Project Website**.
   For more information, see [Reporting a bug](Reporting-a-Bug.md).
 
 ## Controllers Area

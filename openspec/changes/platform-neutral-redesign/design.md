@@ -274,7 +274,7 @@ Profiles >     Activate, Deactivate
 Grant Access...   (only while a permission is missing)
 Open Window
 Settings...
-Help >         Activity Log..., Explain Error Code..., Report a Problem..., Project Website
+Help >         Activity Log..., Explain Error Code..., Report Problem..., Project Website
 Quit
 ```
 

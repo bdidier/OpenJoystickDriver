@@ -3295,6 +3295,8 @@
 "ui.menu.controller.disconnectWirelessLink" = "قطع الاتصال اللاسلكي";
 /* Item of the Controller menu that shows the selected controller in the main window. */
 "ui.menu.controller.showInWindow" = "إظهار في النافذة";
+/* Disabled item of the Controller menu and of the status item's Controllers submenu when no controller is connected. */
+"ui.menu.controller.noneConnected" = "لا توجد وحدة تحكم متصلة";
 /* Disabled item of the Controller menu when no controller is selected. */
 "ui.menu.controller.noneSelected" = "لم يتم تحديد وحدة تحكم";
 /* Title of the Profile menu in the menu bar. */
@@ -3303,6 +3305,10 @@
 "ui.menu.profile.activate" = "تفعيل ملف التعريف";
 /* Item of the Profile menu that turns off the active profile. */
 "ui.menu.profile.deactivate" = "إلغاء تفعيل ملف التعريف";
+/* Disabled item of the Profile menu's Activate Profile submenu when no profile exists. */
+"ui.menu.profile.none" = "لا توجد ملفات تعريف";
+/* Disabled item of the Profile menu's Activate Profile submenu while the profile list is loading or cannot be read. */
+"ui.menu.profile.unavailable" = "ملفات التعريف غير متوفرة";
 /* Title of the alert shown when turning off a profile from the menu fails. */
 "ui.menu.profile.deactivateFailed" = "تعذّر إلغاء تفعيل ملف التعريف";
 /* Message of the alert shown when the profile changed elsewhere during the turn off. */

@@ -21,6 +21,8 @@ BUNDLE_ID = "com.openjoystickdriver"
 AREAS = ("Controllers", "Profiles", "Library", "Access", "Activity")
 SETTINGS_PANES = ("General", "Notifications", "Advanced")
 BOUNDS_TOLERANCE = 2.0
+# kCGDockWindowLevel and kCGMainMenuWindowLevel: the Dock and the menu bar.
+SCREEN_CHROME_LAYERS = (20, 24)
 ACCESSIBILITY_GRANTED = "0"
 ACCESSIBILITY_NOT_TRUSTED = "-25211"
 ACCESSIBILITY_CANNOT_COMPLETE = "-25204"
@@ -38,7 +40,10 @@ class CaptureError(Exception):
 def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         prog="./Scripts/ojd shots capture",
-        description="Capture app windows with screencapture -l into .ojd-shots/<timestamp>/.",
+        description=(
+            "Capture the screen rectangle of each app window with screencapture -R "
+            "into .ojd-shots/<timestamp>/."
+        ),
     )
     choice = parser.add_mutually_exclusive_group(required=True)
     choice.add_argument("--area", choices=AREAS, help="sidebar area of the main window")
@@ -167,7 +172,14 @@ def require_accessibility(
         sleep(min(APP_READY_POLL_SECONDS, max(0.0, deadline - clock())))
 
 
-def window_id(pid: int, kind: str) -> int:
+def on_screen_windows() -> list[dict]:
+    """Every on-screen window, front to back, as window-list.js reports it."""
+    listing = run(["osascript", "-l", "JavaScript", str(GUI_DIR / "window-list.js")])
+    return json.loads(listing)
+
+
+def find_window(pid: int, kind: str, windows: list[dict]) -> dict:
+    """The app window of `kind`: the on-screen layer-0 window of `pid` at its AX bounds."""
     reported = gui("window-bounds", kind)
     try:
         bounds = [float(value) for value in reported.split()]
@@ -175,14 +187,42 @@ def window_id(pid: int, kind: str) -> int:
         raise CaptureError(f"window-bounds reported {reported!r}") from error
     if len(bounds) != 4:
         raise CaptureError(f"window-bounds reported {reported!r}, expected x y w h")
-    listing = run(
-        ["osascript", "-l", "JavaScript", str(GUI_DIR / "window-list.js"), str(pid)]
-    )
-    for window in json.loads(listing):
+    for window in windows:
+        if window["pid"] != pid or window["layer"] != 0:
+            continue
         found = [window[key] for key in ("x", "y", "width", "height")]
         if all(abs(a - b) <= BOUNDS_TOLERANCE for a, b in zip(found, bounds)):
-            return int(window["id"])
+            return window
     raise CaptureError(f"no on-screen {kind} window has bounds {bounds}")
+
+
+def overlaps(first: dict, second: dict) -> bool:
+    return (
+        first["x"] < second["x"] + second["width"]
+        and second["x"] < first["x"] + first["width"]
+        and first["y"] < second["y"] + second["height"]
+        and second["y"] < first["y"] + first["height"]
+    )
+
+
+def covering_windows(target: dict, windows: list[dict]) -> list[str]:
+    """Owners of the windows in front of `target` that overlap it.
+
+    `windows` is front to back. The Dock and the menu bar are transparent windows over the
+    whole screen in front of every app window, so their layers are not counted.
+    """
+    front = windows[: next(i for i, w in enumerate(windows) if w["id"] == target["id"])]
+    return [
+        window["owner"]
+        for window in front
+        if window["layer"] not in SCREEN_CHROME_LAYERS and overlaps(window, target)
+    ]
+
+
+def screen_rectangle(window: dict) -> str:
+    """The `screencapture -R` argument for the window's frame in global points."""
+    values = [window[key] for key in ("x", "y", "width", "height")]
+    return ",".join(f"{value:g}" for value in values)
 
 
 def require_english_ui() -> None:
@@ -220,9 +260,21 @@ def read_state() -> tuple[bool, str | None]:
 
 
 def shoot(pid: int, kind: str, destination: Path) -> None:
-    run(
-        ["screencapture", "-x", "-l", str(window_id(pid, kind)), "-o", str(destination)]
-    )
+    """Captures the screen rectangle of the window, so its materials show what lies behind.
+
+    `screencapture -l` draws one window alone over transparency: a Liquid Glass or other
+    translucent surface then has no backdrop and comes out washed out over a checkerboard.
+    The rectangle shows whatever is in front of the window too, so a covered window fails.
+    """
+    windows = on_screen_windows()
+    window = find_window(pid, kind, windows)
+    covering = covering_windows(window, windows)
+    if covering:
+        raise CaptureError(
+            f"the {kind} window is covered by windows of {', '.join(sorted(set(covering)))}: "
+            "move them off the window and run the capture again"
+        )
+    run(["screencapture", "-x", "-R", screen_rectangle(window), str(destination)])
     if not destination.is_file() or destination.stat().st_size == 0:
         raise CaptureError(
             f"screencapture wrote no image to {destination}: grant Screen Recording"

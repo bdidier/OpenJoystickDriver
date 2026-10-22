@@ -11,7 +11,7 @@ Every status-item and main-menu action SHALL exist in the main window or Setting
 
 ### Requirement: Fixed status-item layout
 
-The status item SHALL show, in order: status line; Controllers submenu; Profiles submenu (Activate, Deactivate); Grant Access; Open Window; Settings; Help submenu (Activity Log, Explain Error Code, Report a Problem, Project Website); Quit. Items SHALL be disabled when not applicable and SHALL NOT be hidden, except Grant Access, which SHALL be hidden while every permission is granted.
+The status item SHALL show, in order: status line; Controllers submenu; Profiles submenu (Activate, Deactivate); Grant Access; Open Window; Settings; Help submenu (Activity Log, Explain Error Code, Report Problem, Project Website); Quit. Items SHALL be disabled when not applicable and SHALL NOT be hidden, except Grant Access, which SHALL be hidden while every permission is granted.
 
 #### Scenario: Every permission granted
 
@@ -82,6 +82,16 @@ The main menu SHALL have App, File, Edit, View, Controller, Profile, Window and 
 
 - **WHEN** the user chooses File > Save Support Report
 - **THEN** a save panel opens and the report writes on confirm
+
+#### Scenario: No profile
+
+- **WHEN** no profile exists
+- **THEN** Profile > Activate Profile stays enabled and its submenu holds one disabled No Profiles row
+
+#### Scenario: Profile list not read
+
+- **WHEN** the profile list is loading or the service cannot report it
+- **THEN** Profile > Activate Profile stays enabled and its submenu holds one disabled Profiles Unavailable row
 
 ### Requirement: Main menu controller target
 
