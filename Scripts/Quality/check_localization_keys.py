@@ -5,6 +5,15 @@ A key read by `OJDLocalized.*`, `CLILocalized.*`, `LocalizedStringResource(` or
 from a literal prefix needs at least one catalog key with that prefix. A catalog key that no Swift
 source under `Sources` reads also fails, unless `KEPT_WITHOUT_READER` names it and says why.
 
+Two further checks reach the keys a call site does not pass directly:
+
+- a string literal anywhere in Swift that has the shape of a key (a namespace and dotted segments)
+  must name a catalog key or start one, unless `NOT_A_KEY` names it and says why. Keys held in
+  enums, tables and `...Key` properties are literals, so a misspelled one fails here;
+- a helper such as `label(_ key: String)` that returns `OJDLocalized.string("ui.x." + key)` has its
+  literal arguments joined to the prefix and checked, as do the functions of the same file that
+  pass their first parameter on to it.
+
 The catalog itself follows these rules:
 
 - namespace: a key starts with one of the namespaces in `NAMESPACE_PATTERNS` and its segments are
@@ -119,6 +128,21 @@ class StringsEntry:
 
 # Catalog keys no Swift source reads but that stay, each with its reason.
 KEPT_WITHOUT_READER: dict[str, str] = {}
+
+# Key-shaped Swift literals that are not catalog keys, each with the reason.
+NOT_A_KEY: dict[str, str] = {
+    "notify.sounds": "the name of a setting that `ojd setting` reads and writes",
+}
+KEY_SHAPE = re.compile(
+    r"(?:term|action|status|ui|a11y|cli|error|notify|platform)(?:\.[A-Za-z0-9_]+)+\.?"
+)
+FUNCTION_WITH_STRING_PARAMETER = re.compile(
+    r"\bfunc\s+(?P<name>\w+)\(\s*_\s+(?P<parameter>\w+)\s*:\s*String\b"
+)
+PREFIX_HELPER = re.compile(
+    r"\bfunc\s+(?P<name>\w+)\(\s*_\s+(?P<parameter>\w+)\s*:\s*String\s*\)\s*->\s*String\s*"
+    r'\{\s*(?:return\s+)?OJDLocalized\.string\(\s*"(?P<prefix>[^"\\]+)"\s*\+\s*(?P=parameter)\s*\)'
+)
 
 
 @dataclass(frozen=True)
@@ -272,6 +296,43 @@ def problems(expression: str, keys: set[str]) -> str | None:
             return None
         return f"no key starts with {prefix.group(1)!r}"
     return None
+
+
+def key_literal_problems(source: str, keys: set[str]) -> list[tuple[int, str]]:
+    """Return (line, literal) for each key-shaped literal that names no catalog key."""
+    found: list[tuple[int, str]] = []
+    for offset, literal in string_literal_spans(source):
+        if (
+            KEY_SHAPE.fullmatch(literal)
+            and literal not in keys
+            and literal not in NOT_A_KEY
+            and not any(key.startswith(literal) for key in keys)
+        ):
+            found.append((source.count("\n", 0, offset) + 1, literal))
+    return found
+
+
+def helper_key_problems(source: str, keys: set[str]) -> list[tuple[int, str]]:
+    """Return (line, key) for each literal argument of a prefix helper that names no catalog key."""
+    found: list[tuple[int, str]] = []
+    functions = list(FUNCTION_WITH_STRING_PARAMETER.finditer(source))
+    for helper in PREFIX_HELPER.finditer(source):
+        names = {helper["name"]}
+        for index, function in enumerate(functions):
+            end = (
+                functions[index + 1].start()
+                if index + 1 < len(functions)
+                else len(source)
+            )
+            body = source[function.end() : end]
+            if re.search(rf"\b{helper['name']}\(\s*{function['parameter']}\s*\)", body):
+                names.add(function["name"])
+        for name in sorted(names):
+            for call in re.finditer(rf'(?<!func )\b{name}\(\s*"([^"\\]*)"', source):
+                key = helper["prefix"] + call[1]
+                if key not in keys:
+                    found.append((source.count("\n", 0, call.start()) + 1, key))
+    return found
 
 
 def tracked_swift_files(root: Path = ROOT) -> list[Path]:
@@ -593,13 +654,24 @@ def check(root: Path = ROOT) -> tuple[list[tuple[KeyUse, str]], list[KeyUse]]:
     unscannable: list[KeyUse] = []
     for path in tracked_swift_files(root):
         relative = path.relative_to(root).as_posix()
-        for line, expression in key_arguments(path.read_text(encoding="utf-8")):
+        source = path.read_text(encoding="utf-8")
+        for line, expression in key_arguments(source):
             use = KeyUse(relative, line, expression)
             reason = problems(expression, keys)
             if reason:
                 missing.append((use, reason))
             elif not LITERAL.search(expression):
                 unscannable.append(use)
+        reported = {
+            (use.line, reason) for use, reason in missing if use.path == relative
+        }
+        for line, key in key_literal_problems(source, keys) + helper_key_problems(
+            source, keys
+        ):
+            reason = f"missing key {key!r}"
+            if (line, reason) not in reported:
+                reported.add((line, reason))
+                missing.append((KeyUse(relative, line, key), reason))
     return missing, unscannable
 
 

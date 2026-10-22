@@ -116,6 +116,64 @@ class ReaderTests(unittest.TestCase):
         self.assertEqual(problems, ["kept key 'read.key' has a reader"])
 
 
+class KeyLiteralTests(unittest.TestCase):
+    def test_key_shaped_literal_must_name_a_catalog_key(self) -> None:
+        keys = {"ui.area.title", "ui.area.sub.leaf"}
+        source = (
+            'let a = "ui.area.title"\nlet b = "ui.area.titel"\nlet c = "ui.area.sub."\n'
+        )
+        self.assertEqual(
+            guard.key_literal_problems(source, keys), [(2, "ui.area.titel")]
+        )
+
+    def test_literals_outside_the_namespaces_and_named_exceptions_pass(self) -> None:
+        source = (
+            'let a = "idVendor"\nlet b = "notify.sounds"\nlet c = "ui.\\(x).title"\n'
+        )
+        self.assertEqual(guard.key_literal_problems(source, set()), [])
+
+    def test_every_named_exception_has_a_reason(self) -> None:
+        for key, reason in guard.NOT_A_KEY.items():
+            self.assertTrue(reason, key)
+
+
+class PrefixHelperTests(unittest.TestCase):
+    SOURCE = (
+        "private func field(_ key: String, _ value: Binding<String>) -> some View {\n"
+        "  Text(label(key))\n"
+        "}\n"
+        "private func label(_ key: String) -> String {\n"
+        '  OJDLocalized.string("ui.profiles.gyro." + key)\n'
+        "}\n"
+        'let rows = [label("deadzone"), field("sensitivty", $x), label(other)]\n'
+    )
+
+    def test_literal_arguments_of_the_helper_and_its_forwarders_are_checked(
+        self,
+    ) -> None:
+        keys = {"ui.profiles.gyro.deadzone", "ui.profiles.gyro.sensitivity"}
+        self.assertEqual(
+            guard.helper_key_problems(self.SOURCE, keys),
+            [(7, "ui.profiles.gyro.sensitivty")],
+        )
+
+    def test_known_arguments_pass(self) -> None:
+        keys = {"ui.profiles.gyro.deadzone", "ui.profiles.gyro.sensitivty"}
+        self.assertEqual(guard.helper_key_problems(self.SOURCE, keys), [])
+
+    def test_the_repository_helpers_are_found(self) -> None:
+        path = (
+            guard.ROOT
+            / "Sources/OpenJoystickDriverPresentation/Profiles/AnalogSheets"
+            / "ProfileStickFields.swift"
+        )
+        source = path.read_text(encoding="utf-8")
+        self.assertTrue(guard.PREFIX_HELPER.search(source))
+        keys = guard.catalog_keys()
+        self.assertEqual(guard.helper_key_problems(source, keys), [])
+        self.assertGreater(len(guard.helper_key_problems(source, set())), 10)
+
+
 class NamespaceTests(unittest.TestCase):
     def test_every_namespace_has_an_accepted_key(self) -> None:
         for key in (
