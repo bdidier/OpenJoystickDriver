@@ -17,7 +17,7 @@ private struct MissingTool: Error, CustomStringConvertible {
 /// with the code and reason that the Kit check reports for the same file.
 @Suite(.serialized)
 struct OJDRepositoryToolTests {
-  private struct Result {
+  struct Result {
     let status: Int32
     let standardOutput: String
     let standardError: String
@@ -51,7 +51,7 @@ struct OJDRepositoryToolTests {
     }
   }
 
-  private static func run(_ arguments: [String]) throws -> Result {
+  static func run(_ arguments: [String]) throws -> Result {
     let process = Process()
     process.executableURL = try tool
     process.arguments = arguments
@@ -86,7 +86,7 @@ struct OJDRepositoryToolTests {
     )
   }
 
-  private static func scratch(_ body: (URL) throws -> Void) throws {
+  static func scratch(_ body: (URL) throws -> Void) throws {
     let directory = FileManager.default.temporaryDirectory.appendingPathComponent(
       "OJDRepositoryToolTests-\(UUID().uuidString)",
       isDirectory: true
