@@ -8,8 +8,9 @@
   ///
   /// An accessory app that becomes regular because a window opened is not yet the active
   /// application of the new policy: its menu bar shows, but AppKit does not track its menus until
-  /// the app is activated once more after the policy took effect. The controller therefore
-  /// activates the app after every switch to `.regular` that a window caused.
+  /// the app is activated again after another app was active. Activating an app that is already
+  /// active does nothing, so after every switch to `.regular` that a window caused, the
+  /// controller hands activation to the Dock and takes it back once the app resigned active.
   @MainActor
   final class DockIconController {
     enum Window: Hashable {
@@ -19,7 +20,7 @@
     }
 
     private let setActivationPolicy: (NSApplication.ActivationPolicy) -> Bool
-    private let activateApplication: () -> Void
+    private let activateApplication: @MainActor () -> Void
     private var openWindows: Set<Window> = []
     /// The Show in Dock setting.
     var showsAlways = false {
@@ -31,11 +32,8 @@
       setActivationPolicy: @escaping (NSApplication.ActivationPolicy) -> Bool = {
         NSApplication.shared.setActivationPolicy($0)
       },
-      activateApplication: @escaping () -> Void = {
-        // The policy change completes on the next run loop turn; activating before it
-        // leaves the menu bar untracked.
-        DispatchQueue.main.async { NSApplication.shared.activate(ignoringOtherApps: true) }
-      }
+      activateApplication: @escaping @MainActor () -> Void = DockIconController
+        .reactivateThroughDock
     ) {
       self.setActivationPolicy = setActivationPolicy
       self.activateApplication = activateApplication
@@ -63,6 +61,36 @@
       appliedPolicy = desiredPolicy
       if desiredPolicy == .regular && !openWindows.isEmpty { activateApplication() }
     }
+
+    private static func reactivateThroughDock() {
+      guard
+        let dock = NSRunningApplication.runningApplications(
+          withBundleIdentifier: "com.apple.dock"
+        ).first
+      else {
+        fputs(
+          "The Dock is not running; the menu bar opens after the app is activated again.\n",
+          stderr
+        )
+        return
+      }
+      guard resignObserver == nil else { return }
+      resignObserver = NotificationCenter.default.addObserver(
+        forName: NSApplication.didResignActiveNotification,
+        object: nil,
+        queue: .main
+      ) { _ in
+        MainActor.assumeIsolated {
+          if let observer = resignObserver { NotificationCenter.default.removeObserver(observer) }
+          resignObserver = nil
+          NSApplication.shared.activate(ignoringOtherApps: true)
+        }
+      }
+      dock.activate(options: [])
+    }
+
+    /// The one-shot observer that activates the app again after it handed activation to the Dock.
+    private static var resignObserver: NSObjectProtocol?
   }
 
 #endif
