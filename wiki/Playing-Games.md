@@ -11,16 +11,17 @@ This page explains how games and apps see your controller through OpenJoystickDr
 
 ## How Games See Your Controller
 
-Games do not read your physical controller. OJD reads it and publishes one virtual controller for each physical controller. Games read the virtual controller. The virtual controller uses one of two profiles.
+Games do not read your physical controller. OJD reads it and publishes one virtual controller for each physical controller. Games read the virtual controller. The virtual controller uses one of three profiles.
 
 ### Virtual Controller Profiles
 
 | Profile | Shown to games as | VID:PID | Rumble |
 | --- | --- | --- | --- |
 | `SDLCompatible` | Xbox Wireless Controller, Microsoft, USB | `045E:02FD` | Accepts rumble output |
+| `GameControllerCompatible` | Xbox Wireless Controller, Microsoft, Bluetooth | `045E:0B13` | Accepts rumble output |
 | `Generic` | OpenJoystickDriver Generic HID Gamepad, USB | `1209:4A4F` | Input only |
 
-The `SDLCompatible` profile is an approximation of an Xbox controller. It is not a byte-exact copy of a real controller. The `Generic` profile has 16 buttons and no hat. The D-pad uses four of the 16 buttons.
+The `SDLCompatible` profile is an approximation of an Xbox controller. It is not a byte-exact copy of a real controller. The `GameControllerCompatible` profile sends the reports of an Xbox Series controller over Bluetooth, which Apple's GameController framework reads. OJD never picks it by itself; choose it with `ojd virtual set game-controller-compatible CONTROLLER`. SDL does not list it with its default hints, so start an SDL game with `ojd virtual launch --sdl-gamecontroller-backend PROGRAM`, which makes SDL read it through the GameController framework. The maintainer has not verified this profile on hardware. The `Generic` profile has 16 buttons and no hat. The D-pad uses four of the 16 buttons.
 
 ### Automatic Selection
 
@@ -29,6 +30,8 @@ OJD picks a profile for each controller model in this order:
 1. The override that you set for the model, if the profile fits the controller.
 2. The `SDLCompatible` profile, if it fits the main controls of the controller.
 3. The `Generic` profile.
+
+Automatic selection never picks `GameControllerCompatible`.
 
 The choice does not depend on the game, the macOS version, or the vendor. Both profiles carry every main control, so OJD chooses the Xbox profile for every controller unless you set an override. PCSX2 2.8.2 (SDL 3.4.12) and DuckStation (SDL 3.4.16) map every control of the Xbox profile as an Xbox pad: A, B, X, Y, LB, RB, View, Menu, both sticks, both triggers, the D-pad, Xbox, and both rumble motors. With the `Generic` profile, they report "No generic bindings were generated for device 'SDL-0'". The maintainer tested this on macOS 27. Steam is not tested with the Xbox profile.
 
@@ -60,7 +63,7 @@ Games read controllers through different programming interfaces. The interface d
 | --- | --- | --- |
 | OJD | Input Test | Works |
 | macOS | Game Controllers in **System Settings** | Works |
-| Browser | Gamepad API | Works |
+| Browser | Gamepad API | Does not fully work. With a Razer Wolverine Tournament Edition and a GameSir pad, the maintainer saw: Chrome reads `Generic` with the triggers on axes 4 and 5 and no rumble, as that profile is made, but the Razer right stick rests at -0.25 on axis 2. Safari does not list `Generic`, and lists `SDLCompatible` as "Xbox Wireless Controller Extended Gamepad" with no input. Firefox 158.0.1 maps many controls of `SDLCompatible` wrongly with no rumble, and maps `Generic` wrongly with the right stick at rest at -0.17 on axis 2. `GameControllerCompatible` is not tested in browsers. |
 | Apple Game Controller framework | Silksong (GOG) | Works after you turn on its native gamepad or MFi options |
 | Native macOS games | Non-Steam native games | Works |
 | SDL | Steam | Works. Steam lists the `SDLCompatible` profile as "Xbox One S Controller", needs no setup, and reads every control and moves the rumble motors. macOS reports the virtual controller's transport as `Virtual`, so SDL reads its reports as USB Xbox One packets, and the profile sends those packets for input and takes them for rumble. |

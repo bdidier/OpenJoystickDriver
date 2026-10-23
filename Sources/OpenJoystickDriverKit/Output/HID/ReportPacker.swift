@@ -6,9 +6,14 @@ import Foundation
 ///
 /// Usage numbers are scoped to their page. Keeping both values prevents a
 /// controller-specific input from colliding with a standard Button-page input.
-struct HIDInputUsage: Hashable, Sendable {
-  let page: Int
-  let usage: Int
+public struct HIDInputUsage: Hashable, Sendable {
+  public let page: Int
+  public let usage: Int
+
+  public init(page: Int, usage: Int) {
+    self.page = page
+    self.usage = usage
+  }
 }
 
 struct HIDReportPacker: Sendable {
@@ -24,12 +29,15 @@ struct HIDReportPacker: Sendable {
   let digitalFields: [HIDInputUsage: HIDField]
   /// Maps normalized button bits to descriptor usages for profile-specific layouts.
   let buttonUsageMap: [Int: Int]
+  /// Maps normalized button bits to usages outside the Button page; wins over `buttonUsageMap`.
+  let digitalUsageMap: [Int: HIDInputUsage]
   let axisFields: [Int: HIDField]  // usage -> field (Generic Desktop)
   let hatField: HIDField?
 
   static func bestEffortGamepadPacker(
     from parsed: HIDParsedDescriptor,
-    buttonUsageMap: [Int: Int] = [:]
+    buttonUsageMap: [Int: Int] = [:],
+    digitalUsageMap: [Int: HIDInputUsage] = [:]
   ) -> Self? {
     // Score each report ID by how many "gamepad-ish" fields it contains.
     let grouped = Dictionary(grouping: parsed.fields) { $0.reportID }
@@ -74,6 +82,7 @@ struct HIDReportPacker: Sendable {
       payloadSizeBytes: parsed.payloadSizeBytesByReportID[rid] ?? 0,
       digitalFields: digitalFields,
       buttonUsageMap: buttonUsageMap,
+      digitalUsageMap: digitalUsageMap,
       axisFields: axes,
       hatField: hat
     )
@@ -148,10 +157,12 @@ struct HIDReportPacker: Sendable {
     // Buttons use stable OJD normalized bits; profiles may map them to different
     // descriptor usages without changing the global normalized ordering.
     for bitIndex in 0..<32 {
-      let usage = HIDInputUsage(
-        page: Self.buttonUsagePage,
-        usage: buttonUsageMap[bitIndex] ?? (bitIndex + 1)
-      )
+      let usage =
+        digitalUsageMap[bitIndex]
+        ?? HIDInputUsage(
+          page: Self.buttonUsagePage,
+          usage: buttonUsageMap[bitIndex] ?? (bitIndex + 1)
+        )
       guard let field = digitalFields[usage] else { continue }
       let pressed = ((state.buttons >> bitIndex) & 1) != 0
       setBits(bitOffset: field.bitOffset, bitSize: field.bitSize, value: pressed ? 1 : 0)

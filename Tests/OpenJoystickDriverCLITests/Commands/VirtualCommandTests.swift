@@ -226,19 +226,24 @@ struct VirtualCommandTests {
   }
 
   @Test
-  func exportMappingPrintsNoNoteForProfilesThatWorkWithDefaultSDLHints() async throws {
+  func exportMappingNotesOnlyTheProfileThatNeedsSDLHints() async throws {
     let service = try FakeService(devices: [])
     let human = await service.run(["virtual", "export-mapping"])
     let lines = human.standardOutput.split(separator: "\n").map(String.init)
-    #expect(!lines.contains { $0.hasPrefix("#") })
-    #expect(lines.count == VirtualHIDProfileID.allCases.count)
+    #expect(
+      lines.filter { $0.hasPrefix("#") } == [
+        "# Note: game-controller-compatible does not work with SDL's default hints."
+      ]
+    )
+    #expect(lines.count == VirtualHIDProfileID.allCases.count + 1)
 
     let json = try await service.run(["virtual", "export-mapping", "--json"]).json()
     let mappings = try #require(json["mappings"] as? [[String: Any]])
-    for entry in mappings {
-      let sdl = try #require(entry["sdl"] as? [String: Any])
-      #expect(sdl["worksWithDefaultSDLHints"] as? Bool == true, "\(entry)")
+    let works = try mappings.map { entry in
+      try #require((entry["sdl"] as? [String: Any])?["worksWithDefaultSDLHints"] as? Bool)
     }
+    #expect(works == VirtualHIDProfileID.allCases.map(\.worksWithDefaultSDLHints))
+    #expect(works == [true, true, false])
   }
 
   @Test

@@ -63,7 +63,11 @@ struct EndpointMessagesTests {
       ) as? [String: String]
     )
     #expect(object["as"] == "SDLCompatible")
-    #expect(VirtualHIDProfileID.allCases.map(\.rawValue).sorted() == ["Generic", "SDLCompatible"])
+    #expect(
+      VirtualHIDProfileID.allCases.map(\.rawValue).sorted() == [
+        "GameControllerCompatible", "Generic", "SDLCompatible",
+      ]
+    )
   }
 
   @Test

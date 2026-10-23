@@ -2,11 +2,12 @@ import Foundation
 
 /// Identifier of one exact published virtual HID ABI.
 ///
-/// These are the only two personas OJD recognizes: `SDLCompatible` and `Generic`. Decoding any
-/// other raw value fails.
+/// These are the only three personas OJD recognizes: `SDLCompatible`, `Generic` and
+/// `GameControllerCompatible`. Decoding any other raw value fails.
 public enum VirtualHIDProfileID: String, CaseIterable, Codable, Sendable {
   case sdlCompatible = "SDLCompatible"
   case generic = "Generic"
+  case gameControllerCompatible = "GameControllerCompatible"
 
   /// The id of the persona on the command line: the lowercase kebab-case form of its name.
   public var commandLineName: String { CommandLineName.kebab(rawValue) }
@@ -15,6 +16,7 @@ public enum VirtualHIDProfileID: String, CaseIterable, Codable, Sendable {
   public func makeProfile() throws -> any VirtualHIDProfile {
     switch VirtualDevice.definition(of: self).layout {
     case .xboxOneGIP?: return XboxOneGIPHIDProfile()
+    case .xboxSeriesBluetooth?: return XboxSeriesBluetoothHIDProfile()
     case .ojdGenericGamepad?, nil: return OJDGenericHIDProfile()
     }
   }
@@ -43,6 +45,8 @@ public enum VirtualHIDProfileID: String, CaseIterable, Codable, Sendable {
     // The Xbox layout. Guide stays out until a genuine capture shows whether ordinary HID clients
     // see it, although today's report still carries it as button usage 11 of report 0x07.
     case .sdlCompatible: return Control.xboxLayout
+    // The Xbox Series Bluetooth report: the Xbox layout, Guide as button 11 and Share.
+    case .gameControllerCompatible: return Control.xboxLayout.union([.guide, .capture])
     // The generic layout: the frozen 32 buttons, the hat and the six named axes. Today's report
     // carries only its first 16 buttons.
     case .generic:
@@ -99,6 +103,33 @@ struct XboxOneGIPHIDProfile: VirtualHIDProfile {
   private let format: XboxOneGIPHIDReportFormat
 
   init() { format = XboxOneGIPHIDReportFormat() }
+
+  var identity: VirtualDeviceProfile { id.identity }
+  var descriptor: [UInt8] { format.descriptor }
+  var reportFormat: any VirtualGamepadReportFormat { format }
+
+  func inputReport(for state: ControllerState) -> [UInt8] {
+    ReportFormatCodec.inputReport(for: state, in: format)
+  }
+
+  func consumerOutput(
+    type: VirtualHostReportType,
+    reportID: UInt32,
+    bytes: [UInt8]
+  ) -> ControllerOutputCommand? {
+    ReportFormatCodec.consumerOutput(type: type, reportID: reportID, bytes: bytes, in: format)
+  }
+}
+
+/// `GameControllerCompatible` over the Xbox Series Bluetooth report layout.
+///
+/// The identity is the `GameControllerCompatible` `VirtualDevice` record's. The descriptor and
+/// input layout are `XboxSeriesBluetoothHIDReportFormat`'s, the layout Apple's GameController
+/// framework reads for an Xbox identity. SDL reads the same reports as GIP packets and misreads
+/// them.
+struct XboxSeriesBluetoothHIDProfile: VirtualHIDProfile {
+  let id = VirtualHIDProfileID.gameControllerCompatible
+  private let format = XboxSeriesBluetoothHIDReportFormat()
 
   var identity: VirtualDeviceProfile { id.identity }
   var descriptor: [UInt8] { format.descriptor }

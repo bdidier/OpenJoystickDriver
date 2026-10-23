@@ -17,7 +17,7 @@ OpenJoystickDriver (OJD) is a macOS menu-bar app that reads game controllers and
 
 OJD is one bundle, `/Applications/OpenJoystickDriver.app`, with no helper app. It runs in your user session. It reads reports from a physical controller over USB, Bluetooth, or a 2.4 GHz dongle. It then publishes a virtual controller that games and apps can read.
 
-The virtual controller uses one of two profiles. One profile is an Xbox Wireless Controller. The other profile is a generic gamepad. OJD selects one automatically. For more information, see [How games see your controller](Playing-Games.md).
+The virtual controller uses one of three profiles. Two profiles are an Xbox Wireless Controller: one for SDL games and one for Apple's GameController framework. The third profile is a generic gamepad. OJD selects the SDL Xbox profile or the generic profile automatically. For more information, see [How games see your controller](Playing-Games.md).
 
 OJD can also remap controls. A profile can send controller input as keyboard, pointer, or scroll events. For more information, see [About profiles](Remapping-Profiles.md).
 

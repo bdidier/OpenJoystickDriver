@@ -6,8 +6,12 @@ import Testing
 
 struct VirtualHIDProfileTests {
   @Test
-  func exactlyTheTwoApprovedProfileIDsExist() {
-    #expect(VirtualHIDProfileID.allCases.map(\.rawValue) == ["SDLCompatible", "Generic"])
+  func exactlyTheThreeApprovedProfileIDsExist() {
+    #expect(
+      VirtualHIDProfileID.allCases.map(\.rawValue) == [
+        "SDLCompatible", "Generic", "GameControllerCompatible",
+      ]
+    )
   }
 
   @Test(arguments: [

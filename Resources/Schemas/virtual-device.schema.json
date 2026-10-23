@@ -13,7 +13,7 @@
       "const": "VirtualDevice"
     },
     "persona": {
-      "enum": ["Generic", "SDLCompatible"]
+      "enum": ["Generic", "SDLCompatible", "GameControllerCompatible"]
     },
     "match": {
       "type": "object",
@@ -38,7 +38,7 @@
     },
     "layout": {
       "description": "The HID report layout the persona publishes.",
-      "enum": ["OJDGenericGamepad", "XboxOneGIP"]
+      "enum": ["OJDGenericGamepad", "XboxOneGIP", "XboxSeriesBluetooth"]
     },
     "transport": {
       "description": "The transport the published device reports.",

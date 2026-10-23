@@ -135,6 +135,7 @@ struct VirtualLaunchCommandTests {
   func everyPersonaMappingFollowsAValueThatIsAlreadySet() async throws {
     let service = try FakeService(devices: [
       Self.device("pad-1", .sdlCompatible), Self.device("pad-2", .generic),
+      Self.device("pad-3", .gameControllerCompatible),
     ])
     var environment = Self.baseEnvironment
     environment[SDLLaunchEnvironment.variable] = "abc,Mine,a:b0"
@@ -151,7 +152,11 @@ struct VirtualLaunchCommandTests {
         == (["abc,Mine,a:b0"] + mappings).joined(separator: "\n")
     )
     for profile in VirtualHIDProfileID.allCases {
-      #expect(!run.standardError.contains(sdlHintsNote(profile.rawValue)), "\(profile)")
+      #expect(
+        run.standardError.contains(sdlHintsNote(profile.rawValue))
+          == !profile.worksWithDefaultSDLHints,
+        "\(profile)"
+      )
     }
   }
 

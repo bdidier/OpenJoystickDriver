@@ -50,7 +50,8 @@ extension VirtualDevice {
     else {
       throw ControllerRecordProblem(
         code: .invalidControllerRecord,
-        "persona must be \(VirtualHIDProfileID.allCases.map(\.rawValue).joined(separator: " or "))"
+        "persona must be one of "
+          + VirtualHIDProfileID.allCases.map(\.rawValue).joined(separator: ", ")
       )
     }
     if requiresMatch, document["match"] == nil {
@@ -61,7 +62,8 @@ extension VirtualDevice {
       guard let layout = (value as? String).flatMap(VirtualDeviceLayout.init) else {
         throw ControllerRecordProblem(
           code: .invalidControllerRecord,
-          "layout must be OJDGenericGamepad or XboxOneGIP"
+          "layout must be one of "
+            + VirtualDeviceLayout.allCases.map(\.rawValue).joined(separator: ", ")
         )
       }
       return layout

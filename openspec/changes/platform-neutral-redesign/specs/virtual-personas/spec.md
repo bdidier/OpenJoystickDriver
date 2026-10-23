@@ -1,8 +1,8 @@
 ## ADDED Requirements
 
-### Requirement: Two personas
+### Requirement: Three personas
 
-OJD SHALL provide two virtual personas as bundled `VirtualDevice` records: `Generic` (vendor `1209`, product `4A4F`, a standard HID gamepad) and `SDLCompatible` (vendor `045E`, product `02FD`). Automatic selection SHALL publish `SDLCompatible` when the controller's primary controls fit it and `Generic` otherwise, unless the user selects a persona.
+OJD SHALL provide three virtual personas as bundled `VirtualDevice` records: `Generic` (vendor `1209`, product `4A4F`, a standard HID gamepad), `SDLCompatible` (vendor `045E`, product `02FD`, Xbox One GIP reports that SDL reads) and `GameControllerCompatible` (vendor `045E`, product `0B13`, the Xbox Series Bluetooth report that Apple's GameController framework reads). Automatic selection SHALL publish `SDLCompatible` when the controller's primary controls fit it and `Generic` otherwise, unless the user selects a persona. Automatic selection SHALL NOT publish `GameControllerCompatible`, because SDL reads its reports as GIP packets.
 
 #### Scenario: Fresh install
 
@@ -14,9 +14,14 @@ OJD SHALL provide two virtual personas as bundled `VirtualDevice` records: `Gene
 - **WHEN** the user runs `ojd virtual set generic <ref>`
 - **THEN** the virtual device for that controller reports `1209:4A4F`
 
-### Requirement: No Microsoft id outside SDLCompatible
+#### Scenario: Choose GameControllerCompatible
 
-No code, record, sample, test fixture or HIDTool subcommand SHALL use a Microsoft vendor id except the `SDLCompatible` persona record and the seven granted extension IDs. The retired id `4F4A:4449` SHALL NOT remain as a live identity. The SDK sample SHALL use `1209:0001`, which pid.codes reserves for private testing, and no bundled record or persona SHALL use it.
+- **WHEN** the user runs `ojd virtual set game-controller-compatible <ref>`
+- **THEN** the virtual device for that controller reports `045E:0B13` and GameController reads its input
+
+### Requirement: No Microsoft id outside the Xbox personas
+
+No code, record, sample, test fixture or HIDTool subcommand SHALL use a Microsoft vendor id except the `SDLCompatible` and `GameControllerCompatible` persona records and the seven granted extension IDs. The retired id `4F4A:4449` SHALL NOT remain as a live identity. The SDK sample SHALL use `1209:0001`, which pid.codes reserves for private testing, and no bundled record or persona SHALL use it.
 
 #### Scenario: Scan
 

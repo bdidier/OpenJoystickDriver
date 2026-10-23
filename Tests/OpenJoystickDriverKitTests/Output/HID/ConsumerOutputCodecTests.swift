@@ -160,6 +160,30 @@ struct ConsumerOutputCodecTests {
     }
   }
 
+  /// The Xbox Series Bluetooth rumble report: ID 3, the enable mask, trigger and motor magnitudes
+  /// `0...100`, duration in 10 ms units, start delay and loop count.
+  @Test
+  func theXboxSeriesBluetoothFormatDecodesReportThreeAndOnlyIt() throws {
+    let series = XboxSeriesBluetoothHIDReportFormat()
+    let intensities = RumbleIntensities(
+      lowFrequency: .max,
+      highFrequency: UnipolarValue(unitInterval: 0.5),
+      leftTrigger: UnipolarValue(unitInterval: 0.1),
+      rightTrigger: .min
+    )
+    #expect(
+      try consumerOutput(3, [0x03, 0x0F, 10, 0, 100, 50, 20, 0, 0], in: series)
+        == .setRumble(intensities, duration: .milliseconds(200))
+    )
+    #expect(try consumerOutput(3, [0x03, 0x0F, 0, 0, 0, 0, 20, 0, 0], in: series) == .stopRumble)
+    #expect(throws: VirtualHostReportError.malformed) {
+      try consumerOutput(3, [0x03, 0x0F, 0, 0, 100, 50], in: series)
+    }
+    #expect(throws: VirtualHostReportError.unsupported) {
+      try consumerOutput(9, gipRumbleReport(activation: 0x0F, left: 10), in: series)
+    }
+  }
+
   @Test
   func theInputOnlyGenericFormatRejectsEveryOutputReport() {
     // An unnumbered vendor report (marker `0x4F`), the short Xbox 360 forms, and a numbered Xbox

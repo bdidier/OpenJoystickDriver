@@ -104,7 +104,7 @@ struct UserSpaceInputReportStateTests {
   @Test
   func everyVirtualHIDProfileFormatExplicitlyClassifiesSpecialControlSupport() throws {
     let supported: [VirtualHIDProfileID: Set<SpecialControl>] = [
-      .sdlCompatible: [], .generic: [.share],
+      .sdlCompatible: [], .generic: [.share], .gameControllerCompatible: [.share],
     ]
     #expect(Set(supported.keys) == Set(VirtualHIDProfileID.allCases))
 

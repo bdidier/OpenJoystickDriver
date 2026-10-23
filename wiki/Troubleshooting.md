@@ -98,7 +98,7 @@ The design of OJD is to pick the virtual profile by itself. Use this step only t
 
 1. In **Controllers**, select the controller.
 2. In **Advanced**, find **Virtual HID profile**. It appears only for controllers that OJD publishes.
-3. Choose **Automatic** or one of the two profiles.
+3. Choose **Automatic** or one of the three profiles.
 4. Test the game again.
 
 OpenEmu worked with the `Generic` profile in the same test. Steam with that profile was erratic and slow to respond. The override applies to every controller of that model.

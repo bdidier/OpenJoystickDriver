@@ -1,5 +1,55 @@
 # Virtual input report bytes per persona for canonical frames, as uppercase hex pairs.
 # A control whose frames leave the report equal to the neutral one is `unmapped`.
+## game-controller-compatible
+neutral: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 00 00 00
+South: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 01 00 00
+East: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 02 00 00
+West: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 04 00 00
+North: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 08 00 00
+LeftShoulder: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 10 00 00
+RightShoulder: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 20 00 00
+LeftTrigger=max: 01 00 80 00 80 00 80 00 80 FF 03 00 00 00 00 00 00
+RightTrigger=max: 01 00 80 00 80 00 80 00 80 00 00 FF 03 00 00 00 00
+Back: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 40 00 00
+Start: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 80 00 00
+LeftStickClick: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 00 01 00
+RightStickClick: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 00 02 00
+DpadUp: 01 00 80 00 80 00 80 00 80 00 00 00 00 01 00 08 00
+DpadDown: 01 00 80 00 80 00 80 00 80 00 00 00 00 05 00 10 00
+DpadLeft: 01 00 80 00 80 00 80 00 80 00 00 00 00 07 00 20 00
+DpadRight: 01 00 80 00 80 00 80 00 80 00 00 00 00 03 00 40 00
+Guide: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 00 04 00
+Capture: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 00 00 01
+Microphone: unmapped
+TouchpadClick: unmapped
+LeftPaddle1: unmapped
+LeftPaddle2: unmapped
+RightPaddle1: unmapped
+RightPaddle2: unmapped
+Auxiliary1: unmapped
+Auxiliary2: unmapped
+Auxiliary3: unmapped
+Auxiliary4: unmapped
+Auxiliary5: unmapped
+Auxiliary6: unmapped
+Auxiliary7: unmapped
+Auxiliary8: unmapped
+LeftStickX=max: 01 FF FF 00 80 00 80 00 80 00 00 00 00 00 00 00 00
+LeftStickX=min: 01 01 00 00 80 00 80 00 80 00 00 00 00 00 00 00 00
+LeftStickY=max: 01 00 80 FF FF 00 80 00 80 00 00 00 00 00 00 00 00
+LeftStickY=min: 01 00 80 01 00 00 80 00 80 00 00 00 00 00 00 00 00
+RightStickX=max: 01 00 80 00 80 FF FF 00 80 00 00 00 00 00 00 00 00
+RightStickX=min: 01 00 80 00 80 01 00 00 80 00 00 00 00 00 00 00 00
+RightStickY=max: 01 00 80 00 80 00 80 FF FF 00 00 00 00 00 00 00 00
+RightStickY=min: 01 00 80 00 80 00 80 01 00 00 00 00 00 00 00 00 00
+LeftStickTouch: unmapped
+RightStickTouch: unmapped
+LeftTrackpadClick: unmapped
+RightTrackpadClick: unmapped
+LeftTrackpadTouch: unmapped
+RightTrackpadTouch: unmapped
+combined: 01 FF FF 01 00 01 00 FF FF FF 03 FF 03 02 51 4E 00
+
 ## generic
 neutral: 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 South: 01 00 00 00 00 00 00 00 00 00 00 00 00 00

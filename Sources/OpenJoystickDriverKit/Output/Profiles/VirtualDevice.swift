@@ -1,9 +1,10 @@
 import Foundation
 
 /// The HID report layout a persona publishes.
-enum VirtualDeviceLayout: String, Sendable {
+enum VirtualDeviceLayout: String, CaseIterable, Sendable {
   case ojdGenericGamepad = "OJDGenericGamepad"
   case xboxOneGIP = "XboxOneGIP"
+  case xboxSeriesBluetooth = "XboxSeriesBluetooth"
 }
 
 /// One `VirtualDevice` document (`virtual-device.schema.json`): either the definition of a
@@ -93,6 +94,7 @@ extension VirtualHIDProfileID {
     switch self {
     case .generic: "virtual-device.generic"
     case .sdlCompatible: "virtual-device.sdl-compatible"
+    case .gameControllerCompatible: "virtual-device.game-controller-compatible"
     }
   }
 }

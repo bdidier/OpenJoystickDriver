@@ -1,11 +1,14 @@
 import Foundation
 
 /// Decodes the output reports a consumer sends to a virtual format into the output command it
-/// requests. The Xbox One GIP rumble report (report ID 9) is the only output report any format
-/// declares; the generic format is input-only.
+/// requests. The Xbox One GIP rumble report (report ID 9) and the Xbox Series Bluetooth rumble
+/// report (report ID 3) are the only output reports any format declares; the generic format is
+/// input-only.
 enum ConsumerOutputCodec {
   static let xboxOneReportID = XboxOneGIPHIDDescriptor.rumbleReportID
   static let xboxOneReportPayloadSize = XboxOneGIPHIDDescriptor.rumbleReportPayloadSize
+  static let xboxSeriesReportID = XboxSeriesBluetoothHIDDescriptor.rumbleReportID
+  static let xboxSeriesReportPayloadSize = XboxSeriesBluetoothHIDDescriptor.rumbleReportPayloadSize
 
   /// The GIP rumble packet's length field and sub-command, which follow its options and sequence.
   private static let gipRumbleLength: UInt8 = 9
@@ -40,12 +43,16 @@ enum ConsumerOutputCodec {
         payload[2] == gipRumbleLength, payload[3] == gipRumbleSubCommand
       else { throw .malformed }
       return activatedRumble(Array(payload[gipRumbleBodyOffset...]))
+    case xboxSeriesReportID:
+      guard payload.count == xboxSeriesReportPayloadSize else { throw .malformed }
+      return activatedRumble(payload)
     default: throw .unsupported
     }
   }
 
   /// The largest rumble magnitude: SDL scales a 16-bit strength to `0...100`
-  /// (`SDL_hidapi_xboxone.c` `HIDAPI_DriverXboxOne_RumbleJoystick`, division by 655).
+  /// (`SDL_hidapi_xboxone.c` `HIDAPI_DriverXboxOne_RumbleJoystick`, division by 655), and the
+  /// Xbox Series Bluetooth descriptor's Magnitude logical maximum is `0x64`.
   private static let rumbleMagnitudeMax = 100.0
 
   /// A rumble command from report magnitudes in `0...100` (larger values clamp to full strength);
@@ -70,8 +77,8 @@ enum ConsumerOutputCodec {
     return .setRumble(intensities, duration: .milliseconds(durationMs))
   }
 
-  /// The GIP rumble body after its sub-command: an activation mask, then left trigger, right
-  /// trigger, left, right and a duration in 10 ms units.
+  /// The rumble body of both Xbox layouts (the GIP one after its sub-command): an activation mask,
+  /// then left trigger, right trigger, left, right and a duration in 10 ms units.
   private static func activatedRumble(_ bytes: [UInt8]) -> ControllerOutputCommand {
     let activation = bytes[0] & rumbleActivationAllMotors
     func channel(_ mask: UInt8, _ offset: Int) -> UInt8 {
