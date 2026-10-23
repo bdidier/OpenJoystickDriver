@@ -145,6 +145,15 @@ struct ConfigChangeCommandTests {
     #expect(try await shown([], in: directory) == (nil, "Driver"))
   }
 
+  @Test
+  func aGlobalOptionAfterANegativeValueStaysAnOption() async throws {
+    let result = await run(["set", "stickDeadzone", "-0.5", "--json"], in: Directory())
+
+    #expect(result.code == 64)
+    #expect(!result.standardError.contains(CLILocalized.text("cli.config.set.valueCount")))
+    #expect(result.standardError.contains("stickDeadzone"), "\(result.standardError)")
+  }
+
   @Test(arguments: ["0", "1", "1.5", "-0.5"])
   func setRefusesAValueOutOfRangeAndWritesNothing(_ value: String) async throws {
     let directory = Directory()

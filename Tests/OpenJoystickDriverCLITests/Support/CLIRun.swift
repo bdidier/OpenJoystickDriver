@@ -112,6 +112,8 @@ enum CLICommandTree {
     case ["setting", "get"]: ["launchAtLogin"]
     case ["explain"]: ["E2004"]
     case ["setting", "set"]: ["launchAtLogin", "true"]
+    case ["config", "set"]: ["stickDeadzone", "0.1", "--controller", "045E:028E"]
+    case ["config", "unset"]: ["stickDeadzone", "--controller", "045E:028E"]
     case ["controller", "show"], ["controller", "watch"], ["controller", "capture"],
       ["controller", "rumble"], ["controller", "suspend"], ["controller", "resume"],
       ["controller", "disconnect"], ["controller", "claim"], ["controller", "release"],
