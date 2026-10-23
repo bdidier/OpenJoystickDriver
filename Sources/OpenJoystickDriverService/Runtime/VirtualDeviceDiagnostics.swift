@@ -13,15 +13,10 @@ enum VirtualDeviceDiagnostics {
       manager,
       AppleGameControllerSyntheticHID.allHIDDevicesExcludingSynthetics as CFDictionary
     )
-    let openResult = IOHIDManagerOpen(manager, IOOptionBits(kIOHIDOptionsTypeNone))
-    if openResult != kIOReturnSuccess {
-      print("[VirtualDeviceDiagnostics] IOHIDManagerOpen warning: \(String(openResult, radix: 16))")
-    }
-
+    // Matching lists the devices and their properties; opening them would only fail on devices
+    // the service may not open.
     let devices = (IOHIDManagerCopyDevices(manager) as? Set<IOHIDDevice>) ?? []
-    let snapshots = devices.compactMap(snapshot).sorted(by: snapshotOrder)
-    IOHIDManagerClose(manager, IOOptionBits(kIOHIDOptionsTypeNone))
-    return snapshots
+    return devices.compactMap(snapshot).sorted(by: snapshotOrder)
   }
 
   private static func snapshot(_ device: IOHIDDevice) -> ApplicationServiceHIDGamepadSnapshot? {
