@@ -53,7 +53,7 @@ public enum ControllerRecordWriter {
     /// The user directory has no file for the model and neither the bundled catalog nor an
     /// installed package has a record of it, so there is nothing to patch. `ojd record draft`
     /// starts a Controller file.
-    case noRecord
+    case noRecord(ControllerModelID)
     /// The existing user file is invalid, with its problem.
     case invalidFile(String)
     /// The changed record is invalid, such as `server` on a raw-USB family or a `stickDeadzone`
@@ -168,7 +168,7 @@ public enum ControllerRecordWriter {
     if let existing {
       document = try updated(existing, file: file, packages: packages, edit: edit)
     } else {
-      if case .model(let model) = target, packages[model] == nil { throw .record(.noRecord) }
+      if case .model(let model) = target, packages[model] == nil { throw .record(.noRecord(model)) }
       var body: [String: Any] = [:]
       do { try edit(&body) } catch { throw .edit(error) }
       document = ControllerPatch.document(selector: selector, body: body)

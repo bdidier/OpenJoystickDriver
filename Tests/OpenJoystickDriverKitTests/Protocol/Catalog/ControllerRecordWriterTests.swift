@@ -145,7 +145,7 @@ struct ControllerRecordWriterTests {
   @Test
   func modelWithoutARecordIsRefused() throws {
     try Self.withDirectory { directory, _ in
-      #expect(throws: ControllerRecordWriter.Failure.noRecord) {
+      #expect(throws: ControllerRecordWriter.Failure.noRecord(Self.unbundled)) {
         try Self.change(Self.unbundled, to: .ojd, in: directory)
       }
     }

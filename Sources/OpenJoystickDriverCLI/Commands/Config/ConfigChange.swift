@@ -108,10 +108,7 @@ enum ConfigChange {
       )
     } catch {
       switch error {
-      case .refused(.noRecord):
-        guard case .model(let model) = target else {
-          preconditionFailure("Only a controller model can have no record to patch.")
-        }
+      case .refused(.noRecord(let model)):
         let identity = model.description
         throw CLIFailure(
           .notFound,

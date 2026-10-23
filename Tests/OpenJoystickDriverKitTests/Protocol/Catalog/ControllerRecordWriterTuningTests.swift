@@ -142,7 +142,7 @@ extension ControllerRecordWriterTests {
   @Test
   func tuningForAModelWithoutARecordIsRefused() throws {
     try Self.withDirectory { directory, _ in
-      #expect(throws: ControllerRecordWriter.TuningFailure.refused(.noRecord)) {
+      #expect(throws: ControllerRecordWriter.TuningFailure.refused(.noRecord(Self.unbundled))) {
         try Self.change(.set(.stickDeadzone, 0.1), for: .model(Self.unbundled), in: directory)
       }
     }
