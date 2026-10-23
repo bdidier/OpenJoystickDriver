@@ -19,6 +19,10 @@ extension ControllerTuning {
     case usbTransferTimeoutMs
     case frameQueueCapacity
 
+    /// Whether the driver picks a value while no layer sets the key. No driver picks a stick
+    /// deadzone, so none applies until a layer sets one.
+    public var hasDriverValue: Bool { self != .stickDeadzone }
+
     /// The keys every driver reads, whatever its family.
     static let alwaysRead: Set<Key> = [.stickDeadzone, .frameQueueCapacity]
   }

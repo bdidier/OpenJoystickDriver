@@ -84,7 +84,7 @@ struct ConfigShowCommand: AsyncParsableCommand {
       case .plain:
         CLIOutput.plain(
           result.values.map {
-            [$0.key, Self.text($0.value), CommandLineName.kebab($0.layer)]
+            [$0.key, Self.text($0.value, of: $0.key), CommandLineName.kebab($0.layer)]
               + [$0.families?.joined(separator: ",")].compactMap { $0 }
           }
         )
@@ -101,7 +101,7 @@ struct ConfigShowCommand: AsyncParsableCommand {
             "  " + CLILocalized.format("cli.config.show.readBy", $0.joined(separator: ", "))
           }
           CLIOutput.stdout(
-            "\(key)  \(Self.text(item.value))  (\(CommandLineName.kebab(item.layer)))"
+            "\(key)  \(Self.text(item.value, of: item.key))  (\(CommandLineName.kebab(item.layer)))"
               + (families ?? "")
           )
         }
@@ -212,8 +212,16 @@ struct ConfigShowCommand: AsyncParsableCommand {
     )
   }
 
-  static func text(_ value: Double?) -> String {
-    value.map { $0 == $0.rounded() ? String(Int($0)) : String($0) }
-      ?? CLILocalized.text("status.notSet")
+  static func text(_ value: Double) -> String {
+    value == value.rounded() ? String(Int(value)) : String(value)
+  }
+
+  /// `value`, or what applies to `key` while no layer sets it.
+  static func text(_ value: Double?, of key: String) -> String {
+    value.map(text)
+      ?? CLILocalized.text(
+        ControllerTuning.Key(rawValue: key)?.hasDriverValue == true
+          ? "tuning.driverDefault" : "status.notSet"
+      )
   }
 }

@@ -28,7 +28,10 @@ enum ControllerTuningRows {
     let keys = record.tuningValues.map { entry in
       ControllerTuningRow(
         name: entry.key.rawValue,
-        value: entry.value.map(number) ?? OJDLocalized.string("status.notSet"),
+        value: entry.value.map(number)
+          ?? OJDLocalized.string(
+            entry.key.hasDriverValue ? "tuning.driverDefault" : "status.notSet"
+          ),
         layer: entry.value == nil ? nil : CommandLineName.kebab(entry.layer.rawValue)
       )
     }

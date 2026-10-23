@@ -300,7 +300,8 @@ extension ControllerDetailFactsTests {
     #expect(rows.map(\.name) == ControllerTuning.Key.allCases.map(\.rawValue))
     for (row, entry) in zip(rows, record.tuningValues) {
       if entry.value == nil {
-        #expect(row.text == OJDLocalized.string("status.notSet"))
+        let unset = entry.key == .stickDeadzone ? "status.notSet" : "tuning.driverDefault"
+        #expect(row.text == OJDLocalized.string(unset))
       } else {
         #expect(row.layer == CommandLineName.kebab(entry.layer.rawValue))
         #expect(row.text == "\(row.value) (\(row.layer ?? ""))")

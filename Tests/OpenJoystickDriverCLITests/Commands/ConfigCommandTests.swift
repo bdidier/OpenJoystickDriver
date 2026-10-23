@@ -101,6 +101,18 @@ struct ConfigCommandTests {
   }
 
   @Test
+  func showNamesTheDriverDefaultOnlyForAKeyTheDriverGivesAValue() async throws {
+    let run = await run(["show"], in: Root())
+
+    #expect(run.code == 0, "\(run.standardError)")
+    let lines = run.standardOutput.split(separator: "\n").map(String.init)
+    let deadzone = try #require(lines.first { $0.hasPrefix("stickDeadzone ") })
+    let capacity = try #require(lines.first { $0.hasPrefix("frameQueueCapacity ") })
+    #expect(deadzone.contains(CLILocalized.text("status.notSet")))
+    #expect(capacity.contains(CLILocalized.text("tuning.driverDefault")))
+  }
+
+  @Test
   func showForAControllerAddsTheActiveProfilesStickDeadzonesInTheProfileLayer() async throws {
     let root = Root()
     let identity = try bareIdentity()
