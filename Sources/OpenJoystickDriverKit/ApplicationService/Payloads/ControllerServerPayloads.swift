@@ -23,7 +23,9 @@ public enum ControllerServerFailure: String, Codable, Equatable, Sendable {
   /// Neither the user directory, the bundled catalog, nor an installed package has a record of
   /// the model, so there is nothing to patch.
   case noRecord
-  /// The existing user record, or the record with the new `server`, is invalid.
+  /// The vendor or product ID of the request is outside `0...0xFFFF`.
+  case invalidRequest
+  /// The existing user record, or the record with the requested `server`, is invalid.
   case invalidRecord
   /// The user record cannot be written.
   case persistenceFailed

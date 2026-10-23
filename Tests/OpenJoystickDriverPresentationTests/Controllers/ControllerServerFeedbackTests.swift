@@ -120,6 +120,7 @@ struct ControllerServerFeedbackTests {
       (ControllerServerFailure.rawUSB, String?.none, OJDLocalized.string("error.E2023.message")),
       (.notNative, nil, OJDLocalized.string("error.E2023.message")),
       (.noRecord, nil, OJDLocalized.string("ui.controllers.server.noRecord")),
+      (.invalidRequest, nil, OJDLocalized.string("ui.controllers.invalidRequest")),
       (
         .invalidRecord, "bad record",
         OJDLocalized.string("ui.controllers.server.invalidRecord") + " bad record"

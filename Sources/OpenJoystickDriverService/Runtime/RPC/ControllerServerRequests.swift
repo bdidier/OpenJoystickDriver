@@ -49,7 +49,7 @@ extension ApplicationServiceServer {
       )
     }
     guard let vendor = UInt16(exactly: vendorID), let product = UInt16(exactly: productID) else {
-      return refused(.noRecord)
+      return refused(.invalidRequest)
     }
     let model = ControllerModelID(vendorID: vendor, productID: product)
     let record = records.records[model]

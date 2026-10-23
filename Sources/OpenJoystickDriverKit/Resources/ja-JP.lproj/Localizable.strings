@@ -222,8 +222,8 @@
 "ui.controllers.stickDeadzone.label" = "スティックのデッドゾーン";
 /* Message in the controller detail when removing the stick deadzone fails because the user's controller record does not set it. The deadzone is the part of the travel near the center that is ignored. */
 "ui.controllers.stickDeadzone.notSet" = "ユーザのコントローラレコードにスティックのデッドゾーンが設定されていないため、リセットするものがありません。";
-/* Message in the controller detail when the service refuses a stick deadzone change because the vendor or product ID of the request is out of range. */
-"ui.controllers.stickDeadzone.invalidRequest" = "リクエストのベンダIDまたはプロダクトIDが範囲外です。何も変更されていません。";
+/* Message in the controller detail when the service refuses a server or stick deadzone change because the vendor or product ID of the request is out of range. */
+"ui.controllers.invalidRequest" = "リクエストのベンダIDまたはプロダクトIDが範囲外です。何も変更されていません。";
 /* Button in the Controllers detail that shows or hides the advanced virtual HID profile choices. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.virtualProfile.advanced" = "詳細";
 /* Heading of the virtual HID profile section in the Controllers detail. HID is the abbreviation of Human Interface Device and stays as written. */

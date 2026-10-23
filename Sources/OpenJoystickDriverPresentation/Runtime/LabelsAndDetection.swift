@@ -110,6 +110,7 @@ enum RuntimePresentation {
     switch failure {
     case .rawUSB, .notNative: message = OJDLocalized.string("error.E2023.message")
     case .noRecord: message = OJDLocalized.string("ui.controllers.server.noRecord")
+    case .invalidRequest: message = OJDLocalized.string("ui.controllers.invalidRequest")
     case .invalidRecord: message = OJDLocalized.string("ui.controllers.server.invalidRecord")
     case .persistenceFailed:
       message = OJDLocalized.string("ui.controllers.server.persistenceFailed")
@@ -127,8 +128,7 @@ enum RuntimePresentation {
     case .noRecord: message = OJDLocalized.string("ui.controllers.server.noRecord")
     case .invalidRecord: message = OJDLocalized.string("ui.controllers.server.invalidRecord")
     case .notSet: message = OJDLocalized.string("ui.controllers.stickDeadzone.notSet")
-    case .invalidRequest:
-      message = OJDLocalized.string("ui.controllers.stickDeadzone.invalidRequest")
+    case .invalidRequest: message = OJDLocalized.string("ui.controllers.invalidRequest")
     case .persistenceFailed:
       message = OJDLocalized.string("ui.controllers.server.persistenceFailed")
     }
