@@ -7,7 +7,7 @@ struct ConfigCommand: AsyncParsableCommand {
     commandName: "config",
     abstract: CLILocalized.text("cli.config.group.abstract"),
     discussion: CLILocalized.text("cli.config.group.discussion"),
-    subcommands: [ConfigShowCommand.self]
+    subcommands: [ConfigShowCommand.self, ConfigSetCommand.self, ConfigUnsetCommand.self]
   )
 
   @OptionGroup(visibility: GlobalOptions.subcommandVisibility)
@@ -212,7 +212,7 @@ struct ConfigShowCommand: AsyncParsableCommand {
     )
   }
 
-  private static func text(_ value: Double?) -> String {
+  static func text(_ value: Double?) -> String {
     value.map { $0 == $0.rounded() ? String(Int($0)) : String($0) }
       ?? CLILocalized.text("cli.config.show.unset")
   }

@@ -62,7 +62,17 @@
             )
           }
         }
-        if let record { Section { tuningDisclosure(for: record) } }
+        if let record {
+          Section {
+            StickDeadzoneRow(
+              viewModel: viewModel,
+              device: device,
+              setting: StickDeadzoneSetting(record: record),
+              didChange: { tuningChanges += 1 }
+            )
+            tuningDisclosure(for: record)
+          }
+        }
         Section { advancedDisclosure }
       }.task(id: recordLoadID) {
         let model = ControllerModelID(vendorID: device.vendorID, productID: device.productID)
@@ -82,9 +92,9 @@
       )
     }
 
-    /// Reloads the record when the controller or who serves its model changes.
+    /// Reloads the record when the controller, who serves its model, or its stick dead zone changes.
     private var recordLoadID: String {
-      "\(device.sessionToken.rawValue) \(device.recordServer.rawValue)"
+      "\(device.sessionToken.rawValue) \(device.recordServer.rawValue) \(tuningChanges)"
     }
 
     private var connectedDevices: [ApplicationServiceDeviceDescription]? {

@@ -79,6 +79,11 @@ protocol VirtualOutputGateway: Sendable {
     model: ControllerModelID,
     server: ControllerServer
   ) async throws -> ControllerServerResult
+  func setControllerTuning(
+    model: ControllerModelID,
+    key: ControllerTuning.Key,
+    value: Double?
+  ) async throws -> ControllerTuningResult
   func suspendController(_ selector: ControllerReference) async throws -> ControllerSuspendResult
   func resumeController(_ selector: ControllerReference) async throws -> ControllerResumeResult
   func disconnectWirelessController(
@@ -94,6 +99,21 @@ extension VirtualOutputGateway {
     ControllerServerResult(
       server: server,
       previous: .system,
+      file: nil,
+      created: false,
+      failure: .noRecord
+    )
+  }
+
+  func setControllerTuning(
+    model: ControllerModelID,
+    key: ControllerTuning.Key,
+    value: Double?
+  ) throws -> ControllerTuningResult {
+    ControllerTuningResult(
+      key: key,
+      value: value,
+      previous: nil,
       file: nil,
       created: false,
       failure: .noRecord

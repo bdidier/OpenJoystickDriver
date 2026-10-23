@@ -129,6 +129,10 @@ enum GUICoverageEntries {
     leaf("controller release", "setControllerServer"),
     leaf("config show", "ControllerTuningRows"),
     option("config show", "--controller", "ControllerTuningRows"),
+    leaf("config set", "setControllerTuning"),
+    option("config set", "--controller", "setControllerTuning"),
+    leaf("config unset", "setControllerTuning"),
+    option("config unset", "--controller", "setControllerTuning"),
   ]
 
   private static let profile = [

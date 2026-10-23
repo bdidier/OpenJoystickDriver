@@ -218,6 +218,10 @@
 "ui.controllers.server.invalidRecord" = "控制器記錄無效。未作任何更改。";
 /* Message when the app cannot save the changed controller record. */
 "ui.controllers.server.persistenceFailed" = "無法儲存控制器記錄。未作任何更改。";
+/* Label of the stepper in the controller detail that sets the stick deadzone of the controller's model. The deadzone is the part of the travel near the center that is ignored. */
+"ui.controllers.stickDeadzone.label" = "搖桿死區";
+/* Message in the controller detail when removing the stick deadzone fails because the user's controller record does not set it. The deadzone is the part of the travel near the center that is ignored. */
+"ui.controllers.stickDeadzone.notSet" = "您的控制器記錄沒有設定搖桿死區，因此沒有可重設的內容。";
 /* Button in the Controllers detail that shows or hides the advanced virtual HID profile choices. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.virtualProfile.advanced" = "進階";
 /* Heading of the virtual HID profile section in the Controllers detail. HID is the abbreviation of Human Interface Device and stays as written. */
@@ -2026,9 +2030,21 @@
 /* Error of 'ojd permission request' for an unknown permission. %1$@ is the text the user gave and %2$@ is the comma-separated list of valid values, which stay as written. */
 "cli.permission.request.unknownId" = "未知的權限「%1$@」。請使用 %2$@。";
 /* One-line summary of 'ojd config' in the command list and at the top of its help. */
-"cli.config.group.abstract" = "顯示 OpenJoystickDriver 套用的設定，以及設定每個值的層級。";
+"cli.config.group.abstract" = "顯示或變更 OpenJoystickDriver 套用的設定，以及設定每個值的層級。";
 /* Long description in the help of 'ojd config'. It lists the configuration layers from lowest to highest priority; all.patch.json is a file name that stays as written. */
 "cli.config.group.discussion" = "值按層級疊加，由最低層開始：驅動程式預設值、內建記錄、套件記錄、all.patch.json、您的記錄、使用中的描述檔。每個調校鍵取設定它的最高層級的值。";
+/* Help text of the --controller option of 'ojd config set' and 'ojd config unset'. VVVV:PPPP stands for the vendor ID and product ID in hexadecimal and stays as written. */
+"cli.config.group.controller" = "僅變更此控制器型號，格式為 VVVV:PPPP，而非所有控制器。";
+/* Error of 'ojd config set' and 'ojd config unset' when a record cannot take the change. %1$@ is the tuning key and %2$@ is the description of the problem. */
+"cli.config.group.invalid" = "無法變更 %1$@：%2$@";
+/* Help text of the KEY argument of 'ojd config set' and 'ojd config unset'. stickDeadzone is a tuning key and stays as written. */
+"cli.config.group.key" = "調校鍵，例如 stickDeadzone。";
+/* Error of 'ojd config set' and 'ojd config unset' for a controller without a record to change. %1$@ and %2$@ are the controller as VVVV:PPPP; 'ojd record draft' stays as written. */
+"cli.config.group.noRecord" = "%1$@ 沒有可變更的控制器記錄。請用「ojd record draft %2$@」建立一個。";
+/* Error of 'ojd config set' when the value is not a number. %@ is the text the user gave. */
+"cli.config.group.notNumber" = "「%@」不是數字。";
+/* Error of 'ojd config set' and 'ojd config unset' for a name that is not a tuning key. %1$@ is the text the user gave and %2$@ is the comma-separated list of valid keys, which stay as written. */
+"cli.config.group.unknownKey" = "「%1$@」不是調校鍵。請使用以下其中之一：%2$@。";
 /* One-line summary of 'ojd config show' in the command list and at the top of its help. */
 "cli.config.show.abstract" = "列印每個調校值以及設定它的層級。";
 /* Help text of the --controller option of 'ojd config show'. VVVV:PPPP stands for the vendor ID and product ID in hexadecimal and stays as written. */
@@ -2047,6 +2063,20 @@
 "cli.config.show.unreadSkippedNoService" = "服務未執行，因此已略過對沒有已連接控制器讀取的 all.patch.json 鍵的檢查。";
 /* Value shown by 'ojd config show' for a tuning key that no layer sets, so the driver default applies. */
 "cli.config.show.unset" = "驅動程式預設值";
+/* One-line summary of 'ojd config set' in the command list and at the top of its help. */
+"cli.config.set.abstract" = "在您的控制器記錄中設定調校值。";
+/* Long description in the help of 'ojd config set'. KEY, --controller, all.patch.json and stickDeadzone stay as written. */
+"cli.config.set.discussion" = "把 KEY 寫入您為 --controller 所指控制器保存的記錄；不帶該選項時，寫入適用於所有控制器的 all.patch.json。記錄的規則適用：stickDeadzone 必須大於 0 且小於 1。規則拒絕的值不會變更任何內容。執行中的服務會套用變更。";
+/* Message printed by 'ojd config set' after it wrote a value. %1$@ is the tuning key, which stays as written, %2$@ is the value and %3$@ is the path of the record file. */
+"cli.config.set.success" = "已把 %1$@ 設為 %2$@（%3$@）。執行中的服務現在會套用它。";
+/* Help text of the VALUE argument of 'ojd config set'. */
+"cli.config.set.value" = "要設定的數字。";
+/* One-line summary of 'ojd config unset' in the command list and at the top of its help. */
+"cli.config.unset.abstract" = "從您的控制器記錄中移除調校值。";
+/* Error of 'ojd config unset' when none of the user's records sets the key. %@ is the tuning key, which stays as written. */
+"cli.config.unset.notSet" = "您的記錄中沒有設定 %@，因此沒有可移除的內容。";
+/* Message printed by 'ojd config unset' after it removed a key. %1$@ is the tuning key, which stays as written, and %2$@ is the path of the record file. */
+"cli.config.unset.success" = "已從 %2$@ 移除 %1$@。執行中的服務現在會套用它。";
 /* One-line summary of 'ojd setting' in the command list and at the top of its help. */
 "cli.setting.group.abstract" = "列出、讀取或更改 OpenJoystickDriver App 設定。";
 /* Error of 'ojd setting set' when the value is neither true nor false. %1$@ is the text the user gave and %2$@ is the setting name, which stays as written. true and false stay as written. */

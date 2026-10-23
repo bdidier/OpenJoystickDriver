@@ -53,7 +53,7 @@ enum GUICoverageMatrix {
       statusItem: "status line, Open Window"
     )
     + row(
-      [["controller"], ["virtual"], ["config", "show"]],
+      [["controller"], ["virtual"], ["config", "show"], ["config", "set"], ["config", "unset"]],
       area: "Controllers",
       mainMenu: "Controller menu",
       statusItem: "Controllers submenu"

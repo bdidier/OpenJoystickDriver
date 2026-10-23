@@ -314,7 +314,7 @@ FIELD_NAME_ENUMS: list[tuple[str, str, Any]] = [
     ("controller-patch", "/then/properties/patch/propertyNames/const", RECORD),
     (
         "cli-output",
-        "/$defs/configShow/properties/values/items/properties/key/anyOf/0/enum",
+        "/$defs/sharedTuningKey/enum",
         TUNING,
     ),
     ("cli-output", "/$defs/sharedSettingKey/enum", SETTING_PATHS),

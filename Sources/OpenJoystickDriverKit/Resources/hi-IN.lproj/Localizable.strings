@@ -218,6 +218,10 @@
 "ui.controllers.server.invalidRecord" = "कंट्रोलर रिकॉर्ड मान्य नहीं है। कुछ नहीं बदला।";
 /* Message when the app cannot save the changed controller record. */
 "ui.controllers.server.persistenceFailed" = "कंट्रोलर रिकॉर्ड सहेजा नहीं जा सका। कुछ नहीं बदला।";
+/* Label of the stepper in the controller detail that sets the stick deadzone of the controller's model. The deadzone is the part of the travel near the center that is ignored. */
+"ui.controllers.stickDeadzone.label" = "स्टिक डेडज़ोन";
+/* Message in the controller detail when removing the stick deadzone fails because the user's controller record does not set it. The deadzone is the part of the travel near the center that is ignored. */
+"ui.controllers.stickDeadzone.notSet" = "आपका कंट्रोलर रिकॉर्ड स्टिक डेडज़ोन सेट नहीं करता, इसलिए रीसेट करने के लिए कुछ नहीं है।";
 /* Button in the Controllers detail that shows or hides the advanced virtual HID profile choices. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.virtualProfile.advanced" = "उन्नत";
 /* Heading of the virtual HID profile section in the Controllers detail. HID is the abbreviation of Human Interface Device and stays as written. */
@@ -2026,9 +2030,21 @@
 /* Error of 'ojd permission request' for an unknown permission. %1$@ is the text the user gave and %2$@ is the comma-separated list of valid values, which stay as written. */
 "cli.permission.request.unknownId" = "अज्ञात अनुमति “%1$@”। %2$@ इस्तेमाल करें।";
 /* One-line summary of 'ojd config' in the command list and at the top of its help. */
-"cli.config.group.abstract" = "OpenJoystickDriver जो कॉन्फ़िगरेशन लागू करता है और हर मान किस लेयर ने सेट किया, यह दिखाएँ।";
+"cli.config.group.abstract" = "OpenJoystickDriver जो कॉन्फ़िगरेशन लागू करता है उसे दिखाएँ या बदलें, और हर मान किस लेयर ने सेट किया, यह दिखाएँ।";
 /* Long description in the help of 'ojd config'. It lists the configuration layers from lowest to highest priority; all.patch.json is a file name that stays as written. */
 "cli.config.group.discussion" = "मान लेयर में लगते हैं, सबसे निचली से शुरू करके: ड्राइवर डिफ़ॉल्ट, बंडल किया गया रिकॉर्ड, पैकेज रिकॉर्ड, all.patch.json, आपका रिकॉर्ड, सक्रिय प्रोफ़ाइल। हर ट्यूनिंग कुंजी उस सबसे ऊँची लेयर का मान लेती है जो उसे सेट करती है।";
+/* Help text of the --controller option of 'ojd config set' and 'ojd config unset'. VVVV:PPPP stands for the vendor ID and product ID in hexadecimal and stays as written. */
+"cli.config.group.controller" = "सभी कंट्रोलर के बजाय केवल इस कंट्रोलर मॉडल को VVVV:PPPP रूप में बदलें।";
+/* Error of 'ojd config set' and 'ojd config unset' when a record cannot take the change. %1$@ is the tuning key and %2$@ is the description of the problem. */
+"cli.config.group.invalid" = "%1$@ बदला नहीं जा सकता: %2$@";
+/* Help text of the KEY argument of 'ojd config set' and 'ojd config unset'. stickDeadzone is a tuning key and stays as written. */
+"cli.config.group.key" = "ट्यूनिंग कुंजी, जैसे stickDeadzone।";
+/* Error of 'ojd config set' and 'ojd config unset' for a controller without a record to change. %1$@ and %2$@ are the controller as VVVV:PPPP; 'ojd record draft' stays as written. */
+"cli.config.group.noRecord" = "%1$@ का बदलने लायक कोई कंट्रोलर रिकॉर्ड नहीं है। “ojd record draft %2$@” से एक बनाएँ।";
+/* Error of 'ojd config set' when the value is not a number. %@ is the text the user gave. */
+"cli.config.group.notNumber" = "“%@” कोई संख्या नहीं है।";
+/* Error of 'ojd config set' and 'ojd config unset' for a name that is not a tuning key. %1$@ is the text the user gave and %2$@ is the comma-separated list of valid keys, which stay as written. */
+"cli.config.group.unknownKey" = "“%1$@” कोई ट्यूनिंग कुंजी नहीं है। इनमें से एक का उपयोग करें: %2$@।";
 /* One-line summary of 'ojd config show' in the command list and at the top of its help. */
 "cli.config.show.abstract" = "हर ट्यूनिंग मान और उसे सेट करने वाली लेयर प्रिंट करें।";
 /* Help text of the --controller option of 'ojd config show'. VVVV:PPPP stands for the vendor ID and product ID in hexadecimal and stays as written. */
@@ -2047,6 +2063,20 @@
 "cli.config.show.unreadSkippedNoService" = "सेवा चालू नहीं है, इसलिए all.patch.json की उन कुंजियों की जाँच छोड़ दी गई जिन्हें कोई जुड़ा हुआ कंट्रोलर नहीं पढ़ता।";
 /* Value shown by 'ojd config show' for a tuning key that no layer sets, so the driver default applies. */
 "cli.config.show.unset" = "ड्राइवर डिफ़ॉल्ट";
+/* One-line summary of 'ojd config set' in the command list and at the top of its help. */
+"cli.config.set.abstract" = "आपके कंट्रोलर रिकॉर्ड में एक ट्यूनिंग मान सेट करें।";
+/* Long description in the help of 'ojd config set'. KEY, --controller, all.patch.json and stickDeadzone stay as written. */
+"cli.config.set.discussion" = "KEY को --controller से दिए गए कंट्रोलर के आपके रिकॉर्ड में लिखता है, या सभी कंट्रोलर के लिए all.patch.json में। रिकॉर्ड के नियम लागू होते हैं: stickDeadzone 0 से बड़ा और 1 से छोटा होना चाहिए। नियमों द्वारा अस्वीकार किया गया मान कुछ नहीं बदलता। चल रही सेवा बदलाव को लागू करती है।";
+/* Message printed by 'ojd config set' after it wrote a value. %1$@ is the tuning key, which stays as written, %2$@ is the value and %3$@ is the path of the record file. */
+"cli.config.set.success" = "%1$@ को %2$@ पर सेट किया गया (%3$@)। चल रही सेवा अब उसे लागू करती है।";
+/* Help text of the VALUE argument of 'ojd config set'. */
+"cli.config.set.value" = "सेट की जाने वाली संख्या।";
+/* One-line summary of 'ojd config unset' in the command list and at the top of its help. */
+"cli.config.unset.abstract" = "आपके कंट्रोलर रिकॉर्ड से एक ट्यूनिंग मान हटाएँ।";
+/* Error of 'ojd config unset' when none of the user's records sets the key. %@ is the tuning key, which stays as written. */
+"cli.config.unset.notSet" = "%@ आपके रिकॉर्ड में सेट नहीं है, इसलिए हटाने के लिए कुछ नहीं है।";
+/* Message printed by 'ojd config unset' after it removed a key. %1$@ is the tuning key, which stays as written, and %2$@ is the path of the record file. */
+"cli.config.unset.success" = "%2$@ से %1$@ हटाया गया। चल रही सेवा अब उसे लागू करती है।";
 /* One-line summary of 'ojd setting' in the command list and at the top of its help. */
 "cli.setting.group.abstract" = "OpenJoystickDriver ऐप की सेटिंग्स की सूची दिखाएँ, पढ़ें या बदलें।";
 /* Error of 'ojd setting set' when the value is neither true nor false. %1$@ is the text the user gave and %2$@ is the setting name, which stays as written. true and false stay as written. */

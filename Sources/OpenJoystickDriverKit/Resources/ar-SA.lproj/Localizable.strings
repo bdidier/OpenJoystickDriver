@@ -218,6 +218,10 @@
 "ui.controllers.server.invalidRecord" = "سجل وحدة التحكم غير صالح. لم يتغير شيء.";
 /* Message when the app cannot save the changed controller record. */
 "ui.controllers.server.persistenceFailed" = "تعذر حفظ سجل وحدة التحكم. لم يتغير شيء.";
+/* Label of the stepper in the controller detail that sets the stick deadzone of the controller's model. The deadzone is the part of the travel near the center that is ignored. */
+"ui.controllers.stickDeadzone.label" = "المنطقة الميتة للعصا";
+/* Message in the controller detail when removing the stick deadzone fails because the user's controller record does not set it. The deadzone is the part of the travel near the center that is ignored. */
+"ui.controllers.stickDeadzone.notSet" = "لا يحدّد سجل وحدة التحكم لديك المنطقة الميتة للعصا، لذا لا يوجد ما يمكن إعادة تعيينه.";
 /* Button in the Controllers detail that shows or hides the advanced virtual HID profile choices. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.virtualProfile.advanced" = "متقدم";
 /* Heading of the virtual HID profile section in the Controllers detail. HID is the abbreviation of Human Interface Device and stays as written. */
@@ -2026,9 +2030,21 @@
 /* Error of 'ojd permission request' for an unknown permission. %1$@ is the text the user gave and %2$@ is the comma-separated list of valid values, which stay as written. */
 "cli.permission.request.unknownId" = "إذن غير معروف «%1$@». استخدم %2$@.";
 /* One-line summary of 'ojd config' in the command list and at the top of its help. */
-"cli.config.group.abstract" = "اعرض الإعدادات التي يطبّقها OpenJoystickDriver والطبقة التي حدّدت كل قيمة.";
+"cli.config.group.abstract" = "اعرض الإعدادات التي يطبّقها OpenJoystickDriver أو غيّرها، والطبقة التي حدّدت كل قيمة.";
 /* Long description in the help of 'ojd config'. It lists the configuration layers from lowest to highest priority; all.patch.json is a file name that stays as written. */
 "cli.config.group.discussion" = "تترتب القيم في طبقات، من الأدنى إلى الأعلى: الإعداد الافتراضي لبرنامج التشغيل، السجل المرفق، سجل الحزمة، all.patch.json، سجلك، ملف التعريف النشط. يأخذ كل مفتاح ضبط قيمة أعلى طبقة تحدّده.";
+/* Help text of the --controller option of 'ojd config set' and 'ojd config unset'. VVVV:PPPP stands for the vendor ID and product ID in hexadecimal and stays as written. */
+"cli.config.group.controller" = "غيّر طراز وحدة التحكم هذا فقط، بالصيغة VVVV:PPPP، بدلًا من جميع وحدات التحكم.";
+/* Error of 'ojd config set' and 'ojd config unset' when a record cannot take the change. %1$@ is the tuning key and %2$@ is the description of the problem. */
+"cli.config.group.invalid" = "تعذّر تغيير %1$@: %2$@";
+/* Help text of the KEY argument of 'ojd config set' and 'ojd config unset'. stickDeadzone is a tuning key and stays as written. */
+"cli.config.group.key" = "مفتاح الضبط، مثل stickDeadzone.";
+/* Error of 'ojd config set' and 'ojd config unset' for a controller without a record to change. %1$@ and %2$@ are the controller as VVVV:PPPP; 'ojd record draft' stays as written. */
+"cli.config.group.noRecord" = "لا يوجد لـ %1$@ سجل وحدة تحكم لتغييره. أنشئ واحدًا باستخدام «ojd record draft %2$@».";
+/* Error of 'ojd config set' when the value is not a number. %@ is the text the user gave. */
+"cli.config.group.notNumber" = "«%@» ليس رقمًا.";
+/* Error of 'ojd config set' and 'ojd config unset' for a name that is not a tuning key. %1$@ is the text the user gave and %2$@ is the comma-separated list of valid keys, which stay as written. */
+"cli.config.group.unknownKey" = "«%1$@» ليس مفتاح ضبط. استخدم أحد هذه المفاتيح: %2$@.";
 /* One-line summary of 'ojd config show' in the command list and at the top of its help. */
 "cli.config.show.abstract" = "اطبع كل قيمة ضبط والطبقة التي حدّدتها.";
 /* Help text of the --controller option of 'ojd config show'. VVVV:PPPP stands for the vendor ID and product ID in hexadecimal and stays as written. */
@@ -2047,6 +2063,20 @@
 "cli.config.show.unreadSkippedNoService" = "الخدمة غير قيد التشغيل، لذا تم تخطي التحقق من مفاتيح all.patch.json التي لا تقرؤها أي وحدة تحكم متصلة.";
 /* Value shown by 'ojd config show' for a tuning key that no layer sets, so the driver default applies. */
 "cli.config.show.unset" = "الإعداد الافتراضي لبرنامج التشغيل";
+/* One-line summary of 'ojd config set' in the command list and at the top of its help. */
+"cli.config.set.abstract" = "حدّد قيمة ضبط في سجلات وحدات التحكم لديك.";
+/* Long description in the help of 'ojd config set'. KEY, --controller, all.patch.json and stickDeadzone stay as written. */
+"cli.config.set.discussion" = "يكتب KEY في سجلك الخاص بوحدة التحكم المحدّدة بالخيار --controller، أو في all.patch.json لجميع وحدات التحكم. تسري قواعد السجل: يجب أن تكون قيمة stickDeadzone أكبر من 0 وأقل من 1. القيمة التي ترفضها القواعد لا تغيّر شيئًا. تطبّق الخدمة قيد التشغيل التغيير.";
+/* Message printed by 'ojd config set' after it wrote a value. %1$@ is the tuning key, which stays as written, %2$@ is the value and %3$@ is the path of the record file. */
+"cli.config.set.success" = "تم ضبط %1$@ على %2$@ في %3$@. تطبّقه الخدمة قيد التشغيل الآن.";
+/* Help text of the VALUE argument of 'ojd config set'. */
+"cli.config.set.value" = "الرقم المطلوب تعيينه.";
+/* One-line summary of 'ojd config unset' in the command list and at the top of its help. */
+"cli.config.unset.abstract" = "أزل قيمة ضبط من سجلات وحدات التحكم لديك.";
+/* Error of 'ojd config unset' when none of the user's records sets the key. %@ is the tuning key, which stays as written. */
+"cli.config.unset.notSet" = "%@ غير محدّد في سجلاتك، لذا لا يوجد ما يمكن إزالته.";
+/* Message printed by 'ojd config unset' after it removed a key. %1$@ is the tuning key, which stays as written, and %2$@ is the path of the record file. */
+"cli.config.unset.success" = "تمت إزالة %1$@ من %2$@. تطبّق الخدمة قيد التشغيل ذلك الآن.";
 /* One-line summary of 'ojd setting' in the command list and at the top of its help. */
 "cli.setting.group.abstract" = "اعرض إعدادات تطبيق OpenJoystickDriver أو اقرأها أو غيّرها.";
 /* Error of 'ojd setting set' when the value is neither true nor false. %1$@ is the text the user gave and %2$@ is the setting name, which stays as written. true and false stay as written. */

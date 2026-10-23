@@ -218,6 +218,10 @@
 "ui.controllers.server.invalidRecord" = "Запись контроллера недействительна. Ничего не изменено.";
 /* Message when the app cannot save the changed controller record. */
 "ui.controllers.server.persistenceFailed" = "Не удалось сохранить запись контроллера. Ничего не изменено.";
+/* Label of the stepper in the controller detail that sets the stick deadzone of the controller's model. The deadzone is the part of the travel near the center that is ignored. */
+"ui.controllers.stickDeadzone.label" = "Мёртвая зона стика";
+/* Message in the controller detail when removing the stick deadzone fails because the user's controller record does not set it. The deadzone is the part of the travel near the center that is ignored. */
+"ui.controllers.stickDeadzone.notSet" = "Ваша запись контроллера не задаёт мёртвую зону стика, поэтому сбрасывать нечего.";
 /* Button in the Controllers detail that shows or hides the advanced virtual HID profile choices. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.virtualProfile.advanced" = "Дополнительно";
 /* Heading of the virtual HID profile section in the Controllers detail. HID is the abbreviation of Human Interface Device and stays as written. */
@@ -2026,9 +2030,21 @@
 /* Error of 'ojd permission request' for an unknown permission. %1$@ is the text the user gave and %2$@ is the comma-separated list of valid values, which stay as written. */
 "cli.permission.request.unknownId" = "Неизвестное разрешение «%1$@». Используйте %2$@.";
 /* One-line summary of 'ojd config' in the command list and at the top of its help. */
-"cli.config.group.abstract" = "Показывает конфигурацию, которую применяет OpenJoystickDriver, и слой, задавший каждое значение.";
+"cli.config.group.abstract" = "Показывает или изменяет конфигурацию, которую применяет OpenJoystickDriver, и слой, задавший каждое значение.";
 /* Long description in the help of 'ojd config'. It lists the configuration layers from lowest to highest priority; all.patch.json is a file name that stays as written. */
 "cli.config.group.discussion" = "Значения накладываются слоями, от низшего к высшему: значение драйвера по умолчанию, встроенная запись, запись пакета, all.patch.json, ваша запись, активный профиль. Каждый ключ настройки берёт значение самого высокого слоя, который его задаёт.";
+/* Help text of the --controller option of 'ojd config set' and 'ojd config unset'. VVVV:PPPP stands for the vendor ID and product ID in hexadecimal and stays as written. */
+"cli.config.group.controller" = "Изменяет только эту модель контроллера, в виде VVVV:PPPP, а не все контроллеры.";
+/* Error of 'ojd config set' and 'ojd config unset' when a record cannot take the change. %1$@ is the tuning key and %2$@ is the description of the problem. */
+"cli.config.group.invalid" = "Не удалось изменить %1$@: %2$@";
+/* Help text of the KEY argument of 'ojd config set' and 'ojd config unset'. stickDeadzone is a tuning key and stays as written. */
+"cli.config.group.key" = "Ключ настройки, например stickDeadzone.";
+/* Error of 'ojd config set' and 'ojd config unset' for a controller without a record to change. %1$@ and %2$@ are the controller as VVVV:PPPP; 'ojd record draft' stays as written. */
+"cli.config.group.noRecord" = "У %1$@ нет записи контроллера для изменения. Создайте её командой «ojd record draft %2$@».";
+/* Error of 'ojd config set' when the value is not a number. %@ is the text the user gave. */
+"cli.config.group.notNumber" = "«%@» не число.";
+/* Error of 'ojd config set' and 'ojd config unset' for a name that is not a tuning key. %1$@ is the text the user gave and %2$@ is the comma-separated list of valid keys, which stay as written. */
+"cli.config.group.unknownKey" = "«%1$@» не ключ настройки. Используйте один из: %2$@.";
 /* One-line summary of 'ojd config show' in the command list and at the top of its help. */
 "cli.config.show.abstract" = "Выводит каждое значение настройки и слой, который его задал.";
 /* Help text of the --controller option of 'ojd config show'. VVVV:PPPP stands for the vendor ID and product ID in hexadecimal and stays as written. */
@@ -2047,6 +2063,20 @@
 "cli.config.show.unreadSkippedNoService" = "Служба не запущена, поэтому проверка ключей all.patch.json, которые не читает ни один подключённый контроллер, пропущена.";
 /* Value shown by 'ojd config show' for a tuning key that no layer sets, so the driver default applies. */
 "cli.config.show.unset" = "значение драйвера по умолчанию";
+/* One-line summary of 'ojd config set' in the command list and at the top of its help. */
+"cli.config.set.abstract" = "Задаёт значение настройки в ваших записях контроллеров.";
+/* Long description in the help of 'ojd config set'. KEY, --controller, all.patch.json and stickDeadzone stay as written. */
+"cli.config.set.discussion" = "Записывает KEY в вашу запись контроллера, указанного в --controller, или в all.patch.json для всех контроллеров. Действуют правила записи: stickDeadzone должно быть больше 0 и меньше 1. Значение, которое правила отклоняют, ничего не меняет. Работающая служба применяет изменение.";
+/* Message printed by 'ojd config set' after it wrote a value. %1$@ is the tuning key, which stays as written, %2$@ is the value and %3$@ is the path of the record file. */
+"cli.config.set.success" = "Задано: %1$@ = %2$@ в %3$@. Работающая служба применяет это сейчас.";
+/* Help text of the VALUE argument of 'ojd config set'. */
+"cli.config.set.value" = "Число, которое нужно задать.";
+/* One-line summary of 'ojd config unset' in the command list and at the top of its help. */
+"cli.config.unset.abstract" = "Удаляет значение настройки из ваших записей контроллеров.";
+/* Error of 'ojd config unset' when none of the user's records sets the key. %@ is the tuning key, which stays as written. */
+"cli.config.unset.notSet" = "%@ не задано в ваших записях, поэтому удалять нечего.";
+/* Message printed by 'ojd config unset' after it removed a key. %1$@ is the tuning key, which stays as written, and %2$@ is the path of the record file. */
+"cli.config.unset.success" = "%1$@ удалено из %2$@. Работающая служба применяет это сейчас.";
 /* One-line summary of 'ojd setting' in the command list and at the top of its help. */
 "cli.setting.group.abstract" = "Показывает, читает или изменяет настройки приложения OpenJoystickDriver.";
 /* Error of 'ojd setting set' when the value is neither true nor false. %1$@ is the text the user gave and %2$@ is the setting name, which stays as written. true and false stay as written. */

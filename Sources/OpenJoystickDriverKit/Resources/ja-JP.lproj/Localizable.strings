@@ -218,6 +218,10 @@
 "ui.controllers.server.invalidRecord" = "コントローラレコードが無効です。何も変更されていません。";
 /* Message when the app cannot save the changed controller record. */
 "ui.controllers.server.persistenceFailed" = "コントローラレコードを保存できませんでした。何も変更されていません。";
+/* Label of the stepper in the controller detail that sets the stick deadzone of the controller's model. The deadzone is the part of the travel near the center that is ignored. */
+"ui.controllers.stickDeadzone.label" = "スティックのデッドゾーン";
+/* Message in the controller detail when removing the stick deadzone fails because the user's controller record does not set it. The deadzone is the part of the travel near the center that is ignored. */
+"ui.controllers.stickDeadzone.notSet" = "ユーザのコントローラレコードにスティックのデッドゾーンが設定されていないため、リセットするものがありません。";
 /* Button in the Controllers detail that shows or hides the advanced virtual HID profile choices. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.virtualProfile.advanced" = "詳細";
 /* Heading of the virtual HID profile section in the Controllers detail. HID is the abbreviation of Human Interface Device and stays as written. */
@@ -2026,9 +2030,21 @@
 /* Error of 'ojd permission request' for an unknown permission. %1$@ is the text the user gave and %2$@ is the comma-separated list of valid values, which stay as written. */
 "cli.permission.request.unknownId" = "不明な権限「%1$@」です。%2$@ を使用してください。";
 /* One-line summary of 'ojd config' in the command list and at the top of its help. */
-"cli.config.group.abstract" = "OpenJoystickDriver が適用する構成と、各値を設定したレイヤを表示します。";
+"cli.config.group.abstract" = "OpenJoystickDriver が適用する構成を表示または変更し、各値を設定したレイヤを表示します。";
 /* Long description in the help of 'ojd config'. It lists the configuration layers from lowest to highest priority; all.patch.json is a file name that stays as written. */
 "cli.config.group.discussion" = "値は下位から順にレイヤとして重なります: ドライバのデフォルト、同梱レコード、パッケージのレコード、all.patch.json、ユーザのレコード、有効なプロファイル。各チューニングキーは、そのキーを設定する最上位レイヤの値を使用します。";
+/* Help text of the --controller option of 'ojd config set' and 'ojd config unset'. VVVV:PPPP stands for the vendor ID and product ID in hexadecimal and stays as written. */
+"cli.config.group.controller" = "すべてのコントローラではなく、このコントローラモデルだけを VVVV:PPPP の形式で変更します。";
+/* Error of 'ojd config set' and 'ojd config unset' when a record cannot take the change. %1$@ is the tuning key and %2$@ is the description of the problem. */
+"cli.config.group.invalid" = "%1$@ を変更できません: %2$@";
+/* Help text of the KEY argument of 'ojd config set' and 'ojd config unset'. stickDeadzone is a tuning key and stays as written. */
+"cli.config.group.key" = "stickDeadzone などのチューニングキー。";
+/* Error of 'ojd config set' and 'ojd config unset' for a controller without a record to change. %1$@ and %2$@ are the controller as VVVV:PPPP; 'ojd record draft' stays as written. */
+"cli.config.group.noRecord" = "%1$@ には変更できるコントローラのレコードがありません。「ojd record draft %2$@」で作成してください。";
+/* Error of 'ojd config set' when the value is not a number. %@ is the text the user gave. */
+"cli.config.group.notNumber" = "「%@」は数値ではありません。";
+/* Error of 'ojd config set' and 'ojd config unset' for a name that is not a tuning key. %1$@ is the text the user gave and %2$@ is the comma-separated list of valid keys, which stay as written. */
+"cli.config.group.unknownKey" = "「%1$@」はチューニングキーではありません。次のいずれかを使ってください: %2$@。";
 /* One-line summary of 'ojd config show' in the command list and at the top of its help. */
 "cli.config.show.abstract" = "各チューニング値と、その値を設定したレイヤを出力します。";
 /* Help text of the --controller option of 'ojd config show'. VVVV:PPPP stands for the vendor ID and product ID in hexadecimal and stays as written. */
@@ -2047,6 +2063,20 @@
 "cli.config.show.unreadSkippedNoService" = "サービスが実行されていないため、接続中のどのコントローラも読み取らない all.patch.json のキーの確認をスキップしました。";
 /* Value shown by 'ojd config show' for a tuning key that no layer sets, so the driver default applies. */
 "cli.config.show.unset" = "ドライバのデフォルト";
+/* One-line summary of 'ojd config set' in the command list and at the top of its help. */
+"cli.config.set.abstract" = "ユーザのコントローラレコードにチューニング値を設定します。";
+/* Long description in the help of 'ojd config set'. KEY, --controller, all.patch.json and stickDeadzone stay as written. */
+"cli.config.set.discussion" = "KEY を、--controller で指定したコントローラのユーザのレコードに書き込みます。指定しない場合は、すべてのコントローラ向けに all.patch.json に書き込みます。レコードの規則が適用されます。stickDeadzone は 0 より大きく 1 より小さい値にしてください。規則に反する値は拒否され、何も変更されません。実行中のサービスが変更を適用します。";
+/* Message printed by 'ojd config set' after it wrote a value. %1$@ is the tuning key, which stays as written, %2$@ is the value and %3$@ is the path of the record file. */
+"cli.config.set.success" = "%1$@ を %2$@ に設定しました（%3$@）。実行中のサービスが今すぐ適用します。";
+/* Help text of the VALUE argument of 'ojd config set'. */
+"cli.config.set.value" = "設定する数値。";
+/* One-line summary of 'ojd config unset' in the command list and at the top of its help. */
+"cli.config.unset.abstract" = "ユーザのコントローラレコードからチューニング値を削除します。";
+/* Error of 'ojd config unset' when none of the user's records sets the key. %@ is the tuning key, which stays as written. */
+"cli.config.unset.notSet" = "%@ はユーザのレコードに設定されていないため、削除するものがありません。";
+/* Message printed by 'ojd config unset' after it removed a key. %1$@ is the tuning key, which stays as written, and %2$@ is the path of the record file. */
+"cli.config.unset.success" = "%2$@ から %1$@ を削除しました。実行中のサービスが今すぐ適用します。";
 /* One-line summary of 'ojd setting' in the command list and at the top of its help. */
 "cli.setting.group.abstract" = "OpenJoystickDriver の App 設定を一覧表示、読み取り、変更します。";
 /* Error of 'ojd setting set' when the value is neither true nor false. %1$@ is the text the user gave and %2$@ is the setting name, which stays as written. true and false stay as written. */

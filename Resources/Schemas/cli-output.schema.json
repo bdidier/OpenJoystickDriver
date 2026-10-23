@@ -335,6 +335,15 @@
         }
       }
     },
+    "configSet": {
+      "required": ["apiVersion", "kind", "value"],
+      "properties": {
+        "kind": {
+          "const": "ConfigChange"
+        }
+      },
+      "$ref": "#/$defs/sharedConfigChange"
+    },
     "configShow": {
       "type": "object",
       "required": ["apiVersion", "kind", "defaultsFile", "values"],
@@ -374,22 +383,7 @@
                 "description": "A record tuning key, or for a profile row the profile file path of the value.",
                 "anyOf": [
                   {
-                    "enum": [
-                      "stickDeadzone",
-                      "inputLivenessTimeoutMs",
-                      "hidStartupRecoveryIntervalMs",
-                      "hidStartupRecoveryRounds",
-                      "hidStartupIntervalMs",
-                      "minimumHIDOutputIntervalMs",
-                      "lizardResendTicks",
-                      "usbCommandTimeoutMs",
-                      "presenceResendReports",
-                      "adapterDisconnectDelayMs",
-                      "usbStartupIntervalMs",
-                      "usbStartupRetryDelayMs",
-                      "usbTransferTimeoutMs",
-                      "frameQueueCapacity"
-                    ]
+                    "$ref": "#/$defs/sharedTuningKey"
                   },
                   {
                     "pattern": "^stickMappings\\.[0-9]+\\.tuning\\.innerDeadzone$"
@@ -503,6 +497,16 @@
           "format": "date-time"
         }
       }
+    },
+    "configUnset": {
+      "required": ["apiVersion", "kind"],
+      "properties": {
+        "kind": {
+          "const": "ConfigChange"
+        },
+        "value": false
+      },
+      "$ref": "#/$defs/sharedConfigChange"
     },
     "controllerClaim": {
       "required": ["apiVersion", "kind"],
@@ -2450,6 +2454,48 @@
         }
       }
     },
+    "sharedConfigChange": {
+      "description": "The result of config set and config unset: the tuning key and its value before the change.",
+      "type": "object",
+      "required": ["created", "file", "key", "removesFile"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "ConfigChange"
+        },
+        "controller": {
+          "description": "The controller model whose record the change writes, as VVVV:PPPP. Absent for all.patch.json.",
+          "type": "string",
+          "pattern": "^[0-9A-F]{4}:[0-9A-F]{4}$"
+        },
+        "created": {
+          "description": "Whether the change creates the user file.",
+          "type": "boolean"
+        },
+        "file": {
+          "description": "The user file the change writes or removes.",
+          "type": "string"
+        },
+        "key": {
+          "$ref": "#/$defs/sharedTuningKey"
+        },
+        "previous": {
+          "description": "The effective value before the change. Absent while only the Driver default applied.",
+          "type": "number"
+        },
+        "removesFile": {
+          "description": "Whether the change removes the file because it leaves no key in a patch.",
+          "type": "boolean"
+        },
+        "value": {
+          "description": "The value set. Absent for config unset.",
+          "type": "number"
+        }
+      }
+    },
     "sharedControllerOutput": {
       "type": "object",
       "required": ["controller", "results"],
@@ -2709,6 +2755,25 @@
           "type": "integer"
         }
       }
+    },
+    "sharedTuningKey": {
+      "description": "A tuning key of a controller record or of all.patch.json.",
+      "enum": [
+        "stickDeadzone",
+        "inputLivenessTimeoutMs",
+        "hidStartupRecoveryIntervalMs",
+        "hidStartupRecoveryRounds",
+        "hidStartupIntervalMs",
+        "minimumHIDOutputIntervalMs",
+        "lizardResendTicks",
+        "usbCommandTimeoutMs",
+        "presenceResendReports",
+        "adapterDisconnectDelayMs",
+        "usbStartupIntervalMs",
+        "usbStartupRetryDelayMs",
+        "usbTransferTimeoutMs",
+        "frameQueueCapacity"
+      ]
     },
     "sharedServer": {
       "description": "Who serves the controller model, the server setting: System leaves it to the system, OJD lets OpenJoystickDriver seize it and publish a virtual gamepad.",

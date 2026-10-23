@@ -56,11 +56,11 @@ extension ApplicationServiceServer {
     let previous = record?.server ?? .system
     if record?.usesRawUSB == true { return refused(.rawUSB, previous) }
     guard systemGamepadConnected || previous == .ojd else { return refused(.notNative, previous) }
-    let change: ControllerServerWriter.Change
+    let change: ControllerRecordWriter.Change
     do {
-      change = try ControllerServerWriter.change(
-        model,
-        to: server,
+      change = try ControllerRecordWriter.change(
+        server,
+        for: model,
         records: records,
         directory: directory
       )
@@ -73,13 +73,13 @@ extension ApplicationServiceServer {
     }
     var failure: ControllerServerFailure?
     var detail: String?
-    do { try ControllerServerWriter.write(change) } catch {
+    do { try ControllerRecordWriter.write(change) } catch {
       failure = .persistenceFailed
       detail = error.localizedDescription
     }
     return ControllerServerResult(
       server: server,
-      previous: change.previous,
+      previous: change.previousServer,
       file: change.file.path,
       created: change.created,
       failure: failure,

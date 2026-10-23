@@ -75,6 +75,8 @@ actor GatewayStub: ApplicationServiceGateway {
   var resetAllResult = true
   var serverRequests: [(model: ControllerModelID, server: ControllerServer)] = []
   var serverFailure: (failure: ControllerServerFailure, detail: String?)?
+  var tuningRequests: [(model: ControllerModelID, key: ControllerTuning.Key, value: Double?)] = []
+  var tuningFailure: (failure: ControllerTuningFailure, detail: String?)?
   var overrideRequestsAreGated = false
   var overrideContinuations: [CheckedContinuation<Void, Never>] = []
 
@@ -380,6 +382,27 @@ actor GatewayStub: ApplicationServiceGateway {
       failure: serverFailure?.failure,
       detail: serverFailure?.detail
     )
+  }
+
+  func setControllerTuning(
+    model: ControllerModelID,
+    key: ControllerTuning.Key,
+    value: Double?
+  ) throws -> ControllerTuningResult {
+    tuningRequests.append((model, key, value))
+    return ControllerTuningResult(
+      key: key,
+      value: value,
+      previous: nil,
+      file: nil,
+      created: false,
+      failure: tuningFailure?.failure,
+      detail: tuningFailure?.detail
+    )
+  }
+
+  func setTuningFailure(_ failure: ControllerTuningFailure?, detail: String? = nil) {
+    tuningFailure = failure.map { ($0, detail) }
   }
 
   func setServerFailure(_ failure: ControllerServerFailure?, detail: String? = nil) {

@@ -159,6 +159,30 @@ extension RuntimeViewModel {
     await waitForRecordServer(server, of: model)
   }
 
+  /// Sets the stick dead zone of `device`'s model in the user's controller record, or removes it
+  /// when `value` is nil. A refusal shows in the controller's detail, with the service's detail
+  /// text for a record that is invalid or cannot be written. Returns whether the service wrote it.
+  @discardableResult
+  func setStickDeadzone(
+    _ value: Double?,
+    for device: ApplicationServiceDeviceDescription
+  ) async -> Bool {
+    var accepted = false
+    await performControllerAction(device) {
+      let result = try await gateway.setControllerTuning(
+        model: ControllerModelID(vendorID: device.vendorID, productID: device.productID),
+        key: .stickDeadzone,
+        value: value
+      )
+      guard let failure = result.failure else {
+        accepted = true
+        return nil
+      }
+      return RuntimePresentation.controllerTuningFailure(failure, detail: result.detail)
+    }
+    return accepted
+  }
+
   /// The server the picker shows for `device`: the pending choice, or the record's server.
   func shownControllerServer(for device: ApplicationServiceDeviceDescription) -> ControllerServer {
     pendingControllerServers[RuntimeControllerModel(device)] ?? device.recordServer

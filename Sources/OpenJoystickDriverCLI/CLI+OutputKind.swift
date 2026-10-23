@@ -36,6 +36,8 @@ extension CLI {
       (BindingSetCommand.self, "Binding"),
       (BindingClearCommand.self, "Status"),
       (ConfigShowCommand.self, "Configuration"),
+      (ConfigSetCommand.self, "ConfigChange"),
+      (ConfigUnsetCommand.self, "ConfigChange"),
       (DiagnoseCommand.self, "Diagnosis"),
       (ExplainCommand.self, "ErrorExplanation"),
       (TransportExtensionStatusCommand.self, "TransportExtension"),

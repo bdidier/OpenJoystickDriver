@@ -3,16 +3,16 @@ import Testing
 
 @testable import OpenJoystickDriverKit
 
-struct ControllerServerWriterTests {
+struct ControllerRecordWriterTests {
   /// A bundled `SonyDualShock4` record, a HID family.
-  private static let bundledHID = ControllerModelID(vendorID: 0x2C22, productID: 0x2000)
+  static let bundledHID = ControllerModelID(vendorID: 0x2C22, productID: 0x2000)
   /// A bundled `XboxGIP` record, a raw-USB family.
-  private static let bundledGIP = ControllerModelID(vendorID: 0x366C, productID: 0x0005)
-  private static let unbundled = ControllerModelID(vendorID: 0x1234, productID: 0xABCD)
+  static let bundledGIP = ControllerModelID(vendorID: 0x366C, productID: 0x0005)
+  static let unbundled = ControllerModelID(vendorID: 0x1234, productID: 0xABCD)
 
   /// Runs `body` with the `Controllers` folder of a temporary application-support folder, whose
   /// `Packages` store is empty unless the test installs a package.
-  private static func withDirectory(_ body: (URL, ModPackageFixture) throws -> Void) throws {
+  static func withDirectory(_ body: (URL, ModPackageFixture) throws -> Void) throws {
     try ModPackageFixture.with { fixture in
       try FileManager.default.createDirectory(
         at: fixture.controllers,
@@ -22,20 +22,45 @@ struct ControllerServerWriterTests {
     }
   }
 
-  private static func change(
+  static func change(
     _ identity: ControllerModelID,
     to server: ControllerServer,
     in directory: URL
-  ) throws -> ControllerServerWriter.Change {
-    try ControllerServerWriter.change(
-      identity,
-      to: server,
+  ) throws -> ControllerRecordWriter.Change {
+    try ControllerRecordWriter.change(
+      server,
+      for: identity,
       records: .load(userDirectory: directory),
       directory: directory
     )
   }
 
-  private static func object(_ data: Data) throws -> [String: Any] {
+  static func change(
+    _ edit: ControllerRecordWriter.TuningEdit,
+    for target: ControllerRecordWriter.Target,
+    in directory: URL
+  ) throws -> ControllerRecordWriter.Change {
+    try ControllerRecordWriter.change(
+      edit,
+      for: target,
+      records: .load(userDirectory: directory),
+      directory: directory
+    )
+  }
+
+  static func write(
+    _ edit: ControllerRecordWriter.TuningEdit,
+    for target: ControllerRecordWriter.Target,
+    in directory: URL
+  ) throws {
+    try ControllerRecordWriter.write(change(edit, for: target, in: directory))
+  }
+
+  static func fields(_ file: URL) throws -> [String: Any] {
+    try #require(try object(Data(contentsOf: file))["patch"] as? [String: Any])
+  }
+
+  static func object(_ data: Data) throws -> [String: Any] {
     try #require(try JSONSerialization.jsonObject(with: data) as? [String: Any])
   }
 
@@ -44,9 +69,9 @@ struct ControllerServerWriterTests {
     try Self.withDirectory { directory, _ in
       let change = try Self.change(Self.bundledHID, to: .ojd, in: directory)
       #expect(change.created)
-      #expect(change.previous == .system)
+      #expect(change.previousServer == .system)
       #expect(change.file.lastPathComponent == "2c22-2000.patch.json")
-      try ControllerServerWriter.write(change)
+      try ControllerRecordWriter.write(change)
       let written = try Self.object(Data(contentsOf: change.file))
       #expect(written["kind"] as? String == "ControllerPatch")
       let selector = try #require(written["selector"] as? [String: Int])
@@ -71,8 +96,8 @@ struct ControllerServerWriterTests {
       .write(to: file)
       let change = try Self.change(Self.bundledHID, to: .system, in: directory)
       #expect(!change.created)
-      #expect(change.previous == .ojd)
-      try ControllerServerWriter.write(change)
+      #expect(change.previousServer == .ojd)
+      try ControllerRecordWriter.write(change)
       let set = try #require(try Self.object(Data(contentsOf: file))["patch"] as? [String: Any])
       #expect(set["server"] as? String == "System")
       #expect(set["tuning"] as? [String: Double] == ["stickDeadzone": 0.1])
@@ -96,7 +121,7 @@ struct ControllerServerWriterTests {
       try fixture.store().install(package, replace: true)
       let change = try Self.change(Self.unbundled, to: .ojd, in: directory)
       #expect(change.created)
-      try ControllerServerWriter.write(change)
+      try ControllerRecordWriter.write(change)
       let loaded = ControllerRecordSet.load(userDirectory: directory)
       let effective = try #require(loaded.records[Self.unbundled])
       #expect(effective.profile.server == .ojd)
@@ -111,7 +136,7 @@ struct ControllerServerWriterTests {
       let file = directory.appendingPathComponent("2c22-2000.patch.json")
       try Data("{".utf8).write(to: file)
       #expect(
-        throws: ControllerServerWriter.Failure.invalidFile("the file is not a JSON object")
+        throws: ControllerRecordWriter.Failure.invalidFile("the file is not a JSON object")
       ) { try Self.change(Self.bundledHID, to: .ojd, in: directory) }
       #expect(try Data(contentsOf: file) == Data("{".utf8))
     }
@@ -120,7 +145,7 @@ struct ControllerServerWriterTests {
   @Test
   func modelWithoutARecordIsRefused() throws {
     try Self.withDirectory { directory, _ in
-      #expect(throws: ControllerServerWriter.Failure.noRecord) {
+      #expect(throws: ControllerRecordWriter.Failure.noRecord) {
         try Self.change(Self.unbundled, to: .ojd, in: directory)
       }
     }
@@ -133,7 +158,7 @@ struct ControllerServerWriterTests {
         _ = try Self.change(Self.bundledGIP, to: .ojd, in: directory)
         Issue.record("a raw-USB model was accepted")
       } catch {
-        guard case .invalidResult(let problem) = error as? ControllerServerWriter.Failure
+        guard case .invalidResult(let problem) = error as? ControllerRecordWriter.Failure
         else {
           Issue.record("unexpected failure \(error)")
           return
@@ -180,7 +205,8 @@ struct ControllerServerWriterTests {
       }
       try Data(text("OJD").utf8).write(to: file)
       let change = try Self.change(Self.bundledHID, to: .system, in: directory)
-      #expect(String(bytes: change.data, encoding: .utf8) == text("System"))
+      let data = try #require(change.data)
+      #expect(String(bytes: data, encoding: .utf8) == text("System"))
     }
   }
 
@@ -198,7 +224,7 @@ struct ControllerServerWriterTests {
         ))
       try data.write(to: file)
       #expect(
-        throws: ControllerServerWriter.Failure.invalidFile(
+        throws: ControllerRecordWriter.Failure.invalidFile(
           "JSON text, byte 0: the text starts with a byte order mark; save the file as UTF-8 "
             + "without one"
         )

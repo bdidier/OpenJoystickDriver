@@ -218,6 +218,10 @@
 "ui.controllers.server.invalidRecord" = "ระเบียนคอนโทรลเลอร์ไม่ถูกต้อง ไม่มีการเปลี่ยนแปลงใดๆ";
 /* Message when the app cannot save the changed controller record. */
 "ui.controllers.server.persistenceFailed" = "ไม่สามารถบันทึกระเบียนคอนโทรลเลอร์ได้ ไม่มีการเปลี่ยนแปลงใดๆ";
+/* Label of the stepper in the controller detail that sets the stick deadzone of the controller's model. The deadzone is the part of the travel near the center that is ignored. */
+"ui.controllers.stickDeadzone.label" = "เดดโซนสติ๊ก";
+/* Message in the controller detail when removing the stick deadzone fails because the user's controller record does not set it. The deadzone is the part of the travel near the center that is ignored. */
+"ui.controllers.stickDeadzone.notSet" = "ระเบียนคอนโทรลเลอร์ของคุณไม่ได้ตั้งเดดโซนสติ๊ก จึงไม่มีอะไรให้รีเซ็ต";
 /* Button in the Controllers detail that shows or hides the advanced virtual HID profile choices. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.virtualProfile.advanced" = "ขั้นสูง";
 /* Heading of the virtual HID profile section in the Controllers detail. HID is the abbreviation of Human Interface Device and stays as written. */
@@ -2026,9 +2030,21 @@
 /* Error of 'ojd permission request' for an unknown permission. %1$@ is the text the user gave and %2$@ is the comma-separated list of valid values, which stay as written. */
 "cli.permission.request.unknownId" = "ไม่รู้จักสิทธิ์ “%1$@” ใช้ %2$@";
 /* One-line summary of 'ojd config' in the command list and at the top of its help. */
-"cli.config.group.abstract" = "แสดงการกำหนดค่าที่ OpenJoystickDriver ใช้ และเลเยอร์ที่กำหนดแต่ละค่า";
+"cli.config.group.abstract" = "แสดงหรือเปลี่ยนการกำหนดค่าที่ OpenJoystickDriver ใช้ และเลเยอร์ที่กำหนดแต่ละค่า";
 /* Long description in the help of 'ojd config'. It lists the configuration layers from lowest to highest priority; all.patch.json is a file name that stays as written. */
 "cli.config.group.discussion" = "ค่าจะซ้อนกันเป็นเลเยอร์ เรียงจากต่ำสุดก่อน: ค่าเริ่มต้นของไดรเวอร์, ระเบียนที่มากับแอป, ระเบียนของแพ็กเกจ, all.patch.json, ระเบียนของคุณ, โปรไฟล์ที่ใช้งานอยู่ คีย์การปรับแต่งแต่ละคีย์จะใช้ค่าจากเลเยอร์สูงสุดที่กำหนดคีย์นั้น";
+/* Help text of the --controller option of 'ojd config set' and 'ojd config unset'. VVVV:PPPP stands for the vendor ID and product ID in hexadecimal and stays as written. */
+"cli.config.group.controller" = "เปลี่ยนเฉพาะรุ่นคอนโทรลเลอร์นี้ในรูปแบบ VVVV:PPPP แทนคอนโทรลเลอร์ทุกตัว";
+/* Error of 'ojd config set' and 'ojd config unset' when a record cannot take the change. %1$@ is the tuning key and %2$@ is the description of the problem. */
+"cli.config.group.invalid" = "เปลี่ยน %1$@ ไม่ได้: %2$@";
+/* Help text of the KEY argument of 'ojd config set' and 'ojd config unset'. stickDeadzone is a tuning key and stays as written. */
+"cli.config.group.key" = "คีย์การปรับแต่ง เช่น stickDeadzone";
+/* Error of 'ojd config set' and 'ojd config unset' for a controller without a record to change. %1$@ and %2$@ are the controller as VVVV:PPPP; 'ojd record draft' stays as written. */
+"cli.config.group.noRecord" = "%1$@ ไม่มีระเบียนคอนโทรลเลอร์ให้เปลี่ยน เริ่มสร้างด้วย “ojd record draft %2$@”";
+/* Error of 'ojd config set' when the value is not a number. %@ is the text the user gave. */
+"cli.config.group.notNumber" = "“%@” ไม่ใช่ตัวเลข";
+/* Error of 'ojd config set' and 'ojd config unset' for a name that is not a tuning key. %1$@ is the text the user gave and %2$@ is the comma-separated list of valid keys, which stay as written. */
+"cli.config.group.unknownKey" = "“%1$@” ไม่ใช่คีย์การปรับแต่ง ใช้หนึ่งในต่อไปนี้: %2$@";
 /* One-line summary of 'ojd config show' in the command list and at the top of its help. */
 "cli.config.show.abstract" = "พิมพ์ค่าการปรับแต่งแต่ละค่าและเลเยอร์ที่กำหนดค่านั้น";
 /* Help text of the --controller option of 'ojd config show'. VVVV:PPPP stands for the vendor ID and product ID in hexadecimal and stays as written. */
@@ -2047,6 +2063,20 @@
 "cli.config.show.unreadSkippedNoService" = "บริการไม่ได้ทำงานอยู่ จึงข้ามการตรวจสอบคีย์ใน all.patch.json ที่ไม่มีคอนโทรลเลอร์ที่เชื่อมต่ออยู่ตัวใดอ่าน";
 /* Value shown by 'ojd config show' for a tuning key that no layer sets, so the driver default applies. */
 "cli.config.show.unset" = "ค่าเริ่มต้นของไดรเวอร์";
+/* One-line summary of 'ojd config set' in the command list and at the top of its help. */
+"cli.config.set.abstract" = "ตั้งค่าการปรับแต่งในระเบียนคอนโทรลเลอร์ของคุณ";
+/* Long description in the help of 'ojd config set'. KEY, --controller, all.patch.json and stickDeadzone stay as written. */
+"cli.config.set.discussion" = "เขียน KEY ลงในระเบียนของคุณสำหรับคอนโทรลเลอร์ที่ระบุด้วย --controller หรือลงใน all.patch.json สำหรับคอนโทรลเลอร์ทุกตัว กฎของระเบียนมีผล: stickDeadzone ต้องมากกว่า 0 และน้อยกว่า 1 ค่าที่กฎปฏิเสธจะไม่เปลี่ยนอะไร บริการที่ทำงานอยู่จะใช้การเปลี่ยนแปลงนี้";
+/* Message printed by 'ojd config set' after it wrote a value. %1$@ is the tuning key, which stays as written, %2$@ is the value and %3$@ is the path of the record file. */
+"cli.config.set.success" = "ตั้งค่า %1$@ เป็น %2$@ ใน %3$@ แล้ว บริการที่ทำงานอยู่จะใช้ตอนนี้";
+/* Help text of the VALUE argument of 'ojd config set'. */
+"cli.config.set.value" = "ตัวเลขที่จะตั้งค่า";
+/* One-line summary of 'ojd config unset' in the command list and at the top of its help. */
+"cli.config.unset.abstract" = "ลบค่าการปรับแต่งออกจากระเบียนคอนโทรลเลอร์ของคุณ";
+/* Error of 'ojd config unset' when none of the user's records sets the key. %@ is the tuning key, which stays as written. */
+"cli.config.unset.notSet" = "ยังไม่ได้ตั้งค่า %@ ในระเบียนของคุณ จึงไม่มีอะไรให้ลบ";
+/* Message printed by 'ojd config unset' after it removed a key. %1$@ is the tuning key, which stays as written, and %2$@ is the path of the record file. */
+"cli.config.unset.success" = "ลบ %1$@ ออกจาก %2$@ แล้ว บริการที่ทำงานอยู่จะใช้ตอนนี้";
 /* One-line summary of 'ojd setting' in the command list and at the top of its help. */
 "cli.setting.group.abstract" = "แสดงรายการ อ่าน หรือเปลี่ยนการตั้งค่าแอป OpenJoystickDriver";
 /* Error of 'ojd setting set' when the value is neither true nor false. %1$@ is the text the user gave and %2$@ is the setting name, which stays as written. true and false stay as written. */

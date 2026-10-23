@@ -36,7 +36,7 @@ enum ControllerServerChange {
         controller: device.sessionToken.rawValue,
         identity: device.identity,
         server: server,
-        previous: change.previous,
+        previous: change.previousServer,
         file: change.file.path,
         created: change.created,
         dryRun: dryRun
@@ -101,11 +101,11 @@ enum ControllerServerChange {
     to server: ControllerServer,
     records: ControllerRecordSet,
     device: ApplicationServiceDeviceDescription
-  ) throws -> ControllerServerWriter.Change {
+  ) throws -> ControllerRecordWriter.Change {
     do {
-      return try ControllerServerWriter.change(
-        model,
-        to: server,
+      return try ControllerRecordWriter.change(
+        server,
+        for: model,
         records: records,
         directory: RecordStore.directory
       )
@@ -135,8 +135,8 @@ enum ControllerServerChange {
     }
   }
 
-  private static func write(_ change: ControllerServerWriter.Change) throws {
-    do { try ControllerServerWriter.write(change) } catch {
+  private static func write(_ change: ControllerRecordWriter.Change) throws {
+    do { try ControllerRecordWriter.write(change) } catch {
       throw CLIFailure(
         .fileAccessFailed,
         CLILocalized.format(

@@ -117,6 +117,22 @@ enum RuntimePresentation {
     return [message, detail].compactMap { $0 }.joined(separator: " ")
   }
 
+  /// A refused controller tuning change, followed by the service's detail text when it has one.
+  static func controllerTuningFailure(
+    _ failure: ControllerTuningFailure,
+    detail: String?
+  ) -> String {
+    let message: String
+    switch failure {
+    case .noRecord: message = OJDLocalized.string("ui.controllers.server.noRecord")
+    case .invalidRecord: message = OJDLocalized.string("ui.controllers.server.invalidRecord")
+    case .notSet: message = OJDLocalized.string("ui.controllers.stickDeadzone.notSet")
+    case .persistenceFailed:
+      message = OJDLocalized.string("ui.controllers.server.persistenceFailed")
+    }
+    return [message, detail].compactMap { $0 }.joined(separator: " ")
+  }
+
   static func sourceLabel(_ source: RemappingSource) -> String {
     switch source {
     case .button(let button): return buttonLabel(button)

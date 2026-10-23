@@ -192,6 +192,15 @@ extension ApplicationServiceClientGateway {
     return try await client.setControllerServer(model: model, server: server)
   }
 
+  func setControllerTuning(
+    model: ControllerModelID,
+    key: ControllerTuning.Key,
+    value: Double?
+  ) async throws -> ControllerTuningResult {
+    await ensureConnection()
+    return try await client.setControllerTuning(model: model, key: key, value: value)
+  }
+
   func suspendController(_ selector: ControllerReference) async throws -> ControllerSuspendResult {
     await ensureConnection()
     return try await client.suspendController(selector)

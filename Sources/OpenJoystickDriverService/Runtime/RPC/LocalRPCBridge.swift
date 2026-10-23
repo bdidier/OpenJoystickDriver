@@ -193,6 +193,16 @@ extension ApplicationServiceServer {
           server: value.server
         )
       )
+    case .setControllerTuning:
+      let value = try decode(LocalServiceRPCControllerTuningArguments.self)
+      return try send(
+        await setControllerTuning(
+          vendorID: value.vendorID,
+          productID: value.productID,
+          key: value.key,
+          value: value.value
+        )
+      )
     case .openVirtualFeed:
       let value = try decode(LocalServiceRPCVirtualFeedOpenArguments.self)
       return try send(try await virtualFeeds.open(profile: value.profile))

@@ -222,6 +222,24 @@ extension ApplicationServiceClient {
     )
   }
 
+  /// Sets `key` to `value` in the user's record for the controller model, or removes it when
+  /// `value` is nil; the service applies it to every connected controller of the model.
+  public func setControllerTuning(
+    model: ControllerModelID,
+    key: ControllerTuning.Key,
+    value: Double?
+  ) async throws -> ControllerTuningResult {
+    try await call(
+      .setControllerTuning,
+      LocalServiceRPCControllerTuningArguments(
+        vendorID: Int(model.vendorID),
+        productID: Int(model.productID),
+        key: key,
+        value: value
+      )
+    )
+  }
+
   /// Returns the selected controller's model, or that unit only when `unit` is true, to automatic
   /// virtual HID profile selection.
   public func resetVirtualHIDProfileOverride(

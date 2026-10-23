@@ -3,7 +3,7 @@ import Foundation
 extension ControllerTuning {
   /// One tuning value, named as in a record's and `all.patch.json`'s `tuning` section. The cases
   /// are in the order `validateTuning` reports a family-scope violation.
-  public enum Key: String, CaseIterable, Sendable {
+  public enum Key: String, CaseIterable, Codable, Sendable {
     case stickDeadzone
     case inputLivenessTimeoutMs
     case hidStartupRecoveryIntervalMs
