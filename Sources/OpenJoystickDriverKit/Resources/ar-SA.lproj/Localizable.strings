@@ -212,16 +212,18 @@
 "ui.controllers.serving.extensionOwned" = "امتداد برنامج التشغيل";
 /* Value of the serving route when the user turned the output off. */
 "ui.controllers.serving.outputDisabled" = "الإخراج متوقف";
-/* Message when the user changes the server of a controller that no controller record describes. */
+/* Message when the user changes the server or the stick deadzone of a controller that no controller record describes. */
 "ui.controllers.server.noRecord" = "لا يوجد سجل وحدة تحكم يصف وحدة التحكم هذه، لذا لا يوجد ما يمكن تغييره.";
-/* Message when the user changes the server of a controller whose record is not valid. */
+/* Message when the user changes the server or the stick deadzone of a controller whose record is not valid, or would not be valid with the change. */
 "ui.controllers.server.invalidRecord" = "سجل وحدة التحكم غير صالح. لم يتغير شيء.";
-/* Message when the app cannot save the changed controller record. */
+/* Message when the app cannot save the controller record changed by a server or stick deadzone change. */
 "ui.controllers.server.persistenceFailed" = "تعذر حفظ سجل وحدة التحكم. لم يتغير شيء.";
 /* Label of the stepper in the controller detail that sets the stick deadzone of the controller's model. The deadzone is the part of the travel near the center that is ignored. */
 "ui.controllers.stickDeadzone.label" = "المنطقة الميتة للعصا";
 /* Message in the controller detail when removing the stick deadzone fails because the user's controller record does not set it. The deadzone is the part of the travel near the center that is ignored. */
 "ui.controllers.stickDeadzone.notSet" = "لا يحدّد سجل وحدة التحكم لديك المنطقة الميتة للعصا، لذا لا يوجد ما يمكن إعادة تعيينه.";
+/* Message in the controller detail when the service refuses a stick deadzone change because the vendor or product ID of the request is out of range. */
+"ui.controllers.stickDeadzone.invalidRequest" = "يحدد الطلب معرّف مورّد أو معرّف منتج خارج النطاق. لم يتغير شيء.";
 /* Button in the Controllers detail that shows or hides the advanced virtual HID profile choices. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.virtualProfile.advanced" = "متقدم";
 /* Heading of the virtual HID profile section in the Controllers detail. HID is the abbreviation of Human Interface Device and stays as written. */
@@ -666,6 +668,8 @@
 "status.notSelected" = "غير محدد";
 /* Value shown in a detail row that has nothing to report. */
 "status.none" = "لا شيء";
+/* Value of a tuning row in the controller detail and of 'ojd config show' when no layer sets the tuning key. */
+"status.notSet" = "غير محدد";
 /* Value of a detail row that says a feature, such as motion sensing, is present. */
 "status.available" = "متوفر";
 /* Value of the launch row of the controller actions when the list of connected controllers cannot be read. */
@@ -2061,8 +2065,6 @@
 "cli.config.show.unreadSkippedNoController" = "لا توجد وحدة تحكم متصلة، لذا تم تخطي التحقق من مفاتيح all.patch.json التي لا تقرؤها أي وحدة تحكم.";
 /* Note printed by 'ojd config show' when it cannot check for unread keys because the service is not running. all.patch.json stays as written. */
 "cli.config.show.unreadSkippedNoService" = "الخدمة غير قيد التشغيل، لذا تم تخطي التحقق من مفاتيح all.patch.json التي لا تقرؤها أي وحدة تحكم متصلة.";
-/* Value shown by 'ojd config show' for a tuning key that no layer sets, so the driver default applies. */
-"cli.config.show.unset" = "الإعداد الافتراضي لبرنامج التشغيل";
 /* One-line summary of 'ojd config set' in the command list and at the top of its help. */
 "cli.config.set.abstract" = "حدّد قيمة ضبط في سجلات وحدات التحكم لديك.";
 /* Long description in the help of 'ojd config set'. KEY, --controller, all.patch.json and stickDeadzone stay as written. */
@@ -2071,6 +2073,8 @@
 "cli.config.set.success" = "تم ضبط %1$@ على %2$@ في %3$@. تطبّقه الخدمة قيد التشغيل الآن.";
 /* Help text of the VALUE argument of 'ojd config set'. */
 "cli.config.set.value" = "الرقم المطلوب تعيينه.";
+/* Error of 'ojd config set' when it gets no value or more than one. VALUE and ojd config set stay as written. */
+"cli.config.set.valueCount" = "قدّم قيمة VALUE واحدة فقط.";
 /* One-line summary of 'ojd config unset' in the command list and at the top of its help. */
 "cli.config.unset.abstract" = "أزل قيمة ضبط من سجلات وحدات التحكم لديك.";
 /* Error of 'ojd config unset' when none of the user's records sets the key. %@ is the tuning key, which stays as written. */

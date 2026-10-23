@@ -14,8 +14,13 @@ struct ConfigSetCommand: AsyncParsableCommand {
   @Argument(help: ArgumentHelp(CLILocalized.text("cli.config.group.key"), valueName: "KEY"))
   var key: String
 
-  @Argument(help: ArgumentHelp(CLILocalized.text("cli.config.set.value"), valueName: "VALUE"))
-  var value: String
+  /// Collects every remaining argument, so a negative number such as `-0.5` is a value and not
+  /// an option; `validate()` requires exactly one.
+  @Argument(
+    parsing: .allUnrecognized,
+    help: ArgumentHelp(CLILocalized.text("cli.config.set.value"), valueName: "VALUE")
+  )
+  var values: [String] = []
 
   @Option(
     name: .customLong("controller"),
@@ -26,14 +31,17 @@ struct ConfigSetCommand: AsyncParsableCommand {
   @OptionGroup(visibility: GlobalOptions.subcommandVisibility)
   var global: GlobalOptions
 
-  func validate() throws { _ = try ConfigChange.edit(key: key, value: value) }
+  func validate() throws { _ = try edit() }
 
   func run() async throws {
-    try await ConfigChange.run(
-      try ConfigChange.edit(key: key, value: value),
-      controller: controller,
-      global: global
-    )
+    try await ConfigChange.run(try edit(), controller: controller, global: global)
+  }
+
+  private func edit() throws -> ControllerRecordWriter.TuningEdit {
+    guard let value = values.first, values.count == 1 else {
+      throw ValidationError(CLILocalized.text("cli.config.set.valueCount"))
+    }
+    return try ConfigChange.edit(key: key, value: value)
   }
 }
 

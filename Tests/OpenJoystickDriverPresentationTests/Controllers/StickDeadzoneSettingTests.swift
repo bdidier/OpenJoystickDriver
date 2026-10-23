@@ -46,10 +46,10 @@ struct StickDeadzoneSettingTests {
   }
 
   @Test
-  func aModelWithoutAValueShowsTheDriverDefaultAndStepsFromZero() throws {
+  func aModelWithoutAValueShowsNotSetAndStepsUpToTheLowestValue() throws {
     let setting = try Self.setting(userValue: nil)
     #expect(setting.value == nil)
-    #expect(setting.text == OJDLocalized.string("cli.config.show.unset"))
+    #expect(setting.text == OJDLocalized.string("status.notSet"))
     #expect(setting.increased == 0.01)
     #expect(setting.decreased == nil)
     #expect(!setting.canReset)
@@ -67,8 +67,27 @@ struct StickDeadzoneSettingTests {
 
   @Test
   func stepsStayInsideTheRangeARecordAccepts() throws {
-    #expect(try Self.setting(userValue: 0.01).decreased == 0.01)
-    #expect(try Self.setting(userValue: 0.99).increased == 0.99)
+    #expect(try Self.setting(userValue: 0.01).decreased == nil)
+    #expect(try Self.setting(userValue: 0.99).increased == nil)
+    #expect(try Self.setting(userValue: 0.02).decreased == 0.01)
+    #expect(try Self.setting(userValue: 0.98).increased == 0.99)
+  }
+
+  @Test
+  func aStepNeverMovesTheValueTheWrongWay() throws {
+    let below = try Self.setting(userValue: 0.005)
+    #expect(below.decreased == nil)
+    #expect(below.increased == 0.015)
+    let above = try Self.setting(userValue: 0.995)
+    #expect(above.increased == nil)
+    #expect(above.decreased == 0.985)
+  }
+
+  @Test
+  func aStepKeepsTheValuesOffTheTwoDecimalGrid() throws {
+    let setting = try Self.setting(userValue: 0.025)
+    #expect(setting.increased == 0.035)
+    #expect(setting.decreased == 0.015)
   }
 
   @Test(arguments: [0.07, nil])

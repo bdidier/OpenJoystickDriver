@@ -293,4 +293,12 @@ private actor PermissionRaceGatewayStub: ApplicationServiceGateway {
   }
 
   func resetAllVirtualHIDProfileOverrides() throws -> Bool { true }
+
+  func setControllerTuning(
+    model: ControllerModelID,
+    key: ControllerTuning.Key,
+    value: Double?
+  ) throws -> ControllerTuningResult {
+    throw ApplicationServiceClientError.invalidResponse
+  }
 }

@@ -16,18 +16,20 @@ public struct LocalServiceRPCControllerTuningArguments: Codable, Sendable {
   }
 }
 
-/// Why a `setControllerTuning` request changed nothing. The user record stays as it was.
+/// Why a `setControllerTuning` request changed nothing. The user record is unchanged.
 public enum ControllerTuningFailure: String, Codable, Equatable, Sendable {
   /// Neither the user directory, the bundled catalog, nor an installed package has a record of
   /// the model, so there is nothing to patch.
   case noRecord
-  /// The existing user record, or the record with the new value, is invalid, such as a
+  /// The existing user record, or the record with the value set, is invalid, such as a
   /// `stickDeadzone` out of range.
   case invalidRecord
   /// The user record does not set the key, so there is nothing to remove.
   case notSet
   /// The user record cannot be written.
   case persistenceFailed
+  /// The request names a vendor or product ID that does not fit 16 bits, so it names no model.
+  case invalidRequest
 }
 
 /// Result of `setControllerTuning`.
@@ -62,6 +64,4 @@ public struct ControllerTuningResult: Codable, Equatable, Sendable {
     self.failure = failure
     self.detail = detail
   }
-
-  public var succeeded: Bool { failure == nil }
 }

@@ -2483,7 +2483,7 @@
           "$ref": "#/$defs/sharedTuningKey"
         },
         "previous": {
-          "description": "The effective value before the change. Absent while only the Driver default applied.",
+          "description": "The effective value before the change. Absent while only the Driver default applies.",
           "type": "number"
         },
         "removesFile": {

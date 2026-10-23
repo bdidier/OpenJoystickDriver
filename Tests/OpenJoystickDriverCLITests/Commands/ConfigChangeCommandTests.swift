@@ -142,15 +142,16 @@ struct ConfigChangeCommandTests {
     #expect(try await shown([], in: directory) == (nil, "Driver"))
   }
 
-  @Test(arguments: ["0", "1", "1.5"])
+  @Test(arguments: ["0", "1", "1.5", "-0.5"])
   func setRefusesAValueOutOfRangeAndWritesNothing(_ value: String) async throws {
     let directory = Directory()
     for options in [["--controller", Self.model], []] {
       let result = await run(["set", "stickDeadzone", value] + options, in: directory)
 
-      #expect(result.code == 1)
-      #expect(result.standardError.contains(ErrorCode.invalidInputFile.rawValue))
-      #expect(result.standardError.contains("stickDeadzone"))
+      #expect(result.code == 64)
+      #expect(result.standardError.contains(ErrorCode.usage.rawValue))
+      #expect(result.standardError.contains("stickDeadzone"), "\(result.standardError)")
+      #expect(!result.standardError.contains("Unknown option"))
     }
     #expect(!FileManager.default.fileExists(atPath: directory.modelFile.path))
     #expect(!FileManager.default.fileExists(atPath: directory.allFile.path))
@@ -161,12 +162,30 @@ struct ConfigChangeCommandTests {
     let directory = Directory()
     let text = await run(["set", "stickDeadzone", "wide"], in: directory)
     let unknown = await run(["set", "stickDeadzon", "0.1"], in: directory)
-    let infinite = await run(["set", "stickDeadzone", "inf"], in: directory)
 
-    #expect(text.code == 64 && unknown.code == 64 && infinite.code == 64)
+    #expect(text.code == 64 && unknown.code == 64)
     #expect(text.standardError.contains("'wide'"))
     #expect(unknown.standardError.contains("stickDeadzon"))
     #expect(!FileManager.default.fileExists(atPath: directory.controllers.path))
+  }
+
+  @Test(arguments: ["0x1p-3", "nan", "inf", "-inf", "1e-1", "1_0", " 0.1", "0.1 ", "+0.1", "."])
+  func setAcceptsOnlyAPlainDecimalNumber(_ value: String) async throws {
+    let directory = Directory()
+    let result = await run(["set", "stickDeadzone", value], in: directory)
+
+    #expect(result.code == 64, "\(value)")
+    #expect(result.standardError.contains(ErrorCode.usage.rawValue))
+    #expect(!FileManager.default.fileExists(atPath: directory.controllers.path))
+  }
+
+  @Test(arguments: ["0.15", ".15", "00.15", "0.150"])
+  func setAcceptsAPlainDecimalNumber(_ value: String) async throws {
+    let directory = Directory()
+    let result = await run(["set", "stickDeadzone", value, "--json"], in: directory)
+
+    #expect(result.code == 0, "\(result.standardError)")
+    #expect(try result.json()["value"] as? Double == 0.15)
   }
 
   @Test
@@ -199,7 +218,7 @@ struct ConfigChangeCommandTests {
       in: directory
     )
 
-    #expect(result.code == 1)
+    #expect(result.code == 64)
     #expect(result.standardError.contains("lizardResendTicks"))
     #expect(!FileManager.default.fileExists(atPath: directory.modelFile.path))
   }

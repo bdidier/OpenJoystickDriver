@@ -212,16 +212,18 @@
 "ui.controllers.serving.extensionOwned" = "Tiện ích mở rộng trình điều khiển";
 /* Value of the serving route when the user turned the output off. */
 "ui.controllers.serving.outputDisabled" = "Đã tắt đầu ra";
-/* Message when the user changes the server of a controller that no controller record describes. */
+/* Message when the user changes the server or the stick deadzone of a controller that no controller record describes. */
 "ui.controllers.server.noRecord" = "Không có bản ghi bộ điều khiển nào mô tả bộ điều khiển này, nên không có gì để thay đổi.";
-/* Message when the user changes the server of a controller whose record is not valid. */
+/* Message when the user changes the server or the stick deadzone of a controller whose record is not valid, or would not be valid with the change. */
 "ui.controllers.server.invalidRecord" = "Bản ghi bộ điều khiển không hợp lệ. Không có gì thay đổi.";
-/* Message when the app cannot save the changed controller record. */
+/* Message when the app cannot save the controller record changed by a server or stick deadzone change. */
 "ui.controllers.server.persistenceFailed" = "Không thể lưu bản ghi bộ điều khiển. Không có gì thay đổi.";
 /* Label of the stepper in the controller detail that sets the stick deadzone of the controller's model. The deadzone is the part of the travel near the center that is ignored. */
 "ui.controllers.stickDeadzone.label" = "Vùng chết của cần";
 /* Message in the controller detail when removing the stick deadzone fails because the user's controller record does not set it. The deadzone is the part of the travel near the center that is ignored. */
 "ui.controllers.stickDeadzone.notSet" = "Bản ghi bộ điều khiển của bạn không đặt vùng chết của cần, nên không có gì để đặt lại.";
+/* Message in the controller detail when the service refuses a stick deadzone change because the vendor or product ID of the request is out of range. */
+"ui.controllers.stickDeadzone.invalidRequest" = "Yêu cầu nêu một ID nhà cung cấp hoặc ID sản phẩm nằm ngoài phạm vi. Không có gì thay đổi.";
 /* Button in the Controllers detail that shows or hides the advanced virtual HID profile choices. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.virtualProfile.advanced" = "Nâng cao";
 /* Heading of the virtual HID profile section in the Controllers detail. HID is the abbreviation of Human Interface Device and stays as written. */
@@ -666,6 +668,8 @@
 "status.notSelected" = "Chưa chọn";
 /* Value shown in a detail row that has nothing to report. */
 "status.none" = "Không có";
+/* Value of a tuning row in the controller detail and of 'ojd config show' when no layer sets the tuning key. */
+"status.notSet" = "Chưa đặt";
 /* Value of a detail row that says a feature, such as motion sensing, is present. */
 "status.available" = "Khả dụng";
 /* Value of the launch row of the controller actions when the list of connected controllers cannot be read. */
@@ -2061,8 +2065,6 @@
 "cli.config.show.unreadSkippedNoController" = "Không có bộ điều khiển nào được kết nối nên đã bỏ qua bước kiểm tra các khóa all.patch.json mà không bộ điều khiển nào đọc.";
 /* Note printed by 'ojd config show' when it cannot check for unread keys because the service is not running. all.patch.json stays as written. */
 "cli.config.show.unreadSkippedNoService" = "Dịch vụ không chạy nên đã bỏ qua bước kiểm tra các khóa all.patch.json mà không bộ điều khiển nào đang kết nối đọc.";
-/* Value shown by 'ojd config show' for a tuning key that no layer sets, so the driver default applies. */
-"cli.config.show.unset" = "mặc định của trình điều khiển";
 /* One-line summary of 'ojd config set' in the command list and at the top of its help. */
 "cli.config.set.abstract" = "Đặt một giá trị tinh chỉnh trong các bản ghi bộ điều khiển của bạn.";
 /* Long description in the help of 'ojd config set'. KEY, --controller, all.patch.json and stickDeadzone stay as written. */
@@ -2071,6 +2073,8 @@
 "cli.config.set.success" = "Đã đặt %1$@ thành %2$@ trong %3$@. Dịch vụ đang chạy áp dụng nó ngay bây giờ.";
 /* Help text of the VALUE argument of 'ojd config set'. */
 "cli.config.set.value" = "Số cần đặt.";
+/* Error of 'ojd config set' when it gets no value or more than one. VALUE and ojd config set stay as written. */
+"cli.config.set.valueCount" = "Chỉ nhập đúng một VALUE.";
 /* One-line summary of 'ojd config unset' in the command list and at the top of its help. */
 "cli.config.unset.abstract" = "Xóa một giá trị tinh chỉnh khỏi các bản ghi bộ điều khiển của bạn.";
 /* Error of 'ojd config unset' when none of the user's records sets the key. %@ is the tuning key, which stays as written. */

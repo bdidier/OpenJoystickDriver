@@ -45,7 +45,7 @@ extension ApplicationServiceServer {
       )
     }
     guard let vendor = UInt16(exactly: vendorID), let product = UInt16(exactly: productID) else {
-      return refused(.noRecord)
+      return refused(.invalidRequest)
     }
     let edit: ControllerRecordWriter.TuningEdit = value.map { .set(key, $0) } ?? .remove(key)
     let change: ControllerRecordWriter.Change

@@ -68,16 +68,13 @@
               viewModel: viewModel,
               device: device,
               setting: StickDeadzoneSetting(record: record),
-              didChange: { tuningChanges += 1 }
+              reload: { await loadRecord() }
             )
             tuningDisclosure(for: record)
           }
         }
         Section { advancedDisclosure }
-      }.task(id: recordLoadID) {
-        let model = ControllerModelID(vendorID: device.vendorID, productID: device.productID)
-        record = await Task.detached { ControllerRecordSet.load().records[model] }.value
-      }.sheet(item: $actions.timedKind) { kind in
+      }.task(id: recordLoadID) { await loadRecord() }.sheet(item: $actions.timedKind) { kind in
         ControllerTimedActionSheet(
           kind: kind,
           device: device,
@@ -92,9 +89,14 @@
       )
     }
 
-    /// Reloads the record when the controller, who serves its model, or its stick dead zone changes.
+    /// Reloads the record when the controller or who serves its model changes.
     private var recordLoadID: String {
-      "\(device.sessionToken.rawValue) \(device.recordServer.rawValue) \(tuningChanges)"
+      "\(device.sessionToken.rawValue) \(device.recordServer.rawValue)"
+    }
+
+    private func loadRecord() async {
+      let model = ControllerModelID(vendorID: device.vendorID, productID: device.productID)
+      record = await Task.detached { ControllerRecordSet.load().records[model] }.value
     }
 
     private var connectedDevices: [ApplicationServiceDeviceDescription]? {

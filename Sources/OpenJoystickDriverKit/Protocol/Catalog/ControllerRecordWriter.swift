@@ -33,7 +33,6 @@ public enum ControllerRecordWriter {
 
   /// One planned change, before ``write(_:)`` stores it.
   public struct Change: Sendable {
-    public let target: Target
     /// The effective server of the model before the change; `system` when no layer sets it and
     /// for ``Target/allControllers``.
     public let previousServer: ControllerServer
@@ -49,7 +48,7 @@ public enum ControllerRecordWriter {
     public let data: Data?
   }
 
-  /// Why the change was refused. The file stays as it was.
+  /// Why the change was refused. The file is unchanged.
   public enum Failure: Error, Equatable, Sendable {
     /// The user directory has no file for the model and neither the bundled catalog nor an
     /// installed package has a record of it, so there is nothing to patch. `ojd record draft`
@@ -62,7 +61,7 @@ public enum ControllerRecordWriter {
     case invalidResult(String)
   }
 
-  /// Why a tuning change was refused. The file stays as it was.
+  /// Why a tuning change was refused. The file is unchanged.
   public enum TuningFailure: Error, Equatable, Sendable {
     case refused(Failure)
     /// The user file does not set the tuning key, so there is nothing to remove.
@@ -200,7 +199,6 @@ public enum ControllerRecordWriter {
       tuning = records.defaultTuningValues
     }
     return Change(
-      target: target,
       previousServer: effective?.profile.server ?? .system,
       previousTuning: tuningKey.flatMap { key in tuning.first { $0.key == key }?.value },
       file: file,

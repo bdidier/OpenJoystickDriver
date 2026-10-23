@@ -212,16 +212,18 @@
 "ui.controllers.serving.extensionOwned" = "Stuurprogramma-extensie";
 /* Value of the serving route when the user turned the output off. */
 "ui.controllers.serving.outputDisabled" = "Uitvoer uit";
-/* Message when the user changes the server of a controller that no controller record describes. */
+/* Message when the user changes the server or the stick deadzone of a controller that no controller record describes. */
 "ui.controllers.server.noRecord" = "Geen controllerrecord beschrijft deze controller, dus er valt niets te wijzigen.";
-/* Message when the user changes the server of a controller whose record is not valid. */
+/* Message when the user changes the server or the stick deadzone of a controller whose record is not valid, or would not be valid with the change. */
 "ui.controllers.server.invalidRecord" = "Het controllerrecord is ongeldig. Er is niets gewijzigd.";
-/* Message when the app cannot save the changed controller record. */
+/* Message when the app cannot save the controller record changed by a server or stick deadzone change. */
 "ui.controllers.server.persistenceFailed" = "Het controllerrecord kon niet worden opgeslagen. Er is niets gewijzigd.";
 /* Label of the stepper in the controller detail that sets the stick deadzone of the controller's model. The deadzone is the part of the travel near the center that is ignored. */
 "ui.controllers.stickDeadzone.label" = "Dode zone van stick";
 /* Message in the controller detail when removing the stick deadzone fails because the user's controller record does not set it. The deadzone is the part of the travel near the center that is ignored. */
 "ui.controllers.stickDeadzone.notSet" = "Je controllerrecord stelt geen dode zone van de stick in, dus er valt niets opnieuw in te stellen.";
+/* Message in the controller detail when the service refuses a stick deadzone change because the vendor or product ID of the request is out of range. */
+"ui.controllers.stickDeadzone.invalidRequest" = "Het verzoek noemt een leveranciers- of product-ID buiten het bereik. Er is niets gewijzigd.";
 /* Button in the Controllers detail that shows or hides the advanced virtual HID profile choices. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.virtualProfile.advanced" = "Geavanceerd";
 /* Heading of the virtual HID profile section in the Controllers detail. HID is the abbreviation of Human Interface Device and stays as written. */
@@ -666,6 +668,8 @@
 "status.notSelected" = "Niet geselecteerd";
 /* Value shown in a detail row that has nothing to report. */
 "status.none" = "Geen";
+/* Value of a tuning row in the controller detail and of 'ojd config show' when no layer sets the tuning key. */
+"status.notSet" = "Niet ingesteld";
 /* Value of a detail row that says a feature, such as motion sensing, is present. */
 "status.available" = "Beschikbaar";
 /* Value of the launch row of the controller actions when the list of connected controllers cannot be read. */
@@ -2061,8 +2065,6 @@
 "cli.config.show.unreadSkippedNoController" = "Er is geen controller aangesloten, dus de controle op sleutels in all.patch.json die geen enkele controller leest is overgeslagen.";
 /* Note printed by 'ojd config show' when it cannot check for unread keys because the service is not running. all.patch.json stays as written. */
 "cli.config.show.unreadSkippedNoService" = "De service draait niet, dus de controle op sleutels in all.patch.json die geen enkele aangesloten controller leest is overgeslagen.";
-/* Value shown by 'ojd config show' for a tuning key that no layer sets, so the driver default applies. */
-"cli.config.show.unset" = "standaard van het stuurprogramma";
 /* One-line summary of 'ojd config set' in the command list and at the top of its help. */
 "cli.config.set.abstract" = "Stelt een afstelwaarde in in je controllerrecords.";
 /* Long description in the help of 'ojd config set'. KEY, --controller, all.patch.json and stickDeadzone stay as written. */
@@ -2071,6 +2073,8 @@
 "cli.config.set.success" = "%1$@ op %2$@ gezet in %3$@. De draaiende service past het nu toe.";
 /* Help text of the VALUE argument of 'ojd config set'. */
 "cli.config.set.value" = "Het getal dat wordt ingesteld.";
+/* Error of 'ojd config set' when it gets no value or more than one. VALUE and ojd config set stay as written. */
+"cli.config.set.valueCount" = "Geef precies één VALUE op.";
 /* One-line summary of 'ojd config unset' in the command list and at the top of its help. */
 "cli.config.unset.abstract" = "Verwijdert een afstelwaarde uit je controllerrecords.";
 /* Error of 'ojd config unset' when none of the user's records sets the key. %@ is the tuning key, which stays as written. */

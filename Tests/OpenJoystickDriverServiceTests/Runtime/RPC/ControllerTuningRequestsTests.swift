@@ -79,6 +79,16 @@ struct ControllerTuningRequestsTests {
     }
   }
 
+  @Test(arguments: [(-1, 0x2000), (0x2C22, 0x10000), (0x10000, 0x2000)])
+  func aVendorOrProductIDOutOfRangeIsAnInvalidRequest(_ model: (Int, Int)) throws {
+    try Self.withDirectory { directory in
+      let result = Self.set(0.1, model: model, in: directory)
+      #expect(result.failure == .invalidRequest)
+      #expect(result.file == nil)
+      #expect(!FileManager.default.fileExists(atPath: directory.path))
+    }
+  }
+
   @Test
   func resultRoundTripsThroughJSON() throws {
     let result = ControllerTuningResult(

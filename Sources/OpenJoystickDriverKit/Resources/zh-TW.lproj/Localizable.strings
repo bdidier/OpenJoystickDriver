@@ -212,16 +212,18 @@
 "ui.controllers.serving.extensionOwned" = "驅動程式擴充功能";
 /* Value of the serving route when the user turned the output off. */
 "ui.controllers.serving.outputDisabled" = "輸出已關閉";
-/* Message when the user changes the server of a controller that no controller record describes. */
+/* Message when the user changes the server or the stick deadzone of a controller that no controller record describes. */
 "ui.controllers.server.noRecord" = "沒有描述此控制器的控制器記錄，因此沒有可變更的內容。";
-/* Message when the user changes the server of a controller whose record is not valid. */
+/* Message when the user changes the server or the stick deadzone of a controller whose record is not valid, or would not be valid with the change. */
 "ui.controllers.server.invalidRecord" = "控制器記錄無效。未作任何變更。";
-/* Message when the app cannot save the changed controller record. */
+/* Message when the app cannot save the controller record changed by a server or stick deadzone change. */
 "ui.controllers.server.persistenceFailed" = "無法儲存控制器記錄。未作任何變更。";
 /* Label of the stepper in the controller detail that sets the stick deadzone of the controller's model. The deadzone is the part of the travel near the center that is ignored. */
 "ui.controllers.stickDeadzone.label" = "搖桿死區";
 /* Message in the controller detail when removing the stick deadzone fails because the user's controller record does not set it. The deadzone is the part of the travel near the center that is ignored. */
 "ui.controllers.stickDeadzone.notSet" = "您的控制器記錄沒有設定搖桿死區，因此沒有可重置的內容。";
+/* Message in the controller detail when the service refuses a stick deadzone change because the vendor or product ID of the request is out of range. */
+"ui.controllers.stickDeadzone.invalidRequest" = "要求中的供應商 ID 或產品 ID 超出範圍。未作任何變更。";
 /* Button in the Controllers detail that shows or hides the advanced virtual HID profile choices. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.virtualProfile.advanced" = "進階";
 /* Heading of the virtual HID profile section in the Controllers detail. HID is the abbreviation of Human Interface Device and stays as written. */
@@ -666,6 +668,8 @@
 "status.notSelected" = "未選取";
 /* Value shown in a detail row that has nothing to report. */
 "status.none" = "無";
+/* Value of a tuning row in the controller detail and of 'ojd config show' when no layer sets the tuning key. */
+"status.notSet" = "未設定";
 /* Value of a detail row that says a feature, such as motion sensing, is present. */
 "status.available" = "可用";
 /* Value of the launch row of the controller actions when the list of connected controllers cannot be read. */
@@ -2061,8 +2065,6 @@
 "cli.config.show.unreadSkippedNoController" = "沒有已連接的控制器，因此已略過對沒有控制器讀取的 all.patch.json 鍵的檢查。";
 /* Note printed by 'ojd config show' when it cannot check for unread keys because the service is not running. all.patch.json stays as written. */
 "cli.config.show.unreadSkippedNoService" = "服務未執行，因此已略過對沒有已連接控制器讀取的 all.patch.json 鍵的檢查。";
-/* Value shown by 'ojd config show' for a tuning key that no layer sets, so the driver default applies. */
-"cli.config.show.unset" = "驅動程式預設值";
 /* One-line summary of 'ojd config set' in the command list and at the top of its help. */
 "cli.config.set.abstract" = "在您的控制器記錄中設定調校值。";
 /* Long description in the help of 'ojd config set'. KEY, --controller, all.patch.json and stickDeadzone stay as written. */
@@ -2071,6 +2073,8 @@
 "cli.config.set.success" = "已把 %1$@ 設為 %2$@（%3$@）。執行中的服務現在會套用它。";
 /* Help text of the VALUE argument of 'ojd config set'. */
 "cli.config.set.value" = "要設定的數字。";
+/* Error of 'ojd config set' when it gets no value or more than one. VALUE and ojd config set stay as written. */
+"cli.config.set.valueCount" = "請只提供一個 VALUE。";
 /* One-line summary of 'ojd config unset' in the command list and at the top of its help. */
 "cli.config.unset.abstract" = "從您的控制器記錄中移除調校值。";
 /* Error of 'ojd config unset' when none of the user's records sets the key. %@ is the tuning key, which stays as written. */

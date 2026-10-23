@@ -212,16 +212,18 @@
 "ui.controllers.serving.extensionOwned" = "Extensión de controlador";
 /* Value of the serving route when the user turned the output off. */
 "ui.controllers.serving.outputDisabled" = "Salida desactivada";
-/* Message when the user changes the server of a controller that no controller record describes. */
+/* Message when the user changes the server or the stick deadzone of a controller that no controller record describes. */
 "ui.controllers.server.noRecord" = "Ningún registro de control describe este control, así que no hay nada que cambiar.";
-/* Message when the user changes the server of a controller whose record is not valid. */
+/* Message when the user changes the server or the stick deadzone of a controller whose record is not valid, or would not be valid with the change. */
 "ui.controllers.server.invalidRecord" = "El registro del control no es válido. No se cambió nada.";
-/* Message when the app cannot save the changed controller record. */
+/* Message when the app cannot save the controller record changed by a server or stick deadzone change. */
 "ui.controllers.server.persistenceFailed" = "No se pudo guardar el registro del control. No se cambió nada.";
 /* Label of the stepper in the controller detail that sets the stick deadzone of the controller's model. The deadzone is the part of the travel near the center that is ignored. */
 "ui.controllers.stickDeadzone.label" = "Zona muerta de la palanca";
 /* Message in the controller detail when removing the stick deadzone fails because the user's controller record does not set it. The deadzone is the part of the travel near the center that is ignored. */
 "ui.controllers.stickDeadzone.notSet" = "Tu registro de control no establece la zona muerta de la palanca, así que no hay nada que restablecer.";
+/* Message in the controller detail when the service refuses a stick deadzone change because the vendor or product ID of the request is out of range. */
+"ui.controllers.stickDeadzone.invalidRequest" = "La solicitud indica un ID de fabricante o de producto fuera de rango. No se cambió nada.";
 /* Button in the Controllers detail that shows or hides the advanced virtual HID profile choices. HID is the abbreviation of Human Interface Device and stays as written. */
 "ui.virtualProfile.advanced" = "Avanzado";
 /* Heading of the virtual HID profile section in the Controllers detail. HID is the abbreviation of Human Interface Device and stays as written. */
@@ -666,6 +668,8 @@
 "status.notSelected" = "No seleccionado";
 /* Value shown in a detail row that has nothing to report. */
 "status.none" = "Ninguno";
+/* Value of a tuning row in the controller detail and of 'ojd config show' when no layer sets the tuning key. */
+"status.notSet" = "Sin definir";
 /* Value of a detail row that says a feature, such as motion sensing, is present. */
 "status.available" = "Disponible";
 /* Value of the launch row of the controller actions when the list of connected controllers cannot be read. */
@@ -2061,8 +2065,6 @@
 "cli.config.show.unreadSkippedNoController" = "No hay ningún control conectado, así que se omitió la comprobación de las claves de all.patch.json que ningún control lee.";
 /* Note printed by 'ojd config show' when it cannot check for unread keys because the service is not running. all.patch.json stays as written. */
 "cli.config.show.unreadSkippedNoService" = "El servicio no se está ejecutando, así que se omitió la comprobación de las claves de all.patch.json que ningún control conectado lee.";
-/* Value shown by 'ojd config show' for a tuning key that no layer sets, so the driver default applies. */
-"cli.config.show.unset" = "valor predeterminado del controlador";
 /* One-line summary of 'ojd config set' in the command list and at the top of its help. */
 "cli.config.set.abstract" = "Establece un valor de ajuste en tus registros de control.";
 /* Long description in the help of 'ojd config set'. KEY, --controller, all.patch.json and stickDeadzone stay as written. */
@@ -2071,6 +2073,8 @@
 "cli.config.set.success" = "%1$@ quedó establecido en %2$@ en %3$@. El servicio en ejecución lo aplica ahora.";
 /* Help text of the VALUE argument of 'ojd config set'. */
 "cli.config.set.value" = "El número que se establece.";
+/* Error of 'ojd config set' when it gets no value or more than one. VALUE and ojd config set stay as written. */
+"cli.config.set.valueCount" = "Indica exactamente un VALUE.";
 /* One-line summary of 'ojd config unset' in the command list and at the top of its help. */
 "cli.config.unset.abstract" = "Quita un valor de ajuste de tus registros de control.";
 /* Error of 'ojd config unset' when none of the user's records sets the key. %@ is the tuning key, which stays as written. */

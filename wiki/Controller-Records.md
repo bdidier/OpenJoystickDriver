@@ -219,14 +219,14 @@ A record's `tuning` field changes a value that the protocol driver otherwise set
 
 OpenJoystickDriver keeps no default deadzone. XInput leaves the deadzone to the game: Microsoft's documentation says "your game must implement dead zone correctly" and gives `XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE` (8689 of 32767) as the value to use. The rest position differs from one unit to the next, and a driver deadzone stacks with the game's own deadzone, so a default here would be wrong for some controllers and doubled for others. A web page reads the raw values, and a game that has no deadzone sees every drift.
 
-A stick that rests off center needs the setting. The Razer controller `1532:0A15` reported its right stick at `RS=(-4672,-1312)` while at rest, which is 0.14 of full deflection on the X axis. Set `stickDeadzone` for the model above that distance, then check the rest value with `ojd controller watch`:
+A stick that rests off center needs the setting. The Razer controller `1532:0A15` reported its right stick at `RS=(-4672,-1312)` while at rest, which is 0.148 of full deflection from the center. `stickDeadzone` is radial: a stick closer to the center than the value, measured as `sqrt(x² + y²)` over the full deflection, reads as centered, so the value must exceed the distance of the rest position, not the offset of one axis. Here the distance is `sqrt(4672² + 1312²) / 32767`, about 0.148. Set `stickDeadzone` for the model above that distance, then check the rest value with `ojd controller watch`:
 
 ```text
-ojd config set stickDeadzone 0.16 --controller 1532:0A15
+ojd config set stickDeadzone 0.15 --controller 1532:0A15
 ojd config show --controller 1532:0A15
 ```
 
-`ojd config unset stickDeadzone --controller 1532:0A15` removes it. The **Stick deadzone** stepper in the **Tuning** group of the controller detail in the app writes the same key. `stickDeadzone` is radial and applies to both sticks, so size it for the stick that rests furthest off center.
+`ojd config unset stickDeadzone --controller 1532:0A15` removes it. The **Stick deadzone** stepper above the **Tuning** group of the controller detail in the app writes the same key. `stickDeadzone` is radial and applies to both sticks, so size it for the stick that rests furthest off center.
 
 The default for `frameQueueCapacity` is 64, the `default` of `tuning.frameQueueCapacity` in `controller.schema.json`. It also applies to a controller that has no record. A protocol description's `defaults.tuning` (`Resources/Protocols/<file stem>.json`) may set another value for its family, and a record, a patch, or `all.patch.json` overrides both, per model or for every controller. Reports queue only while the system takes a long time to accept the previous one; button changes that arrive in the same moment still reach the virtual gamepad in order until the queue is full.
 

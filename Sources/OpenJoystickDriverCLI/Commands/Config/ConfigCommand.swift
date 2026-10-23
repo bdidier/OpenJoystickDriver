@@ -214,6 +214,6 @@ struct ConfigShowCommand: AsyncParsableCommand {
 
   static func text(_ value: Double?) -> String {
     value.map { $0 == $0.rounded() ? String(Int($0)) : String($0) }
-      ?? CLILocalized.text("cli.config.show.unset")
+      ?? CLILocalized.text("status.notSet")
   }
 }

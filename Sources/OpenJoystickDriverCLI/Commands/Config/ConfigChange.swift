@@ -30,9 +30,14 @@ enum ConfigChange {
     return key
   }
 
-  /// The number written as `text`.
+  /// The number written as `text`: digits with an optional `-` and one `.`. Hexadecimal floats,
+  /// exponents, `nan` and `inf` are not numbers here.
   static func number(_ text: String) throws -> Double {
-    guard let number = Double(text), number.isFinite else {
+    let digits = text.hasPrefix("-") ? text.dropFirst() : Substring(text)
+    let isDecimal =
+      digits.contains { $0 != "." } && digits.filter { $0 == "." }.count <= 1
+      && digits.allSatisfy { $0 == "." || ("0"..."9").contains($0) }
+    guard isDecimal, let number = Double(text), number.isFinite else {
       throw ValidationError(CLILocalized.format("cli.config.group.notNumber", text))
     }
     return number
@@ -52,7 +57,7 @@ enum ConfigChange {
   ) async throws {
     try await global.run {
       let target = model.map(ControllerRecordWriter.Target.model) ?? .allControllers
-      let change = try change(edit, for: target, model: model)
+      let change = try change(edit, for: target)
       try write(change)
       var value: Double?
       if case .set(_, let number) = edit { value = number }
@@ -92,8 +97,7 @@ enum ConfigChange {
 
   private static func change(
     _ edit: ControllerRecordWriter.TuningEdit,
-    for target: ControllerRecordWriter.Target,
-    model: ControllerModelID?
+    for target: ControllerRecordWriter.Target
   ) throws -> ControllerRecordWriter.Change {
     do {
       return try ControllerRecordWriter.change(
@@ -105,14 +109,22 @@ enum ConfigChange {
     } catch {
       switch error {
       case .refused(.noRecord):
-        let identity = model?.description ?? ""
+        guard case .model(let model) = target else {
+          preconditionFailure("Only a controller model can have no record to patch.")
+        }
+        let identity = model.description
         throw CLIFailure(
           .notFound,
           CLILocalized.format("cli.config.group.noRecord", identity, identity)
         )
-      case .refused(.invalidFile(let problem)), .refused(.invalidResult(let problem)):
+      case .refused(.invalidFile(let problem)):
         throw CLIFailure(
           .invalidInputFile,
+          CLILocalized.format("cli.config.group.invalid", edit.key.rawValue, problem)
+        )
+      case .refused(.invalidResult(let problem)):
+        throw CLIFailure(
+          .usage,
           CLILocalized.format("cli.config.group.invalid", edit.key.rawValue, problem)
         )
       case .notSet(let key):

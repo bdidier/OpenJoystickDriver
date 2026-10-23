@@ -127,6 +127,8 @@ enum RuntimePresentation {
     case .noRecord: message = OJDLocalized.string("ui.controllers.server.noRecord")
     case .invalidRecord: message = OJDLocalized.string("ui.controllers.server.invalidRecord")
     case .notSet: message = OJDLocalized.string("ui.controllers.stickDeadzone.notSet")
+    case .invalidRequest:
+      message = OJDLocalized.string("ui.controllers.stickDeadzone.invalidRequest")
     case .persistenceFailed:
       message = OJDLocalized.string("ui.controllers.server.persistenceFailed")
     }

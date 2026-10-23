@@ -5,7 +5,7 @@ import OpenJoystickDriverKit
 struct ControllerTuningRow: Equatable, Identifiable {
   /// The key as the record file names it, such as `stickDeadzone`.
   let name: String
-  /// The value, or the driver default's name while no layer sets one.
+  /// The value, or "Not set" while no layer sets one.
   let value: String
   /// The layer that sets the value, such as `user`; nil while only the driver default applies.
   let layer: String?
@@ -28,7 +28,7 @@ enum ControllerTuningRows {
     let keys = record.tuningValues.map { entry in
       ControllerTuningRow(
         name: entry.key.rawValue,
-        value: entry.value.map(number) ?? OJDLocalized.string("cli.config.show.unset"),
+        value: entry.value.map(number) ?? OJDLocalized.string("status.notSet"),
         layer: entry.value == nil ? nil : CommandLineName.kebab(entry.layer.rawValue)
       )
     }

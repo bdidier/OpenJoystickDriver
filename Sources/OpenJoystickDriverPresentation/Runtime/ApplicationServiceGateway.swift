@@ -105,21 +105,6 @@ extension VirtualOutputGateway {
     )
   }
 
-  func setControllerTuning(
-    model: ControllerModelID,
-    key: ControllerTuning.Key,
-    value: Double?
-  ) throws -> ControllerTuningResult {
-    ControllerTuningResult(
-      key: key,
-      value: value,
-      previous: nil,
-      file: nil,
-      created: false,
-      failure: .noRecord
-    )
-  }
-
   func suspendController(_ selector: ControllerReference) throws -> ControllerSuspendResult {
     ControllerSuspendResult(state: .active, failure: .notFound)
   }

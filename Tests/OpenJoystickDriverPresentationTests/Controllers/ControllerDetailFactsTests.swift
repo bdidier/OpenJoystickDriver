@@ -300,7 +300,7 @@ extension ControllerDetailFactsTests {
     #expect(rows.map(\.name) == ControllerTuning.Key.allCases.map(\.rawValue))
     for (row, entry) in zip(rows, record.tuningValues) {
       if entry.value == nil {
-        #expect(row.text == OJDLocalized.string("cli.config.show.unset"))
+        #expect(row.text == OJDLocalized.string("status.notSet"))
       } else {
         #expect(row.layer == CommandLineName.kebab(entry.layer.rawValue))
         #expect(row.text == "\(row.value) (\(row.layer ?? ""))")

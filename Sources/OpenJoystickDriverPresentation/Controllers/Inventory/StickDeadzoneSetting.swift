@@ -21,24 +21,30 @@ struct StickDeadzoneSetting: Equatable {
     layer = entry?.layer ?? .driver
   }
 
-  /// The value as the row shows it, or the driver default's name while no layer sets one.
+  /// The value as the row shows it, or "Not set" while no layer sets one.
   var text: String {
-    value.map { String($0) } ?? OJDLocalized.string("cli.config.show.unset")
+    value.map { String($0) } ?? OJDLocalized.string("status.notSet")
   }
 
   /// Whether the user's record sets the value, so removing it changes the effective value.
   var canReset: Bool { value != nil && layer == .user }
 
-  /// The value one step above the current one, at most `range.upperBound`.
-  var increased: Double { Self.clamped(Self.rounded((value ?? 0) + Self.step)) }
-
-  /// The value one step below the current one, at least `range.lowerBound`; nil while no layer sets
-  /// a value, because there is nothing below the driver default.
-  var decreased: Double? { value.map { Self.clamped(Self.rounded($0 - Self.step)) } }
-
-  private static func rounded(_ value: Double) -> Double { (value * 100).rounded() / 100 }
-
-  private static func clamped(_ value: Double) -> Double {
-    min(max(value, range.lowerBound), range.upperBound)
+  /// The value one step above the current one; with no value set, the lowest value the stepper
+  /// writes. Nil when the step would not end above the current value inside `range`.
+  var increased: Double? {
+    guard let value else { return Self.range.lowerBound }
+    let next = min(Self.rounded(value + Self.step), Self.range.upperBound)
+    return next > value ? next : nil
   }
+
+  /// The value one step below the current one. Nil while no layer sets a value, and when the step
+  /// would not end below the current value inside `range`.
+  var decreased: Double? {
+    guard let value else { return nil }
+    let next = max(Self.rounded(value - Self.step), Self.range.lowerBound)
+    return next < value ? next : nil
+  }
+
+  /// `value` without the binary noise of a sum, such as `0.07 + 0.01`.
+  private static func rounded(_ value: Double) -> Double { (value * 1e9).rounded() / 1e9 }
 }
