@@ -75,7 +75,9 @@ extension ControllerRecordWriterTests {
       try ControllerRecordWriter.write(change)
       let written = try Self.object(Data(contentsOf: change.file))
       #expect(written["selector"] as? [String: Bool] == ["all": true])
-      #expect(ControllerRecordSet.load(userDirectory: directory).defaults?.tuning.stickDeadzone == 0.05)
+      #expect(
+        ControllerRecordSet.load(userDirectory: directory).defaults?.tuning.stickDeadzone == 0.05
+      )
       let next = try Self.change(
         .set(.stickDeadzone, 0.06),
         for: .allControllers,
@@ -95,7 +97,8 @@ extension ControllerRecordWriterTests {
           Issue.record("\(value) was accepted")
         } catch {
           guard
-            case .refused(.invalidResult(let problem)) = error as? ControllerRecordWriter.TuningFailure
+            case .refused(.invalidResult(let problem)) = error
+              as? ControllerRecordWriter.TuningFailure
           else {
             Issue.record("unexpected failure \(error)")
             return
@@ -129,7 +132,8 @@ extension ControllerRecordWriterTests {
         Issue.record("a key the family does not read was accepted")
       } catch {
         guard
-          case .refused(.invalidResult(let problem)) = error as? ControllerRecordWriter.TuningFailure
+          case .refused(.invalidResult(let problem)) = error
+            as? ControllerRecordWriter.TuningFailure
         else {
           Issue.record("unexpected failure \(error)")
           return

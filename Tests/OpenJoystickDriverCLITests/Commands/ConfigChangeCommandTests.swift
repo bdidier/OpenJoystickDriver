@@ -123,7 +123,10 @@ struct ConfigChangeCommandTests {
     #expect(kept["patch"] as? [String: [String: Int]] == ["tuning": ["frameQueueCapacity": 32]])
     #expect(try await shown(["--controller", Self.model], in: directory).layer == "Driver")
 
-    let last = await run(["unset", "frameQueueCapacity", "--controller", Self.model, "--json"], in: directory)
+    let last = await run(
+      ["unset", "frameQueueCapacity", "--controller", Self.model, "--json"],
+      in: directory
+    )
     #expect(last.code == 0, "\(last.standardError)")
     #expect(try last.json()["removesFile"] as? Bool == true)
     #expect(!FileManager.default.fileExists(atPath: directory.modelFile.path))
@@ -203,7 +206,10 @@ struct ConfigChangeCommandTests {
   @Test
   func setRefusesAModelWithoutARecord() async throws {
     let directory = Directory()
-    let result = await run(["set", "stickDeadzone", "0.1", "--controller", "1234:ABCD"], in: directory)
+    let result = await run(
+      ["set", "stickDeadzone", "0.1", "--controller", "1234:ABCD"],
+      in: directory
+    )
 
     #expect(result.code == 1)
     #expect(result.standardError.contains(ErrorCode.notFound.rawValue))
