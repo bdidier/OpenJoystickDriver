@@ -40,7 +40,7 @@ extension USBTransportProvider {
     } catch USBTransportError.notSupported {
       // The provider has no descriptor source; the passive facts are all there is.
       return passiveResolution
-    } catch USBTransportError.accessDenied {
+    } catch USBTransportError.accessDenied, USBTransportError.ownedByAnotherClient {
       throw .refused
     } catch {
       throw .failed(String(describing: error))
@@ -55,8 +55,9 @@ extension USBTransportProvider {
 
 /// Why the configuration descriptor of a raw-USB device could not be read.
 public enum USBConfigurationReadFailure: Error, Equatable, Sendable, CustomStringConvertible {
-  /// The host refused the read (``USBTransportError/accessDenied``): another owner holds the
-  /// device exclusively, or the host denies OJD access to it.
+  /// The host refused the read: another owner holds the device exclusively
+  /// (``USBTransportError/ownedByAnotherClient(owner:)``, such as Steam on macOS 27), or the host
+  /// denies OJD access to it (``USBTransportError/accessDenied``).
   case refused
   /// The host reports no descriptor of configuration 1 for the device's service.
   case unavailable

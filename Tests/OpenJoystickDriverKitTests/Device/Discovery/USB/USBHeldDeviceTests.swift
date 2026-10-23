@@ -82,6 +82,23 @@ struct USBHeldDeviceTests {
     await manager.stop()
   }
 
+  /// The host answers a read of a device another client holds with `kIOReturnExclusiveAccess`.
+  @Test(arguments: [nil, "pid 75592, steam_osx"])
+  func exclusiveAccessRefusalIsHeldAndReadOnce(errorOwner: String?) async {
+    let provider = makeProvider(
+      owner: "pid 75592, steam_osx",
+      readError: .ownedByAnotherClient(owner: errorOwner)
+    )
+    let manager = makeManager(provider)
+    var enumeration = USBEnumerationTracker()
+
+    #expect(await poll(3, manager, provider, &enumeration) == [.ignored])
+    #expect(await provider.descriptorReads == [1])
+    #expect(await manager.unboundDeviceDescriptions().map(\.reason) == [.deviceInUse])
+    #expect(await manager.heldUSBServices == [device.serviceAddress: "pid 75592, steam_osx"])
+    await manager.stop()
+  }
+
   @Test
   func theDetectionLoopReadsAHeldDeviceOnceAcrossPolls() async {
     let provider = makeProvider(owner: "pid 11070, steam_osx")
