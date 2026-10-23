@@ -125,20 +125,20 @@
       "request": "launch",
       "args": [],
       "cwd": "${workspaceFolder:OpenJoystickDriver}",
-      "name": "Debug OpenJoystickDriverGameControllerSnake",
-      "target": "OpenJoystickDriverGameControllerSnake",
+      "name": "Debug OpenJoystickDriverGameControllerViewer",
+      "target": "OpenJoystickDriverGameControllerViewer",
       "configuration": "debug",
-      "preLaunchTask": "swift: Build Debug OpenJoystickDriverGameControllerSnake"
+      "preLaunchTask": "swift: Build Debug OpenJoystickDriverGameControllerViewer"
     },
     {
       "type": "swift",
       "request": "launch",
       "args": [],
       "cwd": "${workspaceFolder:OpenJoystickDriver}",
-      "name": "Release OpenJoystickDriverGameControllerSnake",
-      "target": "OpenJoystickDriverGameControllerSnake",
+      "name": "Release OpenJoystickDriverGameControllerViewer",
+      "target": "OpenJoystickDriverGameControllerViewer",
       "configuration": "release",
-      "preLaunchTask": "swift: Build Release OpenJoystickDriverGameControllerSnake"
+      "preLaunchTask": "swift: Build Release OpenJoystickDriverGameControllerViewer"
     }
   ]
 }

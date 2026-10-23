@@ -145,9 +145,11 @@ let package = Package(
     ),
 
     .executableTarget(
-      name: "OpenJoystickDriverGameControllerSnake",
-      path: "Sources/OpenJoystickDriverGameControllerSnake",
-      linkerSettings: [.linkedFramework("AppKit"), .linkedFramework("GameController")]
+      name: "OpenJoystickDriverGameControllerViewer",
+      path: "Sources/OpenJoystickDriverGameControllerViewer",
+      linkerSettings: [
+        .linkedFramework("AppKit"), .linkedFramework("GameController"), .linkedFramework("SwiftUI"),
+      ]
     ),
 
     .executableTarget(

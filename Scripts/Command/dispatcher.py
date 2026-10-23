@@ -72,6 +72,8 @@ COMMAND_HELP = """Commands:
   diagnose sdl3-hidapi-x360 [--seconds N]
                               Run SDL3 through Xbox 360 HIDAPI and test rumble
   diagnose gamecontroller     Run GameController.framework probe
+  diagnose browsers [--as <persona>] [--browsers firefox,chrome,safari]
+                              Feed every control into each browser's Gamepad API and report its slot
   diagnose backends           Run current backend acceptance loop
   diagnose rumble-motors <vid> <pid> [intensity] [duration-ms]
                               Identify physical rumble actuators interactively
@@ -328,6 +330,8 @@ def dispatch(argv: list[str]) -> int:
                 return run_record(tail)
             if sub == "usb-passive":
                 return run_usb_passive(tail)
+            if sub == "browsers":
+                exec_target("Diagnostics/browser_gamepad.py", tail, python=True)
             if sub == "rumble-motors":
                 if len(tail) not in {2, 3, 4}:
                     die(
@@ -347,7 +351,7 @@ def dispatch(argv: list[str]) -> int:
                     exec_target("Diagnostics/dext/diagnose.sh", [])
                 exec_target("Diagnostics/backend.sh", [sub, *tail])
             die(
-                f"Unknown: diagnose {sub} (expected: record | usb-passive | dext | sdl3 | sdl3-gamecontroller | sdl3-hidapi-x360 | gamecontroller | backends | rumble-motors)"
+                f"Unknown: diagnose {sub} (expected: record | usb-passive | dext | browsers | sdl3 | sdl3-gamecontroller | sdl3-hidapi-x360 | gamecontroller | backends | rumble-motors)"
             )
         case "check":
             sub, tail = (rest[0], rest[1:]) if rest else ("", [])

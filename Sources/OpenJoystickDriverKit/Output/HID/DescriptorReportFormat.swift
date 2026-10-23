@@ -32,7 +32,8 @@ public struct HIDDescriptorReportFormat: VirtualGamepadReportFormat, Sendable {
     outputReportID: UInt8? = nil,
     outputReportPayloadSize: Int? = nil,
     buttonUsageMap: [Int: Int] = [:],
-    digitalUsageMap: [Int: HIDInputUsage] = [:]
+    digitalUsageMap: [Int: HIDInputUsage] = [:],
+    axisUsageMap: [HIDAxisRole: HIDInputUsage] = HIDAxisRole.standardUsages
   ) throws {
     self.descriptor = descriptor
     guard let parsed = HIDReportDescriptorParser.parse(descriptor: descriptor) else {
@@ -42,7 +43,8 @@ public struct HIDDescriptorReportFormat: VirtualGamepadReportFormat, Sendable {
       let packer = HIDReportPacker.bestEffortGamepadPacker(
         from: parsed,
         buttonUsageMap: buttonUsageMap,
-        digitalUsageMap: digitalUsageMap
+        digitalUsageMap: digitalUsageMap,
+        axisUsageMap: axisUsageMap
       )
     else { throw Error.noSuitableInputReport }
     self.packer = packer

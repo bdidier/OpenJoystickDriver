@@ -16,6 +16,21 @@ public struct HIDInputUsage: Hashable, Sendable {
   }
 }
 
+/// The control value an axis field carries.
+public enum HIDAxisRole: CaseIterable, Sendable {
+  case leftStickX, leftStickY, rightStickX, rightStickY, leftTrigger, rightTrigger
+
+  /// Generic Desktop usages: left stick on X/Y, right stick on Rx/Ry, triggers on Z/Rz.
+  public static let standardUsages: [Self: HIDInputUsage] = [
+    .leftStickX: HIDInputUsage(page: 0x01, usage: 0x30),
+    .leftStickY: HIDInputUsage(page: 0x01, usage: 0x31),
+    .leftTrigger: HIDInputUsage(page: 0x01, usage: 0x32),
+    .rightStickX: HIDInputUsage(page: 0x01, usage: 0x33),
+    .rightStickY: HIDInputUsage(page: 0x01, usage: 0x34),
+    .rightTrigger: HIDInputUsage(page: 0x01, usage: 0x35),
+  ]
+}
+
 struct HIDReportPacker: Sendable {
   private static let buttonUsagePage = 0x09
   private static let genericDesktopUsagePage = 0x01
@@ -26,18 +41,20 @@ struct HIDReportPacker: Sendable {
   let reportID: UInt8
   let payloadSizeBytes: Int
 
-  let digitalFields: [HIDInputUsage: HIDField]
+  let fields: [HIDInputUsage: HIDField]
   /// Maps normalized button bits to descriptor usages for profile-specific layouts.
   let buttonUsageMap: [Int: Int]
   /// Maps normalized button bits to usages outside the Button page; wins over `buttonUsageMap`.
   let digitalUsageMap: [Int: HIDInputUsage]
-  let axisFields: [Int: HIDField]  // usage -> field (Generic Desktop)
+  /// Maps each axis role to the usage of the field that carries it.
+  let axisUsageMap: [HIDAxisRole: HIDInputUsage]
   let hatField: HIDField?
 
   static func bestEffortGamepadPacker(
     from parsed: HIDParsedDescriptor,
     buttonUsageMap: [Int: Int] = [:],
-    digitalUsageMap: [Int: HIDInputUsage] = [:]
+    digitalUsageMap: [Int: HIDInputUsage] = [:],
+    axisUsageMap: [HIDAxisRole: HIDInputUsage] = HIDAxisRole.standardUsages
   ) -> Self? {
     // Score each report ID by how many "gamepad-ish" fields it contains.
     let grouped = Dictionary(grouping: parsed.fields) { $0.reportID }
@@ -65,25 +82,21 @@ struct HIDReportPacker: Sendable {
     }
     guard let (rid, _) = best else { return nil }
     let fields = grouped[rid] ?? []
-    var digitalFields: [HIDInputUsage: HIDField] = [:]
-    var axes: [Int: HIDField] = [:]
+    var fieldsByUsage: [HIDInputUsage: HIDField] = [:]
     var hat: HIDField?
     for f in fields {
-      let usage = HIDInputUsage(page: f.usagePage, usage: f.usage)
-      digitalFields[usage] = f
-      if f.usagePage == Self.genericDesktopUsagePage && Self.axisUsageRange.contains(f.usage) {
-        axes[f.usage] = f
-      } else if f.usagePage == Self.genericDesktopUsagePage && f.usage == Self.hatSwitchUsage {
+      fieldsByUsage[HIDInputUsage(page: f.usagePage, usage: f.usage)] = f
+      if f.usagePage == Self.genericDesktopUsagePage && f.usage == Self.hatSwitchUsage {
         hat = f
       }
     }
     return Self(
       reportID: rid,
       payloadSizeBytes: parsed.payloadSizeBytesByReportID[rid] ?? 0,
-      digitalFields: digitalFields,
+      fields: fieldsByUsage,
       buttonUsageMap: buttonUsageMap,
       digitalUsageMap: digitalUsageMap,
-      axisFields: axes,
+      axisUsageMap: axisUsageMap,
       hatField: hat
     )
   }
@@ -163,53 +176,23 @@ struct HIDReportPacker: Sendable {
           page: Self.buttonUsagePage,
           usage: buttonUsageMap[bitIndex] ?? (bitIndex + 1)
         )
-      guard let field = digitalFields[usage] else { continue }
+      guard let field = fields[usage] else { continue }
       let pressed = ((state.buttons >> bitIndex) & 1) != 0
       setBits(bitOffset: field.bitOffset, bitSize: field.bitSize, value: pressed ? 1 : 0)
     }
 
-    // Axes (Generic Desktop): X,Y,Z,Rx,Ry,Rz
-    if let f = axisFields[0x30] {
-      setBits(
-        bitOffset: f.bitOffset,
-        bitSize: f.bitSize,
-        value: encodeAxis(state.leftStickX, field: f, signed: true)
-      )
-    }
-    if let f = axisFields[0x31] {
-      setBits(
-        bitOffset: f.bitOffset,
-        bitSize: f.bitSize,
-        value: encodeAxis(state.leftStickY, field: f, signed: true)
-      )
-    }
-    if let f = axisFields[0x32] {
-      setBits(
-        bitOffset: f.bitOffset,
-        bitSize: f.bitSize,
-        value: encodeTrigger(state.effectiveLeftTrigger, field: f)
-      )
-    }
-    if let f = axisFields[0x33] {
-      setBits(
-        bitOffset: f.bitOffset,
-        bitSize: f.bitSize,
-        value: encodeAxis(state.rightStickX, field: f, signed: true)
-      )
-    }
-    if let f = axisFields[0x34] {
-      setBits(
-        bitOffset: f.bitOffset,
-        bitSize: f.bitSize,
-        value: encodeAxis(state.rightStickY, field: f, signed: true)
-      )
-    }
-    if let f = axisFields[0x35] {
-      setBits(
-        bitOffset: f.bitOffset,
-        bitSize: f.bitSize,
-        value: encodeTrigger(state.effectiveRightTrigger, field: f)
-      )
+    for role in HIDAxisRole.allCases {
+      guard let usage = axisUsageMap[role], let f = fields[usage] else { continue }
+      let value: UInt32
+      switch role {
+      case .leftStickX: value = encodeAxis(state.leftStickX, field: f, signed: true)
+      case .leftStickY: value = encodeAxis(state.leftStickY, field: f, signed: true)
+      case .rightStickX: value = encodeAxis(state.rightStickX, field: f, signed: true)
+      case .rightStickY: value = encodeAxis(state.rightStickY, field: f, signed: true)
+      case .leftTrigger: value = encodeTrigger(state.effectiveLeftTrigger, field: f)
+      case .rightTrigger: value = encodeTrigger(state.effectiveRightTrigger, field: f)
+      }
+      setBits(bitOffset: f.bitOffset, bitSize: f.bitSize, value: value)
     }
 
     if let f = hatField {

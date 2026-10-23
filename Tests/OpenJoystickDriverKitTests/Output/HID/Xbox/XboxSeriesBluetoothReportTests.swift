@@ -26,10 +26,9 @@ struct XboxSeriesBluetoothHIDReportFormatTests {
   @Test
   func everyDigitalControlSetsOnlyItsBit() {
     let controls: [(GamepadHIDDescriptor.ButtonBit, Int, UInt8)] = [
-      (.a, 14, 0x01), (.b, 14, 0x02), (.x, 14, 0x04), (.y, 14, 0x08), (.leftBumper, 14, 0x10),
-      (.rightBumper, 14, 0x20), (.back, 14, 0x40), (.start, 14, 0x80), (.leftStick, 15, 0x01),
-      (.rightStick, 15, 0x02), (.dpadUp, 15, 0x08), (.dpadDown, 15, 0x10),
-      (.dpadLeft, 15, 0x20), (.dpadRight, 15, 0x40), (.share, 16, 0x01),
+      (.a, 14, 0x01), (.b, 14, 0x02), (.x, 14, 0x08), (.y, 14, 0x10), (.leftBumper, 14, 0x40),
+      (.rightBumper, 14, 0x80), (.back, 15, 0x04), (.start, 15, 0x08), (.leftStick, 15, 0x20),
+      (.rightStick, 15, 0x40), (.share, 16, 0x01),
     ]
     for (button, byte, mask) in controls {
       let value = report(buttonBit: button)
@@ -41,11 +40,20 @@ struct XboxSeriesBluetoothHIDReportFormatTests {
   }
 
   @Test
-  func guideTravelsOnlyInReportTwo() {
+  func theDpadTravelsOnlyInTheHat() {
+    for button in [GamepadHIDDescriptor.ButtonBit.dpadUp, .dpadDown, .dpadLeft, .dpadRight] {
+      #expect(report(buttonBit: button) == Self.neutral)
+    }
+  }
+
+  @Test
+  func guideTravelsOnButtonThirteenAndInReportTwo() {
     let guide = VirtualGamepadState(
       buttons: 1 << UInt32(GamepadHIDDescriptor.ButtonBit.guide.rawValue)
     )
-    #expect(format.buildInputReport(from: guide) == Self.neutral)
+    var expected = Self.neutral
+    expected[15] = 0x10
+    #expect(format.buildInputReport(from: guide) == expected)
     #expect(format.buildAuxiliaryInputReports(from: guide) == [[2, 1]])
     #expect(format.buildAuxiliaryInputReports(from: VirtualGamepadState()) == [[2, 0]])
   }
@@ -84,6 +92,13 @@ struct XboxSeriesBluetoothHIDReportFormatTests {
     let buttons = parsed.fields.filter { $0.reportID == 1 && $0.usagePage == 0x09 }
       .sorted { $0.bitOffset < $1.bitOffset }.map(\.usage)
     #expect(buttons == Array(1...15))
+    let axes = parsed.fields.filter { $0.reportID == 1 && $0.usagePage != 0x09 && $0.bitSize >= 10 }
+      .sorted { $0.bitOffset < $1.bitOffset }.map { [$0.usagePage, $0.usage] }
+    #expect(
+      axes == [
+        [0x01, 0x30], [0x01, 0x31], [0x01, 0x32], [0x01, 0x35], [0x02, 0xC5], [0x02, 0xC4],
+      ]
+    )
     #expect(parsed.fields.contains { $0.reportID == 1 && $0.usagePage == 0x0C && $0.usage == 0xB2 })
     #expect(parsed.payloadSizeBytesByReportID[1] == 16)
     #expect(parsed.fields.contains { $0.reportID == 2 && $0.usagePage == 0x01 && $0.usage == 0x85 })

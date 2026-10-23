@@ -1,0 +1,56 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>OJD browser gamepad log</title>
+<style>
+  body { font: 16px -apple-system, sans-serif; margin: 2em; }
+</style>
+<h1>OJD browser gamepad log</h1>
+<p id="state">Waiting for a gamepad.</p>
+<script>
+  // Posts every Gamepad API connection and state change to the harness server.
+  const run = new URLSearchParams(location.search).get("run");
+  const last = {};
+  const rumbled = new Set();
+  function send(event) {
+    event.run = run;
+    event.ua = navigator.userAgent;
+    event.t = Date.now();
+    fetch("/log", { method: "POST", body: JSON.stringify(event) });
+  }
+  async function rumble(pad) {
+    const actuator = pad.vibrationActuator;
+    let result;
+    try {
+      result = actuator
+        ? await actuator.playEffect("dual-rumble", { duration: 200, strongMagnitude: 1, weakMagnitude: 1 })
+        : "no vibrationActuator";
+    } catch (error) {
+      result = "error " + error;
+    }
+    send({ ev: "rumble", i: pad.index, id: pad.id, result: String(result) });
+  }
+  addEventListener("gamepadconnected", (e) => {
+    const pad = e.gamepad;
+    send({ ev: "connected", i: pad.index, id: pad.id, mapping: pad.mapping, nb: pad.buttons.length, na: pad.axes.length });
+  });
+  addEventListener("gamepaddisconnected", (e) => send({ ev: "disconnected", i: e.gamepad.index, id: e.gamepad.id }));
+  function loop() {
+    for (const pad of navigator.getGamepads()) {
+      if (!pad) continue;
+      const buttons = pad.buttons.flatMap((b, i) => (b.pressed || b.value > 0.05 ? [[i, b.value]] : []));
+      const axes = [...pad.axes];
+      const key = JSON.stringify([buttons, axes.map((a) => a.toFixed(2))]);
+      if (last[pad.index] === key) continue;
+      last[pad.index] = key;
+      send({ ev: "state", i: pad.index, id: pad.id, buttons, axes });
+      if (buttons.length && !rumbled.has(pad.index)) {
+        rumbled.add(pad.index);
+        rumble(pad);
+      }
+      document.getElementById("state").textContent = `${pad.index} ${pad.id} [${pad.mapping}] ${key}`;
+    }
+    requestAnimationFrame(loop);
+  }
+  send({ ev: "ready" });
+  loop();
+</script>

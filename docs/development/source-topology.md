@@ -18,7 +18,7 @@ OpenJoystickDriver splits the package into SwiftPM targets whose dependencies en
 | `OJDRepositoryTool` | development executable that checks controller records, protocol descriptions, profiles and virtual devices and applies built-in patches; not shipped |
 | `OpenJoystickDriverHIDTool` | internal hardware investigation executable |
 | `OpenJoystickDriverGameControllerProbe` | isolated GameController visibility probe |
-| `OpenJoystickDriverGameControllerSnake` | snake game that reads controllers only through GameController, to test GameController input by hand; not shipped |
+| `OpenJoystickDriverGameControllerViewer` | window that shows every GameController input element of each connected controller and prints each change as a JSON line, to test GameController input by hand; not shipped |
 
 ## Dependency Graph
 
@@ -37,7 +37,7 @@ DriverKitGenerator        -> USB
 OJDRepositoryTool         -> Kit
 HIDTool                   -> Kit, MacOSPlatform, USB
 GameControllerProbe       -> Kit, MacOSPlatform
-GameControllerSnake
+GameControllerViewer
 ```
 
 - Presentation depends on Kit only. It reaches the runtime through its `ApplicationServiceGateway` protocol (implemented by `ApplicationServiceClientGateway` over the Kit RPC client) and injected closures, so it never imports Service, CLI, or USB.

@@ -233,6 +233,18 @@ class DispatcherTests(unittest.TestCase):
                     "Diagnostics/backend.sh", [route, "--seconds", "3"]
                 )
 
+    def test_browsers_route_forwards_to_the_browser_harness(self) -> None:
+        with (
+            patch.object(
+                dispatcher, "exec_target", side_effect=TargetInvoked
+            ) as execute,
+            self.assertRaises(TargetInvoked),
+        ):
+            dispatcher.dispatch(["diagnose", "browsers", "--browsers", "safari"])
+        execute.assert_called_once_with(
+            "Diagnostics/browser_gamepad.py", ["--browsers", "safari"], python=True
+        )
+
     def test_backend_script_takes_the_gamecontroller_hints_from_virtual_launch(
         self,
     ) -> None:

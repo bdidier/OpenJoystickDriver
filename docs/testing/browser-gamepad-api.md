@@ -2,6 +2,10 @@
 
 Manual protocol for Plan 06. **ControllerTest.io is the canonical external manual site:** <https://controllertest.io/>.
 
+## Automated Run
+
+`./Scripts/ojd diagnose browsers [--as PERSONA] [--browsers firefox,chrome,safari]` serves a logging page, opens it in each browser in turn, and feeds every control into one virtual gamepad with `ojd virtual feed`. It prints the standard-mapping slot each browser gave each control as `ok`, `missing` or `differs`, and the browser's rumble result, and writes `results.json` and `events.jsonl` under `.build/browser-gamepad/`. The standard mapping has no slot for Share: an engine that exposes 18 buttons with Guide at B16, such as Chrome, reports Share as B17, and the run expects it there.
+
 ## Clean-State Protocol
 
 Run every row independently.
@@ -39,7 +43,7 @@ Do not create or submit browser-engine patches as part of OJD's Generic HID fall
 
 ## Current Accepted Browser Evidence
 
-Blink's fully correct result for the published Xbox Series `045E:0B13` identity is the canonical report-layout oracle: descriptor, report bytes, button usages, sticks, triggers, hat, Guide, and Share. Automatic selection publishes `SDLCompatible` (`045E:02FD`) for every browser. With a Razer Wolverine Tournament Edition (`1532:0A15`) and a GameSir pad on macOS 27, the maintainer saw Safari list `SDLCompatible` as "Xbox Wireless Controller Extended Gamepad" with no input, Firefox 158.0.1 map many of its controls wrongly with no rumble, and Chrome read `Generic` as its contract states (triggers on axes 4 and 5, no rumble), except the Razer right stick at rest at -0.25 on axis 2. Safari did not list `Generic`, and Firefox mapped it wrongly with the right stick at rest at -0.17 on axis 2. `GameControllerCompatible` publishes the `045E:0B13` layout with Guide on report 2, where GameController reads Home, and has no browser result yet. The Gecko row for the published Xbox One S `045E:02E0` identity kept the matching axis/trigger order, emitted D-pad through the hat only, and left Share unavailable because Firefox's remapper does not expose B17.
+Blink's fully correct result for the published Xbox Series `045E:0B13` identity is the canonical report-layout oracle: descriptor, report bytes, button usages, sticks, triggers, hat, Guide, and Share. Automatic selection publishes `SDLCompatible` (`045E:02FD`) for every browser. With a Razer Wolverine Tournament Edition (`1532:0A15`) and a GameSir pad on macOS 27, the maintainer saw Safari list `SDLCompatible` as "Xbox Wireless Controller Extended Gamepad" with no input, Firefox 158.0.1 map many of its controls wrongly with no rumble, and Chrome read `Generic` as its contract states (triggers on axes 4 and 5, no rumble), except the Razer right stick at rest at -0.25 on axis 2. Safari did not list `Generic`, and Firefox mapped it wrongly with the right stick at rest at -0.17 on axis 2. `GameControllerCompatible` publishes the bit layout of a real `045E:0B13` over Bluetooth, which SDL's HIDAPI driver and Firefox's `XboxSeriesXRemapper` read, with Guide also on report 2, where GameController reads Home. With `./Scripts/ojd diagnose browsers --as game-controller-compatible` on macOS 27, Firefox 158 gives every control its standard slot but Share and has no `vibrationActuator`; Chrome 156 gives every control but Guide, gives Share as B17 and reports rumble `complete`; and Safari 27.0.1 gives every control but Share and reports rumble `complete`. The Gecko row for the published Xbox One S `045E:02E0` identity kept the matching axis/trigger order, emitted D-pad through the hat only, and left Share unavailable because Firefox's remapper does not expose B17.
 
 | Browser | Published identity | ID/mapping/counts | LT | RT | Issues/reconnect/switch |
 | --- | --- | --- | --- | --- | --- |

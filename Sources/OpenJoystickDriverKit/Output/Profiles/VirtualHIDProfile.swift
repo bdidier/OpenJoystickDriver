@@ -45,7 +45,7 @@ public enum VirtualHIDProfileID: String, CaseIterable, Codable, Sendable {
     // The Xbox layout. Guide stays out until a genuine capture shows whether ordinary HID clients
     // see it, although today's report still carries it as button usage 11 of report 0x07.
     case .sdlCompatible: return Control.xboxLayout
-    // The Xbox Series Bluetooth report: the Xbox layout, Guide as button 11 and Share.
+    // The Xbox Series Bluetooth report: the Xbox layout, Guide and Share.
     case .gameControllerCompatible: return Control.xboxLayout.union([.guide, .capture])
     // The generic layout: the frozen 32 buttons, the hat and the six named axes. Today's report
     // carries only its first 16 buttons.

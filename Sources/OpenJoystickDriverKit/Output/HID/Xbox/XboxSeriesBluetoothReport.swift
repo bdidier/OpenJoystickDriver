@@ -3,17 +3,16 @@ import Foundation
 /// HID report descriptor bytes for the `GameControllerCompatible` persona: the Xbox Series
 /// controller over Bluetooth.
 ///
-/// Apple's GameController framework reads an Xbox identity by this report layout, not by the
-/// descriptor: it binds a GIP-framed `045E:02FD` and receives no input from it. On `045E:0B13` it
-/// delivers every control of this layout but Share, and Home only to the frontmost app.
+/// Consumers that know `045E:0B13` read report 1 at the bit positions of the real controller:
+/// SDL's HIDAPI Xbox One Bluetooth driver and Firefox's `XboxSeriesXRemapper`. Apple's
+/// GameController framework names every control, and delivers Home only to the frontmost app.
 ///
 /// Reports:
-/// - `0x01` (input, 16 bytes): left stick X/Y and right stick X/Y as `0...65535` with rest
-///   `0x8000`, left and right trigger as 10 bits each, a hat `1...8` with null state 0, 15
-///   buttons, then Share as Consumer Record (`0x0C:0xB2`). Button 11 stays clear: Apple's
-///   GameController framework reads no control from it. GameController does not deliver Share
-///   from this report.
-/// - `0x02` (input, 1 byte): Guide as System Main Menu (`0x01:0x85`), where GameController
+/// - `0x01` (input, 16 bytes): left stick X/Y and right stick Z/Rz as `0...65535` with rest
+///   `0x8000`, Brake (left trigger) and Accelerator (right trigger) as 10 bits each, a hat
+///   `1...8` with null state 0 that alone carries the D-pad, 15 buttons, then Share as Consumer
+///   Record (`0x0C:0xB2`). Guide is button 13; buttons 3, 6, 9 and 10 stay clear.
+/// - `0x02` (input, 1 byte): Guide again, as System Main Menu (`0x01:0x85`), where GameController
 ///   reads Home.
 /// - `0x03` (output, 8 bytes): actuator enable mask, then left trigger, right trigger, left and
 ///   right motor magnitudes `0...100`, duration, start delay and loop count.
@@ -26,30 +25,47 @@ public enum XboxSeriesBluetoothHIDDescriptor {
   /// Bytes of the rumble output report after its ID.
   static let rumbleReportPayloadSize = 8
 
-  /// Maps stable OJD button bits to the button usages of report 1: View, Menu, the stick clicks
-  /// move, and the four D-pad bits take usages 12 to 15 beside the hat.
+  /// Maps stable OJD button bits to the button usages of report 1. The D-pad bits map to Button
+  /// usage 0, which names no field, because the hat carries the D-pad.
   static let buttonUsageMap: [Int: Int] = [
-    6: 9,  // L3 -> usage 9
-    7: 10,  // R3 -> usage 10
-    8: 8,  // Start/Menu -> usage 8
-    9: 7,  // Back/View -> usage 7
-    11: 12, 12: 13, 13: 14, 14: 15,
+    GamepadHIDDescriptor.ButtonBit.x.rawValue: 4,
+    GamepadHIDDescriptor.ButtonBit.y.rawValue: 5,
+    GamepadHIDDescriptor.ButtonBit.leftBumper.rawValue: 7,
+    GamepadHIDDescriptor.ButtonBit.rightBumper.rawValue: 8,
+    GamepadHIDDescriptor.ButtonBit.back.rawValue: 11,
+    GamepadHIDDescriptor.ButtonBit.start.rawValue: 12,
+    GamepadHIDDescriptor.ButtonBit.leftStick.rawValue: 14,
+    GamepadHIDDescriptor.ButtonBit.rightStick.rawValue: 15,
+    GamepadHIDDescriptor.ButtonBit.guide.rawValue: 13,
+    GamepadHIDDescriptor.ButtonBit.dpadUp.rawValue: 0,
+    GamepadHIDDescriptor.ButtonBit.dpadDown.rawValue: 0,
+    GamepadHIDDescriptor.ButtonBit.dpadLeft.rawValue: 0,
+    GamepadHIDDescriptor.ButtonBit.dpadRight.rawValue: 0,
   ]
 
-  /// Share, which report 1 carries outside the Button page, and Guide, whose System Main Menu
-  /// usage only report 2 holds.
+  /// The right stick on Z/Rz, and the triggers on Simulation Brake (`0x02:0xC5`) and
+  /// Accelerator (`0x02:0xC4`).
+  static let axisUsageMap: [HIDAxisRole: HIDInputUsage] = [
+    .leftStickX: HIDInputUsage(page: 0x01, usage: 0x30),
+    .leftStickY: HIDInputUsage(page: 0x01, usage: 0x31),
+    .rightStickX: HIDInputUsage(page: 0x01, usage: 0x32),
+    .rightStickY: HIDInputUsage(page: 0x01, usage: 0x35),
+    .leftTrigger: HIDInputUsage(page: 0x02, usage: 0xC5),
+    .rightTrigger: HIDInputUsage(page: 0x02, usage: 0xC4),
+  ]
+
+  /// Share, which report 1 carries outside the Button page.
   static let digitalUsageMap: [Int: HIDInputUsage] = [
-    GamepadHIDDescriptor.ButtonBit.share.rawValue: HIDInputUsage(page: 0x0C, usage: 0xB2),
-    GamepadHIDDescriptor.ButtonBit.guide.rawValue: HIDInputUsage(page: 0x01, usage: 0x85),
+    GamepadHIDDescriptor.ButtonBit.share.rawValue: HIDInputUsage(page: 0x0C, usage: 0xB2)
   ]
 
   public static let descriptor: [UInt8] = [
     0x05, 0x01, 0x09, 0x05, 0xA1, 0x01, 0x85, 0x01, 0x09, 0x01, 0xA1, 0x00, 0x09, 0x30, 0x09, 0x31,
     0x15, 0x00, 0x27, 0xFF, 0xFF, 0x00, 0x00, 0x95, 0x02, 0x75, 0x10, 0x81, 0x02, 0xC0, 0x09, 0x01,
-    0xA1, 0x00, 0x09, 0x33, 0x09, 0x34, 0x15, 0x00, 0x27, 0xFF, 0xFF, 0x00, 0x00, 0x95, 0x02, 0x75,
-    0x10, 0x81, 0x02, 0xC0, 0x05, 0x01, 0x09, 0x32, 0x15, 0x00, 0x26, 0xFF, 0x03, 0x95, 0x01, 0x75,
-    0x0A, 0x81, 0x02, 0x15, 0x00, 0x25, 0x00, 0x75, 0x06, 0x95, 0x01, 0x81, 0x03, 0x05, 0x01, 0x09,
-    0x35, 0x15, 0x00, 0x26, 0xFF, 0x03, 0x95, 0x01, 0x75, 0x0A, 0x81, 0x02, 0x15, 0x00, 0x25, 0x00,
+    0xA1, 0x00, 0x09, 0x32, 0x09, 0x35, 0x15, 0x00, 0x27, 0xFF, 0xFF, 0x00, 0x00, 0x95, 0x02, 0x75,
+    0x10, 0x81, 0x02, 0xC0, 0x05, 0x02, 0x09, 0xC5, 0x15, 0x00, 0x26, 0xFF, 0x03, 0x95, 0x01, 0x75,
+    0x0A, 0x81, 0x02, 0x15, 0x00, 0x25, 0x00, 0x75, 0x06, 0x95, 0x01, 0x81, 0x03, 0x05, 0x02, 0x09,
+    0xC4, 0x15, 0x00, 0x26, 0xFF, 0x03, 0x95, 0x01, 0x75, 0x0A, 0x81, 0x02, 0x15, 0x00, 0x25, 0x00,
     0x75, 0x06, 0x95, 0x01, 0x81, 0x03, 0x05, 0x01, 0x09, 0x39, 0x15, 0x01, 0x25, 0x08, 0x35, 0x00,
     0x46, 0x3B, 0x01, 0x66, 0x14, 0x00, 0x75, 0x04, 0x95, 0x01, 0x81, 0x42, 0x75, 0x04, 0x95, 0x01,
     0x15, 0x00, 0x25, 0x00, 0x35, 0x00, 0x45, 0x00, 0x65, 0x00, 0x81, 0x03, 0x05, 0x09, 0x19, 0x01,
@@ -70,8 +86,8 @@ public enum XboxSeriesBluetoothHIDDescriptor {
   ]
 }
 
-/// The Xbox Series Bluetooth report layout of the `GameControllerCompatible` persona. The D-pad
-/// is the hat and also buttons 12 to 15. The report has no slot for the touchpad click,
+/// The Xbox Series Bluetooth report layout of the `GameControllerCompatible` persona. The hat
+/// carries the D-pad. The report has no slot for the touchpad click,
 /// microphone, paddles, auxiliaries or touch controls.
 public struct XboxSeriesBluetoothHIDReportFormat: VirtualGamepadReportFormat {
   private let base: HIDDescriptorReportFormat
@@ -89,7 +105,8 @@ public struct XboxSeriesBluetoothHIDReportFormat: VirtualGamepadReportFormat {
         outputReportID: XboxSeriesBluetoothHIDDescriptor.rumbleReportID,
         outputReportPayloadSize: XboxSeriesBluetoothHIDDescriptor.rumbleReportPayloadSize,
         buttonUsageMap: XboxSeriesBluetoothHIDDescriptor.buttonUsageMap,
-        digitalUsageMap: XboxSeriesBluetoothHIDDescriptor.digitalUsageMap
+        digitalUsageMap: XboxSeriesBluetoothHIDDescriptor.digitalUsageMap,
+        axisUsageMap: XboxSeriesBluetoothHIDDescriptor.axisUsageMap
       )
     } catch {
       fatalError("[VirtualDevice] The Xbox Series Bluetooth descriptor does not parse: \(error)")
