@@ -339,3 +339,4 @@ None. A stored file that lacks the supported `apiVersion` or does not validate a
 6. Settled 2026-10-15: no new pid.codes entry; browsers reach the standard mapping through the Xbox ID (SDL consumer table).
 7. Settled 2026-10-15: the OJD mapping is not submitted to SDL_GameControllerDB or SDL upstream.
 8. Turn on GitHub Pages for the schema `$id` URLs? (outward-facing; the task prepares it)
+9. Does a GIP pad need the host keep-alive (`03 20 seq 03 00 00 00` every 4 s in `xbox-gip.json`)? [MS-GIPUSB] v20240916 3.1.5.5.2 defines Status Device (`0x03`) only from device to host, and no recorded source gives the host keep-alive. The GameSir `3537:1010` and Razer `1532:0A15` work with it (maintainer, 2026-10-23), so it stays until a pad shows a fault from it; the check is a record patch with `protocol.keepAlive` set to `false` and 60 s idle with input still arriving.
