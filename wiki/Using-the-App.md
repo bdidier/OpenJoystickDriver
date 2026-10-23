@@ -141,7 +141,7 @@ For more information, see [Choose who drives the controller](Controller-Records.
 The **Virtual HID profile** menu appears for controllers that macOS does not serve itself:
 
 - **Automatic (<profile name>)** lets OJD choose the virtual controller profile and names the profile it chose.
-- **Xbox Wireless Controller (SDLCompatible)** forces the Xbox profile.
+- **Xbox Adaptive Controller (SDLCompatible)** forces the Xbox profile.
 - **OpenJoystickDriver Generic HID Gamepad (Generic)** forces the generic profile.
 
 **Apply to** chooses whether the override applies to every connected controller of the same model or to this controller only.

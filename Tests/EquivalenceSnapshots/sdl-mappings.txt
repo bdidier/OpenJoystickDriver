@@ -78,8 +78,8 @@ mapping=03000000091200004f4a000008040000,OpenJoystickDriver Generic HID Gamepad,
 unmapped=Auxiliary1,Auxiliary2,Auxiliary3,Auxiliary4,Auxiliary5,Auxiliary6,Auxiliary7,Auxiliary8,LeftPaddle1,LeftPaddle2,LeftStickTouch,LeftTrackpadClick,RightPaddle1,RightPaddle2,RightStickTouch,RightTrackpadClick,TouchpadClick
 
 ## SDLCompatible
-profile=SDLCompatible vendor=1118 product=765 version=0 name=Xbox Wireless Controller
-guid=030000005e040000fd02000000000000
+profile=SDLCompatible vendor=1118 product=2828 version=0 name=Xbox Adaptive Controller
+guid=030000005e0400000c0b000000000000
 report length=18 descriptorBytes=182
 probe Back fields=[9:7] -> b6
 probe East fields=[9:2] -> b1
@@ -101,5 +101,5 @@ probe DpadUp fields=[9:12] -> b11
 probe DpadRight fields=[9:15] -> b14
 probe DpadDown fields=[9:13] -> b12
 probe DpadLeft fields=[9:14] -> b13
-mapping=030000005e040000fd02000000000000,Xbox Wireless Controller,a:b0,b:b1,x:b2,y:b3,back:b6,start:b7,leftstick:b8,rightstick:b9,leftshoulder:b4,rightshoulder:b5,dpup:b11,dpdown:b12,dpleft:b13,dpright:b14,leftx:a0,lefty:a1~,rightx:a3,righty:a4~,lefttrigger:+a2,righttrigger:+a5,platform:Mac OS X,
+mapping=030000005e0400000c0b000000000000,Xbox Adaptive Controller,a:b0,b:b1,x:b2,y:b3,back:b6,start:b7,leftstick:b8,rightstick:b9,leftshoulder:b4,rightshoulder:b5,dpup:b11,dpdown:b12,dpleft:b13,dpright:b14,leftx:a0,lefty:a1~,rightx:a3,righty:a4~,lefttrigger:+a2,righttrigger:+a5,platform:Mac OS X,
 unmapped=

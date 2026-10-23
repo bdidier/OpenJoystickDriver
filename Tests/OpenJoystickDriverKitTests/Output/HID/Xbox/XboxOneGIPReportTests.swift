@@ -107,8 +107,8 @@ struct XboxOneGIPHIDReportFormatTests {
     )
 
     #expect(profile.vendorID == 0x045E)
-    #expect(profile.productID == 0x02FD)
-    #expect(profile.productName == "Xbox Wireless Controller")
+    #expect(profile.productID == 0x0B0C)
+    #expect(profile.productName == "Xbox Adaptive Controller")
     #expect(format.inputReportID == 0x20)
     #expect(format.outputReportID == 0x09)
     #expect(format.outputReportPayloadSize == 12)

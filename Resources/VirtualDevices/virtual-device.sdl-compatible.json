@@ -8,9 +8,9 @@
   "labels": "Xbox",
   "identity": {
     "vendorID": 1118,
-    "productID": 765,
+    "productID": 2828,
     "version": 0,
-    "productName": "Xbox Wireless Controller",
+    "productName": "Xbox Adaptive Controller",
     "manufacturer": "Microsoft"
   }
 }

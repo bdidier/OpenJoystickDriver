@@ -43,7 +43,7 @@ struct IOHIDVirtualDevicePublisherTests {
   }
 
   @Test
-  func xboxOneSIdentityAdvertisesNumberedReportSizes() throws {
+  func sdlCompatibleIdentityAdvertisesNumberedReportSizes() throws {
     let format = XboxOneGIPHIDReportFormat()
     let properties = IOHIDVirtualDevicePublisher.deviceProperties(
       profile: .sdlCompatible,
@@ -113,7 +113,7 @@ struct IOHIDVirtualDevicePublisherTests {
   /// profile's published identity is pinned literally rather than read back from the profile.
   @Test(arguments: [
     (
-      VirtualHIDProfileID.sdlCompatible, 0x045E, 0x02FD, 0x0000, "Xbox Wireless Controller",
+      VirtualHIDProfileID.sdlCompatible, 0x045E, 0x0B0C, 0x0000, "Xbox Adaptive Controller",
       "Microsoft", "USB", UInt64(0x48E9_971C_3CA8_EDB6), Int?(13)
     ),
     (

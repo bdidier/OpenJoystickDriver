@@ -15,7 +15,7 @@ struct VirtualIdentityPresentationTests {
   func personaGlyphFamilyDecidesSymbolsNotVendorID() {
     let persona = VirtualDeviceProfile(
       vendorID: 0x045E,
-      productID: 0x02FD,
+      productID: 0x0B0C,
       versionNumber: 0,
       productName: "Custom Pad",
       manufacturer: "Custom",
@@ -32,11 +32,11 @@ struct VirtualIdentityPresentationTests {
 
   @Test
   func publishedUSBIdentityLabelsNameTheOfficialProduct() {
-    let xboxOneS = VirtualDeviceProfile.sdlCompatible
-    #expect(xboxOneS.productName == "Xbox Wireless Controller")
-    #expect(xboxOneS.publishedUSBIdentityLabel == "Xbox Wireless Controller (045E:02FD)")
-    #expect(xboxOneS.presentation.glyphFamily == .xbox)
-    #expect(xboxOneS.presentation.controllerSymbolName == "xbox.logo")
+    let adaptive = VirtualDeviceProfile.sdlCompatible
+    #expect(adaptive.productName == "Xbox Adaptive Controller")
+    #expect(adaptive.publishedUSBIdentityLabel == "Xbox Adaptive Controller (045E:0B0C)")
+    #expect(adaptive.presentation.glyphFamily == .xbox)
+    #expect(adaptive.presentation.controllerSymbolName == "xbox.logo")
   }
 
   @Test

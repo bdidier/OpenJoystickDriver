@@ -104,7 +104,7 @@ public enum XboxOneGIPHIDDescriptor {
   ]
 }
 
-/// The Xbox One GIP report layout of the 045E:02FD `SDLCompatible` persona.
+/// The Xbox One GIP report layout of the 045E:0B0C `SDLCompatible` persona.
 ///
 /// The d-pad is four bits of the state payload, not a hat. The payload has no Share field, so this
 /// persona carries neither Capture nor the touchpad click, microphone, paddles, auxiliaries or

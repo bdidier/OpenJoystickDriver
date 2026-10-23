@@ -24,7 +24,7 @@ struct UserSpaceInputReportStateTests {
   }
 
   @Test
-  func xboxOneSIdleReportMatchesInterruptGetReportLayout() throws {
+  func xboxOneGIPIdleReportMatchesInterruptGetReportLayout() throws {
     let format = XboxOneGIPHIDReportFormat()
     let report = UserSpaceInputReportState(format: format).currentReport()
     #expect(report == ProtocolPacketFixtures.XboxOneGIP.neutralInputReport)
@@ -66,7 +66,7 @@ struct UserSpaceInputReportStateTests {
   }
 
   @Test
-  func xboxOneSNeverSetsShareAndKeepsViewOnItsButton() throws {
+  func xboxOneGIPNeverSetsShareAndKeepsViewOnItsButton() throws {
     let format = XboxOneGIPHIDReportFormat()
     let state = UserSpaceInputReportState(format: format)
     let neutral = state.currentReport()

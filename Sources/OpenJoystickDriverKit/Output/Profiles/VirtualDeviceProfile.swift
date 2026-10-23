@@ -37,9 +37,10 @@ public struct VirtualDeviceProfile: Equatable, Sendable {
   /// require a new product ID. The values come from the bundled `VirtualDevice` record.
   public static var generic: Self { VirtualHIDProfileID.generic.identity }
 
-  /// The `SDLCompatible` persona's identity, an Xbox One S identity whose reports are Xbox One
-  /// GIP packets. This is not XInputHID or XUSB emulation. The values come from the bundled
-  /// `VirtualDevice` record.
+  /// The `SDLCompatible` persona's identity, the Xbox Adaptive Controller over Bluetooth, whose
+  /// reports are Xbox One GIP packets. SDL reads that ID with its Xbox One driver, and Apple's
+  /// GameController framework does not bind it on a virtual device. This is not XInputHID or XUSB
+  /// emulation. The values come from the bundled `VirtualDevice` record.
   public static var sdlCompatible: Self { VirtualHIDProfileID.sdlCompatible.identity }
 
   /// This profile with the identity of a persona over it. The transport and, unless the persona

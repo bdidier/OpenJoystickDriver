@@ -51,7 +51,7 @@ public enum VirtualHIDProfileSelector {
     func fits(_ profile: VirtualHIDProfileID) -> Bool { represents(required, in: slots(profile)) }
     if let override, fits(override) { return Selection(profileID: override, source: .override) }
     // SDL 3.4.12 and 3.4.16 map `SDLCompatible` as an Xbox pad and give `Generic` no gamepad
-    // mapping, and GameController takes `045E:02FD` as an Xbox pad, so `SDLCompatible` leads.
+    // mapping, so `SDLCompatible` leads.
     guard let automatic = automaticOrder.first(where: fits) else {
       throw .virtualProfileUnavailable
     }

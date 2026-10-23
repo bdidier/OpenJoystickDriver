@@ -11,7 +11,7 @@ struct VirtualDeviceTests {
     let generic = try #require(VirtualDevice.definition(of: .generic).profile)
     #expect((generic.vendorID, generic.productID) == (0x1209, 0x4A4F))
     let sdl = try #require(VirtualDevice.definition(of: .sdlCompatible).profile)
-    #expect((sdl.vendorID, sdl.productID) == (0x045E, 0x02FD))
+    #expect((sdl.vendorID, sdl.productID) == (0x045E, 0x0B0C))
   }
 
   @Test

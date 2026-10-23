@@ -42,10 +42,10 @@ struct VirtualHIDProfileTests {
   }
 
   @Test
-  func xboxProfileAdaptsTheCurrentXboxOneSApproximation() throws {
+  func sdlCompatibleProfileAdaptsTheXboxOneGIPLayout() throws {
     let profile = try VirtualHIDProfileID.sdlCompatible.makeProfile()
     #expect(profile.identity == .sdlCompatible)
-    #expect(profile.identity.vendorID == 0x045E && profile.identity.productID == 0x02FD)
+    #expect(profile.identity.vendorID == 0x045E && profile.identity.productID == 0x0B0C)
     #expect(profile.descriptor == XboxOneGIPHIDDescriptor.descriptor)
     let neutral = profile.inputReport(for: .neutral)
     #expect(neutral == ProtocolPacketFixtures.XboxOneGIP.neutralInputReport)
