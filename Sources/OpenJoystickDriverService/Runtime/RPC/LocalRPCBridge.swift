@@ -196,7 +196,7 @@ extension ApplicationServiceServer {
     case .setControllerTuning:
       let value = try decode(LocalServiceRPCControllerTuningArguments.self)
       return try send(
-        await setControllerTuning(
+        setControllerTuning(
           vendorID: value.vendorID,
           productID: value.productID,
           key: value.key,

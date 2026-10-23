@@ -67,9 +67,8 @@
             StickDeadzoneRow(
               viewModel: viewModel,
               device: device,
-              setting: StickDeadzoneSetting(record: record),
-              reload: { await loadRecord() }
-            )
+              setting: StickDeadzoneSetting(record: record)
+            ) { await loadRecord() }
             tuningDisclosure(for: record)
           }
         }

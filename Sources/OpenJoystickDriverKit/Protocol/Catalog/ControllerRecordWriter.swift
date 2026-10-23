@@ -105,7 +105,7 @@ public enum ControllerRecordWriter {
         tuningKey: edit.key,
         records: records,
         directory: directory
-      ) { (fields: inout [String: Any]) throws(NotSet) in try edit.apply(to: &fields) }
+      ) { (fields: inout [String: Any]) throws(NotSet) in try apply(edit, to: &fields) }
     } catch {
       switch error {
       case .record(let failure): throw .refused(failure)
@@ -129,12 +129,12 @@ public enum ControllerRecordWriter {
   }
 
   /// A tuning removal found no value to remove.
-  fileprivate struct NotSet: Error {
+  private struct NotSet: Error {
     let key: ControllerTuning.Key
   }
 
   /// Why ``plan(for:tuningKey:records:directory:edit:)`` refused: the record, or the edit.
-  fileprivate enum Refusal<EditFailure: Error>: Error {
+  private enum Refusal<EditFailure: Error>: Error {
     case record(Failure)
     case edit(EditFailure)
   }
@@ -238,17 +238,17 @@ public enum ControllerRecordWriter {
   }
 }
 
-extension ControllerRecordWriter.TuningEdit {
+extension ControllerRecordWriter {
   /// `fields`, the members of a Controller file or the `patch` of a ControllerPatch file, with
-  /// this edit applied. A whole number is written without a fraction, so an integer key reads it.
-  fileprivate func apply(to fields: inout [String: Any]) throws(ControllerRecordWriter.NotSet) {
+  /// `edit` applied. A whole number is written without a fraction, so an integer key reads it.
+  private static func apply(_ edit: TuningEdit, to fields: inout [String: Any]) throws(NotSet) {
     var tuning = fields["tuning"] as? [String: Any] ?? [:]
-    switch self {
+    switch edit {
     case .set(let key, let value):
       tuning[key.rawValue] = Int(exactly: value).map { $0 as Any } ?? value
     case .remove(let key):
       guard let value = tuning.removeValue(forKey: key.rawValue), !(value is NSNull) else {
-        throw ControllerRecordWriter.NotSet(key: key)
+        throw NotSet(key: key)
       }
     }
     fields["tuning"] = tuning.isEmpty ? nil : tuning

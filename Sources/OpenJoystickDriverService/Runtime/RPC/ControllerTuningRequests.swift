@@ -10,7 +10,7 @@ extension ApplicationServiceServer {
     productID: Int,
     key: ControllerTuning.Key,
     value: Double?
-  ) async -> ControllerTuningResult {
+  ) -> ControllerTuningResult {
     let result = Self.setControllerTuning(
       vendorID: vendorID,
       productID: productID,
