@@ -242,6 +242,7 @@ class CapabilityResolverTests(unittest.TestCase):
     def test_biome_is_the_pinned_binary_without_a_path_fallback(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
+            subprocess.run(["git", "init", "--quiet"], cwd=root, check=True)
             (root / "package.json").write_text(
                 '{"devDependencies": {"@biomejs/biome": "2.5.15"}}', encoding="utf-8"
             )
