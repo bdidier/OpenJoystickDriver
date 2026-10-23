@@ -85,7 +85,8 @@ actor RemappingRoutingCore {
     _ input: RemappingRoutedInput,
     from identifier: LogicalControllerID,
     at uptimeNanoseconds: UInt64,
-    requiring proposedPermit: RemappingEmissionPermit?
+    requiring proposedPermit: RemappingEmissionPermit?,
+    onPublished: @escaping @Sendable () -> Void = {}
   ) async throws {
     defer { schedulingRevision &+= 1 }
     try ensureRunning()
@@ -108,7 +109,10 @@ actor RemappingRoutingCore {
       _ = try requireOperationalPermit(proposedPermit)
       switch input {
       case .input(let event):
-        try? await virtualOutput.consume(.controller(event, from: identifier)) {}
+        try? await virtualOutput.consume(
+          .controller(event, from: identifier),
+          onDelivered: onPublished
+        )
       case .activation:
         try? await virtualOutput.consume(.activation(identifier)) {}
       }
@@ -219,7 +223,8 @@ actor RemappingRoutingCore {
 
   func tick(
     at uptimeNanoseconds: UInt64,
-    requiring proposedPermit: RemappingEmissionPermit?
+    requiring proposedPermit: RemappingEmissionPermit?,
+    onPublished: @escaping @Sendable () -> Void = {}
   ) async throws {
     defer { schedulingRevision &+= 1 }
     try ensureRunning()

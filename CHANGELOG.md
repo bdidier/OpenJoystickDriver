@@ -257,6 +257,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The pr
 
 ### Fixed
 
+- `ojd diagnose` lists the `DeliveryVirtualDevice` time of each frame that a virtual gamepad publishes. The remapping router in front of the virtual gamepad dropped the delivery notice, so the timings stopped at `Dispatch`.
 - The `Virtual gamepad` row of `ojd status` printed the backend's diagnostic text, such as `controller=LogicalControllerID(VID:0x3537 PID:0x1010 …) … last-attempted=88598501741541 … status=ended`, which named a controller whose session had ended and gave uptime nanoseconds. The row says `Off`, the error, or `On` with the names of the controllers that a virtual gamepad stands for. `--json` adds `virtualDevice.published`, and the diagnostic text stays in `virtualDevice.status`, `--plain` and `ojd diagnose`.
 - `ojd controller show` named `System` as the server of a controller that the system cannot serve, such as a GameSir G7 SE over raw USB, while OJD served it. It reports `server` `OJD` with the `serverSource` `Route` for such a controller, as `cli-output.schema.json` lists.
 - A raw-USB controller that another program holds, such as a GameSir G7 SE that Steam holds, shows `DeviceInUse` with the program's name, and OJD serves it once that program lets it go. The host answers the configuration read of such a controller with an exclusive-access error, which OJD read as a failed read five times and then left the controller as `ConfigurationUnreadable` until it was plugged in again.

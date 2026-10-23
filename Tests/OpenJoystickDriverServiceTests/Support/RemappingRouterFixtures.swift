@@ -58,21 +58,33 @@ final class RemappingRouterVirtualOutput: OutputDispatcher, ControllerLifecycleL
     from identifier: LogicalControllerID
   ) async { await record(.virtualGamepad(event.state, identifier)) }
 
+  /// Calls `onPublished` once the report is recorded, as a virtual device does once it has it.
+  func dispatchPublishing(
+    _ event: ControllerEvent,
+    from identifier: LogicalControllerID,
+    onPublished: @escaping @Sendable () -> Void
+  ) async throws {
+    if await record(.virtualGamepad(event.state, identifier)) { onPublished() }
+  }
+
   func activateOutput(for identifier: LogicalControllerID) async {
     await record(.virtualOutputActivation(identifier))
   }
 
-  private func record(_ trace: RemappingRouterTrace) async {
+  /// Records `trace` unless output is suppressed; true when it recorded.
+  @discardableResult
+  private func record(_ trace: RemappingRouterTrace) async -> Bool {
     if checkpointAfterSuppressionCheck {
-      guard !suppressOutput else { return }
+      guard !suppressOutput else { return false }
       await dispatchCheckpoint()
       recorder.append(trace)
-      return
+      return true
     }
     await dispatchCheckpoint()
     await Task.yield()
-    guard !suppressOutput else { return }
+    guard !suppressOutput else { return false }
     recorder.append(trace)
+    return true
   }
 
   func setRemappingOutputSuppressed(_ suppressed: Bool) {

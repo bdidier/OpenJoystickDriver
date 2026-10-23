@@ -88,6 +88,16 @@ final class RemappingOutputRouter: OutputDispatcher, ControllerLifecycleListener
     }
   }
 
+  /// `onPublished` runs once a virtual gamepad route's virtual device has the report; a remapping
+  /// route publishes through the engine and reports no publication.
+  func dispatchPublishing(
+    _ event: ControllerEvent,
+    from identifier: LogicalControllerID,
+    onPublished: @escaping @Sendable () -> Void
+  ) async throws {
+    try await dispatchCausally(.input(event), from: identifier, onPublished: onPublished)
+  }
+
   func activateOutput(for identifier: LogicalControllerID) async {
     do { try await dispatchCausally(.activation, from: identifier) } catch {
       // As for dispatch: the typed route status retains the failure.
@@ -96,7 +106,8 @@ final class RemappingOutputRouter: OutputDispatcher, ControllerLifecycleListener
 
   func dispatchCausally(
     _ input: RemappingRoutedInput,
-    from identifier: LogicalControllerID
+    from identifier: LogicalControllerID,
+    onPublished: @escaping @Sendable () -> Void = {}
   ) async throws {
     guard let lease = try outputLeaseIfOpen() else {
       try await core.recordConnectedIdentifierWhileOutputClosed(identifier)
@@ -111,7 +122,13 @@ final class RemappingOutputRouter: OutputDispatcher, ControllerLifecycleListener
       {
         // A transaction still admits exact controller identity while blocking output.
       }
-      try await core.dispatch(input, from: identifier, at: uptime(), requiring: permit)
+      try await core.dispatch(
+        input,
+        from: identifier,
+        at: uptime(),
+        requiring: permit,
+        onPublished: onPublished
+      )
     } catch {
       await reconcileTickerWithEngine()
       if error as? RemappingEventEngineError == .outputSuspended { return }
