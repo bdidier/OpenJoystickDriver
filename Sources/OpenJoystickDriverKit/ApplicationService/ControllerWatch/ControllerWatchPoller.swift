@@ -134,8 +134,10 @@ public struct ControllerWatchPoller {
       connected = devices
     }
     for device in connected {
-      guard let input = try await source.state(of: device) else { continue }
+      // The output is built from the input after it, so reading it first keeps it from showing a
+      // value before the input that produced it.
       let output = includeOutput ? try await source.output(of: device) : nil
+      guard let input = try await source.state(of: device) else { continue }
       let sample = Sample(input: input, output: output)
       guard sample != previous[device.sessionToken] else { continue }
       previous[device.sessionToken] = sample

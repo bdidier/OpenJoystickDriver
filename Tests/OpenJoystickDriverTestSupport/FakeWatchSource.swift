@@ -13,8 +13,11 @@ package final class FakeWatchSource: ControllerWatchSource, @unchecked Sendable 
   private var connected: [ApplicationServiceDeviceDescription] = []
   private var state = ControllerState()
   private var reads = 0
+  private var order: [String] = []
 
   package var outputReads: Int { lock.withLock { reads } }
+  /// `state` and `output`, one per read, in the order the reads came.
+  package var readOrder: [String] { lock.withLock { order } }
 
   package init() {}
 
@@ -32,7 +35,10 @@ package final class FakeWatchSource: ControllerWatchSource, @unchecked Sendable 
   package func state(
     of device: ApplicationServiceDeviceDescription
   ) throws -> ControllerState? {
-    lock.withLock { state }
+    lock.withLock {
+      order.append("state")
+      return state
+    }
   }
 
   package func output(
@@ -42,6 +48,7 @@ package final class FakeWatchSource: ControllerWatchSource, @unchecked Sendable 
   {
     lock.withLock {
       reads += 1
+      order.append("output")
       return output
     }
   }

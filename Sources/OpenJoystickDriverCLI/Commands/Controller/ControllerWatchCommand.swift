@@ -159,8 +159,11 @@ struct ControllerWatchCommand: AsyncParsableCommand {
           try await waitForFirstPress(device, read: read)
         } else {
           try await watch(device) {
+            // The output is built from the input after it, so reading it first keeps an `out`
+            // line from showing a value before the input that produced it.
+            let sent = output ? try await readOutput() : nil
             guard let input = try await read() else { return nil }
-            return Sample(input: input, output: output ? try await readOutput() : nil)
+            return Sample(input: input, output: sent)
           }
         }
       }

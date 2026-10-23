@@ -51,6 +51,18 @@ struct ControllerWatchPollerTests {
     #expect(with.map(\.summary) == ["MODIFIED \(token("pad-1"))"])
     #expect(with.last?.event.object.output == source.output)
   }
+
+  /// The output is read before the input, so an object never holds an output newer than its input.
+  @Test
+  func readsOutputBeforeInput() async throws {
+    let source = FakeWatchSource()
+    source.set(devices: ["pad-1"], state: ControllerState())
+    var poller = ControllerWatchPoller(source: source)
+
+    _ = try await poller.poll(now: 0, includeOutput: true)
+
+    #expect(source.readOrder == ["output", "state"])
+  }
 }
 
 extension ControllerWatchPoller.Update {

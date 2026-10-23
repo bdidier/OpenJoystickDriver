@@ -65,6 +65,9 @@ final class FakeService: @unchecked Sendable {
     lock.withLock { received.filter { $0.0 == method }.map(\.1) }
   }
 
+  /// The method of every request, in order.
+  func methods() -> [ApplicationServiceRPCMethod] { lock.withLock { received.map(\.0) } }
+
   func run(_ arguments: [String]) async -> CLIRun {
     await ServiceConnection.$socketPath.withValue(socketPath) {
       await CLIRun.run(arguments + testServerTimeout)

@@ -485,6 +485,30 @@ struct ControllerCommandTests {
     #expect(try inputOnly.json()["pressed"] != nil)
   }
 
+  /// The virtual gamepad is read before the input, so an `out` line never shows a value before
+  /// the input that produced it.
+  @Test
+  func watchOutputReadsTheVirtualGamepadBeforeTheInput() async throws {
+    let service = try FakeService(devices: [
+      ApplicationServiceDeviceDescription.fixture(id: "pad-1")
+    ]) { method, _ in
+      switch method {
+      case .getControllerState: doubleEncoded(ControllerState.neutral)
+      case .getVirtualOutputState: doubleEncoded(ApplicationServiceVirtualOutputState(.init()))
+      default: nil
+      }
+    }
+
+    let result = await service.run([
+      "controller", "watch", token("pad-1"), "--output", "--duration", "0.1",
+    ])
+
+    #expect(result.code == 0, "\(result.standardError)")
+    let watched: Set<ApplicationServiceRPCMethod> = [.getControllerState, .getVirtualOutputState]
+    let reads = service.methods().filter(watched.contains)
+    #expect(reads.prefix(2) == [.getVirtualOutputState, .getControllerState])
+  }
+
   @Test
   func watchOutputPrintsNoneWhenNothingIsPublished() async throws {
     let service = try FakeService(devices: [
