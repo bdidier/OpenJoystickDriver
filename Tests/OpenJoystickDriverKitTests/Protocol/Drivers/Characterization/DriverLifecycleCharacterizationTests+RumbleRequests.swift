@@ -75,8 +75,8 @@ extension DriverLifecycleCharacterizationTests {
     #expect(
       try gipChannelSubsetLines() == [
         "triggers", "  plan interval=0 reports=1", "  ep=0x01 timeout=2000 n=13",
-        "    09000109000f20100000ff00ff", "main", "  plan interval=0 reports=1",
-        "  ep=0x01 timeout=2000 n=13", "    09000109000f00004080ff00ff",
+        "    09000109000f0d060000ff00ff", "main", "  plan interval=0 reports=1",
+        "  ep=0x01 timeout=2000 n=13", "    09000109000f00001932ff00ff",
       ]
     )
   }

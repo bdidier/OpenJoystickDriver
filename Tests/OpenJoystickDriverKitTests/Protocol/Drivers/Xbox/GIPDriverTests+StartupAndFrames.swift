@@ -14,8 +14,10 @@ extension GIPDriverTests {
     #expect(seq.next(for: 10, options: 0x20) == 3)
     // Security messages have their own counter
     #expect(seq.next(for: 6, options: 0x20) == 1)
-    // Vendor messages have their own counter
+    // Each vendor message type has its own counter ([MS-GIPUSB] 2.2.10.3)
     #expect(seq.next(for: 9, options: 0x00) == 1)
+    #expect(seq.next(for: 0x4D, options: 0x10) == 1)
+    #expect(seq.next(for: 9, options: 0x00) == 2)
     #expect(seq.next(for: 5, options: 0x20) == 4)
   }
 
@@ -64,25 +66,66 @@ extension GIPDriverTests {
     PhysicalProtocolID.xboxGIP.namedPacketWrite(identifier)?.bytes
   }
 
+  /// The header keeps the expansion index and drops the reserved bit 3; the acknowledged
+  /// message's System bit follows its command (SDL `GIP_Acknowledge`).
   @Test
   func testAcknowledgementPacketMatchesGIPLayout() {
     #expect(
       GIPDriver.acknowledgementPacket(
         command: GIPCommand.input,
-        options: 0x13,
+        options: 0x1B,
         sequence: 0x55,
-        totalLength: 0x1234
+        received: 0x1234,
+        remaining: 0x0102
       ) == [
-        GIPCommand.acknowledge, 0x23, 0x55, 9, 0, GIPCommand.input, 0x23, 0x34, 0x12, 0, 0, 0, 0,
+        GIPCommand.acknowledge, 0x23, 0x55, 9, 0, GIPCommand.input, 0x00, 0x34, 0x12, 0, 0, 0x02,
+        0x01,
       ]
     )
+    #expect(
+      GIPDriver.acknowledgementPacket(
+        command: GIPCommand.virtualKey,
+        options: 0x30,
+        sequence: 1,
+        received: 2
+      ) == [GIPCommand.acknowledge, 0x20, 1, 9, 0, GIPCommand.virtualKey, 0x20, 2, 0, 0, 0, 0, 0]
+    )
+  }
+
+  /// A first fragment's extra header field is the message's total length and a later one's is
+  /// its offset ([MS-GIPUSB] 3.1.5.2); each acknowledgement counts the bytes received and the
+  /// bytes still to come (SDL `GIP_Acknowledge`).
+  @Test
+  func testFragmentAcknowledgementsCountReceivedAndRemainingBytes() throws {
+    let parser = GIPDriver()
+    let first = GIPOption.chunk | GIPOption.chunkStart | GIPOption.internal | GIPOption.acknowledge
+    let later = GIPOption.chunk | GIPOption.internal | GIPOption.acknowledge
+    let fragments: [(Data, UInt16, UInt16)] = [
+      (Data([0x04, first, 7, 3, 10, 1, 2, 3]), 3, 7),
+      (Data([0x04, later, 7, 4, 3, 4, 5, 6, 7]), 7, 3),
+      (Data([0x04, later, 7, 3, 7, 8, 9, 10]), 10, 0),
+    ]
+    for (fragment, received, remaining) in fragments {
+      #expect(try parser.parseReport(fragment) == nil)
+      #expect(
+        parser.drainPendingWrites().usbBytes == [
+          GIPDriver.acknowledgementPacket(
+            command: 0x04,
+            options: later,
+            sequence: 7,
+            received: received,
+            remaining: remaining
+          )
+        ]
+      )
+    }
   }
 
   @Test
   func testAcknowledgementIsDeferredUntilTransportConsumesIt() throws {
     let parser = GIPDriver()
     let options = GIPOption.acknowledge | 0x03
-    let packet = Data([GIPCommand.virtualKey, options, 0x55, 1, 1])
+    let packet = Data([GIPCommand.virtualKey, options, 0x55, 2, 1, 0x5B])
 
     #expect(try parser.parseReport(packet).contains(.press(.guide)))
     #expect(
@@ -91,7 +134,7 @@ extension GIPDriverTests {
           command: GIPCommand.virtualKey,
           options: options,
           sequence: 0x55,
-          totalLength: 1
+          received: 2
         )
       ]
     )
@@ -226,7 +269,7 @@ extension GIPDriverTests {
   @Test
   func testParseGuideButtonPressed() throws {
     let parser = GIPDriver()
-    let packet = Data([7, 32, 0, 1, 1])
+    let packet = Data([7, 32, 0, 2, 1, 0x5B])
     let events = try parser.parseReport(packet)
     #expect(events.contains(.press(.guide)))
   }
@@ -234,9 +277,32 @@ extension GIPDriverTests {
   @Test
   func testParseGuideButtonReleased() throws {
     let parser = GIPDriver()
-    let packet = Data([7, 32, 0, 1, 0])
+    let packet = Data([7, 32, 0, 2, 0, 0x5B])
     let events = try parser.parseReport(packet)
     #expect(events.contains(.release(.guide)))
+  }
+
+  /// The Xbox button is the key code `0x5B` (`VK_LWIN`, [MS-GIPUSB] Table 2; SDL
+  /// `GIP_HandleCommandGuideButtonStatus`); another key code is no Guide press.
+  @Test
+  func testVirtualKeyOtherThanTheXboxButtonIsNoGuide() throws {
+    let parser = GIPDriver()
+    #expect(try parser.parseReport(Data([7, 32, 0, 2, 1, 0x5C])) == nil)
+    #expect(try parser.parseReport(Data([7, 32, 1, 1, 1])) == nil)
+  }
+
+  /// Motor levels are percentages, `0x00...0x64` ([MS-GIPUSB] Table 56; SDL
+  /// `HIDAPI_DriverGIP_RumbleJoystick` divides a 16-bit strength by 655).
+  @Test
+  func testRumbleLevelsArePercentages() throws {
+    let intensities = RumbleIntensities(
+      lowFrequency: .max,
+      highFrequency: UnipolarValue(unitInterval: 0.5),
+      leftTrigger: UnipolarValue(unitInterval: 0.25),
+      rightTrigger: .min
+    )
+    let plan = try GIPDriver().encode(.setRumble(intensities, duration: .milliseconds(100)))
+    #expect(plan.writes.usbBytes.first?[6...9] == [25, 0, 100, 50])
   }
 
   @Test

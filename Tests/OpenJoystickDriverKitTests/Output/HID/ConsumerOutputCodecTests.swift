@@ -93,7 +93,7 @@ struct ConsumerOutputCodecTests {
     #expect(
       try consumerOutput(
         9,
-        gipRumbleReport(activation: 0x0C, left: 1, right: 255, duration: 0),
+        gipRumbleReport(activation: 0x03, left: 1, right: 255, duration: 0),
         in: format
       ) == .setRumble(intensities, duration: .milliseconds(0))
     )
@@ -101,10 +101,47 @@ struct ConsumerOutputCodecTests {
     #expect(
       try consumerOutput(
         9,
-        gipRumbleReport(activation: 0x0C, left: 1, right: 255, duration: 50),
+        gipRumbleReport(activation: 0x03, left: 1, right: 255, duration: 50),
         in: format
       ) == .setRumble(intensities, duration: .milliseconds(500))
     )
+  }
+
+  /// The motor bits of [MS-GIPUSB] Table 56, also the Xbox Series Bluetooth enable bits
+  /// (xpadneo `enum xpadneo_rumble_motors`): bit 0 right vibration, bit 1 left vibration,
+  /// bit 2 right impulse trigger, bit 3 left impulse trigger.
+  @Test
+  func eachActivationBitEnablesOnlyItsMotor() throws {
+    func only(_ motor: WritableKeyPath<RumbleIntensities, UnipolarValue>) -> RumbleIntensities {
+      var intensities = RumbleIntensities.off
+      intensities[keyPath: motor] = .max
+      return intensities
+    }
+    let bits: [(UInt8, WritableKeyPath<RumbleIntensities, UnipolarValue>)] = [
+      (0x01, \.highFrequency), (0x02, \.lowFrequency), (0x04, \.rightTrigger),
+      (0x08, \.leftTrigger),
+    ]
+    for (bit, motor) in bits {
+      let gip = gipRumbleReport(
+        activation: bit,
+        leftTrigger: 100,
+        rightTrigger: 100,
+        left: 100,
+        right: 100,
+        duration: 1
+      )
+      #expect(
+        try consumerOutput(9, gip, in: XboxOneGIPHIDReportFormat())
+          == .setRumble(only(motor), duration: .milliseconds(10))
+      )
+      #expect(
+        try consumerOutput(
+          3,
+          [0x03, bit, 100, 100, 100, 100, 1, 0, 0],
+          in: XboxSeriesBluetoothHIDReportFormat()
+        ) == .setRumble(only(motor), duration: .milliseconds(10))
+      )
+    }
   }
 
   /// SDL's HIDAPI Xbox One driver scales rumble to `0...100` (`SDL_hidapi_xboxone.c`

@@ -8,13 +8,19 @@ private let gipMaximumVarintBytes = 5
 private let gipRumbleAllMotors: UInt8 = 0x0F
 private let gipRumbleSubCommandLength: UInt8 = 0x09
 private let gipRumbleDefaultDuration: UInt8 = 0xFF
+/// Motor levels are percentages ([MS-GIPUSB] Table 56).
+private let gipRumbleLevelMax: Double = 100
+/// The Xbox button's key code in a virtual key frame: `VK_LWIN` ([MS-GIPUSB] Table 2).
+private let gipXboxButtonKeyCode: UInt8 = 0x5B
 
 private struct GIPFrame {
   let command: UInt8
   let options: UInt8
   let sequence: UInt8
   let payload: Data
-  let chunkOffset: Int
+  /// A fragment's extra header field: the message's total length in the first fragment, the
+  /// fragment's offset in a later one ([MS-GIPUSB] 3.1.5.2).
+  let totalLengthOrOffset: Int
 }
 
 /// Errors that ``GIPDriver`` can throw during the handshake or while parsing packets.
@@ -53,6 +59,8 @@ public final class GIPDriver: PhysicalProtocolDriver {
   /// Announces between startup resends (`presenceResendReports`).
   let announceResendInterval: Int
   private var hasReceivedInput = false
+  /// Total length of the fragmented message in transfer, from its first fragment.
+  private var fragmentTotalLength = 0
 
   /// Current device state, driven by auth progress.
   public var deviceState: GIPDeviceState { authHandler.deviceState }
@@ -173,13 +181,13 @@ public final class GIPDriver: PhysicalProtocolDriver {
     let sequence = bytes[2]
     guard let (payloadLength, afterLength) = try decodeVarint(bytes, start: 3) else { return nil }
     var headerLength = afterLength
-    var chunkOffset = 0
+    var totalLengthOrOffset = 0
     if options & GIPOption.chunk != 0 {
-      guard let (offset, afterOffset) = try decodeVarint(bytes, start: headerLength) else {
+      guard let (value, afterValue) = try decodeVarint(bytes, start: headerLength) else {
         return nil
       }
-      chunkOffset = offset
-      headerLength = afterOffset
+      totalLengthOrOffset = value
+      headerLength = afterValue
     }
     guard pendingInput.count >= headerLength + payloadLength else { return nil }
 
@@ -190,7 +198,7 @@ public final class GIPDriver: PhysicalProtocolDriver {
       options: options,
       sequence: sequence,
       payload: payload,
-      chunkOffset: chunkOffset
+      totalLengthOrOffset: totalLengthOrOffset
     )
   }
 
@@ -210,9 +218,17 @@ public final class GIPDriver: PhysicalProtocolDriver {
 
   /// Folds one frame into `next`; true when the frame carried input.
   private func process(_ frame: GIPFrame, into next: inout ControllerState) -> Bool {
-    let totalLength = frame.chunkOffset + frame.payload.count
+    let isFragment = frame.options & GIPOption.chunk != 0
+    let isFirstFragment = isFragment && frame.options & GIPOption.chunkStart != 0
+    if isFirstFragment { fragmentTotalLength = frame.totalLengthOrOffset }
     if frame.options & GIPOption.acknowledge != 0 {
-      sendAcknowledgement(for: frame, totalLength: totalLength)
+      let offset = isFragment && !isFirstFragment ? frame.totalLengthOrOffset : 0
+      let received = offset + frame.payload.count
+      sendAcknowledgement(
+        for: frame,
+        received: received,
+        remaining: isFragment ? fragmentTotalLength - received : 0
+      )
     }
     guard frame.options & GIPOption.chunk == 0 else { return false }
 
@@ -222,8 +238,8 @@ public final class GIPDriver: PhysicalProtocolDriver {
       return decodeMainInput(payload: frame.payload, into: &next)
     case GIPCommand.virtualKey:
       hasReceivedInput = true
-      guard let first = frame.payload.first else { return false }
-      next.set(.guide, pressed: first & gipGuideButtonMask != 0)
+      guard frame.payload.count >= 2, frame.payload[1] == gipXboxButtonKeyCode else { return false }
+      next.set(.guide, pressed: frame.payload[0] & gipGuideButtonMask != 0)
       return true
     case GIPCommand.announce:
       resendStartupAfterAnnounce()
@@ -237,13 +253,18 @@ public final class GIPDriver: PhysicalProtocolDriver {
     }
   }
 
-  private func sendAcknowledgement(for frame: GIPFrame, totalLength: Int) {
-    guard let length = UInt16(exactly: totalLength) else { return }
+  /// Acknowledges the bytes of the frame's message received so far and the bytes still to come
+  /// (SDL `GIP_Acknowledge`). A fragment that runs past its message's total length, or counts that
+  /// do not fit the 16-bit fields, get no acknowledgement, as in SDL, which fails the transfer.
+  private func sendAcknowledgement(for frame: GIPFrame, received: Int, remaining: Int) {
+    guard let received = UInt16(exactly: received), let remaining = UInt16(exactly: remaining)
+    else { return }
     let packet = Self.acknowledgementPacket(
       command: frame.command,
       options: frame.options,
       sequence: frame.sequence,
-      totalLength: length
+      received: received,
+      remaining: remaining
     )
     pendingWrites.append(usbWrite(packet))
   }
@@ -270,6 +291,7 @@ public final class GIPDriver: PhysicalProtocolDriver {
     pendingWrites.removeAll()
     hasReceivedInput = false
     announcesBeforeInput = 0
+    fragmentTotalLength = 0
     state = .neutral
   }
 
@@ -290,8 +312,8 @@ public final class GIPDriver: PhysicalProtocolDriver {
     }
     let packet = rumbleFrame(
       sequence: sequencer.next(for: GIPCommand.rumble, options: 0),
-      mainMotors: (intensities.lowFrequency.byte, intensities.highFrequency.byte),
-      triggerMotors: (intensities.leftTrigger.byte, intensities.rightTrigger.byte)
+      mainMotors: (motorLevel(intensities.lowFrequency), motorLevel(intensities.highFrequency)),
+      triggerMotors: (motorLevel(intensities.leftTrigger), motorLevel(intensities.rightTrigger))
     )
     let write = PhysicalUSBOutputPacket(
       endpoint: outEndpoint,
@@ -302,6 +324,10 @@ public final class GIPDriver: PhysicalProtocolDriver {
   }
 
   // MARK: - Private
+
+  private func motorLevel(_ intensity: UnipolarValue) -> UInt8 {
+    UInt8((Double(intensity.rawValue) * gipRumbleLevelMax / Double(UInt16.max)).rounded())
+  }
 
   private func rumbleFrame(
     sequence: UInt8,

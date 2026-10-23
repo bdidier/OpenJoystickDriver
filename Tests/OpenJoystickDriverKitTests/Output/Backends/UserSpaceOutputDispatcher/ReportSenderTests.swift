@@ -477,6 +477,6 @@ struct ReportSenderTests {
 
   /// An Xbox One GIP rumble report (ID 9) for the main motors, lasting the default 250 ms.
   private static func xboxRumble(_ left: UInt8, _ right: UInt8) -> [UInt8] {
-    gipRumbleReport(activation: 0x0C, left: left, right: right, duration: 25)
+    gipRumbleReport(activation: 0x03, left: left, right: right, duration: 25)
   }
 }

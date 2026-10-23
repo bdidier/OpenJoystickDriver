@@ -148,7 +148,9 @@ extension GIPDriverTests {
     _ = try parser.parseReport(Data([0x20, 0x00, 0x01, 0x0E] + [UInt8](repeating: 0, count: 14)))
     _ = try parser.parseReport(Self.announce(sequence: 1))
     // A partial frame from the old session, and an acknowledgement it still owes.
-    _ = try parser.parseReport(Data([GIPCommand.virtualKey, GIPOption.acknowledge, 0x55, 1, 1]))
+    _ = try parser.parseReport(
+      Data([GIPCommand.virtualKey, GIPOption.acknowledge, 0x55, 2, 1, 0x5B])
+    )
     _ = try parser.parseReport(Data([0x20, 0x00, 0x02, 0x0E]))
 
     parser.resetProtocolState()

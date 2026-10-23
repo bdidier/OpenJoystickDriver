@@ -1,3 +1,6 @@
+/// The expansion index bits of the GIP flags ([MS-GIPUSB] Table 14).
+private let gipExpansionIndexMask: UInt8 = 0x07
+
 extension GIPDriver {
   public func consumeInputConnectionStateChange() -> ControllerInputConnectionState? { nil }
 
@@ -20,18 +23,21 @@ extension GIPDriver {
 
   // MARK: - Frame builders and report decoders
 
-  /// Builds the ACK frame required by a GIP packet with the acknowledge option bit set.
+  /// Builds the Protocol Control ACK for a GIP packet with the ACME flag set (SDL
+  /// `GIP_Acknowledge`): a system message to the packet's expansion index, then the ACK control
+  /// code, the acknowledged command and its System flag, the bytes received as a 32-bit offset
+  /// and the bytes still to come.
   static func acknowledgementPacket(
     command: UInt8,
     options: UInt8,
     sequence: UInt8,
-    totalLength: UInt16,
+    received: UInt16,
     remaining: UInt16 = 0
   ) -> [UInt8] {
-    let clientAndInternal = (options & 0x0F) | GIPOption.internal
+    let headerFlags = GIPOption.internal | (options & gipExpansionIndexMask)
     return [
-      GIPCommand.acknowledge, clientAndInternal, sequence, 9, 0, command, clientAndInternal,
-      UInt8(truncatingIfNeeded: totalLength), UInt8(truncatingIfNeeded: totalLength >> 8), 0, 0,
+      GIPCommand.acknowledge, headerFlags, sequence, 9, 0, command, options & GIPOption.internal,
+      UInt8(truncatingIfNeeded: received), UInt8(truncatingIfNeeded: received >> 8), 0, 0,
       UInt8(truncatingIfNeeded: remaining), UInt8(truncatingIfNeeded: remaining >> 8),
     ]
   }

@@ -56,13 +56,13 @@ struct VirtualHostReportTests {
     let rumble = try VirtualHostReportRequest(
       type: .output,
       reportID: 9,
-      bytes: gipRumbleReport(activation: 0x0C, left: 127, right: 255, duration: 25)
+      bytes: gipRumbleReport(activation: 0x03, left: 127, right: 255, duration: 25)
     )
     #expect(try xbox.consumerOutput(rumble) == .consumerRumble(left: 127, right: 255))
     let feature = try VirtualHostReportRequest(
       type: .feature,
       reportID: 9,
-      bytes: gipRumbleReport(activation: 0x0C, left: 127, right: 255, duration: 25)
+      bytes: gipRumbleReport(activation: 0x03, left: 127, right: 255, duration: 25)
     )
     #expect(throws: VirtualHostReportError.unsupported) { try xbox.consumerOutput(feature) }
   }

@@ -3,7 +3,8 @@ import Foundation
 /// Tracks host sequence numbers for the GIP (Xbox One) protocol.
 ///
 /// System messages (option 0x20) share one counter, except security, extended and audio
-/// messages, which each have their own. Vendor messages share another. No counter yields 0:
+/// messages, which each have their own; each vendor message type has its own counter
+/// ([MS-GIPUSB] 2.2.10.3). No counter yields 0:
 /// it starts at 1 and wraps from 255 to 1, as in the Linux GIP driver.
 public struct GIPSequencer: Sendable {
   private static let extendedCommand: UInt8 = 0x1E
@@ -24,7 +25,7 @@ public struct GIPSequencer: Sendable {
   }
 
   private static func channel(commandID: UInt8, options: UInt8) -> Int {
-    guard options & GIPOption.internal != 0 else { return vendorChannel }
+    guard options & GIPOption.internal != 0 else { return vendorChannel | Int(commandID) }
     switch commandID {
     case GIPCommand.authenticate, extendedCommand, audioCommand: return Int(commandID)
     default: return 0

@@ -37,7 +37,7 @@ extension DriverLifecycleCharacterizationTests {
         "presence input#0 change=nil", "liveness timeout=nil", "liveness observation=nil",
         "liveness format=nil", "battery=nil",
         "out[cold].usbRumble motors=[LowFrequency,HighFrequency,LeftTrigger,RightTrigger]",
-        "  ep=0x01 timeout=2000 n=13", "    09000109000f20104080ff00ff",
+        "  ep=0x01 timeout=2000 n=13", "    09000109000f0d061932ff00ff",
       ]
     )
   }
@@ -73,7 +73,7 @@ extension DriverLifecycleCharacterizationTests {
         "presence input#0 change=nil", "liveness timeout=nil", "liveness observation=nil",
         "liveness format=nil", "battery=nil",
         "out[cold].usbRumble motors=[LowFrequency,HighFrequency,LeftTrigger,RightTrigger]",
-        "  ep=0x07 timeout=2000 n=13", "    09000109000f20104080ff00ff",
+        "  ep=0x07 timeout=2000 n=13", "    09000109000f0d061932ff00ff",
       ]
     )
   }

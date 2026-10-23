@@ -54,6 +54,17 @@ The evidence classes used for this decision are official documentation, upstream
 [22]: https://github.com/nefarius/XInputHooker/blob/f31d64470831ac39644dc088e632898afa4dd926/XInputHooker/XUSB.h
 [23]: https://github.com/nefarius/XInputHooker/blob/f31d64470831ac39644dc088e632898afa4dd926/XInputHooker/XInputHooker.cpp
 
+## Pinned GIP Evidence
+
+- **Official:** Microsoft's [MS-GIPUSB] Gaming Input Protocol USB Extension, v20240916 (Release: September 16, 2024; the PDF hashed SHA-256 `7c5422b3ed04f7eb9ec453a047919ae46d2220bd7676889cbac07cecd080baa9`), defines the header flags (Table 14: bit 7 Fragment, 6 InitFrag, 5 System, 4 ACME, 3 reserved, 2:0 expansion index), the sequence pools (2.2.10.3: system commands share one pool; security, extended commands, audio and each vendor message type have their own; `0x00` is reserved), the fragment header field (3.1.5.2: total length in the first fragment, offset in later ones), the Xbox button key code `0x5B` (Table 2), the Direct Motor Command (Table 56: bit 0 right vibration, 1 left vibration, 2 right impulse, 3 left impulse; levels `0x00...0x64`) and the input report (Table 57).
+  The PDF is not in the repository; no text is copied.
+- **Upstream:** SDL's [`SDL_hidapi_gip.c` at `8adc0f98837db84fd24f17c339e59dcf36a17156`][24] corroborates the ACK body (`GIP_Acknowledge`: control code, command, the command's System flag, bytes received as a 32-bit offset, bytes remaining), the `0x5B` check (`GIP_HandleCommandGuideButtonStatus`) and levels in `0...100` (`HIDAPI_DriverGIP_RumbleJoystick`, division by 655). SDL's license is the one of row [4]. No SDL code is copied.
+- **Upstream:** xpadneo's [`xpadneo.h` at `547eb90cd9f01de64db888b558f7e1a606c71965`][25] (`GPL-2.0-only`) gives the same four motor bits for the Xbox Series Bluetooth rumble report (`enum xpadneo_rumble_motors`). No xpadneo code is copied.
+- **Tests:** `GIPDriverTests` (sequence pools, ACK bytes, fragment ACKs, Guide key code, motor levels), `GIPStartupPacketBytesTests` and `ConsumerOutputCodecTests.eachActivationBitEnablesOnlyItsMotor`.
+
+[24]: https://github.com/libsdl-org/SDL/blob/8adc0f98837db84fd24f17c339e59dcf36a17156/src/joystick/hidapi/SDL_hidapi_gip.c
+[25]: https://github.com/atar-axis/xpadneo/blob/547eb90cd9f01de64db888b558f7e1a606c71965/hid-xpadneo/src/xpadneo/xpadneo.h
+
 ## Current Evidence Boundaries
 
 - [ControllerSources.lock.json](../../ControllerSources.lock.json) pins Linux commit `44696aa3a489d2baf58efa61b37833f100072bee` and per-file hashes for `xpad.c`, `hid-playstation.c`, `hid-sony.c`, `hid-nintendo.c`, and `hid-steam.c`. These upstream references establish protocol or identity context, not macOS descriptors, endpoints, TCC behavior, or hardware success. This record reviews the `xpad.c` SPDX identifier only; the other files support separate physical protocol work and were not license-reviewed here.

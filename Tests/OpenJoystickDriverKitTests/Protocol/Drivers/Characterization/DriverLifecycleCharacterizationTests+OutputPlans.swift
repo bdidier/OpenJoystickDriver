@@ -82,8 +82,8 @@ extension DriverLifecycleCharacterizationTests {
     #expect(
       try gipTwoRumbleLines() == [
         "first", "  plan interval=0 reports=1", "  ep=0x01 timeout=2000 n=13",
-        "    09000109000f20104080ff00ff", "second", "  plan interval=0 reports=1",
-        "  ep=0x01 timeout=2000 n=13", "    09000209000f00004080ff00ff",
+        "    09000109000f0d061932ff00ff", "second", "  plan interval=0 reports=1",
+        "  ep=0x01 timeout=2000 n=13", "    09000209000f00001932ff00ff",
       ]
     )
   }

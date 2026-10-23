@@ -18,11 +18,13 @@ enum ConsumerOutputCodec {
   /// Duration of a rumble report that carries none.
   static let defaultRumbleDurationMs = 250
 
+  /// Motor bits of the GIP Direct Motor Command ([MS-GIPUSB] Table 56), which the Xbox Series
+  /// Bluetooth report shares (xpadneo `enum xpadneo_rumble_motors`).
   private static let rumbleActivationAllMotors: UInt8 = 0x0F
-  private static let rumbleActivationLeftTrigger: UInt8 = 0x01
-  private static let rumbleActivationRightTrigger: UInt8 = 0x02
-  private static let rumbleActivationLeft: UInt8 = 0x04
-  private static let rumbleActivationRight: UInt8 = 0x08
+  private static let rumbleActivationRight: UInt8 = 0x01
+  private static let rumbleActivationLeft: UInt8 = 0x02
+  private static let rumbleActivationRightTrigger: UInt8 = 0x04
+  private static let rumbleActivationLeftTrigger: UInt8 = 0x08
   private static let rumbleDurationByteMultiplier = 10
 
   /// The command an output report addressed to `format`'s output report requests. A report
