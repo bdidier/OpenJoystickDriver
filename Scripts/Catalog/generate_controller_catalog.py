@@ -25,6 +25,8 @@ from Scripts.Quality.biome_format import format_json
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 LOCK_PATH = ROOT / "ControllerSources.lock.json"
+# Pinned sources by their locked sha256, so a check reads each one from the network once.
+SOURCE_CACHE = ROOT / ".build" / "catalog-sources"
 CONTROLLER_DIR = ROOT / "Resources" / "Controllers"
 PATCH_DIR = ROOT / "Resources" / "ControllerPatches"
 OUTPUT_DIR = ROOT / "Sources" / "OpenJoystickDriverKit" / "Resources" / "Controllers"
@@ -59,6 +61,15 @@ HID_RECORDS: tuple[
 def load_locked_files(source_lock: dict[str, Any]) -> dict[str, str]:
     result: dict[str, str] = {}
     for key, file_lock in sorted(source_lock["files"].items()):
+        cached = SOURCE_CACHE / file_lock["sha256"]
+        if cached.exists():
+            source = cached.read_text()
+            if hashlib.sha256(source.encode()).hexdigest() != file_lock["sha256"]:
+                raise CatalogError(
+                    f"{key} cached source {cached} does not match its locked sha256; delete it"
+                )
+            result[key] = source
+            continue
         url = (
             f"https://raw.githubusercontent.com/{source_lock['repository']}/"
             f"{source_lock['commit']}/{file_lock['path']}"
@@ -90,6 +101,10 @@ def load_locked_files(source_lock: dict[str, Any]) -> dict[str, str]:
             raise CatalogError(
                 f"{key} source hash mismatch: expected {file_lock['sha256']}, got {digest}"
             )
+        SOURCE_CACHE.mkdir(parents=True, exist_ok=True)
+        partial = cached.with_suffix(".partial")
+        partial.write_text(source)
+        partial.replace(cached)
         result[key] = source
     return result
 

@@ -2,7 +2,10 @@ from __future__ import annotations
 
 import base64
 import hashlib
+import io
 import json
+import pathlib
+import tempfile
 import unittest
 import urllib.error
 from email.message import Message
@@ -46,6 +49,8 @@ class CatalogGenerationTests(unittest.TestCase):
         response = json.dumps({"content": base64.b64encode(source.encode()).decode()})
 
         with (
+            tempfile.TemporaryDirectory() as directory,
+            patch.object(catalog, "SOURCE_CACHE", pathlib.Path(directory)),
             patch.object(catalog.urllib.request, "urlopen", side_effect=rate_limit),
             patch.object(catalog, "run_gh", return_value=response) as run_gh,
         ):
@@ -63,6 +68,61 @@ class CatalogGenerationTests(unittest.TestCase):
             ],
             catalog.CatalogError,
         )
+
+    def locked(self, source: str) -> dict[str, Any]:
+        return {
+            "repository": "torvalds/linux",
+            "commit": "a" * 40,
+            "files": {
+                "xpad": {
+                    "path": "drivers/input/joystick/xpad.c",
+                    "sha256": hashlib.sha256(source.encode()).hexdigest(),
+                }
+            },
+        }
+
+    def test_a_downloaded_source_is_cached_and_read_back_without_the_network(
+        self,
+    ) -> None:
+        source = "static const int xpad_device[] = {1};\n"
+        linux = self.locked(source)
+
+        with tempfile.TemporaryDirectory() as directory:
+            cache = pathlib.Path(directory)
+            with (
+                patch.object(catalog, "SOURCE_CACHE", cache),
+                patch.object(
+                    catalog.urllib.request,
+                    "urlopen",
+                    return_value=io.BytesIO(source.encode()),
+                ),
+            ):
+                self.assertEqual(catalog.load_locked_files(linux), {"xpad": source})
+            digest = linux["files"]["xpad"]["sha256"]
+            self.assertEqual((cache / digest).read_text(), source)
+
+            with (
+                patch.object(catalog, "SOURCE_CACHE", cache),
+                patch.object(catalog.urllib.request, "urlopen") as urlopen,
+                patch.object(catalog, "run_gh") as run_gh,
+            ):
+                self.assertEqual(catalog.load_locked_files(linux), {"xpad": source})
+            urlopen.assert_not_called()
+            run_gh.assert_not_called()
+
+    def test_a_cached_source_that_fails_its_hash_is_refused(self) -> None:
+        linux = self.locked("static const int xpad_device[] = {2};\n")
+        with tempfile.TemporaryDirectory() as directory:
+            cache = pathlib.Path(directory)
+            digest = linux["files"]["xpad"]["sha256"]
+            (cache / digest).write_text("changed\n")
+            with (
+                patch.object(catalog, "SOURCE_CACHE", cache),
+                patch.object(catalog.urllib.request, "urlopen") as urlopen,
+                self.assertRaisesRegex(catalog.CatalogError, str(cache / digest)),
+            ):
+                catalog.load_locked_files(linux)
+            urlopen.assert_not_called()
 
 
 class XpadTranslationTests(unittest.TestCase):
