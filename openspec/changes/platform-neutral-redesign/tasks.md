@@ -490,6 +490,8 @@ Verify: the full check list.
 
 These need the maintainer and a device. Each result is recorded in `wiki` or the record's evidence field.
 
+A check that needs a controller the maintainer does not own does not block `0.6.0-alpha.1`: testers run it on the public alpha.1 and its fixes go to alpha.2. These are H4 (DS4 v2, until the maintainer has one), H5 (`2DC8:301B`), H9 (`1209:4A4F`), H18 (`045E:0B13`) and the `413D:2104` series of H20. H6 uses the maintainer's A1398 and stays a maintainer check.
+
 - [x] H1 Wolverine V1 TE: connect, confirm frames, route and persona.
   Recorded (maintainer, 2026-10-23, macOS 27, Razer `1532:0A15` over USB, persona `generic` by override): `ojd controller watch 1532:0A15 --output` showed every button, the four D-pad directions and output buttons `0x1` to `0x4000`; the sticks pass through unchanged (rest `LS=(793,956) RS=(-4672,-1312)` in and out, the right stick about 14% off center), as the record sets no `stickDeadzone`; a game's own dead zone covers it, and a web page shows it until the user sets one (24.77). `ojd controller show 1532:0A15` prints `Protocol xbox-gip:usb`, `Ownership route raw-usb, physical exclusive-raw-usb`, `Served by OJD (from route)`, `Serving route virtual-hid`, `Record bundled`, the four rumble actuators and `Publication published`.
 - [x] H2 GameSir G7 SE `3537:1010`: confirm the record and route.
