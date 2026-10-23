@@ -55,7 +55,7 @@ The built-in catalog has 696 records. A record without a physical test is unveri
 - **The controller shows Used by another app:** That app reads the controller directly, so OJD cannot. You do not need to do anything for OJD. It serves the controller when the app lets go. The controller detail and `ojd controller list` show the app name.
 - **Input stays held, or the status says Needs attention:** Release the controls. Then check the controller input health with `ojd status --json`.
 
-### Check From the Terminal
+### Check from the Terminal
 
 Run the following command to see the runtime state.
 
@@ -79,18 +79,20 @@ This section explains what to check when a controller works in OJD but not in a 
 
 ### Understand Why Apps Differ
 
-OJD publishes a virtual controller. Each app reads it with its own API. One tester saw apps that use the Apple Game Controller framework, the browser Gamepad API, or **System Settings** read it. The maintainer did not check this. Apps that use SDL may not read it.
+OJD publishes a virtual controller. Each app reads it with its own API, so an app can read one virtual profile and not see another. Apps that use SDL, such as Steam, read the `SDLCompatible` profile. Apps that use the Apple Game Controller framework, such as Safari and **System Settings**, read the `GameControllerCompatible` profile and do not see `SDLCompatible`.
 
 OJD cannot add SDL to other apps. Each app ships its own SDL version.
 
-One tester saw these results with the Xbox virtual profile. This is not a guarantee.
+These results are not a guarantee.
 
 | App | Result |
 | --- | --- |
-| Steam | Shows a phantom controller with no input |
-| CrossOver and Wine | No controller |
-| RPCS3 | Sees a controller, no input |
-| OpenEmu | Buttons map to wrong controls |
+| Steam | Reads input and rumble of the `SDLCompatible` profile in a maintainer test |
+| CrossOver and Wine | One tester saw no controller with the Xbox profile at `045E:02FD`. Not verified with the `SDLCompatible` profile at `045E:0B0C` |
+| RPCS3 | One tester saw a controller with no input with the Xbox profile at `045E:02FD`. Not verified with the `SDLCompatible` profile at `045E:0B0C` |
+| OpenEmu | One tester saw buttons map to wrong controls with the Xbox profile. Works with the `Generic` profile |
+
+For each result and its source, see [Game and app compatibility](Playing-Games.md#game-and-app-compatibility).
 
 ### Try the Other Virtual Profile
 
@@ -145,7 +147,7 @@ This section explains what to do when OJD crashes, does not start, or reports a 
 
 OJD clears its log files at each start. Copy the logs before you start OJD again.
 
-### Crash At Every Start
+### Crash at Every Start
 
 If OJD crashes at every start, two global profiles may be active for one controller model. This is a known issue.
 

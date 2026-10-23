@@ -245,6 +245,7 @@ Verify: `swift test`, `./Scripts/ojd check profiles`. Hardware: H5, H7.
 - [x] 16.3c Give the repository scripts one CLI path rule with no silent fallback: one `OJD_APP_CLI` in `Scripts/Platform/environment.sh` used by `backend.sh`, `rumble-motors.sh` and `install.sh`; `rumble-motors.sh` fails clearly instead of falling back to `.build/debug` or building; `diagnose backends` reports each step's exit status and exits non-zero when a step failed; `.agents/skills/ojd-hardware-evidence/references/probes.md` states that `sdl3-gamecontroller` needs a published gamepad. Verify: `rg` finds the app CLI path only in `environment.sh`; tests in `Tests/RepositoryScripts` cover the failure exits. Done: `OJD_APP_CLI` and `require_ojd_app_cli` live in `Scripts/Platform/environment.sh`; `backend.sh`, `rumble-motors.sh` and `install.sh` use them; `rumble-motors.sh` exits 2 naming the missing path; `diagnose backends` prints `Step exit status: N` for each step and exits 1 when a step failed; `probes.md` states the published gamepad; `build help` lists `build install dev|release` and `build install-fast dev`, which the error names; `test_dispatcher.py` covers each exit and the single path; 24/24 checks at 7a790add (Python 437 OK, 0 skipped).
 - [ ] 16.4 Fix the `SDLCompatible` persona only with hardware evidence from H5. Verify: record the evidence; otherwise leave unchanged and list it.
 - [ ] 16.5 Keep the Wine, CrossOver and browser rows as expectations until H7 confirms them. Verify: `wiki` says "expected" until then.
+  `wiki/Playing-Games.md` marks the Wine and CrossOver row "Not verified" for `045E:0B0C`, with D6's expectation for each persona and the tester's `045E:02FD` result (no controller, macOS 26.7.1); `wiki/Troubleshooting.md` gives the same sources and the Steam result of H14. The browser rows hold the H17 records.
 
 ## 17. CLI vocabulary, command tree, settings, neutral core
 
@@ -507,7 +508,7 @@ Verify: the full check list.
 
 These need the maintainer and a device. Each result is recorded in `wiki` or the record's evidence field.
 
-A check that needs a controller the maintainer does not own does not block `0.6.0-alpha.1`: testers run it on the public alpha.1 and its fixes go to alpha.2. These are H4 (DS4 v2, until the maintainer has one), H5 (`2DC8:301B`), H9 (`1209:4A4F`), H18 (`045E:0B13`) and the `413D:2104` series of H20.
+A check that needs a controller the maintainer does not own does not block `0.6.0-alpha.1`: testers run it on the public alpha.1 and its fixes go to alpha.2. These are H4 (DS4 v2, until the maintainer has one), H5 (`2DC8:301B`) with 16.4, whose `SDLCompatible` persona stays unchanged until H5 records a mapping fault, H9 (`1209:4A4F`), H18 (`045E:0B13`) and the `413D:2104` series of H20.
 
 These also do not block `0.6.0-alpha.1`; they run after it, and their fixes go to a later alpha: H6 and 24.18 (macOS 12 and DS3 Bluetooth pairing on the A1398); H7 and 16.5 (Wine and CrossOver, whose rows stay expectations); the run of H10 with the WebRTC bridge; the open points of H17 (a physical pad in the viewer, and why Safari reads no input from `Generic`); and H20 on the owned pads, which show no reported connect failure. The checks that block are H13 and H15, which the maintainer's pads cover.
 
