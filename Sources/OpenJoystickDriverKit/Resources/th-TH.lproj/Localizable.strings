@@ -246,6 +246,8 @@
 "ui.virtualProfile.failure.serverStopped" = "บริการหยุดทำงาน การแทนที่ไม่มีการเปลี่ยนแปลง";
 /* Error when the service cannot save the override of the virtual HID profile. Nothing is stored. */
 "ui.virtualProfile.failure.persistenceFailed" = "ไม่สามารถบันทึกการแทนที่ได้ ไม่มีการจัดเก็บใดๆ";
+/* Error when resetting the virtual HID profile finds a virtual device file that the reset does not remove. %@ is the path of the file. */
+"ui.virtualProfile.failure.overrideFileKept" = "ไฟล์อุปกรณ์เสมือน %@ กำหนดข้อมูลระบุตัวตนของตัวเองหรือมาจากแพ็กเกจ จึงยังคงอยู่ แก้ไขหรือลบไฟล์นั้น ไม่มีการเปลี่ยนแปลงใดๆ";
 /* Error when the stored virtual HID profile overrides cannot be read. %@ is the reason. Controllers pick a profile themselves. */
 "ui.virtualProfile.storeError" = "ไม่สามารถอ่านการแทนที่โปรไฟล์ HID เสมือนได้ (%@) คอนโทรลเลอร์จะเลือกโดยอัตโนมัติ";
 /* Value of the key field in the capture assignment sheet before the user captures a key. */
@@ -2463,8 +2465,8 @@
 "cli.virtual.reset.allDone" = "ทุกรุ่นของคอนโทรลเลอร์เลือกเกมแพดเสมือนอัตโนมัติแล้ว";
 /* Message printed by 'ojd virtual reset --all --dry-run' instead of resetting. */
 "cli.virtual.reset.allDryRun" = "จะคืนทุกรุ่นของคอนโทรลเลอร์ให้เป็นการเลือกเกมแพดเสมือนอัตโนมัติ";
-/* Error of 'ojd virtual reset --all' when the service could not clear the choices. The command in quotes stays as written. */
-"cli.virtual.reset.allFailed" = "บริการล้างตัวเลือกเกมแพดเสมือนไม่ได้ ตรวจสอบด้วย “ojd status”";
+/* Error of 'ojd virtual reset --all' when the service could not clear the choices, such as when a virtual device file sets its own identity. The folder name VirtualDevices and the command in quotes stay as written. */
+"cli.virtual.reset.allFailed" = "บริการล้างตัวเลือกเกมแพดเสมือนไม่ได้ทั้งหมด ไฟล์อุปกรณ์เสมือนในโฟลเดอร์ VirtualDevices ที่กำหนดข้อมูลระบุตัวตนของตัวเองจะยังคงอยู่จนกว่าคุณจะแก้ไขหรือลบไฟล์นั้น ตรวจสอบด้วย “ojd status”";
 /* Yes or no question that 'ojd virtual reset --all' asks on a terminal. */
 "cli.virtual.reset.allSummary" = "คืนทุกรุ่นของคอนโทรลเลอร์ให้เป็นการเลือกเกมแพดเสมือนอัตโนมัติหรือไม่";
 /* Long description in the help of 'ojd virtual reset'. --all and --force stay as written. */

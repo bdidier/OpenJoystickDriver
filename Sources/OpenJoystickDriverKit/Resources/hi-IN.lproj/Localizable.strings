@@ -246,6 +246,8 @@
 "ui.virtualProfile.failure.serverStopped" = "सेवा रुक गई। ओवरराइड अपरिवर्तित है।";
 /* Error when the service cannot save the override of the virtual HID profile. Nothing is stored. */
 "ui.virtualProfile.failure.persistenceFailed" = "ओवरराइड सहेजा नहीं जा सका। कुछ भी सहेजा नहीं गया।";
+/* Error when resetting the virtual HID profile finds a virtual device file that the reset does not remove. %@ is the path of the file. */
+"ui.virtualProfile.failure.overrideFileKept" = "वर्चुअल डिवाइस फ़ाइल %@ अपनी पहचान खुद तय करती है या किसी पैकेज से आती है, इसलिए वह बनी रहती है। उस फ़ाइल को संपादित करें या हटाएँ। कुछ भी नहीं बदला।";
 /* Error when the stored virtual HID profile overrides cannot be read. %@ is the reason. Controllers pick a profile themselves. */
 "ui.virtualProfile.storeError" = "वर्चुअल HID प्रोफ़ाइल ओवरराइड पढ़े नहीं जा सकते (%@)। कंट्रोलर स्वचालित रूप से चुनते हैं।";
 /* Value of the key field in the capture assignment sheet before the user captures a key. */
@@ -2463,8 +2465,8 @@
 "cli.virtual.reset.allDone" = "अब हर कंट्रोलर मॉडल अपना वर्चुअल गेमपैड स्वचालित रूप से चुनता है।";
 /* Message printed by 'ojd virtual reset --all --dry-run' instead of resetting. */
 "cli.virtual.reset.allDryRun" = "हर कंट्रोलर मॉडल को स्वचालित वर्चुअल गेमपैड चयन पर लौटा देता।";
-/* Error of 'ojd virtual reset --all' when the service could not clear the choices. The command in quotes stays as written. */
-"cli.virtual.reset.allFailed" = "सेवा वर्चुअल गेमपैड के चुनाव साफ़ नहीं कर सकी। “ojd status” से जाँचें।";
+/* Error of 'ojd virtual reset --all' when the service could not clear the choices, such as when a virtual device file sets its own identity. The folder name VirtualDevices and the command in quotes stay as written. */
+"cli.virtual.reset.allFailed" = "सेवा वर्चुअल गेमपैड के सभी चुनाव साफ़ नहीं कर सकी। VirtualDevices फ़ोल्डर की जो वर्चुअल डिवाइस फ़ाइल अपनी पहचान खुद तय करती है, वह तब तक बनी रहती है जब तक आप उसे संपादित न करें या हटा न दें। “ojd status” से जाँचें।";
 /* Yes or no question that 'ojd virtual reset --all' asks on a terminal. */
 "cli.virtual.reset.allSummary" = "हर कंट्रोलर मॉडल को स्वचालित वर्चुअल गेमपैड चयन पर लौटाएँ?";
 /* Long description in the help of 'ojd virtual reset'. --all and --force stay as written. */

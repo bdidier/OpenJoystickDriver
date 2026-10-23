@@ -246,6 +246,8 @@
 "ui.virtualProfile.failure.serverStopped" = "The service stopped. The override is unchanged.";
 /* Error when the service cannot save the override of the virtual HID profile. Nothing is stored. */
 "ui.virtualProfile.failure.persistenceFailed" = "The override couldn't be saved. Nothing was stored.";
+/* Error when resetting the virtual HID profile finds a virtual device file that the reset does not remove. %@ is the path of the file. */
+"ui.virtualProfile.failure.overrideFileKept" = "The virtual device file %@ sets its own identity or comes from a package, so it stays. Edit or delete that file. Nothing changed.";
 /* Error when the stored virtual HID profile overrides cannot be read. %@ is the reason. Controllers pick a profile themselves. */
 "ui.virtualProfile.storeError" = "Virtual HID profile overrides can't be read (%@). Controllers select automatically.";
 /* Value of the key field in the capture assignment sheet before the user captures a key. */
@@ -2463,8 +2465,8 @@
 "cli.virtual.reset.allDone" = "Every controller model now selects its virtual gamepad automatically.";
 /* Message printed by 'ojd virtual reset --all --dry-run' instead of resetting. */
 "cli.virtual.reset.allDryRun" = "Would return every controller model to automatic virtual gamepad selection.";
-/* Error of 'ojd virtual reset --all' when the service could not clear the choices. The command in quotes stays as written. */
-"cli.virtual.reset.allFailed" = "The service could not clear the virtual gamepad choices. Check it with 'ojd status'.";
+/* Error of 'ojd virtual reset --all' when the service could not clear the choices, such as when a virtual device file sets its own identity. The folder name VirtualDevices and the command in quotes stay as written. */
+"cli.virtual.reset.allFailed" = "The service could not clear every virtual gamepad choice. A virtual device file in the VirtualDevices folder that sets its own identity stays until you edit or delete it. Check it with 'ojd status'.";
 /* Yes or no question that 'ojd virtual reset --all' asks on a terminal. */
 "cli.virtual.reset.allSummary" = "Return every controller model to automatic virtual gamepad selection?";
 /* Long description in the help of 'ojd virtual reset'. --all and --force stay as written. */

@@ -246,6 +246,8 @@
 "ui.virtualProfile.failure.serverStopped" = "Il servizio si è interrotto. La sostituzione non è cambiata.";
 /* Error when the service cannot save the override of the virtual HID profile. Nothing is stored. */
 "ui.virtualProfile.failure.persistenceFailed" = "Impossibile salvare la sostituzione. Non è stato salvato nulla.";
+/* Error when resetting the virtual HID profile finds a virtual device file that the reset does not remove. %@ is the path of the file. */
+"ui.virtualProfile.failure.overrideFileKept" = "Il file di dispositivo virtuale %@ definisce una propria identità o proviene da un pacchetto, quindi resta. Modifica o elimina quel file. Non è cambiato nulla.";
 /* Error when the stored virtual HID profile overrides cannot be read. %@ is the reason. Controllers pick a profile themselves. */
 "ui.virtualProfile.storeError" = "Impossibile leggere le sostituzioni del profilo HID virtuale (%@). I controller scelgono automaticamente.";
 /* Value of the key field in the capture assignment sheet before the user captures a key. */
@@ -2463,8 +2465,8 @@
 "cli.virtual.reset.allDone" = "Ogni modello di controller ora seleziona automaticamente il proprio gamepad virtuale.";
 /* Message printed by 'ojd virtual reset --all --dry-run' instead of resetting. */
 "cli.virtual.reset.allDryRun" = "Riporterebbe ogni modello di controller alla selezione automatica del gamepad virtuale.";
-/* Error of 'ojd virtual reset --all' when the service could not clear the choices. The command in quotes stays as written. */
-"cli.virtual.reset.allFailed" = "Il servizio non ha potuto cancellare le scelte del gamepad virtuale. Controlla con «ojd status».";
+/* Error of 'ojd virtual reset --all' when the service could not clear the choices, such as when a virtual device file sets its own identity. The folder name VirtualDevices and the command in quotes stay as written. */
+"cli.virtual.reset.allFailed" = "Il servizio non ha potuto cancellare tutte le scelte del gamepad virtuale. Un file di dispositivo virtuale nella cartella VirtualDevices che definisce una propria identità resta finché non lo modifichi o lo elimini. Controlla con «ojd status».";
 /* Yes or no question that 'ojd virtual reset --all' asks on a terminal. */
 "cli.virtual.reset.allSummary" = "Riportare ogni modello di controller alla selezione automatica del gamepad virtuale?";
 /* Long description in the help of 'ojd virtual reset'. --all and --force stay as written. */

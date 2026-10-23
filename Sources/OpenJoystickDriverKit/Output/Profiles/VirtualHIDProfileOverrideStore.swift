@@ -4,6 +4,9 @@ import Foundation
 public enum VirtualHIDProfileOverrideError: Error, Equatable, Sendable {
   /// The directory exists but cannot be listed, created, or written.
   case unreadableDirectory(String)
+  /// The persona file at this path sets its own identity or comes from a package, so a reset
+  /// leaves it in place.
+  case keptFile(String)
 }
 
 /// One persona: a built-in report descriptor and, optionally, the identity published over it.
@@ -214,31 +217,43 @@ public struct VirtualHIDProfileOverrideStore: Sendable {
   }
 
   /// Returns one controller model, or one unit of it, to automatic selection by removing its
-  /// descriptor-only persona file. Resetting a unit leaves its model's persona in effect, and a
-  /// persona with a custom identity stays: delete its file to remove it.
+  /// descriptor-only persona file. Resetting a unit leaves its model's persona in effect.
   ///
-  /// - Throws: The load error while the directory cannot be read or written.
+  /// - Throws: The load error while the directory cannot be read or written, and
+  ///   ``VirtualHIDProfileOverrideError/keptFile(_:)`` for a persona with a custom identity or
+  ///   from a package, which only an edit or a removal of its file changes.
   public func reset(
     vendorID: UInt16,
     productID: UInt16,
     unit: String? = nil
   ) throws(VirtualHIDProfileOverrideError) {
     let loaded = try load().get()
-    guard let found = loaded.personas[Model(vendorID: vendorID, productID: productID, unit: unit)],
-      found.persona.identity == nil, !found.fromPackage
+    guard let found = loaded.personas[Model(vendorID: vendorID, productID: productID, unit: unit)]
     else { return }
+    guard found.persona.identity == nil, !found.fromPackage else { throw .keptFile(found.url.path) }
     do { try FileManager.default.removeItem(at: found.url) } catch {
       throw .unreadableDirectory(error.localizedDescription)
     }
   }
 
-  /// Removes every descriptor-only persona file. Files with a custom identity and files OJD
-  /// skipped stay.
-  public func resetAll() {
-    guard case .success(let loaded) = load() else { return }
-    for found in loaded.personas.values where found.persona.identity == nil && !found.fromPackage {
-      try? FileManager.default.removeItem(at: found.url)
+  /// Removes every descriptor-only persona file of the `VirtualDevices` directory. Package files
+  /// and files OJD skipped stay.
+  ///
+  /// - Returns: The paths of the user files that set their own identity, which stay, and of the
+  ///   files that could not be removed.
+  /// - Throws: The load error while the directory cannot be read.
+  @discardableResult
+  public func resetAll() throws(VirtualHIDProfileOverrideError) -> [String] {
+    let loaded = try load().get()
+    var kept: [String] = []
+    for found in loaded.personas.values where !found.fromPackage {
+      guard found.persona.identity == nil else {
+        kept.append(found.url.path)
+        continue
+      }
+      do { try FileManager.default.removeItem(at: found.url) } catch { kept.append(found.url.path) }
     }
+    return kept.sorted()
   }
 
   private func load() -> Result<Loaded, VirtualHIDProfileOverrideError> {

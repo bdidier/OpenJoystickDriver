@@ -184,7 +184,10 @@ private func printChange(
   let stored = result.failure == .outputDisabled
   if let failure = result.failure, !stored {
     var reason = failure.code
-    if case .activationFailed(let detail) = failure { reason += ": " + detail }
+    switch failure {
+    case .activationFailed(let detail), .overrideFileKept(let detail): reason += ": " + detail
+    default: break
+    }
     throw CLIFailure(
       .serviceRequestFailed,
       CLILocalized.format(

@@ -93,6 +93,11 @@ enum RuntimePresentation {
       return OJDLocalized.string(
         "ui.virtualProfile.failure.persistenceFailed"
       )
+    case .overrideFileKept(let path):
+      return OJDLocalized.formatted(
+        "ui.virtualProfile.failure.overrideFileKept",
+        path
+      )
     }
   }
 

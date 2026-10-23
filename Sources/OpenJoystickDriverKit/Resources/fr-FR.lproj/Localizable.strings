@@ -246,6 +246,8 @@
 "ui.virtualProfile.failure.serverStopped" = "Le service s’est arrêté. Le remplacement est inchangé.";
 /* Error when the service cannot save the override of the virtual HID profile. Nothing is stored. */
 "ui.virtualProfile.failure.persistenceFailed" = "Impossible d’enregistrer le remplacement. Rien n’a été enregistré.";
+/* Error when resetting the virtual HID profile finds a virtual device file that the reset does not remove. %@ is the path of the file. */
+"ui.virtualProfile.failure.overrideFileKept" = "Le fichier d’appareil virtuel %@ définit sa propre identité ou provient d’un paquet, il est donc conservé. Modifiez ou supprimez ce fichier. Rien n’a changé.";
 /* Error when the stored virtual HID profile overrides cannot be read. %@ is the reason. Controllers pick a profile themselves. */
 "ui.virtualProfile.storeError" = "Impossible de lire les remplacements de profil HID virtuel (%@). Les manettes choisissent automatiquement.";
 /* Value of the key field in the capture assignment sheet before the user captures a key. */
@@ -2463,8 +2465,8 @@
 "cli.virtual.reset.allDone" = "Chaque modèle de manette sélectionne désormais sa manette virtuelle automatiquement.";
 /* Message printed by 'ojd virtual reset --all --dry-run' instead of resetting. */
 "cli.virtual.reset.allDryRun" = "Remettrait tous les modèles de manette en sélection automatique de la manette virtuelle.";
-/* Error of 'ojd virtual reset --all' when the service could not clear the choices. The command in quotes stays as written. */
-"cli.virtual.reset.allFailed" = "Le service n’a pas pu effacer les choix de manette virtuelle. Vérifiez avec « ojd status ».";
+/* Error of 'ojd virtual reset --all' when the service could not clear the choices, such as when a virtual device file sets its own identity. The folder name VirtualDevices and the command in quotes stay as written. */
+"cli.virtual.reset.allFailed" = "Le service n’a pas pu effacer tous les choix de manette virtuelle. Un fichier d’appareil virtuel du dossier VirtualDevices qui définit sa propre identité est conservé jusqu’à ce que vous le modifiiez ou le supprimiez. Vérifiez avec « ojd status ».";
 /* Yes or no question that 'ojd virtual reset --all' asks on a terminal. */
 "cli.virtual.reset.allSummary" = "Remettre tous les modèles de manette en sélection automatique de la manette virtuelle ?";
 /* Long description in the help of 'ojd virtual reset'. --all and --force stay as written. */

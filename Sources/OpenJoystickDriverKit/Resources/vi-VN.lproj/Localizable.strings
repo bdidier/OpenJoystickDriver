@@ -246,6 +246,8 @@
 "ui.virtualProfile.failure.serverStopped" = "Dịch vụ đã dừng. Ghi đè không thay đổi.";
 /* Error when the service cannot save the override of the virtual HID profile. Nothing is stored. */
 "ui.virtualProfile.failure.persistenceFailed" = "Không thể lưu ghi đè. Không có gì được lưu.";
+/* Error when resetting the virtual HID profile finds a virtual device file that the reset does not remove. %@ is the path of the file. */
+"ui.virtualProfile.failure.overrideFileKept" = "Tệp thiết bị ảo %@ tự đặt danh tính riêng hoặc đến từ một gói, nên vẫn được giữ lại. Hãy sửa hoặc xóa tệp đó. Không có gì thay đổi.";
 /* Error when the stored virtual HID profile overrides cannot be read. %@ is the reason. Controllers pick a profile themselves. */
 "ui.virtualProfile.storeError" = "Không thể đọc các ghi đè cấu hình HID ảo (%@). Bộ điều khiển sẽ tự động chọn.";
 /* Value of the key field in the capture assignment sheet before the user captures a key. */
@@ -2463,8 +2465,8 @@
 "cli.virtual.reset.allDone" = "Mọi kiểu máy bộ điều khiển giờ tự động chọn tay cầm ảo của nó.";
 /* Message printed by 'ojd virtual reset --all --dry-run' instead of resetting. */
 "cli.virtual.reset.allDryRun" = "Sẽ đưa mọi kiểu máy bộ điều khiển về lựa chọn tay cầm ảo tự động.";
-/* Error of 'ojd virtual reset --all' when the service could not clear the choices. The command in quotes stays as written. */
-"cli.virtual.reset.allFailed" = "Dịch vụ không thể xóa các lựa chọn tay cầm ảo. Hãy kiểm tra bằng “ojd status”.";
+/* Error of 'ojd virtual reset --all' when the service could not clear the choices, such as when a virtual device file sets its own identity. The folder name VirtualDevices and the command in quotes stay as written. */
+"cli.virtual.reset.allFailed" = "Dịch vụ không thể xóa tất cả lựa chọn tay cầm ảo. Tệp thiết bị ảo trong thư mục VirtualDevices tự đặt danh tính riêng sẽ được giữ lại cho đến khi bạn sửa hoặc xóa nó. Hãy kiểm tra bằng “ojd status”.";
 /* Yes or no question that 'ojd virtual reset --all' asks on a terminal. */
 "cli.virtual.reset.allSummary" = "Đưa mọi kiểu máy bộ điều khiển về lựa chọn tay cầm ảo tự động?";
 /* Long description in the help of 'ojd virtual reset'. --all and --force stay as written. */

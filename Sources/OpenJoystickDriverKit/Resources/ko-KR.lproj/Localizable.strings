@@ -246,6 +246,8 @@
 "ui.virtualProfile.failure.serverStopped" = "서비스가 중지되었습니다. 재정의는 변경되지 않았습니다.";
 /* Error when the service cannot save the override of the virtual HID profile. Nothing is stored. */
 "ui.virtualProfile.failure.persistenceFailed" = "재정의를 저장할 수 없습니다. 저장된 항목이 없습니다.";
+/* Error when resetting the virtual HID profile finds a virtual device file that the reset does not remove. %@ is the path of the file. */
+"ui.virtualProfile.failure.overrideFileKept" = "가상 기기 파일 %@은(는) 자체 ID를 설정하거나 패키지에서 제공되므로 그대로 남습니다. 해당 파일을 편집하거나 삭제하세요. 변경된 내용이 없습니다.";
 /* Error when the stored virtual HID profile overrides cannot be read. %@ is the reason. Controllers pick a profile themselves. */
 "ui.virtualProfile.storeError" = "가상 HID 프로파일 재정의를 읽을 수 없습니다(%@). 컨트롤러가 자동으로 선택합니다.";
 /* Value of the key field in the capture assignment sheet before the user captures a key. */
@@ -2463,8 +2465,8 @@
 "cli.virtual.reset.allDone" = "이제 모든 컨트롤러 모델이 가상 게임패드를 자동으로 선택합니다.";
 /* Message printed by 'ojd virtual reset --all --dry-run' instead of resetting. */
 "cli.virtual.reset.allDryRun" = "모든 컨트롤러 모델을 가상 게임패드 자동 선택으로 되돌립니다.";
-/* Error of 'ojd virtual reset --all' when the service could not clear the choices. The command in quotes stays as written. */
-"cli.virtual.reset.allFailed" = "서비스가 가상 게임패드 선택을 지우지 못했습니다. ‘ojd status’로 확인하세요.";
+/* Error of 'ojd virtual reset --all' when the service could not clear the choices, such as when a virtual device file sets its own identity. The folder name VirtualDevices and the command in quotes stay as written. */
+"cli.virtual.reset.allFailed" = "서비스가 가상 게임패드 선택을 모두 지우지 못했습니다. VirtualDevices 폴더에서 자체 ID를 설정하는 가상 기기 파일은 편집하거나 삭제할 때까지 남습니다. ‘ojd status’로 확인하세요.";
 /* Yes or no question that 'ojd virtual reset --all' asks on a terminal. */
 "cli.virtual.reset.allSummary" = "모든 컨트롤러 모델을 가상 게임패드 자동 선택으로 되돌리시겠습니까?";
 /* Long description in the help of 'ojd virtual reset'. --all and --force stay as written. */

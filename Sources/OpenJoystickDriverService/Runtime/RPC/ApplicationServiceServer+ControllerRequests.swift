@@ -119,9 +119,9 @@ extension ApplicationServiceServer {
   }
 
   private func performResetSettingsAsync() async -> Bool {
-    resetVirtualHIDProfileSettings()
+    let cleared = resetVirtualHIDProfileSettings()
     let live = await performVirtualOutputBackendActivation()
     let retargeted = await retargetConnectedControllers()
-    return live && retargeted
+    return cleared && live && retargeted
   }
 }

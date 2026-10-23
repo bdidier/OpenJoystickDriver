@@ -100,6 +100,9 @@ extension ApplicationServiceServer {
       unit: scope.unit
     )
     do { try storeVirtualHIDProfileOverride(requested, for: scope) } catch {
+      if case .keptFile(let path) = error {
+        return result(requested, .overrideFileKept(path: path))
+      }
       return result(requested, .persistenceFailed)
     }
     guard let automatic = automaticUserSpaceDispatcher() else {
@@ -348,10 +351,18 @@ extension ApplicationServiceServer {
     return recorded ?? notPublished(.noInputYet)
   }
 
-  /// Clears every virtual HID profile override.
-  func resetVirtualHIDProfileSettings() {
-    virtualHIDProfileOverrides.resetAll()
-    NotificationCenter.postServiceStatusChanged(from: self)
+  /// Clears every virtual HID profile override; false when the persona directory cannot be read
+  /// or a persona file stays, and each kept file is logged.
+  func resetVirtualHIDProfileSettings() -> Bool {
+    defer { NotificationCenter.postServiceStatusChanged(from: self) }
+    do {
+      let kept = try virtualHIDProfileOverrides.resetAll()
+      for path in kept { fputs("[VirtualDevices] Reset kept \(path)\n", stderr) }
+      return kept.isEmpty
+    } catch {
+      fputs("[VirtualDevices] Reset failed: \(error.statusDescription)\n", stderr)
+      return false
+    }
   }
 
   /// Applies a change to the persona files. A connected controller whose persona identity or

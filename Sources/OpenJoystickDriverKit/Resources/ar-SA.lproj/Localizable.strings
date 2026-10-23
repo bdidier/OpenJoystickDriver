@@ -246,6 +246,8 @@
 "ui.virtualProfile.failure.serverStopped" = "توقفت الخدمة. لم يتغير التجاوز.";
 /* Error when the service cannot save the override of the virtual HID profile. Nothing is stored. */
 "ui.virtualProfile.failure.persistenceFailed" = "تعذر حفظ التجاوز. لم يُحفظ أي شيء.";
+/* Error when resetting the virtual HID profile finds a virtual device file that the reset does not remove. %@ is the path of the file. */
+"ui.virtualProfile.failure.overrideFileKept" = "ملف الجهاز الافتراضي %@ يحدد هويته الخاصة أو يأتي من حزمة، لذا يبقى. عدّل هذا الملف أو احذفه. لم يتغير شيء.";
 /* Error when the stored virtual HID profile overrides cannot be read. %@ is the reason. Controllers pick a profile themselves. */
 "ui.virtualProfile.storeError" = "تعذّرت قراءة تجاوزات ملف تعريف HID الافتراضي (%@). تختار وحدات التحكم تلقائيًا.";
 /* Value of the key field in the capture assignment sheet before the user captures a key. */
@@ -2463,8 +2465,8 @@
 "cli.virtual.reset.allDone" = "يختار كل طراز وحدة تحكم الآن وحدة التحكم الافتراضية تلقائيًا.";
 /* Message printed by 'ojd virtual reset --all --dry-run' instead of resetting. */
 "cli.virtual.reset.allDryRun" = "سيعيد كل طراز وحدة تحكم إلى الاختيار التلقائي لوحدة التحكم الافتراضية.";
-/* Error of 'ojd virtual reset --all' when the service could not clear the choices. The command in quotes stays as written. */
-"cli.virtual.reset.allFailed" = "تعذّر على الخدمة مسح خيارات وحدات التحكم الافتراضية. افحصها باستخدام «ojd status».";
+/* Error of 'ojd virtual reset --all' when the service could not clear the choices, such as when a virtual device file sets its own identity. The folder name VirtualDevices and the command in quotes stay as written. */
+"cli.virtual.reset.allFailed" = "تعذّر على الخدمة مسح كل خيارات وحدات التحكم الافتراضية. يبقى ملف الجهاز الافتراضي في المجلد VirtualDevices الذي يحدد هويته الخاصة حتى تعدّله أو تحذفه. افحصها باستخدام «ojd status».";
 /* Yes or no question that 'ojd virtual reset --all' asks on a terminal. */
 "cli.virtual.reset.allSummary" = "هل تريد إعادة كل طراز وحدة تحكم إلى الاختيار التلقائي لوحدة التحكم الافتراضية؟";
 /* Long description in the help of 'ojd virtual reset'. --all and --force stay as written. */

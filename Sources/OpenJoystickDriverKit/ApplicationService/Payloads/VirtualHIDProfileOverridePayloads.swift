@@ -46,7 +46,8 @@ public struct LocalServiceRPCVirtualHIDProfileOverrideResetArguments: Codable, S
 
 /// Why a virtual HID profile override request did not take full effect.
 ///
-/// Encoded as `{"code": String, "detail": String?}`; only `activationFailed` carries a detail.
+/// Encoded as `{"code": String, "detail": String?}`; `activationFailed` and `overrideFileKept`
+/// carry a detail.
 public enum VirtualHIDProfileOverrideFailure: Codable, Equatable, Sendable {
   /// The requested profile identifier names no profile. Nothing was stored.
   case unknownProfile
@@ -67,6 +68,9 @@ public enum VirtualHIDProfileOverrideFailure: Codable, Equatable, Sendable {
   case serverStopped
   /// The stored overrides cannot be read or written. Nothing was stored.
   case persistenceFailed
+  /// A reset found a persona file at `path` that sets its own identity or comes from a package,
+  /// so the file and its override stay. Nothing changed.
+  case overrideFileKept(path: String)
 
   /// The wire identifier of the failure.
   public var code: String {
@@ -78,6 +82,7 @@ public enum VirtualHIDProfileOverrideFailure: Codable, Equatable, Sendable {
     case .outputDisabled: "outputDisabled"
     case .serverStopped: "serverStopped"
     case .persistenceFailed: "persistenceFailed"
+    case .overrideFileKept: "overrideFileKept"
     }
   }
 
@@ -98,6 +103,8 @@ public enum VirtualHIDProfileOverrideFailure: Codable, Equatable, Sendable {
     case "outputDisabled": self = .outputDisabled
     case "serverStopped": self = .serverStopped
     case "persistenceFailed": self = .persistenceFailed
+    case "overrideFileKept":
+      self = .overrideFileKept(path: try container.decode(String.self, forKey: .detail))
     default:
       throw DecodingError.dataCorruptedError(
         forKey: .code,
@@ -110,7 +117,11 @@ public enum VirtualHIDProfileOverrideFailure: Codable, Equatable, Sendable {
   public func encode(to encoder: Encoder) throws {
     var container = encoder.container(keyedBy: CodingKeys.self)
     try container.encode(code, forKey: .code)
-    if case .activationFailed(let detail) = self { try container.encode(detail, forKey: .detail) }
+    switch self {
+    case .activationFailed(let detail), .overrideFileKept(let detail):
+      try container.encode(detail, forKey: .detail)
+    default: break
+    }
   }
 }
 
@@ -176,6 +187,7 @@ extension VirtualHIDProfileOverrideError {
   public var statusDescription: String {
     switch self {
     case .unreadableDirectory(let reason): "unreadable-directory: \(reason)"
+    case .keptFile(let path): "kept-file: \(path)"
     }
   }
 }

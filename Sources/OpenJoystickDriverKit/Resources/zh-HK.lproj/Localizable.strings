@@ -246,6 +246,8 @@
 "ui.virtualProfile.failure.serverStopped" = "服務已停止。覆寫未變更。";
 /* Error when the service cannot save the override of the virtual HID profile. Nothing is stored. */
 "ui.virtualProfile.failure.persistenceFailed" = "無法儲存覆寫。未儲存任何內容。";
+/* Error when resetting the virtual HID profile finds a virtual device file that the reset does not remove. %@ is the path of the file. */
+"ui.virtualProfile.failure.overrideFileKept" = "虛擬裝置檔案 %@ 設定了自己的身分或來自某個套件，因此會保留。請編輯或刪除該檔案。未做任何變更。";
 /* Error when the stored virtual HID profile overrides cannot be read. %@ is the reason. Controllers pick a profile themselves. */
 "ui.virtualProfile.storeError" = "無法讀取虛擬 HID 設定檔覆寫（%@）。控制器將自動選擇。";
 /* Value of the key field in the capture assignment sheet before the user captures a key. */
@@ -2463,8 +2465,8 @@
 "cli.virtual.reset.allDone" = "所有控制器型號現在都會自動選擇虛擬遊戲控制器。";
 /* Message printed by 'ojd virtual reset --all --dry-run' instead of resetting. */
 "cli.virtual.reset.allDryRun" = "會讓所有控制器型號恢復自動選擇虛擬遊戲控制器。";
-/* Error of 'ojd virtual reset --all' when the service could not clear the choices. The command in quotes stays as written. */
-"cli.virtual.reset.allFailed" = "服務無法清除虛擬遊戲控制器的選擇。請用「ojd status」檢查。";
+/* Error of 'ojd virtual reset --all' when the service could not clear the choices, such as when a virtual device file sets its own identity. The folder name VirtualDevices and the command in quotes stay as written. */
+"cli.virtual.reset.allFailed" = "服務無法清除所有虛擬遊戲控制器的選擇。VirtualDevices 檔案夾中設定了自己身分的虛擬裝置檔案會保留，直至你編輯或刪除它。請用「ojd status」檢查。";
 /* Yes or no question that 'ojd virtual reset --all' asks on a terminal. */
 "cli.virtual.reset.allSummary" = "要讓所有控制器型號恢復自動選擇虛擬遊戲控制器嗎？";
 /* Long description in the help of 'ojd virtual reset'. --all and --force stay as written. */

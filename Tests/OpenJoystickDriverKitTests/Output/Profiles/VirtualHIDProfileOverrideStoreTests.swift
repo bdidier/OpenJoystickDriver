@@ -1,4 +1,5 @@
 import Foundation
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -237,11 +238,32 @@ struct VirtualHIDProfileOverrideStoreTests {
       )
       try write("not json", named: "broken.json", in: directory)
 
-      store.resetAll()
+      let kept = try store.resetAll()
 
+      #expect(
+        kept == [directory.appendingPathComponent("stick.json").realPath]
+      )
       #expect(store.override(vendorID: 5, productID: 6) == nil)
       #expect(store.persona(vendorID: 1, productID: 2)?.identity != nil)
       #expect(store.files.map(\.url.lastPathComponent) == ["broken.json", "stick.json"])
+    }
+  }
+
+  @Test
+  func resettingAPersonaWithAnIdentityFailsAndKeepsTheFile() throws {
+    try withDirectory { directory in
+      try write(
+        persona(vendorID: 1, productID: 2, identity: Self.identityJSON),
+        named: "stick.json",
+        in: directory
+      )
+      let store = Store(directory: directory)
+      let path = directory.appendingPathComponent("stick.json").realPath
+
+      #expect(throws: VirtualHIDProfileOverrideError.keptFile(path)) {
+        try store.reset(vendorID: 1, productID: 2)
+      }
+      #expect(store.persona(vendorID: 1, productID: 2)?.identity != nil)
     }
   }
 

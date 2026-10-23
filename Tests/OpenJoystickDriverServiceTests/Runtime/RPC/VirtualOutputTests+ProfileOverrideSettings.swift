@@ -224,6 +224,30 @@ extension VirtualOutputTests {
     await fixture.tearDown()
   }
 
+  @Test
+  func aResetThatKeepsAPersonaWithAnIdentityFails() async throws {
+    var file: URL?
+    let fixture = try await profileOverrideServer { directory in
+      try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+      let url = directory.appendingPathComponent("stick.json")
+      let identity =
+        #"{"vendorID":4660,"productID":22136,"productName":"Stick","manufacturer":"Acme"}"#
+      try? Data(
+        (#"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"VirtualDevice","#
+          + #""match":{"vendorID":1,"productID":2},"persona":"Generic","identity":\#(identity)}"#)
+          .utf8
+      ).write(to: url)
+      file = url
+    }
+    let path = try #require(file).realPath
+
+    #expect(await fixture.change(.reset).failure == .overrideFileKept(path: path))
+    #expect(await fixture.server.resetSettings() == false)
+    #expect(FileManager.default.fileExists(atPath: path))
+    #expect(fixture.store.override(vendorID: 1, productID: 2) == .generic)
+    await fixture.tearDown()
+  }
+
   private func status(
     _ server: ApplicationServiceServer
   ) async throws -> ApplicationServiceStatusPayload {
@@ -247,6 +271,12 @@ extension VirtualOutputTests {
         failure: .activationFailed(detail: "backend unavailable")
       ),
       VirtualHIDProfileOverrideResult(requested: nil, live: nil, source: .automatic, failure: nil),
+      VirtualHIDProfileOverrideResult(
+        requested: nil,
+        live: .generic,
+        source: .override,
+        failure: .overrideFileKept(path: "/VirtualDevices/stick.json")
+      ),
     ]
     for result in results {
       let data = try JSONEncoder().encode(result)
@@ -255,6 +285,7 @@ extension VirtualOutputTests {
     let failures: [VirtualHIDProfileOverrideFailure] = [
       .unknownProfile, .controllerNotFound, .overrideRejectedByController,
       .activationFailed(detail: "x"), .outputDisabled, .serverStopped, .persistenceFailed,
+      .overrideFileKept(path: "/p"),
     ]
     let codes = try failures.map { failure in
       let object = try JSONSerialization.jsonObject(with: JSONEncoder().encode(failure))
@@ -264,6 +295,7 @@ extension VirtualOutputTests {
       codes == [
         "unknownProfile", "controllerNotFound", "overrideRejectedByController",
         "activationFailed", "outputDisabled", "serverStopped", "persistenceFailed",
+        "overrideFileKept",
       ]
     )
     let requested = try JSONEncoder().encode(results[0])

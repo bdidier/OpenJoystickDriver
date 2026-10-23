@@ -246,6 +246,8 @@
 "ui.virtualProfile.failure.serverStopped" = "Servis durdu. Geçersiz kılma değişmedi.";
 /* Error when the service cannot save the override of the virtual HID profile. Nothing is stored. */
 "ui.virtualProfile.failure.persistenceFailed" = "Geçersiz kılma kaydedilemedi. Hiçbir şey kaydedilmedi.";
+/* Error when resetting the virtual HID profile finds a virtual device file that the reset does not remove. %@ is the path of the file. */
+"ui.virtualProfile.failure.overrideFileKept" = "%@ sanal aygıt dosyası kendi kimliğini belirliyor veya bir paketten geliyor, bu yüzden yerinde kalıyor. Bu dosyayı düzenleyin veya silin. Hiçbir şey değişmedi.";
 /* Error when the stored virtual HID profile overrides cannot be read. %@ is the reason. Controllers pick a profile themselves. */
 "ui.virtualProfile.storeError" = "Sanal HID profili geçersiz kılmaları okunamıyor (%@). Kontrolcüler otomatik olarak seçilir.";
 /* Value of the key field in the capture assignment sheet before the user captures a key. */
@@ -2463,8 +2465,8 @@
 "cli.virtual.reset.allDone" = "Her kontrolcü modeli artık sanal oyun kontrolcüsünü otomatik seçiyor.";
 /* Message printed by 'ojd virtual reset --all --dry-run' instead of resetting. */
 "cli.virtual.reset.allDryRun" = "Tüm kontrolcü modelleri sanal oyun kontrolcüsünün otomatik seçimine döndürülürdü.";
-/* Error of 'ojd virtual reset --all' when the service could not clear the choices. The command in quotes stays as written. */
-"cli.virtual.reset.allFailed" = "Servis sanal oyun kontrolcüsü seçimlerini temizleyemedi. “ojd status” ile kontrol edin.";
+/* Error of 'ojd virtual reset --all' when the service could not clear the choices, such as when a virtual device file sets its own identity. The folder name VirtualDevices and the command in quotes stay as written. */
+"cli.virtual.reset.allFailed" = "Servis sanal oyun kontrolcüsü seçimlerinin tümünü temizleyemedi. VirtualDevices klasöründe kendi kimliğini belirleyen bir sanal aygıt dosyası, siz onu düzenleyene veya silene kadar yerinde kalır. “ojd status” ile kontrol edin.";
 /* Yes or no question that 'ojd virtual reset --all' asks on a terminal. */
 "cli.virtual.reset.allSummary" = "Tüm kontrolcü modelleri sanal oyun kontrolcüsünün otomatik seçimine döndürülsün mü?";
 /* Long description in the help of 'ojd virtual reset'. --all and --force stay as written. */

@@ -103,6 +103,10 @@ struct VirtualHIDProfileOverrideTests {
     #expect(stored.allSatisfy { $0.contains("is stored") })
     #expect(unstored.allSatisfy { $0.contains("Nothing was stored") })
     #expect(Set(stored + unstored).count == 4)
+    #expect(
+      RuntimePresentation.virtualHIDProfileOverrideFailure(.overrideFileKept(path: "/a/stick.json"))
+        .contains("/a/stick.json")
+    )
   }
 
   @Test

@@ -1,4 +1,5 @@
 import Foundation
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -194,7 +195,12 @@ struct ModPackageLayeringTests {
 
       try store.reset(vendorID: 0x1234, productID: 0xABCD)
       #expect(store.override(vendorID: 0x1234, productID: 0xABCD) == .generic)
-      store.resetAll()
+      #expect(
+        throws: VirtualHIDProfileOverrideError.keptFile(packaged.realPath)
+      ) {
+        try store.reset(vendorID: 0x1234, productID: 0xABCD)
+      }
+      #expect(try store.resetAll().isEmpty)
       #expect(FileManager.default.fileExists(atPath: packaged.path))
     }
   }
