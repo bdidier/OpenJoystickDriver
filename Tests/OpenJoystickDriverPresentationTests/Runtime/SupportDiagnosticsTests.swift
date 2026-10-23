@@ -7,6 +7,9 @@ import Testing
 
 @Suite(.serialized)
 struct SupportDiagnosticsTests {
+  // The report reads the platform host, which the executable installs at launch.
+  init() { PlatformHosts.install(FakePlatformHost()) }
+
   @Test
   func summarizesControllerOutputWithoutHIDDetails() async {
     let diagnostics = ApplicationServiceVirtualDeviceDiagnosticsPayload(
