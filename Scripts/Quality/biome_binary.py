@@ -3,7 +3,7 @@
 The binary is `node_modules/.bin/biome` of the checkout's top level, else of the main
 worktree (a linked worktree has no `bun install` of its own). Its version must equal the
 `@biomejs/biome` pin in the checkout's `package.json`. A Biome on `PATH` is never used.
-Run as a script, it prints the binary path for the top level given as the argument.
+Run as `python3 -m Scripts.Quality.biome_binary TOPLEVEL`, it prints the binary path.
 """
 
 from __future__ import annotations
@@ -13,6 +13,8 @@ import pathlib
 import re
 import subprocess
 import sys
+
+from Scripts.Command.execution import main_checkout_dir
 
 BINARY = pathlib.Path("node_modules/.bin/biome")
 
@@ -24,20 +26,6 @@ class BiomeBinaryError(OSError):
 def pinned_version(toplevel: pathlib.Path) -> str:
     package = json.loads((toplevel / "package.json").read_text(encoding="utf-8"))
     return str(package["devDependencies"]["@biomejs/biome"])
-
-
-def main_checkout(toplevel: pathlib.Path) -> pathlib.Path:
-    """The main worktree: the parent of the repository's common git directory."""
-    result = subprocess.run(
-        ["git", "rev-parse", "--path-format=absolute", "--git-common-dir"],
-        capture_output=True,
-        check=False,
-        cwd=toplevel,
-        text=True,
-    )
-    if result.returncode:
-        return toplevel
-    return pathlib.Path(result.stdout.strip()).parent
 
 
 def installed_version(binary: pathlib.Path) -> str:
@@ -52,7 +40,13 @@ def installed_version(binary: pathlib.Path) -> str:
 
 def resolve(toplevel: pathlib.Path, main: pathlib.Path | None = None) -> pathlib.Path:
     """Returns the pinned binary, or raises BiomeBinaryError with what to run."""
-    main = main_checkout(toplevel) if main is None else main
+    if main is None:
+        try:
+            main = main_checkout_dir(toplevel)
+        except subprocess.CalledProcessError as error:
+            raise BiomeBinaryError(
+                f"{toplevel} is not in a Git checkout: {error.stderr.strip()}"
+            ) from error
     candidates = [toplevel / BINARY]
     if main.resolve() != toplevel.resolve():
         candidates.append(main / BINARY)

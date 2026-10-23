@@ -27,7 +27,7 @@ class BiomePinTests(unittest.TestCase):
     def test_the_justfile_runs_the_biome_that_a_linked_worktree_resolves(self) -> None:
         justfile = (ROOT / "justfile").read_text(encoding="utf-8")
         self.assertNotIn("node_modules/.bin/biome", justfile)
-        self.assertIn("Scripts/Quality/biome_binary.py", justfile)
+        self.assertIn("python3 -m Scripts.Quality.biome_binary", justfile)
 
 
 def install(root: Path, version: str) -> Path:
@@ -73,6 +73,13 @@ class BiomeResolutionTests(unittest.TestCase):
             main, linked = self.checkouts(directory)
             with self.assertRaisesRegex(BiomeBinaryError, "bun install"):
                 resolve(linked, main)
+
+    def test_a_folder_outside_git_is_refused(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            main, _ = self.checkouts(directory)
+            install(main, "2.5.15")
+            with self.assertRaisesRegex(BiomeBinaryError, "not in a Git checkout"):
+                resolve(main)
 
 
 if __name__ == "__main__":

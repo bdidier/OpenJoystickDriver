@@ -20,13 +20,12 @@ from Scripts.Catalog import protocol_descriptions
 from Scripts.Catalog.catalog_rules import load_rules, parse_id, parse_identity
 from Scripts.Catalog.schema_header import KINDS, header
 from Scripts.Catalog.xpad_io import json_text, run_gh
+from Scripts.Command.execution import main_checkout_dir
 from Scripts.Quality import repository_tool
 from Scripts.Quality.biome_format import format_json
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 LOCK_PATH = ROOT / "ControllerSources.lock.json"
-# Pinned sources by their locked sha256, so a check reads each one from the network once.
-SOURCE_CACHE = ROOT / ".build" / "catalog-sources"
 CONTROLLER_DIR = ROOT / "Resources" / "Controllers"
 PATCH_DIR = ROOT / "Resources" / "ControllerPatches"
 OUTPUT_DIR = ROOT / "Sources" / "OpenJoystickDriverKit" / "Resources" / "Controllers"
@@ -58,10 +57,16 @@ HID_RECORDS: tuple[
 )
 
 
+def source_cache(directory: pathlib.Path = ROOT) -> pathlib.Path:
+    """Pinned sources by their locked sha256, so every worktree reads each one from the network once."""
+    return main_checkout_dir(directory) / ".build" / "catalog-sources"
+
+
 def load_locked_files(source_lock: dict[str, Any]) -> dict[str, str]:
     result: dict[str, str] = {}
+    cache = source_cache()
     for key, file_lock in sorted(source_lock["files"].items()):
-        cached = SOURCE_CACHE / file_lock["sha256"]
+        cached = cache / file_lock["sha256"]
         if cached.exists():
             source = cached.read_text()
             if hashlib.sha256(source.encode()).hexdigest() != file_lock["sha256"]:
@@ -101,7 +106,7 @@ def load_locked_files(source_lock: dict[str, Any]) -> dict[str, str]:
             raise CatalogError(
                 f"{key} source hash mismatch: expected {file_lock['sha256']}, got {digest}"
             )
-        SOURCE_CACHE.mkdir(parents=True, exist_ok=True)
+        cache.mkdir(parents=True, exist_ok=True)
         partial = cached.with_suffix(".partial")
         partial.write_text(source)
         partial.replace(cached)

@@ -118,11 +118,14 @@ def install_hooks() -> int:
     return run_commands([["bun", "install"]])
 
 
-def main_checkout_dir() -> Path:
-    """The checkout that owns the shared Git directory, also when run from a worktree."""
+def main_checkout_dir(directory: Path = PROJECT_DIR) -> Path:
+    """The checkout that owns the shared Git directory of `directory`, also from a worktree.
+
+    Raises `subprocess.CalledProcessError` when `directory` is not in a Git checkout.
+    """
     result = subprocess.run(
         ["git", "rev-parse", "--path-format=absolute", "--git-common-dir"],
-        cwd=PROJECT_DIR,
+        cwd=directory,
         capture_output=True,
         text=True,
         check=True,

@@ -50,7 +50,7 @@ class CatalogGenerationTests(unittest.TestCase):
 
         with (
             tempfile.TemporaryDirectory() as directory,
-            patch.object(catalog, "SOURCE_CACHE", pathlib.Path(directory)),
+            patch.object(catalog, "source_cache", return_value=pathlib.Path(directory)),
             patch.object(catalog.urllib.request, "urlopen", side_effect=rate_limit),
             patch.object(catalog, "run_gh", return_value=response) as run_gh,
         ):
@@ -90,7 +90,7 @@ class CatalogGenerationTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             cache = pathlib.Path(directory)
             with (
-                patch.object(catalog, "SOURCE_CACHE", cache),
+                patch.object(catalog, "source_cache", return_value=cache),
                 patch.object(
                     catalog.urllib.request,
                     "urlopen",
@@ -102,7 +102,7 @@ class CatalogGenerationTests(unittest.TestCase):
             self.assertEqual((cache / digest).read_text(), source)
 
             with (
-                patch.object(catalog, "SOURCE_CACHE", cache),
+                patch.object(catalog, "source_cache", return_value=cache),
                 patch.object(catalog.urllib.request, "urlopen") as urlopen,
                 patch.object(catalog, "run_gh") as run_gh,
             ):
@@ -117,7 +117,7 @@ class CatalogGenerationTests(unittest.TestCase):
             digest = linux["files"]["xpad"]["sha256"]
             (cache / digest).write_text("changed\n")
             with (
-                patch.object(catalog, "SOURCE_CACHE", cache),
+                patch.object(catalog, "source_cache", return_value=cache),
                 patch.object(catalog.urllib.request, "urlopen") as urlopen,
                 self.assertRaisesRegex(catalog.CatalogError, str(cache / digest)),
             ):

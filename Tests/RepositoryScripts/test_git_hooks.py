@@ -5,6 +5,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from Scripts.Quality.biome_binary import resolve
+
 
 class GitHookTests(unittest.TestCase):
     root = Path(__file__).resolve().parents[2]
@@ -67,8 +69,8 @@ class GitHookTests(unittest.TestCase):
             self.git(repository, "init", "--quiet")
             for name in ("biome.json", "package.json"):
                 (repository / name).write_text((self.root / name).read_text())
-            for name in ("node_modules", "Scripts"):
-                (repository / name).symlink_to(self.root / name)
+            (repository / "node_modules").symlink_to(resolve(self.root).parents[1])
+            (repository / "Scripts").symlink_to(self.root / "Scripts")
             (repository / "Tests/EquivalenceSnapshots").mkdir(parents=True)
             (repository / "Tests/EquivalenceSnapshots/snapshot.json").write_text(
                 unformatted

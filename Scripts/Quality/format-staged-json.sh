@@ -16,7 +16,7 @@ if ((${#paths[@]} == 0)); then
   exit 0
 fi
 
-biome="$(python3 "$repository_root/Scripts/Quality/biome_binary.py" "$repository_root")"
+biome="$(cd "$repository_root" && python3 -m Scripts.Quality.biome_binary "$repository_root")"
 printf '%s\0' "${paths[@]}" | git checkout-index -z --stdin --prefix="$staged_copy/"
 # Biome resolves the `files.includes` globs against the directory of its configuration.
 if [[ ! -f "$staged_copy/biome.json" ]]; then
