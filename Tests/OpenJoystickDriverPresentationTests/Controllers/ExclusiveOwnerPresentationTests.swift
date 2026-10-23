@@ -47,4 +47,20 @@ struct ExclusiveOwnerPresentationTests {
         .contains { $0.kind == .exclusiveOwner }
     )
   }
+
+  @Test
+  func theDetailSaysWhenMacOSAlsoListsTheController() {
+    let listed = ApplicationServiceDeviceDescription.fixture(
+      id: "listed",
+      hidInputOwnership: .exclusive,
+      duplicateExposureRisk: .systemGameController
+    )
+    let fact = ControllerDetailFacts.general(for: listed).first { $0.kind == .alsoListedBySystem }
+    #expect(fact?.label == OJDLocalized.string("ui.controllers.alsoListedBySystem"))
+    #expect(fact?.value == .text(OJDLocalized.string("status.controllerAlsoListedBySystem")))
+    #expect(
+      !ControllerDetailFacts.general(for: device(ownership: .exclusive, owner: nil))
+        .contains { $0.kind == .alsoListedBySystem }
+    )
+  }
 }

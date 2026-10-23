@@ -11,7 +11,7 @@ struct ControllerFact: Equatable, Identifiable {
     case startupStatus, inputReportFormat, inputRecoveries
     case publicationAttempted, publicationCompleted
     case usbIdentifier, inputEndpoint, outputEndpoint
-    case exclusiveOwner
+    case exclusiveOwner, alsoListedBySystem
   }
 
   let kind: Kind
@@ -82,7 +82,16 @@ enum ControllerDetailFacts {
           )
         )
       ] : []
-    return always + held + (power + capabilities).filter { $0.value != .none }
+    let listed =
+      device.duplicateExposureRisk == .systemGameController
+      ? [
+        fact(
+          .alsoListedBySystem,
+          "ui.controllers.alsoListedBySystem",
+          .text(OJDLocalized.string("status.controllerAlsoListedBySystem"))
+        )
+      ] : []
+    return always + held + listed + (power + capabilities).filter { $0.value != .none }
   }
 
   /// The technical facts, shown under Advanced: identifiers, the parser (the binding that parses
@@ -214,6 +223,7 @@ enum ControllerDetailFacts {
       return OJDLocalized.string(
         ControllerDetailLabels.physicalOwnershipKey(.upstreamVirtualDevice)
       )
+    case .systemGameController: return OJDLocalized.string("ui.controllers.alsoListedBySystem")
     case .unknownOwnership:
       return OJDLocalized.string(ControllerDetailLabels.physicalOwnershipKey(.unknown))
     }

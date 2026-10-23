@@ -68,5 +68,13 @@ extension DeviceManager {
       if case .hid = discoverySource, hidInputOwnership == .exclusive { return .exclusiveHID }
       return discoverySource.ownershipObservation
     }
+
+    var duplicateExposureRisk: DuplicateExposureRisk {
+      let ownership = ownershipObservation
+      if physicalDevice?.systemListsGameController == true, !ownership.isServedBySystem {
+        return .systemGameController
+      }
+      return DuplicateExposureRisk(observation: ownership)
+    }
   }
 }

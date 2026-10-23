@@ -27,8 +27,9 @@ public enum DuplicateExposureRisk: String, Codable, Equatable, Sendable {
   case none = "None"
   case systemHIDVisible = "SystemHIDVisible"
   case upstreamVirtualDevice = "UpstreamVirtualDevice"
+  /// OJD serves the controller, and GameController also lists it as a pad with no input.
+  case systemGameController = "SystemGameController"
   case unknownOwnership = "UnknownOwnership"
-
 }
 
 extension DuplicateExposureRisk {

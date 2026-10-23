@@ -74,7 +74,8 @@ extension HIDDeviceStream {
       vendorID: model.vendorID,
       productID: model.productID,
       transportProperty: transport.isEmpty ? nil : transport,
-      nativePassThrough: nativePassThrough
+      nativePassThrough: nativePassThrough,
+      systemListsGameController: GCController.supportsHIDDevice(device)
     )
     let connection = HIDDeviceConnection(
       physicalDevice: physicalDevice,

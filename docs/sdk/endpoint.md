@@ -83,7 +83,7 @@ The program sends it after the `Welcome` to read the controllers. `Controllers` 
 The endpoint answers with the same `ADDED`, `MODIFIED`, and `DELETED` watch lines as `ojd controller watch --all --json`: first the connected controllers, then each change. A watch line has `type` and `object`, and it has no `apiVersion`. The `object` has the `kind` `Controller`.
 
 ```json
-{"type":"ADDED","object":{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Controller","id":"pad-1","name":"Test Pad","vendorID":1118,"productID":654,"connection":"usb","hasSerialNumber":false,"ownedByAnotherClient":false,"protocol":"XboxXUSB:Wired","session":"Active"}}
+{"type":"ADDED","object":{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Controller","id":"pad-1","name":"Test Pad","vendorID":1118,"productID":654,"connection":"usb","hasSerialNumber":false,"ownedByAnotherClient":false,"alsoListedBySystem":false,"protocol":"XboxXUSB:Wired","session":"Active"}}
 ```
 
 ### FeedRequest

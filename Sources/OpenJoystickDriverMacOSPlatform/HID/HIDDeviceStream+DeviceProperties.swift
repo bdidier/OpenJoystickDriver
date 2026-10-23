@@ -16,7 +16,8 @@ extension HIDDeviceStream {
     vendorID: UInt16,
     productID: UInt16,
     transportProperty: String?,
-    nativePassThrough: Bool
+    nativePassThrough: Bool,
+    systemListsGameController: Bool
   ) -> PhysicalDevice {
     let primaryUsage = HIDUsageSignature(
       usagePage: unsignedProperty(device, kIOHIDPrimaryUsagePageKey).flatMap(UInt32.init(exactly:)),
@@ -96,7 +97,8 @@ extension HIDDeviceStream {
           hidLayout: hidLayout
         )
       ],
-      nativePassThrough: nativePassThrough
+      nativePassThrough: nativePassThrough,
+      systemListsGameController: systemListsGameController
     )
   }
 

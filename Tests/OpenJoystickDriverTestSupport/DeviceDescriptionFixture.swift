@@ -39,6 +39,7 @@ extension ApplicationServiceDeviceDescription {
     inputHealth: ControllerInputHealth = ControllerInputHealth(state: .healthy),
     hidInputOwnership: HIDInputOwnership = .unknown,
     inputOwner: USBExclusiveOwner? = nil,
+    duplicateExposureRisk: DuplicateExposureRisk = .unknownOwnership,
     physicalOutputOwner: ControllerServer = .ojd,
     tuning: ControllerTuning = .none,
     protocolBinding: ProtocolBindingID = ProtocolBindingID(.hidDescriptor)
@@ -52,6 +53,7 @@ extension ApplicationServiceDeviceDescription {
       discoverySource: .rawUSB,
       hidInputOwnership: hidInputOwnership,
       inputOwner: inputOwner,
+      duplicateExposureRisk: duplicateExposureRisk,
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
       physicalOutputCapabilities: outputs,

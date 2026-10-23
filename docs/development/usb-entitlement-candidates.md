@@ -110,3 +110,11 @@ To move an identity to `USBExtension`: obtain Apple-issued USB transport entitle
 | VID | PIDs |
 | --- | --- |
 | `3537` | 1003, 105D, 105E, 109B, 109C, 10BA |
+
+## HID Controllers That macOS Also Lists (1)
+
+These HID-class controllers fall outside the raw-USB predicate above. OJD serves them through the HID stack and holds them exclusively, but Apple's `AppleGCHIDUserEventDriver` stays bound and GameController lists a second, synthetic pad with no input. macOS refuses to hand a HID-class interface from its own driver to an app (`0xE00002C9`, [GameSir family](../testing/gamesir-family.md)), so only a driver extension with USB transport coverage for the identity keeps Apple's driver off the controller.
+
+| VID | PIDs |
+| --- | --- |
+| `054C` | 0268 |

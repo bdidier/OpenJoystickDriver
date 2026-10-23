@@ -212,6 +212,9 @@ public struct PhysicalDevice: Equatable, Sendable {
   /// Whether the running macOS already exposes this device as a native gamepad
   /// (`GCController.supportsHIDDevice`). OJD leaves such a device to macOS before classification.
   public let nativePassThrough: Bool
+  /// Whether GameController lists this device as a gamepad (`GCController.supportsHIDDevice`).
+  /// When OJD serves the device anyway, macOS publishes a second pad for it that gives no input.
+  public let systemListsGameController: Bool
 
   public init(
     serviceAddress: ControllerConnectionAddress? = nil,
@@ -230,7 +233,8 @@ public struct PhysicalDevice: Equatable, Sendable {
     physicalLocationIdentifier: UInt32? = nil,
     stableParentDeviceIdentifier: String? = nil,
     interfaces: [PhysicalInterfaceSignature]? = nil,
-    nativePassThrough: Bool = false
+    nativePassThrough: Bool = false,
+    systemListsGameController: Bool = false
   ) {
     self.serviceAddress = serviceAddress
     self.platformUniqueIdentifier = platformUniqueIdentifier
@@ -249,5 +253,6 @@ public struct PhysicalDevice: Equatable, Sendable {
     self.stableParentDeviceIdentifier = stableParentDeviceIdentifier
     self.interfaces = interfaces
     self.nativePassThrough = nativePassThrough
+    self.systemListsGameController = systemListsGameController
   }
 }

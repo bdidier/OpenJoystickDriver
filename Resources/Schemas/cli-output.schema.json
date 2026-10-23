@@ -557,6 +557,7 @@
           "items": {
             "type": "object",
             "required": [
+              "alsoListedBySystem",
               "connection",
               "hasSerialNumber",
               "id",
@@ -569,6 +570,10 @@
             ],
             "additionalProperties": false,
             "properties": {
+              "alsoListedBySystem": {
+                "description": "Whether the system also lists the controller as a second controller that gives no input while OJD serves it.",
+                "type": "boolean"
+              },
               "connection": {
                 "type": "string"
               },
@@ -839,6 +844,7 @@
                 "None",
                 "SystemHIDVisible",
                 "UpstreamVirtualDevice",
+                "SystemGameController",
                 "UnknownOwnership"
               ]
             },
@@ -2712,6 +2718,7 @@
       "description": "A Controller: the fields of an item of ojd controller list, and the latest input and output once the controller has any.",
       "type": "object",
       "required": [
+        "alsoListedBySystem",
         "apiVersion",
         "connection",
         "hasSerialNumber",
@@ -2734,6 +2741,9 @@
         },
         "ownedByAnotherClient": {
           "$ref": "#/$defs/controllerList/properties/items/items/properties/ownedByAnotherClient"
+        },
+        "alsoListedBySystem": {
+          "$ref": "#/$defs/controllerList/properties/items/items/properties/alsoListedBySystem"
         },
         "owner": {
           "$ref": "#/$defs/sharedExclusiveOwner"

@@ -100,7 +100,7 @@ extension DeviceManager {
       physicalOwnership: ownership,
       hidInputOwnership: usbHeld ? .ownedByAnotherClient : info.hidInputOwnership,
       inputOwner: usbHeld ? await pipeline.usbExclusiveOwner : nil,
-      duplicateExposureRisk: DuplicateExposureRisk(observation: ownership),
+      duplicateExposureRisk: info.duplicateExposureRisk,
       serialNumber: info.serialNumber,
       parameters: record?.parameters.entries ?? [],
       bindingResult: ProtocolBindingResult(

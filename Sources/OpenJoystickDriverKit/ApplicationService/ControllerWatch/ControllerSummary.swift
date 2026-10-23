@@ -19,6 +19,8 @@ public struct ControllerSummary: Encodable, Equatable, Sendable {
   public let ownedByAnotherClient: Bool
   /// The client that holds it; absent when none does or the interface names none.
   public let owner: USBExclusiveOwner?
+  /// Whether the system also lists the controller as a second pad that gives no input.
+  public let alsoListedBySystem: Bool
   /// Absent when the service reports no power state.
   public let power: ControllerConnectionState.Power?
 
@@ -34,6 +36,7 @@ public struct ControllerSummary: Encodable, Equatable, Sendable {
     hasSerialNumber = device.serialNumber.map { !$0.isEmpty } ?? false
     ownedByAnotherClient = device.hidInputOwnership == .ownedByAnotherClient
     owner = device.inputOwner
+    alsoListedBySystem = device.duplicateExposureRisk == .systemGameController
     power = device.connectionState?.power
   }
 }

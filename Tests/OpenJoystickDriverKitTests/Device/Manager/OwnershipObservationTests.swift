@@ -152,6 +152,41 @@ struct OwnershipObservationTests {
     await manager.stop()
   }
 
+  /// A pad OJD seizes while GameController also lists it reaches the summary as a duplicate.
+  @Test(arguments: [true, false])
+  func servedPadThatTheSystemAlsoListsIsADuplicate(_ systemListsGameController: Bool) async throws {
+    let manager = DeviceManager(
+      dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey
+    )
+    await manager.handleHIDEvent(
+      .connected(
+        connection: HIDDeviceConnection(
+          physicalDevice: PhysicalDevice(
+            vendorID: 0x1234,
+            productID: 0x5678,
+            productName: "Test",
+            transportProperty: "USB",
+            physicalLocationIdentifier: 77,
+            interfaces: [gamepadHIDInterface(host: .usb)],
+            systemListsGameController: systemListsGameController
+          ),
+          routingAddress: .ioKit(locationID: 77, interfaceNumber: nil)
+        ),
+        ownership: .exclusive
+      )
+    )
+    let description = try #require(await manager.connectedDeviceDescriptions().first)
+    #expect(description.physicalOwnership == .exclusiveHID)
+    let risk: DuplicateExposureRisk = systemListsGameController ? .systemGameController : .none
+    #expect(description.duplicateExposureRisk == risk)
+    #expect(
+      ControllerSummary(ApplicationServiceDeviceDescription(snapshot: description))
+        .alsoListedBySystem == systemListsGameController
+    )
+    await manager.stop()
+  }
+
   @Test(arguments: [HIDInputOwnership.ownedByAnotherClient, .acquisitionFailed])
   func unseizedConnectionIsRetriedAndRestartsWhenTheSeizeSucceeds(
     _ initial: HIDInputOwnership

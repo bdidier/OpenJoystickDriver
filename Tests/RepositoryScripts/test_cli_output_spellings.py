@@ -54,6 +54,7 @@ VALUES: dict[str, tuple[str, ...]] = {
         "None",
         "SystemHIDVisible",
         "UpstreamVirtualDevice",
+        "SystemGameController",
         "UnknownOwnership",
     ),
     f"{OWNERSHIP}/hidInput": (

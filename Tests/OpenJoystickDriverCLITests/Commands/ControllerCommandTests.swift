@@ -404,7 +404,7 @@ struct ControllerCommandTests {
       $0.split(separator: "\t", omittingEmptySubsequences: false).map(String.init)
     }
     #expect(
-      rows.map { Array($0.suffix(2)) } == [
+      rows.map { Array($0[9...10]) } == [
         ["73%", "charging"], ["0-9%", "discharging"], ["", "unknown"], ["", ""],
       ]
     )

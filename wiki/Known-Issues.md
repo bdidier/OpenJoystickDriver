@@ -22,9 +22,9 @@ When two controllers have the same VID:PID, rumble from games and from **System 
 
 If you unplug a USB controller or dongle while OJD runs, OJD may crash. It may also leave stale virtual controllers in **System Settings**. Restart OJD to clear them.
 
-## The Virtual Controller Override Applies To Every Controller Of a Model
+## A Controller With No Location Takes Only a Model Override
 
-The virtual controller override in the controller detail applies to every connected controller with the same VID:PID. This is by design.
+**Apply to** in the controller detail offers **This controller** only when macOS reports the controller's location, because the controller's unit ID comes from its location. Without one, the override applies to every controller with the same VID:PID.
 
 ## The USB Extension Serves Only Seven Xbox Controllers
 
@@ -36,11 +36,11 @@ Steam or another app can open the USB interface of a controller exclusively. OJD
 
 ## Some Apps Do Not Read the Virtual Controller
 
-CrossOver and older games that use SDL2 or IOHIDManager may not read the virtual Xbox controller. SDL names the `SDLCompatible` profile "Xbox Adaptive Controller". macOS reports its transport as `Virtual`, so SDL reads its reports as USB Xbox One packets, and the profile sends and takes those packets. Steam reads input and rumble of that profile on hardware in a test on `045E:02FD`; `045E:0B0C` is not yet tested. For more information, see [Game and app compatibility](Playing-Games.md).
+CrossOver and older games that use SDL2 or IOHIDManager may not read the virtual Xbox controller. SDL names the `SDLCompatible` profile "Xbox Adaptive Controller". macOS reports its transport as `Virtual`, so SDL reads its reports as USB Xbox One packets, and the profile sends and takes those packets. Steam reads input and rumble of that profile in a test with a GameSir G7 SE. For more information, see [Game and app compatibility](Playing-Games.md).
 
 ## macOS Still Lists Its Own Pad For a DualShock 3
 
-While OJD serves a DualShock 3 over USB, it holds the pad exclusively, so other apps cannot open it and macOS delivers the pad's input only to OJD. macOS still binds `AppleGCHIDUserEventDriver` to the pad and GameController still lists a second, synthetic "PLAYSTATION(R)3 Controller" (`05AC:0004`). Steam lists that pad as a "PLAYSTATION(R)3 Controller" over Bluetooth beside OJD's virtual controller. Choose OJD's virtual controller in the game and ignore the other one. When another app already holds the pad exclusively, the controller's detail and `ojd controller list` show "Owned by another app" and OJD reads no input until that app lets go. `ojd diagnose` reports `hid-input-drops`: a warning means the system dropped input reports before OJD read them.
+While OJD serves a DualShock 3 over USB, it holds the pad exclusively, so other apps cannot open it and macOS delivers the pad's input only to OJD. macOS still binds `AppleGCHIDUserEventDriver` to the pad and GameController still lists a second, synthetic "PLAYSTATION(R)3 Controller" (`05AC:0004`). Steam lists that pad as a "PLAYSTATION(R)3 Controller" over Bluetooth beside OJD's virtual controller, and it gives no input, because OJD holds the real pad. macOS refuses to hand a HID controller from its own driver to an app, so only a driver extension that Apple grants for the DualShock 3's USB ID could keep macOS off the pad. Choose OJD's virtual controller in the game and ignore the other one. The controller's detail shows **Also listed by the system**, and `ojd controller list` names the same state, for every controller that OJD serves while macOS also lists it. When another app already holds the pad exclusively, the controller's detail and `ojd controller list` show "Owned by another app" and OJD reads no input until that app lets go. `ojd diagnose` reports `hid-input-drops`: a warning means the system dropped input reports before OJD read them.
 
 ## The OJD Menu Closes While Steam Is Open
 

@@ -62,6 +62,7 @@ struct ControllerListCommand: AsyncParsableCommand {
               $0.owner.map { $0.processID.map { "\($0)" } ?? "" } ?? "", $0.owner?.name ?? "",
               $0.power?.battery.percentageText ?? "",
               $0.power.map { CommandLineName.kebab($0.charging.rawValue) } ?? "",
+              $0.alsoListedBySystem ? "also-listed-by-system" : "",
             ]
           }
         )
@@ -100,9 +101,12 @@ struct ControllerListCommand: AsyncParsableCommand {
             ? "  "
               + USBExclusiveOwner.heldMessage(for: controller.owner, localize: CLILocalized.text)
             : ""
+          let listed =
+            controller.alsoListedBySystem
+            ? "  " + CLILocalized.text("status.controllerAlsoListedBySystem") : ""
           CLIOutput.stdout(
             "\(id)  \(unit)\(identity)  \(controller.connection)  \(battery)\(controller.name)"
-              + suspended + held
+              + suspended + held + listed
           )
         }
       }

@@ -3965,5 +3965,9 @@
 "status.controllerOwner.nameOnly" = "Used by %@. This controller is read directly. OpenJoystickDriver serves it once it is released.";
 /* Says that another app uses the USB interface of a controller exclusively and that OpenJoystickDriver serves the controller when the app releases it, when the interface names no holder, in the controller detail and the controller list. */
 "status.controllerOwner.unnamed" = "Used by another app. This controller is read directly. OpenJoystickDriver serves it once it is released.";
+/* Says that the system also lists a controller that OpenJoystickDriver serves as a second controller with no input, and tells the user to choose the virtual controller of OpenJoystickDriver in a game, in the controller detail and the controller list. */
+"status.controllerAlsoListedBySystem" = "The system also lists this controller as a second controller that gives no input. In a game, choose the virtual controller that OpenJoystickDriver publishes.";
 /* Label in the controller detail for who holds the USB interface of the controller exclusively. */
 "ui.controllers.exclusiveOwner" = "Exclusive access";
+/* Label in the controller detail for the fact that the system also lists a controller that OpenJoystickDriver serves as a second controller with no input. Also the duplicate exposure risk value for that case. */
+"ui.controllers.alsoListedBySystem" = "Also listed by the system";

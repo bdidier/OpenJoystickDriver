@@ -138,6 +138,7 @@ class EndpointReferenceClientTests(unittest.TestCase):
                     connection="usb",
                     hasSerialNumber=False,
                     ownedByAnotherClient=False,
+                    alsoListedBySystem=False,
                     protocol="XboxXUSB:Wired",
                     session="Active",
                 ),
