@@ -86,6 +86,9 @@ public struct DriverSessionPlan: Equatable, Sendable {
   /// controller OJD serves, and the pipeline writes it with the startup writes, or, when output
   /// waits for an input connection, each time the logical controller connects.
   public let assignsStartupPlayerIndicator: Bool
+  /// True when an HID controller ignores the player indicator written with the startup writes,
+  /// so the assigned slot is written after its first input report instead.
+  public let hidPlayerIndicatorFollowsFirstInput: Bool
   /// USB command interface for `.usb` writes of a controller bound over HID; nil when none.
   public let usbCommandChannel: USBCommandChannel?
 
@@ -106,6 +109,7 @@ public struct DriverSessionPlan: Equatable, Sendable {
     hidStartupRecoveryRounds: Int = 0,
     minimumHIDOutputIntervalNanoseconds: UInt64 = 0,
     assignsStartupPlayerIndicator: Bool = false,
+    hidPlayerIndicatorFollowsFirstInput: Bool = false,
     usbCommandChannel: USBCommandChannel? = nil
   ) {
     self.inputReportLivenessTimeoutNanoseconds = inputReportLivenessTimeoutNanoseconds
@@ -124,6 +128,7 @@ public struct DriverSessionPlan: Equatable, Sendable {
     self.hidStartupRecoveryRounds = hidStartupRecoveryRounds
     self.minimumHIDOutputIntervalNanoseconds = minimumHIDOutputIntervalNanoseconds
     self.assignsStartupPlayerIndicator = assignsStartupPlayerIndicator
+    self.hidPlayerIndicatorFollowsFirstInput = hidPlayerIndicatorFollowsFirstInput
     self.usbCommandChannel = usbCommandChannel
   }
 

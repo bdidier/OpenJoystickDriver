@@ -333,20 +333,57 @@ private final class StartupRecordingOutputDispatcher: OutputDispatcher,
 
 struct HIDStartupPlayerIndicatorTests {
   /// A Sixaxis lights no player LED on its own, and macOS sets none on a controller OJD serves.
+  /// A USB Sixaxis ignores the LED report written right after its startup feature reads, so the
+  /// assigned slot follows its first input report. Three pads of one model light three slots.
   @Test
-  func sixaxisLightsTheAssignedPlayerSlotAtHIDStartup() async throws {
+  func sixaxisServedByOJDLightsItsPlayerSlotAfterItsFirstInputReport() async throws {
     #expect(SixaxisDriver().sessionPlan.assignsStartupPlayerIndicator)
-    let pipeline = DevicePipeline(
-      identifier: LogicalControllerID(vendorID: 0x054C, productID: 0x0268),
-      transport: .hid(address: .ioKit(locationID: 1, interfaceNumber: nil)),
-      driver: SixaxisDriver(),
+    let backend = ScriptedHIDAccessBackend()
+    await backend.enableOutputReports()
+    await backend.enableFeatureReports()
+    let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
-      startupPlayerIndicator: .player2
+      installationKey: testPortKeyInstallationKey,
+      hidManager: HIDManager(backend: backend)
     )
-    await pipeline.start()
-    let report = try #require(await pipeline.hidStartupWrites().hidOutputs.last)
-    await pipeline.stop()
-    #expect(report.reportID == 0x01)
-    #expect(report.bytes[10] == 0x04)
+    await manager.markStartedForTest()
+    let connections = [UInt32(91), 92, 93].map { locationID in
+      HIDDeviceConnection(
+        physicalDevice: PhysicalDevice(
+          vendorID: 0x054C,
+          productID: 0x0268,
+          productName: "Test pad",
+          transportProperty: "USB",
+          physicalLocationIdentifier: locationID,
+          interfaces: [gamepadHIDInterface(host: .usb)]
+        ),
+        routingAddress: .ioKit(locationID: locationID, interfaceNumber: nil)
+      )
+    }
+    await backend.setConnectionSnapshots(
+      connections.map { HIDDeviceConnectionSnapshot(connection: $0, ownership: .unknown) }
+    )
+    var input = [UInt8](repeating: 0, count: 49)
+    input[0] = 0x01
+    input.replaceSubrange(6...9, with: [0x80, 0x80, 0x80, 0x80])
+    var leds: [UInt8?] = []
+    for connection in connections {
+      let before = await backend.recordedOutputReports().count
+      await manager.handleHIDEvent(.connected(connection: connection, ownership: .unknown))
+      #expect(await backend.recordedOutputReports().count == before)
+      for _ in 0..<2 {
+        await manager.routeHIDInputReport(
+          address: connection.routingAddress,
+          connectionID: connection.connectionID,
+          data: Data(input)
+        )
+      }
+      let reports = await backend.recordedOutputReports().dropFirst(before)
+      #expect(reports.count == 1)
+      #expect(reports.first?.reportID == 0x01)
+      leds.append(reports.first?.bytes[10])
+    }
+    await manager.stop()
+    #expect(leds == [0x02, 0x04, 0x08])
   }
 }

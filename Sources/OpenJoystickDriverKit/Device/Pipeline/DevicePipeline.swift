@@ -164,7 +164,8 @@ actor DevicePipeline {
       if oldValue != startupOutputStatus { NotificationCenter.postServiceStatusChanged(from: self) }
     }
   }
-  /// Whether the native startup player indicator still waits for the first input report.
+  /// Whether the startup player indicator still waits for the first input report: on a
+  /// controller macOS serves, and on one whose plan has `hidPlayerIndicatorFollowsFirstInput`.
   var startupPlayerIndicatorPending: Bool
   /// The player slot the manager assigned, written with the startup writes; nil sets none.
   let startupPlayerIndicator: PhysicalPlayerIndicator?
@@ -197,7 +198,6 @@ actor DevicePipeline {
     self.macOSOwnedOutput = macOSOwnedOutput
     self.observesOnly = macOSOwnedOutput != nil
     self.startupPlayerIndicator = startupPlayerIndicator
-    self.startupPlayerIndicatorPending = macOSOwnedOutput?.setsStartupPlayerIndicator == true
     self.observedInputDemand =
       macOSOwnedOutput == nil ? nil : dispatcher as? any ObservedInputDemand
     self.usbTransportProvider = usbTransportProvider
@@ -208,7 +208,11 @@ actor DevicePipeline {
     self.uptimeNanoseconds = uptimeNanoseconds
     self.externalOutputAllowed = externalOutputAllowed
     self.sessionState = sessionState
-    self.plan = self.driver.sessionPlan.tuned(binding?.record?.tuning ?? .none)
+    let plan = self.driver.sessionPlan.tuned(binding?.record?.tuning ?? .none)
+    self.plan = plan
+    self.startupPlayerIndicatorPending =
+      macOSOwnedOutput?.setsStartupPlayerIndicator == true
+      || (startupPlayerIndicator != nil && plan.hidPlayerIndicatorFollowsFirstInput)
     self.inputConnectionActive = !plan.requiresInputConnectionBeforeOutput
     self.packetLog = PacketLogBuffer(maxEntries: maxPacketLogEntries)
   }

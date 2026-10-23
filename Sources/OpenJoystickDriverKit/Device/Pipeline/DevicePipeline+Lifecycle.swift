@@ -101,8 +101,8 @@ extension DevicePipeline {
     return connectionWrites
   }
 
-  /// Whether the native startup player indicator is due, true once. The caller asks after an
-  /// input report, because a USB Sixaxis ignores the LED report until it streams input.
+  /// Whether the startup player indicator is due, true once. The caller asks after an input
+  /// report, because a USB Sixaxis ignores the LED report until it streams input.
   func takeStartupPlayerIndicatorDue() -> Bool {
     guard startupPlayerIndicatorPending else { return false }
     startupPlayerIndicatorPending = false
@@ -120,7 +120,9 @@ extension DevicePipeline {
   /// startup writes: the ones that depend on state only the driver holds.
   func hidStartupWrites() -> [PhysicalOutputWrite] {
     guard isActive else { return [] }
-    let slot = plan.requiresInputConnectionBeforeOutput ? [] : assignedPlayerIndicatorWrites()
+    let slot =
+      plan.requiresInputConnectionBeforeOutput || plan.hidPlayerIndicatorFollowsFirstInput
+      ? [] : assignedPlayerIndicatorWrites()
     return resolvedStartupWrites(phase: .startup) + driver.startupWrites() + slot
   }
 

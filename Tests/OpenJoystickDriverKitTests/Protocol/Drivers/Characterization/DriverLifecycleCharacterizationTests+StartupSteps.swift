@@ -84,6 +84,7 @@ extension DriverLifecycleCharacterizationTests {
       transport: "Bluetooth",
       locationID: 202
     )
+    await deliver([Self.sixaxisNeutralInput], to: recording, locationID: 202)
     let steps = await recordedSteps(recording)
     await recording.manager.stop()
     return steps
@@ -161,13 +162,24 @@ extension DriverLifecycleCharacterizationTests {
     )
   }
 
-  /// The record limits the Bluetooth enable report to Bluetooth, so USB startup writes only the
-  /// assigned player slot.
+  /// A neutral Sixaxis input report; the player slot follows the first one.
+  static let sixaxisNeutralInput: Data = {
+    var input = [UInt8](repeating: 0, count: 49)
+    input[0] = 0x01
+    input.replaceSubrange(6...9, with: [0x80, 0x80, 0x80, 0x80])
+    return Data(input)
+  }()
+
+  /// The record limits the Bluetooth enable report to Bluetooth, so USB startup writes nothing,
+  /// and the assigned player slot follows the first input report.
   @Test
   func sixaxisUSBStartupWritesOnlyThePlayerSlot() async {
     let recording = await startHIDController(Self.sixaxisUSB, transport: "USB", locationID: 206)
+    let startup = await recordedSteps(recording)
+    await deliver([Self.sixaxisNeutralInput], to: recording, locationID: 206)
     let steps = await recordedSteps(recording)
     await recording.manager.stop()
+    #expect(startup == ["outputs=0", "features=0"])
     #expect(
       steps == [
         "outputs=1", "  id=0x01 n=49",
@@ -186,6 +198,7 @@ extension DriverLifecycleCharacterizationTests {
       locationID: 207,
       acceptsOutputReports: acceptsOutputReports
     )
+    await deliver([Self.sixaxisNeutralInput], to: recording, locationID: 207)
     let identifier = try #require(await recording.manager.pipelines.keys.first)
     let pipeline = try #require(await recording.manager.pipelines[identifier])
     let status = await pipeline.startupCommandStatus()

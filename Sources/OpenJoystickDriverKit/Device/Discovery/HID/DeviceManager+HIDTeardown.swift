@@ -197,11 +197,14 @@ extension DeviceManager {
       pipeline: pipeline,
       startupConnection: connection
     )
-    guard pipeline.macOSOwnedOutput?.setsStartupPlayerIndicator == true,
-      await pipeline.takeStartupPlayerIndicatorDue(), pipelines[key] === pipeline,
-      let indicator = claimStartupPlayerSlot(for: key)
+    // A controller OJD serves holds the slot it was admitted with; one macOS serves claims it here.
+    guard await pipeline.takeStartupPlayerIndicatorDue(), pipelines[key] === pipeline,
+      let indicator = pipeline.startupPlayerIndicator ?? claimStartupPlayerSlot(for: key)
     else { return }
-    _ = await sendControllerOutput(.setPlayerIndicator(indicator), toConnected: key)
+    let result = await sendControllerOutput(.setPlayerIndicator(indicator), toConnected: key)
+    // On a controller OJD serves the slot is startup output, so the controller details show it.
+    guard !pipeline.observesOnly else { return }
+    await pipeline.recordStartupOutputStatus(result.outcome == .delivered ? "succeeded" : "failed")
   }
 
   /// The lowest player slot no other native controller holds, kept for `identifier` until it
