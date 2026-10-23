@@ -6,22 +6,7 @@ import Testing
 
 struct SupportReportBindingTests {
   private static let catalog = DeviceCatalog()
-  private static let timings = ControllerFrameTimings(
-    controller: "ctrl-1",
-    name: "Test Controller",
-    frames: [
-      FrameTiming(
-        sequence: 4,
-        stages: [
-          FrameStageTime(stage: .read, nanoseconds: 100),
-          FrameStageTime(stage: .parse, nanoseconds: 150),
-          FrameStageTime(stage: .dispatch, nanoseconds: 200),
-          FrameStageTime(stage: .deliveryVirtualDevice, nanoseconds: 260),
-          FrameStageTime(stage: .deliveryEndpoint, nanoseconds: 900),
-        ]
-      )
-    ]
-  )
+  private static let timings = ControllerFrameTimings.fixture
 
   @Test
   func boundControllerReportsItsRuleAndCatalogRecord() throws {

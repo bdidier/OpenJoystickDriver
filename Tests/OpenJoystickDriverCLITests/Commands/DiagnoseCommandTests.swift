@@ -30,24 +30,7 @@ struct DiagnoseCommandTests {
     )
     let timingsResult = try JSONEncoder().encode(
       try JSONEncoder().encode(
-        ApplicationServiceFrameTimingsPayload(controllers: [
-          ControllerFrameTimings(
-            controller: "ctrl-1",
-            name: "Pad",
-            frames: [
-              FrameTiming(
-                sequence: 4,
-                stages: [
-                  FrameStageTime(stage: .read, nanoseconds: 100),
-                  FrameStageTime(stage: .parse, nanoseconds: 150),
-                  FrameStageTime(stage: .dispatch, nanoseconds: 200),
-                  FrameStageTime(stage: .deliveryVirtualDevice, nanoseconds: 260),
-                  FrameStageTime(stage: .deliveryEndpoint, nanoseconds: 900),
-                ]
-              )
-            ]
-          )
-        ])
+        ApplicationServiceFrameTimingsPayload(controllers: [ControllerFrameTimings.fixture])
       )
     )
     let server = LocalServiceRPCServer(
@@ -205,6 +188,76 @@ struct DiagnoseCommandTests {
     #expect(rows.contains("timing\tctrl-1\t4\tread\t100"), "\(rows)")
     #expect(rows.contains("timing\tctrl-1\t4\tdispatch\t200"), "\(rows)")
     #expect(rows.contains("timing\tctrl-1\t4\tdelivery-endpoint\t900"), "\(rows)")
+  }
+
+  @Test
+  func plainListsTheWindowTheGapsAndTheStallsInAStableColumnOrder() async throws {
+    let socketPath = temporarySocketPath()
+    let server = try serve(socketPath: socketPath)
+    defer { server.stop() }
+
+    let plain = await run(["--plain"], socketPath: socketPath)
+
+    let rows = plain.standardOutput.split(separator: "\n").map(String.init)
+      .filter { $0.hasPrefix("timing-summary\t") }
+    #expect(
+      rows == [
+        "timing-summary\tctrl-1\twindow\t120\t119000000",
+        "timing-summary\tctrl-1\tread-to-parse\t120\t50000\t90000\t120000",
+        "timing-summary\tctrl-1\tread-to-read\t119\t1000000\t2500000\t12000000",
+        "timing-summary\tctrl-1\tstalls\t3000000\t2",
+      ],
+      "\(rows)"
+    )
+  }
+
+  @Test
+  func humanOutputIsOneBlockPerControllerWithTheStallRule() async throws {
+    let socketPath = temporarySocketPath()
+    let server = try serve(socketPath: socketPath)
+    defer { server.stop() }
+
+    let result = await run([], socketPath: socketPath)
+
+    let lines = result.standardOutput.split(separator: "\n").map(String.init)
+    let start = try #require(lines.firstIndex { $0.contains("ctrl-1") && $0.contains("119.000") })
+    let block = Array(lines[start...].prefix(4))
+    #expect(block.count == 4, "\(lines)")
+    #expect(block[0].contains("Pad") && block[0].contains("120"), "\(block)")
+    #expect(block[1].contains("read-to-parse") && block[1].contains("0.090"), "\(block)")
+    #expect(
+      block[2].contains("read-to-read") && block[2].contains("2.500")
+        && block[2].contains("12.000"),
+      "\(block)"
+    )
+    #expect(
+      block[3].contains("3.000") && block[3].contains("3") && block[3].hasSuffix("2"),
+      "\(block)"
+    )
+  }
+
+  @Test
+  func jsonCarriesTheSummaryOfEachController() async throws {
+    let socketPath = temporarySocketPath()
+    let server = try serve(socketPath: socketPath)
+    defer { server.stop() }
+
+    let result = await run(["--json"], socketPath: socketPath)
+
+    #expect(result.code == 0, "\(result.standardError)")
+    let timings = try #require(try result.json()["timings"] as? [[String: Any]])
+    let summary = try #require(timings.first?["summary"] as? [String: Any])
+    #expect(summary["frames"] as? Int == 120)
+    #expect(summary["spanNanoseconds"] as? Int == 119_000_000)
+    let gaps = try #require(summary["gaps"] as? [[String: Any]])
+    #expect(gaps.compactMap { $0["gap"] as? String } == ["ReadToParse", "ReadToRead"])
+    #expect(gaps.last?["p50Nanoseconds"] as? Int == 1_000_000)
+    #expect(gaps.last?["p99Nanoseconds"] as? Int == 2_500_000)
+    #expect(gaps.last?["maxNanoseconds"] as? Int == 12_000_000)
+    #expect(gaps.last?["samples"] as? Int == 119)
+    let stalls = try #require(summary["stalls"] as? [String: Any])
+    #expect(stalls["thresholdNanoseconds"] as? Int == 3_000_000)
+    #expect(stalls["count"] as? Int == 2)
   }
 
   @Test

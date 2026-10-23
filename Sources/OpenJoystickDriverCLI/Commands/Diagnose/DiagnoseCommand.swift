@@ -248,6 +248,7 @@ struct DiagnoseCommand: AsyncParsableCommand {
       CLIOutput.stdout("\(status)  \(id)  \(check.detail)")
     }
     for controller in report.timings {
+      for line in DiagnoseReport.summaryLines(of: controller) { CLIOutput.stdout(line) }
       for frame in controller.frames {
         let stages = frame.stages.map {
           "\(CommandLineName.kebab($0.stage.rawValue))=\($0.nanoseconds)"

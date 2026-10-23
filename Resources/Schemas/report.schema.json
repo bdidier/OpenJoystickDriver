@@ -102,7 +102,7 @@
           "$ref": "#/$defs/systemGamepadAudit"
         },
         "frameTimings": {
-          "description": "The newest frames of each connected controller, oldest first, as `ojd diagnose --json` lists them in `timings`; empty while the service is stopped or has no frames. Nanoseconds are on the service's monotonic uptime clock. Each controller keeps its last 8 frames.",
+          "description": "The newest frames of each connected controller, oldest first, as `ojd diagnose --json` lists them in `timings`; empty while the service is stopped or has no frames. Nanoseconds are on the service's monotonic uptime clock. frames lists the newest 8 frames of each controller; summary covers the window of its newest 15000 frames.",
           "type": "array",
           "items": {
             "$ref": "#/$defs/controllerFrameTimings"
@@ -116,9 +116,84 @@
         }
       }
     },
+    "frameTimingSummary": {
+      "description": "What the frame window of one controller says about stutter. A gap lists median, 99th percentile (nearest rank) and maximum over the frames that reached both of its stages, and is absent when no frame did. ReadToRead is the time between the Read stamps of consecutive frames. A stall is a read interval longer than 3 times the median ReadToRead; the threshold follows the report rate of the controller. stalls is absent when the window holds fewer than two frames.",
+      "type": "object",
+      "required": ["frames", "spanNanoseconds", "gaps"],
+      "additionalProperties": false,
+      "properties": {
+        "frames": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "spanNanoseconds": {
+          "description": "From the first to the last Read stamp of the window.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "gaps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "gap",
+              "samples",
+              "p50Nanoseconds",
+              "p99Nanoseconds",
+              "maxNanoseconds"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "gap": {
+                "enum": [
+                  "ReadToParse",
+                  "ParseToDispatch",
+                  "DispatchToDeliveryVirtualDevice",
+                  "DispatchToDeliveryEndpoint",
+                  "ReadToRead"
+                ]
+              },
+              "samples": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "p50Nanoseconds": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "p99Nanoseconds": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "maxNanoseconds": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        },
+        "stalls": {
+          "type": "object",
+          "required": ["thresholdNanoseconds", "count"],
+          "additionalProperties": false,
+          "properties": {
+            "thresholdNanoseconds": {
+              "description": "3 times the median ReadToRead.",
+              "type": "integer",
+              "minimum": 0
+            },
+            "count": {
+              "description": "The read intervals longer than the threshold.",
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    },
     "controllerFrameTimings": {
       "type": "object",
-      "required": ["controller", "name", "frames"],
+      "required": ["controller", "name", "frames", "summary"],
       "additionalProperties": false,
       "properties": {
         "controller": {
@@ -126,6 +201,9 @@
         },
         "name": {
           "type": "string"
+        },
+        "summary": {
+          "$ref": "#/$defs/frameTimingSummary"
         },
         "frames": {
           "type": "array",

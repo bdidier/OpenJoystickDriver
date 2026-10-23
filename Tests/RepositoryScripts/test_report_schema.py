@@ -73,6 +73,28 @@ class ReportSchemaTests(unittest.TestCase):
         with self.assertRaises(validate_schemas.ValidationError):
             self.validator.validate(report)
 
+    def test_accepts_the_summary_of_a_frame_window(self) -> None:
+        report = load_fixture()
+        summary = report["data"]["frameTimings"][0]["summary"]
+        self.assertEqual(summary["frames"], 120)
+        self.assertEqual(summary["stalls"]["count"], 2)
+
+        self.validator.validate(report)
+
+    def test_rejects_a_summary_with_an_unknown_gap_or_without_a_window_size(
+        self,
+    ) -> None:
+        unknown_gap = copy.deepcopy(load_fixture())
+        unknown_gap["data"]["frameTimings"][0]["summary"]["gaps"][0]["gap"] = "wire"
+        no_frames = copy.deepcopy(load_fixture())
+        del no_frames["data"]["frameTimings"][0]["summary"]["frames"]
+        no_summary = copy.deepcopy(load_fixture())
+        del no_summary["data"]["frameTimings"][0]["summary"]
+
+        for report in (unknown_gap, no_frames, no_summary):
+            with self.assertRaises(validate_schemas.ValidationError):
+                self.validator.validate(report)
+
     def test_rejects_a_report_without_frame_timings(self) -> None:
         report = copy.deepcopy(load_fixture())
         del report["data"]["frameTimings"]

@@ -2545,6 +2545,14 @@
 "cli.diagnose.group.recordsSkipped" = "已跳过 %@；请用“ojd record list”检查";
 /* One line of the frame timings of 'ojd diagnose'. %1$lld is the frame number, %2$@ is the controller name, %3$@ is the controller ID and %4$@ is the timestamp of the frame from the monotonic clock in nanoseconds. */
 "cli.diagnose.group.timingsFrame" = "第 %1$lld 帧，%2$@（%3$@），单调时钟（纳秒）：%4$@";
+/* One gap line in the timing summary of 'ojd diagnose'. %1$@ is the gap name such as read-to-parse, which stays as written, %2$@ is the median, %3$@ is the 99th percentile and %4$@ is the maximum of the gap in milliseconds, and %5$@ is the number of frames measured. The unit symbol ms may be localized. */
+"cli.diagnose.group.timingsSummaryGap" = "%1$@：中位数 %2$@ 毫秒，第 99 百分位数 %3$@ 毫秒，最大值 %4$@ 毫秒，样本数：%5$@";
+/* First line of the timing summary of one controller in 'ojd diagnose'. %1$@ is the controller name, %2$@ is the controller ID, %3$@ is the number of frames in the window and %4$@ is the time from the first to the last frame of the window in milliseconds. The unit symbol ms may be localized. */
+"cli.diagnose.group.timingsSummaryHeader" = "%1$@（%2$@）的计时摘要。窗口内的帧数：%3$@。时间跨度：%4$@ 毫秒。";
+/* Stall line of the timing summary of 'ojd diagnose' when the window holds fewer than two frames, so it has no read interval. A stall is a read interval that is much longer than the usual one. */
+"cli.diagnose.group.timingsSummaryNoStalls" = "卡顿：未测量，窗口内的帧少于两个";
+/* Stall line of the timing summary of 'ojd diagnose'. A stall is a read interval that is much longer than the usual one. %1$@ is the number of read intervals in the window longer than the threshold, %2$@ is the threshold in milliseconds and %3$@ is the multiple of the median read interval that sets the threshold. The unit symbol ms may be localized. */
+"cli.diagnose.group.timingsSummaryStalls" = "卡顿（读取间隔超过 %2$@ 毫秒，即读取间隔中位数的 %3$@ 倍）：%1$@";
 /* One-line summary of 'ojd record' in the command list and at the top of its help. */
 "cli.record.group.abstract" = "起草、列出、检查、安装或移除控制器记录。";
 /* Long description in the help of 'ojd record'. The folder path stays as written. A controller record describes how the driver talks to one controller model. */

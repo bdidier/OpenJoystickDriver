@@ -170,22 +170,7 @@ struct SupportDiagnosticsTests {
 
   @Test
   func reportCarriesTheFrameTimingsOfTheService() async throws {
-    let timings = ControllerFrameTimings(
-      controller: "ctrl-1",
-      name: "Pad",
-      frames: [
-        FrameTiming(
-          sequence: 4,
-          stages: [
-            FrameStageTime(stage: .read, nanoseconds: 100),
-            FrameStageTime(stage: .parse, nanoseconds: 150),
-            FrameStageTime(stage: .dispatch, nanoseconds: 200),
-            FrameStageTime(stage: .deliveryVirtualDevice, nanoseconds: 260),
-            FrameStageTime(stage: .deliveryEndpoint, nanoseconds: 900),
-          ]
-        )
-      ]
-    )
+    let timings = ControllerFrameTimings.fixture
 
     let report = try await savedReport(SupportDiagnosticsGatewayStub(frameTimings: [timings]))
 

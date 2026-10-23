@@ -147,15 +147,56 @@ struct FrameTimingsTests {
   @Test
   func theRingKeepsOnlyTheNewestFrames() {
     let recorder = FrameTimingRecorder()
-    for index in 0..<(FrameTimingRecorder.capacity + 3) {
+    for index in 0..<(FrameTimingRecorder.listedFrames + 3) {
       recorder.parsed(for: identifier, read: UInt64(index), parse: UInt64(index))
       _ = recorder.dispatched(for: identifier, at: UInt64(index))
     }
 
     let sequences = recorder.frames(for: identifier).map(\.sequence)
-    #expect(sequences.count == FrameTimingRecorder.capacity)
+    #expect(sequences.count == FrameTimingRecorder.listedFrames)
     #expect(sequences.first == 3)
-    #expect(sequences.last == UInt64(FrameTimingRecorder.capacity + 2))
+    #expect(sequences.last == UInt64(FrameTimingRecorder.listedFrames + 2))
+  }
+
+  @Test
+  func theWindowHoldsAtLeastTenSecondsAtOneKilohertz() {
+    #expect(FrameTimingRecorder.windowCapacity >= 10 * 1_000)
+  }
+
+  @Test
+  func theWindowKeepsTheNewestFramesAndNoMore() {
+    let recorder = FrameTimingRecorder()
+    let total = FrameTimingRecorder.windowCapacity + 25
+    for index in 0..<total {
+      recorder.parsed(for: identifier, read: UInt64(index), parse: UInt64(index))
+      _ = recorder.dispatched(for: identifier, at: UInt64(index))
+    }
+
+    let window = recorder.window(for: identifier)
+    #expect(window.count == FrameTimingRecorder.windowCapacity)
+    #expect(window.map(\.sequence) == Array(UInt64(25)..<UInt64(total)))
+    #expect(
+      recorder.frames(for: identifier) == Array(window.suffix(FrameTimingRecorder.listedFrames))
+    )
+  }
+
+  @Test
+  func aDeliveryForAFrameTheWindowDroppedStampsNoOtherFrame() {
+    let recorder = FrameTimingRecorder()
+    let total = FrameTimingRecorder.windowCapacity + 1
+    var sequences: [UInt64] = []
+    for index in 0..<total {
+      recorder.parsed(for: identifier, read: UInt64(index), parse: UInt64(index))
+      sequences.append(recorder.dispatched(for: identifier, at: UInt64(index)) ?? 99)
+    }
+
+    recorder.virtualDeviceDelivered(sequence: sequences[0], for: identifier, at: 7)
+    recorder.virtualDeviceDelivered(sequence: sequences[1], for: identifier, at: 8)
+
+    let window = recorder.window(for: identifier)
+    let delivered = window.filter { $0.stages.contains { $0.stage == .deliveryVirtualDevice } }
+    #expect(delivered.map(\.sequence) == [1])
+    #expect(delivered.first?.stages.last?.nanoseconds == 8)
   }
 
   @Test

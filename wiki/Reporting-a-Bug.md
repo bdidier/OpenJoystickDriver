@@ -26,7 +26,7 @@ You can also choose **Help** > **Copy Support Report**. The app copies the repor
 
 The report leaves out serial numbers, file paths, packet payloads, and HID location IDs. It includes controller product names. Read the report before you share it.
 
-The support report, from `ojd diagnose --output` or the app, also lists `frameTimings`, the time each of a controller's newest 8 frames reached each pipeline stage. Attach it to a stutter or latency report.
+The support report, from `ojd diagnose --output` or the app, also lists `frameTimings`: the time each of a controller's newest 8 frames reached each pipeline stage, and a summary of its newest 15000 frames with the stall count. Run `ojd diagnose --output` right after the stutter, then attach the report to a stutter or latency report.
 
 ## Get the Logs
 

@@ -2545,6 +2545,14 @@
 "cli.diagnose.group.recordsSkipped" = "%@ 건너뜀. ‘ojd record list’로 확인하세요";
 /* One line of the frame timings of 'ojd diagnose'. %1$lld is the frame number, %2$@ is the controller name, %3$@ is the controller ID and %4$@ is the timestamp of the frame from the monotonic clock in nanoseconds. */
 "cli.diagnose.group.timingsFrame" = "프레임 %1$lld, %2$@(%3$@), 단조 시계(나노초): %4$@";
+/* One gap line in the timing summary of 'ojd diagnose'. %1$@ is the gap name such as read-to-parse, which stays as written, %2$@ is the median, %3$@ is the 99th percentile and %4$@ is the maximum of the gap in milliseconds, and %5$@ is the number of frames measured. The unit symbol ms may be localized. */
+"cli.diagnose.group.timingsSummaryGap" = "%1$@: 중앙값 %2$@ 밀리초, 99번째 백분위수 %3$@ 밀리초, 최댓값 %4$@ 밀리초, 샘플 수: %5$@";
+/* First line of the timing summary of one controller in 'ojd diagnose'. %1$@ is the controller name, %2$@ is the controller ID, %3$@ is the number of frames in the window and %4$@ is the time from the first to the last frame of the window in milliseconds. The unit symbol ms may be localized. */
+"cli.diagnose.group.timingsSummaryHeader" = "%1$@(%2$@)의 타이밍 요약. 윈도우의 프레임 수: %3$@. 시간 범위: %4$@ 밀리초.";
+/* Stall line of the timing summary of 'ojd diagnose' when the window holds fewer than two frames, so it has no read interval. A stall is a read interval that is much longer than the usual one. */
+"cli.diagnose.group.timingsSummaryNoStalls" = "멈춤: 측정되지 않음, 윈도우에 프레임이 두 개 미만입니다";
+/* Stall line of the timing summary of 'ojd diagnose'. A stall is a read interval that is much longer than the usual one. %1$@ is the number of read intervals in the window longer than the threshold, %2$@ is the threshold in milliseconds and %3$@ is the multiple of the median read interval that sets the threshold. The unit symbol ms may be localized. */
+"cli.diagnose.group.timingsSummaryStalls" = "멈춤(%2$@ 밀리초보다 긴 읽기 간격, 읽기 간격 중앙값의 %3$@배): %1$@";
 /* One-line summary of 'ojd record' in the command list and at the top of its help. */
 "cli.record.group.abstract" = "컨트롤러 레코드의 초안을 만들거나 나열, 확인, 설치 또는 제거합니다.";
 /* Long description in the help of 'ojd record'. The folder path stays as written. A controller record describes how the driver talks to one controller model. */

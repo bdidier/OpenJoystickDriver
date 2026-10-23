@@ -39,17 +39,36 @@ public struct FrameTiming: Codable, Equatable, Sendable {
   }
 }
 
-/// The newest frames of one connected controller, oldest first.
+/// The newest frames of one connected controller, oldest first, and the summary of its window.
 public struct ControllerFrameTimings: Codable, Equatable, Sendable {
   /// The ID from `ojd controller list`.
   public let controller: String
   public let name: String
+  /// The newest ``FrameTimingRecorder/listedFrames`` frames of the window.
   public let frames: [FrameTiming]
+  /// The summary of the whole window, not only of ``frames``.
+  public let summary: FrameTimingSummary
 
-  public init(controller: String, name: String, frames: [FrameTiming]) {
+  public init(
+    controller: String,
+    name: String,
+    frames: [FrameTiming],
+    summary: FrameTimingSummary
+  ) {
     self.controller = controller
     self.name = name
     self.frames = frames
+    self.summary = summary
+  }
+
+  /// The timings of a controller whose frame window is `window`, oldest frame first.
+  init(controller: String, name: String, window: [FrameTiming]) {
+    self.init(
+      controller: controller,
+      name: name,
+      frames: Array(window.suffix(FrameTimingRecorder.listedFrames)),
+      summary: FrameTimingSummary(window: window)
+    )
   }
 }
 
@@ -62,11 +81,16 @@ public struct ApplicationServiceFrameTimingsPayload: Codable, Equatable, Sendabl
 
 /// Records when frames reach each pipeline stage, for `ojd diagnose`.
 ///
-/// It keeps the newest ``capacity`` frames per controller, so memory stays bounded. A frame
-/// enters the ring when it is dispatched; reports that never reach dispatch leave no entry.
+/// It keeps the newest ``windowCapacity`` frames per controller in a fixed ring, so memory stays
+/// bounded and a new frame replaces the oldest in constant time. A frame enters the ring when it
+/// is dispatched; reports that never reach dispatch leave no entry.
 public final class FrameTimingRecorder: Sendable {
-  /// The frames kept per controller.
-  public static let capacity = 8
+  /// The newest frames of the window that `ojd diagnose` lists with every stage stamp.
+  public static let listedFrames = 8
+
+  /// The frames kept per controller: 15 seconds at the highest report rate of 1000 Hz. A
+  /// 10-second stick sweep fits whole, with time left to run `ojd diagnose` after it.
+  public static let windowCapacity = 15_000
 
   private struct Pending {
     let read: UInt64
@@ -76,14 +100,46 @@ public final class FrameTimingRecorder: Sendable {
   private struct Track {
     var pending: Pending?
     var nextSequence: UInt64 = 0
-    var frames: [FrameTiming] = []
+    /// The frame of sequence `n` sits in slot `n % windowCapacity` until the frame
+    /// `windowCapacity` sequences later takes the slot.
+    var slots = [FrameTiming?](repeating: nil, count: FrameTimingRecorder.windowCapacity)
 
-    mutating func append(_ stage: FrameStage, at nanoseconds: UInt64, toFrameAt index: Int) {
-      let frame = frames[index]
-      frames[index] = FrameTiming(
-        sequence: frame.sequence,
+    var newestSequence: UInt64? { nextSequence > 0 ? nextSequence - 1 : nil }
+
+    private func slot(of sequence: UInt64) -> Int { Int(sequence % UInt64(slots.count)) }
+
+    /// Starts a frame from the pending report at the dispatch stage and returns its sequence, or
+    /// nil when no parsed report is pending.
+    mutating func dispatch(at nanoseconds: UInt64) -> UInt64? {
+      guard let pending else { return nil }
+      self.pending = nil
+      let sequence = nextSequence
+      nextSequence += 1
+      slots[slot(of: sequence)] = FrameTiming(
+        sequence: sequence,
+        stages: [
+          FrameStageTime(stage: .read, nanoseconds: pending.read),
+          FrameStageTime(stage: .parse, nanoseconds: pending.parse),
+          FrameStageTime(stage: .dispatch, nanoseconds: nanoseconds),
+        ]
+      )
+      return sequence
+    }
+
+    /// Adds `stage` to the frame `sequence`, unless the ring already replaced it.
+    mutating func append(_ stage: FrameStage, at nanoseconds: UInt64, toSequence sequence: UInt64) {
+      let index = slot(of: sequence)
+      guard let frame = slots[index], frame.sequence == sequence else { return }
+      slots[index] = FrameTiming(
+        sequence: sequence,
         stages: frame.stages + [FrameStageTime(stage: stage, nanoseconds: nanoseconds)]
       )
+    }
+
+    /// The newest `limit` frames, oldest first.
+    func newest(_ limit: Int) -> [FrameTiming] {
+      let first = nextSequence - min(nextSequence, UInt64(limit))
+      return (first..<nextSequence).compactMap { slots[slot(of: $0)] }
     }
   }
 
@@ -99,25 +155,7 @@ public final class FrameTimingRecorder: Sendable {
   /// Starts a frame from the pending report at the dispatch stage and returns its sequence, or nil
   /// when no parsed report is pending.
   func dispatched(for identifier: LogicalControllerID, at nanoseconds: UInt64) -> UInt64? {
-    tracks.withLock { tracks in
-      guard var track = tracks[identifier], let pending = track.pending else { return nil }
-      track.pending = nil
-      let sequence = track.nextSequence
-      track.nextSequence += 1
-      track.frames.append(
-        FrameTiming(
-          sequence: sequence,
-          stages: [
-            FrameStageTime(stage: .read, nanoseconds: pending.read),
-            FrameStageTime(stage: .parse, nanoseconds: pending.parse),
-            FrameStageTime(stage: .dispatch, nanoseconds: nanoseconds),
-          ]
-        )
-      )
-      if track.frames.count > Self.capacity { track.frames.removeFirst() }
-      tracks[identifier] = track
-      return sequence
-    }
+    tracks.withLock { $0[identifier]?.dispatch(at: nanoseconds) }
   }
 
   /// Adds the virtual device delivery to the frame `sequence`, unless the ring already dropped it.
@@ -127,26 +165,27 @@ public final class FrameTimingRecorder: Sendable {
     at nanoseconds: UInt64
   ) {
     tracks.withLock { tracks in
-      guard var track = tracks[identifier],
-        let index = track.frames.firstIndex(where: { $0.sequence == sequence })
-      else { return }
-      track.append(.deliveryVirtualDevice, at: nanoseconds, toFrameAt: index)
-      tracks[identifier] = track
+      tracks[identifier]?.append(.deliveryVirtualDevice, at: nanoseconds, toSequence: sequence)
+      return
     }
   }
 
   /// Adds the endpoint delivery to the newest frame of `identifier`.
   public func endpointDelivered(for identifier: LogicalControllerID, at nanoseconds: UInt64) {
     tracks.withLock { tracks in
-      guard var track = tracks[identifier], !track.frames.isEmpty else { return }
-      track.append(.deliveryEndpoint, at: nanoseconds, toFrameAt: track.frames.count - 1)
-      tracks[identifier] = track
+      guard let sequence = tracks[identifier]?.newestSequence else { return }
+      tracks[identifier]?.append(.deliveryEndpoint, at: nanoseconds, toSequence: sequence)
     }
   }
 
-  /// The frames of `identifier`, oldest first.
+  /// The newest ``listedFrames`` frames of `identifier`, oldest first.
   public func frames(for identifier: LogicalControllerID) -> [FrameTiming] {
-    tracks.withLock { $0[identifier]?.frames ?? [] }
+    tracks.withLock { $0[identifier]?.newest(Self.listedFrames) ?? [] }
+  }
+
+  /// Every frame the ring holds for `identifier`, oldest first.
+  public func window(for identifier: LogicalControllerID) -> [FrameTiming] {
+    tracks.withLock { $0[identifier]?.newest(Self.windowCapacity) ?? [] }
   }
 
   /// Forgets `identifier` once its pipeline stops.

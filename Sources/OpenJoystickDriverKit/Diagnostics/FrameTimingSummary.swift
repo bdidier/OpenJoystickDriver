@@ -1,0 +1,164 @@
+import Foundation
+
+/// A span between two points of a controller's frames. The raw values are the stable identifiers
+/// that `ojd diagnose` prints and `cli-output.schema.json` lists.
+public enum FrameGap: String, Codable, CaseIterable, Sendable {
+  /// From a frame's `Read` stage to its `Parse` stage.
+  case readToParse = "ReadToParse"
+  /// From a frame's `Parse` stage to its `Dispatch` stage.
+  case parseToDispatch = "ParseToDispatch"
+  /// From a frame's `Dispatch` stage to its `DeliveryVirtualDevice` stage.
+  case dispatchToDeliveryVirtualDevice = "DispatchToDeliveryVirtualDevice"
+  /// From a frame's `Dispatch` stage to its `DeliveryEndpoint` stage.
+  case dispatchToDeliveryEndpoint = "DispatchToDeliveryEndpoint"
+  /// From the `Read` stage of the frame before a frame to its own `Read` stage.
+  case readToRead = "ReadToRead"
+}
+
+/// The median, the 99th percentile and the maximum of one ``FrameGap`` over a window.
+public struct FrameGapSummary: Codable, Equatable, Sendable {
+  public let gap: FrameGap
+  /// The spans the gap was measured on; a frame that did not reach both stages adds none.
+  public let samples: Int
+  public let p50Nanoseconds: UInt64
+  public let p99Nanoseconds: UInt64
+  public let maxNanoseconds: UInt64
+
+  public init(
+    gap: FrameGap,
+    samples: Int,
+    p50Nanoseconds: UInt64,
+    p99Nanoseconds: UInt64,
+    maxNanoseconds: UInt64
+  ) {
+    self.gap = gap
+    self.samples = samples
+    self.p50Nanoseconds = p50Nanoseconds
+    self.p99Nanoseconds = p99Nanoseconds
+    self.maxNanoseconds = maxNanoseconds
+  }
+}
+
+/// The read intervals of a window that are longer than the stall threshold.
+public struct FrameStalls: Codable, Equatable, Sendable {
+  /// ``FrameTimingSummary/stallIntervalMultiplier`` times the median read interval.
+  public let thresholdNanoseconds: UInt64
+  /// The read intervals longer than ``thresholdNanoseconds``.
+  public let count: Int
+
+  public init(thresholdNanoseconds: UInt64, count: Int) {
+    self.thresholdNanoseconds = thresholdNanoseconds
+    self.count = count
+  }
+}
+
+/// What the frame window of one controller says about stutter.
+///
+/// A gap is measured on the frames that reached both of its stages, so a frame without a delivery
+/// stage adds no sample to that delivery gap. A pair of stamps whose later one is earlier than the
+/// first is not a sample. A percentile is the nearest-rank value: the sample at 1-based rank
+/// `ceil(percent * count / 100)` of the sorted samples.
+///
+/// A read interval is the time between the `Read` stamps of two consecutive frames. A report that
+/// a newer one replaced before dispatch is no frame, so the interval spans it.
+///
+/// A stall is a read interval longer than ``stallIntervalMultiplier`` times the median read
+/// interval of the window. The threshold follows the report rate of the controller, so the same
+/// rule fits a 125 Hz controller (8 ms) and a 1000 Hz one (1 ms), where one fixed limit would miss
+/// the first or flag the second. An interval equal to the threshold is not a stall.
+public struct FrameTimingSummary: Codable, Equatable, Sendable {
+  /// The multiple of the median read interval above which a read interval is a stall.
+  public static let stallIntervalMultiplier: UInt64 = 3
+
+  /// The frames in the window.
+  public let frames: Int
+  /// The time from the first to the last `Read` stamp of the window; 0 for fewer than two frames.
+  public let spanNanoseconds: UInt64
+  /// One summary per ``FrameGap`` that has a sample, in the order of `FrameGap.allCases`.
+  public let gaps: [FrameGapSummary]
+  /// Absent when the window holds fewer than two frames, so it has no read interval.
+  public let stalls: FrameStalls?
+
+  public init(
+    frames: Int,
+    spanNanoseconds: UInt64,
+    gaps: [FrameGapSummary],
+    stalls: FrameStalls?
+  ) {
+    self.frames = frames
+    self.spanNanoseconds = spanNanoseconds
+    self.gaps = gaps
+    self.stalls = stalls
+  }
+
+  /// The summary of `window`, oldest frame first.
+  public init(window: [FrameTiming]) {
+    let reads = window.compactMap { Self.time(of: .read, in: $0) }
+    let intervals = zip(reads, reads.dropFirst()).compactMap { Self.elapsed(from: $0, to: $1) }
+    let samples: [FrameGap: [UInt64]] = [
+      .readToParse: Self.elapsed(in: window, from: .read, to: .parse),
+      .parseToDispatch: Self.elapsed(in: window, from: .parse, to: .dispatch),
+      .dispatchToDeliveryVirtualDevice: Self.elapsed(
+        in: window,
+        from: .dispatch,
+        to: .deliveryVirtualDevice
+      ),
+      .dispatchToDeliveryEndpoint: Self.elapsed(in: window, from: .dispatch, to: .deliveryEndpoint),
+      .readToRead: intervals,
+    ]
+    let stalls = Self.percentile(50, of: intervals.sorted()).map { median in
+      let threshold = median * Self.stallIntervalMultiplier
+      return FrameStalls(
+        thresholdNanoseconds: threshold,
+        count: intervals.filter { $0 > threshold }.count
+      )
+    }
+    let span = reads.first.flatMap { first in
+      reads.last.flatMap { Self.elapsed(from: first, to: $0) }
+    }
+    self.init(
+      frames: window.count,
+      spanNanoseconds: span ?? 0,
+      gaps: FrameGap.allCases.compactMap { gap in
+        let sorted = (samples[gap] ?? []).sorted()
+        guard let median = Self.percentile(50, of: sorted),
+          let high = Self.percentile(99, of: sorted),
+          let maximum = sorted.last
+        else { return nil }
+        return FrameGapSummary(
+          gap: gap,
+          samples: sorted.count,
+          p50Nanoseconds: median,
+          p99Nanoseconds: high,
+          maxNanoseconds: maximum
+        )
+      },
+      stalls: stalls
+    )
+  }
+
+  private static func elapsed(from start: UInt64, to end: UInt64) -> UInt64? {
+    end >= start ? end - start : nil
+  }
+
+  private static func elapsed(
+    in window: [FrameTiming],
+    from first: FrameStage,
+    to second: FrameStage
+  ) -> [UInt64] {
+    window.compactMap { frame in
+      guard let start = time(of: first, in: frame), let end = time(of: second, in: frame)
+      else { return nil }
+      return elapsed(from: start, to: end)
+    }
+  }
+
+  private static func time(of stage: FrameStage, in frame: FrameTiming) -> UInt64? {
+    frame.stages.first { $0.stage == stage }?.nanoseconds
+  }
+
+  private static func percentile(_ percent: Int, of sorted: [UInt64]) -> UInt64? {
+    guard !sorted.isEmpty else { return nil }
+    return sorted[(percent * sorted.count + 99) / 100 - 1]
+  }
+}

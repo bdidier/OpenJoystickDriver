@@ -2545,6 +2545,14 @@
 "cli.diagnose.group.recordsSkipped" = "छोड़े गए: %@; उन्हें “ojd record list” से जाँचें";
 /* One line of the frame timings of 'ojd diagnose'. %1$lld is the frame number, %2$@ is the controller name, %3$@ is the controller ID and %4$@ is the timestamp of the frame from the monotonic clock in nanoseconds. */
 "cli.diagnose.group.timingsFrame" = "फ़्रेम %1$lld, कंट्रोलर %2$@ (%3$@), नैनोसेकंड में मोनोटोनिक घड़ी: %4$@";
+/* One gap line in the timing summary of 'ojd diagnose'. %1$@ is the gap name such as read-to-parse, which stays as written, %2$@ is the median, %3$@ is the 99th percentile and %4$@ is the maximum of the gap in milliseconds, and %5$@ is the number of frames measured. The unit symbol ms may be localized. */
+"cli.diagnose.group.timingsSummaryGap" = "%1$@: माध्यिका %2$@ ms, 99वाँ पर्सेंटाइल %3$@ ms, अधिकतम %4$@ ms, नमूने: %5$@";
+/* First line of the timing summary of one controller in 'ojd diagnose'. %1$@ is the controller name, %2$@ is the controller ID, %3$@ is the number of frames in the window and %4$@ is the time from the first to the last frame of the window in milliseconds. The unit symbol ms may be localized. */
+"cli.diagnose.group.timingsSummaryHeader" = "%1$@ (%2$@) का समय-सारांश। विंडो में फ़्रेम: %3$@। समय-अवधि: %4$@ ms।";
+/* Stall line of the timing summary of 'ojd diagnose' when the window holds fewer than two frames, so it has no read interval. A stall is a read interval that is much longer than the usual one. */
+"cli.diagnose.group.timingsSummaryNoStalls" = "ठहराव: मापा नहीं गया, विंडो में दो से कम फ़्रेम हैं";
+/* Stall line of the timing summary of 'ojd diagnose'. A stall is a read interval that is much longer than the usual one. %1$@ is the number of read intervals in the window longer than the threshold, %2$@ is the threshold in milliseconds and %3$@ is the multiple of the median read interval that sets the threshold. The unit symbol ms may be localized. */
+"cli.diagnose.group.timingsSummaryStalls" = "ठहराव (%2$@ ms से लंबे रीड अंतराल, यानी रीड अंतराल की माध्यिका का %3$@ गुना): %1$@";
 /* One-line summary of 'ojd record' in the command list and at the top of its help. */
 "cli.record.group.abstract" = "कंट्रोलर रिकॉर्ड का मसौदा बनाएँ, सूचीबद्ध करें, जाँचें, इंस्टॉल करें या हटाएँ।";
 /* Long description in the help of 'ojd record'. The folder path stays as written. A controller record describes how the driver talks to one controller model. */

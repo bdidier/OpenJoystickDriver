@@ -37,7 +37,7 @@ extension DeviceManager {
         ControllerFrameTimings(
           controller: $0.sessionToken.rawValue,
           name: $0.name,
-          frames: frameTimings.frames(for: $0.logicalControllerID)
+          window: frameTimings.window(for: $0.logicalControllerID)
         )
       }
     )

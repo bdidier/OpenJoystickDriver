@@ -111,7 +111,31 @@
             ]
           }
         ],
-        "name" : "Test Controller"
+        "name" : "Pad",
+        "summary" : {
+          "frames" : 120,
+          "gaps" : [
+            {
+              "gap" : "ReadToParse",
+              "maxNanoseconds" : 120000,
+              "p50Nanoseconds" : 50000,
+              "p99Nanoseconds" : 90000,
+              "samples" : 120
+            },
+            {
+              "gap" : "ReadToRead",
+              "maxNanoseconds" : 12000000,
+              "p50Nanoseconds" : 1000000,
+              "p99Nanoseconds" : 2500000,
+              "samples" : 119
+            }
+          ],
+          "spanNanoseconds" : 119000000,
+          "stalls" : {
+            "count" : 2,
+            "thresholdNanoseconds" : 3000000
+          }
+        }
       }
     ],
     "hidGamepads" : [
