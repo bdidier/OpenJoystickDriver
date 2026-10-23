@@ -103,6 +103,16 @@ The design of OJD is to pick the virtual profile by itself. Use this step only t
 
 OpenEmu worked with the `Generic` profile in the same test. Steam with that profile was erratic and slow to respond. The override applies to every controller of that model.
 
+### A Button Does Nothing in Steam
+
+Steam keeps its own mapping for each controller it has seen, and it does not read the mapping that OJD publishes. When Steam's mapping misses a button, Steam ignores that button even though OJD sends it. The maintainer saw this with the `Generic` profile: Steam's saved mapping had no Guide button, so the PS button of a DualShock 3 did nothing in Steam, while `ojd controller watch` showed `Guide` for each press.
+
+1. Run `ojd controller watch CONTROLLER --output` and press the button. If the line shows the button, OJD sends it.
+2. In Steam, open the controller's **Controller Layout** page and choose **Setup Device Inputs**.
+3. Press each button when Steam asks for it, including the Guide button.
+
+After that setup, Guide and Select worked in Steam, and Guide opened Big Picture mode. `ojd virtual export-mapping generic` prints the mapping that OJD publishes, so you can compare it with Steam's.
+
 ### Try a Different Controller Mode
 
 Some controllers have a Switch Pro mode. In that mode macOS reads the controller itself, and OJD does not publish a virtual controller. One tester saw RPCS3, the browser, and **System Settings** work in that mode. HD rumble in that mode drives only the linear haptics. Not verified for other controllers.
