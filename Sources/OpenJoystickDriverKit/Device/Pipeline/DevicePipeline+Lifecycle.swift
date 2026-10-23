@@ -234,6 +234,8 @@ extension DevicePipeline {
     )
   }
   func startupCommandStatus() -> String? { startupOutputStatus }
+
+  func recordStartupOutputStatus(_ status: String) { startupOutputStatus = status }
   /// Returns captured packets and renews the capture lease; reading is what enables capture.
   func getPacketLog() -> [PacketLogEntry] {
     packetLog.armCapture()

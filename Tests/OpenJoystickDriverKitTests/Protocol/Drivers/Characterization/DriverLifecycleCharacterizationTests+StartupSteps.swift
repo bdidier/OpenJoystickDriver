@@ -21,10 +21,11 @@ extension DriverLifecycleCharacterizationTests {
     _ subject: Subject,
     transport: String,
     locationID: UInt32,
-    interface: PhysicalInterfaceSignature? = nil
+    interface: PhysicalInterfaceSignature? = nil,
+    acceptsOutputReports: Bool = true
   ) async -> HIDStartupRecording {
     let backend = ScriptedHIDAccessBackend()
-    await backend.enableOutputReports()
+    if acceptsOutputReports { await backend.enableOutputReports() }
     await backend.enableFeatureReports()
     let connection = HIDDeviceConnection(
       physicalDevice: PhysicalDevice(
@@ -174,6 +175,22 @@ extension DriverLifecycleCharacterizationTests {
         "    0000000000000000000000000000000000", "features=0",
       ]
     )
+  }
+
+  /// The controller details show whether the HID startup output reached the controller.
+  @Test(arguments: [true, false])
+  func sixaxisUSBStartupRecordsItsOutputResult(acceptsOutputReports: Bool) async throws {
+    let recording = await startHIDController(
+      Self.sixaxisUSB,
+      transport: "USB",
+      locationID: 207,
+      acceptsOutputReports: acceptsOutputReports
+    )
+    let identifier = try #require(await recording.manager.pipelines.keys.first)
+    let pipeline = try #require(await recording.manager.pipelines[identifier])
+    let status = await pipeline.startupCommandStatus()
+    await recording.manager.stop()
+    #expect(status == (acceptsOutputReports ? "succeeded" : "failed"))
   }
 
   @Test

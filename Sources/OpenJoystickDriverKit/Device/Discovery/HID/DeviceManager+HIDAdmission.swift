@@ -276,10 +276,7 @@ extension DeviceManager {
       guard await isCurrentHIDStartupPipeline(pipeline, connection: connection) else { return }
     }
     if requiresSuccessfulStartupOutput {
-      guard startupOutputSucceeded else {
-        print("[DeviceManager] Required HID startup output failed for route=\(routingAddress)")
-        return
-      }
+      guard startupOutputSucceeded else { return }
       await pipeline.setExternalOutputAllowed(externalOutputAllowed)
       guard await isCurrentHIDStartupPipeline(pipeline, connection: connection) else { return }
     }

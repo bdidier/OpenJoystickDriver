@@ -161,6 +161,16 @@ extension DeviceManager {
       connection: connection
     )
     guard await isCurrentHIDStartupPipeline(pipeline, connection: connection) else { return false }
+    // The controller details show the result; a startup with no writes has none to show.
+    if !succeeded {
+      print(
+        "[DeviceManager] HID startup output failed for controller=\(pipeline.identifier) "
+          + "route=\(connection.routingAddress)"
+      )
+      await pipeline.recordStartupOutputStatus("failed")
+    } else if !writes.isEmpty {
+      await pipeline.recordStartupOutputStatus("succeeded")
+    }
     if plan.hasStartupRecovery {
       await runHIDStartupRecovery(pipeline: pipeline, connection: connection, plan: plan)
     }
