@@ -6,6 +6,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The pr
 
 ## [Unreleased]
 
+## [0.6.0-alpha.1] - 2026-10-23
+
 ### Added
 
 - A protocol description names what starts a controller's input (`inputStart`, with `PressGuide` for `SonySixaxis` over USB, because a USB DualShock 3 sends no input report until its PS button is pressed). Until such a controller sends its first input, its detail shows the input reason **Press the PS or home button**, `ojd controller show` gives `guide-not-pressed` (`GuideNotPressed` with `--json`), and `ojd controller list` tells you to press it, with `waits-for-guide-press` as the last `--plain` column and `waitsForGuidePress` with `--json`.
@@ -99,7 +101,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The pr
 
 ### Changed
 
-- Building from source uses Xcode's Swift 6.4.0 (`.swift-version`) instead of a swift.org toolchain from swiftly: the swift.org runtime libraries from 6.0.1 on are built for macOS 13, so linking for macOS 12 warned. A warning from the Swift compiler, the linker or the package manager fails `./Scripts/ojd check swift`, `./Scripts/ojd check tools`, `just check` and CI, and every target of the package and its tool packages treats Swift warnings as errors.
+- Building from source needs the Swift 6.4.0 of the selected Xcode, which `.swift-version` names, and stops when that Xcode ships another version. The swift.org toolchains from 6.0.1 on build their runtime for macOS 13, so linking for macOS 12 with them warns. A warning from the Swift compiler, the linker or the package manager fails `./Scripts/ojd check swift`, `./Scripts/ojd check tools`, `just check` and CI, and every target of the package and its tool packages treats Swift warnings as errors.
 - `ojd` human output and the app show a path under your home folder as `~/…`: `ojd log show`, the record, mod, profile and access commands, `ojd diagnose`, `ojd virtual launch` and error messages, and in the app the Library list and detail, the Access lists and the controller detail's record row. `--json`, `--plain`, written files and values a script reads keep absolute paths: `ojd log path`, `ojd record show` and `ojd record draft` file text, `ojd profile export` to stdout, `ojd virtual export-mapping` and the token of `ojd access grant`.
 - Automatic selection publishes `SDLCompatible` (`045E:0B0C`) when the controller's primary controls fit it and `Generic` (`1209:4A4F`) otherwise; `VirtualHIDProfileID.default` is gone and the `SDLCompatible` record states `worksWithDefaultSDLHints: true`. PCSX2 2.8.2 (SDL 3.4.12) and DuckStation (SDL 3.4.16) map every control of `SDLCompatible` as an Xbox pad and report "No generic bindings were generated for device 'SDL-0'" for `Generic` (tested on `045E:02FD`).
 - The status item's Profiles > Activate, Profiles > Deactivate and per-controller Active Profile submenus stay enabled while they list no profile, and hold one disabled row (No Profiles, No Active Profile, or Profiles Unavailable while the profile list is loading or cannot be read), as the main menu's Activate Profile submenu does. Activate lists every profile and checks the active one. The string `ui.menu.profile.noneActive` needs native review in every language but English.
@@ -231,11 +233,11 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The pr
   Command behavior and output do not change.
 - `./Scripts/ojd diagnose sdl3-gamecontroller` runs the SDL3 probe through `ojd virtual launch --sdl-gamecontroller-backend`, so the SDL hints that select the GameController backend exist only in `SDLLaunchEnvironment`. The probe needs a published gamepad, as `ojd virtual launch` does. `./Scripts/ojd diagnose sdl3-gamecontroller` and `diagnose backends` run the CLI at `/Applications/OpenJoystickDriver.app/Contents/MacOS/OpenJoystickDriver` and stop with an error when it is not installed.
 - **BREAKING:** for contributors: `./Scripts/ojd signing configure` and `signing install-profiles` take `--mode development|release|all`, `signing configure` takes `--development-identity <sha1>` and `--release-identity <sha1>` to pick a Keychain identity, and `notarize.sh submit` takes no arguments or the app and the archive (`submit <app> <zip>`). The support report fixture is the equivalence snapshot `Tests/EquivalenceSnapshots/support-report-binding.json`, which `./Scripts/ojd snapshots write` rewrites.
-- GitHub Actions installs swiftly 1.2.0 (checked against its SHA-256) and the toolchain that `.swift-version` names, and the CI toolchain step fails unless `swift` is swiftly's and reports that version.
 
 ### Removed
 
-- The environment variables `SWIFT_BIN`, `SWIFT_BUILD_BIN`, `SWIFT_PACKAGE_BIN`, `OJD_NONINTERACTIVE`, `OJD_APPLICATIONS_DIR`, `OJD_NOTARIZE_PROFILE`, `NOTARIZE_TIMEOUT_MINUTES`, `NOTARIZE_POLL_INTERVAL`, `NOTARIZE_MAX_RETRIES`, `NOTARIZE_KEYCHAIN`, `DEV_ENV`, `REL_ENV`, `PROJECT_DIR`, `DEXT_BUNDLE_VERSION`, `OJD_ENABLE_CONTRIBUTOR_USB_PASSIVE`, `DEVELOPER_ID_APPLICATION_IDENTITY_EXPORT`, `OPENJOYSTICKDRIVER_GUI_DEVID_PROFILE`, `OPENJOYSTICKDRIVER_DEXT_DEVID_PROFILE`, `OJD_REGENERATE_REPORT_FIXTURE`, `GUI_DEV_PROFILE`, `GUI_DEVID_PROFILE`, `DEXT_PROFILE`, `DEXT_DEVID_PROFILE`, `APPLE_DEV_IDENTITY`, `DEVID_APP_IDENTITY`, `OJD_SIGNING_MODE`, `OJD_NOTARIZE_APP` and `OJD_NOTARIZE_ZIP`; `docs/development/environment.md` lists the variables that remain. Every Swift command runs the `swift` on `PATH`, which is swiftly's.
+- `./Scripts/ojd catalog regenerate` no longer downloads a source through `gh api` when the raw GitHub download fails; it stops with the URL and the HTTP status. CI and the release workflow cache the downloaded sources.
+- The environment variables `SWIFT_BIN`, `SWIFT_BUILD_BIN`, `SWIFT_PACKAGE_BIN`, `OJD_NONINTERACTIVE`, `OJD_APPLICATIONS_DIR`, `OJD_NOTARIZE_PROFILE`, `NOTARIZE_TIMEOUT_MINUTES`, `NOTARIZE_POLL_INTERVAL`, `NOTARIZE_MAX_RETRIES`, `NOTARIZE_KEYCHAIN`, `DEV_ENV`, `REL_ENV`, `PROJECT_DIR`, `DEXT_BUNDLE_VERSION`, `OJD_ENABLE_CONTRIBUTOR_USB_PASSIVE`, `DEVELOPER_ID_APPLICATION_IDENTITY_EXPORT`, `OPENJOYSTICKDRIVER_GUI_DEVID_PROFILE`, `OPENJOYSTICKDRIVER_DEXT_DEVID_PROFILE`, `OJD_REGENERATE_REPORT_FIXTURE`, `GUI_DEV_PROFILE`, `GUI_DEVID_PROFILE`, `DEXT_PROFILE`, `DEXT_DEVID_PROFILE`, `APPLE_DEV_IDENTITY`, `DEVID_APP_IDENTITY`, `OJD_SIGNING_MODE`, `OJD_NOTARIZE_APP` and `OJD_NOTARIZE_ZIP`; `docs/development/environment.md` lists the variables that remain. Every Swift command runs the `swift` of the selected Xcode.
 - **BREAKING:** The `.env.dev` and `.env.release` keys `GUI_CODESIGN_IDENTITY`, `DEXT_BUILD_IDENTITY` and `DEXT_BUILD_PROFILE`. `CODESIGN_IDENTITY` signs the app, its bundles and the DEXT, and the build passes the `Name` inside `DEXT_PROVISIONING_PROFILE` to Xcode as the profile specifier. Every repository script stops with exit status 2 on a `.env` key outside the documented signing and notarization keys; delete those three lines from a local file, or run `./Scripts/ojd signing configure`.
 - **BREAKING:** The passive USB descriptor probe (`diagnose usb-passive`) runs in every build without a gate; `PassiveUSBDescriptorError.contributorGateRequired` is removed. The probe reads the IORegistry facts of one allowlisted device and claims nothing.
 - `./Scripts/ojd repair swiftpm-module-cache` and `just repair-swiftpm-module-cache`; `swift package clean` does the same.
@@ -576,7 +578,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The pr
 - Fix an output-dispatcher race when creating virtual devices.
 - Keep the menu-bar app alive after launch.
 
-[Unreleased]: https://github.com/xsyetopz/OpenJoystickDriver/compare/0.5.0-beta.4...HEAD
+[Unreleased]: https://github.com/xsyetopz/OpenJoystickDriver/compare/0.6.0-alpha.1...HEAD
+[0.6.0-alpha.1]: https://github.com/xsyetopz/OpenJoystickDriver/compare/0.5.0-beta.4...0.6.0-alpha.1
+[0.5.0-beta.4]: https://github.com/xsyetopz/OpenJoystickDriver/compare/0.5.0-beta.3...0.5.0-beta.4
 [0.5.0-beta.3]: https://github.com/xsyetopz/OpenJoystickDriver/compare/0.5.0-beta.2...0.5.0-beta.3
 [0.5.0-beta.2]: https://github.com/xsyetopz/OpenJoystickDriver/compare/0.5.0-beta.1...0.5.0-beta.2
 [0.5.0-beta.1]: https://github.com/xsyetopz/OpenJoystickDriver/releases/tag/0.5.0-beta.1

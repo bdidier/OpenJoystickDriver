@@ -63,9 +63,14 @@ jobs:
           .build/schema-validator/bin/python -m pip install -r Scripts/Quality/requirements.txt
           echo "$PWD/.build/schema-validator/bin" >> "$GITHUB_PATH"
 
+      # Each source is stored under its locked sha256 and checked on read, so a run downloads only changed sources.
+      - name: Cache controller catalog sources
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .build/catalog-sources
+          key: catalog-sources-${{ hashFiles('ControllerSources.lock.json') }}
+
       - name: Verify generated controller catalog
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: |
           ./Scripts/ojd catalog regenerate --check
           ./Scripts/ojd errors regenerate --check

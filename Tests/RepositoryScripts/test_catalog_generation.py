@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import base64
 import hashlib
 import io
 import json
@@ -27,18 +26,7 @@ def proto(record: dict[str, Any]) -> dict[str, Any]:
 
 
 class CatalogGenerationTests(unittest.TestCase):
-    def test_rate_limited_download_uses_authenticated_github_fallback(self) -> None:
-        source = "static const int xpad_device[] = {0};\n"
-        linux = {
-            "repository": "torvalds/linux",
-            "commit": "a" * 40,
-            "files": {
-                "xpad": {
-                    "path": "drivers/input/joystick/xpad.c",
-                    "sha256": hashlib.sha256(source.encode()).hexdigest(),
-                }
-            },
-        }
+    def test_a_failed_download_stops_with_its_url_and_status(self) -> None:
         rate_limit = urllib.error.HTTPError(
             "https://raw.githubusercontent.com",
             429,
@@ -46,28 +34,19 @@ class CatalogGenerationTests(unittest.TestCase):
             Message(),
             None,
         )
-        response = json.dumps({"content": base64.b64encode(source.encode()).decode()})
-
         with (
             tempfile.TemporaryDirectory() as directory,
             patch.object(catalog, "source_cache", return_value=pathlib.Path(directory)),
             patch.object(catalog.urllib.request, "urlopen", side_effect=rate_limit),
-            patch.object(catalog, "run_gh", return_value=response) as run_gh,
+            self.assertRaisesRegex(
+                catalog.CatalogError,
+                "raw.githubusercontent.com/torvalds/linux/a{40}/"
+                "drivers/input/joystick/xpad.c failed: HTTP 429",
+            ),
         ):
-            files = catalog.load_locked_files(linux)
-
-        self.assertEqual(files, {"xpad": source})
-        run_gh.assert_called_once_with(
-            [
-                "api",
-                "-X",
-                "GET",
-                "repos/torvalds/linux/contents/drivers/input/joystick/xpad.c",
-                "-f",
-                f"ref={'a' * 40}",
-            ],
-            catalog.CatalogError,
-        )
+            catalog.load_locked_files(
+                self.locked("static const int xpad_device[] = {0};\n")
+            )
 
     def locked(self, source: str) -> dict[str, Any]:
         return {
@@ -104,11 +83,9 @@ class CatalogGenerationTests(unittest.TestCase):
             with (
                 patch.object(catalog, "source_cache", return_value=cache),
                 patch.object(catalog.urllib.request, "urlopen") as urlopen,
-                patch.object(catalog, "run_gh") as run_gh,
             ):
                 self.assertEqual(catalog.load_locked_files(linux), {"xpad": source})
             urlopen.assert_not_called()
-            run_gh.assert_not_called()
 
     def test_a_cached_source_that_fails_its_hash_is_refused(self) -> None:
         linux = self.locked("static const int xpad_device[] = {2};\n")

@@ -61,8 +61,6 @@ jobs:
           key: catalog-sources-${{ hashFiles('ControllerSources.lock.json') }}
 
       - name: Verify generated controller catalog
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: |
           ./Scripts/ojd catalog regenerate --check
           ./Scripts/ojd errors regenerate --check

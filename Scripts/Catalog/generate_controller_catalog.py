@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import base64
 import hashlib
 import importlib.util
 import json
@@ -19,7 +18,7 @@ from typing import Any
 from Scripts.Catalog import protocol_descriptions
 from Scripts.Catalog.catalog_rules import load_rules, parse_id, parse_identity
 from Scripts.Catalog.schema_header import KINDS, header
-from Scripts.Catalog.xpad_io import json_text, run_gh
+from Scripts.Catalog.xpad_io import json_text
 from Scripts.Command.execution import main_checkout_dir
 from Scripts.Quality import repository_tool
 from Scripts.Quality.biome_format import format_json
@@ -86,21 +85,10 @@ def load_locked_files(source_lock: dict[str, Any]) -> dict[str, str]:
         try:
             with urllib.request.urlopen(request, timeout=30) as response:
                 source = response.read().decode()
-        except urllib.error.HTTPError:
-            document = json.loads(
-                run_gh(
-                    [
-                        "api",
-                        "-X",
-                        "GET",
-                        f"repos/{source_lock['repository']}/contents/{file_lock['path']}",
-                        "-f",
-                        f"ref={source_lock['commit']}",
-                    ],
-                    CatalogError,
-                )
-            )
-            source = base64.b64decode(document["content"]).decode()
+        except urllib.error.HTTPError as error:
+            raise CatalogError(
+                f"{url} failed: HTTP {error.code} {error.reason}"
+            ) from error
         digest = hashlib.sha256(source.encode()).hexdigest()
         if digest != file_lock["sha256"]:
             raise CatalogError(
