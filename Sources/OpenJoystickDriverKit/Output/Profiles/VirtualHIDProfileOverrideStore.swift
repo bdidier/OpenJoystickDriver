@@ -38,7 +38,8 @@ public struct VirtualPersonaFile: Equatable, Sendable {
 /// wins over its model's. A file that fails validation, or repeats the match of an earlier file in
 /// file-name order, is skipped and listed in ``problems``. A missing directory holds no personas.
 /// A folder named ``unreadFolderName`` beside the directory is not read, and ``files`` lists it
-/// with the reason, so that the files a user keeps there are not ignored without a word.
+/// with the reason when it holds a visible file, so that the files a user keeps there are not
+/// ignored without a word.
 /// `set` writes `vvvv-pppp.json` or `vvvv-pppp-<unit>.json`, and keeps the identity of a persona
 /// that already matches.
 public struct VirtualHIDProfileOverrideStore: Sendable {
@@ -56,7 +57,7 @@ public struct VirtualHIDProfileOverrideStore: Sendable {
 
   /// The folder name `Personas`, which OJD does not read. The concept is a persona, but the files
   /// are `VirtualDevice` documents and live in ``directoryName``; ``files`` lists this folder when
-  /// it exists beside the directory, so that its files do not go unnoticed.
+  /// it holds a visible file, so that its files do not go unnoticed.
   public static let unreadFolderName = "Personas"
 
   private static let localization = Localization()
@@ -109,7 +110,7 @@ public struct VirtualHIDProfileOverrideStore: Sendable {
   }
 
   /// Every file in the directory, in file-name order, with the reason OJD skipped it, then the
-  /// ``unreadFolderName`` folder beside the directory when it exists.
+  /// ``unreadFolderName`` folder beside the directory when it holds a visible file.
   public var files: [VirtualPersonaFile] {
     let unread = unreadFolder.map { [$0] } ?? []
     if case .success(let loaded) = load() { return loaded.files + unread }
@@ -117,14 +118,16 @@ public struct VirtualHIDProfileOverrideStore: Sendable {
   }
 
   /// The ``unreadFolderName`` folder beside the directory, with the reason it is not read; nil
-  /// when there is no such folder.
+  /// when there is no such folder or it holds no visible file.
   private var unreadFolder: VirtualPersonaFile? {
     let url = directory.deletingLastPathComponent()
       .appendingPathComponent(Self.unreadFolderName, isDirectory: true)
-    var isDirectory: ObjCBool = false
-    guard FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory),
-      isDirectory.boolValue
-    else { return nil }
+    let contents = try? FileManager.default.contentsOfDirectory(
+      at: url,
+      includingPropertiesForKeys: nil,
+      options: .skipsHiddenFiles
+    )
+    guard contents?.isEmpty == false else { return nil }
     return VirtualPersonaFile(
       url: url,
       problem: Self.localization.formatted(

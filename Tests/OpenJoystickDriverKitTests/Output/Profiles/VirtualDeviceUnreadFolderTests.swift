@@ -53,6 +53,21 @@ struct VirtualDeviceUnreadFolderTests {
   }
 
   @Test
+  func aPersonasFolderWithNoVisibleFilesListsNothing() throws {
+    try withSupportFolder { support in
+      let unread = support.appendingPathComponent(
+        VirtualHIDProfileOverrideStore.unreadFolderName,
+        isDirectory: true
+      )
+      try FileManager.default.createDirectory(at: unread, withIntermediateDirectories: true)
+      try Data().write(to: unread.appendingPathComponent(".DS_Store"))
+      let devices = support.appendingPathComponent("VirtualDevices", isDirectory: true)
+
+      #expect(VirtualHIDProfileOverrideStore(directory: devices).problems.isEmpty)
+    }
+  }
+
+  @Test
   func noPersonasFolderListsNothing() throws {
     try withSupportFolder { support in
       let devices = support.appendingPathComponent("VirtualDevices", isDirectory: true)

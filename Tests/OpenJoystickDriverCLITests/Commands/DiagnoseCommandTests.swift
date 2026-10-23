@@ -454,6 +454,7 @@ struct DiagnoseCommandTests {
     let unread = support.appendingPathComponent("Personas", isDirectory: true)
     try FileManager.default.createDirectory(at: unread, withIntermediateDirectories: true)
     defer { try? FileManager.default.removeItem(at: support) }
+    try Data("{}".utf8).write(to: unread.appendingPathComponent("1209-0001.json"))
 
     let result = await run(
       ["--json"],
