@@ -63,7 +63,7 @@ Games read controllers through different programming interfaces. The interface d
 | Browser | Gamepad API | Works |
 | Apple Game Controller framework | Silksong (GOG) | Works after you turn on its native gamepad or MFi options |
 | Native macOS games | Non-Steam native games | Works |
-| SDL | Steam | Input not verified on hardware. Steam lists the `SDLCompatible` profile as "Xbox One S Controller" and needs no setup. macOS reports the virtual controller's transport as `Virtual`, so SDL reads its reports as USB Xbox One packets, and the profile sends those packets for input and takes them for rumble. |
+| SDL | Steam | Works. Steam lists the `SDLCompatible` profile as "Xbox One S Controller", needs no setup, and reads every control and moves the rumble motors. macOS reports the virtual controller's transport as `Virtual`, so SDL reads its reports as USB Xbox One packets, and the profile sends those packets for input and takes them for rumble. |
 | Wine | CrossOver | Does not work. Sees no controller |
 | SDL | RPCS3 | Not verified on hardware. It lists "Xbox One S Controller", which SDL reads like Steam does |
 | IOHIDManager or SDL2 | Super Meat Boy, Cuphead, LEGO Marvel's Avengers, older Unity or Feral ports | Does not work. These games do not detect the controller |

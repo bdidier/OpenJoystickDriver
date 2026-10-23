@@ -24,7 +24,7 @@ Each app reads controllers with its own API. Some apps that use SDL cannot read 
 
 ## Does OJD Work With Steam?
 
-Not verified to work. One tester saw a phantom controller with no input when Steam read the Xbox virtual profile. With the generic profile, Steam was erratic and slow to respond. For more information, see [Game and app compatibility](Playing-Games.md).
+Yes, with the Xbox virtual profile (`SDLCompatible`): the maintainer saw Steam read every control and move the rumble motors on macOS 27. One tester saw a phantom controller with no input when Steam read that profile. With the generic profile, Steam was erratic and slow to respond. For more information, see [Game and app compatibility](Playing-Games.md).
 
 ## Why Is My Clone Controller Different?
 
