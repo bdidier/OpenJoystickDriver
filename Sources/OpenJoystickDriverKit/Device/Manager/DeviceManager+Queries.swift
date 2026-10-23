@@ -31,8 +31,8 @@ extension DeviceManager {
   }
 
   /// Returns the frame timings of every connected controller: the frames read within
-  /// `lastSeconds` seconds before `now` on the uptime clock, or the whole ring when `lastSeconds` is
-  /// nil.
+  /// `lastSeconds` seconds before `now` on the uptime clock, or the whole ring when `lastSeconds`
+  /// is nil.
   public func frameTimingsSnapshot(
     lastSeconds: Int?,
     now: UInt64

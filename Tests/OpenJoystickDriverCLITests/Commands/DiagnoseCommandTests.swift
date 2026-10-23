@@ -456,9 +456,10 @@ struct DiagnoseCommandTests {
   func badFramesValuesAreUsageErrors() async {
     let socketPath = temporarySocketPath()
     for value in ["0", "16", "-1", "abc"] {
-      let result = await DiagnoseCommand.$frameWindowWait.withValue({ _ in }) {
-        await run(["--frames", value], socketPath: socketPath)
-      }
+      let result = await DiagnoseCommand.$frameWindowWait.withValue(
+        { _ in },
+        operation: { await run(["--frames", value], socketPath: socketPath) }
+      )
       #expect(result.code == 64, "\(value)")
       #expect(result.standardOutput.isEmpty, "\(value)")
     }
@@ -476,11 +477,10 @@ struct DiagnoseCommandTests {
     }
     defer { server.stop() }
 
-    let result = await DiagnoseCommand.$frameWindowWait.withValue({ seconds in
-      events.withLock { $0.append("wait \(seconds)") }
-    }) {
-      await run(["--frames", "10"], socketPath: socketPath)
-    }
+    let result = await DiagnoseCommand.$frameWindowWait.withValue(
+      { seconds in events.withLock { $0.append("wait \(seconds)") } },
+      operation: { await run(["--frames", "10"], socketPath: socketPath) }
+    )
 
     #expect(result.code == 0, "\(result.standardError)")
     #expect(events.withLock { $0 } == ["wait 10", "request 10"])
@@ -509,11 +509,10 @@ struct DiagnoseCommandTests {
     }
     defer { server.stop() }
 
-    let result = await DiagnoseCommand.$frameWindowWait.withValue({ _ in
-      Issue.record("diagnose waited without --frames")
-    }) {
-      await run([], socketPath: socketPath)
-    }
+    let result = await DiagnoseCommand.$frameWindowWait.withValue(
+      { _ in Issue.record("diagnose waited without --frames") },
+      operation: { await run([], socketPath: socketPath) }
+    )
 
     #expect(result.code == 0, "\(result.standardError)")
     #expect(requests.withLock { $0 } == [nil])

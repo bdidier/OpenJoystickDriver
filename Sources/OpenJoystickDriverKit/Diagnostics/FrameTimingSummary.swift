@@ -66,9 +66,10 @@ public struct FrameStalls: Codable, Equatable, Sendable {
 /// interval of the window. Read intervals and stalls are measured only on a window of the last
 /// ``lastSeconds`` seconds, which the user fills with constant input: a controller that sends a
 /// report only when an input changes leaves a gap for each pause, and the whole ring holds the
-/// pauses before and after the input. The threshold follows the report rate of the controller, so the same
-/// rule fits a 125 Hz controller (8 ms) and a 1000 Hz one (1 ms), where one fixed limit would miss
-/// the first or flag the second. An interval equal to the threshold is not a stall.
+/// pauses before and after the input. The threshold follows the report rate of the controller,
+/// so the same rule fits a 125 Hz controller (8 ms) and a 1000 Hz one (1 ms), where one fixed
+/// limit would miss the first or flag the second. An interval equal to the threshold is not a
+/// stall.
 public struct FrameTimingSummary: Codable, Equatable, Sendable {
   /// The multiple of the median read interval above which a read interval is a stall.
   public static let stallIntervalMultiplier: UInt64 = 3
