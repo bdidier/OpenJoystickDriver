@@ -18,8 +18,11 @@ fi
 
 biome="$(python3 "$repository_root/Scripts/Quality/biome_binary.py" "$repository_root")"
 printf '%s\0' "${paths[@]}" | git checkout-index -z --stdin --prefix="$staged_copy/"
-"$biome" format --write --config-path="$repository_root/biome.json" --vcs-enabled=false \
-  "$staged_copy" >/dev/null
+# Biome resolves the `files.includes` globs against the directory of its configuration.
+if [[ ! -f "$staged_copy/biome.json" ]]; then
+  cp "$repository_root/biome.json" "$staged_copy/biome.json"
+fi
+(cd "$staged_copy" && "$biome" format --write --vcs-enabled=false . >/dev/null)
 
 for path in "${paths[@]}"; do
   staged="$(git rev-parse ":$path")"
