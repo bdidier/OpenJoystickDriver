@@ -52,6 +52,8 @@ struct HIDDeviceStreamMappingTests {
     #expect(PhysicalHIDFailure(ioReturn: kIOReturnNotResponding) == .notResponding)
     #expect(PhysicalHIDFailure(ioReturn: kIOReturnUnsupported) == .declined)
     #expect(PhysicalHIDFailure(ioReturn: IOReturn(bitPattern: 0xE000_404F)) == .declined)
+    // A DualShock 3 clone's stalled 0xEF feature read returns `kUSBHostReturnPipeStalled`.
+    #expect(PhysicalHIDFailure(ioReturn: IOReturn(bitPattern: 0xE000_5000)) == .declined)
     for code in [
       kIOReturnNotOpen, kIOReturnNoDevice, kIOReturnAborted, kIOReturnNotPermitted,
       kIOReturnExclusiveAccess, kIOReturnError,

@@ -478,7 +478,7 @@ These need the maintainer and a device. Each result is recorded in `wiki` or the
 
 - [ ] H1 Wolverine V1 TE: connect, confirm frames, route and persona.
 - [ ] H2 GameSir G7 SE `3537:1010`: confirm the record and route.
-- [ ] H3 DS3 CECHZC2E genuine and a DS3 clone: confirm the 0xEF discriminator and settle open item 1.
+- [x] H3 DS3 CECHZC2E genuine and a DS3 clone: confirm the 0xEF discriminator and settle open item 1. Genuine CECHZC2E and CECHZC1(E) answer `0xEF` and the clone stalls it with `kUSBHostReturnPipeStalled` (D7, 2026-10-23).
 - [ ] H4 DS4 v2: confirm the report form and probe.
 - [ ] H5 8BitDo `2DC8:301B` and the `SDLCompatible` persona: SDL3 or Steam shows the right mapping.
 - [ ] H6 A1398 on macOS 12 (floor) and DS3 Bluetooth pairing.

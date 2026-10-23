@@ -36,10 +36,10 @@ public struct ControllerModeProbe: Equatable, Sendable {
   }
 
   /// Only the device's own refusal (`PhysicalHIDFailure.declined`: a stalled control pipe, or a
-  /// request it does not support) is a stall. No recorded DualShock 3 evidence says which of the
-  /// two it returns, so both count. A timeout, an unavailable route, and every other failure (not
-  /// open, no device, aborted, not permitted, exclusive access) say nothing about the device, so
-  /// they are inconclusive.
+  /// request it does not support) is a stall. A DualShock 3 clone stalls its pipe for report
+  /// `0xEF`; both refusals count, because either says the device lacks the report. A timeout,
+  /// an unavailable route, and every other failure (not open, no device, aborted, not
+  /// permitted, exclusive access) say nothing about the device, so they are inconclusive.
   func verdict(for result: PhysicalHIDReportResult<Data>) -> Verdict {
     switch result {
     case .success(let data):

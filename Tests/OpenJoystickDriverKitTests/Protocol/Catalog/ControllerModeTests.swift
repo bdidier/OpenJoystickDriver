@@ -189,6 +189,27 @@ struct ControllerModeTests {
     }
   }
 
+  /// Two pads of one model differ only by location, so each mode line names it.
+  @Test
+  func modeLinesNameTheDeviceLocation() async throws {
+    let profile = try Self.profile(modes: Self.twoModes)
+    let log = Locked<[String]>([])
+    let reader = ScriptedProbeReader([160: .success(Data([1]))])
+    let selection = await ControllerModeSelector.select(
+      from: profile,
+      model: Self.model,
+      backend: .hid,
+      reader: reader,
+      device: PhysicalDevice(physicalLocationIdentifier: 0x0013_0000)
+    ) { line in log.withLock { $0.append(line) } }
+    #expect(selection == .matched("dualshock"))
+    #expect(
+      log.withLock { $0 } == [
+        "[DeviceManager] Mode keys of 1234:ABCD at location 0x00130000 selected mode dualshock"
+      ]
+    )
+  }
+
   @Test
   func aStallSatisfiesAStallsProbeAndAnAnswerSatisfiesItNot() async throws {
     let profile = try Self.profile(modes: [
