@@ -1683,6 +1683,14 @@
 "cli.status.group.labelUnbound" = "不支持的设备 (%lld)";
 /* Row label in the output of 'ojd status'. The state of the virtual gamepad follows. */
 "cli.status.group.labelVirtualDevice" = "虚拟游戏手柄";
+/* Value of the 'Virtual gamepad' row of 'ojd status' when virtual output is turned off. */
+"cli.status.group.virtualOff" = "关";
+/* Value of the 'Virtual gamepad' row of 'ojd status' when the virtual gamepad reports an error. %@ is the error message of the system. */
+"cli.status.group.virtualError" = "错误：%@";
+/* Value of the 'Virtual gamepad' row of 'ojd status' when virtual output is on and no connected controller has a virtual gamepad. */
+"cli.status.group.virtualNonePublished" = "开，未发布任何控制器";
+/* Value of the 'Virtual gamepad' row of 'ojd status' when virtual output is on. %@ is the comma-separated list of the names of the controllers that a virtual gamepad stands for. */
+"cli.status.group.virtualPublished" = "开，正在发布 %@";
 /* Hint printed by 'ojd status' when the service is stopped. The command in quotes stays as written. */
 "cli.status.group.startHint" = "服务运行时会显示控制器和权限：“ojd service start”。";
 /* One-line summary of 'ojd access' in the command list and at the top of its help. */

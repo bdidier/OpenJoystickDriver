@@ -3579,7 +3579,7 @@
         },
         "virtualDevice": {
           "type": "object",
-          "required": [],
+          "required": ["published"],
           "additionalProperties": false,
           "properties": {
             "enabled": {
@@ -3587,6 +3587,12 @@
             },
             "overrideError": {
               "type": "string"
+            },
+            "published": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             },
             "status": {
               "type": "string"

@@ -115,8 +115,11 @@ struct StatusReport: Encodable, Equatable {
 
   struct VirtualDevice: Encodable, Equatable {
     let enabled: Bool?
+    /// The backend's diagnostic text, with each controller's generations and send times.
     let status: String?
     let overrideError: String?
+    /// The `id` of each connected controller that a virtual gamepad publishes.
+    let published: [String]
   }
 
   struct Controller: Encodable, Equatable {
@@ -186,7 +189,9 @@ struct StatusReport: Encodable, Equatable {
     virtualDevice = VirtualDevice(
       enabled: payload.userSpaceVirtualDeviceEnabled,
       status: payload.userSpaceVirtualDeviceStatus?.wireValue,
-      overrideError: payload.virtualHIDProfileOverrideError
+      overrideError: payload.virtualHIDProfileOverrideError,
+      published: payload.connectedDevices.filter { $0.publication?.state == .published }
+        .map(\.sessionToken.rawValue)
     )
     controllers = payload.connectedDevices.map {
       Controller(

@@ -141,6 +141,22 @@ struct StatusCommand: AsyncParsableCommand {
     return rows
   }
 
+  /// Off, the backend's error, or the names of the controllers a virtual gamepad publishes. The
+  /// per-controller diagnostics stay in `--json`, `--plain` and `ojd diagnose`.
+  static func virtualDeviceSummary(
+    _ virtual: StatusReport.VirtualDevice,
+    controllers: [StatusReport.Controller]
+  ) -> String {
+    if virtual.enabled == false { return CLILocalized.text("cli.status.group.virtualOff") }
+    if case .error(let message) = virtual.status.map(VirtualOutputBackendStatus.init(wireValue:)) {
+      return CLILocalized.format("cli.status.group.virtualError", message)
+    }
+    let names = controllers.filter { virtual.published.contains($0.id) }.map(\.name)
+    return names.isEmpty
+      ? CLILocalized.text("cli.status.group.virtualNonePublished")
+      : CLILocalized.format("cli.status.group.virtualPublished", names.joined(separator: ", "))
+  }
+
   private static func printHuman(_ report: StatusReport) {
     let transport = report.transportExtension
     var rows: [(String, String)] = [
@@ -184,7 +200,7 @@ struct StatusCommand: AsyncParsableCommand {
       rows.append(
         (
           CLILocalized.text("cli.status.group.labelVirtualDevice"),
-          virtual.status ?? (virtual.enabled == true ? "enabled" : "disabled")
+          virtualDeviceSummary(virtual, controllers: report.controllers ?? [])
         )
       )
       if let error = virtual.overrideError {

@@ -1683,6 +1683,14 @@
 "cli.status.group.labelUnbound" = "Thiết bị không được hỗ trợ (%lld)";
 /* Row label in the output of 'ojd status'. The state of the virtual gamepad follows. */
 "cli.status.group.labelVirtualDevice" = "Tay cầm ảo";
+/* Value of the 'Virtual gamepad' row of 'ojd status' when virtual output is turned off. */
+"cli.status.group.virtualOff" = "Tắt";
+/* Value of the 'Virtual gamepad' row of 'ojd status' when the virtual gamepad reports an error. %@ is the error message of the system. */
+"cli.status.group.virtualError" = "Lỗi: %@";
+/* Value of the 'Virtual gamepad' row of 'ojd status' when virtual output is on and no connected controller has a virtual gamepad. */
+"cli.status.group.virtualNonePublished" = "Bật, không cung cấp bộ điều khiển nào";
+/* Value of the 'Virtual gamepad' row of 'ojd status' when virtual output is on. %@ is the comma-separated list of the names of the controllers that a virtual gamepad stands for. */
+"cli.status.group.virtualPublished" = "Bật, đang cung cấp %@";
 /* Hint printed by 'ojd status' when the service is stopped. The command in quotes stays as written. */
 "cli.status.group.startHint" = "Bộ điều khiển và quyền sẽ xuất hiện khi dịch vụ chạy: “ojd service start”.";
 /* One-line summary of 'ojd access' in the command list and at the top of its help. */

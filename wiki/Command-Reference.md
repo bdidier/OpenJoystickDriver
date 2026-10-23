@@ -41,7 +41,7 @@ With `--json`, the output is one `SystemStatus` object with these keys:
 - `extension`: `bundle` (`Present`, `Missing`, or `Invalid`) and `registration` (`Active`, `Inactive`, `Absent`, or `Unavailable`).
 - `commandLineTool`: the `ojd` link that the app installs. `state` is `Installed` (a link to this app's executable), `LinkedElsewhere` (a link to another existing file, such as another copy of the app), `Broken` (a link whose target is gone), `BlockedByFile` (a file or folder that is not a link; the app never replaces it), or `Missing` (nothing at `path`). `path` is where the link goes, and `target` is what it points at, when it is a link.
 - `permissions`: `inputRead` and `inputInject`.
-- `virtualDevice`: `enabled`, `status`, and `overrideError`.
+- `virtualDevice`: `enabled`, `status` (the backend's diagnostic text, with each controller's generations and send times, which `--plain` and `ojd diagnose` also print), `overrideError`, and `published` (the `id` of each connected controller that a virtual gamepad stands for). The `Virtual gamepad` row of the human output says `Off`, the error, or `On` with the names of those controllers.
 - `controllers`: each with `id`, `name`, `vendorID`, `productID`, and `connection`.
 - `unboundDevices`: devices that OpenJoystickDriver does not support, each with `vendorID`, `productID`, `connection`, and `reason`.
 - `passThroughDevices`: devices that OpenJoystickDriver leaves to macOS.
