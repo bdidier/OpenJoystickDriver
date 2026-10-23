@@ -90,6 +90,13 @@ enum GUICoverageEntries {
     + ["--help", "--version"].map {
       CLIOnlyItem(command: nil, option: $0, reason: "terminal help and version")
     }
+    + [
+      CLIOnlyItem(
+        command: ["diagnose"],
+        option: "--frames",
+        reason: "the window of a frame-timing run started in a terminal while the sticks move"
+      )
+    ]
 
   // MARK: Entries
 
