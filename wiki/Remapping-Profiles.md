@@ -76,7 +76,7 @@ This section explains how to create, activate, rename, duplicate, and delete a p
 
 ### Before You Begin
 
-- Connect the controller that the profile is for. The **Controller** list in the new profile sheet shows connected controllers. You can also select **Manual identifiers** and enter a vendor ID and product ID.
+- Connect the controller that the profile is for. The **Controller** list in the new profile sheet groups controllers under **Connected**, **Used by your profiles**, and one group for each protocol family in the catalog.
 - Open the **Profiles** area of the app window.
 
 ### Create a Profile In the App
@@ -104,7 +104,7 @@ Add `--app BUNDLE-ID` to limit the profile to one app. The new profile is inacti
 1. Select the profile in the list.
 2. Click **Set active**.
 
-If the profile produces no output, so that the controller does nothing while it is active, the app shows the alert **Activate profile with no controller input?**. Click **Set active** only if you want that result. To restore default input, click **Restore default input** first.
+If the profile produces no output, so that the controller does nothing while it is active, the app shows the alert **Activate profile with no controller input?**. Click **Set active** only if you want that result. To restore default input, click **Restore Default Input** first.
 
 To deactivate the profile, click **Deactivate**. To deactivate every profile for the controller, open the **Profile actions** menu and select **Deactivate all**.
 
@@ -128,7 +128,7 @@ If another process changes the profile, the app shows **This profile changed els
 1. Select the profile.
 2. Click the pencil button, **Profile details**.
 3. Change **Profile name**, **Vendor ID**, **Product ID**, or **Target**.
-4. If you select **One application**, enter the **Bundle identifier**. The app has no running-app picker.
+4. If you select **One application**, enter the **App ID**. The app has no running-app picker.
 5. Click **Apply**, then click **Save**.
 
 To rename a profile on the command line, run `ojd profile rename PROFILE NEW-NAME`. To change the controller model or the app, run `ojd profile edit PROFILE` and change `device` or `applicationScope` in the profile file, or run `ojd profile set PROFILE applicationScope '{"type":"Global"}'`.
@@ -155,7 +155,7 @@ The command line equivalent is `ojd profile delete PROFILE`.
 2. Select **Clear all inputs**.
 3. Confirm the alert **Clear all inputs?**.
 
-This clears all assignments and input processing from the profile. To return to pass-through, select **Restore default input**.
+This clears all assignments and input processing from the profile. To return to pass-through, select **Restore Default Input**.
 
 The command line has no equivalent that also clears input processing. `ojd binding clear PROFILE --all` removes every assignment, combination, sequence, and layer, and keeps stick, trigger, touch, motion, and output settings. To return to pass-through, run `ojd profile set PROFILE outputPolicy.virtualGamepad Passthrough`.
 

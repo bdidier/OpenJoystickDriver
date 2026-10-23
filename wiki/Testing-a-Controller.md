@@ -39,7 +39,7 @@ For controllers with a gyroscope. Keep the controller still while OJD collects t
 
 ### Rumble
 
-Shows only when the controller supports rumble. Otherwise it shows **Rumble is not supported by this controller.**
+Shows the motors that the controller has. A controller with no motor shows **Rumble is not supported by this controller.**
 
 1. Set the strength of each motor with its slider. The range is 0 to 255. Some motors only switch on and off.
 2. Set **Duration**. The range is 100 to 2000 ms. The default is 300 ms.
@@ -49,7 +49,7 @@ Click **Stop** to end the test early. The group shows **Done** or **Failed**. If
 
 ### Lighting
 
-Shows only the controls that the controller supports. Otherwise it shows **Lighting controls are not available for this controller.** The controls are **Player indicator**, **Color**, and **Brightness**. Click **Apply** beside a control to send it.
+Shows only for a controller with lighting, and only the controls that the controller supports. The controls are **Player indicator**, **Color**, and **Brightness**. Click **Apply** beside a control to send it.
 
 ## Further Reading
 

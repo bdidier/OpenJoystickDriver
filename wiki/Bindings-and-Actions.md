@@ -122,7 +122,7 @@ The command line options are `--deadzone`, `--gain`, `--invert`, `--response-cur
 ### Restore Or Clear Assignments
 
 - To remove every assignment, select **Clear all inputs**.
-- To return to pass-through, select **Restore default input** in the **Profile actions** menu.
+- To return to pass-through, select **Restore Default Input** in the **Profile actions** menu.
 
 ## Combinations, Sequences, and Layers
 

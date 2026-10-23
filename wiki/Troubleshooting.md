@@ -49,10 +49,10 @@ The built-in catalog has 696 records. A record without a physical test is unveri
 - **Xbox One or Xbox Series controller on USB:** These controllers need the OJD driver extension. Check the **Xbox USB Driver** banner below the toolbar of the app window. If it shows **Open System Settings**, click it and approve the extension. If it shows **Repair Xbox USB Driver**, click it. **Xbox USB Driver** in **Settings** > **Advanced** shows the state of the extension. For more information, see [Xbox USB driver extension](Connecting-Controllers.md).
 - **Clone or fake controller:** It may report itself in a way the catalog does not cover. For more information, see [Clone and fake controllers](Supported-Controllers.md).
 - **Dongle:** A dongle problem is separate from a controller problem. Test the controller in another connection mode if it has one.
-- **Runtime disconnected:** Run `ojd service start`, then run `ojd status`.
+- **The app shows OpenJoystickDriver cannot reach its service:** Run `ojd service start`, then run `ojd status`.
 - **SDL sees 0 controllers:** Grant **Input Monitoring** and **Accessibility**, restart OJD, and try again.
 - **Xbox USB driver extension install fails:** Rebuild the signed app, then run `ojd transport-extension activate`.
-- **The controller shows Used by an app:** That app reads the controller directly, so OJD cannot. You do not need to do anything for OJD. It serves the controller when the app lets go. The controller detail and `ojd controller list` show the app name.
+- **The controller shows Used by another app:** That app reads the controller directly, so OJD cannot. You do not need to do anything for OJD. It serves the controller when the app lets go. The controller detail and `ojd controller list` show the app name.
 - **Input stays held, or the status says Needs attention:** Release the controls. Then check the controller input health with `ojd status --json`.
 
 ### Check From the Terminal

@@ -22,11 +22,12 @@ The maintainer owns and tests these controllers.
 | Controller | Connection mode tested |
 | --- | --- |
 | Sony DUALSHOCK 4 (v2) | Not recorded here |
-| Sony DUALSHOCK 3 (CECHZC2) | Not recorded here |
-| GameSir G7 SE | Not recorded here |
-| Razer Wolverine (V1) Tournament Edition | Not recorded here |
+| Sony DUALSHOCK 3 (CECHZC2) | USB |
+| Sony DUALSHOCK 3 (CECHZC1) | USB |
+| GameSir G7 SE | USB |
+| Razer Wolverine (V1) Tournament Edition | USB |
 
-The maintainer says that a few more controllers belong in this tier. This list names only the four that the maintainer confirmed.
+The maintainer says that a few more controllers belong in this tier. This list names only the ones that the maintainer confirmed.
 
 The DUALSHOCK 3 does not connect over Bluetooth on macOS 27.0. The test stored the Mac's Bluetooth address in the controller over USB, and the controller then reached the Mac. macOS requires authentication before it accepts a Bluetooth HID connection. It asks for a passcode, which the DUALSHOCK 3 cannot answer, and pairing times out. Use the DUALSHOCK 3 with a USB cable.
 

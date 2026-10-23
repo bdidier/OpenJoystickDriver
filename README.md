@@ -18,7 +18,7 @@ It reads a controller over USB, Bluetooth, or a 2.4 GHz dongle and shows it to g
 
 - **696 controller records:** Xbox, PlayStation, Nintendo Switch, Steam, GameSir, NVIDIA SHIELD, Flydigi, and generic HID gamepads.
   The [support table][wiki-supported] shows which ones have a hardware test.
-- **Two virtual controller profiles:** an Xbox Wireless Controller (`SDLCompatible`) or a generic gamepad (`Generic`), one for each physical controller.
+- **Three virtual controller profiles:** an Xbox Adaptive Controller for SDL games and Steam (`SDLCompatible`), an Xbox Wireless Controller for Apple's Game Controller framework (`GameControllerCompatible`), or a generic gamepad (`Generic`), one for each physical controller.
 - **SDL mappings:** `ojd virtual launch` starts a game with the mapping of your virtual controllers.
 - **Remapping:** buttons, combinations, sequences, and layers, plus keyboard, pointer, and scroll output.
 - **Input test:** see each button, stick, and trigger before you play.
