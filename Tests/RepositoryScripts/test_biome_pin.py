@@ -24,6 +24,11 @@ class BiomePinTests(unittest.TestCase):
         assert match is not None
         self.assertEqual(pin, match.group(1))
 
+    def test_the_justfile_runs_the_biome_that_a_linked_worktree_resolves(self) -> None:
+        justfile = (ROOT / "justfile").read_text(encoding="utf-8")
+        self.assertNotIn("node_modules/.bin/biome", justfile)
+        self.assertIn("Scripts/Quality/biome_binary.py", justfile)
+
 
 def install(root: Path, version: str) -> Path:
     binary = root / "node_modules/.bin/biome"
