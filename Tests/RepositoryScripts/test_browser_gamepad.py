@@ -107,6 +107,19 @@ class BrowserGamepadHarnessTests(unittest.TestCase):
         )
         self.assertEqual(rows_moved["controls"][0]["status"], "differs")
 
+    def test_a_press_that_arrives_a_little_early_counts_for_its_own_step(self) -> None:
+        events = [
+            {**e, "t": e["t"] - 5}
+            if e.get("ev") == "state" and e["t"] >= 10_000 + STEP_MS
+            else e
+            for e in run(10_000, wake=False)
+        ]
+        statuses = {
+            row["status"]
+            for row in harness.classify(events, 1_000, 120_000)["controls"]
+        }
+        self.assertEqual(statuses, {"ok"})
+
     def test_no_wake_press_reports_no_pad(self) -> None:
         events = [
             e

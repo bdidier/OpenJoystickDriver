@@ -120,7 +120,9 @@ def _steps(states: list[Event], first_step_ms: int) -> list[Event]:
     step_ms = PRESS_MS + REST_MS
     seen: list[set[str]] = [set() for _ in CONTROLS]
     for event in states:
-        step = (int(event["t"]) - first_step_ms) // step_ms
+        # Each window starts half a rest before its press, so a press that a browser timestamps a
+        # little early still counts for its own step.
+        step = (int(event["t"]) - first_step_ms + REST_MS // 2) // step_ms
         if 0 <= step < len(CONTROLS):
             seen[step] |= readings(event)
     return [
