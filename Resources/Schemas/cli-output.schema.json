@@ -833,8 +833,8 @@
               "$ref": "#/$defs/sharedServer"
             },
             "serverSource": {
-              "description": "The record layer that sets server, or Default when no layer sets it and macOS serves the controller.",
-              "enum": ["Bundled", "Package", "User", "Default"]
+              "description": "The record layer that sets server, Default when no layer sets it, or Route when the system cannot serve the controller, so server is OJD.",
+              "enum": ["Bundled", "Package", "User", "Default", "Route"]
             },
             "discoverySource": {
               "enum": ["HID", "RawUSB"]

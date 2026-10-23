@@ -71,7 +71,7 @@ VALUES: dict[str, tuple[str, ...]] = {
         "UpstreamVirtualDevice",
         "Unknown",
     ),
-    f"{OWNERSHIP}/serverSource": ("Bundled", "Package", "User", "Default"),
+    f"{OWNERSHIP}/serverSource": ("Bundled", "Package", "User", "Default", "Route"),
     f"{D}/controllerShow/properties/publication/properties/state": (
         "Published",
         "NotPublished",

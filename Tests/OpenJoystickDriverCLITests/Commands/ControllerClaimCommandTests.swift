@@ -208,4 +208,40 @@ struct ControllerClaimCommandTests {
     )
     #expect(plain.standardOutput.contains("server\tojd\tuser\n"))
   }
+
+  @Test(arguments: [
+    (ControllerOwnershipObservation.exclusiveRawUSB, ControllerAccessRoute.rawAccess),
+    (.exclusiveHID, .system),
+  ])
+  func showNamesOJDForAControllerTheSystemDoesNotServe(
+    observation: ControllerOwnershipObservation,
+    accessRoute: ControllerAccessRoute
+  ) async throws {
+    var object = try #require(
+      try JSONSerialization.jsonObject(
+        with: JSONEncoder().encode(Self.device(vendorID: 0x3537, productID: 0x1010, native: false))
+      ) as? [String: Any]
+    )
+    object["physicalOwnership"] = observation.rawValue
+    object["recordAccessRoute"] = accessRoute.rawValue
+    let device = try JSONDecoder().decode(
+      ApplicationServiceDeviceDescription.self,
+      from: JSONSerialization.data(withJSONObject: object)
+    )
+    let directory = Directory()
+    let json = try await Self.run(
+      ["controller", "show", token("pad-1"), "--json"],
+      device: device,
+      in: directory
+    ).json()
+    let ownership = try #require(json["ownership"] as? [String: Any])
+    #expect(ownership["server"] as? String == "OJD")
+    #expect(ownership["serverSource"] as? String == "Route")
+    let plain = try await Self.run(
+      ["controller", "show", token("pad-1"), "--plain"],
+      device: device,
+      in: directory
+    )
+    #expect(plain.standardOutput.contains("server\tojd\troute\n"))
+  }
 }

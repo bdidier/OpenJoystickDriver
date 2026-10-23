@@ -11,10 +11,11 @@ struct ControllerShowReport: Encodable, Equatable {
     /// the interface names none.
     let owner: USBExclusiveOwner?
     let duplicateExposureRisk: String
-    /// Who the record lets serve the model: `system` or `ojd`, the `server` setting.
+    /// Who serves the model: the `server` setting, or `ojd` for a controller the system cannot
+    /// serve.
     let server: ControllerServer
     /// The record layer that sets `server`: `Bundled`, `Package`, or `User`; `Default` when no
-    /// layer sets it.
+    /// layer sets it; `Route` when the system cannot serve the controller.
     let serverSource: String
   }
 
@@ -196,6 +197,7 @@ struct ControllerShowReport: Encodable, Equatable {
     sharesModel: Bool = false
   ) {
     let output = device.physicalOutputCapabilities
+    let offersServerChoice = ServingPolicy.offersServerChoice(ServingInput(device))
     controller = Detail(
       id: device.sessionToken.rawValue,
       unit: device.portKey?.rawValue,
@@ -221,8 +223,10 @@ struct ControllerShowReport: Encodable, Equatable {
         hidInput: device.hidInputOwnership.rawValue,
         owner: device.inputOwner,
         duplicateExposureRisk: device.duplicateExposureRisk.rawValue,
-        server: record?.server ?? .system,
-        serverSource: record?.serverSource ?? ControllerRecord.defaultServerSource
+        server: offersServerChoice ? record?.server ?? .system : .ojd,
+        serverSource: offersServerChoice
+          ? record?.serverSource ?? ControllerRecord.defaultServerSource
+          : ControllerRecord.routeServerSource
       ),
       serving: Serving(device.servingDecision),
       parameters: device.parameters,

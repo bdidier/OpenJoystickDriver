@@ -33,8 +33,12 @@ extension ControllerRecord {
   /// The source `ojd controller show` names for `server` when no record matches the model.
   public static let defaultServerSource = "Default"
 
-  /// The record layer that sets `server`: `Bundled`, `Package`, `Global` or `User`; `Default`
-  /// when no layer sets it.
+  /// The source `ojd controller show` names for `server` when the system cannot serve the
+  /// controller, so its serving route belongs to OJD whatever the record says.
+  public static let routeServerSource = "Route"
+
+  /// The record layer that sets `server`: `Bundled`, `Package` or `User`; `Default` when no layer
+  /// sets it. `all.patch.json` holds only tuning, so `Global` never sets it.
   public var serverSource: String {
     fieldLayers["server"]?.rawValue ?? Self.defaultServerSource
   }
