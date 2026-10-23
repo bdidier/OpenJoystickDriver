@@ -135,9 +135,9 @@ extension DriverParseCharacterizationTests {
     let lines = try transcript(Subjects.sixaxisUSB, Self.capturedSteps(Self.capturedSixaxis))
     #expect(
       lines == [
-        "cap0 [] hat=Neutral ls=-1279,258 rs=258,0 lt=0 rt=0",
-        "cap1 [] hat=Neutral ls=-1023,258 rs=258,0 lt=0 rt=0",
-        "cap2 [] hat=Neutral ls=-1279,258 rs=258,0 lt=0 rt=0",
+        "cap0 [] hat=Neutral ls=-1279,258 rs=258,0 lt=0 rt=0 fresh",
+        "cap1 [] hat=Neutral ls=-1023,258 rs=258,0 lt=0 rt=0 fresh",
+        "cap2 [] hat=Neutral ls=-1279,258 rs=258,0 lt=0 rt=0 fresh",
       ]
     )
   }

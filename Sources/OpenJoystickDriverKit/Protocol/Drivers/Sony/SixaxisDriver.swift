@@ -59,12 +59,13 @@ public final class SixaxisDriver: PhysicalProtocolDriver {
   public func resetProtocolState() { state = .neutral }
 
   /// A Sixaxis lights no player LED until the host sets one. Over USB it ignores the LED report
-  /// written right after the startup feature reads and takes it once it streams input.
+  /// written right after the startup feature reads and takes it once it streams input. The
+  /// description's USB variant sets the input timeout, because a USB Sixaxis streams while idle.
   public var sessionPlan: DriverSessionPlan {
     DriverSessionPlan(
       assignsStartupPlayerIndicator: true,
       hidPlayerIndicatorFollowsFirstInput: true
-    )
+    ).withDefaults(of: .sonySixaxis, variant: isBluetooth ? .bluetoothClassic : .usb)
   }
 
   public func consumeInputConnectionStateChange() -> ControllerInputConnectionState? { nil }

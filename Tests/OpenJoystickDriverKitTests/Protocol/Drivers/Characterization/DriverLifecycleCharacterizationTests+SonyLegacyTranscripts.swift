@@ -26,8 +26,9 @@ extension DriverLifecycleCharacterizationTests {
         "hid.featureReports[presence] reports=0",
         "hid.shutdownFeatureReports reports=0", "hid.periodic nil", "hid.statusRequest nil",
         "hid.recovery[USB] supported=false beforeStartup=0 afterStartup=0",
-        "hid.recovery afterExpiry=0", "presence requiresConnection=false", "liveness timeout=nil",
-        "liveness observation=nil", "liveness format=nil", "battery=nil",
+        "hid.recovery afterExpiry=0", "presence requiresConnection=false",
+        "liveness timeout=1000000000", "liveness observation=nil",
+        "liveness format=nil", "battery=nil",
         "out[cold].hidRumble motors=[LowFrequency,HighFrequency] binary=[HighFrequency] "
           + "minInterval=0",
         "  id=0x01 n=49", "    0101ff01ff400000000002ff27100032ff27100032ff27100032ff2710003200",

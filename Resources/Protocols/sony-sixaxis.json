@@ -7,7 +7,11 @@
     "in": 130,
     "out": 2
   },
-  "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
+  "tuningKeys": [
+    "hidStartupIntervalMs",
+    "minimumHIDOutputIntervalMs",
+    "inputLivenessTimeoutMs"
+  ],
   "macOSOwnedOutput": {
     "lightingFeatures": ["PlayerIndicator"],
     "drivesRumble": true,
@@ -21,6 +25,15 @@
     "setsStartupPlayerIndicator": true,
     "readsStartupFeatures": true,
     "rationale": "macOS never writes output report 0x01 to a Sixaxis, and a USB Sixaxis ignores it until the host reads feature report 0xF2."
+  },
+  "defaults": {
+    "variants": {
+      "USB": {
+        "tuning": {
+          "inputLivenessTimeoutMs": 1000
+        }
+      }
+    }
   },
   "controls": {
     "base": "Xbox",

@@ -88,6 +88,14 @@ struct SixaxisDriverTests {
     #expect(bluetooth.activationWrites().isEmpty)
   }
 
+  /// A USB Sixaxis streams input reports while idle, so a second without one is a stale pad.
+  @Test
+  func testDS3OverUSBGoesStaleAfterASecondWithoutInput() {
+    #expect(SixaxisDriver().sessionPlan.inputReportLivenessTimeoutNanoseconds == 1_000_000_000)
+    let bluetooth = SixaxisDriver(isBluetooth: true)
+    #expect(bluetooth.sessionPlan.inputReportLivenessTimeoutNanoseconds == nil)
+  }
+
   @Test
   func testDS3IgnoresBogusBluetoothStatusReport() throws {
     let parser = SixaxisDriver()

@@ -109,11 +109,11 @@ struct ControllerModeConditionalTests {
     Self.expectRejected(
       Self.record(
         default: ["family": "SonyDualShock4"],
-        second: Self.hid,
+        second: ["family": "VendorPS3ThirdParty"],
         match: Self.hidMatch,
         fields: ["tuning": ["inputLivenessTimeoutMs": 500]]
       ),
-      "inputLivenessTimeoutMs is not read by the SonySixaxis driver"
+      "inputLivenessTimeoutMs is not read by the VendorPS3ThirdParty driver"
     )
   }
 

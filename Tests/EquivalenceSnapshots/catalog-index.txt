@@ -884,7 +884,7 @@ transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverrid
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
 output rumble=[low-frequency,high-frequency] binary=[high-frequency] lighting=[player-indicator] adaptiveTriggers=[]
-session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=0 recoveryRounds=0 livenessMs=-
+session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=0 recoveryRounds=0 livenessMs=1000
 parameters=
 
 ## 054C:05C4
@@ -6359,7 +6359,7 @@ transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverrid
 tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
 output rumble=[low-frequency,high-frequency] binary=[high-frequency] lighting=[player-indicator] adaptiveTriggers=[]
-session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=0 recoveryRounds=0 livenessMs=-
+session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=0 recoveryRounds=0 livenessMs=1000
 parameters=
 
 ## 2563:0575

@@ -136,71 +136,71 @@ b2.1 [LeftStickClick] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
 b2.2 [RightStickClick] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
 
 ## 054C:0268 host=usb steps=capturedSixaxis
-cap0 [] hat=Neutral ls=-1279,258 rs=258,0 lt=0 rt=0
-cap1 [] hat=Neutral ls=-1023,258 rs=258,0 lt=0 rt=0
-cap2 [] hat=Neutral ls=-1279,258 rs=258,0 lt=0 rt=0
+cap0 [] hat=Neutral ls=-1279,258 rs=258,0 lt=0 rt=0 fresh
+cap1 [] hat=Neutral ls=-1023,258 rs=258,0 lt=0 rt=0 fresh
+cap2 [] hat=Neutral ls=-1279,258 rs=258,0 lt=0 rt=0 fresh
 
 ## 054C:0268 host=usb steps=sixaxisSteps
-neutral [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-b2.0 [Back] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-b2.1 [LeftStickClick] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-b2.2 [RightStickClick] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-b2.3 [Start] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-b3.0 [LeftTrigger] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-b3.1 [RightTrigger] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-b3.2 [LeftShoulder] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-b3.3 [RightShoulder] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-b3.4 [North] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-b3.5 [East] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-b3.6 [South] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-b3.7 [West] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-b4.0 [Guide] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-b4.1 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-b4.2 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-b4.3 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-b4.4 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-b4.5 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-b4.6 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-b4.7 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-h10 [] hat=North ls=0,0 rs=0,0 lt=0 rt=0
-h30 [] hat=NorthEast ls=0,0 rs=0,0 lt=0 rt=0
-h20 [] hat=East ls=0,0 rs=0,0 lt=0 rt=0
-h60 [] hat=SouthEast ls=0,0 rs=0,0 lt=0 rt=0
-h40 [] hat=South ls=0,0 rs=0,0 lt=0 rt=0
-hc0 [] hat=SouthWest ls=0,0 rs=0,0 lt=0 rt=0
-h80 [] hat=West ls=0,0 rs=0,0 lt=0 rt=0
-h90 [] hat=NorthWest ls=0,0 rs=0,0 lt=0 rt=0
-h50 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-h0 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-s6=0 [] hat=Neutral ls=-32767,0 rs=0,0 lt=0 rt=0
-s6=7f [] hat=Neutral ls=-255,0 rs=0,0 lt=0 rt=0
-s6=80 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-s6=81 [] hat=Neutral ls=258,0 rs=0,0 lt=0 rt=0
-s6=ff [] hat=Neutral ls=32767,0 rs=0,0 lt=0 rt=0
-s7=0 [] hat=Neutral ls=0,-32767 rs=0,0 lt=0 rt=0
-s7=7f [] hat=Neutral ls=0,-255 rs=0,0 lt=0 rt=0
-s7=80 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-s7=81 [] hat=Neutral ls=0,258 rs=0,0 lt=0 rt=0
-s7=ff [] hat=Neutral ls=0,32767 rs=0,0 lt=0 rt=0
-s8=0 [] hat=Neutral ls=0,0 rs=-32767,0 lt=0 rt=0
-s8=7f [] hat=Neutral ls=0,0 rs=-255,0 lt=0 rt=0
-s8=80 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-s8=81 [] hat=Neutral ls=0,0 rs=258,0 lt=0 rt=0
-s8=ff [] hat=Neutral ls=0,0 rs=32767,0 lt=0 rt=0
-s9=0 [] hat=Neutral ls=0,0 rs=0,-32767 lt=0 rt=0
-s9=7f [] hat=Neutral ls=0,0 rs=0,-255 lt=0 rt=0
-s9=80 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-s9=81 [] hat=Neutral ls=0,0 rs=0,258 lt=0 rt=0
-s9=ff [] hat=Neutral ls=0,0 rs=0,32767 lt=0 rt=0
-t18=80 [] hat=Neutral ls=0,0 rs=0,0 lt=32896 rt=0
-t18=ff [] hat=Neutral ls=0,0 rs=0,0 lt=65535 rt=0
-t18=0 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-t19=80 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=32896
-t19=ff [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=65535
-t19=0 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-repeat [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-byte1=ff [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-short [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
+neutral [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 fresh
+b2.0 [Back] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 fresh
+b2.1 [LeftStickClick] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 fresh
+b2.2 [RightStickClick] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 fresh
+b2.3 [Start] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 fresh
+b3.0 [LeftTrigger] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 fresh
+b3.1 [RightTrigger] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 fresh
+b3.2 [LeftShoulder] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 fresh
+b3.3 [RightShoulder] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 fresh
+b3.4 [North] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 fresh
+b3.5 [East] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 fresh
+b3.6 [South] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 fresh
+b3.7 [West] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 fresh
+b4.0 [Guide] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 fresh
+b4.1 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 fresh
+b4.2 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 fresh
+b4.3 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 fresh
+b4.4 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 fresh
+b4.5 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 fresh
+b4.6 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 fresh
+b4.7 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 fresh
+h10 [] hat=North ls=0,0 rs=0,0 lt=0 rt=0 fresh
+h30 [] hat=NorthEast ls=0,0 rs=0,0 lt=0 rt=0 fresh
+h20 [] hat=East ls=0,0 rs=0,0 lt=0 rt=0 fresh
+h60 [] hat=SouthEast ls=0,0 rs=0,0 lt=0 rt=0 fresh
+h40 [] hat=South ls=0,0 rs=0,0 lt=0 rt=0 fresh
+hc0 [] hat=SouthWest ls=0,0 rs=0,0 lt=0 rt=0 fresh
+h80 [] hat=West ls=0,0 rs=0,0 lt=0 rt=0 fresh
+h90 [] hat=NorthWest ls=0,0 rs=0,0 lt=0 rt=0 fresh
+h50 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 fresh
+h0 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 fresh
+s6=0 [] hat=Neutral ls=-32767,0 rs=0,0 lt=0 rt=0 fresh
+s6=7f [] hat=Neutral ls=-255,0 rs=0,0 lt=0 rt=0 fresh
+s6=80 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 fresh
+s6=81 [] hat=Neutral ls=258,0 rs=0,0 lt=0 rt=0 fresh
+s6=ff [] hat=Neutral ls=32767,0 rs=0,0 lt=0 rt=0 fresh
+s7=0 [] hat=Neutral ls=0,-32767 rs=0,0 lt=0 rt=0 fresh
+s7=7f [] hat=Neutral ls=0,-255 rs=0,0 lt=0 rt=0 fresh
+s7=80 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 fresh
+s7=81 [] hat=Neutral ls=0,258 rs=0,0 lt=0 rt=0 fresh
+s7=ff [] hat=Neutral ls=0,32767 rs=0,0 lt=0 rt=0 fresh
+s8=0 [] hat=Neutral ls=0,0 rs=-32767,0 lt=0 rt=0 fresh
+s8=7f [] hat=Neutral ls=0,0 rs=-255,0 lt=0 rt=0 fresh
+s8=80 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 fresh
+s8=81 [] hat=Neutral ls=0,0 rs=258,0 lt=0 rt=0 fresh
+s8=ff [] hat=Neutral ls=0,0 rs=32767,0 lt=0 rt=0 fresh
+s9=0 [] hat=Neutral ls=0,0 rs=0,-32767 lt=0 rt=0 fresh
+s9=7f [] hat=Neutral ls=0,0 rs=0,-255 lt=0 rt=0 fresh
+s9=80 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 fresh
+s9=81 [] hat=Neutral ls=0,0 rs=0,258 lt=0 rt=0 fresh
+s9=ff [] hat=Neutral ls=0,0 rs=0,32767 lt=0 rt=0 fresh
+t18=80 [] hat=Neutral ls=0,0 rs=0,0 lt=32896 rt=0 fresh
+t18=ff [] hat=Neutral ls=0,0 rs=0,0 lt=65535 rt=0 fresh
+t18=0 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 fresh
+t19=80 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=32896 fresh
+t19=ff [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=65535 fresh
+t19=0 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 fresh
+repeat [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 fresh
+byte1=ff [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 fresh
+short [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 fresh
 
 ## 054C:09CC host=bluetoothClassic steps=dualShock4BluetoothSteps
 neutral [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh

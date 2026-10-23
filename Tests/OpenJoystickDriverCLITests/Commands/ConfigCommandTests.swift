@@ -177,7 +177,8 @@ struct ConfigCommandTests {
 
     #expect(run.code == 0, "\(run.standardError)")
     let values = try values(run)
-    #expect(values["inputLivenessTimeoutMs"]?["families"] as? [String] == ["SonyDualShock4"])
+    let liveness = values["inputLivenessTimeoutMs"]?["families"] as? [String]
+    #expect(liveness == ["SonyDualShock4", "SonySixaxis"])
     let deadzone = try #require(values["stickDeadzone"]?["families"] as? [String])
     #expect(deadzone.contains("XboxGIP") && deadzone.contains("SonyDualShock4"))
     let recovery = try #require(values["hidStartupRecoveryRounds"]?["families"] as? [String])
@@ -200,7 +201,7 @@ struct ConfigCommandTests {
     let line = try #require(
       run.standardOutput.split(separator: "\n").first { $0.hasPrefix("inputLivenessTimeoutMs") }
     )
-    #expect(line.hasSuffix("SonyDualShock4"))
+    #expect(line.hasSuffix("read by: SonyDualShock4, SonySixaxis"))
   }
 
   @Test

@@ -1655,7 +1655,7 @@
           {
             "id": "second",
             "protocol": {
-              "family": "SonySixaxis"
+              "family": "VendorPS3ThirdParty"
             },
             "match": {
               "probes": [

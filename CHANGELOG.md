@@ -256,6 +256,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The pr
 
 ### Fixed
 
+- A DualShock 3 or Sixaxis that OpenJoystickDriver serves over USB releases its held buttons and sticks when it sends no input for a second, as a DualShock 4 does. A USB Sixaxis streams input while idle, so a second of silence means it stopped, such as on a hub that cannot power it. Without the timeout, the virtual gamepad kept the last pressed controls. `inputLivenessTimeoutMs` sets the time for the USB link.
 - The mode-selection lines in the daemon log name the controller's location, such as `054C:0268 at location 0x00130000`, so two pads of one model, such as a DualShock 3 and its clone, can be told apart.
 - A mode probe counts a stalled feature report as the controller's refusal also when macOS reports the stall as `kUSBHostReturnPipeStalled` (`0xE0005000`), as it does for a DualShock 3 clone's report `0xEF`. That code counted as no reply, so a probe that expects a stall never held and the log said the controller did not answer.
 - A DualShock 3 or Sixaxis that OJD serves over USB lights its player LED: OJD writes the assigned slot after the controller's first input report, as it does for one macOS serves. Written right after the startup feature reads, the LED report was ignored, so the four LEDs kept blinking.
