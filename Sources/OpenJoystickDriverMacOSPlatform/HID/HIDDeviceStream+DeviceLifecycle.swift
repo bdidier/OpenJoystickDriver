@@ -172,7 +172,7 @@ extension HIDDeviceStream {
 
   /// Routes input reports of one opened device into this stream. Element values are routed only
   /// after a bound driver asks for them, since IOKit decodes every element of every report.
-  private func attachInput(_ device: IOHIDDevice, deviceID: UInt64) {
+  func attachInput(_ device: IOHIDDevice, deviceID: UInt64) {
     let size = max(Int(unsignedProperty(device, kIOHIDMaxInputReportSizeKey) ?? 0), 1)
     sizeReportQueue(device)
     let reportBuffer = UnsafeMutableBufferPointer<UInt8>.allocate(capacity: size)

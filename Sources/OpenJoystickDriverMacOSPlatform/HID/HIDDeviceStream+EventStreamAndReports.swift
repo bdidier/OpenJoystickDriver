@@ -250,29 +250,33 @@ extension HIDDeviceStream {
   }
 
   /// Re-runs the seize of tracked non-native devices at a location whose earlier seize was
-  /// refused or failed, and yields `.ownershipChanged` when the location's ownership changes.
+  /// refused or failed, attaches the input of a device that had no shared open, and yields
+  /// `.ownershipChanged` when the location's ownership changes.
+  @MainActor
   package func retryInputClaim(locationID: UInt32) {
     guard !eventAdapter.hasNativeDevice(locationID: locationID) else { return }
-    let candidates: [(deviceID: UInt64, device: IOHIDDevice)] = seizeLock.withLock {
-      guard releasedByLocation[locationID]?.isEmpty ?? true else { return [] }
-      return sharedOpenByDeviceID.compactMap { deviceID, sharedOpen in
-        connectionsByDeviceID[deviceID]?.ioKitLocationID == locationID
-          ? (deviceID, sharedOpen.device) : nil
-      }
+    let (tracked, sharedOpenIDs) = seizeLock.withLock {
+      () -> ([UInt64: HIDDeviceConnection], Set<UInt64>) in
+      guard releasedByLocation[locationID]?.isEmpty ?? true else { return ([:], []) }
+      return (connectionsByDeviceID, Set(sharedOpenByDeviceID.keys))
     }
+    let candidateIDs = Self.inputClaimRetryCandidates(tracked: tracked, locationID: locationID) {
+      eventAdapter.ownership(deviceID: $0)
+    }
+    guard !candidateIDs.isEmpty, let manager,
+      let devices = IOHIDManagerCopyDevices(manager) as? Set<IOHIDDevice>
+    else { return }
+    let devicesByID = Dictionary(devices.map { (trackingID(for: $0), $0) }) { first, _ in first }
     let before = eventAdapter.ownership(locationID: locationID)
-    for candidate in candidates {
-      switch eventAdapter.ownership(deviceID: candidate.deviceID) {
-      case .ownedByAnotherClient, .acquisitionFailed:
-        let claim = HIDInputClaim.reclaim(port: HIDDeviceOpenPort(device: candidate.device))
-        if claim.inputResult == kIOReturnSuccess { sizeReportQueue(candidate.device) }
-        record(
-          claim,
-          device: candidate.device,
-          deviceID: candidate.deviceID,
-          locationID: locationID
-        )
-      default: continue
+    for deviceID in candidateIDs {
+      guard let device = devicesByID[deviceID] else { continue }
+      let claim = HIDInputClaim.reclaim(port: HIDDeviceOpenPort(device: device))
+      record(claim, device: device, deviceID: deviceID, locationID: locationID)
+      guard claim.inputResult == kIOReturnSuccess else { continue }
+      if sharedOpenIDs.contains(deviceID) {
+        sizeReportQueue(device)
+      } else {
+        attachInput(device, deviceID: deviceID)
       }
     }
     let after = eventAdapter.ownership(locationID: locationID)
@@ -284,6 +288,23 @@ extension HIDDeviceStream {
         )
       )
     }
+  }
+
+  /// The tracked devices at `locationID` whose seize was refused or failed, in ID order. Each is
+  /// retried whether or not it has a shared open: while another client seizes a device, macOS
+  /// refuses the shared open too.
+  static func inputClaimRetryCandidates(
+    tracked: [UInt64: HIDDeviceConnection],
+    locationID: UInt32,
+    ownership: (UInt64) -> HIDInputOwnership?
+  ) -> [UInt64] {
+    tracked.compactMap { deviceID, connection -> UInt64? in
+      guard connection.ioKitLocationID == locationID else { return nil }
+      switch ownership(deviceID) {
+      case .ownedByAnotherClient, .acquisitionFailed: return deviceID
+      default: return nil
+      }
+    }.sorted()
   }
 
   private func setReport(
