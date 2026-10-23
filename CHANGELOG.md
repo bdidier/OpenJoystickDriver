@@ -262,6 +262,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The pr
 
 ### Fixed
 
+- A raw-USB controller whose interface another process holds, such as a GameSir G7 SE `3537:1010` whose interface 0 another app opened, shows **Used by** that app and is served when the app lets go. macOS 27 refuses the open with `kIOReturnInternalError` as well as `kIOReturnExclusiveAccess`, so a failed open of an interface whose `UsbExclusiveOwner` names another process is read as held by it, in place of a device that OJD kept retrying as unavailable.
 - `ojd virtual show` lists the virtual gamepad choices as `virtual set` takes them (`sdl-compatible, generic, game-controller-compatible`) instead of their identifiers (`SDLCompatible`). The `--json` output keeps the identifiers.
 - `just lint`, `just check` and the CI and release workflows run the pinned Biome that `Scripts/Quality/biome_binary.py` resolves, so they also pass in a linked worktree, which has no `node_modules` of its own; the recipe named `node_modules/.bin/biome` of the working directory. Outside a Git checkout the lookup fails with the `git` error; it used the folder itself as the main checkout.
 - `./Scripts/ojd catalog regenerate` keeps the pinned upstream sources in `.build/catalog-sources` of the main checkout, so a linked worktree reads them from the network only when the main checkout has no copy.

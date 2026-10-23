@@ -86,12 +86,32 @@ public actor IOUSBHostTransportProvider: USBTransportProvider {
 
   private static func openError(_ error: Error, interfaceService: io_service_t) -> USBTransportError
   {
-    let code = IOReturn(truncatingIfNeeded: (error as NSError).code)
-    return transportError(
-      code,
-      exclusiveOwner: code == kIOReturnExclusiveAccess
-        ? interfaceExclusiveOwner(of: interfaceService) : nil
+    openError(
+      IOReturn(truncatingIfNeeded: (error as NSError).code),
+      interfaceOwner: interfaceExclusiveOwner(of: interfaceService),
+      processID: getpid()
     )
+  }
+
+  /// A failed open of an interface that names an owner other than process `processID` is
+  /// ``USBTransportError/ownedByAnotherClient(owner:)`` whatever `code` is, because macOS 27
+  /// refuses such an open with `kIOReturnInternalError` as well as `kIOReturnExclusiveAccess`.
+  /// Access refusals stay `accessDenied`.
+  static func openError(
+    _ code: IOReturn,
+    interfaceOwner: String?,
+    processID: Int32
+  ) -> USBTransportError {
+    let mapped = transportError(code)
+    guard let interfaceOwner, !interfaceOwner.hasPrefix("pid \(processID),"),
+      mapped != .accessDenied
+    else {
+      return transportError(
+        code,
+        exclusiveOwner: code == kIOReturnExclusiveAccess ? interfaceOwner : nil
+      )
+    }
+    return .ownedByAnotherClient(owner: interfaceOwner)
   }
 
   /// The device's own `UsbExclusiveOwner` registry property, such as `pid 11070, steam_osx`. It
