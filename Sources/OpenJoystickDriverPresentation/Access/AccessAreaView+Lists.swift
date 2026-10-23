@@ -27,7 +27,7 @@
               AccessPresentation.signer(grant.publisher.kind, grant.publisher.id),
               AccessPresentation.scopes(grant.scopes)
             ),
-            help: grant.path
+            help: AccessPresentation.location(grant.path)
           ) {
             revokeControl(
               scopes: grant.scopes,
@@ -75,7 +75,7 @@
               AccessPresentation.scopes(client.scopes),
               client.reason
             ),
-            help: client.path
+            help: client.path.map(AccessPresentation.location)
           ) {
             Button(OJDLocalized.string("ui.access.grant")) { model.requestRefusedGrant(client) }
               .disabled(model.busy).ojdAccessibilityLabel(

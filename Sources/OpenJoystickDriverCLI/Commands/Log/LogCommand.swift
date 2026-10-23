@@ -37,7 +37,7 @@ struct LogPathCommand: AsyncParsableCommand {
       let path = LogCommand.environment.directory().path
       switch CLIContext.current.format {
       case .json: try CLIOutput.json(Result(path: path))
-      case .plain, .human: CLIOutput.stdout(path)
+      case .plain, .human: CLIOutput.raw(path)
       }
     }
   }

@@ -165,7 +165,10 @@
             }
           )
         ).disabled(model.busy).help(
-          OJDLocalized.formatted("ui.access.web.pages", status.web.pagesPath)
+          OJDLocalized.formatted(
+            "ui.access.web.pages",
+            AccessPresentation.location(status.web.pagesPath)
+          )
         )
         if status.web.enabled {
           Text(AccessPresentation.web(status.web)).font(.caption).foregroundColor(

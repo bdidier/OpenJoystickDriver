@@ -235,7 +235,12 @@ enum ControllerDetailFacts {
     guard let file = record.file else {
       return OJDLocalized.string("cli.controller.show.recordBundled")
     }
-    return OJDLocalized.formatted("cli.controller.show.recordUser", file.path)
+    return recordLocation(file.path)
+  }
+
+  /// The record row for a user or package file, with the home folder written as `~`.
+  static func recordLocation(_ path: String) -> String {
+    OJDLocalized.formatted("cli.controller.show.recordUser", HomeFolder.redacting(path))
   }
 
   private static func inputHealthKey(_ state: ControllerInputHealthState) -> String {

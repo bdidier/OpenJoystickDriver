@@ -136,7 +136,7 @@ struct RecordDraftCommand: AsyncParsableCommand {
     case .plain:
       CLIOutput.plain(changed.map { [$0.byte, $0.minimum, $0.maximum].map(String.init) })
     case .human:
-      CLIOutput.stdout(draft.text, terminator: "")
+      CLIOutput.raw(draft.text, terminator: "")
       CLIOutput.success(
         CLILocalized.format(
           "cli.record.draft.captured",

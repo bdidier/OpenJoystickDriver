@@ -4,12 +4,20 @@ import Foundation
 import OpenJoystickDriverKit
 
 enum CLIOutput {
+  /// Prints human text on stdout, with each path under the home folder written as `~`.
   static func stdout(_ message: String = "", terminator: String = "\n") {
-    write(message, terminator: terminator, to: FileHandle.standardOutput)
+    write(HomeFolder.redacting(message), terminator: terminator, to: FileHandle.standardOutput)
   }
 
+  /// Prints human text on stderr, with each path under the home folder written as `~`.
   static func stderr(_ message: String = "", terminator: String = "\n") {
-    write(message, terminator: terminator, to: FileHandle.standardError)
+    write(HomeFolder.redacting(message), terminator: terminator, to: FileHandle.standardError)
+  }
+
+  /// Prints `message` on stdout unchanged: a value a script reads, such as a path that a shell
+  /// substitution uses, where `~` would not expand.
+  static func raw(_ message: String, terminator: String = "\n") {
+    write(message, terminator: terminator, to: FileHandle.standardOutput)
   }
 
   /// Prints a success message on stderr unless `--quiet` is set.
@@ -37,7 +45,7 @@ enum CLIOutput {
     let document = try OrderedJSONEncoder().encode(
       CLIDocument(kind: kind ?? self.kind, value: value)
     )
-    stdout(document.formatted(), terminator: "")
+    raw(document.formatted(), terminator: "")
   }
 
   /// Prints `value` as one line of JSON on stdout, with `apiVersion` and `kind`, for a `--json`
@@ -46,13 +54,13 @@ enum CLIOutput {
     let document = try OrderedJSONEncoder().encode(
       CLIDocument(kind: kind ?? self.kind, value: value)
     )
-    stdout(document.compact())
+    raw(document.compact())
   }
 
   /// Prints `value` as one line of JSON on stdout, without `apiVersion` and `kind`, such as a
   /// watch line `{type, object}`. Members are sorted by name.
   static func jsonLineWithoutEnvelope(_ value: some Encodable) throws {
-    stdout(try OrderedJSONEncoder().encode(value).compact())
+    raw(try OrderedJSONEncoder().encode(value).compact())
   }
 
   /// Prints one tab-separated record per row on stdout, for `--plain`. A tab or a newline character
@@ -69,7 +77,7 @@ enum CLIOutput {
           )
         )
       }
-      stdout(fields.joined(separator: "\t"))
+      raw(fields.joined(separator: "\t"))
     }
   }
 

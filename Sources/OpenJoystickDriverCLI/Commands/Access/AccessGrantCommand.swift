@@ -215,7 +215,7 @@ struct AccessGrantCommand: AsyncParsableCommand {
           result.grant.id
         )
       )
-      CLIOutput.stdout(result.token)
+      CLIOutput.raw(result.token)
     }
   }
 

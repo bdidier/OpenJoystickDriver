@@ -101,7 +101,7 @@ struct VirtualExportMappingCommand: AsyncParsableCommand {
   )
     throws
   {
-    CLIOutput.stdout(
+    CLIOutput.raw(
       try format.document(for: personas) { sdlHintsNote($0.rawValue) }
     )
   }

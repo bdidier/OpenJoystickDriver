@@ -200,24 +200,7 @@ public enum ApplicationServiceLogService {
     _ snapshots: [ApplicationServiceLogSnapshot],
     home: String
   ) -> String {
-    redactingHome(humanText(snapshots), home: home)
-  }
-
-  /// `text` with each path under `home` written as `~`, as the support report leaves out
-  /// filesystem paths. A longer folder name that starts with `home` is left alone.
-  public static func redactingHome(_ text: String, home: String) -> String {
-    let home = home.hasSuffix("/") ? String(home.dropLast()) : home
-    guard !home.isEmpty,
-      let expression = try? NSRegularExpression(
-        pattern: NSRegularExpression.escapedPattern(for: home) + #"(?=$|[/\s"':,;)\]])"#,
-        options: .anchorsMatchLines
-      )
-    else { return text }
-    return expression.stringByReplacingMatches(
-      in: text,
-      range: NSRange(text.startIndex..., in: text),
-      withTemplate: "~"
-    )
+    HomeFolder.redacting(humanText(snapshots), home: home)
   }
 }
 

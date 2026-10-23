@@ -22,6 +22,8 @@ struct LibraryRecordItem: Equatable, Identifiable {
   /// Only a record that a user file adds or patches can be removed here; a package's record
   /// goes with its package.
   var isRemovable: Bool { layer == .user }
+  /// The record's file as the Library shows it, with the home folder written as `~`.
+  var fileDisplayPath: String? { file.map { HomeFolder.redacting($0.path) } }
 
   /// Whether the record's `VVVV:PPPP`, its family's display name or its family's `ojd` token
   /// contains `query`, ignoring case, so a search finds what the Library shows and what `ojd`
@@ -43,6 +45,8 @@ struct LibrarySkippedFile: Equatable, Identifiable {
   let problem: String
 
   var id: String { path }
+  /// The path as the Library shows it, with the home folder written as `~`.
+  var displayPath: String { HomeFolder.redacting(path) }
 }
 
 struct LibraryRecordListing: Equatable {

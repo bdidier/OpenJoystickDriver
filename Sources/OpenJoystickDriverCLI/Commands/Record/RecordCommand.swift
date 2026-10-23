@@ -156,7 +156,7 @@ struct RecordShowCommand: AsyncParsableCommand {
           )
         }
         CLIOutput.stdout("")
-        CLIOutput.stdout(record.text, terminator: "")
+        CLIOutput.raw(record.text, terminator: "")
       }
     }
   }

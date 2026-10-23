@@ -98,7 +98,7 @@
           OJDLocalized.string("ui.library.field.source"),
           detail.item.layer.libraryTitle
         )
-        OJDLabeledValue(OJDLocalized.string("ui.library.field.file"), detail.item.file?.path)
+        OJDLabeledValue(OJDLocalized.string("ui.library.field.file"), detail.item.fileDisplayPath)
         OJDLabeledValue(OJDLocalized.string("ui.library.field.transport"), detail.transport)
         if let claimed = detail.claimedByUSBExtension {
           OJDLabeledValue(

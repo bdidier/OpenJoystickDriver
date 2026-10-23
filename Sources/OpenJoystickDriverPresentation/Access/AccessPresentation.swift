@@ -3,6 +3,9 @@ import OpenJoystickDriverKit
 
 /// Words for the values of the access payloads.
 enum AccessPresentation {
+  /// A client's program or folder path, with the home folder written as `~`.
+  static func location(_ path: String) -> String { HomeFolder.redacting(path) }
+
   static func scopes(_ scopes: [EndpointScope]) -> String {
     scopes.map(scope).joined(separator: ", ")
   }

@@ -206,7 +206,7 @@ struct ProfileExportCommand: AsyncParsableCommand {
         try await selector.resolve(with: $0)
       }
       guard let output else {
-        CLIOutput.stdout(try RemappingProfileFileStore.encodedJSON(document))
+        CLIOutput.raw(try RemappingProfileFileStore.encodedJSON(document))
         return
       }
       do { try RemappingProfileFileStore.write(document, to: URL(fileURLWithPath: output)) } catch {

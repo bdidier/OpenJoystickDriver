@@ -109,7 +109,7 @@
 
     private func skippedRow(_ skipped: LibrarySkippedFile) -> some View {
       VStack(alignment: .leading, spacing: 2) {
-        Text(skipped.path)
+        Text(skipped.displayPath)
         Text(OJDLocalized.formatted("ui.library.record.skipped", skipped.problem)).font(.caption)
           .foregroundColor(.secondary)
       }.ojdAccessibilityLabel(skipped.path).ojdAccessibilityValue(skipped.problem)
