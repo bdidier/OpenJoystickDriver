@@ -47,9 +47,6 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      - name: Swift toolchain
-        uses: ./.github/actions/swift-toolchain
-
       - name: Remove unused untrusted Homebrew taps
         run: |
           if brew tap | grep -Fxq aws/tap; then
@@ -119,13 +116,8 @@ jobs:
       - name: Check the platform split
         run: python3 Scripts/Quality/check_neutral_core_imports.py
 
-      - name: Build package
-        run: |
-          swift build
-
-      - name: Run tests
-        run: |
-          swift test --no-parallel
+      - name: Build and test package
+        run: ./Scripts/ojd check swift
 
       - name: Create release tag
         env:

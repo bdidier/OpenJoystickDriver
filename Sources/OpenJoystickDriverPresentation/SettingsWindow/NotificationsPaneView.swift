@@ -75,7 +75,7 @@
       _ titleKey: String,
       _ accessibilityKey: String,
       _ value: KeyPath<SettingsPreferencesModel, Bool>,
-      _ set: @escaping (Bool) -> Void
+      _ set: @escaping @MainActor @Sendable (Bool) -> Void
     ) -> some View {
       Toggle(
         OJDLocalized.string(titleKey),

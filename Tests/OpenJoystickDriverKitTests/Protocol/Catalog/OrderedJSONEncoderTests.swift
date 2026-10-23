@@ -34,7 +34,7 @@ struct OrderedJSONEncoderTests {
   private struct Floats: Encodable {
     let values: [Double] = [
       0, -0.0, 1, -1, 0.1, 0.25, 100.5, 1e3, 1e15, 1e16, 1e21, 1e22, 1.5e300, 1e-5, 1e-7,
-      5e-324, .greatestFiniteMagnitude, .leastNormalMagnitude, 9_007_199_254_740_993,
+      5e-324, .greatestFiniteMagnitude, .leastNormalMagnitude, 9_007_199_254_740_992,
       0.30000000000000004, 123_456_789.123_456_79,
     ]
     let singles: [Float] = [

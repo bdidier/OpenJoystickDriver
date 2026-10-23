@@ -366,7 +366,7 @@ struct LocalRPCBridgeTests {
   func anOverrideResetAnnouncesFromTheServer() async throws {
     try await withServer { server in
       #expect(
-        await Self.announcements(from: server) { server.resetVirtualHIDProfileSettings() } == 1
+        await Self.announcements(from: server) { _ = server.resetVirtualHIDProfileSettings() } == 1
       )
     }
   }

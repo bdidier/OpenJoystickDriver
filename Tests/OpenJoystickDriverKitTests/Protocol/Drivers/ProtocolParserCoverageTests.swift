@@ -32,14 +32,16 @@ extension NVIDIAShieldDriverTests: ParserSuite {}
 /// Every physical protocol family has a parser suite that declares the family it covers, and no
 /// two suites claim the same family, so a new family cannot ship without a parser test.
 struct ProtocolParserCoverageTests {
-  static let parserSuites: [any ParserSuite.Type] = [
-    HIDDescriptorDriverTests.self, ReportLayoutDriverTests.self, XboxXIDParserTests.self,
-    XUSBDriverTests.self, GIPDriverTests.self, SixaxisDriverTests.self,
-    DualShock4DriverTests.self, DualSenseDriverTests.self, Switch1DriverTests.self,
-    Switch2DriverTests.self, SwitchInputOnlyParserTests.self, SteamControllerDriverTests.self,
-    SteamTritonDriverTests.self, SteamDeckDriverTests.self, FlydigiParserTests.self,
-    PS3ThirdPartyDriverTests.self, GameSirDriverTests.self, NVIDIAShieldDriverTests.self,
-  ]
+  static var parserSuites: [any ParserSuite.Type] {
+    [
+      HIDDescriptorDriverTests.self, ReportLayoutDriverTests.self, XboxXIDParserTests.self,
+      XUSBDriverTests.self, GIPDriverTests.self, SixaxisDriverTests.self,
+      DualShock4DriverTests.self, DualSenseDriverTests.self, Switch1DriverTests.self,
+      Switch2DriverTests.self, SwitchInputOnlyParserTests.self, SteamControllerDriverTests.self,
+      SteamTritonDriverTests.self, SteamDeckDriverTests.self, FlydigiParserTests.self,
+      PS3ThirdPartyDriverTests.self, GameSirDriverTests.self, NVIDIAShieldDriverTests.self,
+    ]
+  }
 
   @Test
   func everyProtocolFamilyHasExactlyOneParserSuite() {

@@ -30,17 +30,12 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      - name: Swift toolchain
-        uses: ./.github/actions/swift-toolchain
-
       - name: Toolchain
         run: |
           sw_vers
           xcodebuild -version
-          command -v swift
-          swift --version
-          test "$(command -v swift)" = "$HOME/.swiftly/bin/swift"
-          swift --version | grep -F "Swift version $(cat .swift-version) ("
+          # environment.sh selects Xcode's swift and stops unless it is the version .swift-version names.
+          bash -c 'source Scripts/Platform/environment.sh && echo "$SWIFT_PATH" && "$SWIFT_PATH" --version'
 
       - name: Remove unused untrusted Homebrew taps
         run: |
@@ -118,10 +113,5 @@ jobs:
           swiftlint lint --no-cache --strict
           python3 Scripts/Quality/check_localization_keys.py
 
-      - name: Build package
-        run: |
-          swift build
-
-      - name: Run tests
-        run: |
-          swift test --no-parallel
+      - name: Build and test package
+        run: ./Scripts/ojd check swift

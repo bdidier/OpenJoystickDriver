@@ -48,10 +48,20 @@ def executed_test_count(output: str) -> int:
     return max(xctest, default=0) + max(testing, default=0)
 
 
-def swift_test_package(directory: Path) -> int:
-    """Runs `swift test` in `directory`; a run that executes no test at all fails."""
+WARNING_LINE = re.compile(r"(^|: )warning: ")
+TERMINAL_COLOR = re.compile(r"\x1b\[[0-9;]*m")
+
+
+def warning_lines(output: str) -> list[str]:
+    """The compiler, linker and package manager warnings in `output`."""
+    plain = TERMINAL_COLOR.sub("", output)
+    return [line for line in plain.splitlines() if WARNING_LINE.search(line)]
+
+
+def run_without_warnings(command: list[str], directory: Path) -> tuple[int, str]:
+    """Runs a build `command`; any warning in its output fails it with status 1."""
     completed = subprocess.run(
-        swift_command(["test"]),
+        command,
         cwd=directory,
         env=env_with(),
         stdout=subprocess.PIPE,
@@ -61,10 +71,26 @@ def swift_test_package(directory: Path) -> int:
     )
     output = completed.stdout or ""
     print(output, end="")
-    if completed.returncode == 0 and executed_test_count(output) == 0:
+    warnings = warning_lines(output)
+    if warnings:
+        print(
+            f"error: the build in {directory} printed {len(warnings)} warning lines, "
+            "and a warning fails the check:",
+            *dict.fromkeys(warnings),
+            sep="\n",
+            file=sys.stderr,
+        )
+        return 1, output
+    return completed.returncode, output
+
+
+def swift_test_package(directory: Path) -> int:
+    """Runs `swift test` in `directory`; a warning or a run that executes no test fails."""
+    status, output = run_without_warnings(swift_command(["test"]), directory)
+    if status == 0 and executed_test_count(output) == 0:
         print(f"error: swift test in {directory} executed no tests", file=sys.stderr)
         return 1
-    return completed.returncode
+    return status
 
 
 def run_record(args: list[str]) -> int:

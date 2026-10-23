@@ -86,8 +86,9 @@ COMMAND_HELP = """Commands:
   vocabulary regenerate --write   Rebuild the wiki control crosswalk table from crosswalk.json
   check profiles              Check canonical controller records
   check schemas               Validate canonical schemas and a live support report
+  check swift                 Build the package and its tests, failing on any warning, then test
   check driverkit             Verify generated DriverKit reproducibility and build
-  check tools                 Build the SDL gamepad probe and test the WebRTC bridge package
+  check tools                 Build the SDL gamepad probe and test the WebRTC bridge package, failing on any warning
   test parsers-macos14        Run focused parser regressions without Swift Testing
   snapshots check             Diff the tree against the equivalence snapshots, per record
   snapshots write             Rewrite the equivalence snapshots from the tree (review the diff)
@@ -218,6 +219,7 @@ from .execution import (
     install_hooks,
     run_record,
     run_usb_passive,
+    run_without_warnings,
     swift_command,
     swift_test_package,
     validate_hooks,
@@ -367,13 +369,26 @@ def dispatch(argv: list[str]) -> int:
                     python=True,
                     schema_python=sub in {"profiles", "schemas"},
                 )
+            if sub == "swift":
+                require("check swift", tail, count=0)
+                built, _ = run_without_warnings(
+                    swift_command(["build", "--build-tests"]), PROJECT_DIR
+                )
+                if built:
+                    return built
+                return subprocess.run(
+                    swift_command(["test", "--skip-build", "--no-parallel"]),
+                    cwd=PROJECT_DIR,
+                    env=env_with(),
+                    check=False,
+                ).returncode
             if sub == "driverkit":
                 require("check driverkit", tail, count=0)
                 exec_target("Build/driverkit.sh", ["validate"])
             if sub == "tools":
                 require("check tools", tail, count=0)
                 # xmake's clang finds no SDK on its own; environment.sh exports SDKROOT.
-                probe = subprocess.run(
+                probe, _ = run_without_warnings(
                     [
                         "/bin/bash",
                         "-c",
@@ -382,15 +397,13 @@ def dispatch(argv: list[str]) -> int:
                         str(ENVIRONMENT),
                         str(PROJECT_DIR / "Tools/SDLGamepadProbe"),
                     ],
-                    cwd=PROJECT_DIR,
-                    env=env_with(),
-                    check=False,
-                ).returncode
+                    PROJECT_DIR,
+                )
                 # The bridge is its own package, so the root `swift test` never builds it.
                 bridge = swift_test_package(PROJECT_DIR / "Tools/WebRTCBridge")
                 return probe or bridge
             die(
-                f"Unknown: check {sub} (expected: profiles | schemas | driverkit | tools)"
+                f"Unknown: check {sub} (expected: profiles | schemas | swift | driverkit | tools)"
             )
         case "snapshots":
             if rest not in (["check"], ["write"]):

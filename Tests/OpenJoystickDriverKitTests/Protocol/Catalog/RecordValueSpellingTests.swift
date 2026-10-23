@@ -301,9 +301,7 @@ struct RecordValueSpellingTests {
       do {
         _ = try ProtocolDescriptionFixture.decode(family: spelling.family, body)
         return nil
-      } catch let problem as ProtocolDescriptionProblem { return problem.code } catch {
-        return .unexpected
-      }
+      } catch { return error.code }
     }
     #expect(code(spelling.current) == nil, "the current spelling decodes")
     for name in spelling.rejected { #expect(code(name) == spelling.code, "\(name) is unknown") }

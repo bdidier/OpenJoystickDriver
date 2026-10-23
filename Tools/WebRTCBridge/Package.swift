@@ -1,4 +1,4 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 6.4
 import PackageDescription
 
 let package = Package(
@@ -24,5 +24,11 @@ let package = Package(
         "WebRTCBridge", "WebRTCBridgeCore", .product(name: "BridgeCore", package: "BridgeCore"),
       ]
     ),
-  ]
+  ],
+  swiftLanguageModes: [.v5]
 )
+
+// Warnings are errors in every target of this package; the setting does not reach dependencies.
+for target in package.targets {
+  target.swiftSettings = (target.swiftSettings ?? []) + [.treatAllWarnings(as: .error)]
+}

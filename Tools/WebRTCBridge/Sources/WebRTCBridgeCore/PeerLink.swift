@@ -63,7 +63,7 @@ public final class PeerLink: NSObject, @unchecked Sendable {
     let constraints = LKRTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: nil)
     let description: LKRTCSessionDescription =
       try await withCheckedThrowingContinuation { continuation in
-        let completion: (LKRTCSessionDescription?, Error?) -> Void = { sdp, error in
+        let completion: @Sendable (LKRTCSessionDescription?, Error?) -> Void = { sdp, error in
           if let sdp {
             continuation.resume(returning: sdp)
           } else {

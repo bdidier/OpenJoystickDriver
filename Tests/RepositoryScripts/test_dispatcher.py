@@ -18,6 +18,10 @@ XCTEST_RUN = """\
 Test run with 0 tests in 0 suites passed after 0.001 seconds.
 """
 TESTING_RUN = "Test run with 4 tests in 1 suite passed after 0.1 seconds.\n"
+COMPILER_WARNING = "/src/a.swift:3:5: warning: result of call to 'map' is unused\n"
+LINKER_WARNING = (
+    "ld: warning: building for macOS-12.0, but linking with dylib built for 13.0\n"
+)
 NO_TESTS_RUN = """\
 \t Executed 0 tests, with 0 failures (0 unexpected) in 0.0 (0.0) seconds
 Test run with 0 tests in 0 suites passed after 0.001 seconds.
@@ -40,6 +44,7 @@ class ScriptTree:
         shutil.copytree(
             self.root / "Scripts", self.path / "Scripts", ignore=ignore_cache
         )
+        shutil.copy(self.root / ".swift-version", self.path / ".swift-version")
         info = self.path / "Sources/OpenJoystickDriver/App/Info.plist"
         info.parent.mkdir(parents=True)
         shutil.copy(self.root / "Sources/OpenJoystickDriver/App/Info.plist", info)
@@ -377,6 +382,62 @@ class DispatcherTests(unittest.TestCase):
         ]
         with patch.object(dispatcher.subprocess, "run", side_effect=results):
             self.assertEqual(dispatcher.dispatch(["check", "tools"]), 0)
+
+    def test_check_tools_fails_when_the_probe_build_warns(self) -> None:
+        results = [
+            subprocess.CompletedProcess(args=[], returncode=0, stdout=COMPILER_WARNING),
+            subprocess.CompletedProcess(args=[], returncode=0, stdout=XCTEST_RUN),
+        ]
+        with patch.object(dispatcher.subprocess, "run", side_effect=results):
+            self.assertEqual(dispatcher.dispatch(["check", "tools"]), 1)
+
+    def test_check_tools_fails_when_the_bridge_build_warns(self) -> None:
+        results = [
+            subprocess.CompletedProcess(args=[], returncode=0),
+            subprocess.CompletedProcess(
+                args=[], returncode=0, stdout=LINKER_WARNING + XCTEST_RUN
+            ),
+        ]
+        with patch.object(dispatcher.subprocess, "run", side_effect=results):
+            self.assertEqual(dispatcher.dispatch(["check", "tools"]), 1)
+
+    def test_check_swift_builds_then_tests_without_building_again(self) -> None:
+        completed = subprocess.CompletedProcess(args=[], returncode=0, stdout="")
+        with patch.object(
+            dispatcher.subprocess, "run", return_value=completed
+        ) as run_command:
+            self.assertEqual(dispatcher.dispatch(["check", "swift"]), 0)
+        commands = [call.args[0][5:] for call in run_command.call_args_list]
+        self.assertEqual(
+            commands,
+            [
+                ["build", "--build-tests"],
+                ["test", "--skip-build", "--no-parallel"],
+            ],
+        )
+        for call in run_command.call_args_list:
+            self.assertEqual(call.kwargs["cwd"], dispatcher.PROJECT_DIR)
+
+    def test_check_swift_fails_on_a_build_warning_and_runs_no_tests(self) -> None:
+        completed = subprocess.CompletedProcess(
+            args=[], returncode=0, stdout=COMPILER_WARNING
+        )
+        with patch.object(
+            dispatcher.subprocess, "run", return_value=completed
+        ) as run_command:
+            self.assertEqual(dispatcher.dispatch(["check", "swift"]), 1)
+        self.assertEqual(run_command.call_count, 1)
+
+    def test_warning_lines_finds_compiler_linker_and_package_warnings(self) -> None:
+        output = (
+            COMPILER_WARNING
+            + LINKER_WARNING
+            + "warning: 'pkg': found 1 file(s) which are unhandled\n"
+            + "\x1b[1;33mwarning: \x1b[1;39mcolored\x1b[0;0m\n"
+            + "Build complete! 0 warnings\n"
+            + "swiftc -warnings-as-errors -c main.swift\n"
+        )
+        self.assertEqual(len(execution.warning_lines(output)), 4)
 
     def test_executed_test_count_adds_xctest_and_swift_testing(self) -> None:
         count = execution.executed_test_count

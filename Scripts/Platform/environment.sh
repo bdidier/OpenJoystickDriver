@@ -67,12 +67,21 @@ if [[ -n "${DEVELOPER_DIR:-}" ]]; then
   XCODE_SELECT_PATH="$DEVELOPER_DIR"
 fi
 
-# Every Swift command runs the `swift` found on PATH, so one compiler writes `.build`.
-# DEVELOPER_DIR and SDKROOT only select the Xcode SDK and Xcode tools such as xcodebuild.
+# Every Swift command runs the swift of the selected Xcode, so one compiler writes `.build`. The
+# swift.org toolchains from 6.0.1 on build their runtime for macOS 13, so linking a macOS 12
+# target against them warns; Xcode's toolchain links against the SDK instead.
+export PATH="$XCODE_SELECT_PATH/Toolchains/XcodeDefault.xctoolchain/usr/bin:$PATH"
 SWIFT_PATH="$(command -v swift)" || die "swift is not on PATH"
+_SWIFT_PINNED="$(tr -d '[:space:]' < "$PROJECT_DIR/.swift-version")"
+_SWIFT_FOUND="$("$SWIFT_PATH" --version 2>&1 |
+  sed -nE 's/.*Swift version ([0-9]+\.[0-9]+(\.[0-9]+)?).*/\1/p' | head -n1)"
+[[ "$_SWIFT_FOUND" == *.*.* ]] || _SWIFT_FOUND="$_SWIFT_FOUND.0"
+[[ "$_SWIFT_FOUND" == "$_SWIFT_PINNED" ]] ||
+  die "$SWIFT_PATH is Swift $_SWIFT_FOUND; .swift-version names $_SWIFT_PINNED: select the Xcode that ships it with DEVELOPER_DIR"
+unset _SWIFT_PINNED _SWIFT_FOUND
 
 # Export SDKROOT so swift build, xcodebuild, and clang skip the xcrun lookup, which can hang, and
-# so swiftly-installed toolchains use the selected Xcode SDK instead of the CommandLineTools SDK.
+# use the selected Xcode SDK instead of the CommandLineTools SDK.
 # The SDK must be one that swift can read: a swift older than the selected Xcode's gets the
 # newest installed SDK it reads, with a note; an explicit SDKROOT it cannot read is an error.
 _DEFAULT_SDKROOT="$XCODE_SELECT_PATH/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"

@@ -107,8 +107,8 @@ def main(argv: list[str]) -> int:
             return 0
         print(
             f"error: SDKROOT={preferred} needs a newer Swift than {swift} "
-            f"({compiler[0]}.{compiler[1]}); unset SDKROOT, or run `swiftly install` for the "
-            "Swift that .swift-version names",
+            f"({compiler[0]}.{compiler[1]}); unset SDKROOT, or select the Xcode whose "
+            "Swift .swift-version names",
             file=sys.stderr,
         )
         return 1
@@ -116,7 +116,7 @@ def main(argv: list[str]) -> int:
     if sdk is None:
         print(
             f"error: no installed macOS SDK can be read by Swift {compiler[0]}.{compiler[1]} "
-            f"({swift}); run `swiftly install` for the Swift that .swift-version names",
+            f"({swift}); select the Xcode whose Swift .swift-version names",
             file=sys.stderr,
         )
         return 1

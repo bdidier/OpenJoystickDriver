@@ -93,7 +93,7 @@ struct TriggerButtonDerivationTests {
   @Test
   func digitalTriggersAreOptionalInTheStoredForm() throws {
     let encoded = try JSONEncoder().encode(Self.analogOnly)
-    #expect(try !(String(data: encoded, encoding: .utf8) ?? "").contains("digitalTriggers"))
+    #expect(!(String(data: encoded, encoding: .utf8) ?? "").contains("digitalTriggers"))
     #expect(try JSONDecoder().decode(ControllerCapabilities.self, from: encoded) == Self.analogOnly)
     let round = try JSONDecoder().decode(
       ControllerCapabilities.self,

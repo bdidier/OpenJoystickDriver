@@ -5,18 +5,18 @@ import Testing
 /// `CLIRun.run` checks every `--json` document the tests print against these definitions.
 struct CLIOutputSchemaTests {
   @Test
-  func jsonLineWithoutEnvelopePrintsOneSortedLineWithoutAPIVersionOrKind() async throws {
+  func jsonLineWithoutEnvelopePrintsOneSortedLineWithoutAPIVersionOrKind() throws {
     let capture = CLIOutputCapture()
-    try await CLIOutput.$capture.withValue(capture) {
+    try CLIOutput.$capture.withValue(capture) {
       try CLIOutput.jsonLineWithoutEnvelope(["type": "added", "object": "pad"])
     }
     #expect(capture.standardOutput == "{\"object\":\"pad\",\"type\":\"added\"}\n")
   }
 
   @Test
-  func plainRowsKeepEachFieldOnOneLine() async throws {
+  func plainRowsKeepEachFieldOnOneLine() {
     let capture = CLIOutputCapture()
-    await CLIOutput.$capture.withValue(capture) {
+    CLIOutput.$capture.withValue(capture) {
       CLIOutput.plain([
         ["a\tb", "line one\nline two", "x\r\ny\rz", "u\u{85}v\u{2028}w\u{2029}x\u{0B}y\u{0C}z"],
         ["next"],

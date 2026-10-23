@@ -5,6 +5,7 @@
   @testable import OpenJoystickDriverPresentation
 
   @Suite
+  @MainActor
   struct CommandLineToolSectionStatusTextTests {
     @Test
     func linkWithoutReadableTargetSaysSo() {

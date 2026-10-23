@@ -1,6 +1,7 @@
 set_project("SDLGamepadProbe")
 set_languages("c11")
 set_toolchains("clang")
+set_warnings("error")
 
 add_requires("pkgconfig::sdl3", {system = true})
 

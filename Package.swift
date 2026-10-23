@@ -245,15 +245,9 @@ let package = Package(
   ]
 )
 
-// Warnings are errors only in this package's app targets. A global `-Xswiftc -warnings-as-errors`
-// would also reach dependencies, and swift-argument-parser 1.8.2 uses its own deprecated
-// `_errorLabel`.
-let warningsAsErrorsTargets: Set = [
-  "OpenJoystickDriverKit", "OpenJoystickDriverMacOSPlatform", "OpenJoystickDriverUSB",
-  "OpenJoystickDriverService",
-  "OpenJoystickDriverCLI", "OpenJoystickDriverPresentation", "OpenJoystickDriverMacOSHost",
-  "OpenJoystickDriver",
-]
-for target in package.targets where warningsAsErrorsTargets.contains(target.name) {
+// Warnings are errors in every target of this package. The setting is per target, unlike a global
+// `-Xswiftc -warnings-as-errors`, which would also reach dependencies: swift-argument-parser 1.8.2
+// uses its own deprecated `_errorLabel`.
+for target in package.targets {
   target.swiftSettings = (target.swiftSettings ?? []) + [.treatAllWarnings(as: .error)]
 }

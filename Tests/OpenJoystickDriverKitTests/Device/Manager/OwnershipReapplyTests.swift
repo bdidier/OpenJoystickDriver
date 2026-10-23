@@ -51,8 +51,8 @@ struct OwnershipReapplyTests {
     let readmitted = try #require(await backend.admittedPipelines()[changedID])
     #expect(await readmitted.observedInputDemand == nil)
     // A second admission by `readmitHIDConnections` would replace the backend's pipeline.
-    #expect(try #require(await manager.pipelines[changedID]) === readmitted)
-    #expect(try #require(await manager.pipelines[otherID]) === otherPipeline)
+    #expect(await manager.pipelines[changedID] === readmitted)
+    #expect(await manager.pipelines[otherID] === otherPipeline)
     await manager.stop()
   }
 

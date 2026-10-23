@@ -104,11 +104,11 @@ struct ControlVocabularyTests {
     var byW3CAxis: [Int: Set<String>] = [:]
     var byHID: [Crosswalk.Row.HID: Set<String>] = [:]
     for (id, row) in rows {
-      row.sdl.map { bySDL[$0, default: []].insert(id) }
-      row.evdev.map { byEvdev[$0, default: []].insert(id) }
-      row.apple.map { byApple[$0, default: []].insert(id) }
-      row.w3cButton.map { byW3CButton[$0, default: []].insert(id) }
-      row.w3cAxis.map { byW3CAxis[$0, default: []].insert(id) }
+      if let sdl = row.sdl { bySDL[sdl, default: []].insert(id) }
+      if let evdev = row.evdev { byEvdev[evdev, default: []].insert(id) }
+      if let apple = row.apple { byApple[apple, default: []].insert(id) }
+      if let button = row.w3cButton { byW3CButton[button, default: []].insert(id) }
+      if let axis = row.w3cAxis { byW3CAxis[axis, default: []].insert(id) }
       for entry in row.hid { byHID[entry, default: []].insert(id) }
     }
     for control in Control.allCases {

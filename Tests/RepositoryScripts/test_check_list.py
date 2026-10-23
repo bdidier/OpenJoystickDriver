@@ -4,10 +4,10 @@ CI and the release gate must run the same commands.
 
 Documented exemptions, kept deliberately small:
 - the justfile's whitespace check on the working tree (`JUSTFILE_ONLY`) has no CI counterpart,
-  and the justfile prefixes the Swift commands with a DEVELOPER_DIR lookup that CI sets through
+  and the justfile prefixes swiftlint with a DEVELOPER_DIR lookup that CI sets through
   `env:`; the lookup is stripped before comparing.
 - CI steps that only prepare the runner (toolchain probe, Homebrew cleanup and installs, bun and
-  venv setup), `swift build`, and the `OJD_USE_LOCAL_SWIFTERKIT` guard are not checks of the tree.
+  venv setup) and the `OJD_USE_LOCAL_SWIFTERKIT` guard are not checks of the tree.
 """
 
 from __future__ import annotations
@@ -23,7 +23,6 @@ CI_ONLY_STEPS = {
     "Toolchain",
     "Remove unused untrusted Homebrew taps",
     "Install dependencies",
-    "Build package",
 }
 CI_ONLY_COMMANDS = {'test "$OJD_USE_LOCAL_SWIFTERKIT" = "0"'}
 JUSTFILE_ROOT_RECIPES = ("check",)
@@ -35,7 +34,7 @@ WORKFLOWS = {
         ".github/workflows/release.yml",
         "package",
         "Remove unused untrusted Homebrew taps",
-        "Run tests",
+        "Build and test package",
     ),
 }
 
@@ -119,14 +118,14 @@ def workflow_commands(key: str) -> list[str]:
             continue
         if run.group(2) not in ("|", ">"):
             commands.append(normalize(run.group(2)))
-            continue
-        body: list[str] = []
-        while index < len(lines) and (
-            not lines[index].strip() or lines[index].startswith(run.group(1) + "  ")
-        ):
-            body.append(lines[index])
-            index += 1
-        commands.extend(join_continuations(body))
+        else:
+            body: list[str] = []
+            while index < len(lines) and (
+                not lines[index].strip() or lines[index].startswith(run.group(1) + "  ")
+            ):
+                body.append(lines[index])
+                index += 1
+            commands.extend(join_continuations(body))
         if step == last:
             break
     return [command for command in commands if command not in CI_ONLY_COMMANDS]
@@ -155,7 +154,7 @@ class CheckListTests(unittest.TestCase):
             "./Scripts/ojd test parsers-macos14",
             "./Scripts/ojd snapshots check",
             "python3 Scripts/Quality/check_localization_keys.py",
-            "swift test --no-parallel",
+            "./Scripts/ojd check swift",
         ):
             self.assertIn(required, self.canonical)
 
