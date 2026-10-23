@@ -165,6 +165,31 @@ extension ProtocolDescription {
       }
     }
 
+    /// `inputStart`: a known action and the unique variant names it is limited to.
+    struct InputStartDocument: Decodable {
+      let action: InputStartAction
+      let variants: [String]
+
+      init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: DocumentKey.self)
+        try container.rejectUnknown(allowed: ["action", "variants"])
+        let actionName = try container.decode(String.self, for: "action")
+        let names = try container.decodeOptional([String].self, for: "variants")
+        guard let action = InputStartAction(rawValue: actionName), names?.isEmpty != true,
+          Set(names ?? []).count == names?.count ?? 0
+        else {
+          throw DecodingError.dataCorrupted(
+            .init(
+              codingPath: decoder.codingPath,
+              debugDescription: "inputStart has a known action and unique variants"
+            )
+          )
+        }
+        self.action = action
+        variants = names ?? []
+      }
+    }
+
     /// `defaults.variants.<variant>`: the tuning and rumble template a variant starts from.
     struct VariantDefaults: Decodable {
       let tuning: ControllerTuning?
@@ -211,6 +236,7 @@ extension ProtocolDescription {
     let controls: ControllerCapabilities?
     let recordCapabilities: RecordCapabilityRules
     let macOSOwnedOutput: MacOSOwnedOutput
+    let inputStart: InputStartDocument?
     let interfaceSignatures: [Signature]
     let parameters: [String: ParameterType]
     let parameterRules: [ParameterRule]
@@ -272,7 +298,7 @@ extension ProtocolDescription {
         "apiVersion", "kind", "family", "variants", "storesVariant", "endpoints", "rawUSB",
         "recordSections", "sessionKeys", "tuningKeys", "rawUSBTuningKeys", "controls",
         "recordCapabilities",
-        "macOSOwnedOutput",
+        "macOSOwnedOutput", "inputStart",
         "interfaceSignatures", "parameters", "parameterRules", "writeTransports", "defaults",
       ])
       apiVersion = try container.decodeOptional(String.self, for: "apiVersion")
@@ -327,6 +353,7 @@ extension ProtocolDescription {
       macOSOwnedOutput =
         try container.decodeOptional(MacOSOwnedOutputDocument.self, for: "macOSOwnedOutput")?.value
         ?? .none
+      inputStart = try container.decodeOptional(InputStartDocument.self, for: "inputStart")
       let signatures = try container.decodeOptional([Signature].self, for: "interfaceSignatures")
       guard signatures?.isEmpty != true else {
         throw DecodingError.dataCorrupted(

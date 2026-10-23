@@ -21,6 +21,9 @@ public struct ControllerSummary: Encodable, Equatable, Sendable {
   public let owner: USBExclusiveOwner?
   /// Whether the system also lists the controller as a second pad that gives no input.
   public let alsoListedBySystem: Bool
+  /// Whether the controller has sent no input since its session started and waits for a press of
+  /// its home button (``ControllerInputHealthFailureReason/guideNotPressed``).
+  public let waitsForGuidePress: Bool
   /// Absent when the service reports no power state.
   public let power: ControllerConnectionState.Power?
 
@@ -37,6 +40,7 @@ public struct ControllerSummary: Encodable, Equatable, Sendable {
     ownedByAnotherClient = device.hidInputOwnership == .ownedByAnotherClient
     owner = device.inputOwner
     alsoListedBySystem = device.duplicateExposureRisk == .systemGameController
+    waitsForGuidePress = device.inputHealth.failureReason == .guideNotPressed
     power = device.connectionState?.power
   }
 }

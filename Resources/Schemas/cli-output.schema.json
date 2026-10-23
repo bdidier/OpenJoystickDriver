@@ -570,7 +570,8 @@
               "productID",
               "protocol",
               "session",
-              "vendorID"
+              "vendorID",
+              "waitsForGuidePress"
             ],
             "additionalProperties": false,
             "properties": {
@@ -621,6 +622,10 @@
                 "type": "integer",
                 "minimum": 0,
                 "maximum": 65535
+              },
+              "waitsForGuidePress": {
+                "description": "Whether the controller has sent no input since its session started and waits for a press of its home button, the PS button of a DualShock 3.",
+                "type": "boolean"
               }
             }
           }
@@ -2878,7 +2883,8 @@
         "productID",
         "protocol",
         "session",
-        "vendorID"
+        "vendorID",
+        "waitsForGuidePress"
       ],
       "additionalProperties": false,
       "properties": {
@@ -2927,6 +2933,9 @@
         },
         "vendorID": {
           "$ref": "#/$defs/controllerList/properties/items/items/properties/vendorID"
+        },
+        "waitsForGuidePress": {
+          "$ref": "#/$defs/controllerList/properties/items/items/properties/waitsForGuidePress"
         },
         "input": {
           "description": "The latest input; absent until the controller has input state.",

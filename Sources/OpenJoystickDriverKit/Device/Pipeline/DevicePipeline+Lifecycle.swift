@@ -297,6 +297,8 @@ extension DevicePipeline {
       let observationAge, observationAge < timeout
     {
       failureReason = .freshnessNotAdvancing
+    } else if lastLiveInputReportNanoseconds == nil, plan.inputStartAction == .pressGuide {
+      failureReason = .guideNotPressed
     } else {
       failureReason = .missingReports
     }

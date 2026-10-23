@@ -2225,6 +2225,8 @@
 "cli.controller.list.empty" = "ไม่มีคอนโทรลเลอร์ที่เชื่อมต่ออยู่";
 /* Marker appended to the line of a suspended controller in 'ojd controller list'. Keep the parentheses. */
 "cli.controller.list.suspended" = "(หยุดชั่วคราวแล้ว)";
+/* Sentence appended to the line of a controller in 'ojd controller list' that sends no input until its home button is pressed, which is the PS button on a PlayStation controller. PS stays as written. */
+"cli.controller.list.pressGuide" = "กดปุ่ม PS หรือปุ่ม Home เพื่อเริ่มอินพุต";
 /* Help text of the --duration option of 'ojd controller watch' and 'ojd controller capture'. Control-C is the key combination that stops a program in a terminal. */
 "cli.controller.group.optionDuration" = "หยุดหลังจากจำนวนวินาทีนี้ หากไม่ใช้ จะทำงานต่อไปจนกว่าคุณจะกด Control-C";
 /* Error of the controller output commands when the controller rejects a command. %1$@ is the controller name, %2$@ is the command name and %3$@ is the outcome in kebab case, which stays as written. The command in quotes stays as written. */
@@ -3947,6 +3949,8 @@
 "ui.controllers.inputHealth.reason.missingReports" = "ไม่มีรายงานเข้ามา";
 /* Reason of failing input health: the reports arrive but their content does not change. */
 "ui.controllers.inputHealth.reason.freshnessNotAdvancing" = "รายงานไม่อัปเดต";
+/* Reason of failing input health: the controller sends no input until its home button is pressed, which is the PS button on a PlayStation controller. PS stays as written. */
+"ui.controllers.inputHealth.reason.guideNotPressed" = "กดปุ่ม PS หรือปุ่ม Home";
 /* Input health state with its failure reason, for example "Stale (No reports arriving)". %1$@ is the state and %2$@ the reason. */
 "ui.controllers.inputHealth.withReason" = "%1$@ (%2$@)";
 /* Value of the discovery route: the app found the controller as an HID device. HID is the abbreviation of Human Interface Device and stays as written. */

@@ -91,6 +91,9 @@ public struct DriverSessionPlan: Equatable, Sendable {
   public let hidPlayerIndicatorFollowsFirstInput: Bool
   /// USB command interface for `.usb` writes of a controller bound over HID; nil when none.
   public let usbCommandChannel: USBCommandChannel?
+  /// What the user does before the controller sends input, from the family's description for the
+  /// bound variant (``withDefaults(of:variant:)``); nil when input starts on its own.
+  public internal(set) var inputStartAction: InputStartAction?
 
   public init(
     inputReportLivenessTimeoutNanoseconds: UInt64? = nil,
@@ -133,12 +136,13 @@ public struct DriverSessionPlan: Equatable, Sendable {
   }
 
   /// This plan with the timings that `family`'s protocol description defaults for `variant` in
-  /// place of the plan's own; the plan when the description defaults none.
+  /// place of the plan's own, and the description's input start action for `variant`.
   func withDefaults(
     of family: PhysicalProtocolID,
     variant: PhysicalProtocolVariantID? = nil
   ) -> Self {
-    let plan = withKeepAlive(of: family)
+    var plan = withKeepAlive(of: family)
+    plan.inputStartAction = family.protocolDescription.inputStartAction(variant: variant)
     return family.protocolDescription.tuning(variant: variant).map(plan.tuned) ?? plan
   }
 

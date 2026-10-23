@@ -470,7 +470,7 @@
           "enum": ["Healthy", "Stale", "WaitingForNeutral"]
         },
         "failureReason": {
-          "enum": ["MissingReports", "FreshnessNotAdvancing"]
+          "enum": ["MissingReports", "FreshnessNotAdvancing", "GuideNotPressed"]
         },
         "reportFormat": {
           "type": "string"

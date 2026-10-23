@@ -141,6 +141,7 @@ class EndpointReferenceClientTests(unittest.TestCase):
                     alsoListedBySystem=False,
                     protocol="XboxXUSB:Wired",
                     session="Active",
+                    waitsForGuidePress=False,
                 ),
             },
         ]

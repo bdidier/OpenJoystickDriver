@@ -58,7 +58,10 @@ struct ReportValueNamesTests {
     refuses(ControllerSessionState.self, ["active", "suspended"])
     refuses(BuildIdentity.SourceState.self, ["clean", "dirty", "unknown"])
     refuses(ControllerInputHealthState.self, ["healthy", "stale", "waitingForNeutral"])
-    refuses(ControllerInputHealthFailureReason.self, ["missingReports", "freshnessNotAdvancing"])
+    refuses(
+      ControllerInputHealthFailureReason.self,
+      ["missingReports", "freshnessNotAdvancing", "guideNotPressed"]
+    )
     refuses(
       ControllerConnectionState.Charging.self,
       ["unknown", "discharging", "charging", "full", "notChargeable"]

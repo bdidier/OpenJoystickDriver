@@ -135,6 +135,9 @@ struct ProtocolDescription: Sendable {
   let rawUSBTuningKeys: Set<ControllerTuning.Key>
   /// What OJD still sends when macOS serves the controller.
   let macOSOwnedOutput: MacOSOwnedOutput
+  /// What the user does before a controller of the family sends input; nil when input starts on
+  /// its own.
+  let inputStart: InputStart?
   let interfaceSignatures: [ProtocolInterfaceSignature]
   /// The parameters records of this family may set, by name.
   let parameters: [String: ParameterType]
@@ -205,6 +208,22 @@ struct ProtocolDescription: Sendable {
       (delta.presentControls.isEmpty || delta.presentControls == presentControls)
         && (!delta.rumbleAbsent || rumbleAbsent)
     }
+  }
+
+  /// `inputStart`: the action that starts input on the listed variants, or on every variant when
+  /// the list is empty.
+  struct InputStart: Equatable, Sendable {
+    let action: InputStartAction
+    let variants: Set<PhysicalProtocolVariantID>
+  }
+
+  /// The action that starts input on a controller of this family and `variant`; nil when input
+  /// starts on its own.
+  func inputStartAction(variant: PhysicalProtocolVariantID?) -> InputStartAction? {
+    guard let inputStart,
+      inputStart.variants.isEmpty || variant.map(inputStart.variants.contains) == true
+    else { return nil }
+    return inputStart.action
   }
 
   /// The defaults a controller of this family and stored variant starts from: the family's
@@ -442,6 +461,12 @@ struct ProtocolDescription: Sendable {
     for (name, template) in document.defaults?.variantRumble ?? [:] {
       variantRumble[try variant(named: name)] = template
     }
+    var inputStart: InputStart?
+    if let document = document.inputStart {
+      var variants: Set<PhysicalProtocolVariantID> = []
+      for name in document.variants { variants.insert(try variant(named: name)) }
+      inputStart = InputStart(action: document.action, variants: variants)
+    }
     let usbStartupWrites = try resolvedUSBStartup(
       document.defaults?.session?.startup,
       namedPackets: document.defaults?.session?.namedPackets,
@@ -458,6 +483,7 @@ struct ProtocolDescription: Sendable {
       tuningKeys: document.tuningKeys,
       rawUSBTuningKeys: document.rawUSBTuningKeys,
       macOSOwnedOutput: document.macOSOwnedOutput,
+      inputStart: inputStart,
       interfaceSignatures: signatures,
       parameters: document.parameters,
       parameterRules: document.parameterRules,

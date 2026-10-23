@@ -63,6 +63,7 @@ struct ControllerListCommand: AsyncParsableCommand {
               $0.power?.battery.percentageText ?? "",
               $0.power.map { CommandLineName.kebab($0.charging.rawValue) } ?? "",
               $0.alsoListedBySystem ? "also-listed-by-system" : "",
+              $0.waitsForGuidePress ? "waits-for-guide-press" : "",
             ]
           }
         )
@@ -104,9 +105,12 @@ struct ControllerListCommand: AsyncParsableCommand {
           let listed =
             controller.alsoListedBySystem
             ? "  " + CLILocalized.text("status.controllerAlsoListedBySystem") : ""
+          let guide =
+            controller.waitsForGuidePress
+            ? "  " + CLILocalized.text("cli.controller.list.pressGuide") : ""
           CLIOutput.stdout(
             "\(id)  \(unit)\(identity)  \(controller.connection)  \(battery)\(controller.name)"
-              + suspended + held + listed
+              + suspended + held + listed + guide
           )
         }
       }

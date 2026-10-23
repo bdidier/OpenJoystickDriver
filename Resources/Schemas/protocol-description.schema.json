@@ -111,6 +111,25 @@
     "macOSOwnedOutput": {
       "$ref": "#/$defs/macOSOwnedOutput"
     },
+    "inputStart": {
+      "description": "What the user does before a controller of the family sends its first input report: PressGuide presses the home button. variants limits it to those variants, each one the family lists, which a schema cannot say and the validators check; absent means every variant.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["action"],
+      "properties": {
+        "action": {
+          "enum": ["PressGuide"]
+        },
+        "variants": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/variant"
+          }
+        }
+      }
+    },
     "interfaceSignatures": {
       "type": "array",
       "minItems": 1,

@@ -13,9 +13,19 @@ public enum ControllerInputHealthState: String, Codable, Sendable {
   case waitingForNeutral = "WaitingForNeutral"
 }
 
-public enum ControllerInputHealthFailureReason: String, Codable, Sendable {
+public enum ControllerInputHealthFailureReason: String, Codable, CaseIterable, Sendable {
   case missingReports = "MissingReports"
   case freshnessNotAdvancing = "FreshnessNotAdvancing"
+  /// No input since the session started from a controller that sends none until its home button
+  /// is pressed (``InputStartAction/pressGuide``).
+  case guideNotPressed = "GuideNotPressed"
+}
+
+/// What the user does before a controller sends its first input report; the family's protocol
+/// description names it (`inputStart`).
+public enum InputStartAction: String, Sendable {
+  /// Press the home button: the PS button of a USB DualShock 3.
+  case pressGuide = "PressGuide"
 }
 
 public struct ControllerInputHealth: Codable, Sendable {

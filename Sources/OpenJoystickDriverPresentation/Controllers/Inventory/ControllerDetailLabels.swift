@@ -32,6 +32,7 @@ enum ControllerDetailLabels {
     switch reason {
     case .missingReports: return "ui.controllers.inputHealth.reason.missingReports"
     case .freshnessNotAdvancing: return "ui.controllers.inputHealth.reason.freshnessNotAdvancing"
+    case .guideNotPressed: return "ui.controllers.inputHealth.reason.guideNotPressed"
     }
   }
 

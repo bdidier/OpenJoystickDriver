@@ -96,6 +96,14 @@ struct SixaxisDriverTests {
     #expect(bluetooth.sessionPlan.inputReportLivenessTimeoutNanoseconds == nil)
   }
 
+  /// A USB Sixaxis sends no input until its PS button is pressed; over Bluetooth the press is
+  /// what connects it.
+  @Test
+  func testDS3OverUSBStartsInputOnAGuidePress() {
+    #expect(SixaxisDriver().sessionPlan.inputStartAction == .pressGuide)
+    #expect(SixaxisDriver(isBluetooth: true).sessionPlan.inputStartAction == nil)
+  }
+
   @Test
   func testDS3IgnoresBogusBluetoothStatusReport() throws {
     let parser = SixaxisDriver()

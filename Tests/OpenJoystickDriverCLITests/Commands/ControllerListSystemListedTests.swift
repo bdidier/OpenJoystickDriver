@@ -29,7 +29,7 @@ struct ControllerListSystemListedTests {
     let rows = plain.standardOutput.split(separator: "\n").map {
       $0.split(separator: "\t", omittingEmptySubsequences: false).map(String.init)
     }
-    #expect(rows.map(\.last) == ["also-listed-by-system", ""])
+    #expect(rows.map { $0.dropLast().last } == ["also-listed-by-system", ""])
     let lines = human.standardOutput.split(separator: "\n").map(String.init)
     let sentence = CLILocalized.text("status.controllerAlsoListedBySystem")
     #expect(lines.map { $0.hasSuffix("  " + sentence) } == [true, false])

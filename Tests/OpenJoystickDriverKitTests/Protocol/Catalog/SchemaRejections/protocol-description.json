@@ -23483,6 +23483,39 @@
           }
         }
       }
+    },
+    {
+      "name": "input start names an unknown action",
+      "code": "E5002",
+      "fileName": "sony-sixaxis.json",
+      "schema": true,
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "SonySixaxis",
+        "variants": ["USB", "BluetoothClassic"],
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "inputStart": { "action": "PressStart", "variants": ["USB"] }
+      }
+    },
+    {
+      "name": "input start names a variant the family lacks",
+      "code": "E5004",
+      "fileName": "sony-sixaxis.json",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "SonySixaxis",
+        "variants": ["USB", "BluetoothClassic"],
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "inputStart": { "action": "PressGuide", "variants": ["Wired"] }
+      }
     }
   ]
 }

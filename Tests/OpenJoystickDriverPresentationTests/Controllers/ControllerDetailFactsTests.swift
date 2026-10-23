@@ -226,6 +226,16 @@ struct ControllerDetailFactsTests {
   }
 
   @Test
+  func aControllerWaitingForItsGuidePressSaysToPressIt() {
+    let waiting = ApplicationServiceDeviceDescription.fixture(
+      id: "pad-1",
+      inputHealth: ControllerInputHealth(state: .stale, failureReason: .guideNotPressed)
+    )
+    let value = Self.value(.inputHealth, in: ControllerDetailFacts.general(for: waiting))
+    #expect(value == .text("Stale (Press the PS or home button)"))
+  }
+
+  @Test
   func everyStateTheDetailNamesHasEnglishText() {
     var keys: [String] = []
     keys += ControllerOwnershipObservation.allCases.map(ControllerDetailLabels.physicalOwnershipKey)
@@ -236,7 +246,7 @@ struct ControllerDetailFactsTests {
     .map(ControllerDetailLabels.hidInputOwnershipKey)
     keys += [DeviceDiscoverySource.hid, .rawUSB].map(ControllerDetailLabels.discoveryKey)
     keys += OutputDisabledReason.allCases.map(ControllerDetailLabels.servingReasonKey)
-    keys += [ControllerInputHealthFailureReason.missingReports, .freshnessNotAdvancing]
+    keys += ControllerInputHealthFailureReason.allCases
       .map(ControllerDetailLabels.inputHealthReasonKey)
     keys += [
       "ui.controllers.publication.withReason", "ui.controllers.serving.withReason",
