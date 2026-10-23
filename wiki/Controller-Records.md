@@ -200,7 +200,7 @@ A record's `tuning` field changes a value that the protocol driver otherwise set
 
 | Field | Range | Applies to | What it sets |
 | --- | --- | --- | --- |
-| `stickDeadzone` | more than 0, less than 1 | every family | The radial deadzone of both sticks on the virtual gamepad, as a fraction of full deflection. Movement past the deadzone is rescaled to the full range. |
+| `stickDeadzone` | more than 0, less than 1 | every family | The radial deadzone of both sticks on the virtual gamepad, as a fraction of full deflection. Movement past the deadzone is rescaled to the full range. Without it, the sticks have no deadzone: games and browsers get the values the controller reports. |
 | `inputLivenessTimeoutMs` | 1 to 60000 | `SonyDualShock4` | How long the controller can send no input before OpenJoystickDriver releases its held controls. The default is 1000. |
 | `hidStartupIntervalMs` | 0 to 60000 | HID families | The gap between the startup writes. |
 | `minimumHIDOutputIntervalMs` | 0 to 60000 | HID families | The shortest gap between rumble and lighting reports. 0 sends them without a limit. |

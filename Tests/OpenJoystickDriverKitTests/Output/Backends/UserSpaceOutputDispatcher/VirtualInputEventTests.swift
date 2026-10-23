@@ -134,6 +134,27 @@ struct VirtualInputEventTests {
     )
   }
 
+  /// `stickDeadzone` is radial: a diagonal past it keeps both axes, a small cross-axis component
+  /// of a deflected stick survives, and a stick inside it reads zero.
+  @Test
+  func recordStickDeadZoneIsRadial() {
+    let transfer = VirtualGamepadReportMapping.StickTransfer(deadzone: 0.1, rescalesDeadzone: true)
+    func mapped(_ x: Float, _ y: Float) -> (Int16, Int16) {
+      var state = VirtualGamepadState()
+      VirtualGamepadReportMapping.apply(
+        snapshot(.leftStick(x: x, y: y)),
+        stickTransfer: transfer,
+        to: &state
+      )
+      return (state.leftStickX, state.leftStickY)
+    }
+    let diagonal = mapped(0.09, 0.09)
+    #expect(diagonal.0 > 0 && diagonal.1 > 0)
+    #expect(mapped(0.8, 0.05).1 > 0)
+    #expect(mapped(0.07, 0.07) == (0, 0))
+    #expect(abs(Int(mapped(1, 0).0) - 32_767) <= 1)
+  }
+
   @Test
   func xidSoutheastSurvivesParserToReport() throws {
     var packet = [UInt8](repeating: 0, count: 20)

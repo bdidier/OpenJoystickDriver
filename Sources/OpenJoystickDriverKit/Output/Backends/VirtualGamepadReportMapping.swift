@@ -55,10 +55,16 @@ enum VirtualGamepadReportMapping {
     state.leftTriggerPressed = input.pressed.contains(.leftTrigger)
     state.rightTriggerPressed = input.pressed.contains(.rightTrigger)
     // The report's Y and the canonical state's Y both point down.
-    state.leftStickX = Self.axisValue(input.leftStick.x, transfer: stickTransfer)
-    state.leftStickY = Self.axisValue(input.leftStick.y, transfer: stickTransfer)
-    state.rightStickX = Self.axisValue(input.rightStick.x, transfer: stickTransfer)
-    state.rightStickY = Self.axisValue(input.rightStick.y, transfer: stickTransfer)
+    (state.leftStickX, state.leftStickY) = Self.stickValues(
+      input.leftStick.x,
+      input.leftStick.y,
+      transfer: stickTransfer
+    )
+    (state.rightStickX, state.rightStickY) = Self.stickValues(
+      input.rightStick.x,
+      input.rightStick.y,
+      transfer: stickTransfer
+    )
     state.leftTrigger = Self.triggerValue(input.leftTrigger)
     state.rightTrigger = Self.triggerValue(input.rightTrigger)
   }
@@ -159,13 +165,21 @@ enum VirtualGamepadReportMapping {
 
   // MARK: - Axis + hat helpers
 
-  static func axisValue(_ value: BipolarValue, transfer: StickTransfer) -> Int16 {
-    let normalized = value.normalized
-    let magnitude = abs(normalized)
-    guard magnitude > transfer.deadzone else { return 0 }
-    guard transfer.rescalesDeadzone else { return value.rawValue }
-    let rescaled = (magnitude - transfer.deadzone) / (1 - transfer.deadzone)
-    return Int16(copysignf(rescaled, normalized) * 32_767)
+  /// Both axes of one stick through the radial deadzone: a stick whose deflection is inside it
+  /// reads zero, and deflection past it is rescaled to the full range along the same direction.
+  static func stickValues(
+    _ x: BipolarValue,
+    _ y: BipolarValue,
+    transfer: StickTransfer
+  ) -> (x: Int16, y: Int16) {
+    let magnitude = hypotf(x.normalized, y.normalized)
+    guard magnitude > transfer.deadzone else { return (0, 0) }
+    guard transfer.rescalesDeadzone else { return (x.rawValue, y.rawValue) }
+    let scale = (magnitude - transfer.deadzone) / (1 - transfer.deadzone) / magnitude
+    func axis(_ value: BipolarValue) -> Int16 {
+      Int16((value.normalized * scale).clamped(to: -1...1) * 32_767)
+    }
+    return (axis(x), axis(y))
   }
 
   /// The report's 15-bit trigger, scaled down with truncation. Every 8-bit source (`u = v * 257`)
