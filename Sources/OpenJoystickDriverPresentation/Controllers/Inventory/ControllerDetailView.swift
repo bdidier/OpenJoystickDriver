@@ -15,6 +15,8 @@
     var serialVisibility = SerialNumberVisibility()
     @State
     var showsAdvanced = false
+    @State
+    var showsTuning = false
     /// The effective record of the controller's model, read from the record files.
     @State
     var record: ControllerRecord?

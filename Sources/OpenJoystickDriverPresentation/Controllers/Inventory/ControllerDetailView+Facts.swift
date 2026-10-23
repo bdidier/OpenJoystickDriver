@@ -62,11 +62,7 @@
             )
           }
         }
-        if let record {
-          Section(header: Text(OJDLocalized.string("cli.controller.show.labelTuning"))) {
-            tuningRows(for: record)
-          }
-        }
+        if let record { Section { tuningDisclosure(for: record) } }
         Section { advancedDisclosure }
       }.task(id: recordLoadID) {
         let model = ControllerModelID(vendorID: device.vendorID, productID: device.productID)
@@ -107,10 +103,15 @@
       return snapshot.profiles.first { $0.id == active.profileID }
     }
 
-    @ViewBuilder
-    private func tuningRows(for record: ControllerRecord) -> some View {
-      ForEach(ControllerTuningRows.rows(for: record, activeProfile: activeRemappingProfile)) {
-        OJDLabeledValue($0.name, $0.text)
+    /// The effective tuning values, collapsed by default. The whole label row toggles.
+    private func tuningDisclosure(for record: ControllerRecord) -> some View {
+      DisclosureGroup(isExpanded: $showsTuning) {
+        ForEach(ControllerTuningRows.rows(for: record, activeProfile: activeRemappingProfile)) {
+          OJDLabeledValue($0.name, $0.text)
+        }
+      } label: {
+        Button(OJDLocalized.string("cli.controller.show.labelTuning")) { showsTuning.toggle() }
+          .buttonStyle(.plain).frame(maxWidth: .infinity, alignment: .leading)
       }
     }
 
