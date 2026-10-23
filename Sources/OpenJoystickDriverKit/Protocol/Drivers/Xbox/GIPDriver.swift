@@ -329,7 +329,7 @@ public final class GIPDriver: PhysicalProtocolDriver {
     for (index, bit, control) in Self.buttonTable {
       next.set(control, pressed: bytes[index] & bit != 0)
     }
-    next.set(.capture, pressed: shareByte(in: bytes) & 1 != 0)
+    if let share = shareByte(in: bytes) { next.set(.capture, pressed: share & 1 != 0) }
     next.hat = mapDpad(bytes[1] & gipDpadMask)
     next.leftStick = StickPosition(x: normalizeStick(lsx), y: -normalizeStick(lsy))
     next.rightStick = StickPosition(x: normalizeStick(rsx), y: -normalizeStick(rsy))
@@ -345,18 +345,14 @@ public final class GIPDriver: PhysicalProtocolDriver {
     (1, 128, .rightStickClick),
   ]
 
-  private func shareByte(in bytes: [UInt8]) -> UInt8 {
-    if let shareButtonFromEnd {
-      // Linux xpad: data[len - 26] of the packet, which is the payload after a 4-byte GIP
-      // header; SDL reads byte 18 of the 44-byte Series X firmware 5.5 payload.
-      let index = bytes.count - shareButtonFromEnd
-      guard index >= 0, index < bytes.count else { return 0 }
-      return bytes[index]
-    }
-    // GameSir G7 SE and typical 32-byte GIP payloads put Share at payload[14]
-    // (URB offset 18 on a 4-byte header). Series X sets shareButton instead.
-    guard bytes.count > 14 else { return 0 }
-    return bytes[14]
+  /// The byte holding Share, `shareButtonFromEnd` bytes back from the end; nil for a pad whose
+  /// record names no Share. Linux xpad reads `data[len - 18]` of the packet, or `data[len - 26]`
+  /// with `MAP_SHARE_OFFSET`; the 4-byte GIP header leaves the same offset from the payload end.
+  private func shareByte(in bytes: [UInt8]) -> UInt8? {
+    guard let shareButtonFromEnd else { return nil }
+    let index = bytes.count - shareButtonFromEnd
+    guard index >= 0, index < bytes.count else { return 0 }
+    return bytes[index]
   }
 
   private func normalizeStick(_ raw: Int16) -> Float { Float(raw) / gipStickMax }

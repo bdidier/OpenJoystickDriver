@@ -162,6 +162,20 @@ class XpadTranslationTests(unittest.TestCase):
         )
         self.assertNotIn("capabilities", profile)
 
+    def test_gip_share_button_reads_eighteen_bytes_from_the_end(self) -> None:
+        profile = xpad.build_profile(
+            self.device("XTYPE_XBOXONE", "MAP_SHARE_BUTTON"),
+            [
+                xpad.InitRule(0, 0, "xboxone_power_on"),
+                xpad.InitRule(0, 0, "xboxone_led_on"),
+                xpad.InitRule(0, 0, "xboxone_auth_done"),
+            ],
+        )
+        self.assertEqual(
+            proto(profile),
+            {"family": "XboxGIP", "parameters": {"shareButton": {"fromEnd": 18}}},
+        )
+
     def test_parameter_outside_its_driver_is_rejected(self) -> None:
         with self.assertRaises(xpad.GenerationError):
             xpad.build_profile(

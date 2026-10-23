@@ -116,7 +116,10 @@ class CatalogRulesLoadingTests(unittest.TestCase):
         )
         self.assertEqual(
             xpad.MAPPING_ORDER,
-            (("MAP_SHARE_OFFSET", {"shareButton": {"fromEnd": 26}}, "XboxGIP"),),
+            (
+                ("MAP_SHARE_BUTTON", {"shareButton": {"fromEnd": 18}}, "XboxGIP"),
+                ("MAP_SHARE_OFFSET", {"shareButton": {"fromEnd": 26}}, "XboxGIP"),
+            ),
         )
         self.assertEqual(xpad.CAPABILITY_ABSENCES[1][0], "MAP_TRIGGERS_TO_BUTTONS")
         self.assertEqual(

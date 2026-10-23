@@ -66,6 +66,19 @@ struct ControllerRecordSetTests {
     #expect(bundled.fieldLayers == ["modes": .bundled])
   }
 
+  /// xpad `MAP_SHARE_BUTTON` rows and the GameSir G7 SE, whose Share is payload byte 14 of its
+  /// 32-byte input (captured 2026-10-23), read Share 18 bytes from the packet end.
+  @Test
+  func shareButtonPadsDeclareTheirShareOffset() throws {
+    for model in [
+      ControllerModelID(vendorID: 0x3537, productID: 0x1010),
+      ControllerModelID(vendorID: 0x20D6, productID: 0x2064),
+    ] {
+      let record = try #require(ControllerRecordSet.bundled.records[model])
+      #expect(record.profile.parameters == ProtocolParameters(shareButton: .init(fromEnd: 18)))
+    }
+  }
+
   /// A patch overrides `modes` as an array, so a restated default mode keeps only the parameters it
   /// names.
   @Test
@@ -153,7 +166,16 @@ struct ControllerRecordSetTests {
       Self.problem(
         try Self.patch(
           Self.bundledGIP,
-          set: ["modes": [["id": "default", "protocol": ["family": "XboxGIP"]]]]
+          set: [
+            "modes": [
+              [
+                "id": "default",
+                "protocol": [
+                  "family": "XboxGIP", "parameters": ["shareButton": ["fromEnd": 18]],
+                ],
+              ]
+            ]
+          ]
         )
       )
         == "the patch changes nothing in the record"

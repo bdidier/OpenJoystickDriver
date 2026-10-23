@@ -67,7 +67,7 @@ b1.4 [LeftShoulder] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
 b1.5 [RightShoulder] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
 b1.6 [LeftStickClick] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
 b1.7 [RightStickClick] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
-b14.0 [Capture] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
+b14.0 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
 b14.1 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
 b14.2 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0
 b14.3 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0

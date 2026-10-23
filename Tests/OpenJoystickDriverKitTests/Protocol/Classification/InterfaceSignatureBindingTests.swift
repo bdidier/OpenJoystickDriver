@@ -138,10 +138,13 @@ struct InterfaceSignatureBindingTests {
   @Test
   func gipSignatureRunsWithTheProfileOfAFamilyOnlyGIPRow() throws {
     let binding = try bound(observed(interfaces: [registryInterface(0, 0xFF, 0x47, 0xD0)]))
-    // 3537:1010 (GameSir G7 SE) names only the GIP family and set-configuration-before-claim.
+    // 3537:1010 (GameSir G7 SE) names the GIP family, set-configuration-before-claim and a Share
+    // offset; a pad known only by its signature has no Share offset.
     let g7SE = registry.record(for: ControllerModelID(vendorID: 0x3537, productID: 0x1010))
     #expect(g7SE?.recordID == "3537-1010")
-    #expect(registry.runtimeProfile(for: binding) == g7SE?.withRecordID(nil))
+    var familyOnly = g7SE?.withRecordID(nil)
+    familyOnly?.parameters = ProtocolParameters()
+    #expect(registry.runtimeProfile(for: binding) == familyOnly)
     let xusb = try bound(observed(interfaces: [registryInterface(0, 0xFF, 0x5D, 0x01)]))
     let xusbProfile = try #require(registry.runtimeProfile(for: xusb))
     #expect(xusbProfile.physicalProtocolVariant == .wired)

@@ -9,7 +9,7 @@ import Foundation
 /// a record never spells a default value.
 public struct ProtocolParameters: Codable, Equatable, Sendable {
   /// Where a GIP packet carries the Share button, counted back from the packet's end (Linux
-  /// xpad `MAP_SHARE_OFFSET`). `XboxGIP`.
+  /// xpad `MAP_SHARE_BUTTON` 18, `MAP_SHARE_OFFSET` 26); a pad without it has no Share. `XboxGIP`.
   public struct ShareButton: Codable, Equatable, Sendable {
     public let fromEnd: Int
 

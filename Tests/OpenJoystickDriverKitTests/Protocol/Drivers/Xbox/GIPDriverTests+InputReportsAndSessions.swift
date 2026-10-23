@@ -7,7 +7,7 @@ import Testing
 extension GIPDriverTests {
   @Test
   func testGamesirStyleThirtyTwoByteGIPReportMapsViewGuideMenuAndShareFromPacketBytes() throws {
-    let parser = GIPDriver()
+    let parser = GIPDriver(shareButtonFromEnd: 18)
     let view = try parser.parseReport(
       Data([
 
@@ -91,6 +91,18 @@ extension GIPDriverTests {
       let events = try parser.parseReport(ProtocolPacketFixtures.GIP.inputPacket(payload: payload))
       #expect(events.contains(.press(.capture)), "payload \(count)")
     }
+  }
+
+  /// A pad whose record names no Share offset has no Share, so byte 14 of its input is not read
+  /// as one.
+  @Test
+  func testUndeclaredShareIsNotDecoded() throws {
+    let parser = GIPDriver()
+    var payload = Data(repeating: 0, count: 32)
+    payload[14] = 1
+    let events = try parser.parseReport(ProtocolPacketFixtures.GIP.inputPacket(payload: payload))
+    #expect(!events.contains(.press(.capture)))
+    #expect(!parser.capabilities.controls.contains(.capture))
   }
 
   @Test

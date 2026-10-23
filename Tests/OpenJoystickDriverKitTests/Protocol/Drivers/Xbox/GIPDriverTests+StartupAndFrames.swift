@@ -186,7 +186,7 @@ extension GIPDriverTests {
 
   @Test
   func testParseMainInputShareButton() throws {
-    let parser = GIPDriver()
+    let parser = GIPDriver(shareButtonFromEnd: 18)
     var payload = Data(repeating: 0, count: 32)
     payload[14] = 1
     let events = try parser.parseReport(ProtocolPacketFixtures.GIP.inputPacket(payload: payload))

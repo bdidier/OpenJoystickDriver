@@ -255,7 +255,7 @@ parameters=
 protocol=xbox-gip variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
-controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
+controls [Back,Capture,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
 output rumble=[low-frequency,high-frequency,left-trigger,right-trigger] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=50 usbKeepAliveMs=4000 hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=0 recoveryRounds=0 livenessMs=-
 startup[0] usb ep=2 timeoutMs=2000 tolerated=false 0520010100
@@ -263,7 +263,7 @@ startup[1] usb ep=2 timeoutMs=2000 tolerated=false 0A200203000114
 startup[2] usb ep=2 timeoutMs=2000 tolerated=false 062001020100
 keepAlive[0] usb ep=2 timeoutMs=2000 tolerated=false 03200303000000
 gip keepAlive=enabled startup=[0520000100,0A200003000114,062000020100]
-parameters=
+parameters=shareButton.fromEnd=18
 
 ## 03F0:09B4
 protocol=xbox-gip variant=- ownership=macos
@@ -1720,7 +1720,7 @@ parameters=
 protocol=xbox-gip variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
-controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
+controls [Back,Capture,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
 output rumble=[low-frequency,high-frequency,left-trigger,right-trigger] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=50 usbKeepAliveMs=4000 hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=0 recoveryRounds=0 livenessMs=-
 startup[0] usb ep=2 timeoutMs=2000 tolerated=false 0520010100
@@ -1728,7 +1728,7 @@ startup[1] usb ep=2 timeoutMs=2000 tolerated=false 0A200203000114
 startup[2] usb ep=2 timeoutMs=2000 tolerated=false 062001020100
 keepAlive[0] usb ep=2 timeoutMs=2000 tolerated=false 03200303000000
 gip keepAlive=enabled startup=[0520000100,0A200003000114,062000020100]
-parameters=
+parameters=shareButton.fromEnd=18
 
 ## 0B05:1ABB
 protocol=xbox-gip variant=- ownership=macos
@@ -1775,7 +1775,7 @@ parameters=
 protocol=xbox-gip variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
-controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
+controls [Back,Capture,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
 output rumble=[low-frequency,high-frequency,left-trigger,right-trigger] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=50 usbKeepAliveMs=4000 hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=0 recoveryRounds=0 livenessMs=-
 startup[0] usb ep=2 timeoutMs=2000 tolerated=false 0520010100
@@ -1783,13 +1783,13 @@ startup[1] usb ep=2 timeoutMs=2000 tolerated=false 0A200203000114
 startup[2] usb ep=2 timeoutMs=2000 tolerated=false 062001020100
 keepAlive[0] usb ep=2 timeoutMs=2000 tolerated=false 03200303000000
 gip keepAlive=enabled startup=[0520000100,0A200003000114,062000020100]
-parameters=
+parameters=shareButton.fromEnd=18
 
 ## 0B05:1D04
 protocol=xbox-gip variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
-controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
+controls [Back,Capture,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
 output rumble=[low-frequency,high-frequency,left-trigger,right-trigger] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=50 usbKeepAliveMs=4000 hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=0 recoveryRounds=0 livenessMs=-
 startup[0] usb ep=2 timeoutMs=2000 tolerated=false 0520010100
@@ -1797,7 +1797,7 @@ startup[1] usb ep=2 timeoutMs=2000 tolerated=false 0A200203000114
 startup[2] usb ep=2 timeoutMs=2000 tolerated=false 062001020100
 keepAlive[0] usb ep=2 timeoutMs=2000 tolerated=false 03200303000000
 gip keepAlive=enabled startup=[0520000100,0A200003000114,062000020100]
-parameters=
+parameters=shareButton.fromEnd=18
 
 ## 0C12:0005
 protocol=xbox-xid variant=gamepad ownership=macos
@@ -4091,7 +4091,7 @@ parameters=maker=ThirdParty
 protocol=xbox-gip variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
-controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
+controls [Back,Capture,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
 output rumble=[low-frequency,high-frequency,left-trigger,right-trigger] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=50 usbKeepAliveMs=4000 hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=0 recoveryRounds=0 livenessMs=-
 startup[0] usb ep=2 timeoutMs=2000 tolerated=false 0520010100
@@ -4099,7 +4099,7 @@ startup[1] usb ep=2 timeoutMs=2000 tolerated=false 0A200203000114
 startup[2] usb ep=2 timeoutMs=2000 tolerated=false 062001020100
 keepAlive[0] usb ep=2 timeoutMs=2000 tolerated=false 03200303000000
 gip keepAlive=enabled startup=[0520000100,0A200003000114,062000020100]
-parameters=
+parameters=shareButton.fromEnd=18
 
 ## 0F30:010B
 protocol=xbox-xid variant=gamepad ownership=macos
@@ -4182,7 +4182,7 @@ parameters=
 protocol=xbox-gip variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
-controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
+controls [Back,Capture,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
 output rumble=[low-frequency,high-frequency,left-trigger,right-trigger] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=50 usbKeepAliveMs=4000 hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=0 recoveryRounds=0 livenessMs=-
 startup[0] usb ep=2 timeoutMs=2000 tolerated=false 0520010100
@@ -4190,7 +4190,7 @@ startup[1] usb ep=2 timeoutMs=2000 tolerated=false 0A200203000114
 startup[2] usb ep=2 timeoutMs=2000 tolerated=false 062001020100
 keepAlive[0] usb ep=2 timeoutMs=2000 tolerated=false 03200303000000
 gip keepAlive=enabled startup=[0520000100,0A200003000114,062000020100]
-parameters=
+parameters=shareButton.fromEnd=18
 
 ## 10F5:7009
 protocol=xbox-gip variant=- ownership=macos
@@ -4224,7 +4224,7 @@ parameters=
 protocol=xbox-gip variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
-controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
+controls [Back,Capture,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
 output rumble=[low-frequency,high-frequency,left-trigger,right-trigger] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=50 usbKeepAliveMs=4000 hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=0 recoveryRounds=0 livenessMs=-
 startup[0] usb ep=2 timeoutMs=2000 tolerated=false 0520010100
@@ -4232,7 +4232,7 @@ startup[1] usb ep=2 timeoutMs=2000 tolerated=false 0A200203000114
 startup[2] usb ep=2 timeoutMs=2000 tolerated=false 062001020100
 keepAlive[0] usb ep=2 timeoutMs=2000 tolerated=false 03200303000000
 gip keepAlive=enabled startup=[0520000100,0A200003000114,062000020100]
-parameters=
+parameters=shareButton.fromEnd=18
 
 ## 11C0:4001
 protocol=sony-dual-shock4 variant=- ownership=macos
@@ -5794,7 +5794,7 @@ parameters=
 protocol=xbox-gip variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
-controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
+controls [Back,Capture,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
 output rumble=[low-frequency,high-frequency,left-trigger,right-trigger] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=50 usbKeepAliveMs=4000 hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=0 recoveryRounds=0 livenessMs=-
 startup[0] usb ep=2 timeoutMs=2000 tolerated=false 0520010100
@@ -5802,7 +5802,7 @@ startup[1] usb ep=2 timeoutMs=2000 tolerated=false 0A200203000114
 startup[2] usb ep=2 timeoutMs=2000 tolerated=false 062001020100
 keepAlive[0] usb ep=2 timeoutMs=2000 tolerated=false 03200303000000
 gip keepAlive=enabled startup=[0520000100,0A200003000114,062000020100]
-parameters=
+parameters=shareButton.fromEnd=18
 
 ## 20D6:281F
 protocol=xbox-xusb variant=wired ownership=macos
@@ -5845,7 +5845,7 @@ parameters=
 protocol=xbox-gip variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
-controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
+controls [Back,Capture,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
 output rumble=[low-frequency,high-frequency,left-trigger,right-trigger] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=50 usbKeepAliveMs=4000 hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=0 recoveryRounds=0 livenessMs=-
 startup[0] usb ep=2 timeoutMs=2000 tolerated=false 0520010100
@@ -5853,7 +5853,7 @@ startup[1] usb ep=2 timeoutMs=2000 tolerated=false 0A200203000114
 startup[2] usb ep=2 timeoutMs=2000 tolerated=false 062001020100
 keepAlive[0] usb ep=2 timeoutMs=2000 tolerated=false 03200303000000
 gip keepAlive=enabled startup=[0520000100,0A200003000114,062000020100]
-parameters=
+parameters=shareButton.fromEnd=18
 
 ## 20D6:576D
 protocol=vendor-ps3-third-party variant=- ownership=macos
@@ -5877,7 +5877,7 @@ parameters=
 protocol=xbox-gip variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
-controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
+controls [Back,Capture,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
 output rumble=[low-frequency,high-frequency,left-trigger,right-trigger] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=50 usbKeepAliveMs=4000 hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=0 recoveryRounds=0 livenessMs=-
 startup[0] usb ep=2 timeoutMs=2000 tolerated=false 0520010100
@@ -5885,7 +5885,7 @@ startup[1] usb ep=2 timeoutMs=2000 tolerated=false 0A200203000114
 startup[2] usb ep=2 timeoutMs=2000 tolerated=false 062001020100
 keepAlive[0] usb ep=2 timeoutMs=2000 tolerated=false 03200303000000
 gip keepAlive=enabled startup=[0520000100,0A200003000114,062000020100]
-parameters=
+parameters=shareButton.fromEnd=18
 
 ## 20D6:A711
 protocol=nintendo-switch-input-only variant=- ownership=macos
@@ -6705,7 +6705,7 @@ parameters=
 protocol=xbox-gip variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
-controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
+controls [Back,Capture,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
 output rumble=[low-frequency,high-frequency,left-trigger,right-trigger] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=50 usbKeepAliveMs=4000 hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=0 recoveryRounds=0 livenessMs=-
 startup[0] usb ep=2 timeoutMs=2000 tolerated=false 0520010100
@@ -6713,7 +6713,7 @@ startup[1] usb ep=2 timeoutMs=2000 tolerated=false 0A200203000114
 startup[2] usb ep=2 timeoutMs=2000 tolerated=false 062001020100
 keepAlive[0] usb ep=2 timeoutMs=2000 tolerated=false 03200303000000
 gip keepAlive=enabled startup=[0520000100,0A200003000114,062000020100]
-parameters=
+parameters=shareButton.fromEnd=18
 
 ## 2DC8:301B
 protocol=hid-descriptor variant=- ownership=macos
@@ -6782,7 +6782,7 @@ parameters=
 protocol=xbox-gip variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
-controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
+controls [Back,Capture,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
 output rumble=[low-frequency,high-frequency,left-trigger,right-trigger] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=50 usbKeepAliveMs=4000 hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=0 recoveryRounds=0 livenessMs=-
 startup[0] usb ep=2 timeoutMs=2000 tolerated=false 0520010100
@@ -6790,7 +6790,7 @@ startup[1] usb ep=2 timeoutMs=2000 tolerated=false 0A200203000114
 startup[2] usb ep=2 timeoutMs=2000 tolerated=false 062001020100
 keepAlive[0] usb ep=2 timeoutMs=2000 tolerated=false 03200303000000
 gip keepAlive=enabled startup=[0520000100,0A200003000114,062000020100]
-parameters=
+parameters=shareButton.fromEnd=18
 
 ## 2E24:0652
 protocol=xbox-gip variant=- ownership=macos
@@ -6838,7 +6838,7 @@ parameters=
 protocol=xbox-gip variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
-controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
+controls [Back,Capture,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
 output rumble=[low-frequency,high-frequency,left-trigger,right-trigger] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=50 usbKeepAliveMs=4000 hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=0 recoveryRounds=0 livenessMs=-
 startup[0] usb ep=2 timeoutMs=2000 tolerated=false 0520010100
@@ -6846,7 +6846,7 @@ startup[1] usb ep=2 timeoutMs=2000 tolerated=false 0A200203000114
 startup[2] usb ep=2 timeoutMs=2000 tolerated=false 062001020100
 keepAlive[0] usb ep=2 timeoutMs=2000 tolerated=false 03200303000000
 gip keepAlive=enabled startup=[0520000100,0A200003000114,062000020100]
-parameters=
+parameters=shareButton.fromEnd=18
 
 ## 2E95:434D
 protocol=hid-descriptor variant=- ownership=macos
@@ -7233,7 +7233,7 @@ parameters=
 protocol=xbox-gip variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=true settleNs=0
 tuning -
-controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
+controls [Back,Capture,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
 output rumble=[low-frequency,high-frequency,left-trigger,right-trigger] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=50 usbKeepAliveMs=4000 hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=0 recoveryRounds=0 livenessMs=-
 startup[0] usb ep=2 timeoutMs=2000 tolerated=false 0520010100
@@ -7241,7 +7241,7 @@ startup[1] usb ep=2 timeoutMs=2000 tolerated=false 0A200203000114
 startup[2] usb ep=2 timeoutMs=2000 tolerated=false 062001020100
 keepAlive[0] usb ep=2 timeoutMs=2000 tolerated=false 03200303000000
 gip keepAlive=enabled startup=[0520000100,0A200003000114,062000020100]
-parameters=
+parameters=shareButton.fromEnd=18
 
 ## 3537:1022
 protocol=xbox-gip variant=- ownership=macos
@@ -7403,7 +7403,7 @@ parameters=
 protocol=xbox-gip variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
-controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
+controls [Back,Capture,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
 output rumble=[low-frequency,high-frequency,left-trigger,right-trigger] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=50 usbKeepAliveMs=4000 hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=0 recoveryRounds=0 livenessMs=-
 startup[0] usb ep=2 timeoutMs=2000 tolerated=false 0520010100
@@ -7411,7 +7411,7 @@ startup[1] usb ep=2 timeoutMs=2000 tolerated=false 0A200203000114
 startup[2] usb ep=2 timeoutMs=2000 tolerated=false 062001020100
 keepAlive[0] usb ep=2 timeoutMs=2000 tolerated=false 03200303000000
 gip keepAlive=enabled startup=[0520000100,0A200003000114,062000020100]
-parameters=
+parameters=shareButton.fromEnd=18
 
 ## 3767:0101
 protocol=xbox-xid variant=gamepad ownership=macos

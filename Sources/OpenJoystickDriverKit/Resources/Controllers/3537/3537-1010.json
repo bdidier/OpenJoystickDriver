@@ -7,7 +7,12 @@
     {
       "id": "default",
       "protocol": {
-        "family": "XboxGIP"
+        "family": "XboxGIP",
+        "parameters": {
+          "shareButton": {
+            "fromEnd": 18
+          }
+        }
       }
     }
   ],

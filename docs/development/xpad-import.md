@@ -28,7 +28,7 @@ Supported Linux input mappings:
 - `XTYPE_XBOX360W` becomes `XboxXUSB:Receiver` (Argon adapter/receiver).
 - `XTYPE_XBOXONE` becomes `XboxGIP`; the transport decides its variant, so none is stored.
 - xpad rows carry no transport field: every `xbox.*` family is reached through raw USB.
-- `MAP_SHARE_OFFSET` becomes the `XboxGIP` parameter `shareButton` with `fromEnd` 26; a row needing a parameter its family does not declare fails generation.
+- `MAP_SHARE_BUTTON` becomes the `XboxGIP` parameter `shareButton` with `fromEnd` 18, and `fromEnd` 26 with `MAP_SHARE_OFFSET`, as xpad reads `data[len - 18]` or `data[len - 26]`; a row needing a parameter its family does not declare fails generation. A GIP pad with no `shareButton` has no Share.
 - `MAP_TRIGGERS_TO_BUTTONS` and `MAP_STICKS_TO_NULL` become `capabilities.absent` entries (`left-trigger`/`right-trigger` and the four stick axes). Buttons and stick clicks stay; no trigger buttons are added because the XID, XUSB and GIP parsers emit none.
 - `MAP_DPAD_TO_BUTTONS` is dropped: it changes only how Linux reports the D-pad, not the wire bits OJD parsers decode.
 - Supported PlayStation, Sony, Nintendo, and Steam HID registrations become IOHID records from their driver tables and hid-ids.h (`SonySixaxis`, `SonyDualShock4`, `SonyDualSense`, `NintendoSwitch1`, `ValveSteamController:Wired`, and `ValveSteamController:Dongle` for the Steam wireless receiver).

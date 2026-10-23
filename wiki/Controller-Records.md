@@ -279,7 +279,7 @@ A `VirtualDevice` file in `~/Library/Application Support/OpenJoystickDriver/Virt
 
 Some families drive several models that differ in one detail. A typed parameter in the `protocol.parameters` object of a mode selects the detail. Each family declares its own parameters, and a record with an unknown parameter, a parameter another family declares, or a value of the wrong type is rejected. A flag parameter is `true` or left out.
 
-- `shareButton` (`XboxGIP`): `{"fromEnd": N}` reads the Share button N bytes back from the end of the packet (Linux xpad `MAP_SHARE_OFFSET` is 26).
+- `shareButton` (`XboxGIP`): `{"fromEnd": N}` reads the Share button N bytes back from the end of the packet (Linux xpad `MAP_SHARE_BUTTON` is 18, and 26 with `MAP_SHARE_OFFSET`). Without it, the pad has no Share. If your pad has a Share button that `ojd controller watch` does not show, add the parameter in a patch. 18 fits most pads with a 32-byte input payload.
 - `layout` (`NintendoSwitch1`, `NintendoSwitch2`): `Pro`, `JoyConLeft` or `JoyConRight`, and `GameCube` on `NintendoSwitch2`, the NSO GameCube controller. `usbProtocol` (`NintendoSwitch1`): `ChargingOnly` for a pad whose USB link only charges it, which binds the Bluetooth Classic link only; it excludes `layout`.
 - `innerGrips` and `lightingMemory` (`VendorGameSir`): an enhanced HID record names exactly one. `innerGrips` reports the inner grips; `lightingMemory: "ProfileSlots"` makes lighting memory slot-based. A GameSir USB record names neither.
 - `hatSource: "DpadPressure"` (`VendorPS3ThirdParty`): any nonzero D-pad pressure byte holds its direction.

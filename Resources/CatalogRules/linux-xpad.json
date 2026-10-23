@@ -10,6 +10,15 @@
   ],
   "mappingParameters": [
     {
+      "flag": "MAP_SHARE_BUTTON",
+      "parameters": {
+        "shareButton": {
+          "fromEnd": 18
+        }
+      },
+      "family": "XboxGIP"
+    },
+    {
       "flag": "MAP_SHARE_OFFSET",
       "parameters": {
         "shareButton": {
@@ -30,7 +39,7 @@
     }
   ],
   "representationFlags": ["MAP_DPAD_TO_BUTTONS"],
-  "presenceFlags": ["MAP_PADDLES", "MAP_PROFILE_BUTTON", "MAP_SHARE_BUTTON"],
+  "presenceFlags": ["MAP_PADDLES", "MAP_PROFILE_BUTTON"],
   "dancepadFlags": [
     "MAP_DPAD_TO_BUTTONS",
     "MAP_STICKS_TO_NULL",
