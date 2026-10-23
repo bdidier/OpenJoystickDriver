@@ -221,7 +221,7 @@ struct ConfigShowCommand: AsyncParsableCommand {
     value.map(text)
       ?? CLILocalized.text(
         ControllerTuning.Key(rawValue: key)?.hasDriverValue == true
-          ? "tuning.driverDefault" : "status.notSet"
+          ? "status.driverDefault" : "status.notSet"
       )
   }
 }

@@ -671,7 +671,7 @@
 /* Value of the stick deadzone in the controller detail and in 'ojd config show' when no layer sets it, so no deadzone applies. */
 "status.notSet" = "설정 안 됨";
 /* Value of a tuning row in the controller detail and of 'ojd config show' when no layer sets the tuning key, so the driver picks the value. */
-"tuning.driverDefault" = "드라이버 기본값";
+"status.driverDefault" = "드라이버 기본값";
 /* Value of a detail row that says a feature, such as motion sensing, is present. */
 "status.available" = "사용 가능";
 /* Value of the launch row of the controller actions when the list of connected controllers cannot be read. */

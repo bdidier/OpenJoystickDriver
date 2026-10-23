@@ -109,7 +109,7 @@ struct ConfigCommandTests {
     let deadzone = try #require(lines.first { $0.hasPrefix("stickDeadzone ") })
     let capacity = try #require(lines.first { $0.hasPrefix("frameQueueCapacity ") })
     #expect(deadzone.contains(CLILocalized.text("status.notSet")))
-    #expect(capacity.contains(CLILocalized.text("tuning.driverDefault")))
+    #expect(capacity.contains(CLILocalized.text("status.driverDefault")))
   }
 
   @Test

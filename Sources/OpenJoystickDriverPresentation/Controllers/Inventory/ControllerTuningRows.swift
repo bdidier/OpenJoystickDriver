@@ -30,7 +30,7 @@ enum ControllerTuningRows {
         name: entry.key.rawValue,
         value: entry.value.map(number)
           ?? OJDLocalized.string(
-            entry.key.hasDriverValue ? "tuning.driverDefault" : "status.notSet"
+            entry.key.hasDriverValue ? "status.driverDefault" : "status.notSet"
           ),
         layer: entry.value == nil ? nil : CommandLineName.kebab(entry.layer.rawValue)
       )
