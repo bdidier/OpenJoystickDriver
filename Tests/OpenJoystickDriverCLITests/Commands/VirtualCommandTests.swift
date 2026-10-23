@@ -155,6 +155,17 @@ struct VirtualCommandTests {
   }
 
   @Test
+  func showListsTheChoicesInHumanOutputAsVirtualSetTakesThem() async throws {
+    let service = try FakeService(devices: [
+      ApplicationServiceDeviceDescription.fixture(id: "pad-1")
+    ])
+    let result = await service.run(["virtual", "show"])
+    #expect(result.code == 0, "\(result.standardError)")
+    let choices = VirtualHIDProfileID.allCases.map { CommandLineName.kebab($0.rawValue) }
+    #expect(result.standardOutput.contains(choices.joined(separator: ", ")))
+  }
+
+  @Test
   func exportMappingPrintsOneSDLLinePerPersonaByDefault() async throws {
     let service = try FakeService(devices: [])
     let result = await service.run(["virtual", "export-mapping"])

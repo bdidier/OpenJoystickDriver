@@ -151,7 +151,7 @@ struct VirtualShowCommand: AsyncParsableCommand {
     CLIOutput.stdout(
       CLILocalized.format(
         "cli.virtual.show.profiles",
-        report.profiles.joined(separator: ", ")
+        report.profiles.map(CommandLineName.kebab).joined(separator: ", ")
       )
     )
   }
