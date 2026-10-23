@@ -130,9 +130,13 @@ struct DevicePipelineStatusAnnouncementTests {
     // Live input before the gap makes the gap a loss that the next neutral report recovers.
     await pipeline.feedHIDData(Data([2]))
     clock.advance(by: 2_000_000_000)
-    // The overdue watch announces once the gap passes.
+    // The overdue watch announces once the gap passes. The idle monitor can post the same gap
+    // first, so the wait is for the watch itself to finish.
     let deadline = Date().addingTimeInterval(30)
-    while posts.count < 1, Date() < deadline { try? await Task.sleep(nanoseconds: 10_000_000) }
+    while await pipeline.staleWatchTask != nil, Date() < deadline {
+      try? await Task.sleep(nanoseconds: 10_000_000)
+    }
+    #expect(posts.count >= 1)
     // The overdue gap retires output: the first report lands in the waiting-for-neutral state.
     await pipeline.feedHIDData(Data([1]))
     let before = posts.count
