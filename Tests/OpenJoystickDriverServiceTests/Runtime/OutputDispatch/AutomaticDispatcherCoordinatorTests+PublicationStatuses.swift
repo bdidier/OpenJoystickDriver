@@ -37,4 +37,52 @@ extension AutomaticDispatcherCoordinatorTests {
     #expect(failed.target == .generic)
     await coordinator.close()
   }
+
+  @Test(.timeLimit(.minutes(1)))
+  func aControllerHeldByAnotherClientPublishesNothingUntilItIsReleased() async throws {
+    let coordinator = AutomaticDispatcherCoordinator()
+    let backend = InstallationBackend(stage: .none, gate: InstallationGate())
+    let lease: () async -> AutomaticBackendLease? = {
+      await coordinator.leaseForDispatch(
+        controller: self.identifier,
+        profile: .generic,
+        isEligible: { _, _ in true },
+        factory: { _ in backend }
+      )
+    }
+    await lease()?.release()
+    #expect(await coordinator.publicationStatuses()[identifier]?.state == .published)
+
+    await coordinator.setHeldByAnotherClient(true, for: identifier)
+    #expect(backend.counts().closes == 1)
+    #expect(await coordinator.installedBackend(for: identifier) == nil)
+    #expect(await lease() == nil)
+    let held = try #require(await coordinator.publicationStatuses()[identifier])
+    #expect(held.state == .notPublished && held.reason == .heldByAnotherClient)
+    #expect(held.target == .generic)
+
+    await coordinator.setHeldByAnotherClient(false, for: identifier)
+    let released = try #require(await lease())
+    await released.release()
+    #expect(await coordinator.publicationStatuses()[identifier]?.state == .published)
+    await coordinator.close()
+  }
+
+  @Test(.timeLimit(.minutes(1)))
+  func aControllerHeldBeforeItsFirstPublicationReportsTheHeldReason() async throws {
+    let coordinator = AutomaticDispatcherCoordinator()
+    let backend = InstallationBackend(stage: .none, gate: InstallationGate())
+    await coordinator.setHeldByAnotherClient(true, for: identifier)
+    let lease = await coordinator.leaseForDispatch(
+      controller: identifier,
+      profile: .generic,
+      isEligible: { _, _ in true },
+      factory: { _ in backend }
+    )
+    #expect(lease == nil)
+    #expect(backend.counts().activations == 0)
+    let held = try #require(await coordinator.publicationStatuses()[identifier])
+    #expect(held.state == .notPublished && held.reason == .heldByAnotherClient)
+    await coordinator.close()
+  }
 }

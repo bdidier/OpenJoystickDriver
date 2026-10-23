@@ -86,6 +86,7 @@ VALUES: dict[str, tuple[str, ...]] = {
         "NoVirtualProfile",
         "Suppressed",
         "NoInputYet",
+        "HeldByAnotherClient",
     ),
     f"{D}/controllerShow/properties/record/properties/layer": LAYERS,
     f"{D}/controllerShow/properties/serving/properties/reason": (

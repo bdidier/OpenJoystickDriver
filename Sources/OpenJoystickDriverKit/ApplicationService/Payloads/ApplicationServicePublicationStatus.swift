@@ -29,6 +29,9 @@ public struct ApplicationServicePublicationStatus: Codable, Equatable, Sendable 
     case suppressed = "Suppressed"
     /// The controller has sent no input yet.
     case noInputYet = "NoInputYet"
+    /// Another client holds the controller's input, so a virtual device would never move; OJD
+    /// publishes once the client lets go.
+    case heldByAnotherClient = "HeldByAnotherClient"
   }
 
   public let state: State

@@ -2,8 +2,8 @@ import Foundation
 import OpenJoystickDriverKit
 
 final class AutomaticUserSpaceOutputDispatcher: VirtualOutputDispatching,
-  VirtualOutputControllerActivating, ControllerLifecycleListener, RemappingGamepadSink,
-  RemappingGamepadOutputControlling, @unchecked Sendable
+  VirtualOutputControllerActivating, ControllerLifecycleListener, ControllerInputOwnershipListener,
+  RemappingGamepadSink, RemappingGamepadOutputControlling, @unchecked Sendable
 {
   private let deviceManager: DeviceManager
   private let ownershipProvider:
@@ -271,6 +271,14 @@ final class AutomaticUserSpaceOutputDispatcher: VirtualOutputDispatching,
       throw error
     }
     await lease.release()
+    await synchronizeDiagnostics()
+  }
+
+  func controllerInputOwnershipChanged(
+    _ ownership: HIDInputOwnership,
+    for identifier: LogicalControllerID
+  ) async {
+    await coordinator.setHeldByAnotherClient(ownership == .ownedByAnotherClient, for: identifier)
     await synchronizeDiagnostics()
   }
 

@@ -261,12 +261,17 @@ struct ControllerShowCommand: AsyncParsableCommand {
         )
       )
     }
+    // A controller that another client holds runs no input session, so it has no input health.
+    if detail.ownership.hidInput != HIDInputOwnership.ownedByAnotherClient.rawValue {
+      rows.append(
+        (
+          CLILocalized.text("cli.controller.show.labelInput"),
+          CommandLineName.kebab(detail.inputHealth.state)
+            + (detail.inputHealth.failureReason.map { " (\(CommandLineName.kebab($0)))" } ?? "")
+        )
+      )
+    }
     rows += [
-      (
-        CLILocalized.text("cli.controller.show.labelInput"),
-        CommandLineName.kebab(detail.inputHealth.state)
-          + (detail.inputHealth.failureReason.map { " (\(CommandLineName.kebab($0)))" } ?? "")
-      ),
       (
         CLILocalized.text("cli.controller.show.labelOwnership"),
         CLILocalized.format(

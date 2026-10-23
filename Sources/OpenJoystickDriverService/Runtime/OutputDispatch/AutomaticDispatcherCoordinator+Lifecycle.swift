@@ -139,7 +139,14 @@ extension AutomaticDispatcherCoordinator {
       let attempted = entry.lastAttemptedSend
       let completed = entry.lastCompletedSend
       statuses[element.key] =
-        if let failure = entry.lastFailure {
+        if entry.heldByAnotherClient {
+          .notPublished(
+            .heldByAnotherClient,
+            target: target,
+            lastAttemptedNanoseconds: attempted,
+            lastCompletedNanoseconds: completed
+          )
+        } else if let failure = entry.lastFailure {
           .failed(
             failure,
             target: target,
@@ -178,6 +185,38 @@ extension AutomaticDispatcherCoordinator {
         } while true
       }
       await lease.release()
+    }
+  }
+
+  /// Records whether another client holds the controller's input. Holding retires the live
+  /// publication, whose virtual device could never move; the physical session stays, so the next
+  /// activation or input after the release publishes again.
+  func setHeldByAnotherClient(_ held: Bool, for controller: LogicalControllerID) async {
+    guard !closed else { return }
+    var entry = entries[controller] ?? Entry()
+    guard entry.heldByAnotherClient != held else { return }
+    entry.heldByAnotherClient = held
+    guard held else {
+      entries[controller] = entry
+      return
+    }
+    entry.publicationGeneration &+= 1
+    entry.tasks.values.forEach { $0.task.cancel() }
+    entry.pending = nil
+    let installed = entry.installed
+    entry.installed = nil
+    entry.installedToken = nil
+    entry.target = nil
+    if let installed { entry.retiring = installed }
+    entries[controller] = entry
+    guard let installed else { return }
+    if await installed.retireAndWait() {
+      await retirementFinished(identifier: controller, slot: installed)
+    } else {
+      Task { [weak self] in
+        await installed.waitForCloseCompletion()
+        await self?.retirementFinished(identifier: controller, slot: installed)
+      }
     }
   }
 

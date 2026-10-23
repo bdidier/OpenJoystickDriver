@@ -49,7 +49,7 @@ struct CLIOutputValueSpellingTests {
     #expect(
       ApplicationServicePublicationStatus.NotPublishedReason.allCases.map(\.rawValue) == [
         "OutputDisabled", "SystemGamepad", "NativeHIDPassThrough", "UpstreamVirtualDevice",
-        "SessionSuspended", "NoVirtualProfile", "Suppressed", "NoInputYet",
+        "SessionSuspended", "NoVirtualProfile", "Suppressed", "NoInputYet", "HeldByAnotherClient",
       ]
     )
     for raw in [

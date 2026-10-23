@@ -110,6 +110,8 @@ extension RemappingRoutingCore {
     guard !terminationRequested else { return }
     inputOwnership[identifier] = ownership
     schedulingRevision &+= 1
+    await (virtualOutput as? any ControllerInputOwnershipListener)?
+      .controllerInputOwnershipChanged(ownership, for: identifier)
     guard !profileTransactionState.blocksOutput, let permit = emissionBarrier.currentPermit() else {
       return
     }

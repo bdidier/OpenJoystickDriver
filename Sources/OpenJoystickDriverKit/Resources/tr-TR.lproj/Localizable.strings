@@ -3939,6 +3939,8 @@
 "ui.controllers.publication.reason.suppressed" = "Çıkış duraklatıldı";
 /* Reason the controller has no virtual gamepad: the first input has not arrived. */
 "ui.controllers.publication.reason.noInputYet" = "İlk girdi bekleniyor";
+/* Reason the controller has no virtual gamepad: another app holds its input. */
+"ui.controllers.publication.reason.heldByAnotherClient" = "Başka bir uygulama onu kullanıyor";
 /* Publication state with its reason or failure, for example "Not published (Waiting for the first input)". %1$@ is the state and %2$@ the reason. */
 "ui.controllers.publication.withReason" = "%1$@ (%2$@)";
 /* Reason shown with a failed publication. %@ is the reason the last send failed. */

@@ -39,6 +39,8 @@ extension AutomaticDispatcherCoordinator {
     var lastFailure: String?
     var recoveryState = "idle"
     var recoveryToken: UUID?
+    /// Another client holds the controller's input; nothing installs until it lets go.
+    var heldByAnotherClient = false
   }
 
   struct PublicationContext: Sendable {
@@ -60,6 +62,10 @@ extension AutomaticDispatcherCoordinator {
       let profile = profileProvider(identifier, description)
     else { return }
     beginSession(identifier)
+    await setHeldByAnotherClient(
+      description.hidInputOwnership == .ownedByAnotherClient,
+      for: identifier
+    )
     let lease = try await acquire(
       identifier,
       target: profile,
@@ -178,6 +184,13 @@ extension AutomaticDispatcherCoordinator {
     guard !closed else { return nil }
     if entries[controller] == nil { entries[controller] = Entry() }
     guard !suppressed, let initial = entries[controller], initial.physicalSessionActive else {
+      return nil
+    }
+    if initial.heldByAnotherClient {
+      // The context keeps the target, so the status names what publishes after the release.
+      entries[controller]?.context =
+        initial.context
+        ?? PublicationContext(target: target, isEligible: isEligible, factory: factory)
       return nil
     }
     let sessionGeneration = initial.sessionGeneration

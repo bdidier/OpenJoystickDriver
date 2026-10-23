@@ -959,7 +959,8 @@
                 "SessionSuspended",
                 "NoVirtualProfile",
                 "Suppressed",
-                "NoInputYet"
+                "NoInputYet",
+                "HeldByAnotherClient"
               ]
             },
             "state": {

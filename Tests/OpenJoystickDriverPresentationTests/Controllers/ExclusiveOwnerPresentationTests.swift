@@ -49,6 +49,18 @@ struct ExclusiveOwnerPresentationTests {
   }
 
   @Test
+  func aHeldControllerShowsNoInputHealth() {
+    let held = ControllerDetailFacts.general(
+      for: device(ownership: .ownedByAnotherClient, owner: owner)
+    )
+    #expect(!held.contains { $0.kind == .inputHealth })
+    #expect(
+      ControllerDetailFacts.general(for: device(ownership: .exclusive, owner: nil))
+        .contains { $0.kind == .inputHealth }
+    )
+  }
+
+  @Test
   func theDetailSaysWhenMacOSAlsoListsTheController() {
     let listed = ApplicationServiceDeviceDescription.fixture(
       id: "listed",

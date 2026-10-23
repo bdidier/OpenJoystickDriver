@@ -78,6 +78,19 @@ public final class VirtualOutputRouter: OutputDispatcher, RemappingGamepadSink,
   }
 }
 
+extension VirtualOutputRouter: ControllerInputOwnershipListener {
+  public func controllerInputOwnershipChanged(
+    _ ownership: HIDInputOwnership,
+    for identifier: LogicalControllerID
+  ) async {
+    let target = lock.withLock { backend }
+    await (target as? any ControllerInputOwnershipListener)?.controllerInputOwnershipChanged(
+      ownership,
+      for: identifier
+    )
+  }
+}
+
 extension VirtualOutputRouter: ControllerLifecycleListener {
   public func controllerDidStop(_ identifier: LogicalControllerID) async {
     let target = lock.withLock { backend }

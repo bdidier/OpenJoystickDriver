@@ -3939,6 +3939,8 @@
 "ui.controllers.publication.reason.suppressed" = "الإخراج متوقف مؤقتًا";
 /* Reason the controller has no virtual gamepad: the first input has not arrived. */
 "ui.controllers.publication.reason.noInputYet" = "في انتظار أول إدخال";
+/* Reason the controller has no virtual gamepad: another app holds its input. */
+"ui.controllers.publication.reason.heldByAnotherClient" = "تطبيق آخر يستخدمها";
 /* Publication state with its reason or failure, for example "Not published (Waiting for the first input)". %1$@ is the state and %2$@ the reason. */
 "ui.controllers.publication.withReason" = "%1$@ (%2$@)";
 /* Reason shown with a failed publication. %@ is the reason the last send failed. */

@@ -3939,6 +3939,8 @@
 "ui.controllers.publication.reason.suppressed" = "출력 일시 중지됨";
 /* Reason the controller has no virtual gamepad: the first input has not arrived. */
 "ui.controllers.publication.reason.noInputYet" = "첫 입력을 기다리는 중";
+/* Reason the controller has no virtual gamepad: another app holds its input. */
+"ui.controllers.publication.reason.heldByAnotherClient" = "다른 앱이 사용 중임";
 /* Publication state with its reason or failure, for example "Not published (Waiting for the first input)". %1$@ is the state and %2$@ the reason. */
 "ui.controllers.publication.withReason" = "%1$@ (%2$@)";
 /* Reason shown with a failed publication. %@ is the reason the last send failed. */

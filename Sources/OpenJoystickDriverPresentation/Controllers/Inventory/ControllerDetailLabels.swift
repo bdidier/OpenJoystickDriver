@@ -17,6 +17,7 @@ enum ControllerDetailLabels {
     case .noVirtualProfile: return "ui.controllers.publication.reason.noVirtualProfile"
     case .suppressed: return "ui.controllers.publication.reason.suppressed"
     case .noInputYet: return "ui.controllers.publication.reason.noInputYet"
+    case .heldByAnotherClient: return "ui.controllers.publication.reason.heldByAnotherClient"
     }
   }
 

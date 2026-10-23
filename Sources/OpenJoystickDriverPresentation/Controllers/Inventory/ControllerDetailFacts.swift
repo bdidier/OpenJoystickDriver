@@ -40,8 +40,12 @@ enum ControllerDetailFacts {
         .text(device.protocolBinding.displayName)
       ),
       fact(.serialNumber, "term.serialNumber", serialNumber(device)),
-      fact(.inputHealth, "cli.controller.show.labelInput", .text(inputHealthText(device))),
     ]
+    // A controller that another client holds runs no input session, so it has no input health.
+    let input =
+      device.hidInputOwnership == .ownedByAnotherClient
+      ? []
+      : [fact(.inputHealth, "cli.controller.show.labelInput", .text(inputHealthText(device)))]
     let power = [
       fact(.battery, "ui.controllers.battery", battery(device)),
       fact(.chargingState, "ui.controllers.chargingState", chargingState(device)),
@@ -91,7 +95,7 @@ enum ControllerDetailFacts {
           .text(OJDLocalized.string("status.controllerAlsoListedBySystem"))
         )
       ] : []
-    return always + held + listed + (power + capabilities).filter { $0.value != .none }
+    return always + input + held + listed + (power + capabilities).filter { $0.value != .none }
   }
 
   /// The technical facts, shown under Advanced: identifiers, the parser (the binding that parses
