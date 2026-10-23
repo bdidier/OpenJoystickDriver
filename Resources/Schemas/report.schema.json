@@ -117,11 +117,17 @@
       }
     },
     "frameTimingSummary": {
-      "description": "What the frame window of one controller says about stutter. A gap lists median, 99th percentile (nearest rank) and maximum over the frames that reached both of its stages, and is absent when no frame did. ReadToRead is the time between the Read stamps of consecutive frames. A stall is a read interval longer than 3 times the median ReadToRead; the threshold follows the report rate of the controller. stalls is absent when the window holds fewer than two frames.",
+      "description": "What the frame window of one controller says about stutter. A gap lists median, 99th percentile (nearest rank) and maximum over the frames that reached both of its stages, and is absent when no frame did. ReadToRead is the time between the Read stamps of consecutive frames. A stall is a read interval longer than 3 times the median ReadToRead; the threshold follows the report rate of the controller. ReadToRead and stalls are measured only on a window of lastSeconds, which the user fills with constant input, because a controller that reports only when an input changes leaves a gap for each pause; the whole ring, without lastSeconds, has neither. stalls is also absent when the window holds fewer than two frames.",
       "type": "object",
       "required": ["frames", "spanNanoseconds", "gaps"],
       "additionalProperties": false,
       "properties": {
+        "lastSeconds": {
+          "description": "The seconds before the service answered that the window covers (ojd diagnose --frames); absent for the whole ring.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 15
+        },
         "frames": {
           "type": "integer",
           "minimum": 0

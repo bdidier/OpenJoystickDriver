@@ -61,13 +61,14 @@ public struct ControllerFrameTimings: Codable, Equatable, Sendable {
     self.summary = summary
   }
 
-  /// The timings of a controller whose frame window is `window`, oldest frame first.
-  init(controller: String, name: String, window: [FrameTiming]) {
+  /// The timings of a controller whose frame window is `window`, oldest frame first: the frames of
+  /// the last `lastSeconds` seconds or, for nil, the whole ring.
+  init(controller: String, name: String, window: [FrameTiming], lastSeconds: Int?) {
     self.init(
       controller: controller,
       name: name,
       frames: Array(window.suffix(FrameTimingRecorder.listedFrames)),
-      summary: FrameTimingSummary(window: window)
+      summary: FrameTimingSummary(window: window, lastSeconds: lastSeconds)
     )
   }
 }

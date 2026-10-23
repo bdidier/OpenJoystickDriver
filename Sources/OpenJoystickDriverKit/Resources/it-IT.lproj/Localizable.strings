@@ -1860,7 +1860,7 @@
 /* Help text of the --footprint-limit-mib option of 'ojd diagnose'. The physical footprint is the memory charged to the service in MiB, mebibytes. The range 0-65536 is fixed. */
 "cli.diagnose.group.footprintLimit" = "Con --soak, fallisce oltre questo footprint fisico in MiB; 0 disattiva (0-65536).";
 /* Help text of the --frames option of 'ojd diagnose'. The number is a count of seconds from 1 to 15. A stall is a read interval that is much longer than the usual one. */
-"cli.diagnose.group.frames" = "Tieni in movimento le levette per questo tempo, poi riepiloga solo i frame letti in quel periodo (1-15). Un controller che segnala solo quando un input cambia conta ogni pausa dell’input come un blocco.";
+"cli.diagnose.group.frames" = "Tieni in movimento le levette per questo tempo, poi riepiloga solo i frame letti in quel periodo (1-15). Con un controller che segnala solo quando un input cambia, ogni pausa dell’input conta come un blocco.";
 /* Error of the service when a request for frame timings asks for a frame window outside the 1 to 15 seconds the service keeps. Shown by 'ojd diagnose' if the request reaches the service. */
 "cli.diagnose.group.framesInvalidRequest" = "La finestra di frame della richiesta è fuori dall’intervallo da 1 a 15 secondi che il servizio conserva.";
 /* Progress line of 'ojd diagnose --frames', written to the error output while the command waits. %@ is the wait, such as 10s. The sticks are the thumbsticks of the controller. Keep the three dots. */
@@ -2561,6 +2561,7 @@
 "cli.diagnose.group.timingsSummaryNoStalls" = "Blocchi: non misurati, la finestra contiene meno di due frame";
 /* Stall line of the timing summary of 'ojd diagnose'. A stall is a read interval that is much longer than the usual one. %1$@ is the number of read intervals in the window longer than the threshold, %2$@ is the threshold in milliseconds and %3$@ is the multiple of the median read interval that sets the threshold. The unit symbol ms may be localized. */
 "cli.diagnose.group.timingsSummaryStalls" = "Blocchi (intervalli di lettura superiori a %2$@ ms, %3$@ volte la mediana degli intervalli di lettura): %1$@";
+"cli.diagnose.group.timingsSummaryStallsNeedFrames" = "Blocchi: misurati solo con --frames, mentre le levette restano in movimento";
 /* Line of 'ojd diagnose --frames' above the timing summaries. %@ is the length of the window, such as 10s. The frames are those the controller reported in that time. */
 "cli.diagnose.group.timingsWindow" = "Finestra dei tempi: frame letti negli ultimi %@.";
 /* One-line summary of 'ojd record' in the command list and at the top of its help. */

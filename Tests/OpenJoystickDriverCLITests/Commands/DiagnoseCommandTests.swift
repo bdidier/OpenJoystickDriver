@@ -19,6 +19,7 @@ struct DiagnoseCommandTests {
 
   private func serve(
     socketPath: String,
+    timings: ControllerFrameTimings = .fixture,
     onFrameTimings: @escaping @Sendable (Data) -> Void = { _ in }
   ) throws -> LocalServiceRPCServer {
     let statusResult = try JSONEncoder().encode(
@@ -33,7 +34,7 @@ struct DiagnoseCommandTests {
     )
     let timingsResult = try JSONEncoder().encode(
       try JSONEncoder().encode(
-        ApplicationServiceFrameTimingsPayload(controllers: [ControllerFrameTimings.fixture])
+        ApplicationServiceFrameTimingsPayload(controllers: [timings])
       )
     )
     let server = LocalServiceRPCServer(
@@ -206,7 +207,7 @@ struct DiagnoseCommandTests {
       .filter { $0.hasPrefix("timing-summary\t") }
     #expect(
       rows == [
-        "timing-summary\tctrl-1\twindow\t120\t119000000",
+        "timing-summary\tctrl-1\twindow\t120\t119000000\t10",
         "timing-summary\tctrl-1\tread-to-parse\t120\t50000\t90000\t120000",
         "timing-summary\tctrl-1\tread-to-read\t119\t1000000\t2500000\t12000000",
         "timing-summary\tctrl-1\tstalls\t3000000\t2",
@@ -238,6 +239,33 @@ struct DiagnoseCommandTests {
       block[3].contains("3.000") && block[3].contains("3") && block[3].hasSuffix("2"),
       "\(block)"
     )
+  }
+
+  @Test
+  func humanOutputOfTheWholeRingSaysThatStallsNeedFrames() async throws {
+    let fixture = ControllerFrameTimings.fixture
+    let summary = fixture.summary
+    let ring = ControllerFrameTimings(
+      controller: fixture.controller,
+      name: fixture.name,
+      frames: fixture.frames,
+      summary: FrameTimingSummary(
+        lastSeconds: nil,
+        frames: summary.frames,
+        spanNanoseconds: summary.spanNanoseconds,
+        gaps: summary.gaps.filter { $0.gap != .readToRead },
+        stalls: nil
+      )
+    )
+    let socketPath = temporarySocketPath()
+    let server = try serve(socketPath: socketPath, timings: ring)
+    defer { server.stop() }
+
+    let result = await run([], socketPath: socketPath)
+
+    let needFrames = CLILocalized.text("cli.diagnose.group.timingsSummaryStallsNeedFrames")
+    #expect(result.standardOutput.contains(needFrames), "\(result.standardOutput)")
+    #expect(!result.standardOutput.contains("read-to-read"))
   }
 
   @Test

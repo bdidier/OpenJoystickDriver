@@ -33,17 +33,23 @@ struct DiagnoseReport: Encodable, Equatable {
   /// The `timing-summary` rows of `controller`. The first two columns are `timing-summary` and
   /// the controller ID; the third names the row, and the columns after it depend on the name:
   ///
-  /// - `window`: frames in the window, time span in nanoseconds.
+  /// - `window`: frames in the window, time span in nanoseconds, the seconds of `--frames` (empty
+  ///   for the whole ring).
   /// - a gap name in kebab-case (`read-to-parse`, `parse-to-dispatch`,
   ///   `dispatch-to-delivery-virtual-device`, `dispatch-to-delivery-endpoint`, `read-to-read`):
   ///   samples, median, 99th percentile and maximum in nanoseconds. A gap without a sample has no
-  ///   row.
+  ///   row; the whole ring has no `read-to-read` row.
   /// - `stalls`: threshold in nanoseconds, read intervals longer than the threshold. The row is
-  ///   absent when the window holds fewer than two frames.
+  ///   absent for the whole ring and when the window holds fewer than two frames.
   private static func summaryRows(of controller: ControllerFrameTimings) -> [[String]] {
     let summary = controller.summary
     let head = ["timing-summary", controller.controller]
-    var rows = [head + ["window", String(summary.frames), String(summary.spanNanoseconds)]]
+    var rows = [
+      head + [
+        "window", String(summary.frames), String(summary.spanNanoseconds),
+        summary.lastSeconds.map(String.init) ?? "",
+      ]
+    ]
     rows += summary.gaps.map {
       head + [
         CommandLineName.kebab($0.gap.rawValue), String($0.samples), String($0.p50Nanoseconds),
@@ -89,6 +95,8 @@ struct DiagnoseReport: Encodable, Equatable {
             String(FrameTimingSummary.stallIntervalMultiplier)
           )
       )
+    } else if summary.lastSeconds == nil {
+      lines.append("  " + CLILocalized.text("cli.diagnose.group.timingsSummaryStallsNeedFrames"))
     } else {
       lines.append("  " + CLILocalized.text("cli.diagnose.group.timingsSummaryNoStalls"))
     }

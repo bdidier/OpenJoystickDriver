@@ -1,8 +1,8 @@
 import OpenJoystickDriverKit
 
 extension ControllerFrameTimings {
-  /// One controller whose newest frame reached every stage and whose window of 120 frames had
-  /// two stalls.
+  /// One controller whose newest frame reached every stage and whose 10-second window of 120
+  /// frames had two stalls.
   public static let fixture = ControllerFrameTimings(
     controller: "ctrl-1",
     name: "Pad",
@@ -19,6 +19,7 @@ extension ControllerFrameTimings {
       )
     ],
     summary: FrameTimingSummary(
+      lastSeconds: 10,
       frames: 120,
       spanNanoseconds: 119_000_000,
       gaps: [

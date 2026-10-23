@@ -45,7 +45,8 @@ extension DeviceManager {
           name: description.name,
           window: lastSeconds.map { seconds in
             frameTimings.window(for: identifier, lastSeconds: seconds, now: now)
-          } ?? frameTimings.window(for: identifier)
+          } ?? frameTimings.window(for: identifier),
+          lastSeconds: lastSeconds
         )
       }
     )

@@ -130,6 +130,7 @@
               "samples" : 119
             }
           ],
+          "lastSeconds" : 10,
           "spanNanoseconds" : 119000000,
           "stalls" : {
             "count" : 2,

@@ -1860,7 +1860,7 @@
 /* Help text of the --footprint-limit-mib option of 'ojd diagnose'. The physical footprint is the memory charged to the service in MiB, mebibytes. The range 0-65536 is fixed. */
 "cli.diagnose.group.footprintLimit" = "--soak 사용 시 이 물리 메모리 사용량(MiB)을 초과하면 실패 처리합니다. 0이면 사용 안 함 (0-65536).";
 /* Help text of the --frames option of 'ojd diagnose'. The number is a count of seconds from 1 to 15. A stall is a read interval that is much longer than the usual one. */
-"cli.diagnose.group.frames" = "이 시간 동안 스틱을 계속 움직인 뒤, 그동안 읽은 프레임만 요약합니다 (1-15). 입력이 바뀔 때만 보고하는 컨트롤러는 입력이 멈출 때마다 멈춤으로 셉니다.";
+"cli.diagnose.group.frames" = "이 시간 동안 스틱을 계속 움직인 뒤, 그동안 읽은 프레임만 요약합니다 (1-15). 입력이 바뀔 때만 보고하는 컨트롤러에서는 입력이 멈출 때마다 멈춤으로 집계됩니다.";
 /* Error of the service when a request for frame timings asks for a frame window outside the 1 to 15 seconds the service keeps. Shown by 'ojd diagnose' if the request reaches the service. */
 "cli.diagnose.group.framesInvalidRequest" = "요청한 프레임 윈도우가 서비스가 보관하는 1초에서 15초 범위를 벗어났습니다.";
 /* Progress line of 'ojd diagnose --frames', written to the error output while the command waits. %@ is the wait, such as 10s. The sticks are the thumbsticks of the controller. Keep the three dots. */
@@ -2561,6 +2561,7 @@
 "cli.diagnose.group.timingsSummaryNoStalls" = "멈춤: 측정되지 않음, 윈도우에 프레임이 두 개 미만입니다";
 /* Stall line of the timing summary of 'ojd diagnose'. A stall is a read interval that is much longer than the usual one. %1$@ is the number of read intervals in the window longer than the threshold, %2$@ is the threshold in milliseconds and %3$@ is the multiple of the median read interval that sets the threshold. The unit symbol ms may be localized. */
 "cli.diagnose.group.timingsSummaryStalls" = "멈춤(%2$@ 밀리초보다 긴 읽기 간격, 읽기 간격 중앙값의 %3$@배): %1$@";
+"cli.diagnose.group.timingsSummaryStallsNeedFrames" = "멈춤: --frames를 사용할 때 스틱을 계속 움직이는 동안에만 측정됩니다";
 /* Line of 'ojd diagnose --frames' above the timing summaries. %@ is the length of the window, such as 10s. The frames are those the controller reported in that time. */
 "cli.diagnose.group.timingsWindow" = "타이밍 윈도우: 최근 %@ 동안 읽은 프레임.";
 /* One-line summary of 'ojd record' in the command list and at the top of its help. */

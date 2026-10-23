@@ -63,38 +63,48 @@ public struct FrameStalls: Codable, Equatable, Sendable {
 /// a newer one replaced before dispatch is no frame, so the interval spans it.
 ///
 /// A stall is a read interval longer than ``stallIntervalMultiplier`` times the median read
-/// interval of the window. The threshold follows the report rate of the controller, so the same
+/// interval of the window. Read intervals and stalls are measured only on a window of the last
+/// ``lastSeconds`` seconds, which the user fills with constant input: a controller that sends a
+/// report only when an input changes leaves a gap for each pause, and the whole ring holds the
+/// pauses before and after the input. The threshold follows the report rate of the controller, so the same
 /// rule fits a 125 Hz controller (8 ms) and a 1000 Hz one (1 ms), where one fixed limit would miss
 /// the first or flag the second. An interval equal to the threshold is not a stall.
 public struct FrameTimingSummary: Codable, Equatable, Sendable {
   /// The multiple of the median read interval above which a read interval is a stall.
   public static let stallIntervalMultiplier: UInt64 = 3
 
+  /// The seconds before the service answered that the window covers; absent for the whole ring.
+  public let lastSeconds: Int?
   /// The frames in the window.
   public let frames: Int
   /// The time from the first to the last `Read` stamp of the window; 0 for fewer than two frames.
   public let spanNanoseconds: UInt64
   /// One summary per ``FrameGap`` that has a sample, in the order of `FrameGap.allCases`.
   public let gaps: [FrameGapSummary]
-  /// Absent when the window holds fewer than two frames, so it has no read interval.
+  /// Absent for the whole ring and when the window holds fewer than two frames.
   public let stalls: FrameStalls?
 
   public init(
+    lastSeconds: Int?,
     frames: Int,
     spanNanoseconds: UInt64,
     gaps: [FrameGapSummary],
     stalls: FrameStalls?
   ) {
+    self.lastSeconds = lastSeconds
     self.frames = frames
     self.spanNanoseconds = spanNanoseconds
     self.gaps = gaps
     self.stalls = stalls
   }
 
-  /// The summary of `window`, oldest frame first.
-  public init(window: [FrameTiming]) {
+  /// The summary of `window`, oldest frame first, which holds the frames of the last
+  /// `lastSeconds` seconds or, for nil, the whole ring.
+  public init(window: [FrameTiming], lastSeconds: Int?) {
     let reads = window.compactMap { Self.time(of: .read, in: $0) }
-    let intervals = zip(reads, reads.dropFirst()).compactMap { Self.elapsed(from: $0, to: $1) }
+    let intervals =
+      lastSeconds == nil
+      ? [] : zip(reads, reads.dropFirst()).compactMap { Self.elapsed(from: $0, to: $1) }
     let samples: [FrameGap: [UInt64]] = [
       .readToParse: Self.elapsed(in: window, from: .read, to: .parse),
       .parseToDispatch: Self.elapsed(in: window, from: .parse, to: .dispatch),
@@ -117,6 +127,7 @@ public struct FrameTimingSummary: Codable, Equatable, Sendable {
       reads.last.flatMap { Self.elapsed(from: first, to: $0) }
     }
     self.init(
+      lastSeconds: lastSeconds,
       frames: window.count,
       spanNanoseconds: span ?? 0,
       gaps: FrameGap.allCases.compactMap { gap in

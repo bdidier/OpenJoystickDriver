@@ -35,7 +35,7 @@ struct FrameTimingSummaryTests {
 
   @Test
   func theWindowCountAndSpanAreTheFramesAndTheFirstToLastRead() {
-    let summary = FrameTimingSummary(window: Self.window())
+    let summary = FrameTimingSummary(window: Self.window(), lastSeconds: 10)
 
     #expect(summary.frames == 101)
     #expect(summary.spanNanoseconds == 98 * 1_000_000 + 2_000_000 + 10_000_000)
@@ -43,7 +43,7 @@ struct FrameTimingSummaryTests {
 
   @Test
   func theReadIntervalPercentilesAreNearestRank() throws {
-    let summary = FrameTimingSummary(window: Self.window())
+    let summary = FrameTimingSummary(window: Self.window(), lastSeconds: 10)
 
     let interval = try #require(gap(.readToRead, in: summary))
     #expect(interval.samples == 100)
@@ -54,7 +54,7 @@ struct FrameTimingSummaryTests {
 
   @Test
   func theStallThresholdIsThreeMedianReadIntervalsAndCountsOnlyLongerIntervals() throws {
-    let summary = FrameTimingSummary(window: Self.window())
+    let summary = FrameTimingSummary(window: Self.window(), lastSeconds: 10)
 
     #expect(FrameTimingSummary.stallIntervalMultiplier == 3)
     let stalls = try #require(summary.stalls)
@@ -73,14 +73,14 @@ struct FrameTimingSummaryTests {
       )
     }
 
-    let stalls = try #require(FrameTimingSummary(window: window).stalls)
+    let stalls = try #require(FrameTimingSummary(window: window, lastSeconds: 10).stalls)
 
     #expect(stalls == FrameStalls(thresholdNanoseconds: 3_000_000, count: 0))
   }
 
   @Test
   func theStageGapsAreMeasuredOnTheFramesThatReachedBothStages() throws {
-    let summary = FrameTimingSummary(window: Self.window())
+    let summary = FrameTimingSummary(window: Self.window(), lastSeconds: 10)
 
     let parse = try #require(gap(.readToParse, in: summary))
     #expect(parse.samples == 101)
@@ -116,7 +116,7 @@ struct FrameTimingSummaryTests {
       )
     }
 
-    let summary = FrameTimingSummary(window: window)
+    let summary = FrameTimingSummary(window: window, lastSeconds: 10)
 
     #expect(
       summary.gaps.map(\.gap) == [
@@ -144,7 +144,7 @@ struct FrameTimingSummaryTests {
       ),
     ]
 
-    let summary = FrameTimingSummary(window: window)
+    let summary = FrameTimingSummary(window: window, lastSeconds: 10)
 
     let parse = try #require(gap(.readToParse, in: summary))
     #expect(parse.samples == 1)
@@ -153,7 +153,7 @@ struct FrameTimingSummaryTests {
 
   @Test
   func oneFrameHasNoReadIntervalAndNoStallRule() {
-    let summary = FrameTimingSummary(window: Array(Self.window().prefix(1)))
+    let summary = FrameTimingSummary(window: Array(Self.window().prefix(1)), lastSeconds: 10)
 
     #expect(summary.frames == 1)
     #expect(summary.spanNanoseconds == 0)
@@ -166,9 +166,24 @@ struct FrameTimingSummaryTests {
   @Test
   func anEmptyWindowHasNothingToSummarize() {
     #expect(
-      FrameTimingSummary(window: [])
-        == FrameTimingSummary(frames: 0, spanNanoseconds: 0, gaps: [], stalls: nil)
+      FrameTimingSummary(window: [], lastSeconds: 10)
+        == FrameTimingSummary(lastSeconds: 10, frames: 0, spanNanoseconds: 0, gaps: [], stalls: nil)
     )
+  }
+
+  @Test
+  func theWholeRingKeepsTheStageGapsButMeasuresNoReadIntervalAndNoStall() {
+    let summary = FrameTimingSummary(window: Self.window(), lastSeconds: nil)
+
+    #expect(summary.lastSeconds == nil)
+    #expect(summary.frames == 101)
+    #expect(
+      summary.gaps.map(\.gap) == [
+        .readToParse, .parseToDispatch, .dispatchToDeliveryVirtualDevice,
+        .dispatchToDeliveryEndpoint,
+      ]
+    )
+    #expect(summary.stalls == nil)
   }
 
   @Test
@@ -184,12 +199,14 @@ struct FrameTimingSummaryTests {
     let timings = ControllerFrameTimings(
       controller: "c",
       name: "n",
-      window: recorder.window(for: identifier)
+      window: recorder.window(for: identifier),
+      lastSeconds: nil
     )
 
     #expect(timings.frames.count == FrameTimingRecorder.listedFrames)
     #expect(timings.summary.frames == 30)
     #expect(timings.summary.spanNanoseconds == 29_000_000)
-    #expect(timings.summary.stalls == FrameStalls(thresholdNanoseconds: 3_000_000, count: 0))
+    #expect(timings.summary.lastSeconds == nil)
+    #expect(timings.summary.stalls == nil)
   }
 }
