@@ -301,4 +301,37 @@ private actor PermissionRaceGatewayStub: ApplicationServiceGateway {
   ) throws -> ControllerTuningResult {
     throw ApplicationServiceClientError.invalidResponse
   }
+
+  func setControllerServer(
+    model: ControllerModelID,
+    server: ControllerServer
+  ) throws -> ControllerServerResult {
+    throw ApplicationServiceClientError.invalidResponse
+  }
+
+  func suspendController(_ selector: ControllerReference) throws -> ControllerSuspendResult {
+    throw ApplicationServiceClientError.invalidResponse
+  }
+
+  func resumeController(_ selector: ControllerReference) throws -> ControllerResumeResult {
+    throw ApplicationServiceClientError.invalidResponse
+  }
+
+  func disconnectWirelessController(
+    _ selector: ControllerReference
+  ) throws -> WirelessControllerDisconnectResult {
+    throw ApplicationServiceClientError.invalidResponse
+  }
+
+  func deleteDamagedRemappingProfile(
+    issueID: UUID
+  ) throws -> ApplicationServiceRemappingSnapshotPayload {
+    throw ApplicationServiceClientError.invalidResponse
+  }
+
+  func resetRemappingProfileLibrary(
+    issueID: UUID
+  ) throws -> ApplicationServiceRemappingSnapshotPayload {
+    throw ApplicationServiceClientError.invalidResponse
+  }
 }

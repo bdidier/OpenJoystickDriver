@@ -436,3 +436,34 @@ actor GatewayStub: ApplicationServiceGateway {
     if let overrideError { throw overrideError }
   }
 }
+
+extension GatewayStub {
+  func deleteDamagedRemappingProfile(
+    issueID: UUID
+  ) throws -> ApplicationServiceRemappingSnapshotPayload {
+    throw ApplicationServiceClientError.invalidResponse
+  }
+
+  func resetRemappingProfileLibrary(
+    issueID: UUID
+  ) throws -> ApplicationServiceRemappingSnapshotPayload {
+    throw ApplicationServiceClientError.invalidResponse
+  }
+}
+
+/// Every controller session request is refused as `notFound`.
+extension GatewayStub {
+  func suspendController(_ selector: ControllerReference) throws -> ControllerSuspendResult {
+    ControllerSuspendResult(state: .active, failure: .notFound)
+  }
+
+  func resumeController(_ selector: ControllerReference) throws -> ControllerResumeResult {
+    ControllerResumeResult(state: .suspended, failure: .notFound)
+  }
+
+  func disconnectWirelessController(
+    _ selector: ControllerReference
+  ) throws -> WirelessControllerDisconnectResult {
+    WirelessControllerDisconnectResult(state: .active, failure: .notFound)
+  }
+}

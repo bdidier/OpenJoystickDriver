@@ -91,47 +91,15 @@ protocol VirtualOutputGateway: Sendable {
   ) async throws -> WirelessControllerDisconnectResult
 }
 
-extension VirtualOutputGateway {
-  func setControllerServer(
-    model: ControllerModelID,
-    server: ControllerServer
-  ) throws -> ControllerServerResult {
-    ControllerServerResult(
-      server: server,
-      previous: .system,
-      file: nil,
-      created: false,
-      failure: .noRecord
-    )
-  }
-
-  func suspendController(_ selector: ControllerReference) throws -> ControllerSuspendResult {
-    ControllerSuspendResult(state: .active, failure: .notFound)
-  }
-
-  func resumeController(_ selector: ControllerReference) throws -> ControllerResumeResult {
-    ControllerResumeResult(state: .suspended, failure: .notFound)
-  }
-
-  func disconnectWirelessController(
-    _ selector: ControllerReference
-  ) throws -> WirelessControllerDisconnectResult {
-    WirelessControllerDisconnectResult(state: .active, failure: .notFound)
-  }
-}
-
 protocol ApplicationServiceGateway: RuntimeStatusGateway, ControllerDiagnosticsGateway,
   RemappingGateway, VirtualOutputGateway
 {}
 
 enum ApplicationServiceGatewayError: Error, LocalizedError, Sendable, Equatable {
-  case profileRecoveryUnavailable
   case controllerSessionChangeRejected
 
   var errorDescription: String? {
     switch self {
-    case .profileRecoveryUnavailable:
-      return OJDLocalized.string("ui.profiles.unavailable")
     case .controllerSessionChangeRejected:
       return OJDLocalized.string(
         "ui.error.controllerSessionChangeRejected"
@@ -146,22 +114,6 @@ package actor ApplicationServiceClientGateway: ApplicationServiceGateway {
 
   package init(client: ApplicationServiceClient = ApplicationServiceClient()) {
     self.client = client
-  }
-}
-
-extension RemappingGateway {
-  func deleteDamagedRemappingProfile(
-    issueID: UUID
-  ) async throws -> ApplicationServiceRemappingSnapshotPayload {
-    await Task.yield()
-    throw ApplicationServiceGatewayError.profileRecoveryUnavailable
-  }
-
-  func resetRemappingProfileLibrary(
-    issueID: UUID
-  ) async throws -> ApplicationServiceRemappingSnapshotPayload {
-    await Task.yield()
-    throw ApplicationServiceGatewayError.profileRecoveryUnavailable
   }
 }
 
