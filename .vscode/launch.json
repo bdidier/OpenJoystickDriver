@@ -119,6 +119,26 @@
       "target": "OJDRepositoryTool",
       "configuration": "release",
       "preLaunchTask": "swift: Build Release OJDRepositoryTool"
+    },
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:OpenJoystickDriver}",
+      "name": "Debug OpenJoystickDriverGameControllerSnake",
+      "target": "OpenJoystickDriverGameControllerSnake",
+      "configuration": "debug",
+      "preLaunchTask": "swift: Build Debug OpenJoystickDriverGameControllerSnake"
+    },
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:OpenJoystickDriver}",
+      "name": "Release OpenJoystickDriverGameControllerSnake",
+      "target": "OpenJoystickDriverGameControllerSnake",
+      "configuration": "release",
+      "preLaunchTask": "swift: Build Release OpenJoystickDriverGameControllerSnake"
     }
   ]
 }

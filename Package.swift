@@ -145,6 +145,12 @@ let package = Package(
     ),
 
     .executableTarget(
+      name: "OpenJoystickDriverGameControllerSnake",
+      path: "Sources/OpenJoystickDriverGameControllerSnake",
+      linkerSettings: [.linkedFramework("AppKit"), .linkedFramework("GameController")]
+    ),
+
+    .executableTarget(
       name: "ParserCompatibilityHarness",
       dependencies: ["OpenJoystickDriverKit", "ProtocolPacketFixtures"],
       path: "Tests/ParserCompatibilityHarness",
