@@ -167,6 +167,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     let restart = pad.buttonA
     let pause = pad.buttonMenu
     for button in controller.physicalInputProfile.allButtons {
+      // macOS binds Home and Share to system gestures; the game takes them to show each press.
+      if button.isBoundToSystemGesture { button.preferredSystemGestureState = .disabled }
       let label = button.localizedName ?? button.aliases.min() ?? "Button"
       button.pressedChangedHandler = { button, _, pressed in
         guard pressed else { return }

@@ -4,37 +4,43 @@ import Foundation
 /// controller over Bluetooth.
 ///
 /// Apple's GameController framework reads an Xbox identity by this report layout, not by the
-/// descriptor: it binds a GIP-framed `045E:02FD` and receives no input from it. Blink read every
-/// control of this layout on `045E:0B13`.
+/// descriptor: it binds a GIP-framed `045E:02FD` and receives no input from it. On `045E:0B13` it
+/// delivers every control of this layout but Share, and Home only to the frontmost app.
 ///
 /// Reports:
 /// - `0x01` (input, 16 bytes): left stick X/Y and right stick X/Y as `0...65535` with rest
 ///   `0x8000`, left and right trigger as 10 bits each, a hat `1...8` with null state 0, 15
-///   buttons, then Share as Consumer Record (`0x0C:0xB2`).
-/// - `0x02` (input): System Main Menu alone. OJD sends Guide as button 11 of report 1 instead.
+///   buttons, then Share as Consumer Record (`0x0C:0xB2`). Button 11 stays clear: Apple's
+///   GameController framework reads no control from it. GameController does not deliver Share
+///   from this report.
+/// - `0x02` (input, 1 byte): Guide as System Main Menu (`0x01:0x85`), where GameController
+///   reads Home.
 /// - `0x03` (output, 8 bytes): actuator enable mask, then left trigger, right trigger, left and
 ///   right motor magnitudes `0...100`, duration, start delay and loop count.
 /// - `0x04` (input): battery strength. OJD does not send it.
 public enum XboxSeriesBluetoothHIDDescriptor {
+  /// Report ID of the Guide input report.
+  static let guideReportID: UInt8 = 0x02
   /// Report ID of the rumble output report.
   public static let rumbleReportID: UInt8 = 0x03
   /// Bytes of the rumble output report after its ID.
   static let rumbleReportPayloadSize = 8
 
   /// Maps stable OJD button bits to the button usages of report 1: View, Menu, the stick clicks
-  /// and Guide move, and the four D-pad bits take usages 12 to 15 beside the hat.
+  /// move, and the four D-pad bits take usages 12 to 15 beside the hat.
   static let buttonUsageMap: [Int: Int] = [
     6: 9,  // L3 -> usage 9
     7: 10,  // R3 -> usage 10
     8: 8,  // Start/Menu -> usage 8
     9: 7,  // Back/View -> usage 7
-    10: 11,  // Guide -> usage 11
     11: 12, 12: 13, 13: 14, 14: 15,
   ]
 
-  /// Share, which report 1 carries outside the Button page.
+  /// Share, which report 1 carries outside the Button page, and Guide, whose System Main Menu
+  /// usage only report 2 holds.
   static let digitalUsageMap: [Int: HIDInputUsage] = [
-    GamepadHIDDescriptor.ButtonBit.share.rawValue: HIDInputUsage(page: 0x0C, usage: 0xB2)
+    GamepadHIDDescriptor.ButtonBit.share.rawValue: HIDInputUsage(page: 0x0C, usage: 0xB2),
+    GamepadHIDDescriptor.ButtonBit.guide.rawValue: HIDInputUsage(page: 0x01, usage: 0x85),
   ]
 
   public static let descriptor: [UInt8] = [
@@ -92,5 +98,11 @@ public struct XboxSeriesBluetoothHIDReportFormat: VirtualGamepadReportFormat {
 
   public func buildInputReport(from state: VirtualGamepadState) -> [UInt8] {
     base.buildInputReport(from: state)
+  }
+
+  /// Report 2, which carries Guide.
+  public func buildAuxiliaryInputReports(from state: VirtualGamepadState) -> [[UInt8]] {
+    let guide = state.buttons & (1 << UInt32(GamepadHIDDescriptor.ButtonBit.guide.rawValue)) != 0
+    return [[XboxSeriesBluetoothHIDDescriptor.guideReportID, guide ? 1 : 0]]
   }
 }

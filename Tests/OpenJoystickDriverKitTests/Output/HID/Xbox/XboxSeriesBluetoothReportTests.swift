@@ -28,7 +28,7 @@ struct XboxSeriesBluetoothHIDReportFormatTests {
     let controls: [(GamepadHIDDescriptor.ButtonBit, Int, UInt8)] = [
       (.a, 14, 0x01), (.b, 14, 0x02), (.x, 14, 0x04), (.y, 14, 0x08), (.leftBumper, 14, 0x10),
       (.rightBumper, 14, 0x20), (.back, 14, 0x40), (.start, 14, 0x80), (.leftStick, 15, 0x01),
-      (.rightStick, 15, 0x02), (.guide, 15, 0x04), (.dpadUp, 15, 0x08), (.dpadDown, 15, 0x10),
+      (.rightStick, 15, 0x02), (.dpadUp, 15, 0x08), (.dpadDown, 15, 0x10),
       (.dpadLeft, 15, 0x20), (.dpadRight, 15, 0x40), (.share, 16, 0x01),
     ]
     for (button, byte, mask) in controls {
@@ -38,6 +38,16 @@ struct XboxSeriesBluetoothHIDReportFormatTests {
         value.enumerated().allSatisfy { $0.offset == byte || $0.element == Self.neutral[$0.offset] }
       )
     }
+  }
+
+  @Test
+  func guideTravelsOnlyInReportTwo() {
+    let guide = VirtualGamepadState(
+      buttons: 1 << UInt32(GamepadHIDDescriptor.ButtonBit.guide.rawValue)
+    )
+    #expect(format.buildInputReport(from: guide) == Self.neutral)
+    #expect(format.buildAuxiliaryInputReports(from: guide) == [[2, 1]])
+    #expect(format.buildAuxiliaryInputReports(from: VirtualGamepadState()) == [[2, 0]])
   }
 
   @Test
@@ -76,6 +86,8 @@ struct XboxSeriesBluetoothHIDReportFormatTests {
     #expect(buttons == Array(1...15))
     #expect(parsed.fields.contains { $0.reportID == 1 && $0.usagePage == 0x0C && $0.usage == 0xB2 })
     #expect(parsed.payloadSizeBytesByReportID[1] == 16)
+    #expect(parsed.fields.contains { $0.reportID == 2 && $0.usagePage == 0x01 && $0.usage == 0x85 })
+    #expect(parsed.payloadSizeBytesByReportID[2] == 1)
   }
 
   @Test

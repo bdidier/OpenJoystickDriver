@@ -1,25 +1,26 @@
-# Virtual input report bytes per persona for canonical frames, as uppercase hex pairs.
-# A control whose frames leave the report equal to the neutral one is `unmapped`.
+# Virtual input report bytes per persona for canonical frames, as uppercase hex pairs, each
+# input report apart by ` | `. A control whose frames leave every report equal to the
+# neutral ones is `unmapped`.
 ## game-controller-compatible
-neutral: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 00 00 00
-South: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 01 00 00
-East: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 02 00 00
-West: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 04 00 00
-North: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 08 00 00
-LeftShoulder: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 10 00 00
-RightShoulder: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 20 00 00
-LeftTrigger=max: 01 00 80 00 80 00 80 00 80 FF 03 00 00 00 00 00 00
-RightTrigger=max: 01 00 80 00 80 00 80 00 80 00 00 FF 03 00 00 00 00
-Back: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 40 00 00
-Start: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 80 00 00
-LeftStickClick: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 00 01 00
-RightStickClick: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 00 02 00
-DpadUp: 01 00 80 00 80 00 80 00 80 00 00 00 00 01 00 08 00
-DpadDown: 01 00 80 00 80 00 80 00 80 00 00 00 00 05 00 10 00
-DpadLeft: 01 00 80 00 80 00 80 00 80 00 00 00 00 07 00 20 00
-DpadRight: 01 00 80 00 80 00 80 00 80 00 00 00 00 03 00 40 00
-Guide: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 00 04 00
-Capture: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 00 00 01
+neutral: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 00 00 00 | 02 00
+South: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 01 00 00 | 02 00
+East: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 02 00 00 | 02 00
+West: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 04 00 00 | 02 00
+North: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 08 00 00 | 02 00
+LeftShoulder: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 10 00 00 | 02 00
+RightShoulder: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 20 00 00 | 02 00
+LeftTrigger=max: 01 00 80 00 80 00 80 00 80 FF 03 00 00 00 00 00 00 | 02 00
+RightTrigger=max: 01 00 80 00 80 00 80 00 80 00 00 FF 03 00 00 00 00 | 02 00
+Back: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 40 00 00 | 02 00
+Start: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 80 00 00 | 02 00
+LeftStickClick: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 00 01 00 | 02 00
+RightStickClick: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 00 02 00 | 02 00
+DpadUp: 01 00 80 00 80 00 80 00 80 00 00 00 00 01 00 08 00 | 02 00
+DpadDown: 01 00 80 00 80 00 80 00 80 00 00 00 00 05 00 10 00 | 02 00
+DpadLeft: 01 00 80 00 80 00 80 00 80 00 00 00 00 07 00 20 00 | 02 00
+DpadRight: 01 00 80 00 80 00 80 00 80 00 00 00 00 03 00 40 00 | 02 00
+Guide: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 00 00 00 | 02 01
+Capture: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 00 00 01 | 02 00
 Microphone: unmapped
 TouchpadClick: unmapped
 LeftPaddle1: unmapped
@@ -34,21 +35,21 @@ Auxiliary5: unmapped
 Auxiliary6: unmapped
 Auxiliary7: unmapped
 Auxiliary8: unmapped
-LeftStickX=max: 01 FF FF 00 80 00 80 00 80 00 00 00 00 00 00 00 00
-LeftStickX=min: 01 01 00 00 80 00 80 00 80 00 00 00 00 00 00 00 00
-LeftStickY=max: 01 00 80 FF FF 00 80 00 80 00 00 00 00 00 00 00 00
-LeftStickY=min: 01 00 80 01 00 00 80 00 80 00 00 00 00 00 00 00 00
-RightStickX=max: 01 00 80 00 80 FF FF 00 80 00 00 00 00 00 00 00 00
-RightStickX=min: 01 00 80 00 80 01 00 00 80 00 00 00 00 00 00 00 00
-RightStickY=max: 01 00 80 00 80 00 80 FF FF 00 00 00 00 00 00 00 00
-RightStickY=min: 01 00 80 00 80 00 80 01 00 00 00 00 00 00 00 00 00
+LeftStickX=max: 01 FF FF 00 80 00 80 00 80 00 00 00 00 00 00 00 00 | 02 00
+LeftStickX=min: 01 01 00 00 80 00 80 00 80 00 00 00 00 00 00 00 00 | 02 00
+LeftStickY=max: 01 00 80 FF FF 00 80 00 80 00 00 00 00 00 00 00 00 | 02 00
+LeftStickY=min: 01 00 80 01 00 00 80 00 80 00 00 00 00 00 00 00 00 | 02 00
+RightStickX=max: 01 00 80 00 80 FF FF 00 80 00 00 00 00 00 00 00 00 | 02 00
+RightStickX=min: 01 00 80 00 80 01 00 00 80 00 00 00 00 00 00 00 00 | 02 00
+RightStickY=max: 01 00 80 00 80 00 80 FF FF 00 00 00 00 00 00 00 00 | 02 00
+RightStickY=min: 01 00 80 00 80 00 80 01 00 00 00 00 00 00 00 00 00 | 02 00
 LeftStickTouch: unmapped
 RightStickTouch: unmapped
 LeftTrackpadClick: unmapped
 RightTrackpadClick: unmapped
 LeftTrackpadTouch: unmapped
 RightTrackpadTouch: unmapped
-combined: 01 FF FF 01 00 01 00 FF FF FF 03 FF 03 02 51 4E 00
+combined: 01 FF FF 01 00 01 00 FF FF FF 03 FF 03 02 51 4A 00 | 02 01
 
 ## generic
 neutral: 00 00 00 00 00 00 00 00 00 00 00 00 00 00
@@ -101,24 +102,24 @@ RightTrackpadTouch: unmapped
 combined: 51 66 FF 7F 01 80 01 80 FF 7F FF 7F FF 7F
 
 ## sdl-compatible
-neutral: 20 00 00 0E 00 00 00 00 00 00 00 00 FF FF 00 00 FF FF
-South: 20 00 00 0E 10 00 00 00 00 00 00 00 FF FF 00 00 FF FF
-East: 20 00 00 0E 20 00 00 00 00 00 00 00 FF FF 00 00 FF FF
-West: 20 00 00 0E 40 00 00 00 00 00 00 00 FF FF 00 00 FF FF
-North: 20 00 00 0E 80 00 00 00 00 00 00 00 FF FF 00 00 FF FF
-LeftShoulder: 20 00 00 0E 00 10 00 00 00 00 00 00 FF FF 00 00 FF FF
-RightShoulder: 20 00 00 0E 00 20 00 00 00 00 00 00 FF FF 00 00 FF FF
-LeftTrigger=max: 20 00 00 0E 00 00 FF 03 00 00 00 00 FF FF 00 00 FF FF
-RightTrigger=max: 20 00 00 0E 00 00 00 00 FF 03 00 00 FF FF 00 00 FF FF
-Back: 20 00 00 0E 08 00 00 00 00 00 00 00 FF FF 00 00 FF FF
-Start: 20 00 00 0E 04 00 00 00 00 00 00 00 FF FF 00 00 FF FF
-LeftStickClick: 20 00 00 0E 00 40 00 00 00 00 00 00 FF FF 00 00 FF FF
-RightStickClick: 20 00 00 0E 00 80 00 00 00 00 00 00 FF FF 00 00 FF FF
-DpadUp: 20 00 00 0E 00 01 00 00 00 00 00 00 FF FF 00 00 FF FF
-DpadDown: 20 00 00 0E 00 02 00 00 00 00 00 00 FF FF 00 00 FF FF
-DpadLeft: 20 00 00 0E 00 04 00 00 00 00 00 00 FF FF 00 00 FF FF
-DpadRight: 20 00 00 0E 00 08 00 00 00 00 00 00 FF FF 00 00 FF FF
-Guide: unmapped
+neutral: 20 00 00 0E 00 00 00 00 00 00 00 00 FF FF 00 00 FF FF | 07 20 00 02 00 5B
+South: 20 00 00 0E 10 00 00 00 00 00 00 00 FF FF 00 00 FF FF | 07 20 00 02 00 5B
+East: 20 00 00 0E 20 00 00 00 00 00 00 00 FF FF 00 00 FF FF | 07 20 00 02 00 5B
+West: 20 00 00 0E 40 00 00 00 00 00 00 00 FF FF 00 00 FF FF | 07 20 00 02 00 5B
+North: 20 00 00 0E 80 00 00 00 00 00 00 00 FF FF 00 00 FF FF | 07 20 00 02 00 5B
+LeftShoulder: 20 00 00 0E 00 10 00 00 00 00 00 00 FF FF 00 00 FF FF | 07 20 00 02 00 5B
+RightShoulder: 20 00 00 0E 00 20 00 00 00 00 00 00 FF FF 00 00 FF FF | 07 20 00 02 00 5B
+LeftTrigger=max: 20 00 00 0E 00 00 FF 03 00 00 00 00 FF FF 00 00 FF FF | 07 20 00 02 00 5B
+RightTrigger=max: 20 00 00 0E 00 00 00 00 FF 03 00 00 FF FF 00 00 FF FF | 07 20 00 02 00 5B
+Back: 20 00 00 0E 08 00 00 00 00 00 00 00 FF FF 00 00 FF FF | 07 20 00 02 00 5B
+Start: 20 00 00 0E 04 00 00 00 00 00 00 00 FF FF 00 00 FF FF | 07 20 00 02 00 5B
+LeftStickClick: 20 00 00 0E 00 40 00 00 00 00 00 00 FF FF 00 00 FF FF | 07 20 00 02 00 5B
+RightStickClick: 20 00 00 0E 00 80 00 00 00 00 00 00 FF FF 00 00 FF FF | 07 20 00 02 00 5B
+DpadUp: 20 00 00 0E 00 01 00 00 00 00 00 00 FF FF 00 00 FF FF | 07 20 00 02 00 5B
+DpadDown: 20 00 00 0E 00 02 00 00 00 00 00 00 FF FF 00 00 FF FF | 07 20 00 02 00 5B
+DpadLeft: 20 00 00 0E 00 04 00 00 00 00 00 00 FF FF 00 00 FF FF | 07 20 00 02 00 5B
+DpadRight: 20 00 00 0E 00 08 00 00 00 00 00 00 FF FF 00 00 FF FF | 07 20 00 02 00 5B
+Guide: 20 00 00 0E 00 00 00 00 00 00 00 00 FF FF 00 00 FF FF | 07 20 00 02 01 5B
 Capture: unmapped
 Microphone: unmapped
 TouchpadClick: unmapped
@@ -134,18 +135,18 @@ Auxiliary5: unmapped
 Auxiliary6: unmapped
 Auxiliary7: unmapped
 Auxiliary8: unmapped
-LeftStickX=max: 20 00 00 0E 00 00 00 00 00 00 FF 7F FF FF 00 00 FF FF
-LeftStickX=min: 20 00 00 0E 00 00 00 00 00 00 01 80 FF FF 00 00 FF FF
-LeftStickY=max: 20 00 00 0E 00 00 00 00 00 00 00 00 00 80 00 00 FF FF
-LeftStickY=min: 20 00 00 0E 00 00 00 00 00 00 00 00 FE 7F 00 00 FF FF
-RightStickX=max: 20 00 00 0E 00 00 00 00 00 00 00 00 FF FF FF 7F FF FF
-RightStickX=min: 20 00 00 0E 00 00 00 00 00 00 00 00 FF FF 01 80 FF FF
-RightStickY=max: 20 00 00 0E 00 00 00 00 00 00 00 00 FF FF 00 00 00 80
-RightStickY=min: 20 00 00 0E 00 00 00 00 00 00 00 00 FF FF 00 00 FE 7F
+LeftStickX=max: 20 00 00 0E 00 00 00 00 00 00 FF 7F FF FF 00 00 FF FF | 07 20 00 02 00 5B
+LeftStickX=min: 20 00 00 0E 00 00 00 00 00 00 01 80 FF FF 00 00 FF FF | 07 20 00 02 00 5B
+LeftStickY=max: 20 00 00 0E 00 00 00 00 00 00 00 00 00 80 00 00 FF FF | 07 20 00 02 00 5B
+LeftStickY=min: 20 00 00 0E 00 00 00 00 00 00 00 00 FE 7F 00 00 FF FF | 07 20 00 02 00 5B
+RightStickX=max: 20 00 00 0E 00 00 00 00 00 00 00 00 FF FF FF 7F FF FF | 07 20 00 02 00 5B
+RightStickX=min: 20 00 00 0E 00 00 00 00 00 00 00 00 FF FF 01 80 FF FF | 07 20 00 02 00 5B
+RightStickY=max: 20 00 00 0E 00 00 00 00 00 00 00 00 FF FF 00 00 00 80 | 07 20 00 02 00 5B
+RightStickY=min: 20 00 00 0E 00 00 00 00 00 00 00 00 FF FF 00 00 FE 7F | 07 20 00 02 00 5B
 LeftStickTouch: unmapped
 RightStickTouch: unmapped
 LeftTrackpadClick: unmapped
 RightTrackpadClick: unmapped
 LeftTrackpadTouch: unmapped
 RightTrackpadTouch: unmapped
-combined: 20 00 00 0E 18 99 FF 03 FF 03 FF 7F FE 7F 01 80 00 80
+combined: 20 00 00 0E 18 99 FF 03 FF 03 FF 7F FE 7F 01 80 00 80 | 07 20 00 02 01 5B

@@ -2424,7 +2424,7 @@
 /* One-line summary of 'ojd virtual feed' in the command list and at the top of its help. Standard input is the input stream of the program. */
 "cli.virtual.feed.abstract" = "stdin으로 구동되는 가상 게임패드를 게시합니다.";
 /* Long description in the help of 'ojd virtual feed'. The JSON field names buttons, dpad and axes and the control names stay as written. */
-"cli.virtual.feed.discussion" = "한 줄에 JSON 객체 하나를 읽습니다. ‘buttons’와 ‘dpad’는 South, up처럼 눌린 컨트롤을 나열하고, ‘axes’는 LeftStickX 같은 축 이름을 값에 대응시킵니다. 없는 컨트롤은 중립으로 처리됩니다. 스틱은 -1에서 1까지이며 Y는 아래쪽입니다. 트리거는 0에서 1까지입니다. 프레임은 순서대로 재생되며 각각 최소 8 ms 동안 유지됩니다. ‘holdMilliseconds’는 프레임을 더 오래 유지하며 최대 60000까지 가능합니다. 게임이 게임패드로 보내는 모든 출력 명령(예: 진동)을 한 줄에 JSON 객체 하나로 출력합니다. 입력이 끝난 뒤 모든 프레임이 재생되면 중지됩니다.";
+"cli.virtual.feed.discussion" = "한 줄에 JSON 객체 하나를 읽습니다. ‘buttons’와 ‘dpad’는 South, DpadUp처럼 눌린 컨트롤을 나열하고, ‘axes’는 LeftStickX 같은 축 이름을 값에 대응시킵니다. 없는 컨트롤은 중립으로 처리됩니다. 스틱은 -1에서 1까지이며 Y는 아래쪽입니다. 트리거는 0에서 1까지입니다. 프레임은 순서대로 재생되며 각각 최소 8 ms 동안 유지됩니다. ‘holdMilliseconds’는 프레임을 더 오래 유지하며 최대 60000까지 가능합니다. 게임이 게임패드로 보내는 모든 출력 명령(예: 진동)을 한 줄에 JSON 객체 하나로 출력합니다. 입력이 끝난 뒤 모든 프레임이 재생되면 중지됩니다.";
 /* Error of 'ojd virtual feed' when the service closed the virtual gamepad. The command in quotes stays as written. */
 "cli.virtual.feed.errorClosed" = "서비스가 가상 게임패드를 닫았습니다. ‘ojd status’로 확인하세요.";
 /* Error from `ojd virtual feed` when the service connection broke while the virtual gamepad was closing. */

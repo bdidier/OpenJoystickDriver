@@ -1,11 +1,14 @@
 /// How a consumer reads one persona's virtual gamepad: its SDL mapping and its W3C description.
 ///
 /// Nothing here is written per persona. Each control is driven alone through the persona's own
-/// report codec, the HID fields its report changes are read from the persona's descriptor, and
-/// SDL's macOS order names them: buttons by ascending button usage (`bN`), axes by ascending
-/// Generic Desktop usage (`aN`), and the hat as `h0.<mask>`. A control the report cannot carry,
-/// or one SDL has no name for, is listed in ``unmapped``. An axis whose report value falls as the
-/// control rises is bound inverted (`aN~`); a trigger binds the positive half (`+aN`).
+/// report codec, the HID fields its input reports change are read from the persona's descriptor,
+/// and SDL's macOS IOKit order names them: buttons (`bN`) are the Button and Consumer pages and
+/// the Generic Desktop D-pad, Start, Select and System Main Menu usages, axes (`aN`) are Generic
+/// Desktop X to Rz, Slider, Dial and Wheel and Simulation Rudder, Throttle, Accelerator and
+/// Brake, each ordered by usage and then by descriptor order, and the hat is `h0.<mask>`. A
+/// control the report cannot carry, or one SDL has no name for, is listed in ``unmapped``. An
+/// axis whose report value falls as the control rises is bound inverted (`aN~`); a trigger binds
+/// the positive half (`+aN`).
 public struct VirtualGamepadMapping: Equatable, Sendable {
   /// One control driven alone, and the descriptor fields its report changed.
   public struct Probe: Equatable, Sendable {
@@ -103,41 +106,46 @@ extension VirtualHIDProfileID {
       throw VirtualGamepadMappingError.descriptorNotParsable(self)
     }
     let numbered = parsed.inputReportIDs != [0]
-    let buttonUsages = Set(parsed.fields.filter { $0.usagePage == 9 }.map(\.usage)).sorted()
-    let axisUsages = Set(
-      parsed.fields.filter { $0.usagePage == 1 && (0x30...0x35).contains($0.usage) }.map(\.usage)
-    ).sorted()
-    let neutral = profile.inputReport(for: .neutral)
+    let fields = Array(parsed.fields.enumerated())
+    func sdlOrder(_ isElement: (HIDField) -> Bool) -> [Int] {
+      fields.filter { isElement($0.element) }
+        .sorted { ($0.element.usage, $0.offset) < ($1.element.usage, $1.offset) }.map(\.offset)
+    }
+    let buttons = sdlOrder {
+      $0.usagePage == 9 || $0.usagePage == 0x0C
+        || ($0.usagePage == 1 && Self.sdlDesktopButtonUsages.contains($0.usage))
+    }
+    let axes = sdlOrder {
+      ($0.usagePage == 1 && Self.sdlDesktopAxisUsages.contains($0.usage))
+        || ($0.usagePage == 2 && Self.sdlSimulationAxisUsages.contains($0.usage))
+    }
+    let neutral = Self.reportsByID(profile.inputReports(for: .neutral), numbered: numbered)
     var probes: [VirtualGamepadMapping.Probe] = []
     for (control, state) in Self.probeStates(for: representableControls) {
-      let report = profile.inputReport(for: state)
-      let changed = parsed.fields.filter {
-        Self.value(of: $0, in: report, numbered: numbered)
-          != Self.value(of: $0, in: neutral, numbered: numbered)
+      let reports = Self.reportsByID(profile.inputReports(for: state), numbered: numbered)
+      let changed = fields.filter {
+        Self.value(of: $0.element, in: reports) != Self.value(of: $0.element, in: neutral)
       }
+      let changedOffsets = Set(changed.map(\.offset))
       var binding: String?
-      if let button = changed.first(where: { $0.usagePage == 9 }),
-        let index = buttonUsages.firstIndex(of: button.usage)
-      {
+      if let index = buttons.firstIndex(where: changedOffsets.contains) {
         binding = "b\(index)"
-      } else if let axis = changed.first(where: {
-        $0.usagePage == 1 && axisUsages.contains($0.usage)
-      }),
-        let index = axisUsages.firstIndex(of: axis.usage)
-      {
+      } else if let index = axes.firstIndex(where: changedOffsets.contains) {
+        let axis = parsed.fields[axes[index]]
         let inverted =
-          Self.signedValue(of: axis, in: report, numbered: numbered)
-          < Self.signedValue(of: axis, in: neutral, numbered: numbered)
+          Self.signedValue(of: axis, in: reports) < Self.signedValue(of: axis, in: neutral)
         binding = "a\(index)" + (inverted ? "~" : "")
-      } else if let hat = changed.first(where: { $0.usagePage == 1 && $0.usage == 0x39 }) {
+      } else if let hat = changed.first(where: {
+        $0.element.usagePage == 1 && $0.element.usage == 0x39
+      })?.element {
         let mask = [1: 1, 2: 3, 3: 2, 4: 6, 5: 4, 6: 12, 7: 8, 8: 9]
-        let raw = Self.value(of: hat, in: report, numbered: numbered) - hat.logicalMin + 1
+        let raw = Self.value(of: hat, in: reports) - hat.logicalMin + 1
         binding = "h0.\(mask[raw] ?? 0)"
       }
       probes.append(
         .init(
           control: control,
-          fields: changed.map { "\($0.usagePage):\($0.usage)" },
+          fields: changed.map { "\($0.element.usagePage):\($0.element.usage)" },
           binding: binding
         )
       )
@@ -221,10 +229,26 @@ extension VirtualHIDProfileID {
     return result
   }
 
-  /// The little-endian value of `field` in `report`, which leads with its report ID byte when
-  /// the descriptor numbers its reports.
-  private static func value(of field: HIDField, in report: [UInt8], numbered: Bool) -> Int {
-    let payload = numbered ? Array(report.dropFirst()) : report
+  /// Generic Desktop usages SDL's IOKit backend counts as buttons: D-pad, Start, Select and
+  /// System Main Menu.
+  private static let sdlDesktopButtonUsages: Set<Int> = [0x90, 0x91, 0x92, 0x93, 0x3D, 0x3E, 0x85]
+  /// Generic Desktop usages SDL's IOKit backend counts as axes: X to Rz, Slider, Dial and Wheel.
+  private static let sdlDesktopAxisUsages = Set(0x30...0x38)
+  /// Simulation usages SDL's IOKit backend counts as axes: Rudder, Throttle, Accelerator, Brake.
+  private static let sdlSimulationAxisUsages: Set<Int> = [0xBA, 0xBB, 0xC4, 0xC5]
+
+  /// Each report's payload by report ID: the first byte when the descriptor numbers its
+  /// reports, else 0.
+  private static func reportsByID(_ reports: [[UInt8]], numbered: Bool) -> [UInt8: [UInt8]] {
+    Dictionary(
+      reports.map { numbered ? ($0.first ?? 0, Array($0.dropFirst())) : (0, $0) }
+    ) { first, _ in first }
+  }
+
+  /// The little-endian value of `field` in the payload of its report; 0 when no report has its
+  /// ID.
+  private static func value(of field: HIDField, in reports: [UInt8: [UInt8]]) -> Int {
+    let payload = reports[field.reportID] ?? []
     var value = 0
     for bit in 0..<field.bitSize {
       let position = field.bitOffset + bit
@@ -234,10 +258,9 @@ extension VirtualHIDProfileID {
     return value
   }
 
-  /// `value(of:in:numbered:)` read as two's complement when the field's logical minimum is below
-  /// zero.
-  private static func signedValue(of field: HIDField, in report: [UInt8], numbered: Bool) -> Int {
-    let raw = value(of: field, in: report, numbered: numbered)
+  /// `value(of:in:)` read as two's complement when the field's logical minimum is below zero.
+  private static func signedValue(of field: HIDField, in reports: [UInt8: [UInt8]]) -> Int {
+    let raw = value(of: field, in: reports)
     guard field.logicalMin < 0, raw >= 1 << (field.bitSize - 1) else { return raw }
     return raw - (1 << field.bitSize)
   }

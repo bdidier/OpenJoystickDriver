@@ -177,7 +177,11 @@ let shouldDisableSystemGestures = hasArg("--disable-system-gestures")
 print("GameController probe")
 print("Listening for \(seconds)s")
 if shouldRumble { print("Rumble pulse requested") }
-if shouldDisableSystemGestures { print("System controller gestures disabled for this test") }
+if shouldDisableSystemGestures {
+  print("System controller gestures disabled for this test")
+  // GameController sends Home and Share only to the frontmost app, and this tool has no window.
+  print("Home and Share reach only the frontmost app: test them with the snake game")
+}
 print("")
 GCController.shouldMonitorBackgroundEvents = true
 let supportsHID = printHIDSupport()

@@ -7,9 +7,9 @@ profile=GameControllerCompatible vendor=1118 product=2835 version=0 name=Xbox Wi
 guid=050000005e040000130b000000000000
 report length=17 descriptorBytes=331
 probe Back fields=[9:7] -> b6
-probe Capture fields=[12:178] -> none
+probe Capture fields=[12:178] -> b16
 probe East fields=[9:2] -> b1
-probe Guide fields=[9:11] -> b10
+probe Guide fields=[1:133] -> b15
 probe LeftShoulder fields=[9:5] -> b4
 probe LeftStickClick fields=[9:9] -> b8
 probe North fields=[9:4] -> b3
@@ -18,7 +18,7 @@ probe RightStickClick fields=[9:10] -> b9
 probe South fields=[9:1] -> b0
 probe Start fields=[9:8] -> b7
 probe West fields=[9:3] -> b2
-probe LeftStickX fields=[1:48+1:133+6:32] -> a0
+probe LeftStickX fields=[1:48] -> a0
 probe LeftStickY fields=[1:49] -> a1
 probe RightStickX fields=[1:51] -> a3
 probe RightStickY fields=[1:52] -> a4
@@ -28,8 +28,8 @@ probe DpadUp fields=[1:57+9:12] -> b11
 probe DpadRight fields=[1:57+9:15] -> b14
 probe DpadDown fields=[1:57+9:13] -> b12
 probe DpadLeft fields=[1:57+9:14] -> b13
-mapping=050000005e040000130b000000000000,Xbox Wireless Controller,a:b0,b:b1,x:b2,y:b3,back:b6,guide:b10,start:b7,leftstick:b8,rightstick:b9,leftshoulder:b4,rightshoulder:b5,dpup:b11,dpdown:b12,dpleft:b13,dpright:b14,leftx:a0,lefty:a1,rightx:a3,righty:a4,lefttrigger:+a2,righttrigger:+a5,platform:Mac OS X,
-unmapped=Capture
+mapping=050000005e040000130b000000000000,Xbox Wireless Controller,a:b0,b:b1,x:b2,y:b3,back:b6,guide:b15,start:b7,leftstick:b8,rightstick:b9,leftshoulder:b4,rightshoulder:b5,dpup:b11,dpdown:b12,dpleft:b13,dpright:b14,misc1:b16,leftx:a0,lefty:a1,rightx:a3,righty:a4,lefttrigger:+a2,righttrigger:+a5,platform:Mac OS X,
+unmapped=
 
 ## Generic
 profile=Generic vendor=4617 product=19023 version=1032 name=OpenJoystickDriver Generic HID Gamepad

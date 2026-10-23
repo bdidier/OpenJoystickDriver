@@ -13,7 +13,7 @@ import Testing
 /// leave the report equal to the neutral one has no bit in that persona and is recorded as
 /// `unmapped`.
 struct EquivalenceSnapshotOutputMappingTests {
-  typealias Encoder = (any VirtualHIDProfile, ControllerState) -> [UInt8]
+  typealias Encoder = (any VirtualHIDProfile, ControllerState) -> [[UInt8]]
 
   private struct Frame {
     let name: String
@@ -64,16 +64,18 @@ struct EquivalenceSnapshotOutputMappingTests {
     }
   }
 
-  private static func hex(_ bytes: [UInt8]) -> String {
-    bytes.map { String(format: "%02X", $0) }.joined(separator: " ")
+  /// Each report as hex pairs, the reports apart by ` | `.
+  private static func hex(_ reports: [[UInt8]]) -> String {
+    reports.map { $0.map { String(format: "%02X", $0) }.joined(separator: " ") }
+      .joined(separator: " | ")
   }
 
-  /// One section per persona: the neutral report, then each control's frames, with `unmapped`
-  /// for a control none of whose frames change the report, then the combined frame.
+  /// One section per persona: the neutral reports, then each control's frames, with `unmapped`
+  /// for a control none of whose frames change a report, then the combined frame.
   static func sections(
     encoder: Encoder? = nil
   ) throws -> [(title: String, lines: [String])] {
-    let encoder: Encoder = encoder ?? { $0.inputReport(for: $1) }
+    let encoder: Encoder = encoder ?? { $0.inputReports(for: $1) }
     return try VirtualHIDProfileID.allCases.map { id in
       let profile = try id.makeProfile()
       let neutral = encoder(profile, .neutral)
@@ -93,8 +95,9 @@ struct EquivalenceSnapshotOutputMappingTests {
 
   static func rendered(encoder: Encoder? = nil) throws -> String {
     let header = """
-      # Virtual input report bytes per persona for canonical frames, as uppercase hex pairs.
-      # A control whose frames leave the report equal to the neutral one is `unmapped`.
+      # Virtual input report bytes per persona for canonical frames, as uppercase hex pairs, each
+      # input report apart by ` | `. A control whose frames leave every report equal to the
+      # neutral ones is `unmapped`.
 
       """
     return EquivalenceSnapshotStore.render(try sections(encoder: encoder), header: header)
@@ -139,9 +142,9 @@ struct EquivalenceSnapshotOutputMappingTests {
 
     // Plant a one-bit change in the last byte of every report that is not neutral.
     let mutated = try Self.rendered { profile, state in
-      var bytes = profile.inputReport(for: state)
-      if state != .neutral, !bytes.isEmpty { bytes[bytes.count - 1] ^= 0x01 }
-      return bytes
+      var reports = profile.inputReports(for: state)
+      if state != .neutral, !reports[0].isEmpty { reports[0][reports[0].count - 1] ^= 0x01 }
+      return reports
     }
     #expect(mutated != baseline)
     let result = try EquivalenceSnapshotStore.verify(

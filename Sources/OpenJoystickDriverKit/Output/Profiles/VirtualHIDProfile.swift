@@ -173,21 +173,34 @@ struct OJDGenericHIDProfile: VirtualHIDProfile {
   ) -> ControllerOutputCommand? { nil }
 }
 
+extension VirtualHIDProfile {
+  /// Every input report for `state`, each with its report ID byte: ``inputReport(for:)``, then
+  /// the report format's auxiliary reports.
+  public func inputReports(for state: ControllerState) -> [[UInt8]] {
+    [inputReport(for: state)]
+      + reportFormat.buildAuxiliaryInputReports(from: ReportFormatCodec.virtualState(for: state))
+  }
+}
+
 /// The adapter from a profile's contract to the report format it wraps.
 private enum ReportFormatCodec {
-  /// Encodes canonical state through the dispatcher's mapping, without its stick dead zone,
-  /// which is output policy rather than part of the ABI.
-  static func inputReport(
-    for state: ControllerState,
-    in format: some VirtualGamepadReportFormat
-  ) -> [UInt8] {
+  /// Canonical state through the dispatcher's mapping, without its stick dead zone, which is
+  /// output policy rather than part of the ABI.
+  static func virtualState(for state: ControllerState) -> VirtualGamepadState {
     var virtual = VirtualGamepadState()
     VirtualGamepadReportMapping.apply(
       state,
       stickTransfer: .init(deadzone: 0, rescalesDeadzone: false),
       to: &virtual
     )
-    return format.buildInputReport(from: virtual)
+    return virtual
+  }
+
+  static func inputReport(
+    for state: ControllerState,
+    in format: some VirtualGamepadReportFormat
+  ) -> [UInt8] {
+    format.buildInputReport(from: virtualState(for: state))
   }
 
   /// Decodes an output report through the consumer output codec that the published device's
