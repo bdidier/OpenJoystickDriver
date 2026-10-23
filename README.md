@@ -5,16 +5,11 @@ Use the controller you already own with Mac games.
 OpenJoystickDriver (OJD) is a free, open-source menu-bar app.
 It reads a controller over USB, Bluetooth, or a 2.4 GHz dongle and shows it to games as a standard virtual controller, including controllers that macOS does not support.
 
-[![
-Latest release][release-badge]][releases] [![
-macOS 12 or later][macos-badge]](#requirements) [![
-License][license-badge]](LICENSE) [![
-GitHub Sponsors][sponsor-badge]][sponsor]
+[![Latest release][release-badge]][releases] [![macOS 12 or later][macos-badge]](#requirements) [![License][license-badge]](LICENSE) [![GitHub Sponsors][sponsor-badge]][sponsor]
 
 ![The Controllers area with a DualShock 3 that OJD serves as a virtual gamepad](docs/screenshots/main-controllers.png)
 
-> [!
-> WARNING]
+> [!WARNING]
 > OJD is alpha software.
 > Many controllers have no hardware test yet, and some games do not read the virtual controller.
 > Check [Supported controllers][wiki-supported] and [Playing games][wiki-games] before you rely on it.
@@ -74,8 +69,7 @@ If something does not work, see [Troubleshooting][wiki-troubleshooting].
 Star the repository to help other Mac players find it.
 [GitHub Sponsors][sponsor] pays for the tools that build the app and for the controllers tested on the maintainer's Macs: Apple silicon on macOS 27 and Intel on macOS 12.
 
-[![
-Star History Chart][star-chart]][star-history]
+[![Star History Chart][star-chart]][star-history]
 
 ## License
 
