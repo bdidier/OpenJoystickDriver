@@ -40,7 +40,12 @@ CrossOver and older games that use SDL2 or IOHIDManager may not read the virtual
 
 ## macOS Still Lists Its Own Pad For a DualShock 3
 
-While OJD serves a DualShock 3 over USB, it holds the pad exclusively, so other apps cannot open it and macOS delivers the pad's input only to OJD. macOS still binds `AppleGCHIDUserEventDriver` to the pad and GameController still lists a second, synthetic "PLAYSTATION(R)3 Controller" (`05AC:0004`). Choose OJD's virtual controller in the game and ignore the other one. When another app already holds the pad exclusively, the controller's detail and `ojd controller list` show "Owned by another app" and OJD reads no input until that app lets go. `ojd diagnose` reports `hid-input-drops`: a warning means the system dropped input reports before OJD read them.
+While OJD serves a DualShock 3 over USB, it holds the pad exclusively, so other apps cannot open it and macOS delivers the pad's input only to OJD. macOS still binds `AppleGCHIDUserEventDriver` to the pad and GameController still lists a second, synthetic "PLAYSTATION(R)3 Controller" (`05AC:0004`). Steam lists that pad as a "PLAYSTATION(R)3 Controller" over Bluetooth beside OJD's virtual controller. Choose OJD's virtual controller in the game and ignore the other one. When another app already holds the pad exclusively, the controller's detail and `ojd controller list` show "Owned by another app" and OJD reads no input until that app lets go. `ojd diagnose` reports `hid-input-drops`: a warning means the system dropped input reports before OJD read them.
+
+## The OJD Menu Closes While Steam Is Open
+
+Steam brings its window to the front again while connected controllers send input, and macOS closes an open menu of another app when that happens.
+Click the OJD icon in the menu bar again, or switch to another app first.
 
 ## Further Reading
 
