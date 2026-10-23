@@ -1859,6 +1859,14 @@
 "cli.diagnose.group.failed" = "Pemeriksaan gagal: %lld. Perbaiki menggunakan detail di atas, atau jalankan “ojd diagnose --output <path>” dan lampirkan file ke laporan bug.";
 /* Help text of the --footprint-limit-mib option of 'ojd diagnose'. The physical footprint is the memory charged to the service in MiB, mebibytes. The range 0-65536 is fixed. */
 "cli.diagnose.group.footprintLimit" = "Dengan --soak, gagal di atas footprint fisik ini dalam MiB; 0 menonaktifkan (0-65536).";
+/* Help text of the --frames option of 'ojd diagnose'. The number is a count of seconds from 1 to 15. A stall is a read interval that is much longer than the usual one. */
+"cli.diagnose.group.frames" = "Gerakkan stik terus selama waktu ini, lalu ringkas hanya frame yang dibaca dalam waktu itu (1-15). Pengontrol yang hanya melapor saat masukan berubah menghitung setiap jeda masukan sebagai hambatan.";
+/* Error of the service when a request for frame timings asks for a frame window outside the 1 to 15 seconds the service keeps. Shown by 'ojd diagnose' if the request reaches the service. */
+"cli.diagnose.group.framesInvalidRequest" = "Jendela frame pada permintaan berada di luar rentang 1 sampai 15 detik yang disimpan layanan.";
+/* Progress line of 'ojd diagnose --frames', written to the error output while the command waits. %@ is the wait, such as 10s. The sticks are the thumbsticks of the controller. Keep the three dots. */
+"cli.diagnose.group.framesProgress" = "Terus gerakkan stik selama %@…";
+/* Error of 'ojd diagnose' when --frames is out of range. --frames stays as written. The range is fixed. */
+"cli.diagnose.group.framesRange" = "--frames harus antara 1 dan 15 detik.";
 /* Help text of the --interval-ms option of 'ojd diagnose'. The range 100-60000 is fixed. */
 "cli.diagnose.group.interval" = "Dengan --soak, milidetik antar sampel (100-60000).";
 /* Error of 'ojd diagnose' when --interval-ms is out of range. --interval-ms stays as written. */
@@ -2553,6 +2561,8 @@
 "cli.diagnose.group.timingsSummaryNoStalls" = "Hambatan: tidak diukur, jendela berisi kurang dari dua frame";
 /* Stall line of the timing summary of 'ojd diagnose'. A stall is a read interval that is much longer than the usual one. %1$@ is the number of read intervals in the window longer than the threshold, %2$@ is the threshold in milliseconds and %3$@ is the multiple of the median read interval that sets the threshold. The unit symbol ms may be localized. */
 "cli.diagnose.group.timingsSummaryStalls" = "Hambatan (interval baca lebih dari %2$@ ms, %3$@ kali median interval baca): %1$@";
+/* Line of 'ojd diagnose --frames' above the timing summaries. %@ is the length of the window, such as 10s. The frames are those the controller reported in that time. */
+"cli.diagnose.group.timingsWindow" = "Jendela waktu: frame yang dibaca dalam %@ terakhir.";
 /* One-line summary of 'ojd record' in the command list and at the top of its help. */
 "cli.record.group.abstract" = "Susun draf, daftar, periksa, instal, atau hapus catatan pengontrol.";
 /* Long description in the help of 'ojd record'. The folder path stays as written. A controller record describes how the driver talks to one controller model. */

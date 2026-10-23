@@ -2,15 +2,16 @@ import Foundation
 import OpenJoystickDriverKit
 
 extension DiagnoseServiceSnapshot {
-  /// Asks the service once; a stopped or failing service never throws.
-  static func fetch() async -> Self {
+  /// Asks the service once; a stopped or failing service never throws. `frameSeconds` limits the
+  /// frame timings to the frames read within that many seconds; nil asks for the whole ring.
+  static func fetch(frameSeconds: Int?) async -> Self {
     let socketPath = ServiceConnection.socketPath
     do {
       return try await ServiceConnection.request { client in
         await gather(
           status: { try await client.getStatus() },
           virtualDiagnostics: { try await client.getVirtualDeviceDiagnostics() },
-          frameTimings: { try await client.getFrameTimings() },
+          frameTimings: { try await client.getFrameTimings(lastSeconds: frameSeconds) },
           classify: { error in
             let failure = ServiceConnection.failure(for: error)
             if let known = failure as? CLIFailure, known.code == .serviceUnavailable {

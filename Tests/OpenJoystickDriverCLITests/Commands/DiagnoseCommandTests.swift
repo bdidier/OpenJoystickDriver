@@ -17,7 +17,10 @@ struct DiagnoseCommandTests {
     ExtensionStatus(bundle: .missing, registration: .absent)
   }
 
-  private func serve(socketPath: String) throws -> LocalServiceRPCServer {
+  private func serve(
+    socketPath: String,
+    onFrameTimings: @escaping @Sendable (Data) -> Void = { _ in }
+  ) throws -> LocalServiceRPCServer {
     let statusResult = try JSONEncoder().encode(
       try JSONEncoder().encode(
         ApplicationServiceStatusPayload(
@@ -41,6 +44,7 @@ struct DiagnoseCommandTests {
           return LocalServiceRPCResponse(result: statusResult, error: nil)
         }
         if request.method == ApplicationServiceRPCMethod.getFrameTimings.rawValue {
+          onFrameTimings(request.arguments)
           return LocalServiceRPCResponse(result: timingsResult, error: nil)
         }
         return LocalServiceRPCResponse(result: nil, error: "unexpected \(request.method)")
@@ -418,6 +422,74 @@ struct DiagnoseCommandTests {
       #expect(result.code == 64, "\(arguments)")
       #expect(result.standardOutput.isEmpty, "\(arguments)")
     }
+  }
+
+  @Test
+  func badFramesValuesAreUsageErrors() async {
+    let socketPath = temporarySocketPath()
+    for value in ["0", "16", "-1", "abc"] {
+      let result = await DiagnoseCommand.$frameWindowWait.withValue({ _ in }) {
+        await run(["--frames", value], socketPath: socketPath)
+      }
+      #expect(result.code == 64, "\(value)")
+      #expect(result.standardOutput.isEmpty, "\(value)")
+    }
+  }
+
+  @Test
+  func framesWaitThenAskForOneSnapshotOfThatManySeconds() async throws {
+    let socketPath = temporarySocketPath()
+    let events = Locked<[String]>([])
+    let server = try serve(socketPath: socketPath) { arguments in
+      let seconds =
+        (try? JSONDecoder().decode(LocalServiceRPCFrameTimingsArguments.self, from: arguments))?
+        .lastSeconds
+      events.withLock { $0.append("request \(seconds.map(String.init) ?? "nil")") }
+    }
+    defer { server.stop() }
+
+    let result = await DiagnoseCommand.$frameWindowWait.withValue({ seconds in
+      events.withLock { $0.append("wait \(seconds)") }
+    }) {
+      await run(["--frames", "10"], socketPath: socketPath)
+    }
+
+    #expect(result.code == 0, "\(result.standardError)")
+    #expect(events.withLock { $0 } == ["wait 10", "request 10"])
+    #expect(
+      result.standardError.contains(
+        CLILocalized.format("cli.diagnose.group.framesProgress", Double(10).durationText)
+      )
+    )
+    #expect(
+      result.standardOutput.contains(
+        CLILocalized.format("cli.diagnose.group.timingsWindow", Double(10).durationText)
+      )
+    )
+  }
+
+  @Test
+  func withoutFramesTheRequestCoversTheWholeRingAndNothingWaits() async throws {
+    let socketPath = temporarySocketPath()
+    let requests = Locked<[Int?]>([])
+    let server = try serve(socketPath: socketPath) { arguments in
+      let decoded = try? JSONDecoder().decode(
+        LocalServiceRPCFrameTimingsArguments.self,
+        from: arguments
+      )
+      requests.withLock { $0.append(decoded?.lastSeconds) }
+    }
+    defer { server.stop() }
+
+    let result = await DiagnoseCommand.$frameWindowWait.withValue({ _ in
+      Issue.record("diagnose waited without --frames")
+    }) {
+      await run([], socketPath: socketPath)
+    }
+
+    #expect(result.code == 0, "\(result.standardError)")
+    #expect(requests.withLock { $0 } == [nil])
+    #expect(!result.standardOutput.contains("Timing window"))
   }
 
   @Test

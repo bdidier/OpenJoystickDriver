@@ -165,8 +165,16 @@ extension ApplicationServiceClient {
     )
   }
 
-  public func getFrameTimings() async throws -> ApplicationServiceFrameTimingsPayload {
-    let data: Data = try await call(.getFrameTimings, LocalServiceRPCEmptyArguments())
+  /// Returns the frame timings of every connected controller: the frames read within the last
+  /// `lastSeconds` seconds, or the whole ring when `lastSeconds` is nil. The service refuses a
+  /// value outside ``FrameTimingRecorder/windowSecondsRange``.
+  public func getFrameTimings(
+    lastSeconds: Int?
+  ) async throws -> ApplicationServiceFrameTimingsPayload {
+    let data: Data = try await call(
+      .getFrameTimings,
+      LocalServiceRPCFrameTimingsArguments(lastSeconds: lastSeconds)
+    )
     guard
       let payload = try? JSONDecoder().decode(
         ApplicationServiceFrameTimingsPayload.self,

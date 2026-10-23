@@ -181,6 +181,52 @@ struct FrameTimingsTests {
   }
 
   @Test
+  func theWindowSecondsSetTheCapacityAtOneKilohertz() {
+    #expect(FrameTimingRecorder.windowSeconds == 15)
+    #expect(FrameTimingRecorder.windowCapacity == FrameTimingRecorder.windowSeconds * 1_000)
+    #expect(FrameTimingRecorder.windowSecondsRange == 1...15)
+  }
+
+  @Test
+  func framesReadBeforeTheLastSecondsLeaveTheWindow() {
+    let recorder = FrameTimingRecorder()
+    let second: UInt64 = 1_000_000_000
+    for read in [2 * second, 4 * second, 7 * second, 9 * second, 10 * second] {
+      recorder.parsed(for: identifier, read: read, parse: read + 1)
+      _ = recorder.dispatched(for: identifier, at: read + 2)
+    }
+
+    let window = recorder.window(for: identifier, lastSeconds: 3, now: 10 * second)
+
+    #expect(window.map(\.sequence) == [2, 3, 4])
+    #expect(
+      recorder.window(for: identifier, lastSeconds: 1, now: 10 * second).map(\.sequence) == [3, 4]
+    )
+    #expect(recorder.window(for: identifier, lastSeconds: 15, now: 10 * second).count == 5)
+    #expect(recorder.window(for: identifier).count == 5)
+  }
+
+  @Test
+  func aFrameReadExactlyTheLastSecondsBeforeNowStaysInTheWindow() {
+    let recorder = FrameTimingRecorder()
+    let second: UInt64 = 1_000_000_000
+    recorder.parsed(for: identifier, read: 7 * second, parse: 7 * second + 1)
+    _ = recorder.dispatched(for: identifier, at: 7 * second + 2)
+
+    #expect(recorder.window(for: identifier, lastSeconds: 3, now: 10 * second).count == 1)
+    #expect(recorder.window(for: identifier, lastSeconds: 3, now: 10 * second + 1).isEmpty)
+  }
+
+  @Test
+  func theWindowOfAShortUptimeStartsAtTheClockOrigin() {
+    let recorder = FrameTimingRecorder()
+    recorder.parsed(for: identifier, read: 5, parse: 6)
+    _ = recorder.dispatched(for: identifier, at: 7)
+
+    #expect(recorder.window(for: identifier, lastSeconds: 15, now: 100).count == 1)
+  }
+
+  @Test
   func aDeliveryForAFrameTheWindowDroppedStampsNoOtherFrame() {
     let recorder = FrameTimingRecorder()
     let total = FrameTimingRecorder.windowCapacity + 1

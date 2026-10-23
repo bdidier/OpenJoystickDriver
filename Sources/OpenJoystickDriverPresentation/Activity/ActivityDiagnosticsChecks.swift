@@ -34,7 +34,7 @@ enum ActivityDiagnosticsChecks {
     await DiagnoseServiceSnapshot.gather(
       status: { try await gateway.status() },
       virtualDiagnostics: { try await gateway.virtualDeviceDiagnostics() },
-      frameTimings: { try await gateway.frameTimings() },
+      frameTimings: { try await gateway.frameTimings(lastSeconds: nil) },
       listenerFailure: ServiceListenerFailure.readDefault
     )
   }

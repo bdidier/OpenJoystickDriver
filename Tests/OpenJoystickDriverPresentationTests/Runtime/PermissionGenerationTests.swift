@@ -176,7 +176,7 @@ private actor PermissionRaceGatewayStub: ApplicationServiceGateway {
     return statusPayload
   }
 
-  func frameTimings() throws -> ApplicationServiceFrameTimingsPayload {
+  func frameTimings(lastSeconds _: Int?) throws -> ApplicationServiceFrameTimingsPayload {
     ApplicationServiceFrameTimingsPayload(controllers: [])
   }
 

@@ -103,9 +103,15 @@ extension ApplicationServiceServer {
     }
   }
 
-  /// Returns the newest per-stage frame timings of every connected controller as encoded JSON.
-  public func getFrameTimings() async -> Data {
-    do { return try JSONEncoder().encode(await deviceManager.frameTimingsSnapshot()) } catch {
+  /// Returns the per-stage frame timings of every connected controller as encoded JSON: the
+  /// frames read within the last `lastSeconds` seconds of the uptime clock, or the whole ring when
+  /// `lastSeconds` is nil.
+  public func getFrameTimings(lastSeconds: Int?) async -> Data {
+    let snapshot = await deviceManager.frameTimingsSnapshot(
+      lastSeconds: lastSeconds,
+      now: DispatchTime.now().uptimeNanoseconds
+    )
+    do { return try JSONEncoder().encode(snapshot) } catch {
       print("[ApplicationServiceServer] getFrameTimings encode error: \(error)")
       return Data()
     }

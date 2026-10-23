@@ -51,19 +51,20 @@ struct DeviceManagerFrameTimingsTests {
       StickDeliveryLatencyTests.gamepadReport(leftX: 0xA0, connection: connection),
       attempt: 1
     )
-    var snapshot = await manager.frameTimingsSnapshot()
+    var snapshot = await manager.frameTimingsSnapshot(lastSeconds: nil, now: 0)
     let delivered: (ApplicationServiceFrameTimingsPayload) -> Bool = {
       $0.controllers.first?.frames.last?.stages.contains { $0.stage == .deliveryVirtualDevice }
         == true
     }
     await waitUntil("virtual-device delivery stage recorded") {
-      snapshot = await manager.frameTimingsSnapshot()
+      snapshot = await manager.frameTimingsSnapshot(lastSeconds: nil, now: 0)
       return delivered(snapshot)
     }
     let controller = try #require(snapshot.controllers.first)
     let token = try #require(ControllerSessionToken(rawValue: controller.controller))
     await manager.endpointDelivered(session: token, at: UInt64.max)
-    let stages = await manager.frameTimingsSnapshot().controllers.first?.frames.last?.stages
+    let stages = await manager.frameTimingsSnapshot(lastSeconds: nil, now: 0).controllers.first?
+      .frames.last?.stages
     await manager.stop()
 
     #expect(

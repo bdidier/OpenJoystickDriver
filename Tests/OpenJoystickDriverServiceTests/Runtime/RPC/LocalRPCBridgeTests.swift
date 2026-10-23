@@ -249,6 +249,50 @@ struct LocalRPCBridgeTests {
   }
 
   @Test
+  func frameTimingsDecodeTheLastSecondsAndTheEmptyRequest() async throws {
+    try await withServer { server in
+      for lastSeconds in [nil, 1, FrameTimingRecorder.windowSeconds] {
+        let arguments = try JSONEncoder().encode(
+          LocalServiceRPCFrameTimingsArguments(lastSeconds: lastSeconds)
+        )
+        let response = await handle(
+          server,
+          method: ApplicationServiceRPCMethod.getFrameTimings.rawValue,
+          arguments: arguments
+        )
+
+        #expect(response.error == nil, "\(String(describing: lastSeconds))")
+        let encoded = try JSONDecoder().decode(Data.self, from: try #require(response.result))
+        let payload = try JSONDecoder().decode(
+          ApplicationServiceFrameTimingsPayload.self,
+          from: encoded
+        )
+        #expect(payload.controllers.isEmpty)
+      }
+    }
+  }
+
+  @Test
+  func frameTimingsRefuseALastSecondsOutsideTheWindowAsInvalidRequest() async throws {
+    try await withServer { server in
+      for lastSeconds in [-1, 0, FrameTimingRecorder.windowSeconds + 1] {
+        let arguments = try JSONEncoder().encode(
+          LocalServiceRPCFrameTimingsArguments(lastSeconds: lastSeconds)
+        )
+        let response = await handle(
+          server,
+          method: ApplicationServiceRPCMethod.getFrameTimings.rawValue,
+          arguments: arguments
+        )
+
+        #expect(response.result == nil, "\(lastSeconds)")
+        #expect(response.error == FrameTimingsRequestError.invalidRequest.errorDescription)
+        #expect(response.error == Localization().string("cli.diagnose.group.framesInvalidRequest"))
+      }
+    }
+  }
+
+  @Test
   func aReportOfNoAnswerIsRefusedWithItsOwnText() async throws {
     try await withServer { server in
       let arguments = try JSONEncoder().encode(

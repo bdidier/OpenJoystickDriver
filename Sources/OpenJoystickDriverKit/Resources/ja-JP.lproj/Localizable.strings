@@ -1859,6 +1859,14 @@
 "cli.diagnose.group.failed" = "失敗したチェック: %lld 件。上記の詳細を参考に修正するか、「ojd diagnose --output <path>」を実行してファイルをバグ報告に添付してください。";
 /* Help text of the --footprint-limit-mib option of 'ojd diagnose'. The physical footprint is the memory charged to the service in MiB, mebibytes. The range 0-65536 is fixed. */
 "cli.diagnose.group.footprintLimit" = "--soak 使用時、この物理フットプリント (MiB) を超えると失敗とします。0 で無効 (0-65536)。";
+/* Help text of the --frames option of 'ojd diagnose'. The number is a count of seconds from 1 to 15. A stall is a read interval that is much longer than the usual one. */
+"cli.diagnose.group.frames" = "この時間だけスティックを動かし続けてから、その間に読み取ったフレームだけを集計します (1-15)。入力が変わったときだけ報告するコントローラでは、入力が止まるたびに停止として数えられます。";
+/* Error of the service when a request for frame timings asks for a frame window outside the 1 to 15 seconds the service keeps. Shown by 'ojd diagnose' if the request reaches the service. */
+"cli.diagnose.group.framesInvalidRequest" = "リクエストのフレームウインドウが、サービスが保持する 1 秒から 15 秒の範囲外です。";
+/* Progress line of 'ojd diagnose --frames', written to the error output while the command waits. %@ is the wait, such as 10s. The sticks are the thumbsticks of the controller. Keep the three dots. */
+"cli.diagnose.group.framesProgress" = "スティックを %@ 間動かし続けてください…";
+/* Error of 'ojd diagnose' when --frames is out of range. --frames stays as written. The range is fixed. */
+"cli.diagnose.group.framesRange" = "--frames は 1 から 15 秒の間で指定してください。";
 /* Help text of the --interval-ms option of 'ojd diagnose'. The range 100-60000 is fixed. */
 "cli.diagnose.group.interval" = "--soak 使用時のサンプル間隔 (ミリ秒) (100-60000)。";
 /* Error of 'ojd diagnose' when --interval-ms is out of range. --interval-ms stays as written. */
@@ -2553,6 +2561,8 @@
 "cli.diagnose.group.timingsSummaryNoStalls" = "停止：未測定（ウインドウ内のフレームが2つ未満）";
 /* Stall line of the timing summary of 'ojd diagnose'. A stall is a read interval that is much longer than the usual one. %1$@ is the number of read intervals in the window longer than the threshold, %2$@ is the threshold in milliseconds and %3$@ is the multiple of the median read interval that sets the threshold. The unit symbol ms may be localized. */
 "cli.diagnose.group.timingsSummaryStalls" = "停止（読み取り間隔が %2$@ ミリ秒（読み取り間隔の中央値の %3$@ 倍）を超えた回数）：%1$@";
+/* Line of 'ojd diagnose --frames' above the timing summaries. %@ is the length of the window, such as 10s. The frames are those the controller reported in that time. */
+"cli.diagnose.group.timingsWindow" = "タイミングのウインドウ：直近 %@ に読み取ったフレーム。";
 /* One-line summary of 'ojd record' in the command list and at the top of its help. */
 "cli.record.group.abstract" = "コントローラのレコードの下書き作成、一覧表示、確認、インストール、削除を行います。";
 /* Long description in the help of 'ojd record'. The folder path stays as written. A controller record describes how the driver talks to one controller model. */

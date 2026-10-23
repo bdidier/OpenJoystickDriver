@@ -14,6 +14,19 @@ enum TestNotificationReportError: Error, LocalizedError, Equatable {
   }
 }
 
+/// Why the service refuses a `getFrameTimings` request.
+enum FrameTimingsRequestError: Error, LocalizedError, Equatable {
+  /// `lastSeconds` is outside ``FrameTimingRecorder/windowSecondsRange``.
+  case invalidRequest
+
+  var errorDescription: String? {
+    switch self {
+    case .invalidRequest:
+      Localization().string("cli.diagnose.group.framesInvalidRequest")
+    }
+  }
+}
+
 extension ApplicationServiceServer {
   /// Decodes `request`, awaits its handler, and encodes the value or error as the response.
   func handleLocalRPC(_ request: LocalServiceRPCRequest) async -> LocalServiceRPCResponse {
@@ -145,8 +158,13 @@ extension ApplicationServiceServer {
       _ = try decode(LocalServiceRPCEmptyArguments.self)
       return try send(getVirtualDeviceDiagnostics())
     case .getFrameTimings:
-      _ = try decode(LocalServiceRPCEmptyArguments.self)
-      return try send(await getFrameTimings())
+      let value = try decode(LocalServiceRPCFrameTimingsArguments.self)
+      if let lastSeconds = value.lastSeconds,
+        !FrameTimingRecorder.windowSecondsRange.contains(lastSeconds)
+      {
+        throw FrameTimingsRequestError.invalidRequest
+      }
+      return try send(await getFrameTimings(lastSeconds: value.lastSeconds))
     case .waitForServiceStatusChange:
       let value = try decode(LocalServiceRPCStatusChangeArguments.self)
       return try send(

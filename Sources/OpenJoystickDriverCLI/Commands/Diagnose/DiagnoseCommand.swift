@@ -41,6 +41,12 @@ struct DiagnoseCommand: AsyncParsableCommand {
       )
     }
 
+  /// Waits while the user moves the sticks for `--frames`; tests replace it to avoid sleeping.
+  @TaskLocal
+  static var frameWindowWait: @Sendable (Int) async throws -> Void = { seconds in
+    try await Task.sleep(nanoseconds: UInt64(seconds) * 1_000_000_000)
+  }
+
   /// The system gamepad audit for the support bundle; tests replace it.
   @TaskLocal
   static var gameControllerAudit: @Sendable () -> SystemGamepadSupportAudit? = {
@@ -101,8 +107,19 @@ struct DiagnoseCommand: AsyncParsableCommand {
   )
   var footprintLimitMiB = 512
 
+  @Option(
+    help: ArgumentHelp(
+      CLILocalized.text("cli.diagnose.group.frames"),
+      valueName: "seconds"
+    )
+  )
+  var frames: Int?
+
   func validate() throws {
     if let output { _ = try Self.outputURL(output) }
+    if let frames, !FrameTimingRecorder.windowSecondsRange.contains(frames) {
+      throw ValidationError(CLILocalized.text("cli.diagnose.group.framesRange"))
+    }
     guard let soak else { return }
     guard ApplicationServiceRuntimeHealthSampler.secondsRange.contains(soak) else {
       throw ValidationError(
@@ -169,7 +186,16 @@ struct DiagnoseCommand: AsyncParsableCommand {
 
   func run() async throws {
     try await global.run {
-      let snapshot = await DiagnoseServiceSnapshot.fetch()
+      if let frames {
+        CLIOutput.stderr(
+          CLILocalized.format(
+            "cli.diagnose.group.framesProgress",
+            Double(frames).durationText
+          )
+        )
+        try await Self.frameWindowWait(frames)
+      }
+      let snapshot = await DiagnoseServiceSnapshot.fetch(frameSeconds: frames)
       let soakOptions = soak.map {
         DiagnoseSoak(
           seconds: $0,
@@ -205,7 +231,7 @@ struct DiagnoseCommand: AsyncParsableCommand {
       switch CLIContext.current.format {
       case .json: try CLIOutput.json(report)
       case .plain: CLIOutput.plain(report.plainRows)
-      case .human: Self.printTable(report)
+      case .human: Self.printTable(report, frameSeconds: frames)
       }
       if let outputURL {
         CLIOutput.success(
@@ -236,7 +262,7 @@ struct DiagnoseCommand: AsyncParsableCommand {
     }
   }
 
-  private static func printTable(_ report: DiagnoseReport) {
+  private static func printTable(_ report: DiagnoseReport, frameSeconds: Int?) {
     let idWidth = report.checks.map(\.id.count).max() ?? 0
     for check in report.checks {
       let id = check.id.padding(toLength: idWidth, withPad: " ", startingAt: 0)
@@ -246,6 +272,14 @@ struct DiagnoseCommand: AsyncParsableCommand {
         startingAt: 0
       )
       CLIOutput.stdout("\(status)  \(id)  \(check.detail)")
+    }
+    if let frameSeconds, !report.timings.isEmpty {
+      CLIOutput.stdout(
+        CLILocalized.format(
+          "cli.diagnose.group.timingsWindow",
+          Double(frameSeconds).durationText
+        )
+      )
     }
     for controller in report.timings {
       for line in DiagnoseReport.summaryLines(of: controller) { CLIOutput.stdout(line) }

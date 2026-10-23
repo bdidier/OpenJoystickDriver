@@ -72,7 +72,15 @@ public struct ControllerFrameTimings: Codable, Equatable, Sendable {
   }
 }
 
-/// The result of `ApplicationServiceClient.getFrameTimings()`.
+/// Arguments of `getFrameTimings`: the seconds of the uptime clock the payload covers, counted
+/// back from the moment the service answers; nil covers the whole ring.
+public struct LocalServiceRPCFrameTimingsArguments: Codable, Equatable, Sendable {
+  public let lastSeconds: Int?
+
+  public init(lastSeconds: Int?) { self.lastSeconds = lastSeconds }
+}
+
+/// The result of `ApplicationServiceClient.getFrameTimings(lastSeconds:)`.
 public struct ApplicationServiceFrameTimingsPayload: Codable, Equatable, Sendable {
   public let controllers: [ControllerFrameTimings]
 
@@ -88,9 +96,15 @@ public final class FrameTimingRecorder: Sendable {
   /// The newest frames of the window that `ojd diagnose` lists with every stage stamp.
   public static let listedFrames = 8
 
-  /// The frames kept per controller: 15 seconds at the highest report rate of 1000 Hz. A
-  /// 10-second stick sweep fits whole, with time left to run `ojd diagnose` after it.
-  public static let windowCapacity = 15_000
+  /// The seconds of frames the ring holds at the highest report rate of 1000 Hz. A 10-second
+  /// stick sweep fits whole, with time left to run `ojd diagnose` after it.
+  public static let windowSeconds = 15
+
+  /// The seconds a request for the last frames may ask for.
+  public static let windowSecondsRange = 1...windowSeconds
+
+  /// The frames kept per controller: ``windowSeconds`` at 1000 Hz.
+  public static let windowCapacity = windowSeconds * 1_000
 
   private struct Pending {
     let read: UInt64
@@ -186,6 +200,20 @@ public final class FrameTimingRecorder: Sendable {
   /// Every frame the ring holds for `identifier`, oldest first.
   public func window(for identifier: LogicalControllerID) -> [FrameTiming] {
     tracks.withLock { $0[identifier]?.newest(Self.windowCapacity) ?? [] }
+  }
+
+  /// The frames of ``window(for:)`` whose `Read` stamp lies within `lastSeconds` seconds before
+  /// `now`, oldest first. `now` is on the uptime clock the pipeline stamps with.
+  func window(
+    for identifier: LogicalControllerID,
+    lastSeconds: Int,
+    now: UInt64
+  ) -> [FrameTiming] {
+    let span = UInt64(lastSeconds) * 1_000_000_000
+    let oldest = now >= span ? now - span : 0
+    return window(for: identifier).filter {
+      FrameTimingSummary.time(of: .read, in: $0).map { $0 >= oldest } ?? false
+    }
   }
 
   /// Forgets `identifier` once its pipeline stops.

@@ -30,14 +30,22 @@ extension DeviceManager {
     return await pipelines[key]?.getPacketLog() ?? []
   }
 
-  /// Returns the newest frame timings of every connected controller.
-  public func frameTimingsSnapshot() async -> ApplicationServiceFrameTimingsPayload {
+  /// Returns the frame timings of every connected controller: the frames read within
+  /// `lastSeconds` seconds before `now` on the uptime clock, or the whole ring when `lastSeconds` is
+  /// nil.
+  public func frameTimingsSnapshot(
+    lastSeconds: Int?,
+    now: UInt64
+  ) async -> ApplicationServiceFrameTimingsPayload {
     ApplicationServiceFrameTimingsPayload(
-      controllers: await connectedDeviceDescriptions().map {
-        ControllerFrameTimings(
-          controller: $0.sessionToken.rawValue,
-          name: $0.name,
-          window: frameTimings.window(for: $0.logicalControllerID)
+      controllers: await connectedDeviceDescriptions().map { description in
+        let identifier = description.logicalControllerID
+        return ControllerFrameTimings(
+          controller: description.sessionToken.rawValue,
+          name: description.name,
+          window: lastSeconds.map { seconds in
+            frameTimings.window(for: identifier, lastSeconds: seconds, now: now)
+          } ?? frameTimings.window(for: identifier)
         )
       }
     )

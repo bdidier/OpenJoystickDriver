@@ -15,9 +15,9 @@ extension ApplicationServiceClientGateway {
     return try await client.getVirtualDeviceDiagnostics()
   }
 
-  func frameTimings() async throws -> ApplicationServiceFrameTimingsPayload {
+  func frameTimings(lastSeconds: Int?) async throws -> ApplicationServiceFrameTimingsPayload {
     await ensureConnection()
-    return try await client.getFrameTimings()
+    return try await client.getFrameTimings(lastSeconds: lastSeconds)
   }
 
   func requestPermissions() async throws -> PermissionManager.Snapshot {

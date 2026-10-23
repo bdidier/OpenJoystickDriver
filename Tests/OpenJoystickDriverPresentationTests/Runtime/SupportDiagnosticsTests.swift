@@ -261,7 +261,7 @@ private actor SupportDiagnosticsGatewayStub: ApplicationServiceGateway {
 
   func status() throws -> ApplicationServiceStatusPayload { statusPayload }
 
-  func frameTimings() throws -> ApplicationServiceFrameTimingsPayload {
+  func frameTimings(lastSeconds _: Int?) throws -> ApplicationServiceFrameTimingsPayload {
     guard let frameTimingsPayload else { throw ApplicationServiceClientError.timeout }
     return ApplicationServiceFrameTimingsPayload(controllers: frameTimingsPayload)
   }

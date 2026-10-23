@@ -166,7 +166,7 @@ actor GatewayStub: ApplicationServiceGateway {
     snapshotPayload = payload
   }
 
-  func frameTimings() throws -> ApplicationServiceFrameTimingsPayload {
+  func frameTimings(lastSeconds _: Int?) throws -> ApplicationServiceFrameTimingsPayload {
     ApplicationServiceFrameTimingsPayload(controllers: [])
   }
 

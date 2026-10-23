@@ -5,7 +5,7 @@ import OpenJoystickDriverKit
 protocol RuntimeStatusGateway: Sendable {
   func status() async throws -> ApplicationServiceStatusPayload
   func virtualDeviceDiagnostics() async throws -> ApplicationServiceVirtualDeviceDiagnosticsPayload
-  func frameTimings() async throws -> ApplicationServiceFrameTimingsPayload
+  func frameTimings(lastSeconds: Int?) async throws -> ApplicationServiceFrameTimingsPayload
   func requestPermissions() async throws -> PermissionManager.Snapshot
   func requestPermission(
     _ requirement: PermissionManager.Requirement

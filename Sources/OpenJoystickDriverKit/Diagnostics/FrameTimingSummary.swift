@@ -153,7 +153,7 @@ public struct FrameTimingSummary: Codable, Equatable, Sendable {
     }
   }
 
-  private static func time(of stage: FrameStage, in frame: FrameTiming) -> UInt64? {
+  static func time(of stage: FrameStage, in frame: FrameTiming) -> UInt64? {
     frame.stages.first { $0.stage == stage }?.nanoseconds
   }
 

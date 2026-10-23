@@ -61,7 +61,7 @@ final class SupportReportModel: ObservableObject {
     }
 
     // Like `ojd diagnose --output`, an unreachable service leaves the timings empty.
-    let frameTimings = (try? await gateway.frameTimings().controllers) ?? []
+    let frameTimings = (try? await gateway.frameTimings(lastSeconds: nil).controllers) ?? []
 
     // A separate Collect action may supersede the diagnostics display while this report is
     // being assembled. The report remains an independent user operation and must still reach a
