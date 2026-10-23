@@ -127,6 +127,8 @@ struct DevicePipelineStatusAnnouncementTests {
     let (posts, observer) = observe(pipeline)
     defer { NotificationCenter.default.removeObserver(observer) }
     await pipeline.start()
+    // Live input before the gap makes the gap a loss that the next neutral report recovers.
+    await pipeline.feedHIDData(Data([2]))
     clock.advance(by: 2_000_000_000)
     // The overdue watch announces once the gap passes.
     let deadline = Date().addingTimeInterval(30)

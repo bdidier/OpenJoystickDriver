@@ -157,6 +157,9 @@ actor DevicePipeline {
   }
   /// Counted before `awaitingNeutralAfterLivenessLoss` clears, so one recovery posts once.
   var inputHealthRecoveryCount = 0
+  /// Whether the session had read live input when its input was lost. The first input of a
+  /// session that never had any is its start, not a recovery.
+  var livenessLossFollowedInput = false
   /// Wakes once the input reports are overdue, because no event announces that.
   var staleWatchTask: Task<Void, Never>?
   var startupOutputStatus: String? {

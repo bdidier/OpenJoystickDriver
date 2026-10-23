@@ -32,7 +32,7 @@ extension DevicePipeline {
         guard let event, event.isFresh, event.state.isEffectivelyNeutral else { return }
         currentInputState = .neutral
         foregroundMask = nil
-        inputHealthRecoveryCount += 1
+        if livenessLossFollowedInput { inputHealthRecoveryCount += 1 }
         awaitingNeutralAfterLivenessLoss = false
         await activateOutput()
         return

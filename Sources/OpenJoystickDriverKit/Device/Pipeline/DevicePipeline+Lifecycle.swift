@@ -281,7 +281,8 @@ extension DevicePipeline {
     let age = reference.map { now &- $0 }
     let observationAge = lastObservedInputReportNanoseconds.map { now &- $0 }
     let state: ControllerInputHealthState
-    if awaitingNeutralAfterLivenessLoss {
+    // A session with no input yet has nothing to return to neutral from: it is stale.
+    if awaitingNeutralAfterLivenessLoss, lastLiveInputReportNanoseconds != nil {
       state = .waitingForNeutral
     } else if let timeout = plan.inputReportLivenessTimeoutNanoseconds, let age,
       age >= timeout

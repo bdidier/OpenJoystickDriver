@@ -63,6 +63,7 @@ extension DevicePipeline {
     guard !awaitingNeutralAfterLivenessLoss else { return }
     currentInputState = .neutral
     await neutralizeOutput()
+    livenessLossFollowedInput = lastLiveInputReportNanoseconds != nil
     awaitingNeutralAfterLivenessLoss = true
     await notifyControllerDidStop()
   }

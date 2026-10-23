@@ -101,13 +101,14 @@ extension ControllerSessionTests {
     clock.advance(by: 1_100_000_000)
     await pipeline.evaluateIdleSleep()
 
-    #expect(await pipeline.inputHealth().state == .waitingForNeutral)
+    #expect(await pipeline.inputHealth().state == .stale)
     #expect(await pipeline.inputHealth().failureReason == .missingReports)
     #expect(output.snapshot().stopped == [identifier])
 
+    // The first input of a session that never had any starts it; it is not a recovery.
     await pipeline.feedHIDData(ds4USBReport(buttons: 0x08, timestamp: 1))
     #expect(await pipeline.inputHealth().state == .healthy)
-    #expect(await pipeline.inputHealth().recoveryCount == 1)
+    #expect(await pipeline.inputHealth().recoveryCount == 0)
     await pipeline.stop()
   }
 
