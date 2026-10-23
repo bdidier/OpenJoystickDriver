@@ -220,6 +220,25 @@ struct Switch2BluetoothLEHubTests {
     }
   }
 
+  @Test
+  func compositeUSBProviderWaitsForReleaseThroughItsBase() async throws {
+    let (hub, _) = Self.connectedHub(writer: RecordingSwitch2Writer())
+    let base = RecoveryUSBProvider(sessions: [])
+    let provider = BluetoothLECompositeUSBTransportProvider(base: base, hub: hub)
+    let device = USBTransportDevice(
+      route: .rawUSB,
+      serviceID: 1,
+      vendorID: 0x054C,
+      productID: 0x0268,
+      locationID: 0x0021_0000
+    )
+
+    let wait = Task { try await provider.waitForRelease(of: device, interfaceNumber: 0) }
+    await waitUntil("base.releaseWaitCount == 1") { await base.releaseWaitCount == 1 }
+    await base.announceRelease()
+    try await wait.value
+  }
+
   private func connection(of hub: Switch2BluetoothLEHub) -> HIDDeviceConnection {
     hub.connectionSnapshots()[0].connection
   }

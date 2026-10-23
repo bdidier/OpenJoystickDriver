@@ -202,6 +202,11 @@ final class BluetoothLECompositeUSBTransportProvider: USBTransportProvider {
     guard let base else { throw USBTransportError.notSupported }
     return try await base.exclusiveOwner(of: device)
   }
+
+  func waitForRelease(of device: USBTransportDevice, interfaceNumber: UInt8) async throws {
+    guard let base else { throw USBTransportError.notSupported }
+    try await base.waitForRelease(of: device, interfaceNumber: interfaceNumber)
+  }
 }
 
 /// A Switch 2 command channel over GATT: OUT writes go to the command characteristic, and IN reads
