@@ -811,100 +811,6 @@
       }
     },
     {
-      "name": "a family specific session field of another family is refused: family=XboxXID, key=receiverInquiryResendLimit",
-      "code": "E5002",
-      "fileName": "xbox-xid.json",
-      "document": {
-        "variants": ["Gamepad"],
-        "storesVariant": true,
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "XboxXID",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "rawUSB": true,
-        "recordSections": ["input", "rumble"],
-        "defaults": {
-          "session": {
-            "receiverInquiryResendLimit": 8
-          }
-        }
-      }
-    },
-    {
-      "name": "a family specific session field of another family is refused: family=SonyDualSense, key=receiverInquiryResendLimit",
-      "code": "E5002",
-      "fileName": "sony-dual-sense.json",
-      "document": {
-        "variants": ["USB", "BluetoothClassic"],
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "SonyDualSense",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "defaults": {
-          "session": {
-            "receiverInquiryResendLimit": 8
-          }
-        }
-      }
-    },
-    {
-      "name": "a family specific session field of another family is refused: family=NintendoSwitchInputOnly, key=receiverInquiryResendLimit",
-      "code": "E5002",
-      "fileName": "nintendo-switch-input-only.json",
-      "document": {
-        "variants": ["USB", "BluetoothClassic"],
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "NintendoSwitchInputOnly",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "defaults": {
-          "session": {
-            "receiverInquiryResendLimit": 8
-          }
-        }
-      }
-    },
-    {
-      "name": "a family specific session field of another family is refused: family=another owner, key=receiverInquiryResendLimit",
-      "code": "E5002",
-      "fileName": "xbox-gip.json",
-      "document": {
-        "variants": ["USB"],
-        "sessionKeys": ["startup", "keepAlive"],
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "XboxGIP",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "rawUSB": true,
-        "defaults": {
-          "session": {
-            "handshakeAttempts": 3,
-            "announceResendLimit": 8,
-            "namedPackets": [
-              {
-                "id": "XboxGIP/power-on",
-                "bytes": "05 20 00 01 00",
-                "sessionByte": 2
-              }
-            ],
-            "receiverInquiryResendLimit": 8
-          }
-        }
-      }
-    },
-    {
       "name": "a family specific session field of another family is refused: family=XboxXID, key=commandChannel",
       "code": "E5002",
       "fileName": "xbox-xid.json",
@@ -15032,12 +14938,7 @@
             "interfaceSubclass": 93,
             "interfaceProtocol": 1
           }
-        ],
-        "defaults": {
-          "session": {
-            "receiverInquiryResendLimit": 8
-          }
-        }
+        ]
       }
     },
     {
@@ -15063,12 +14964,7 @@
             "interfaceSubclass": 93,
             "interfaceProtocol": 1
           }
-        ],
-        "defaults": {
-          "session": {
-            "receiverInquiryResendLimit": 8
-          }
-        }
+        ]
       }
     },
     {
@@ -15094,12 +14990,7 @@
             "interfaceSubclass": 93,
             "interfaceProtocol": 1
           }
-        ],
-        "defaults": {
-          "session": {
-            "receiverInquiryResendLimit": 8
-          }
-        }
+        ]
       }
     },
     {
@@ -16437,12 +16328,7 @@
             "interfaceSubclass": 93,
             "interfaceProtocol": 1
           }
-        ],
-        "defaults": {
-          "session": {
-            "receiverInquiryResendLimit": 8
-          }
-        }
+        ]
       }
     },
     {
@@ -23087,54 +22973,6 @@
                 "sessionByte": 2
               }
             ]
-          }
-        }
-      }
-    },
-    {
-      "name": "session limits have ranges: key=receiverInquiryResendLimit, value=0",
-      "code": "E5002",
-      "fileName": "xbox-xusb.json",
-      "schema": true,
-      "document": {
-        "variants": ["Wired", "Receiver"],
-        "storesVariant": true,
-        "sessionKeys": ["startup"],
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "XboxXUSB",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "rawUSB": true,
-        "defaults": {
-          "session": {
-            "receiverInquiryResendLimit": 0
-          }
-        }
-      }
-    },
-    {
-      "name": "session limits have ranges: key=receiverInquiryResendLimit, value=101",
-      "code": "E5002",
-      "fileName": "xbox-xusb.json",
-      "schema": true,
-      "document": {
-        "variants": ["Wired", "Receiver"],
-        "storesVariant": true,
-        "sessionKeys": ["startup"],
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "XboxXUSB",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "rawUSB": true,
-        "defaults": {
-          "session": {
-            "receiverInquiryResendLimit": 101
           }
         }
       }
